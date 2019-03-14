@@ -1,0 +1,35 @@
+
+<app-accordion ng-init="myIndex=1;selectedIndex=1" >
+  <div class="accordionTitle">Passive Segment</div>
+  <div class="accordionContent"> 
+    <passive></passive>
+  </div>
+
+</app-accordion>
+<app-accordion ng-init="myIndex=2;"> 
+    <div class="accordionTitle"> Reporting</div>
+    <div class="accordionContent">
+        <app-reporting></app-reporting>
+    </div>
+ 
+  </app-accordion>
+  <app-accordion ng-init="myIndex=3;"> 
+      <div class="accordionTitle">Payment</div>
+      <div class="accordionContent"> 
+        <app-payment></app-payment>
+
+      </div>    
+  </app-accordion>
+
+  <app-accordion ng-init="myIndex=4;">
+        <div class="accordionTitle"> Remarks</div>
+        <div class="accordionContent"> 
+          Test data
+        </div>
+      
+ </app-accordion>
+<button (click)="SubmitToPNR()">Submit To PNR</button>
+
+{{message}}
+
+

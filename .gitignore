@@ -1,0 +1,11 @@
+.project
+**/.project
+.classpath
+**/.classpath
+target
+**/target
+.settings
+**/.settings
+**/coverage
+**/node_modules
+

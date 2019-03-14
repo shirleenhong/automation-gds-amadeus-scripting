@@ -1,0 +1,9 @@
+<div  class="accordion" > 
+    <div  class="accordionHeader" (click)="isHidden=!isHidden" >
+      <ng-content select=".accordionTitle" ></ng-content>
+    </div>
+  <div  class="accordionBody"  [hidden]="isHidden"> 
+      <ng-content select=".accordionContent"></ng-content>
+  </div>
+
+</div>

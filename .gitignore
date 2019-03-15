@@ -8,4 +8,4 @@ target
 **/.settings
 **/coverage
 **/node_modules
-
+dist

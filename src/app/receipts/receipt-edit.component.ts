@@ -61,7 +61,7 @@ export class ReceiptEditComponent implements OnInit {
           ];
     }
 
-  onreceiptFormSubmit() {
+  onReceiptFormSubmit() {
     let dataModel = this.receiptForm.value;
     this.saveReceipt.emit(dataModel);
   }

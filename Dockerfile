@@ -9,7 +9,8 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build-stg /ng-app/dist/ /usr/share/nginx/html
-CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE "8443"
 EXPOSE "8080"
+
+CMD ["nginx", "-g", "daemon off;"]

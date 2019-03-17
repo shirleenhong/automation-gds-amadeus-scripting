@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -58,11 +59,16 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "bpg-gds-scripting-amadeus:build"
+            "browserTarget": "bpg-gds-scripting-amadeus:build",
+            "proxyConfig": "src/environments/proxy.conf.test.json"
           },
           "configurations": {
             "production": {
               "browserTarget": "bpg-gds-scripting-amadeus:build:production"
+            },
+            "test": {
+              "browserTarget": "bpg-gds-scripting-amadeus:build:test",
+              "proxyConfig": "src/environments/proxy.conf.test.json"
             }
           }
         },
@@ -132,5 +138,10 @@
       }
     }
   },
-  "defaultProject": "bpg-gds-scripting-amadeus"
+  "defaultProject": "bpg-gds-scripting-amadeus",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }

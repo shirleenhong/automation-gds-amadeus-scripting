@@ -6,6 +6,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'segments-list',
+  styleUrls: ['../leisure/leisure.component.scss'],
   template: `
     <table class="table table-striped">
       <thead>

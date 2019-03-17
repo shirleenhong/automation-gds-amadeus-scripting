@@ -1,0 +1,7 @@
+{
+    "/api/token": {
+      "target": "https://test.int.us-west-2.bpg-aws-cwt.com/service/repo/powerbaseaws/oauth2/token",
+      "secure": false
+     
+    }
+}

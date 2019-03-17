@@ -5,16 +5,30 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {SelectItem} from '../models/select.item.model'
 
 @Component({
   selector: 'segment-edit',
-  templateUrl: './segment-edit.html'
+  template: `
+    <form [formGroup]="segmentForm" (ngSubmit)="onSegmentFormSubmit()">
+      <input type="hidden" formControlName="id">
+      <div class="form-group">
+        <label for="suppliername">Suppliername</label>
+        <input type="text" class="form-control" id="suppliername" placeholder="Suppliername" formControlName="suppliername">
+      </div>
+      <div class="form-group">
+        <label for="from">From</label>
+        <input type="text" class="form-control" id="from" placeholder="From" formControlName="from">
+      </div>
+      <div class="form-group">
+        <label for="to">To</label>
+        <input type="text" class="form-control" id="to" placeholder="To" formControlName="to">
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  `
 })
 export class SegmentEditComponent implements OnInit {
   segmentForm: FormGroup;
-  bspSupplierName: SelectItem[];
-  suppliername: String; 
 
   @Input() segment;
   @Output() saveSegment = new EventEmitter<any>();
@@ -24,14 +38,7 @@ export class SegmentEditComponent implements OnInit {
       id: '',
       suppliername: '',
       from: '',
-      to: '',
-      startDate:'',
-      startTime:'',
-      endDate:'',
-      endTime:'',
-      confirmationNo:'',
-      unitPrice:'',
-      currency:''
+      to: ''
     });
   }
 
@@ -40,26 +47,9 @@ export class SegmentEditComponent implements OnInit {
       id: this.segment.id || -1,
       suppliername: this.segment.suppliername || '',
       from: this.segment.from || '',
-      to: this.segment.to || '',
-      startDate: this.segment.startDate || '',
-      startTime: this.segment.startTime || '',
-      endDate: this.segment.endDate || '',
-      endTime: this.segment.endTime || '',
-      confirmationNo: this.segment.confirmationNo || '',
-      unitPrice: this.segment.unitPrice || '',
-      currency: this.segment.currency || ''
+      to: this.segment.to || ''
     });
-    // this.getSupplierCode();
   }
-
-  getSupplierCode(){
-    //todo Get from API DDB 
-      this.bspSupplierName =[ {itemText:"",itemValue:"-1"},
-            {itemText:"Eurostar",itemValue:"0"},
-            {itemText:"Eurotunnel",itemValue:"1"},
-            {itemText:"Test",itemValue:"2"}
-          ];
-    }
 
   onSegmentFormSubmit() {
     let dataModel = this.segmentForm.value;

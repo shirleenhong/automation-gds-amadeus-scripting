@@ -9,4 +9,3 @@ export class RemarkModel {
     relatedSegments:string[];
     relatedPassengers: string[];
 }
-

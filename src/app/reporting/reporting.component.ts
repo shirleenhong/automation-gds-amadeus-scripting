@@ -7,21 +7,21 @@ import { RemarkModel } from '../models/remark.model';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
-  styleUrls: ['./reporting.component.css']
+  styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit{
   bspRouteCodeList: SelectItem[];
   routeCode : string;
   tripType:number;
   reasonForTravel:string;
-  
+  isDisabled:boolean;
   
   constructor(private pnrService: PnrService,private remarkCollectionService:RemarkCollectionService) { }
 
   ngOnInit() {
     if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
     this.getRouteCodes(); 
-    
+    this.getPnrCFLine();
   }
 
 
@@ -55,7 +55,9 @@ getPnrCFLine(){
         }
   var cfa = cfLine.substring(4,3);
       if (cfa=="" || cfa=="")  this.tripType=2;
-    
+    this.isDisabled =false
+  }else{
+    this.isDisabled=true;
   }
   
 
@@ -67,21 +69,17 @@ routeCodeChange(){
 }
 
 buildRemark(){
-var remText="FS" + this.routeCode +''+ this.tripType;
-
-
+var remText= "FS"+this.routeCode +''+ this.tripType;
 var rmGroup = new RemarkGroup();
 rmGroup.group ="BSP Routing"
+rmGroup.cryptics= new Array<string>();
 
-var rem = new RemarkModel();
-
-rem.remarkType = "RM";
-rem.remarkText=remText;
-rem.category="";
-rmGroup.remarks = new Array<RemarkModel>();
-
-rmGroup.remarks.push(rem);
-
+var existNumber = this.pnrService.getFSLineNumber();
+if (existNumber !="") {
+  rmGroup.deleteRemarkByIds=new Array<string>();
+  rmGroup.deleteRemarkByIds.push(existNumber);
+}
+rmGroup.cryptics.push(remText);
 this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
  
 

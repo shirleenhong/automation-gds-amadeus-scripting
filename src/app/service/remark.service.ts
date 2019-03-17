@@ -1,8 +1,7 @@
 import { RemarkGroup } from '../models/remark.group.model';
-import { PassiveSegmentGroup } from '../models/remark.group.model';
+import { PassiveSegmentModel } from '../models/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/remark.model';
-import { PassiveSegmentModel } from '../models/passive-segment.model';
 import { iterateListLike } from '@angular/core/src/change_detection/change_detection_util';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 
@@ -14,32 +13,67 @@ declare var smartScriptSession: any;
   })
   export class RemarkService {
       remarksElement:Array<any>;
+      crypticCommands=Array<string>();
+      deleteRemarksByIds=Array<string>();
       passiveSegmentElement:Array<any>;
-      
+      passiveSegmentGroup:Array<PassiveSegmentModel>;
       responseMessage:string;
         constructor(){
-
+            this.deleteRemarksByIds=new Array<string>();
+            this.crypticCommands=new Array<string>();
+            this.remarksElement=new Array<any>();
         }
 
-        BuildRemarks(remarkGroups: RemarkGroup[], passiveSegmentGroup: PassiveSegmentGroup[]){
+        
+        clear(){
+            this.deleteRemarksByIds.length=0;
+            this.crypticCommands.length=0;
+            this.remarksElement.length=0;
+        }
+
+        BuildRemarks(remarkGroups: RemarkGroup[]){
                 this.remarksElement= new Array<any>();
                 this.passiveSegmentElement = new Array<any>();
 
-                remarkGroups.forEach(group => {
-                    if (group.group!=""&& group.remarks.length>0){
-                        group.remarks.forEach(rem=>{
-                        this.remarksElement.push(this.getRemarkElement(rem));
-                    });
-                }
+                remarkGroups.forEach(group => 
+                    {
+                        if (group.group!=""&& group.group!="" )
+                        {
+                            if(group.deleteRemarkByIds != null && group.deleteRemarkByIds.length>0){
+                                group.deleteRemarkByIds.forEach(c => {
+                                    this.deleteRemarksByIds.push(c);
+                                });
+                            }
+
+                            if(group.cryptics != null && group.cryptics.length>0){
+                                group.cryptics.forEach(c => {
+                                    this.crypticCommands.push(c);
+                                });
+                            }
+
+
+                        
+                                if (group.group!=""&& group.passiveSegments.length>0)
+                                {
+                                    group.passiveSegments.forEach(pas=>{
+                                    this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
+                                    });
+                                }
+                            
+
+                            if (group.remarks!=null && group.remarks.length>0)
+                            {
+                            group.remarks.forEach(rem=>{
+                                            this.remarksElement.push(this.getRemarkElement(rem));
+                                            });
+                            }
+                        }   
+                                      
+                
             });
 
-            passiveSegmentGroup.forEach(group => {
-                if (group.group!=""&& group.passiveSegment.length>0){
-                    group.passiveSegment.forEach(pas=>{
-                    this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
-                });
-            }
-        });
+            
+       
         }
 
         getRemarkElement(remarkModel:RemarkModel){
@@ -93,85 +127,78 @@ declare var smartScriptSession: any;
                 depTime: "0000",
                 arrDate: passiveSegmentmodel.endDate,
                 arrTime: "0000"
-            }
-    
-            
-            var travelProduct = {
-                product: travelProductProduct,
-                boardpointDetail: boardPointDetail,
-                offpointDetail: offPointDetail,
-                company: company
-            }
-    
-            var relatedProduct = {
-                quantity: "1",
-                status: passiveSegmentmodel.status
-                // quantitySpecified: true,
-                // product: travelProductProduct
-            }
-    
-            var messageActionBusiness ={
-                function: "12"
-            }
-    
-            var messageAction = {
-                business : messageActionBusiness
-            }
-    
-            var freeTextItineraryDetail ={
-                subjectQualifier: "3",
-                type: "P19"
-            }
-    
-            var freeTextItinerary ={
-                freetextDetail: freeTextItineraryDetail,
-                longFreetext: passiveSegmentmodel.freeText
-            }
-    
-            var airAuxItinerary ={
-                travelProduct: travelProduct,
-                messageAction: messageAction,
-                relatedProduct: relatedProduct,
-                freetextItinerary: freeTextItinerary
-                
-            }
-        
-        return {elementManagementItinerary, airAuxItinerary}
-            // var summary = {originDestinationDetails};
-            // RemarklistModel.addRemark(summary);
-            // alert(JSON.stringify(RemarklistModel.originDestinationDetails ))
-    
+         }
+
+         var travelProduct = {
+            product: travelProductProduct,
+            boardpointDetail: boardPointDetail,
+            offpointDetail: offPointDetail,
+            company: company
         }
 
-        // CombineElements(){
-        //     if (this.passiveSegmentElement.length > 0){
-                
-        //         var originDestination = {
-        //             origin: "",
-        //             destination: ""
-        //         }
+        var relatedProduct = {
+            quantity: "1",
+            status: passiveSegmentmodel.status
+            // quantitySpecified: true,
+            // product: travelProductProduct
+        }
 
-        //         this.originDestinationDetails ={
-        //             originDestination: originDestination,
-        //             itineraryInfo: this.passiveSegmentElement
-        //         } 
-        //     }
+        var messageActionBusiness ={
+            function: "12"
+        }
 
-        //     if (this.remarksElement.length > 0){
-        //         this.dataElementsMaster = {
-        //             marker1: "",
-        //             dataElementsIndiv: this.remarksElement
-        //         }
-        //     }
+        var messageAction = {
+            business : messageActionBusiness
+        }
 
-        // }
+        var freeTextItineraryDetail ={
+            subjectQualifier: "3",
+            type: "P19"
+        }
 
-         async SubmitRemarks(){
+        var freeTextItinerary ={
+            freetextDetail: freeTextItineraryDetail,
+            longFreetext: passiveSegmentmodel.freeText
+        }
+
+        var airAuxItinerary ={
+            travelProduct: travelProduct,
+            messageAction: messageAction,
+            relatedProduct: relatedProduct,
+            freetextItinerary: freeTextItinerary
+            
+        }
+    
+    return {elementManagementItinerary, airAuxItinerary}
+        // var summary = {originDestinationDetails};
+        // RemarklistModel.addRemark(summary);
+        // alert(JSON.stringify(RemarklistModel.originDestinationDetails ))
+
+    }
+
+        sendCryptics(){
+            this.crypticCommands.forEach(command => { smartScriptSession.send(command); });            
+        }
+
+
+        deleteRemarks(){
+            var deleteIds="";
+            this.deleteRemarksByIds.forEach(ids => { deleteIds+=ids+"," });  
+            if (deleteIds!="") {           
+     
+                deleteIds = deleteIds.slice(0, -1)
+                smartScriptSession.send("XE"+deleteIds);
+            }
         
+        }
+
+
+        async   sendRemarks(){
+            if (this.remarksElement.length>0){
             var pnrActions = {
                  optionCode: "0"
              }
-
+      
              
             if (this.passiveSegmentElement.length > 0){
                 
@@ -187,12 +214,12 @@ declare var smartScriptSession: any;
             }
 
             if (this.remarksElement.length > 0){
-                var dataElementsMaster = {
-                    marker1: "",
-                    dataElementsIndiv: this.remarksElement
-                }
+            var dataElementsMaster = {
+                marker1: "",
+                dataElementsIndiv: this.remarksElement
             }
-            
+            }
+      
       
             
             var remarkElements ={pnrActions, originDestinationDetails, dataElementsMaster}            
@@ -201,13 +228,20 @@ declare var smartScriptSession: any;
             {
                 this.responseMessage = "Remarks Updated";
                 smartScriptSession.send("RT");
-               
+                alert(JSON.stringify(remarkElements));
             }, error=>
             {
                 this.responseMessage = JSON.stringify(error);              
+                });
                 
-            });
+            }
+        }
           
+        async SubmitRemarks(){
+            this.deleteRemarks();
+            this.sendCryptics();
+            await this.sendRemarks();
+            this.clear();
         }
 
   }

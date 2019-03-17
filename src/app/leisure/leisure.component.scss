@@ -1,0 +1,28 @@
+ /deep/.card-header {
+    padding: 2px ;
+    background-color: #333f48;
+
+}
+
+/deep/ .card-header .btn {
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #ffffff;
+}
+
+ .cwtlogo {
+    float: right !important;
+width: 100px;
+height:25px;
+position: absolute;
+top: 5px;
+right: 16px;
+background-image: url("../../assets/images/myCwt.png");
+background-repeat: no-repeat;
+}
+
+

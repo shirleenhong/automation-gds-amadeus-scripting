@@ -1,8 +1,8 @@
-BSP Routing Code  : <select id="bspRouteCode" [(ngModel)]="routeCode" (change)="routeCodeChange()">
+
+<div class="">
+    BSP Routing Code :</div>  
+    <select id="bspRouteCode" [(ngModel)]="routeCode" (change)="routeCodeChange()" required [disabled]="isDisabled">
                         <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
                           {{item.itemText}}
                         </option>
                       </select>
-                      {{routeCode}}
-
-                      {{reasonForTravel}}

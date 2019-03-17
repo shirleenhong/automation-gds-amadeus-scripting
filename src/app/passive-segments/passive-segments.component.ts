@@ -1,9 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { RemarkCollectionService } from '../service/remark.collection.service';
+
 import { TabsComponent } from '../shared/tabs/tabs.component';
-import { PassiveSegmentModel } from '../models/passive-segment.model';
-import { RemarkGroup, PassiveSegmentGroup } from '../models/remark.group.model';
-import { DatePipe } from '@angular/common';
 
 declare var smartScriptSession: any;
 
@@ -48,13 +45,16 @@ export class PassiveSegmentsComponent{
     @ViewChild('segmentEdit') editSegmentTemplate;
     @ViewChild('about') aboutTemplate;
     @ViewChild(TabsComponent) tabsComponent;
-    segments = [];
 
-    constructor(private remarkCollectionService:RemarkCollectionService){
-      
-    }
-    
-  
+    segments = [
+        {
+        id: 1,
+        suppliername: 'Juri',
+        from: 'Strumpflohner',
+        to: '@juristr'
+        }
+    ];
+
     onEditSegment(segment) {
         this.tabsComponent.openTab(
         `Editing ${segment.suppliername}`,
@@ -81,51 +81,13 @@ export class PassiveSegmentsComponent{
         // create a new one
         dataModel.id = Math.round(Math.random() * 100);
         this.segments.push(dataModel);
-        this.buildRemark(dataModel);
         }
 
         // close the tab
         this.tabsComponent.closeActiveTab();
     }
 
-    onOpenAbout(dataModel) {
+    onOpenAbout() {
         this.tabsComponent.openTab('About', this.aboutTemplate, {}, true);
     }
-
-    buildRemark(dataModel){
-      var pasGroup = new PassiveSegmentGroup();
-      pasGroup.group = dataModel.id
-      var passive = new PassiveSegmentModel();
-      var datePipe = new DatePipe("en-US");
-      
-      passive.endDate = dataModel.endDate;
-      passive.vendor = "1A";
-      passive.passiveSegmentType = "Tour";
-      passive.startDate = datePipe.transform(dataModel.startDate, 'ddMMyy');
-      passive.endDate= datePipe.transform(dataModel.endDate, "ddMMyy")
-      passive.startTime = "";
-      passive.endTime="";
-      passive.startPoint= dataModel.from;
-      passive.endPoint = dataModel.to;
-      passive.quantity = 1;
-      
-      var datePipe = new DatePipe("en-US");
-      var startdatevalue = datePipe.transform(dataModel.startDate, 'ddMMM');
-      var enddatevalue = datePipe.transform(dataModel.endDate, "ddMM")
-      var startTime = (<string>dataModel.startTime).replace(':','');
-      var endTime = (<string>dataModel.endTime).replace(':','');
-      passive.status = "HK";
-
-      var freetext ="TYP-TOR/SUC-ZZ/SC" + dataModel.startPoint + "/SD-" + startdatevalue +
-                     "/ST-" + startTime + "/EC-" + dataModel.endPoint + "/ED-" + 
-                     enddatevalue + "/ET-" + endTime + "/PS-1" ;
-      
-      passive.freeText = freetext;
-      pasGroup.passiveSegment = new Array<PassiveSegmentModel>();
-      pasGroup.passiveSegment.push(passive);
-      
-      this.remarkCollectionService.addUpdatePassiveSegmentGroup(pasGroup);
-      
-      }
-
 }

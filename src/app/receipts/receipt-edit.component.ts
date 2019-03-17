@@ -6,6 +6,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {SelectItem} from '../models/select.item.model'
+import {PnrService} from  '../service/pnr.service'
 
 @Component({
   selector: 'receipt-edit',
@@ -19,7 +20,7 @@ export class ReceiptEditComponent implements OnInit {
   @Input() receipt;
   @Output() saveReceipt = new EventEmitter<any>();
 
-  constructor(private fb: FormBuilder) {
+  constructor(private pnrService: PnrService,private fb: FormBuilder) {
     this.receiptForm = this.fb.group({
       id: '',
       suppliername: '',
@@ -36,6 +37,9 @@ export class ReceiptEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    // if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
+    // var test = this.pnrService.getNameElements();
+    // console.log("test");
     this.receiptForm.setValue({
       id: this.receipt.id || -1,
       suppliername: this.receipt.suppliername || '',
@@ -49,8 +53,9 @@ export class ReceiptEditComponent implements OnInit {
       unitPrice: this.receipt.unitPrice || '',
       currency: this.receipt.currency || ''
     });
-    // this.getSupplierCode();
+    
   }
+
 
   getSupplierCode(){
     //todo Get from API DDB 
@@ -60,8 +65,12 @@ export class ReceiptEditComponent implements OnInit {
             {itemText:"Test",itemValue:"2"}
           ];
     }
+  
+  getName(){
 
-  onReceiptFormSubmit() {
+  }
+  
+  onreceiptFormSubmit() {
     let dataModel = this.receiptForm.value;
     this.saveReceipt.emit(dataModel);
   }

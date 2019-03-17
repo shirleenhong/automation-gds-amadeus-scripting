@@ -8,6 +8,9 @@ points:number=0;
 amount:number=0;
 cwtRef:string="";
 lastFourVi:number=0;
+ccNo:number;
+expDate:Date;
+vendorCode:number;
 constructor(){
     
 }

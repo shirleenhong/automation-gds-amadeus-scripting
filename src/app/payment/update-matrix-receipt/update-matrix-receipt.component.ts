@@ -14,19 +14,20 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 title:string;
 matrixReceipt: MatrixReceiptModel;
 bankAccountList: Array<SelectItem>;
-passengerList:Array<string>;
+passengerList: Array<any>;
+
+
 @ViewChild('bankAccount') bankAccEl: ElementRef;
   constructor( public activeModal: NgbActiveModal,private pnrService:PnrService) { 
-    if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
-    this.passengerList = new Array<string>();
     this.bankAccountList=new Array<SelectItem>();
     this.matrixReceipt= new MatrixReceiptModel();
     this.loadBankAccount();
-    this.loadPassenger();
+    
   }
 
   ngOnInit() {
-
+     if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
+    this.passengerList = this.pnrService.getPassengers();
   }
 
 
@@ -52,11 +53,6 @@ this.bankAccountList = [{itemText:"",itemValue:""},
                       ] ;
 
 
-}
-
-loadPassenger(){
-  this.passengerList= this.pnrService.getPassengers();  
-  this.passengerList = ["Test Pass","Test Pass 2"];
 }
 
 }

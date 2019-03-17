@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { R3NgModuleDef } from '@angular/compiler/src/render3/r3_module_compiler';
 
 declare var PNR: any;
 
@@ -23,9 +24,6 @@ export class PnrService {
                 this.isPNRLoaded=false;
                 this.errorMessage="Error:"+error;               
             });
-    
-   // alert("getpnrrm" + JSON.stringify(this.pnrObj.rmElements));
-   /// alert("getpnranme" + JSON.stringify(this.pnrObj.nameElements));
   }
 
 getCFLine() {
@@ -44,30 +42,28 @@ getFSLineNumber(){
     if (this.isPNRLoaded){
         for (var rm of this.pnrObj.fsElements){
              return rm.elementNumber;
-        }        
+        }
     }  
     return "";
 }
 
-getNameElements() {
-    if (this.isPNRLoaded){
-        for (var rm of this.pnrObj.nameElements){
-            console.log(rm);
-        }
-       // alert("name" + JSON.stringify(this.pnrObj.nameElements));
-    }
-      // alert("namename" + JSON.stringify(this.pnrObj.nameElements));
-    console.log(JSON.stringify(this.pnrObj.nameElements));
-      //alert("namerm" + JSON.stringify(this.pnrObj.rmElements));
-    return "";
-    
-}
 
 getPassengers(){
     if (this.isPNRLoaded){
-        var passengers = new Array<string>();
+        var passengers = [];
+
         for (var rm of this.pnrObj.nameElements){
-            passengers.push(rm);
+            var  fname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.givenName
+            var lname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.surname
+            var fname: any = fname + '-' + lname;
+            var passenger =
+            {
+                firstname : fname,
+                surname : lname,
+                id : rm.elementNumber,
+                fullname: fname
+            }
+            passengers.push(passenger);
         }
     return passengers;
     }

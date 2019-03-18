@@ -5,8 +5,8 @@ import { TabsComponent } from '../shared/tabs/tabs.component';
 declare var smartScriptSession: any;
 
 @Component({
-    selector: 'passive',
-    template: `
+  selector: 'app-passive',
+  template: `
     <my-tabs>
       <my-tab [tabTitle]="'Segments'">
         <h3>List of Segments</h3>
@@ -41,53 +41,53 @@ declare var smartScriptSession: any;
   `
 })
 
-export class PassiveSegmentsComponent{
-    @ViewChild('segmentEdit') editSegmentTemplate;
-    @ViewChild('about') aboutTemplate;
-    @ViewChild(TabsComponent) tabsComponent;
+export class PassiveSegmentsComponent {
+  @ViewChild('segmentEdit') editSegmentTemplate;
+  @ViewChild('about') aboutTemplate;
+  @ViewChild(TabsComponent) tabsComponent;
 
-    segments = [
-        {
-        id: 1,
-        suppliername: 'Juri',
-        from: 'Strumpflohner',
-        to: '@juristr'
-        }
-    ];
-
-    onEditSegment(segment) {
-        this.tabsComponent.openTab(
-        `Editing ${segment.suppliername}`,
-        this.editSegmentTemplate,
-        segment,
-        true
-        );
+  segments = [
+    {
+      id: 1,
+      suppliername: 'Juri',
+      from: 'Strumpflohner',
+      to: '@juristr'
     }
+  ];
 
-    onAddSegment() {
-        this.tabsComponent.openTab('New Segment', this.editSegmentTemplate, {}, true);
-    }
+  onEditSegment(segment) {
+    this.tabsComponent.openTab(
+      `Editing ${segment.suppliername}`,
+      this.editSegmentTemplate,
+      segment,
+      true
+    );
+  }
 
-    onSegmentFormSubmit(dataModel) {
-        if (dataModel.id > 0) {
-        this.segments = this.segments.map(segment => {
-            if (segment.id === dataModel.id) {
-            return dataModel;
-            } else {
-            return segment;
-            }
-        });
+  onAddSegment() {
+    this.tabsComponent.openTab('New Segment', this.editSegmentTemplate, {}, true);
+  }
+
+  onSegmentFormSubmit(dataModel) {
+    if (dataModel.id > 0) {
+      this.segments = this.segments.map(segment => {
+        if (segment.id === dataModel.id) {
+          return dataModel;
         } else {
-        // create a new one
-        dataModel.id = Math.round(Math.random() * 100);
-        this.segments.push(dataModel);
+          return segment;
         }
-
-        // close the tab
-        this.tabsComponent.closeActiveTab();
+      });
+    } else {
+      // create a new one
+      dataModel.id = Math.round(Math.random() * 100);
+      this.segments.push(dataModel);
     }
 
-    onOpenAbout() {
-        this.tabsComponent.openTab('About', this.aboutTemplate, {}, true);
-    }
+    // close the tab
+    this.tabsComponent.closeActiveTab();
+  }
+
+  onOpenAbout() {
+    this.tabsComponent.openTab('About', this.aboutTemplate, {}, true);
+  }
 }

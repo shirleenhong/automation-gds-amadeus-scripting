@@ -1,8 +1,82 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <label for="bspRouteCode">BSP Routing Code</label>
+      <select id="bspRouteCode" class="form-control" [(ngModel)]="routeCode" (change)="routeCodeChange()" required
+        [disabled]="isDisabled">
+        <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
+          {{item.itemText}}
+        </option>
+      </select>
+    </div>
 
-<div class="">
-    BSP Routing Code :</div>  
-    <select id="bspRouteCode" [(ngModel)]="routeCode" (change)="routeCodeChange()" required [disabled]="isDisabled">
-                        <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
-                          {{item.itemText}}
-                        </option>
-                      </select>
+    <div class="col">
+      <label for="destination">Destination</label>
+      <select id="destination" class="form-control" [(ngModel)]="routeCode" (change)="routeCodeChange()" required
+        [disabled]="isDisabled">
+        <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
+          {{item.itemText}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="passengerName">Passenger Name</label>
+      <input type="text" class="form-control" id="passengerName" placeholder="e.g. Jane Doe">
+    </div>
+
+    <div class="col">
+      <label for="bankAccounts">Bank account list</label>
+      <select id="bankAccounts" class="form-control" [(ngModel)]="routeCode" (change)="routeCodeChange()" required
+        [disabled]="isDisabled">
+        <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
+          {{item.itemText}}
+        </option>
+      </select>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="cardNumber">Card number</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-credit-card"></i></span>
+          </div>
+          <input type="text" class="form-control" name="cardNumber" placeholder="xxxx xxxx xxxx xxxx">
+        </div> <!-- input-group.// -->
+      </div> <!-- form-group.// -->
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label><span class="hidden-xs">Expiration</span> </label>
+        <div class="form-inline">
+          <select class="form-control" style="width:45%">
+            <option>MM</option>
+            <option>January</option>
+            <option>February</option>
+            <option>March</option>
+          </select>
+          <span style="width:10%; text-align: center"> / </span>
+          <select class="form-control" style="width:45%">
+            <option>YY</option>
+            <option>2018</option>
+            <option>2019</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="redeemPoints">Redeem Points</label>
+      <input placeholder="Maximum 7 digits" type="text" class="form-control" id="redeemPoints">
+    </div>
+
+    <div class="col">
+    </div>
+
+  </div>
+</div>

@@ -3,9 +3,9 @@
 
 export class RemarkModel {
 
-   remarkType : string;
-    remarkText: string; 
+    remarkType: string;
+    remarkText: string;
     category: string;
-    relatedSegments:string[];
+    relatedSegments: string[];
     relatedPassengers: string[];
 }

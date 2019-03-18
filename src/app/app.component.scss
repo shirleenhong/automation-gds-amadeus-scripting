@@ -1,0 +1,22 @@
+::ng-deep .customClass {
+    &.card {
+        background-color: #333f48;
+        color: #fff;
+        border-radius: 0;
+
+        >.card-header:first-child {
+            border-radius: 0;
+        }
+    }
+
+    &.panel {
+        background-color: #333f48;
+        color: #fff;
+
+        .panel-body {
+            background-color: white;
+        }
+    }
+
+
+}

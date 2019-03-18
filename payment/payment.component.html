@@ -1,5 +1,4 @@
-
-<ngb-tabset>
+<!-- <ngb-tabset>
 
 <ngb-tab>
   <ng-template ngbTabTitle>Matrix Receipt</ng-template>
@@ -12,4 +11,16 @@
   <ng-template ngbTabContent>  
   </ng-template>
 </ngb-tab>
-</ngb-tabset>
+</ngb-tabset> -->
+
+<tabset>
+
+  <tab>
+    <ng-template tabHeading>
+      <span class="badge badge-secondary">Matrix Receipt</span>
+    </ng-template>
+    <ng-template tabContent>
+      <app-matrix-receipt></app-matrix-receipt>
+    </ng-template>
+  </tab>
+</tabset>

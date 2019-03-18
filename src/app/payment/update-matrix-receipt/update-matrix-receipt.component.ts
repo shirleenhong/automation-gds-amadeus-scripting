@@ -1,6 +1,6 @@
 
-import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { MatrixReceiptModel } from 'src/app/models/matrix-receipt.model';
 import { SelectItem } from 'src/app/models/select.item.model';
 import { PnrService } from 'src/app/service/pnr.service';
@@ -11,48 +11,48 @@ import { PnrService } from 'src/app/service/pnr.service';
   styleUrls: ['./update-matrix-receipt.component.scss']
 })
 export class UpdateMatrixReceiptComponent implements OnInit {
-title:string;
-matrixReceipt: MatrixReceiptModel;
-bankAccountList: Array<SelectItem>;
-passengerList: Array<any>;
+  title: string;
+  matrixReceipt: MatrixReceiptModel;
+  bankAccountList: Array<SelectItem>;
+  passengerList: Array<any>;
 
 
-@ViewChild('bankAccount') bankAccEl: ElementRef;
-  constructor( public activeModal: NgbActiveModal,private pnrService:PnrService) { 
-    this.bankAccountList=new Array<SelectItem>();
-    this.matrixReceipt= new MatrixReceiptModel();
+  @ViewChild('bankAccount') bankAccEl: ElementRef;
+  constructor(public activeModal: BsModalService, private pnrService: PnrService) {
+    this.bankAccountList = new Array<SelectItem>();
+    this.matrixReceipt = new MatrixReceiptModel();
     this.loadBankAccount();
-    
+
   }
 
   ngOnInit() {
-     if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
+    if (!this.pnrService.isPNRLoaded) this.pnrService.getPNR();
     this.passengerList = this.pnrService.getPassengers();
   }
 
 
-saveReceipt(){
-  
-  this.activeModal.close(this.matrixReceipt);
-}
+  saveReceipt() {
 
-loadBankAccount(){
+    // this.activeModal.close(this.matrixReceipt);
+  }
 
-this.bankAccountList = [{itemText:"",itemValue:""},
-                            {itemText:"CAD Funds (outside of QC) | 101000  ",itemValue:"101000"},
-                            {itemText:"USD Funds (outside of QC) | 102000",itemValue:"102000"},
-                            {itemText:"USD Trust (QB only) | 108000",itemValue:"108000"},
-                            {itemText:"Canadian Trust (QB only) | 106000",itemValue:"106000"},
-                            {itemText:"Debit Card (POS receipts) | 109000",itemValue:"109000"},
-                            {itemText:"RBC Point Redemptions | 224000",itemValue:"224000"},
-                            {itemText:"CWT Gift Card Redemptions | 227000",itemValue:"227000"},
-                            {itemText:"Customer Credit Card - CWT (Visa) | 115000",itemValue:"115000"},
-                            {itemText:"Customer Credit Card - CWT (Mastercard) | 116000",itemValue:"116000"},
-                            {itemText:"Customer Credit Card - CWT (Amex) | 117000",itemValue:"117000"},
-                            {itemText:"Customer Credit Card - CWT (Diners) | 118000 ",itemValue:"118000"},
-                      ] ;
+  loadBankAccount() {
+
+    this.bankAccountList = [{ itemText: "", itemValue: "" },
+    { itemText: "CAD Funds (outside of QC) | 101000  ", itemValue: "101000" },
+    { itemText: "USD Funds (outside of QC) | 102000", itemValue: "102000" },
+    { itemText: "USD Trust (QB only) | 108000", itemValue: "108000" },
+    { itemText: "Canadian Trust (QB only) | 106000", itemValue: "106000" },
+    { itemText: "Debit Card (POS receipts) | 109000", itemValue: "109000" },
+    { itemText: "RBC Point Redemptions | 224000", itemValue: "224000" },
+    { itemText: "CWT Gift Card Redemptions | 227000", itemValue: "227000" },
+    { itemText: "Customer Credit Card - CWT (Visa) | 115000", itemValue: "115000" },
+    { itemText: "Customer Credit Card - CWT (Mastercard) | 116000", itemValue: "116000" },
+    { itemText: "Customer Credit Card - CWT (Amex) | 117000", itemValue: "117000" },
+    { itemText: "Customer Credit Card - CWT (Diners) | 118000 ", itemValue: "118000" },
+    ];
 
 
-}
+  }
 
 }

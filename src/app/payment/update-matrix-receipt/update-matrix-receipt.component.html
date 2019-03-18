@@ -150,12 +150,24 @@
           required
           [ngClass]="{ 'is-invalid': f.vendorCode.touched && f.vendorCode.invalid }"
           [(ngModel)]="matrixReceipt.vendorCode" formControlName="vendorCode"  name="vendorCode" 
-          />
+          disabled/>
         </div>
         </div>
       </div>
+      <div *ngIf="matrixReceipt.paymentType == PaymentType.Undefined">      
+      <div class="form-group  row">
+          <div class="col-sm-4" >Type of Payment: </div>
+          <div class="col-sm-8">
+              <select autofocus  id="modePayment" class="form-control" [(ngModel)]="matrixReceipt.modePayment" name="modePayment" required >
+                  <option *ngFor="let item of  PaymentModeList" [value]="item.itemValue">
+                                  {{item.itemText}}
+                                </option>
+                </select>
+        </div>
+      </div>
+        </div>
           
-      <div>{{ !matrixForm.invalid }}</div>
+      <!-- <div>{{ !matrixForm.invalid }}</div> -->
             
         </form>
 

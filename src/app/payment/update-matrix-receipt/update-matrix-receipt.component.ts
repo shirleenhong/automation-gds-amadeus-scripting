@@ -18,18 +18,20 @@ bankAccountList: Array<SelectItem>;
 passengerList: Array<any>;
 matrixForm:FormGroup;
 isSubmitted:boolean;
+PaymentModeList: Array<SelectItem>;
 
 @ViewChild('bankAccount') bankAccEl: ElementRef;
   constructor( public activeModal: NgbActiveModal,private pnrService:PnrService,private formBuilder: FormBuilder) { 
     this.bankAccountList=new Array<SelectItem>();
     this.matrixReceipt= new MatrixReceiptModel();
     this.loadBankAccount();
+    this.loadPaymentMode();
     this.matrixForm = new FormGroup({
       'bankAccount': new FormControl('',[Validators.required]),
       'passengerName': new FormControl('', [Validators.required]), 
       'description': new FormControl('', [Validators.required]), 
       'cwtRef': new FormControl('', [Validators.required,Validators.minLength(6), Validators.maxLength(6)]), 
-      'points': new FormControl('', [Validators.required,Validators.minLength(7)],), 
+      'points': new FormControl('', [Validators.required,Validators.maxLength(7)],), 
       'lastFourVi': new FormControl('',[Validators.required,Validators.minLength(4), Validators.maxLength(4)]), 
       'gcNumber': new FormControl('', [Validators.maxLength(19)]), 
       'amount': new FormControl('', [Validators.required,Validators.min(0),Validators.pattern('[0-9]*')]), 
@@ -74,6 +76,8 @@ get PaymentType() {return PaymentType; }
         this.enableFormControls(['gcNumber'],false);
         break;
     }
+
+    this.SelectVendorCode(newValue);
 
   }
 
@@ -138,6 +142,46 @@ getAllErrors(form: FormGroup | FormArray): { [key: string]: any; } | null {
       return acc;
   }, {} as { [key: string]: any; });
   return hasError ? result : null;
+}
+
+
+loadPaymentMode(){
+
+  this.PaymentModeList = [{itemText:"",itemValue:""},
+                              {itemText:"Cash",itemValue:"CA"},
+                              {itemText:"Cheque",itemValue:"CK"}
+                        ] ;
+  
+  
+  }
+
+SelectVendorCode(newValue)
+{
+  var  modeOfPayment: string;
+  switch(newValue) { 
+    case "115000": { 
+      modeOfPayment = 'VI'; 
+       break; 
+    } 
+    case "116000": { 
+      modeOfPayment = 'MC'; 
+       break; 
+    } 
+    case "117000": { 
+      modeOfPayment = 'AX'; 
+      break; 
+   } 
+   case "118000": { 
+    modeOfPayment = 'DI'; 
+    break; 
+ } 
+    default: { 
+      modeOfPayment = ''; 
+       break; 
+    } 
+ } 
+
+  this.matrixReceipt.vendorCode = modeOfPayment;
 }
 
 

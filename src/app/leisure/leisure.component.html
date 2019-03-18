@@ -6,18 +6,19 @@
     </div>
     <app-passive></app-passive>
   </accordion-group>
-  <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+  <accordion-group [panelClass]="'customClass'">
     <div accordion-heading>
       <i class='fa fa-users'></i> Reporting
       <span class="cwt-logo"></span>
     </div>
     <app-reporting></app-reporting>
   </accordion-group>
-  <accordion-group [panelClass]="'customClass'">
+  <accordion-group [panelClass]="'customClass'" [isOpen]="true">
     <div accordion-heading>
       <i class='fa fa-users'></i> Remarks
       <span class="cwt-logo"></span>
     </div>
+    <app-remarks></app-remarks>
   </accordion-group>
 </accordion>
 <br />

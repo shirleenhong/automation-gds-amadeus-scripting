@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SelectItem } from '../models/select.item.model'
 import { PnrService } from '../service/pnr.service'
 import { RemarkCollectionService } from '../service/remark.collection.service';
@@ -10,7 +10,10 @@ import { RemarkModel } from '../models/remark.model';
   styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit {
+
+  @Input()
   bspRouteCodeList: SelectItem[];
+
   routeCode: string;
   tripType: number;
   reasonForTravel: string;

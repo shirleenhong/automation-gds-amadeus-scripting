@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-remark',
+  selector: 'app-remarks',
   templateUrl: './remark.component.html',
   styleUrls: ['./remark.component.scss']
 })

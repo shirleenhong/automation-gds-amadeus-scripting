@@ -53,7 +53,7 @@ declare var smartScriptSession: any;
 
 
                         
-                                if (group.group!=""&& group.passiveSegments.length>0)
+                                if (group.passiveSegments != null && group.passiveSegments.length>0)
                                 {
                                     group.passiveSegments.forEach(pas=>{
                                     this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
@@ -64,7 +64,13 @@ declare var smartScriptSession: any;
                             if (group.remarks!=null && group.remarks.length>0)
                             {
                             group.remarks.forEach(rem=>{
+                                        if(rem.remarkType == "FS"){
+                                            this.remarksElement.push(this.getFSRemarksElement(rem));
+                                        }else
+                                        {
                                             this.remarksElement.push(this.getRemarkElement(rem));
+                                        }    
+                                        
                                             });
                             }
                         }   
@@ -74,6 +80,29 @@ declare var smartScriptSession: any;
 
             
        
+        }
+
+        getFSRemarksElement(remarkModel:RemarkModel)
+        {
+            var reference =
+                    {
+                        qualifier: "OT",
+                        number: "1"
+                    };
+                var elementManagementData = {
+                    reference: reference,
+                    segmentName: "FS"
+                };
+
+            var fareElement =
+            {
+                generalIndicator: "S",
+				passengerType: "",
+				freetextLong: remarkModel.remarkText
+            }
+
+            return {elementManagementData, fareElement};
+
         }
 
         getRemarkElement(remarkModel:RemarkModel){
@@ -194,7 +223,6 @@ declare var smartScriptSession: any;
 
 
         async   sendRemarks(){
-            if (this.remarksElement.length>0){
             var pnrActions = {
                  optionCode: "0"
              }
@@ -228,14 +256,14 @@ declare var smartScriptSession: any;
             {
                 this.responseMessage = "Remarks Updated";
                 smartScriptSession.send("RT");
-                alert(JSON.stringify(remarkElements));
+                // alert(JSON.stringify(remarkElements));
             }, error=>
             {
                 this.responseMessage = JSON.stringify(error);              
                 });
                 
             }
-        }
+        
           
         async SubmitRemarks(){
             this.deleteRemarks();

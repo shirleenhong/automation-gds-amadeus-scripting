@@ -55,19 +55,31 @@ getPassengers(){
         for (var rm of this.pnrObj.nameElements){
             var  fname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.givenName
             var lname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.surname
-            var fname: any = fname + '-' + lname;
+            var fullname: any = fname + '-' + lname;
             var passenger =
             {
                 firstname : fname,
                 surname : lname,
                 id : rm.elementNumber,
-                fullname: fname
+                fullname: fullname
             }
             passengers.push(passenger);
         }
     return passengers;
     }
     return new Array<string>();
+}
+
+
+getDestinationLine() {
+    if (this.isPNRLoaded){
+        for (var rm of this.pnrObj.rmElements){
+            if (rm.freeFlowText.indexOf("DE/-")==0){
+                    return rm.elementNumber;
+            }
+        }  
+    }
+    return "";
 }
 
 

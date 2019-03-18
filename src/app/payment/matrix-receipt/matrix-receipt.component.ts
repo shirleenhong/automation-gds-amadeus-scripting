@@ -4,6 +4,8 @@ import { NgbActiveModal, NgbModal,NgbModalRef } from '@ng-bootstrap/ng-bootstrap
 import { UpdateMatrixReceiptComponent } from '../update-matrix-receipt/update-matrix-receipt.component';
 import { RemarkModel } from 'src/app/models/remark.model';
 import { DatePipe } from '@angular/common';
+import { RemarkGroup } from '../../models/remark.group.model';
+import { RemarkCollectionService } from '../../service/remark.collection.service';
 
 @Component({
   selector: 'app-matrix-receipt',
@@ -21,7 +23,8 @@ export class MatrixReceiptComponent implements OnInit, OnChanges {
   private modalRef: NgbModalRef;
   remarkList : Array<RemarkModel>;
 
-  constructor(private modalService: NgbModal) {
+  
+  constructor(private modalService: NgbModal, private remarkCollectionService:RemarkCollectionService) {
     this.matrixReceiptList=new Array<MatrixReceiptModel>();
     this.remarkList= new Array<RemarkModel>();
    }
@@ -30,6 +33,7 @@ export class MatrixReceiptComponent implements OnInit, OnChanges {
   }
 
 buildRemarks(){
+
 this.remarkList.length=0;
 
 this.matrixReceiptList.forEach(matrix => {
@@ -67,16 +71,17 @@ var datePipe = new DatePipe("en-US");
 var fop = ""
 if (Object.values(CardType).includes(matrix.bankAccount))
 {
+  // var month = datePipe.transform(matrix.expDate, 'MM');
+  // var year = datePipe.transform(matrix.expDate, 'dd/MMM/yyyy').substring(8,2);
+  //  alert("month " + month + "yr " + year)
   fop = "CC" + matrix.ccNo + '/-EXP' + datePipe.transform(matrix.expDate, 'mmYY');
 }else{
-    fop = 'CA'
+    fop = matrix.modePayment;
 }
-
-alert(fop);
 
   let rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName+'/-AMT-'+matrix.amount;
   let rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-'+ fop + '/-LK-T/-BA-'+ matrix.bankAccount + '/-GL-'+matrix.glCode;
-  let rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-'+ matrix.description + '/-GC';
+  let rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-'+ matrix.description + '/-GC' + matrix.gcNumber;
   this.remarkList.push(this.getRemarksModel(rem1));
   this.remarkList.push(this.getRemarksModel(rem2));
   this.remarkList.push(this.getRemarksModel(rem3));
@@ -91,6 +96,13 @@ getRemarksModel(remText){
 }
 
 
+UpdateRemarkGroup(){
+  var remGroup = new RemarkGroup();
+  remGroup.group = "Matrix Remark";
+  remGroup.remarks = this.remarkList;
+  this.remarkCollectionService.addUpdateRemarkGroup(remGroup);
+  } 
+
 
   addMatrixReceipt(){
 
@@ -103,6 +115,8 @@ getRemarksModel(remText){
      
       if (typeof  (x) !="string"){
         this.matrixReceiptList.push(x);
+        this.buildRemarks();
+        this.UpdateRemarkGroup();
       }
 
 

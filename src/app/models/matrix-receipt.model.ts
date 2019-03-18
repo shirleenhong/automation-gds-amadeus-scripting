@@ -10,9 +10,21 @@ cwtRef:string="";
 lastFourVi:number=0;
 ccNo:number;
 expDate:Date;
-vendorCode:number;
+vendorCode:string;
+gcNumber:number;
+modePayment:string;
+paymentType:PaymentType;
+
 constructor(){
     
 }
 
 }
+
+export enum PaymentType{
+    Undefined=-1,
+    Rbc=0,
+    CreditCard=1,
+    Cash=2,
+    Check=3
+    } 

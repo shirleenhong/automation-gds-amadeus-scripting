@@ -15,6 +15,9 @@ export class ReportingComponent implements OnInit{
   tripType:number;
   reasonForTravel:string;
   isDisabled:boolean;
+  destination : string;
+  destinationList: SelectItem[];
+  remarkList : Array<RemarkModel>;
   
   constructor(private pnrService: PnrService,private remarkCollectionService:RemarkCollectionService) { }
 
@@ -22,6 +25,7 @@ export class ReportingComponent implements OnInit{
     if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
     this.getRouteCodes(); 
     this.getPnrCFLine();
+    this.getDestinationCodes();
   }
 
 
@@ -44,7 +48,6 @@ export class ReportingComponent implements OnInit{
   }
 
 getPnrCFLine(){
-
   var cfLine= this.pnrService.getCFLine();
   
   if (cfLine !=''){
@@ -54,8 +57,8 @@ getPnrCFLine(){
           this.tripType=2;
         }
   var cfa = cfLine.substring(4,3);
-      if (cfa=="" || cfa=="")  this.tripType=2;
-    this.isDisabled =false
+      if (cfa=="RBM" || cfa=="RBP")  this.tripType=2;
+      this.isDisabled =false
   }else{
     this.isDisabled=true;
   }
@@ -69,21 +72,60 @@ routeCodeChange(){
 }
 
 buildRemark(){
-var remText= "FS"+this.routeCode +''+ this.tripType;
-var rmGroup = new RemarkGroup();
-rmGroup.group ="BSP Routing"
-rmGroup.cryptics= new Array<string>();
-
-var existNumber = this.pnrService.getFSLineNumber();
-if (existNumber !="") {
-  rmGroup.deleteRemarkByIds=new Array<string>();
-  rmGroup.deleteRemarkByIds.push(existNumber);
-}
-rmGroup.cryptics.push(remText);
-this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
- 
+  var rmGroup = new RemarkGroup();
+  rmGroup.group ="BSP Routing"      
+  rmGroup.remarks = new Array<RemarkModel>();
+  var remText= this.routeCode +''+ this.tripType;
+  // alert(remText);
+  rmGroup.remarks.push(this.getRemark(remText,'FS',''));
+  this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
 
 }
+
+getDestinationCodes(){
+
+  // this.remarkCollectionService.passiveSegmentCollection.forEach(x => 
+  //  {
+  //       this.destinationList.push(x.endPoint);
+  //  });
+
+  this.destinationList =[
+        {itemText:"YYC",itemValue:"YYC"},
+        {itemText:"YEG",itemValue:"YEG"},
+        {itemText:"YVR",itemValue:"YVR"}
+      ];
+}
+
+destinationChanged()
+{
+  var rmGroup = new RemarkGroup();
+  rmGroup.group ="Destination"      
+  rmGroup.remarks = new Array<RemarkModel>();
+  var remText= "DE/-"+ this.destination;
+
+  rmGroup.remarks.push(this.getRemark(remText ,'RM',''));
+
+  // var elementNumber = this.pnrService.getDestinationLine();
+  
+  //  if( elementNumber!= "")
+  //  {
+  //   rmGroup.remarks.push(this.getRemark(remText,'RM', ''));
+  //  }
+
+  //  rmGroup.remarks.push(this.getRemark(remText,'RM', ''));
+
+    this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
+  }
+
+  getRemark(remarkText,remarkType,remarkCategory){
+    var rem = new RemarkModel();
+    rem.remarkType = remarkType;
+    rem.remarkText=remarkText;
+    rem.category=remarkCategory;
+    return rem;
+  }  
+
+
 
 
 

@@ -14,7 +14,14 @@
     </div>
     <app-reporting></app-reporting>
   </accordion-group>
-  <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+  <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class='fa fa-users'></i> Payment
+        <span class="cwt-logo"></span>
+      </div>
+      <app-payment></app-payment>
+    </accordion-group>
+  <accordion-group [panelClass]="'customClass'" >
     <div accordion-heading>
       <i class='fa fa-users'></i> Remarks
       <span class="cwt-logo"></span>

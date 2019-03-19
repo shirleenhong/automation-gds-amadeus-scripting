@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '
 import { PassiveSegmentModel } from 'src/app/models/passive-segment.model';
 import { SelectItem } from 'src/app/models/select.item.model';
 import { PnrService } from 'src/app/service/pnr.service';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-update-tour-segment',
@@ -13,11 +13,11 @@ import { BsModalService } from 'ngx-bootstrap';
 export class UpdateTourSegmentComponent implements OnInit {
   title: string;
   passiveSegment: PassiveSegmentModel;
-
+  isSubmitted:boolean;
 
 
   @ViewChild('bankAccount') bankAccEl: ElementRef;
-  constructor(public activeModal: BsModalService, private pnrService: PnrService) {
+  constructor(public activeModal: BsModalService, private pnrService: PnrService,private modalRef:BsModalRef) {
     this.passiveSegment = new PassiveSegmentModel();
 
   }
@@ -27,8 +27,8 @@ export class UpdateTourSegmentComponent implements OnInit {
 
 
   saveSegment() {
-
-    this.activeModal.show(this.passiveSegment);
+     this.isSubmitted=true;
+    this.modalRef.hide();
   }
 
 

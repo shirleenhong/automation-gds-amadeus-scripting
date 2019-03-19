@@ -15,7 +15,7 @@ import { RemarkCollectionService } from '../../service/remark.collection.service
 export class MatrixReceiptComponent implements OnInit {
 
   matrixReceiptList:Array<MatrixReceiptModel>;
-  private modalRef: BsModalRef;
+  modalRef: BsModalRef;
   remarkList : Array<RemarkModel>;
 
   
@@ -97,20 +97,17 @@ UpdateRemarkGroup(){
 
 
   addMatrixReceipt() {
-
-    var matrixReceipt = new MatrixReceiptModel();
-    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent);
-    // this.modalRef.componentInstance['title'] = "Add Matrix Receipt";
-    // matrixReceipt.rln = (this.matrixReceiptList.length + 1);
-    // this.modalRef.componentInstance['matrixReceipt'] = matrixReceipt;
-    // this.modalRef.result.then(x => {
-
-    //   if (typeof (x) != "string") {
-    //     this.matrixReceiptList.push(x);
-    //   }
-
-
-    // });
+      var matrixReceipt = new MatrixReceiptModel();
+      this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent);
+      this.modalRef.content.title  ="Add Matrix Receipt";
+      matrixReceipt.rln = (this.matrixReceiptList.length + 1);
+      this.modalRef.content.matrixReceipt = matrixReceipt;
+      this.modalService.onHide.subscribe(result => {
+      if ( this.modalRef.content.isSubmitted) {        
+              this.matrixReceiptList.push(this.modalRef.content.matrixReceipt);
+            }
+        console.log('results', result);
+    });
 
   }
 

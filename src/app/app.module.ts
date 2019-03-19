@@ -8,7 +8,7 @@ import { ReportingComponent } from './reporting/reporting.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PaymentComponent } from './payment/payment.component';
 import { RemarkComponent } from './remark/remark.component';
-import { TourpackageComponent } from './remark/tourpackage/tourpackage.component';
+import { TourPackageComponent } from './remark/tour-package/tour-package.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 
@@ -28,7 +28,7 @@ import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ng
     ReportingComponent,
     PassiveSegmentsComponent,
     RemarkComponent,
-    TourpackageComponent,
+    TourPackageComponent,
     PaymentComponent,
     MatrixReceiptComponent,
     UpdateMatrixReceiptComponent,
@@ -48,8 +48,8 @@ import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ng
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot()
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
   exports: [],

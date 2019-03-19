@@ -71,22 +71,18 @@ export class TourSegmentComponent implements OnInit, OnChanges {
 
 
   addPassiveSegment() {
-
-    var passiveSegment = new PassiveSegmentModel();
+    
     this.modalRef = this.modalService.show(UpdateTourSegmentComponent);
+    this.modalRef.content.title= "Add Tour Segment";
+    this.modalRef.content.passiveSegment= new PassiveSegmentModel();
+    this.modalService.onHide.subscribe(result => {
+         
+      if (this.modalRef.content.isSubmitted){
+          this.tourSegmentList.push(this.modalRef.content.passiveSegment);
+          this.buildRemark(this.modalRef.content.passiveSegment);
 
-    // TODO: convert to ngx
-    // this.modalRef.componentInstance['title'] = "Add Tour Segment";
-    // // tourSegment.rln = (this.tourSegmentList.length +1);
-    // this.modalRef.componentInstance['passiveSegment'] = passiveSegment;
-    // this.modalRef.result.then(x => {
-
-    //   if (typeof (x) != "string") {
-    //     this.tourSegmentList.push(x);
-    //     this.buildRemark(x);
-    //     // this.buildRemark();
-    //   }
-    // });
+          }
+    });
 
   }
 

@@ -2,14 +2,11 @@
 
 <div class="modal-header">
     <div class="modal-title">{{title}}</div>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('Cross click')">
+    <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-
-     
-
 
       <form [formGroup]="matrixForm">
 
@@ -158,7 +155,9 @@
       <div class="form-group  row">
           <div class="col-sm-4" >Type of Payment: </div>
           <div class="col-sm-8">
-              <select autofocus  id="modePayment" class="form-control" [(ngModel)]="matrixReceipt.modePayment" name="modePayment" required >
+              <select autofocus  id="modePayment" class="form-control" [(ngModel)]="matrixReceipt.modePayment" 
+              formControlName="modePayment" name="modePayment"
+              [ngClass]="{ 'is-invalid': f.vendorCode.touched && f.vendorCode.invalid }"  required >
                   <option *ngFor="let item of  PaymentModeList" [value]="item.itemValue">
                                   {{item.itemText}}
                                 </option>
@@ -167,13 +166,12 @@
       </div>
         </div>
           
-      <!-- <div>{{ !matrixForm.invalid }}</div> -->
             
         </form>
 
   </div>
   <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="saveReceipt()"  [disabled]="matrixForm.invalid">Save</button>
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
   </div>
 

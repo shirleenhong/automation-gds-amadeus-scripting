@@ -5,7 +5,7 @@ import { MatrixReceiptModel, PaymentType } from 'src/app/models/matrix-receipt.m
 import { SelectItem } from 'src/app/models/select.item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-update-matrix-receipt',
@@ -22,7 +22,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   PaymentModeList: Array<SelectItem>;
 
   @ViewChild('bankAccount') bankAccEl: ElementRef;
-  constructor(public activeModal: BsModalService, private pnrService: PnrService, private formBuilder: FormBuilder) {
+  constructor(public activeModal: BsModalService, private pnrService: PnrService,public modalRef: BsModalRef) {
     this.bankAccountList = new Array<SelectItem>();
     this.matrixReceipt = new MatrixReceiptModel();
     this.loadBankAccount();
@@ -38,7 +38,8 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       'amount': new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]),
       'vendorCode': new FormControl('', [Validators.required, Validators.maxLength(10)]),
       'ccNo': new FormControl('', [Validators.required, Validators.minLength(16), Validators.required, Validators.maxLength(16)]),
-      'expDate': new FormControl('', [Validators.required])
+      'expDate': new FormControl('', [Validators.required]),
+      'modePayment': new FormControl('', [Validators.required])
 
     }, { updateOn: 'blur' });
 
@@ -52,6 +53,11 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 
   }
 
+  hideModel(){
+
+
+  }
+
   get PaymentType() { return PaymentType; }
 
   bankAccountChange(newValue) {
@@ -59,7 +65,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     switch (newValue) {
       case '224000':
         this.matrixReceipt.paymentType = PaymentType.Rbc
-        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode'], true);
+        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode',"modePayment"], true);
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], false);
         break;
       case '115000':
@@ -67,14 +73,14 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       case '117000':
       case '118000':
         this.matrixReceipt.paymentType = PaymentType.CreditCard
-        this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], true);
+        this.enableFormControls(['cwtRef', 'points', 'lastFourVi',"modePayment"], true);
         this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode'], false);
         break;
       default:
         this.matrixReceipt.paymentType = PaymentType.Undefined
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], true);
         this.enableFormControls(['ccNo', 'expDate', 'vendorCode'], true)
-        this.enableFormControls(['gcNumber'], false);
+        this.enableFormControls(['gcNumber',"modePayment"], false);
         break;
     }
 
@@ -97,14 +103,14 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   get f() { return this.matrixForm.controls; }
 
   saveReceipt() {
-    this.isSubmitted = true;
-
-
+    
     if (this.matrixForm.invalid) {
       alert("Please Complete And Complete all the required Information");
+      this.isSubmitted = false;
       return;
     }
-
+    this.isSubmitted = true;
+    this.modalRef.hide()
   }
 
   loadBankAccount() {

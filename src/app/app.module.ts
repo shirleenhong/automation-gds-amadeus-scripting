@@ -19,14 +19,14 @@ import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segme
 import { PassiveSegmentsComponent } from './passive-segments/passive.segments.component';
 import { AccordionComponent } from './shared/accordion/accordion.component';
 
-import { AccordionModule, ModalModule, TabsModule } from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
     LeisureComponent,
     ReportingComponent,
-    PassiveSegmentsComponent,   
+    PassiveSegmentsComponent,
     RemarkComponent,
     TourpackageComponent,
     PaymentComponent,
@@ -45,13 +45,14 @@ import { AccordionModule, ModalModule, TabsModule } from 'ngx-bootstrap';
     HttpClientModule,
     AccordionModule.forRoot(),
     ModalModule.forRoot(),
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true},
-   
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+
   ],
   bootstrap: [AppComponent],
-  exports:[],
+  exports: [],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent]
 })
 export class AppModule { }

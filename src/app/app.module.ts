@@ -48,8 +48,8 @@ import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ng
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot()
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
   exports: [],

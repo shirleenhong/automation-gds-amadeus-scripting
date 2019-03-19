@@ -17,7 +17,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 export class TourPackageComponent implements OnInit {
   bspCurrencyList: SelectItem[];
   currencyCode: string;
-  adultNum: string;
+  _adultNum: string;
   baseCost: string;
   taxesPerAdult: string;
   insurancePerAdult: string;
@@ -48,11 +48,12 @@ export class TourPackageComponent implements OnInit {
     this.buildForm();
   }
 
+
   buildForm() {
     this._formGroup = this._formBuilder.group({
-      adultNum: [null, [Validators.required, Validators.pattern('(?<=\s|^)\d+(?=\s|$)')]],
+      adultNum: [null, [Validators.required, Validators.min(1), Validators.max(9)]],
       userIdFirstWay: [null, [Validators.required]],
-      baseCost: [null, [Validators.required]],
+      baseCost: [null, [Validators.required, Validators.maxLength(7), Validators.pattern('^\d+$')]],
       taxesPerAdult: [null, [Validators.required]],
       childrenNumber: [null, [Validators.required]],
       childBaseCost: [null, [Validators.required]],
@@ -69,6 +70,7 @@ export class TourPackageComponent implements OnInit {
       commisionAmount: [null, [Validators.required]]
     })
   }
+
 
   getCurrencies() {
     // TODO: Get from API DDB 
@@ -278,7 +280,7 @@ export class TourPackageComponent implements OnInit {
   computeAdultCost() {
     var sum = (parseInt(this.baseCost) + parseInt(this.insurancePerAdult) + parseInt(this.taxesPerAdult))
 
-    var result = parseInt(this.adultNum) * sum;
+    var result = parseInt(this._adultNum) * sum;
     return result;
   }
 
@@ -296,6 +298,7 @@ export class TourPackageComponent implements OnInit {
     return result;
   }
 
+  get adultNum() { return this._formGroup.get('adultNum'); }
 
   buildRemark() {
     var rmGroup = new RemarkGroup();

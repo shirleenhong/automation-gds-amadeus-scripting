@@ -1,6 +1,6 @@
 export class SelectItem {
 
     itemText: string;
-    itemValue: string; 
+    itemValue: string;
 
 }

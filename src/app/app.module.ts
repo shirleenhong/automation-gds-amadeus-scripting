@@ -9,9 +9,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PaymentComponent } from './payment/payment.component';
 import { RemarkComponent } from './remark/remark.component';
 import { TourpackageComponent } from './remark/tourpackage/tourpackage.component';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import {NgbModule, NgbActiveModal,NgbDateAdapter, NgbDateNativeAdapter} from '@ng-bootstrap/ng-bootstrap';
+
 import { MatrixReceiptComponent } from './payment/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './payment/update-matrix-receipt/update-matrix-receipt.component';
 import { TourSegmentComponent } from './passive-segments/tour-segment/tour-segment.component';
@@ -19,12 +19,14 @@ import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segme
 import { PassiveSegmentsComponent } from './passive-segments/passive.segments.component';
 import { AccordionComponent } from './shared/accordion/accordion.component';
 
+import { AccordionModule, ModalModule, TabsModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
     LeisureComponent,
     ReportingComponent,
+    PassiveSegmentsComponent,   
     RemarkComponent,
     TourpackageComponent,
     PaymentComponent,
@@ -39,15 +41,14 @@ import { AccordionComponent } from './shared/accordion/accordion.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule,  
-   HttpClientModule    ,
-   NgbModule 
+    ReactiveFormsModule,
+    HttpClientModule,
+    AccordionModule.forRoot(),
+    ModalModule.forRoot(),
+    TabsModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true},NgbActiveModal,
-    {		
-        provide: NgbDateAdapter,		
-        useClass: NgbDateNativeAdapter		
-    }
+  providers: [{provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true},
+   
   ],
   bootstrap: [AppComponent],
   exports:[],

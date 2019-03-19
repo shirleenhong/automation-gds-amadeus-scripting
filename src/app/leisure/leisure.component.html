@@ -1,82 +1,26 @@
 
-<app-accordion ng-init="myIndex=1;selectedIndex=1" >
-  <div class="card-header accordionTitle">PASSIVE SEGMENT  <div class="cwtlogo"></div></div>
-  <div class="accordionContent"> 
-     <app-passive-segments></app-passive-segments>
-  </div>
-
-</app-accordion>
-<app-accordion ng-init="myIndex=2;"> 
-    <div class="card-header accordionTitle"> REPORTING  <div class="cwtlogo"></div></div>
-    <div class="accordionContent">
-        <app-reporting></app-reporting>
+<accordion [closeOthers]="true">
+  <accordion-group [panelClass]="'customClass'">
+    <div accordion-heading>
+      <i class='fa fa-users'></i> Passive Segment
+      <span class="cwt-logo"></span>
     </div>
- 
-  </app-accordion>
-  <app-accordion ng-init="myIndex=3;"> 
-      <div class="card-header accordionTitle">PAYMENT  <div class="cwtlogo"></div> </div>
-      <div class="accordionContent"> 
-      <app-payment></app-payment>
-
-      </div>    
-  </app-accordion>
-
-  <app-accordion ng-init="myIndex=4;">
-        <div class="card-header  accordionTitle"> REMARKS  <div class="cwtlogo"></div></div>
-        <div class="accordionContent"> 
-         <app-remark></app-remark>
-        </div>
-      
- </app-accordion>
+    <app-passive-segments></app-passive-segments>
+  </accordion-group>
+  <accordion-group [panelClass]="'customClass'">
+    <div accordion-heading>
+      <i class='fa fa-users'></i> Reporting
+      <span class="cwt-logo"></span>
+    </div>
+    <app-reporting></app-reporting>
+  </accordion-group>
+  <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+    <div accordion-heading>
+      <i class='fa fa-users'></i> Remarks
+      <span class="cwt-logo"></span>
+    </div>
+    <app-remarks></app-remarks>
+  </accordion-group>
+</accordion>
+<br />
 <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
-
-
-
-<!-- 
-
- <ngb-accordion #acc="ngbAccordion" [closeOthers]="true" activeIds="ngb-panel-0">
-    <ngb-panel >
-        <ng-template ngbPanelTitle>
-            <span>PASSIVE SEGMENT</span>
-            <div class="cwtlogo"></div>
-          </ng-template>
-
-      <ng-template ngbPanelContent>
-          <passive></passive>
-      </ng-template>
-    </ngb-panel>
-    <ngb-panel   >    
-        <ng-template ngbPanelTitle>
-            <span>REPORTING</span>
-            <div class="cwtlogo"></div>
-          </ng-template>
-      
-      <ng-template ngbPanelContent>
-          <app-reporting></app-reporting>
-      </ng-template>
-    </ngb-panel>
-    <ngb-panel>
-        <ng-template ngbPanelTitle>
-            <span>PAYMENT</span>
-            <div class="cwtlogo"></div>
-          </ng-template>
-         
-      <ng-template ngbPanelContent>
-<app-payment></app-payment>
-      </ng-template>
-    </ngb-panel>
-
-    <ngb-panel title="REMARKS" >
-        <ng-template ngbPanelTitle>
-            <span>REMARKS</span>
-            <div class="cwtlogo"></div>
-          </ng-template>
-
-        <ng-template ngbPanelContent>
-  
-        </ng-template>
-      </ngb-panel>
-
-  </ngb-accordion>
-  <br/>
-  <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button> -->

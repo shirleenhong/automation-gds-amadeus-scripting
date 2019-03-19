@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {SelectItem} from '../models/select.item.model'
-import {PnrService} from  '../service/pnr.service'
+import { Component, OnInit, Input } from '@angular/core';
+import { SelectItem } from '../models/select.item.model'
+import { PnrService } from '../service/pnr.service'
 import { RemarkCollectionService } from '../service/remark.collection.service';
 import { RemarkGroup } from '../models/remark.group.model';
 import { RemarkModel } from '../models/remark.model';
@@ -9,7 +9,9 @@ import { RemarkModel } from '../models/remark.model';
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
-export class ReportingComponent implements OnInit{
+export class ReportingComponent implements OnInit {
+
+  @Input()
   bspRouteCodeList: SelectItem[];
   routeCode : string;
   tripType:number;
@@ -22,30 +24,28 @@ export class ReportingComponent implements OnInit{
   constructor(private pnrService: PnrService,private remarkCollectionService:RemarkCollectionService) { }
 
   ngOnInit() {
-    if (!this.pnrService.isPNRLoaded ) this.pnrService.getPNR();
-    this.getRouteCodes(); 
+    if (!this.pnrService.isPNRLoaded) this.pnrService.getPNR();
+    this.getRouteCodes();
     this.getPnrCFLine();
     this.getDestinationCodes();
   }
 
-
- 
-
-  getRouteCodes(){
-  //todo Get from API DDB 
-    this.bspRouteCodeList =[ {itemText:"",itemValue:"-1"},
-          {itemText:"USA incl. all US Territories and Possessions",itemValue:"0"},
-          {itemText:"Mexico/Central America/Canal Zone/Costa Rica",itemValue:"1"},
-          {itemText:"Caribbean and Bermuda",itemValue:"2"},
-          {itemText:"South America4",itemValue:"3"},
-          {itemText:"Europe-incl. Morocco/Tunisia/Algeria/Greenland",itemValue:"4"},
-          {itemText:"Africa",itemValue:"5"},
-          {itemText:"Middle East/Western Asia",itemValue:"6"},
-          {itemText:"Asia incl. India",itemValue:"7"},
-          {itemText:"Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam",itemValue:"8"},
-          {itemText:"Canada and St. Pierre et Miquelon",itemValue:"9"}
-        ];
+  getRouteCodes() {
+    //todo Get from API DDB 
+    this.bspRouteCodeList = [{ itemText: "", itemValue: "-1" },
+    { itemText: "USA incl. all US Territories and Possessions", itemValue: "0" },
+    { itemText: "Mexico/Central America/Canal Zone/Costa Rica", itemValue: "1" },
+    { itemText: "Caribbean and Bermuda", itemValue: "2" },
+    { itemText: "South America4", itemValue: "3" },
+    { itemText: "Europe-incl. Morocco/Tunisia/Algeria/Greenland", itemValue: "4" },
+    { itemText: "Africa", itemValue: "5" },
+    { itemText: "Middle East/Western Asia", itemValue: "6" },
+    { itemText: "Asia incl. India", itemValue: "7" },
+    { itemText: "Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam", itemValue: "8" },
+    { itemText: "Canada and St. Pierre et Miquelon", itemValue: "9" }
+    ];
   }
+
 
 getPnrCFLine(){
   var cfLine= this.pnrService.getCFLine();
@@ -61,15 +61,15 @@ getPnrCFLine(){
       this.isDisabled =false
   }else{
     this.isDisabled=true;
+
   }
-  
-
 }
+  routeCodeChange() {
+    this.getPnrCFLine();
+    this.buildRemark();
+  }
 
-routeCodeChange(){
-  this.getPnrCFLine();
-  this.buildRemark();
-}
+
 
 buildRemark(){
   var rmGroup = new RemarkGroup();
@@ -104,18 +104,8 @@ destinationChanged()
   var remText= "DE/-"+ this.destination;
 
   rmGroup.remarks.push(this.getRemark(remText ,'RM',''));
-
-  // var elementNumber = this.pnrService.getDestinationLine();
-  
-  //  if( elementNumber!= "")
-  //  {
-  //   rmGroup.remarks.push(this.getRemark(remText,'RM', ''));
-  //  }
-
-  //  rmGroup.remarks.push(this.getRemark(remText,'RM', ''));
-
-    this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
-  }
+  this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
+}
 
   getRemark(remarkText,remarkType,remarkCategory){
     var rem = new RemarkModel();

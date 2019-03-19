@@ -1,11 +1,14 @@
-
-.cwtlogo {
+.cwt-logo {
     float: right !important;
     width: 100px;
-    height:25px;
-
+    height: 25px;
+    position: absolute;
     top: 5px;
     right: 16px;
     background-image: url("../../assets/images/myCwt.png");
     background-repeat: no-repeat;
+}
+
+.customClass {
+    background-color: red;
 }

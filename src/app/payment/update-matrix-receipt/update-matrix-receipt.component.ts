@@ -1,7 +1,7 @@
 
 import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatrixReceiptModel, PaymentType } from 'src/app/models/matrix-receipt.model';
+
 import { SelectItem } from 'src/app/models/select.item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
@@ -21,7 +21,7 @@ isSubmitted:boolean;
 PaymentModeList: Array<SelectItem>;
 
 @ViewChild('bankAccount') bankAccEl: ElementRef;
-  constructor( public activeModal: NgbActiveModal,private pnrService:PnrService,private formBuilder: FormBuilder) { 
+  constructor( public activeModal:any ,private pnrService:PnrService,private formBuilder: FormBuilder) { 
     this.bankAccountList=new Array<SelectItem>();
     this.matrixReceipt= new MatrixReceiptModel();
     this.loadBankAccount();
@@ -104,27 +104,26 @@ saveReceipt(){
     return;
   }
 
-  this.activeModal.close(this.matrixReceipt);
-}
+  }
 
-loadBankAccount(){
+  loadBankAccount() {
 
-this.bankAccountList = [{itemText:"",itemValue:""},
-                            {itemText:"CAD Funds (outside of QC) | 101000  ",itemValue:"101000"},
-                            {itemText:"USD Funds (outside of QC) | 102000",itemValue:"102000"},
-                            {itemText:"USD Trust (QB only) | 108000",itemValue:"108000"},
-                            {itemText:"Canadian Trust (QB only) | 106000",itemValue:"106000"},
-                            {itemText:"Debit Card (POS receipts) | 109000",itemValue:"109000"},
-                            {itemText:"RBC Point Redemptions | 224000",itemValue:"224000"},
-                            {itemText:"CWT Gift Card Redemptions | 227000",itemValue:"227000"},
-                            {itemText:"Customer Credit Card - CWT (Visa) | 115000",itemValue:"115000"},
-                            {itemText:"Customer Credit Card - CWT (Mastercard) | 116000",itemValue:"116000"},
-                            {itemText:"Customer Credit Card - CWT (Amex) | 117000",itemValue:"117000"},
-                            {itemText:"Customer Credit Card - CWT (Diners) | 118000 ",itemValue:"118000"},
-                      ] ;
+    this.bankAccountList = [{ itemText: "", itemValue: "" },
+    { itemText: "CAD Funds (outside of QC) | 101000  ", itemValue: "101000" },
+    { itemText: "USD Funds (outside of QC) | 102000", itemValue: "102000" },
+    { itemText: "USD Trust (QB only) | 108000", itemValue: "108000" },
+    { itemText: "Canadian Trust (QB only) | 106000", itemValue: "106000" },
+    { itemText: "Debit Card (POS receipts) | 109000", itemValue: "109000" },
+    { itemText: "RBC Point Redemptions | 224000", itemValue: "224000" },
+    { itemText: "CWT Gift Card Redemptions | 227000", itemValue: "227000" },
+    { itemText: "Customer Credit Card - CWT (Visa) | 115000", itemValue: "115000" },
+    { itemText: "Customer Credit Card - CWT (Mastercard) | 116000", itemValue: "116000" },
+    { itemText: "Customer Credit Card - CWT (Amex) | 117000", itemValue: "117000" },
+    { itemText: "Customer Credit Card - CWT (Diners) | 118000 ", itemValue: "118000" },
+    ];
 
 
-}
+  }
 
 
 getAllErrors(form: FormGroup | FormArray): { [key: string]: any; } | null {

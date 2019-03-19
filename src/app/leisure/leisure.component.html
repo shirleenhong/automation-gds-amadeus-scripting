@@ -1,38 +1,38 @@
-<!-- 
+
 <app-accordion ng-init="myIndex=1;selectedIndex=1" >
-  <div class="accordionTitle">Passive Segment</div>
+  <div class="card-header accordionTitle">PASSIVE SEGMENT  <div class="cwtlogo"></div></div>
   <div class="accordionContent"> 
-   
+     <app-passive-segments></app-passive-segments>
   </div>
 
 </app-accordion>
 <app-accordion ng-init="myIndex=2;"> 
-    <div class="accordionTitle"> Reporting</div>
+    <div class="card-header accordionTitle"> REPORTING  <div class="cwtlogo"></div></div>
     <div class="accordionContent">
         <app-reporting></app-reporting>
     </div>
  
   </app-accordion>
   <app-accordion ng-init="myIndex=3;"> 
-      <div class="accordionTitle">Payment</div>
+      <div class="card-header accordionTitle">PAYMENT  <div class="cwtlogo"></div> </div>
       <div class="accordionContent"> 
-        Test data
+      <app-payment></app-payment>
 
       </div>    
   </app-accordion>
 
   <app-accordion ng-init="myIndex=4;">
-        <div class="accordionTitle"> Remarks</div>
+        <div class="card-header  accordionTitle"> REMARKS  <div class="cwtlogo"></div></div>
         <div class="accordionContent"> 
-          Test data
+         <app-remark></app-remark>
         </div>
       
  </app-accordion>
-<button (click)="SubmitToPNR()">Submit To PNR</button>
+<button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
 
-{{message}}
 
- -->
+
+<!-- 
 
  <ngb-accordion #acc="ngbAccordion" [closeOthers]="true" activeIds="ngb-panel-0">
     <ngb-panel >
@@ -79,4 +79,4 @@
 
   </ngb-accordion>
   <br/>
-  <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
+  <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button> -->

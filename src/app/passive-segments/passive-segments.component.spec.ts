@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PassiveSegmentsComponent } from './passive.segments.component';
+import { PassiveSegmentsComponent } from './passive-segments.component';
 
 describe('PassiveSegmentsComponent', () => {
   let component: PassiveSegmentsComponent;

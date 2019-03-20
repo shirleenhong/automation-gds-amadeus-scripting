@@ -1,5 +1,5 @@
 import { Injectable  } from '@angular/core';
-import { RemarkGroup } from '../models/remark.group.model';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
 
 
 @Injectable({

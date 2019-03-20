@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { SelectItem } from '../models/select.item.model'
+import { SelectItem } from '../models/select-item.model'
 import { PnrService } from '../service/pnr.service'
 import { RemarkCollectionService } from '../service/remark.collection.service';
-import { RemarkGroup } from '../models/remark.group.model';
-import { RemarkModel } from '../models/remark.model';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { RemarkModel } from '../models/pnr/remark.model';
+import { ReportingViewModel } from '../models/reporting-view.model';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -13,15 +14,12 @@ export class ReportingComponent implements OnInit {
 
   @Input()
   bspRouteCodeList: SelectItem[];
-  routeCode : string;
-  tripType:number;
-  reasonForTravel:string;
-  isDisabled:boolean;
-  destination : string;
+  reportingViewModel: ReportingViewModel;
   destinationList: SelectItem[];
-  remarkList : Array<RemarkModel>;
-  
-  constructor(private pnrService: PnrService,private remarkCollectionService:RemarkCollectionService) { }
+  remarkList: Array<RemarkModel>;
+
+  constructor(private pnrService: PnrService, private remarkCollectionService: RemarkCollectionService) { }
+  reportingSection: ReportingViewModel;
 
   ngOnInit() {
     if (!this.pnrService.isPNRLoaded) this.pnrService.getPNR();
@@ -47,23 +45,23 @@ export class ReportingComponent implements OnInit {
   }
 
 
-getPnrCFLine(){
-  var cfLine= this.pnrService.getCFLine();
-  
-  if (cfLine !=''){
-        if (cfLine.slice(-1)=='N'){
-          this.tripType=1;
-        }else if (cfLine.slice(-1)=='C'){
-          this.tripType=2;
-        }
-  var cfa = cfLine.substring(4,3);
-      if (cfa=="RBM" || cfa=="RBP")  this.tripType=2;
-      this.isDisabled =false
-  }else{
-    this.isDisabled=true;
+  getPnrCFLine() {
+    // var cfLine = this.pnrService.getCFLine();
 
+    // if (cfLine != '') {
+    //   if (cfLine.slice(-1) == 'N') {
+    //     this.tripType = 1;
+    //   } else if (cfLine.slice(-1) == 'C') {
+    //     this.tripType = 2;
+    //   }
+    //   var cfa = cfLine.substring(4, 3);
+    //   if (cfa == "RBM" || cfa == "RBP") this.tripType = 2;
+    //   this.isDisabled = false
+    // } else {
+    //   this.isDisabled = true;
+
+    // }
   }
-}
   routeCodeChange() {
     this.getPnrCFLine();
     this.buildRemark();
@@ -71,49 +69,48 @@ getPnrCFLine(){
 
 
 
-buildRemark(){
-  var rmGroup = new RemarkGroup();
-  rmGroup.group ="BSP Routing"      
-  rmGroup.remarks = new Array<RemarkModel>();
-  var remText= this.routeCode +''+ this.tripType;
-  // alert(remText);
-  rmGroup.remarks.push(this.getRemark(remText,'FS',''));
-  this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
+  buildRemark() {
+    // var rmGroup = new RemarkGroup();
+    // rmGroup.group = "BSP Routing"
+    // rmGroup.remarks = new Array<RemarkModel>();
+    // var remText = this.routeCode + '' + this.tripType;
+    // // alert(remText);
+    // rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
+    // this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
 
-}
+  }
 
-getDestinationCodes(){
+  getDestinationCodes() {
 
-  // this.remarkCollectionService.passiveSegmentCollection.forEach(x => 
-  //  {
-  //       this.destinationList.push(x.endPoint);
-  //  });
+    // this.remarkCollectionService.passiveSegmentCollection.forEach(x => 
+    //  {
+    //       this.destinationList.push(x.endPoint);
+    //  });
 
-  this.destinationList =[
-        {itemText:"YYC",itemValue:"YYC"},
-        {itemText:"YEG",itemValue:"YEG"},
-        {itemText:"YVR",itemValue:"YVR"}
-      ];
-}
+    this.destinationList = [
+      { itemText: "YYC", itemValue: "YYC" },
+      { itemText: "YEG", itemValue: "YEG" },
+      { itemText: "YVR", itemValue: "YVR" }
+    ];
+  }
 
-destinationChanged()
-{
-  var rmGroup = new RemarkGroup();
-  rmGroup.group ="Destination"      
-  rmGroup.remarks = new Array<RemarkModel>();
-  var remText= "DE/-"+ this.destination;
+  destinationChanged() {
+    // var rmGroup = new RemarkGroup();
+    // rmGroup.group = "Destination"
+    // rmGroup.remarks = new Array<RemarkModel>();
+    // var remText = "DE/-" + this.destination;
 
-  rmGroup.remarks.push(this.getRemark(remText ,'RM','*'));
-  this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
-}
+    // rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+    // // this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
+  }
 
-  getRemark(remarkText,remarkType,remarkCategory){
+  getRemark(remarkText, remarkType, remarkCategory) {
     var rem = new RemarkModel();
     rem.remarkType = remarkType;
-    rem.remarkText=remarkText;
-    rem.category=remarkCategory;
+    rem.remarkText = remarkText;
+    rem.category = remarkCategory;
     return rem;
-  }  
+  }
 
 
 

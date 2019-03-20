@@ -1,7 +1,7 @@
-import { RemarkGroup } from '../models/remark.group.model';
-import { PassiveSegmentModel } from '../models/passive-segment.model';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
-import { RemarkModel } from '../models/remark.model';
+import { RemarkModel } from '../models/pnr/remark.model';
 import { iterateListLike } from '@angular/core/src/change_detection/change_detection_util';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 

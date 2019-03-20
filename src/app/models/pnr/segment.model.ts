@@ -1,8 +1,7 @@
 import { Time } from '@angular/common';
 
-export class SegmentItems {
-
-    id: string
+export class SegmentModel {
+    id: string;
     supplierName: string;
     from: string;
     to: string;
@@ -12,7 +11,5 @@ export class SegmentItems {
     endTime: Time;
     confirmationNo: string;
     unitPrice: string;
-    currency: string
-
-
+    currency: string;
 }

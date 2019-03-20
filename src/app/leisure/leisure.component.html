@@ -12,14 +12,14 @@
         <i class='fa fa-users'></i> Reporting
         <span class="cwt-logo"></span>
       </div>
-      <app-reporting></app-reporting>
+      <app-reporting [reportingView]="leisure.reportingView"></app-reporting>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class='fa fa-users'></i> Payment
         <span class="cwt-logo"></span>
       </div>
-      <app-payment></app-payment>
+      <app-payment [paymentView]="leisure.paymentView"></app-payment>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>

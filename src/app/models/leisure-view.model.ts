@@ -6,16 +6,16 @@ import { PassiveSegmentViewModel } from './passive-segment-view.model';
 
 export class LeisureViewModel {
 
-    passiveSegmentSection:PassiveSegmentViewModel;
-    paymentSection:PaymentViewModel;
-    remarkSection:RemarkViewModel;
-    reportingSection:ReportingViewModel;
-    
-    constructor(){
-        this.passiveSegmentSection= new PassiveSegmentViewModel();
-        this.paymentSection= new PaymentViewModel();
-        this.remarkSection=new RemarkViewModel();
-        this.reportingSection=new ReportingViewModel();
+    passiveSegmentView: PassiveSegmentViewModel;
+    paymentView: PaymentViewModel;
+    remarkView: RemarkViewModel;
+    reportingView: ReportingViewModel;
+
+    constructor() {
+        this.passiveSegmentView = new PassiveSegmentViewModel();
+        this.paymentView = new PaymentViewModel();
+        this.remarkView = new RemarkViewModel();
+        this.reportingView = new ReportingViewModel();
     }
 
 

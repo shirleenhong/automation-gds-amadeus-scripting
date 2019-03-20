@@ -53,31 +53,33 @@ this.remarkList.length=0;
   }
 
 
-  processOtherPaymentRemarks(matrix: MatrixReceiptModel) {
+  processOtherPaymentRemarks(matrix:MatrixReceiptModel){
 
     enum CardType {
       VI = '115000',
       MC = '116000',
       AMEX = '117000',
-      Diners = '118000'
-    }
-
-var datePipe = new DatePipe("en-US");
-var fop = ""
-if (Object.values(CardType).includes(matrix.bankAccount))
-{
-  fop = "CC" + matrix.ccNo + '/-EXP' + datePipe.transform(matrix.expDate, 'mmYY');
-}else{
-    fop = matrix.modePayment;
-}
-
-  let rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName+'/-AMT-'+matrix.amount;
-  let rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-'+ fop + '/-LK-T/-BA-'+ matrix.bankAccount + '/-GL-'+matrix.glCode;
-  let rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-'+ matrix.description + '/-GC' + matrix.gcNumber;
-  this.remarkList.push(this.getRemarksModel(rem1));
-  this.remarkList.push(this.getRemarksModel(rem2));
-  this.remarkList.push(this.getRemarksModel(rem3));
-}
+      Diners ='118000'
+  }
+  
+  var datePipe = new DatePipe("en-US");
+  var fop = ""
+  if (Object.values(CardType).includes(matrix.bankAccount))
+  {
+    var month = datePipe.transform(matrix.expDate, 'MM');
+    var year = matrix.expDate.toString().substr(2,2);
+    fop = "CC" + matrix.ccNo + '/-EXP' + month + year;
+  }else{
+      fop = matrix.modePayment;
+  }
+  
+    let rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName+'/-AMT-'+matrix.amount;
+    let rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-'+ fop + '/-LK-T/-BA-'+ matrix.bankAccount + '/-GL-'+matrix.glCode;
+    let rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-'+ matrix.description + '/-GC' + matrix.gcNumber;
+    this.remarkList.push(this.getRemarksModel(rem1));
+    this.remarkList.push(this.getRemarksModel(rem2));
+    this.remarkList.push(this.getRemarksModel(rem3));
+  }
 
   getRemarksModel(remText) {
     var rem = new RemarkModel;

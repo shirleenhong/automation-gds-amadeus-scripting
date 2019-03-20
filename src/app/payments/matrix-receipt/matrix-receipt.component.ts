@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatrixReceiptModel } from '../../models/pnr/matrix-receipt.model'
+import { MatrixReceiptModel } from '../../models/pnr/matrix-receipt.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateMatrixReceiptComponent } from '../update-matrix-receipt/update-matrix-receipt.component';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { RemarkCollectionService } from '../../service/remark.collection.service';
-import { PaymentViewModel } from 'src/app/models/payment-view.model';
+import { PaymentViewModel } from '../../models/payment-view.model';
 
 @Component({
   selector: 'app-matrix-receipt',

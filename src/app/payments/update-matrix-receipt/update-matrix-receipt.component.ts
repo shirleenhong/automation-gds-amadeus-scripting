@@ -34,18 +34,18 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     this.loadBankAccount();
     this.loadPaymentMode();
     this.matrixForm = new FormGroup({
-      'bankAccount': new FormControl('', [Validators.required]),
-      'passengerName': new FormControl('', [Validators.required]),
-      'description': new FormControl('', [Validators.required]),
-      'cwtRef': new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
-      'points': new FormControl('', [Validators.required, Validators.maxLength(7)]),
-      'lastFourVi': new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
-      'gcNumber': new FormControl('', [Validators.maxLength(19)]),
-      'amount': new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]),
-      'vendorCode': new FormControl('', [Validators.required, Validators.maxLength(10)]),
-      'ccNo': new FormControl('', [Validators.required, Validators.minLength(16), Validators.required, Validators.maxLength(16)]),
-      'expDate': new FormControl('', [Validators.required]),
-      'modePayment': new FormControl('', [Validators.required])
+      bankAccount: new FormControl('', [Validators.required]),
+      passengerName: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
+      cwtRef: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
+      points: new FormControl('', [Validators.required, Validators.maxLength(7)]),
+      lastFourVi: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
+      gcNumber: new FormControl('', [Validators.maxLength(19)]),
+      amount: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]),
+      vendorCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
+      ccNo: new FormControl('', [Validators.required, Validators.minLength(16), Validators.required, Validators.maxLength(16)]),
+      expDate: new FormControl('', [Validators.required]),
+      modePayment: new FormControl('', [Validators.required])
 
     }, { updateOn: 'blur' });
 
@@ -53,7 +53,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.pnrService.isPNRLoaded) this.pnrService.getPNR();
+
     this.passengerList = this.pnrService.getPassengers();
 
 
@@ -70,23 +70,23 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 
     switch (newValue) {
       case '224000':
-        this.matrixReceipt.paymentType = PaymentType.Rbc
-        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode', "modePayment"], true);
+        this.matrixReceipt.paymentType = PaymentType.Rbc;
+        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode', 'modePayment'], true);
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], false);
         break;
       case '115000':
       case '116000':
       case '117000':
       case '118000':
-        this.matrixReceipt.paymentType = PaymentType.CreditCard
-        this.enableFormControls(['cwtRef', 'points', 'lastFourVi', "modePayment"], true);
+        this.matrixReceipt.paymentType = PaymentType.CreditCard;
+        this.enableFormControls(['cwtRef', 'points', 'lastFourVi', 'modePayment'], true);
         this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode'], false);
         break;
       default:
-        this.matrixReceipt.paymentType = PaymentType.Undefined
+        this.matrixReceipt.paymentType = PaymentType.Undefined;
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], true);
-        this.enableFormControls(['ccNo', 'expDate', 'vendorCode'], true)
-        this.enableFormControls(['gcNumber', "modePayment"], false);
+        this.enableFormControls(['ccNo', 'expDate', 'vendorCode'], true);
+        this.enableFormControls(['gcNumber', 'modePayment'], false);
         break;
     }
 
@@ -111,28 +111,28 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   saveReceipt() {
 
     if (this.matrixForm.invalid) {
-      alert("Please Complete And Complete all the required Information");
+      alert('Please Complete And Complete all the required Information');
       this.isSubmitted = false;
       return;
     }
     this.isSubmitted = true;
-    this.modalRef.hide()
+    this.modalRef.hide();
   }
 
   loadBankAccount() {
 
-    this.bankAccountList = [{ itemText: "", itemValue: "" },
-    { itemText: "CAD Funds (outside of QC) | 101000  ", itemValue: "101000" },
-    { itemText: "USD Funds (outside of QC) | 102000", itemValue: "102000" },
-    { itemText: "USD Trust (QB only) | 108000", itemValue: "108000" },
-    { itemText: "Canadian Trust (QB only) | 106000", itemValue: "106000" },
-    { itemText: "Debit Card (POS receipts) | 109000", itemValue: "109000" },
-    { itemText: "RBC Point Redemptions | 224000", itemValue: "224000" },
-    { itemText: "CWT Gift Card Redemptions | 227000", itemValue: "227000" },
-    { itemText: "Customer Credit Card - CWT (Visa) | 115000", itemValue: "115000" },
-    { itemText: "Customer Credit Card - CWT (Mastercard) | 116000", itemValue: "116000" },
-    { itemText: "Customer Credit Card - CWT (Amex) | 117000", itemValue: "117000" },
-    { itemText: "Customer Credit Card - CWT (Diners) | 118000 ", itemValue: "118000" },
+    this.bankAccountList = [{ itemText: '', itemValue: '' },
+    { itemText: 'CAD Funds (outside of QC) | 101000  ', itemValue: '101000' },
+    { itemText: 'USD Funds (outside of QC) | 102000', itemValue: '102000' },
+    { itemText: 'USD Trust (QB only) | 108000', itemValue: '108000' },
+    { itemText: 'Canadian Trust (QB only) | 106000', itemValue: '106000' },
+    { itemText: 'Debit Card (POS receipts) | 109000', itemValue: '109000' },
+    { itemText: 'RBC Point Redemptions | 224000', itemValue: '224000' },
+    { itemText: 'CWT Gift Card Redemptions | 227000', itemValue: '227000' },
+    { itemText: 'Customer Credit Card - CWT (Visa) | 115000', itemValue: '115000' },
+    { itemText: 'Customer Credit Card - CWT (Mastercard) | 116000', itemValue: '116000' },
+    { itemText: 'Customer Credit Card - CWT (Amex) | 117000', itemValue: '117000' },
+    { itemText: 'Customer Credit Card - CWT (Diners) | 118000 ', itemValue: '118000' },
     ];
 
 
@@ -159,30 +159,30 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 
   loadPaymentMode() {
 
-    this.PaymentModeList = [{ itemText: "", itemValue: "" },
-    { itemText: "Cash", itemValue: "CA" },
-    { itemText: "Cheque", itemValue: "CK" }
+    this.PaymentModeList = [{ itemText: '', itemValue: '' },
+    { itemText: 'Cash', itemValue: 'CA' },
+    { itemText: 'Cheque', itemValue: 'CK' }
     ];
 
 
   }
 
   SelectVendorCode(newValue) {
-    var modeOfPayment: string;
+    let modeOfPayment: string;
     switch (newValue) {
-      case "115000": {
+      case '115000': {
         modeOfPayment = 'VI';
         break;
       }
-      case "116000": {
+      case '116000': {
         modeOfPayment = 'MC';
         break;
       }
-      case "117000": {
+      case '117000': {
         modeOfPayment = 'AX';
         break;
       }
-      case "118000": {
+      case '118000': {
         modeOfPayment = 'DI';
         break;
       }

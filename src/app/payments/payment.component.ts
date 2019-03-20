@@ -8,7 +8,7 @@ import { PaymentViewModel } from '../models/payment-view.model';
 })
 export class PaymentComponent {
   @Input()
-  paymentSection: PaymentViewModel;
+  paymentView: PaymentViewModel;
 
   onEditReceipt() {
 

@@ -103,7 +103,7 @@ destinationChanged()
   rmGroup.remarks = new Array<RemarkModel>();
   var remText= "DE/-"+ this.destination;
 
-  rmGroup.remarks.push(this.getRemark(remText ,'RM',''));
+  rmGroup.remarks.push(this.getRemark(remText ,'RM','*'));
   this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
 }
 

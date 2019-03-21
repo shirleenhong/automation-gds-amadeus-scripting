@@ -73,12 +73,10 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
       this.reportingView.isDisabled = false;
       this.reportingView.cfLine.cfa = cfa;
       this.reportingView.cfLine.code = cfLine;
-
     } else {
       this.reportingView.isDisabled = true;
-
     }
-    alert(this.reportingView.cfLine.cfa);
+
   }
 
 

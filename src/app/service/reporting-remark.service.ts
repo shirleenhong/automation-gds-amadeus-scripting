@@ -17,7 +17,7 @@ export class ReportingRemarkService {
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Routing';
         rmGroup.remarks = new Array<RemarkModel>();
-
+        rmGroup.deleteRemarkByIds = new Array<string>();
         this.getFSRemarks(reporting, rmGroup);
         this.getDestinationRemarks(reporting, rmGroup);
         this.getUDIDRemarks(reporting, rmGroup);
@@ -31,21 +31,16 @@ export class ReportingRemarkService {
 
         const existNumber = this.pnrService.getFSLineNumber();
         if (existNumber !== '') {
-            rmGroup.deleteRemarkByIds = new Array<string>();
             rmGroup.deleteRemarkByIds.push(existNumber);
         }
 
     }
 
     getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-        // Destination
-
         const remText = 'DE/-' + reporting.destination;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
-
         const existNumber = this.pnrService.getDestinationLine();
         if (existNumber !== '') {
-            rmGroup.deleteRemarkByIds = new Array<string>();
             rmGroup.deleteRemarkByIds.push(existNumber);
         }
 

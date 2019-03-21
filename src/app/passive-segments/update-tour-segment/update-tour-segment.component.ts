@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
@@ -12,6 +12,7 @@ import { TourSegmentViewModel } from 'src/app/models/tour-segment-view.model';
 })
 export class UpdateTourSegmentComponent implements OnInit {
   title: string;
+  @Input()
   passiveSegment: PassiveSegmentModel;
   isSubmitted: boolean;
 

@@ -1,27 +1,26 @@
-    <table class="table">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Supplier Name</th>
-        <th scope="col">To</th>
-        <th scope="col">From</th>
-        <th scope="col">Start Date</th>
-        <th scope="col">End Date</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-       
-            <tr *ngFor="let r of tourSegmentList">
-              <td>{{ r.suppliername }}</td>
-              <td>{{ r.from }}</td>
-              <td>{{ r.to }}</td>
-              <td>{{ r.startDate }}</td>
-              <td>{{ r.endDate }}</td>
-              <td></td>
-            </tr>
-          
-     
-    </tbody>
-  </table>
-  <button class="btn btn-pill btn-warning" (click)="addPassiveSegment()">Add Tour Segment</button>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Supplier Name</th>
+      <th scope="col">To</th>
+      <th scope="col">From</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
 
+    <tr *ngFor="let r of tourSegmentView.tourSegmentList">
+      <td>{{ r.suppliername }}</td>
+      <td>{{ r.from }}</td>
+      <td>{{ r.to }}</td>
+      <td>{{ r.startDate }}</td>
+      <td>{{ r.endDate }}</td>
+      <td></td>
+    </tr>
+
+
+  </tbody>
+</table>
+<button class="btn btn-pill btn-warning" (click)="addPassiveSegment()">Add Tour Segment</button>

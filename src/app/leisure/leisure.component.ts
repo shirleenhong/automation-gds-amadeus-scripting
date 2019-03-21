@@ -5,6 +5,7 @@ import { LeisureViewModel } from '../models/leisure-view.model';
 import { PaymentRemarkService } from '../service/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
+import { SegmentService } from '../service/segment.service';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
@@ -38,8 +39,11 @@ export class LeisureComponent implements OnInit {
     private remarkService: RemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
+
+    private segmentService: SegmentService,
     private tourPackageRemarksService: TourPackageRemarksService,
     private fb: FormBuilder
+
   ) {
 
     this.leisureForm = this.fb.group({
@@ -75,6 +79,8 @@ export class LeisureComponent implements OnInit {
     });
 
     this.loadPNR();
+
+    alert(JSON.stringify(this.leisure));
   }
 
   async loadPNR() {
@@ -95,12 +101,14 @@ export class LeisureComponent implements OnInit {
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
+    alert("y");
+    remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
+    alert(JSON.stringify(remarkCollection));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    
+
     // TODO: This is a sample of passing the FormGroup values to services to build remarks
     this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage);
-    
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();

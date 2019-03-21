@@ -11,6 +11,10 @@ export class PassiveSegmentsComponent {
   @Input()
   passiveSegmentView: PassiveSegmentViewModel;
 
+  constructor() {
+
+  }
+
   onEditReceipt() {
 
   }

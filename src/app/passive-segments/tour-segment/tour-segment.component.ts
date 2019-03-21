@@ -17,10 +17,10 @@ export class TourSegmentComponent implements OnInit, OnChanges {
   private modalRef: BsModalRef;
 
   @Input()
-  tourSegment: TourSegmentViewModel;
+  tourSegmentView: TourSegmentViewModel;
 
   constructor(private modalService: BsModalService) {
-
+    //
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -29,6 +29,7 @@ export class TourSegmentComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
+    this.tourSegmentView.tourSegmentList = [];
   }
 
   buildRemark(dataModel: any) {
@@ -70,13 +71,14 @@ export class TourSegmentComponent implements OnInit, OnChanges {
 
   addPassiveSegment() {
 
+
     this.modalRef = this.modalService.show(UpdateTourSegmentComponent);
     this.modalRef.content.title = 'Add Tour Segment';
     this.modalRef.content.passiveSegment = new PassiveSegmentModel();
-    this.modalService.onHide.subscribe(result => {
 
+    this.modalService.onHide.subscribe(result => {
       if (this.modalRef.content.isSubmitted) {
-        this.tourSegment.tourSegmentList.push(this.modalRef.content.passiveSegment);
+        this.tourSegmentView.tourSegmentList.push(this.modalRef.content.passiveSegment);
         //  this.buildRemark(this.modalRef.content.passiveSegment);
 
       }

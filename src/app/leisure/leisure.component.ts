@@ -20,10 +20,13 @@ export class LeisureComponent implements OnInit {
   constructor(private pnrService: PnrService,
     private remarkService: RemarkService,
     private paymentRemarkService: PaymentRemarkService,
-    private reportingRemarkService: ReportingRemarkService
+    private reportingRemarkService: ReportingRemarkService,
+    private segmentService: SegmentService,
   ) {
     this.leisure = new LeisureViewModel();
     this.loadPNR();
+
+    alert(JSON.stringify(this.leisure));
   }
 
   async loadPNR() {
@@ -41,13 +44,18 @@ export class LeisureComponent implements OnInit {
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
+    alert("y");
+    remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
+    alert(JSON.stringify(remarkCollection));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
+
+
+
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();
-    remarkCollection.push(this.SegmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
 
     }, error => { alert(JSON.stringify(error)); });
   }

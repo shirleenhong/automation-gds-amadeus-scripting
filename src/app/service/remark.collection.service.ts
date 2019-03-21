@@ -14,13 +14,15 @@ export class RemarkCollectionService {
 
 
 
+
   public addUpdateRemarkGroup(remarkGroup: RemarkGroup) {
     if (this.remarkCollection.length > 0) {
-      const look = this.remarkCollection.find(x => x.group === remarkGroup.group);
+      const look = this.remarkCollection.find(x => x.group == remarkGroup.group);
       if (look != null) {
         const index = this.remarkCollection.indexOf(look);
         this.remarkCollection.splice(index, 1);
       }
+
     }
     this.remarkCollection.push(remarkGroup);
   }

@@ -1,6 +1,12 @@
 import { TourSegmentViewModel } from './tour-segment-view.model';
+import { PassiveSegmentModel } from './pnr/passive-segment.model';
+import { Input } from '@angular/core';
 
 export class PassiveSegmentViewModel {
-   tourSegment: TourSegmentViewModel;
+   tourSegmentView: TourSegmentViewModel;
+   constructor() {
+      this.tourSegmentView = new TourSegmentViewModel();
+
+   }
 
 }

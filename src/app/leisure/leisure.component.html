@@ -1,6 +1,6 @@
 <form [formGroup]="leisureForm">
   <div>
-    <accordion [closeOthers]="true">
+    <accordion [closeOthers]="false">
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
           <i class='fa fa-users'></i> Passive Segment
@@ -22,12 +22,12 @@
         </div>
         <app-payment [paymentView]="leisure.paymentView"></app-payment>
       </accordion-group>
-      <accordion-group [panelClass]="'customClass'">
+      <accordion-group [panelClass]="'customClass'" [isOpen]="'true'">
         <div accordion-heading>
           <i class='fa fa-users'></i> Remarks
           <span class="cwt-logo"></span>
         </div>
-        <app-remarks [parentForm]="parentForm"></app-remarks>
+        <app-remarks [group]="leisureForm.get('remarks')"></app-remarks>
       </accordion-group>
     </accordion>
     <br />

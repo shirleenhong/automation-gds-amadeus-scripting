@@ -1,18 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
 import { RemarkViewModel } from '../models/remark-view.model';
-import { FormGroup } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
   selector: 'app-remarks',
   templateUrl: './remark.component.html',
   styleUrls: ['./remark.component.scss']
 })
-export class RemarkComponent implements OnInit {
-  @Input()
-  remarkSection: RemarkViewModel;
+export class RemarkComponent implements OnInit, OnChanges {
 
-  @Input()
-  parentForm: FormGroup;
+  @Input() remarkSection: RemarkViewModel;
+
+  @Input() group: FormGroup;
 
   constructor() { }
 
@@ -20,4 +19,9 @@ export class RemarkComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('form group: ', this.group);
+  }
+
 }
+

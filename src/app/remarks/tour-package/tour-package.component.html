@@ -1,181 +1,127 @@
-
+<div class="container" [formGroup]="group">
+  <div class="row">
     <h2>Tour Package</h2>
-    <div style="width: 75%">
-       <div class="row">
-           <div class="col"> 
-               Currency Type
-           </div>
-           
-           <div class="col">            
-           
-           <input type="text" class="form-control"  [(ngModel)]="currencyCode" (keyup)="getUserIdsFirstWay($event)" id="userIdFirstWay" list="dynamicCurrency" />
-             <datalist id="dynamicCurrency">
-               <option *ngFor="let item of bspCurrencyList" [value]="item.itemText">{{item.itemText}}</option>
-           </datalist>
-         </div>              
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Number of Adults
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  (change)="tourPackageChange" maxlength="1" id="adultNum" [(ngModel)]="adultNum" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Base Cost per adult
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="8" id="baseCost" (change)="tourPackageChange" [(ngModel)]="baseCost" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Taxes/Service per adult
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"   maxlength="7" id="taxesPerAdult" (change)="tourPackageChange" [(ngModel)]="taxesPerAdult" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Insurance per adult
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="7" id="insurancePerAdult" (change)="tourPackageChange" [(ngModel)]="insurancePerAdult" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Number of Children
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="1" id="childrenNumber" [(ngModel)]="childrenNumber" (change)="tourPackageChange()"  />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Base Cost per child
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="8" id="childBaseCost" [(ngModel)]="childBaseCost" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Taxes/Service per child
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="7" id="taxesPerChild" [(ngModel)]="taxesPerChild" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Insurance per child
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="7" id="insurancePerChild" [(ngModel)]="insurancePerChild" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-             Number of Infants
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="1" id="infantNumber" [(ngModel)]="infantNumber" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Total cost per infant
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="7" id="totalCostPerInfant" [(ngModel)]="totalCostPerInfant" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Deposit Paid
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  maxlength="9" id="depositPaid" [(ngModel)]="depositPaid" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           The total cost of Holiday
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  id="totalCostHoliday" [(ngModel)]="totalCostHoliday" (change)="tourPackageChange()"  />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Less Deposit Paid
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  id="lessDepositPaid" [(ngModel)]="lessDepositPaid" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Balance to be Paid
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control"  id="balanceToBePaid" [(ngModel)]="balanceToBePaid" (change)="tourPackageChange()"   />                
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Balance Due Date
-         </div>
-         
-         <div class="col">
-             <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()"  placeholder="yyyy-mm-dd"   [(ngModel)]="balanceDueDate"  (change)="tourPackageChange()"  />
-             <!-- <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>required (change)="tourPackageChange()"   -->     
-         </div>      
-       </div>
-   
-       <div class="row">
-         <div class="col"> 
-           Commision Amount
-         </div>
-         
-         <div class="col">
-           <input type="text" class="form-control" maxlength="8" id="commisionAmount"  [(ngModel)]="commisionAmount" (change)="tourPackageChange()" />                
-         </div>      
-       </div>
-     </div>
-   
- 
- <!--</form>-->
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="userIdFirstWay">Currency Type</label>
+      <input type="text" class="form-control" placeholder="select a currency" formControlName="userIdFirstWay" id="userIdFirstWay"
+        list="dynamicCurrency" />
+      <datalist id="dynamicCurrency">
+        <option *ngFor="let item of bspCurrencyList" [value]="item.itemText">{{item.itemText}}</option>
+      </datalist>
+
+    </div>
+    <div class="col">
+
+      <label for="adultNum">Number of Adults</label>
+      <input type="number" class="form-control" placeholder="any number from 1-9" id="adultNum" formControlName="adultNum" />
+      <!-- <div *ngIf="adultNum.invalid && (adultNum.dirty || adultNum.touched)" class="alert alert-danger">
+        <div *ngIf="adultNum.errors.required">
+          This field is required.
+        </div>
+        <div *ngIf="adultNum.errors?.max">
+          Number of adults must not exceed 9.
+        </div>
+        <div *ngIf="adultNum.errors?.min">
+          Number of adults must not be less than 1.
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label for="baseCost">Base Cost per adult</label>
+      <input type="text" class="form-control" id="baseCost" formControlName="baseCost" />
+    </div>
+
+    <div class="col">
+      <label for="taxesPerAdult">Taxes per adult</label>
+      <input type="text" class="form-control" maxlength="7" id="taxesPerAdult" formControlName="taxesPerAdult" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label for="insurancePerAdult">Insurance per adult</label>
+      <input type="text" class="form-control" maxlength="7" id="insurancePerAdult" formControlName="insurancePerAdult" />
+    </div>
+    <div class="col">
+      <label for="childrenNumber">Number of Children</label>
+      <input type="text" class="form-control" maxlength="1" id="childrenNumber" formControlName="childrenNumber" />
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col">
+      <label for="childBaseCost">Base Cost per child</label>
+      <input type="text" class="form-control" maxlength="8" id="childBaseCost" formControlName="childBaseCost" />
+    </div>
+    <div class="col">
+      <label for="taxesPerChild">Taxes/Service per child</label>
+      <input type="text" class="form-control" maxlength="7" id="taxesPerChild" formControlName="taxesPerChild" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label for="insurancePerChild">Taxes/Service per child</label>
+      <input type="text" class="form-control" maxlength="7" id="insurancePerChild" formControlName="insurancePerChild" />
+    </div>
+
+    <div class="col">
+      <label for="infantNumber">Number of Infants</label>
+      <input type="text" class="form-control" maxlength="1" id="infantNumber" formControlName="infantNumber" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="totalCostPerInfant">Total cost per infant</label>
+      <input type="text" class="form-control" maxlength="7" id="totalCostPerInfant" formControlName="totalCostPerInfant" />
+    </div>
+    <div class="col">
+      <label for="depositPaid"> Deposit Paid</label>
+      <input type="text" class="form-control" maxlength="9" id="depositPaid" formControlName="depositPaid" />
+    </div>
+
+  </div>
+
+  <div class="row">
+
+
+    <div class="col">
+      <label for="totalCostHoliday">The total cost of Holiday</label>
+      <input type="text" class="form-control" id="totalCostHoliday" formControlName="totalCostHoliday" />
+    </div>
+    <div class="col">
+      <label for="lessDepositPaid">Less Deposit Paid</label>
+      <input type="text" class="form-control" id="lessDepositPaid" formControlName="lessDepositPaid" />
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <div class="col">
+      <label for="balanceToBePaid">Balance to be Paid</label>
+      <input type="text" class="form-control" id="balanceToBePaid" formControlName="balanceToBePaid" />
+    </div>
+    <div class="col">
+      <label for="balanceDueDate">Balance Due Date</label>
+      <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()" placeholder="yyyy-mm-dd"
+        formControlName="balanceDueDate" />
+    </div>
+  </div>
+
+  <div class="row">
+
+
+    <div class="col">
+      <label for="commisionAmount">Commision Amount</label>
+      <input type="text" class="form-control" maxlength="8" id="commisionAmount" formControlName="commisionAmount" />
+    </div>
+    <div class="col"></div>
+  </div>
+</div>

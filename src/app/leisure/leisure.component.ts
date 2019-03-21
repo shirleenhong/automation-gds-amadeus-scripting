@@ -1,17 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, forwardRef } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
 import { RemarkService } from '../service/remark.service';
 import { LeisureViewModel } from '../models/leisure-view.model';
 import { PaymentRemarkService } from '../service/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { LeisureForm } from '../models/forms/leisure-form';
+import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
+import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 
 @Component({
   selector: 'app-leisure',
   templateUrl: './leisure.component.html',
-  styleUrls: ['./leisure.component.scss']
+  styleUrls: ['./leisure.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TourPackageComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => TourPackageComponent),
+      multi: true
+    }
+  ]
 })
 
 export class LeisureComponent implements OnInit {
@@ -28,9 +40,38 @@ export class LeisureComponent implements OnInit {
     private fb: FormBuilder
   ) {
 
-    this.leisure = new LeisureViewModel();
+    this.leisureForm = this.fb.group({
+      remarks: this.fb.group({
+        tourPackage: this.fb.group({
+          adultNum: new FormControl("", [Validators.required, Validators.min(1), Validators.max(9)]),
+          userIdFirstWay: new FormControl("", [Validators.required]),
+          baseCost: new FormControl("", [Validators.required, Validators.maxLength(7)]),
+          taxesPerAdult: new FormControl("", [Validators.required]),
+          childrenNumber: new FormControl("", [Validators.required]),
+          childBaseCost: new FormControl("", [Validators.required]),
+          insurancePerAdult: new FormControl("", [Validators.required]),
+          insurancePerChild: new FormControl("", [Validators.required]),
+          taxesPerChild: new FormControl("", [Validators.required]),
+          infantNumber: new FormControl("", [Validators.required]),
+          totalCostPerInfant: new FormControl("", [Validators.required]),
+          depositPaid: new FormControl("", [Validators.required]),
+          totalCostHoliday: new FormControl("", [Validators.required]),
+          lessDepositPaid: new FormControl("", [Validators.required]),
+          balanceToBePaid: new FormControl("", [Validators.required]),
+          balanceDueDate: new FormControl("", [Validators.required]),
+          commisionAmount: new FormControl("", [Validators.required])
+        })
+      }),
+      reporting: this.fb.group({
+        bspRoutingCode: new FormControl("", [Validators.required]),
+        destinationCode: new FormControl("", [Validators.required])
+      })
+    });
 
-    this.leisureForm = this.fb.group(new LeisureForm());
+    this.leisureForm.valueChanges.subscribe(val => {
+      console.log(val);
+    });
+
     this.loadPNR();
   }
 
@@ -39,6 +80,9 @@ export class LeisureComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.leisure = new LeisureViewModel();
+
 
   }
 

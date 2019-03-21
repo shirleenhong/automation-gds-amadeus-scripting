@@ -5,7 +5,9 @@
         <i class='fa fa-users'></i> Passive Segment
         <span class="cwt-logo"></span>
       </div>
-      <app-passive-segments></app-passive-segments>
+      <app-passive-segments [passiveSegmentView]="leisure.PassiveSegmentViewModel">
+
+      </app-passive-segments>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>

@@ -9,7 +9,7 @@ import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
 
 export class PassiveSegmentsComponent {
   @Input()
-  passiveSegmentSection: PassiveSegmentViewModel;
+  passiveSegmentView: PassiveSegmentViewModel;
 
   onEditReceipt() {
 

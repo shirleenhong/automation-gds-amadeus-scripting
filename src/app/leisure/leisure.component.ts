@@ -5,6 +5,7 @@ import { LeisureViewModel } from '../models/leisure-view.model';
 import { PaymentRemarkService } from '../service/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
+import { SegmentService } from '../service/segment.service';
 
 @Component({
   selector: 'app-leisure',
@@ -46,6 +47,7 @@ export class LeisureComponent implements OnInit {
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();
+    remarkCollection.push(this.SegmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
 
     }, error => { alert(JSON.stringify(error)); });
   }

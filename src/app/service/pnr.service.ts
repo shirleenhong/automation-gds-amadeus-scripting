@@ -18,7 +18,7 @@ export class PnrService {
         await this.pnrObj.retrievePNR().then((res: any) => {
             this.isPNRLoaded = true;
             this.errorMessage = 'PNR Loaded Successfully';
-            alert(this.errorMessage);
+
         }, (error: string) => {
             this.isPNRLoaded = false;
             this.errorMessage = 'Error:' + error;

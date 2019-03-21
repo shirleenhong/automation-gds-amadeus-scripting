@@ -42,8 +42,11 @@ export class LeisureComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
+
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
-    });
+      this.loadPNR();
+
+    }, error => { alert(JSON.stringify(error)); });
   }
 }

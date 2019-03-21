@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { R3NgModuleDef } from '@angular/compiler/src/render3/r3_module_compiler';
+import { stringify } from '@angular/core/src/util';
 
 declare var PNR: any;
 
@@ -83,11 +84,27 @@ export class PnrService {
 
 
     getPnrDestinations() {
-        return [
-            { itemText: 'YYC', itemValue: 'YYC' },
-            { itemText: 'YEG', itemValue: 'YEG' },
-            { itemText: 'YVR', itemValue: 'YVR' }
-        ];
+        var destinationCity = 
+        [{
+            endpoint
+        }]
+        if(this.isPNRLoaded)
+        {
+            for (let rm of this.pnrObj.miscSegments) {
+                var endpoint = rm.fullNode.travelProduct.boardpointDetail.cityCode;
+                const look = destinationCity.find(x => x.endpoint === endpoint);
+                if (look == null) {
+                    var destination =
+                    {
+                        endpoint: rm.fullNode.travelProduct.boardpointDetail.cityCode
+                    }
+                    destinationCity.push(destination);
+                }
+            }
+            return destinationCity;
+            
+        }
+
     }
 
 

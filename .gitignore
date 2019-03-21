@@ -9,3 +9,4 @@ target
 **/coverage
 **/node_modules
 dist
+!index.html

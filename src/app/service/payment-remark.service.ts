@@ -54,7 +54,9 @@ export class PaymentRemarkService {
         const datePipe = new DatePipe('en-US');
         let fop = '';
         if (Object.values(CardType).includes(matrix.bankAccount)) {
-            fop = 'CC' + matrix.ccNo + '/-EXP' + datePipe.transform(matrix.expDate, 'mmYY');
+            var month = datePipe.transform(matrix.expDate, 'MM');
+            var year = matrix.expDate.toString().substr(2,2);
+            fop = "CC" + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
         } else {
             fop = matrix.modePayment;
         }

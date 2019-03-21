@@ -26,14 +26,17 @@ export class ReportingRemarkService {
     }
 
     getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-        const remText = reporting.routeCode + '' + reporting.tripType;
+        
+        if (reporting.cfLine.cfa !== '')
+        {
+            const remText = reporting.routeCode + '' + reporting.tripType;
         rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 
         const existNumber = this.pnrService.getFSLineNumber();
         if (existNumber !== '') {
             rmGroup.deleteRemarkByIds.push(existNumber);
         }
-
+        }
     }
 
     getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {

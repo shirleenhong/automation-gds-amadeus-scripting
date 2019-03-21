@@ -37,11 +37,11 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       bankAccount: new FormControl('', [Validators.required]),
       passengerName: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
-      cwtRef: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
+      cwtRef: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(10)]),
       points: new FormControl('', [Validators.required, Validators.maxLength(7)]),
       lastFourVi: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
       gcNumber: new FormControl('', [Validators.maxLength(19)]),
-      amount: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]),
+      amount: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('^(\\d*\\.)?\\d+$')]),
       vendorCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
       ccNo: new FormControl('', [Validators.required, Validators.minLength(16), Validators.required, Validators.maxLength(16)]),
       expDate: new FormControl('', [Validators.required]),
@@ -71,7 +71,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     switch (newValue) {
       case '224000':
         this.matrixReceipt.paymentType = PaymentType.Rbc;
-        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode', 'modePayment'], true);
+        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode', 'modePayment', 'description'], true);
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], false);
         break;
       case '115000':
@@ -80,13 +80,13 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       case '118000':
         this.matrixReceipt.paymentType = PaymentType.CreditCard;
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi', 'modePayment'], true);
-        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode'], false);
+        this.enableFormControls(['gcNumber', 'ccNo', 'expDate', 'vendorCode','description'], false);
         break;
       default:
         this.matrixReceipt.paymentType = PaymentType.Undefined;
         this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], true);
         this.enableFormControls(['ccNo', 'expDate', 'vendorCode'], true);
-        this.enableFormControls(['gcNumber', 'modePayment'], false);
+        this.enableFormControls(['gcNumber', 'modePayment','description'], false);
         break;
     }
 

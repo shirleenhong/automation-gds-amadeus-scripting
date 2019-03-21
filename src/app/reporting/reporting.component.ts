@@ -66,19 +66,17 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
       if (this.reportingView.cfLine.lastLetter === 'N') {
         this.reportingView.tripType = 2;
       } else if (this.reportingView.cfLine.lastLetter === 'C') {
-        this.reportingView.tripType = 2;
+        this.reportingView.tripType = 1;
       }
       const cfa = cfLine.substr(4, 3);
       if (cfa === 'RBM' || cfa === 'RBP') { this.reportingView.tripType = 2; }
       this.reportingView.isDisabled = false;
       this.reportingView.cfLine.cfa = cfa;
       this.reportingView.cfLine.code = cfLine;
-
     } else {
       this.reportingView.isDisabled = true;
-
     }
-    alert(this.reportingView.cfLine.cfa);
+
   }
 
 

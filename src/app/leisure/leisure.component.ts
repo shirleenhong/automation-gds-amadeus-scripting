@@ -85,6 +85,7 @@ export class LeisureComponent implements OnInit {
 
   async loadPNR() {
     await this.pnrService.getPNR();
+    this.isPnrLoaded=this.pnrService.isPNRLoaded;
   }
 
   ngOnInit() {

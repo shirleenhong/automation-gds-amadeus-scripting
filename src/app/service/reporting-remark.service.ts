@@ -26,20 +26,20 @@ export class ReportingRemarkService {
     }
 
     getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
+        if (reporting.routeCode == null)  {return}
         
-        if (reporting.cfLine.cfa !== '')
-        {
-            const remText = reporting.routeCode + '' + reporting.tripType;
+        const remText = reporting.routeCode + '' + reporting.tripType;
         rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 
         const existNumber = this.pnrService.getFSLineNumber();
         if (existNumber !== '') {
             rmGroup.deleteRemarkByIds.push(existNumber);
         }
-        }
     }
 
     getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
+        if(reporting.destination == null) {return}
+
         const remText = 'DE/-' + reporting.destination;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
         const existNumber = this.pnrService.getDestinationLine();

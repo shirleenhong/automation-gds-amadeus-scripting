@@ -1,25 +1,31 @@
+<!-- <form [formGroup]="reportingForm"> -->
 <div class="row">
   <div class="col">
     BSP Routing Code :
-    <select id="bspRouteCode" [(ngModel)]="reportingView.routeCode" (change)="reportingChange()" class="form-control">
+    <select id="bspRouteCode"
+     class="form-control" [(ngModel)]="reportingView.bspRouteCode"
+     [disabled] = 'reportingView.isDisabled'
+     >
       <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
         {{item.itemText}}
       </option>
     </select>
-
   </div>
 
   <div class="col">
 
     Destination Code:
-    <select id="destinationList" (change)="reportingChange()" [(ngModel)]="reportingView.destination" class="form-control">
-      <option [ngValue]="null" disabled selected>Select Your Destination</option>
-      <option *ngFor="let p of destinationList " [value]="p.itemValue">
-        {{p.itemText}}
+    <select id="destinationList"  [(ngModel)]="reportingView.destination" 
+    class="form-control" name="destinationList"
+    [disabled] = 'reportingView.isDisabledDest'
+    >
+      <option *ngFor="let p of destinationList" [value]="p.endpoint">
+        {{p.endpoint}}
       </option>
     </select>
   </div>
 </div>
+<!-- </form> -->
 
 <!--        
     <div class="col">

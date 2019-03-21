@@ -1,61 +1,65 @@
-import { Component, OnInit } from '@angular/core';
-import { SelectItem } from '../../models/select-item.model'
-import { PnrService } from '../../service/pnr.service'
-import { RemarkCollectionService } from '../../service/remark.collection.service';
-import { RemarkGroup } from '../../models/pnr/remark.group.model';
-import { RemarkModel } from '../../models/pnr/remark.model';
-import { formatDate } from '@angular/common';
-import { DatePipe } from '@angular/common';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
+import { SelectItem } from 'src/app/models/select-item.model';
 
 
 @Component({
   selector: 'app-tour-package',
   templateUrl: './tour-package.component.html',
-  styleUrls: ['./tour-package.component.scss']
+  styleUrls: ['./tour-package.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class TourPackageComponent implements OnInit {
+export class TourPackageComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
+
   bspCurrencyList: SelectItem[];
   tourPackage: TourPackageViewModel;
 
-  _formBuilder: FormBuilder;
-  _formGroup: FormGroup;
+  @Input() group: FormGroup;
 
-  constructor(private pnrService: PnrService,
-    private remarkCollectionService: RemarkCollectionService,
-    private formBuilder: FormBuilder) {
-    this._formBuilder = formBuilder;
+  constructor() {
+
   }
+
 
   ngOnInit() {
     this.getCurrencies();
-    this.buildForm();
-  }
 
-
-  buildForm() {
-    this._formGroup = this._formBuilder.group({
-      adultNum: [null, [Validators.required, Validators.min(1), Validators.max(9)]],
-      userIdFirstWay: [null, [Validators.required]],
-      baseCost: [null, [Validators.required, Validators.maxLength(7), Validators.pattern('^\d+$')]],
-      taxesPerAdult: [null, [Validators.required]],
-      childrenNumber: [null, [Validators.required]],
-      childBaseCost: [null, [Validators.required]],
-      insurancePerAdult: [null, [Validators.required]],
-      insurancePerChild: [null, [Validators.required]],
-      taxesPerChild: [null, [Validators.required]],
-      infantNumber: [null, [Validators.required]],
-      totalCostPerInfant: [null, [Validators.required]],
-      depositPaid: [null, [Validators.required]],
-      totalCostHoliday: [null, [Validators.required]],
-      lessDepositPaid: [null, [Validators.required]],
-      balanceToBePaid: [null, [Validators.required]],
-      balanceDueDate: [null, [Validators.required]],
-      commisionAmount: [null, [Validators.required]]
+    this.group.valueChanges.subscribe(val => {
+      // console.log(val);
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('form group: ', this.group);
+  }
+
+  public onTouched: () => void = () => { };
+
+  writeValue(val: any): void {
+    val && this.group.setValue(val, { emitEvent: false });
+  }
+  registerOnChange(fn: any): void {
+    console.log("on change");
+    this.group.valueChanges.subscribe(fn);
+  }
+  registerOnTouched(fn: any): void {
+    console.log("on blur");
+    this.onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    isDisabled ? this.group.disable() : this.group.enable();
+  }
+
+  validate(c: AbstractControl): ValidationErrors {
+    console.log("Basic Info validation", c);
+    return this.group.valid ? null : { invalidForm: { valid: false, message: "basicInfoForm fields are invalid" } };
+  }
+
+  registerOnValidatorChange?(fn: () => void): void {
+
+
+  }
 
   getCurrencies() {
     // TODO: Get from API DDB 
@@ -245,78 +249,6 @@ export class TourPackageComponent implements OnInit {
     { itemText: "Zimbabwe Dollarr", itemValue: "ZWD" },
     { itemText: "Zimbabwe Dollar", itemValue: "ZWR" },
     ];
-  }
-
-  formControlValueChanged() {
-    this._formGroup.get('adultNum').valueChanges.subscribe(
-      (mode: string) => {
-        console.log(mode);
-      });
-  }
-
-  tourPackageChange() {
-
-    // this.totalCostHoliday = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost()
-    // this.lessDepositPaid = this.depositPaid;
-    // this.balanceToBePaid = this.totalCostHoliday - parseInt(this.lessDepositPaid)
-    // this.buildRemark();
-  }
-
-  computeAdultCost() {
-    // var sum = (parseInt(this.baseCost) + parseInt(this.insurancePerAdult) + parseInt(this.taxesPerAdult))
-
-    // var result = parseInt(this._adultNum) * sum;
-    // return result;
-  }
-
-  computeChildCost() {
-    // var sum = (parseInt(this.childBaseCost) + parseInt(this.insurancePerChild) + parseInt(this.taxesPerChild))
-
-    // var result = parseInt(this.childrenNumber) * sum;
-    // return result;
-  }
-
-  computeInfantCost() {
-    // var sum = (parseInt(this.totalCostPerInfant));
-
-    // var result = parseInt(this.infantNumber) * sum;
-    // return result;
-  }
-
-  get adultNum() { return this._formGroup.get('adultNum'); }
-
-  buildRemark() {
-    // var rmGroup = new RemarkGroup();
-    // rmGroup.group = "Tour Package"
-    // rmGroup.remarks = new Array<RemarkModel>();
-    // var datePipe = new DatePipe("en-US");
-
-    // rmGroup.remarks.push(this.getRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + this.currencyCode, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('ADULT PACKAGE            ' + this.baseCost + 'X' + this.adultNum + '       ' + this.baseCost, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('ADULT TAXES               ' + this.taxesPerAdult + 'X' + this.adultNum + '       ' + this.taxesPerAdult, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('ADULT INSURANCE           ' + this.insurancePerAdult + 'X' + this.adultNum + '       ' + this.insurancePerAdult, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('CHILD PACKAGE            ' + this.childBaseCost + 'X' + this.childrenNumber + '       ' + this.childBaseCost, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('CHILD TAXES               ' + this.taxesPerChild + 'X' + this.childrenNumber + '       ' + this.taxesPerChild, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('CHILD INSURANCE           ' + this.insurancePerChild + 'X' + this.childrenNumber + '       ' + this.insurancePerChild, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('TOTAL PACKAGE PRICE                        ' + this.totalCostHoliday, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('LESS DEPOSIT PAID                          ' + this.lessDepositPaid + '-' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('BALANCE DUE                                ' + this.balanceToBePaid, 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('---- BALANCE OF ' + this.balanceToBePaid + ' IS DUE ' + datePipe.transform(this.balanceDueDate, 'dMMMyy') + '----', 'RI', 'I'));
-    // rmGroup.remarks.push(this.getRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'I'));
-
-    // rmGroup.remarks.push(this.getRemark('U43/-' + datePipe.transform(this.balanceDueDate, 'MMMyy'), 'RM', '*'));
-    // //rmGroup.remarks.push(this.getRemark('*U43/-' + formatDate(this.balanceDueDate,'MMMyy','en'),'RM','*'));
-    // rmGroup.remarks.push(this.getRemark('U41/-' + this.balanceToBePaid, 'RM', '*'));
-    // rmGroup.remarks.push(this.getRemark('U42/-' + this.commisionAmount, 'RM', '*'));
-    // this.remarkCollectionService.addUpdateRemarkGroup(rmGroup);
-  }
-
-  getRemark(remarkText, remarkType, remarkCategory) {
-    // var rem = new RemarkModel();
-    // rem.remarkType = remarkType;
-    // rem.remarkText = remarkText;
-    // rem.category = remarkCategory;
-    // return rem;
   }
 }
 

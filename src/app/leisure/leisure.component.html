@@ -1,3 +1,5 @@
+
+<form [formGroup]="leisureForm">
 <div>
   <accordion [closeOthers]="true">
     <accordion-group [panelClass]="'customClass'">
@@ -5,10 +7,7 @@
         <i class='fa fa-users'></i> Passive Segment
         <span class="cwt-logo"></span>
       </div>
-
-
       <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
-
       </app-passive-segments>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
@@ -30,9 +29,10 @@
         <i class='fa fa-users'></i> Remarks
         <span class="cwt-logo"></span>
       </div>
-      <app-remarks></app-remarks>
+       <app-remarks [group]="leisureForm.get('remarks')"></app-remarks>
     </accordion-group>
   </accordion>
   <br />
   <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
 </div>
+</form>

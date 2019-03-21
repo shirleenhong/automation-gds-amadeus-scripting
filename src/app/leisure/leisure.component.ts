@@ -7,6 +7,7 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
+import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
 
 @Component({
   selector: 'app-leisure',
@@ -37,34 +38,35 @@ export class LeisureComponent implements OnInit {
     private remarkService: RemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
+    private tourPackageRemarksService: TourPackageRemarksService,
     private fb: FormBuilder
   ) {
 
     this.leisureForm = this.fb.group({
       remarks: this.fb.group({
         tourPackage: this.fb.group({
-          adultNum: new FormControl("", [Validators.required, Validators.min(1), Validators.max(9)]),
-          userIdFirstWay: new FormControl("", [Validators.required]),
-          baseCost: new FormControl("", [Validators.required, Validators.maxLength(7)]),
-          taxesPerAdult: new FormControl("", [Validators.required]),
-          childrenNumber: new FormControl("", [Validators.required]),
-          childBaseCost: new FormControl("", [Validators.required]),
-          insurancePerAdult: new FormControl("", [Validators.required]),
-          insurancePerChild: new FormControl("", [Validators.required]),
-          taxesPerChild: new FormControl("", [Validators.required]),
-          infantNumber: new FormControl("", [Validators.required]),
-          totalCostPerInfant: new FormControl("", [Validators.required]),
-          depositPaid: new FormControl("", [Validators.required]),
-          totalCostHoliday: new FormControl("", [Validators.required]),
-          lessDepositPaid: new FormControl("", [Validators.required]),
-          balanceToBePaid: new FormControl("", [Validators.required]),
-          balanceDueDate: new FormControl("", [Validators.required]),
-          commisionAmount: new FormControl("", [Validators.required])
+          adultNum: new FormControl('', [Validators.required, Validators.min(1), Validators.max(9)]),
+          userIdFirstWay: new FormControl('', [Validators.required]),
+          baseCost: new FormControl('', [Validators.required, Validators.maxLength(7)]),
+          taxesPerAdult: new FormControl('', [Validators.required]),
+          childrenNumber: new FormControl('', [Validators.required]),
+          childBaseCost: new FormControl('', [Validators.required]),
+          insurancePerAdult: new FormControl('', [Validators.required]),
+          insurancePerChild: new FormControl('', [Validators.required]),
+          taxesPerChild: new FormControl('', [Validators.required]),
+          infantNumber: new FormControl('', [Validators.required]),
+          totalCostPerInfant: new FormControl('', [Validators.required]),
+          depositPaid: new FormControl('', [Validators.required]),
+          totalCostHoliday: new FormControl('', [Validators.required]),
+          lessDepositPaid: new FormControl('', [Validators.required]),
+          balanceToBePaid: new FormControl('', [Validators.required]),
+          balanceDueDate: new FormControl('', [Validators.required]),
+          commisionAmount: new FormControl('', [Validators.required])
         })
       }),
       reporting: this.fb.group({
-        bspRoutingCode: new FormControl("", [Validators.required]),
-        destinationCode: new FormControl("", [Validators.required])
+        bspRoutingCode: new FormControl('', [Validators.required]),
+        destinationCode: new FormControl('', [Validators.required])
       })
     });
 
@@ -95,6 +97,10 @@ export class LeisureComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
+
+    // TODO: This is a sample of passing the FormGroup values to services to build remarks
+    this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage);
+
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
     });

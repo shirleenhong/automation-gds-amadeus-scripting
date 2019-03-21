@@ -1,13 +1,12 @@
+.ng-invalid:not(form) {
+  border: 1px solid #f70a06;
+  /* red */
+}
 
-  
-  
-  .ng-invalid:not(form)  {
-    border: 1px solid #f70a06; /* red */
-  }
-
-  .invalid-feedback {
-    width: 100%;
-    margin-top: .25rem;
-    font-size: 80%;
-    color: #dc3545;
-  }
+.error-msg {
+  width: 100%;
+  margin-top: -.75rem;
+  margin-bottom: .5rem;
+  font-size: 80%;
+  color: #dc3545;
+}

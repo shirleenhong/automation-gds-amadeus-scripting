@@ -56,7 +56,7 @@ export class PnrService {
             for (let rm of this.pnrObj.nameElements) {
                 let fname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.givenName;
                 let lname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.surname;
-                let fullname: any = fname + '-' + lname;
+                let fullname: any = lname + '-' + fname.ToUpper().replace(' MS', '').replace(' MRS', ).replace(' MSTR', '').replace(' INF', '').replace(' MR', '').replace(' MISS', '') ;
                 let passenger = {
                     firstname: fname,
                     surname: lname,

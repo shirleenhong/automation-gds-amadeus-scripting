@@ -3,7 +3,7 @@
   <div class="col">
     BSP Routing Code :
     <select id="bspRouteCode"
-     class="form-control" [(ngModel)]="reportingView.bspRouteCode"
+     class="form-control" [(ngModel)]="reportingView.routeCode"
      [disabled] = 'reportingView.isDisabled'
      >
       <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">

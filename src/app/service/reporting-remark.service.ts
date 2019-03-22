@@ -26,8 +26,8 @@ export class ReportingRemarkService {
     }
 
     getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-        if (reporting.routeCode == null)  {return}
         
+        if (reporting.routeCode == null)  {return}
         const remText = reporting.routeCode + '' + reporting.tripType;
         rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 
@@ -41,7 +41,7 @@ export class ReportingRemarkService {
         if(reporting.destination == null) {return}
 
         const remText = 'DE/-' + reporting.destination;
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
         const existNumber = this.pnrService.getDestinationLine();
         if (existNumber !== '') {
             rmGroup.deleteRemarkByIds.push(existNumber);

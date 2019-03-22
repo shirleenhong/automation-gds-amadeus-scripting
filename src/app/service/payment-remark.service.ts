@@ -64,7 +64,7 @@ export class PaymentRemarkService {
         var gcNo = ''
         if(matrix.gcNumber != null && (matrix.gcNumber.toString() !== ""))
         {   
-            gcNo = '/-GC' + matrix.gcNumber;
+            gcNo = '/-GC-' + matrix.gcNumber;
         }
 
         const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;

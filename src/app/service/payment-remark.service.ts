@@ -60,10 +60,16 @@ export class PaymentRemarkService {
         } else {
             fop = matrix.modePayment;
         }
+        
+        var gcNo = ''
+        if(matrix.gcNumber !=null)
+        {
+            gcNo = '/-GC' + matrix.gcNumber;
+        }
 
         const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
         const rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-' + fop + '/-LK-T/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
-        const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.description + '/-GC' + matrix.gcNumber;
+        const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.description + gcNo;
         remarkList.push(this.getRemarksModel(rem1));
         remarkList.push(this.getRemarksModel(rem2));
         remarkList.push(this.getRemarksModel(rem3));

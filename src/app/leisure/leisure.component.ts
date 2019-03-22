@@ -80,7 +80,7 @@ export class LeisureComponent implements OnInit {
 
     this.loadPNR();
 
-    alert(JSON.stringify(this.leisure));
+    // alert(JSON.stringify(this.leisure));
   }
 
   async loadPNR() {
@@ -102,14 +102,14 @@ export class LeisureComponent implements OnInit {
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
-    alert("y");
-    remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
-    alert(JSON.stringify(remarkCollection));
+    
+    // remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
 
     // TODO: This is a sample of passing the FormGroup values to services to build remarks
-    this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage);
+    // this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage);
+    
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();

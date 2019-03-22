@@ -61,10 +61,6 @@ export class SegmentService {
         const passGroup = new RemarkGroup();
         passGroup.group = 'Segment Remark';
         passGroup.passiveSegments = tourSegment;
-        alert("passgroup");
-        alert(JSON.stringify(passGroup));
-        alert("passgroup passive");
-        alert(JSON.stringify(passGroup.passiveSegments));
         return passGroup;
 
     }

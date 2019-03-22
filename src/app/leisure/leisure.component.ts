@@ -109,7 +109,6 @@ export class LeisureComponent implements OnInit {
 
     // TODO: This is a sample of passing the FormGroup values to services to build remarks
     // this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage);
-    alert('remarkCollection' + JSON.stringify(remarkCollection));
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();

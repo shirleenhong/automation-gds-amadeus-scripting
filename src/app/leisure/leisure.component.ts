@@ -39,7 +39,6 @@ export class LeisureComponent implements OnInit {
     private remarkService: RemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
-
     private segmentService: SegmentService,
     private tourPackageRemarksService: TourPackageRemarksService,
     private fb: FormBuilder
@@ -101,14 +100,15 @@ export class LeisureComponent implements OnInit {
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
-    alert("y");
+
+
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
-    alert(JSON.stringify(remarkCollection));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-
+    remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
     // TODO: This is a sample of passing the FormGroup values to services to build remarks
-    this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage);
+
+
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();

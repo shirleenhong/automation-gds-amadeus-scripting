@@ -20,7 +20,7 @@ import { PassiveSegmentsComponent } from './passive-segments/passive-segments.co
 import { AccordionComponent } from './shared/accordion/accordion.component';
 
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
-import { TourPackageRemarksService } from './service/tour-package-remarks.service';
+import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,8 @@ import { TourPackageRemarksService } from './service/tour-package-remarks.servic
     TourSegmentComponent,
     UpdateTourSegmentComponent,
     PassiveSegmentsComponent,
-    AccordionComponent
+    AccordionComponent,
+    LeisureFeeComponent
   ],
   imports: [
     BrowserModule,
@@ -50,8 +51,7 @@ import { TourPackageRemarksService } from './service/tour-package-remarks.servic
     BsDatepickerModule.forRoot()
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: TourPackageRemarksService }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   exports: [],

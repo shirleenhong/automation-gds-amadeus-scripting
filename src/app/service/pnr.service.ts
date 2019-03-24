@@ -32,7 +32,7 @@ export class PnrService {
     getCFLine() {
 
         if (this.isPNRLoaded) {
-            for (let rm of this.pnrObj.rmElements) {
+            for (const rm of this.pnrObj.rmElements) {
                 if (rm.freeFlowText.indexOf('CF/-') === 0) {
                     return rm.freeFlowText;
                 }
@@ -42,9 +42,21 @@ export class PnrService {
         return '';
     }
 
+    getSFCLine() {
+        if (this.isPNRLoaded) {
+            for (const rm of this.pnrObj.rmElements) {
+                if (rm.freeFlowText.indexOf('SFC/-') === 0) {
+                    return rm.freeFlowText;
+                }
+            }
+        }
+        return '';
+    }
+
+
     getFSLineNumber() {
         if (this.isPNRLoaded) {
-            for (let rm of this.pnrObj.fsElements) {
+            for (const rm of this.pnrObj.fsElements) {
                 return rm.elementNumber;
             }
         }
@@ -54,7 +66,7 @@ export class PnrService {
 
     getPassengers() {
         if (this.isPNRLoaded) {
-            let passengers = [];
+            const passengers = [];
 
             for (let rm of this.pnrObj.nameElements) {
                 let fname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.givenName;
@@ -78,7 +90,7 @@ export class PnrService {
 
     getDestinationLine() {
         if (this.isPNRLoaded) {
-            for (let rm of this.pnrObj.rmElements) {
+            for (const rm of this.pnrObj.rmElements) {
                 if (rm.freeFlowText.indexOf('DE/-') === 0) {
                     return rm.elementNumber;
                 }
@@ -125,6 +137,33 @@ export class PnrService {
             
         }
 
+    }
+
+    getPnrSegments() {
+        if (this.isPNRLoaded) {
+            for (const rm of this.pnrObj.get) {
+                if (rm.freeFlowText.indexOf('DE/-') === 0) {
+                    return rm.elementNumber;
+                }
+            }
+        }
+        return '';
+    }
+
+    getPassiveCarSegmentNumbers() {
+        const elementNumbers = new Array<number>();
+        for (const rm of this.pnrObj.auxCarSegments) {
+            elementNumbers.push(rm.elementNumber);
+        }
+        return elementNumbers;
+    }
+
+    getPassiveHotelSegmentNumbers() {
+        const elementNumbers = new Array<number>();
+        for (const rm of this.pnrObj.auxHotelSegments) {
+            elementNumbers.push(rm.elementNumber);
+        }
+        return elementNumbers;
     }
 
 

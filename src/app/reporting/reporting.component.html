@@ -1,11 +1,24 @@
 <!-- <form [formGroup]="reportingForm"> -->
 <div class="row">
   <div class="col">
+    Does this PNR contain travel to any countries listed below?
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <select>
+      <option *ngFor="let item of countryList">{{item}}</option>
+    </select>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col">
     BSP Routing Code :
-    <select id="bspRouteCode"
-     class="form-control" [(ngModel)]="reportingView.routeCode"
-     [disabled] = 'reportingView.isDisabled'
-     >
+    <select id="bspRouteCode" class="form-control" [(ngModel)]="reportingView.bspRouteCode">
+      <!-- [disabled]='reportingView.isDisabled'> -->
       <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
         {{item.itemText}}
       </option>
@@ -15,88 +28,56 @@
   <div class="col">
 
     Destination Code:
-    <select id="destinationList"  [(ngModel)]="reportingView.destination" 
-    class="form-control" name="destinationList"
-    [disabled] = 'reportingView.isDisabledDest'
-    >
+    <select id="destinationList" [(ngModel)]="reportingView.destination" class="form-control" name="destinationList">
+      <!-- [disabled]='reportingView.isDisabledDest'> -->
       <option *ngFor="let p of destinationList" [value]="p.endpoint">
         {{p.endpoint}}
       </option>
     </select>
   </div>
 </div>
-<!-- </form> -->
 
-<!--        
-    <div class="col">
-      <label for="destination">Destination</label>
-      <select id="destination" class="form-control" [(ngModel)]="routeCode" (change)="routeCodeChange()" required
-        [disabled]="isDisabled">
-        <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <label for="passengerName">Passenger Name</label>
-      <input type="text" class="form-control" id="passengerName" placeholder="e.g. Jane Doe">
-    </div>
-
-    <div class="col">
-      <label for="bankAccounts">Bank account list</label>
-      <select id="bankAccounts" class="form-control" [(ngModel)]="routeCode" (change)="routeCodeChange()" required
-        [disabled]="isDisabled">
-        <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-
-  </div>
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="cardNumber">Card number</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-credit-card"></i></span>
-          </div>
-          <input type="text" class="form-control" name="cardNumber" placeholder="xxxx xxxx xxxx xxxx">
-        </div> <!-- input-group.//
-      </div> <!-- form-group.//
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <label><span class="hidden-xs">Expiration</span> </label>
-        <div class="form-inline">
-          <select class="form-control" style="width:45%">
-            <option>MM</option>
-            <option>January</option>
-            <option>February</option>
-            <option>March</option>
-          </select>
-          <span style="width:10%; text-align: center"> / </span>
-          <select class="form-control" style="width:45%">
-            <option>YY</option>
-            <option>2018</option>
-            <option>2019</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <label for="redeemPoints">Redeem Points</label>
-      <input placeholder="Maximum 7 digits" type="text" class="form-control" id="redeemPoints">
-    </div>
-
-    <div class="col">
-    </div>
-
+<div class="row">
+  <div class="col">
+    Name of Company Traveller Works For:
+    <input type="text" class="form-control" [(ngModel)]="reportingView.companyName" id="companyName"
+      placeholder="e.g. CWT" />
   </div>
 </div>
 
- -->
+<div class="row">
+  <div class="col">
+    No Fee Reason:
+    <input type="text" class="form-control" maxlength="35" [(ngModel)]="reportingView.noFeeReason" id="noFeeReason"
+      placeholder="Enter No Fee Reason" [disabled]="checkSFC()" />
+    <!-- [disabled]='reportingView.isDisabledReason'> -->
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    Did client accept cancellation insurance?
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <input type="radio" name="showInsurance" (change)="isHidden=!isHidden" checked="true"
+      [disabled]="checkInsurance()" />Yes - Cancellation Insurance Accepted
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <input type="radio" name="showInsurance" (change)="isHidden=!isHidden" [disabled]="checkInsurance()" />No -
+    Cancellation Insurance Declined
+  </div>
+</div>
+
+<div class="row" *ngIf="isHidden">
+  <div class="col">
+    Insurance Declined Reason:
+    <input type="text" class="form-control" maxlength="35" [(ngModel)]="reportingView.insuranceDeclinedReason"
+      id="insuranceDeclinedReason" placeholder="Reason Why Insurance Declined" />
+  </div>
+</div>

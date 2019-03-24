@@ -11,7 +11,7 @@ export class PnrService {
     pnrObj: any;
     isPNRLoaded = false;
     errorMessage = '';
-    destinationCity =  [{endpoint : ""}]
+    destinationCity = [{ endpoint: "" }]
 
     constructor() { }
 
@@ -26,7 +26,7 @@ export class PnrService {
             this.errorMessage = 'Error:' + error;
         });
 
-        console.log(JSON.stringify(this.pnrObj ));
+        console.log(JSON.stringify(this.pnrObj));
     }
 
     getCFLine() {
@@ -42,11 +42,22 @@ export class PnrService {
         return '';
     }
 
-    getSFCLine() {
+    getSFCLineNumber() {
         if (this.isPNRLoaded) {
             for (const rm of this.pnrObj.rmElements) {
                 if (rm.freeFlowText.indexOf('SFC/-') === 0) {
-                    return rm.freeFlowText;
+                    return rm.elementNumber;
+                }
+            }
+        }
+        return '';
+    }
+
+    getTaxLineNumber() {
+        if (this.isPNRLoaded) {
+            for (const rm of this.pnrObj.rmElements) {
+                if (rm.freeFlowText.indexOf('TAX') === 0) {
+                    return rm.elementNumber;
                 }
             }
         }
@@ -72,7 +83,7 @@ export class PnrService {
                 let fname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.givenName;
                 let lname = rm.fullNode.enhancedPassengerData.enhancedTravellerInformation.otherPaxNamesDetails.surname;
 
-                let fullname: any = lname + '-' + fname.toUpperCase().replace(' MS', '').replace(' MRS', '').replace(' MSTR', '').replace(' INF', '').replace(' MR', '').replace(' MISS', '') ;
+                let fullname: any = lname + '-' + fname.toUpperCase().replace(' MS', '').replace(' MRS', '').replace(' MSTR', '').replace(' INF', '').replace(' MR', '').replace(' MISS', '');
 
                 let passenger = {
                     firstname: fname,
@@ -99,23 +110,21 @@ export class PnrService {
         return '';
     }
 
-    pushDestination(endpoint){
+    pushDestination(endpoint) {
         const look = this.destinationCity.find(x => x.endpoint === endpoint);
-                if (look == null) {
-                    var destination =
-                    {
-                        endpoint: endpoint
-                    }
-                    this.destinationCity.push(destination);
-                }
+        if (look == null) {
+            var destination =
+            {
+                endpoint: endpoint
+            }
+            this.destinationCity.push(destination);
+        }
     }
 
-   getPnrDestinations() {
-        
-        if(this.isPNRLoaded)
-        {
-            for (let air of this.pnrObj.airSegments)
-            {
+    getPnrDestinations() {
+
+        if (this.isPNRLoaded) {
+            for (let air of this.pnrObj.airSegments) {
                 var airendpoint = air.arrivalAirport;
                 this.pushDestination(airendpoint)
             }
@@ -124,8 +133,7 @@ export class PnrService {
                 // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
                 var longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
                 var endpoint = null
-                if (longFreetext.indexOf('/EC-') > -1)
-                {
+                if (longFreetext.indexOf('/EC-') > -1) {
                     var endpoint = longFreetext.substr(longFreetext.indexOf('/EC-') + 4, 3);
                 }
                 if (endpoint != null) {
@@ -134,7 +142,7 @@ export class PnrService {
             }
             return this.destinationCity;
 
-            
+
         }
 
     }

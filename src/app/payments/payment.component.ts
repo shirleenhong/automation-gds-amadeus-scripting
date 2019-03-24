@@ -11,7 +11,7 @@ import { MatrixReceiptComponent } from './matrix-receipt/matrix-receipt.componen
 export class PaymentComponent {
   @Input()
   paymentView: PaymentViewModel;
-  @ViewChild(LeisureFeeComponent) liesureFee: LeisureFeeComponent;
+  @ViewChild(LeisureFeeComponent) leisureFee: LeisureFeeComponent;
   @ViewChild(MatrixReceiptComponent) matrixReceipt: MatrixReceiptComponent;
 
 

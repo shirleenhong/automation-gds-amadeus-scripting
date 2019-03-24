@@ -56,7 +56,7 @@ export class LeisureComponent implements OnInit, AfterViewInit {
           balanceToBePaid: new FormControl('', [Validators.required]),
           balanceDueDate: new FormControl('', [Validators.required]),
           commisionAmount: new FormControl('', [Validators.required])
-        })
+        }, { updateOn: 'blur' })
       }),
       reporting: this.fb.group({
         bspRoutingCode: new FormControl('', [Validators.required]),
@@ -96,7 +96,7 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
 
-    const leisureFee = this.paymentComponent.liesureFee;
+    const leisureFee = this.paymentComponent.leisureFee;
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }

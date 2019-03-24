@@ -1,0 +1,98 @@
+<div class="contentPanel">
+
+  <form [formGroup]="leisureFeeForm">
+
+    <div class="row form-group">
+      <div class="col-3">Segment Association :</div>
+      <div class="col-8">
+        <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control">
+          <option value="0">No Segment Association Required/Fee Applies to PNR</option>
+          <option value="1">Ticket Segment</option>
+          <option value="2">Tour/Cruise Segment</option>
+          <option value="3">Hotel Segment</option>
+          <option value="4">Car Segment</option>
+        </select>
+      </div>
+    </div>
+    <div *ngIf="f.segmentAssoc.value != 0">
+
+      <div *ngIf="f.segmentAssoc.value == 3 || f.segmentAssoc.value == 4">
+        <div class="row form-group">
+          <div class="col-3"></div>
+          <div class="col">
+            Do you wish to attach the service fee to a specific itinerary segment?
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-3"></div>
+          <div class="col-2">
+            <select id="segmentNum" name="segmentNum" class="form-control" formControlName="segmentNum">
+              <option *ngFor="let item of  segmentList" [value]="item">
+                {{item}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-3">
+          Amount :
+        </div>
+        <div class="col-2">
+          <input type="number" id="amount" name="amount" class="form-control" formControlName="amount">
+        </div>
+      </div>
+
+
+      <div class="row form-group">
+        <div class="col-3">
+          Form of Payment :
+        </div>
+        <div class="col-3">
+          <select id="paymentType" name="paymentType" class="form-control" formControlName="paymentType">
+            <option value="C">Credit Card</option>
+            <option value="K">Cheque</option>
+          </select>
+        </div>
+      </div>
+      <div class="row form-group" *ngIf="f.paymentType.value=='C'">
+        <div class="col-3">
+          Caredit Card Info:
+        </div>
+        <div class="col-1">
+          <input type="text" id="vendorCode" name="vendorCode" class="form-control" formControlName="vendorCode">
+        </div>
+        <div class="col-3">
+          <input type="text" id="ccNo" name="ccNo" class="form-control" formControlName="ccNo" maxlength="16">
+        </div>
+        <div class="col-3">
+          <input type="month" class="form-control" bsDatePicker placeHolder="MM/YY" id="expDate" required name="expDate"
+            formControlName="expDate" />
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-3"></div>
+        <div class="col">
+          "Select the Province of the traveler's Home Address"
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-3"></div>
+        <div class="col-4">
+          <select id="address" name="address" class="form-control" formControlName="address">
+            <option *ngFor="let item of  provinceList" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+
+
+</div>

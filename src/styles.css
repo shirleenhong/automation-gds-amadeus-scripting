@@ -26,3 +26,14 @@
 }
 
 /* Microsoft Edge */
+
+
+.form-group input.ng-invalid.ng-touched,
+.form-group input.ng-invalid:focus,
+.form-group select.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched,
+.form-submit input.ng-invalid,
+.form-submit select.ng-invalid,
+.form-submit textarea.ng-invalid {
+    border-color: #ff4c6a;
+}

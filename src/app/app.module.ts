@@ -20,6 +20,8 @@ import { PassiveSegmentsComponent } from './passive-segments/passive-segments.co
 import { AccordionComponent } from './shared/accordion/accordion.component';
 
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
+import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
 
@@ -39,6 +41,8 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
     UpdateTourSegmentComponent,
     PassiveSegmentsComponent,
     AccordionComponent,
+    UpdateAccountingRemarkComponent,
+    AccountingRemarkComponent,
     LeisureFeeComponent
   ],
   imports: [
@@ -58,6 +62,6 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
   ],
   bootstrap: [AppComponent],
   exports: [],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent]
+  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent]
 })
 export class AppModule { }

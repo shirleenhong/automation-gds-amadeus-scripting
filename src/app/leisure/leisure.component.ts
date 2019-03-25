@@ -32,8 +32,9 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
-    private tourPackageRemarksService: TourPackageRemarksService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private tourPackageRemarksService: TourPackageRemarksService
+
 
   ) {
 
@@ -95,10 +96,12 @@ export class LeisureComponent implements OnInit, AfterViewInit {
 
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
+    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
 
     const leisureFee = this.paymentComponent.leisureFee;
+
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }

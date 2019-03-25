@@ -17,8 +17,8 @@
 <div class="row">
   <div class="col">
     BSP Routing Code :
-    <select id="bspRouteCode" class="form-control" [(ngModel)]="reportingView.bspRouteCode">
-      <!-- [disabled]='reportingView.isDisabled'> -->
+    <select id="bspRouteCode" class="form-control" [(ngModel)]="reportingView.routeCode"
+      [disabled]='reportingView.isDisabled'>
       <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
         {{item.itemText}}
       </option>
@@ -28,8 +28,8 @@
   <div class="col">
 
     Destination Code:
-    <select id="destinationList" [(ngModel)]="reportingView.destination" class="form-control" name="destinationList">
-      <!-- [disabled]='reportingView.isDisabledDest'> -->
+    <select id="destinationList" [(ngModel)]="reportingView.destination" class="form-control" name="destinationList"
+      [disabled]='reportingView.isDisabledDest'>
       <option *ngFor="let p of destinationList" [value]="p.endpoint">
         {{p.endpoint}}
       </option>
@@ -74,10 +74,4 @@
   </div>
 </div>
 
-<div class="row" *ngIf="isHidden">
-  <div class="col">
-    Insurance Declined Reason:
-    <input type="text" class="form-control" maxlength="35" [(ngModel)]="reportingView.insuranceDeclinedReason"
-      id="insuranceDeclinedReason" placeholder="Reason Why Insurance Declined" />
-  </div>
-</div>
+ -->

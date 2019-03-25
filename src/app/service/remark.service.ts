@@ -257,7 +257,6 @@ export class RemarkService {
 
     }
 
-
     async SubmitRemarks() {
         this.deleteRemarks();
         this.sendCryptics();

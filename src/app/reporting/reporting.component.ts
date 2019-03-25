@@ -4,6 +4,7 @@ import { PnrService } from '../service/pnr.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { ReportingViewModel } from '../models/reporting-view.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -14,30 +15,36 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   reportingView: ReportingViewModel;
   bspRouteCodeList: SelectItem[];
-  destinationList: SelectItem[];
+  destinationList: Array<any>;
   remarkList: Array<RemarkModel>;
 
-  constructor(private pnrService: PnrService) {
+  reportingForm: FormGroup;
 
+  constructor(private pnrService: PnrService) {
+  
   }
 
   ngAfterViewInit() {
-
+    this.getDestination();
+    this.getPnrCFLine();
+    // this.reportingForm.get('destinationList').setValidators(this.setRequired());
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.getPnrCFLine();
+  
+    
   }
 
   ngOnInit() {
-    this.destinationList = this.pnrService.getPnrDestinations();
+    // this.destinationList = this.pnrService.getPnrDestinations();
     this.getRouteCodes();
 
   }
 
+
   getRouteCodes() {
     // todo Get from API DDB
-    this.bspRouteCodeList = [{ itemText: '', itemValue: '-1' },
+    this.bspRouteCodeList = [{ itemText: '', itemValue: '' },
     { itemText: 'USA incl. all US Territories and Possessions', itemValue: '0' },
     { itemText: 'Mexico/Central America/Canal Zone/Costa Rica', itemValue: '1' },
     { itemText: 'Caribbean and Bermuda', itemValue: '2' },
@@ -51,9 +58,24 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
     ];
   }
 
-  reportingChange() {
-    this.getPnrCFLine();
+  // get f() { return this.reportingForm.controls; }
+
+  getDestination()
+  {
+    this.destinationList = this.pnrService.getPnrDestinations();
   }
+  
+  checkDestination(){
+    if(this.destinationList.length<=1)
+    {
+      this.reportingView.isDisabledDest = true;  
+    }
+    else
+    {
+      this.reportingView.isDisabledDest = false;  
+    }
+  }
+
 
   getPnrCFLine() {
 
@@ -70,10 +92,13 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
       }
       const cfa = cfLine.substr(4, 3);
       if (cfa === 'RBM' || cfa === 'RBP') { this.reportingView.tripType = 2; }
+
       this.reportingView.isDisabled = false;
       this.reportingView.cfLine.cfa = cfa;
       this.reportingView.cfLine.code = cfLine;
+      this.checkDestination();
     } else {
+      this.reportingView.isDisabledDest = true;  
       this.reportingView.isDisabled = true;
     }
 

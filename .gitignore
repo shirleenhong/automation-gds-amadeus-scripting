@@ -9,4 +9,8 @@ target
 **/coverage
 **/node_modules
 dist
+<<<<<<< Updated upstream
 !index.html
+=======
+!index.html
+>>>>>>> Stashed changes

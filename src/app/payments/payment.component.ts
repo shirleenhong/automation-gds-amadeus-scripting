@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { PaymentViewModel } from '../models/payment-view.model';
+import { LeisureFeeComponent } from './leisure-fee/leisure-fee.component';
+import { MatrixReceiptComponent } from './matrix-receipt/matrix-receipt.component';
 
 @Component({
   selector: 'app-payment',
@@ -9,6 +11,9 @@ import { PaymentViewModel } from '../models/payment-view.model';
 export class PaymentComponent {
   @Input()
   paymentView: PaymentViewModel;
+  @ViewChild(LeisureFeeComponent) leisureFee: LeisureFeeComponent;
+  @ViewChild(MatrixReceiptComponent) matrixReceipt: MatrixReceiptComponent;
+
 
   onEditReceipt() {
 

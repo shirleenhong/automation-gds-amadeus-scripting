@@ -32,7 +32,7 @@ export class DDBService implements OnInit {
     if (this.isTokenExpired === true || this.token === '') {
       const bodyInfo = { client_id: environment.clientId, client_secret: environment.clientSecret, grant_type: 'client_credentials' };
       const hds = new HttpHeaders({
-        'Content", itemText:"Type': 'application/json'
+        'Content-Type': 'application/json'
       });
 
       const res = await this.httpClient.post<any>('/api/oauth2/token', JSON.stringify(bodyInfo), { headers: hds }).toPromise();
@@ -86,7 +86,18 @@ export class DDBService implements OnInit {
       { provinceCode: 'SK', tax1: 0.15, taxType1: 'GST', tax2: 0.0, taxType2: '' },
       { provinceCode: 'YT', tax1: 0.15, taxType1: 'GST', tax2: 0.0, taxType2: '' },
     ];
-
   }
+  getSupplierCode() {
+    let SupplierCode = [];
 
+    // let passesupplier = {type: type,suppliercode: suppliercode,supplierName: supplierName,};
+    SupplierCode = [{ type: '', supplierCode: '', supplierName: '' },
+    { type: '1', supplierCode: 'AC', supplierName: 'Air Canada' },
+    { type: '1', supplierCode: 'QK', supplierName: 'Air Canada Jazz' },
+    { type: '1', supplierCode: 'RV', supplierName: 'Air Canada Rouge' },
+    { type: '6', supplierCode: 'G69', supplierName: 'Autos Tucan S.L.L' },
+    { type: '6', supplierCode: 'G70', supplierName: 'G70	Autocars Rufo' }
+    ];
+    return SupplierCode;
+  }
 }

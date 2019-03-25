@@ -4,10 +4,10 @@ export class MatrixReceiptModel {
     bankAccount = '';
     glCode = '124000';
     description = '';
-    points = 0;
-    amount = 0;
+    points;
+    amount;
     cwtRef = '';
-    lastFourVi = 0;
+    lastFourVi;
     ccNo: number;
     expDate: Date;
     vendorCode: string;

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
+import { MatrixAccountingModel} from '../models/pnr/matrix-accounting.model';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { DatePipe } from '@angular/common';
+
+
 
 @Injectable({
     providedIn: 'root',
@@ -27,12 +30,52 @@ export class PaymentRemarkService {
 
     }
 
+    accountingRemarks: Array<MatrixAccountingModel>;
+
+    public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
+
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'Accounting Remark';
+        remGroup.remarks = new Array<RemarkModel>();
+        accountingRemarks.forEach(account => {
+            this.processAccountingRemarks(account, remGroup.remarks);
+        });
+
+        return remGroup;
+
+    }
+
     getRemarksModel(remText) {
         const rem = new RemarkModel();
         rem.category = '*';
         rem.remarkText = remText;
         rem.remarkType = 'RM';
         return rem;
+    }
+
+    getFOP(modeofPayment, creditCardNo, vendorCode, expDate)
+    {
+        const datePipe = new DatePipe('en-US');
+        let fop = '';
+        if (modeofPayment == 'CC') {
+             var month = datePipe.transform(expDate, 'MM');
+             var year = expDate.toString().substr(2,2);
+            fop = "CC" + vendorCode + creditCardNo + '/-EXP' + month + year;
+        } else {
+            fop =modeofPayment;
+        }
+        return fop;
+    }
+
+    processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>)
+    {
+        const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' + accounting.baseAmount.toString().trim() + '/-PT-' + accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() + 'XG/-PT-' + accounting.qst.toString().trim() +  ' XQ/-PT- ' + accounting.otherTax.toString().trim() + 'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
+        const acc2 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.toString().trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim()  + '/-FOP-' + this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
+              '/-TK-' + accounting.tktLine.toString().trim() + '/-MP-' + accounting.passengerNo.toString().trim() + '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim() + '/S' + accounting.segmentNo.toString().trim();
+
+        remarkList.push(this.getRemarksModel(acc1));      
+        remarkList.push(this.getRemarksModel(acc2));      
+
     }
 
     processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {

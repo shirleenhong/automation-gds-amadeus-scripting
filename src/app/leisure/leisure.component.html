@@ -1,6 +1,6 @@
-<!-- <div *ngIf="isPnrLoaded"> -->
+<div *ngIf="isPnrLoaded"> 
 <form [formGroup]="leisureForm">
-  <div>
+  
     <accordion [closeOthers]="true">
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
@@ -34,5 +34,6 @@
     </accordion>
     <br />
     <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
-  </div>
+
 </form>
+</div>

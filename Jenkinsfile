@@ -16,7 +16,7 @@ pipeline {
     // TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/dev-gds-scripting-amadeus/fdd76e1dc1f3f5d4'
     DEV_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/dev-gds-scripting-amadeus-tg/4960397b08f766e7'
     TST_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/tst-gds-scripting-amadeus-tg/96e7c9cc7c232266'
-    STG_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/stg-gds-scripting-amadeus-tg/2acfe96b7c098224'
+    STG_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/stg-gds-scripting-amadeus-tg/94c3ad6cc12221f0'
     // PROD_TARGET_GROUP_ARN ='arn:aws:elasticloadbalancing:us-west-2:704608996963:targetgroup/bpg-gds-scripting-amadeus-tg/59e5073548e3d7f6'    
   }
   // General Options

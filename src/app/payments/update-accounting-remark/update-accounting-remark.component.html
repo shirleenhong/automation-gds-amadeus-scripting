@@ -9,6 +9,14 @@
   <form [formGroup]="matrixAccountingForm">
 
     <div class="form-group  row">
+      <div class="col-sm-4">BSP : </div>
+      <div class="col-sm-8">
+        <input type="text" maxlength="4" class="form-control" id="bsp" [(ngModel)]="accountingRemarks.bsp" name="bsp"
+          [ngModelOptions]="{standalone: true}" (change)="IsBSP($event.target.value)" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
       <div class="col-sm-4">MAC Line # : </div>
       <div class="col-sm-8">
         <input type="text" maxlength="4" class="form-control" id="tkMacLine" [(ngModel)]="accountingRemarks.tkMacLine"
@@ -56,9 +64,9 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="select a supplier Code" formControlName="supplierCodeName"
           id="supplierCodeName" list="dynamicSupplierCode" [(ngModel)]="accountingRemarks.supplierCodeName"
-          formControlName="supplierCodeName" />
+          formControlName="supplierCodeName" (change)="SetTktNumber()" />
         <datalist id="dynamicSupplierCode">
-          <option *ngFor="let item of supplierCodeList" [value]="item.supplierCode">{{item.supplierCode}} -
+          <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">{{item.supplierCode}} -
             {{item.supplierName}}</option>
         </datalist>
       </div>
@@ -186,12 +194,23 @@
         </div>
       </div>
     </div>
+    <div *ngIf="accountingRemarks.bsp === true">
+      <div class="form-group  row">
+        <div class="col-sm-4">Ticket Number: </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="tktLine" formControlName="tktLine"
+            [(ngModel)]="accountingRemarks.tktLine" formControlName="tktLine" name="tktLine" required />
+        </div>
+      </div>
+    </div>
 
-    <div class="form-group  row">
-      <div class="col-sm-4">Ticket Number: </div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="tktLine" formControlName="tktLine"
-          [(ngModel)]="accountingRemarks.tktLine" formControlName="tktLine" name="tktLine" required />
+    <div *ngIf="accountingRemarks.bsp !== true">
+      <div class="form-group  row">
+        <div class="col-sm-4">Description: </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="description" formControlName="description"
+            [(ngModel)]="accountingRemarks.description" formControlName="description" name="description" required />
+        </div>
       </div>
     </div>
 

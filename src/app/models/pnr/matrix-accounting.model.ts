@@ -1,22 +1,25 @@
 export class MatrixAccountingModel {
-    tkMacLine:number;
+    bsp: boolean;
+    type: string;
+    tkMacLine: number;
     accountingTypeRemark: string;
     segmentNo: number;
     passengerNo: string;
     fop: string;
     vendorCode: string;
-    expDate:  string;
+    expDate: string;
     expYear: string;
     cardNumber: string;
     baseAmount: number;
     commisionWithoutTax: number;
     gst: number;
     hst: number;
-    qst: number ;
-    otherTax: number ;
+    qst: number;
+    otherTax: number;
     supplierCodeName: string;
     supplierConfirmatioNo: string;
     airAccountingRemark: string;
     tktLine: string;
-    
+    description: string;
+
 }

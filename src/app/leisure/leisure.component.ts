@@ -35,6 +35,7 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private tourPackageRemarksService: TourPackageRemarksService
 
+
   ) {
 
     this.leisureForm = this.fb.group({
@@ -98,7 +99,7 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
-    // TODO: This is a sample of passing the FormGroup values to services to build remarks
+
     const leisureFee = this.paymentComponent.leisureFee;
 
     if (leisureFee.leisureFeeForm.valid) {

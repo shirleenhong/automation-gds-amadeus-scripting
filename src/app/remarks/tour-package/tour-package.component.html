@@ -6,8 +6,8 @@
     <div class="col">
       <div class="form-group">
         <label for="userIdFirstWay">Currency Type</label>
-        <input type="text" class="form-control" placeholder="select a currency" formControlName="userIdFirstWay" id="userIdFirstWay"
-          list="dynamicCurrency" />
+        <input type="text" class="form-control" placeholder="select a currency" formControlName="userIdFirstWay"
+          id="userIdFirstWay" list="dynamicCurrency" />
         <datalist id="dynamicCurrency">
           <option *ngFor="let item of bspCurrencyList" [value]="item.itemText">{{item.itemText}}</option>
         </datalist>
@@ -19,7 +19,8 @@
     <div class="col">
       <div class="form-group">
         <label for="adultNum">Number of Adults</label>
-        <input type="number" class="form-control" placeholder="any number from 1-9" id="adultNum" formControlName="adultNum" />
+        <input type="number" class="form-control" placeholder="any number from 1-9" id="adultNum"
+          formControlName="adultNum" />
       </div>
       <div *ngIf="group.controls['adultNum'].errors" class="error-msg">
         <div [hidden]="!group.controls['adultNum'].errors.required">This field is required.</div>
@@ -55,7 +56,8 @@
     <div class="col">
       <div class="form-group">
         <label for="insurancePerAdult">Insurance per adult</label>
-        <input type="text" class="form-control" maxlength="7" id="insurancePerAdult" formControlName="insurancePerAdult" />
+        <input type="text" class="form-control" maxlength="7" id="insurancePerAdult"
+          formControlName="insurancePerAdult" />
       </div>
       <div *ngIf="group.controls['insurancePerAdult'].errors" class="error-msg">
         <div [hidden]="!group.controls['insurancePerAdult'].errors.required">This field is required.</div>
@@ -98,7 +100,8 @@
     <div class="col">
       <div class="form-group">
         <label for="insurancePerChild">Taxes/Service per child</label>
-        <input type="text" class="form-control" maxlength="7" id="insurancePerChild" formControlName="insurancePerChild" />
+        <input type="text" class="form-control" maxlength="7" id="insurancePerChild"
+          formControlName="insurancePerChild" />
       </div>
       <div *ngIf="group.controls['insurancePerChild'].errors" class="error-msg">
         <div [hidden]="!group.controls['insurancePerChild'].errors.required">This field is required.</div>
@@ -119,7 +122,8 @@
     <div class="col">
       <div class="form-group">
         <label for="totalCostPerInfant">Total cost per infant</label>
-        <input type="text" class="form-control" maxlength="7" id="totalCostPerInfant" formControlName="totalCostPerInfant" />
+        <input type="text" class="form-control" maxlength="7" id="totalCostPerInfant"
+          formControlName="totalCostPerInfant" />
       </div>
       <div *ngIf="group.controls['totalCostPerInfant'].errors" class="error-msg">
         <div [hidden]="!group.controls['totalCostPerInfant'].errors.required">This field is required.</div>
@@ -141,11 +145,11 @@
     <div class="col">
       <div class="form-group">
         <label for="totalCostHoliday">The total cost of Holiday</label>
-        <input type="text" class="form-control" id="totalCostHoliday" formControlName="totalCostHoliday" />
+        <input type="text" class="form-control" id="totalCostHoliday" formControlName="totalCostHoliday" disabled />
       </div>
-      <div *ngIf="group.controls['totalCostHoliday'].errors" class="error-msg">
+      <!-- <div *ngIf="group.controls['totalCostHoliday'].errors" class="error-msg">
         <div [hidden]="!group.controls['totalCostHoliday'].errors.required">This field is required.</div>
-      </div>
+      </div> -->
     </div>
     <div class="col">
       <div class="form-group">
@@ -164,17 +168,17 @@
     <div class="col">
       <div class="form-group">
         <label for="balanceToBePaid">Balance to be Paid</label>
-        <input type="text" class="form-control" id="balanceToBePaid" formControlName="balanceToBePaid" />
+        <input type="text" class="form-control" id="balanceToBePaid" formControlName="balanceToBePaid" disabled />
       </div>
-      <div *ngIf="group.controls['balanceToBePaid'].errors" class="error-msg">
+      <!-- <div *ngIf="group.controls['balanceToBePaid'].errors" class="error-msg">
         <div [hidden]="!group.controls['balanceToBePaid'].errors.required">This field is required.</div>
-      </div>
+      </div> -->
     </div>
     <div class="col">
       <div class="form-group">
         <label for="balanceDueDate">Balance Due Date</label>
-        <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()" placeholder="yyyy-mm-dd"
-          formControlName="balanceDueDate" />
+        <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()"
+          placeholder="yyyy-mm-dd" formControlName="balanceDueDate" />
       </div>
       <div *ngIf="group.controls['balanceDueDate'].errors" class="error-msg">
         <div [hidden]="!group.controls['balanceDueDate'].errors.required">This field is required.</div>

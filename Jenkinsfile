@@ -269,8 +269,8 @@ def deployDockerContainer(targetGroupARN) {
   echo ' >>>>>>>>>>>>>>>>>> ECS Compose <<<<<<<<<<<<<<<< '
   echo "Cluster Name: ${CLUSTER_NAME}"
   
-  sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster dev-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10'
-  sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster dev-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0'
+  sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${ENVIRONMENT}-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10'
+  sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${ENVIRONMENT}-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0'
 
   echo ' ============== ECS Deployment End ============== '
 }

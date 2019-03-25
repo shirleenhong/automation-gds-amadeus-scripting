@@ -4,11 +4,13 @@ export class ReportingViewModel {
     routeCode: string;
     tripType: number;
     reasonForTravel: string;
-    isDisabled: boolean = false;
+    isDisabled = false;
     destination: string;
     companyName: string;
     noFeeReason: string;
     insuranceDeclinedReason: string;
     cfLine: CfRemarkModel;
-    isDisabledDest: boolean = false;
+    isDisabledDest = false;
+    sfcLineAdded: boolean;
+    leisureFeeType: number;
 }

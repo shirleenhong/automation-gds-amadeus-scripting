@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
 import { RemarkService } from '../service/remark.service';
 import { LeisureViewModel } from '../models/leisure-view.model';
@@ -18,7 +18,7 @@ import { TourPackageRemarksService } from '../service/tour-package-remarks.servi
   styleUrls: ['./leisure.component.scss']
 })
 
-export class LeisureComponent implements OnInit, AfterViewInit {
+export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked {
   isPnrLoaded: boolean;
   message: string;
   leisure: LeisureViewModel;
@@ -65,21 +65,27 @@ export class LeisureComponent implements OnInit, AfterViewInit {
       })
     });
 
-    this.leisureForm.valueChanges.subscribe(val => {
-      console.log(val);
-    });
-
     this.loadPNR();
 
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewChecked() {
+    // Subscribe to event from child Component
+    this.paymentComponent.leisureFee.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
+      this.leisure.reportingView.leisureFeeType = val;
+    });
 
+  }
+  ngAfterViewInit(): void {
   }
 
   async loadPNR() {
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+
+
+
+
   }
 
   ngOnInit() {
@@ -98,9 +104,8 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
-    // TODO: This is a sample of passing the FormGroup values to services to build remarks
-    const leisureFee = this.paymentComponent.leisureFee;
 
+    const leisureFee = this.paymentComponent.leisureFee;
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }

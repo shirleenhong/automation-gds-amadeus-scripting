@@ -26,8 +26,8 @@ export class ReportingRemarkService {
     }
 
     getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-        
-        if (reporting.routeCode == null)  {return}
+
+        if (reporting.routeCode == null) { return }
         const remText = reporting.routeCode + '' + reporting.tripType;
         rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 
@@ -38,7 +38,7 @@ export class ReportingRemarkService {
     }
 
     getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-        if(reporting.destination == null) {return}
+        if (reporting.destination == null) { return; }
 
         const remText = 'DE/-' + reporting.destination;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
@@ -55,30 +55,30 @@ export class ReportingRemarkService {
 
         // *U86
         let remText = 'U86/-OVERRIDE LEI';
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
 
         // *U10
         if (reporting.cfLine.cfa === 'CVC') {
             const companyname = reporting.companyName;
             remText = 'U10/-' + companyname;
-            rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+            rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
         }
 
         // *U11
         const noFeeReason = reporting.noFeeReason;
         remText = 'U11/-' + noFeeReason;
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
 
         // *U12
         const insuranceDeclined = reporting.insuranceDeclinedReason;
         remText = 'U12/-' + insuranceDeclined;
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
 
         // *U13
         const datePipe = new DatePipe('en-US');
         const dateToday = datePipe.transform(Date.now(), 'ddMMM');
         remText = 'U30/-NEWLEI' + dateToday;
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', ''));
+        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
 
     }
 

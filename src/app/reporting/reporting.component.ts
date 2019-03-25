@@ -6,23 +6,24 @@ import {
   OnChanges,
   SimpleChange,
   SimpleChanges
-} from "@angular/core";
-import { SelectItem } from "../models/select-item.model";
-import { PnrService } from "../service/pnr.service";
-import { RemarkModel } from "../models/pnr/remark.model";
-import { ReportingViewModel } from "../models/reporting-view.model";
-import { CfRemarkModel } from "../models/pnr/cf-remark.model";
+} from '@angular/core';
+import { SelectItem } from '../models/select-item.model';
+import { PnrService } from '../service/pnr.service';
+import { RemarkModel } from '../models/pnr/remark.model';
+import { ReportingViewModel } from '../models/reporting-view.model';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import {
   FormGroup,
   FormBuilder,
   Validators,
   FormArray,
   FormControl
-} from "@angular/forms";
+} from '@angular/forms';
+import { DDBService } from '../service/ddb.service';
 @Component({
-  selector: "app-reporting",
-  templateUrl: "./reporting.component.html",
-  styleUrls: ["./reporting.component.scss"]
+  selector: 'app-reporting',
+  templateUrl: './reporting.component.html',
+  styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
@@ -35,58 +36,32 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   enableInsurance = false;
   countryList: Array<string>;
 
-  constructor(private pnrService: PnrService) {}
+
+  constructor(private pnrService: PnrService, private ddbService: DDBService) { }
 
   ngAfterViewInit() {
-    this.getDestination();
-    this.getPnrCFLine();
 
-    this.countryList = [
-      "GHANA",
-      "NIGERIA",
-      "PAKISTAN",
-      "JOHANNESBURG-SOUTH AFRICA",
-      "NONE OF THE ABOVE"
-    ];
-
-    // this.reportingForm.get('destinationList').setValidators(this.setRequired());
   }
 
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(changes: SimpleChanges) { }
 
   ngOnInit() {
-    // this.destinationList = this.pnrService.getPnrDestinations();
     this.getRouteCodes();
+    this.getPnrCFLine();
+    this.getDestination();
+    this.countryList = [
+      '',
+      'GHANA',
+      'NIGERIA',
+      'PAKISTAN',
+      'JOHANNESBURG-SOUTH AFRICA',
+      'NONE OF THE ABOVE'
+    ];
+
   }
 
   getRouteCodes() {
-    // todo Get from API DDB
-    this.bspRouteCodeList = [
-      { itemText: "", itemValue: "" },
-      {
-        itemText: "USA incl. all US Territories and Possessions",
-        itemValue: "0"
-      },
-      {
-        itemText: "Mexico/Central America/Canal Zone/Costa Rica",
-        itemValue: "1"
-      },
-      { itemText: "Caribbean and Bermuda", itemValue: "2" },
-      { itemText: "South America4", itemValue: "3" },
-      {
-        itemText: "Europe-incl. Morocco/Tunisia/Algeria/Greenland",
-        itemValue: "4"
-      },
-      { itemText: "Africa", itemValue: "5" },
-      { itemText: "Middle East/Western Asia", itemValue: "6" },
-      { itemText: "Asia incl. India", itemValue: "7" },
-      {
-        itemText:
-          "Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam",
-        itemValue: "8"
-      },
-      { itemText: "Canada and St. Pierre et Miquelon", itemValue: "9" }
-    ];
+    this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
 
   // get f() { return this.reportingForm.controls; }
@@ -104,38 +79,43 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   checkSFC() {
-    if (this.pnrService.getSFCLineNumber() === "") {
+    if (this.pnrService.getSFCLineNumber() === '' || this.reportingView.leisureFeeType === 0) {
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+
+  checkInsurance() {
+    if (this.pnrService.getInsuranceCancellationLineNumber() === '') {
       return false;
     } else {
       return true;
     }
   }
 
-  checkInsurance() {
-    if (this.pnrService.getInsuranceCancellationLineNumber() === "") {
-      return false;
-    } else {
-      return true;
-    }
+  isU10Exist() {
+    return (this.pnrService.getU10LineNumber() !== '');
   }
+
 
   getPnrCFLine() {
     const cfLine = this.pnrService.getCFLine();
 
     this.reportingView.cfLine = new CfRemarkModel();
 
-    if (cfLine !== "") {
+    if (cfLine !== '') {
       this.reportingView.cfLine.lastLetter = cfLine.substr(-1);
-      if (this.reportingView.cfLine.lastLetter === "N") {
+      if (this.reportingView.cfLine.lastLetter === 'N') {
         this.reportingView.tripType = 2;
-      } else if (this.reportingView.cfLine.lastLetter === "C") {
+      } else if (this.reportingView.cfLine.lastLetter === 'C') {
         this.reportingView.tripType = 1;
       }
       const cfa = cfLine.substr(4, 3);
-      if (cfa === "RBM" || cfa === "RBP") {
+      if (cfa === 'RBM' || cfa === 'RBP') {
         this.reportingView.tripType = 2;
       }
-
       this.reportingView.isDisabled = false;
       this.reportingView.cfLine.cfa = cfa;
       this.reportingView.cfLine.code = cfLine;

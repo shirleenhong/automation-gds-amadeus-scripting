@@ -100,4 +100,33 @@ export class DDBService implements OnInit {
     ];
     return SupplierCode;
   }
+
+  getRouteCodeList() {
+    return [
+      { itemText: '', itemValue: '' },
+      {
+        itemText: 'USA incl. all US Territories and Possessions',
+        itemValue: '0'
+      },
+      {
+        itemText: 'Mexico/Central America/Canal Zone/Costa Rica',
+        itemValue: '1'
+      },
+      { itemText: 'Caribbean and Bermuda', itemValue: '2' },
+      { itemText: 'South America4', itemValue: '3' },
+      {
+        itemText: 'Europe-incl. Morocco/Tunisia/Algeria/Greenland',
+        itemValue: '4'
+      },
+      { itemText: 'Africa', itemValue: '5' },
+      { itemText: 'Middle East/Western Asia', itemValue: '6' },
+      { itemText: 'Asia incl. India', itemValue: '7' },
+      {
+        itemText:
+          'Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam',
+        itemValue: '8'
+      },
+      { itemText: 'Canada and St. Pierre et Miquelon', itemValue: '9' }
+    ];
+  }
 }

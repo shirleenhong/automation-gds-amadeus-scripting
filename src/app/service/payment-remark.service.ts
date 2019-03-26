@@ -45,11 +45,11 @@ export class PaymentRemarkService {
 
     }
 
-    getRemarksModel(remText) {
+    getRemarksModel(remText, cat, type) {
         const rem = new RemarkModel();
-        rem.category = '*';
+        rem.category = cat;
         rem.remarkText = remText;
-        rem.remarkType = 'RM';
+        rem.remarkType = type;
         return rem;
     }
 
@@ -60,11 +60,22 @@ export class PaymentRemarkService {
             const month = datePipe.transform(expDate, 'MM');
             const year = expDate.toString().substr(2, 2);
             fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
+
         } else {
             fop = modeofPayment;
         }
         return fop;
     }
+  
+  getTKTline(tktLine) {
+        let tline = '';
+        if (tktLine !== null && tktLine.toString() !== '') {
+            tline = '/-TK-' + tktLine.toString().trim();
+        }
+        return tline;
+    }
+
+
 
     processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
         const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-'
@@ -78,9 +89,15 @@ export class PaymentRemarkService {
 
         remarkList.push(this.getRemarksModel(acc1));
         remarkList.push(this.getRemarksModel(acc2));
-
+      
+        if (!accounting.bsp) {
+            var ttltax = accounting.gst + accounting.hst + accounting.qst;
+            const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo + ' CAD' + accounting.baseAmount + 'PLUS ' + ttltax.toString() + 'TAX ON ' + this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) + '/S' + accounting.segmentNo.toString().trim();
+            remarkList.push(this.getRemarksModel(acc3, 'I', 'RI'));
+        }
     }
 
+    
     processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
         const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
         const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
@@ -100,12 +117,14 @@ export class PaymentRemarkService {
         const datePipe = new DatePipe('en-US');
         let fop = '';
         if (Object.values(CardType).includes(matrix.bankAccount)) {
+
             const month = datePipe.transform(matrix.expDate, 'MM');
             const year = matrix.expDate.toString().substr(2, 2);
             fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
         } else {
             fop = matrix.modePayment;
         }
+
 
         let gcNo = '';
         if (matrix.gcNumber != null && (matrix.gcNumber.toString() !== '')) {
@@ -116,9 +135,9 @@ export class PaymentRemarkService {
         const rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-' + fop + '/-LK-T/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
         const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.description + gcNo;
 
-        remarkList.push(this.getRemarksModel(rem1));
-        remarkList.push(this.getRemarksModel(rem2));
-        remarkList.push(this.getRemarksModel(rem3));
+        remarkList.push(this.getRemarksModel(rem1, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(rem2, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
     }
 
 

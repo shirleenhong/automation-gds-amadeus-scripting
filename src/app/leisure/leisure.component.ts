@@ -37,6 +37,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private fb: FormBuilder,
     private tourPackageRemarksService: TourPackageRemarksService
 
+
   ) {
 
     this.leisureForm = this.fb.group({
@@ -108,7 +109,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
-
     const leisureFee = this.paymentComponent.leisureFee;
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());

@@ -7,7 +7,6 @@ import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 
-
 @Component({
   selector: 'app-leisure-fee',
   templateUrl: './leisure-fee.component.html',
@@ -129,7 +128,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       remark = this.generateSFCRemark(assoc);
       remGroup.remarks.push(this.getRemark(remark, '*'));
       remark = 'TAX-' + this.f.address.value;
-      remGroup.remarks.push(this.getRemark(remark, 'T'));
+      remGroup.remarks.push(this.getRemark(remark, 'Y'));
     }
 
     lineNum = this.pnrService.getU11LineNumber();
@@ -187,11 +186,13 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     const provTax = this.provinceTaxes.filter(x => x.provinceCode === this.f.address.value);
     let tax1 = '0.00';
     let tax2 = '0.00';
+    let taxType1 = 'XG';
     if (provTax.length > 0) {
       tax1 = this.decPipe.transform((+this.f.amount.value) * +provTax[0].tax1, '1.2-2');
       tax2 = this.decPipe.transform((+this.f.amount.value) * +provTax[0].tax2, '1.2-2');
+      taxType1 = (provTax[0].taxType1 === 'GST' ? 'XG' : 'RC');
     }
-    let txt = '/-PT-' + tax1 + (this.f.address.value === 'NL' ? 'RC' : 'XG');
+    let txt = '/-PT-' + tax1 + taxType1;
     txt += '/-PT-' + tax2 + 'XQ';
     return txt;
   }

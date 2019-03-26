@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { BankAccount } from 'src/app/models/bank-account.model';
 import { DatePipe } from '@angular/common';
+import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 
 @Component({
   selector: 'app-update-matrix-receipt',
@@ -30,7 +31,9 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 
   @ViewChild('bankAccount') bankAccEl: ElementRef;
 
-  constructor(public activeModal: BsModalService, private pnrService: PnrService, public modalRef: BsModalRef) {
+  constructor(public activeModal: BsModalService, private pnrService: PnrService,
+    public modalRef: BsModalRef,
+    private paymentHelper: PaymentRemarkHelper) {
     this.bankAccountList = new Array<SelectItem>();
     this.matrixReceipt = new MatrixReceiptModel();
     this.loadBankAccount();
@@ -163,8 +166,6 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     { itemText: 'Cash', itemValue: 'CA' },
     { itemText: 'Cheque', itemValue: 'CK' }
     ];
-
-
   }
 
   SelectVendorCode(newValue) {
@@ -193,52 +194,17 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     }
 
     this.matrixReceipt.vendorCode = modeOfPayment;
+    this.creditcardMaxValidator(modeOfPayment);
   }
 
   creditcardMaxValidator(newValue) {
-    let pat = '';
-    switch (newValue) {
-      case 'VI': {
-        pat = '^4[0-9]{15}$';
-        break;
-      }
-      case 'MC': {
-        pat = '^5[0-9]{15}$';
-        break;
-      }
-      case 'AX': {
-        pat = '^3[0-9]{14}$';
-        break;
-      }
-      case 'DC': {
-        pat = '^[0-9]{14,16}$';
-        break;
-      }
-      default: {
-        pat = '^[0-9]{14,16}$';
-        break;
-      }
-    }
-
-    this.matrixForm.controls.ccNo.setValidators(Validators.pattern(pat));
+    let pattern = '';
+    pattern = this.paymentHelper.creditcardMaxValidator(newValue);
+    this.matrixForm.controls.ccNo.setValidators(Validators.pattern(pattern));
   }
 
   checkDate(newValue) {
-    const datePipe = new DatePipe('en-US');
-
-    const month = datePipe.transform(newValue, 'MM');
-    const year = datePipe.transform(newValue, 'yyyy');
-
-    const d = new Date();
-    const moNow = d.getMonth();
-    const yrnow = d.getFullYear();
-    let valid = false;
-    if (parseInt(year) > yrnow) {
-      valid = true;
-    }
-    if ((parseInt(year) === yrnow) && (parseInt(month) >= moNow + 1)) {
-      valid = true;
-    }
+    const valid = this.paymentHelper.checkDate(newValue);
 
     if (!valid) {
       this.matrixForm.controls.expDate.setValidators(Validators.pattern('^[0-9]{14,16}$'));

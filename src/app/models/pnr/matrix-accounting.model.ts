@@ -1,5 +1,5 @@
 export class MatrixAccountingModel {
-    bsp: boolean;
+    bsp: string;
     type: string;
     tkMacLine: number;
     accountingTypeRemark: string;

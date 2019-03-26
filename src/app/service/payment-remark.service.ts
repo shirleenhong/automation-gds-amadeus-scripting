@@ -14,7 +14,6 @@ export class PaymentRemarkService {
 
     accountingRemarks: Array<MatrixAccountingModel>;
 
-
     public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
 
         const remGroup = new RemarkGroup();
@@ -56,13 +55,23 @@ export class PaymentRemarkService {
     getFOP(modeofPayment, creditCardNo, vendorCode, expDate) {
         const datePipe = new DatePipe('en-US');
         let fop = '';
-        if (modeofPayment == 'CC') {
-            const month = datePipe.transform(expDate, 'MM');
-            const year = expDate.toString().substr(2, 2);
-            fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
 
-        } else {
-            fop = modeofPayment;
+        switch (modeofPayment) {
+            case 'CC': {
+                const month = datePipe.transform(expDate, 'MM');
+                const year = expDate.toString().substr(2, 2);
+                fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
+                break;
+            }
+            case 'CCA': {
+                fop = 'CCVI4111111111111111/-EXP1229';
+                break;
+            }
+            default: {
+                fop = modeofPayment;
+                break;
+            }
+
         }
         return fop;
     }
@@ -76,23 +85,29 @@ export class PaymentRemarkService {
     }
 
 
-
     processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-        const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-'
-            + accounting.baseAmount.toString().trim() + '/-PT-' + accounting.hst.toString().trim() + 'RC/-PT-'
-            + accounting.gst.toString().trim() + 'XG/-PT-' + accounting.qst.toString().trim()
-            + ' XQ/-PT- ' + accounting.otherTax.toString().trim() + 'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
-        const acc2 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.toString().trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim()
-            + '/-FOP-' + this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
-            '/-TK-' + accounting.tktLine.toString().trim() + '/-MP-' + accounting.passengerNo.toString().trim()
-            + '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim() + '/S' + accounting.segmentNo.toString().trim();
+        const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() +
+            '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
+            accounting.baseAmount.toString().trim() + '/-PT-' +
+            accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() +
+            'XG/-PT-' + accounting.qst.toString().trim() + ' XQ/-PT- ' + accounting.otherTax.toString().trim() +
+            'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
 
-        remarkList.push(this.getRemarksModel(acc1));
-        remarkList.push(this.getRemarksModel(acc2));
-      
-        if (!accounting.bsp) {
-            var ttltax = accounting.gst + accounting.hst + accounting.qst;
-            const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo + ' CAD' + accounting.baseAmount + 'PLUS ' + ttltax.toString() + 'TAX ON ' + this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) + '/S' + accounting.segmentNo.toString().trim();
+        const acc2 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
+            '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
+            this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
+            this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
+            '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim() + '/S' + accounting.segmentNo.toString().trim();
+
+
+        if (accounting.bsp === '2') {
+            // tslint:disable-next-line:prefer-const
+            let ttltax = accounting.gst + accounting.hst + accounting.qst;
+            const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
+                ' CAD' + accounting.baseAmount + 'PLUS ' + ttltax.toString() + 'TAX ON ' +
+                this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
+                '/S' + accounting.segmentNo.toString().trim();
+
             remarkList.push(this.getRemarksModel(acc3, 'I', 'RI'));
         }
     }
@@ -120,13 +135,14 @@ export class PaymentRemarkService {
 
             const month = datePipe.transform(matrix.expDate, 'MM');
             const year = matrix.expDate.toString().substr(2, 2);
+
             fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
         } else {
             fop = matrix.modePayment;
         }
 
-
         let gcNo = '';
+
         if (matrix.gcNumber != null && (matrix.gcNumber.toString() !== '')) {
             gcNo = '/-GC-' + matrix.gcNumber;
         }

@@ -64,10 +64,6 @@ export class ReportingRemarkService {
             rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
         }
 
-        // *U11
-        const noFeeReason = reporting.noFeeReason;
-        remText = 'U11/-' + noFeeReason;
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
 
         // *U12
         const insuranceDeclined = reporting.insuranceDeclinedReason;

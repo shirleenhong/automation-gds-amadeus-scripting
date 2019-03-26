@@ -73,7 +73,16 @@ export class PnrService {
     }
     return '';
   }
-
+  getU11LineNumber() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf('U11/-') === 0) {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '';
+  }
 
   getTaxLineNumber() {
     if (this.isPNRLoaded) {

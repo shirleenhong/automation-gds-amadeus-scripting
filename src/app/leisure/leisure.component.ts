@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, AfterContentInit } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
 import { RemarkService } from '../service/remark.service';
 import { LeisureViewModel } from '../models/leisure-view.model';
@@ -11,6 +11,7 @@ import { SegmentService } from '../service/segment.service';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
+import { ReportingComponent } from '../reporting/reporting.component';
 
 @Component({
   selector: 'app-leisure',
@@ -23,8 +24,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   message: string;
   leisure: LeisureViewModel;
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
+  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   leisureForm: FormGroup;
-
+  eventSubscribe = false;
 
 
   constructor(private pnrService: PnrService,
@@ -69,13 +71,18 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   }
 
+
   ngAfterViewChecked() {
     // Subscribe to event from child Component
-    this.paymentComponent.leisureFee.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
-      this.leisure.reportingView.leisureFeeType = val;
-    });
-
+    // if (this.eventSubscribe) { return; }
+    // this.paymentComponent.leisureFee.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
+    //   this.reportingComponent.reportingView.leisureFeeType = val;
+    //   this.reportingComponent.checkSFC();
+    // });
+    //this.eventSubscribe = true;
   }
+
+
   ngAfterViewInit(): void {
   }
 

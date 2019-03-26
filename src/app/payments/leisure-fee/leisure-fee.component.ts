@@ -48,9 +48,10 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       vendorCode: new FormControl('', [Validators.required, Validators.pattern('[A-Z]{2}')]),
       ccNo: new FormControl('', [Validators.required]),
       expDate: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required])
+      address: new FormControl('', [Validators.required]),
+      noFeeReason: new FormControl('', [Validators.required])
     });
-    this.f.segmentAssoc.patchValue('0');
+
     this.onControlChanges();
   }
 
@@ -77,7 +78,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         default:
           this.leisureFeeForm.get('segmentNum').disable();
       }
-
     });
     this.leisureFeeForm.get('paymentType').valueChanges.subscribe(val => {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
@@ -96,26 +96,55 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
   }
 
+  checkSFC() {
+    if (this.pnrService.getSFCLineNumber() === '' && this.f.segmentAssoc.value === '0') {
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+
+
+
+
   BuildRemark() {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Leisure Fee';
     remGroup.remarks = new Array<RemarkModel>();
     const assoc = (this.f.segmentAssoc.value);
     remGroup.deleteRemarkByIds = [];
+    let remark = '';
     let lineNum = this.pnrService.getSFCLineNumber();
     if (lineNum !== '') {
       remGroup.deleteRemarkByIds.push(lineNum);
     }
+
+
     lineNum = this.pnrService.getTaxLineNumber();
     if (lineNum !== '') {
       remGroup.deleteRemarkByIds.push(lineNum);
     }
     if (assoc > 0) {
-      let remark = this.generateSFCRemark(assoc);
+      remark = this.generateSFCRemark(assoc);
       remGroup.remarks.push(this.getRemark(remark, '*'));
       remark = 'TAX-' + this.f.address.value;
       remGroup.remarks.push(this.getRemark(remark, 'T'));
     }
+
+    lineNum = this.pnrService.getU11LineNumber();
+    if (lineNum !== '') {
+      remGroup.deleteRemarkByIds.push(lineNum);
+    }
+
+    if (assoc === '0') {
+
+      // *U11
+      const noFeeReason = this.f.noFeeReason.value;
+      remark = 'U11/-' + noFeeReason;
+      remGroup.remarks.push(this.getRemark(remark, '*'));
+    }
+
     return remGroup;
   }
 

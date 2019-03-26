@@ -35,7 +35,7 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   enableReason = false;
   enableInsurance = false;
   countryList: Array<string>;
-
+  isCVC = false;
 
   constructor(private pnrService: PnrService, private ddbService: DDBService) { }
 
@@ -71,21 +71,14 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   checkDestination() {
-    if (this.destinationList.length <= 1) {
+    if (this.destinationList !== undefined && this.destinationList.length <= 1) {
       this.reportingView.isDisabledDest = true;
     } else {
       this.reportingView.isDisabledDest = false;
     }
   }
 
-  checkSFC() {
-    if (this.pnrService.getSFCLineNumber() === '' || this.reportingView.leisureFeeType === 0) {
-      return false;
-    } else {
-      return true;
-    }
 
-  }
 
   checkInsurance() {
     if (this.pnrService.getInsuranceCancellationLineNumber() === '') {
@@ -93,10 +86,6 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       return true;
     }
-  }
-
-  isU10Exist() {
-    return (this.pnrService.getU10LineNumber() !== '');
   }
 
 
@@ -116,10 +105,13 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
       if (cfa === 'RBM' || cfa === 'RBP') {
         this.reportingView.tripType = 2;
       }
+
       this.reportingView.isDisabled = false;
       this.reportingView.cfLine.cfa = cfa;
       this.reportingView.cfLine.code = cfLine;
       this.checkDestination();
+      this.isCVC = (cfa === 'CVC');
+
     } else {
       this.reportingView.isDisabledDest = true;
       this.reportingView.isDisabled = true;

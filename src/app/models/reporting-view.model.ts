@@ -12,5 +12,5 @@ export class ReportingViewModel {
     cfLine: CfRemarkModel;
     isDisabledDest = false;
     sfcLineAdded: boolean;
-    leisureFeeType: number;
+    leisureFeeType = 0;
 }

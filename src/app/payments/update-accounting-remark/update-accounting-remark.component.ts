@@ -7,6 +7,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
+import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   // // TODO: Via service
   accountingRemarkList: Array<SelectItem>;
   formOfPaymentList: Array<SelectItem>;
+  bspList: Array<SelectItem>;
   vendorCodeList: Array<SelectItem>;
   supplierCodeList: Array<any>;
   filterSupplierCodeList: Array<any>;
@@ -35,12 +37,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
 
-  constructor(public activeModal: BsModalService, private pnrService: PnrService, public modalRef: BsModalRef, private ddbService: DDBService) {
+  constructor(public activeModal: BsModalService, private pnrService: PnrService,
+    public modalRef: BsModalRef, private ddbService: DDBService,
+    private paymentHelper: PaymentRemarkHelper) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
     this.accountingRemarks = new MatrixAccountingModel();
-    // this.loadAccountingRemarkList();
-    // this.loadFormOfPaymentList();
+    this.loadBSPList();
     this.loadVendorCode();
     this.loadPassengerList();
     this.matrixAccountingForm = new FormGroup({
@@ -49,18 +52,19 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', [Validators.required]),
       supplierConfirmatioNo: new FormControl('', [Validators.required]),
-      baseAmount: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
-      commisionWithoutTax: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
-      gst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
-      hst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
-      qst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
-      otherTax: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
+      baseAmount: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
+      commisionWithoutTax: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
+      gst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
+      hst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
+      qst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
+      otherTax: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
       fop: new FormControl('', [Validators.required]),
       vendorCode: new FormControl('', [Validators.required]),
       cardNumber: new FormControl('', [Validators.required]),
       expDate: new FormControl('', [Validators.required]),
-      tktLine: new FormControl('', [Validators.required]),
+      tktLine: new FormControl('', []),
       description: new FormControl('', [Validators.required]),
+      bsp: new FormControl('', [Validators.required])
     }, { updateOn: 'blur' });
 
   }
@@ -73,21 +77,27 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   IsBSP(testvalue) {
-    if (testvalue === "1") {
+    if (testvalue === '1') {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
       this.enableFormControls(['tktLine'], false);
       this.enableFormControls(['description'], true);
-      this.accountingRemarks.bsp = true;
+      this.accountingRemarks.bsp = '1';
     }
     else {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
       this.enableFormControls(['tktLine'], true);
       this.enableFormControls(['description'], false);
-      this.accountingRemarks.bsp = false;
+      this.accountingRemarks.bsp = '2';
     }
     // return true;
+  }
+
+  loadBSPList() {
+    this.bspList = [{ itemText: '', itemValue: '' },
+    { itemText: 'NO', itemValue: '1' },
+    { itemText: 'YES', itemValue: '2' }];
   }
 
   loadPassengerList() {
@@ -112,12 +122,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       ];
     }
 
-
-
   }
 
   loadVendorCode() {
-
     this.vendorCodeList = [{ itemText: '', itemValue: '' },
     { itemText: 'VI- Visa', itemValue: 'VI' },
     { itemText: 'MC - Mastercard', itemValue: 'MC' },
@@ -153,7 +160,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.filterSupplierCodeList = this.supplierCodeList.filter(
       supplier => supplier.type === typeCode);
 
-    if (!this.accountingRemarks.bsp) {
+    if (this.accountingRemarks.bsp === '2') {
       if (typeCode === 'SEAT') {
         this.accountingRemarks.supplierCodeName = 'PFS';
       }
@@ -161,9 +168,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.accountingRemarks.supplierCodeName = 'CGO';
       }
     } else {
-      this.SetTktNumber();
+      this.accountingRemarks.supplierCodeName = '';
     }
-
   }
 
   // get PaymentType() { return PaymentType; }
@@ -223,49 +229,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   creditcardMaxValidator(newValue) {
-    let pat = '';
-    switch (newValue) {
-      case 'VI': {
-        pat = '^4[0-9]{15}$';
-        break;
-      }
-      case 'MC': {
-        pat = '^5[0-9]{15}$';
-        break;
-      }
-      case 'AX': {
-        pat = '^3[0-9]{14}$';
-        break;
-      }
-      case 'DC': {
-        pat = '^[0-9]{14,16}$';
-        break;
-      }
-      default: {
-        pat = '^[0-9]{14,16}$';
-        break;
-      }
-    }
-
-    this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pat));
+    let pattern = '';
+    pattern = this.paymentHelper.creditcardMaxValidator(newValue);
+    this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
   }
 
   checkDate(newValue) {
-    const datePipe = new DatePipe('en-US');
-
-    const month = datePipe.transform(newValue, 'MM');
-    const year = datePipe.transform(newValue, 'yyyy');
-
-    const d = new Date();
-    const moNow = d.getMonth();
-    const yrnow = d.getFullYear();
-    let valid = false;
-    if (parseInt(year) > yrnow) {
-      valid = true;
-    }
-    if ((parseInt(year) === yrnow) && (parseInt(month) >= moNow + 1)) {
-      valid = true;
-    }
+    const valid = this.paymentHelper.checkDate(newValue);
 
     if (!valid) {
       this.matrixAccountingForm.controls.expDate.setValidators(Validators.pattern('^[0-9]{14,16}$'));
@@ -275,14 +245,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   }
 
-  SetTktNumber() {
+  SetTktNumber(supValue) {
     var supCode = ['ACY', 'SOA', 'WJ3'];
 
-    if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(this.accountingRemarks.supplierCodeName)) {
+    if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(supValue)) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
     }
 
+    this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
   }
 }

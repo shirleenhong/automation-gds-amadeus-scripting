@@ -3,19 +3,23 @@
         background-color: #333f48;
         color: #fff;
         border-radius: 0;
-
+        cursor: pointer;
+      
+        
         >.card-header:first-child {
             border-radius: 0;
+            border-bottom: 1px solid gray;
         }
     }
 
     &.panel {
         background-color: #333f48;
         color: #fff;
-
+       
         .panel-body {
-            background-color: white;
+            background-color: #f1f3f5;
             color: #000;
+            min-height: 200px;
         }
     }
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 declare var PNR: any;
 
 @Injectable({
@@ -12,7 +11,7 @@ export class PnrService {
   errorMessage = '';
   destinationCity = [{ endpoint: '' }];
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.pnrObj = new PNR();
@@ -30,65 +29,22 @@ export class PnrService {
     console.log(JSON.stringify(this.pnrObj));
   }
 
-  getCFLine() {
+  getRemarkLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('CF/-') === 0) {
+        if (rm.freeFlowText.indexOf(searchText) === 0) {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '';
+  }
+
+  getRemarkText(searchText: string) {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf(searchText) === 0) {
           return rm.freeFlowText;
-        }
-      }
-    }
-    return '';
-  }
-
-  getSFCLineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('SFC/-') === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return '';
-  }
-
-  getInsuranceCancellationLineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('U12/-') === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return '';
-  }
-
-  getU10LineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('U10/-') === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return '';
-  }
-  getU11LineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('U11/-') === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return '';
-  }
-
-  getTaxLineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('TAX') === 0) {
-          return rm.elementNumber;
         }
       }
     }
@@ -141,17 +97,6 @@ export class PnrService {
     return new Array<string>();
   }
 
-  getDestinationLine() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('DE/-') === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return '';
-  }
-
   pushDestination(endpoint) {
     const look = this.destinationCity.find(x => x.endpoint === endpoint);
     if (look == null) {
@@ -164,24 +109,26 @@ export class PnrService {
 
   getPnrDestinations() {
     if (this.isPNRLoaded) {
-
       for (const air of this.pnrObj.airSegments) {
         const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
 
       for (const car of this.pnrObj.auxCarSegments) {
-        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
+        const carendpoint =
+          car.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(carendpoint);
       }
 
       for (const hotel of this.pnrObj.auxHotelSegments) {
-        const hotelendpoint = hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+        const hotelendpoint =
+          hotel.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(hotelendpoint);
       }
 
       for (const misc of this.pnrObj.miscSegments) {
-        const miscendpoint = misc.fullNode.travelProduct.boardpointDetail.cityCode;
+        const miscendpoint =
+          misc.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(miscendpoint);
       }
       // for (const rm of this.pnrObj.miscSegments) {
@@ -204,11 +151,6 @@ export class PnrService {
 
   getPnrSegments() {
     if (this.isPNRLoaded) {
-      // for (const rm of this.pnrObj.get) {
-      //   if (rm.freeFlowText.indexOf('DE/-') === 0) {
-      //     return rm.elementNumber;
-      //   }
-      // }
     }
     return '';
   }

@@ -164,25 +164,40 @@ export class PnrService {
 
   getPnrDestinations() {
     if (this.isPNRLoaded) {
+
       for (const air of this.pnrObj.airSegments) {
         const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
 
-      for (const rm of this.pnrObj.miscSegments) {
-        // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
-        const longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
-        let endpoint = null;
-        if (longFreetext.indexOf('/EC-') > -1) {
-          endpoint = longFreetext.substr(
-            longFreetext.indexOf('/EC-') + 4,
-            3
-          );
-        }
-        if (endpoint != null) {
-          this.pushDestination(endpoint);
-        }
+      for (const car of this.pnrObj.auxCarSegments) {
+        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
+        this.pushDestination(carendpoint);
       }
+
+      for (const hotel of this.pnrObj.auxHotelSegments) {
+        const hotelendpoint = hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+        this.pushDestination(hotelendpoint);
+      }
+
+      for (const misc of this.pnrObj.miscSegments) {
+        const miscendpoint = misc.fullNode.travelProduct.boardpointDetail.cityCode;
+        this.pushDestination(miscendpoint);
+      }
+      // for (const rm of this.pnrObj.miscSegments) {
+      //   // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
+      //   const longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
+      //   let endpoint = null;
+      //   if (longFreetext.indexOf('/EC-') > -1) {
+      //     endpoint = longFreetext.substr(
+      //       longFreetext.indexOf('/EC-') + 4,
+      //       3
+      //     );
+      //   }
+      //   if (endpoint != null) {
+      //     this.pushDestination(endpoint);
+      //   }
+      // }
       return this.destinationCity;
     }
   }

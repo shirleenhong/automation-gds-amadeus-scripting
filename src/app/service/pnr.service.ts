@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { RemarkModel } from '../models/pnr/remark.model';
 
 declare var PNR: any;
 
@@ -169,5 +172,37 @@ export class PnrService {
       elementNumbers.push(rm.elementNumber);
     }
     return elementNumbers;
+  }
+
+  getMISRetentionLine() {
+    if (this.isPNRLoaded) {
+    const itinInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
+
+    const lastSegment = itinInfo[itinInfo.length - 1].itineraryFreetext;
+    let lastSegmentDate = lastSegment.longFreetext.substr(lastSegment.longFreetext.indexOf('ED-'), 8).split('-')[1];
+    const datePipe = new DatePipe('en-US');
+
+    let formattedDate = new Date();
+    const oDate = new Date();
+
+    lastSegmentDate = datePipe.transform(lastSegmentDate, 'dd-MM');
+    formattedDate =  new Date(lastSegmentDate + '-' + formattedDate.getFullYear());
+    oDate.setDate(formattedDate.getDate() + 180);
+
+    const maxDate = new Date(formattedDate.getDate() + 331);
+    let finalDate: string;
+
+    if (oDate.getDate() > maxDate.getDate()) {
+       finalDate = datePipe.transform(maxDate, 'ddmmm');
+     } else {
+      finalDate = datePipe.transform(oDate, 'ddmmm');
+     }
+
+     const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
+     const MISGroup = new RemarkGroup();
+     MISGroup.group = 'MIS Retention';
+     MISGroup.cryptics.push(command);
+     return MISGroup;
+    }
   }
 }

@@ -83,9 +83,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
 
-
-
-
   }
 
   ngOnInit() {

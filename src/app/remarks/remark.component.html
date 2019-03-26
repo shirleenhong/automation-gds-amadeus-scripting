@@ -1,1 +1,35 @@
-<app-tour-package [group]="group.get('tourPackage')"></app-tour-package>
+<div class="contentPanel">
+
+    <form [formGroup]="group">
+
+        <div class="row form-group">
+            <div class="col-3">Select Price Remarks :</div>
+            <div class="col-8">
+                <select id="priceRemarkSelector" name="priceRemarkSelector" formControlName="priceRemarkSelector"
+                    class="form-control">
+                    <option value="0">TOUR PACKAGE</option>
+                    <option value="1">ITC - ITEMIZE AIR/CRUISE ETC</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <tabset>
+                    <tab heading="Package Remarks" id="tab1">
+                        <div *ngIf="f.priceRemarkSelector.value == 0">
+                            <app-tour-package [group]="group.get('tourPackage')"></app-tour-package>
+                        </div>
+                    </tab>
+                    <tab heading="Package Remarks" id="tab2">
+                        <div *ngIf="f.priceRemarkSelector.value == 1">
+                            <app-package-cost [group]="group.get('package')"></app-package-cost>
+                        </div>
+
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+
+    </form>
+</div>

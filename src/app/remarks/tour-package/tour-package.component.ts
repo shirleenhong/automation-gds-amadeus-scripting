@@ -25,13 +25,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   ngOnInit() {
     this.getCurrencies();
-
-    // this.group.valueChanges.subscribe(val => {
-    //   console.log('Mico Test');
-    //   console.log('val:' + val);
-    //   //debugger;
-    //   // this.tourPackageChange();
-    // });
     this.group.get('adultNum').valueChanges.subscribe(e => {
       this.group.adultNum = e;
       this.tourPackageChange();
@@ -137,18 +130,24 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   tourPackageChange() {
     console.log('tour package call');
     const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
-    // console.log('v');
-    // console.log(v);
-    // this.group.value.totalCostHoliday.updatevalue = 100;
-    // console.log(this.group);
     this.group.patchValue({ totalCostHoliday: v });
+    this.computeBalanceToBePaid();
     // console.log('total cost holiday');
     // console.log(this.group.value.totalCostHoliday);
-    this.group.patchValue({ lessDepositPaid: this.group.value.depositPaid });
+    // this.group.patchValue({ lessDepositPaid: this.group.value.depositPaid });
     // this.group.value.lessDepositPaid = this.group.value.depositPaid;
     // this.group.value.balanceToBePaid = this.group.value.totalCostHoliday - parseInt(this.group.value.lessDepositPaid, 0);
-    this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - parseInt(this.group.value.lessDepositPaid, 0) });
+    // this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - parseInt(this.group.value.depositPaid, 0) });
     // this.buildRemark();
+  }
+
+  computeBalanceToBePaid() {
+    let dp = 0;
+    if (this.group.value.depositPaid !== '') {
+      dp = (parseInt(this.group.value.depositPaid, 0));
+    }
+
+    this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - dp });
   }
 
   computeAdultCost() {
@@ -236,7 +235,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   getCurrencies() {
     // TODO: Get from API DDB
-    this.bspCurrencyList = [{ itemText: '', itemValue: '-1' },
+    this.bspCurrencyList = [{ itemText: 'Select', itemValue: '' },
     { itemText: 'Andorran Peset', itemValue: 'ADP' },
     { itemText: 'UAE Dirham', itemValue: 'AED' },
     { itemText: 'Afghanistan Afghani', itemValue: 'AFN' },

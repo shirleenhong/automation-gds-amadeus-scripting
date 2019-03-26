@@ -22,6 +22,7 @@ import { AccordionComponent } from './shared/accordion/accordion.component';
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
+import { PackageCostComponent } from './remarks/package-cost/package-cost.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
     UpdateTourSegmentComponent,
     PassiveSegmentsComponent,
     AccordionComponent,
-    LeisureFeeComponent
+    LeisureFeeComponent,
+    PackageCostComponent
   ],
   imports: [
     BrowserModule,

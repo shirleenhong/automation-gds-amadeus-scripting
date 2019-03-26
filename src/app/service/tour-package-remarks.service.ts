@@ -32,13 +32,13 @@ export class TourPackageRemarksService {
     //     return
     // }
     public GetRemarks(group: any) {
-        alert('xcx');
+        //alert('xcx');
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Tour Package';
         rmGroup.remarks = new Array<RemarkModel>();
         const datePipe = new DatePipe('en-US');
 
-        // debugger;
+
         // const ad = group.adultNum;
         // alert(ad);
         // alert(this.WordpressForm.get('adultNum'));
@@ -75,7 +75,7 @@ export class TourPackageRemarksService {
 
         rmGroup.remarks.push(this.createRemark('TOTAL PACKAGE PRICE ' + group.totalCostHoliday, 'RI', 'I'));
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.createRemark('LESS DEPOSIT PAID ' + group.lessDepositPaid + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'I'));
+        rmGroup.remarks.push(this.createRemark('LESS DEPOSIT PAID ' + group.depositPaid + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'I'));
         rmGroup.remarks.push(this.createRemark('BALANCE DUE ' + group.balanceToBePaid, 'RI', 'I'));
         // tslint:disable-next-line:max-line-length
         rmGroup.remarks.push(this.createRemark('---- BALANCE OF ' + group.balanceToBePaid + ' IS DUE ' + datePipe.transform(group.balanceDueDate, 'dMMMyy') + '----', 'RI', 'I'));

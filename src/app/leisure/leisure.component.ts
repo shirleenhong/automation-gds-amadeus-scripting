@@ -11,6 +11,7 @@ import { SegmentService } from '../service/segment.service';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
+import { PackageCostRemarksService } from '../service/package-cost-remarks.service';
 
 @Component({
   selector: 'app-leisure',
@@ -32,30 +33,31 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
+    private tourPackageRemarksService: TourPackageRemarksService,
+    private packageCostRemarksService: PackageCostRemarksService,
     private fb: FormBuilder
-
   ) {
 
     this.leisureForm = this.fb.group({
       remarks: this.fb.group({
         tourPackage: this.fb.group({
-          adultNum: new FormControl('', [Validators.required, Validators.min(1), Validators.max(9)]),
-          userIdFirstWay: new FormControl('', [Validators.required]),
-          baseCost: new FormControl('', [Validators.required, Validators.maxLength(7)]),
-          taxesPerAdult: new FormControl('', [Validators.required]),
-          childrenNumber: new FormControl('', [Validators.required]),
-          childBaseCost: new FormControl('', [Validators.required]),
-          insurancePerAdult: new FormControl('', [Validators.required]),
-          insurancePerChild: new FormControl('', [Validators.required]),
-          taxesPerChild: new FormControl('', [Validators.required]),
-          infantNumber: new FormControl('', [Validators.required]),
-          totalCostPerInfant: new FormControl('', [Validators.required]),
-          depositPaid: new FormControl('', [Validators.required]),
-          totalCostHoliday: new FormControl('', [Validators.required]),
-          lessDepositPaid: new FormControl('', [Validators.required]),
-          balanceToBePaid: new FormControl('', [Validators.required]),
-          balanceDueDate: new FormControl('', [Validators.required]),
-          commisionAmount: new FormControl('', [Validators.required])
+          adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+          userIdFirstWay: new FormControl(''),
+          baseCost: new FormControl('', [Validators.maxLength(8)]),
+          taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
+          childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+          childBaseCost: new FormControl('', [Validators.maxLength(8)]),
+          insurancePerAdult: new FormControl('', [Validators.maxLength(7)]),
+          insurancePerChild: new FormControl('', [Validators.maxLength(7)]),
+          taxesPerChild: new FormControl('', [Validators.maxLength(7)]),
+          infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+          totalCostPerInfant: new FormControl(''),
+          depositPaid: new FormControl(''),
+          totalCostHoliday: new FormControl(''),
+          lessDepositPaid: new FormControl(''),
+          balanceToBePaid: new FormControl(''),
+          balanceDueDate: new FormControl(''),
+          commisionAmount: new FormControl('', [Validators.maxLength(8)])
         }, { updateOn: 'blur' })
       }),
       reporting: this.fb.group({

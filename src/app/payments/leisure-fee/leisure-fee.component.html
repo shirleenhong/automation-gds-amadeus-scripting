@@ -14,6 +14,16 @@
         </select>
       </div>
     </div>
+
+    <div class="form-group row" *ngIf="!checkSFC()">
+      <div class="col-3">No Fee Reason:</div>
+      <div class="col-8">
+
+        <input type="text" class="form-control" maxlength="35" id="noFeeReason" required formControlName="noFeeReason"
+          placeholder="Enter No Fee Reason" [disabled]="checkSFC()" />
+      </div>
+    </div>
+
     <div *ngIf="f.segmentAssoc.value != 0">
 
       <div *ngIf="f.segmentAssoc.value == 3 || f.segmentAssoc.value == 4">
@@ -57,7 +67,7 @@
       </div>
       <div class="row form-group" *ngIf="f.paymentType.value=='C'">
         <div class="col-3">
-          Caredit Card Info:
+          Credit Card Info:
         </div>
         <div class="col-1">
           <input type="text" id="vendorCode" name="vendorCode" class="form-control" formControlName="vendorCode">

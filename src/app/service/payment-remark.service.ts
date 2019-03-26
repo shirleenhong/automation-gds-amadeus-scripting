@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 export class PaymentRemarkService {
 
     accountingRemarks: Array<MatrixAccountingModel>;
+
     public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
 
         const remGroup = new RemarkGroup();
@@ -54,6 +55,7 @@ export class PaymentRemarkService {
     getFOP(modeofPayment, creditCardNo, vendorCode, expDate) {
         const datePipe = new DatePipe('en-US');
         let fop = '';
+
         switch (modeofPayment) {
             case 'CC': {
                 const month = datePipe.transform(expDate, 'MM');
@@ -69,17 +71,19 @@ export class PaymentRemarkService {
                 fop = modeofPayment;
                 break;
             }
+
         }
         return fop;
     }
-
-    getTKTline(tktLine) {
+  
+  getTKTline(tktLine) {
         let tline = '';
         if (tktLine !== null && tktLine.toString() !== '') {
             tline = '/-TK-' + tktLine.toString().trim();
         }
         return tline;
     }
+
 
     processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
         const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() +
@@ -95,8 +99,6 @@ export class PaymentRemarkService {
             this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
             '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim() + '/S' + accounting.segmentNo.toString().trim();
 
-        remarkList.push(this.getRemarksModel(acc1, '*', 'RM'));
-        remarkList.push(this.getRemarksModel(acc2, '*', 'RM'));
 
         if (accounting.bsp === '2') {
             // tslint:disable-next-line:prefer-const
@@ -110,13 +112,14 @@ export class PaymentRemarkService {
         }
     }
 
+    
     processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
         const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
-        const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR-' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
-        const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.points + '/-REF-' + matrix.cwtRef;
-        remarkList.push(this.getRemarksModel(rem1, '*', 'RM'));
-        remarkList.push(this.getRemarksModel(rem2, '*', 'RM'));
-        remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
+        const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
+        const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-POINTS ' + matrix.points + ' REF-' + matrix.cwtRef;
+        remarkList.push(this.getRemarksModel(rem1));
+        remarkList.push(this.getRemarksModel(rem2));
+        remarkList.push(this.getRemarksModel(rem3));
     }
 
     processOtherPaymentRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
@@ -129,14 +132,17 @@ export class PaymentRemarkService {
         const datePipe = new DatePipe('en-US');
         let fop = '';
         if (Object.values(CardType).includes(matrix.bankAccount)) {
-            var month = datePipe.transform(matrix.expDate, 'MM');
-            var year = matrix.expDate.toString().substr(2, 2);
+
+            const month = datePipe.transform(matrix.expDate, 'MM');
+            const year = matrix.expDate.toString().substr(2, 2);
+
             fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
         } else {
             fop = matrix.modePayment;
         }
 
-        var gcNo = ''
+        let gcNo = '';
+
         if (matrix.gcNumber != null && (matrix.gcNumber.toString() !== '')) {
             gcNo = '/-GC-' + matrix.gcNumber;
         }

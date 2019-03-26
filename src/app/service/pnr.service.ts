@@ -1,30 +1,29 @@
-import { Injectable } from "@angular/core";
-import { R3NgModuleDef } from "@angular/compiler/src/render3/r3_module_compiler";
-import { stringify } from "@angular/core/src/util";
+import { Injectable } from '@angular/core';
+
 
 declare var PNR: any;
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class PnrService {
   pnrObj: any;
   isPNRLoaded = false;
-  errorMessage = "";
-  destinationCity = [{ endpoint: "" }];
+  errorMessage = '';
+  destinationCity = [{ endpoint: '' }];
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
       (res: any) => {
         this.isPNRLoaded = true;
-        this.errorMessage = "PNR Loaded Successfully";
+        this.errorMessage = 'PNR Loaded Successfully';
       },
       (error: string) => {
         this.isPNRLoaded = false;
-        this.errorMessage = "Error:" + error;
+        this.errorMessage = 'Error:' + error;
       }
     );
 
@@ -34,45 +33,66 @@ export class PnrService {
   getCFLine() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("CF/-") === 0) {
+        if (rm.freeFlowText.indexOf('CF/-') === 0) {
           return rm.freeFlowText;
         }
       }
     }
-    return "";
+    return '';
   }
 
   getSFCLineNumber() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("SFC/-") === 0) {
+        if (rm.freeFlowText.indexOf('SFC/-') === 0) {
           return rm.elementNumber;
         }
       }
     }
-    return "";
+    return '';
   }
 
   getInsuranceCancellationLineNumber() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("U12/-") === 0) {
+        if (rm.freeFlowText.indexOf('U12/-') === 0) {
           return rm.elementNumber;
         }
       }
     }
-    return "";
+    return '';
+  }
+
+  getU10LineNumber() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf('U10/-') === 0) {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '';
+  }
+  getU11LineNumber() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf('U11/-') === 0) {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '';
   }
 
   getTaxLineNumber() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("TAX") === 0) {
+        if (rm.freeFlowText.indexOf('TAX') === 0) {
           return rm.elementNumber;
         }
       }
     }
-    return "";
+    return '';
   }
 
   getFSLineNumber() {
@@ -81,38 +101,38 @@ export class PnrService {
         return rm.elementNumber;
       }
     }
-    return "";
+    return '';
   }
 
   getPassengers() {
     if (this.isPNRLoaded) {
       const passengers = [];
 
-      for (let rm of this.pnrObj.nameElements) {
-        let fname =
+      for (const rm of this.pnrObj.nameElements) {
+        const fname =
           rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
             .otherPaxNamesDetails.givenName;
-        let lname =
+        const lname =
           rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
             .otherPaxNamesDetails.surname;
 
-        let fullname: any =
+        const fullname: any =
           lname +
-          "-" +
+          '-' +
           fname
             .toUpperCase()
-            .replace(" MS", "")
-            .replace(" MRS", "")
-            .replace(" MSTR", "")
-            .replace(" INF", "")
-            .replace(" MR", "")
-            .replace(" MISS", "");
+            .replace(' MS', '')
+            .replace(' MRS', '')
+            .replace(' MSTR', '')
+            .replace(' INF', '')
+            .replace(' MR', '')
+            .replace(' MISS', '');
 
-        let passenger = {
+        const passenger = {
           firstname: fname,
           surname: lname,
           id: rm.elementNumber,
-          fullname: fullname
+          fullname
         };
         passengers.push(passenger);
       }
@@ -124,19 +144,19 @@ export class PnrService {
   getDestinationLine() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("DE/-") === 0) {
+        if (rm.freeFlowText.indexOf('DE/-') === 0) {
           return rm.elementNumber;
         }
       }
     }
-    return "";
+    return '';
   }
 
   pushDestination(endpoint) {
     const look = this.destinationCity.find(x => x.endpoint === endpoint);
     if (look == null) {
-      var destination = {
-        endpoint: endpoint
+      const destination = {
+        endpoint
       };
       this.destinationCity.push(destination);
     }
@@ -144,18 +164,18 @@ export class PnrService {
 
   getPnrDestinations() {
     if (this.isPNRLoaded) {
-      for (let air of this.pnrObj.airSegments) {
-        var airendpoint = air.arrivalAirport;
+      for (const air of this.pnrObj.airSegments) {
+        const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
 
-      for (let rm of this.pnrObj.miscSegments) {
+      for (const rm of this.pnrObj.miscSegments) {
         // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
-        var longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
-        var endpoint = null;
-        if (longFreetext.indexOf("/EC-") > -1) {
-          var endpoint = longFreetext.substr(
-            longFreetext.indexOf("/EC-") + 4,
+        const longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
+        let endpoint = null;
+        if (longFreetext.indexOf('/EC-') > -1) {
+          endpoint = longFreetext.substr(
+            longFreetext.indexOf('/EC-') + 4,
             3
           );
         }
@@ -169,13 +189,13 @@ export class PnrService {
 
   getPnrSegments() {
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.get) {
-        if (rm.freeFlowText.indexOf("DE/-") === 0) {
-          return rm.elementNumber;
-        }
-      }
+      // for (const rm of this.pnrObj.get) {
+      //   if (rm.freeFlowText.indexOf('DE/-') === 0) {
+      //     return rm.elementNumber;
+      //   }
+      // }
     }
-    return "";
+    return '';
   }
 
   getPassiveCarSegmentNumbers() {

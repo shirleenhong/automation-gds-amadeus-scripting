@@ -13,12 +13,12 @@
 
   <div class="col">
     Destination Code:
-    <select id="destinationList" [(ngModel)]="reportingView.destination" class="form-control" name="destinationList"
-      [disabled]='reportingView.isDisabledDest'>
-      <option *ngFor="let p of destinationList" [value]="p.endpoint">
-        {{p.endpoint}}
-      </option>
-    </select>
+    <input type="text" class="form-control" placeholder="select a destination Code"
+      [(ngModel)]="reportingView.destination" id="destinationList" list="dynamicDestinationCode"
+      [disabled]='reportingView.isDisabledDest' />
+    <datalist id="dynamicDestinationCode">
+      <option *ngFor="let item of destinationList" [value]="item.endpoint">{{item.endpoint}}
+    </datalist>
   </div>
 </div>
 

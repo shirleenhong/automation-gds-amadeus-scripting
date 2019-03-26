@@ -52,12 +52,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', [Validators.required]),
       supplierConfirmatioNo: new FormControl('', [Validators.required]),
-      baseAmount: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
-      commisionWithoutTax: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
-      gst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
-      hst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
-      qst: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{2})?\\s*$')]),
-      otherTax: new FormControl('', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{1,2})?\\s*$')]),
+      baseAmount: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      commisionWithoutTax: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      gst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      hst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      qst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      otherTax: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       fop: new FormControl('', [Validators.required]),
       vendorCode: new FormControl('', [Validators.required]),
       cardNumber: new FormControl('', [Validators.required]),
@@ -83,8 +83,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.enableFormControls(['tktLine'], false);
       this.enableFormControls(['description'], true);
       this.accountingRemarks.bsp = '1';
-    }
-    else {
+    } else {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
       this.enableFormControls(['tktLine'], true);
@@ -107,7 +106,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   loadFormOfPaymentList(testvalue) {
-    if (testvalue === "1") {
+    if (testvalue === '1') {
       this.formOfPaymentList = [{ itemText: '', itemValue: '' },
       { itemText: 'Credit Card', itemValue: 'CC' },
       { itemText: 'Cash', itemValue: 'CA' },
@@ -135,7 +134,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   loadAccountingRemarkList(testvalue) {
 
-    if (testvalue === "1") {
+    if (testvalue === '1') {
       this.accountingRemarkList = [{ itemText: '', itemValue: '' },
       { itemText: 'Tour Accounting Remark  ', itemValue: '12' },
       { itemText: 'Cruise Accounting Remark', itemValue: '5' },
@@ -145,13 +144,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       ];
     } else {
       this.accountingRemarkList = [{ itemText: '', itemValue: '' },
-      { itemText: 'SEAT COSTS', itemValue: 'SEAT' },
-      { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MAPLE' },
-      { itemText: 'PET TRANSPORTATION', itemValue: 'PET' },
-      { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT' },
-      { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE' },
-      { itemText: 'FOOD COSTS', itemValue: 'FOOD' },
-      { itemText: 'OTHER COSTS', itemValue: 'OTHER ' }
+      { itemText: 'SEAT COSTS', itemValue: 'SEAT COSTS' },
+      { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MMAPLE LEAF LOUNGE COSTS' },
+      { itemText: 'PET TRANSPORTATION', itemValue: 'PET TRANSPORTATION' },
+      { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT COSTS' },
+      { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE FEES' },
+      { itemText: 'FOOD COSTS', itemValue: 'FOOD COSTS' },
+      { itemText: 'OTHER COSTS', itemValue: 'OTHER COSTS' }
       ];
     }
   }
@@ -161,14 +160,29 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       supplier => supplier.type === typeCode);
 
     if (this.accountingRemarks.bsp === '2') {
-      if (typeCode === 'SEAT') {
-        this.accountingRemarks.supplierCodeName = 'PFS';
-      }
-      else {
-        this.accountingRemarks.supplierCodeName = 'CGO';
-      }
+      this.assignSupplierCode(typeCode);
+      this.assignDescription(typeCode);
     } else {
       this.accountingRemarks.supplierCodeName = '';
+    }
+  }
+
+  private assignDescription(typeCode: any) {
+    if (typeCode === 'OTHER COSTS') {
+      this.accountingRemarks.description = '';
+      this.matrixAccountingForm.controls.description.enable();
+      this.matrixAccountingForm.controls.description.setValidators(Validators.required);
+    } else {
+      this.accountingRemarks.description = typeCode;
+      this.matrixAccountingForm.controls.description.disable();
+    }
+  }
+
+  private assignSupplierCode(typeCode: any) {
+    if (typeCode === 'SEAT COSTS') {
+      this.accountingRemarks.supplierCodeName = 'PFS';
+    } else {
+      this.accountingRemarks.supplierCodeName = 'CGO';
     }
   }
 
@@ -246,7 +260,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   SetTktNumber(supValue) {
-    var supCode = ['ACY', 'SOA', 'WJ3'];
+    const supCode = ['ACY', 'SOA', 'WJ3'];
 
     if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(supValue)) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);

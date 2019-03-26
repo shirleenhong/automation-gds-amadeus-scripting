@@ -25,6 +25,7 @@
     color: #ccc;
 }
 
+
 /* Microsoft Edge */
 
 
@@ -36,4 +37,10 @@
 .form-submit select.ng-invalid,
 .form-submit textarea.ng-invalid {
     border-color: #ff4c6a;
+}
+
+
+.form-control {
+    padding: 2px;
+
 }

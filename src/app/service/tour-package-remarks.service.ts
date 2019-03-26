@@ -32,7 +32,6 @@ export class TourPackageRemarksService {
     //     return
     // }
     public GetRemarks(group: any) {
-        alert('xcx');
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Tour Package';
         rmGroup.remarks = new Array<RemarkModel>();

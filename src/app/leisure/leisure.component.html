@@ -1,6 +1,6 @@
-<div *ngIf="isPnrLoaded"> 
-<form [formGroup]="leisureForm">
-  
+<div *ngIf="isPnrLoaded">
+  <form [formGroup]="leisureForm">
+
     <accordion [closeOthers]="true">
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
@@ -35,5 +35,9 @@
     <br />
     <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
 
-</form>
+  </form>
+  <br />
+  <!-- <div *ngIf="paymentComponent!=null && paymentComponent.leisureFee.leisureFeeForm.valid==false" class="error-msg">
+    <!-- Please Complete Leisure Fee -->
+  <!-- </div> -->
 </div>

@@ -193,16 +193,16 @@ export class PnrService {
     let finalDate: string;
 
     if (oDate.getDate() > maxDate.getDate()) {
-       finalDate = datePipe.transform(maxDate, 'ddmmm');
+       finalDate = datePipe.transform(maxDate, 'ddMMM');
      } else {
-      finalDate = datePipe.transform(oDate, 'ddmmm');
+      finalDate = datePipe.transform(oDate, 'ddMMM');
      }
 
-     const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
-     const MISGroup = new RemarkGroup();
-     MISGroup.group = 'MIS Retention';
-     MISGroup.cryptics.push(command);
-     return MISGroup;
+    const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
+    const MISGroup = new RemarkGroup();
+    MISGroup.group = 'MIS Retention';
+    MISGroup.cryptics.push(command);
+    return MISGroup;
     }
   }
 }

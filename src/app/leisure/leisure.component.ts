@@ -113,6 +113,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }
+    remarkCollection.push(this.pnrService.getMISRetentionLine());
+
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.loadPNR();

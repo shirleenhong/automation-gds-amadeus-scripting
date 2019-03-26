@@ -12,6 +12,7 @@ import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
 import { PackageCostRemarksService } from '../service/package-cost-remarks.service';
+import { RemarkComponent } from '../remarks/remark.component';
 
 @Component({
   selector: 'app-leisure',
@@ -23,8 +24,11 @@ export class LeisureComponent implements OnInit, AfterViewInit {
   isPnrLoaded: boolean;
   message: string;
   leisure: LeisureViewModel;
+
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
-  leisureForm: FormGroup;
+  @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
+
+  // leisureForm: FormGroup;
 
 
 
@@ -38,37 +42,9 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder
   ) {
 
-    this.leisureForm = this.fb.group({
-      remarks: this.fb.group({
-        tourPackage: this.fb.group({
-          adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-          userIdFirstWay: new FormControl(''),
-          baseCost: new FormControl('', [Validators.maxLength(8)]),
-          taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
-          childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-          childBaseCost: new FormControl('', [Validators.maxLength(8)]),
-          insurancePerAdult: new FormControl('', [Validators.maxLength(7)]),
-          insurancePerChild: new FormControl('', [Validators.maxLength(7)]),
-          taxesPerChild: new FormControl('', [Validators.maxLength(7)]),
-          infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-          totalCostPerInfant: new FormControl(''),
-          depositPaid: new FormControl(''),
-          totalCostHoliday: new FormControl(''),
-          lessDepositPaid: new FormControl(''),
-          balanceToBePaid: new FormControl(''),
-          balanceDueDate: new FormControl(''),
-          commisionAmount: new FormControl('', [Validators.maxLength(8)])
-        }, { updateOn: 'blur' })
-      }),
-      reporting: this.fb.group({
-        bspRoutingCode: new FormControl('', [Validators.required]),
-        destinationCode: new FormControl('', [Validators.required])
-      })
-    });
-
-    this.leisureForm.valueChanges.subscribe(val => {
-      console.log(val);
-    });
+    // this.leisureForm.valueChanges.subscribe(val => {
+    //   console.log(val);
+    // });
 
     this.loadPNR();
 
@@ -84,12 +60,8 @@ export class LeisureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-
     this.leisure = new LeisureViewModel();
-
-
   }
-
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
@@ -97,8 +69,8 @@ export class LeisureComponent implements OnInit, AfterViewInit {
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
-    // TODO: This is a sample of passing the FormGroup values to services to build remarks
+    remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));
+
     const leisureFee = this.paymentComponent.leisureFee;
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());

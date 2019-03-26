@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
 import { RemarkViewModel } from '../models/remark-view.model';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { TourPackageComponent } from './tour-package/tour-package.component';
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
@@ -8,29 +9,22 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
   templateUrl: './remark.component.html',
   styleUrls: ['./remark.component.scss']
 })
-export class RemarkComponent implements OnInit, OnChanges {
+export class RemarkComponent {
+
+  @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
 
   @Input() remarkSection: RemarkViewModel;
 
-  @Input() group: FormGroup;
+  group: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
-
-  ngAfterViewInit(): void {
-    // throw new Error("Method not implemented.");
-    this.f.priceRemarkSelector.patchValue('0');
+  constructor(private fb: FormBuilder) {
+    this.group = new FormGroup({
+      priceRemarkSelector: new FormControl('', [Validators.required])
+    }, { updateOn: 'blur' });
   }
 
-  ngOnInit() {
-    this.group = this.fb.group({
-      priceRemarkSelector: new FormControl('')
-    });
-  }
-
-  get f() { return this.group.controls; }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('form group: ', this.group);
+  getSelector() {
+    // this.group.priceRemarkSelector = '1';
   }
 
 }

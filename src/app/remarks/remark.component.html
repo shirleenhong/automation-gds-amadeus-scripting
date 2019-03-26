@@ -1,12 +1,11 @@
-<div class="contentPanel">
-
-    <form [formGroup]="group">
+<form [formGroup]="group">
+    <div class="contentPanel">
 
         <div class="row form-group">
             <div class="col-3">Select Price Remarks :</div>
             <div class="col-8">
                 <select id="priceRemarkSelector" name="priceRemarkSelector" formControlName="priceRemarkSelector"
-                    class="form-control">
+                    class="form-control" (change)="getSelector()">
                     <option value="0">TOUR PACKAGE</option>
                     <option value="1">ITC - ITEMIZE AIR/CRUISE ETC</option>
                 </select>
@@ -17,19 +16,23 @@
             <div class="col">
                 <tabset>
                     <tab heading="Package Remarks" id="tab1">
-                        <div *ngIf="f.priceRemarkSelector.value == 0">
-                            <app-tour-package [group]="group.get('tourPackage')"></app-tour-package>
+                        <div *ngIf="group.priceRemarkSelector == 1">
+                            <app-tour-package>
+                            </app-tour-package>
                         </div>
+                        <!-- <div *ngIf="f.priceRemarkSelector.value == 1">
+                                <app-package-cost [group]="group.get('tourPackage')"></app-package-cost> 
+                            </div> -->
                     </tab>
-                    <tab heading="Package Remarks" id="tab2">
+                    <!-- <tab heading="Package Remarks" id="tab2">
                         <div *ngIf="f.priceRemarkSelector.value == 1">
+                            <app-package-cost [group]="group.get('package')"></app-package-cost>
                             <app-package-cost [group]="group.get('package')"></app-package-cost>
                         </div>
 
-                    </tab>
+                    </tab> -->
                 </tabset>
             </div>
         </div>
-
-    </form>
-</div>
+    </div>
+</form>

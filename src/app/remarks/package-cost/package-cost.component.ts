@@ -8,11 +8,11 @@ import { SelectItem } from 'src/app/models/select-item.model';
   templateUrl: './package-cost.component.html',
   styleUrls: ['./package-cost.component.scss']
 })
-export class PackageCostComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
+export class PackageCostComponent implements OnInit {
 
-  currencies: SelectItem[];
+  // currencies: SelectItem[];
 
-  @Input() group: FormGroup;
+  // @Input() group: FormGroup;
 
   // constructor(private ddbService: DDBService) {
   constructor() {
@@ -30,30 +30,30 @@ export class PackageCostComponent implements OnInit, OnChanges, ControlValueAcce
     // });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // TODO: Do whatever you want here on change
-  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   // TODO: Do whatever you want here on change
+  // }
 
-  public onTouched: () => void = () => { };
+  // public onTouched: () => void = () => { };
 
-  writeValue(val: any): void {
-    val && this.group.setValue(val, { emitEvent: false });
-  }
-  registerOnChange(fn: any): void {
-    console.log('on change');
-    this.group.valueChanges.subscribe(fn);
-  }
-  registerOnTouched(fn: any): void {
-    console.log('on blur');
-    this.onTouched = fn;
-  }
-  setDisabledState?(isDisabled: boolean): void {
-    isDisabled ? this.group.disable() : this.group.enable();
-  }
+  // writeValue(val: any): void {
+  //   val && this.group.setValue(val, { emitEvent: false });
+  // }
+  // registerOnChange(fn: any): void {
+  //   console.log('on change');
+  //   this.group.valueChanges.subscribe(fn);
+  // }
+  // registerOnTouched(fn: any): void {
+  //   console.log('on blur');
+  //   this.onTouched = fn;
+  // }
+  // setDisabledState?(isDisabled: boolean): void {
+  //   isDisabled ? this.group.disable() : this.group.enable();
+  // }
 
-  validate(c: AbstractControl): ValidationErrors {
-    console.log('Basic Info validation', c);
-    return this.group.valid ? null : { invalidForm: { valid: false, message: 'basicInfoForm fields are invalid' } };
-  }
+  // validate(c: AbstractControl): ValidationErrors {
+  //   console.log('Basic Info validation', c);
+  //   return this.group.valid ? null : { invalidForm: { valid: false, message: 'basicInfoForm fields are invalid' } };
+  // }
 
 }

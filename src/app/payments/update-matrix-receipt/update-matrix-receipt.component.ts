@@ -46,7 +46,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       points: new FormControl('', [Validators.required, Validators.maxLength(7)]),
       lastFourVi: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
       gcNumber: new FormControl('', [Validators.maxLength(19)]),
-      amount: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('^[1-9]+\\.[0-9][0-9]$')]),
+      amount: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern('(?!^0*$)(?!^0*\\.0*$)^\\d{1,5}(\\.\\d{0,2})?$')]),
       vendorCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
       ccNo: new FormControl('', [Validators.required, Validators.minLength(16), Validators.required, Validators.maxLength(16)]),
       expDate: new FormControl('', [Validators.required]),

@@ -22,19 +22,20 @@ export class ReportingRemarkService {
     return rmGroup;
   }
 
-  getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-    if (reporting.routeCode == null) {
-      return;
-    }
-    const remText = reporting.routeCode + "" + reporting.tripType;
-    rmGroup.remarks.push(this.getRemark(remText, "FS", ""));
 
-    const existNumber = this.pnrService.getFSLineNumber();
-    if (existNumber !== "") {
-      rmGroup.deleteRemarkByIds.push(existNumber);
-    }
-  }
+    getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
 
+        if (reporting.routeCode == null) { return ;}
+        const remText = reporting.routeCode + '' + reporting.tripType;
+        rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
+
+        const existNumber = this.pnrService.getFSLineNumber();
+        if (existNumber !== '') {
+            rmGroup.deleteRemarkByIds.push(existNumber);
+        }
+
+    }
+  
   getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
     if (reporting.destination == null) {
       return;

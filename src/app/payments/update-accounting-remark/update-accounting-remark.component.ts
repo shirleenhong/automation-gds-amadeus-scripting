@@ -48,10 +48,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.loadPassengerList();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
-      segmentNo: new FormControl('', [Validators.required, Validators.maxLength(7)]),
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', [Validators.required]),
-      supplierConfirmatioNo: new FormControl('', [Validators.required]),
+      supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
       baseAmount: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       commisionWithoutTax: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       gst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
@@ -62,7 +62,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       vendorCode: new FormControl('', [Validators.required]),
       cardNumber: new FormControl('', [Validators.required]),
       expDate: new FormControl('', [Validators.required]),
-      tktLine: new FormControl('', []),
+      tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
       description: new FormControl('', [Validators.required]),
       bsp: new FormControl('', [Validators.required])
     }, { updateOn: 'blur' });
@@ -80,13 +80,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (testvalue === '1') {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
-      this.enableFormControls(['tktLine'], false);
+      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax'], false);
       this.enableFormControls(['description'], true);
       this.accountingRemarks.bsp = '1';
     } else {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
-      this.enableFormControls(['tktLine'], true);
+      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax'], true);
       this.enableFormControls(['description'], false);
       this.accountingRemarks.bsp = '2';
     }

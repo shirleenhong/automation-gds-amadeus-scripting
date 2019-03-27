@@ -28,7 +28,6 @@ export class PnrService {
         this.errorMessage = 'Error:' + error;
       }
     );
-
     console.log(JSON.stringify(this.pnrObj));
   }
 
@@ -204,5 +203,42 @@ export class PnrService {
     MISGroup.cryptics.push(command);
     return MISGroup;
     }
+
+  getSegmentTatooNumber() {
+    const segments = new Array<any>();
+    for (const air of this.pnrObj.airSegments) {
+      const segment = {
+        lineNo: air.elementNumber,
+        tatooNo: air.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    for (const car of this.pnrObj.auxCarSegments) {
+      const segment = {
+        lineNo: car.elementNumber,
+        tatooNo: car.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    for (const hotel of this.pnrObj.auxHotelSegments) {
+      const segment = {
+        lineNo: hotel.elementNumber,
+        tatooNo: hotel.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    for (const misc of this.pnrObj.miscSegments) {
+      const segment = {
+        lineNo: misc.elementNumber,
+        tatooNo: misc.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    return segments;
+
   }
 }

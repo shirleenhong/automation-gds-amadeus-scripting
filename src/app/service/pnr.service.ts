@@ -14,7 +14,7 @@ export class PnrService {
   errorMessage = '';
   destinationCity = [{ endpoint: '' }];
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.pnrObj = new PNR();
@@ -175,34 +175,35 @@ export class PnrService {
 
   getMISRetentionLine() {
     if (this.isPNRLoaded) {
-    const itinInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
+      const itinInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
 
-    const lastSegment = itinInfo[itinInfo.length - 1].itineraryFreetext;
-    let lastSegmentDate = lastSegment.longFreetext.substr(lastSegment.longFreetext.indexOf('ED-'), 8).split('-')[1];
-    const datePipe = new DatePipe('en-US');
+      const lastSegment = itinInfo[itinInfo.length - 1].itineraryFreetext;
+      let lastSegmentDate = lastSegment.longFreetext.substr(lastSegment.longFreetext.indexOf('ED-'), 8).split('-')[1];
+      const datePipe = new DatePipe('en-US');
 
-    let formattedDate = new Date();
-    const oDate = new Date();
+      let formattedDate = new Date();
+      const oDate = new Date();
 
-    lastSegmentDate = datePipe.transform(lastSegmentDate, 'dd-MM');
-    formattedDate =  new Date(lastSegmentDate + '-' + formattedDate.getFullYear());
-    oDate.setDate(formattedDate.getDate() + 180);
+      lastSegmentDate = datePipe.transform(lastSegmentDate, 'dd-MM');
+      formattedDate = new Date(lastSegmentDate + '-' + formattedDate.getFullYear());
+      oDate.setDate(formattedDate.getDate() + 180);
 
-    const maxDate = new Date(formattedDate.getDate() + 331);
-    let finalDate: string;
+      const maxDate = new Date(formattedDate.getDate() + 331);
+      let finalDate: string;
 
-    if (oDate.getDate() > maxDate.getDate()) {
-       finalDate = datePipe.transform(maxDate, 'ddMMM');
-     } else {
-      finalDate = datePipe.transform(oDate, 'ddMMM');
-     }
+      if (oDate.getDate() > maxDate.getDate()) {
+        finalDate = datePipe.transform(maxDate, 'ddMMM');
+      } else {
+        finalDate = datePipe.transform(oDate, 'ddMMM');
+      }
 
-    const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
-    const MISGroup = new RemarkGroup();
-    MISGroup.group = 'MIS Retention';
-    MISGroup.cryptics.push(command);
-    return MISGroup;
+      const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
+      const MISGroup = new RemarkGroup();
+      MISGroup.group = 'MIS Retention';
+      MISGroup.cryptics.push(command);
+      return MISGroup;
     }
+  }
 
   getSegmentTatooNumber() {
     const segments = new Array<any>();
@@ -242,3 +243,4 @@ export class PnrService {
 
   }
 }
+

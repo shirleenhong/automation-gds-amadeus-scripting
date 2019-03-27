@@ -24,6 +24,7 @@ import { UpdateAccountingRemarkComponent } from './payments/update-accounting-re
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
+import { ItcPackageComponent } from './remarks/itc-package/itc-package.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
     AccordionComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
-    LeisureFeeComponent
+    LeisureFeeComponent,
+    ItcPackageComponent
   ],
   imports: [
     BrowserModule,

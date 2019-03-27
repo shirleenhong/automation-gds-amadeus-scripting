@@ -1,0 +1,201 @@
+<form [formGroup]="itcForm">
+
+  <div class="row form-group">
+    <div class="col-2">
+
+    </div>
+    <div class="col-3">
+      Adult
+    </div>
+    <div class="col-3">
+      Child
+    </div>
+    <div class="col-3">
+      Infant
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Number Of Pax
+    </div>
+    <div class="col-3">
+      <input type="text" id="noAdult" name="noAdult" class="form-control" formControlName="noAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="noChild" name="noChild" class="form-control" formControlName="noChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="noInfant" name="noInfant" class="form-control" formControlName="noInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Base Price
+    </div>
+    <div class="col-3">
+      <input type="text" id="baseAdult" name="baseAdult" class="form-control" formControlName="baseAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="baseChild" name="baseChild" class="form-control" formControlName="baseChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="baseInfant" name="baseInfant" class="form-control" formControlName="baseInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Taxes
+    </div>
+    <div class="col-3">
+      <input type="text" id="taxAdult" name="taxAdult" class="form-control" formControlName="taxAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="taxChild" name="taxChild" class="form-control" formControlName="taxChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="taxInfant" name="taxInfant" class="form-control" formControlName="taxInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Base Cruise
+    </div>
+    <div class="col-3">
+      <input type="text" id="bcruiseAdult" name="bcruiseAdult" class="form-control" formControlName="bcruiseAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="bcruiseChild" name="bcruiseChild" class="form-control" formControlName="bcruiseChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="bcruiseInfant" name="bcruiseInfant" class="form-control" formControlName="bcruiseInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Taxes
+    </div>
+    <div class="col-3">
+      <input type="text" id="tcruiseAdult" name="tcruiseAdult" class="form-control" formControlName="tcruiseAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="tcruiseChild" name="tcruiseChild" class="form-control" formControlName="tcruiseChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="tcruiseInfant" name="tcruiseInfant" class="form-control" formControlName="tcruiseInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Rail
+    </div>
+    <div class="col-3">
+      <input type="text" id="railAdult" name="railAdult" class="form-control" formControlName="railAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="railChild" name="railChild" class="form-control" formControlName="railChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="railInfant" name="railInfant" class="form-control" formControlName="railInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Insurance
+    </div>
+    <div class="col-3">
+      <input type="text" id="insAdult" name="insAdult" class="form-control" formControlName="insAdult"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="insChild" name="insChild" class="form-control" formControlName="insChild"
+        (change)="ComputeBalance()">
+    </div>
+    <div class="col-3">
+      <input type="text" id="insInfant" name="insInfant" class="form-control" formControlName="insInfant"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Hotel - Total cost
+    </div>
+    <div class="col-3">
+      <input type="text" id="hotelAdult" name="hotelAdult" class="form-control" formControlName="hotelAdult"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Car - Total cost
+    </div>
+    <div class="col-3">
+      <input type="text" id="carAdult" name="carAdult" class="form-control" formControlName="carAdult"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Deposit
+    </div>
+    <div class="col-3">
+      <input type="text" id="depAdult" name="depAdult" class="form-control" formControlName="depAdult"
+        (change)="ComputeBalance()">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Balance to be paid
+    </div>
+    <div class="col-3">
+      <input type="text" id="balance" name="balance" class="form-control" formControlName="balance" disabled>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Balance due date
+    </div>
+    <div class="col-3">
+      <input type="date" id="dueDate" name="dueDate" class="form-control" formControlName="dueDate">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-2">
+      Commission Amount
+    </div>
+    <div class="col-3">
+      <input type="text" id="commission" name="commission" class="form-control" formControlName="commission">
+    </div>
+  </div>
+
+</form>

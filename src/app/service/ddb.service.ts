@@ -83,8 +83,8 @@ export class DDBService implements OnInit {
       { provinceCode: 'ON', tax1: 0.13, taxType1: 'HST', tax2: 0.0, taxType2: '' },
       { provinceCode: 'PE', tax1: 0.15, taxType1: 'HST', tax2: 0.0, taxType2: '' },
       { provinceCode: 'QC', tax1: 0.05, taxType1: 'GST', tax2: 0.09975, taxType2: 'QST' },
-      { provinceCode: 'SK', tax1: 0.15, taxType1: 'GST', tax2: 0.0, taxType2: '' },
-      { provinceCode: 'YT', tax1: 0.15, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'SK', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'YT', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
     ];
   }
   getSupplierCode() {
@@ -99,5 +99,34 @@ export class DDBService implements OnInit {
     { type: '6', supplierCode: 'G70', supplierName: 'G70	Autocars Rufo' }
     ];
     return SupplierCode;
+  }
+
+  getRouteCodeList() {
+    return [
+      { itemText: '', itemValue: '' },
+      {
+        itemText: 'USA incl. all US Territories and Possessions',
+        itemValue: '0'
+      },
+      {
+        itemText: 'Mexico/Central America/Canal Zone/Costa Rica',
+        itemValue: '1'
+      },
+      { itemText: 'Caribbean and Bermuda', itemValue: '2' },
+      { itemText: 'South America4', itemValue: '3' },
+      {
+        itemText: 'Europe-incl. Morocco/Tunisia/Algeria/Greenland',
+        itemValue: '4'
+      },
+      { itemText: 'Africa', itemValue: '5' },
+      { itemText: 'Middle East/Western Asia', itemValue: '6' },
+      { itemText: 'Asia incl. India', itemValue: '7' },
+      {
+        itemText:
+          'Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam',
+        itemValue: '8'
+      },
+      { itemText: 'Canada and St. Pierre et Miquelon', itemValue: '9' }
+    ];
   }
 }

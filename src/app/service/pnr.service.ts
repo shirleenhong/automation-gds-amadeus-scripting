@@ -1,78 +1,56 @@
-import { Injectable } from "@angular/core";
-import { R3NgModuleDef } from "@angular/compiler/src/render3/r3_module_compiler";
-import { stringify } from "@angular/core/src/util";
+import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { RemarkModel } from '../models/pnr/remark.model';
 
 declare var PNR: any;
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class PnrService {
   pnrObj: any;
   isPNRLoaded = false;
-  errorMessage = "";
-  destinationCity = [{ endpoint: "" }];
+  errorMessage = '';
+  destinationCity = [{ endpoint: '' }];
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
       (res: any) => {
         this.isPNRLoaded = true;
-        this.errorMessage = "PNR Loaded Successfully";
+        this.errorMessage = 'PNR Loaded Successfully';
       },
       (error: string) => {
         this.isPNRLoaded = false;
-        this.errorMessage = "Error:" + error;
+        this.errorMessage = 'Error:' + error;
       }
     );
-
     console.log(JSON.stringify(this.pnrObj));
   }
 
-  getCFLine() {
+  getRemarkLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("CF/-") === 0) {
+        if (rm.freeFlowText.indexOf(searchText) === 0) {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '';
+  }
+
+  getRemarkText(searchText: string) {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf(searchText) === 0) {
           return rm.freeFlowText;
         }
       }
     }
-    return "";
-  }
-
-  getSFCLineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("SFC/-") === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return "";
-  }
-
-  getInsuranceCancellationLineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("U12/-") === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return "";
-  }
-
-  getTaxLineNumber() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("TAX") === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return "";
+    return '';
   }
 
   getFSLineNumber() {
@@ -81,38 +59,38 @@ export class PnrService {
         return rm.elementNumber;
       }
     }
-    return "";
+    return '';
   }
 
   getPassengers() {
     if (this.isPNRLoaded) {
       const passengers = [];
 
-      for (let rm of this.pnrObj.nameElements) {
-        let fname =
+      for (const rm of this.pnrObj.nameElements) {
+        const fname =
           rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
             .otherPaxNamesDetails.givenName;
-        let lname =
+        const lname =
           rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
             .otherPaxNamesDetails.surname;
 
-        let fullname: any =
+        const fullname: any =
           lname +
-          "-" +
+          '-' +
           fname
             .toUpperCase()
-            .replace(" MS", "")
-            .replace(" MRS", "")
-            .replace(" MSTR", "")
-            .replace(" INF", "")
-            .replace(" MR", "")
-            .replace(" MISS", "");
+            .replace(' MS', '')
+            .replace(' MRS', '')
+            .replace(' MSTR', '')
+            .replace(' INF', '')
+            .replace(' MR', '')
+            .replace(' MISS', '');
 
-        let passenger = {
+        const passenger = {
           firstname: fname,
           surname: lname,
           id: rm.elementNumber,
-          fullname: fullname
+          fullname
         };
         passengers.push(passenger);
       }
@@ -121,22 +99,11 @@ export class PnrService {
     return new Array<string>();
   }
 
-  getDestinationLine() {
-    if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf("DE/-") === 0) {
-          return rm.elementNumber;
-        }
-      }
-    }
-    return "";
-  }
-
   pushDestination(endpoint) {
     const look = this.destinationCity.find(x => x.endpoint === endpoint);
     if (look == null) {
-      var destination = {
-        endpoint: endpoint
+      const destination = {
+        endpoint
       };
       this.destinationCity.push(destination);
     }
@@ -144,38 +111,50 @@ export class PnrService {
 
   getPnrDestinations() {
     if (this.isPNRLoaded) {
-      for (let air of this.pnrObj.airSegments) {
-        var airendpoint = air.arrivalAirport;
+      for (const air of this.pnrObj.airSegments) {
+        const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
 
-      for (let rm of this.pnrObj.miscSegments) {
-        // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
-        var longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
-        var endpoint = null;
-        if (longFreetext.indexOf("/EC-") > -1) {
-          var endpoint = longFreetext.substr(
-            longFreetext.indexOf("/EC-") + 4,
-            3
-          );
-        }
-        if (endpoint != null) {
-          this.pushDestination(endpoint);
-        }
+      for (const car of this.pnrObj.auxCarSegments) {
+        const carendpoint =
+          car.fullNode.travelProduct.boardpointDetail.cityCode;
+        this.pushDestination(carendpoint);
       }
+
+      for (const hotel of this.pnrObj.auxHotelSegments) {
+        const hotelendpoint =
+          hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+        this.pushDestination(hotelendpoint);
+      }
+
+      for (const misc of this.pnrObj.miscSegments) {
+        const miscendpoint =
+          misc.fullNode.travelProduct.boardpointDetail.cityCode;
+        this.pushDestination(miscendpoint);
+      }
+      // for (const rm of this.pnrObj.miscSegments) {
+      //   // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
+      //   const longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
+      //   let endpoint = null;
+      //   if (longFreetext.indexOf('/EC-') > -1) {
+      //     endpoint = longFreetext.substr(
+      //       longFreetext.indexOf('/EC-') + 4,
+      //       3
+      //     );
+      //   }
+      //   if (endpoint != null) {
+      //     this.pushDestination(endpoint);
+      //   }
+      // }
       return this.destinationCity;
     }
   }
 
   getPnrSegments() {
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.get) {
-        if (rm.freeFlowText.indexOf("DE/-") === 0) {
-          return rm.elementNumber;
-        }
-      }
     }
-    return "";
+    return '';
   }
 
   getPassiveCarSegmentNumbers() {
@@ -193,4 +172,88 @@ export class PnrService {
     }
     return elementNumbers;
   }
+
+  getMISRetentionLine() {
+    if (this.isPNRLoaded) {
+      const segmentDates = Array<Date>();
+      const datePipe = new DatePipe('en-US');
+      const itineraryInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
+      const misLineNumber = new Array<string>();
+
+      itineraryInfo.forEach(x => {
+        const longFreetext = x.itineraryFreetext.longFreetext;
+        if (longFreetext.indexOf('ED-') !== -1) {
+            let formattedDate = new Date();
+            let parsedDate: string;
+            parsedDate = longFreetext.substr(longFreetext.indexOf('ED-'), 8).split('-')[1];
+            formattedDate = new Date(datePipe.transform(parsedDate, 'dd-MM') + '-' + formattedDate.getFullYear());
+            segmentDates.push(formattedDate);
+        }
+
+        if (longFreetext.indexOf('-THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL') === 0) {
+          misLineNumber.push(x.elementManagementItinerary.lineNumber);
+         }
+      });
+
+      const lastSegmentDate = new Date(Math.max.apply(null, segmentDates));
+      const oDate = new Date();
+      oDate.setDate(lastSegmentDate.getDate() + 180);
+
+      const maxDate = new Date();
+      maxDate.setDate(lastSegmentDate.getDate() + 331);
+      let finalDate: string;
+
+      if (oDate.getDate() > maxDate.getDate()) {
+        finalDate = datePipe.transform(maxDate, 'ddMMM');
+      } else {
+        finalDate = datePipe.transform(oDate, 'ddMMM');
+      }
+
+      const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
+      const MISGroup = new RemarkGroup();
+      MISGroup.group = 'MIS Retention';
+      MISGroup.deleteRemarkByIds = misLineNumber;
+      MISGroup.cryptics.push(command);
+      return MISGroup; } else {return new RemarkGroup();
+    }
+  }
+
+  getSegmentTatooNumber() {
+    const segments = new Array<any>();
+    for (const air of this.pnrObj.airSegments) {
+      const segment = {
+        lineNo: air.elementNumber,
+        tatooNo: air.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    for (const car of this.pnrObj.auxCarSegments) {
+      const segment = {
+        lineNo: car.elementNumber,
+        tatooNo: car.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    for (const hotel of this.pnrObj.auxHotelSegments) {
+      const segment = {
+        lineNo: hotel.elementNumber,
+        tatooNo: hotel.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    for (const misc of this.pnrObj.miscSegments) {
+      const segment = {
+        lineNo: misc.elementNumber,
+        tatooNo: misc.tatooNumber
+      };
+      segments.push(segment);
+    }
+
+    return segments;
+
+  }
 }
+

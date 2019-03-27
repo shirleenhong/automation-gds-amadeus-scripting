@@ -12,11 +12,9 @@ export class RemarkCollectionService {
     this.remarkCollection = new Array<RemarkGroup>();
   }
 
-
-
-
   public addUpdateRemarkGroup(remarkGroup: RemarkGroup) {
     if (this.remarkCollection.length > 0) {
+// tslint:disable-next-line: triple-equals
       const look = this.remarkCollection.find(x => x.group == remarkGroup.group);
       if (look != null) {
         const index = this.remarkCollection.indexOf(look);

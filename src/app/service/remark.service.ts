@@ -63,6 +63,7 @@ export class RemarkService {
                         if (rem.remarkType == "FS") {
                             this.remarksElement.push(this.getFSRemarksElement(rem));
                         } else {
+                            let test = this.getRemarkElement(rem);
                             this.remarksElement.push(this.getRemarkElement(rem));
                         }
 
@@ -120,9 +121,41 @@ export class RemarkService {
             remarks: remarks
         };
 
-        return { elementManagementData, miscellaneousRemark };
+
+        const temp = new Array<any>();
+        if (remarkModel.relatedSegments) {
+            remarkModel.relatedSegments.forEach(element => {
+                const ref = {
+                    qualifier: 'ST',
+                    number: element
+                };
+                temp.push(ref);
+            });
+        }
+        const referenceForDataElement = {
+            reference: temp
+        };
+
+        // alert(JSON.stringify(referenceForDataElement));
+        return { elementManagementData, miscellaneousRemark, referenceForDataElement };
 
     }
+
+    // private segmentRelate(remarkModel: RemarkModel) {
+    //     const reference = [];
+    //     if (remarkModel.relatedSegments.length > 0) {
+    //         remarkModel.relatedSegments.forEach(element => {
+    //             const ref = {
+    //                 qualifier: 'ST',
+    //                 number: element
+    //             };
+    //             reference.push(ref);
+    //         });
+    //     }
+    //     const referenceForDataElement = {
+    //         reference
+    //     };
+    // }
 
     addPassiveSegmentElement(passiveSegmentmodel: PassiveSegmentModel) {
 
@@ -252,14 +285,14 @@ export class RemarkService {
             smartScriptSession.send("RT");
             // alert(JSON.stringify(remarkElements));
         }, error => {
-                this.responseMessage = JSON.stringify(error);
-            });
+            this.responseMessage = JSON.stringify(error);
+        });
 
     }
 
     async SubmitRemarks() {
         this.deleteRemarks();
-        this.sendCryptics();
+        await this.sendCryptics();
         await this.sendRemarks();
         this.clear();
     }

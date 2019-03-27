@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
-import { MatrixAccountingModel} from '../models/pnr/matrix-accounting.model';
+import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { DatePipe } from '@angular/common';
-
+import { PnrService } from './pnr.service';
+import { IfStmt } from '@angular/compiler';
 
 
 @Injectable({
@@ -12,6 +13,10 @@ import { DatePipe } from '@angular/common';
 })
 export class PaymentRemarkService {
 
+    constructor(private pnrService: PnrService) {
+    }
+
+    accountingRemarks: Array<MatrixAccountingModel>;
 
     public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
 
@@ -30,8 +35,6 @@ export class PaymentRemarkService {
 
     }
 
-    accountingRemarks: Array<MatrixAccountingModel>;
-
     public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
 
         const remGroup = new RemarkGroup();
@@ -45,46 +48,115 @@ export class PaymentRemarkService {
 
     }
 
-    getRemarksModel(remText) {
+    getRemarksModel(remText, cat, type, segment?: string) {
+        let segmentrelate = [];
+        if (segment) {
+            segmentrelate = segment.split(',');
+        }
+
         const rem = new RemarkModel();
-        rem.category = '*';
+        rem.category = cat;
         rem.remarkText = remText;
-        rem.remarkType = 'RM';
+        rem.remarkType = type;
+        rem.relatedSegments = this.getSegmentTatooValue(segmentrelate);
         return rem;
     }
 
-    getFOP(modeofPayment, creditCardNo, vendorCode, expDate)
-    {
+    getSegmentTatooValue(segmentrelate) {
+        const relatedSegment = [];
+        const tatooSegment = this.pnrService.getSegmentTatooNumber();
+        segmentrelate.forEach(element => {
+            if (tatooSegment.length > 0) {
+                const look = tatooSegment.find(x => x.lineNo === element);
+                if (look) {
+                    relatedSegment.push(look.tatooNo);
+                }
+            }
+        });
+        // alert(JSON.stringify(relatedSegment));
+        return relatedSegment;
+    }
+
+    getFOP(modeofPayment, creditCardNo, vendorCode, expDate) {
         const datePipe = new DatePipe('en-US');
         let fop = '';
-        if (modeofPayment == 'CC') {
-             var month = datePipe.transform(expDate, 'MM');
-             var year = expDate.toString().substr(2,2);
-            fop = "CC" + vendorCode + creditCardNo + '/-EXP' + month + year;
-        } else {
-            fop =modeofPayment;
+
+        switch (modeofPayment) {
+            case 'CC': {
+                const month = datePipe.transform(expDate, 'MM');
+                const year = expDate.toString().substr(2, 2);
+                fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
+                break;
+            }
+            case 'ACC': {
+                fop = 'CCVI4111111111111111/-EXP1229';
+                break;
+            }
+            default: {
+                fop = modeofPayment;
+                break;
+            }
+
         }
         return fop;
     }
 
-    processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>)
-    {
-        const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' + accounting.baseAmount.toString().trim() + '/-PT-' + accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() + 'XG/-PT-' + accounting.qst.toString().trim() +  ' XQ/-PT- ' + accounting.otherTax.toString().trim() + 'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
-        const acc2 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.toString().trim() + '/-LK-MAC' + accounting.tkMacLine.toString().trim()  + '/-FOP-' + this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
-              '/-TK-' + accounting.tktLine.toString().trim() + '/-MP-' + accounting.passengerNo.toString().trim() + '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim() + '/S' + accounting.segmentNo.toString().trim();
+    getTKTline(tktLine) {
+        let tline = '';
+        // if (tktLine tktLine !== null && tktLine !== '') {
+        if (tktLine) {
+            tline = '/-TK-' + tktLine.toString().trim();
+        }
+        return tline;
+    }
 
-        remarkList.push(this.getRemarksModel(acc1));      
-        remarkList.push(this.getRemarksModel(acc2));      
 
+    processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
+        const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
+            '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
+            accounting.baseAmount.toString().trim() + '/-PT-' +
+            accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() +
+            'XG/-PT-' + accounting.qst.toString().trim() + 'XQ';
+
+        let facc = acc1;
+        if (accounting.bsp === '1') {
+            facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim()
+                + 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
+        }
+
+        const acc2 = 'MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
+            '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
+            this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
+            this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
+            '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim();
+        // + '/S' + accounting.segmentNo.toString().trim();
+
+        remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
+
+        if (accounting.bsp === '2') {
+            // tslint:disable-next-line:prefer-const
+            let ttltax: number = Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
+            ttltax = Math.round(ttltax * 100) / 100;
+            let vcode = '';
+            if (accounting.vendorCode) {
+                vcode = accounting.vendorCode;
+            }
+            const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
+                ' CAD' + accounting.baseAmount + ' PLUS ' + ttltax + ' TAX ON ' + vcode;
+            // + '/S' + accounting.segmentNo.toString().trim();
+
+            remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));
+        }
     }
 
     processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
         const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
-        const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR-' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
-        const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.points + '/-REF-' + matrix.cwtRef;
-        remarkList.push(this.getRemarksModel(rem1));
-        remarkList.push(this.getRemarksModel(rem2));
-        remarkList.push(this.getRemarksModel(rem3));
+        const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
+        const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-POINTS ' + matrix.points + ' REF-' + matrix.cwtRef;
+        remarkList.push(this.getRemarksModel(rem1, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(rem2, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
     }
 
     processOtherPaymentRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
@@ -97,16 +169,18 @@ export class PaymentRemarkService {
         const datePipe = new DatePipe('en-US');
         let fop = '';
         if (Object.values(CardType).includes(matrix.bankAccount)) {
-            var month = datePipe.transform(matrix.expDate, 'MM');
-            var year = matrix.expDate.toString().substr(2,2);
-            fop = "CC" + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
+
+            const month = datePipe.transform(matrix.expDate, 'MM');
+            const year = matrix.expDate.toString().substr(2, 2);
+
+            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
         } else {
             fop = matrix.modePayment;
         }
 
-        var gcNo = ''
-        if(matrix.gcNumber != null && (matrix.gcNumber.toString() !== ""))
-        {   
+        let gcNo = '';
+
+        if (matrix.gcNumber != null && (matrix.gcNumber.toString() !== '')) {
             gcNo = '/-GC-' + matrix.gcNumber;
         }
 
@@ -114,9 +188,9 @@ export class PaymentRemarkService {
         const rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-' + fop + '/-LK-T/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
         const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.description + gcNo;
 
-        remarkList.push(this.getRemarksModel(rem1));
-        remarkList.push(this.getRemarksModel(rem2));
-        remarkList.push(this.getRemarksModel(rem3));
+        remarkList.push(this.getRemarksModel(rem1, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(rem2, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
     }
 
 

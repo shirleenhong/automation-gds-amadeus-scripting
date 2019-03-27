@@ -12,6 +12,7 @@ import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
 import { ReportingComponent } from '../reporting/reporting.component';
+import { PackageCostRemarksService } from '../service/package-cost-remarks.service';
 
 @Component({
   selector: 'app-leisure',
@@ -35,8 +36,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
     private fb: FormBuilder,
-    private tourPackageRemarksService: TourPackageRemarksService
-
+    private tourPackageRemarksService: TourPackageRemarksService,
+    private packageCostRemarksService: PackageCostRemarksService
 
   ) {
 
@@ -109,8 +110,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
+    // remarkCollection.push(this.packageCostRemarksService.GetRemarks(this.leisure.remarkView.));
     const leisureFee = this.paymentComponent.leisureFee;
-    
+
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }

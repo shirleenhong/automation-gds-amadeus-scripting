@@ -4,7 +4,7 @@
     <accordion [closeOthers]="true">
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
-          <i class='fa fa-users'></i> Passive Segment
+          <i class='fas fa-plane'></i> Passive Segment
           <span class="cwt-logo"></span>
         </div>
         <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
@@ -12,28 +12,28 @@
       </accordion-group>
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
-          <i class='fa fa-users'></i> Payment
+          <i class='fas fa-hand-holding-usd'></i> Payment
           <span class="cwt-logo"></span>
         </div>
         <app-payment [paymentView]="leisure.paymentView"></app-payment>
       </accordion-group>
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
-          <i class='fa fa-users'></i> Reporting
+          <i class='fas fa-file-export'></i> Reporting
           <span class="cwt-logo"></span>
         </div>
         <app-reporting [reportingView]="leisure.reportingView"></app-reporting>
       </accordion-group>
       <accordion-group [panelClass]="'customClass'">
         <div accordion-heading>
-          <i class='fa fa-users'></i> Remarks
+          <i class='far fa-list-alt'></i> Remarks
           <span class="cwt-logo"></span>
         </div>
         <app-remarks [group]="leisureForm.get('remarks')"></app-remarks>
       </accordion-group>
     </accordion>
     <br />
-    <button class="btn btn-pill btn-warning" (click)="SubmitToPNR()">Submit To PNR</button>
+    <button class="submitPnr" (click)="SubmitToPNR()">Submit To PNR</button>
 
   </form>
   <br />

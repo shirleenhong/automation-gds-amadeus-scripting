@@ -27,7 +27,7 @@ export class ReportingRemarkService {
 
     getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
 
-        if (reporting.routeCode == null) { return }
+        if (reporting.routeCode == null) { return ;}
         const remText = reporting.routeCode + '' + reporting.tripType;
         rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 

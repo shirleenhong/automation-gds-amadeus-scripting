@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { setTheme } from 'ngx-bootstrap';
 
 @Component({
@@ -6,14 +6,20 @@ import { setTheme } from 'ngx-bootstrap';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewChecked {
   title = 'bpg-gds-scripting-amadeus';
+  constructor() {
+
+  }
+
   ngOnInit() {
 
     setTheme('bs4');
 
   }
 
+  ngAfterViewChecked() {
 
+  }
 
 }

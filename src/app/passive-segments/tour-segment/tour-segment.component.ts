@@ -72,7 +72,7 @@ export class TourSegmentComponent implements OnInit, OnChanges {
   addPassiveSegment() {
 
 
-    this.modalRef = this.modalService.show(UpdateTourSegmentComponent);
+    this.modalRef = this.modalService.show(UpdateTourSegmentComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Add Tour Segment';
     this.modalRef.content.passiveSegment = new PassiveSegmentModel();
 

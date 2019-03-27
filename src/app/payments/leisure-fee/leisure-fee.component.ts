@@ -87,6 +87,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         "address"
       ];
       this.enableDisbleControls(ctrls, false);
+      this.enableDisbleControls(['noFeeReason'], true);
       this.eventFeeTypeChanged.emit(val);
       switch (val) {
         case "3":
@@ -100,6 +101,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
           break;
         case "0":
           this.enableDisbleControls(ctrls, true);
+          this.enableDisbleControls(['noFeeReason'], false);
           break;
         default:
           this.leisureFeeForm.get("segmentNum").disable();

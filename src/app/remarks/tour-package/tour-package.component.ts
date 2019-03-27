@@ -16,7 +16,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   tourPackage: TourPackageViewModel;
 
   // @Input() group: any;
-  group: FormControl;
+  group: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.group = this.fb.group({

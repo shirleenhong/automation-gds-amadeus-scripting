@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, FormBuilder, Validators } from '@angular/forms';
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 
@@ -15,89 +15,100 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   bspCurrencyList: SelectItem[];
   tourPackage: TourPackageViewModel;
 
-  //@Input() group: FormGroup;
-  @Input() group: any;
+  // @Input() group: any;
+  group: FormControl;
 
-  constructor() {
-
+  constructor(private fb: FormBuilder) {
+    this.group = this.fb.group({
+      adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      userIdFirstWay: new FormControl(''),
+      baseCost: new FormControl('', [Validators.maxLength(8)]),
+      taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
+      childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      childBaseCost: new FormControl('', [Validators.maxLength(8)]),
+      insurancePerAdult: new FormControl('', [Validators.maxLength(7)]),
+      insurancePerChild: new FormControl('', [Validators.maxLength(7)]),
+      taxesPerChild: new FormControl('', [Validators.maxLength(7)]),
+      infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      totalCostPerInfant: new FormControl(''),
+      depositPaid: new FormControl(''),
+      totalCostHoliday: new FormControl(''),
+      lessDepositPaid: new FormControl(''),
+      balanceToBePaid: new FormControl(''),
+      balanceDueDate: new FormControl(''),
+      commisionAmount: new FormControl('', [Validators.maxLength(8)])
+    }, { updateOn: 'blur' });
   }
 
 
   ngOnInit() {
-    this.getCurrencies();
+    // this.getCurrencies();
+    // this.group.get('adultNum').valueChanges.subscribe(e => {
+    //   this.group.adultNum = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    // this.group.valueChanges.subscribe(val => {
-    //   console.log('Mico Test');
-    //   console.log('val:' + val);
-    //   //debugger;
-    //   // this.tourPackageChange();
-    // });
-    this.group.get('adultNum').valueChanges.subscribe(e => {
-      this.group.adultNum = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('baseCost').valueChanges.subscribe(e => {
+    //   this.group.value.baseCost = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('baseCost').valueChanges.subscribe(e => {
-      this.group.value.baseCost = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('taxesPerAdult').valueChanges.subscribe(e => {
+    //   this.group.value.taxesPerAdult = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('taxesPerAdult').valueChanges.subscribe(e => {
-      this.group.value.taxesPerAdult = e;
-      this.tourPackageChange();
-    }
-    );
-
-    this.group.get('insurancePerAdult').valueChanges.subscribe(e => {
-      this.group.value.insurancePerAdult = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('insurancePerAdult').valueChanges.subscribe(e => {
+    //   this.group.value.insurancePerAdult = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
 
-    this.group.get('childrenNumber').valueChanges.subscribe(e => {
-      this.group.value.childrenNumber = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('childrenNumber').valueChanges.subscribe(e => {
+    //   this.group.value.childrenNumber = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('childBaseCost').valueChanges.subscribe(e => {
-      this.group.value.childBaseCost = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('childBaseCost').valueChanges.subscribe(e => {
+    //   this.group.value.childBaseCost = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('taxesPerChild').valueChanges.subscribe(e => {
-      this.group.value.taxesPerChild = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('taxesPerChild').valueChanges.subscribe(e => {
+    //   this.group.value.taxesPerChild = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('insurancePerChild').valueChanges.subscribe(e => {
-      this.group.value.insurancePerChild = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('insurancePerChild').valueChanges.subscribe(e => {
+    //   this.group.value.insurancePerChild = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('infantNumber').valueChanges.subscribe(e => {
-      this.group.value.infantNumber = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('infantNumber').valueChanges.subscribe(e => {
+    //   this.group.value.infantNumber = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('totalCostPerInfant').valueChanges.subscribe(e => {
-      this.group.value.totalCostPerInfant = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('totalCostPerInfant').valueChanges.subscribe(e => {
+    //   this.group.value.totalCostPerInfant = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
-    this.group.get('depositPaid').valueChanges.subscribe(e => {
-      this.group.value.depositPaid = e;
-      this.tourPackageChange();
-    }
-    );
+    // this.group.get('depositPaid').valueChanges.subscribe(e => {
+    //   this.group.value.depositPaid = e;
+    //   this.tourPackageChange();
+    // }
+    // );
 
   }
 
@@ -137,18 +148,24 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   tourPackageChange() {
     console.log('tour package call');
     const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
-    // console.log('v');
-    // console.log(v);
-    // this.group.value.totalCostHoliday.updatevalue = 100;
-    // console.log(this.group);
     this.group.patchValue({ totalCostHoliday: v });
+    this.computeBalanceToBePaid();
     // console.log('total cost holiday');
     // console.log(this.group.value.totalCostHoliday);
-    this.group.patchValue({ lessDepositPaid: this.group.value.depositPaid });
+    // this.group.patchValue({ lessDepositPaid: this.group.value.depositPaid });
     // this.group.value.lessDepositPaid = this.group.value.depositPaid;
     // this.group.value.balanceToBePaid = this.group.value.totalCostHoliday - parseInt(this.group.value.lessDepositPaid, 0);
-    this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - parseInt(this.group.value.lessDepositPaid, 0) });
+    // this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - parseInt(this.group.value.depositPaid, 0) });
     // this.buildRemark();
+  }
+
+  computeBalanceToBePaid() {
+    let dp = 0;
+    if (this.group.value.depositPaid !== '') {
+      dp = (parseInt(this.group.value.depositPaid, 0));
+    }
+
+    this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - dp });
   }
 
   computeAdultCost() {
@@ -236,7 +253,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   getCurrencies() {
     // TODO: Get from API DDB
-    this.bspCurrencyList = [{ itemText: '', itemValue: '-1' },
+    this.bspCurrencyList = [{ itemText: 'Select', itemValue: '' },
     { itemText: 'Andorran Peset', itemValue: 'ADP' },
     { itemText: 'UAE Dirham', itemValue: 'AED' },
     { itemText: 'Afghanistan Afghani', itemValue: 'AFN' },

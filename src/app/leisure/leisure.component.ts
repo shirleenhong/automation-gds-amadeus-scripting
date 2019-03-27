@@ -12,7 +12,8 @@ import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
 import { ReportingComponent } from '../reporting/reporting.component';
-import { PackageCostRemarksService } from '../service/package-cost-remarks.service';
+import { ITCPackageCostRemarkService } from '../service/itc-packagecost-remarks.service';
+import { RemarkComponent } from '../remarks/remark.component';
 
 @Component({
   selector: 'app-leisure',
@@ -24,10 +25,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   isPnrLoaded: boolean;
   message: string;
   leisure: LeisureViewModel;
+
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
-  leisureForm: FormGroup;
+  // leisureForm: FormGroup;
   eventSubscribe = false;
+  @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
+
 
 
   constructor(private pnrService: PnrService,
@@ -35,39 +39,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
-    private fb: FormBuilder,
     private tourPackageRemarksService: TourPackageRemarksService,
-    private packageCostRemarksService: PackageCostRemarksService
-
+    private itcPackageCostRemarkService: ITCPackageCostRemarkService,
+    private fb: FormBuilder
   ) {
 
-    this.leisureForm = this.fb.group({
-      remarks: this.fb.group({
-        tourPackage: this.fb.group({
-          adultNum: new FormControl('', [Validators.required, Validators.min(1), Validators.max(9)]),
-          userIdFirstWay: new FormControl('', [Validators.required]),
-          baseCost: new FormControl('', [Validators.required, Validators.maxLength(7)]),
-          taxesPerAdult: new FormControl('', [Validators.required]),
-          childrenNumber: new FormControl('', [Validators.required]),
-          childBaseCost: new FormControl('', [Validators.required]),
-          insurancePerAdult: new FormControl('', [Validators.required]),
-          insurancePerChild: new FormControl('', [Validators.required]),
-          taxesPerChild: new FormControl('', [Validators.required]),
-          infantNumber: new FormControl('', [Validators.required]),
-          totalCostPerInfant: new FormControl('', [Validators.required]),
-          depositPaid: new FormControl('', [Validators.required]),
-          totalCostHoliday: new FormControl('', [Validators.required]),
-          lessDepositPaid: new FormControl('', [Validators.required]),
-          balanceToBePaid: new FormControl('', [Validators.required]),
-          balanceDueDate: new FormControl('', [Validators.required]),
-          commisionAmount: new FormControl('', [Validators.required])
-        }, { updateOn: 'blur' })
-      }),
-      reporting: this.fb.group({
-        bspRoutingCode: new FormControl('', [Validators.required]),
-        destinationCode: new FormControl('', [Validators.required])
-      })
-    });
+    // this.leisureForm.valueChanges.subscribe(val => {
+    //   console.log(val);
+    // });
 
     this.loadPNR();
 
@@ -95,12 +74,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   ngOnInit() {
-
     this.leisure = new LeisureViewModel();
-
-
   }
-
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
@@ -109,14 +84,15 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.leisureForm.value.remarks.tourPackage));
-    // remarkCollection.push(this.packageCostRemarksService.GetRemarks(this.leisure.remarkView.));
+    // remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));
+    remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));
+
     const leisureFee = this.paymentComponent.leisureFee;
 
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }
-    remarkCollection.push(this.pnrService.getMISRetentionLine());
+    // remarkCollection.push(this.pnrService.getMISRetentionLine());
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {

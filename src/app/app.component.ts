@@ -8,11 +8,11 @@ import { setTheme } from 'ngx-bootstrap';
 })
 export class AppComponent {
   title = 'bpg-gds-scripting-amadeus';
-  ngOnInit() {
+  // ngOnInit() {
 
-    setTheme('bs4');
+  //   setTheme('bs4');
 
-  }
+  // }
 
 
 

@@ -1,0 +1,305 @@
+<div class="container">
+
+  <div class="row">
+    <h2>Itemized Package Cost Remarks</h2>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="userIdFirstWay">Currency Type</label>
+        <input type="text" class="form-control" placeholder="select a currency" formControlName="userIdFirstWay"
+          id="userIdFirstWay" list="dynamicCurrency" />
+        <datalist id="dynamicCurrency">
+          <option *ngFor="let item of bspCurrencyList" [value]="item.itemText">{{item.itemText}}</option>
+        </datalist>
+      </div>
+      <div *ngIf="group.controls['userIdFirstWay'].errors" class="error-msg">
+        <div [hidden]="!group.controls['userIdFirstWay'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4"></div>
+    <div class="col-4"></div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="adultNum">Number of Adults</label>
+        <input type="number" class="form-control" placeholder="any number from 1-9" id="adultNum"
+          formControlName="adultNum" />
+      </div>
+      <div *ngIf="group.controls['adultNum'].errors" class="error-msg">
+        <div [hidden]="!group.controls['adultNum'].errors.required">This field is required.</div>
+        <div [hidden]="!group.controls['adultNum'].errors?.max">Number of adults must not exceed 9.</div>
+        <div [hidden]="!group.controls['adultNum'].errors?.min">Number of adults must not be less than 1.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childrenNumber">Number of Children</label>
+        <input type="text" class="form-control" maxlength="1" id="childrenNumber" formControlName="childrenNumber" />
+      </div>
+      <div *ngIf="group.controls['childrenNumber'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childrenNumber'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantNumber">Number of Infants</label>
+        <input type="number" class="form-control" maxlength="1" id="infantNumber" formControlName="infantNumber" />
+      </div>
+      <div *ngIf="group.controls['infantNumber'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantNumber'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="adultPrice">Base Price per adult</label>
+        <input type="text" class="form-control" id="adultPrice" formControlName="adultPrice" />
+      </div>
+      <div *ngIf="group.controls['adultPrice'].errors" class="error-msg">
+        <div [hidden]="!group.controls['adultPrice'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childPrice">Base Price per child</label>
+        <input type="text" class="form-control" maxlength="8" id="childPrice" formControlName="childPrice" />
+      </div>
+      <div *ngIf="group.controls['childPrice'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childPrice'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantPrice">Base Price per infant</label>
+        <input type="text" class="form-control" maxlength="8" id="infantPrice" formControlName="infantPrice" />
+      </div>
+      <div *ngIf="group.controls['infantPrice'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantPrice'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="adultTaxes">Taxes per adult</label>
+        <input type="text" class="form-control" id="adultTaxes" formControlName="adultTaxes" />
+      </div>
+      <div *ngIf="group.controls['adultTaxes'].errors" class="error-msg">
+        <div [hidden]="!group.controls['adultTaxes'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childTaxes">Taxes per child</label>
+        <input type="text" class="form-control" maxlength="8" id="childTaxes" formControlName="childTaxes" />
+      </div>
+      <div *ngIf="group.controls['childTaxes'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childTaxes'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantTaxes">Taxes per infant</label>
+        <input type="text" class="form-control" maxlength="8" id="infantTaxes" formControlName="infantTaxes" />
+      </div>
+      <div *ngIf="group.controls['infantTaxes'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantTaxes'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="adultCruise">Base Cruise per adult</label>
+        <input type="text" class="form-control" id="adultCruise" formControlName="adultCruise" />
+      </div>
+      <div *ngIf="group.controls['adultCruise'].errors" class="error-msg">
+        <div [hidden]="!group.controls['adultCruise'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childCruise">Base Cruise per child</label>
+        <input type="text" class="form-control" maxlength="8" id="childCruise" formControlName="childCruise" />
+      </div>
+      <div *ngIf="group.controls['childCruise'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childCruise'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantCruise">Base Cruise per infant</label>
+        <input type="text" class="form-control" maxlength="8" id="infantCruise" formControlName="infantCruise" />
+      </div>
+      <div *ngIf="group.controls['infantCruise'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantCruise'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="taxesAdult">Taxes/Port Charges Adult</label>
+        <input type="text" class="form-control" id="taxesAdult" formControlName="taxesAdult" />
+      </div>
+      <div *ngIf="group.controls['taxesAdult'].errors" class="error-msg">
+        <div [hidden]="!group.controls['taxesAdult'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childTaxes">Taxes/Port Charges child</label>
+        <input type="text" class="form-control" maxlength="8" id="childTaxes" formControlName="childTaxes" />
+      </div>
+      <div *ngIf="group.controls['childTaxes'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childTaxes'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantTaxes">Taxes/Port Charges infant</label>
+        <input type="text" class="form-control" maxlength="8" id="infantTaxes" formControlName="infantTaxes" />
+      </div>
+      <div *ngIf="group.controls['infantTaxes'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantTaxes'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="adultRail">Rail Adult</label>
+        <input type="text" class="form-control" id="adultRail" formControlName="adultRail" />
+      </div>
+      <div *ngIf="group.controls['adultRail'].errors" class="error-msg">
+        <div [hidden]="!group.controls['adultRail'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childRail">Rail child</label>
+        <input type="text" class="form-control" maxlength="8" id="childRail" formControlName="childRail" />
+      </div>
+      <div *ngIf="group.controls['childRail'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childRail'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantRail">Rail infant</label>
+        <input type="text" class="form-control" maxlength="8" id="infantRail" formControlName="infantRail" />
+      </div>
+      <div *ngIf="group.controls['infantRail'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantRail'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="adultInsurance">Insurance Adult</label>
+        <input type="text" class="form-control" id="adultInsurance" formControlName="adultInsurance" />
+      </div>
+      <div *ngIf="group.controls['adultInsurance'].errors" class="error-msg">
+        <div [hidden]="!group.controls['adultInsurance'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="childInsurance">Insurance child</label>
+        <input type="text" class="form-control" maxlength="8" id="childInsurance" formControlName="childInsurance" />
+      </div>
+      <div *ngIf="group.controls['childInsurance'].errors" class="error-msg">
+        <div [hidden]="!group.controls['childInsurance'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="infantInsurance">Insurance infant</label>
+        <input type="text" class="form-control" maxlength="8" id="infantInsurance" formControlName="infantInsurance" />
+      </div>
+      <div *ngIf="group.controls['infantInsurance'].errors" class="error-msg">
+        <div [hidden]="!group.controls['infantInsurance'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label for="hotelAccommodation">Hotel - Total Cost</label>
+        <input type="text" class="form-control" id="hotelAccommodation" formControlName="hotelAccommodation" />
+      </div>
+      <div *ngIf="group.controls['hotelAccommodation'].errors" class="error-msg">
+        <div [hidden]="!group.controls['hotelAccommodation'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="carTotalCost">Car - Total Cost</label>
+        <input type="text" class="form-control" id="carTotalCost" formControlName="carTotalCost" />
+      </div>
+      <div *ngIf="group.controls['carTotalCost'].errors" class="error-msg">
+        <div [hidden]="!group.controls['carTotalCost'].errors.required">This field is required.</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="depositPaid">Deposit Paid</label>
+        <input type="text" class="form-control" id="depositPaid" formControlName="depositPaid" />
+      </div>
+      <div *ngIf="group.controls['depositPaid'].errors" class="error-msg">
+        <div [hidden]="!group.controls['depositPaid'].errors.required">This field is required.</div>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <br />
+
+
+  <div class="form-group row">
+    <div class="col-sm-4">
+      <label for="totalCostHoliday">The total cost of Holiday</label>
+    </div>
+    <div class="col-sm-4">
+      <input type="text" disabled class="form-control" id="totalCostHoliday" formControlName="totalCostHoliday" />
+    </div>
+  </div>
+
+
+  <div class="form-group row">
+    <div class="col-sm-4">
+      <label for="balanceToBePaid">Balance to be Paid</label>
+    </div>
+    <div class="col-sm-4">
+      <input type="text" disabled class="form-control" id="balanceToBePaid" formControlName="balanceToBePaid" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-4">
+      <label for="balanceDueDate">Balance Due Date</label>
+    </div>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()" placeholder="yyyy-mm-dd"
+        formControlName="balanceDueDate" />
+    </div>
+  </div>
+
+
+
+  <div class="form-group row">
+    <div class="col-sm-4">
+      <label for="commisionAmount">Commision Amount</label>
+    </div>
+    <div class="col-sm-4">
+
+      <input type="text" class="form-control" maxlength="8" id="commisionAmount" formControlName="commisionAmount" />
+    </div>
+  </div>
+</div>

@@ -25,6 +25,7 @@ import { AccountingRemarkComponent } from './payments/accounting-remark/accounti
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
 import { ItcPackageComponent } from './remarks/itc-package/itc-package.component';
+// import { PackageCostComponent } from './remarks/package-cost/package-cost.component';
 
 
 @NgModule({

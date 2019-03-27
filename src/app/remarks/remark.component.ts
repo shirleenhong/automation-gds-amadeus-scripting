@@ -1,14 +1,21 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
 import { RemarkViewModel } from '../models/remark-view.model';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, Validators, FormBuilder } from "@angular/forms";
 import { SelectItem } from '../models/select-item.model';
+// import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { TourPackageComponent } from './tour-package/tour-package.component';
+import { ItcPackageComponent } from './itc-package/itc-package.component';
+// import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
   selector: 'app-remarks',
   templateUrl: './remark.component.html',
   styleUrls: ['./remark.component.scss']
 })
-export class RemarkComponent implements OnInit, OnChanges {
+export class RemarkComponent {
+
+  @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
+  @ViewChild(ItcPackageComponent) itcPackageComponent: ItcPackageComponent;
   remarkForm: FormGroup;
   @Input() remarkSection: RemarkViewModel;
 
@@ -23,12 +30,9 @@ export class RemarkComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnInit() {
 
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('form group: ', this.group);
+  getSelector() {
+    // this.group.priceRemarkSelector = '1';
   }
 
 

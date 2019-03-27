@@ -64,8 +64,6 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
 
-  // get f() { return this.reportingForm.controls; }
-
   getDestination() {
     this.destinationList = this.pnrService.getPnrDestinations();
   }
@@ -78,19 +76,16 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-
-
   checkInsurance() {
-    if (this.pnrService.getInsuranceCancellationLineNumber() === '') {
+    if (this.pnrService.getRemarkLineNumber('U12/-') === '') {
       return false;
     } else {
       return true;
     }
   }
 
-
   getPnrCFLine() {
-    const cfLine = this.pnrService.getCFLine();
+    const cfLine = this.pnrService.getRemarkText('CF/-');
 
     this.reportingView.cfLine = new CfRemarkModel();
 

@@ -292,7 +292,7 @@ export class RemarkService {
 
     async SubmitRemarks() {
         this.deleteRemarks();
-        this.sendCryptics();
+        await this.sendCryptics();
         await this.sendRemarks();
         this.clear();
     }

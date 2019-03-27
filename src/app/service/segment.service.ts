@@ -21,10 +21,7 @@ export class SegmentService {
 
 
     GetSegmentRemark(dataModel: TourSegmentViewModel) {
-
-        const passive = new PassiveSegmentModel();
         const datePipe = new DatePipe('en-US');
-
         const tourSegment = new Array<PassiveSegmentModel>();
 
         // {
@@ -33,7 +30,6 @@ export class SegmentService {
 
         dataModel.tourSegmentList.forEach(segment => {
             const passive = new PassiveSegmentModel();
-            passive.endDate = segment.endDate;
             passive.vendor = '1A';
             passive.passiveSegmentType = 'Tour';
             passive.startDate = datePipe.transform(segment.startDate, 'ddMMyy');
@@ -47,8 +43,8 @@ export class SegmentService {
             const datePipe2 = new DatePipe('en-US');
             const startdatevalue = datePipe2.transform(segment.startDate, 'ddMMM');
             const enddatevalue = datePipe2.transform(segment.endDate, 'ddMM');
-            const startTime = (<string>segment.startTime).replace(':', '');
-            const endTime = (<string>segment.endTime).replace(':', '');
+            const startTime = (segment.startTime as string).replace(':', '');
+            const endTime = (segment.endTime as string).replace(':', '');
             passive.status = 'HK';
 
             const freetext = 'TYP-TOR/SUC-ZZ/SC' + segment.startPoint + '/SD-' + startdatevalue +

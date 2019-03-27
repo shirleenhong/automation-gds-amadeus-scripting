@@ -175,20 +175,32 @@ export class PnrService {
 
   getMISRetentionLine() {
     if (this.isPNRLoaded) {
-      const itinInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
-
-      const lastSegment = itinInfo[itinInfo.length - 1].itineraryFreetext;
-      let lastSegmentDate = lastSegment.longFreetext.substr(lastSegment.longFreetext.indexOf('ED-'), 8).split('-')[1];
+      const segmentDates = Array<Date>();
       const datePipe = new DatePipe('en-US');
+      const itineraryInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
+      const misLineNumber = new Array<string>();
 
-      let formattedDate = new Date();
+      itineraryInfo.forEach(x => {
+        const longFreetext = x.itineraryFreetext.longFreetext;
+        if (longFreetext.indexOf('ED-') !== -1) {
+            let formattedDate = new Date();
+            let parsedDate: string;
+            parsedDate = longFreetext.substr(longFreetext.indexOf('ED-'), 8).split('-')[1];
+            formattedDate = new Date(datePipe.transform(parsedDate, 'dd-MM') + '-' + formattedDate.getFullYear());
+            segmentDates.push(formattedDate);
+        }
+
+        if (longFreetext.indexOf('-THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL') === 0) {
+          misLineNumber.push(x.elementManagementItinerary.lineNumber);
+         }
+      });
+
+      const lastSegmentDate = new Date(Math.max.apply(null, segmentDates));
       const oDate = new Date();
+      oDate.setDate(lastSegmentDate.getDate() + 180);
 
-      lastSegmentDate = datePipe.transform(lastSegmentDate, 'dd-MM');
-      formattedDate = new Date(lastSegmentDate + '-' + formattedDate.getFullYear());
-      oDate.setDate(formattedDate.getDate() + 180);
-
-      const maxDate = new Date(formattedDate.getDate() + 331);
+      const maxDate = new Date();
+      maxDate.setDate(lastSegmentDate.getDate() + 331);
       let finalDate: string;
 
       if (oDate.getDate() > maxDate.getDate()) {
@@ -200,8 +212,9 @@ export class PnrService {
       const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
       const MISGroup = new RemarkGroup();
       MISGroup.group = 'MIS Retention';
+      MISGroup.deleteRemarkByIds = misLineNumber;
       MISGroup.cryptics.push(command);
-      return MISGroup;
+      return MISGroup; } else {return new RemarkGroup();
     }
   }
 

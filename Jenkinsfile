@@ -29,6 +29,7 @@ pipeline {
 
     // booleanParam(name: 'RUN_STATIC_SCAN', defaultValue: false, description: 'Execute Static security Scan?')
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
+    booleanParam(name: 'BUILD', defaultValue: false, description: 'Build?')    
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
     // booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression against Dev Environment?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')
@@ -42,7 +43,7 @@ pipeline {
     stage('Build/Prepare') {
       when {
         expression { 
-          return params.DEPLOY_TO_DEV
+          return params.BUILD
         }
       }
       steps{

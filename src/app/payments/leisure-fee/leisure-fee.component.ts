@@ -60,6 +60,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
       const ctrls = ['segmentNum', 'amount', 'paymentType', 'vendorCode', 'ccNo', 'expDate', 'address'];
       this.enableDisbleControls(ctrls, false);
+      this.enableDisbleControls(['noFeeReason'], true);
       this.eventFeeTypeChanged.emit(val);
       switch (val) {
         case '3':
@@ -73,6 +74,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
           break;
         case '0':
           this.enableDisbleControls(ctrls, true);
+          this.enableDisbleControls(['noFeeReason'], false);
           break;
         default:
           this.leisureFeeForm.get('segmentNum').disable();

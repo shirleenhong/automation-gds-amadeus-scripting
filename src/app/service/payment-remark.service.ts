@@ -112,19 +112,19 @@ export class PaymentRemarkService {
 
 
     processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-        const acc1 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.trim() +
+        const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
             '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
             accounting.baseAmount.toString().trim() + '/-PT-' +
             accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() +
-            'XG/-PT-' + accounting.qst.toString().trim() + ' XQ';
+            'XG/-PT-' + accounting.qst.toString().trim() + 'XQ';
 
         let facc = acc1;
         if (accounting.bsp === '1') {
             facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim()
-                + 'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
+                + 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
         }
 
-        const acc2 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
+        const acc2 = 'MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
             '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
             this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
             this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
@@ -143,7 +143,7 @@ export class PaymentRemarkService {
                 vcode = accounting.vendorCode;
             }
             const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
-                ' CAD' + accounting.baseAmount + 'PLUS ' + ttltax.toString() + 'TAX ON ' + vcode;
+                ' CAD' + accounting.baseAmount + ' PLUS ' + ttltax + ' TAX ON ' + vcode;
             // + '/S' + accounting.segmentNo.toString().trim();
 
             remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));

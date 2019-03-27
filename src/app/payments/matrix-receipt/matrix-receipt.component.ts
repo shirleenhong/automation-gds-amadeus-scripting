@@ -21,7 +21,7 @@ export class MatrixReceiptComponent implements OnInit {
 
   addMatrixReceipt() {
     const matrixReceipt = new MatrixReceiptModel();
-    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent);
+    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Add Matrix Receipt';
     matrixReceipt.rln = (this.matrixReceipts.length + 1);
     this.modalRef.content.matrixReceipt = matrixReceipt;

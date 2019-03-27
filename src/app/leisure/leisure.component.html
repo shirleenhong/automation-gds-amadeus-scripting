@@ -37,16 +37,16 @@
 
   </form>
   <br />
-  <!-- <div *ngIf="paymentComponent!=null && paymentComponent.leisureFee.leisureFeeForm.valid==false" class="error-msg">
-    <!-- Please Complete Leisure Fee -->
-  <!-- </div> -->
+
 </div>
 
 <div class="loaderBody" *ngIf="!isPnrLoaded">
+  <div class="loader" *ngIf="errorPnrMsg==''">
+    <div class="loaderlogo"></div><br /> Loading PNR...
 
-  <div class="loader">
-    Loading PNR...
-
+  </div>
+  <div class="loader" *ngIf="errorPnrMsg!=''">
+    Unable to load PNR or no PNR is loaded in Amadeus.
   </div>
 
 </div>

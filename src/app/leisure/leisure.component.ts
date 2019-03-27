@@ -27,7 +27,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   leisureForm: FormGroup;
   eventSubscribe = false;
-
+  errorPnrMsg = '';
 
   constructor(private pnrService: PnrService,
     private remarkService: RemarkService,
@@ -88,8 +88,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async loadPNR() {
+    this.errorPnrMsg = '';
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    if (this.pnrService.errorMessage.indexOf('Error') === 0) {
+      this.errorPnrMsg = this.pnrService.errorMessage;
+    }
 
   }
 

@@ -54,7 +54,7 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
     AccordionModule.forRoot(),
     ModalModule.forRoot(),
     TabsModule.forRoot(),
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

@@ -4,13 +4,17 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { DatePipe } from '@angular/common';
-
+import { PnrService } from './pnr.service';
+import { IfStmt } from '@angular/compiler';
 
 
 @Injectable({
     providedIn: 'root',
 })
 export class PaymentRemarkService {
+
+    constructor(private pnrService: PnrService) {
+    }
 
     accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -44,12 +48,33 @@ export class PaymentRemarkService {
 
     }
 
-    getRemarksModel(remText, cat, type) {
+    getRemarksModel(remText, cat, type, segment?: string) {
+        let segmentrelate = [];
+        if (segment) {
+            segmentrelate = segment.split(',');
+        }
+
         const rem = new RemarkModel();
         rem.category = cat;
         rem.remarkText = remText;
         rem.remarkType = type;
+        rem.relatedSegments = this.getSegmentTatooValue(segmentrelate);
         return rem;
+    }
+
+    getSegmentTatooValue(segmentrelate) {
+        const relatedSegment = [];
+        const tatooSegment = this.pnrService.getSegmentTatooNumber();
+        segmentrelate.forEach(element => {
+            if (tatooSegment.length > 0) {
+                const look = tatooSegment.find(x => x.lineNo === element);
+                if (look) {
+                    relatedSegment.push(look.tatooNo);
+                }
+            }
+        });
+        // alert(JSON.stringify(relatedSegment));
+        return relatedSegment;
     }
 
     getFOP(modeofPayment, creditCardNo, vendorCode, expDate) {
@@ -63,7 +88,7 @@ export class PaymentRemarkService {
                 fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
                 break;
             }
-            case 'CCA': {
+            case 'ACC': {
                 fop = 'CCVI4111111111111111/-EXP1229';
                 break;
             }
@@ -78,7 +103,8 @@ export class PaymentRemarkService {
 
     getTKTline(tktLine) {
         let tline = '';
-        if (tktLine !== null && tktLine.toString() !== '') {
+        // if (tktLine tktLine !== null && tktLine !== '') {
+        if (tktLine) {
             tline = '/-TK-' + tktLine.toString().trim();
         }
         return tline;
@@ -90,25 +116,37 @@ export class PaymentRemarkService {
             '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
             accounting.baseAmount.toString().trim() + '/-PT-' +
             accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() +
-            'XG/-PT-' + accounting.qst.toString().trim() + ' XQ/-PT- ' + accounting.otherTax.toString().trim() +
-            'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
+            'XG/-PT-' + accounting.qst.toString().trim() + ' XQ';
+
+        let facc = acc1;
+        if (accounting.bsp === '1') {
+            facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim()
+                + 'XT /-CD-' + accounting.commisionWithoutTax.toString().trim();
+        }
 
         const acc2 = 'RM*MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
             '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
             this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
             this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
-            '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim() + '/S' + accounting.segmentNo.toString().trim();
+            '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim();
+        // + '/S' + accounting.segmentNo.toString().trim();
 
+        remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
+        remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
 
         if (accounting.bsp === '2') {
             // tslint:disable-next-line:prefer-const
-            let ttltax = accounting.gst + accounting.hst + accounting.qst;
+            let ttltax: number = Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
+            ttltax = Math.round(ttltax * 100) / 100;
+            let vcode = '';
+            if (accounting.vendorCode) {
+                vcode = accounting.vendorCode;
+            }
             const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
-                ' CAD' + accounting.baseAmount + 'PLUS ' + ttltax.toString() + 'TAX ON ' +
-                this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
-                '/S' + accounting.segmentNo.toString().trim();
+                ' CAD' + accounting.baseAmount + 'PLUS ' + ttltax.toString() + 'TAX ON ' + vcode;
+            // + '/S' + accounting.segmentNo.toString().trim();
 
-            remarkList.push(this.getRemarksModel(acc3, 'I', 'RI'));
+            remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));
         }
     }
 

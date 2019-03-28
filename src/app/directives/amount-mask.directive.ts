@@ -1,10 +1,12 @@
 import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
 
 @Directive({
     selector: '[formControlName][AmountMask]',
 })
 export class AmountMaskDirective {
+    decPipe = new DecimalPipe('en-US');
 
     constructor(public ngControl: NgControl) { }
 
@@ -13,10 +15,12 @@ export class AmountMaskDirective {
         this.onInputChange(event, false);
     }
 
-    // @HostListener('keydown.backspace', ['$event'])
-    // keydownBackspace(event) {
-    //     this.onInputChange(event.target.value, false);
-    // }
+    @HostListener('blur')
+    onBlur() {
+        const newVal = this.decPipe.transform(this.ngControl.value, '1.2-2');
+        this.ngControl.valueAccessor.writeValue(newVal);
+    }
+
 
     onInputChange(event, backspace) {
         let newVal = event;

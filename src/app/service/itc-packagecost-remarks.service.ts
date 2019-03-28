@@ -7,7 +7,7 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { DatePipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
-import { RemarkHelper } from '../Helper/remark-helper';
+import { RemarkHelper } from '../helper/remark-helper';
 
 @Injectable({
     providedIn: 'root',

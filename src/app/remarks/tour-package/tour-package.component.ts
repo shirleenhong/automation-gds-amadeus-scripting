@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, FormBuilder, Validators } from '@angular/forms';
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
+import { DecimalPipe } from '@angular/common';
 
 
 @Component({
@@ -11,29 +12,39 @@ import { SelectItem } from 'src/app/models/select-item.model';
   encapsulation: ViewEncapsulation.None
 })
 export class TourPackageComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
-
+  decPipe = new DecimalPipe('en-US');
   bspCurrencyList: SelectItem[];
   tourPackage: TourPackageViewModel;
 
-  //@Input() group: FormGroup;
-  @Input() group: any;
+  group: FormGroup;
 
-  constructor() {
-
+  constructor(private fb: FormBuilder) {
+    this.group = this.fb.group({
+      adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      userIdFirstWay: new FormControl(''),
+      baseCost: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxesPerAdult: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      childBaseCost: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insurancePerAdult: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insurancePerChild: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxesPerChild: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      totalCostPerInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      depositPaid: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      totalCostHoliday: new FormControl(''),
+      lessDepositPaid: new FormControl(''),
+      balanceToBePaid: new FormControl(''),
+      balanceDueDate: new FormControl(''),
+      commisionAmount: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')])
+    }, { updateOn: 'blur' });
   }
 
 
   ngOnInit() {
     this.getCurrencies();
-
-    // this.group.valueChanges.subscribe(val => {
-    //   console.log('Mico Test');
-    //   console.log('val:' + val);
-    //   //debugger;
-    //   // this.tourPackageChange();
-    // });
     this.group.get('adultNum').valueChanges.subscribe(e => {
-      this.group.adultNum = e;
+      this.group.value.adultNum = e;
       this.tourPackageChange();
     }
     );
@@ -103,7 +114,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('form group: ', this.group);
-    // debugger;  
+    // debugger;
   }
 
   public onTouched: () => void = () => { };
@@ -137,18 +148,24 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   tourPackageChange() {
     console.log('tour package call');
     const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
-    // console.log('v');
-    // console.log(v);
-    // this.group.value.totalCostHoliday.updatevalue = 100;
-    // console.log(this.group);
-    this.group.patchValue({ totalCostHoliday: v });
+    this.group.patchValue({ totalCostHoliday: this.decPipe.transform(v, '1.2-2') });
+    this.computeBalanceToBePaid();
     // console.log('total cost holiday');
     // console.log(this.group.value.totalCostHoliday);
-    this.group.patchValue({ lessDepositPaid: this.group.value.depositPaid });
+    // this.group.patchValue({ lessDepositPaid: this.group.value.depositPaid });
     // this.group.value.lessDepositPaid = this.group.value.depositPaid;
     // this.group.value.balanceToBePaid = this.group.value.totalCostHoliday - parseInt(this.group.value.lessDepositPaid, 0);
-    this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - parseInt(this.group.value.lessDepositPaid, 0) });
+    // this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - parseInt(this.group.value.depositPaid, 0) });
     // this.buildRemark();
+  }
+
+  computeBalanceToBePaid() {
+    let dp = 0;
+    if (this.group.value.depositPaid !== '') {
+      dp = (parseInt(this.group.value.depositPaid, 0));
+    }
+
+    this.group.patchValue({ balanceToBePaid: this.decPipe.transform(this.group.value.totalCostHoliday - dp, '1.2-2') });
   }
 
   computeAdultCost() {
@@ -236,7 +253,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   getCurrencies() {
     // TODO: Get from API DDB
-    this.bspCurrencyList = [{ itemText: '', itemValue: '-1' },
+    this.bspCurrencyList = [{ itemText: 'Select', itemValue: '' },
     { itemText: 'Andorran Peset', itemValue: 'ADP' },
     { itemText: 'UAE Dirham', itemValue: 'AED' },
     { itemText: 'Afghanistan Afghani', itemValue: 'AFN' },

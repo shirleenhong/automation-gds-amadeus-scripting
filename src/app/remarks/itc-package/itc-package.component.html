@@ -20,16 +20,16 @@
       Number Of Pax
     </div>
     <div class="col-3">
-      <input type="text" id="noAdult" name="noAdult" class="form-control" formControlName="noAdult"
-        (change)="ComputeBalance()">
+      <input type="text" id="noAdult" name="noAdult" class="form-control" formControlName="noAdult" maxlength="1"
+        NumberOnlyMask (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="noChild" name="noChild" class="form-control" formControlName="noChild"
-        (change)="ComputeBalance()">
+      <input type="text" id="noChild" name="noChild" class="form-control" formControlName="noChild" maxlength="1"
+        NumberOnlyMask (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="noInfant" name="noInfant" class="form-control" formControlName="noInfant"
-        (change)="ComputeBalance()">
+      <input type="text" id="noInfant" name="noInfant" class="form-control" formControlName="noInfant" maxlength="1"
+        NumberOnlyMask (change)="ComputeBalance()">
     </div>
   </div>
 
@@ -38,15 +38,15 @@
       Base Price
     </div>
     <div class="col-3">
-      <input type="text" id="baseAdult" name="baseAdult" class="form-control" formControlName="baseAdult"
+      <input type="text" id="baseAdult" name="baseAdult" class="form-control" formControlName="baseAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="baseChild" name="baseChild" class="form-control" formControlName="baseChild"
+      <input type="text" id="baseChild" name="baseChild" class="form-control" formControlName="baseChild" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="baseInfant" name="baseInfant" class="form-control" formControlName="baseInfant"
+      <input type="text" id="baseInfant" name="baseInfant" class="form-control" formControlName="baseInfant" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -56,15 +56,15 @@
       Taxes
     </div>
     <div class="col-3">
-      <input type="text" id="taxAdult" name="taxAdult" class="form-control" formControlName="taxAdult"
+      <input type="text" id="taxAdult" name="taxAdult" class="form-control" formControlName="taxAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="taxChild" name="taxChild" class="form-control" formControlName="taxChild"
+      <input type="text" id="taxChild" name="taxChild" class="form-control" formControlName="taxChild" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="taxInfant" name="taxInfant" class="form-control" formControlName="taxInfant"
+      <input type="text" id="taxInfant" name="taxInfant" class="form-control" formControlName="taxInfant" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -75,15 +75,15 @@
     </div>
     <div class="col-3">
       <input type="text" id="bcruiseAdult" name="bcruiseAdult" class="form-control" formControlName="bcruiseAdult"
-        (change)="ComputeBalance()">
+        AmountMask (change)="ComputeBalance()">
     </div>
     <div class="col-3">
       <input type="text" id="bcruiseChild" name="bcruiseChild" class="form-control" formControlName="bcruiseChild"
-        (change)="ComputeBalance()">
+        AmountMask (change)="ComputeBalance()">
     </div>
     <div class="col-3">
       <input type="text" id="bcruiseInfant" name="bcruiseInfant" class="form-control" formControlName="bcruiseInfant"
-        (change)="ComputeBalance()">
+        AmountMask (change)="ComputeBalance()">
     </div>
   </div>
 
@@ -93,15 +93,15 @@
     </div>
     <div class="col-3">
       <input type="text" id="tcruiseAdult" name="tcruiseAdult" class="form-control" formControlName="tcruiseAdult"
-        (change)="ComputeBalance()">
+        AmountMask (change)="ComputeBalance()">
     </div>
     <div class="col-3">
       <input type="text" id="tcruiseChild" name="tcruiseChild" class="form-control" formControlName="tcruiseChild"
-        (change)="ComputeBalance()">
+        AmountMask (change)="ComputeBalance()">
     </div>
     <div class="col-3">
       <input type="text" id="tcruiseInfant" name="tcruiseInfant" class="form-control" formControlName="tcruiseInfant"
-        (change)="ComputeBalance()">
+        AmountMask (change)="ComputeBalance()">
     </div>
   </div>
 
@@ -110,15 +110,15 @@
       Rail
     </div>
     <div class="col-3">
-      <input type="text" id="railAdult" name="railAdult" class="form-control" formControlName="railAdult"
+      <input type="text" id="railAdult" name="railAdult" class="form-control" formControlName="railAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="railChild" name="railChild" class="form-control" formControlName="railChild"
+      <input type="text" id="railChild" name="railChild" class="form-control" formControlName="railChild" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="railInfant" name="railInfant" class="form-control" formControlName="railInfant"
+      <input type="text" id="railInfant" name="railInfant" class="form-control" formControlName="railInfant" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -128,15 +128,15 @@
       Insurance
     </div>
     <div class="col-3">
-      <input type="text" id="insAdult" name="insAdult" class="form-control" formControlName="insAdult"
+      <input type="text" id="insAdult" name="insAdult" class="form-control" formControlName="insAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="insChild" name="insChild" class="form-control" formControlName="insChild"
+      <input type="text" id="insChild" name="insChild" class="form-control" formControlName="insChild" AmountMask
         (change)="ComputeBalance()">
     </div>
     <div class="col-3">
-      <input type="text" id="insInfant" name="insInfant" class="form-control" formControlName="insInfant"
+      <input type="text" id="insInfant" name="insInfant" class="form-control" formControlName="insInfant" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -146,7 +146,7 @@
       Hotel - Total cost
     </div>
     <div class="col-3">
-      <input type="text" id="hotelAdult" name="hotelAdult" class="form-control" formControlName="hotelAdult"
+      <input type="text" id="hotelAdult" name="hotelAdult" class="form-control" formControlName="hotelAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -156,7 +156,7 @@
       Car - Total cost
     </div>
     <div class="col-3">
-      <input type="text" id="carAdult" name="carAdult" class="form-control" formControlName="carAdult"
+      <input type="text" id="carAdult" name="carAdult" class="form-control" formControlName="carAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -166,7 +166,7 @@
       Deposit
     </div>
     <div class="col-3">
-      <input type="text" id="depAdult" name="depAdult" class="form-control" formControlName="depAdult"
+      <input type="text" id="depAdult" name="depAdult" class="form-control" formControlName="depAdult" AmountMask
         (change)="ComputeBalance()">
     </div>
   </div>
@@ -176,7 +176,7 @@
       Balance to be paid
     </div>
     <div class="col-3">
-      <input type="text" id="balance" name="balance" class="form-control" formControlName="balance" disabled>
+      <input type="text" id="balance" name="balance" class="form-control" formControlName="balance" AmountMask disabled>
     </div>
   </div>
 
@@ -194,7 +194,8 @@
       Commission Amount
     </div>
     <div class="col-3">
-      <input type="text" id="commission" name="commission" class="form-control" formControlName="commission">
+      <input type="text" id="commission" name="commission" class="form-control" formControlName="commission"
+        AmountMask />
     </div>
   </div>
 

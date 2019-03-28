@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 
 declare var PNR: any;
 
@@ -53,6 +54,22 @@ export class PnrService {
     return '';
   }
 
+
+  getCFLine(): CfRemarkModel {
+    const cfLine = new CfRemarkModel();
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf('CF/-') === 0) {
+          cfLine.lastLetter = rm.freeFlowText.substr(-1);
+          cfLine.cfa = rm.freeFlowText.substr(4, 3);
+          cfLine.code = rm.freeFlowText;
+          return cfLine;
+        }
+      }
+    }
+
+  }
+
   getFSLineNumber() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.fsElements) {
@@ -61,6 +78,7 @@ export class PnrService {
     }
     return '';
   }
+
 
   getPassengers() {
     if (this.isPNRLoaded) {

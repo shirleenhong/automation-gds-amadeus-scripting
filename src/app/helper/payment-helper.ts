@@ -40,22 +40,21 @@ export class PaymentRemarkHelper {
     }
 
     checkDate(newValue) {
-        const datePipe = new DatePipe('en-US');
-
-        const month = datePipe.transform(newValue, 'MM');
-        const year = datePipe.transform(newValue, 'yyyy');
+        if (newValue.length < 5) { return false; }
+        const dts = newValue.split('/');
+        const month = dts[0];
+        const year = dts[1];
 
         const d = new Date();
         const moNow = d.getMonth();
-        const yrnow = d.getFullYear();
+        const yrnow = parseInt(d.getFullYear().toString().substr(2, 2), 0);
         let valid = false;
-        if (parseInt(year) > yrnow) {
+        if (parseInt(year, 0) > yrnow) {
             valid = true;
         }
-        if ((parseInt(year) === yrnow) && (parseInt(month) >= moNow + 1)) {
+        if ((parseInt(year, 0) === yrnow) && (parseInt(month, 0) >= moNow + 1)) {
             valid = true;
         }
-
         return valid;
     }
 

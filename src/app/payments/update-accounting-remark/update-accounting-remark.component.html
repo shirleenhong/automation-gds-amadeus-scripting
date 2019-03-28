@@ -18,9 +18,6 @@
           </option>
         </select>
 
-        <!-- <input type="text" maxlength="4" class="form-control" id="bsp" [(ngModel)]="accountingRemarks.bsp" name="bsp"
-          [ngModelOptions]="{standalone: true}" (change)="IsBSP($event.target.value)" />
-      </div> -->
       </div>
     </div>
 
@@ -135,16 +132,16 @@
         <div class="col-sm-4">Card Number</div>
         <div class="col-sm-8">
           <input type="cardNumber" class="form-control" id="ccNo" [(ngModel)]="accountingRemarks.cardNumber"
-            formControlName="cardNumber" name="cardNumber" />
+            formControlName="cardNumber" name="cardNumber" NumberOnlyMask />
         </div>
       </div>
 
       <div class="form-group  row">
         <div class="col-sm-4">Expiration Date: </div>
         <div class="col-sm-8">
-          <input type="month" class="form-control" id="expDate" required formControlName="expDate" name="expDate"
-            (change)="checkDate($event.target.value)" [(ngModel)]="accountingRemarks.expDate"
-            formControlName="expDate" />
+          <input type="text" class="form-control" id="expDate" required formControlName="expDate" name="expDate"
+            placeholder="MM/YY" (change)="checkDate($event.target.value)" [(ngModel)]="accountingRemarks.expDate"
+            CCDateExpMask formControlName="expDate" />
         </div>
       </div>
     </div>
@@ -153,7 +150,7 @@
       <div class="col-sm-4">Base Amount :</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="baseAmount" [(ngModel)]="accountingRemarks.baseAmount"
-          formControlName="baseAmount" name="baseAmount" required placeholder="00.00" />
+          formControlName="baseAmount" name="baseAmount" required placeholder="00.00" AmountMask />
       </div>
     </div>
 
@@ -161,7 +158,7 @@
       <div class="col-sm-4">GST :</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemarks.gst"
-          formControlName="gst" name="gst" required placeholder="00.00" />
+          formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
       </div>
     </div>
 
@@ -169,7 +166,7 @@
       <div class="col-sm-4">HST :</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemarks.hst"
-          formControlName="hst" name="hst" required placeholder="00.00" />
+          formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
       </div>
     </div>
 
@@ -177,7 +174,7 @@
       <div class="col-sm-4">QST :</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemarks.qst"
-          formControlName="qst" name="qst" required placeholder="00.00" />
+          formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
       </div>
     </div>
 
@@ -186,7 +183,7 @@
         <div class="col-sm-4">Ticket Number: </div>
         <div class="col-sm-8">
           <input type="text" class="form-control" id="tktLine" formControlName="tktLine"
-            [(ngModel)]="accountingRemarks.tktLine" formControlName="tktLine" name="tktLine" />
+            [(ngModel)]="accountingRemarks.tktLine" formControlName="tktLine" name="tktLine" NumberOnlyMask />
         </div>
       </div>
 
@@ -195,7 +192,7 @@
         <div class="col-sm-8">
           <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
             [(ngModel)]="accountingRemarks.otherTax" formControlName="otherTax" name="otherTax" required
-            placeholder="00.00" />
+            placeholder="00.00" AmountMask />
         </div>
       </div>
 
@@ -204,7 +201,7 @@
         <div class="col-sm-8">
           <input type="text" class="form-control" id="commisionWithoutTax"
             [(ngModel)]="accountingRemarks.commisionWithoutTax" formControlName="commisionWithoutTax"
-            name="commisionWithoutTax" required placeholder="00.00" />
+            name="commisionWithoutTax" required placeholder="00.00" AmountMask />
         </div>
       </div>
 

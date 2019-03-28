@@ -27,7 +27,7 @@ export class PnrService {
         this.isPNRLoaded = false;
         this.errorMessage = 'Error:' + error;
       }
-    ).catch((err) => { console.log(err); });
+    ).catch(err => { console.log(err); });
     console.log(JSON.stringify(this.pnrObj));
   }
 

@@ -82,8 +82,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
-
-
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value !== null && 
         this.remarkComponent.remarkForm.controls['packageList'].value !== '') {

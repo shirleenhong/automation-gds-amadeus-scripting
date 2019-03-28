@@ -45,7 +45,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.loadPNR();
   }
 
-
   ngAfterViewChecked() {
     // Subscribe to event from child Component
     // if (this.eventSubscribe) { return; }
@@ -55,8 +54,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // });
     //this.eventSubscribe = true;
   }
-
-
   ngAfterViewInit(): void {
   }
 
@@ -67,7 +64,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = this.pnrService.errorMessage;
     }
-
   }
 
   ngOnInit() {

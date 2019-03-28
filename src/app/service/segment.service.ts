@@ -106,8 +106,6 @@ export class SegmentService {
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);
         passGroup.passiveSegments = misSegment;
-        alert(JSON.stringify(passGroup));
-
         return passGroup;
     }
 

@@ -9,6 +9,7 @@ import { TourSegmentViewModel } from 'src/app/models/tour-segment-view.model';
 import { Injectable } from '@angular/core';
 import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
 import { forEach } from '@angular/router/src/utils/collection';
+import { PnrService } from './pnr.service';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 export class SegmentService {
 
-    constructor() { }
+    constructor(private pnrService: PnrService) { }
 
 
     GetSegmentRemark(dataModel: TourSegmentViewModel) {
@@ -61,6 +62,63 @@ export class SegmentService {
 
     }
 
+
+    getRetentionLine() {
+
+        const lastDeptDate = this.pnrService.getLatestDepartureDate();
+        const odate = lastDeptDate;
+        odate.setDate(odate.getDate() + 180);
+
+        const today = new Date();
+        const maxdate = today;
+        maxdate.setDate(maxdate.getDate() + 331);
+        // testing
+        // const lastDeptDate = new Date('12/10/2019');
+        // const odate = lastDeptDate;
+        // odate.setDate(odate.getDate() + 180);
+        // const test = odate.toDateString();
+        // const today = new Date('11/05/2019');
+        // const maxdate = today;
+        // const test2 = maxdate.toDateString();
+        // maxdate.setDate(maxdate.getDate() + 331);
+
+        let finaldate = new Date();
+        if (odate > maxdate) {
+            finaldate.setDate(finaldate.getDate() - 35);
+        } else {
+            finaldate = odate;
+        }
+
+        const misSegment = new Array<PassiveSegmentModel>();
+        const mis = new PassiveSegmentModel();
+        const day = this.padDate(finaldate.getDate().toString());
+        const mo = this.padDate((finaldate.getMonth() + 1).toString());
+        const yr = odate.getFullYear().toString().substr(-2);
+
+        mis.vendor = '1A';
+        mis.status = 'HK';
+        mis.startDate = day + mo + yr;
+        mis.endDate = day + mo + yr;
+        mis.startPoint = 'YYZ';
+        mis.endPoint = 'YYZ';
+        mis.freeText = 'THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
+        const passGroup = new RemarkGroup();
+        passGroup.group = 'MIS Remark';
+        misSegment.push(mis);
+        passGroup.passiveSegments = misSegment;
+        alert(JSON.stringify(passGroup));
+
+        return passGroup;
+    }
+
+
+    padDate(num) {
+        let padnum = num;
+        if (num.length < 2) {
+            padnum = '0' + num;
+        }
+        return padnum;
+    }
 
 }
 

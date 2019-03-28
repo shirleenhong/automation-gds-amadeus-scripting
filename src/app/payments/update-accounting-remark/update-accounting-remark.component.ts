@@ -128,7 +128,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     { itemText: 'VI- Visa', itemValue: 'VI' },
     { itemText: 'MC - Mastercard', itemValue: 'MC' },
     { itemText: 'AX - American Express', itemValue: 'AX' },
-    { itemText: 'DI -Diners', itemValue: 'DC' }
+    { itemText: 'DC -Diners', itemValue: 'DC' }
     ];
   }
 
@@ -145,7 +145,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     } else {
       this.accountingRemarkList = [{ itemText: '', itemValue: '' },
       { itemText: 'SEAT COSTS', itemValue: 'SEAT COSTS' },
-      { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MAPLE LEAF LOUNGE COSTS' },
+      { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MAPLE LEAF' },
       { itemText: 'PET TRANSPORTATION', itemValue: 'PET TRANSPORTATION' },
       { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT COSTS' },
       { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE FEES' },

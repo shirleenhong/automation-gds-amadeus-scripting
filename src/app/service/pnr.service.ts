@@ -201,16 +201,16 @@ export class PnrService {
       itineraryInfo.forEach(x => {
         const longFreetext = x.itineraryFreetext.longFreetext;
         if (longFreetext.indexOf('ED-') !== -1) {
-            let formattedDate = new Date();
-            let parsedDate: string;
-            parsedDate = longFreetext.substr(longFreetext.indexOf('ED-'), 8).split('-')[1];
-            formattedDate = new Date(datePipe.transform(parsedDate, 'dd-MM') + '-' + formattedDate.getFullYear());
-            segmentDates.push(formattedDate);
+          let formattedDate = new Date();
+          let parsedDate: string;
+          parsedDate = longFreetext.substr(longFreetext.indexOf('ED-'), 8).split('-')[1];
+          formattedDate = new Date(datePipe.transform(parsedDate, 'dd-MM') + '-' + formattedDate.getFullYear());
+          segmentDates.push(formattedDate);
         }
 
         if (longFreetext.indexOf('-THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL') === 0) {
           misLineNumber.push(x.elementManagementItinerary.lineNumber);
-         }
+        }
       });
 
       const lastSegmentDate = new Date(Math.max.apply(null, segmentDates));
@@ -232,7 +232,9 @@ export class PnrService {
       MISGroup.group = 'MIS Retention';
       MISGroup.deleteRemarkByIds = misLineNumber;
       MISGroup.cryptics.push(command);
-      return MISGroup; } else {return new RemarkGroup();
+      return MISGroup;
+    } else {
+      return new RemarkGroup();
     }
   }
 
@@ -273,5 +275,39 @@ export class PnrService {
     return segments;
 
   }
+
+  private getLastDate(airdate: any, lastDeptDate: Date) {
+    const lairdate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
+    if (lairdate > lastDeptDate) {
+      lastDeptDate = lairdate;
+    }
+    return lastDeptDate;
+  }
+
+
+  getLatestDepartureDate() {
+    let lastDeptDate = new Date();
+    for (const air of this.pnrObj.airSegments) {
+      const airdate = air.fullNode.travelProduct.product.depDate;
+      lastDeptDate = this.getLastDate(airdate, lastDeptDate);
+    }
+
+    for (const car of this.pnrObj.auxCarSegments) {
+      const cardate = car.fullNode.travelProduct.product.depDate;
+      lastDeptDate = this.getLastDate(cardate, lastDeptDate);
+    }
+
+    for (const hotel of this.pnrObj.auxHotelSegments) {
+      const hotdate = hotel.fullNode.travelProduct.product.depDate;
+      lastDeptDate = this.getLastDate(hotdate, lastDeptDate);
+    }
+
+    for (const misc of this.pnrObj.miscSegments) {
+      const miscdate = misc.fullNode.travelProduct.product.depDate;
+      lastDeptDate = this.getLastDate(miscdate, lastDeptDate);
+    }
+    return lastDeptDate;
+  }
+
 }
 

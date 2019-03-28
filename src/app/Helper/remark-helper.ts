@@ -47,7 +47,6 @@ export class RemarkHelper {
         const total = Math.round(Number(amount) * Number(count));
 
         const x = r - (count.toString().length + total.toString().length);
-        alert(x);
         const remark = label + '-'.repeat(z) + amount + 'X' + count + '-'.repeat(x) + this.decPipe.transform(total, '1.2-2');
 
         return this.createRemark(remark, 'RI', 'I');

@@ -173,7 +173,7 @@ export class PaymentRemarkService {
             const month = datePipe.transform(matrix.expDate, 'MM');
             const year = matrix.expDate.toString().substr(2, 2);
 
-            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
+            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + month + year;
         } else {
             fop = matrix.modePayment;
         }

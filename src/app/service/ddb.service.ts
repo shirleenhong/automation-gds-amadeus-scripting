@@ -101,6 +101,18 @@ export class DDBService implements OnInit {
     return SupplierCode;
   }
 
+
+  getCcVendorCodeList() {
+    return [{ itemText: '', itemValue: '' },
+    { itemText: 'VI- Visa', itemValue: 'VI' },
+    { itemText: 'MC - Mastercard', itemValue: 'MC' },
+    { itemText: 'AX - American Express', itemValue: 'AX' },
+    { itemText: 'DI -Diners', itemValue: 'DC' }
+    ];
+
+  }
+
+
   getRouteCodeList() {
     return [
       { itemText: '', itemValue: '' },

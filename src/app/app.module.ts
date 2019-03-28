@@ -24,6 +24,10 @@ import { UpdateAccountingRemarkComponent } from './payments/update-accounting-re
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
+import { CCDateExpMaskDirective } from './directives/cc-date-exp-mask.directive';
+
+import { AmountMaskDirective } from './directives/amount-mask.directive';
+import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive';
 
 
 @NgModule({
@@ -43,7 +47,8 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
     AccordionComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
-    LeisureFeeComponent
+    LeisureFeeComponent,
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective
   ],
   imports: [
     BrowserModule,
@@ -61,7 +66,7 @@ import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.componen
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [],
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent]
 })
 export class AppModule { }

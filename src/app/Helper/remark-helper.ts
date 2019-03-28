@@ -1,7 +1,7 @@
 import { RemarkModel } from '../models/pnr/remark.model';
 import { Injectable } from '@angular/core';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { formatDate } from '@angular/common';
 })
 
 export class RemarkHelper {
+    decPipe = new DecimalPipe('en-US');
     constructor() { }
 
 
@@ -36,5 +37,19 @@ export class RemarkHelper {
 
         return newformat;
 
+    }
+
+
+    processRiiRemark(label, amount, count) {
+        const r = 15;
+        const l = 30;
+        const z = l - (label.length + amount.length);
+        const total = Math.round(Number(amount) * Number(count));
+
+        const x = r - (count.toString().length + total.toString().length);
+        alert(x);
+        const remark = label + '-'.repeat(z) + amount + 'X' + count + '-'.repeat(x) + this.decPipe.transform(total, '1.2-2');
+
+        return this.createRemark(remark, 'RI', 'I');
     }
 }

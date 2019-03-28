@@ -78,12 +78,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   public SubmitToPNR() {
+    console.log('fix 1');
     const remarkCollection = new Array<RemarkGroup>();
 
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
+
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value === 'ITC') {
       remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));

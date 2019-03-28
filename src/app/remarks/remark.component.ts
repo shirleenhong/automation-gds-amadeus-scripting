@@ -41,7 +41,7 @@ export class RemarkComponent implements OnInit {
 
   loadtourPackage() {
     this.packageList = [{ itemText: '', itemValue: '' },
-    { itemText: 'ITC', itemValue: 'ITC' },
+    { itemText: 'Itemize Package Cost Remarks', itemValue: 'ITC' },
     { itemText: 'Tour Package', itemValue: 'TP' }
     ];
   }

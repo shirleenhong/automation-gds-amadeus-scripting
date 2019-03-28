@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewE
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, FormBuilder, Validators } from '@angular/forms';
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
+import { DecimalPipe } from '@angular/common';
 
 
 @Component({
@@ -11,32 +12,31 @@ import { SelectItem } from 'src/app/models/select-item.model';
   encapsulation: ViewEncapsulation.None
 })
 export class TourPackageComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
-
+  decPipe = new DecimalPipe('en-US');
   bspCurrencyList: SelectItem[];
   tourPackage: TourPackageViewModel;
 
-  // @Input() group: any;
   group: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.group = this.fb.group({
       adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
       userIdFirstWay: new FormControl(''),
-      baseCost: new FormControl('', [Validators.maxLength(8)]),
-      taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
+      baseCost: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxesPerAdult: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-      childBaseCost: new FormControl('', [Validators.maxLength(8)]),
-      insurancePerAdult: new FormControl('', [Validators.maxLength(7)]),
-      insurancePerChild: new FormControl('', [Validators.maxLength(7)]),
-      taxesPerChild: new FormControl('', [Validators.maxLength(7)]),
+      childBaseCost: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insurancePerAdult: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insurancePerChild: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxesPerChild: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-      totalCostPerInfant: new FormControl(''),
-      depositPaid: new FormControl(''),
+      totalCostPerInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      depositPaid: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       totalCostHoliday: new FormControl(''),
       lessDepositPaid: new FormControl(''),
       balanceToBePaid: new FormControl(''),
       balanceDueDate: new FormControl(''),
-      commisionAmount: new FormControl('', [Validators.maxLength(8)])
+      commisionAmount: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')])
     }, { updateOn: 'blur' });
   }
 
@@ -148,7 +148,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   tourPackageChange() {
     console.log('tour package call');
     const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
-    this.group.patchValue({ totalCostHoliday: v });
+    this.group.patchValue({ totalCostHoliday: this.decPipe.transform(v, '1.2-2') });
     this.computeBalanceToBePaid();
     // console.log('total cost holiday');
     // console.log(this.group.value.totalCostHoliday);
@@ -165,7 +165,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
       dp = (parseInt(this.group.value.depositPaid, 0));
     }
 
-    this.group.patchValue({ balanceToBePaid: this.group.value.totalCostHoliday - dp });
+    this.group.patchValue({ balanceToBePaid: this.decPipe.transform(this.group.value.totalCostHoliday - dp, '1.2-2') });
   }
 
   computeAdultCost() {

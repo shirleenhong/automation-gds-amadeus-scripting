@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-itc-package',
@@ -12,64 +12,38 @@ export class ItcPackageComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {
     this.itcForm = this.fb.group({
-      noAdult: new FormControl('', []),
-      noChild: new FormControl('', []),
-      noInfant: new FormControl('', []),
-      baseAdult: new FormControl('', []),
-      baseChild: new FormControl('', []),
-      baseInfant: new FormControl('', []),
-      taxAdult: new FormControl('', []),
-      taxChild: new FormControl('', []),
-      taxInfant: new FormControl('', []),
-      bcruiseAdult: new FormControl('', []),
-      bcruiseChild: new FormControl('', []),
-      bcruiseInfant: new FormControl('', []),
-      tcruiseAdult: new FormControl('', []),
-      tcruiseChild: new FormControl('', []),
-      tcruiseInfant: new FormControl('', []),
-      railAdult: new FormControl('', []),
-      railChild: new FormControl('', []),
-      railInfant: new FormControl('', []),
-      insAdult: new FormControl('', []),
-      insChild: new FormControl('', []),
-      insInfant: new FormControl('', []),
-      hotelAdult: new FormControl('', []),
-      carAdult: new FormControl('', []),
-      depAdult: new FormControl('', []),
+      noAdult: new FormControl('', [Validators.pattern('[0-9]*')]),
+      noChild: new FormControl('', [Validators.pattern('[0-9]*')]),
+      noInfant: new FormControl('', [Validators.pattern('[0-9]*')]),
+      baseAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      baseChild: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      baseInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxChild: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      taxInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      bcruiseAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      bcruiseChild: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      bcruiseInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      tcruiseAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      tcruiseChild: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      tcruiseInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      railAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      railChild: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      railInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insChild: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      insInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      hotelAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      carAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      depAdult: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
       balance: new FormControl('', []),
       dueDate: new FormControl('', []),
-      commission: new FormControl('', [])
+      commission: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')])
     });
   }
 
   ngOnInit() {
-    this.itcForm.patchValue({ noAdult: '1' });
-    this.itcForm.patchValue({ noAdult: '1' });
-    this.itcForm.patchValue({ noChild: '1' });
-    this.itcForm.patchValue({ noInfant: '1' });
-    this.itcForm.patchValue({ baseAdult: '1' });
-    this.itcForm.patchValue({ baseChild: '1' });
-    this.itcForm.patchValue({ baseInfant: '1' });
-    this.itcForm.patchValue({ taxAdult: '1' });
-    this.itcForm.patchValue({ taxChild: '1' });
-    this.itcForm.patchValue({ taxInfant: '1' });
-    this.itcForm.patchValue({ bcruiseAdult: '1' });
-    this.itcForm.patchValue({ bcruiseChild: '1' });
-    this.itcForm.patchValue({ bcruiseInfant: '1' });
-    this.itcForm.patchValue({ tcruiseAdult: '1' });
-    this.itcForm.patchValue({ tcruiseChild: '1' });
-    this.itcForm.patchValue({ tcruiseInfant: '1' });
-    this.itcForm.patchValue({ railAdult: '1' });
-    this.itcForm.patchValue({ railChild: '1' });
-    this.itcForm.patchValue({ railInfant: '1' });
-    this.itcForm.patchValue({ insAdult: '1' });
-    this.itcForm.patchValue({ insChild: '1' });
-    this.itcForm.patchValue({ insInfant: '1' });
-    this.itcForm.patchValue({ hotelAdult: '1' });
-    this.itcForm.patchValue({ carAdult: '1' });
 
-
-    this.itcForm.patchValue({ commission: '100' });
 
   }
 

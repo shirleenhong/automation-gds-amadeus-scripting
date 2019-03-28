@@ -83,13 +83,12 @@ export class PaymentRemarkService {
 
         switch (modeofPayment) {
             case 'CC': {
-                const month = datePipe.transform(expDate, 'MM');
-                const year = expDate.toString().substr(2, 2);
-                fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
+
+                fop = 'CC' + vendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
                 break;
             }
             case 'ACC': {
-                fop = 'CCVI4111111111111111/-EXP1229';
+                fop = 'CCVI4111111111111111/-EXP-1229';
                 break;
             }
             default: {
@@ -169,11 +168,7 @@ export class PaymentRemarkService {
         const datePipe = new DatePipe('en-US');
         let fop = '';
         if (Object.values(CardType).includes(matrix.bankAccount)) {
-
-            const month = datePipe.transform(matrix.expDate, 'MM');
-            const year = matrix.expDate.toString().substr(2, 2);
-
-            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + month + year;
+            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
         } else {
             fop = matrix.modePayment;
         }

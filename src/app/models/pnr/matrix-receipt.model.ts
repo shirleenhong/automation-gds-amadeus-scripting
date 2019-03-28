@@ -9,7 +9,7 @@ export class MatrixReceiptModel {
     cwtRef = '';
     lastFourVi;
     ccNo: number;
-    expDate: Date;
+    expDate: string;
     vendorCode: string;
     gcNumber: number;
     modePayment: string;

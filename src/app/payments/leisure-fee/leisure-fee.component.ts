@@ -217,7 +217,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       remark += '/-FOP-CC' + this.f.vendorCode.value + this.f.ccNo.value;
       remark += '/-EXP-' + this.f.expDate.value.replace('/', '');
     } else {
-      remark += '/FOP-CK';
+      remark += '/-FOP-CK';
     }
     return remark;
   }

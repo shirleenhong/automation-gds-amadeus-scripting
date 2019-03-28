@@ -42,20 +42,24 @@ export class PaymentRemarkHelper {
     checkDate(newValue) {
         if (newValue.length < 5) { return false; }
         const dts = newValue.split('/');
-        const month = dts[0];
-        const year = dts[1];
+        const month = parseInt(dts[0], 0);
+        const year = parseInt(dts[1], 0);
 
         const d = new Date();
         const moNow = d.getMonth();
         const yrnow = parseInt(d.getFullYear().toString().substr(2, 2), 0);
-        let valid = false;
-        if (parseInt(year, 0) > yrnow) {
-            valid = true;
+
+        if (month < 0 || month > 12) {
+            return false;
         }
-        if ((parseInt(year, 0) === yrnow) && (parseInt(month, 0) >= moNow + 1)) {
-            valid = true;
+
+        if (year > yrnow) {
+            return true;
         }
-        return valid;
+        if ((year === yrnow) && (month >= moNow + 1)) {
+            return true;
+        }
+        return false;
     }
 
 

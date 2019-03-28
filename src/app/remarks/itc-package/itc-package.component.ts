@@ -43,6 +43,34 @@ export class ItcPackageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.itcForm.patchValue({ noAdult: '1' });
+    this.itcForm.patchValue({ noAdult: '1' });
+    this.itcForm.patchValue({ noChild: '1' });
+    this.itcForm.patchValue({ noInfant: '1' });
+    this.itcForm.patchValue({ baseAdult: '1' });
+    this.itcForm.patchValue({ baseChild: '1' });
+    this.itcForm.patchValue({ baseInfant: '1' });
+    this.itcForm.patchValue({ taxAdult: '1' });
+    this.itcForm.patchValue({ taxChild: '1' });
+    this.itcForm.patchValue({ taxInfant: '1' });
+    this.itcForm.patchValue({ bcruiseAdult: '1' });
+    this.itcForm.patchValue({ bcruiseChild: '1' });
+    this.itcForm.patchValue({ bcruiseInfant: '1' });
+    this.itcForm.patchValue({ tcruiseAdult: '1' });
+    this.itcForm.patchValue({ tcruiseChild: '1' });
+    this.itcForm.patchValue({ tcruiseInfant: '1' });
+    this.itcForm.patchValue({ railAdult: '1' });
+    this.itcForm.patchValue({ railChild: '1' });
+    this.itcForm.patchValue({ railInfant: '1' });
+    this.itcForm.patchValue({ insAdult: '1' });
+    this.itcForm.patchValue({ insChild: '1' });
+    this.itcForm.patchValue({ insInfant: '1' });
+    this.itcForm.patchValue({ hotelAdult: '1' });
+    this.itcForm.patchValue({ carAdult: '1' });
+
+
+    this.itcForm.patchValue({ commission: '100' });
+
   }
 
   get f() {

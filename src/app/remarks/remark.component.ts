@@ -12,24 +12,27 @@ import { ItcPackageComponent } from './itc-package/itc-package.component';
   templateUrl: './remark.component.html',
   styleUrls: ['./remark.component.scss']
 })
-export class RemarkComponent {
+export class RemarkComponent implements OnInit {
 
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
   @ViewChild(ItcPackageComponent) itcPackageComponent: ItcPackageComponent;
   remarkForm: FormGroup;
   @Input() remarkSection: RemarkViewModel;
 
-  @Input() group: FormGroup;
+  // @Input() group: FormGroup;
   packageList: Array<SelectItem>;
 
   constructor(private fb: FormBuilder) {
     this.loadtourPackage();
     this.remarkForm = this.fb.group({
       packageList: new FormControl('', [Validators.required])
+      // packageList: new FormControl('', [Validators.required])
       // segmentNum: new FormControl('', [Validators.required])
     });
   }
-
+  ngOnInit() {
+    this.remarkForm.controls.packageList.patchValue('1');
+  }
 
   getSelector() {
     // this.group.priceRemarkSelector = '1';

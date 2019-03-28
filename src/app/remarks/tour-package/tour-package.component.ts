@@ -42,79 +42,79 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
 
   ngOnInit() {
-    // this.getCurrencies();
-    // this.group.get('adultNum').valueChanges.subscribe(e => {
-    //   this.group.adultNum = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.getCurrencies();
+    this.group.get('adultNum').valueChanges.subscribe(e => {
+      this.group.value.adultNum = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('baseCost').valueChanges.subscribe(e => {
-    //   this.group.value.baseCost = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('baseCost').valueChanges.subscribe(e => {
+      this.group.value.baseCost = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('taxesPerAdult').valueChanges.subscribe(e => {
-    //   this.group.value.taxesPerAdult = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('taxesPerAdult').valueChanges.subscribe(e => {
+      this.group.value.taxesPerAdult = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('insurancePerAdult').valueChanges.subscribe(e => {
-    //   this.group.value.insurancePerAdult = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('insurancePerAdult').valueChanges.subscribe(e => {
+      this.group.value.insurancePerAdult = e;
+      this.tourPackageChange();
+    }
+    );
 
 
-    // this.group.get('childrenNumber').valueChanges.subscribe(e => {
-    //   this.group.value.childrenNumber = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('childrenNumber').valueChanges.subscribe(e => {
+      this.group.value.childrenNumber = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('childBaseCost').valueChanges.subscribe(e => {
-    //   this.group.value.childBaseCost = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('childBaseCost').valueChanges.subscribe(e => {
+      this.group.value.childBaseCost = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('taxesPerChild').valueChanges.subscribe(e => {
-    //   this.group.value.taxesPerChild = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('taxesPerChild').valueChanges.subscribe(e => {
+      this.group.value.taxesPerChild = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('insurancePerChild').valueChanges.subscribe(e => {
-    //   this.group.value.insurancePerChild = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('insurancePerChild').valueChanges.subscribe(e => {
+      this.group.value.insurancePerChild = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('infantNumber').valueChanges.subscribe(e => {
-    //   this.group.value.infantNumber = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('infantNumber').valueChanges.subscribe(e => {
+      this.group.value.infantNumber = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('totalCostPerInfant').valueChanges.subscribe(e => {
-    //   this.group.value.totalCostPerInfant = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('totalCostPerInfant').valueChanges.subscribe(e => {
+      this.group.value.totalCostPerInfant = e;
+      this.tourPackageChange();
+    }
+    );
 
-    // this.group.get('depositPaid').valueChanges.subscribe(e => {
-    //   this.group.value.depositPaid = e;
-    //   this.tourPackageChange();
-    // }
-    // );
+    this.group.get('depositPaid').valueChanges.subscribe(e => {
+      this.group.value.depositPaid = e;
+      this.tourPackageChange();
+    }
+    );
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('form group: ', this.group);
-    // debugger;  
+    // debugger;
   }
 
   public onTouched: () => void = () => { };

@@ -6,7 +6,7 @@ import { setTheme } from 'ngx-bootstrap';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements {
+export class AppComponent {
   title = 'bpg-gds-scripting-amadeus';
 
 

@@ -23,7 +23,7 @@ export class AccountingRemarkComponent implements OnInit {
 
   addAccountingRemarks() {
     const accountingRemarks = new MatrixAccountingModel();
-    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent);
+    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Add Accounting Remarks';
     accountingRemarks.tkMacLine = (this.accountingRemarks.length + 1);
     this.modalRef.content.accountingRemarks = accountingRemarks;

@@ -49,7 +49,7 @@
           Amount :
         </div>
         <div class="col-2">
-          <input type="number" id="amount" name="amount" class="form-control" formControlName="amount">
+          <input type="text" id="amount" name="amount" class="form-control" formControlName="amount" AmountMask>
         </div>
       </div>
 
@@ -65,26 +65,37 @@
           </select>
         </div>
       </div>
-      <div class="row form-group" *ngIf="f.paymentType.value=='C'">
+      <div class="row " *ngIf="f.paymentType.value=='C'">
         <div class="col-3">
           Credit Card Info:
         </div>
-        <div class="col-1">
-          <input type="text" id="vendorCode" name="vendorCode" class="form-control" formControlName="vendorCode">
+        <div class="col ccinfo ">
+          <div class="d-flex flex-row ">
+            <div style="width:160px;">
+              <select id="vendorCode" class="form-control" name="vendorCode" formControlName="vendorCode"
+                (change)="creditcardMaxValidator($event.target.value)">
+                <option *ngFor="let item of  vendorCodeList" [value]="item.itemValue">
+                  {{item.itemText}}
+                </option>
+              </select>
+            </div>
+            <div style="width:160px;">
+              <input type="text" id="ccNo" name="ccNo" class="form-control" formControlName="ccNo" maxlength="16"
+                NumberOnlyMask />
+            </div>
+            <div style="width:60px">
+              <input type="text" class="form-control" bsDatePicker placeHolder="MM/YY" id="expDate" required
+                maxlength="5" name="expDate" formControlName="expDate" CCDateExpMask />
+            </div>
+          </div>
         </div>
-        <div class="col-3">
-          <input type="text" id="ccNo" name="ccNo" class="form-control" formControlName="ccNo" maxlength="16">
-        </div>
-        <div class="col-3">
-          <input type="month" class="form-control" bsDatePicker placeHolder="MM/YY" id="expDate" required name="expDate"
-            formControlName="expDate" />
-        </div>
+
       </div>
 
       <div class="row form-group">
         <div class="col-3"></div>
         <div class="col">
-          "Select the Province of the traveler's Home Address"
+          Select the Province of the traveler's Home Address
         </div>
       </div>
 

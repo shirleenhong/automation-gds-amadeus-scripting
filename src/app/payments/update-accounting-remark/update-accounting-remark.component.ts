@@ -52,12 +52,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', [Validators.required]),
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-      baseAmount: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      commisionWithoutTax: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      gst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      hst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      qst: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      otherTax: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      baseAmount: new FormControl('', [Validators.required]),
+      commisionWithoutTax: new FormControl('', [Validators.required]),
+      gst: new FormControl('', [Validators.required]),
+      hst: new FormControl('', [Validators.required]),
+      qst: new FormControl('', [Validators.required]),
+      otherTax: new FormControl('', [Validators.required]),
       fop: new FormControl('', [Validators.required]),
       vendorCode: new FormControl('', [Validators.required]),
       cardNumber: new FormControl('', [Validators.required]),
@@ -65,7 +65,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
       description: new FormControl('', [Validators.required]),
       bsp: new FormControl('', [Validators.required])
-    }, { updateOn: 'blur' });
+    });
 
   }
 
@@ -253,8 +253,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     if (!valid) {
       this.matrixAccountingForm.controls.expDate.setValidators(Validators.pattern('^[0-9]{14,16}$'));
+      this.matrixAccountingForm.controls.expDate.updateValueAndValidity();
     } else {
       this.matrixAccountingForm.controls.expDate.setValidators(Validators.pattern('.*'));
+      this.matrixAccountingForm.controls.expDate.updateValueAndValidity();
     }
 
   }

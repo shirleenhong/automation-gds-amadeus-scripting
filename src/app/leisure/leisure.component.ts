@@ -27,11 +27,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   leisure: LeisureViewModel;
 
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
-  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
-  // leisureForm: FormGroup;
-  eventSubscribe = false;
+  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent; 
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
-
+  errorPnrMsg = '';
+  eventSubscribe = false;
 
 
   constructor(private pnrService: PnrService,
@@ -43,13 +42,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private itcPackageCostRemarkService: ITCPackageCostRemarkService,
     private fb: FormBuilder
   ) {
-
-    // this.leisureForm.valueChanges.subscribe(val => {
-    //   console.log(val);
-    // });
-
-    this.loadPNR();
-
+      this.loadPNR();
   }
 
 
@@ -68,8 +61,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async loadPNR() {
+    this.errorPnrMsg = '';
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    if (this.pnrService.errorMessage.indexOf('Error') === 0) {
+      this.errorPnrMsg = this.pnrService.errorMessage;
+    }
 
   }
 
@@ -98,7 +95,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(leisureFee.BuildRemark());
     }
-    // remarkCollection.push(this.pnrService.getMISRetentionLine());
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {

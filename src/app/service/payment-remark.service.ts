@@ -3,7 +3,7 @@ import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { PnrService } from './pnr.service';
 import { IfStmt } from '@angular/compiler';
 
@@ -83,13 +83,12 @@ export class PaymentRemarkService {
 
         switch (modeofPayment) {
             case 'CC': {
-                const month = datePipe.transform(expDate, 'MM');
-                const year = expDate.toString().substr(2, 2);
-                fop = 'CC' + vendorCode + creditCardNo + '/-EXP' + month + year;
+
+                fop = 'CC' + vendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
                 break;
             }
             case 'ACC': {
-                fop = 'CCVI4111111111111111/-EXP1229';
+                fop = 'CCVI4111111111111111/-EXP-1229';
                 break;
             }
             default: {
@@ -138,12 +137,14 @@ export class PaymentRemarkService {
             // tslint:disable-next-line:prefer-const
             let ttltax: number = Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
             ttltax = Math.round(ttltax * 100) / 100;
+            const decPipe = new DecimalPipe('en-Us');
+
             let vcode = '';
             if (accounting.vendorCode) {
                 vcode = accounting.vendorCode;
             }
             const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
-                ' CAD' + accounting.baseAmount + ' PLUS ' + ttltax + ' TAX ON ' + vcode;
+                ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + vcode;
             // + '/S' + accounting.segmentNo.toString().trim();
 
             remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));
@@ -169,11 +170,7 @@ export class PaymentRemarkService {
         const datePipe = new DatePipe('en-US');
         let fop = '';
         if (Object.values(CardType).includes(matrix.bankAccount)) {
-
-            const month = datePipe.transform(matrix.expDate, 'MM');
-            const year = matrix.expDate.toString().substr(2, 2);
-
-            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP' + month + year;
+            fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
         } else {
             fop = matrix.modePayment;
         }

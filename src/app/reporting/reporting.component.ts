@@ -60,6 +60,13 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
 
   }
 
+  isRbmRbp() {
+
+    return (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP');
+
+  }
+
+
   getRouteCodes() {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
@@ -85,27 +92,21 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getPnrCFLine() {
-    const cfLine = this.pnrService.getRemarkText('CF/-');
+    this.reportingView.cfLine = this.pnrService.getCFLine();
 
-    this.reportingView.cfLine = new CfRemarkModel();
-
-    if (cfLine !== '') {
-      this.reportingView.cfLine.lastLetter = cfLine.substr(-1);
+    if (this.reportingView.cfLine.code !== '') {
       if (this.reportingView.cfLine.lastLetter === 'N') {
         this.reportingView.tripType = 2;
       } else if (this.reportingView.cfLine.lastLetter === 'C') {
         this.reportingView.tripType = 1;
       }
-      const cfa = cfLine.substr(4, 3);
-      if (cfa === 'RBM' || cfa === 'RBP') {
+      if (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP') {
         this.reportingView.tripType = 2;
       }
-
       this.reportingView.isDisabled = false;
-      this.reportingView.cfLine.cfa = cfa;
-      this.reportingView.cfLine.code = cfLine;
+
       this.checkDestination();
-      this.isCVC = (cfa === 'CVC');
+      this.isCVC = (this.reportingView.cfLine.cfa === 'CVC');
 
     } else {
       this.reportingView.isDisabledDest = true;

@@ -40,23 +40,26 @@ export class PaymentRemarkHelper {
     }
 
     checkDate(newValue) {
-        const datePipe = new DatePipe('en-US');
-
-        const month = datePipe.transform(newValue, 'MM');
-        const year = datePipe.transform(newValue, 'yyyy');
+        if (newValue.length < 5) { return false; }
+        const dts = newValue.split('/');
+        const month = parseInt(dts[0], 0);
+        const year = parseInt(dts[1], 0);
 
         const d = new Date();
         const moNow = d.getMonth();
-        const yrnow = d.getFullYear();
-        let valid = false;
-        if (parseInt(year) > yrnow) {
-            valid = true;
-        }
-        if ((parseInt(year) === yrnow) && (parseInt(month) >= moNow + 1)) {
-            valid = true;
+        const yrnow = parseInt(d.getFullYear().toString().substr(2, 2), 0);
+
+        if (month < 0 || month > 12) {
+            return false;
         }
 
-        return valid;
+        if (year > yrnow) {
+            return true;
+        }
+        if ((year === yrnow) && (month >= moNow + 1)) {
+            return true;
+        }
+        return false;
     }
 
 

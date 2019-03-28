@@ -25,7 +25,10 @@ import { AccountingRemarkComponent } from './payments/accounting-remark/accounti
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
 import { ItcPackageComponent } from './remarks/itc-package/itc-package.component';
-// import { PackageCostComponent } from './remarks/package-cost/package-cost.component';
+import { CCDateExpMaskDirective } from './directives/cc-date-exp-mask.directive';
+import { AmountMaskDirective } from './directives/amount-mask.directive';
+import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive';
+
 
 
 @NgModule({
@@ -46,7 +49,9 @@ import { ItcPackageComponent } from './remarks/itc-package/itc-package.component
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
     LeisureFeeComponent,
-    ItcPackageComponent
+    ItcPackageComponent,
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective
+
   ],
   imports: [
     BrowserModule,
@@ -57,14 +62,14 @@ import { ItcPackageComponent } from './remarks/itc-package/itc-package.component
     AccordionModule.forRoot(),
     ModalModule.forRoot(),
     TabsModule.forRoot(),
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [],
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent]
 })
 export class AppModule { }

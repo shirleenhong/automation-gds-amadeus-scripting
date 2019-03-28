@@ -83,8 +83,8 @@ export class DDBService implements OnInit {
       { provinceCode: 'ON', tax1: 0.13, taxType1: 'HST', tax2: 0.0, taxType2: '' },
       { provinceCode: 'PE', tax1: 0.15, taxType1: 'HST', tax2: 0.0, taxType2: '' },
       { provinceCode: 'QC', tax1: 0.05, taxType1: 'GST', tax2: 0.09975, taxType2: 'QST' },
-      { provinceCode: 'SK', tax1: 0.15, taxType1: 'GST', tax2: 0.0, taxType2: '' },
-      { provinceCode: 'YT', tax1: 0.15, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'SK', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'YT', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
     ];
   }
   getSupplierCode() {
@@ -100,6 +100,18 @@ export class DDBService implements OnInit {
     ];
     return SupplierCode;
   }
+
+
+  getCcVendorCodeList() {
+    return [{ itemText: '', itemValue: '' },
+    { itemText: 'VI- Visa', itemValue: 'VI' },
+    { itemText: 'MC - Mastercard', itemValue: 'MC' },
+    { itemText: 'AX - American Express', itemValue: 'AX' },
+    { itemText: 'DI -Diners', itemValue: 'DC' }
+    ];
+
+  }
+
 
   getRouteCodeList() {
     return [

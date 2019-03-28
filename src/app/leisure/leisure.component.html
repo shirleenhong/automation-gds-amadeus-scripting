@@ -1,4 +1,4 @@
-<!-- <div *ngIf="isPnrLoaded"> -->
+<div *ngIf="isPnrLoaded"> 
 <form [formGroup]="leisureForm">
 
   <accordion [closeOthers]="true">
@@ -33,7 +33,20 @@
     </accordion-group>
   </accordion>
   <br />
+
   <button class="submitPnr" (click)="SubmitToPNR()">Submit To PNR</button>
 
-</form>
-<br />
+  </form>
+</div>
+
+<div class="loaderBody" *ngIf="!isPnrLoaded">
+  <div class="loader" *ngIf="errorPnrMsg==''">
+    <div class="loaderlogo"></div><br /> Loading PNR...
+
+  </div>
+  <div class="loader" *ngIf="errorPnrMsg!=''">
+    Unable to load PNR or no PNR is loaded in Amadeus.
+  </div>
+
+</div>
+

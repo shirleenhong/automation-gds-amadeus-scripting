@@ -61,8 +61,8 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   isRbmRbp() {
-
-    return (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP');
+    if (this.reportingView.cfLine !== null) { return false; }
+    return ((this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP'));
 
   }
 
@@ -94,23 +94,25 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   getPnrCFLine() {
     this.reportingView.cfLine = this.pnrService.getCFLine();
 
-    if (this.reportingView.cfLine.code !== '') {
-      if (this.reportingView.cfLine.lastLetter === 'N') {
-        this.reportingView.tripType = 2;
-      } else if (this.reportingView.cfLine.lastLetter === 'C') {
-        this.reportingView.tripType = 1;
-      }
-      if (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP') {
-        this.reportingView.tripType = 2;
-      }
-      this.reportingView.isDisabled = false;
+    if (this.reportingView.cfLine != null) {
+      if (this.reportingView.cfLine.code !== '') {
+        if (this.reportingView.cfLine.lastLetter === 'N') {
+          this.reportingView.tripType = 2;
+        } else if (this.reportingView.cfLine.lastLetter === 'C') {
+          this.reportingView.tripType = 1;
+        }
+        if (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP') {
+          this.reportingView.tripType = 2;
+        }
+        this.reportingView.isDisabled = false;
 
-      this.checkDestination();
-      this.isCVC = (this.reportingView.cfLine.cfa === 'CVC');
+        this.checkDestination();
+        this.isCVC = (this.reportingView.cfLine.cfa === 'CVC');
 
-    } else {
-      this.reportingView.isDisabledDest = true;
-      this.reportingView.isDisabled = true;
+      } else {
+        this.reportingView.isDisabledDest = true;
+        this.reportingView.isDisabled = true;
+      }
     }
   }
 }

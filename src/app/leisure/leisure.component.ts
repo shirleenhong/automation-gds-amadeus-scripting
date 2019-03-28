@@ -45,7 +45,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.loadPNR();
   }
 
-
   ngAfterViewChecked() {
     // Subscribe to event from child Component
     // if (this.eventSubscribe) { return; }
@@ -55,8 +54,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // });
     //this.eventSubscribe = true;
   }
-
-
   ngAfterViewInit(): void {
   }
 
@@ -67,7 +64,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = this.pnrService.errorMessage;
     }
-
   }
 
   ngOnInit() {
@@ -75,16 +71,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   public SubmitToPNR() {
-    console.log('fix 1');
     const remarkCollection = new Array<RemarkGroup>();
 
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
-
+    remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
-
-
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value !== null && 
         this.remarkComponent.remarkForm.controls['packageList'].value !== '') {

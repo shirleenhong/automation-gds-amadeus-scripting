@@ -1,43 +1,42 @@
-<div *ngIf="isPnrLoaded">
-  <form [formGroup]="leisureForm">
+<div *ngIf="isPnrLoaded"> 
+<form [formGroup]="leisureForm">
 
-    <accordion [closeOthers]="true">
-      <accordion-group [panelClass]="'customClass'">
-        <div accordion-heading>
-          <i class='fas fa-plane'></i> Passive Segment
-          <span class="cwt-logo"></span>
-        </div>
-        <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
-        </app-passive-segments>
-      </accordion-group>
-      <accordion-group [panelClass]="'customClass'">
-        <div accordion-heading>
-          <i class='fas fa-hand-holding-usd'></i> Payment
-          <span class="cwt-logo"></span>
-        </div>
-        <app-payment [paymentView]="leisure.paymentView"></app-payment>
-      </accordion-group>
-      <accordion-group [panelClass]="'customClass'">
-        <div accordion-heading>
-          <i class='fas fa-file-export'></i> Reporting
-          <span class="cwt-logo"></span>
-        </div>
-        <app-reporting [reportingView]="leisure.reportingView"></app-reporting>
-      </accordion-group>
-      <accordion-group [panelClass]="'customClass'">
-        <div accordion-heading>
-          <i class='far fa-list-alt'></i> Remarks
-          <span class="cwt-logo"></span>
-        </div>
-        <app-remarks [group]="leisureForm.get('remarks')"></app-remarks>
-      </accordion-group>
-    </accordion>
-    <br />
-    <button class="submitPnr" (click)="SubmitToPNR()">Submit To PNR</button>
-
-  </form>
+  <accordion [closeOthers]="true">
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class='fas fa-plane'></i> Passive Segment
+        <span class="cwt-logo"></span>
+      </div>
+      <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
+      </app-passive-segments>
+    </accordion-group>
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class='fas fa-hand-holding-usd'></i> Payment
+        <span class="cwt-logo"></span>
+      </div>
+      <app-payment [paymentView]="leisure.paymentView"></app-payment>
+    </accordion-group>
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class='fas fa-file-export'></i> Reporting
+        <span class="cwt-logo"></span>
+      </div>
+      <app-reporting [reportingView]="leisure.reportingView"></app-reporting>
+    </accordion-group>
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class='far fa-list-alt'></i> Remarks
+        <span class="cwt-logo"></span>
+      </div>
+      <app-remarks></app-remarks>
+    </accordion-group>
+  </accordion>
   <br />
 
+  <button class="submitPnr" (click)="SubmitToPNR()">Submit To PNR</button>
+
+  </form>
 </div>
 
 <div class="loaderBody" *ngIf="!isPnrLoaded">
@@ -50,3 +49,4 @@
   </div>
 
 </div>
+

@@ -20,11 +20,11 @@ export class RemarkHelper {
         return rem;
     }
 
-    addSpaces(textToformat: string, len: number, type: string) {
-        let newformat: string = '';
+    addSpaces(rm2: string, textToformat: string, len: number, type: string) {
+        let newformat: string = rm2;
 
-        if (textToformat.length < 10) {
-            for (let i = 1; i < (len - textToformat.length); i++) {
+        if ((textToformat.length + rm2.length) < len) {
+            for (let i = 1; i < len - (textToformat.length + rm2.length); i++) {
                 newformat = newformat + '-';
             }
         }

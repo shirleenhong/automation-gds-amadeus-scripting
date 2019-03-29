@@ -6,8 +6,8 @@
         <label for="userIdFirstWay">Currency Type</label>
       </div>
       <div class="col-4">
-        <input type="text" class="form-control" placeholder="select a currency" formControlName="userIdFirstWay"
-          id="userIdFirstWay" list="dynamicCurrency" />
+        <input type="text" class="form-control" placeholder="select a currency" formControlName="tourCurrencyType"
+          id="tourCurrencyType " list="dynamicCurrency" />
         <datalist id="dynamicCurrency">
           <option *ngFor="let item of bspCurrencyList" [value]="item.itemValue">{{item.itemText}}</option>
         </datalist>
@@ -197,8 +197,10 @@
         <label for="balanceDueDate">Balance Due Date</label>
       </div>
       <div class="col-4">
-        <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()"
-          placeholder="yyyy-mm-dd" formControlName="balanceDueDate" />
+        <input type="date" id="balanceDueDate" name="balanceDueDate" class="form-control"
+          formControlName="balanceDueDate" />
+        <!-- <input type="text" class="form-control" bsDatepicker #d="bsDatepicker" (focus)="d.open()"
+          placeholder="yyyy-mm-dd" formControlName="balanceDueDate" />-->
       </div>
     </div>
 

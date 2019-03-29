@@ -17,10 +17,9 @@ export class AmountMaskDirective {
 
     @HostListener('blur')
     onBlur() {
-        const newVal = this.decPipe.transform(this.ngControl.value, '1.2-2');
-        this.ngControl.valueAccessor.writeValue(newVal);
+        const newVal = this.decPipe.transform(this.ngControl.value.replace(',', ''), '1.2-2');
+        this.ngControl.control.setValue(newVal);
     }
-
 
     onInputChange(event, backspace) {
         let newVal = event;

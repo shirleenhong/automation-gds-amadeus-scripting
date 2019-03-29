@@ -24,7 +24,7 @@ import { DDBService } from '../service/ddb.service';
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
-export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
+export class ReportingComponent implements OnInit, OnChanges {
   @Input()
   reportingView: ReportingViewModel;
   bspRouteCodeList: SelectItem[];
@@ -36,7 +36,7 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   countryList: Array<string>;
   isCVC = false;
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService) { 
+  constructor(private pnrService: PnrService, private ddbService: DDBService) {
 
   }
   get f() { return this.reportingForm.controls; }
@@ -49,8 +49,7 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
       companyName: new FormControl('', [Validators.required]),
       destinationList: new FormControl('', [Validators.required]),
       u86: new FormControl('', [Validators.required]),
-      showInsuranceYes: new FormControl('', []),
-      showInsuranceNo: new FormControl('', []),
+      showInsurance: new FormControl('', []),
       insuranceDeclinedReason: new FormControl('', [Validators.required])
     });
     this.getRouteCodes();
@@ -64,7 +63,7 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
       'JOHANNESBURG-SOUTH AFRICA',
       'NONE OF THE ABOVE'
     ];
-
+    this.reportingView.showInsurance = true;
   }
 
   isRbmRbp() {
@@ -98,6 +97,10 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.reportingView.isDisabledDest = false;
     }
+  }
+
+  showInsurance() {
+    this.reportingView.showInsurance = (this.f.showInsurance.value === 'Yes');
   }
 
   checkInsurance() {

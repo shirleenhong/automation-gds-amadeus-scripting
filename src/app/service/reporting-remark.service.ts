@@ -63,11 +63,13 @@ export class ReportingRemarkService {
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
       }
 
-      // *U12
-      const insuranceDeclined = reporting.insuranceDeclinedReason;
-      if (insuranceDeclined !== null && insuranceDeclined !== '') {
-        remText = 'U12/-' + insuranceDeclined;
-        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
+      if (!reporting.showInsurance) {
+        // *U12
+        const insuranceDeclined = reporting.insuranceDeclinedReason;
+        if (insuranceDeclined !== null && insuranceDeclined !== '') {
+          remText = 'U12/-' + insuranceDeclined;
+          rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
+        }
       }
       // *U13
       const datePipe = new DatePipe('en-US');

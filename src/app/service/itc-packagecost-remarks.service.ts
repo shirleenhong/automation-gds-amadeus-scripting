@@ -4,7 +4,7 @@ import { PnrService } from './pnr.service';
 
 import { Injectable } from '@angular/core';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { RemarkHelper } from '../helper/remark-helper';
@@ -14,6 +14,7 @@ import { RemarkHelper } from '../helper/remark-helper';
 })
 
 export class ITCPackageCostRemarkService {
+    decPipe = new DecimalPipe('en-US');
     constructor(private remarkHelper: RemarkHelper) { }
 
     public GetRemarks(group: any) {
@@ -24,85 +25,74 @@ export class ITCPackageCostRemarkService {
         const datePipe = new DatePipe('en-US');
 
 
-        // to do
-        // rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.userIdFirstWay, 'RI', 'I'));
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('ADULT PRICE', group.value.noAdult, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.baseAdult, 10, 'suffix') + ' ' + Math.round(Number(group.value.baseAdult) * Number(group.value.noAdult)), 'RI', 'I'));
-        console.log('Adult Price');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('ADULT TAXES', group.value.taxAdult, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noAdult, 10, 'suffix') + ' ' + Math.round(Number(group.value.taxAdult) * Number(group.value.noAdult)), 'RI', 'I'));
-        console.log('Adult Taxes');
-        // tslint:disable-next-line:max-line-length
-        // rmGroup.remarks.push(this.remarkHelper.createRemark('ADULT GST' + this.remarkHelper.addSpaces('to do', 10, 'prefix') + 'X' + this.remarkHelper.addSpaces('to do', 10, 'suffix') + ' ' + (Number('to do', 0) * Number(group.noAdult, 0)), 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'I'));
 
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CHILD PRICE', group.value.baseChild, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noChild, 10, 'suffix') + ' ' + Math.round(Number(group.value.baseChild) * Number(group.value.noChild)), 'RI', 'I'));
-        console.log('Child Price');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CHILD TAXES', group.value.taxChild, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noChild, 10, 'suffix') + ' ' + Math.round(Number(group.value.taxChild) * Number(group.value.noChild)), 'RI', 'I'));
-        console.log('CHild Taxes');
-        // tslint:disable-next-line:max-line-length
-        // rmGroup.remarks.push(this.remarkHelper.createRemark('CHILD GST' + this.remarkHelper.addSpaces(group.childInsurance, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces(group.noChild, 10, 'suffix') + ' ' + (Number(group.childInsurance, 0) * Number(group.noChild, 0)), 'RI', 'I'));
+        if (Number(group.value.noAdult) > 0) {
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT PRICE', group.value.baseAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT TAXES', group.value.taxAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT INSURANCE', group.value.insAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT CRUISE', group.value.bcruiseAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT TAX/PORT CHARGES', group.value.tcruiseAdult,
+                group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT RAIL', group.value.railAdult, group.value.noAdult));
+        }
+
+        if (Number(group.value.noChild) > 0) {
+
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD PRICE', group.value.baseChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD TAXES', group.value.taxChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD INSURANCE', group.value.insChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD CRUISE', group.value.bcruiseChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD TAX/PORT CHARGES', group.value.tcruiseChild,
+                group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD RAIL', group.value.railChild, group.value.noChild));
+        }
 
 
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CHILD TAXES', group.value.baseInfant, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noInfant, 10, 'suffix') + ' ' + Math.round(Number(group.value.baseInfant) * Number(group.value.noInfant)), 'RI', 'I'));
-        console.log('Infant Price');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('INFANT TAXES', group.value.taxInfant, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noInfant, 10, 'suffix') + ' ' + Math.round(Number(group.value.taxInfant) * Number(group.value.noInfant)), 'RI', 'I'));
-        console.log('Infant Taxes');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('INFANT INSURANCE', group.value.insInfant, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noInfant, 10, 'suffix') + ' ' + Math.round(Number(group.value.insInfant) * Number(group.value.noInfant)), 'RI', 'I'));
-        console.log('Infant Insurance');
+        if (Number(group.value.noInfant) > 0) {
 
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('ADULT CRUISE', group.value.bcruiseAdult, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.bcruiseAdult, 10, 'suffix') + ' ' + Math.round(Number(group.value.bcruiseAdult) * Number(group.value.noAdult)), 'RI', 'I'));
-        console.log('Adult Cruise');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('ADULT TAX/PORT CHARGES', group.value.tcruiseAdult, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noAdult, 10, 'suffix') + ' ' + Math.round(Number(group.value.tcruiseAdult) * Number(group.value.noAdult)), 'RI', 'I'));
-        console.log('Adult Port CHanges');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CHILD CRUISE', group.value.bcruiseChild, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noChild, 10, 'suffix') + ' ' + Math.round(Number(group.value.bcruiseChild) * Number(group.value.noChild)), 'RI', 'I'));
-        console.log('Adult Cruise CHanges');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CHILD TAX/PORT CHARGES', group.value.tcruiseChild, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noChild, 10, 'suffix') + ' ' + Math.round(Number(group.value.tcruiseChild) * Number(group.value.noChild)), 'RI', 'I'));
-        console.log('Adult Port CHanges');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('INFANT CRUISE', group.value.bcruiseInfant, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noInfant, 10, 'suffix') + ' ' + Math.round(Number(group.value.bcruiseInfant) * Number(group.value.noInfant)), 'RI', 'I'));
-        console.log('Infant Port CHanges');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('INFANT TAX/PORT CHARGES', group.value.tcruiseInfant, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noInfant, 10, 'suffix') + ' ' + Math.round(Number(group.value.tcruiseInfant) * Number(group.value.noInfant)), 'RI', 'I'));
-        console.log('Adult Port CHanges');
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT PRICE', group.value.baseInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT TAXES', group.value.taxInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT INSURANCE', group.value.insInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT CRUISE', group.value.bcruiseInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT TAX/PORT CHARGES', group.value.tcruiseInfant,
+                group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT RAIL', group.value.railInfant, group.value.noInfant));
+        }
 
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('ADULT RAIL', group.value.railAdult, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noAdult, 10, 'suffix') + ' ' + Math.round(Number(group.value.railAdult) * Number(group.value.noAdult)), 'RI', 'I'));
-        console.log('Adult Rail');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CHILD RAIL', group.value.railChild, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noChild, 10, 'suffix') + ' ' + Math.round(Number(group.value.railChild) * Number(group.value.noChild)), 'RI', 'I'));
-        console.log('Child Rail');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('INFANT RAIL', group.value.railInfant, 30, 'prefix') + 'X' + this.remarkHelper.addSpaces('', group.value.noInfant, 10, 'suffix') + ' ' + Math.round(Number(group.value.railInfant) * Number(group.value.noInfant)), 'RI', 'I'));
-        console.log('Infant Rail');
-        // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('HOTEL/ACCOMMODATION', group.value.hotelAdult, 30, 'prefix') + Math.round(Number(group.value.hotelAdult)), 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('HOTEL/ACCOMMODATION', group.value.hotelAdult, null));
         console.log('Hotel Acoomodation');
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark(this.remarkHelper.addSpaces('CAR RENTAL', group.value.carAdult, 30, 'prefix') + Math.round(Number(group.value.carAdult)), 'RI', 'I'));
-        console.log('Car Rental');
+        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CAR RENTAL', group.value.carAdult, null));
+
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('TOTAL HOLIDAY COST' + Math.round(Number(group.value.balance) * Number(group.value.depAdult)), 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('TOTAL HOLIDAY COST', (parseFloat(group.value.balance) + parseFloat(group.value.depAdult)), null));
+
         console.log('Total Holiday');
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('LESS DEPOSIT PAID ' + group.value.depAdult + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'I'));
-        console.log('Less Deposit');
-        rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.value.balance, 'RI', 'I'));
-        console.log('Balance Due');
+        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('LESS DEPOSIT PAID', group.value.depAdult, null));
+
+
+
+        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('BALANCE DUE', group.value.balance, null));
+
+
         // tslint:disable-next-line:max-line-length
         rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + group.value.balance + ' IS DUE ' + datePipe.transform(group.value.dueDate, 'dMMMyy') + '----', 'RI', 'I'));
         console.log('Balance of');
 
-        rmGroup.remarks.push(this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.dueDate, 'MMMyy'), 'RM', '*'));
-        rmGroup.remarks.push(this.remarkHelper.createRemark('U41/-' + group.balance, 'RM', '*'));
+        if (group.value.dueDate.length > 0) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.value.dueDate, 'MMMyy'), 'RM', '*'));
+        }
+
+        if (group.value.balance.length > 0) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U41/-' + group.value.balance, 'RM', '*'));
+        }
+
+        if (group.value.commission.length > 0) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.value.commission, 'RM', '*'));
+        }
 
         console.log(rmGroup);
         return rmGroup;

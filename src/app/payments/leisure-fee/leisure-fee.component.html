@@ -3,7 +3,7 @@
   <form [formGroup]="leisureFeeForm">
 
     <div class="row form-group">
-      <div class="col-3">Segment Association :</div>
+      <div class="col-2">Segment Association :</div>
       <div class="col-8">
         <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control">
           <option value="0">No Segment Association Required/Fee Applies to PNR</option>
@@ -16,7 +16,7 @@
     </div>
 
     <div class="form-group row" *ngIf="!checkSFC()">
-      <div class="col-3">No Fee Reason:</div>
+      <div class="col-2">No Fee Reason:</div>
       <div class="col-8">
 
         <input type="text" class="form-control" maxlength="35" id="noFeeReason" required formControlName="noFeeReason"
@@ -28,13 +28,13 @@
 
       <div *ngIf="f.segmentAssoc.value == 3 || f.segmentAssoc.value == 4">
         <div class="row form-group">
-          <div class="col-3"></div>
+          <div class="col-2"></div>
           <div class="col">
             Do you wish to attach the service fee to a specific itinerary segment?
           </div>
         </div>
         <div class="row form-group">
-          <div class="col-3"></div>
+          <div class="col-2"></div>
           <div class="col-2">
             <select id="segmentNum" name="segmentNum" class="form-control" formControlName="segmentNum">
               <option *ngFor="let item of  segmentList" [value]="item">
@@ -45,7 +45,7 @@
         </div>
       </div>
       <div class="row form-group">
-        <div class="col-3">
+        <div class="col-2">
           Amount :
         </div>
         <div class="col-2">
@@ -55,18 +55,18 @@
 
 
       <div class="row form-group">
-        <div class="col-3">
+        <div class="col-2">
           Form of Payment :
         </div>
-        <div class="col-3">
+        <div class="col-2">
           <select id="paymentType" name="paymentType" class="form-control" formControlName="paymentType">
             <option value="C">Credit Card</option>
             <option value="K">Cheque</option>
           </select>
         </div>
       </div>
-      <div class="row " *ngIf="f.paymentType.value=='C'">
-        <div class="col-3">
+      <div class="row form-group" *ngIf="f.paymentType.value=='C'">
+        <div class="col-2">
           Credit Card Info:
         </div>
         <div class="col ccinfo ">
@@ -93,14 +93,14 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-3"></div>
+        <div class="col-2"></div>
         <div class="col">
           Select the Province of the traveler's Home Address
         </div>
       </div>
 
       <div class="row form-group">
-        <div class="col-3"></div>
+        <div class="col-2"></div>
         <div class="col-4">
           <select id="address" name="address" class="form-control" formControlName="address">
             <option *ngFor="let item of  provinceList" [value]="item.itemValue">

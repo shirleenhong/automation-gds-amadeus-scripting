@@ -27,7 +27,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   leisure: LeisureViewModel;
 
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
-  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent; 
+  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
   errorPnrMsg = '';
   eventSubscribe = false;
@@ -42,7 +42,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private itcPackageCostRemarkService: ITCPackageCostRemarkService,
     private fb: FormBuilder
   ) {
-      this.loadPNR();
+    this.loadPNR();
   }
 
   ngAfterViewChecked() {
@@ -78,14 +78,16 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
+
     // tslint:disable-next-line:no-string-literal
-    if (this.remarkComponent.remarkForm.controls['packageList'].value !== null && 
-        this.remarkComponent.remarkForm.controls['packageList'].value !== '') {
-        if (this.remarkComponent.remarkForm.controls['packageList'].value === 'ITC') {
-          remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));
-        } else {
-          remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));
-        }
+    if (this.remarkComponent.remarkForm.controls['packageList'].value !== null &&
+      this.remarkComponent.remarkForm.controls['packageList'].value !== ''
+      && this.remarkComponent.remarkForm.controls['packageList'].value !== "1") {
+      if (this.remarkComponent.remarkForm.controls['packageList'].value === 'ITC') {
+        remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));
+      } else {
+        remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));
+      }
     }
 
     const leisureFee = this.paymentComponent.leisureFee;
@@ -96,7 +98,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
-     // this.loadPNR();
+      // this.loadPNR();
 
     }, error => { alert(JSON.stringify(error)); });
   }

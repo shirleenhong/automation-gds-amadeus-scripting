@@ -11,7 +11,6 @@ import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { ReportingViewModel } from '../models/reporting-view.model';
-import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import {
   FormGroup,
   FormBuilder,
@@ -37,15 +36,29 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   countryList: Array<string>;
   isCVC = false;
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private ddbService: DDBService) { 
+
+  }
 
   ngAfterViewInit() {
 
+  
   }
+
+  get f() { return this.reportingForm.controls; }
 
   ngOnChanges(changes: SimpleChanges) { }
 
   ngOnInit() {
+    this.reportingForm = new FormGroup({
+      bspRouteCode: new FormControl('', [Validators.required]),
+      companyName: new FormControl('', [Validators.required]),
+      destinationList: new FormControl('', [Validators.required]),
+      u86: new FormControl('', [Validators.required]),
+      showInsuranceYes: new FormControl('', []),
+      showInsuranceNo: new FormControl('', []),
+      insuranceDeclinedReason: new FormControl('', [Validators.required])
+    });
     this.getRouteCodes();
     this.getPnrCFLine();
     this.getDestination();
@@ -64,6 +77,16 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.reportingView.cfLine !== null) { return false; }
     return ((this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP'));
 
+  }
+
+  enableDisbleControls(ctrls: string[], isDisabled: boolean) {
+    ctrls.forEach(x => {
+      if (isDisabled) {
+        this.reportingForm.get(x).disable();
+      } else {
+        this.reportingForm.get(x).enable();
+      }
+    });
   }
 
 
@@ -85,8 +108,10 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
 
   checkInsurance() {
     if (this.pnrService.getRemarkLineNumber('U12/-') === '') {
+      this.enableDisbleControls(['insuranceDeclinedReason'], false);
       return false;
     } else {
+      this.enableDisbleControls(['insuranceDeclinedReason'], true);
       return true;
     }
   }

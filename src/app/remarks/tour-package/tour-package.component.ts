@@ -149,7 +149,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   tourPackageChange() {
     console.log('tour package call');
     const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
-    this.group.patchValue({ totalCostHoliday: this.decPipe.transform(v, '1.2-2') });
+    this.group.patchValue({ totalCostHoliday: this.decPipe.transform(v, '1.2-2').replace(',', '') });
 
     this.computeBalanceToBePaid();
     // console.log('total cost holiday');
@@ -166,8 +166,8 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     if (this.group.value.depositPaid !== '') {
       dp = (parseInt(this.group.value.depositPaid, 0));
     }
-
-    this.group.patchValue({ balanceToBePaid: this.decPipe.transform(this.group.value.totalCostHoliday - dp, '1.2-2') });
+    const totalCost = this.group.value.totalCostHoliday.replace(',', '');
+    this.group.patchValue({ balanceToBePaid: this.decPipe.transform(parseFloat(totalCost) - dp, '1.2-2').replace(',', '') });
   }
 
   computeAdultCost() {

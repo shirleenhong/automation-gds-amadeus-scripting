@@ -43,7 +43,8 @@ export class ItcPackageComponent implements OnInit {
       depAdult: new FormControl(''),
       balance: new FormControl('', []),
       dueDate: new FormControl('', []),
-      commission: new FormControl('')
+      commission: new FormControl(''),
+      holidayCost: new FormControl('')
     });
   }
 
@@ -58,11 +59,17 @@ export class ItcPackageComponent implements OnInit {
 
   ComputeBalance() {
     let totalBalance = 0;
+    let holidayCost = 0;
+
     totalBalance = this.ComputeAdult() + this.ComputeChild() + this.ComputeInfant();
     if (this.f.depAdult.value) { totalBalance = totalBalance - Number(this.f.depAdult.value); }
 
+    holidayCost = totalBalance;
+    if (this.f.depAdult.value) { holidayCost = totalBalance + Number(this.f.depAdult.value); }
+
+    this.itcForm.controls['holidayCost'].setValue(this.decPipe.transform(holidayCost, '1.2-2').replace(',', ''));
     // tslint:disable-next-line:no-string-literal
-    this.itcForm.controls['balance'].setValue(this.decPipe.transform(totalBalance, '1.2-2'));
+    this.itcForm.controls['balance'].setValue(this.decPipe.transform(totalBalance, '1.2-2').replace(',', ''));
   }
 
   ComputeAdult() {

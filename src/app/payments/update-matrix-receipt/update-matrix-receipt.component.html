@@ -68,7 +68,7 @@
         <div class="col-sm-8">
 
           <input type="number" class="form-control" id="points" formControlName="points" name="points" required
-            NumberOnlyMask [ngClass]="{ 'is-invalid': f.points.touched && f.points.invalid }"
+            maxlength="7" NumberOnlyMask [ngClass]="{ 'is-invalid': f.points.touched && f.points.invalid }"
             [(ngModel)]="matrixReceipt.points" />
         </div>
       </div>
@@ -77,8 +77,8 @@
         <div class="col-sm-4">CWT Reference :</div>
         <div class="col-sm-8">
           <input type="text" class="form-control" id="cwtRef" name="cwtRef" placeholder="0000000000" NumberOnlyMask
-            [ngClass]="{ 'is-invalid': f.cwtRef.touched && f.cwtRef.invalid }" required formControlName="cwtRef"
-            [(ngModel)]="matrixReceipt.cwtRef" />
+            maxlength="10" minlength="6" [ngClass]="{ 'is-invalid': f.cwtRef.touched && f.cwtRef.invalid }" required
+            formControlName="cwtRef" [(ngModel)]="matrixReceipt.cwtRef" />
         </div>
       </div>
       <div class="form-group  row">
@@ -86,9 +86,9 @@
           Last Four digit VI :</div>
         <div class="col-sm-8">
 
-          <input type="number" class="form-control" id="lastFourVi" placeholder="0000" required
-            [ngClass]="{ 'is-invalid': f.lastFourVi.touched && f.lastFourVi.invalid }" formControlName="lastFourVi"
-            NumberOnlyMask name="lastFourVi" [(ngModel)]="matrixReceipt.lastFourVi" />
+          <input type="text" class="form-control" id="lastFourVi" placeholder="0000" required maxlength="4"
+            NumberOnlyMask [ngClass]="{ 'is-invalid': f.lastFourVi.touched && f.lastFourVi.invalid }"
+            formControlName="lastFourVi" NumberOnlyMask name="lastFourVi" [(ngModel)]="matrixReceipt.lastFourVi" />
         </div>
       </div>
     </div>
@@ -98,7 +98,7 @@
         <div class="col-sm-4">GC Number :</div>
         <div class="col-sm-8">
           <input type="text" class="form-control" id="gcNumber"
-            [ngClass]="{ 'is-invalid': f.gcNumber.touched && f.gcNumber.invalid }" name="gcNumber"
+            [ngClass]="{ 'is-invalid': f.gcNumber.touched && f.gcNumber.invalid }" name="gcNumber" AlphaNumericMask
             formControlName="gcNumber" [(ngModel)]="matrixReceipt.gcNumber" />
         </div>
       </div>

@@ -36,7 +36,7 @@ export class RemarkService {
         this.passiveSegmentElement = new Array<any>();
 
         remarkGroups.forEach(group => {
-            if (group.group != "" && group.group != "") {
+            if (group.group != '' && group.group != '') {
                 if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
                     group.deleteRemarkByIds.forEach(c => {
                         this.deleteRemarksByIds.push(c);
@@ -79,46 +79,43 @@ export class RemarkService {
     }
 
     getFSRemarksElement(remarkModel: RemarkModel) {
-        var reference =
-        {
-            qualifier: "OT",
-            number: "1"
+        const reference = {
+            qualifier: 'OT',
+            number: '1'
         };
-        var elementManagementData = {
-            reference: reference,
-            segmentName: "FS"
+        const elementManagementData = {
+            reference,
+            segmentName: 'FS'
         };
 
-        var fareElement =
-        {
-            generalIndicator: "S",
-            passengerType: "",
+        const fareElement = {
+            generalIndicator: 'S',
+            passengerType: '',
             freetextLong: remarkModel.remarkText
-        }
+        };
 
         return { elementManagementData, fareElement };
 
     }
 
     getRemarkElement(remarkModel: RemarkModel) {
-        var reference =
-        {
-            qualifier: "OT",
-            number: "1"
+        const reference = {
+            qualifier: 'OT',
+            number: '1'
         };
-        var elementManagementData = {
-            reference: reference,
-            segmentName: "RM"
+        const elementManagementData = {
+            reference,
+            segmentName: 'RM'
         };
 
-        var remarks = {
+        const remarks = {
             type: remarkModel.remarkType,
             category: remarkModel.category,
             freetext: remarkModel.remarkText
         };
 
-        var miscellaneousRemark = {
-            remarks: remarks
+        const miscellaneousRemark = {
+            remarks
         };
 
 
@@ -159,74 +156,74 @@ export class RemarkService {
 
     addPassiveSegmentElement(passiveSegmentmodel: PassiveSegmentModel) {
 
-        var reference = {
-            qualifier: "SR",
-            number: "1"
-        }
+        const reference = {
+            qualifier: 'SR',
+            number: '1'
+        };
 
-        var elementManagementItinerary = {
-            reference: reference,
-            segmentName: "RU"
-        }
+        const elementManagementItinerary = {
+            reference,
+            segmentName: 'RU'
+        };
 
-        var boardPointDetail = {
+        const boardPointDetail = {
             cityCode: passiveSegmentmodel.startPoint
-        }
-        var offPointDetail = {
+        };
+        const offPointDetail = {
             cityCode: passiveSegmentmodel.endPoint
-        }
-        var company = {
+        };
+        const company = {
             identification: passiveSegmentmodel.vendor
-        }
+        };
 
-        var travelProductProduct = {
+        const travelProductProduct = {
             depDate: passiveSegmentmodel.startDate,
-            depTime: "0000",
+            depTime: '0000',
             arrDate: passiveSegmentmodel.endDate,
-            arrTime: "0000"
-        }
+            arrTime: '0000'
+        };
 
-        var travelProduct = {
+        const travelProduct = {
             product: travelProductProduct,
             boardpointDetail: boardPointDetail,
             offpointDetail: offPointDetail,
-            company: company
-        }
+            company
+        };
 
-        var relatedProduct = {
-            quantity: "1",
+        const relatedProduct = {
+            quantity: '1',
             status: passiveSegmentmodel.status
             // quantitySpecified: true,
             // product: travelProductProduct
-        }
+        };
 
-        var messageActionBusiness = {
-            function: "12"
-        }
+        const messageActionBusiness = {
+            function: '12'
+        };
 
-        var messageAction = {
+        const messageAction = {
             business: messageActionBusiness
-        }
+        };
 
-        var freeTextItineraryDetail = {
-            subjectQualifier: "3",
-            type: "P19"
-        }
+        const freeTextItineraryDetail = {
+            subjectQualifier: '3',
+            type: 'P19'
+        };
 
-        var freeTextItinerary = {
+        const freeTextItinerary = {
             freetextDetail: freeTextItineraryDetail,
             longFreetext: passiveSegmentmodel.freeText
-        }
+        };
 
-        var airAuxItinerary = {
-            travelProduct: travelProduct,
-            messageAction: messageAction,
-            relatedProduct: relatedProduct,
+        const airAuxItinerary = {
+            travelProduct,
+            messageAction,
+            relatedProduct,
             freetextItinerary: freeTextItinerary
 
-        }
+        };
 
-        return { elementManagementItinerary, airAuxItinerary }
+        return { elementManagementItinerary, airAuxItinerary };
         // var summary = {originDestinationDetails};
         // RemarklistModel.addRemark(summary);
         // alert(JSON.stringify(RemarklistModel.originDestinationDetails ))
@@ -239,50 +236,52 @@ export class RemarkService {
 
 
     deleteRemarks() {
-        var deleteIds = "";
-        this.deleteRemarksByIds.forEach(ids => { deleteIds += ids + "," });
-        if (deleteIds != "") {
+        let deleteIds = '';
+        this.deleteRemarksByIds.forEach(ids => { deleteIds += ids + ','; });
+        if (deleteIds != '') {
 
-            deleteIds = deleteIds.slice(0, -1)
-            smartScriptSession.send("XE" + deleteIds);
+            deleteIds = deleteIds.slice(0, -1);
+            smartScriptSession.send('XE' + deleteIds);
         }
 
     }
 
 
     async   sendRemarks() {
-        var pnrActions = {
-            optionCode: "0"
-        }
-
+        const pnrActions = {
+            optionCode: '0'
+        };
+        let dataElementsMaster;
+        let originDestination;
+        let originDestinationDetails;
 
         if (this.passiveSegmentElement.length > 0) {
 
-            var originDestination = {
-                origin: "",
-                destination: ""
-            }
+            originDestination = {
+                origin: '',
+                destination: ''
+            };
 
-            var originDestinationDetails = {
-                originDestination: originDestination,
+            originDestinationDetails = {
+                originDestination,
                 itineraryInfo: this.passiveSegmentElement
-            }
+            };
         }
 
         if (this.remarksElement.length > 0) {
-            var dataElementsMaster = {
-                marker1: "",
+            dataElementsMaster = {
+                marker1: '',
                 dataElementsIndiv: this.remarksElement
-            }
+            };
         }
 
 
 
-        var remarkElements = { pnrActions, originDestinationDetails, dataElementsMaster }
+        const remarkElements = { pnrActions, originDestinationDetails, dataElementsMaster };
         console.log(JSON.stringify(remarkElements));
-        await smartScriptSession.requestService("ws.addMultiElement_v14.1", remarkElements).then(data => {
-            this.responseMessage = "Remarks Updated";
-            smartScriptSession.send("RT");
+        await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(data => {
+            this.responseMessage = 'Remarks Updated';
+            smartScriptSession.send('RT');
             // alert(JSON.stringify(remarkElements));
         }, error => {
             this.responseMessage = JSON.stringify(error);

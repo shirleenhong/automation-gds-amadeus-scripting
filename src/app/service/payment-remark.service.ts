@@ -77,27 +77,34 @@ export class PaymentRemarkService {
         return relatedSegment;
     }
 
-    getFOP(modeofPayment, creditCardNo, vendorCode, expDate) {
+    getFOP(modeofPayment, creditCardNo, fopvendorCode, expDate) {
         const datePipe = new DatePipe('en-US');
         let fop = '';
+        let paymentvendorCode = fopvendorCode;
+        let formOfPaymentList = [];
+        let payment: { foptxt: string; vendorCode: string };
+
 
         switch (modeofPayment) {
             case 'CC': {
-
-                fop = 'CC' + vendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
+                fop = 'CC' + fopvendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
                 break;
             }
             case 'ACC': {
-                fop = 'CCVI4111111111111111/-EXP-1229';
+                fop = 'APVI4111111111111111/-EXP-1229';
+                paymentvendorCode = 'VI';
                 break;
             }
             default: {
                 fop = modeofPayment;
+                paymentvendorCode = modeofPayment;
                 break;
             }
 
         }
-        return fop;
+        payment = { foptxt: fop, vendorCode: paymentvendorCode };
+        formOfPaymentList.push(payment);
+        return formOfPaymentList;
     }
 
     getTKTline(tktLine) {
@@ -122,11 +129,10 @@ export class PaymentRemarkService {
             facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim()
                 + 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
         }
-
+        let fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
         const acc2 = 'MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
             '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
-            this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate) +
-            this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
+            fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
             '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim();
         // + '/S' + accounting.segmentNo.toString().trim();
 
@@ -139,12 +145,8 @@ export class PaymentRemarkService {
             ttltax = Math.round(ttltax * 100) / 100;
             const decPipe = new DecimalPipe('en-Us');
 
-            let vcode = '';
-            if (accounting.vendorCode) {
-                vcode = accounting.vendorCode;
-            }
             const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
-                ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + vcode;
+                ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
             // + '/S' + accounting.segmentNo.toString().trim();
 
             remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));

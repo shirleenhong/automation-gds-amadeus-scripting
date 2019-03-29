@@ -7,7 +7,7 @@
       </div>
       <div class="col-4">
         <input type="text" class="form-control" placeholder="select a currency" formControlName="tourCurrencyType"
-          id="tourCurrencyType " list="dynamicCurrency" />
+          id="tourCurrencyType" list="dynamicCurrency" />
         <datalist id="dynamicCurrency">
           <option *ngFor="let item of bspCurrencyList" [value]="item.itemValue">{{item.itemText}}</option>
         </datalist>

@@ -28,6 +28,7 @@ import { ItcPackageComponent } from './remarks/itc-package/itc-package.component
 import { CCDateExpMaskDirective } from './directives/cc-date-exp-mask.directive';
 import { AmountMaskDirective } from './directives/amount-mask.directive';
 import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive';
+import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
 
 
 
@@ -50,7 +51,7 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective
 
   ],
   imports: [
@@ -69,7 +70,7 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective],
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent]
 })
 export class AppModule { }

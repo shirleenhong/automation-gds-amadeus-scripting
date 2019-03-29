@@ -61,7 +61,7 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   isRbmRbp() {
-    if (this.reportingView.cfLine !== null) { return false; }
+    if (this.reportingView.cfLine === null) { return false; }
     return ((this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP'));
 
   }

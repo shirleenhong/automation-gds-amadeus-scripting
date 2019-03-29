@@ -6,6 +6,8 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PnrService } from './pnr.service';
 import { IfStmt } from '@angular/compiler';
+import { PaymentRemarkHelper } from '../helper/payment-helper';
+import { RemarkHelper } from '../helper/remark-helper';
 
 
 @Injectable({
@@ -13,7 +15,7 @@ import { IfStmt } from '@angular/compiler';
 })
 export class PaymentRemarkService {
 
-    constructor(private pnrService: PnrService) {
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) {
     }
 
     accountingRemarks: Array<MatrixAccountingModel>;
@@ -140,17 +142,31 @@ export class PaymentRemarkService {
         remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
 
         if (accounting.bsp === '2') {
-            // tslint:disable-next-line:prefer-const
-            let ttltax: number = Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
-            ttltax = Math.round(ttltax * 100) / 100;
-            const decPipe = new DecimalPipe('en-Us');
-
-            const acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
-                ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
-            // + '/S' + accounting.segmentNo.toString().trim();
-
-            remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));
+            this.extractApayRemark(accounting, remarkList, fopObj);
         }
+    }
+
+    private extractApayRemark(accounting: MatrixAccountingModel, remarkList: RemarkModel[], fopObj: Array<any>) {
+        let ttltax: number = Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
+        ttltax = Math.round(ttltax * 100) / 100;
+        let vcode = '';
+        if (accounting.vendorCode) {
+            vcode = accounting.vendorCode;
+        }
+        let acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
+            ' CAD' + accounting.baseAmount + ' PLUS ' + ttltax + ' TAX ON ' + fopObj[0].vendorCode;
+
+        const maxlen = this.remarkHelper.getMaxLength('Itinerary');
+
+        if (acc3.length > maxlen) {
+            const lessChar: number = (acc3.length - Number(maxlen));
+            const templen: number = accounting.description.length - (lessChar + 1);
+            const tempdec = accounting.description.substr(0, templen);
+            acc3 = 'PAID ' + tempdec + ' CF-' + accounting.supplierConfirmatioNo +
+                ' CAD' + accounting.baseAmount + ' PLUS ' + ttltax + ' TAX ON ' + fopObj[0].vendorCode;
+        }
+
+        remarkList.push(this.getRemarksModel(acc3, 'I', 'RI', accounting.segmentNo.toString()));
     }
 
     processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {

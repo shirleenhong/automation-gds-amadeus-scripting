@@ -51,4 +51,24 @@ export class RemarkHelper {
 
         return this.createRemark(remark, 'RI', 'I');
     }
+
+    getMaxLength(remtype) {
+        let maxlen = 0;
+        switch (remtype) {
+            case 'General': {
+                maxlen = 127;
+                break;
+            }
+            case 'Itinerary': {
+                maxlen = 65;
+                break;
+            }
+            default: {
+                maxlen = 127;
+                break;
+            }
+        }
+        return maxlen;
+
+    }
 }

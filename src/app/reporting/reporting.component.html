@@ -1,10 +1,12 @@
+<form [formGroup]="reportingForm">
+
 <div class="reportingContainer">
 
-  <div class="row">
+  <div class="row form-group">
     <div class="col">
       BSP Routing Code :
-      <select id="bspRouteCode" class="form-control" [(ngModel)]="reportingView.routeCode"
-        [disabled]='reportingView.isDisabled'>
+      <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode" [(ngModel)]="reportingView.routeCode"
+         required>
         <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
           {{item.itemText}}
         </option>
@@ -13,7 +15,7 @@
 
     <div class="col">
       Destination Code:
-      <input type="text" class="form-control" placeholder="select a destination Code"
+      <input type="text" class="form-control" formControlName="destinationList" name="destinationList" placeholder="select a destination Code"
         [(ngModel)]="reportingView.destination" id="destinationList" list="dynamicDestinationCode"
         [disabled]='reportingView.isDisabledDest' />
       <datalist id="dynamicDestinationCode">
@@ -22,7 +24,7 @@
     </div>
   </div>
 
-  <div *ngIf="isRbmRbp()">
+  <div *ngIf="isRbmRbp()" class="form-group">
     <div class="row">
       <div class="col">
         Does this PNR contain travel to any countries listed below?
@@ -31,7 +33,7 @@
 
     <div class="row">
       <div class="col-6">
-        <select class="form-control" required id="u86" name="u86">
+        <select class="form-control" required id="u86" name="u86" formControlName="u86">
           <option *ngFor="let item of countryList">{{item}}</option>
         </select>
       </div>
@@ -42,29 +44,29 @@
     <div class="row">
       <div class="col" *ngIf="isCVC">
         Name of Company Traveller Works For :
-        <input type="text" class="form-control" [(ngModel)]="reportingView.companyName" id="companyName" required
-          maxlength="35" [disabled]="!isCVC" placeholder="e.g. CWT" />
+        <input class="form-control" [(ngModel)]="reportingView.companyName" id="companyName" formControlName="companyName" required
+          maxlength="35" [disabled]="!isCVC" placeholder="e.g. CWT" 
+          [ngClass]="{ 'is-invalid': f.companyName.touched && f.companyName.invalid }" required />
       </div>
     </div>
 
-
     <div *ngIf="!checkInsurance()">
-      <div class="row">
+      <div class="row form-group">
         <div class="col">
           Did client accept cancellation insurance?
         </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group" >
         <div class="col">
-          <input type="radio" name="showInsurance" (change)="isHidden=!isHidden" checked="true" required
+          <input type="radio" name="showInsurance" formControlName="showInsuranceYes" (change)="isHidden=!isHidden" checked="true" required
             [disabled]="checkInsurance()" />Yes - Cancellation Insurance Accepted
         </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
         <div class="col">
-          <input type="radio" name="showInsurance" (change)="isHidden=!isHidden" [disabled]="checkInsurance()"
+          <input type="radio" name="showInsurance" formControlName="showInsuranceNo"  (change)="isHidden=!isHidden" [disabled]="checkInsurance()"
             required />No
           -
           Cancellation Insurance Declined
@@ -73,12 +75,14 @@
 
     </div>
 
-    <div class="row" *ngIf="isHidden">
+    <div class="row form-group" *ngIf="isHidden">
       <div class="col">
         Insurance Declined Reason:
-        <input type="text" class="form-control" maxlength="35" [(ngModel)]="reportingView.insuranceDeclinedReason"
+        <input type="text" class="form-control" formControlName="insuranceDeclinedReason" maxlength="35" [(ngModel)]="reportingView.insuranceDeclinedReason"
           id="insuranceDeclinedReason" placeholder="Reason Why Insurance Declined" />
       </div>
     </div>
   </div>
 </div>
+
+</form>

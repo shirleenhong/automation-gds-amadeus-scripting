@@ -13,4 +13,5 @@ export class ReportingViewModel {
     isDisabledDest = false;
     sfcLineAdded: boolean;
     leisureFeeType = 0;
+    showInsurance = false;
 }

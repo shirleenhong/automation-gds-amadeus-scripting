@@ -21,22 +21,22 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   constructor(private fb: FormBuilder) {
     this.group = this.fb.group({
       adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-      userIdFirstWay: new FormControl(''),
-      baseCost: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      taxesPerAdult: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      tourCurrencyType: new FormControl(''),
+      baseCost: new FormControl('', [Validators.maxLength(8)]),
+      taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
       childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-      childBaseCost: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      insurancePerAdult: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      insurancePerChild: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      taxesPerChild: new FormControl('', [Validators.maxLength(7), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      childBaseCost: new FormControl('', [Validators.maxLength(8)]),
+      insurancePerAdult: new FormControl('', [Validators.maxLength(7)]),
+      insurancePerChild: new FormControl('', [Validators.maxLength(7)]),
+      taxesPerChild: new FormControl('', [Validators.maxLength(7)]),
       infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-      totalCostPerInfant: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
-      depositPaid: new FormControl('', [Validators.pattern('^[0-9]+\\.[0-9][0-9]$')]),
+      totalCostPerInfant: new FormControl(''),
+      depositPaid: new FormControl(''),
       totalCostHoliday: new FormControl(''),
       lessDepositPaid: new FormControl(''),
       balanceToBePaid: new FormControl(''),
       balanceDueDate: new FormControl(''),
-      commisionAmount: new FormControl('', [Validators.maxLength(8), Validators.pattern('^[0-9]+\\.[0-9][0-9]$')])
+      commisionAmount: new FormControl('', [Validators.maxLength(8)])
     }, { updateOn: 'blur' });
   }
 
@@ -149,6 +149,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     console.log('tour package call');
     const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
     this.group.patchValue({ totalCostHoliday: this.decPipe.transform(v, '1.2-2') });
+
     this.computeBalanceToBePaid();
     // console.log('total cost holiday');
     // console.log(this.group.value.totalCostHoliday);
@@ -171,25 +172,28 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   computeAdultCost() {
     let baseCost = 0;
     if (this.group.value.baseCost !== '') {
-      baseCost = (parseInt(this.group.value.baseCost, 0));
+      baseCost = (Number(this.group.value.baseCost));
     }
+    console.log('basecost ' + baseCost);
     let ipa = 0;
     if (this.group.value.insurancePerAdult !== '') {
-      ipa = (parseInt(this.group.value.insurancePerAdult, 0));
+      ipa = (Number(this.group.value.insurancePerAdult));
     }
     let tpa = 0;
     if (this.group.value.taxesPerAdult !== '') {
-      tpa = (parseInt(this.group.value.taxesPerAdult, 0));
+      tpa = (Number(this.group.value.taxesPerAdult));
     }
     const sum = (baseCost + ipa + tpa);
 
+    console.log('sum ' + sum);
+
     let adultCount = 0;
     if (this.group.value.adultNum !== '') {
-      adultCount = (parseInt(this.group.value.adultNum, 0));
+      adultCount = (Number(this.group.value.adultNum));
     }
 
-    let result = adultCount * sum;
-    console.log(result);
+    let result = (adultCount * sum);
+    console.log('result adult ' + result);
     if (Number.isNaN(result)) {
       result = 0;
     }
@@ -199,24 +203,24 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   computeChildCost() {
     let childBaseCost = 0;
     if (this.group.value.childBaseCost !== '') {
-      childBaseCost = (parseInt(this.group.value.childBaseCost, 0));
+      childBaseCost = (Number(this.group.value.childBaseCost));
     }
 
     let ipc = 0;
     if (this.group.value.insurancePerChild !== '') {
-      ipc = (parseInt(this.group.value.insurancePerChild, 0));
+      ipc = (Number(this.group.value.insurancePerChild));
     }
 
     let tpc = 0;
     if (this.group.value.taxesPerChild !== '') {
-      tpc = (parseInt(this.group.value.taxesPerChild, 0));
+      tpc = (Number(this.group.value.taxesPerChild));
     }
 
     const sum = (childBaseCost + ipc + tpc);
 
     let childCount = 0;
     if (this.group.value.childrenNumber !== '') {
-      childCount = (parseInt(this.group.value.childrenNumber, 0));
+      childCount = (Number(this.group.value.childrenNumber));
     }
 
     let result = childCount * sum;
@@ -224,7 +228,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     if (Number.isNaN(result)) {
       result = 0;
     }
-
+    console.log('result child ' + result);
     return result;
   }
 
@@ -233,20 +237,22 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
     let tcpa = 0;
     if (this.group.value.totalCostPerInfant !== '') {
-      tcpa = (parseInt(this.group.value.totalCostPerInfant, 0));
+      tcpa = (Number(this.group.value.totalCostPerInfant));
     }
 
     const sum = tcpa;
 
     let infantCount = 0;
     if (this.group.value.infantNumber !== '') {
-      infantCount = (parseInt(this.group.value.infantNumber, 0));
+      infantCount = (Number(this.group.value.infantNumber));
     }
 
     let result = infantCount * sum;
     if (Number.isNaN(result)) {
       result = 0;
     }
+
+    console.log('result infant ' + result);
     return result;
   }
 

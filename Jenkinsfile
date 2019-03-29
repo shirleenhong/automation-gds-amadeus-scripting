@@ -29,6 +29,7 @@ pipeline {
 
     // booleanParam(name: 'RUN_STATIC_SCAN', defaultValue: false, description: 'Execute Static security Scan?')
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
+    // booleanParam(name: 'BUILD_AND_PREPARE', defaultValue: false, description: 'Build and Prepare?')
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
     // booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression against Dev Environment?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')

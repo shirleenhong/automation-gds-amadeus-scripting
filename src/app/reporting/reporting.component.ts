@@ -39,12 +39,6 @@ export class ReportingComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(private pnrService: PnrService, private ddbService: DDBService) { 
 
   }
-
-  ngAfterViewInit() {
-
-  
-  }
-
   get f() { return this.reportingForm.controls; }
 
   ngOnChanges(changes: SimpleChanges) { }

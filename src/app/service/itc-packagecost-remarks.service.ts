@@ -67,12 +67,11 @@ export class ITCPackageCostRemarkService {
         rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CAR RENTAL', group.value.carAdult, null));
 
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('TOTAL HOLIDAY COST', (parseFloat(group.value.balance) + parseFloat(group.value.depAdult)), null));
+        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('TOTAL HOLIDAY COST', (parseFloat(group.value.holidayCost)), null));
 
         console.log('Total Holiday');
         // tslint:disable-next-line:max-line-length
         rmGroup.remarks.push(this.remarkHelper.processRiiRemark('LESS DEPOSIT PAID', group.value.depAdult, null));
-
 
 
         rmGroup.remarks.push(this.remarkHelper.processRiiRemark('BALANCE DUE', group.value.balance, null));

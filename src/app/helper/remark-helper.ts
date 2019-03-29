@@ -46,7 +46,7 @@ export class RemarkHelper {
         const r = 15;
         const l = 30;
 
-        const amtStr = this.decPipe.transform(amount.toString().replace(',', ''), '1.2-2');
+        const amtStr = this.decPipe.transform(amount.toString().replace(',', ''), '1.2-2').replace(',', '');
         const z = l - (label.length + amtStr.length);
         let remark = '';
 

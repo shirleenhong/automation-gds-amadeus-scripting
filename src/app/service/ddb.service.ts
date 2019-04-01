@@ -28,6 +28,14 @@ export class DDBService implements OnInit {
 
   }
 
+  async sampleSupplier() {
+
+    this.getRequest('SupplierDealCodes?ClientSubUnitGuid=A:D325C?').subscribe(x => { alert(JSON.stringify(x)); }
+      , err => { alert(JSON.stringify(err)); });
+
+  }
+
+
   async getToken() {
     if (this.isTokenExpired === true || this.token === '') {
       const bodyInfo = { client_id: environment.clientId, client_secret: environment.clientSecret, grant_type: 'client_credentials' };
@@ -48,10 +56,13 @@ export class DDBService implements OnInit {
 
   getRequest(apiUrl: string): Observable<any> {
     this.getToken();
-    const hds = new HttpHeaders().append('Content", itemText:"Type', 'application/json');
+    const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient.get<any>('/api/' + apiUrl, { headers: hds });
   }
 
+  testsample() {
+    this.sample();
+  }
 
   getProvinces(): any {
     return [{ itemValue: 'ON', itemText: 'Ontario' },
@@ -107,7 +118,7 @@ export class DDBService implements OnInit {
     { itemText: 'VI- Visa', itemValue: 'VI' },
     { itemText: 'MC - Mastercard', itemValue: 'MC' },
     { itemText: 'AX - American Express', itemValue: 'AX' },
-    { itemText: 'DI -Diners', itemValue: 'DC' }
+    { itemText: 'DC -Diners', itemValue: 'DC' }
     ];
 
   }

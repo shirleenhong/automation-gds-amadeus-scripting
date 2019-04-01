@@ -59,7 +59,11 @@ export class TourPackageRemarksService {
         rmGroup.remarks.push(this.remarkHelper.createRemark('LESS DEPOSIT PAID ' + (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'I'));
         rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'I'));
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) + ' IS DUE ' + datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') + ' ----', 'RI', 'I'));
+        if (group.controls.balanceDueDate.value) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value)
+                + ' IS DUE ' + datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') + ' ----', 'RI', 'I'));
+        }
+
         rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'I'));
         if (group.controls.balanceDueDate.value.length > 0) {
             // tslint:disable-next-line:max-line-length

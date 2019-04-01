@@ -78,7 +78,11 @@ export class ITCPackageCostRemarkService {
 
 
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + group.value.balance + ' IS DUE ' + datePipe.transform(group.value.dueDate, 'dMMMyy') + '----', 'RI', 'I'));
+        if (group.value.dueDate) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + group.value.balance + ' IS DUE ' +
+                datePipe.transform(group.value.dueDate, 'dMMMyy') + '----', 'RI', 'I'));
+        }
+
         console.log('Balance of');
 
         if (group.value.dueDate.length > 0) {

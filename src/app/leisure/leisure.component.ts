@@ -34,13 +34,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
 
   constructor(private pnrService: PnrService,
-    private remarkService: RemarkService,
-    private paymentRemarkService: PaymentRemarkService,
-    private reportingRemarkService: ReportingRemarkService,
-    private segmentService: SegmentService,
-    private tourPackageRemarksService: TourPackageRemarksService,
-    private itcPackageCostRemarkService: ITCPackageCostRemarkService,
-    private fb: FormBuilder
+              private remarkService: RemarkService,
+              private paymentRemarkService: PaymentRemarkService,
+              private reportingRemarkService: ReportingRemarkService,
+              private segmentService: SegmentService,
+              private tourPackageRemarksService: TourPackageRemarksService,
+              private itcPackageCostRemarkService: ITCPackageCostRemarkService,
+              private fb: FormBuilder
   ) {
     this.loadPNR();
   }
@@ -52,7 +52,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     //   this.reportingComponent.reportingView.leisureFeeType = val;
     //   this.reportingComponent.checkSFC();
     // });
-    //this.eventSubscribe = true;
+    // this.eventSubscribe = true;
   }
   ngAfterViewInit(): void {
   }
@@ -78,12 +78,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
+    remarkCollection.push(this.segmentService.setMandatoryRemarks());
+
 
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value !== null &&
-      this.remarkComponent.remarkForm.controls['packageList'].value !== ''
-      && this.remarkComponent.remarkForm.controls['packageList'].value !== "1") {
-      if (this.remarkComponent.remarkForm.controls['packageList'].value === 'ITC') {
+      this.remarkComponent.remarkForm.controls.packageList.value !== ''
+      && this.remarkComponent.remarkForm.controls.packageList.value !== '1') {
+      if (this.remarkComponent.remarkForm.controls.packageList.value === 'ITC') {
         remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));
       } else {
         remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));

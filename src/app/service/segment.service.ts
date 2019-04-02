@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
 import { forEach } from '@angular/router/src/utils/collection';
 import { PnrService } from './pnr.service';
-
+import { RemarkHelper } from '../helper/remark-helper';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +18,7 @@ import { PnrService } from './pnr.service';
 
 export class SegmentService {
 
-    constructor(private pnrService: PnrService) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
 
     GetSegmentRemark(dataModel: TourSegmentViewModel) {
@@ -61,7 +61,6 @@ export class SegmentService {
         return passGroup;
 
     }
-
 
     getRetentionLine() {
 
@@ -109,14 +108,57 @@ export class SegmentService {
         return passGroup;
     }
 
+    setMandatoryRemarks() {
+        const mandatoryRemarkGroup = new RemarkGroup();
+        mandatoryRemarkGroup.group = 'Mandatory Remarks';
+        const LLBMandatoryRemark = this.pnrService.getRIILineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
+        const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
 
-    padDate(num) {
+        if (LLBMandatoryRemark === '') {
+            const command = 'PBN/LLB MANDATORY REMARKS';
+            mandatoryRemarkGroup.cryptics.push(command);
+        }
+
+        if (this.hasMexicoSegment()) {
+            if (MexicoMandatoryRemark === '') {
+                const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
+                mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+            }
+        }
+        return mandatoryRemarkGroup;
+    }
+
+    hasMexicoSegment(): boolean {
+    let res: boolean;
+    res = false;
+    const pnrAirSegments = this.pnrService.pnrObj.allAirSegments;
+    // check if this can be retrieved from DDB
+    const mexicoCities: Array<string> =
+        ['ACA', 'MEX', 'TIJ', 'CUN', 'CNA', 'AGU', 'XAL', 'AZG', 'AZP', 'CPA', 'CYW', 'CTM', 'CZA', 'CUU',
+         'ACN', 'CUA', 'CME', 'MMC', 'CJS', 'CEN', 'CVM', 'CLQ', 'CJT', 'CZM', 'CVJ', 'CUL', 'DGO', 'ESE',
+         'GDL', 'GSV', 'GYM', 'GUB', 'HMO', 'HUX', 'ISJ', 'ZIH', 'IZT', 'LAP', 'LOM', 'LZC', 'BJX', 'LTO',
+         'SJD', 'LMM', 'ZLO', 'MAM', 'MTH', 'MZT', 'MID', 'MXL', 'MTT', 'LOV', 'MTY', 'NTR', 'MLM', 'MUG',
+         'NVJ', 'NOG', 'NCG', 'NLD', 'OAX', 'PQM', 'PDS', 'PCM', 'PAZ', 'PBC', 'PXM', 'PPE', 'PVR', 'QRO',
+         'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
+         'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
+    for (const airSegment of pnrAirSegments) {
+        const origin = airSegment.fullNode.legInfo.legTravelProduct.boardPointDetails.trueLocationId;
+        const destination = airSegment.fullNode.legInfo.legTravelProduct.offpointDetails.trueLocationId;
+
+        if (mexicoCities.indexOf(origin) !== -1 || mexicoCities.indexOf(destination) !== -1) {
+            res = true; }
+    }
+    return res;
+}
+
+padDate(num: string) {
         let padnum = num;
         if (num.length < 2) {
             padnum = '0' + num;
         }
         return padnum;
     }
+
 
 }
 

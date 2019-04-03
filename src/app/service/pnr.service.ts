@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { debug } from 'util';
 
 declare var PNR: any;
 
@@ -54,6 +55,16 @@ export class PnrService {
     return '';
   }
 
+  getItineraryLanguage(): string {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf('LANGUAGE-') === 0) {
+          return rm.freeFlowText; // returns e.g. EN-GB, FR-FR
+        }
+      }
+    }
+    return '';
+  }
 
   getCFLine(): CfRemarkModel {
     const cfLine = new CfRemarkModel();
@@ -161,20 +172,6 @@ export class PnrService {
           misc.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(miscendpoint);
       }
-      // for (const rm of this.pnrObj.miscSegments) {
-      //   // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
-      //   const longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
-      //   let endpoint = null;
-      //   if (longFreetext.indexOf('/EC-') > -1) {
-      //     endpoint = longFreetext.substr(
-      //       longFreetext.indexOf('/EC-') + 4,
-      //       3
-      //     );
-      //   }
-      //   if (endpoint != null) {
-      //     this.pushDestination(endpoint);
-      //   }
-      // }
       return this.destinationCity;
     }
   }

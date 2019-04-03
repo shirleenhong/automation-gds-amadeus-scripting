@@ -17,6 +17,15 @@ import { RemarkHelper } from '../helper/remark-helper';
 })
 
 export class SegmentService {
+    // check if this can be retrieved from ddb
+    mexicoCities: Array<string> =
+    ['ACA', 'MEX', 'TIJ', 'CUN', 'CNA', 'AGU', 'XAL', 'AZG', 'AZP', 'CPA', 'CYW', 'CTM', 'CZA', 'CUU',
+     'ACN', 'CUA', 'CME', 'MMC', 'CJS', 'CEN', 'CVM', 'CLQ', 'CJT', 'CZM', 'CVJ', 'CUL', 'DGO', 'ESE',
+     'GDL', 'GSV', 'GYM', 'GUB', 'HMO', 'HUX', 'ISJ', 'ZIH', 'IZT', 'LAP', 'LOM', 'LZC', 'BJX', 'LTO',
+     'SJD', 'LMM', 'ZLO', 'MAM', 'MTH', 'MZT', 'MID', 'MXL', 'MTT', 'LOV', 'MTY', 'NTR', 'MLM', 'MUG',
+     'NVJ', 'NOG', 'NCG', 'NLD', 'OAX', 'PQM', 'PDS', 'PCM', 'PAZ', 'PBC', 'PXM', 'PPE', 'PVR', 'QRO',
+     'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
+     'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
@@ -111,47 +120,85 @@ export class SegmentService {
     setMandatoryRemarks() {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
-        const LLBMandatoryRemark = this.pnrService.getRIILineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
-        const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+        debugger;
+        const itinLanguage = this.pnrService.getItineraryLanguage();
 
-        if (LLBMandatoryRemark === '') {
-            const command = 'PBN/LLB MANDATORY REMARKS';
-            mandatoryRemarkGroup.cryptics.push(command);
-        }
-
-        if (this.hasMexicoSegment()) {
-            if (MexicoMandatoryRemark === '') {
-                const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
-                mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+        if (itinLanguage === 'EN-EN' || itinLanguage === 'EN-GB') {
+            const LLBMandatoryRemarkEN = this.pnrService.getRIILineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
+            if (LLBMandatoryRemarkEN === '') {
+                const commandEN = 'PBN/LLB MANDATORY REMARKS *';
+                mandatoryRemarkGroup.cryptics.push(commandEN);
             }
+
+            const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+
+            if (this.hasFlightSegment(this.mexicoCities) && MexicoMandatoryRemark === '') {
+                    const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
+                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                }
         }
+
+        if (itinLanguage === 'FR-FR') {
+            const LLBMandatoryRemarkFR = this.pnrService.getRIILineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
+            if (LLBMandatoryRemarkFR === '') {
+                const commandFR = 'PBN/LLB MANDATORY FRENCH *';
+                mandatoryRemarkGroup.cryptics.push(commandFR);
+            }
+
+            const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
+
+            if (this.hasFlightSegment(this.mexicoCities) && MexicoMandatoryRemark === '') {
+                    let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
+                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                    command = 'POUR ENTRER AU MEXIQUE';
+                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                }
+        }
+
         return mandatoryRemarkGroup;
     }
 
-    hasMexicoSegment(): boolean {
+    hasFlightSegment(cities: string[]): boolean {
     let res: boolean;
     res = false;
-    const pnrAirSegments = this.pnrService.pnrObj.allAirSegments;
-    // check if this can be retrieved from DDB
-    const mexicoCities: Array<string> =
-        ['ACA', 'MEX', 'TIJ', 'CUN', 'CNA', 'AGU', 'XAL', 'AZG', 'AZP', 'CPA', 'CYW', 'CTM', 'CZA', 'CUU',
-         'ACN', 'CUA', 'CME', 'MMC', 'CJS', 'CEN', 'CVM', 'CLQ', 'CJT', 'CZM', 'CVJ', 'CUL', 'DGO', 'ESE',
-         'GDL', 'GSV', 'GYM', 'GUB', 'HMO', 'HUX', 'ISJ', 'ZIH', 'IZT', 'LAP', 'LOM', 'LZC', 'BJX', 'LTO',
-         'SJD', 'LMM', 'ZLO', 'MAM', 'MTH', 'MZT', 'MID', 'MXL', 'MTT', 'LOV', 'MTY', 'NTR', 'MLM', 'MUG',
-         'NVJ', 'NOG', 'NCG', 'NLD', 'OAX', 'PQM', 'PDS', 'PCM', 'PAZ', 'PBC', 'PXM', 'PPE', 'PVR', 'QRO',
-         'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
-         'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
-    for (const airSegment of pnrAirSegments) {
-        const origin = airSegment.fullNode.legInfo.legTravelProduct.boardPointDetails.trueLocationId;
-        const destination = airSegment.fullNode.legInfo.legTravelProduct.offpointDetails.trueLocationId;
 
-        if (mexicoCities.indexOf(origin) !== -1 || mexicoCities.indexOf(destination) !== -1) {
+    const pnr = this.pnrService.pnrObj;
+    // check if this can be retrieved from DDB
+
+    for (const airSegment of pnr.airSegments) {
+        const origin = airSegment.fullNode.travelProduct.boardpointDetail.cityCode;
+        const destination = airSegment.fullNode.travelProduct.offpointDetail.cityCode;
+
+        if (cities.indexOf(origin) !== -1 || cities.indexOf(destination) !== -1) {
             res = true; }
     }
+
+    for (const car of pnr.auxCarSegments) {
+        const carendpoint =
+          car.fullNode.travelProduct.boardpointDetail.cityCode;
+        if (cities.indexOf(carendpoint) !== -1) {
+            res = true; }
+      }
+
+    for (const hotel of pnr.auxHotelSegments) {
+        const hotelendpoint =
+          hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+        if (cities.indexOf(hotelendpoint) !== -1) {
+            res = true; }
+      }
+
+    for (const misc of pnr.miscSegments) {
+        const miscendpoint =
+          misc.fullNode.travelProduct.boardpointDetail.cityCode;
+        if (cities.indexOf(miscendpoint) !== -1) {
+            res = true; }
+      }
+
     return res;
 }
 
-padDate(num: string) {
+
+    padDate(num: string) {
         let padnum = num;
         if (num.length < 2) {
             padnum = '0' + num;

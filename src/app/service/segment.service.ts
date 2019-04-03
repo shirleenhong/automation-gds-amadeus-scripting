@@ -11,6 +11,7 @@ import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
 import { forEach } from '@angular/router/src/utils/collection';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
+import { SwitchView } from '@angular/common/src/directives/ng_switch';
 
 @Injectable({
     providedIn: 'root',
@@ -121,44 +122,45 @@ export class SegmentService {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
         const itinLanguage = this.pnrService.getItineraryLanguage();
-
-        debugger;
-        if (itinLanguage === 'EN-EN' || itinLanguage === 'EN-GB') {
-            const LLBMandatoryRemarkEN = this.pnrService.getRIILineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
-            if (LLBMandatoryRemarkEN === '') {
-                const commandEN = 'PBN/LLB MANDATORY REMARKS *';
-                mandatoryRemarkGroup.cryptics.push(commandEN);
-            }
-
-            const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
-
-            if (this.hasFlightSegment(this.mexicoCities) && MexicoMandatoryRemark === '') {
-                    const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+        switch (true) {
+            case (itinLanguage === 'EN-GB' || itinLanguage === 'EN-EN') : {
+                const LLBMandatoryRemarkEN = this.pnrService.getRIILineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
+                if (LLBMandatoryRemarkEN === '') {
+                    const commandEN = 'PBN/LLB MANDATORY REMARKS *';
+                    mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
-        }
-
-        if (itinLanguage === 'FR-FR') {
-            const LLBMandatoryRemarkFR = this.pnrService.getRIILineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
-            if (LLBMandatoryRemarkFR === '') {
-                const commandFR = 'PBN/LLB MANDATORY FRENCH *';
-                mandatoryRemarkGroup.cryptics.push(commandFR);
+                const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+                if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
+                        const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
+                        mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                    }
+                break;
             }
-
-            const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
-
-            if (this.hasFlightSegment(this.mexicoCities) && MexicoMandatoryRemark === '') {
-                    let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
-                    command = 'POUR ENTRER AU MEXIQUE';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+            case (itinLanguage === 'FR-FR'): {
+                const LLBMandatoryRemarkFR = this.pnrService.getRIILineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
+                if (LLBMandatoryRemarkFR === '') {
+                    const commandFR = 'PBN/LLB MANDATORY FRENCH *';
+                    mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
+                const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
+                if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
+                        let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
+                        mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                        command = 'POUR ENTRER AU MEXIQUE';
+                        mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                    }
+                break;
+            }
+            default: {
+                return;
+                break;
+            }
         }
 
         return mandatoryRemarkGroup;
     }
 
-    hasFlightSegment(cities: string[]): boolean {
+    checkCityInSegments(cities: string[]): boolean {
     let res: boolean;
     res = false;
 

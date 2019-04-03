@@ -15,7 +15,7 @@
         <i class='fas fa-hand-holding-usd'></i> Payment
         <span class="cwt-logo"></span>
       </div>
-      <app-payment [paymentView]="leisure.paymentView"></app-payment>
+      <app-payment></app-payment>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
@@ -26,6 +26,7 @@
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
+
         <i class='far fa-list-alt'></i> Remarks
         <span class="cwt-logo"></span>
       </div>
@@ -36,7 +37,6 @@
 
   <button class="submitPnr" (click)="SubmitToPNR()">Submit To PNR</button>
 
-
 </div>
 
 <div class="loaderBody" *ngIf="!isPnrLoaded">
@@ -45,7 +45,8 @@
 
   </div>
   <div class="loader" *ngIf="errorPnrMsg!=''">
-    Unable to load PNR or no PNR is loaded in Amadeus.
+    {{errorPnrMsg}}
+
   </div>
 
 </div>

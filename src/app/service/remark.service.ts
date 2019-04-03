@@ -36,7 +36,7 @@ export class RemarkService {
         this.passiveSegmentElement = new Array<any>();
 
         remarkGroups.forEach(group => {
-            if (group.group != '' && group.group != '') {
+            if (group.group !== '' && group.group !== '') {
                 if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
                     group.deleteRemarkByIds.forEach(c => {
                         this.deleteRemarksByIds.push(c);
@@ -60,7 +60,7 @@ export class RemarkService {
 
                 if (group.remarks != null && group.remarks.length > 0) {
                     group.remarks.forEach(rem => {
-                        if (rem.remarkType == 'FS') {
+                        if (rem.remarkType === 'FS') {
                             this.remarksElement.push(this.getFSRemarksElement(rem));
                         } else {
                             // let test = this.getRemarkElement(rem);
@@ -238,7 +238,7 @@ export class RemarkService {
     deleteRemarks() {
         let deleteIds = '';
         this.deleteRemarksByIds.forEach(ids => { deleteIds += ids + ','; });
-        if (deleteIds != '') {
+        if (deleteIds !== '') {
 
             deleteIds = deleteIds.slice(0, -1);
             smartScriptSession.send('XE' + deleteIds);

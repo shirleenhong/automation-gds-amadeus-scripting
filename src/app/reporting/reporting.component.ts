@@ -5,7 +5,8 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChange,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
@@ -19,12 +20,16 @@ import {
   FormControl
 } from '@angular/forms';
 import { DDBService } from '../service/ddb.service';
+import { ConciergeUdidsComponent } from './concierge-udids/concierge-udids.component';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit, OnChanges {
+
+  @ViewChild(ConciergeUdidsComponent) conciergeComponent: ConciergeUdidsComponent;
+
   @Input()
   reportingView: ReportingViewModel;
   bspRouteCodeList: SelectItem[];

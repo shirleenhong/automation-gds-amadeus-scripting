@@ -10,25 +10,21 @@
 
     <div class="form-group  row">
       <div class="col-sm-4">APAY : </div>
-      <div class="col-sm-8">
+      <div class="col">
         <select autofocus id="bsp" class="form-control" name="bsp" required (change)="IsBSP($event.target.value)"
           [(ngModel)]="accountingRemarks.bsp" formControlName="bsp">
           <option *ngFor="let item of  bspList" [value]="item.itemValue">
             {{item.itemText}}
           </option>
         </select>
-
       </div>
-    </div>
+      <div class="col">MAC Line # : </div>
+      <div class="col">
 
-    <div class="form-group  row">
-      <div class="col-sm-4">MAC Line # : </div>
-      <div class="col-sm-8">
         <input type="text" maxlength="4" class="form-control" id="tkMacLine" [(ngModel)]="accountingRemarks.tkMacLine"
           name="tkMacLine" [ngModelOptions]="{standalone: true}" disabled />
       </div>
     </div>
-
 
     <div class="form-group  row">
       <div class="col-sm-4">Accounting Remark : </div>
@@ -76,21 +72,6 @@
       </div>
     </div>
 
-    <!-- <div class="form-group  row">
-    <div class="col-sm-4" >Supplier Code: </div>
-    <div class="col-sm-8">
-      <select autofocus  id="supplierCodeName" class="form-control" 
-      formControlName="supplierCodeName" name="supplierCodeName" 
-      [(ngModel)]="accountingRemarks.supplierCodeName" formControlName="supplierCodeName"
-      required >
-        <option *ngFor="let item of  supplierCodeList" [value]="item.supplierCode">
-                       {{item.supplierCode}} - {{item.supplierName}}
-                      </option>
-      </select>
-  </div>
-  </div> -->
-
-
     <div class="form-group  row">
       <div class="col-sm-4">Supplier Confirmation No: </div>
       <div class="col-sm-8">
@@ -130,15 +111,11 @@
 
       <div class="form-group  row">
         <div class="col-sm-4">Card Number</div>
-        <div class="col-sm-8">
+        <div class="col">
           <input type="cardNumber" class="form-control" id="ccNo" [(ngModel)]="accountingRemarks.cardNumber"
             maxlength="16" formControlName="cardNumber" name="cardNumber" NumberOnlyMask />
         </div>
-      </div>
-
-      <div class="form-group  row">
-        <div class="col-sm-4">Expiration Date: </div>
-        <div class="col-sm-8">
+        <div class="col-3">
           <input type="text" class="form-control" id="expDate" required formControlName="expDate" name="expDate"
             placeholder="MM/YY" (change)="checkDate($event.target.value)" [(ngModel)]="accountingRemarks.expDate"
             CCDateExpMask formControlName="expDate" />
@@ -146,39 +123,68 @@
       </div>
     </div>
 
+
+
     <div class="form-group  row">
-      <div class="col-sm-4">Base Amount :</div>
-      <div class="col-sm-8">
+      <div class="col-sm-4"></div>
+      <div class="col">
+        <div class="">Base Amount :</div>
         <input type="text" class="form-control" id="baseAmount" [(ngModel)]="accountingRemarks.baseAmount"
           formControlName="baseAmount" name="baseAmount" required placeholder="00.00" AmountMask />
       </div>
-    </div>
 
-    <div class="form-group  row">
-      <div class="col-sm-4">GST :</div>
-      <div class="col-sm-8">
+
+      <div class="col">
+        <div class="">GST :</div>
         <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemarks.gst"
           formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
       </div>
+
     </div>
 
+
+
     <div class="form-group  row">
-      <div class="col-sm-4">HST :</div>
-      <div class="col-sm-8">
+      <div class="col-sm-4"></div>
+      <div class="col">
+        <div class="">HST :</div>
         <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemarks.hst"
           formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
       </div>
-    </div>
 
-    <div class="form-group  row">
-      <div class="col-sm-4">QST :</div>
-      <div class="col-sm-8">
+
+      <div class="col">
+        <div class="">QST :</div>
         <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemarks.qst"
           formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
       </div>
+
+
     </div>
 
+
+
     <div *ngIf="accountingRemarks.bsp == 1">
+
+
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">Other Tax :</div>
+          <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
+            [(ngModel)]="accountingRemarks.otherTax" formControlName="otherTax" name="otherTax" required
+            placeholder="00.00" AmountMask />
+        </div>
+
+
+        <div class="col">
+          <div class="">Commision w/o Tax :</div>
+          <input type="text" class="form-control" id="commisionWithoutTax"
+            [(ngModel)]="accountingRemarks.commisionWithoutTax" formControlName="commisionWithoutTax"
+            name="commisionWithoutTax" required placeholder="00.00" AmountMask />
+        </div>
+      </div>
+
       <div class="form-group  row">
         <div class="col-sm-4">Ticket Number: </div>
         <div class="col-sm-8">
@@ -186,25 +192,6 @@
             [(ngModel)]="accountingRemarks.tktLine" formControlName="tktLine" name="tktLine" NumberOnlyMask />
         </div>
       </div>
-
-      <div class="form-group  row">
-        <div class="col-sm-4">Other Tax :</div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
-            [(ngModel)]="accountingRemarks.otherTax" formControlName="otherTax" name="otherTax" required
-            placeholder="00.00" AmountMask />
-        </div>
-      </div>
-
-      <div class="form-group  row">
-        <div class="col-sm-4">Commision Without Tax :</div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="commisionWithoutTax"
-            [(ngModel)]="accountingRemarks.commisionWithoutTax" formControlName="commisionWithoutTax"
-            name="commisionWithoutTax" required placeholder="00.00" AmountMask />
-        </div>
-      </div>
-
     </div>
 
     <div *ngIf="accountingRemarks.bsp == 2">

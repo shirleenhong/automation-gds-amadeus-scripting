@@ -120,9 +120,9 @@ export class SegmentService {
     setMandatoryRemarks() {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
-        debugger;
         const itinLanguage = this.pnrService.getItineraryLanguage();
 
+        debugger;
         if (itinLanguage === 'EN-EN' || itinLanguage === 'EN-GB') {
             const LLBMandatoryRemarkEN = this.pnrService.getRIILineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
             if (LLBMandatoryRemarkEN === '') {

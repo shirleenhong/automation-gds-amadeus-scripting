@@ -59,7 +59,7 @@ export class PnrService {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
         if (rm.freeFlowText.indexOf('LANGUAGE-') === 0) {
-          return rm.freeFlowText; // returns e.g. EN-GB, FR-FR
+          return rm.freeFlowText.substr(9); // returns e.g. EN-GB, FR-FR
         }
       }
     }

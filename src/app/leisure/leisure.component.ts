@@ -85,7 +85,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     const concierge = this.reportingComponent.conciergeComponent;
     remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
-      concierge.getConciergeForDeletion(), concierge.getConciergeu30()));
+      concierge.getConciergeForDeletion(), concierge.getConciergeRetain()));
 
 
     // tslint:disable-next-line:no-string-literal

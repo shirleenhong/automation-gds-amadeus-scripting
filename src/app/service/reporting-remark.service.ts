@@ -87,14 +87,14 @@ export class ReportingRemarkService {
   }
 
 
-  getConciergeUdids(concierge: any, forDeletion: Array<any>, isU30: boolean) {
+  getConciergeUdids(concierge: any, forDeletion: Array<any>, forRetain: Array<any>) {
     let remText = '';
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Concierge';
     rmGroup.remarks = new Array<RemarkModel>();
     rmGroup.deleteRemarkByIds = new Array<string>();
-    alert(concierge.value.hotelName);
-    alert('xxx' + concierge.valid);
+    // alert(concierge.value.hotelName);
+    // alert('xxx' + concierge.valid);
 
     if (!concierge.valid) { return; }
 
@@ -147,7 +147,7 @@ export class ReportingRemarkService {
     if (concierge.value.hotelName) {
       remText = 'U13/-' + concierge.value.hotelName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-    } else {
+    } else if (forRetain.indexOf('U13') === -1) {
       remText = 'U13/-' + 'NO HTL BKD';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
@@ -167,7 +167,7 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (!isU30) {
+    if (forRetain.indexOf('U30') === -1) {
       const datePipe = new DatePipe('en-US');
       const dateToday = datePipe.transform(Date.now(), 'ddMMM');
       remText = 'U30/-TGIF' + dateToday;

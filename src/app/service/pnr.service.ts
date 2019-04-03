@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { debug } from 'util';
+import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 
 declare var PNR: any;
 
@@ -14,10 +16,12 @@ export class PnrService {
   isPNRLoaded = false;
   errorMessage = '';
   destinationCity = [{ endpoint: '' }];
+  cfLine: CfRemarkModel;
 
   constructor() { }
 
   async getPNR(): Promise<void> {
+    this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
       (res: any) => {
@@ -54,20 +58,34 @@ export class PnrService {
     return '';
   }
 
-
-  getCFLine(): CfRemarkModel {
-    const cfLine = new CfRemarkModel();
+  getItineraryLanguage(): string {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('CF/-') === 0) {
-          cfLine.lastLetter = rm.freeFlowText.substr(-1);
-          cfLine.cfa = rm.freeFlowText.substr(4, 3);
-          cfLine.code = rm.freeFlowText;
-          return cfLine;
+        if (rm.freeFlowText.indexOf('LANGUAGE-') === 0) {
+          return rm.freeFlowText.substr(9); // returns e.g. EN-GB, FR-FR
         }
       }
     }
+    return '';
+  }
 
+  getCFLine(): CfRemarkModel {
+    if (this.cfLine == null) {
+      const cfLine = new CfRemarkModel();
+      if (this.isPNRLoaded) {
+        for (const rm of this.pnrObj.rmElements) {
+          if (rm.freeFlowText.indexOf('CF/-') === 0) {
+            cfLine.lastLetter = rm.freeFlowText.substr(-1);
+            cfLine.cfa = rm.freeFlowText.substr(4, 3);
+            cfLine.code = rm.freeFlowText;
+            return cfLine;
+          }
+        }
+      } else {
+        return this.cfLine;
+      }
+    }
+    return null;
   }
 
   getFSLineNumber() {
@@ -79,6 +97,16 @@ export class PnrService {
     return '';
   }
 
+  getRIILineNumber(searchText: string) {
+    if (this.isPNRLoaded) {
+      for (const rii of this.pnrObj.riiElements) {
+         if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {
+              return rii.elementNumber;
+         }
+      }
+    }
+    return '';
+  }
 
   getPassengers() {
     if (this.isPNRLoaded) {
@@ -151,20 +179,6 @@ export class PnrService {
           misc.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(miscendpoint);
       }
-      // for (const rm of this.pnrObj.miscSegments) {
-      //   // var endpoint = rm.fullNode.itineraryFreetext.boardpointDetail.cityCode;
-      //   const longFreetext = rm.fullNode.itineraryFreetext.longFreetext;
-      //   let endpoint = null;
-      //   if (longFreetext.indexOf('/EC-') > -1) {
-      //     endpoint = longFreetext.substr(
-      //       longFreetext.indexOf('/EC-') + 4,
-      //       3
-      //     );
-      //   }
-      //   if (endpoint != null) {
-      //     this.pushDestination(endpoint);
-      //   }
-      // }
       return this.destinationCity;
     }
   }
@@ -191,52 +205,6 @@ export class PnrService {
     return elementNumbers;
   }
 
-  getMISRetentionLine() {
-    if (this.isPNRLoaded) {
-      const segmentDates = Array<Date>();
-      const datePipe = new DatePipe('en-US');
-      const itineraryInfo = this.pnrObj.fullNode.response.model.output.response.originDestinationDetails.itineraryInfo;
-      const misLineNumber = new Array<string>();
-
-      itineraryInfo.forEach(x => {
-        const longFreetext = x.itineraryFreetext.longFreetext;
-        if (longFreetext.indexOf('ED-') !== -1) {
-          let formattedDate = new Date();
-          let parsedDate: string;
-          parsedDate = longFreetext.substr(longFreetext.indexOf('ED-'), 8).split('-')[1];
-          formattedDate = new Date(datePipe.transform(parsedDate, 'dd-MM') + '-' + formattedDate.getFullYear());
-          segmentDates.push(formattedDate);
-        }
-
-        if (longFreetext.indexOf('-THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL') === 0) {
-          misLineNumber.push(x.elementManagementItinerary.lineNumber);
-        }
-      });
-
-      const lastSegmentDate = new Date(Math.max.apply(null, segmentDates));
-      const oDate = new Date();
-      oDate.setDate(lastSegmentDate.getDate() + 180);
-
-      const maxDate = new Date();
-      maxDate.setDate(lastSegmentDate.getDate() + 331);
-      let finalDate: string;
-
-      if (oDate.getDate() > maxDate.getDate()) {
-        finalDate = datePipe.transform(maxDate, 'ddMMM');
-      } else {
-        finalDate = datePipe.transform(oDate, 'ddMMM');
-      }
-
-      const command = 'RU1AHK1YYZ' + finalDate + '/THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL';
-      const MISGroup = new RemarkGroup();
-      MISGroup.group = 'MIS Retention';
-      MISGroup.deleteRemarkByIds = misLineNumber;
-      MISGroup.cryptics.push(command);
-      return MISGroup;
-    } else {
-      return new RemarkGroup();
-    }
-  }
 
   getSegmentTatooNumber() {
     const segments = new Array<any>();
@@ -278,14 +246,14 @@ export class PnrService {
 
   private getLastDate(airdate: any, lastDeptDate: Date) {
     const lairdate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
-    if (lairdate > lastDeptDate) {
+    if (lairdate > lastDeptDate) { } {
       lastDeptDate = lairdate;
     }
     return lastDeptDate;
   }
 
 
-  getLatestDepartureDate() {
+    getLatestDepartureDate() {
     let lastDeptDate = new Date();
     for (const air of this.pnrObj.airSegments) {
       const airdate = air.fullNode.travelProduct.product.depDate;
@@ -322,6 +290,108 @@ export class PnrService {
       }
     }
     return remarks;
+  }
+
+  getMatrixAccountingLineNumbers() {
+    const lineNumbers = [];
+    for (const rm of this.pnrObj.rmElements) {
+      if (rm.freeFlowText.indexOf('MAC/-') === 0) {
+        lineNumbers.push(rm.elementNumber);
+      }
+    }
+    return lineNumbers;
+  }
+
+
+  getAccountingRemarks(): Array<MatrixAccountingModel> {
+    const matrixModels = new Array<MatrixAccountingModel>();
+    let macNum = '';
+    for (const rm of this.pnrObj.rmElements) {
+      if (rm.freeFlowText.indexOf('MAC/-') === 0) {
+        let model: MatrixAccountingModel;
+        macNum = rm.freeFlowText.match(/LK-MAC[0-9]*/g);
+        if (macNum !== undefined && macNum !== '') {
+          macNum = macNum.toString().replace('LK-MAC', '');
+          model = matrixModels.find(x => x.tkMacLine === Number(macNum));
+        }
+        if (model === null || model === undefined) {
+          model = new MatrixAccountingModel();
+          matrixModels.push(this.extractMatrixAccount(model, rm.freeFlowText));
+        } else {
+          this.extractMatrixAccount(model, rm.freeFlowText);
+        }
+
+        if (rm.associations !== null && rm.associations !== undefined && model !== undefined) {
+          const s = [];
+          rm.associations.forEach(x => {
+            s.push(x.tatooNumber);
+          });
+          model.segmentNo = s.join(',');
+        }
+
+      }
+    }
+    return matrixModels;
+  }
+
+  private extractMatrixAccount(model: MatrixAccountingModel, remark: string): MatrixAccountingModel {
+    const rem = remark.split('/-');
+
+    rem.forEach(r => {
+      const val = r.split('-');
+      switch (val[0]) {
+        case 'SUP':
+          model.supplierCodeName = val[1];
+          break;
+        case 'LK':
+          model.tkMacLine = Number(val[1].replace('MAC', ''));
+          break;
+        case 'AMT':
+          model.baseAmount = parseFloat(val[1]);
+          break;
+        case 'PT':
+          const pt = val[1].replace('XG', '').replace('XQ', '').replace('XT', '');
+          if (model.gst == null) {
+            model.gst = parseFloat(pt);
+          } else if (model.hst == null) {
+            model.hst = parseFloat(pt);
+          } else if (model.qst == null) {
+            model.qst = parseFloat(pt);
+          } else if (model.otherTax == null) {
+            model.otherTax = parseFloat(pt);
+          }
+          break;
+        case 'FOP':
+          model.fop = val[1].substr(0, 2);
+          if (model.fop === 'CC' || model.fop === 'AP') {
+            model.vendorCode = val[1].substr(2, 2);
+            model.cardNumber = val[1].substr(4);
+          }
+
+          break;
+        case 'EXP':
+          model.expDate = val[1].substr(0, 2) + '/' + val[1].substr(2, 2);
+          break;
+        case 'TK':
+          model.tktLine = val[1];
+          break;
+        case 'MP':
+          model.passengerNo = val[1];
+          break;
+        case 'BKN':
+          model.supplierConfirmatioNo = (val[1]);
+          break;
+        case 'CD':
+          model.commisionWithoutTax = Number(val[1]);
+          break;
+        case '':
+
+      }
+
+    });
+
+
+    return model;
   }
 
 }

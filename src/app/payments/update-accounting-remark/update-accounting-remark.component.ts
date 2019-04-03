@@ -111,12 +111,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Credit Card', itemValue: 'CC' },
       { itemText: 'Cash', itemValue: 'CA' },
       { itemText: 'Cheque', itemValue: 'CK' },
-      { itemText: 'Agency Plastic Card', itemValue: 'ACC' }
+      { itemText: 'Agency Plastic Card', itemValue: 'AP' }
       ];
     } else {
       this.formOfPaymentList = [{ itemText: '', itemValue: '' },
       { itemText: 'Credit Card', itemValue: 'CC' },
-      { itemText: 'Agency Plastic Card', itemValue: 'ACC' },
+      { itemText: 'Agency Plastic Card', itemValue: 'AP' },
       { itemText: 'RBC Points', itemValue: 'CK' }
       ];
     }

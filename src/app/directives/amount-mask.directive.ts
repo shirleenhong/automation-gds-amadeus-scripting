@@ -25,7 +25,8 @@ export class AmountMaskDirective {
     onInputChange(event, backspace) {
         let newVal = event;
 
-        if (newVal === null) { return newVal; }
+        if (newVal === null || newVal === undefined || isNaN(newVal)) { return newVal; }
+
         const lastChar = newVal.substr(newVal.length - 1);
 
         if (lastChar.match(/[0-9]/g) === null && lastChar !== '.') {

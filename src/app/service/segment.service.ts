@@ -1,14 +1,10 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 // import { UpdateTourSegmentComponent } from '../passive-segments/tour-segment/update-tour-segment.component';
 import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { RemarkCollectionService } from './remark.collection.service';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { TourSegmentViewModel } from 'src/app/models/tour-segment-view.model';
 import { Injectable } from '@angular/core';
-import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
-import { forEach } from '@angular/router/src/utils/collection';
 import { PnrService } from './pnr.service';
 
 

@@ -149,99 +149,99 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  BuildRemark() {
-    const remGroup = new RemarkGroup();
-    remGroup.group = 'Leisure Fee';
-    remGroup.remarks = new Array<RemarkModel>();
-    const assoc = this.f.segmentAssoc.value;
-    remGroup.deleteRemarkByIds = [];
-    let remark = '';
-    let lineNum = this.pnrService.getRemarkLineNumber('SFC/-');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
-    }
+  // BuildRemark() {
+  //   const remGroup = new RemarkGroup();
+  //   remGroup.group = 'Leisure Fee';
+  //   remGroup.remarks = new Array<RemarkModel>();
+  //   const assoc = this.f.segmentAssoc.value;
+  //   remGroup.deleteRemarkByIds = [];
+  //   let remark = '';
+  //   let lineNum = this.pnrService.getRemarkLineNumber('SFC/-');
+  //   if (lineNum !== '') {
+  //     remGroup.deleteRemarkByIds.push(lineNum);
+  //   }
 
-    lineNum = this.pnrService.getRemarkLineNumber('TAX');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
-    }
-    if (assoc > 0) {
-      remark = this.generateSFCRemark(assoc);
-      remGroup.remarks.push(this.getRemark(remark, '*'));
-      remark = 'TAX-' + this.f.address.value;
-      remGroup.remarks.push(this.getRemark(remark, 'Y'));
-    }
+  //   lineNum = this.pnrService.getRemarkLineNumber('TAX');
+  //   if (lineNum !== '') {
+  //     remGroup.deleteRemarkByIds.push(lineNum);
+  //   }
+  //   if (assoc > 0) {
+  //     remark = this.generateSFCRemark(assoc);
+  //     remGroup.remarks.push(this.getRemark(remark, '*'));
+  //     remark = 'TAX-' + this.f.address.value;
+  //     remGroup.remarks.push(this.getRemark(remark, 'Y'));
+  //   }
 
-    lineNum = this.pnrService.getRemarkLineNumber('U11/-');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
-    }
+  //   lineNum = this.pnrService.getRemarkLineNumber('U11/-');
+  //   if (lineNum !== '') {
+  //     remGroup.deleteRemarkByIds.push(lineNum);
+  //   }
 
-    if (assoc === '0' && (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')) {
-      // *U11
-      const noFeeReason = this.f.noFeeReason.value;
-      remark = 'U11/-' + noFeeReason;
-      remGroup.remarks.push(this.getRemark(remark, '*'));
-    }
+  //   if (assoc === '0' && (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')) {
+  //     // *U11
+  //     const noFeeReason = this.f.noFeeReason.value;
+  //     remark = 'U11/-' + noFeeReason;
+  //     remGroup.remarks.push(this.getRemark(remark, '*'));
+  //   }
 
-    return remGroup;
-  }
+  //   return remGroup;
+  // }
 
-  getRemark(remarkText, remarkCategory) {
-    const rem = new RemarkModel();
-    rem.remarkType = 'RM';
-    rem.remarkText = remarkText;
-    rem.category = remarkCategory;
-    return rem;
-  }
+  // getRemark(remarkText, remarkCategory) {
+  //   const rem = new RemarkModel();
+  //   rem.remarkType = 'RM';
+  //   rem.remarkText = remarkText;
+  //   rem.category = remarkCategory;
+  //   return rem;
+  // }
 
-  generateSFCRemark(assoc) {
-    let remark = 'SFC';
-    switch (assoc) {
-      case '3':
-        remark += '/-FA-H' + this.f.segmentNum.value;
-        break;
-      case '4':
-        remark += '/-FA-C' + this.f.segmentNum.value;
-        break;
-      case '1':
-        remark += '/-FA-T1';
-        break;
-    }
+  // generateSFCRemark(assoc) {
+  //   let remark = 'SFC';
+  //   switch (assoc) {
+  //     case '3':
+  //       remark += '/-FA-H' + this.f.segmentNum.value;
+  //       break;
+  //     case '4':
+  //       remark += '/-FA-C' + this.f.segmentNum.value;
+  //       break;
+  //     case '1':
+  //       remark += '/-FA-T1';
+  //       break;
+  //   }
 
-    remark += '/-FLN-F1/-FP-TRF';
-    remark +=
-      '/-AMT-CAD' + this.decPipe.transform(this.f.amount.value, '1.2-2');
-    remark += this.getProvinceTaxRemark();
-    if (this.f.paymentType.value === 'C') {
-      remark += '/-FOP-CC' + this.f.vendorCode.value + this.f.ccNo.value;
-      remark += '/-EXP-' + this.f.expDate.value.replace('/', '');
-    } else {
-      remark += '/-FOP-CK';
-    }
-    return remark;
-  }
+  //   remark += '/-FLN-F1/-FP-TRF';
+  //   remark +=
+  //     '/-AMT-CAD' + this.decPipe.transform(this.f.amount.value, '1.2-2');
+  //   remark += this.getProvinceTaxRemark();
+  //   if (this.f.paymentType.value === 'C') {
+  //     remark += '/-FOP-CC' + this.f.vendorCode.value + this.f.ccNo.value;
+  //     remark += '/-EXP-' + this.f.expDate.value.replace('/', '');
+  //   } else {
+  //     remark += '/-FOP-CK';
+  //   }
+  //   return remark;
+  // }
 
-  getProvinceTaxRemark() {
-    const provTax = this.provinceTaxes.filter(
-      x => x.provinceCode === this.f.address.value
-    );
-    let tax1 = '0.00';
-    let tax2 = '0.00';
-    let taxType1 = 'XG';
-    if (provTax.length > 0) {
-      tax1 = this.decPipe.transform(
-        +this.f.amount.value * +provTax[0].tax1,
-        '1.2-2'
-      );
-      tax2 = this.decPipe.transform(
-        +this.f.amount.value * +provTax[0].tax2,
-        '1.2-2'
-      );
-      taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
-    }
-    let txt = '/-PT-' + tax1 + taxType1;
-    txt += '/-PT-' + tax2 + 'XQ';
-    return txt;
-  }
+  // getProvinceTaxRemark() {
+  //   const provTax = this.provinceTaxes.filter(
+  //     x => x.provinceCode === this.f.address.value
+  //   );
+  //   let tax1 = '0.00';
+  //   let tax2 = '0.00';
+  //   let taxType1 = 'XG';
+  //   if (provTax.length > 0) {
+  //     tax1 = this.decPipe.transform(
+  //       +this.f.amount.value * +provTax[0].tax1,
+  //       '1.2-2'
+  //     );
+  //     tax2 = this.decPipe.transform(
+  //       +this.f.amount.value * +provTax[0].tax2,
+  //       '1.2-2'
+  //     );
+  //     taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
+  //   }
+  //   let txt = '/-PT-' + tax1 + taxType1;
+  //   txt += '/-PT-' + tax2 + 'XQ';
+  //   return txt;
+  // }
 }

@@ -93,8 +93,6 @@ export class ReportingRemarkService {
     rmGroup.group = 'Concierge';
     rmGroup.remarks = new Array<RemarkModel>();
     rmGroup.deleteRemarkByIds = new Array<string>();
-    alert(concierge.value.hotelName);
-    alert('xxx' + concierge.valid);
 
     if (!concierge.valid) { return; }
 

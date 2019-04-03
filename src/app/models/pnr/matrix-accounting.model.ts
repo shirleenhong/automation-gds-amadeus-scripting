@@ -3,7 +3,7 @@ export class MatrixAccountingModel {
     type: string;
     tkMacLine: number;
     accountingTypeRemark: string;
-    segmentNo: number;
+    segmentNo: string;
     passengerNo: string;
     fop: string;
     vendorCode: string;

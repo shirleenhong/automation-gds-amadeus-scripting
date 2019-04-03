@@ -138,6 +138,15 @@ export class ConciergeUdidsComponent implements OnInit {
     return this.u30;
   }
 
+  onchangeHotel(newValue) {
+    if (newValue === 'YES') {
+      this.conciergeForm.controls['reasonHotelBooked'].setValue('');
+      this.conciergeForm.controls['reasonHotelBooked'].disable();
+    } else {
+      this.conciergeForm.controls['reasonHotelBooked'].enable();
+    }
+  }
+
   // getConciergeForDeletion() {
   //   return this.forDeletion;
   // }

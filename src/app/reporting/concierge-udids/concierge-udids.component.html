@@ -84,7 +84,8 @@
   <div class="row form-group">
     <div class="col-4">Hotel Reservation Booked by CWT?</div>
     <div class="col-4">
-      <select id="hotelRes" class="form-control" formControlName="hotelRes" name="hotelRes">
+      <select id="hotelRes" class="form-control" formControlName="hotelRes" name="hotelRes"
+        (change)="onchangeHotel($event.target.value)">
         <option *ngFor="let item of yesNoList" [value]="item.itemValue">
           {{item.itemText}}
         </option>
@@ -92,14 +93,17 @@
     </div>
   </div>
 
-  <div class="row form-group">
-    <div class="col-4">Select Reason Why No Hotel Booked?</div>
-    <div class="col-4">
-      <select id="reasonHotelBooked" class="form-control" formControlName="reasonHotelBooked" name="reasonHotelBooked">
-        <option *ngFor="let item of reasonHotelBooked" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
+  <div *ngIf="f.hotelRes.value === 'NO'">
+    <div class="row form-group">
+      <div class="col-4">Select Reason Why No Hotel Booked?</div>
+      <div class="col-4">
+        <select id="reasonHotelBooked" class="form-control" formControlName="reasonHotelBooked"
+          name="reasonHotelBooked">
+          <option *ngFor="let item of reasonHotelBooked" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
     </div>
   </div>
 

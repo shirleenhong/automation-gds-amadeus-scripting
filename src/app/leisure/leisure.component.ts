@@ -38,6 +38,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
 
   constructor(private pnrService: PnrService,
+
     private remarkService: RemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
@@ -46,6 +47,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private itcPackageCostRemarkService: ITCPackageCostRemarkService,
     private fb: FormBuilder,
     private ddbService: DDBService
+
   ) {
     this.loadPNR();
   }
@@ -94,6 +96,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
+    remarkCollection.push(this.segmentService.setMandatoryRemarks());
+
 
     const concierge = this.reportingComponent.conciergeComponent;
     remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,

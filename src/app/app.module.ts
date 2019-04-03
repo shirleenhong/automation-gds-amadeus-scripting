@@ -29,6 +29,7 @@ import { CCDateExpMaskDirective } from './directives/cc-date-exp-mask.directive'
 import { AmountMaskDirective } from './directives/amount-mask.directive';
 import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive';
 import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
+import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 
 
 
@@ -51,7 +52,7 @@ import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.direc
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, ConciergeUdidsComponent
 
   ],
   imports: [

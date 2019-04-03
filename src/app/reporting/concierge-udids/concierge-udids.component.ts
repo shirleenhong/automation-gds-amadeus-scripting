@@ -1,0 +1,152 @@
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { SelectItem } from 'src/app/models/select-item.model';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { PnrService } from 'src/app/service/pnr.service';
+import { stringify } from 'querystring';
+
+@Component({
+  selector: 'app-concierge-udids',
+  templateUrl: './concierge-udids.component.html',
+  styleUrls: ['./concierge-udids.component.scss']
+})
+export class ConciergeUdidsComponent implements OnInit {
+
+  conciergeForm: FormGroup;
+  redemptionList: Array<SelectItem>;
+  reservationReqList: Array<SelectItem>;
+  bookingTypeList: Array<SelectItem>;
+  yesNoList: Array<SelectItem>;
+  reasonHotelBooked: Array<SelectItem>;
+  remarks: Array<any>;
+  forDeletion = [];
+  u30: boolean = false;
+
+
+  constructor(private pnrService: PnrService) {
+
+    this.conciergeForm = new FormGroup({
+      redemptionAdded: new FormControl('', []),
+      reservationReq: new FormControl('', []),
+      bookingType: new FormControl('', []),
+      chCallerName: new FormControl('', []),
+      delegateName: new FormControl('', []),
+      hotelName: new FormControl('', []),
+      businessTravel: new FormControl('', []),
+      hotelRes: new FormControl('', []),
+      reasonHotelBooked: new FormControl('', [])
+    });
+
+  }
+
+  ngOnInit() {
+    this.loadStaticValue();
+    this.getRemarksFromGds();
+
+  }
+
+  get f() {
+    return this.conciergeForm.controls;
+  }
+
+
+  loadStaticValue() {
+    this.redemptionList = [{ itemText: '', itemValue: '' },
+    { itemText: 'WITHIN 48 Hours of Original Booking', itemValue: 'WITHIN 48HRS OF BKNG' },
+    { itemText: 'OUTSIDE 48 Hours of Original Booking', itemValue: 'OUTSIDE 48HRS OF BKNG' }];
+
+    this.reservationReqList = [{ itemText: '', itemValue: '' },
+    { itemText: 'Reservation was generated via EMAIL', itemValue: 'EMAIL REQUEST' },
+    { itemText: 'Reservation was generated via Phone Request', itemValue: 'PHONE REQUEST' }];
+
+    this.bookingTypeList = [{ itemText: '', itemValue: '' },
+    { itemText: 'Air Only Booking', itemValue: 'AIR ONLY BOOKING' },
+    { itemText: 'Air and Hotel and/or Car', itemValue: 'AIR/HOTEL AND OR CAR' },
+    { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' }];
+
+    this.yesNoList = [{ itemText: '', itemValue: '' },
+    { itemText: 'Yes', itemValue: 'YES' },
+    { itemText: 'No', itemValue: 'NO' }];
+
+    this.reasonHotelBooked = [{ itemText: '', itemValue: '' },
+    { itemText: 'Conference', itemValue: 'CONFERENCE' },
+    { itemText: 'Personal Accommodations', itemValue: 'PERSONAL ACCOMMODATIONS' },
+    { itemText: 'Booked Elsewhere', itemValue: 'BOOKED ELSEWHERE' },
+    { itemText: 'Booking to be Completed/Confirmed', itemValue: 'BOOKING TO BE COMPLETED/CONFIRMED' }];
+  }
+
+  getTextLineNo(remark) {
+    let textLine: { remarkText: string, lineNo: string };
+    const look = this.remarks.find(x => x.remarkText.indexOf(remark) > -1);
+    if (look) {
+      textLine = {
+        remarkText: look.remarkText,
+        lineNo: look.lineNo
+      };
+    }
+
+    return textLine;
+  }
+
+  getRemarksFromGds() {
+    this.remarks = this.pnrService.getRemarksFromGDS();
+    const udids = [{ id: '*U3/-', control: 'redemptionAdded' },
+    { id: '*U4/-', control: 'redemptionAdded' },
+    { id: '*U5/-', control: 'reservationReq' },
+    { id: '*U6/-', control: 'reservationReq' },
+    { id: '*U8/-', control: 'bookingType' },
+    { id: '*U9/-', control: 'bookingType' },
+    { id: '*U10/-', control: 'bookingType' },
+    { id: '*U11/-', control: 'chCallerName' },
+    { id: '*U12/-', control: 'delegateName' },
+    { id: '*U13/-', control: 'hotelName' },
+    { id: '*U15/-', control: 'businessTravel' },
+    { id: '*U17/-', control: 'hotelRes' },
+    { id: '*U18/-', control: 'reasonHotelBooked' },
+    { id: '*U30/-', control: '' }];
+
+    for (let i = 0; i <= udids.length; i++) {
+      const rem = this.getTextLineNo(udids[i].id);
+      if (rem) {
+        this.setControls(rem.remarkText, udids[i].id, udids[i].control, rem.lineNo);
+      }
+    }
+  }
+
+  private setControls(rem: string, id: string, control: string, lineNo: string) {
+    if (id === '*U13/-' && rem.replace(id, '') === 'NO HTL BKD') {
+      this.forDeletion.push(lineNo);
+      return;
+    }
+
+    if (id === '*U30/-') {
+      this.u30 = true;
+      return;
+    }
+
+    this.conciergeForm.controls[control].setValue(rem.replace(id, ''));
+    this.conciergeForm.controls[control].disable();
+    // this.forDeletion.push(lineNo);
+
+  }
+
+  getConciergeForDeletion() {
+    return this.forDeletion;
+  }
+
+  getConciergeu30() {
+    return this.u30;
+  }
+
+  // getConciergeForDeletion() {
+  //   return this.forDeletion;
+  // }
+
+  // deleteRemarks(){
+  //   const remGroup = new RemarkGroup();
+  //   remGroup.group = 'Delete Concierge';
+  //   remGroup.remarks = new Array<RemarkModel>();
+  //   const assoc = this.f.segmentAssoc.value;
+  //   remGroup.deleteRemarkByIds = [];
+  // }
+}

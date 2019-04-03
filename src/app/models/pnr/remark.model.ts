@@ -4,4 +4,5 @@ export class RemarkModel {
     category: string;
     relatedSegments: string[] = [];
     relatedPassengers: string[];
+    lineNo: string;
 }

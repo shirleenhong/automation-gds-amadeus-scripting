@@ -9,7 +9,7 @@ export class RemarkGroup {
    remarks: Array<RemarkModel>;
    cryptics: Array<string>;
    deleteRemarkByIds: Array<string>;
-   passiveSegments: Array<PassiveSegmentModel>
+   passiveSegments: Array<PassiveSegmentModel>;
 
    constructor() {
       this.remarks = new Array<RemarkModel>();

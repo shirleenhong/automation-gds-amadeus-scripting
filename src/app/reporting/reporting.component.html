@@ -1,90 +1,101 @@
-<form [formGroup]="reportingForm">
+<tabset>
 
-  <div class="reportingContainer">
+  <tab heading="Reporting Remarks" id="tab1">
+    <form [formGroup]="reportingForm">
 
-    <div class="row form-group">
-      <div class="col">
-        BSP Routing Code :
-        <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode"
-          [(ngModel)]="reportingView.routeCode" required>
-          <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
-            {{item.itemText}}
-          </option>
-        </select>
-      </div>
-
-      <div class="col">
-        Destination Code:
-        <input type="text" class="form-control" formControlName="destinationList" name="destinationList"
-          placeholder="select a destination Code" [(ngModel)]="reportingView.destination" id="destinationList"
-          list="dynamicDestinationCode" [disabled]='reportingView.isDisabledDest' />
-        <datalist id="dynamicDestinationCode">
-          <option *ngFor="let item of destinationList" [value]="item.endpoint">{{item.endpoint}}
-        </datalist>
-      </div>
-    </div>
-
-    <div *ngIf="isRbmRbp()" class="form-group">
-      <div class="row">
-        <div class="col">
-          Does this PNR contain travel to any countries listed below?
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <select class="form-control" required id="u86" name="u86" formControlName="u86">
-            <option *ngFor="let item of countryList">{{item}}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="!isRbmRbp()">
-      <div class="row">
-        <div class="col" *ngIf="isCVC">
-          Name of Company Traveller Works For :
-          <input class="form-control" [(ngModel)]="reportingView.companyName" id="companyName"
-            formControlName="companyName" required maxlength="35" [disabled]="!isCVC" placeholder="e.g. CWT"
-            [ngClass]="{ 'is-invalid': f.companyName.touched && f.companyName.invalid }" required />
-        </div>
-      </div>
-
-      <div *ngIf="!checkInsurance()">
-        <div class="row form-group">
-          <div class="col">
-            Did client accept cancellation insurance?
-          </div>
-        </div>
+      <div class="reportingContainer">
 
         <div class="row form-group">
           <div class="col">
-            <input type="radio" name="showInsurance" formControlName="showInsurance" value="Yes"
-              (change)="showInsurance()" checked="true" [disabled]="checkInsurance()" />Yes - Cancellation
-            Insurance Accepted
+            BSP Routing Code :
+            <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode"
+              [(ngModel)]="reportingView.routeCode" required>
+              <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
+                {{item.itemText}}
+              </option>
+            </select>
           </div>
-        </div>
 
-        <div class="row form-group">
           <div class="col">
-            <input type="radio" name="showInsurance" formControlName="showInsurance" value="No"
-              (change)="showInsurance()" [disabled]="checkInsurance()" required />No
-            -
-            Cancellation Insurance Declined
+            Destination Code:
+            <input type="text" class="form-control" formControlName="destinationList" name="destinationList"
+              placeholder="select a destination Code" [(ngModel)]="reportingView.destination" id="destinationList"
+              list="dynamicDestinationCode" [disabled]='reportingView.isDisabledDest' />
+            <datalist id="dynamicDestinationCode">
+              <option *ngFor="let item of destinationList" [value]="item.endpoint">{{item.endpoint}}
+            </datalist>
           </div>
         </div>
 
-      </div>
+        <div *ngIf="isRbmRbp()" class="form-group">
+          <div class="row">
+            <div class="col">
+              Does this PNR contain travel to any countries listed below?
+            </div>
+          </div>
 
-      <div class="row form-group" *ngIf="!reportingView.showInsurance">
-        <div class="col">
-          Insurance Declined Reason:
-          <input type="text" class="form-control" formControlName="insuranceDeclinedReason" maxlength="35"
-            [(ngModel)]="reportingView.insuranceDeclinedReason" id="insuranceDeclinedReason"
-            placeholder="Reason Why Insurance Declined" />
+          <div class="row">
+            <div class="col-6">
+              <select class="form-control" required id="u86" name="u86" formControlName="u86">
+                <option *ngFor="let item of countryList">{{item}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isRbmRbp()">
+          <div class="row">
+            <div class="col" *ngIf="isCVC">
+              Name of Company Traveller Works For :
+              <input class="form-control" [(ngModel)]="reportingView.companyName" id="companyName"
+                formControlName="companyName" required maxlength="35" [disabled]="!isCVC" placeholder="e.g. CWT"
+                [ngClass]="{ 'is-invalid': f.companyName.touched && f.companyName.invalid }" required />
+            </div>
+          </div>
+
+          <div *ngIf="!checkInsurance()">
+            <div class="row form-group">
+              <div class="col">
+                Did client accept cancellation insurance?
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div class="col">
+                <input type="radio" name="showInsurance" formControlName="showInsurance" value="Yes"
+                  (change)="showInsurance()" checked="true" [disabled]="checkInsurance()" />Yes - Cancellation
+                Insurance Accepted
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div class="col">
+                <input type="radio" name="showInsurance" formControlName="showInsurance" value="No"
+                  (change)="showInsurance()" [disabled]="checkInsurance()" required />No
+                -
+                Cancellation Insurance Declined
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row form-group" *ngIf="!reportingView.showInsurance">
+            <div class="col">
+              Insurance Declined Reason:
+              <input type="text" class="form-control" formControlName="insuranceDeclinedReason" maxlength="35"
+                [(ngModel)]="reportingView.insuranceDeclinedReason" id="insuranceDeclinedReason"
+                placeholder="Reason Why Insurance Declined" />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-</form>
+    </form>
+  </tab>
+  <!-- <div> -->
+  <tab *ngIf="isRbmRbp()" heading="Royal Bank - Concierge" id="tab2">
+    <app-concierge-udids></app-concierge-udids>
+  </tab>
+  <!-- </div> -->
+
+</tabset>

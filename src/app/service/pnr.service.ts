@@ -309,5 +309,20 @@ export class PnrService {
     return lastDeptDate;
   }
 
+  getRemarksFromGDS() {
+    const remarks = new Array<any>();
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        const rem = {
+          remarkText: rm.fullNode.miscellaneousRemarks.remarks.freetext,
+          category: rm.fullNode.miscellaneousRemarks.remarks.type,
+          lineNo: rm.elementNumber
+        };
+        remarks.push(rem);
+      }
+    }
+    return remarks;
+  }
+
 }
 

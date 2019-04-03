@@ -14,6 +14,7 @@ import { TourPackageRemarksService } from '../service/tour-package-remarks.servi
 import { ReportingComponent } from '../reporting/reporting.component';
 import { ITCPackageCostRemarkService } from '../service/itc-packagecost-remarks.service';
 import { RemarkComponent } from '../remarks/remark.component';
+import { DDBService } from '../service/ddb.service';
 
 @Component({
   selector: 'app-leisure',
@@ -29,6 +30,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
+
   errorPnrMsg = '';
   eventSubscribe = false;
 
@@ -40,7 +42,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private segmentService: SegmentService,
     private tourPackageRemarksService: TourPackageRemarksService,
     private itcPackageCostRemarkService: ITCPackageCostRemarkService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ddbService: DDBService
   ) {
     this.loadPNR();
   }
@@ -59,6 +62,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   async loadPNR() {
     this.errorPnrMsg = '';
+    // this.ddbService.sampleSupplier();
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
@@ -78,6 +82,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
+
+    const concierge = this.reportingComponent.conciergeComponent;
+    remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
+      concierge.getConciergeForDeletion(), concierge.getConciergeu30()));
+
 
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value !== null &&

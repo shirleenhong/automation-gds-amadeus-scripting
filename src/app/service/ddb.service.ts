@@ -35,6 +35,17 @@ export class DDBService implements OnInit {
 
   }
 
+  async getTravelPorts() {
+
+    this.getRequest('TravelPorts/Airport').subscribe(x => {
+
+      const res = x;
+      debugger;
+     }
+      , err => { alert(JSON.stringify(err)); });
+
+  }
+
 
   async getToken() {
     if (this.isTokenExpired === true || this.token === '') {
@@ -55,6 +66,7 @@ export class DDBService implements OnInit {
 
 
   getRequest(apiUrl: string): Observable<any> {
+    debugger;
     this.getToken();
     const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient.get<any>('/api/' + apiUrl, { headers: hds });

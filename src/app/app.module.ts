@@ -31,6 +31,7 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
 import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
 import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
+import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 
 
 
@@ -53,6 +54,7 @@ import { AmountPipe } from './pipes/amount.pipe';
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
+    VisaPassportComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, ConciergeUdidsComponent, AmountPipe
 
   ],

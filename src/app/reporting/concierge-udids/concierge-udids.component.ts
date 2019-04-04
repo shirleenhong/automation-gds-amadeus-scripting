@@ -62,7 +62,7 @@ export class ConciergeUdidsComponent implements OnInit {
 
     this.bookingTypeList = [{ itemText: '', itemValue: '' },
     { itemText: 'Air Only Booking', itemValue: 'AIR ONLY BOOKING' },
-    { itemText: 'Air and Hotel and/or Car', itemValue: 'AIR/HOTEL AND OR CAR' },
+    { itemText: 'Air and Hotel and/or Car', itemValue: 'AIR AND HOTEL AND/OR CAR' },
     { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' }];
 
     this.yesNoList = [{ itemText: '', itemValue: '' },

@@ -72,8 +72,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.cfLine = this.pnrService.getCFLine();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus.&lt;br/&gt;' + this.pnrService.errorMessage;
-
-      ;
     } else if (this.cfLine == null) {
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
       this.isPnrLoaded = false;
@@ -98,11 +96,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.segmentService.getRetentionLine());
     remarkCollection.push(this.segmentService.setMandatoryRemarks());
 
-
-    const concierge = this.reportingComponent.conciergeComponent;
-    remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
-      concierge.getConciergeForDeletion(), concierge.getConciergeRetain()));
-
+    if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
+      const concierge = this.reportingComponent.conciergeComponent;
+      remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
+        concierge.getConciergeForDeletion(), concierge.getConciergeRetain()));
+    }
 
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value !== null &&

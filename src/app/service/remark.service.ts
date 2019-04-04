@@ -36,7 +36,7 @@ export class RemarkService {
         this.passiveSegmentElement = new Array<any>();
 
         remarkGroups.forEach(group => {
-            if (group.group !== '' && group.group !== '') {
+            if (group !== undefined && group.group !== '') {
                 if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
                     group.deleteRemarkByIds.forEach(c => {
                         this.deleteRemarksByIds.push(c);

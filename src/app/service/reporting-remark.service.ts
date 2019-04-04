@@ -115,13 +115,12 @@ export class ReportingRemarkService {
     }
 
     if (concierge.value.bookingType) {
-
       switch (concierge.value.bookingType) {
         case 'AIR ONLY BOOKING':
           remText = 'U8/-AIR ONLY BOOKING';
           break;
-        case 'AIR/HOTEL AND OR CAR':
-          remText = 'U9/-AIR/HOTEL AND OR CAR';
+        case 'AIR AND HOTEL AND/OR CAR':
+          remText = 'U9/-AIR AND HOTEL AND/OR CAR';
           break;
         case 'CRUISE/TOUR/FIT':
           remText = 'U10/-CRUISE/TOUR/FIT';

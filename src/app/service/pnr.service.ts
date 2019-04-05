@@ -324,5 +324,43 @@ export class PnrService {
     return remarks;
   }
 
+  getRIIRemarksFromGDS() {
+    const remarks = new Array<any>();
+    if (this.isPNRLoaded) {
+      for (const ri of this.pnrObj.riiElements) {
+        const rem = {
+          remarkText: ri.fullNode.miscellaneousRemarks.remarks.freetext,
+          category: ri.fullNode.miscellaneousRemarks.remarks.type,
+          lineNo: ri.elementNumber
+        };
+        remarks.push(rem);
+      }
+    }
+    return remarks;
+  }
+
+  getRIIRemarkText(searchText: string) {
+    if (this.isPNRLoaded) {
+      for (const ri of this.pnrObj.riiElements) {
+        if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
+          return ri;
+        }
+      }
+    }
+    return '';
+  }
+
+  getUDIDText(searchText: string) {
+    if (this.isPNRLoaded) {
+      for (const ri of this.pnrObj.rmElements) {
+        if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
+          //return ri.fullNode.miscellaneousRemarks.remarks.freetext;
+          return ri;
+        }
+      }
+    }
+    return '';
+  }
+
 }
 

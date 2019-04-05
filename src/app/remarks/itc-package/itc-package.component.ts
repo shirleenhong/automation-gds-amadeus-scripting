@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DecimalPipe } from '@angular/common';
 import { DDBService } from 'src/app/service/ddb.service';
+import { PnrService } from 'src/app/service/pnr.service';
+import { PackageRemarkHelper } from 'src/app/helper/packageRemark-helper';
 
 @Component({
   selector: 'app-itc-package',
@@ -14,7 +16,8 @@ export class ItcPackageComponent implements OnInit {
   itcForm: FormGroup;
   decPipe = new DecimalPipe('en-US');
 
-  constructor(private fb: FormBuilder, private ddb: DDBService) {
+  constructor(private fb: FormBuilder, private ddb: DDBService, private pnrService: PnrService,
+    private packageRemarkHelper: PackageRemarkHelper) {
     this.itcForm = this.fb.group({
       itcCurrencyType: new FormControl(''),
       noAdult: new FormControl('', [Validators.pattern('[0-9]*')]),
@@ -50,7 +53,7 @@ export class ItcPackageComponent implements OnInit {
 
   ngOnInit() {
     this.getCurrencies();
-
+    this.loadValues();
   }
 
   get f() {
@@ -116,6 +119,55 @@ export class ItcPackageComponent implements OnInit {
   getCurrencies() {
     // TODO: Get from API DDB
     this.bspCurrencyList = this.ddb.getCurrencies();
+  }
+
+  private loadValues() {
+
+    if (this.pnrService.getRIIRemarkText('HOTEL/ACCOMMODATION') !== '' ||
+      this.pnrService.getRIIRemarkText('CAR RENTAL') !== '') {
+      this.getRIITourPackageRemarksFromGDS();
+      this.packageRemarkHelper.getUDIDPackageRemarksFromGds(this.itcForm);
+    }
+  }
+
+
+  private getRIITourPackageRemarksFromGDS() {
+
+    this.itcForm.controls.dueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
+    this.itcForm.controls.itcCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
+
+    this.packageRemarkHelper.getValues('ADULT', 'PRICE', 'baseAdult', this.itcForm);
+    this.packageRemarkHelper.getValues('ADULT', 'TAXES', 'taxAdult', this.itcForm);
+    this.packageRemarkHelper.getValues('ADULT', 'INSURANCE', 'insAdult', this.itcForm);
+    this.packageRemarkHelper.getValues('ADULT', 'TAX/PORT CHARGES', 'tcruiseAdult', this.itcForm);
+    this.packageRemarkHelper.getValues('ADULT', 'CRUISE', 'bcruiseAdult', this.itcForm);
+    this.packageRemarkHelper.getValues('ADULT', 'RAIL', 'railAdult', this.itcForm);
+
+    this.packageRemarkHelper.getValues('CHILD', 'PRICE', 'baseChild', this.itcForm);
+    this.packageRemarkHelper.getValues('CHILD', 'TAXES', 'taxChild', this.itcForm);
+    this.packageRemarkHelper.getValues('CHILD', 'INSURANCE', 'insChild', this.itcForm);
+    this.packageRemarkHelper.getValues('CHILD', 'TAX/PORT CHARGES', 'tcruiseChild', this.itcForm);
+    this.packageRemarkHelper.getValues('CHILD', 'CRUISE', 'bcruiseChild', this.itcForm);
+    this.packageRemarkHelper.getValues('CHILD', 'RAIL', 'railChild', this.itcForm);
+
+    this.packageRemarkHelper.getValues('INFANT', 'PRICE', 'baseInfant', this.itcForm);
+    this.packageRemarkHelper.getValues('INFANT', 'TAXES', 'taxInfant', this.itcForm);
+    this.packageRemarkHelper.getValues('INFANT', 'INSURANCE', 'insInfant', this.itcForm);
+    this.packageRemarkHelper.getValues('INFANT', 'TAX/PORT CHARGES', 'tcruiseInfant', this.itcForm);
+    this.packageRemarkHelper.getValues('INFANT', 'CRUISE', 'bcruiseInfant', this.itcForm);
+    this.packageRemarkHelper.getValues('INFANT', 'RAIL', 'railInfant', this.itcForm);
+
+    this.packageRemarkHelper.getCount('ADULT', 'PRICE', 'noAdult', this.itcForm);
+    this.packageRemarkHelper.getCount('CHILD', 'PRICE', 'noChild', this.itcForm);
+    this.packageRemarkHelper.getCount('INFANT', 'PRICE', 'noInfant', this.itcForm);
+
+    const regexp: RegExp = /([0-9]+[\.]*[0-9]*)/;
+
+    this.itcForm.controls.hotelAdult.setValue(this.packageRemarkHelper.getRegexResult('HOTEL/ACCOMMODATION', regexp));
+    this.itcForm.controls.carAdult.setValue(this.packageRemarkHelper.getRegexResult('CAR RENTAL', regexp));
+    this.itcForm.controls.depAdult.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regexp));
+    this.itcForm.controls.holidayCost.setValue(this.packageRemarkHelper.getRegexResult('TOTAL HOLIDAY COST', regexp));
+    this.itcForm.controls.balance.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regexp));
   }
 
 }

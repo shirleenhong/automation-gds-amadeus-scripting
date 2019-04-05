@@ -27,11 +27,10 @@ export class PnrService {
       (res: any) => {
         this.isPNRLoaded = true;
         this.errorMessage = 'PNR Loaded Successfully';
-        this.errorMessage = 'Error: ' + (JSON.stringify(this.pnrObj));
       },
       (error: string) => {
         this.isPNRLoaded = false;
-        this.errorMessage = 'Error:' + error;
+        this.errorMessage = 'Error: ' + error;
       }
     ).catch(err => { console.log(err); });
 
@@ -101,9 +100,9 @@ export class PnrService {
   getRIILineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rii of this.pnrObj.riiElements) {
-         if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {
-              return rii.elementNumber;
-         }
+        if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {
+          return rii.elementNumber;
+        }
       }
     }
     return '';
@@ -254,7 +253,7 @@ export class PnrService {
   }
 
 
-    getLatestDepartureDate() {
+  getLatestDepartureDate() {
     let lastDeptDate = new Date();
     for (const air of this.pnrObj.airSegments) {
       const airdate = air.fullNode.travelProduct.product.depDate;

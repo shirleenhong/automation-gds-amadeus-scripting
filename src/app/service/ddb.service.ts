@@ -2,8 +2,8 @@ import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { interval, Observable } from 'rxjs';
-
-
+import { jsonpCallbackContext } from '@angular/common/http/src/module';
+import { stringify } from '@angular/core/src/util';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +16,6 @@ export class DDBService implements OnInit {
   }
 
   constructor(private httpClient: HttpClient) {
-
-
   }
 
 
@@ -31,17 +29,6 @@ export class DDBService implements OnInit {
   async sampleSupplier() {
 
     this.getRequest('SupplierDealCodes?ClientSubUnitGuid=A:D325C?').subscribe(x => { alert(JSON.stringify(x)); }
-      , err => { alert(JSON.stringify(err)); });
-
-  }
-
-  async getTravelPorts() {
-
-    this.getRequest('TravelPorts/Airport').subscribe(x => {
-
-      const res = x;
-      debugger;
-     }
       , err => { alert(JSON.stringify(err)); });
 
   }
@@ -66,7 +53,6 @@ export class DDBService implements OnInit {
 
 
   getRequest(apiUrl: string): Observable<any> {
-    debugger;
     this.getToken();
     const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient.get<any>('/api/' + apiUrl, { headers: hds });
@@ -353,5 +339,21 @@ export class DDBService implements OnInit {
     { itemText: 'Zimbabwe Dollarr', itemValue: 'ZWD' },
     { itemText: 'Zimbabwe Dollar', itemValue: 'ZWR' },
     ];
+  }
+
+  getCityCountry(city: string) {
+    let cityList = [];
+
+    cityList = [
+    { city: 'LHR' , countryCode: 'NL' },
+    { city: 'AMS' , countryCode: 'NL' },
+    { city: 'PAR' , countryCode: 'FR' },
+    { city: 'LON' , countryCode: 'UK' },
+    { city: 'YUL' , countryCode: 'CA' },
+    { city: 'YYZ' , countryCode: 'CA' },
+    { city: 'YVR' , countryCode: 'CA' },
+    ];
+
+    return cityList.find(x => x.city === city);
   }
 }

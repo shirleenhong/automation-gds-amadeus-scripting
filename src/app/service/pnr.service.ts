@@ -5,6 +5,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { debug } from 'util';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
+import { DDBService } from './ddb.service';
 
 declare var PNR: any;
 
@@ -393,6 +394,5 @@ export class PnrService {
 
     return model;
   }
-
 }
 

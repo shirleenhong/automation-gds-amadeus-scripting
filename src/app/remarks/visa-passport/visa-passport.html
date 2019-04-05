@@ -1,7 +1,7 @@
 <form [formGroup]="visaPassportForm">
 
     <div class="row form-group">
-      <div class="col-8">
+      <div class="col-10">
         Is/Are the Departure and Destination City(s) located in the same country?:
       </div>
     </div>
@@ -17,7 +17,16 @@
                     (change)="changedOriginDestination()"  />
                     No
               </div>
+     </div>
 
-          </div>
-
+     <div class="row form-group">
+            <div class="col-2">
+              Citizenship: 
+            </div>
+            <div class="col-3">
+                    <input type="text" class="form-control" formControlName="citizenship" maxlength="35"
+                    [(ngModel)]="visaPassportModelView.citizenship" id="citizenship"
+                    placeholder="e.g. Canadian" />         
+            </div>      
+    </div>
   </form>

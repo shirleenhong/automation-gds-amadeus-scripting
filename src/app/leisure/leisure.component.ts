@@ -66,7 +66,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   async loadPNR() {
     this.errorPnrMsg = '';
-    // this.ddbService.sampleSupplier();
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
     this.cfLine = this.pnrService.getCFLine();
@@ -76,7 +75,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
       this.isPnrLoaded = false;
     }
-
   }
 
   ngOnInit() {

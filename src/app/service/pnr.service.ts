@@ -27,13 +27,14 @@ export class PnrService {
       (res: any) => {
         this.isPNRLoaded = true;
         this.errorMessage = 'PNR Loaded Successfully';
+        this.errorMessage = 'Error: ' + (JSON.stringify(this.pnrObj));
       },
       (error: string) => {
         this.isPNRLoaded = false;
         this.errorMessage = 'Error:' + error;
       }
     ).catch(err => { console.log(err); });
-    console.log(JSON.stringify(this.pnrObj));
+
   }
 
   getRemarkLineNumber(searchText: string) {
@@ -305,6 +306,7 @@ export class PnrService {
 
   getAccountingRemarks(): Array<MatrixAccountingModel> {
     const matrixModels = new Array<MatrixAccountingModel>();
+    const apays = this.getApayRiiRemarkLines();
     let macNum = '';
     for (const rm of this.pnrObj.rmElements) {
       if (rm.freeFlowText.indexOf('MAC/-') === 0) {
@@ -320,13 +322,20 @@ export class PnrService {
         } else {
           this.extractMatrixAccount(model, rm.freeFlowText);
         }
-
+        if (model.bsp === undefined || model.bsp == null || model.bsp === '') { model.bsp = '1'; }// default
         if (rm.associations !== null && rm.associations !== undefined && model !== undefined) {
-          const s = [];
-          rm.associations.forEach(x => {
-            s.push(x.tatooNumber);
-          });
-          model.segmentNo = s.join(',');
+          model.segmentNo = this.getAssocNumbers(rm.associations);
+
+          if (apays !== null && apays.length > 0) {
+            apays.forEach(x => {
+              if (x.segments === model.segmentNo) {
+                model.bsp = '2';
+                model.description = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
+                model.accountingTypeRemark = model.description;
+              }
+
+            });
+          }
         }
 
       }
@@ -347,18 +356,18 @@ export class PnrService {
           model.tkMacLine = Number(val[1].replace('MAC', ''));
           break;
         case 'AMT':
-          model.baseAmount = parseFloat(val[1]);
+          model.baseAmount = (val[1]);
           break;
         case 'PT':
           const pt = val[1].replace('XG', '').replace('XQ', '').replace('XT', '');
           if (model.gst == null) {
-            model.gst = parseFloat(pt);
+            model.gst = parseFloat(pt).toString();
           } else if (model.hst == null) {
-            model.hst = parseFloat(pt);
+            model.hst = parseFloat(pt).toString();
           } else if (model.qst == null) {
-            model.qst = parseFloat(pt);
+            model.qst = parseFloat(pt).toString();
           } else if (model.otherTax == null) {
-            model.otherTax = parseFloat(pt);
+            model.otherTax = parseFloat(pt).toString();
           }
           break;
         case 'FOP':
@@ -382,7 +391,7 @@ export class PnrService {
           model.supplierConfirmatioNo = (val[1]);
           break;
         case 'CD':
-          model.commisionWithoutTax = Number(val[1]);
+          model.commisionWithoutTax = (val[1]);
           break;
         case '':
 
@@ -394,5 +403,30 @@ export class PnrService {
     return model;
   }
 
-}
+  getAssocNumbers(assoc) {
+    if (assoc === null || assoc === undefined) {
+      return '';
+    }
+    const s = [];
+    assoc.forEach(x => {
+      const segment = this.getSegmentTatooNumber().find(z => z.tatooNo === x.tatooNumber);
+      if (segment !== null && segment !== undefined) { s.push(segment.lineNo); }
+    });
+    return s.join(',');
+  }
 
+  getApayRiiRemarkLines() {
+    const apays = [];
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.riiElements) {
+        const rem = rm.fullNode.miscellaneousRemarks.remarks.freetext;
+        if (rem.match(/PAID (.*) CF-(.*) PLUS (.*) TAX ON (.*)/g) !== '') {
+          apays.push({ lineNum: rm.elementNumber, remark: rem, segments: this.getAssocNumbers(rm.associations) });
+        }
+      }
+    }
+    return apays;
+  }
+
+
+}

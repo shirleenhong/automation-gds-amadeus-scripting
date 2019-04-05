@@ -3,13 +3,14 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Passenger</th>
-      <th scope="col">Supplier Code Name</th>
-      <th scope="col">Form of Payment</th>
+      <th scope="col">Supplier Code</th>
+      <th scope="col">FOP</th>
       <th scope="col">Base Amount</th>
-      <th scope="col">Commision Without Tax</th>
       <th scope="col">GST</th>
       <th scope="col">HST</th>
       <th scope="col">QST</th>
+      <th scope="col">Comm. w/o Tax</th>
+      <th scope="col">Other Tax</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -21,11 +22,14 @@
       <td>{{ r.supplierCodeName }}</td>
       <td>{{ r.fop }}</td>
       <td>{{ r.baseAmount }}</td>
-      <td>{{ r.commisionWithoutTax }}</td>
       <td>{{ r.gst }}</td>
       <td>{{ r.hst }}</td>
       <td>{{ r.qst }}</td>
-      <td></td>
+      <td>{{ r.commisionWithoutTax }}</td>
+      <td>{{ r.otherTax }}</td>
+      <td><i class="fas fa-edit" (click)="updateItem(r)"></i>&nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt"
+          (click)="deleteItem(r)"></i>
+      </td>
     </tr>
   </tbody>
 </table>

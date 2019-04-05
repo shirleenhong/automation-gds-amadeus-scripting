@@ -10,12 +10,12 @@ export class MatrixAccountingModel {
     expDate: string;
     expYear: string;
     cardNumber: string;
-    baseAmount: number;
-    commisionWithoutTax: number;
-    gst: number;
-    hst: number;
-    qst: number;
-    otherTax: number;
+    baseAmount: string;
+    commisionWithoutTax: string;
+    gst: string;
+    hst: string;
+    qst: string;
+    otherTax: string;
     supplierCodeName: string;
     supplierConfirmatioNo: string;
     airAccountingRemark: string;

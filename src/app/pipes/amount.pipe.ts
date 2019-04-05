@@ -11,7 +11,7 @@ export class AmountPipe implements PipeTransform {
         if (newVal === undefined || isNaN(newVal)) {
             newVal = 0;
         }
-        return this.decPipe.transform(value).replace(',', '');
+        return this.decPipe.transform(value, '1.2-2').replace(',', '');
     }
 
     constructor() {

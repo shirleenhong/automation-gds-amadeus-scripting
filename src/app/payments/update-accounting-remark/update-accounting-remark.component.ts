@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
-
+import { validateSegmentNumbers } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -30,7 +30,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   supplierCodeList: Array<any>;
   filterSupplierCodeList: Array<any>;
   passengerList: Array<any>;
-
+  segments = [];
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
   // PaymentModeList: Array<SelectItem>;
@@ -46,9 +46,18 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.loadBSPList();
     this.loadVendorCode();
     this.loadPassengerList();
+
+
+
+  }
+
+  ngOnInit() {
+    this.supplierCodeList = this.ddbService.getSupplierCode();
+    this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
-      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      validateSegmentNumbers(this.segments)]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', [Validators.required]),
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
@@ -66,15 +75,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       description: new FormControl('', [Validators.required]),
       bsp: new FormControl('', [Validators.required])
     });
-
   }
 
-  ngOnInit() {
 
-    //  this.passengerList = this.pnrService.getPassengers();
-    //  this.passengerList.push({fullname: 'All',  id:'ALL'})
-    this.supplierCodeList = this.ddbService.getSupplierCode();
-  }
 
   IsBSP(testvalue) {
     if (testvalue === '1') {
@@ -111,12 +114,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Credit Card', itemValue: 'CC' },
       { itemText: 'Cash', itemValue: 'CA' },
       { itemText: 'Cheque', itemValue: 'CK' },
-      { itemText: 'Agency Plastic Card', itemValue: 'ACC' }
+      { itemText: 'Agency Plastic Card', itemValue: 'AP' }
       ];
     } else {
       this.formOfPaymentList = [{ itemText: '', itemValue: '' },
       { itemText: 'Credit Card', itemValue: 'CC' },
-      { itemText: 'Agency Plastic Card', itemValue: 'ACC' },
+      { itemText: 'Agency Plastic Card', itemValue: 'AP' },
       { itemText: 'RBC Points', itemValue: 'CK' }
       ];
     }
@@ -167,7 +170,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
   }
 
-  private assignDescription(typeCode: any) {
+  assignDescription(typeCode: any) {
     if (typeCode === 'OTHER COSTS') {
       this.accountingRemarks.description = '';
       this.matrixAccountingForm.controls.description.enable();

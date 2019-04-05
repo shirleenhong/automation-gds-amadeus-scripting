@@ -15,6 +15,7 @@ import { ReportingComponent } from '../reporting/reporting.component';
 import { ITCPackageCostRemarkService } from '../service/itc-packagecost-remarks.service';
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 
 @Component({
   selector: 'app-leisure',
@@ -26,6 +27,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   isPnrLoaded: boolean;
   message: string;
   leisure: LeisureViewModel;
+  cfLine: CfRemarkModel;
 
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -36,6 +38,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
 
   constructor(private pnrService: PnrService,
+
     private remarkService: RemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
@@ -44,6 +47,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private itcPackageCostRemarkService: ITCPackageCostRemarkService,
     private fb: FormBuilder,
     private ddbService: DDBService
+
   ) {
     this.loadPNR();
   }
@@ -55,7 +59,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     //   this.reportingComponent.reportingView.leisureFeeType = val;
     //   this.reportingComponent.checkSFC();
     // });
-    //this.eventSubscribe = true;
+    // this.eventSubscribe = true;
   }
   ngAfterViewInit(): void {
   }
@@ -65,9 +69,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // this.ddbService.sampleSupplier();
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    this.cfLine = this.pnrService.getCFLine();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
-      this.errorPnrMsg = this.pnrService.errorMessage;
+      this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
+    } else if (this.cfLine == null || this.cfLine === undefined) {
+      this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
+      this.isPnrLoaded = false;
     }
+
   }
 
   ngOnInit() {
@@ -78,21 +87,26 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const remarkCollection = new Array<RemarkGroup>();
 
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
-    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.leisure.paymentView.matrixReceipts));
-    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.leisure.paymentView.accountingRemarks));
+    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
+    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
+    remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark.accountingForm));
+
+
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
+    remarkCollection.push(this.segmentService.setMandatoryRemarks());
 
-    const concierge = this.reportingComponent.conciergeComponent;
-    remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
-      concierge.getConciergeForDeletion(), concierge.getConciergeu30()));
-
+    if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
+      const concierge = this.reportingComponent.conciergeComponent;
+      remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
+        concierge.getConciergeForDeletion(), concierge.getConciergeRetain()));
+    }
 
     // tslint:disable-next-line:no-string-literal
     if (this.remarkComponent.remarkForm.controls['packageList'].value !== null &&
-      this.remarkComponent.remarkForm.controls['packageList'].value !== ''
-      && this.remarkComponent.remarkForm.controls['packageList'].value !== "1") {
-      if (this.remarkComponent.remarkForm.controls['packageList'].value === 'ITC') {
+      this.remarkComponent.remarkForm.controls.packageList.value !== ''
+      && this.remarkComponent.remarkForm.controls.packageList.value !== '1') {
+      if (this.remarkComponent.remarkForm.controls.packageList.value === 'ITC') {
         remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));
       } else {
         remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));
@@ -102,13 +116,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const leisureFee = this.paymentComponent.leisureFee;
 
     if (leisureFee.leisureFeeForm.valid) {
-      remarkCollection.push(leisureFee.BuildRemark());
+      remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
     }
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
-      // this.loadPNR();
-
     }, error => { alert(JSON.stringify(error)); });
   }
 }

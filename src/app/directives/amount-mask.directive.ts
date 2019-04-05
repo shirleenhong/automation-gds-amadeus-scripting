@@ -17,7 +17,7 @@ export class AmountMaskDirective {
 
     @HostListener('blur')
     onBlur() {
-        if (this.ngControl.value === null) { return; }
+        if (this.ngControl.value === null || this.ngControl.value === undefined) { return; }
         const newVal = this.decPipe.transform(this.ngControl.value.replace(',', ''), '1.2-2').replace(',', '');
         this.ngControl.control.setValue(newVal);
     }
@@ -25,7 +25,8 @@ export class AmountMaskDirective {
     onInputChange(event, backspace) {
         let newVal = event;
 
-        if (newVal === null) { return newVal; }
+        if (newVal === null || newVal === undefined || isNaN(newVal)) { return newVal; }
+
         const lastChar = newVal.substr(newVal.length - 1);
 
         if (lastChar.match(/[0-9]/g) === null && lastChar !== '.') {

@@ -20,7 +20,7 @@ export class AlphaNumericMaskDirective {
     onInputChange(event) {
         let newVal = event;
 
-        if (newVal === null) { return newVal; }
+        if (newVal === null || newVal === undefined) { return newVal; }
         const lastChar = newVal.substr(newVal.length - 1);
 
         if (lastChar.match(/[0-9]/g) === null && lastChar.match(/[a-z]/g) === null && lastChar.match(/[A-Z]/g) === null) {

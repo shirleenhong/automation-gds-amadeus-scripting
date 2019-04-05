@@ -1,13 +1,11 @@
 
 import { RemarkModel } from '../models/pnr/remark.model';
-
 import { PnrService } from './pnr.service';
-
 import { Injectable } from '@angular/core';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { DatePipe } from '@angular/common';
 import { formatDate } from '@angular/common';
-import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { RemarkHelper } from '../helper/remark-helper';
 import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 @Injectable({

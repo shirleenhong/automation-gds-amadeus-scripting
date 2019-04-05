@@ -20,7 +20,8 @@ export class ConciergeUdidsComponent implements OnInit {
   reasonHotelBooked: Array<SelectItem>;
   remarks: Array<any>;
   forDeletion = [];
-  u30: boolean = false;
+  forReference = [];
+  // u30: boolean = false;
 
 
   constructor(private pnrService: PnrService) {
@@ -61,7 +62,7 @@ export class ConciergeUdidsComponent implements OnInit {
 
     this.bookingTypeList = [{ itemText: '', itemValue: '' },
     { itemText: 'Air Only Booking', itemValue: 'AIR ONLY BOOKING' },
-    { itemText: 'Air and Hotel and/or Car', itemValue: 'AIR/HOTEL AND OR CAR' },
+    { itemText: 'Air and Hotel and/or Car', itemValue: 'AIR AND HOTEL AND/OR CAR' },
     { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' }];
 
     this.yesNoList = [{ itemText: '', itemValue: '' },
@@ -105,8 +106,9 @@ export class ConciergeUdidsComponent implements OnInit {
     { id: '*U18/-', control: 'reasonHotelBooked' },
     { id: '*U30/-', control: '' }];
 
-    for (let i = 0; i <= udids.length; i++) {
+    for (let i = 0; i <= (udids.length - 1); i++) {
       const rem = this.getTextLineNo(udids[i].id);
+      // alert(rem);
       if (rem) {
         this.setControls(rem.remarkText, udids[i].id, udids[i].control, rem.lineNo);
       }
@@ -114,13 +116,17 @@ export class ConciergeUdidsComponent implements OnInit {
   }
 
   private setControls(rem: string, id: string, control: string, lineNo: string) {
-    if (id === '*U13/-' && rem.replace(id, '') === 'NO HTL BKD') {
-      this.forDeletion.push(lineNo);
-      return;
+    if (id === '*U13/-') {
+      if (rem.replace(id, '') === 'NO HTL BKD') {
+        this.forDeletion.push(lineNo);
+        return;
+      } else {
+        this.forReference.push('U13');
+      }
     }
 
     if (id === '*U30/-') {
-      this.u30 = true;
+      this.forReference.push('U30');
       return;
     }
 
@@ -134,8 +140,17 @@ export class ConciergeUdidsComponent implements OnInit {
     return this.forDeletion;
   }
 
-  getConciergeu30() {
-    return this.u30;
+  getConciergeRetain() {
+    return this.forReference;
+  }
+
+  onchangeHotel(newValue) {
+    if (newValue === 'YES') {
+      this.conciergeForm.controls['reasonHotelBooked'].setValue('');
+      this.conciergeForm.controls['reasonHotelBooked'].disable();
+    } else {
+      this.conciergeForm.controls['reasonHotelBooked'].enable();
+    }
   }
 
   // getConciergeForDeletion() {

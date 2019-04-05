@@ -3,7 +3,6 @@ import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
 import { UpdateTourSegmentComponent } from '../update-tour-segment/update-tour-segment.component';
 import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
-import { RemarkCollectionService } from '../../service/remark.collection.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { TourSegmentViewModel } from 'src/app/models/tour-segment-view.model';
 

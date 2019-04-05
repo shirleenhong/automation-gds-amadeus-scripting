@@ -4,6 +4,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/update-accounting-remark.component';
 import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
+import { Alert } from 'selenium-webdriver';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class AccountingRemarkComponent implements OnInit {
   showU73 = false;
   showU74 = false;
   showU77 = false;
-
+  isAddNew = false;
 
 
   constructor(private modalService: BsModalService, private pnrService: PnrService, private fb: FormBuilder) {
@@ -52,10 +53,56 @@ export class AccountingRemarkComponent implements OnInit {
       this.setControlValidator(this.f.propertyName, this.showU75);
     });
     this.checkSupplierCode();
+    this.modalSubscribeOnClose();
+
   }
 
 
+  deleteItem(r: MatrixAccountingModel) {
+    if (confirm('Are you sure you want to delete this Accounting Remark?')) {
+      this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
+      let i = 1;
+      this.accountingRemarks.forEach(x => {
+        x.tkMacLine = i;
+        i++;
+      });
+    }
+  }
 
+  modalSubscribeOnClose() {
+    this.modalService.onHide.subscribe(result => {
+      if (this.modalRef.content.isSubmitted) {
+        if (!this.isAddNew) {
+          const cur = this.accountingRemarks.find(x => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
+          this.modelCopy(this.modalRef.content.accountingRemarks, cur);
+        } else {
+          this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
+        }
+        this.modalRef.content.isSubmitted = false;
+        this.checkSupplierCode();
+      }
+    });
+  }
+
+
+  updateItem(r: MatrixAccountingModel) {
+    this.isAddNew = false;
+    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, { backdrop: 'static' });
+    this.modalRef.content.title = 'Update Accounting Remarks';
+    this.modalRef.content.accountingRemarks = new MatrixAccountingModel();
+    this.modelCopy(r, this.modalRef.content.accountingRemarks);
+    this.modalRef.content.IsBSP(r.bsp);
+    this.modalRef.content.assignDescription(r.description);
+    this.modalRef.content.FormOfPaymentChange(r.fop);
+  }
+
+  modelCopy(src, target) {
+    for (const prop in src) {
+      if (src.hasOwnProperty(prop)) {
+        target[prop] = src[prop];
+      }
+    }
+  }
 
 
   get f() { return this.accountingForm.controls; }
@@ -66,14 +113,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.title = 'Add Accounting Remarks';
     accountingRemarks.tkMacLine = (this.accountingRemarks.length + 1);
     this.modalRef.content.accountingRemarks = accountingRemarks;
-    this.modalService.onHide.subscribe(result => {
-      if (this.modalRef.content.isSubmitted) {
-        this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
-        this.modalRef.content.isSubmitted = false;
-        this.checkSupplierCode();
-      }
-      console.log('results', result);
-    });
+    this.isAddNew = true;
   }
 
   checkSupplierCode() {

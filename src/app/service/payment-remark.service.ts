@@ -52,6 +52,17 @@ export class PaymentRemarkService {
     if (existingLines.length > 0) {
       remGroup.deleteRemarkByIds = existingLines;
     }
+    const apays = this.pnrService.getApayRiiRemarkLines();
+    if (apays !== null && apays.length > 0) {
+      if (remGroup.deleteRemarkByIds === undefined) {
+        remGroup.deleteRemarkByIds = [];
+      }
+
+      apays.forEach(x => {
+        remGroup.deleteRemarkByIds.push(x.lineNum);
+      });
+    }
+
 
     if (accountingRemarks !== null) {
       accountingRemarks.forEach(account => {

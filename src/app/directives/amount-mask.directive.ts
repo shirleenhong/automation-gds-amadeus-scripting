@@ -17,7 +17,7 @@ export class AmountMaskDirective {
 
     @HostListener('blur')
     onBlur() {
-        if (this.ngControl.value === null) { return; }
+        if (this.ngControl.value === null || this.ngControl.value === undefined) { return; }
         const newVal = this.decPipe.transform(this.ngControl.value.replace(',', ''), '1.2-2').replace(',', '');
         this.ngControl.control.setValue(newVal);
     }

@@ -11,7 +11,7 @@ import { UpdateMatrixReceiptComponent } from '../update-matrix-receipt/update-ma
 export class MatrixReceiptComponent implements OnInit {
 
   @Input()
-  matrixReceipts: MatrixReceiptModel[];
+  matrixReceipts: MatrixReceiptModel[] = [];
   modalRef: BsModalRef;
 
   constructor(private modalService: BsModalService) { }

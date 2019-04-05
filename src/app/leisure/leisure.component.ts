@@ -72,7 +72,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.cfLine = this.pnrService.getCFLine();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
-    } else if (this.cfLine == null) {
+    } else if (this.cfLine == null || this.cfLine == undefined) {
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
       this.isPnrLoaded = false;
     }

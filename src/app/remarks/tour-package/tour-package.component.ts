@@ -2,8 +2,12 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewE
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, FormBuilder, Validators } from '@angular/forms';
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { DDBService } from 'src/app/service/ddb.service';
+import { PnrService } from 'src/app/service/pnr.service';
+import { RemarkHelper } from 'src/app/helper/remark-helper';
+import { PackageRemarkHelper } from 'src/app/helper/packageRemark-helper';
 
 
 @Component({
@@ -16,10 +20,13 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   decPipe = new DecimalPipe('en-US');
   bspCurrencyList: SelectItem[];
   tourPackage: TourPackageViewModel;
-
+  remarks: Array<any>;
+  riiRemarks: Array<any>;
   group: FormGroup;
+  datePipe = new DatePipe('en-US');
 
-  constructor(private fb: FormBuilder, private ddb: DDBService) {
+  constructor(private fb: FormBuilder, private ddb: DDBService, private pnrService: PnrService,
+    private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) {
     this.group = this.fb.group({
       adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
       tourCurrencyType: new FormControl(''),
@@ -37,7 +44,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
       lessDepositPaid: new FormControl(''),
       balanceToBePaid: new FormControl(''),
       balanceDueDate: new FormControl(''),
-      commisionAmount: new FormControl('', [Validators.maxLength(8)])
+      commission: new FormControl('', [Validators.maxLength(8)])
     }, { updateOn: 'blur' });
   }
 
@@ -111,6 +118,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     }
     );
 
+    this.loadValues();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -262,5 +270,41 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     // TODO: Get from API DDB
     this.bspCurrencyList = this.ddb.getCurrencies();
   }
+
+  private loadValues() {
+    if (this.pnrService.getRIIRemarkText('HOTEL/ACCOMMODATION') === '' ||
+      this.pnrService.getRIIRemarkText('CAR RENTAL') === '') {
+      this.getRIITourPackageRemarksFromGDS();
+      this.packageRemarkHelper.getUDIDPackageRemarksFromGds(this.group);
+    }
+  }
+
+
+
+  private getRIITourPackageRemarksFromGDS() {
+
+    this.group.controls.balanceDueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
+    this.group.controls.tourCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
+
+    this.packageRemarkHelper.getValues('ADULT', 'PACKAGE', 'baseCost', this.group);
+    this.packageRemarkHelper.getValues('ADULT', 'TAXES', 'taxesPerAdult', this.group);
+    this.packageRemarkHelper.getValues('ADULT', 'INSURANCE', 'insurancePerAdult', this.group);
+    this.packageRemarkHelper.getValues('CHILD', 'PACKAGE', 'childBaseCost', this.group);
+    this.packageRemarkHelper.getValues('CHILD', 'TAXES', 'taxesPerChild', this.group);
+    this.packageRemarkHelper.getValues('CHILD', 'INSURANCE', 'insurancePerChild', this.group);
+    this.packageRemarkHelper.getValues('INFANT', 'PACKAGE', 'totalCostPerInfant', this.group);
+    this.packageRemarkHelper.getCount('ADULT', 'PACKAGE', 'adultNum', this.group);
+    this.packageRemarkHelper.getCount('CHILD', 'PACKAGE', 'childrenNumber', this.group);
+    this.packageRemarkHelper.getCount('INFANT', 'PACKAGE', 'infantNumber', this.group);
+
+    const regexp: RegExp = /([0-9]+[\.]*[0-9]*)/;
+    this.group.controls.depositPaid.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regexp));
+    this.group.controls.totalCostHoliday.setValue(this.packageRemarkHelper.getRegexResult('TOTAL PACKAGE PRICE', regexp));
+    this.group.controls.balanceToBePaid.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regexp));
+    this.packageRemarkHelper.removeOtherTourRemark();
+  }
+
+
+
 }
 

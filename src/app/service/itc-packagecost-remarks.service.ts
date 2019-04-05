@@ -8,6 +8,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { RemarkHelper } from '../helper/remark-helper';
+import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,7 @@ import { RemarkHelper } from '../helper/remark-helper';
 
 export class ITCPackageCostRemarkService {
     decPipe = new DecimalPipe('en-US');
-    constructor(private remarkHelper: RemarkHelper) { }
+    constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) { }
 
     public GetRemarks(group: any) {
 
@@ -23,6 +24,10 @@ export class ITCPackageCostRemarkService {
         rmGroup.group = 'Tour Package';
         rmGroup.remarks = new Array<RemarkModel>();
         const datePipe = new DatePipe('en-US');
+
+        this.packageRemarkHelper.getForDeletion().forEach(c => {
+            rmGroup.deleteRemarkByIds.push(c);
+        });
 
 
         // tslint:disable-next-line:max-line-length
@@ -80,7 +85,7 @@ export class ITCPackageCostRemarkService {
         // tslint:disable-next-line:max-line-length
         if (group.value.dueDate) {
             rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + group.value.balance + ' IS DUE ' +
-                datePipe.transform(group.value.dueDate, 'dMMMyy') + '----', 'RI', 'I'));
+                datePipe.transform(group.value.dueDate, 'dMMMyy') + ' ----', 'RI', 'I'));
         }
 
         console.log('Balance of');

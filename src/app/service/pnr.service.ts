@@ -459,7 +459,7 @@ export class PnrService {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.riiElements) {
         const rem = rm.fullNode.miscellaneousRemarks.remarks.freetext;
-        if (rem.match(/PAID (.*) CF-(.*) PLUS (.*) TAX ON (.*)/g) !== '') {
+        if (rem.match(/PAID (.*) CF-(.*) PLUS (.*) TAX ON (.*)/g) !== null) {
           apays.push({ lineNum: rm.elementNumber, remark: rem, segments: this.getAssocNumbers(rm.associations) });
         }
       }

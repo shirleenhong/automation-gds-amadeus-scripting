@@ -19,7 +19,11 @@ export class PnrService {
   errorMessage = '';
   destinationCity = [{ endpoint: '' }];
   cfLine: CfRemarkModel;
+
+  segments = [];
+
   amountPipe = new AmountPipe();
+
 
   constructor() { }
 
@@ -37,6 +41,7 @@ export class PnrService {
       }
     ).catch(err => { console.log(err); });
 
+    console.log(JSON.stringify(this.pnrObj));
   }
 
   getRemarkLineNumber(searchText: string) {
@@ -210,41 +215,54 @@ export class PnrService {
 
 
   getSegmentTatooNumber() {
-    const segments = new Array<any>();
+    // const segments = new Array<any>();
+    this.segments = [];
     for (const air of this.pnrObj.airSegments) {
-      const segment = {
-        lineNo: air.elementNumber,
-        tatooNo: air.tatooNumber
-      };
-      segments.push(segment);
+      this.getSegmentDetails(air, 'air');
     }
 
     for (const car of this.pnrObj.auxCarSegments) {
-      const segment = {
-        lineNo: car.elementNumber,
-        tatooNo: car.tatooNumber
-      };
-      segments.push(segment);
+      this.getSegmentDetails(car, 'car');
     }
 
     for (const hotel of this.pnrObj.auxHotelSegments) {
-      const segment = {
-        lineNo: hotel.elementNumber,
-        tatooNo: hotel.tatooNumber
-      };
-      segments.push(segment);
+      this.getSegmentDetails(hotel, 'hotel');
     }
 
     for (const misc of this.pnrObj.miscSegments) {
-      const segment = {
-        lineNo: misc.elementNumber,
-        tatooNo: misc.tatooNumber
-      };
-      segments.push(segment);
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
+        this.getSegmentDetails(misc, 'mis');
+      }
     }
+    return this.segments;
+  }
 
-    return segments;
+  private getSegmentDetails(elem: any, type: string) {
+    let elemText = '';
+    let elemStatus = '';
+    let elemairlineCode = '';
 
+    if (type === 'air') {
+      elemText = type + '-' + elem.airlineCode + elem.flightNumber + ' ' + elem.class + elem.departureDate + ' '
+        + elem.departureAirport + elem.arrivalAirport + elem.status + ' ' + elem.departureTime + ' ' + elem.arrivalTime;
+      elemStatus = elem.status;
+      elemairlineCode = elem.airlineCode;
+    } else {
+      const fullnodetemp = elem.fullNode.travelProduct;
+      elemText = type + '-' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
+        + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' + fullnodetemp.product.depDate;
+      elemStatus = elem.fullNode.relatedProduct.status;
+    }
+    const segment = {
+      lineNo: elem.elementNumber,
+      tatooNo: elem.tatooNumber,
+      status: elemStatus,
+      segmentType: type,
+      longFreeText: elemText,
+      airlineCode: elemairlineCode
+    };
+    this.segments.push(segment);
   }
 
   private getLastDate(airdate: any, lastDeptDate: Date) {
@@ -470,6 +488,18 @@ export class PnrService {
     return apays;
   }
 
+
+  hasNUCRemarks() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText === 'NUC') {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   getMatrixReceiptRemarks(): MatrixReceiptModel[] {
     const matrixReceipts: MatrixReceiptModel[] = [];
     for (const rm of this.pnrObj.rmElements) {
@@ -499,7 +529,7 @@ export class PnrService {
     alert(JSON.stringify(match));
     if (match.length > 0) {
 
-    }
+    
 
 
     match = remark.match(/RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(.*)\/-GL-(?<gl>(.*))/g);
@@ -512,6 +542,17 @@ export class PnrService {
 
     return model;
 
+    }
   }
 
+  IsMISRetention() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf('PNR CANCELLED') > -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }

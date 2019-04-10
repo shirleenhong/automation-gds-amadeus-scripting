@@ -85,4 +85,12 @@ export class RemarkHelper {
         return maxlen;
 
     }
+
+    getRemark(remarkText, remarkType, remarkCategory) {
+        const rem = new RemarkModel();
+        rem.remarkType = remarkType;
+        rem.remarkText = remarkText;
+        rem.category = remarkCategory;
+        return rem;
+    }
 }

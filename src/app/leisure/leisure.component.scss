@@ -12,7 +12,7 @@
 
 
 
-.submitPnr {
+.submitPnr, .cancelPnr, .loadPnr {
 	-moz-box-shadow: inset 0px 1px 0px 0px #fad7c0;
 	-webkit-box-shadow: inset 0px 1px 0px 0px #fad7c0;
 	box-shadow: inset 0px 1px 0px 0px #fad7c0;
@@ -55,6 +55,11 @@
 	top: 1px;
 }
 
+.cancelsegment:disabled {
+	position: relative;
+	top: 1px;
+	color: gray;
+}
 
 .loaderBody {
 	width: 100%;
@@ -84,4 +89,8 @@
 	background-image: url("../../assets/images/logo-reverse-with-orange.png");
 	background-repeat: no-repeat;
 	background-size: 100%;
+}
+
+.cancelPnr, .loadPnr {
+	width: 300px;
 }

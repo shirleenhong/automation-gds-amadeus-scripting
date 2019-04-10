@@ -31,6 +31,7 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
 import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
 import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
+import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
 
 
 
@@ -53,7 +54,8 @@ import { AmountPipe } from './pipes/amount.pipe';
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, ConciergeUdidsComponent, AmountPipe
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent
 
   ],
   imports: [

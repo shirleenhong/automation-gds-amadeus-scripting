@@ -5,6 +5,8 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { debug } from 'util';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
+import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
+import { AmountPipe } from '../pipes/amount.pipe';
 
 declare var PNR: any;
 
@@ -17,6 +19,7 @@ export class PnrService {
   errorMessage = '';
   destinationCity = [{ endpoint: '' }];
   cfLine: CfRemarkModel;
+  amountPipe = new AmountPipe();
 
   constructor() { }
 
@@ -396,18 +399,18 @@ export class PnrService {
           model.tkMacLine = Number(val[1].replace('MAC', ''));
           break;
         case 'AMT':
-          model.baseAmount = (val[1]);
+          model.baseAmount = this.amountPipe.transform(val[1]);
           break;
         case 'PT':
           const pt = val[1].replace('XG', '').replace('XQ', '').replace('XT', '');
-          if (model.gst == null) {
-            model.gst = parseFloat(pt).toString();
-          } else if (model.hst == null) {
-            model.hst = parseFloat(pt).toString();
+          if (model.hst == null) {
+            model.hst = this.amountPipe.transform(parseFloat(pt));
+          } else if (model.gst == null) {
+            model.gst = this.amountPipe.transform(parseFloat(pt));
           } else if (model.qst == null) {
-            model.qst = parseFloat(pt).toString();
+            model.qst = this.amountPipe.transform(parseFloat(pt));
           } else if (model.otherTax == null) {
-            model.otherTax = parseFloat(pt).toString();
+            model.otherTax = this.amountPipe.transform(parseFloat(pt));
           }
           break;
         case 'FOP':
@@ -467,5 +470,48 @@ export class PnrService {
     return apays;
   }
 
+  getMatrixReceiptRemarks(): MatrixReceiptModel[] {
+    const matrixReceipts: MatrixReceiptModel[] = [];
+    for (const rm of this.pnrObj.rmElements) {
+      if (rm.freeFlowText.indexOf('REC/-') === 0) {
+        let model: MatrixReceiptModel;
+        let rln = rm.freeFlowText.match(/REC\/-RLN-[0-9]*/g);
+        if (rln !== undefined && rln !== '') {
+          rln = rln.toString().replace('REC/-RLN-', '');
+          model = matrixReceipts.find(x => x.rln === Number(rln));
+        }
+        if (model === null || model === undefined) {
+          model = new MatrixReceiptModel();
+
+          matrixReceipts.push(this.extractMatrixReceipt(model, rm.freeFlowText));
+        } else {
+          this.extractMatrixReceipt(model, rm.freeFlowText);
+        }
+
+      }
+    }
+    return matrixReceipts;
+  }
+
+  private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
+
+    let match = remark.match(/RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(.*)/g);
+    alert(JSON.stringify(match));
+    if (match.length > 0) {
+
+    }
+
+
+    match = remark.match(/RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(.*)\/-GL-(?<gl>(.*))/g);
+
+    match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-POINTS (?<lastFourDigit>(.*)) REF-(?<ref>(.*))/g);
+
+    match = remark.match(/RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g);
+
+    match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g);
+
+    return model;
+
+  }
 
 }

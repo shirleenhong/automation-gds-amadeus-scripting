@@ -47,8 +47,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.loadVendorCode();
     this.loadPassengerList();
 
-
-
   }
 
   ngOnInit() {
@@ -56,8 +54,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
-      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
-      validateSegmentNumbers(this.segments)]),
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'), validateSegmentNumbers(this.segments)]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', [Validators.required]),
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),

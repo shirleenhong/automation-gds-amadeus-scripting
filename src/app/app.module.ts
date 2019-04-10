@@ -17,7 +17,6 @@ import { UpdateMatrixReceiptComponent } from './payments/update-matrix-receipt/u
 import { TourSegmentComponent } from './passive-segments/tour-segment/tour-segment.component';
 import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segment/update-tour-segment.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
-import { AccordionComponent } from './shared/accordion/accordion.component';
 
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
@@ -48,7 +47,6 @@ import { AmountPipe } from './pipes/amount.pipe';
     TourSegmentComponent,
     UpdateTourSegmentComponent,
     PassiveSegmentsComponent,
-    AccordionComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
     LeisureFeeComponent,

@@ -147,11 +147,20 @@ export class CancelSegmentComponent implements OnInit {
         if (look.airlineCode === 'AC') {
           this.defaultPassenger('AC');
           this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
+          this.cancelForm.controls['acTicketNo'].setValue('');
+          this.cancelForm.controls['acpassengerNo'].setValue('');
+          this.cancelForm.controls['acFlightNo'].setValue('');
+          this.cancelForm.controls['accityPair'].setValue('');
+          this.cancelForm.controls['acdepDate'].setValue('');
+          this.cancelForm.controls['relationship'].setValue('');
           this.isAC = true;
         }
         if (look.airlineCode === 'UA') {
           this.defaultPassenger('UA');
           this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
+          this.cancelForm.controls['reasonUACancel'].setValue('');
+          this.cancelForm.controls['uasegNo'].setValue('');
+          this.cancelForm.controls['uaPassengerNo'].setValue('');
           this.isUA = true;
 
         }

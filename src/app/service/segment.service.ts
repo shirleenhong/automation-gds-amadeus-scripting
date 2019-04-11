@@ -227,12 +227,16 @@ export class SegmentService {
 
 
         if (cancel.value.reasonACCancel) {
+            let pass = '1';
+            if (cancel.value.acpassengerNo !== undefined) {
+                pass = cancel.value.acpassengerNo;
+            }
             switch (cancel.value.reasonACCancel) {
                 case '1':
-                    remText = 'OS AC NCC 014' + cancel.value.acTicketNo + '/P' + cancel.value.acpassengerNo;
+                    remText = 'OS AC NCC 014' + cancel.value.acTicketNo + '/P' + pass;
                     break;
                 case '2':
-                    remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + cancel.value.acpassengerNo;
+                    remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + pass;
                     break;
                 case '3':
                     remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo;
@@ -243,11 +247,11 @@ export class SegmentService {
                 case '5':
                     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
                         + cancel.value.accityPair + ' ' + cancel.value.acdepDate
-                        + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + cancel.value.acpassengerNo;
+                        + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
                     break;
                 case '6':
                     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                        + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + cancel.value.acpassengerNo;
+                        + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + pass;
                     break;
                 default:
                     break;
@@ -259,8 +263,12 @@ export class SegmentService {
         }
 
         if (cancel.value.reasonUACancel) {
+            let uapass = '1';
+            if (cancel.value.uaPassengerNo !== undefined) {
+                uapass = cancel.value.uaPassengerNo;
+            }
             if (cancel.value.reasonUACancel === '1') {
-                remText = 'SROTHSUA-' + cancel.value.uasegNo + '/BSP24REFUND/P' + cancel.value.uaPassengerNo;
+                remText = 'SROTHSUA-' + cancel.value.uasegNo + '/BSP24REFUND/P' + uapass;
             }
             rmGroup.cryptics.push(remText);
         }

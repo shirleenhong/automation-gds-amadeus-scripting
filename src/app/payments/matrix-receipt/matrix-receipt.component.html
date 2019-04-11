@@ -25,17 +25,20 @@
       <td>{{ r.description }}</td>
       <td>{{ r.cwtRef }}</td>
       <td>{{ r.lastFourVi }}</td>
-      <td></td>
+      <td><i class="fas fa-edit" (click)="updateItem(r)"></i>
+        &nbsp;&nbsp;&nbsp;
+        <i class=" fas fa-trash-alt" (click)="deleteItem(r)"> </i>
+      </td>
     </tr>
 
 
   </tbody>
 </table>
 
-<div class="row" >
+<div class="row">
   <div class="col">
-  <div class="pull-right">
-        <button   (click)="addMatrixReceipt()">Add Matrix Receipt</button>
+    <div class="pull-right">
+      <button (click)="addMatrixReceipt()">Add Matrix Receipt</button>
+    </div>
   </div>
-</div>
 </div>

@@ -256,6 +256,7 @@ export class SegmentService {
                 default:
                     break;
             }
+
             rmGroup.cryptics.push(remText);
             // if (multiremText !== '') {
             //     rmGroup.cryptics.push(multiremText);
@@ -272,11 +273,16 @@ export class SegmentService {
             }
             rmGroup.cryptics.push(remText);
         }
+
         if (remText !== '') {
             rmGroup.cryptics.push('RFCWTPTEST');
             rmGroup.cryptics.push('ER');
         }
 
+        const nuRemarks = this.pnrService.hasNUCRemarks();
+        if (nuRemarks !== '0') {
+            rmGroup.deleteRemarkByIds.push(nuRemarks);
+        }
         return rmGroup;
     }
 
@@ -303,7 +309,7 @@ export class SegmentService {
         }
 
 
-        const hotellook = segmentselected.find(x => x.segmentType === 'hotel');
+        const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
         if (hotellook) {
             remText = dateToday + '/HTL SEGMENT INCLUDED IN CANCEL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
@@ -366,10 +372,7 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        const nuRemarks = this.pnrService.hasNUCRemarks();
-        if (nuRemarks !== '0') {
-            rmGroup.deleteRemarkByIds.push(nuRemarks);
-        }
+
         segmentselected.forEach(element => {
             rmGroup.deleteRemarkByIds.push(element.lineNo);
         });

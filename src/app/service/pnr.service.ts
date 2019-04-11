@@ -623,24 +623,24 @@ export class PnrService {
         }
       }
     }
-  
-return false;
+
+    return false;
   }
 
 
   hasRecordLocator() {
-  return this.pnrObj.header.recordLocator;
+    return this.pnrObj.header.recordLocator;
   }
 
-hasAmendMISRetentionLine() {
-  for (const misc of this.pnrObj.miscSegments) {
-    if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') >= -1) {
-      return true;
+  hasAmendMISRetentionLine() {
+    for (const misc of this.pnrObj.miscSegments) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
+        return true;
+      }
     }
+
+    return false;
+
   }
-
-  return false;
-
-}
 
 }

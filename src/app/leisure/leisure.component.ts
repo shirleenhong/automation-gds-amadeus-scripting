@@ -105,7 +105,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
 
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    remarkCollection.push(this.segmentService.getRetentionLine());
+    if (!this.pnrService.hasAmendMISRetentionLine()) {
+      remarkCollection.push(this.segmentService.getRetentionLine());
+    }
     remarkCollection.push(this.segmentService.setMandatoryRemarks());
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
@@ -182,7 +184,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.hasNUCRemarks() && (this.segment.length > 0 || this.pnrService.IsMISRetention())) {
+      if (this.pnrService.hasRecordLocator() !== undefined && (this.segment.length > 0
+        || (this.pnrService.IsMISRetention() && this.pnrService.hasHotelCancelSegments()))) {
         this.cancelEnabled = false;
       }
     }

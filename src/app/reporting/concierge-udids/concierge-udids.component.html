@@ -12,101 +12,102 @@
       </select>
     </div>
   </div> -->
+  <div class="conciergeContainer">
 
-  <div class="row form-group">
-    <div class="col-4">Redemption Added: </div>
-    <div class="col-4">
-      <select id="redemptionAdded" class="form-control" formControlName="redemptionAdded" name="redemptionAdded">
-        <option *ngFor="let item of redemptionList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">How was this Reservation Requested?</div>
-    <div class="col-4">
-      <select id="reservationReq" class="form-control" formControlName="reservationReq" name="reservationReq">
-        <option *ngFor="let item of reservationReqList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">What type of booking are you making?</div>
-    <div class="col-4">
-      <select id="bookingType" class="form-control" formControlName="bookingType" name="bookingType">
-        <option *ngFor="let item of bookingTypeList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">Card Holder Caller Name: </div>
-    <div class="col-4">
-      <input type="text" class="form-control" id="chCallerName" name="chCallerName" formControlName="chCallerName"
-        maxlength="35" />
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">Delegate Caller Name:</div>
-    <div class="col-4">
-      <input type="text" class="form-control" id="delegateName" name="delegateName" formControlName="delegateName"
-        maxlength="35" />
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">Hotel Name:</div>
-    <div class="col-4">
-      <input type="text" class="form-control" id="hotelName" name="hotelName" formControlName="hotelName"
-        maxlength="35" />
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">Is this Reservation for Business Travel?</div>
-    <div class="col-4">
-      <select id="businessTravel" class="form-control" formControlName="businessTravel" name="businessTravel">
-        <option *ngFor="let item of yesNoList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row form-group">
-    <div class="col-4">Hotel Reservation Booked by CWT?</div>
-    <div class="col-4">
-      <select id="hotelRes" class="form-control" formControlName="hotelRes" name="hotelRes"
-        (change)="onchangeHotel($event.target.value)">
-        <option *ngFor="let item of yesNoList" [value]="item.itemValue">
-          {{item.itemText}}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div *ngIf="f.hotelRes.value === 'NO'">
     <div class="row form-group">
-      <div class="col-4">Select Reason Why No Hotel Booked?</div>
+      <div class="col-4">Redemption Added: </div>
       <div class="col-4">
-        <select id="reasonHotelBooked" class="form-control" formControlName="reasonHotelBooked"
-          name="reasonHotelBooked">
-          <option *ngFor="let item of reasonHotelBooked" [value]="item.itemValue">
+        <select id="redemptionAdded" class="form-control" formControlName="redemptionAdded" name="redemptionAdded">
+          <option *ngFor="let item of redemptionList" [value]="item.itemValue">
             {{item.itemText}}
           </option>
         </select>
       </div>
     </div>
-  </div>
 
+    <div class="row form-group">
+      <div class="col-4">How was this Reservation Requested?</div>
+      <div class="col-4">
+        <select id="reservationReq" class="form-control" formControlName="reservationReq" name="reservationReq">
+          <option *ngFor="let item of reservationReqList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4">What type of booking are you making?</div>
+      <div class="col-4">
+        <select id="bookingType" class="form-control" formControlName="bookingType" name="bookingType">
+          <option *ngFor="let item of bookingTypeList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4">Card Holder Caller Name: </div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="chCallerName" name="chCallerName" formControlName="chCallerName"
+          maxlength="35" />
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4">Delegate Caller Name:</div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="delegateName" name="delegateName" formControlName="delegateName"
+          maxlength="35" />
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4">Hotel Name:</div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="hotelName" name="hotelName" formControlName="hotelName"
+          maxlength="35" />
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4">Is this Reservation for Business Travel?</div>
+      <div class="col-4">
+        <select id="businessTravel" class="form-control" formControlName="businessTravel" name="businessTravel">
+          <option *ngFor="let item of yesNoList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4">Hotel Reservation Booked by CWT?</div>
+      <div class="col-4">
+        <select id="hotelRes" class="form-control" formControlName="hotelRes" name="hotelRes"
+          (change)="onchangeHotel($event.target.value)">
+          <option *ngFor="let item of yesNoList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="f.hotelRes.value === 'NO'">
+      <div class="row form-group">
+        <div class="col-4">Select Reason Why No Hotel Booked?</div>
+        <div class="col-4">
+          <select id="reasonHotelBooked" class="form-control" formControlName="reasonHotelBooked"
+            name="reasonHotelBooked">
+            <option *ngFor="let item of reasonHotelBooked" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- </div> -->
 

@@ -5,6 +5,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { debug } from 'util';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
+import { element } from '@angular/core/src/render3';
 
 declare var PNR: any;
 
@@ -216,20 +217,27 @@ export class PnrService {
     }
 
     for (const car of this.pnrObj.auxCarSegments) {
-      this.getSegmentDetails(car, 'car');
+      this.getSegmentDetails(car, 'CAR');
     }
 
     for (const hotel of this.pnrObj.auxHotelSegments) {
-      this.getSegmentDetails(hotel, 'hotel');
+      this.getSegmentDetails(hotel, 'HTL');
     }
 
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
         misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
-        this.getSegmentDetails(misc, 'mis');
+        this.getSegmentDetails(misc, 'MIS');
       }
     }
     return this.segments;
+  }
+
+  private formatDate(tempDate) {
+    const lairdate = new Date(tempDate.substr(2, 2) + '/' + tempDate.substr(0, 2) + '/' + tempDate.substr(4, 2));
+    const datePipe = new DatePipe('en-US');
+    let tdate = datePipe.transform(lairdate, 'ddMMM');
+    return tdate;
   }
 
   private getSegmentDetails(elem: any, type: string) {
@@ -238,14 +246,16 @@ export class PnrService {
     let elemairlineCode = '';
 
     if (type === 'air') {
-      elemText = type + '-' + elem.airlineCode + elem.flightNumber + ' ' + elem.class + elem.departureDate + ' '
-        + elem.departureAirport + elem.arrivalAirport + elem.status + ' ' + elem.departureTime + ' ' + elem.arrivalTime;
+      elemText = elem.airlineCode + elem.flightNumber + ' ' + elem.class + this.formatDate(elem.departureDate) +
+        ' ' + elem.departureAirport + elem.arrivalAirport + ' ' + elem.status + elem.bookedQuantity +
+        ' ' + elem.departureTime + ' ' + elem.arrivalTime + ' ' + this.formatDate(elem.arrivalDate) + ' ' + elem.airlineReference;
       elemStatus = elem.status;
       elemairlineCode = elem.airlineCode;
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
-      elemText = type + '-' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
-        + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' + fullnodetemp.product.depDate;
+      elemText = type + ' ' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
+        + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' +
+        this.formatDate(fullnodetemp.product.depDate);
       elemStatus = elem.fullNode.relatedProduct.status;
     }
     const segment = {
@@ -486,6 +496,17 @@ export class PnrService {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
         if (rm.freeFlowText === 'NUC') {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '0';
+  }
+
+  hasHotelCancelSegments() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText === '/HTL SEGMENT INCLUDED IN CANCEL') {
           return true;
         }
       }
@@ -499,6 +520,19 @@ export class PnrService {
         if (rm.freeFlowText.indexOf('PNR CANCELLED') > -1) {
           return true;
         }
+      }
+    }
+    return false;
+  }
+
+  hasRecordLocator() {
+    return this.pnrObj.header.recordLocator;
+  }
+
+  hasAmendMISRetentionLine() {
+    for (const misc of this.pnrObj.miscSegments) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') >= -1) {
+        return true;
       }
     }
     return false;

@@ -1,5 +1,5 @@
 <form [formGroup]="cancelForm">
-  <div>
+  <div class="cancelContainer">
 
     <div class="row form-group">
       <div class="col-4">Requestor:</div>
@@ -47,7 +47,8 @@
       <div class="row form-group">
         <div class="col-4">AC Reason For Cancel: </div>
         <div class="col-8">
-          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel">
+          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
+            (change)="acChange($event.target.value)">
             <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
               {{item.itemText}}
             </option>
@@ -108,7 +109,8 @@
       <div class="row form-group">
         <div class="col-4">UA Reason For Cancel: </div>
         <div class="col-8">
-          <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel">
+          <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel"
+            (change)="uaChange($event.target.value)">
             <option *ngFor="let item of reasonUaList" [value]="item.itemValue">
               {{item.itemText}}
             </option>
@@ -129,6 +131,7 @@
             name="uaPassengerNo" />
         </div>
       </div>
+
     </div>
 
     <div class="row form-group">

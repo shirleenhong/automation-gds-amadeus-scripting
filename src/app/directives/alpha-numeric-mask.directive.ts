@@ -20,11 +20,11 @@ export class AlphaNumericMaskDirective {
     onInputChange(event) {
         let newVal = event;
 
-        if (newVal === null || newVal === undefined) { return newVal; }
-        const lastChar = newVal.substr(newVal.length - 1);
+        if (newVal === null || newVal === undefined || newVal.length === 0) { return newVal; }
+        const lastChar = newVal.toString().substr(newVal.length - 1);
 
         if (lastChar.match(/[0-9]/g) === null && lastChar.match(/[a-z]/g) === null && lastChar.match(/[A-Z]/g) === null) {
-            newVal = newVal.substring(0, newVal.length - 1);
+            newVal = newVal.substr(0, newVal.length - 1);
         }
         this.ngControl.valueAccessor.writeValue(newVal);
     }

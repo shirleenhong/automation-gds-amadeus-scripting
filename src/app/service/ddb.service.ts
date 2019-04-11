@@ -17,7 +17,6 @@ export class DDBService implements OnInit {
 
   constructor(private httpClient: HttpClient) {
 
-
   }
 
 
@@ -48,7 +47,6 @@ export class DDBService implements OnInit {
       localStorage.setItem('token', this.token);
       this.isTokenExpired = false;
       interval((res.expires_in * 1000)).subscribe(x => { this.isTokenExpired = true; });
-
     }
 
   }

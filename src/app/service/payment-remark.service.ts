@@ -28,6 +28,7 @@ export class PaymentRemarkService {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Matrix Remark';
     remGroup.remarks = new Array<RemarkModel>();
+    remGroup.deleteRemarkByIds = this.pnrService.getMatrixReceiptLineNumbers();
     if (matrixRemarks !== undefined) {
       matrixRemarks.forEach(matrix => {
         if (matrix.bankAccount === '224000') {

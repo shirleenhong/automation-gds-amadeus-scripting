@@ -11,7 +11,7 @@ export class MatrixReceiptModel {
     ccNo: number;
     expDate: string;
     vendorCode: string;
-    gcNumber: number;
+    gcNumber: string;
     modePayment: string;
     paymentType: PaymentType;
 

@@ -5,6 +5,7 @@ import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/upd
 import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 import { Alert } from 'selenium-webdriver';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 
 @Component({
@@ -30,7 +31,10 @@ export class AccountingRemarkComponent implements OnInit {
   isAddNew = false;
 
 
-  constructor(private modalService: BsModalService, private pnrService: PnrService, private fb: FormBuilder) {
+  constructor(private modalService: BsModalService,
+    private pnrService: PnrService,
+    private fb: FormBuilder,
+    private utilHelper: UtilHelper) {
   }
 
   ngOnInit() {
@@ -71,15 +75,16 @@ export class AccountingRemarkComponent implements OnInit {
 
   modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(result => {
-      if (this.modalRef.content.isSubmitted) {
+      if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
           const cur = this.accountingRemarks.find(x => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
-          this.modelCopy(this.modalRef.content.accountingRemarks, cur);
+          this.utilHelper.modelCopy(this.modalRef.content.accountingRemarks, cur);
         } else {
           this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
         }
         this.modalRef.content.isSubmitted = false;
         this.checkSupplierCode();
+
       }
     });
   }
@@ -90,19 +95,13 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Update Accounting Remarks';
     this.modalRef.content.accountingRemarks = new MatrixAccountingModel();
-    this.modelCopy(r, this.modalRef.content.accountingRemarks);
+    this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemarks);
     this.modalRef.content.IsBSP(r.bsp);
     this.modalRef.content.assignDescription(r.description);
     this.modalRef.content.FormOfPaymentChange(r.fop);
+    //this.modalSubscribeOnClose();
   }
 
-  modelCopy(src, target) {
-    for (const prop in src) {
-      if (src.hasOwnProperty(prop)) {
-        target[prop] = src[prop];
-      }
-    }
-  }
 
 
   get f() { return this.accountingForm.controls; }
@@ -114,6 +113,7 @@ export class AccountingRemarkComponent implements OnInit {
     accountingRemarks.tkMacLine = (this.accountingRemarks.length + 1);
     this.modalRef.content.accountingRemarks = accountingRemarks;
     this.isAddNew = true;
+    this.modalSubscribeOnClose();
   }
 
   checkSupplierCode() {

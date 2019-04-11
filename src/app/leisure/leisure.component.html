@@ -36,9 +36,8 @@
   <br />
 
   <div class="form-group  row">
-    <button class="submitPnr" (click)="SubmitToPNR()">Submit To PNR</button>
-
-    <div class="col-sm-3">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="SubmitToPNR()">SUBMIT TO PNR</button>
       <button class="backMain" (click)="back()">Back To Main Menu</button>
     </div>
   </div>
@@ -70,7 +69,6 @@
 <div class="loaderBody" *ngIf="!isPnrLoaded">
   <div class="loader" *ngIf="errorPnrMsg==''">
     <div class="loaderlogo"></div><br /> Loading PNR...
-
   </div>
   <div class="loader" *ngIf="errorPnrMsg!=''">
     {{errorPnrMsg}}
@@ -80,14 +78,13 @@
 
 <div class="loaderBody" *ngIf="isPnrLoaded && workflow === ''">
   <div class="loader" *ngIf="errorPnrMsg==''">
-    <!-- <div class="loaderlogo"></div><br /> Loading PNR... -->
-    <!-- <span class="cwt-logo"></span> -->
+
     <div>Leisure <span class="cwt-logo"></span></div>
     <div>
-      <button class="loadPnr" (click)="loadPnr()">Load PNR</button>
+      <button class="leisureButton btnMenu" (click)="loadPnr()">Load PNR</button>
     </div>
     <div>
-      <button class="cancelPnr" (click)="cancelSegment()">Cancel Segments</button>
+      <button class="leisureButton btnMenu" (click)="cancelSegment()">Cancel Segments</button>
     </div>
   </div>
   <div class="loader" *ngIf="errorPnrMsg!=''">

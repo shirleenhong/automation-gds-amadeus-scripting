@@ -57,6 +57,19 @@ export class PnrService {
     return '';
   }
 
+  getRemarkLineNumbers(searchText: string) {
+    const lineNos = [];
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText.indexOf(searchText) === 0) {
+          lineNos.push(rm.elementNumber);
+        }
+      }
+    }
+    return lineNos;
+  }
+
+
   getRemarkText(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
@@ -355,7 +368,7 @@ export class PnrService {
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rmElements) {
         if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
-          //return ri.fullNode.miscellaneousRemarks.remarks.freetext;
+          // return ri.fullNode.miscellaneousRemarks.remarks.freetext;
           return ri;
         }
       }
@@ -363,16 +376,12 @@ export class PnrService {
     return '';
   }
 
-
+  getMatrixReceiptLineNumbers() {
+    return this.getRemarkLineNumbers('REC/-RLN');
+  }
 
   getMatrixAccountingLineNumbers() {
-    const lineNumbers = [];
-    for (const rm of this.pnrObj.rmElements) {
-      if (rm.freeFlowText.indexOf('MAC/-') === 0) {
-        lineNumbers.push(rm.elementNumber);
-      }
-    }
-    return lineNumbers;
+    return this.getRemarkLineNumbers('MAC/-');
   }
 
 
@@ -542,10 +551,12 @@ export class PnrService {
 
       }
     }
+
     return matrixReceipts;
   }
 
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
+
 
     let match = remark.match(/RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(.*)/g);
     alert(JSON.stringify(match));
@@ -560,12 +571,67 @@ export class PnrService {
 
       match = remark.match(/RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g);
 
+    let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
+    let match = regex.exec(remark);
+    if (match !== null) {
+      model.rln = Number(match.groups.rln);
+      model.passengerName = match.groups.fullname;
+      model.amount = this.amountPipe.transform(match.groups.amount);
+      return model;
+    }
+    regex = /RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(?<bankAccount>(.*))\/-GL-(?<gl>(.*))/g;
+    match = regex.exec(remark);
+    if (match !== null) {
+      model.rln = Number(match.groups.rln);
+      model.glCode = match.groups.gl;
+      model.lastFourVi = match.groups.lastFourDigit;
+      model.bankAccount = match.groups.bankAccount;
+      return model;
+    }
+    regex = /RLN-(?<rln>[0-9]*)\/-RM-POINTS (?<points>(.*)) REF-(?<ref>(.*))/g;
+    match = regex.exec(remark);
+    if (match !== null) {
+      model.rln = Number(match.groups.rln);
+      model.points = match.groups.points;
+      model.cwtRef = match.groups.ref;
+    }
+    regex = /RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g;
+    match = regex.exec(remark);
+    if (match !== null) {
+      model.rln = Number(match.groups.rln);
+      model.bankAccount = match.groups.ba;
+      model.glCode = match.groups.glcode;
+      const fop = match.groups.fop;
+      const typ = fop.substr(0, 2);
+      model.modePayment = typ;
+      if (typ === 'CC') {
+        regex = /([A-Z]{2})(?<vendor>[A-Z]{2})(?<cardNo>[0-9]*)\/-EXP-(?<exp>([0-9]{4}))/g;
+        match = regex.exec(fop);
+        if (match !== null) {
+          model.vendorCode = match.groups.vendor;
+          model.ccNo = Number(match.groups.cardNo);
+          model.expDate = match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
+        }
+
+        return model;
+      }
+    }
+    regex = /RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g;
+    match = regex.exec(remark);
+    if (match !== null) {
+      model.rln = Number(match.groups.rln);
+      model.description = match.groups.desc;
+      model.gcNumber = (match.groups.gc);
+      return model;
+    }
+
+
       match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g);
 
       return model;
 
-    }
   }
+
 
   IsMISRetention() {
     if (this.isPNRLoaded) {
@@ -577,6 +643,7 @@ export class PnrService {
     }
     return false;
   }
+
 
   hasRecordLocator() {
     return this.pnrObj.header.recordLocator;
@@ -590,4 +657,5 @@ export class PnrService {
     }
     return false;
   }
+
 }

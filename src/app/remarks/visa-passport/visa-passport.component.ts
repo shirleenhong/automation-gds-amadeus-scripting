@@ -41,7 +41,7 @@ export class VisaPassportComponent implements OnInit {
         }
         this.getVisaTrips();
         // tslint:disable-next-line:max-line-length
-        window.open('https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_YGMnAMztuXbHrayudbpsjKqTmmPWatnv&EXTERNAL_CATALOG_VERSION=21.5.1', '_blank');
+        // window.open('https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_YGMnAMztuXbHrayudbpsjKqTmmPWatnv&EXTERNAL_CATALOG_VERSION=21.5.1', '_blank');
     }
   }
 

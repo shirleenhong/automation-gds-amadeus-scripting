@@ -341,19 +341,34 @@ export class DDBService implements OnInit {
     ];
   }
 
-  getCityCountry(city: string) {
+  getCityCountry(search: string) {
     let cityList = [];
-
     cityList = [
-    { city: 'LHR' , countryCode: 'NL' },
-    { city: 'AMS' , countryCode: 'NL' },
-    { city: 'PAR' , countryCode: 'FR' },
-    { city: 'LON' , countryCode: 'UK' },
-    { city: 'YUL' , countryCode: 'CA' },
-    { city: 'YYZ' , countryCode: 'CA' },
-    { city: 'YVR' , countryCode: 'CA' },
+    { city: 'LHR' , countryCode: 'NL', country: 'Netherlands' },
+    { city: 'AMS' , countryCode: 'NL', country: 'Netherlands' },
+    { city: 'PAR' , countryCode: 'FR', country: 'France' },
+    { city: 'LON' , countryCode: 'UK', country: 'United Kingdom' },
+    { city: 'YUL' , countryCode: 'CA', country: 'Canada' },
+    { city: 'YYZ' , countryCode: 'CA', country: 'Canada' },
+    { city: 'YVR' , countryCode: 'CA', country: 'Canada' },
+    { city: 'CDG' , countryCode: 'FR', country: 'France' },
+    { city: 'MAD' , countryCode: 'ES', country: 'Spain' },
+    { city: 'ORD' , countryCode: 'US', country: 'United States' },
+    { city: 'FRA' , countryCode: 'DE', country: 'Germany' },
     ];
+    return cityList.find(x => x.city === search);
+  }
 
-    return cityList.find(x => x.city === city);
+  getCitizenship(search: string) {
+    let countryList = [];
+    countryList = [
+    { countryCode: 'NL', country: 'Netherlands' },
+    { countryCode: 'FR', country: 'France' },
+    { countryCode: 'GB', country: 'United Kingdom' },
+    { countryCode: 'CA', country: 'Canada' },
+    { countryCode: 'ES', country: 'Spain' },
+    { countryCode: 'US', country: 'United States' }
+    ];
+    return countryList.find(x => x.countryCode === search);
   }
 }

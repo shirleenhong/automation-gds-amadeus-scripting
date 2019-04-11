@@ -1,32 +1,125 @@
-<form [formGroup]="visaPassportForm">
+<form [formGroup]="formGroup">
+  <div class="row form-group">
+    <div class="col-4">
+      Select One
+    </div>
+  </div>
 
-    <div class="row form-group">
+  <div class="row form-group">
       <div class="col-10">
-        Is/Are the Departure and Destination City(s) located in the same country?:
+        <input
+          type="radio"
+          name="originDestination"
+          formControlName="originDestination"
+          value="true"
+          (change)="changedOriginDestination()"
+        />
+        Departure City(s) and Destination City(s) are located in different countries
       </div>
-    </div>
-  
-    <div class="row form-group">
-            <div class="col-2">
-                    <input type="radio" name="originDestination" formControlName="originDestination" value="Yes"
-                    (change)="changedOriginDestination()" checked="true" />
-                    Yes
-              </div>
-            <div class="col-2">
-                    <input type="radio" name="originDestination" formControlName="originDestination" value="No"
-                    (change)="changedOriginDestination()"  />
-                    No
-              </div>
-     </div>
+    </div>  
 
-     <div class="row form-group">
-            <div class="col-2">
-              Citizenship: 
-            </div>
-            <div class="col-3">
-                    <input type="text" class="form-control" formControlName="citizenship" maxlength="35"
-                    [(ngModel)]="visaPassportModelView.citizenship" id="citizenship"
-                    placeholder="e.g. Canadian" />         
-            </div>      
+  <div class="row form-group">
+    <div class="col-10">
+      <input
+        type="radio"
+        name="originDestination"
+        formControlName="originDestination"
+        value="false"
+        (change)="changedOriginDestination()"
+      />
+      Departure City and Destination City(s) are located within the same country  
     </div>
-  </form>
+  </div><br>
+
+  <div class="row form-group">
+    <div class="col-4">
+      International Travel Advisory Sent?
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-10">
+      <input
+        type="radio"
+        name="advisory"
+        formControlName="advisory"
+        value="Yes"
+        (change)="changedAdvisory()"
+        disabled
+      />
+      Consultant Needs to send International Travel Advisory to
+      Traveller/Arranger
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-10">
+      <input
+        type="radio"
+        name="advisory"
+        formControlName="advisory"
+        value="No"
+        (change)="changedAdvisory()"
+        disabled
+      />
+      International Travel Advisory already sent to Traveller/Arranger
+    </div>
+  </div>
+  <br />
+
+  <div class="row form-group">
+    <div class="col-5">
+      Citizenship:
+    </div>
+    <div class="col-3" >
+      <input
+        type="text"
+        class="form-control"
+        formControlName="citizenship"
+        name = "citizenship"
+        maxlength="35"
+        id="citizenship"
+        placeholder="e.g. Canadian"
+        disabled
+      />
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-5">
+      Who did you advise of these requirements?
+    </div>
+    <div class="col-3">
+      <input
+        type="text"
+        class="form-control"
+        formControlName = "travellerName"
+        maxlength="35"
+        id="travellerName"
+        name = "travellerName"
+        placeholder="e.g. John"
+        disabled
+      />
+    </div>
+  </div>
+
+  <table class="table-sm">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Passport</th>
+        <th>Visa</th>
+        <th>Associated Segment No.</th>
+      </tr>
+    </thead>
+    <tbody class="col-8">
+      <tr formArrayName="segments" *ngFor="let segment of formGroup.controls.segments.controls; let i = index">  
+        <td>
+          {{segments[i]}}
+        </td>
+        <td>
+            <input type="checkbox" formControlName="('ch' + i)">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

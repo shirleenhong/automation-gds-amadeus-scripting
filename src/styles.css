@@ -54,6 +54,17 @@
     color: black;
 }
 
+
+.checkbox-control {
+    padding: 2px 4px 2px 5px;
+    height: calc(1em + .75rem + 2px);
+    line-height: 1rem;
+    margin-top: 1px;
+    font-size: 0.6rem;
+    background-color: #ffffff;
+    color: black;
+}
+
 .row {
     padding-bottom: 3px;
     margin-right: 0px;

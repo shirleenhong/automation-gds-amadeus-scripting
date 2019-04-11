@@ -557,20 +557,6 @@ export class PnrService {
 
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
 
-
-    let match = remark.match(/RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(.*)/g);
-    alert(JSON.stringify(match));
-    if (match.length > 0) {
-
-
-
-
-      match = remark.match(/RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(.*)\/-GL-(?<gl>(.*))/g);
-
-      match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-POINTS (?<lastFourDigit>(.*)) REF-(?<ref>(.*))/g);
-
-      match = remark.match(/RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g);
-
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
     let match = regex.exec(remark);
     if (match !== null) {
@@ -625,13 +611,9 @@ export class PnrService {
       return model;
     }
 
-
-      match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g);
-
-      return model;
+    return model;
 
   }
-
 
   IsMISRetention() {
     if (this.isPNRLoaded) {
@@ -641,21 +623,24 @@ export class PnrService {
         }
       }
     }
-    return false;
+  
+return false;
   }
 
 
   hasRecordLocator() {
-    return this.pnrObj.header.recordLocator;
+  return this.pnrObj.header.recordLocator;
   }
 
-  hasAmendMISRetentionLine() {
-    for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') >= -1) {
-        return true;
-      }
+hasAmendMISRetentionLine() {
+  for (const misc of this.pnrObj.miscSegments) {
+    if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') >= -1) {
+      return true;
     }
-    return false;
   }
+
+  return false;
+
+}
 
 }

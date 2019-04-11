@@ -50,12 +50,11 @@ export class ReportingRemarkService {
 
   getUDIDRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
     let remText = '';
-    if (this.pnrService.getRemarkLineNumber('U86/-') === '') {
+    if (reporting.cfLine.cfa === 'RBM' || reporting.cfLine.cfa === 'RBP') {
       // *U86
       remText = 'U86/-OVERRIDE LEI';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-    }
-    if (!(reporting.cfLine.cfa === 'RBM' || reporting.cfLine.cfa === 'RBP')) {
+    } else {
       // *U10
       if (reporting.cfLine.cfa === 'CVC') {
         const companyname = reporting.companyName;
@@ -71,16 +70,11 @@ export class ReportingRemarkService {
           rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
         }
       }
-
-      // todo : uncomment for ummend story
-      // const existNumber = this.pnrService.getRemarkLineNumber('U30/-NEWLEI');
-      // if (existNumber === '') {
-      // *U30
+      // *U13
       const datePipe = new DatePipe('en-US');
       const dateToday = datePipe.transform(Date.now(), 'ddMMM');
       remText = 'U30/-NEWLEI' + dateToday;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-      // }
     }
   }
 

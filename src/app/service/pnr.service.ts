@@ -5,8 +5,10 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { debug } from 'util';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
+import { element } from '@angular/core/src/render3';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
+
 
 declare var PNR: any;
 
@@ -235,20 +237,27 @@ export class PnrService {
     }
 
     for (const car of this.pnrObj.auxCarSegments) {
-      this.getSegmentDetails(car, 'car');
+      this.getSegmentDetails(car, 'CAR');
     }
 
     for (const hotel of this.pnrObj.auxHotelSegments) {
-      this.getSegmentDetails(hotel, 'hotel');
+      this.getSegmentDetails(hotel, 'HTL');
     }
 
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
         misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
-        this.getSegmentDetails(misc, 'mis');
+        this.getSegmentDetails(misc, 'MIS');
       }
     }
     return this.segments;
+  }
+
+  private formatDate(tempDate) {
+    const lairdate = new Date(tempDate.substr(2, 2) + '/' + tempDate.substr(0, 2) + '/' + tempDate.substr(4, 2));
+    const datePipe = new DatePipe('en-US');
+    let tdate = datePipe.transform(lairdate, 'ddMMM');
+    return tdate;
   }
 
   private getSegmentDetails(elem: any, type: string) {
@@ -257,14 +266,16 @@ export class PnrService {
     let elemairlineCode = '';
 
     if (type === 'air') {
-      elemText = type + '-' + elem.airlineCode + elem.flightNumber + ' ' + elem.class + elem.departureDate + ' '
-        + elem.departureAirport + elem.arrivalAirport + elem.status + ' ' + elem.departureTime + ' ' + elem.arrivalTime;
+      elemText = elem.airlineCode + elem.flightNumber + ' ' + elem.class + this.formatDate(elem.departureDate) +
+        ' ' + elem.departureAirport + elem.arrivalAirport + ' ' + elem.status + elem.bookedQuantity +
+        ' ' + elem.departureTime + ' ' + elem.arrivalTime + ' ' + this.formatDate(elem.arrivalDate) + ' ' + elem.airlineReference;
       elemStatus = elem.status;
       elemairlineCode = elem.airlineCode;
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
-      elemText = type + '-' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
-        + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' + fullnodetemp.product.depDate;
+      elemText = type + ' ' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
+        + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' +
+        this.formatDate(fullnodetemp.product.depDate);
       elemStatus = elem.fullNode.relatedProduct.status;
     }
     const segment = {
@@ -502,6 +513,17 @@ export class PnrService {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
         if (rm.freeFlowText === 'NUC') {
+          return rm.elementNumber;
+        }
+      }
+    }
+    return '0';
+  }
+
+  hasHotelCancelSegments() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.freeFlowText === '/HTL SEGMENT INCLUDED IN CANCEL') {
           return true;
         }
       }
@@ -534,6 +556,20 @@ export class PnrService {
   }
 
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
+
+
+    let match = remark.match(/RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(.*)/g);
+    alert(JSON.stringify(match));
+    if (match.length > 0) {
+
+
+
+
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(.*)\/-GL-(?<gl>(.*))/g);
+
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-POINTS (?<lastFourDigit>(.*)) REF-(?<ref>(.*))/g);
+
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g);
 
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
     let match = regex.exec(remark);
@@ -589,17 +625,34 @@ export class PnrService {
       return model;
     }
 
-    return model;
+
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g);
+
+      return model;
 
   }
 
 
   IsMISRetention() {
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('PNR CANCELLED') > -1) {
+      for (const misc of this.pnrObj.miscSegments) {
+        if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
           return true;
         }
+      }
+    }
+    return false;
+  }
+
+
+  hasRecordLocator() {
+    return this.pnrObj.header.recordLocator;
+  }
+
+  hasAmendMISRetentionLine() {
+    for (const misc of this.pnrObj.miscSegments) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') >= -1) {
+        return true;
       }
     }
     return false;

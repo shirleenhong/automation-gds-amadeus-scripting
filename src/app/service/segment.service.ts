@@ -264,8 +264,11 @@ export class SegmentService {
             }
             rmGroup.cryptics.push(remText);
         }
-        rmGroup.cryptics.push('RFCWTPTEST');
-        rmGroup.cryptics.push('ER');
+        if (remText !== '') {
+            rmGroup.cryptics.push('RFCWTPTEST');
+            rmGroup.cryptics.push('ER');
+        }
+
         return rmGroup;
     }
 
@@ -354,6 +357,11 @@ export class SegmentService {
             remText = dateToday + '/TKT NBR-' + cancel.value.ticket6 + ' CPNS-' + cancel.value.coupon6;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
+
+        const nuRemarks = this.pnrService.hasNUCRemarks();
+        if (nuRemarks !== '0') {
+            rmGroup.deleteRemarkByIds.push(nuRemarks);
+        }
         segmentselected.forEach(element => {
             rmGroup.deleteRemarkByIds.push(element.lineNo);
         });
@@ -368,7 +376,7 @@ export class SegmentService {
         let finaldate = new Date();
 
         finaldate.setDate(finaldate.getDate() + 90);
-        const mis = this.setMisRemark(finaldate, finaldate, 'PNR CANCELLED' + dateToday);
+        const mis = this.setMisRemark(finaldate, finaldate, 'PNR CANCELLED ' + dateToday);
         const passGroup = new RemarkGroup();
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);

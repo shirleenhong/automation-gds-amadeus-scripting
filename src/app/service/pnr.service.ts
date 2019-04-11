@@ -551,26 +551,26 @@ export class PnrService {
     alert(JSON.stringify(match));
     if (match.length > 0) {
 
-    
 
 
-    match = remark.match(/RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(.*)\/-GL-(?<gl>(.*))/g);
 
-    match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-POINTS (?<lastFourDigit>(.*)) REF-(?<ref>(.*))/g);
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-PR(?<lastFourDigit>(.*))\/-BA-(.*)\/-GL-(?<gl>(.*))/g);
 
-    match = remark.match(/RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g);
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-POINTS (?<lastFourDigit>(.*)) REF-(?<ref>(.*))/g);
 
-    match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g);
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g);
 
-    return model;
+      match = remark.match(/RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g);
+
+      return model;
 
     }
   }
 
   IsMISRetention() {
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
-        if (rm.freeFlowText.indexOf('PNR CANCELLED') > -1) {
+      for (const misc of this.pnrObj.miscSegments) {
+        if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
           return true;
         }
       }

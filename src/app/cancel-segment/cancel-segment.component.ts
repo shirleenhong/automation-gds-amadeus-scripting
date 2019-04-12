@@ -29,31 +29,31 @@ export class CancelSegmentComponent implements OnInit {
       requestor: new FormControl('', [Validators.required]),
       desc1: new FormControl('', [Validators.required]),
       desc2: new FormControl('', []),
-      reasonACCancel: new FormControl('', [Validators.required]),
-      reasonUACancel: new FormControl('', [Validators.required]),
-      ticket1: new FormControl('', [Validators.required]),
+      reasonACCancel: new FormControl('', []),
+      reasonUACancel: new FormControl('', []),
+      ticket1: new FormControl('', []),
       ticket2: new FormControl('', []),
       ticket3: new FormControl('', []),
       ticket4: new FormControl('', []),
       ticket5: new FormControl('', []),
       ticket6: new FormControl('', []),
-      coupon1: new FormControl('', [Validators.required]),
+      coupon1: new FormControl('', []),
       coupon2: new FormControl('', []),
       coupon3: new FormControl('', []),
       coupon4: new FormControl('', []),
       coupon5: new FormControl('', []),
       coupon6: new FormControl('', []),
-      airlineNo: new FormControl('', [Validators.required]),
-      acTicketNo: new FormControl('', [Validators.required]),
-      acFlightNo: new FormControl('', [Validators.required]),
-      accityPair: new FormControl('', [Validators.required]),
-      acdepDate: new FormControl('', [Validators.required]),
-      relationship: new FormControl('', [Validators.required]),
-      uasegNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      airlineNo: new FormControl('', []),
+      acTicketNo: new FormControl('', []),
+      acFlightNo: new FormControl('', []),
+      accityPair: new FormControl('', []),
+      acdepDate: new FormControl('', []),
+      relationship: new FormControl('', []),
+      uasegNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'),
       validateSegmentNumbers(this.segments)]),
-      uaPassengerNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      uaPassengerNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'),
       validatePassengerNumbers(this.passengers)]),
-      acpassengerNo: new FormControl('', [Validators.required])
+      acpassengerNo: new FormControl('', [])
     });
   }
 
@@ -145,7 +145,6 @@ export class CancelSegmentComponent implements OnInit {
       const look = this.segments.find(x => x.id === element);
       if (look) {
         if (look.airlineCode === 'AC') {
-          this.defaultPassenger('AC');
           this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
           this.cancelForm.controls['acTicketNo'].setValue('');
           this.cancelForm.controls['acpassengerNo'].setValue('');
@@ -153,14 +152,15 @@ export class CancelSegmentComponent implements OnInit {
           this.cancelForm.controls['accityPair'].setValue('');
           this.cancelForm.controls['acdepDate'].setValue('');
           this.cancelForm.controls['relationship'].setValue('');
+          this.defaultPassenger('AC');
           this.isAC = true;
         }
         if (look.airlineCode === 'UA') {
-          this.defaultPassenger('UA');
           this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
           this.cancelForm.controls['reasonUACancel'].setValue('');
           this.cancelForm.controls['uasegNo'].setValue('');
           this.cancelForm.controls['uaPassengerNo'].setValue('');
+          this.defaultPassenger('UA');
           this.isUA = true;
 
         }
@@ -239,6 +239,33 @@ export class CancelSegmentComponent implements OnInit {
     }
   }
 
+  ticketCouponchange(name) {
+    alert(name);
+    name = name.substr(-1);
+    alert(name);
+    switch (name) {
+      case '1':
+        this.enableFormControls(['coupon1'], false);
+        break;
+      case '2':
+        this.enableFormControls(['coupon2'], false);
+        break;
+      case '3':
+        this.enableFormControls(['coupon3'], false);
+        break;
+      case '4':
+        this.enableFormControls(['coupon4'], false);
+        break;
+      case '5':
+        this.enableFormControls(['coupon5'], false);
+        break;
+      case '6':
+        this.enableFormControls(['coupon6'], false);
+      default:
+        break;
+    }
+  }
+
 
   enableFormControls(controls: string[], disabled: boolean) {
     controls.forEach(c => {
@@ -246,6 +273,8 @@ export class CancelSegmentComponent implements OnInit {
         this.cancelForm.get(c).disable();
       } else {
         this.cancelForm.get(c).enable();
+        this.cancelForm.get(c).setValidators(Validators.required);
+        this.cancelForm.get(c).updateValueAndValidity();
       }
     });
 

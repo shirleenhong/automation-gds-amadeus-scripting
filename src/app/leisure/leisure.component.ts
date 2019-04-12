@@ -136,6 +136,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
     }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR();
   }
 
   async cancelPnr() {

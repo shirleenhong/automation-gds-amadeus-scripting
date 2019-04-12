@@ -145,23 +145,23 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const cancel = this.cancelSegmentComponent;
     let getSelected = cancel.submit();
 
-    if (getSelected.length >= 1) {
-      osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-      this.remarkService.BuildRemarks(osiCollection);
-      await this.remarkService.cancelRemarks().then(x => {
-      }, error => { alert(JSON.stringify(error)); });
+    // if (getSelected.length >= 1) {
+    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+    this.remarkService.BuildRemarks(osiCollection);
+    await this.remarkService.cancelRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
 
-      if (getSelected.length === this.segment.length) {
-        remarkCollection.push(this.segmentService.cancelMisSegment());
-      }
-
-      remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-      this.remarkService.BuildRemarks(remarkCollection);
-      await this.remarkService.cancelRemarks().then(x => {
-      }, error => { alert(JSON.stringify(error)); });
-      this.remarkService.endPNR();
+    if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
+      remarkCollection.push(this.segmentService.cancelMisSegment());
     }
+
+    remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    this.remarkService.BuildRemarks(remarkCollection);
+    await this.remarkService.cancelRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR();
   }
+  // }
 
   public loadPnr() {
     if (this.isPnrLoaded) {

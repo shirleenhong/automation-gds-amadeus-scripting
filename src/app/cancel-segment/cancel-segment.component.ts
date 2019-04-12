@@ -240,9 +240,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   ticketCouponchange(name) {
-    alert(name);
     name = name.substr(-1);
-    alert(name);
     switch (name) {
       case '1':
         this.enableFormControls(['coupon1'], false);

@@ -6,7 +6,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import { of } from 'rxjs';
-
+declare var smartScriptSession: any;
 @Component({
   selector: 'app-visa-passport',
   templateUrl: './visa-passport.html',
@@ -42,6 +42,7 @@ export class VisaPassportComponent implements OnInit {
         this.getVisaTrips();
         // tslint:disable-next-line:max-line-length
         // window.open('https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_YGMnAMztuXbHrayudbpsjKqTmmPWatnv&EXTERNAL_CATALOG_VERSION=21.5.1', '_blank');
+        smartScriptSession.launchSmartTool('TravelAdvisory', 'TravelAdvisory');
     }
   }
 

@@ -114,7 +114,7 @@
     <tbody class="col-8">
       <tr formArrayName="segments" *ngFor="let segment of formGroup.controls.segments.controls; let i = index">  
         <td>
-          {{segments[i]}}
+          {{segments[i].country}}
         </td>
         <td>
             <input type="checkbox" class="checkbox-control">
@@ -123,7 +123,7 @@
             <input type="checkbox" class="checkbox-control">
         </td>
         <td>
-           <input type="text" class="form-control">
+           <input type="text" class="form-control" >
         </td>        
       </tr>
     </tbody>

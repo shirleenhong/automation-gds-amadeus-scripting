@@ -85,7 +85,7 @@ export class VisaPassportComponent implements OnInit {
        originDestination.push( {origin: departureCountry, destination: arrivalCountry, departuredate: air.departureDate} );
      }
 
-     const countryList = [];
+     const countryList = [{country: '', passport: '', visa: '', segmentLine: ''}];
      // tslint:disable-next-line:prefer-for-of
      for (let i = 1;  i < originDestination.length; i++ ) {
       const mainOrigin = originDestination[1].origin;
@@ -93,12 +93,15 @@ export class VisaPassportComponent implements OnInit {
       if (mainOrigin === originDestination[originDestination.length - 1].destination) {
          exclude = mainOrigin;
       }
+
       if (originDestination[i].destination !== exclude &&
-          countryList.indexOf(originDestination[i].destination) === -1) {
-        countryList.push(originDestination[i].destination);
+          countryList.findIndex(x => x.country === originDestination[i].destination) === -1){
+        countryList.push({country: originDestination[i].destination, passport: '', visa: '', segmentLine: ''});
       }
      }
+     countryList.splice(0 , 1);
      this.segments = countryList;
+
      this.segments.map((o, i) => {
       const control = new FormControl(i === 0);
       (this.formGroup.controls.segments as FormArray).push(control);

@@ -186,8 +186,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.hasRecordLocator() !== undefined && (this.segment.length > 0
-        || (this.pnrService.IsMISRetention() && this.pnrService.hasHotelCancelSegments()))) {
+      if (this.pnrService.hasRecordLocator() !== undefined && (this.segment.length > 0 || (this.pnrService.IsMISRetention()))) {
         this.cancelEnabled = false;
       }
     }

@@ -145,21 +145,29 @@ export class CancelSegmentComponent implements OnInit {
       const look = this.segments.find(x => x.id === element);
       if (look) {
         if (look.airlineCode === 'AC') {
-          this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
-          this.cancelForm.controls['acTicketNo'].setValue('');
-          this.cancelForm.controls['acpassengerNo'].setValue('');
-          this.cancelForm.controls['acFlightNo'].setValue('');
-          this.cancelForm.controls['accityPair'].setValue('');
-          this.cancelForm.controls['acdepDate'].setValue('');
-          this.cancelForm.controls['relationship'].setValue('');
+          if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
+            this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
+            this.cancelForm.controls['acTicketNo'].setValue('');
+            this.cancelForm.controls['acpassengerNo'].setValue('');
+            this.cancelForm.controls['acFlightNo'].setValue('');
+            this.cancelForm.controls['accityPair'].setValue('');
+            this.cancelForm.controls['acdepDate'].setValue('');
+            this.cancelForm.controls['relationship'].setValue('');
+          } else {
+            this.acChange(this.cancelForm.value.reasonACCancel);
+          }
           this.defaultPassenger('AC');
           this.isAC = true;
         }
         if (look.airlineCode === 'UA') {
-          this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
-          this.cancelForm.controls['reasonUACancel'].setValue('');
-          this.cancelForm.controls['uasegNo'].setValue('');
-          this.cancelForm.controls['uaPassengerNo'].setValue('');
+          if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
+            this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
+            this.cancelForm.controls['reasonUACancel'].setValue('');
+            this.cancelForm.controls['uasegNo'].setValue('');
+            this.cancelForm.controls['uaPassengerNo'].setValue('');
+          } else {
+            this.uaChange(this.cancelForm.value.reasonUACancel);
+          }
           this.defaultPassenger('UA');
           this.isUA = true;
 
@@ -193,10 +201,10 @@ export class CancelSegmentComponent implements OnInit {
         this.cancelForm.controls['acpassengerNo'].disable();
       }
 
-      // if (airline === 'UA') {
-      //   this.cancelForm.controls['uaPassengerNo'].setValue('1');
-      //   this.cancelForm.controls['uaPassengerNo'].disable();
-      // }
+      if (airline === 'UA') {
+        this.cancelForm.controls['uaPassengerNo'].setValue('1');
+        this.cancelForm.controls['uaPassengerNo'].disable();
+      }
 
     }
   }
@@ -259,6 +267,7 @@ export class CancelSegmentComponent implements OnInit {
         break;
       case '6':
         this.enableFormControls(['coupon6'], false);
+        break;
       default:
         break;
     }

@@ -70,7 +70,6 @@ export class SegmentService {
     }
 
     getRetentionLine() {
-
         const lastDeptDate = this.pnrService.getLatestDepartureDate();
         const odate = lastDeptDate;
         odate.setDate(odate.getDate() + 180);
@@ -308,7 +307,6 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
         if (hotellook) {
             remText = dateToday + '/HTL SEGMENT INCLUDED IN CANCEL';
@@ -319,17 +317,17 @@ export class SegmentService {
         }
 
         if (this.pnrService.getSegmentTatooNumber().length === segmentselected.length) {
-            remText = dateToday + '/CXLD SEG-ALL';
+            remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         } else {
             segmentselected.forEach(element => {
-                remText = dateToday + '/CXLD SEG-' + element.lineNo;
+                remText = dateToday + '/CANCELLED/CXLD SEG-' + element.lineNo;
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             });
             const prevCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG') > -1);
             const preCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG-PRE') === -1);
             if (prevCancel && preCancel) {
-                remText = dateToday + '/CXLD SEG-PRE';
+                remText = dateToday + '/CANCELLED/CXLD SEG-PRE';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }
         }

@@ -296,6 +296,18 @@ export class RemarkService {
         this.clear();
     }
 
+    async cancelRemarks() {
+        await this.deleteRemarks();
+        await this.sendCryptics();
+        await this.sendRemarks();
+        this.clear();
+    }
+
+    endPNR() {
+        smartScriptSession.send('RFCWTPTEST');
+        smartScriptSession.send('ER');
+        smartScriptSession.send('RT');
+    }
 }
 
 

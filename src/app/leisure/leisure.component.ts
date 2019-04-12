@@ -16,6 +16,7 @@ import { ITCPackageCostRemarkService } from '../service/itc-packagecost-remarks.
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
 
 @Component({
   selector: 'app-leisure',
@@ -28,13 +29,19 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
+  workflow: string = '';
+  cancelEnabled: boolean = true;
+
+
 
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
-
+  @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   errorPnrMsg = '';
   eventSubscribe = false;
+  segment = [];
+
 
 
   constructor(private pnrService: PnrService,
@@ -49,6 +56,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private ddbService: DDBService
 
   ) {
+    // this.leisureMainForm = new FormGroup({
+    //   cancelsegment: new FormControl('', []),
+    //   backMain: new FormControl('', [])
+    // });
+
     this.loadPNR();
   }
 
@@ -76,11 +88,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
       this.isPnrLoaded = false;
     }
-
   }
 
   ngOnInit() {
     this.leisure = new LeisureViewModel();
+
   }
 
   public SubmitToPNR() {
@@ -93,7 +105,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
 
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    remarkCollection.push(this.segmentService.getRetentionLine());
+    if (!this.pnrService.hasAmendMISRetentionLine()) {
+      remarkCollection.push(this.segmentService.getRetentionLine());
+    }
     remarkCollection.push(this.segmentService.setMandatoryRemarks());
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
@@ -122,5 +136,59 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
     }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR();
+  }
+
+  async cancelPnr() {
+    const osiCollection = new Array<RemarkGroup>();
+    const remarkCollection = new Array<RemarkGroup>();
+    const cancel = this.cancelSegmentComponent;
+    let getSelected = cancel.submit();
+
+    // if (getSelected.length >= 1) {
+    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+    this.remarkService.BuildRemarks(osiCollection);
+    await this.remarkService.cancelRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
+
+    if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
+      remarkCollection.push(this.segmentService.cancelMisSegment());
+    }
+
+    remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    this.remarkService.BuildRemarks(remarkCollection);
+    await this.remarkService.cancelRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR();
+  }
+  // }
+
+  public loadPnr() {
+    if (this.isPnrLoaded) {
+      this.workflow = 'load';
+    }
+
+  }
+
+  public cancelSegment() {
+    if (this.isPnrLoaded) {
+      this.workflow = 'cancel';
+      this.segment = this.pnrService.getSegmentTatooNumber();
+      this.setControl();
+    }
+  }
+
+  public back() {
+    if (this.isPnrLoaded) {
+      this.workflow = '';
+    }
+  }
+
+  setControl() {
+    if (this.isPnrLoaded) {
+      if (this.pnrService.hasRecordLocator() !== undefined && (this.segment.length > 0 || (this.pnrService.IsMISRetention()))) {
+        this.cancelEnabled = false;
+      }
+    }
   }
 }

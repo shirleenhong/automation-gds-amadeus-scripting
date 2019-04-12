@@ -7,19 +7,26 @@ import { DatePipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { RemarkHelper } from '../helper/remark-helper';
+import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 @Injectable({
     providedIn: 'root',
 })
 
 export class TourPackageRemarksService {
 
-    constructor(private remarkHelper: RemarkHelper) { }
+    constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) { }
     public GetRemarks(group: FormGroup) {
 
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Tour Package';
         rmGroup.remarks = new Array<RemarkModel>();
         const datePipe = new DatePipe('en-US');
+
+        if (this.packageRemarkHelper.getForDeletion() !== undefined) {
+            this.packageRemarkHelper.getForDeletion().forEach(c => {
+                rmGroup.deleteRemarkByIds.push(c);
+            });
+        }
 
         // tslint:disable-next-line:max-line-length
         rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'I'));
@@ -58,7 +65,8 @@ export class TourPackageRemarksService {
         rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'I'));
         // tslint:disable-next-line:max-line-length
         if (group.controls.balanceDueDate.value) {
-            rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value)
+            rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' +
+                (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value)
                 + ' IS DUE ' + datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') + ' ----', 'RI', 'I'));
         }
 
@@ -72,8 +80,8 @@ export class TourPackageRemarksService {
             rmGroup.remarks.push(this.remarkHelper.createRemark('U41/-' + group.controls.balanceToBePaid.value, 'RM', '*'));
         }
 
-        if (group.controls.commisionAmount.value.length > 0) {
-            rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.controls.commisionAmount.value, 'RM', '*'));
+        if (group.controls.commission.value.length > 0) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.controls.commission.value, 'RM', '*'));
         }
 
         return rmGroup;

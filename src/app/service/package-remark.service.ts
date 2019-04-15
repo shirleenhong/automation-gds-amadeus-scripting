@@ -14,11 +14,11 @@ import { PackageRemarkHelper } from '../helper/packageRemark-helper';
     providedIn: 'root',
 })
 
-export class ITCPackageCostRemarkService {
+export class PackageRemarkService {
     decPipe = new DecimalPipe('en-US');
     constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) { }
 
-    public GetRemarks(group: any) {
+    public GetITCPackageRemarks(group: any) {
 
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Tour Package';
@@ -105,4 +105,77 @@ export class ITCPackageCostRemarkService {
         console.log(rmGroup);
         return rmGroup;
     }
+
+    public GetTourPackageRemarks(group: FormGroup) {
+
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Tour Package';
+        rmGroup.remarks = new Array<RemarkModel>();
+        const datePipe = new DatePipe('en-US');
+
+        if (this.packageRemarkHelper.getForDeletion() !== undefined) {
+            this.packageRemarkHelper.getForDeletion().forEach(c => {
+                rmGroup.deleteRemarkByIds.push(c);
+            });
+        }
+
+        // tslint:disable-next-line:max-line-length
+        rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'R'));
+
+        if (Number(group.controls.adultNum.value) > 0) {
+
+
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT PACKAGE',
+                group.controls.baseCost.value, group.controls.adultNum.value));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT TAXES',
+                group.controls.taxesPerAdult.value, group.controls.adultNum.value));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT INSURANCE',
+                group.controls.insurancePerAdult.value, group.controls.adultNum.value));
+        }
+
+        if (Number(group.controls.childrenNumber.value) > 0) {
+
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD PACKAGE',
+                group.controls.childBaseCost.value, group.controls.childrenNumber.value));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD TAXES',
+                group.controls.taxesPerChild.value, group.controls.childrenNumber.value));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD INSURANCE',
+                group.controls.insurancePerChild.value, group.controls.childrenNumber.value));
+        }
+
+        if (Number(group.controls.infantNumber.value) > 0) {
+
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT PACKAGE', group.controls.totalCostPerInfant.value,
+                group.controls.infantNumber.value));
+        }
+
+        // tslint:disable-next-line:max-line-length
+        rmGroup.remarks.push(this.remarkHelper.createRemark('TOTAL PACKAGE PRICE ' + (group.controls.totalCostHoliday.value === '' ? '0.00' : group.controls.totalCostHoliday.value), 'RI', 'R'));
+        // tslint:disable-next-line:max-line-length
+        rmGroup.remarks.push(this.remarkHelper.createRemark('LESS DEPOSIT PAID ' + (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'R'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'R'));
+        // tslint:disable-next-line:max-line-length
+        if (group.controls.balanceDueDate.value) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' +
+                (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value)
+                + ' IS DUE ' + datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') + ' ----', 'RI', 'R'));
+        }
+
+        rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'R'));
+        if (group.controls.balanceDueDate.value.length > 0) {
+            // tslint:disable-next-line:max-line-length
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.controls.balanceDueDate.value, 'MMMyy'), 'RM', '*'));
+        }
+
+        if (group.controls.balanceToBePaid.value.length > 0) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U41/-' + group.controls.balanceToBePaid.value, 'RM', '*'));
+        }
+
+        if (group.controls.commission.value.length > 0) {
+            rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.controls.commission.value, 'RM', '*'));
+        }
+
+        return rmGroup;
+    }
+
 }

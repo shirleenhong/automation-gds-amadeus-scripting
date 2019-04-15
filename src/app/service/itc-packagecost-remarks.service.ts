@@ -31,7 +31,7 @@ export class ITCPackageCostRemarkService {
 
 
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'R'));
 
         if (Number(group.value.noAdult) > 0) {
             rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT PRICE', group.value.baseAdult, group.value.noAdult));
@@ -85,7 +85,7 @@ export class ITCPackageCostRemarkService {
         // tslint:disable-next-line:max-line-length
         if (group.value.dueDate) {
             rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' + group.value.balance + ' IS DUE ' +
-                datePipe.transform(group.value.dueDate, 'dMMMyy') + ' ----', 'RI', 'I'));
+                datePipe.transform(group.value.dueDate, 'dMMMyy') + ' ----', 'RI', 'R'));
         }
 
         console.log('Balance of');

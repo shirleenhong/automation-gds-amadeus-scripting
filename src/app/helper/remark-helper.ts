@@ -63,7 +63,7 @@ export class RemarkHelper {
             remark = label + '-'.repeat(z) + amtStr + 'X' + count + '-'.repeat(x) + totalStr;
         }
 
-        return this.createRemark(remark, 'RI', 'I');
+        return this.createRemark(remark, 'RI', 'R');
     }
 
     getMaxLength(remtype) {

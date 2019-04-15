@@ -29,7 +29,7 @@ export class TourPackageRemarksService {
         }
 
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'R'));
 
         if (Number(group.controls.adultNum.value) > 0) {
 
@@ -59,18 +59,18 @@ export class TourPackageRemarksService {
         }
 
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('TOTAL PACKAGE PRICE ' + (group.controls.totalCostHoliday.value === '' ? '0.00' : group.controls.totalCostHoliday.value), 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('TOTAL PACKAGE PRICE ' + (group.controls.totalCostHoliday.value === '' ? '0.00' : group.controls.totalCostHoliday.value), 'RI', 'R'));
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.createRemark('LESS DEPOSIT PAID ' + (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'I'));
-        rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('LESS DEPOSIT PAID ' + (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) + ' - ' + formatDate(Date.now(), 'dMMM', 'en'), 'RI', 'R'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'R'));
         // tslint:disable-next-line:max-line-length
         if (group.controls.balanceDueDate.value) {
             rmGroup.remarks.push(this.remarkHelper.createRemark('---- BALANCE OF ' +
                 (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value)
-                + ' IS DUE ' + datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') + ' ----', 'RI', 'I'));
+                + ' IS DUE ' + datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') + ' ----', 'RI', 'R'));
         }
 
-        rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'I'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'R'));
         if (group.controls.balanceDueDate.value.length > 0) {
             // tslint:disable-next-line:max-line-length
             rmGroup.remarks.push(this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.controls.balanceDueDate.value, 'MMMyy'), 'RM', '*'));

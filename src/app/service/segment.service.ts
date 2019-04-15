@@ -136,7 +136,7 @@ export class SegmentService {
                 const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
                 if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
                     const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
                 }
                 break;
             }
@@ -149,9 +149,9 @@ export class SegmentService {
                 const MexicoMandatoryRemark = this.pnrService.getRIILineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
                 if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
                     let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
                     command = 'POUR ENTRER AU MEXIQUE';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'I'));
+                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
                 }
                 break;
             }

@@ -122,7 +122,7 @@ export class PnrService {
 
   getRIILineNumber(searchText: string) {
     if (this.isPNRLoaded) {
-      for (const rii of this.pnrObj.riiElements) {
+      for (const rii of this.pnrObj.rirElements) {
         if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {
           return rii.elementNumber;
         }
@@ -341,7 +341,7 @@ export class PnrService {
   getRIIRemarksFromGDS() {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
-      for (const ri of this.pnrObj.riiElements) {
+      for (const ri of this.pnrObj.rirElements) {
         const rem = {
           remarkText: ri.fullNode.miscellaneousRemarks.remarks.freetext,
           category: ri.fullNode.miscellaneousRemarks.remarks.type,
@@ -355,7 +355,7 @@ export class PnrService {
 
   getRIIRemarkText(searchText: string) {
     if (this.isPNRLoaded) {
-      for (const ri of this.pnrObj.riiElements) {
+      for (const ri of this.pnrObj.rirElements) {
         if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
           return ri;
         }
@@ -498,7 +498,7 @@ export class PnrService {
   getApayRiiRemarkLines() {
     const apays = [];
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.riiElements) {
+      for (const rm of this.pnrObj.rirElements) {
         const rem = rm.fullNode.miscellaneousRemarks.remarks.freetext;
         if (rem.match(/PAID (.*) CF-(.*) PLUS (.*) TAX ON (.*)/g) !== null) {
           apays.push({ lineNum: rm.elementNumber, remark: rem, segments: this.getAssocNumbers(rm.associations) });
@@ -606,8 +606,7 @@ export class PnrService {
     match = regex.exec(remark);
     if (match !== null) {
       model.rln = Number(match.groups.rln);
-      model.description = match.groups.desc;
-      debugger;
+      model.description = match.groups.desc; 
       if (model.gcNumber !== null) { model.gcNumber = (match.groups.gc); }
       return model;
     }

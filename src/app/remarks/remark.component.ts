@@ -5,6 +5,7 @@ import { SelectItem } from '../models/select-item.model';
 // import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TourPackageComponent } from './tour-package/tour-package.component';
 import { ItcPackageComponent } from './itc-package/itc-package.component';
+import { PnrService } from 'src/app/service/pnr.service';
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
@@ -22,7 +23,7 @@ export class RemarkComponent implements OnInit {
   // @Input() group: FormGroup;
   packageList: Array<SelectItem>;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private pnrService: PnrService) {
     this.loadtourPackage();
     this.remarkForm = this.fb.group({
       packageList: new FormControl('', [Validators.required])
@@ -32,6 +33,7 @@ export class RemarkComponent implements OnInit {
   }
   ngOnInit() {
     this.remarkForm.controls.packageList.patchValue('1');
+    this.setPackageListValue();
   }
 
   getSelector() {
@@ -46,9 +48,15 @@ export class RemarkComponent implements OnInit {
     ];
   }
 
-  // showPackage(tourValue) {
-  //   this.remarkForm.packageList = tourValue
-  // }
+   private setPackageListValue() {
+      if (this.pnrService.getRIIRemarkText('THE FOLLOWING COSTS ARE SHOWN IN')) {
+       this.remarkForm.controls.packageList.patchValue('TP');
+          if (this.pnrService.getRIIRemarkText('HOTEL/ACCOMMODATION') !== '' ||
+              this.pnrService.getRIIRemarkText('CAR RENTAL') !== '') {
+              this.remarkForm.controls.packageList.patchValue('ITC');
+              }
+      }    
+  }
 
   get f() {
     return this.remarkForm.controls;

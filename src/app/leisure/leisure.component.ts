@@ -10,13 +10,12 @@ import { PaymentComponent } from '../payments/payment.component';
 import { SegmentService } from '../service/segment.service';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
-import { TourPackageRemarksService } from '../service/tour-package-remarks.service';
 import { ReportingComponent } from '../reporting/reporting.component';
-import { ITCPackageCostRemarkService } from '../service/itc-packagecost-remarks.service';
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
+import { PackageRemarkService } from '../service/package-remark.service';
 
 @Component({
   selector: 'app-leisure',
@@ -50,8 +49,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
-    private tourPackageRemarksService: TourPackageRemarksService,
-    private itcPackageCostRemarkService: ITCPackageCostRemarkService,
+    private packageRemarkService: PackageRemarkService,
     private fb: FormBuilder,
     private ddbService: DDBService
 
@@ -121,9 +119,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.remarkComponent.remarkForm.controls.packageList.value !== ''
       && this.remarkComponent.remarkForm.controls.packageList.value !== '1') {
       if (this.remarkComponent.remarkForm.controls.packageList.value === 'ITC') {
-        remarkCollection.push(this.itcPackageCostRemarkService.GetRemarks(this.remarkComponent.itcPackageComponent.itcForm));
+        remarkCollection.push(this.packageRemarkService.GetITCPackageRemarks(this.remarkComponent.itcPackageComponent.itcForm));
       } else {
-        remarkCollection.push(this.tourPackageRemarksService.GetRemarks(this.remarkComponent.tourPackageComponent.group));
+        remarkCollection.push(this.packageRemarkService.GetTourPackageRemarks(this.remarkComponent.tourPackageComponent.group));
       }
     }
 

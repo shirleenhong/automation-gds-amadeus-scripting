@@ -1,11 +1,16 @@
 <div class="contentPanel">
 
   <form [formGroup]="leisureFeeForm">
-
+    <div class="row form-group" *ngIf="IsPnrAvailable">
+      <div class="col-3">Update Remove Leisure Fee :</div>
+      <div class="col-8">
+        <input type="checkbox" name="chkUpdateRemove" formControlName="chkUpdateRemove" id="chkUpdateRemove" (change)="changeState()" />
+      </div>
+    </div>
     <div class="row form-group">
       <div class="col-3">Segment Association :</div>
       <div class="col-8">
-        <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control">
+        <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control" (change)="changeFeeState()">
           <option value="0">No Segment Association Required/Fee Applies to PNR</option>
           <option value="1">Ticket Segment</option>
           <option value="2">Tour/Cruise Segment</option>

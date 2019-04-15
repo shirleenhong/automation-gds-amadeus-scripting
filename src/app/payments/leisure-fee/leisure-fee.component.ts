@@ -90,55 +90,54 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
   }
 
-  checkHasPnr() {    
-    this.IsPnrAvailable = this.pnrService.hasRecordLocator() !==undefined ;
-    if(this.IsPnrAvailable) {
+  checkHasPnr() {
+    this.IsPnrAvailable = this.pnrService.hasRecordLocator() !== undefined;
+    if (this.IsPnrAvailable) {
       this.setFormState(true);
     }
-  }  
-
-  changeState() {    
-    this.setFormState (!this.leisureFeeForm.controls.chkUpdateRemove.value);
   }
 
-  changeFeeState() {          
-      if(this.f.segmentAssoc.value === '0') {
-          this.enableDisbleControls(['noFeeReason'],this.checkSFC());
-      } else {
-        this.enableDisbleControls(['noFeeReason'],true);
-      }
-      
+  changeState() {
+    this.setFormState(!this.leisureFeeForm.controls.chkUpdateRemove.value);
   }
 
-  setFormState(isDisabled: boolean) {    
-    debugger;
+  changeFeeState() {
+    if (this.f.segmentAssoc.value === '0') {
+      this.enableDisbleControls(['noFeeReason'], this.checkSFC());
+    } else {
+      this.enableDisbleControls(['noFeeReason'], true);
+    }
+
+  }
+
+  setFormState(isDisabled: boolean) {
     const ctrls = [
-        'segmentAssoc',
-        'segmentNum',
-        'amount',
-        'paymentType',       
-        'vendorCode',
-        'ccNo',
-        'expDate',
-        'address'
-      ];
-      
+      'segmentAssoc',
+      'segmentNum',
+      'amount',
+      'paymentType',
+      'vendorCode',
+      'ccNo',
+      'expDate',
+      'address'
+    ];
 
-      this.enableDisbleControls(ctrls,isDisabled);
-      if(this.leisureFeeForm.controls.paymentType.value === 'K') {
-        const controls = ['vendorCode', 'ccNo', 'expDate'];
-        this.enableDisbleControls(controls,true);
-      }      
-      this.changeFeeState();
+
+    this.enableDisbleControls(ctrls, isDisabled);
+    if (this.leisureFeeForm.controls.paymentType.value === 'K') {
+      const controls = ['vendorCode', 'ccNo', 'expDate'];
+      this.enableDisbleControls(controls, true);
+    }
+    this.changeFeeState();
   }
 
   get f() {
     return this.leisureFeeForm.controls;
   }
 
-  onControlChanges() {        
+  onControlChanges() {
     this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
-      const ctrls = [        
+      const ctrls = [
         'segmentNum',
         'amount',
         'paymentType',
@@ -164,7 +163,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         case '0':
           this.enableDisbleControls(ctrls, true);
           // this.enableDisbleControls(['noFeeReason'], false);
-         // this.enableDisbleControls(['noFeeReason'], true);
+          // this.enableDisbleControls(['noFeeReason'], true);
           break;
         default:
           this.leisureFeeForm.get('segmentNum').disable();
@@ -186,9 +185,9 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  checkSFC() {     
+  checkSFC() {
     if (
-    //  this.pnrService.getRemarkLineNumber('SFC/-') === '' &&
+      //  this.pnrService.getRemarkLineNumber('SFC/-') === '' &&
       this.f.segmentAssoc.value === '0' &&
       (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')
     ) {
@@ -202,7 +201,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     const remarkText = this.pnrService.getRemarkText('SFC');
     const remarkTax = this.pnrService.getRemarkText('TAX-');
     this.f.paymentType.patchValue('C');
-    this.leisureFeeForm.controls.segmentAssoc.setValue('0');    
+    this.leisureFeeForm.controls.segmentAssoc.setValue('0');
 
     if (remarkText !== '') {
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));

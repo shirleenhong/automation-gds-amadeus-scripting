@@ -155,10 +155,10 @@ export class PaymentRemarkService {
       facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim()
         + 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
     }
+
     const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
-    const acc2 = 'MAC/-SUP-' + accounting.supplierCodeName.toString().trim() +
-      '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
-      fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-' + accounting.passengerNo.toString().trim() +
+    const acc2 = 'MAC/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
+      fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-ALL' +
       '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
 

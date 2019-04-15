@@ -580,12 +580,13 @@ export class PnrService {
         return model;
       }
     }
-    regex = /RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g;
+    regex = /RLN-(?<rln>[0-9]*)\/-RM-(?<desc>([^\/]+))(\/-GC-(?<gc>.*))?/g;
     match = regex.exec(remark);
     if (match !== null) {
       model.rln = Number(match.groups.rln);
       model.description = match.groups.desc;
-      model.gcNumber = (match.groups.gc);
+      debugger;
+      if (model.gcNumber !== null) { model.gcNumber = (match.groups.gc); }
       return model;
     }
 

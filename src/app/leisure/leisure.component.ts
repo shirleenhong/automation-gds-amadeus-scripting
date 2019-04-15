@@ -16,7 +16,8 @@ import { ITCPackageCostRemarkService } from '../service/itc-packagecost-remarks.
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
-
+import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
+import { VisaPassportService} from '../service/visa-passport.service';
 @Component({
   selector: 'app-leisure',
   templateUrl: './leisure.component.html',
@@ -32,21 +33,22 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
-
+ 
+  
   errorPnrMsg = '';
   eventSubscribe = false;
 
 
   constructor(private pnrService: PnrService,
-
-    private remarkService: RemarkService,
-    private paymentRemarkService: PaymentRemarkService,
-    private reportingRemarkService: ReportingRemarkService,
-    private segmentService: SegmentService,
-    private tourPackageRemarksService: TourPackageRemarksService,
-    private itcPackageCostRemarkService: ITCPackageCostRemarkService,
-    private fb: FormBuilder,
-    private ddbService: DDBService
+              private remarkService: RemarkService,
+              private paymentRemarkService: PaymentRemarkService,
+              private reportingRemarkService: ReportingRemarkService,
+              private segmentService: SegmentService,
+              private tourPackageRemarksService: TourPackageRemarksService,
+              private itcPackageCostRemarkService: ITCPackageCostRemarkService,
+              private visaPassportService: VisaPassportService,
+              private fb: FormBuilder,
+              private ddbService: DDBService
 
   ) {
     this.loadPNR();
@@ -88,11 +90,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark.accountingForm));
-
-
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
-    remarkCollection.push(this.segmentService.setMandatoryRemarks());
+    remarkCollection.push(this.segmentService.getMandatoryRemarks());
+
+    this.visaPassportService.getRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup);
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
       const concierge = this.reportingComponent.conciergeComponent;

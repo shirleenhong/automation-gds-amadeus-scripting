@@ -1,12 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SelectItem } from 'src/app/models/select-item.model';
+import { Component, OnInit, Input, ViewChild  } from '@angular/core';
 import { DDBService } from 'src/app/service/ddb.service';
-import { VisaPassportModel } from 'src/app/models/visa-passport.model';
+import { VisaPassportModel } from '../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
-import { of } from 'rxjs';
+import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 declare var smartScriptSession: any;
+
 @Component({
   selector: 'app-visa-passport',
   templateUrl: './visa-passport.html',
@@ -14,25 +13,27 @@ declare var smartScriptSession: any;
 })
 
 export class VisaPassportComponent implements OnInit {
+
   @Input()
-  formGroup: FormGroup;
-  visaPassportModelView: VisaPassportModel;
+  visaPassportView: VisaPassportModel;
+  visaPassportFormGroup: FormGroup;
   travelPort: any[];
   hasRemarkLine: string;
-  datePipe = new DatePipe('en-US');
   segments = [];
 
   constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService ) {
-    this.formGroup = this.fb.group({
+  }
+
+  ngOnInit() {
+    this.visaPassportView = new VisaPassportModel();
+    this.visaPassportFormGroup = new FormGroup({
       originDestination: new FormControl('', []),
       citizenship: new FormControl('', []),
       advisory : new FormControl('', []),
       travellerName: new FormControl('', []),
-      segments: new FormArray([], []),
+      segments: new FormArray([]),
     });
-  }
 
-  ngOnInit() {
     if ( this.pnrService.isPNRLoaded) {
         if (!this.getAdvisoryLine()) {
           this.enableFormControls(['originDestination'], false);
@@ -40,10 +41,12 @@ export class VisaPassportComponent implements OnInit {
           this.enableFormControls(['originDestination'], true);
         }
         this.getVisaTrips();
-        // tslint:disable-next-line:max-line-length
-        // window.open('https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_YGMnAMztuXbHrayudbpsjKqTmmPWatnv&EXTERNAL_CATALOG_VERSION=21.5.1', '_blank');
-        smartScriptSession.launchSmartTool('TravelAdvisory', 'TravelAdvisory');
-    }
+        this.startSmartTool();
+      }
+  }
+
+  startSmartTool(): void {
+    this.pnrService.startSmartTool();
   }
 
   changedOriginDestination() {
@@ -63,16 +66,16 @@ export class VisaPassportComponent implements OnInit {
   }
 
   get f() {
-    return this.formGroup.controls;
+    return this.visaPassportFormGroup.controls;
   }
 
   enableFormControls(controls: string[], disabled: boolean) {
     controls.forEach(c => {
       if (disabled) {
-        this.formGroup.get(c).disable();
-        this.formGroup.get(c).reset();
+        this.visaPassportFormGroup.get(c).disable();
+        this.visaPassportFormGroup.get(c).reset();
       } else {
-        this.formGroup.get(c).enable();
+        this.visaPassportFormGroup.get(c).enable();
       }
     });
   }
@@ -96,19 +99,34 @@ export class VisaPassportComponent implements OnInit {
       }
 
       if (originDestination[i].destination !== exclude &&
-          countryList.findIndex(x => x.country === originDestination[i].destination) === -1){
+          countryList.findIndex(x => x.country === originDestination[i].destination) === -1) {
         countryList.push({country: originDestination[i].destination, passport: '', visa: '', segmentLine: ''});
       }
      }
      countryList.splice(0 , 1);
      this.segments = countryList;
 
-     this.segments.map((o, i) => {
-      const control = new FormControl(i === 0);
-      (this.formGroup.controls.segments as FormArray).push(control);
-    });
+     const segmentArray = this.visaPassportFormGroup.controls.segments as FormArray;
+
+     this.segments.forEach(x => {
+       segmentArray.push(this.fb.group({
+         country: x.country,
+         passport: x.passport,
+         visa: x.visa,
+         segmentLine: x.segmentLine
+       }));
+     });
    }
  }
+
+ passportChanged() {
+ // this.visaPassportView = (this.f.showInsurance.value === 'Yes');
+}
+
+ visaChanged() {
+  //this.visaPassportView.showInsurance = (this.f.showInsurance.value === 'Yes');
+}
+
 
  getCitizenship() {
     let citizenship: string;

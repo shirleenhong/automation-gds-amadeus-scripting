@@ -1,4 +1,5 @@
-<form [formGroup]="formGroup">
+
+<form [formGroup]="visaPassportFormGroup">
   <div class="row form-group">
     <div class="col-4">
       Select One
@@ -51,6 +52,7 @@
       Traveller/Arranger
     </div>
   </div>
+  <a href="https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_fduZOrraKeGBSmtrfkppXAismBiwTJZe&EXTERNAL_CATALOG_VERSION=21.5.1" target="_blank">travel advisory</a>
   <div class="row form-group">
     <div class="col-10">
       <input
@@ -67,11 +69,12 @@
   <br />
 
   <div class="row form-group">
-    <div class="col-5">
+    <div class="col-6">
       Citizenship:
     </div>
     <div class="col-3" >
       <input
+       [(ngModel)]="visaPassportView.citizenship"
         type="text"
         class="form-control"
         formControlName="citizenship"
@@ -85,7 +88,7 @@
   </div>
 
   <div class="row form-group">
-    <div class="col-5">
+    <div class="col-6">
       Who did you advise of these requirements?
     </div>
     <div class="col-3">
@@ -100,32 +103,37 @@
         disabled
       />
     </div>
+  </div><br>
+
+  <div class="row form-group">
+      <div class="col-2">
+        <b>Country</b>
+      </div> 
+      <div class="col-2">  
+        <b>Passport</b>
+      </div>
+      <div class="col-2">  
+        <b>Visa</b>
+      </div>
+      <div class="col-3">
+        <b>Associated Segment No.</b>
+      </div>
   </div>
 
-  <table class="table-sm">
-    <thead>
-      <tr>
-        <th>Country</th>
-        <th>Passport</th>
-        <th>Visa</th>
-        <th>Associated Segment No.</th>
-      </tr>
-    </thead>
-    <tbody class="col-8">
-      <tr formArrayName="segments" *ngFor="let segment of formGroup.controls.segments.controls; let i = index">  
-        <td>
-          {{segments[i].country}}
-        </td>
-        <td>
-            <input type="checkbox" class="checkbox-control">
-        </td>
-        <td>
-            <input type="checkbox" class="checkbox-control">
-        </td>
-        <td>
-           <input type="text" class="form-control" >
-        </td>        
-      </tr>
-    </tbody>
-  </table>
+  <div class="row form-group" formArrayName="segments"  *ngFor="let item of visaPassportFormGroup.controls.segments?.value; let i = index">
+    <ng-container [formGroupName]="i">
+      <div class="col-2">
+        {{item.country}}
+      </div> 
+      <div class="col-2">  
+        <input type="checkbox" class="checkbox-control" [checked]="passport" value="Yes" (change)="passportChanged()"  formControlName="passport">
+      </div>
+      <div class="col-2">  
+        <input type="checkbox" class="checkbox-control" [checked]="visa" value="Yes" (change)="visaChanged()"  formControlName="visa">
+      </div>
+      <div class="col-3">
+        <input type="text" class="form-control" id="segmentLine" placeholder="segmentLine" formControlName="segmentLine">
+      </div>
+    </ng-container>
+  </div>
 </form>

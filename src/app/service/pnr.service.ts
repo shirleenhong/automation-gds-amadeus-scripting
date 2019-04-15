@@ -8,7 +8,7 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { DDBService } from './ddb.service';
 
 declare var PNR: any;
-
+declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
@@ -303,6 +303,15 @@ export class PnrService {
     return lineNumbers;
   }
 
+  startSmartTool(): void {
+    const _popupId = smartScriptSession.getPopupId();
+    smartScriptSession.requestService('popups.launchSmartTool', { popupId: _popupId, smartToolName: 'Traveladvisory' })
+      .then(function (data) {
+        console.log(data);
+      }, function (error) {
+        console.log(error);
+      });
+  }
 
   getAccountingRemarks(): Array<MatrixAccountingModel> {
     const matrixModels = new Array<MatrixAccountingModel>();

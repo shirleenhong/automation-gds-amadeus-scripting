@@ -5,6 +5,8 @@ import { SelectItem } from '../models/select-item.model';
 // import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TourPackageComponent } from './tour-package/tour-package.component';
 import { ItcPackageComponent } from './itc-package/itc-package.component';
+import { VisaPassportComponent } from './visa-passport/visa-passport.component';
+
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
@@ -16,6 +18,8 @@ export class RemarkComponent implements OnInit {
 
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
   @ViewChild(ItcPackageComponent) itcPackageComponent: ItcPackageComponent;
+  @ViewChild( VisaPassportComponent ) viewPassportComponent: VisaPassportComponent;
+
   remarkForm: FormGroup;
   @Input() remarkSection: RemarkViewModel;
 

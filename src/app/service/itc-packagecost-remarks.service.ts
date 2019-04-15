@@ -34,52 +34,52 @@ export class ITCPackageCostRemarkService {
         rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'R'));
 
         if (Number(group.value.noAdult) > 0) {
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT PRICE', group.value.baseAdult, group.value.noAdult));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT TAXES', group.value.taxAdult, group.value.noAdult));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT INSURANCE', group.value.insAdult, group.value.noAdult));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT CRUISE', group.value.bcruiseAdult, group.value.noAdult));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT TAX/PORT CHARGES', group.value.tcruiseAdult,
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT PRICE', group.value.baseAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT TAXES', group.value.taxAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT INSURANCE', group.value.insAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT CRUISE', group.value.bcruiseAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT TAX/PORT CHARGES', group.value.tcruiseAdult,
                 group.value.noAdult));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT RAIL', group.value.railAdult, group.value.noAdult));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT RAIL', group.value.railAdult, group.value.noAdult));
         }
 
         if (Number(group.value.noChild) > 0) {
 
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD PRICE', group.value.baseChild, group.value.noChild));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD TAXES', group.value.taxChild, group.value.noChild));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD INSURANCE', group.value.insChild, group.value.noChild));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD CRUISE', group.value.bcruiseChild, group.value.noChild));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD TAX/PORT CHARGES', group.value.tcruiseChild,
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD PRICE', group.value.baseChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD TAXES', group.value.taxChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD INSURANCE', group.value.insChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD CRUISE', group.value.bcruiseChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD TAX/PORT CHARGES', group.value.tcruiseChild,
                 group.value.noChild));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD RAIL', group.value.railChild, group.value.noChild));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD RAIL', group.value.railChild, group.value.noChild));
         }
 
 
         if (Number(group.value.noInfant) > 0) {
 
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT PRICE', group.value.baseInfant, group.value.noInfant));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT TAXES', group.value.taxInfant, group.value.noInfant));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT INSURANCE', group.value.insInfant, group.value.noInfant));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT CRUISE', group.value.bcruiseInfant, group.value.noInfant));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT TAX/PORT CHARGES', group.value.tcruiseInfant,
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT PRICE', group.value.baseInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT TAXES', group.value.taxInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT INSURANCE', group.value.insInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT CRUISE', group.value.bcruiseInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT TAX/PORT CHARGES', group.value.tcruiseInfant,
                 group.value.noInfant));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT RAIL', group.value.railInfant, group.value.noInfant));
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT RAIL', group.value.railInfant, group.value.noInfant));
         }
 
-        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('HOTEL/ACCOMMODATION', group.value.hotelAdult, null));
+        rmGroup.remarks.push(this.remarkHelper.processRIRRemark('HOTEL/ACCOMMODATION', group.value.hotelAdult, null));
         console.log('Hotel Acoomodation');
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CAR RENTAL', group.value.carAdult, null));
+        rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CAR RENTAL', group.value.carAdult, null));
 
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('TOTAL HOLIDAY COST', (parseFloat(group.value.holidayCost)), null));
+        rmGroup.remarks.push(this.remarkHelper.processRIRRemark('TOTAL HOLIDAY COST', (parseFloat(group.value.holidayCost)), null));
 
         console.log('Total Holiday');
         // tslint:disable-next-line:max-line-length
-        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('LESS DEPOSIT PAID', group.value.depAdult, null));
+        rmGroup.remarks.push(this.remarkHelper.processRIRRemark('LESS DEPOSIT PAID', group.value.depAdult, null));
 
 
-        rmGroup.remarks.push(this.remarkHelper.processRiiRemark('BALANCE DUE', group.value.balance, null));
+        rmGroup.remarks.push(this.remarkHelper.processRIRRemark('BALANCE DUE', group.value.balance, null));
 
 
         // tslint:disable-next-line:max-line-length

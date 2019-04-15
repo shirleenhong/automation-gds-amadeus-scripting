@@ -120,7 +120,7 @@ export class PnrService {
     return '';
   }
 
-  getRIILineNumber(searchText: string) {
+  getRIRLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rii of this.pnrObj.rirElements) {
         if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {

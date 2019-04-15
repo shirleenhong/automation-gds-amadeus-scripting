@@ -34,27 +34,27 @@ export class TourPackageRemarksService {
         if (Number(group.controls.adultNum.value) > 0) {
 
 
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT PACKAGE',
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT PACKAGE',
                 group.controls.baseCost.value, group.controls.adultNum.value));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT TAXES',
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT TAXES',
                 group.controls.taxesPerAdult.value, group.controls.adultNum.value));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('ADULT INSURANCE',
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT INSURANCE',
                 group.controls.insurancePerAdult.value, group.controls.adultNum.value));
         }
 
         if (Number(group.controls.childrenNumber.value) > 0) {
 
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD PACKAGE',
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD PACKAGE',
                 group.controls.childBaseCost.value, group.controls.childrenNumber.value));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD TAXES',
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD TAXES',
                 group.controls.taxesPerChild.value, group.controls.childrenNumber.value));
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('CHILD INSURANCE',
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('CHILD INSURANCE',
                 group.controls.insurancePerChild.value, group.controls.childrenNumber.value));
         }
 
         if (Number(group.controls.infantNumber.value) > 0) {
 
-            rmGroup.remarks.push(this.remarkHelper.processRiiRemark('INFANT PACKAGE', group.controls.totalCostPerInfant.value,
+            rmGroup.remarks.push(this.remarkHelper.processRIRRemark('INFANT PACKAGE', group.controls.totalCostPerInfant.value,
                 group.controls.infantNumber.value));
         }
 

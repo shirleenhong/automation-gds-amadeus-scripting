@@ -70,7 +70,6 @@ export class SegmentService {
     }
 
     getRetentionLine() {
-
         const lastDeptDate = this.pnrService.getLatestDepartureDate();
         const odate = lastDeptDate;
         odate.setDate(odate.getDate() + 180);
@@ -227,12 +226,16 @@ export class SegmentService {
 
 
         if (cancel.value.reasonACCancel) {
+            let pass = '1';
+            if (cancel.value.acpassengerNo !== undefined) {
+                pass = cancel.value.acpassengerNo;
+            }
             switch (cancel.value.reasonACCancel) {
                 case '1':
-                    remText = 'OS AC NCC 014' + cancel.value.acTicketNo + '/P' + cancel.value.acpassengerNo;
+                    remText = 'OS AC NCC 014' + cancel.value.acTicketNo + '/P' + pass;
                     break;
                 case '2':
-                    remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + cancel.value.acpassengerNo;
+                    remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + pass;
                     break;
                 case '3':
                     remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo;
@@ -243,15 +246,16 @@ export class SegmentService {
                 case '5':
                     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
                         + cancel.value.accityPair + ' ' + cancel.value.acdepDate
-                        + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + cancel.value.acpassengerNo;
+                        + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
                     break;
                 case '6':
                     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                        + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + cancel.value.acpassengerNo;
+                        + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + pass;
                     break;
                 default:
                     break;
             }
+
             rmGroup.cryptics.push(remText);
             // if (multiremText !== '') {
             //     rmGroup.cryptics.push(multiremText);
@@ -259,13 +263,25 @@ export class SegmentService {
         }
 
         if (cancel.value.reasonUACancel) {
+            let uapass = '1';
+            if (cancel.value.uaPassengerNo !== undefined) {
+                uapass = cancel.value.uaPassengerNo;
+            }
             if (cancel.value.reasonUACancel === '1') {
-                remText = 'SROTHSUA-' + cancel.value.uasegNo + '/BSP24REFUND/P' + cancel.value.uaPassengerNo;
+                remText = 'SROTHSUA-' + cancel.value.uasegNo + '/BSP24REFUND/P' + uapass;
             }
             rmGroup.cryptics.push(remText);
         }
-        rmGroup.cryptics.push('RFCWTPTEST');
-        rmGroup.cryptics.push('ER');
+
+        if (remText !== '') {
+            rmGroup.cryptics.push('RFCWTPTEST');
+            rmGroup.cryptics.push('ER');
+        }
+
+        const nuRemarks = this.pnrService.hasNUCRemarks();
+        if (nuRemarks !== '0') {
+            rmGroup.deleteRemarkByIds.push(nuRemarks);
+        }
         return rmGroup;
     }
 
@@ -291,8 +307,7 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-
-        const hotellook = segmentselected.find(x => x.segmentType === 'hotel');
+        const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
         if (hotellook) {
             remText = dateToday + '/HTL SEGMENT INCLUDED IN CANCEL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
@@ -302,17 +317,17 @@ export class SegmentService {
         }
 
         if (this.pnrService.getSegmentTatooNumber().length === segmentselected.length) {
-            remText = dateToday + '/CXLD SEG-ALL';
+            remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         } else {
             segmentselected.forEach(element => {
-                remText = dateToday + '/CXLD SEG-' + element.lineNo;
+                remText = dateToday + '/CANCELLED/CXLD SEG-' + element.lineNo;
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             });
             const prevCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG') > -1);
             const preCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG-PRE') === -1);
             if (prevCancel && preCancel) {
-                remText = dateToday + '/CXLD SEG-PRE';
+                remText = dateToday + '/CANCELLED/CXLD SEG-PRE';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }
         }
@@ -354,6 +369,8 @@ export class SegmentService {
             remText = dateToday + '/TKT NBR-' + cancel.value.ticket6 + ' CPNS-' + cancel.value.coupon6;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
+
+
         segmentselected.forEach(element => {
             rmGroup.deleteRemarkByIds.push(element.lineNo);
         });
@@ -368,7 +385,7 @@ export class SegmentService {
         let finaldate = new Date();
 
         finaldate.setDate(finaldate.getDate() + 90);
-        const mis = this.setMisRemark(finaldate, finaldate, 'PNR CANCELLED' + dateToday);
+        const mis = this.setMisRemark(finaldate, finaldate, 'PNR CANCELLED ' + dateToday);
         const passGroup = new RemarkGroup();
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);

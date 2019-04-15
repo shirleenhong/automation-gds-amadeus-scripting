@@ -84,6 +84,7 @@ export class ReportingRemarkService {
     }
   }
 
+
   getRemark(remarkText, remarkType, remarkCategory) {
     const rem = new RemarkModel();
     rem.remarkType = remarkType;

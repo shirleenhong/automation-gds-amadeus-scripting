@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
-import { validateSegmentNumbers } from '../shared/validators/leisure.validators';
+import { validateSegmentNumbers, validatePassengerNumbers } from '../shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-cancel-segment',
@@ -17,6 +17,7 @@ export class CancelSegmentComponent implements OnInit {
   segments = [];
   isAC: boolean = false;
   isUA: boolean = false;
+  passengers = [];
 
   // segmentDetails: any;
 
@@ -48,9 +49,10 @@ export class CancelSegmentComponent implements OnInit {
       accityPair: new FormControl('', []),
       acdepDate: new FormControl('', []),
       relationship: new FormControl('', []),
-      uasegNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      uasegNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'),
       validateSegmentNumbers(this.segments)]),
-      uaPassengerNo: new FormControl('', []),
+      uaPassengerNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'),
+      validatePassengerNumbers(this.passengers)]),
       acpassengerNo: new FormControl('', [])
     });
   }
@@ -67,6 +69,7 @@ export class CancelSegmentComponent implements OnInit {
     this.getSegmentTatooValue();
     this.addCheckboxes();
     this.checkFirstSegment();
+    this.getPassengers();
   }
 
   loadStaticValue() {
@@ -103,6 +106,10 @@ export class CancelSegmentComponent implements OnInit {
     // return segments;
   }
 
+  getPassengers() {
+    this.passengers = this.pnrService.getPassengers();
+  }
+
   submit() {
     // Filter out the unselected ids
     // tslint:disable-next-line:prefer-const
@@ -128,6 +135,9 @@ export class CancelSegmentComponent implements OnInit {
   checkSegmentAirline() {
     this.isAC = false;
     this.isUA = false;
+    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+    this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
+
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => checked ? this.segments[index].id : null)
       .filter(value => value !== null);
@@ -135,25 +145,48 @@ export class CancelSegmentComponent implements OnInit {
       const look = this.segments.find(x => x.id === element);
       if (look) {
         if (look.airlineCode === 'AC') {
+          if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
+            this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
+            this.cancelForm.controls['acTicketNo'].setValue('');
+            this.cancelForm.controls['acpassengerNo'].setValue('');
+            this.cancelForm.controls['acFlightNo'].setValue('');
+            this.cancelForm.controls['accityPair'].setValue('');
+            this.cancelForm.controls['acdepDate'].setValue('');
+            this.cancelForm.controls['relationship'].setValue('');
+          } else {
+            this.acChange(this.cancelForm.value.reasonACCancel);
+          }
           this.defaultPassenger('AC');
           this.isAC = true;
-
         }
         if (look.airlineCode === 'UA') {
+          if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
+            this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
+            this.cancelForm.controls['reasonUACancel'].setValue('');
+            this.cancelForm.controls['uasegNo'].setValue('');
+            this.cancelForm.controls['uaPassengerNo'].setValue('');
+          } else {
+            this.uaChange(this.cancelForm.value.reasonUACancel);
+          }
           this.defaultPassenger('UA');
           this.isUA = true;
+
         }
       }
     });
   }
 
   checkFirstSegment() {
+    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+    this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
     if (this.segments.length > 0 && this.segments[0].segmentType) {
       if (this.segments[0].airlineCode === 'AC') {
         this.defaultPassenger('AC');
+        this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
         this.isAC = true;
       }
       if (this.segments[0].airlineCode === 'UA') {
+        this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
         this.defaultPassenger('UA');
         this.isUA = true;
       }
@@ -169,11 +202,89 @@ export class CancelSegmentComponent implements OnInit {
       }
 
       if (airline === 'UA') {
-        alert(this.cancelForm);
         this.cancelForm.controls['uaPassengerNo'].setValue('1');
         this.cancelForm.controls['uaPassengerNo'].disable();
       }
 
     }
   }
+
+  acChange(newValue) {
+
+    switch (newValue) {
+      case '1':
+      case '2':
+      case '3':
+        this.enableFormControls(['acTicketNo'], false);
+        this.enableFormControls(['acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+        break;
+      case '4':
+        this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+        break;
+      case '5':
+        this.enableFormControls(['acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
+        this.enableFormControls(['acFlightNo', 'acpassengerNo'], true);
+        break;
+      case '6':
+        this.enableFormControls(['acFlightNo', 'accityPair', 'acdepDate'], false);
+        this.enableFormControls(['acFlightNo', 'acpassengerNo', 'relationship'], true);
+        break;
+      default:
+        this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+        break;
+    }
+  }
+
+  uaChange(newValue) {
+
+    switch (newValue) {
+      case '1':
+        this.enableFormControls(['uasegNo', 'uaPassengerNo'], false);
+        break;
+      default:
+        this.enableFormControls(['uasegNo', 'uaPassengerNo'], true);
+        break;
+    }
+  }
+
+  ticketCouponchange(name) {
+    name = name.substr(-1);
+    switch (name) {
+      case '1':
+        this.enableFormControls(['coupon1'], false);
+        break;
+      case '2':
+        this.enableFormControls(['coupon2'], false);
+        break;
+      case '3':
+        this.enableFormControls(['coupon3'], false);
+        break;
+      case '4':
+        this.enableFormControls(['coupon4'], false);
+        break;
+      case '5':
+        this.enableFormControls(['coupon5'], false);
+        break;
+      case '6':
+        this.enableFormControls(['coupon6'], false);
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  enableFormControls(controls: string[], disabled: boolean) {
+    controls.forEach(c => {
+      if (disabled) {
+        this.cancelForm.get(c).disable();
+      } else {
+        this.cancelForm.get(c).enable();
+        this.cancelForm.get(c).setValidators(Validators.required);
+        this.cancelForm.get(c).updateValueAndValidity();
+      }
+    });
+
+  }
+
 }

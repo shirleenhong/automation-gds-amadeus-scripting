@@ -297,16 +297,17 @@ export class RemarkService {
     }
 
     async cancelRemarks() {
-        await this.sendCryptics();
         await this.deleteRemarks();
+        await this.sendCryptics();
         await this.sendRemarks();
-        smartScriptSession.send('RFCWTPTEST');
-        smartScriptSession.send('ER');
-        smartScriptSession.send('RT');
         this.clear();
     }
 
-
+    endPNR() {
+        smartScriptSession.send('RFCWTPTEST');
+        smartScriptSession.send('ER');
+        smartScriptSession.send('RT');
+    }
 }
 
 

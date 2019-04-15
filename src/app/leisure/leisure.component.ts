@@ -103,8 +103,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark.accountingForm));
 
+
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    remarkCollection.push(this.segmentService.getRetentionLine());
+    if (!this.pnrService.hasAmendMISRetentionLine()) {
+      remarkCollection.push(this.segmentService.getRetentionLine());
+    }
     remarkCollection.push(this.segmentService.setMandatoryRemarks());
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
@@ -133,6 +136,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
     }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR();
   }
 
   async cancelPnr() {
@@ -141,22 +145,23 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const cancel = this.cancelSegmentComponent;
     let getSelected = cancel.submit();
 
-    if (getSelected.length >= 1) {
-      osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-      this.remarkService.BuildRemarks(osiCollection);
-      await this.remarkService.cancelRemarks().then(x => {
-      }, error => { alert(JSON.stringify(error)); });
+    // if (getSelected.length >= 1) {
+    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+    this.remarkService.BuildRemarks(osiCollection);
+    await this.remarkService.cancelRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
 
-      if (getSelected.length === this.segment.length) {
-        remarkCollection.push(this.segmentService.cancelMisSegment());
-      }
-
-      remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-      this.remarkService.BuildRemarks(remarkCollection);
-      await this.remarkService.cancelRemarks().then(x => {
-      }, error => { alert(JSON.stringify(error)); });
+    if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
+      remarkCollection.push(this.segmentService.cancelMisSegment());
     }
+
+    remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    this.remarkService.BuildRemarks(remarkCollection);
+    await this.remarkService.cancelRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR();
   }
+  // }
 
   public loadPnr() {
     if (this.isPnrLoaded) {
@@ -181,7 +186,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.hasNUCRemarks() && (this.segment.length > 0 || this.pnrService.IsMISRetention())) {
+      if (this.pnrService.hasRecordLocator() !== undefined && (this.segment.length > 0 || (this.pnrService.IsMISRetention()))) {
         this.cancelEnabled = false;
       }
     }

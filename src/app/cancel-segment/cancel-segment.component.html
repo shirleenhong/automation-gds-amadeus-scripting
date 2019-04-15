@@ -1,5 +1,5 @@
 <form [formGroup]="cancelForm">
-  <div>
+  <div class="cancelContainer">
 
     <div class="row form-group">
       <div class="col-4">Requestor:</div>
@@ -47,7 +47,8 @@
       <div class="row form-group">
         <div class="col-4">AC Reason For Cancel: </div>
         <div class="col-8">
-          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel">
+          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
+            (change)="acChange($event.target.value)">
             <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
               {{item.itemText}}
             </option>
@@ -108,7 +109,8 @@
       <div class="row form-group">
         <div class="col-4">UA Reason For Cancel: </div>
         <div class="col-8">
-          <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel">
+          <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel"
+            (change)="uaChange($event.target.value)">
             <option *ngFor="let item of reasonUaList" [value]="item.itemValue">
               {{item.itemText}}
             </option>
@@ -129,6 +131,7 @@
             name="uaPassengerNo" />
         </div>
       </div>
+
     </div>
 
     <div class="row form-group">
@@ -143,7 +146,8 @@
       <div class="col-sm-4"></div>
       <div class="col-4">
         <div class="">Ticket No:</div>
-        <input type="text" class="form-control" id="ticket1" formControlName="ticket1" name="ticket1" />
+        <input type="text" class="form-control" id="ticket1" formControlName="ticket1" name="ticket1"
+          (change)="ticketCouponchange($event.target.name)" />
       </div>
 
       <div class="col-4">
@@ -155,7 +159,8 @@
     <div class="row form-group">
       <div class="col-sm-4"></div>
       <div class="col-4">
-        <input type="text" class="form-control" id="ticket2" formControlName="ticket2" name="ticket2" />
+        <input type="text" class="form-control" id="ticket2" formControlName="ticket2" name="ticket2"
+          (change)="ticketCouponchange($event.target.name)" />
       </div>
 
       <div class="col-4">
@@ -166,7 +171,8 @@
     <div class="row form-group">
       <div class="col-sm-4"></div>
       <div class="col-4">
-        <input type="text" class="form-control" id="ticket3" formControlName="ticket3" name="ticket3" />
+        <input type="text" class="form-control" id="ticket3" formControlName="ticket3" name="ticket3"
+          (change)="ticketCouponchange($event.target.name)" />
       </div>
 
       <div class="col-4">
@@ -177,18 +183,20 @@
     <div class="row form-group">
       <div class="col-sm-4"></div>
       <div class="col-4">
-        <input type="text" class="form-control" id="ticket4" formControlName="ticket4" name="ticket4" />
+        <input type="text" class="form-control" id="ticket4" formControlName="ticket4" name="ticket4"
+          (change)="ticketCouponchange($event.target.name)" />
       </div>
 
       <div class="col-4">
-        <input type="text" class="form-control" id="coupon4" formControlName="coupon1" name="coupon4" />
+        <input type="text" class="form-control" id="coupon4" formControlName="coupon4" name="coupon4" />
       </div>
     </div>
 
     <div class="row form-group">
       <div class="col-sm-4"></div>
       <div class="col-4">
-        <input type="text" class="form-control" id="ticket5" formControlName="ticket5" name="ticket5" />
+        <input type="text" class="form-control" id="ticket5" formControlName="ticket5" name="ticket5"
+          (change)="ticketCouponchange($event.target.name)" />
       </div>
 
       <div class="col-4">
@@ -199,7 +207,8 @@
     <div class="row form-group">
       <div class="col-sm-4"></div>
       <div class="col-4">
-        <input type="text" class="form-control" id="ticket6" formControlName="ticket6" name="ticket6" />
+        <input type="text" class="form-control" id="ticket6" formControlName="ticket6" name="ticket6"
+          (change)="ticketCouponchange($event.target.name)" />
       </div>
 
       <div class="col-4">

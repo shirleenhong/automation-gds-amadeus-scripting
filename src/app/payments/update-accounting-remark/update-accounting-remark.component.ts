@@ -45,7 +45,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.accountingRemarks = new MatrixAccountingModel();
     this.loadBSPList();
     this.loadVendorCode();
-    this.loadPassengerList();
+    // this.loadPassengerList();
+
+
 
   }
 
@@ -54,9 +56,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
-      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'), validateSegmentNumbers(this.segments)]),
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      validateSegmentNumbers(this.segments)]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
-      passengerNo: new FormControl('', [Validators.required]),
+      // passengerNo: new FormControl('', [Validators.required]),
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
       baseAmount: new FormControl('', [Validators.required]),
       commisionWithoutTax: new FormControl('', [Validators.required]),

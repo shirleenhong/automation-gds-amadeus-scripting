@@ -151,7 +151,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;
       this.getPnr();
-      this.workflow = '';
+      //  this.workflow = '';
+      //this.loadPnr();
 
     }, error => { alert(JSON.stringify(error)); });
     this.remarkService.endPNR();

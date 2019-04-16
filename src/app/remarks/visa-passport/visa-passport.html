@@ -1,4 +1,3 @@
-
 <form [formGroup]="visaPassportFormGroup">
   <div class="row form-group">
     <div class="col-4">
@@ -7,28 +6,18 @@
   </div>
 
   <div class="row form-group">
-      <div class="col-10">
-        <input
-          type="radio"
-          name="originDestination"
-          formControlName="originDestination"
-          value="true"
-          (change)="changedOriginDestination()"
-        />
-        Departure City(s) and Destination City(s) are located in different countries
-      </div>
-    </div>  
+    <div class="col-10">
+      <input type="radio" name="originDestination" formControlName="originDestination" value="true"
+        (change)="changedOriginDestination()" />
+      Departure City(s) and Destination City(s) are located in different countries
+    </div>
+  </div>
 
   <div class="row form-group">
     <div class="col-10">
-      <input
-        type="radio"
-        name="originDestination"
-        formControlName="originDestination"
-        value="false"
-        (change)="changedOriginDestination()"
-      />
-      Departure City and Destination City(s) are located within the same country  
+      <input type="radio" name="originDestination" formControlName="originDestination" value="false"
+        (change)="changedOriginDestination()" />
+      Departure City and Destination City(s) are located within the same country
     </div>
   </div><br>
 
@@ -40,29 +29,17 @@
 
   <div class="row form-group">
     <div class="col-10">
-      <input
-        type="radio"
-        name="advisory"
-        formControlName="advisory"
-        value="Yes"
-        (change)="changedAdvisory()"
-        disabled
-      />
+      <input type="radio" name="advisory" formControlName="advisory" value="Yes" (change)="changedAdvisory()"
+        disabled />
       Consultant Needs to send International Travel Advisory to
       Traveller/Arranger
     </div>
   </div>
-  <a href="https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_fduZOrraKeGBSmtrfkppXAismBiwTJZe&EXTERNAL_CATALOG_VERSION=21.5.1" target="_blank">travel advisory</a>
+  <a href="https://www.etraveladvisories.com/agent.html?POPUP_ID=smarTool_fduZOrraKeGBSmtrfkppXAismBiwTJZe&EXTERNAL_CATALOG_VERSION=21.5.1"
+    target="_blank">travel advisory</a>
   <div class="row form-group">
     <div class="col-10">
-      <input
-        type="radio"
-        name="advisory"
-        formControlName="advisory"
-        value="No"
-        (change)="changedAdvisory()"
-        disabled
-      />
+      <input type="radio" name="advisory" formControlName="advisory" value="No" (change)="changedAdvisory()" disabled />
       International Travel Advisory already sent to Traveller/Arranger
     </div>
   </div>
@@ -72,18 +49,9 @@
     <div class="col-6">
       Citizenship:
     </div>
-    <div class="col-3" >
-      <input
-       [(ngModel)]="visaPassportView.citizenship"
-        type="text"
-        class="form-control"
-        formControlName="citizenship"
-        name = "citizenship"
-        maxlength="35"
-        id="citizenship"
-        placeholder="e.g. Canadian"
-        disabled
-      />
+    <div class="col-3">
+      <input [(ngModel)]="visaPassportView.citizenship" type="text" class="form-control" formControlName="citizenship"
+        name="citizenship" maxlength="35" id="citizenship" placeholder="e.g. Canadian" disabled />
     </div>
   </div>
 
@@ -92,48 +60,48 @@
       Who did you advise of these requirements?
     </div>
     <div class="col-3">
-      <input
-        type="text"
-        class="form-control"
-        formControlName = "travellerName"
-        maxlength="35"
-        id="travellerName"
-        name = "travellerName"
-        placeholder="e.g. John"
-        disabled
-      />
+      <input type="text" class="form-control" formControlName="travellerName" maxlength="35" id="travellerName"
+        name="travellerName" placeholder="e.g. John" disabled />
     </div>
   </div><br>
 
   <div class="row form-group">
-      <div class="col-2">
-        <b>Country</b>
-      </div> 
-      <div class="col-2">  
-        <b>Passport</b>
-      </div>
-      <div class="col-2">  
-        <b>Visa</b>
-      </div>
-      <div class="col-3">
-        <b>Associated Segment No.</b>
-      </div>
+    <div class="col-2">
+      <b>Country</b>
+    </div>
+    <div class="col-2">
+      <b>Passport</b>
+    </div>
+    <div class="col-2">
+      <b>Visa</b>
+    </div>
+    <div class="col-3">
+      <b>Associated Segment No.</b>
+    </div>
   </div>
 
-  <div class="row form-group" formArrayName="segments"  *ngFor="let item of visaPassportFormGroup.controls.segments?.value; let i = index">
-    <ng-container [formGroupName]="i">
+  <div formArrayName="segments"
+    *ngFor="let item of this.visaPassportFormGroup.get('segments').controls; let i = index;">
+    <div class="row" [formGroupName]="i">
       <div class="col-2">
-        {{item.country}}
-      </div> 
-      <div class="col-2">  
-        <input type="checkbox" class="checkbox-control" [checked]="passport" value="Yes" (change)="passportChanged()"  formControlName="passport">
+        <input type="text" class="form-control" [checked]="passport" value="Yes" (change)="passportChanged()"
+          formControlName="country">
       </div>
-      <div class="col-2">  
-        <input type="checkbox" class="checkbox-control" [checked]="visa" value="Yes" (change)="visaChanged()"  formControlName="visa">
+      <div class="col-2">
+        <input type="checkbox" class="checkbox-control" [checked]="passport" value="Yes" (change)="passportChanged()"
+          formControlName="passport">
+      </div>
+      <div class="col-2">
+        <input type="checkbox" class="checkbox-control" [checked]="visa" value="Yes" (change)="visaChanged()"
+          formControlName="visa">
       </div>
       <div class="col-3">
-        <input type="text" class="form-control" id="segmentLine" placeholder="segmentLine" formControlName="segmentLine">
+        <input type="text" class="form-control" id="segmentLine" placeholder="segmentLine" formControlName="segmentLine"
+          (change)="passportChanged()">
       </div>
-    </ng-container>
+    </div>
+
+
   </div>
+
 </form>

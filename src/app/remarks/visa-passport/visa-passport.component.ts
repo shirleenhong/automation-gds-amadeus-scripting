@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild  } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { DDBService } from 'src/app/service/ddb.service';
 import { VisaPassportModel } from '../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
@@ -17,11 +17,13 @@ export class VisaPassportComponent implements OnInit {
   @Input()
   visaPassportView: VisaPassportModel;
   visaPassportFormGroup: FormGroup;
+  segmentGroup: FormGroup;
   travelPort: any[];
   hasRemarkLine: string;
   segments = [];
 
-  constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService ) {
+
+  constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService) {
   }
 
   ngOnInit() {
@@ -29,20 +31,25 @@ export class VisaPassportComponent implements OnInit {
     this.visaPassportFormGroup = new FormGroup({
       originDestination: new FormControl('', []),
       citizenship: new FormControl('', []),
-      advisory : new FormControl('', []),
+      advisory: new FormControl('', []),
       travellerName: new FormControl('', []),
       segments: new FormArray([]),
     });
+    this.segmentGroup = this.fb.group({
+      passport: new FormControl('', []),
+      visa: new FormControl('', []),
+      segmentLine: new FormControl('', []),
+    });
 
-    if ( this.pnrService.isPNRLoaded) {
-        if (!this.getAdvisoryLine()) {
-          this.enableFormControls(['originDestination'], false);
-        } else {
-          this.enableFormControls(['originDestination'], true);
-        }
-        this.getVisaTrips();
-        this.startSmartTool();
+    if (this.pnrService.isPNRLoaded) {
+      if (!this.getAdvisoryLine()) {
+        this.enableFormControls(['originDestination'], false);
+      } else {
+        this.enableFormControls(['originDestination'], true);
       }
+      this.getVisaTrips();
+      this.startSmartTool();
+    }
   }
 
   startSmartTool(): void {
@@ -57,11 +64,11 @@ export class VisaPassportComponent implements OnInit {
       if (!this.getAdvisoryLine()) {
         this.enableFormControls(['advisory'], false);
       }
-      this.enableFormControls(['travellerName'] , false);
+      this.enableFormControls(['travellerName'], false);
     } else {
       this.enableFormControls(['citizenship'], true);
       this.enableFormControls(['advisory'], true);
-      this.enableFormControls(['travellerName'] , true);
+      this.enableFormControls(['travellerName'], true);
     }
   }
 
@@ -83,52 +90,54 @@ export class VisaPassportComponent implements OnInit {
   getVisaTrips() {
     const originDestination = [{ origin: '', destination: '', departuredate: '' }];
     if (this.pnrService.isPNRLoaded) {
-     for (const air of this.pnrService.pnrObj.airSegments) {
-       const departureCountry = this.ddbService.getCityCountry(air.departureAirport).country;
-       const arrivalCountry =  this.ddbService.getCityCountry(air.arrivalAirport).country;
-       originDestination.push( {origin: departureCountry, destination: arrivalCountry, departuredate: air.departureDate} );
-     }
-
-     const countryList = [{country: '', passport: '', visa: '', segmentLine: ''}];
-     // tslint:disable-next-line:prefer-for-of
-     for (let i = 1;  i < originDestination.length; i++ ) {
-      const mainOrigin = originDestination[1].origin;
-      let exclude: string;
-      if (mainOrigin === originDestination[originDestination.length - 1].destination) {
-         exclude = mainOrigin;
+      for (const air of this.pnrService.pnrObj.airSegments) {
+        const departureCountry = this.ddbService.getCityCountry(air.departureAirport).country;
+        const arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country;
+        originDestination.push({ origin: departureCountry, destination: arrivalCountry, departuredate: air.departureDate });
       }
 
-      if (originDestination[i].destination !== exclude &&
+      const countryList = [{ country: '', passport: '', visa: '', segmentLine: '' }];
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 1; i < originDestination.length; i++) {
+        const mainOrigin = originDestination[1].origin;
+        let exclude: string;
+        if (mainOrigin === originDestination[originDestination.length - 1].destination) {
+          exclude = mainOrigin;
+        }
+
+        if (originDestination[i].destination !== exclude &&
           countryList.findIndex(x => x.country === originDestination[i].destination) === -1) {
-        countryList.push({country: originDestination[i].destination, passport: '', visa: '', segmentLine: ''});
+          countryList.push({ country: originDestination[i].destination, passport: '', visa: '', segmentLine: '' });
+        }
       }
-     }
-     countryList.splice(0 , 1);
-     this.segments = countryList;
+      countryList.splice(0, 1);
+      this.segments = countryList;
 
-     const segmentArray = this.visaPassportFormGroup.controls.segments as FormArray;
+      const segmentArray = this.visaPassportFormGroup.controls.segments as FormArray;
 
-     this.segments.forEach(x => {
-       segmentArray.push(this.fb.group({
-         country: x.country,
-         passport: x.passport,
-         visa: x.visa,
-         segmentLine: x.segmentLine
-       }));
-     });
-   }
- }
+      this.segments.forEach(x => {
+        segmentArray.push(this.fb.group({
+          country: x.country,
+          passport: x.passport,
+          visa: x.visa,
+          segmentLine: x.segmentLine
+        }));
+      });
+    }
+  }
 
- passportChanged() {
- // this.visaPassportView = (this.f.showInsurance.value === 'Yes');
-}
+  passportChanged() {
+    // this.visaPassportView = (this.f.showInsurance.value === 'Yes');
+    // debugger;
+    //alert(this.segmentGroup.get('segmentLine').value);
+  }
 
- visaChanged() {
-  //this.visaPassportView.showInsurance = (this.f.showInsurance.value === 'Yes');
-}
+  visaChanged() {
+    //this.visaPassportView.showInsurance = (this.f.showInsurance.value === 'Yes');
+  }
 
 
- getCitizenship() {
+  getCitizenship() {
     let citizenship: string;
     let country: string;
     citizenship = this.pnrService.getRemarkText('CITIZENSHIP-');
@@ -137,14 +146,14 @@ export class VisaPassportComponent implements OnInit {
       country = this.ddbService.getCitizenship(citizenship).country;
       this.f.citizenship.setValue(country);
     }
-}
-
-getAdvisoryLine(): boolean {
-  this.hasRemarkLine = this.pnrService.getRemarkLineNumber('INTERNATIONAL TRAVEL ADVISORY SENT');
-  if (this.hasRemarkLine !== '') {
-    return true;
-  } else {
-    return false;
   }
-}
+
+  getAdvisoryLine(): boolean {
+    this.hasRemarkLine = this.pnrService.getRemarkLineNumber('INTERNATIONAL TRAVEL ADVISORY SENT');
+    if (this.hasRemarkLine !== '') {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

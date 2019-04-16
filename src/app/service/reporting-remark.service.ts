@@ -36,7 +36,7 @@ export class ReportingRemarkService {
   }
 
   getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-    if (reporting.destination == null) {
+    if (reporting.destination == null || reporting.destination === '') {
       return;
     }
 

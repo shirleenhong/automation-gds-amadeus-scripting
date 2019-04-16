@@ -40,7 +40,7 @@ export class RemarkHelper {
     }
 
 
-    processRiiRemark(label, amount, count) {
+    processRIRRemark(label, amount, count) {
         if (isNaN(amount) || amount === null || amount === undefined || amount === '') { amount = '0.00'; }
 
         const r = 15;
@@ -63,7 +63,7 @@ export class RemarkHelper {
             remark = label + '-'.repeat(z) + amtStr + 'X' + count + '-'.repeat(x) + totalStr;
         }
 
-        return this.createRemark(remark, 'RI', 'I');
+        return this.createRemark(remark, 'RI', 'R');
     }
 
     getMaxLength(remtype) {

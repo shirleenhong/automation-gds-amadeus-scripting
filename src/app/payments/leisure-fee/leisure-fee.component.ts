@@ -107,7 +107,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     } else {
       this.enableDisbleControls(['noFeeReason'], true);
     }
-
+    this.enableDisableCredits();
   }
 
   setFormState(isDisabled: boolean) {
@@ -124,11 +124,15 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
 
     this.enableDisbleControls(ctrls, isDisabled);
+    this.enableDisableCredits();
+    this.changeFeeState();
+  }
+
+  enableDisableCredits() {
     if (this.leisureFeeForm.controls.paymentType.value === 'K') {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
       this.enableDisbleControls(controls, true);
     }
-    this.changeFeeState();
   }
 
   get f() {

@@ -5,12 +5,12 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PnrService } from './pnr.service';
-import { IfStmt } from '@angular/compiler';
-import { PaymentRemarkHelper } from '../helper/payment-helper';
 import { RemarkHelper } from '../helper/remark-helper';
 import { FormGroup } from '@angular/forms';
 import { DDBService } from './ddb.service';
 import { AmountPipe } from '../pipes/amount.pipe';
+import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
+
 
 
 @Injectable({
@@ -261,7 +261,7 @@ export class PaymentRemarkService {
       remGroup.deleteRemarkByIds.push(lineNum);
     }
 
-    if (assoc === '0' && (cfa !== 'RBM' && cfa !== 'RBP')) {
+    if (assoc === '0' && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
       // *U11
       const noFeeReason = fg.get('noFeeReason').value;
       remark = 'U11/-' + noFeeReason;
@@ -318,8 +318,9 @@ export class PaymentRemarkService {
     return txt;
   }
 
-  public GetAccountingUdids(fg: FormGroup) {
+  public GetAccountingUdids(acc: AccountingRemarkComponent) {
 
+    const fg = acc.accountingForm;
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting UDIDs';
     remGroup.remarks = new Array<RemarkModel>();
@@ -328,17 +329,27 @@ export class PaymentRemarkService {
     const udids = ['U76/-', 'U71/-', 'U75/-', 'U72/-', 'U73/-', 'U74/-', 'U77/-'];
     const values = ['airOnly', 'exclusiveProperty', 'propertyName', 'flightType', 'priceVsSupplier', 'group', 'preferredVendor'];
     let i = 0;
-    udids.forEach(udid => {
-      const line = this.pnrService.getRemarkLineNumber(udid);
-      if (line === '') {
-        const val = fg.get(values[i]).value;
-        if (val !== null && val !== undefined && val !== '' && !fg.get(values[i]).disabled) {
-          remark = udid + val;
-          remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+
+    if (acc.isAd1SwgSupplier) {
+      udids.forEach(udid => {
+        const line = this.pnrService.getRemarkLineNumber(udid);
+        if (line === '') {
+          const val = fg.get(values[i]).value;
+          if (val !== null && val !== undefined && val !== '' && !fg.get(values[i]).disabled) {
+            remark = udid + val;
+            remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+          }
         }
-      }
-      i++;
-    });
+        i++;
+      });
+    } else {
+      udids.forEach(udid => {
+        const line = this.pnrService.getRemarkLineNumber(udid);
+        if (line !== '') {
+          remGroup.deleteRemarkByIds.push(line);
+        }
+      });
+    }
     return remGroup;
   }
 

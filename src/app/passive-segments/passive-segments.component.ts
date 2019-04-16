@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
+import { Component, ViewChild } from '@angular/core';
+import { TourSegmentComponent } from './tour-segment/tour-segment.component';
 
 @Component({
   selector: 'app-passive-segments',
@@ -8,8 +8,7 @@ import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
 })
 
 export class PassiveSegmentsComponent {
-  @Input()
-  passiveSegmentView: PassiveSegmentViewModel;
+  @ViewChild(TourSegmentComponent) tourSegmentComponent: TourSegmentComponent;
 
   constructor() {
 
@@ -21,5 +20,9 @@ export class PassiveSegmentsComponent {
 
   onAddReceipt() {
 
+  }
+  checkValid() {
+    // add validation here if theres need to validate
+    return true;
   }
 }

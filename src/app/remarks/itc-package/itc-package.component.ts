@@ -19,7 +19,7 @@ export class ItcPackageComponent implements OnInit {
   constructor(private fb: FormBuilder, private ddb: DDBService, private pnrService: PnrService,
     private packageRemarkHelper: PackageRemarkHelper) {
     this.itcForm = this.fb.group({
-      itcCurrencyType: new FormControl(''),
+      itcCurrencyType: new FormControl('', [Validators.required]),
       noAdult: new FormControl('', [Validators.pattern('[0-9]*')]),
       noChild: new FormControl('', [Validators.pattern('[0-9]*')]),
       noInfant: new FormControl('', [Validators.pattern('[0-9]*')]),
@@ -45,7 +45,7 @@ export class ItcPackageComponent implements OnInit {
       carAdult: new FormControl(''),
       depAdult: new FormControl(''),
       balance: new FormControl('', []),
-      dueDate: new FormControl('', []),
+      dueDate: new FormControl('', [Validators.required]),
       commission: new FormControl(''),
       holidayCost: new FormControl('')
     });

@@ -9,6 +9,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { BankAccount } from 'src/app/models/bank-account.model';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-matrix-receipt',
@@ -48,8 +49,8 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       gcNumber: new FormControl('', [Validators.maxLength(19)]),
       amount: new FormControl('', [Validators.required, Validators.min(0)]),
       vendorCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
-      ccNo: new FormControl('', [Validators.required, Validators.minLength(16), Validators.required, Validators.maxLength(16)]),
-      expDate: new FormControl('', [Validators.required]),
+      ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
       modePayment: new FormControl('', [Validators.required])
 
     });
@@ -194,26 +195,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     }
 
     this.matrixReceipt.vendorCode = modeOfPayment;
-    this.creditcardMaxValidator(modeOfPayment);
-  }
-
-  creditcardMaxValidator(newValue) {
-    let pattern = '';
-    pattern = this.paymentHelper.creditcardMaxValidator(newValue);
-    this.matrixForm.controls.ccNo.setValidators(Validators.pattern(pattern));
-  }
-
-  checkDate(newValue) {
-
-    const valid = this.paymentHelper.checkDate(newValue);
-    if (!valid) {
-      this.matrixForm.controls.expDate.setValidators(Validators.pattern('[a-z]'));
-      this.matrixForm.controls.expDate.updateValueAndValidity();
-    } else {
-      this.matrixForm.controls.expDate.setValidators(Validators.pattern('.*'));
-      this.matrixForm.controls.expDate.updateValueAndValidity();
-    }
-
+    this.f.ccNo.setValue('');
   }
 
 

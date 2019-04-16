@@ -125,9 +125,10 @@ export class SegmentService {
     setMandatoryRemarks() {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
-        const itinLanguage = this.pnrService.getItineraryLanguage();
+        let itinLanguage = this.pnrService.getItineraryLanguage();
+        itinLanguage = itinLanguage.substr(0, 2);
         switch (true) {
-            case (itinLanguage === 'EN-GB' || itinLanguage === 'EN-EN'): {
+            case (itinLanguage === 'EN'): {
                 const LLBMandatoryRemarkEN = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
                 if (LLBMandatoryRemarkEN === '') {
                     const commandEN = 'PBN/LLB MANDATORY REMARKS*';
@@ -140,7 +141,7 @@ export class SegmentService {
                 }
                 break;
             }
-            case (itinLanguage === 'FR-FR'): {
+            case (itinLanguage === 'FR'): {
                 const LLBMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
                 if (LLBMandatoryRemarkFR === '') {
                     const commandFR = 'PBN/LLB MANDATORY FRENCH*';

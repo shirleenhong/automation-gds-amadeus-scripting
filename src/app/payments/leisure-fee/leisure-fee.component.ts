@@ -20,6 +20,8 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 import { CfRemarkModel } from 'src/app/models/pnr/cf-remark.model';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-leisure-fee',
@@ -54,9 +56,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   creditcardMaxValidator(newValue) {
-    const pattern = this.paymentHelper.creditcardMaxValidator(newValue);
-    this.f.ccNo.clearValidators();
-    this.f.ccNo.setValidators([Validators.required, Validators.pattern(pattern)]);
+    // retrigger validation
+    this.f.ccNo.setValue(this.f.ccNo.value);
 
   }
 
@@ -77,13 +78,13 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         Validators.required,
         Validators.pattern('[A-Z]{2}')
       ]),
-      ccNo: new FormControl('', [Validators.required]),
-      expDate: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
-      noFeeReason: new FormControl('', [Validators.required]),
+      noFeeReason: new FormControl(''),
 
     });
-
+    this.enableDisbleControls(['noFeeReason'], true);
     this.onControlChanges();
     this.loadValues();
     this.checkHasPnr();
@@ -151,7 +152,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         'address'
       ];
       this.enableDisbleControls(ctrls, false);
-      // this.enableDisbleControls(['noFeeReason'], true);
       this.enableDisbleControls(['noFeeReason'], true);
 
       switch (val) {
@@ -166,8 +166,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
           break;
         case '0':
           this.enableDisbleControls(ctrls, true);
-          // this.enableDisbleControls(['noFeeReason'], false);
-          // this.enableDisbleControls(['noFeeReason'], true);
+          //this.enableDisbleControls(['noFeeReason'], false);
+          this.f.noFeeReason.setValidators(Validators.required);
           break;
         default:
           this.leisureFeeForm.get('segmentNum').disable();
@@ -206,6 +206,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     const remarkTax = this.pnrService.getRemarkText('TAX-');
     this.f.paymentType.patchValue('C');
     this.leisureFeeForm.controls.segmentAssoc.setValue('0');
+    this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
     if (remarkText !== '') {
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));

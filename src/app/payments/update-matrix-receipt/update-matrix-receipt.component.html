@@ -129,7 +129,7 @@
         <div class="col-sm-4">Expiration Date: </div>
         <div class="col-sm-8">
           <input type="input" class="form-control" id="expDate" required [(ngModel)]="matrixReceipt.expDate"
-            formControlName="expDate" name="expDate" (change)="checkDate($event.target.value)" CCDateExpMask
+            formControlName="expDate" name="expDate" CCDateExpMask
             [ngClass]="{ 'is-invalid': f.expDate.touched && f.expDate.invalid }" />
         </div>
       </div>

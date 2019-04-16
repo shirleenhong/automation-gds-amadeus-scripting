@@ -108,7 +108,6 @@ export class ConciergeUdidsComponent implements OnInit {
 
     for (let i = 0; i <= (udids.length - 1); i++) {
       const rem = this.getTextLineNo(udids[i].id);
-      // alert(rem);
       if (rem) {
         this.setControls(rem.remarkText, udids[i].id, udids[i].control, rem.lineNo);
       }

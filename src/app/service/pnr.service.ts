@@ -110,7 +110,7 @@ export class PnrService {
   getFSRemark() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.fsElements) {
-        return rm.freeFlowText;
+        return rm.fullNode.otherDataFreetext.longFreetext;
       }
     }
     return '';

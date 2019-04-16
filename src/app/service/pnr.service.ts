@@ -580,6 +580,7 @@ export class PnrService {
       model.rln = Number(match.groups.rln);
       model.points = match.groups.points;
       model.cwtRef = match.groups.ref;
+      return model;
     }
     regex = /RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g;
     match = regex.exec(remark);

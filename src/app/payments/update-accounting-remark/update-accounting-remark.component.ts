@@ -52,6 +52,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({

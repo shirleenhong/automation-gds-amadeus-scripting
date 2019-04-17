@@ -8,7 +8,9 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
+import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -39,7 +41,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   constructor(public activeModal: BsModalService, private pnrService: PnrService,
     public modalRef: BsModalRef, private ddbService: DDBService,
-    private paymentHelper: PaymentRemarkHelper) {
+    private paymentHelper: PaymentRemarkHelper, private utilHelper: UtilHelper) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
     this.accountingRemarks = new MatrixAccountingModel();
@@ -169,6 +171,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     } else {
       this.accountingRemarks.supplierCodeName = '';
     }
+    this.setInsuranceValue();
   }
 
   assignDescription(typeCode: any) {
@@ -266,4 +269,50 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
   }
+
+  setInsuranceValue() {
+
+    if (this.matrixAccountingForm.controls.segmentNo.value !== undefined) {
+      const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
+      let isMLF = false;
+      segmentList.forEach(segment => {
+        if (this.isTypeINSExist(segment)) {
+          isMLF = true;
+        }
+      });
+
+      if (isMLF) {
+        this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
+        this.matrixAccountingForm.controls.supplierCodeName.disable();
+      } else {
+        this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
+        this.matrixAccountingForm.controls.supplierCodeName.enable();
+      }
+    }
+  }
+
+  isTypeINSExist(segmentNo: any) {
+    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    let res = false;
+    segmentDetails.forEach(element => {
+      if (segmentDetails.length > 0) {
+        const details = {
+          id: element.lineNo,
+          name: element.longFreeText,
+          status: element.status,
+          segmentType: element.segmentType,
+          airlineCode: element.airlineCode,
+          freeText: element.freeText
+        };
+        if (details.id === segmentNo) {
+          const regexp: RegExp = /(?<=TYP-)(\w{3})/;
+          if (this.utilHelper.getRegexValue(details.freeText, regexp) === 'INS') {
+            res = true;
+          }
+        }
+      }
+    });
+    return res;
+  }
+
 }

@@ -2,12 +2,13 @@ import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { isUndefined } from 'util';
+import { AmountPipe } from '../pipes/amount.pipe';
 
 @Directive({
     selector: '[formControlName][AmountMask]',
 })
 export class AmountMaskDirective {
-    decPipe = new DecimalPipe('en-US');
+    amountPipe = new AmountPipe();
 
     constructor(public ngControl: NgControl) { }
 
@@ -19,7 +20,7 @@ export class AmountMaskDirective {
     @HostListener('blur')
     onBlur() {
         if (this.ngControl.value === null || this.ngControl.value === undefined || isNaN(this.ngControl.value)) { return; }
-        const newVal = this.decPipe.transform(this.ngControl.value.replace(',', ''), '1.2-2').replace(',', '');
+        const newVal = this.amountPipe.transform(this.ngControl.value.replace(',', ''));
         this.ngControl.control.setValue(newVal);
     }
 

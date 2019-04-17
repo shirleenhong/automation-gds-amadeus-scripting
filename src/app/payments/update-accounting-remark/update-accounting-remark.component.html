@@ -63,7 +63,7 @@
       <div class="col-sm-4">Supplier Code: </div>
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="select a supplier Code" formControlName="supplierCodeName"
-          id="supplierCodeName" list="dynamicSupplierCode" [(ngModel)]="accountingRemarks.supplierCodeName"
+          id="supplierCodeName" list="dynamicSupplierCode" [(ngModel)]="accountingRemarks.supplierCodeName" AllCapsMask
           formControlName="supplierCodeName" (change)="SetTktNumber($event.target.value)" />
         <datalist id="dynamicSupplierCode">
           <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">{{item.supplierCode}} -

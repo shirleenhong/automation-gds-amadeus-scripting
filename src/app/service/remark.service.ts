@@ -282,7 +282,10 @@ export class RemarkService {
         await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(data => {
             this.responseMessage = 'Remarks Updated';
             smartScriptSession.send('RT');
-            // alert(JSON.stringify(remarkElements));
+            // smartScriptSession.requestService('bookingfile.refresh', null, {
+            //     fn: '',
+            //     scope: this
+            // });
         }, error => {
             this.responseMessage = JSON.stringify(error);
         });

@@ -12,32 +12,7 @@ import { DatePipe } from '@angular/common';
 })
 export class PaymentRemarkHelper {
 
-    creditcardMaxValidator(newValue) {
-        let pat = '';
-        switch (newValue) {
-            case 'VI': {
-                pat = '^4[0-9]{15}$';
-                break;
-            }
-            case 'MC': {
-                pat = '^5[0-9]{15}$';
-                break;
-            }
-            case 'AX': {
-                pat = '^3[0-9]{14}$';
-                break;
-            }
-            case 'DC': {
-                pat = '^[0-9]{14,16}$';
-                break;
-            }
-            default: {
-                pat = '^[0-9]{14,16}$';
-                break;
-            }
-        }
-        return pat;
-    }
+
 
     checkDate(newValue) {
         if (newValue.length < 5) { return false; }

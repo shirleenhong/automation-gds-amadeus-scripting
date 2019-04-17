@@ -34,6 +34,9 @@ import { AmountPipe } from './pipes/amount.pipe';
 import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
 import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
+import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
+import { MessageComponent } from './shared/message/message.component';
+
 
 
 
@@ -56,8 +59,9 @@ import { UpdateSegmentComponent } from './passive-segments/update-segment/update
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent
+
 
   ],
   imports: [
@@ -76,7 +80,8 @@ import { UpdateSegmentComponent } from './passive-segments/update-segment/update
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, UpdateSegmentComponent]
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,  AllCapsMaskDirective],
+  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, UpdateSegmentComponent, MessageComponent]
+
 })
 export class AppModule { }

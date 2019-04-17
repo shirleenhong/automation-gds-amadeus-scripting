@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
-import { validateSegmentNumbers } from 'src/app/shared/validators/leisure.validators';
+import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -70,8 +70,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       otherTax: new FormControl('', [Validators.required]),
       fop: new FormControl('', [Validators.required]),
       vendorCode: new FormControl('', [Validators.required]),
-      cardNumber: new FormControl('', [Validators.required]),
-      expDate: new FormControl('', [Validators.required]),
+      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
       tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
       description: new FormControl('', [Validators.required]),
       bsp: new FormControl('', [Validators.required])
@@ -247,23 +247,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   creditcardMaxValidator(newValue) {
-    let pattern = '';
-    pattern = this.paymentHelper.creditcardMaxValidator(newValue);
-    this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
+    this.f.cardNumber.setValue('');
+    // let pattern = '';
+    // pattern = this.paymentHelper.creditcardMaxValidator(newValue);
+    // this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
   }
 
-  checkDate(newValue) {
-    const valid = this.paymentHelper.checkDate(newValue);
 
-    if (!valid) {
-      this.matrixAccountingForm.controls.expDate.setValidators(Validators.pattern('^[0-9]{14,16}$'));
-      this.matrixAccountingForm.controls.expDate.updateValueAndValidity();
-    } else {
-      this.matrixAccountingForm.controls.expDate.setValidators(Validators.pattern('.*'));
-      this.matrixAccountingForm.controls.expDate.updateValueAndValidity();
-    }
-
-  }
 
   SetTktNumber(supValue) {
     const supCode = ['ACY', 'SOA', 'WJ3'];

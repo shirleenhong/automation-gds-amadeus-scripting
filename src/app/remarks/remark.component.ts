@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
-import { RemarkViewModel } from '../models/remark-view.model';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, Validators, FormBuilder } from "@angular/forms";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { SelectItem } from '../models/select-item.model';
-// import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TourPackageComponent } from './tour-package/tour-package.component';
 import { ItcPackageComponent } from './itc-package/itc-package.component';
-// import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
+import { PnrService } from 'src/app/service/pnr.service';
+import { UtilHelper } from '../helper/util.helper';
+
 
 @Component({
   selector: 'app-remarks',
@@ -17,21 +17,20 @@ export class RemarkComponent implements OnInit {
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
   @ViewChild(ItcPackageComponent) itcPackageComponent: ItcPackageComponent;
   remarkForm: FormGroup;
-  @Input() remarkSection: RemarkViewModel;
+
 
   // @Input() group: FormGroup;
   packageList: Array<SelectItem>;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
     this.loadtourPackage();
     this.remarkForm = this.fb.group({
       packageList: new FormControl('', [Validators.required])
-      // packageList: new FormControl('', [Validators.required])
-      // segmentNum: new FormControl('', [Validators.required])
     });
   }
   ngOnInit() {
     this.remarkForm.controls.packageList.patchValue('1');
+    this.setPackageListValue();
   }
 
   getSelector() {
@@ -46,9 +45,30 @@ export class RemarkComponent implements OnInit {
     ];
   }
 
-  // showPackage(tourValue) {
-  //   this.remarkForm.packageList = tourValue
-  // }
+  private setPackageListValue() {
+    if (this.pnrService.getRIIRemarkText('THE FOLLOWING COSTS ARE SHOWN IN')) {
+      this.remarkForm.controls.packageList.patchValue('TP');
+      if (this.pnrService.getRIIRemarkText('HOTEL/ACCOMMODATION') !== '' ||
+        this.pnrService.getRIIRemarkText('CAR RENTAL') !== '') {
+        this.remarkForm.controls.packageList.patchValue('ITC');
+      }
+    }
+  }
+
+  checkValid() {
+    if (this.f.packageList.value === 'ITC') {
+      this.utilHelper.validateAllFields(this.itcPackageComponent.itcForm);
+      if (!this.itcPackageComponent.itcForm.valid) {
+        return false;
+      }
+    } else if (this.f.packageList.value === 'TP') {
+      this.utilHelper.validateAllFields(this.tourPackageComponent.group);
+      if (!this.tourPackageComponent.group.valid) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   get f() {
     return this.remarkForm.controls;

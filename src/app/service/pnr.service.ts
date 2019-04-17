@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { RemarkModel } from '../models/pnr/remark.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
-import { debug } from 'util';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
-import { element } from '@angular/core/src/render3';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
@@ -113,6 +109,15 @@ export class PnrService {
     return null;
   }
 
+  getFSRemark() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.fsElements) {
+        return rm.fullNode.otherDataFreetext.longFreetext;
+      }
+    }
+    return '';
+  }
+
   getFSLineNumber() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.fsElements) {
@@ -122,9 +127,9 @@ export class PnrService {
     return '';
   }
 
-  getRIILineNumber(searchText: string) {
+  getRIRLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
-      for (const rii of this.pnrObj.riiElements) {
+      for (const rii of this.pnrObj.rirElements) {
         if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {
           return rii.elementNumber;
         }
@@ -258,7 +263,7 @@ export class PnrService {
   private formatDate(tempDate) {
     const lairdate = new Date(tempDate.substr(2, 2) + '/' + tempDate.substr(0, 2) + '/' + tempDate.substr(4, 2));
     const datePipe = new DatePipe('en-US');
-    let tdate = datePipe.transform(lairdate, 'ddMMM');
+    const tdate = datePipe.transform(lairdate, 'ddMMM');
     return tdate;
   }
 
@@ -354,11 +359,39 @@ export class PnrService {
     return remarks;
   }
 
+  getAllUdidRemarks() {
+    return this.getRemarksFromGDSByRegex(/U[0-9]{1,2}\/-(?<value>(.*))/g);
+  }
+
+  getRemarksFromGDSByRegex(regex) {
+    const remarks = new Array<any>();
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        const rem = {
+          remarkText: rm.fullNode.miscellaneousRemarks.remarks.freetext,
+          category: rm.fullNode.miscellaneousRemarks.remarks.type,
+          lineNo: rm.elementNumber,
+          value: ''
+        };
+        const match = regex.exec(rem.remarkText);
+        if (match !== null) {
+          if (match.groups !== null && match.groups.value !== null) {
+            rem.value = match.groups.value;
+          }
+          remarks.push(rem);
+        }
+      }
+    }
+    return remarks;
+  }
+
+
+
 
   getRIIRemarksFromGDS() {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
-      for (const ri of this.pnrObj.riiElements) {
+      for (const ri of this.pnrObj.rirElements) {
         const rem = {
           remarkText: ri.fullNode.miscellaneousRemarks.remarks.freetext,
           category: ri.fullNode.miscellaneousRemarks.remarks.type,
@@ -372,7 +405,7 @@ export class PnrService {
 
   getRIIRemarkText(searchText: string) {
     if (this.isPNRLoaded) {
-      for (const ri of this.pnrObj.riiElements) {
+      for (const ri of this.pnrObj.rirElements) {
         if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
           return ri;
         }
@@ -515,7 +548,7 @@ export class PnrService {
   getApayRiiRemarkLines() {
     const apays = [];
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.riiElements) {
+      for (const rm of this.pnrObj.rirElements) {
         const rem = rm.fullNode.miscellaneousRemarks.remarks.freetext;
         if (rem.match(/PAID (.*) CF-(.*) PLUS (.*) TAX ON (.*)/g) !== null) {
           apays.push({ lineNum: rm.elementNumber, remark: rem, segments: this.getAssocNumbers(rm.associations) });
@@ -651,6 +684,7 @@ export class PnrService {
       model.rln = Number(match.groups.rln);
       model.points = match.groups.points;
       model.cwtRef = match.groups.ref;
+      return model;
     }
     regex = /RLN-(?<rln>[0-9]*)\/-FOP-(?<fop>(.*))\/-LK-T\/-BA-(?<ba>(.*))\/-GL-(?<glcode>(.*))/g;
     match = regex.exec(remark);
@@ -673,12 +707,12 @@ export class PnrService {
         return model;
       }
     }
-    regex = /RLN-(?<rln>[0-9]*)\/-RM-(?<desc>(.*))\/-GC-(?<gc>.*)/g;
+    regex = /RLN-(?<rln>[0-9]*)\/-RM-(?<desc>([^\/]+))(\/-GC-(?<gc>.*))?/g;
     match = regex.exec(remark);
     if (match !== null) {
       model.rln = Number(match.groups.rln);
       model.description = match.groups.desc;
-      model.gcNumber = (match.groups.gc);
+      if (model.gcNumber !== null) { model.gcNumber = (match.groups.gc); }
       return model;
     }
 

@@ -6,6 +6,8 @@ import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder } from
 import { PnrService } from 'src/app/service/pnr.service';
 import { Alert } from 'selenium-webdriver';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { MessageComponent } from 'src/app/shared/message/message.component';
+import { MessageType } from 'src/app/shared/message/MessageType';
 
 
 @Component({
@@ -63,28 +65,41 @@ export class AccountingRemarkComponent implements OnInit {
 
 
   deleteItem(r: MatrixAccountingModel) {
-    if (confirm('Are you sure you want to delete this Accounting Remark?')) {
-      this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
-      let i = 1;
-      this.accountingRemarks.forEach(x => {
-        x.tkMacLine = i;
-        i++;
-      });
-    }
+    this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+    this.modalRef.content.modalRef = this.modalRef;
+    this.modalRef.content.title = 'Delete?';
+    this.modalRef.content.message = 'Are you sure you want to delete this Accounting Remark?';
+    this.modalRef.content.callerName = 'Accounting';
+    this.modalRef.content.response = '';
+    this.modalRef.content.paramValue = r;
+    this.modalRef.content.setMessageType(MessageType.YesNo);
   }
 
   modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(result => {
-      if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
-        if (!this.isAddNew) {
-          const cur = this.accountingRemarks.find(x => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
-          this.utilHelper.modelCopy(this.modalRef.content.accountingRemarks, cur);
-        } else {
-          this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+        if (this.modalRef.content.isSubmitted) {
+          if (!this.isAddNew) {
+            const cur = this.accountingRemarks.find(x => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
+            this.utilHelper.modelCopy(this.modalRef.content.accountingRemarks, cur);
+          } else {
+            this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
+          }
+          this.modalRef.content.isSubmitted = false;
+          this.checkSupplierCode();
         }
-        this.modalRef.content.isSubmitted = false;
-        this.checkSupplierCode();
+        if (this.modalRef.content.callerName === 'Accounting' && this.modalRef.content.response === 'YES') {
 
+          const r = this.modalRef.content.paramValue;
+          this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
+          let i = 1;
+          this.accountingRemarks.forEach(x => {
+            x.tkMacLine = i;
+            i++;
+            this.checkSupplierCode();
+          });
+          this.modalRef.content.response = '';
+        }
       }
     });
   }
@@ -99,7 +114,6 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.IsBSP(r.bsp);
     this.modalRef.content.assignDescription(r.description);
     this.modalRef.content.FormOfPaymentChange(r.fop);
-    //this.modalSubscribeOnClose();
   }
 
 

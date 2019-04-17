@@ -32,23 +32,26 @@ export class MatrixReceiptComponent implements OnInit {
 
   modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(result => {
-      if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.isSubmitted) {
-        if (!this.isAddNew) {
-          const cur = this.matrixReceipts.find(x => x.rln === this.modalRef.content.matrixReceipt.rln);
-          this.utilHelper.modelCopy(this.modalRef.content.matrixReceipt, cur);
-        } else {
-          this.matrixReceipts.push(this.modalRef.content.matrixReceipt);
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+        if (this.modalRef.content.isSubmitted) {
+          if (!this.isAddNew) {
+            const cur = this.matrixReceipts.find(x => x.rln === this.modalRef.content.matrixReceipt.rln);
+            this.utilHelper.modelCopy(this.modalRef.content.matrixReceipt, cur);
+          } else {
+            this.matrixReceipts.push(this.modalRef.content.matrixReceipt);
+          }
+          this.modalRef.content.isSubmitted = false;
         }
-        this.modalRef.content.isSubmitted = false;
-      }
-      if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.response === 'YES') {
-        const r = this.modalRef.content.paramValue;
-        this.matrixReceipts.splice(this.matrixReceipts.indexOf(r), 1);
-        let i = 1;
-        this.matrixReceipts.forEach(x => {
-          x.rln = i;
-          i++;
-        });
+        if (this.modalRef.content.callerName === 'MatrixReceipt' && this.modalRef.content.response === 'YES') {
+          const r = this.modalRef.content.paramValue;
+          this.matrixReceipts.splice(this.matrixReceipts.indexOf(r), 1);
+          let i = 1;
+          this.matrixReceipts.forEach(x => {
+            x.rln = i;
+            i++;
+          });
+          this.modalRef.content.response = '';
+        }
       }
     });
   }
@@ -59,6 +62,7 @@ export class MatrixReceiptComponent implements OnInit {
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
     this.modalRef.content.message = 'Are you sure you want to delete this Matrix Receipt?';
+    this.modalRef.content.callerName = 'MatrixReceipt';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);
   }

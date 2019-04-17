@@ -8,6 +8,7 @@ import { MessageType } from './MessageType';
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit {
+  callerName = '';
   modalRef = new BsModalRef();
   message = '';
   title = '';
@@ -23,6 +24,7 @@ export class MessageComponent implements OnInit {
 
   setMessageType(type: MessageType) {
     this.messageType = type;
+    this.response = '';
     switch (type) {
       case MessageType.Default:
         this.iconClass = 'fas fa-exclamation-circle fa-w-16 fa-3x';
@@ -30,7 +32,6 @@ export class MessageComponent implements OnInit {
       case MessageType.YesNo:
         this.iconClass = 'fas fa-question-circle fa-w-16 fa-3x';
         break;
-
     }
   }
 

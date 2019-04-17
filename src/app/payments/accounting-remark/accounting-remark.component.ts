@@ -69,6 +69,8 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
     this.modalRef.content.message = 'Are you sure you want to delete this Accounting Remark?';
+    this.modalRef.content.callerName = 'Accounting';
+    this.modalRef.content.response = '';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);
   }
@@ -86,14 +88,17 @@ export class AccountingRemarkComponent implements OnInit {
           this.modalRef.content.isSubmitted = false;
           this.checkSupplierCode();
         }
-        if (this.modalRef.content.response === 'YES') {
+        if (this.modalRef.content.callerName === 'Accounting' && this.modalRef.content.response === 'YES') {
+
           const r = this.modalRef.content.paramValue;
           this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
           let i = 1;
           this.accountingRemarks.forEach(x => {
             x.tkMacLine = i;
             i++;
+            this.checkSupplierCode();
           });
+          this.modalRef.content.response = '';
         }
       }
     });

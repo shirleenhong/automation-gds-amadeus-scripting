@@ -29,7 +29,7 @@ export class ValidateModel {
 
     isAllValid() {
         this.setCssClass();
-        return (this.isPaymentValid && this.isReportingValid && this.isSegmentValid && this.isRemarkValid);
+        return (this.isPaymentValid && this.isReportingValid && this.isRemarkValid);
     }
 
 }

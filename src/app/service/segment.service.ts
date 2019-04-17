@@ -38,6 +38,7 @@ export class SegmentService {
             if (!segment.isNew) {
                 return;
             }
+
             const passive = new PassiveSegmentModel();
             passive.vendor = '1A';
             passive.passiveSegmentType = segment.segmentType;
@@ -55,7 +56,7 @@ export class SegmentService {
             }
 
             passive.endPoint = segdest;
-            passive.quantity = 1;
+            passive.quantity = Number(segment.noPeople);
 
             const datePipe2 = new DatePipe('en-US');
             const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');

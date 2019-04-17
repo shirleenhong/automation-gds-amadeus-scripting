@@ -59,8 +59,8 @@ import { MessageComponent } from './shared/message/message.component';
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,AllCapsMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent
 
 
   ],
@@ -80,7 +80,7 @@ import { MessageComponent } from './shared/message/message.component';
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,  AllCapsMaskDirective],
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, UpdateSegmentComponent, MessageComponent]
 
 })

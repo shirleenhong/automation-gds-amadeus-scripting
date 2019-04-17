@@ -1,8 +1,4 @@
 import { FormControl, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
-import { SegmentService } from 'src/app/service/segment.service';
-import { isUndefined } from 'ngx-bootstrap/chronos/utils/type-checks';
-
-
 
 export function validateSegmentNumbers(segments: any[]): ValidatorFn {
     return (currentControl: AbstractControl): { [key: string]: any } => {
@@ -40,3 +36,74 @@ export function validatePassengerNumbers(passenger: any[]): ValidatorFn {
         return response;
     };
 }
+export function validateCreditCard(vendorControlName): ValidatorFn {
+    return (currentControl: AbstractControl): { [key: string]: any } => {
+        if (currentControl.value === undefined) { return { no_value: true }; }
+        if (currentControl.parent === undefined) { return { no_value: true }; }
+        const vendor = currentControl.parent.get(vendorControlName).value;
+        //  let response = null;
+        let pat = '';
+        switch (vendor) {
+            case 'VI': {
+                pat = '^4[0-9]{15}$';
+                break;
+            }
+            case 'MC': {
+                pat = '^5[0-9]{15}$';
+                break;
+            }
+            case 'AX': {
+                pat = '^3[0-9]{14}$';
+                break;
+            }
+            case 'DC': {
+                pat = '^[0-9]{14,16}$';
+                break;
+            }
+            default: {
+                pat = '^[0-9]{14,16}$';
+                break;
+            }
+        }
+
+        if (currentControl.value.toString().match(pat) === null) {
+            return { INVALID_CC: true };
+        }
+
+        // currentControl.setValidators(Validators.pattern(pat));
+        return null;
+    };
+}
+
+
+
+export function validateExpDate(): ValidatorFn {
+    return (currentControl: AbstractControl): { [key: string]: any } => {
+        const newValue = currentControl.value;
+        if (newValue === undefined) { return { no_value: true }; }
+        if (newValue.length < 5) { return { INVALID_LENGTH: true }; }
+        const dts = newValue.split('/');
+        const month = parseInt(dts[0], 0);
+        const year = parseInt(dts[1], 0);
+
+        const d = new Date();
+        const moNow = d.getMonth();
+        const yrnow = parseInt(d.getFullYear().toString().substr(2, 2), 0);
+
+        if (month < 0 || month > 12) {
+            return { INVALID_MONTH: true };
+        }
+
+        if ((year > yrnow) || ((year === yrnow) && (month >= moNow + 1))) {
+            return null;
+        } else {
+            return { INVALID_EXP_DATE: true };
+        }
+
+    };
+
+}
+
+
+
+

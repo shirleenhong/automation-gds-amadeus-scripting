@@ -36,7 +36,7 @@ export class ReportingRemarkService {
   }
 
   getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-    if (reporting.destination == null) {
+    if (reporting.destination == null || reporting.destination === '') {
       return;
     }
 
@@ -56,12 +56,16 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
     if (!(reporting.cfLine.cfa === 'RBM' || reporting.cfLine.cfa === 'RBP')) {
+
+
+      this.deleteRemarks(['U10/-', 'U12/-'], rmGroup);
       // *U10
       if (reporting.cfLine.cfa === 'CVC') {
         const companyname = reporting.companyName;
         remText = 'U10/-' + companyname;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
       }
+
 
       if (!reporting.showInsurance) {
         // *U12
@@ -73,17 +77,25 @@ export class ReportingRemarkService {
       }
 
       // todo : uncomment for ummend story
-      // const existNumber = this.pnrService.getRemarkLineNumber('U30/-NEWLEI');
-      // if (existNumber === '') {
-      // *U30
-      const datePipe = new DatePipe('en-US');
-      const dateToday = datePipe.transform(Date.now(), 'ddMMM');
-      remText = 'U30/-NEWLEI' + dateToday;
-      rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-      // }
+      const existNumber = this.pnrService.getRemarkLineNumber('U30/-NEWLEI');
+      if (existNumber === '') {
+        // *U30
+        const datePipe = new DatePipe('en-US');
+        const dateToday = datePipe.transform(Date.now(), 'ddMMM');
+        remText = 'U30/-NEWLEI' + dateToday;
+        rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
+      }
     }
   }
 
+  deleteRemarks(udids, rmGroup) {
+    udids.forEach(x => {
+      const existNumber = this.pnrService.getRemarkLineNumber(x);
+      if (existNumber !== '') {
+        rmGroup.deleteRemarkByIds.push(existNumber);
+      }
+    });
+  }
 
   getRemark(remarkText, remarkType, remarkCategory) {
     const rem = new RemarkModel();
@@ -138,17 +150,17 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.chCallerName) {
+    if (concierge.value.chCallerName !== '') {
       remText = 'U11/-' + concierge.value.chCallerName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.delegateName) {
+    if (concierge.value.delegateName !== '') {
       remText = 'U12/-' + concierge.value.delegateName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.hotelName) {
+    if (concierge.value.hotelName !== '') {
       remText = 'U13/-' + concierge.value.hotelName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     } else if (forRetain.indexOf('U13') === -1) {

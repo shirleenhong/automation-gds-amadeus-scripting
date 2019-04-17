@@ -7,11 +7,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class AmountPipe implements PipeTransform {
     decPipe = new DecimalPipe('en-Us');
     transform(value: any) {
+        if (value === null) { return; }
         let newVal = parseFloat(value);
         if (newVal === undefined || isNaN(newVal)) {
             newVal = 0;
         }
-        return this.decPipe.transform(value, '1.2-2').replace(',', '');
+        return this.decPipe.transform(newVal, '1.2-2').replace(',', '');
     }
 
     constructor() {

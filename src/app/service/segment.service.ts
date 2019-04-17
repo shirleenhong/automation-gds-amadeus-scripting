@@ -9,6 +9,7 @@ import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
+import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 
 @Injectable({
     providedIn: 'root',
@@ -28,36 +29,47 @@ export class SegmentService {
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
 
-    GetSegmentRemark(dataModel: TourSegmentViewModel) {
+    GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
+        const remarks = new Array<RemarkModel>();
 
-        // {
-        //     segmentList: PassiveSegmentModel
-        // };
-
-        dataModel.tourSegmentList.forEach(segment => {
+        segmentRemarks.forEach(segment => {
+            if (!segment.isNew) {
+                return;
+            }
             const passive = new PassiveSegmentModel();
             passive.vendor = '1A';
-            passive.passiveSegmentType = 'Tour';
-            passive.startDate = datePipe.transform(segment.startDate, 'ddMMyy');
-            passive.endDate = datePipe.transform(segment.endDate, 'ddMMyy');
+            passive.passiveSegmentType = segment.segmentType;
+            passive.startDate = datePipe.transform(segment.departureDate, 'ddMMyy');
+            passive.endDate = datePipe.transform(segment.arrivalDate, 'ddMMyy');
             passive.startTime = '';
             passive.endTime = '';
-            passive.startPoint = segment.startPoint;
-            passive.endPoint = segment.endPoint;
+            passive.startPoint = segment.departureCity;
+            let segdest = '';
+
+            if (segment.destinationCity === undefined) {
+                segdest = segment.departureCity;
+            } else {
+                segdest = segment.destinationCity;
+            }
+
+            passive.endPoint = segdest;
             passive.quantity = 1;
 
             const datePipe2 = new DatePipe('en-US');
-            const startdatevalue = datePipe2.transform(segment.startDate, 'ddMMM');
-            const enddatevalue = datePipe2.transform(segment.endDate, 'ddMM');
-            const startTime = (segment.startTime as string).replace(':', '');
-            const endTime = (segment.endTime as string).replace(':', '');
+            const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
+            const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMM');
+            let startTime = '';
+            if (segment.departureTime) {
+                startTime = (segment.departureTime as string).replace(':', '');
+            }
+            let endTime = '';
+            if (segment.arrivalTime) {
+                endTime = (segment.arrivalTime as string).replace(':', '');
+            }
             passive.status = 'HK';
-
-            const freetext = 'TYP-TOR/SUC-ZZ/SC' + segment.startPoint + '/SD-' + startdatevalue +
-                '/ST-' + startTime + '/EC-' + segment.endPoint + '/ED-' +
-                enddatevalue + '/ET-' + endTime + '/PS-1';
+            const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
             passive.freeText = freetext;
             tourSegment.push(passive);
         });
@@ -66,7 +78,78 @@ export class SegmentService {
         passGroup.group = 'Segment Remark';
         passGroup.passiveSegments = tourSegment;
         return passGroup;
+    }
 
+    addSeaSegmentRir(segmentRemarks: PassiveSegmentsModel[]) {
+        const datePipe = new DatePipe('en-US');
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'RIR remark';
+        rmGroup.remarks = new Array<RemarkModel>();
+
+        const segments = this.pnrService.getSegmentTatooNumber();
+        segmentRemarks.forEach(segmentrem => {
+            if (!segmentrem.isNew) {
+                return;
+            }
+            if (segmentrem.segmentType === 'SEA') {
+                segments.forEach(pnrSegment => {
+                    if (pnrSegment.segmentType === 'MIS') {
+                        const type = pnrSegment.freetext.substr(6, 3);
+                        if (type === 'SEA') {
+                            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+                            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+                                let remText = segmentrem.stateRoom + ' ' + segmentrem.cabinNo;
+                                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        return rmGroup;
+    }
+
+    public getRemarksModel(remText, type, cat, segment?: string) {
+        let segmentrelate = [];
+        if (segment) {
+            segmentrelate = segment.split(',');
+        }
+
+        const rem = new RemarkModel();
+        rem.category = cat;
+        rem.remarkText = remText;
+        rem.remarkType = type;
+        rem.relatedSegments = segmentrelate;
+        return rem;
+    }
+
+    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
+        startTime: string, enddatevalue: string, endTime: string) {
+
+        let freetext = '';
+        switch (segment.segmentType) {
+            case 'TOR':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + segment.roomType +
+                    ' ' + segment.mealPlan + ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
+                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                break;
+            case 'SEA':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + segment.dining +
+                    ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
+                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                break;
+            case 'INS':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-MANULIFE INSURANCE/SUC-MLF/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-0900' + '/EC-' + segment.departureCity +
+                    '/ED-' + enddatevalue + '/ET-0900/CF-CWT' + segment.policyNo;
+                break;
+            default:
+                break;
+        }
+        return freetext;
     }
 
     getRetentionLine() {
@@ -125,9 +208,10 @@ export class SegmentService {
     setMandatoryRemarks() {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
-        const itinLanguage = this.pnrService.getItineraryLanguage();
+        let itinLanguage = this.pnrService.getItineraryLanguage();
+        itinLanguage = itinLanguage.substr(0, 2);
         switch (true) {
-            case (itinLanguage === 'EN-GB' || itinLanguage === 'EN-EN'): {
+            case (itinLanguage === 'EN'): {
                 const LLBMandatoryRemarkEN = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
                 if (LLBMandatoryRemarkEN === '') {
                     const commandEN = 'PBN/LLB MANDATORY REMARKS*';
@@ -140,7 +224,7 @@ export class SegmentService {
                 }
                 break;
             }
-            case (itinLanguage === 'FR-FR'): {
+            case (itinLanguage === 'FR'): {
                 const LLBMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
                 if (LLBMandatoryRemarkFR === '') {
                     const commandFR = 'PBN/LLB MANDATORY FRENCH*';

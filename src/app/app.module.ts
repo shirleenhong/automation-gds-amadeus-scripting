@@ -32,8 +32,11 @@ import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.direc
 import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
 import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
+import { SegmentsComponent } from './passive-segments/segments/segments.component';
+import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { MessageComponent } from './shared/message/message.component';
+
 
 
 
@@ -56,8 +59,9 @@ import { MessageComponent } from './shared/message/message.component';
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, MessageComponent
+    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,AllCapsMaskDirective,
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent
+
 
   ],
   imports: [
@@ -76,7 +80,8 @@ import { MessageComponent } from './shared/message/message.component';
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, MessageComponent]
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,  AllCapsMaskDirective],
+  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, UpdateSegmentComponent, MessageComponent]
+
 })
 export class AppModule { }

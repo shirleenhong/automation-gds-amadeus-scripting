@@ -20,6 +20,8 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 import { CfRemarkModel } from 'src/app/models/pnr/cf-remark.model';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-leisure-fee',
@@ -54,9 +56,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   creditcardMaxValidator(newValue) {
-    const pattern = this.paymentHelper.creditcardMaxValidator(newValue);
-    this.f.ccNo.clearValidators();
-    this.f.ccNo.setValidators([Validators.required, Validators.pattern(pattern)]);
+    // retrigger validation
+    this.f.ccNo.setValue(this.f.ccNo.value);
 
   }
 
@@ -77,13 +78,13 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         Validators.required,
         Validators.pattern('[A-Z]{2}')
       ]),
-      ccNo: new FormControl('', [Validators.required]),
-      expDate: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
-      noFeeReason: new FormControl('', [Validators.required]),
+      noFeeReason: new FormControl(''),
 
     });
-
+    this.enableDisbleControls(['noFeeReason'], true);
     this.onControlChanges();
     this.loadValues();
     this.checkHasPnr();
@@ -102,7 +103,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   changeFeeState() {
-    if (this.f.segmentAssoc.value === '0') {
+    if (this.f.segmentAssoc.value === '0' && (this.IsPnrAvailable && this.f.chkUpdateRemove.value)) {
       this.enableDisbleControls(['noFeeReason'], this.checkSFC());
     } else {
       this.enableDisbleControls(['noFeeReason'], true);
@@ -111,20 +112,27 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   setFormState(isDisabled: boolean) {
-    const ctrls = [
-      'segmentAssoc',
-      'segmentNum',
-      'amount',
-      'paymentType',
-      'vendorCode',
-      'ccNo',
-      'expDate',
-      'address'
-    ];
 
+    if (isDisabled) {
+      const ctrls = [
+        'segmentAssoc',
+        'segmentNum',
+        'amount',
+        'paymentType',
+        'vendorCode',
+        'ccNo',
+        'expDate',
+        'address',
+        'noFeeReason'
 
-    this.enableDisbleControls(ctrls, isDisabled);
-    this.enableDisableCredits();
+      ];
+
+      this.enableDisbleControls(ctrls, isDisabled);
+    } else {
+      this.enableDisbleControls(['segmentAssoc'], false);
+      this.processAssocValues(this.f.segmentAssoc.value);
+    }
+    //this.enableDisableCredits();
     this.changeFeeState();
   }
 
@@ -141,42 +149,45 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
   onControlChanges() {
     this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
-      const ctrls = [
-        'segmentNum',
-        'amount',
-        'paymentType',
-        'vendorCode',
-        'ccNo',
-        'expDate',
-        'address'
-      ];
-      this.enableDisbleControls(ctrls, false);
-      // this.enableDisbleControls(['noFeeReason'], true);
-      this.enableDisbleControls(['noFeeReason'], true);
-
-      switch (val) {
-        case '3':
-        case '4':
-          this.leisureFeeForm.get('segmentNum').enable();
-          if (val === '3') {
-            this.segmentList = this.pnrService.getPassiveHotelSegmentNumbers();
-          } else {
-            this.segmentList = this.pnrService.getPassiveCarSegmentNumbers();
-          }
-          break;
-        case '0':
-          this.enableDisbleControls(ctrls, true);
-          // this.enableDisbleControls(['noFeeReason'], false);
-          // this.enableDisbleControls(['noFeeReason'], true);
-          break;
-        default:
-          this.leisureFeeForm.get('segmentNum').disable();
-      }
+      this.processAssocValues(val);
     });
     this.leisureFeeForm.get('paymentType').valueChanges.subscribe(val => {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
       this.enableDisbleControls(controls, val === 'K');
     });
+  }
+
+  processAssocValues(val) {
+    const ctrls = [
+      'segmentNum',
+      'amount',
+      'paymentType',
+      'vendorCode',
+      'ccNo',
+      'expDate',
+      'address'
+    ];
+    this.enableDisbleControls(ctrls, false);
+    this.enableDisbleControls(['noFeeReason'], true);
+
+    switch (val) {
+      case '3':
+      case '4':
+        this.leisureFeeForm.get('segmentNum').enable();
+        if (val === '3') {
+          this.segmentList = this.pnrService.getPassiveHotelSegmentNumbers();
+        } else {
+          this.segmentList = this.pnrService.getPassiveCarSegmentNumbers();
+        }
+        break;
+      case '0':
+        this.enableDisbleControls(ctrls, true);
+        if (!this.IsPnrAvailable) { this.enableDisbleControls(['noFeeReason'], false); }
+        this.f.noFeeReason.setValidators(Validators.required);
+        break;
+      default:
+        this.leisureFeeForm.get('segmentNum').disable();
+    }
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {
@@ -206,6 +217,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     const remarkTax = this.pnrService.getRemarkText('TAX-');
     this.f.paymentType.patchValue('C');
     this.leisureFeeForm.controls.segmentAssoc.setValue('0');
+    this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
     if (remarkText !== '') {
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));

@@ -284,7 +284,8 @@ export class PnrService {
       status: elemStatus,
       segmentType: type,
       longFreeText: elemText,
-      airlineCode: elemairlineCode
+      airlineCode: elemairlineCode,
+      freeText: elem.fullNode.itineraryFreetext.longFreetext
     };
     this.segments.push(segment);
   }
@@ -607,7 +608,7 @@ export class PnrService {
     match = regex.exec(remark);
     if (match !== null) {
       model.rln = Number(match.groups.rln);
-      model.description = match.groups.desc; 
+      model.description = match.groups.desc;
       if (model.gcNumber !== null) { model.gcNumber = (match.groups.gc); }
       return model;
     }

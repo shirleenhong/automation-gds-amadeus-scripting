@@ -126,7 +126,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     const leisureFee = this.paymentComponent.leisureFee;
-
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
     }

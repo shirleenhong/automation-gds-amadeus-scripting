@@ -14,4 +14,15 @@ export class UtilHelper {
         }
     }
 
+
+    getRegexValue(freeText: string, expression: RegExp) {
+        if (expression.test(freeText)) {
+            for (let result = expression.exec(freeText); result !== null;
+                result = expression.exec(freeText)) {
+                return result[0];
+            }
+        }
+        return '';
+    }
+
 }

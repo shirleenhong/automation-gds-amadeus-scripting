@@ -182,7 +182,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         break;
       case '0':
         this.enableDisbleControls(ctrls, true);
-        if (!this.IsPnrAvailable) { this.enableDisbleControls(['noFeeReason'], false); }
+        if (!this.IsPnrAvailable  && !this.checkSFC()) { this.enableDisbleControls(['noFeeReason'], false); }
         this.f.noFeeReason.setValidators(Validators.required);
         break;
       default:

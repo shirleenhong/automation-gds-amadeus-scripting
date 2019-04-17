@@ -155,7 +155,7 @@ export class RemarkService {
     // }
 
     addPassiveSegmentElement(passiveSegmentmodel: PassiveSegmentModel) {
-
+        // alert(passiveSegmentmodel.quantity);
         const reference = {
             qualifier: 'SR',
             number: '1'
@@ -191,7 +191,8 @@ export class RemarkService {
         };
 
         const relatedProduct = {
-            quantity: '1',
+            // quantity: '1',
+            quantity: passiveSegmentmodel.quantity,
             status: passiveSegmentmodel.status
             // quantitySpecified: true,
             // product: travelProductProduct
@@ -282,10 +283,10 @@ export class RemarkService {
         await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(data => {
             this.responseMessage = 'Remarks Updated';
             smartScriptSession.send('RT');
-            // smartScriptSession.requestService('bookingfile.refresh', null, {
-            //     fn: '',
-            //     scope: this
-            // });
+            smartScriptSession.requestService('bookingfile.refresh', null, {
+                fn: '',
+                scope: this
+            });
         }, error => {
             this.responseMessage = JSON.stringify(error);
         });

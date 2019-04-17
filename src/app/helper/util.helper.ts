@@ -14,7 +14,6 @@ export class UtilHelper {
             }
         }
     }
-}
 
     getRegexValue(freeText: string, expression: RegExp) {
         if (expression.test(freeText)) {
@@ -36,6 +35,5 @@ export class UtilHelper {
             }
         });
     }
-
 }
 

@@ -302,7 +302,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           status: element.status,
           segmentType: element.segmentType,
           airlineCode: element.airlineCode,
-          freeText: element.freeText
+          freeText: element.freetext
         };
         if (details.id === segmentNo) {
           const regexp: RegExp = /(?<=TYP-)(\w{3})/;

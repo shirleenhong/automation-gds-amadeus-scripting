@@ -18,7 +18,6 @@ import { SegmentsComponent } from '../passive-segments/segments/segments.compone
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
-import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
 import { invalid } from '@angular/compiler/src/render3/view/util';
@@ -37,7 +36,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   cfLine: CfRemarkModel;
   workflow: string = '';
   cancelEnabled: boolean = true;
-  segmentEnabled: boolean = true;
+  segmentEnabled: boolean = false;
   validModel = new ValidateModel();
 
 
@@ -92,7 +91,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
     } else if (this.cfLine == null || this.cfLine === undefined) {
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
-      this.isPnrLoaded = false;
+      this.isPnrLoaded = true;
     }
   }
 
@@ -103,20 +102,20 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   checkValid() {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
-    this.validModel.isSegmentValid = this.segmentComponent.checkValid();
+    // this.validModel.isSegmentValid = this.segmentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
     return this.validModel.isAllValid();
   }
 
   public SubmitToPNR() {
-    // if (!this.checkValid()) {
-    //   const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
-    //   modalRef.content.modalRef = modalRef;
-    //   modalRef.content.title = 'Invalid Inputs';
-    //   modalRef.content.message = ('Please make sure all the inputs are valid and put required values!');
-    //   return;
-    // }
+    if (!this.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = ('Please make sure all the inputs are valid and put required values!');
+      return;
+    }
 
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
@@ -202,7 +201,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     await this.remarkService.BuildRemarks(remarkCollection2);
     this.remarkService.SubmitRemarks().then(x => {
     }, error => { alert(JSON.stringify(error)); });
-    this.segmentEnabled = false;
+    this.segmentEnabled = true;
   }
   // }
 

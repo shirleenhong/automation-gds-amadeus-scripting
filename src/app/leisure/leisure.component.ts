@@ -102,13 +102,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   public SubmitToPNR() {
-    // if (!this.checkValid()) {
-    //   const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
-    //   modalRef.content.modalRef = modalRef;
-    //   modalRef.content.title = 'Invalid Inputs';
-    //   modalRef.content.message = ('Please make sure all the inputs are valid and put required values!');
-    //   return;
-    // }
+    if (!this.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = ('Please make sure all the inputs are valid and put required values!');
+      return;
+    }
 
     const remarkCollection = new Array<RemarkGroup>();
 
@@ -151,8 +151,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;
       this.getPnr();
-      //  this.workflow = '';
-      //this.loadPnr();
+      this.workflow = '';
 
     }, error => { alert(JSON.stringify(error)); });
     this.remarkService.endPNR();

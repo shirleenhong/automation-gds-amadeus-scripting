@@ -20,6 +20,8 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 import { CfRemarkModel } from 'src/app/models/pnr/cf-remark.model';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-leisure-fee',
@@ -37,6 +39,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   isInvalid = true;
   vendorCodeList: Array<SelectItem>;
   cfaLine: CfRemarkModel;
+  IsPnrAvailable = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,9 +56,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   creditcardMaxValidator(newValue) {
-    const pattern = this.paymentHelper.creditcardMaxValidator(newValue);
-    this.f.ccNo.clearValidators();
-    this.f.ccNo.setValidators([Validators.required, Validators.pattern(pattern)]);
+    // retrigger validation
+    this.f.ccNo.setValue(this.f.ccNo.value);
 
   }
 
@@ -63,10 +65,11 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // throw new Error("Method not implemented.");
     //
-    this.f.paymentType.patchValue('C');
+    // this.f.paymentType.patchValue('C');
   }
   ngOnInit() {
     this.leisureFeeForm = this.fb.group({
+      chkUpdateRemove: new FormControl(''),
       segmentAssoc: new FormControl('', [Validators.required]),
       segmentNum: new FormControl('', [Validators.required]),
       amount: new FormControl('', [Validators.required]),
@@ -75,14 +78,69 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         Validators.required,
         Validators.pattern('[A-Z]{2}')
       ]),
-      ccNo: new FormControl('', [Validators.required]),
-      expDate: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
-      noFeeReason: new FormControl('', [Validators.required]),
+      noFeeReason: new FormControl(''),
 
     });
-
+    this.enableDisbleControls(['noFeeReason'], true);
     this.onControlChanges();
+    this.loadValues();
+    this.checkHasPnr();
+
+  }
+
+  checkHasPnr() {
+    this.IsPnrAvailable = this.pnrService.hasRecordLocator() !== undefined;
+    if (this.IsPnrAvailable) {
+      this.setFormState(true);
+    }
+  }
+
+  changeState() {
+    this.setFormState(!this.leisureFeeForm.controls.chkUpdateRemove.value);
+  }
+
+  changeFeeState() {
+    if (this.f.segmentAssoc.value === '0' && (this.IsPnrAvailable && this.f.chkUpdateRemove.value)) {
+      this.enableDisbleControls(['noFeeReason'], this.checkSFC());
+    } else {
+      this.enableDisbleControls(['noFeeReason'], true);
+    }
+    this.enableDisableCredits();
+  }
+
+  setFormState(isDisabled: boolean) {
+
+    if (isDisabled) {
+      const ctrls = [
+        'segmentAssoc',
+        'segmentNum',
+        'amount',
+        'paymentType',
+        'vendorCode',
+        'ccNo',
+        'expDate',
+        'address',
+        'noFeeReason'
+
+      ];
+
+      this.enableDisbleControls(ctrls, isDisabled);
+    } else {
+      this.enableDisbleControls(['segmentAssoc'], false);
+      this.processAssocValues(this.f.segmentAssoc.value);
+    }
+    //this.enableDisableCredits();
+    this.changeFeeState();
+  }
+
+  enableDisableCredits() {
+    if (this.leisureFeeForm.controls.paymentType.value === 'K') {
+      const controls = ['vendorCode', 'ccNo', 'expDate'];
+      this.enableDisbleControls(controls, true);
+    }
   }
 
   get f() {
@@ -91,40 +149,45 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
   onControlChanges() {
     this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
-      const ctrls = [
-        'segmentNum',
-        'amount',
-        'paymentType',
-        'vendorCode',
-        'ccNo',
-        'expDate',
-        'address'
-      ];
-      this.enableDisbleControls(ctrls, false);
-      this.enableDisbleControls(['noFeeReason'], true);
-
-      switch (val) {
-        case '3':
-        case '4':
-          this.leisureFeeForm.get('segmentNum').enable();
-          if (val === '3') {
-            this.segmentList = this.pnrService.getPassiveHotelSegmentNumbers();
-          } else {
-            this.segmentList = this.pnrService.getPassiveCarSegmentNumbers();
-          }
-          break;
-        case '0':
-          this.enableDisbleControls(ctrls, true);
-          this.enableDisbleControls(['noFeeReason'], false);
-          break;
-        default:
-          this.leisureFeeForm.get('segmentNum').disable();
-      }
+      this.processAssocValues(val);
     });
     this.leisureFeeForm.get('paymentType').valueChanges.subscribe(val => {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
       this.enableDisbleControls(controls, val === 'K');
     });
+  }
+
+  processAssocValues(val) {
+    const ctrls = [
+      'segmentNum',
+      'amount',
+      'paymentType',
+      'vendorCode',
+      'ccNo',
+      'expDate',
+      'address'
+    ];
+    this.enableDisbleControls(ctrls, false);
+    this.enableDisbleControls(['noFeeReason'], true);
+
+    switch (val) {
+      case '3':
+      case '4':
+        this.leisureFeeForm.get('segmentNum').enable();
+        if (val === '3') {
+          this.segmentList = this.pnrService.getPassiveHotelSegmentNumbers();
+        } else {
+          this.segmentList = this.pnrService.getPassiveCarSegmentNumbers();
+        }
+        break;
+      case '0':
+        this.enableDisbleControls(ctrls, true);
+        if (!this.IsPnrAvailable) { this.enableDisbleControls(['noFeeReason'], false); }
+        this.f.noFeeReason.setValidators(Validators.required);
+        break;
+      default:
+        this.leisureFeeForm.get('segmentNum').disable();
+    }
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {
@@ -139,7 +202,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
   checkSFC() {
     if (
-      this.pnrService.getRemarkLineNumber('SFC/-') === '' &&
+      //  this.pnrService.getRemarkLineNumber('SFC/-') === '' &&
       this.f.segmentAssoc.value === '0' &&
       (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')
     ) {
@@ -149,99 +212,82 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // BuildRemark() {
-  //   const remGroup = new RemarkGroup();
-  //   remGroup.group = 'Leisure Fee';
-  //   remGroup.remarks = new Array<RemarkModel>();
-  //   const assoc = this.f.segmentAssoc.value;
-  //   remGroup.deleteRemarkByIds = [];
-  //   let remark = '';
-  //   let lineNum = this.pnrService.getRemarkLineNumber('SFC/-');
-  //   if (lineNum !== '') {
-  //     remGroup.deleteRemarkByIds.push(lineNum);
-  //   }
+  private loadValues() {
+    const remarkText = this.pnrService.getRemarkText('SFC');
+    const remarkTax = this.pnrService.getRemarkText('TAX-');
+    this.f.paymentType.patchValue('C');
+    this.leisureFeeForm.controls.segmentAssoc.setValue('0');
+    this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
-  //   lineNum = this.pnrService.getRemarkLineNumber('TAX');
-  //   if (lineNum !== '') {
-  //     remGroup.deleteRemarkByIds.push(lineNum);
-  //   }
-  //   if (assoc > 0) {
-  //     remark = this.generateSFCRemark(assoc);
-  //     remGroup.remarks.push(this.getRemark(remark, '*'));
-  //     remark = 'TAX-' + this.f.address.value;
-  //     remGroup.remarks.push(this.getRemark(remark, 'Y'));
-  //   }
+    if (remarkText !== '') {
+      const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));
+      this.leisureFeeForm.controls.segmentAssoc.setValue(segmentAssociation);
+      const amount = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-AMT'), /([0-9]+[\.]*[0-9]*)/);
+      const ccNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?:\d[ \-]*){16}/);
+      const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
 
-  //   lineNum = this.pnrService.getRemarkLineNumber('U11/-');
-  //   if (lineNum !== '') {
-  //     remGroup.deleteRemarkByIds.push(lineNum);
-  //   }
+      this.leisureFeeForm.controls.amount.setValue(amount);
+      this.leisureFeeForm.controls.segmentNum.setValue(segNum);
+      if (ccNum !== undefined) {
+        const provider = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?<=CC)([A-Z]{2})/);
+        const expiryDate = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-EXP'), /([0-9]+[\.]*[0-9]*)/);
+        // this.leisureFeeForm.controls.paymentType.setValue('Credit Card');
+        this.leisureFeeForm.controls.ccNo.setValue(ccNum);
+        this.leisureFeeForm.controls.vendorCode.setValue(provider);
+        this.leisureFeeForm.controls.expDate.setValue(expiryDate.slice(0, 2) + '/' + expiryDate.slice(2, 4));
+      } else {
+        this.f.paymentType.patchValue('K');
+      }
+    }
 
-  //   if (assoc === '0' && (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')) {
-  //     // *U11
-  //     const noFeeReason = this.f.noFeeReason.value;
-  //     remark = 'U11/-' + noFeeReason;
-  //     remGroup.remarks.push(this.getRemark(remark, '*'));
-  //   }
+    if (remarkTax !== '') {
+      const tax = this.getValueByRegex(this.GetValueFromSFCRemark(remarkTax, 'TAX-'), /(?<=TAX-)([A-Z]{2})/);
+      this.leisureFeeForm.controls.address.setValue(tax);
+    }
+  }
 
-  //   return remGroup;
-  // }
 
-  // getRemark(remarkText, remarkCategory) {
-  //   const rem = new RemarkModel();
-  //   rem.remarkType = 'RM';
-  //   rem.remarkText = remarkText;
-  //   rem.category = remarkCategory;
-  //   return rem;
-  // }
 
-  // generateSFCRemark(assoc) {
-  //   let remark = 'SFC';
-  //   switch (assoc) {
-  //     case '3':
-  //       remark += '/-FA-H' + this.f.segmentNum.value;
-  //       break;
-  //     case '4':
-  //       remark += '/-FA-C' + this.f.segmentNum.value;
-  //       break;
-  //     case '1':
-  //       remark += '/-FA-T1';
-  //       break;
-  //   }
+  private getSegmentAssociation(value: string) {
+    if (value.indexOf('-FA-T') === 0) {
+      return '1';
+    } else if (value === '') {
+      return '2';
+    } else if (value.indexOf('-FA-H') === 0) {
+      return '3';
+    } else if (value.indexOf('-FA-C') === 0) {
+      return '4';
+    } else {
+      return '0';
+    }
+  }
 
-  //   remark += '/-FLN-F1/-FP-TRF';
-  //   remark +=
-  //     '/-AMT-CAD' + this.decPipe.transform(this.f.amount.value, '1.2-2');
-  //   remark += this.getProvinceTaxRemark();
-  //   if (this.f.paymentType.value === 'C') {
-  //     remark += '/-FOP-CC' + this.f.vendorCode.value + this.f.ccNo.value;
-  //     remark += '/-EXP-' + this.f.expDate.value.replace('/', '');
-  //   } else {
-  //     remark += '/-FOP-CK';
-  //   }
-  //   return remark;
-  // }
+  private getValueByRegex(value: string, expression: RegExp) {
+    if (expression.test(value)) {
+      for (let result = expression.exec(value); result !== null;
+        result = expression.exec(value)) {
+        // if (!this.forDeletion.includes(textSearch.elementNumber)) {
+        //     this.forDeletion.push(textSearch.elementNumber);
+        // }
+        return result[0];
+      }
+    }
+  }
 
-  // getProvinceTaxRemark() {
-  //   const provTax = this.provinceTaxes.filter(
-  //     x => x.provinceCode === this.f.address.value
-  //   );
-  //   let tax1 = '0.00';
-  //   let tax2 = '0.00';
-  //   let taxType1 = 'XG';
-  //   if (provTax.length > 0) {
-  //     tax1 = this.decPipe.transform(
-  //       +this.f.amount.value * +provTax[0].tax1,
-  //       '1.2-2'
-  //     );
-  //     tax2 = this.decPipe.transform(
-  //       +this.f.amount.value * +provTax[0].tax2,
-  //       '1.2-2'
-  //     );
-  //     taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
-  //   }
-  //   let txt = '/-PT-' + tax1 + taxType1;
-  //   txt += '/-PT-' + tax2 + 'XQ';
-  //   return txt;
-  // }
+
+  private GetValueFromSFCRemark(value: string, searchString: string) {
+    const results = value.split('/');
+    let res = '';
+    results.forEach(val => {
+      if (val.indexOf(searchString) === 0) {
+        res = val;
+        return;
+      }
+    });
+
+    return res;
+  }
+
+
+
 }

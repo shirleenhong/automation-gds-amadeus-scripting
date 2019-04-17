@@ -29,7 +29,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) {
     this.group = this.fb.group({
       adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
-      tourCurrencyType: new FormControl(''),
+      tourCurrencyType: new FormControl('', [Validators.required]),
       baseCost: new FormControl('', [Validators.maxLength(8)]),
       taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
       childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
@@ -43,9 +43,9 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
       totalCostHoliday: new FormControl(''),
       lessDepositPaid: new FormControl(''),
       balanceToBePaid: new FormControl(''),
-      balanceDueDate: new FormControl(''),
+      balanceDueDate: new FormControl('', [Validators.required]),
       commission: new FormControl('', [Validators.maxLength(8)])
-    }, { updateOn: 'blur' });
+    });
   }
 
 
@@ -123,7 +123,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('form group: ', this.group);
-    // debugger;
+   
   }
 
   public onTouched: () => void = () => { };

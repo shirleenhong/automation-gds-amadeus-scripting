@@ -4,30 +4,28 @@
   <accordion [closeOthers]="false">
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class='fas fa-plane'></i> Passive Segment
+        <i class='fas fa-plane'></i> Passive Segment <i [ngClass]="validModel.segmentValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
-      <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
-      </app-passive-segments>
+      <app-passive-segments></app-passive-segments>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class='fas fa-hand-holding-usd'></i> Payment
+        <i class='fas fa-hand-holding-usd'></i> Payment <i [ngClass]="validModel.paymentValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-payment></app-payment>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class='fas fa-file-export'></i> Reporting
+        <i class='fas fa-file-export'></i> Reporting <i [ngClass]="validModel.reportingValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-reporting [reportingView]="leisure.reportingView"></app-reporting>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-
-        <i class='far fa-list-alt'></i> Remarks
+        <i class='far fa-list-alt'></i> Remarks <i [ngClass]="validModel.remarkValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-remarks></app-remarks>

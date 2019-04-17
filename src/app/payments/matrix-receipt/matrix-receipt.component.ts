@@ -61,7 +61,6 @@ export class MatrixReceiptComponent implements OnInit {
     this.modalRef.content.matrixReceipt = new MatrixReceiptModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.matrixReceipt);
     this.modalRef.content.bankAccountChange(r.bankAccount);
-    debugger;
   }
 
 

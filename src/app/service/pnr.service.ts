@@ -8,6 +8,7 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { element } from '@angular/core/src/render3';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
+import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 
 
 declare var PNR: any;
@@ -30,6 +31,7 @@ export class PnrService {
   constructor() { }
 
   async getPNR(): Promise<void> {
+
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
@@ -233,7 +235,7 @@ export class PnrService {
     // const segments = new Array<any>();
     this.segments = [];
     for (const air of this.pnrObj.airSegments) {
-      this.getSegmentDetails(air, 'air');
+      this.getSegmentDetails(air, 'AIR');
     }
 
     for (const car of this.pnrObj.auxCarSegments) {
@@ -264,27 +266,42 @@ export class PnrService {
     let elemText = '';
     let elemStatus = '';
     let elemairlineCode = '';
+    let elemdepdate = '';
+    let elemcitycode = '';
 
-    if (type === 'air') {
+    if (type === 'AIR') {
       elemText = elem.airlineCode + elem.flightNumber + ' ' + elem.class + this.formatDate(elem.departureDate) +
         ' ' + elem.departureAirport + elem.arrivalAirport + ' ' + elem.status + elem.bookedQuantity +
         ' ' + elem.departureTime + ' ' + elem.arrivalTime + ' ' + this.formatDate(elem.arrivalDate) + ' ' + elem.airlineReference;
       elemStatus = elem.status;
       elemairlineCode = elem.airlineCode;
+      elemdepdate = elem.departureDate;
+      elemcitycode = elem.departureAirport;
+
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
       elemText = type + ' ' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
         + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' +
         this.formatDate(fullnodetemp.product.depDate);
       elemStatus = elem.fullNode.relatedProduct.status;
+      elemdepdate = fullnodetemp.product.depDate;
+      elemcitycode = fullnodetemp.boardpointDetail.cityCode;
     }
+    let flongtext = '';
+    if (type === 'MIS') {
+      flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+    }
+
     const segment = {
       lineNo: elem.elementNumber,
       tatooNo: elem.tatooNumber,
       status: elemStatus,
       segmentType: type,
       longFreeText: elemText,
-      airlineCode: elemairlineCode
+      airlineCode: elemairlineCode,
+      freetext: flongtext,
+      deptdate: elemdepdate,
+      cityCode: elemcitycode
     };
     this.segments.push(segment);
   }
@@ -554,6 +571,60 @@ export class PnrService {
 
     return matrixReceipts;
   }
+
+  getSegmentModel(freetext, index, type) {
+    let segmentModel: PassiveSegmentsModel;
+    segmentModel = new PassiveSegmentsModel();
+
+    if (type === 'MIS') {
+      // tslint:disable-next-line:max-line-length
+      let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF(?<conf>(.*))/g;
+      let match = regex.exec(freetext);
+      if (match === null) {
+        regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
+
+      if (match !== null) {
+        segmentModel.isNew = false;
+        segmentModel.segmentNo = index;
+        segmentModel.segmentType = match.groups.type;
+        segmentModel.vendorName = match.groups.vendorName;
+        segmentModel.vendorCode = match.groups.vendorCode;
+        segmentModel.departureCity = match.groups.depCity;
+        segmentModel.departureDate = match.groups.depdate;
+        segmentModel.departureTime = match.groups.dateTime;
+        segmentModel.destinationCity = match.groups.destcity;
+        segmentModel.arrivalDate = match.groups.arrdate;
+        segmentModel.arrivalTime = match.groups.arrtime;
+        segmentModel.confirmationNo = match.groups.conf;
+        return segmentModel;
+      }
+    }
+  }
+
+  getModelPassiveSegments(): PassiveSegmentsModel[] {
+    const pSegment: PassiveSegmentsModel[] = [];
+    let segment = this.getSegmentTatooNumber();
+    let index = 0;
+    segment.forEach(element => {
+      index++;
+      pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+    });
+
+    return pSegment;
+
+  }
+
+
+  // getRirSeaSegments() {
+  //   const pSegment = [];
+  //   let segment = this.getSegmentTatooNumber();
+  //   segment.forEach(element => {
+  //     pSegment.push();
+  //   });
+  //   return pSegment;
+  // }
 
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
 

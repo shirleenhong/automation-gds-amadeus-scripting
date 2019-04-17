@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
+import { SegmentsComponent } from './segments/segments.component';
 
 @Component({
   selector: 'app-passive-segments',
@@ -8,6 +9,9 @@ import { PassiveSegmentViewModel } from '../models/passive-segment-view.model';
 })
 
 export class PassiveSegmentsComponent {
+
+  @ViewChild(SegmentsComponent) segmentRemark: SegmentsComponent;
+
   @Input()
   passiveSegmentView: PassiveSegmentViewModel;
 

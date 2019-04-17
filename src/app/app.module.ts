@@ -32,6 +32,8 @@ import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.direc
 import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
 import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
+import { SegmentsComponent } from './passive-segments/segments/segments.component';
+import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 
 
 
@@ -55,7 +57,7 @@ import { CancelSegmentComponent } from './cancel-segment/cancel-segment.componen
     LeisureFeeComponent,
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent
 
   ],
   imports: [
@@ -75,6 +77,6 @@ import { CancelSegmentComponent } from './cancel-segment/cancel-segment.componen
   ],
   bootstrap: [AppComponent],
   exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent]
+  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, UpdateSegmentComponent]
 })
 export class AppModule { }

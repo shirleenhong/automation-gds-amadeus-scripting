@@ -26,8 +26,8 @@
       <b>International Travel Advisory Sent?</b>
     </div>
     <div class="col-4" *ngIf="visaPassportView.advisory">
-        <input type="button" name="btnAdvisory" (click)="showTravelAdvisory()" value="Open e-TravelAdvisories"/>
-      </div>
+        <input name="btnAdvisory" style={font-size:6px;} type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories"/>
+    </div>
   </div>
 
   <div class="row form-group">
@@ -43,7 +43,6 @@
       <input type="radio" name="advisory" formControlName="advisory" value="No" (change)="changedAdvisory()" disabled />
       International Travel Advisory already sent to Traveller/Arranger
     </div>
-    <div></div>
   </div>
   <br />
 
@@ -86,8 +85,8 @@
     <div class="col-2">
       <b>Visa</b>
     </div>
-    <div class="col-3">
-      <b>Associated Segment No.</b>
+    <div class="col-4">
+      <b>Associated Segment Number</b>
     </div>
   </div>
 

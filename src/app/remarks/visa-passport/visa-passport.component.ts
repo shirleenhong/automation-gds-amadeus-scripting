@@ -21,8 +21,7 @@ export class VisaPassportComponent implements OnInit {
   travelPort: any[];
   hasRemarkLine: string;
   segments = [];
-  passport: true;
-  visa: false;
+
 
   constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService) {
   }
@@ -35,7 +34,7 @@ export class VisaPassportComponent implements OnInit {
       advisory: new FormControl('', []),
       btnAdvisory: new FormControl('', []),
       passportName: new FormControl('', [Validators.required]),
-      segments: new FormArray([]),
+      segments: new FormArray([])
     });
     this.segmentGroup = this.fb.group({
       passport: new FormControl('', [Validators.required]),
@@ -68,7 +67,6 @@ export class VisaPassportComponent implements OnInit {
   }
 
   changedOriginDestination() {
-    debugger;
     const originDestination = this.f.originDestination.value;
     if (originDestination === 'true') {
       this.enableFormControls(['citizenship'], false);
@@ -78,11 +76,23 @@ export class VisaPassportComponent implements OnInit {
       }
       this.enableFormControls(['passportName'], false);
       this.visaPassportFormGroup.get('segments').enable();
+      let items: any;
+      // tslint:disable-next-line:no-string-literal
+      items = this.visaPassportFormGroup.get('segments')['controls'];
+
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < items.length; i ++){
+         // tslint:disable-next-line:no-string-literal
+         items[i].controls['country'].disable();
+         // tslint:disable-next-line:no-string-literal
+         items[i].controls['segmentLine'].disable();
+        }
     } else {
       this.enableFormControls(['citizenship'], true);
       this.enableFormControls(['advisory'], true);
       this.enableFormControls(['passportName'], true);
       this.visaPassportFormGroup.get('segments').disable();
+
     }
   }
 
@@ -182,7 +192,6 @@ export class VisaPassportComponent implements OnInit {
       this.segments = countryList;
 
       const segmentArray = this.visaPassportFormGroup.controls.segments as FormArray;
-
       this.segments.forEach(x => {
         segmentArray.push(this.fb.group({
           country: x.country,

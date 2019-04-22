@@ -26,8 +26,8 @@ import { formatDate } from '@angular/common';
 
      if (this.formGroup.controls.originDestination.value === 'true') {
      // this.AddCitizenship();
-     this.AddSegments();
      this.AddAdvisory();
+     this.AddSegments();
     }
      return this.remarkGroup;
   }
@@ -37,10 +37,9 @@ import { formatDate } from '@angular/common';
   }
 
   AddAdvisory(): void {
-    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', '*'));
-    // tslint:disable-next-line:max-line-length
+     // tslint:disable-next-line:max-line-length
     this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', '*'));
-
+    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', '*'));
   }
 
   AddSegments(): void {

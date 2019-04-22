@@ -84,7 +84,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
-    debugger;
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));

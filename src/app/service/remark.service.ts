@@ -155,7 +155,7 @@ export class RemarkService {
     // }
 
     addPassiveSegmentElement(passiveSegmentmodel: PassiveSegmentModel) {
-
+        // alert(passiveSegmentmodel.quantity);
         const reference = {
             qualifier: 'SR',
             number: '1'
@@ -191,7 +191,8 @@ export class RemarkService {
         };
 
         const relatedProduct = {
-            quantity: '1',
+            // quantity: '1',
+            quantity: passiveSegmentmodel.quantity,
             status: passiveSegmentmodel.status
             // quantitySpecified: true,
             // product: travelProductProduct

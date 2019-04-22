@@ -14,12 +14,14 @@ import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
+import { SegmentsComponent } from '../passive-segments/segments/segments.component';
+import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
-import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
 import { invalid } from '@angular/compiler/src/render3/view/util';
+
 
 @Component({
   selector: 'app-leisure',
@@ -32,15 +34,19 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
-  workflow = '';
-  cancelEnabled = true;
+  workflow: string = '';
+  cancelEnabled: boolean = true;
+  segmentEnabled: boolean = false;
   validModel = new ValidateModel();
+
+
 
   @ViewChild(PassiveSegmentsComponent) segmentComponent: PassiveSegmentsComponent;
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
+  @ViewChild(PassiveSegmentsComponent) passiveSegmentsComponent: PassiveSegmentsComponent;
   errorPnrMsg = '';
   eventSubscribe = false;
   segment = [];
@@ -77,6 +83,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   async getPnr() {
     this.errorPnrMsg = '';
     // this.ddbService.sampleSupplier();
+    // this.ddbService.sample();
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
     this.cfLine = this.pnrService.getCFLine();
@@ -84,7 +91,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
     } else if (this.cfLine == null || this.cfLine === undefined) {
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
-      this.isPnrLoaded = false;
+      this.isPnrLoaded = true;
     }
   }
 
@@ -95,7 +102,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   checkValid() {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
-    this.validModel.isSegmentValid = this.segmentComponent.checkValid();
+    // this.validModel.isSegmentValid = this.segmentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
     return this.validModel.isAllValid();
@@ -111,8 +118,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     const remarkCollection = new Array<RemarkGroup>();
-
-    remarkCollection.push(this.segmentService.GetSegmentRemark(this.segmentComponent.tourSegmentComponent.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
@@ -142,7 +147,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     const leisureFee = this.paymentComponent.leisureFee;
-
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
     }
@@ -179,6 +183,25 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }, error => { alert(JSON.stringify(error)); });
     this.remarkService.endPNR();
   }
+
+  async addSegmentToPNR() {
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    this.remarkService.BuildRemarks(remarkCollection);
+    await this.remarkService.SubmitRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
+    await this.addRir();
+  }
+
+  async addRir() {
+    await this.pnrService.getPNR();
+    const remarkCollection2 = new Array<RemarkGroup>();
+    remarkCollection2.push(this.segmentService.addSeaSegmentRir(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    await this.remarkService.BuildRemarks(remarkCollection2);
+    this.remarkService.SubmitRemarks().then(x => {
+    }, error => { alert(JSON.stringify(error)); });
+    this.segmentEnabled = true;
+  }
   // }
 
   public loadPnr() {
@@ -195,7 +218,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
-  public back() {
+  public AddSegment() {
+    if (this.isPnrLoaded) {
+      this.workflow = 'segment';
+    }
+  }
+
+  back(): void {
+    window.location.reload();
     if (this.isPnrLoaded) {
       this.workflow = '';
     }
@@ -208,4 +238,5 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       }
     }
   }
+
 }

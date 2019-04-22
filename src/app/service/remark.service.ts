@@ -282,11 +282,17 @@ export class RemarkService {
         console.log(JSON.stringify(remarkElements));
         await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(data => {
             this.responseMessage = 'Remarks Updated';
-            smartScriptSession.send('RT');
-            smartScriptSession.requestService('bookingfile.refresh', null, {
-                fn: '',
-                scope: this
+            smartScriptSession.getActiveTask().then(x => {
+                if (x.subtype === 'PNR') {
+                    smartScriptSession.requestService('bookingfile.refresh', null, {
+                        fn: '',
+                        scope: this
+                    });
+                } else {
+                    smartScriptSession.send('RT');
+                }
             });
+
         }, error => {
             this.responseMessage = JSON.stringify(error);
         });

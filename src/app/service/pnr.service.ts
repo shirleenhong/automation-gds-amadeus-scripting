@@ -303,16 +303,6 @@ export class PnrService {
     return lineNumbers;
   }
 
-  startSmartTool(): void {
-    const _popupId = smartScriptSession.getPopupId();
-    smartScriptSession.requestService('popups.launchSmartTool', { popupId: _popupId, smartToolName: 'Traveladvisory' })
-      .then(function (data) {
-        console.log(data);
-      }, function (error) {
-        console.log(error);
-      });
-  }
-
   getAccountingRemarks(): Array<MatrixAccountingModel> {
     const matrixModels = new Array<MatrixAccountingModel>();
     let macNum = '';

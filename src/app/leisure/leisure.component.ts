@@ -33,8 +33,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
- 
-  
+
   errorPnrMsg = '';
   eventSubscribe = false;
 
@@ -85,7 +84,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   public SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
-
+    debugger;
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.leisure.passiveSegmentView.tourSegmentView));
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
@@ -93,8 +92,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     remarkCollection.push(this.segmentService.getRetentionLine());
     remarkCollection.push(this.segmentService.getMandatoryRemarks());
-
-    this.visaPassportService.getRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup);
+    remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
       const concierge = this.reportingComponent.conciergeComponent;

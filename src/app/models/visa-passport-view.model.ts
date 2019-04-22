@@ -1,5 +1,6 @@
 export class VisaPassportModel {
    citizenship: string;
-   advisedPassportName: string;
+   passportName: string;
    segments: [];
+   advisory: boolean;
 }

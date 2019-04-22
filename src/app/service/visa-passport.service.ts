@@ -24,7 +24,7 @@ import { formatDate } from '@angular/common';
      this.remarkGroup.group = 'Visa Passport Group';
      this.remarkGroup.remarks = new Array<RemarkModel>();
 
-     if (this.formGroup.controls.originDestination.value === true) {
+     if (this.formGroup.controls.originDestination.value === 'true') {
      // this.AddCitizenship();
      this.AddSegments();
      this.AddAdvisory();

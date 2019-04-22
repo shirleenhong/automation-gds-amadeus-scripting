@@ -154,7 +154,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.setControlValidator(this.f.flightType, this.showU72);
     this.setControlValidator(this.f.priceVsSupplier, this.showU73);
     // this.setControlValidator(this.f.group, this.showU74);
-    this.setControlValidator(this.f.preferredVendor, this.showU75);
+    this.setControlValidator(this.f.preferredVendor, this.showU77);
 
   }
 

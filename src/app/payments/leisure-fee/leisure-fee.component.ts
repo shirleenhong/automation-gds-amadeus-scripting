@@ -103,12 +103,12 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   changeFeeState() {
-    if (this.f.segmentAssoc.value === '0' && (this.IsPnrAvailable && this.f.chkUpdateRemove.value)) {
-      this.enableDisbleControls(['noFeeReason'], this.checkSFC());
-    } else {
-      this.enableDisbleControls(['noFeeReason'], true);
-    }
-    this.enableDisableCredits();
+    // if (this.f.segmentAssoc.value === '0' && (this.IsPnrAvailable && this.f.chkUpdateRemove.value)) {
+    //   this.enableDisbleControls(['noFeeReason'], this.checkSFC());
+    // } else {
+    //   this.enableDisbleControls(['noFeeReason'], true);
+    // }
+    // this.enableDisableCredits();
   }
 
   setFormState(isDisabled: boolean) {
@@ -124,7 +124,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         'expDate',
         'address',
         'noFeeReason'
-
       ];
 
       this.enableDisbleControls(ctrls, isDisabled);
@@ -132,8 +131,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       this.enableDisbleControls(['segmentAssoc'], false);
       this.processAssocValues(this.f.segmentAssoc.value);
     }
-    //this.enableDisableCredits();
-    this.changeFeeState();
+    // this.enableDisableCredits();
+    // this.changeFeeState();
   }
 
   enableDisableCredits() {
@@ -182,7 +181,11 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         break;
       case '0':
         this.enableDisbleControls(ctrls, true);
-        if (!this.IsPnrAvailable) { this.enableDisbleControls(['noFeeReason'], false); }
+
+        if ((!this.IsPnrAvailable && !this.checkSFC()) ||
+          (this.IsPnrAvailable && this.f.chkUpdateRemove.value === true && !this.checkSFC())) {
+          this.enableDisbleControls(['noFeeReason'], false);
+        }
         this.f.noFeeReason.setValidators(Validators.required);
         break;
       default:
@@ -202,7 +205,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
 
   checkSFC() {
     if (
-      //  this.pnrService.getRemarkLineNumber('SFC/-') === '' &&
       this.f.segmentAssoc.value === '0' &&
       (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')
     ) {

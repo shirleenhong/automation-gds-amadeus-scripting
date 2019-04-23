@@ -2,7 +2,7 @@
   <thead class="thead-light">
     <tr>
       <th scope="col">Segment Type</th>
-      <th scope="col">Vendor Name</th>
+      <th scope="col">Segment Information</th>
       <th scope="col">Vendor Code</th>
       <th scope="col">Confirmation No</th>
       <th scope="col">Departure Date</th>
@@ -18,14 +18,20 @@
 
     <tr *ngFor="let r of segmentRemarks">
       <td>{{ r.segmentType}}</td>
-      <td>{{ r.vendorName}}</td>
-      <td>{{ r.vendorCode}}</td>
+      <td *ngIf="r.segmentType === 'TOR'">{{ r.vendorName | uppercase}} {{ r.tourName| uppercase}}
+        {{ r.roomType| uppercase}} {{ r.mealPlan| uppercase}}
+        {{ r.noNights}}NTS</td>
+      <td *ngIf="r.segmentType === 'SEA'">{{ r.vendorName | uppercase}} {{ r.tourName | uppercase}}
+        {{ r.dining | uppercase}} {{ r.noNights}}NTS</td>
+      <td *ngIf="r.segmentType === 'INS'">MANULIFE INSURANCE</td>
+      <td>{{ r.vendorCode | uppercase}}</td>
       <td>{{ r.confirmationNo }}</td>
-      <td>{{ r.departureDate }}</td>
+      <td>{{ r.departureDate | date: "ddMMM" | uppercase}}</td>
       <td>{{ r.departureTime }}</td>
-      <td>{{ r.departureCity }}</td>
-      <td>{{ r.destinationCity }}</td>
-      <td>{{ r.arrivalDate }}</td>
+      <td>{{ r.departureCity | uppercase}}</td>
+      <td>{{ r.destinationCity |uppercase}}</td>
+      <td>{{ r.arrivalDate | date: "ddMMM" | uppercase}}</td>
+      <td>{{ r.formatarrdate }}</td>
       <td>{{ r.arrivalTime }}</td>
       <td *ngIf="r.isNew"><i class="fas fa-edit" (click)="updateItem(r)"></i>
         &nbsp;&nbsp;&nbsp;

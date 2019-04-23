@@ -95,9 +95,9 @@ export class AccountingRemarkComponent implements OnInit {
           let i = 1;
           this.accountingRemarks.forEach(x => {
             x.tkMacLine = i;
-            i++;
-            this.checkSupplierCode();
+            i++;           
           });
+          this.checkSupplierCode();
           this.modalRef.content.response = '';
         }
       }

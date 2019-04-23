@@ -81,12 +81,12 @@ export class VisaPassportComponent implements OnInit {
       items = this.visaPassportFormGroup.get('segments')['controls'];
 
       // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < items.length; i ++){
+      for (let i = 0; i < items.length; i ++) {
          // tslint:disable-next-line:no-string-literal
-         items[i].controls['country'].disable();
-         // tslint:disable-next-line:no-string-literal
-         items[i].controls['segmentLine'].disable();
-        }
+          items[i].controls['country'].disable();
+         //  tslint:disable-next-line:no-string-literal
+          items[i].controls['segmentLine'].disable();
+             }
     } else {
       this.enableFormControls(['citizenship'], true);
       this.enableFormControls(['advisory'], true);
@@ -135,6 +135,7 @@ export class VisaPassportComponent implements OnInit {
     let lastLoop = true;
 
     if (this.pnrService.isPNRLoaded) {
+
       const countryList = [{ country: '', passport: '' , visa: '', segmentLine: '' }];
       for (const air of this.pnrService.pnrObj.airSegments) {
         const departureCountry = this.ddbService.getCityCountry(air.departureAirport).country;
@@ -205,12 +206,12 @@ export class VisaPassportComponent implements OnInit {
 
   getCitizenship() {
     let citizenship: string;
-    let country: string;
+    // let country: string;
     citizenship = this.pnrService.getRemarkText('CITIZENSHIP-');
     if (citizenship !== '') {
-      citizenship = citizenship.substr(12, 3);
-      country = this.ddbService.getCitizenship(citizenship).country;
-      this.f.citizenship.setValue(country);
+      // citizenship = citizenship.substr(12, 3);
+      // country = this.ddbService.getCitizenship(citizenship).country;
+      this.f.citizenship.setValue(citizenship);
     }
   }
 

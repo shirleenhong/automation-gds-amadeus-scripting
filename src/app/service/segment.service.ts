@@ -206,7 +206,7 @@ export class SegmentService {
         return mis;
     }
 
-    setMandatoryRemarks() {
+    getMandatoryRemarks() {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
         let itinLanguage = this.pnrService.getItineraryLanguage();

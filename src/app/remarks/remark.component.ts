@@ -6,6 +6,9 @@ import { ItcPackageComponent } from './itc-package/itc-package.component';
 import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from '../helper/util.helper';
 
+import { VisaPassportComponent } from './visa-passport/visa-passport.component';
+
+// import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
   selector: 'app-remarks',
@@ -16,6 +19,8 @@ export class RemarkComponent implements OnInit {
 
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
   @ViewChild(ItcPackageComponent) itcPackageComponent: ItcPackageComponent;
+  @ViewChild( VisaPassportComponent ) viewPassportComponent: VisaPassportComponent;
+
   remarkForm: FormGroup;
 
 

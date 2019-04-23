@@ -37,6 +37,7 @@ import { UpdateSegmentComponent } from './passive-segments/update-segment/update
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { MessageComponent } from './shared/message/message.component';
 
+import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 
 
 
@@ -60,9 +61,9 @@ import { MessageComponent } from './shared/message/message.component';
     LeisureFeeComponent,
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent
-
-
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
+    VisaPassportComponent
+  
   ],
   imports: [
     BrowserModule,

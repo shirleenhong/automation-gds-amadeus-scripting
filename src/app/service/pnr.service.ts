@@ -6,9 +6,10 @@ import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 
+import { DDBService } from './ddb.service';
 
 declare var PNR: any;
-
+declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
@@ -434,7 +435,6 @@ export class PnrService {
     return this.getRemarkLineNumbers('MAC/-');
   }
 
-
   getAccountingRemarks(): Array<MatrixAccountingModel> {
     const matrixModels = new Array<MatrixAccountingModel>();
     const apays = this.getApayRiiRemarkLines();
@@ -731,7 +731,6 @@ export class PnrService {
 
     return false;
   }
-
 
   hasRecordLocator() {
     return this.pnrObj.header.recordLocator;

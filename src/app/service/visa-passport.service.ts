@@ -34,7 +34,7 @@ import { formatDate } from '@angular/common';
      // tslint:disable-next-line:no-string-literal
      items = this.formGroup.get('segments')['controls'];
      // tslint:disable-next-line:prefer-for-of
-     for (let i = 0; i < items.length; i ++){
+     for (let i = 0; i < items.length; i ++) {
       // tslint:disable-next-line:no-string-literal
        items[i].controls['country'].disable();
       //  tslint:disable-next-line:no-string-literal
@@ -58,7 +58,6 @@ import { formatDate } from '@angular/common';
     this.formGroup.controls.segments.value.forEach(x => {
       if (x.visa === '') {
         // tslint:disable-next-line:max-line-length
-        debugger;
         this.remarkGroup.remarks.push(this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED' + '/S' + x.segmentLine, 'RM', '*'));
       } else if (x.visa) {
         // tslint:disable-next-line:max-line-length

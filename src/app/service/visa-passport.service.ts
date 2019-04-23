@@ -23,11 +23,23 @@ import { formatDate } from '@angular/common';
      this.remarkGroup = new RemarkGroup();
      this.remarkGroup.group = 'Visa Passport Group';
      this.remarkGroup.remarks = new Array<RemarkModel>();
+     this.formGroup.get('segments').enable();
 
      if (this.formGroup.controls.originDestination.value === 'true') {
      // this.AddCitizenship();
      this.AddAdvisory();
      this.AddSegments();
+
+     let items: any;
+     // tslint:disable-next-line:no-string-literal
+     items = this.formGroup.get('segments')['controls'];
+     // tslint:disable-next-line:prefer-for-of
+     for (let i = 0; i < items.length; i ++){
+      // tslint:disable-next-line:no-string-literal
+       items[i].controls['country'].disable();
+      //  tslint:disable-next-line:no-string-literal
+       items[i].controls['segmentLine'].disable();
+          }
     }
      return this.remarkGroup;
   }
@@ -46,6 +58,7 @@ import { formatDate } from '@angular/common';
     this.formGroup.controls.segments.value.forEach(x => {
       if (x.visa === '') {
         // tslint:disable-next-line:max-line-length
+        debugger;
         this.remarkGroup.remarks.push(this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED' + '/S' + x.segmentLine, 'RM', '*'));
       } else if (x.visa) {
         // tslint:disable-next-line:max-line-length

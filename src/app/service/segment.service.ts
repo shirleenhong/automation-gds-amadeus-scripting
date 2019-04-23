@@ -145,7 +145,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + segment.dining +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + ' ' + segment.dining +
                     ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;

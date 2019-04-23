@@ -48,9 +48,6 @@
         </div>
 
       </div>
-
-
-
     </div>
 
     <div *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA'">
@@ -109,7 +106,9 @@
             formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity" />
         </div>
 
-        <div *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA'" class="col-4">
+        <div
+          *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA'  ||  passiveSegments.segmentType == 'AIR'"
+          class="col-4">
           <label id="lblName"> {{lbldestinationCity}} </label>
           <input type="text" class="form-control" id="destinationCity" name="destinationCity" maxlength="3"
             formControlName="destinationCity" [(ngModel)]="passiveSegments.destinationCity" />
@@ -232,7 +231,7 @@
         <div class="col-sm-8">
           <select autofocus id="dining" class="form-control" name="dining" formControlName="dining"
             [(ngModel)]="passiveSegments.dining">
-            <option *ngFor="let item of  mealPlanList" [value]="item.itemValue">
+            <option *ngFor="let item of  diningList" [value]="item.itemValue">
               {{item.itemText}}
             </option>
           </select>

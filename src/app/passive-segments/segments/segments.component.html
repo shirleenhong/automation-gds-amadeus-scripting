@@ -24,6 +24,8 @@
       <td *ngIf="r.segmentType === 'SEA'">{{ r.vendorName | uppercase}} {{ r.tourName | uppercase}}
         {{ r.dining | uppercase}} {{ r.noNights}}NTS</td>
       <td *ngIf="r.segmentType === 'INS'">MANULIFE INSURANCE</td>
+      <td *ngIf="r.segmentType === 'AIR'">{{ r.airlineCode | uppercase}} {{ r.flightNumber | uppercase}}
+        {{ r.classService | uppercase}}</td>
       <td>{{ r.vendorCode | uppercase}}</td>
       <td>{{ r.confirmationNo }}</td>
       <td>{{ r.departureDate | date: "ddMMM" | uppercase}}</td>
@@ -31,7 +33,6 @@
       <td>{{ r.departureCity | uppercase}}</td>
       <td>{{ r.destinationCity |uppercase}}</td>
       <td>{{ r.arrivalDate | date: "ddMMM" | uppercase}}</td>
-      <td>{{ r.formatarrdate }}</td>
       <td>{{ r.arrivalTime }}</td>
       <td *ngIf="r.isNew"><i class="fas fa-edit" (click)="updateItem(r)"></i>
         &nbsp;&nbsp;&nbsp;

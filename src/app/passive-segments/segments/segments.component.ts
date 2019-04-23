@@ -17,6 +17,7 @@ export class SegmentsComponent implements OnInit {
 
   private modalRef: BsModalRef;
   isAddNew = false;
+  passengers = [];
 
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
@@ -38,7 +39,9 @@ export class SegmentsComponent implements OnInit {
     this.modalRef.content.title = 'Add Passive Segment';
     passiveSegment.segmentNo = (this.segmentRemarks.length + 1);
     passiveSegment.isNew = true;
+    passiveSegment.noPeople = this.getNoPassengers();
     this.modalRef.content.passiveSegments = passiveSegment;
+
   }
 
   modalSubscribeOnClose() {
@@ -74,6 +77,11 @@ export class SegmentsComponent implements OnInit {
         i++;
       });
     }
+  }
+
+  getNoPassengers() {
+    this.passengers = this.pnrService.getPassengers();
+    return this.passengers.length.toString();
   }
 
 }

@@ -5,6 +5,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
+import { DeprecatedDatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-update-segment',
@@ -21,6 +22,7 @@ export class UpdateSegmentComponent implements OnInit {
   segmentTypeList: Array<SelectItem>;
   stateRoomList: Array<SelectItem>;
   arrivaldayList: Array<SelectItem>;
+  diningList: Array<SelectItem>;
   segmentForm: FormGroup;
   isSubmitted: boolean;
   supplierCodeList: Array<any>;
@@ -53,8 +55,8 @@ export class UpdateSegmentComponent implements OnInit {
       arrivalDate: new FormControl('', [Validators.required]),
       arrivalTime: new FormControl('', [Validators.required]),
       tourName: new FormControl('', [Validators.required]),
-      noPeople: new FormControl('', [Validators.required]),
-      noNights: new FormControl('', [Validators.required]),
+      noPeople: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
+      noNights: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
       roomType: new FormControl('', []),
       mealPlan: new FormControl('', []),
       stateRoom: new FormControl('', []),
@@ -73,8 +75,9 @@ export class UpdateSegmentComponent implements OnInit {
     this.loadRoomType();
     this.loadSegmentType();
     this.loadStateRoom();
-    this.getPassengers();
     this.loadArrivalDay();
+    this.loadDining();
+    this.getNoPassengers();
   }
 
   ngOnInit() {
@@ -130,13 +133,23 @@ export class UpdateSegmentComponent implements OnInit {
     { itemText: 'Other', itemValue: 'OTHER' }];
   }
 
-  getPassengers() {
-    this.passengers = this.pnrService.getPassengers();
-    this.segmentForm.controls.noPeople.patchValue(this.passengers.length);
+  loadDining() {
+    this.diningList = [{ itemText: '', itemValue: '' },
+    { itemText: 'Early Dining', itemValue: 'EARLY DINING' },
+    { itemText: 'Late Dining', itemValue: 'LATE DINING' },
+    { itemText: 'Open Dining', itemValue: 'OPEN DINING' },
+    { itemText: 'Waitlist Early', itemValue: 'WAITLIST EARLY' },
+    { itemText: 'Waitlist Late', itemValue: 'WAITLIST LATE' }];
+  }
 
+  getNoPassengers() {
+    this.passengers = this.pnrService.getPassengers();
+    var passengerCount = this.passengers.length;
+    this.passiveSegments.noPeople = passengerCount.toString();
   }
 
   changeControlLabel(type) {
+    debugger;
     switch (type) {
       case 'AIR':
         this.lbldepartureDate = 'Departure Date';
@@ -149,6 +162,7 @@ export class UpdateSegmentComponent implements OnInit {
           'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan', 'policyNo', 'noPeople', 'othersText'], true);
         this.enableFormControls(['departureDate', 'departureCity', 'arrivalDate', 'departureTime', 'destinationCity',
           'arrivalTime', 'airlineCode', 'flightNumber', 'classService', 'arrivalday', 'airlineRecloc'], false);
+        break;
       case 'TOR':
         this.lblvendorName = 'Vendor Name';
         this.lblvendorCode = 'Vendor Code';
@@ -230,13 +244,16 @@ export class UpdateSegmentComponent implements OnInit {
       if (this.segmentForm.controls.arrivalDate.value !== undefined && this.segmentForm.controls.departureDate.value !== undefined) {
         const depdate = new Date(this.segmentForm.controls.departureDate.value);
         const arrDate = new Date(this.segmentForm.controls.arrivalDate.value);
-
         if (depdate > arrDate) {
           this.segmentForm.get(tempname).setErrors({ incorrect: true });
           return;
         }
+        let diff = arrDate.getTime() - depdate.getTime();
+        var night = Math.ceil(diff / (1000 * 3600 * 24));
+        this.segmentForm.controls.noNights.patchValue(night);
       }
       this.segmentForm.get(tempname).setErrors(null);
+      // this.getNoPassengers();
     }
   }
 

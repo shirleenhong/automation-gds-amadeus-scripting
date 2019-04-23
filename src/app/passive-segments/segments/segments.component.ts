@@ -6,6 +6,7 @@ import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model'
 import { SegmentsViewModel } from 'src/app/models/segments-view.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { PnrService } from 'src/app/service/pnr.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-segments',
@@ -38,7 +39,6 @@ export class SegmentsComponent implements OnInit {
     passiveSegment.segmentNo = (this.segmentRemarks.length + 1);
     passiveSegment.isNew = true;
     this.modalRef.content.passiveSegments = passiveSegment;
-
   }
 
   modalSubscribeOnClose() {
@@ -62,6 +62,7 @@ export class SegmentsComponent implements OnInit {
     this.modalRef.content.matrixReceipt = new PassiveSegmentsModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.passiveSegments);
     this.modalRef.content.onChangeSegmentType(r.segmentType);
+    this.modalRef.content.onChangeStateRoom(r.stateRoom);
   }
 
   deleteItem(r: PassiveSegmentsModel) {

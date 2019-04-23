@@ -60,7 +60,7 @@ export class SegmentService {
 
             const datePipe2 = new DatePipe('en-US');
             const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
-            const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMM');
+            const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMMM');
             let startTime = '';
             if (segment.departureTime) {
                 startTime = (segment.departureTime as string).replace(':', '');
@@ -99,7 +99,12 @@ export class SegmentService {
                         if (type === 'SEA') {
                             const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
                             if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
-                                let remText = segmentrem.stateRoom + ' ' + segmentrem.cabinNo;
+                                let sroom = segmentrem.stateRoom;
+                                if (sroom === 'OTHER') {
+                                    sroom = segmentrem.othersText;
+                                }
+
+                                let remText = sroom + ' ' + segmentrem.cabinNo;
                                 rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
                             }
                         }
@@ -131,9 +136,12 @@ export class SegmentService {
         let freetext = '';
         switch (segment.segmentType) {
             case 'TOR':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + segment.roomType +
-                    ' ' + segment.mealPlan + ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
-                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
+                let tourName = segment.vendorName + ' ' + segment.tourName;
+                if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+                if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
+                    'NTS/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
+                    '/ST-' + startTime + '/EC-' + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
@@ -203,6 +211,7 @@ export class SegmentService {
         mis.startPoint = 'YYZ';
         mis.endPoint = 'YYZ';
         mis.freeText = freetext;
+        mis.quantity = 1;
         return mis;
     }
 

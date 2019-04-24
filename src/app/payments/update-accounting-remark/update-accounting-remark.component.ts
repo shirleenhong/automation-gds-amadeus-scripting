@@ -294,11 +294,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
         this.matrixAccountingForm.controls.supplierCodeName.disable();
         this.matrixAccountingForm.controls.commisionPercentage.enable();
+        this.matrixAccountingForm.controls.description.disable();
       } else {
         this.IsInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
         this.matrixAccountingForm.controls.supplierCodeName.enable();
+        this.matrixAccountingForm.controls.description.enable();
         this.matrixAccountingForm.controls.commisionPercentage.disable();
       }
     }

@@ -21,5 +21,5 @@ export class MatrixAccountingModel {
     airAccountingRemark: string;
     tktLine: string;
     description: string;
-
+    commisionPercentage: string;
 }

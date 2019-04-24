@@ -95,9 +95,9 @@ export class AccountingRemarkComponent implements OnInit {
           let i = 1;
           this.accountingRemarks.forEach(x => {
             x.tkMacLine = i;
-            i++;
-            this.checkSupplierCode();
+            i++;           
           });
+          this.checkSupplierCode();
           this.modalRef.content.response = '';
         }
       }
@@ -154,7 +154,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.setControlValidator(this.f.flightType, this.showU72);
     this.setControlValidator(this.f.priceVsSupplier, this.showU73);
     // this.setControlValidator(this.f.group, this.showU74);
-    this.setControlValidator(this.f.preferredVendor, this.showU75);
+    this.setControlValidator(this.f.preferredVendor, this.showU77);
 
   }
 

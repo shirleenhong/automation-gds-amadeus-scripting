@@ -155,8 +155,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;
       this.getPnr();
-      //  this.workflow = '';
-      //this.loadPnr();
+      this.workflow = '';
 
     }, error => { alert(JSON.stringify(error)); });
     this.remarkService.endPNR();
@@ -234,7 +233,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.hasRecordLocator() !== undefined && (this.segment.length > 0 || (this.pnrService.IsMISRetention()))) {
+      debugger;
+      if (this.pnrService.hasRecordLocator() !== undefined) {
         this.cancelEnabled = false;
       }
     }

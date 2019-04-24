@@ -146,6 +146,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       }
     }
 
+    remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
+
     const leisureFee = this.paymentComponent.leisureFee;
     if (leisureFee.leisureFeeForm.valid) {
       remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
@@ -225,15 +227,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   back(): void {
-    window.location.reload();
+    //window.location.reload();
     if (this.isPnrLoaded) {
       this.workflow = '';
     }
   }
 
   setControl() {
-    if (this.isPnrLoaded) {
-      debugger;
+    if (this.isPnrLoaded) {    
       if (this.pnrService.hasRecordLocator() !== undefined) {
         this.cancelEnabled = false;
       }

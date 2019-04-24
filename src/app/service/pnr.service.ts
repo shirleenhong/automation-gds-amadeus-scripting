@@ -5,6 +5,7 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
+import { SegmentModel } from '../models/pnr/segment.model';
 
 
 declare var PNR: any;
@@ -371,23 +372,43 @@ export class PnrService {
     return this.getRemarksFromGDSByRegex(/U[0-9]{1,2}\/-(?<value>(.*))/g);
   }
 
-  getRemarksFromGDSByRegex(regex) {
+  getRemarksFromGDSByRegex(regex, category?) {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
+      let arr = [];
+      switch (category) {
+        case 'RIR':
+          arr = this.pnrObj.rirElements;
+          break;
+
+        default:
+          arr = this.pnrObj.rmElements;
+          break;
+      }
+
+      for (const rm of arr) {       
         const rem = {
           remarkText: rm.fullNode.miscellaneousRemarks.remarks.freetext,
           category: rm.fullNode.miscellaneousRemarks.remarks.type,
           lineNo: rm.elementNumber,
-          value: ''
+          tattooNumber: rm.tatooNumber,
+          value: '',
+          segments: []
         };
+
+        if (rm.associations !== undefined && rm.associations.length > 0) {
+          rm.associations.forEach(element => {
+            rem.segments.push(element.tatooNumber);
+          });
+        }
+
         const match = regex.exec(rem.remarkText);
         if (match !== null) {
-          if (match.groups !== null && match.groups.value !== null) {
+          if (match.groups !== undefined && match.groups.value !== undefined) {
             rem.value = match.groups.value;
-          }
-          remarks.push(rem);
+          }          
         }
+        remarks.push(rem);
       }
     }
     return remarks;
@@ -758,5 +779,8 @@ export class PnrService {
     return false;
 
   }
+
+
+
 
 }

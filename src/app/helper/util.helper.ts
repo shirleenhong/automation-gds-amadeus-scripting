@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
 
 
 @Injectable({
@@ -32,8 +32,14 @@ export class UtilHelper {
                 control.markAsTouched({ onlySelf: true });
             } else if (control instanceof FormGroup) {
                 this.validateAllFields(control);
+            } else if (control instanceof FormArray) {
+                for (const c of control.controls) {
+                    c.markAsTouched({ onlySelf: true });
+                }
             }
         });
     }
+
+
 }
 

@@ -100,7 +100,7 @@ export class PaymentRemarkService {
         }
       }
     });
-    // alert(JSON.stringify(relatedSegment));
+
     return relatedSegment;
   }
 
@@ -256,6 +256,7 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     const assoc = fg.get('segmentAssoc').value;
     remGroup.deleteRemarkByIds = [];
+
     let remark = '';
     let lineNum = this.pnrService.getRemarkLineNumber('SFC/-');
     if (lineNum !== '') {

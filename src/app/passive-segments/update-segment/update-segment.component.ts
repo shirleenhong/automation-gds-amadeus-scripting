@@ -148,8 +148,7 @@ export class UpdateSegmentComponent implements OnInit {
     this.passiveSegments.noPeople = passengerCount.toString();
   }
 
-  changeControlLabel(type) {
-    debugger;
+  changeControlLabel(type) {   
     switch (type) {
       case 'AIR':
         this.lbldepartureDate = 'Departure Date';
@@ -258,8 +257,7 @@ export class UpdateSegmentComponent implements OnInit {
   }
 
 
-  onChangeStateRoom(type) {
-    debugger;
+  onChangeStateRoom(type) {    
     if (type === 'OTHER') {
       this.segmentForm.controls.othersText.enable();
       this.segmentForm.controls.othersText.setValidators(Validators.required);

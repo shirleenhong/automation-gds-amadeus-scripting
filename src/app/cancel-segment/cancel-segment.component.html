@@ -23,6 +23,14 @@
       </div>
     </div>
 
+
+    <div class="row form-group">
+      <div class="col-4"></div>
+      <div class="col-8 note">
+        Note: If any segment contains GK status call vendor directly to cancel.
+      </div>
+    </div>
+
     <div class="row form-group">
       <div class="col-4">Segments: </div>
       <div class="col-8">
@@ -31,13 +39,6 @@
           <input type="checkbox" [formControlName]="i" (change)="checkSegmentAirline()">
           {{segments[i].name}}
         </label>
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-4"></div>
-      <div class="col-8">
-        If any segment contains GK status call vendor directly to cancel.
       </div>
     </div>
 
@@ -103,6 +104,17 @@
             name="relationship" />
         </div>
       </div>
+
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <div class="">Type the affected Airline Flight Number(s)</div>
+          <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
+            maxlength="35" />
+          <div class="">Ex. Single flight AC4519, Multiple Flights AC4519/AC1234/AC5678</div>
+        </div>
+      </div>
+
     </div>
 
     <div *ngIf="isUA">
@@ -130,15 +142,6 @@
           <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
             name="uaPassengerNo" />
         </div>
-      </div>
-
-    </div>
-
-    <div class="row form-group">
-      <div class="col-4">Affected Airline No:</div>
-      <div class="col-8">
-        <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
-          maxlength="35" />
       </div>
     </div>
 

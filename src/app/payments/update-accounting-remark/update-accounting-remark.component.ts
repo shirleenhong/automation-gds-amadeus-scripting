@@ -35,6 +35,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   segments = [];
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
+  name: string;
+  IsInsurance = false;
   // PaymentModeList: Array<SelectItem>;
 
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
@@ -59,6 +61,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
+      confirmationLabel: new FormControl(''),
       segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
       validateSegmentNumbers(this.segments)]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
@@ -76,8 +79,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
       tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
       description: new FormControl('', [Validators.required]),
-      bsp: new FormControl('', [Validators.required])
+      bsp: new FormControl('', [Validators.required]),
+      commisionPercentage: new FormControl('', [Validators.required])
     });
+
+    this.name = 'Supplier Confirmation Number:';
   }
 
 
@@ -96,6 +102,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.enableFormControls(['description'], false);
       this.accountingRemarks.bsp = '2';
     }
+
+    this.setInsuranceValue();
     // return true;
   }
 
@@ -271,7 +279,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   setInsuranceValue() {
-
     if (this.matrixAccountingForm.controls.segmentNo.value !== undefined) {
       const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
       let isMLF = false;
@@ -281,13 +288,30 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
       });
 
-      if (isMLF) {
+      if (isMLF && this.accountingRemarks.bsp === '2') {
+        this.IsInsurance = true;
+        this.name = 'Policy Confirmation Number:';
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
         this.matrixAccountingForm.controls.supplierCodeName.disable();
+        this.matrixAccountingForm.controls.commisionPercentage.enable();
       } else {
+        this.IsInsurance = false;
+        this.name = 'Supplier Confirmation Number:';
         this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
         this.matrixAccountingForm.controls.supplierCodeName.enable();
+        this.matrixAccountingForm.controls.commisionPercentage.disable();
       }
+    }
+  }
+
+  loadData() {
+    if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName === 'MLF') {
+      this.IsInsurance = true;
+      this.name = 'Policy Confirmation Number:';
+      this.matrixAccountingForm.controls.supplierCodeName.disable();
+    } else {
+      this.IsInsurance = false;
+      this.name = 'Supplier Confirmation Number:';
     }
   }
 

@@ -235,6 +235,14 @@ export class PnrService {
     return elementNumbers;
   }
 
+  getPassiveAirSegmentNumbers() {
+    const elementNumbers = new Array<number>();
+    for (const rm of this.pnrObj.airSegments) {
+      elementNumbers.push(rm.elementNumber);
+    }
+    return elementNumbers;
+  }
+
 
   getSegmentTatooNumber() {
     // const segments = new Array<any>();
@@ -519,10 +527,13 @@ export class PnrService {
           model.passengerNo = val[1];
           break;
         case 'BKN':
-          model.supplierConfirmatioNo = (val[1]);
+          model.supplierConfirmatioNo = (val[1]).replace('CWT', '');
           break;
         case 'CD':
           model.commisionWithoutTax = (val[1]);
+          break;
+        case 'CP':
+          model.commisionPercentage = (val[1]);
           break;
         case '':
 

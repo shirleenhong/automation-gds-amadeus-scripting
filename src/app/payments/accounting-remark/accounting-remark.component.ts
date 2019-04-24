@@ -114,6 +114,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.IsBSP(r.bsp);
     this.modalRef.content.assignDescription(r.description);
     this.modalRef.content.FormOfPaymentChange(r.fop);
+    this.modalRef.content.loadData();
   }
 
 

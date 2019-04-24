@@ -300,9 +300,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.name = 'Supplier Confirmation Number:';
         this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
         this.matrixAccountingForm.controls.supplierCodeName.enable();
-        this.matrixAccountingForm.controls.description.enable();
+        this.matrixAccountingForm.controls.description.disable();
         this.matrixAccountingForm.controls.commisionPercentage.disable();
       }
+
+      if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName !== 'MLF') {
+        this.matrixAccountingForm.controls.description.enable();
+      }
+
     }
   }
 

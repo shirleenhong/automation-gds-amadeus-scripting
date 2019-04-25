@@ -401,14 +401,15 @@ export class PnrService {
             rem.segments.push(element.tatooNumber);
           });
         }
-
         const match = regex.exec(rem.remarkText);
+        regex.lastIndex = 0;
         if (match !== null) {
           if (match.groups !== undefined && match.groups.value !== undefined) {
             rem.value = match.groups.value;
-          }          
+          }    
+          remarks.push(rem);      
         }
-        remarks.push(rem);
+       
       }
     }
     return remarks;

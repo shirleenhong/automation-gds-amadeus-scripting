@@ -33,7 +33,6 @@ export class DDBService implements OnInit {
 
   }
 
-
   async getToken() {
     if (this.isTokenExpired === true || this.token === '') {
       const bodyInfo = { client_id: environment.clientId, client_secret: environment.clientSecret, grant_type: 'client_credentials' };
@@ -50,9 +49,12 @@ export class DDBService implements OnInit {
 
   }
 
+  async getTravelPort(travelportCode: string) {
+   return await this.getRequest('config/travelports/Airport?travelPortCode=' + travelportCode).toPromise();
+  }
 
   getRequest(apiUrl: string): Observable<any> {
-    this.getToken();
+    //this.getToken();
     const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient.get<any>('/api/' + apiUrl, { headers: hds });
   }

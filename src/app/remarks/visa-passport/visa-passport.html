@@ -1,4 +1,4 @@
-<form [formGroup]="visaPassportFormGroup">
+<form [formGroup]="visaPassportFormGroup" class="col">
   <div class="row form-group">
     <div class="col-4">
       <b>Select One</b>
@@ -70,6 +70,7 @@
   </div><br>
 
   <!-- <div class="row form-group" *ngIf="!getAdvisoryLine()"> -->
+<div *ngIf="hasAirSegments()">
     <div class ="row form-group">
     <div class="col-2">
       <b>Country</b>
@@ -102,5 +103,6 @@
       </div>
     </div>
   </div>
+</div>
 
 </form>

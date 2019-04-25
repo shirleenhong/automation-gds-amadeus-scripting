@@ -1,7 +1,7 @@
 {
     "/api/token": {
-      "target": "https://test.int.us-west-2.bpg-aws-cwt.com/service/repo/powerbaseaws/oauth2/token",
-      "secure": false
-     
+      "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com/config-services-rest/api",
+      "secure": false,
+      "pathRewrite": {"^/api" : ""}
     }
 }

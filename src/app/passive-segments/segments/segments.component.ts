@@ -6,6 +6,7 @@ import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model'
 import { SegmentsViewModel } from 'src/app/models/segments-view.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { PnrService } from 'src/app/service/pnr.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-segments',
@@ -16,6 +17,7 @@ export class SegmentsComponent implements OnInit {
 
   private modalRef: BsModalRef;
   isAddNew = false;
+  passengers = [];
 
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
@@ -37,6 +39,7 @@ export class SegmentsComponent implements OnInit {
     this.modalRef.content.title = 'Add Passive Segment';
     passiveSegment.segmentNo = (this.segmentRemarks.length + 1);
     passiveSegment.isNew = true;
+    passiveSegment.noPeople = this.getNoPassengers();
     this.modalRef.content.passiveSegments = passiveSegment;
 
   }
@@ -62,6 +65,7 @@ export class SegmentsComponent implements OnInit {
     this.modalRef.content.matrixReceipt = new PassiveSegmentsModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.passiveSegments);
     this.modalRef.content.onChangeSegmentType(r.segmentType);
+    this.modalRef.content.onChangeStateRoom(r.stateRoom);
   }
 
   deleteItem(r: PassiveSegmentsModel) {
@@ -73,6 +77,11 @@ export class SegmentsComponent implements OnInit {
         i++;
       });
     }
+  }
+
+  getNoPassengers() {
+    this.passengers = this.pnrService.getPassengers();
+    return this.passengers.length.toString();
   }
 
 }

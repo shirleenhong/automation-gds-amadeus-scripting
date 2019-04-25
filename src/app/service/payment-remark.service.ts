@@ -100,7 +100,7 @@ export class PaymentRemarkService {
         }
       }
     });
-    // alert(JSON.stringify(relatedSegment));
+
     return relatedSegment;
   }
 
@@ -144,6 +144,7 @@ export class PaymentRemarkService {
 
 
   processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
+
     const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
       '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
       accounting.baseAmount.toString().trim() + '/-PT-' +
@@ -151,15 +152,31 @@ export class PaymentRemarkService {
       'XG/-PT-' + accounting.qst.toString().trim() + 'XQ';
 
     let facc = acc1;
-    if (accounting.bsp === '1') {
-      facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim()
-        + 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
+
+    let line1 = '';
+
+    if (accounting.commisionWithoutTax !== undefined) {
+      line1 = 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
     }
+
+    let bknLine = '/-BKN-';
+
+    if (accounting.commisionPercentage !== undefined && accounting.bsp === '2') {
+      line1 = '/-CP-' + accounting.commisionPercentage.toString().trim();
+      bknLine = '/-BKN-CWT';
+    }
+
+    if (accounting.bsp === '1') {
+      facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim();
+      // + line1;
+    }
+
+    facc = facc + line1;
 
     const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
     const acc2 = 'MAC/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
       fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-ALL' +
-      '/-BKN-' + accounting.supplierConfirmatioNo.toString().trim();
+      bknLine + accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
 
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
@@ -239,6 +256,7 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     const assoc = fg.get('segmentAssoc').value;
     remGroup.deleteRemarkByIds = [];
+
     let remark = '';
     let lineNum = this.pnrService.getRemarkLineNumber('SFC/-');
     if (lineNum !== '') {

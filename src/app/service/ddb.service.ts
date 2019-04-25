@@ -135,7 +135,7 @@ export class DDBService implements OnInit {
         itemValue: '1'
       },
       { itemText: 'Caribbean and Bermuda', itemValue: '2' },
-      { itemText: 'South America4', itemValue: '3' },
+      { itemText: 'South America', itemValue: '3' },
       {
         itemText: 'Europe-incl. Morocco/Tunisia/Algeria/Greenland',
         itemValue: '4'

@@ -1,6 +1,4 @@
-
 <tabset>
-
         <tab heading="Packages" id="tab1">
                 <form [formGroup]="remarkForm">
                         <div style="padding:5px;">
@@ -14,8 +12,6 @@
                                     </select>
                                 </div>
                             </div>
-                    
-                    
                             <div *ngIf="f.packageList.value === 'ITC'">
                                 <app-itc-package></app-itc-package>
                             </div>
@@ -31,5 +27,5 @@
         <tab heading="Code Share" id="tab2">
             <app-codeshare></app-codeshare>
         </tab>
-    </tabset>
+</tabset>
 

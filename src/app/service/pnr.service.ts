@@ -5,6 +5,7 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
+import { SegmentModel } from '../models/pnr/segment.model';
 
 import { DDBService } from './ddb.service';
 
@@ -236,6 +237,14 @@ export class PnrService {
     return elementNumbers;
   }
 
+  getPassiveAirSegmentNumbers() {
+    const elementNumbers = new Array<number>();
+    for (const rm of this.pnrObj.airSegments) {
+      elementNumbers.push(rm.elementNumber);
+    }
+    return elementNumbers;
+  }
+
 
   getSegmentTatooNumber() {
     // const segments = new Array<any>();
@@ -364,23 +373,44 @@ export class PnrService {
     return this.getRemarksFromGDSByRegex(/U[0-9]{1,2}\/-(?<value>(.*))/g);
   }
 
-  getRemarksFromGDSByRegex(regex) {
+  getRemarksFromGDSByRegex(regex, category?) {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
-      for (const rm of this.pnrObj.rmElements) {
+      let arr = [];
+      switch (category) {
+        case 'RIR':
+          arr = this.pnrObj.rirElements;
+          break;
+
+        default:
+          arr = this.pnrObj.rmElements;
+          break;
+      }
+
+      for (const rm of arr) {       
         const rem = {
           remarkText: rm.fullNode.miscellaneousRemarks.remarks.freetext,
           category: rm.fullNode.miscellaneousRemarks.remarks.type,
           lineNo: rm.elementNumber,
-          value: ''
+          tattooNumber: rm.tatooNumber,
+          value: '',
+          segments: []
         };
-        const match = regex.exec(rem.remarkText);
-        if (match !== null) {
-          if (match.groups !== null && match.groups.value !== null) {
-            rem.value = match.groups.value;
-          }
-          remarks.push(rem);
+
+        if (rm.associations !== undefined && rm.associations.length > 0) {
+          rm.associations.forEach(element => {
+            rem.segments.push(element.tatooNumber);
+          });
         }
+        const match = regex.exec(rem.remarkText);
+        regex.lastIndex = 0;
+        if (match !== null) {
+          if (match.groups !== undefined && match.groups.value !== undefined) {
+            rem.value = match.groups.value;
+          }    
+          remarks.push(rem);      
+        }
+       
       }
     }
     return remarks;
@@ -519,10 +549,13 @@ export class PnrService {
           model.passengerNo = val[1];
           break;
         case 'BKN':
-          model.supplierConfirmatioNo = (val[1]);
+          model.supplierConfirmatioNo = (val[1]).replace('CWT', '');
           break;
         case 'CD':
           model.commisionWithoutTax = (val[1]);
+          break;
+        case 'CP':
+          model.commisionPercentage = (val[1]);
           break;
         case '':
 
@@ -611,10 +644,10 @@ export class PnrService {
 
     if (type === 'MIS') {
       // tslint:disable-next-line:max-line-length
-      let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF(?<conf>(.*))/g;
+      let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
       let match = regex.exec(freetext);
       if (match === null) {
-        regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF(?<conf>(.*))/g;
+        regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(([0-9]{4})))(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
 
@@ -746,5 +779,8 @@ export class PnrService {
     return false;
 
   }
+
+
+
 
 }

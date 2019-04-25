@@ -1,0 +1,47 @@
+.form-control {
+    width: unset;
+    display: unset;
+}
+
+
+
+.codeShareRow div {
+
+    display: inline;
+}
+
+.codeShareRow div span {
+
+
+    display: block;
+    float: left;
+    padding: 5px 10px
+}
+
+
+.fa-minus-circle {
+    color: red;
+    font-size: 1.5em;
+    margin-top: 5px;
+    text-align: center;
+}
+
+
+.fa-minus-circle:hover {
+    color: #f06868;
+
+}
+
+
+.fa-plus-circle {
+    color: rgb(60, 218, 94);
+    font-size: 1.5em;
+    margin-top: 5px;
+    text-align: center;
+}
+
+
+.fa-plus-circle:hover {
+    color: rgb(61, 252, 102);
+
+}

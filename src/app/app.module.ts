@@ -19,7 +19,7 @@ import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segme
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
 import { AccordionComponent } from './shared/accordion/accordion.component';
 
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
@@ -36,6 +36,8 @@ import { SegmentsComponent } from './passive-segments/segments/segments.componen
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { MessageComponent } from './shared/message/message.component';
+import { CodeshareComponent } from './remarks/codeshare/codeshare.component';
+import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
 
 import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 
@@ -62,8 +64,9 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
-    VisaPassportComponent
+    VisaPassportComponent , CodeshareComponent, SegmentSelectComponent
   
+
   ],
   imports: [
     BrowserModule,
@@ -75,6 +78,7 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -82,7 +86,8 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
   ],
   bootstrap: [AppComponent],
   exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, UpdateSegmentComponent, MessageComponent]
+  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
+    UpdateSegmentComponent, MessageComponent]
 
 })
 export class AppModule { }

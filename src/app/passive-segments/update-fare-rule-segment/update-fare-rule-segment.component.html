@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <div class="modal-title">{{title}}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="fareRuleForm">
+    <div class="form-group  row">
+      <div class="col-sm-4">Fare Rule :</div>
+      <div class="col-sm-8">
+        <select id="fareRuleList" class="form-control" name="fareRuleList" formControlName="fareRuleList" required>
+          <option *ngFor="let item of  fareRuleList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group  row">
+      <div class="col-sm-4">Segment No :</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="segmentNo" name="segmentNo" />
+      </div>
+    </div>
+    <div class="form-group  row">
+      <div class="col-sm-4">Remark :</div>
+      <div class="col-sm-7">
+        <!-- <input type="text" class="form-control" id="Remark" name="Remark" /> -->
+        <div style="padding-bottom:10px" formArrayName="items"
+          *ngFor="let item of fareRuleForm.get('items').controls; let i = index;">
+          <div [formGroupName]="i">
+
+            <input formControlName="remarkText" class="form-control"><i
+              style="float:right;clear:left;overflow: auto;display: block;" class="fas fa-times-circle"></i>
+          </div>
+        </div>
+        <br>
+        <button type="button" class="btn btn-outline-dark" (click)="addItem()">Add Remark</button>
+      </div>
+    </div>
+
+
+  </form>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+
+</div>
+
+<!-- (click)="modalRef.hide()" -->
+<!-- (click)="saveSegment()" -->

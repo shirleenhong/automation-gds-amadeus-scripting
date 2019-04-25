@@ -21,8 +21,8 @@ import { ValidateModel } from '../models/validate-model';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
 import { invalid } from '@angular/compiler/src/render3/view/util';
-
-
+import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
+import { VisaPassportService} from '../service/visa-passport.service';
 @Component({
   selector: 'app-leisure',
   templateUrl: './leisure.component.html',
@@ -59,6 +59,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
     private packageRemarkService: PackageRemarkService,
+    private visaPassportService: VisaPassportService,
     private fb: FormBuilder,
     private ddbService: DDBService,
     private modalService: BsModalService
@@ -121,13 +122,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
-
+    remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
 
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {
       remarkCollection.push(this.segmentService.getRetentionLine());
     }
-    remarkCollection.push(this.segmentService.setMandatoryRemarks());
+    remarkCollection.push(this.segmentService.getMandatoryRemarks());
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
       const concierge = this.reportingComponent.conciergeComponent;

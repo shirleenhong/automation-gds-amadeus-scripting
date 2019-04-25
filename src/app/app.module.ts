@@ -39,6 +39,7 @@ import { MessageComponent } from './shared/message/message.component';
 import { CodeshareComponent } from './remarks/codeshare/codeshare.component';
 import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
 
+import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 
 
 
@@ -62,9 +63,9 @@ import { SegmentSelectComponent } from './shared/segment-select/segment-select.c
     LeisureFeeComponent,
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent,
-    MessageComponent, CodeshareComponent, SegmentSelectComponent
-
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
+    VisaPassportComponent , CodeshareComponent, SegmentSelectComponent
+  
 
   ],
   imports: [

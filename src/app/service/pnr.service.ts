@@ -283,6 +283,14 @@ export class PnrService {
     let elemairlineCode = '';
     let elemdepdate = '';
     let elemcitycode = '';
+    let flightNumber = '';
+    let arrivalAirport = '';
+    let departureTime = '';
+    let departureDate = '';
+    let arrivalTime = '';
+    let arrivalDate = '';
+    let classservice = '';
+
 
     if (type === 'AIR') {
       elemText = elem.airlineCode + elem.flightNumber + ' ' + elem.class + this.formatDate(elem.departureDate) +
@@ -292,7 +300,13 @@ export class PnrService {
       elemairlineCode = elem.airlineCode;
       elemdepdate = elem.departureDate;
       elemcitycode = elem.departureAirport;
-
+      flightNumber = elem.flightNumber;
+      arrivalAirport = elem.arrivalAirport;
+      departureTime = elem.departureTime;
+      departureDate = elem.departureDate;
+      arrivalTime = elem.arrivalTime;
+      arrivalDate = elem.arrivalDate;
+      classservice = elem.class;
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
       elemText = type + ' ' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
@@ -316,7 +330,15 @@ export class PnrService {
       airlineCode: elemairlineCode,
       freetext: flongtext,
       deptdate: elemdepdate,
-      cityCode: elemcitycode
+      cityCode: elemcitycode,
+      arrivalStation: arrivalAirport,
+      flightNumber,
+      arrivalAirport,
+      departureTime,
+      departureDate,
+      arrivalTime,
+      arrivalDate,
+      classservice
     };
     this.segments.push(segment);
   }
@@ -669,17 +691,42 @@ export class PnrService {
     }
   }
 
+  getAirSegmentModel(element, index) {
+    let segmentModel: PassiveSegmentsModel;
+    segmentModel = new PassiveSegmentsModel();
+    segmentModel.isNew = false;
+    segmentModel.segmentNo = index;
+    segmentModel.segmentType = element.segmentType;
+    segmentModel.flightNumber = element.flightNumber;
+    segmentModel.classService = element.classservice;
+    // segmentModel.arrivalday = element.classservice;
+    // segmentModel.airlineRecloc = elem.
+    segmentModel.departureDate = this.formatDate(element.departureDate);
+    segmentModel.departureTime = element.departureTime;
+    segmentModel.departureCity = element.cityCode;
+    segmentModel.destinationCity = element.arrivalStation;
+    segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
+    segmentModel.arrivalTime = element.arrivalTime;
+    segmentModel.airlineCode = element.airlineCode;
+    return segmentModel;
+  }
+
   getModelPassiveSegments(): PassiveSegmentsModel[] {
     const pSegment: PassiveSegmentsModel[] = [];
     let segment = this.getSegmentTatooNumber();
     let index = 0;
     segment.forEach(element => {
       index++;
-      pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+
+      switch (element.segmentType) {
+        case 'MIS':
+          pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+          break;
+        case 'AIR':
+          pSegment.push(this.getAirSegmentModel(element, index));
+      }
     });
-
     return pSegment;
-
   }
 
 

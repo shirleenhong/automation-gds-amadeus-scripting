@@ -11,4 +11,10 @@ export class PassiveSegmentModel {
     endPoint: string;
     quantity: number;
     freeText: string;
+    segmentName: string;
+    function: string;
+    classOfService: string;
+    controlNo: string;
+    dayChangeIndicator: string;
+    flightNo: string;
 }

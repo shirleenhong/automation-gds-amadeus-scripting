@@ -163,7 +163,7 @@ export class RemarkService {
 
         const elementManagementItinerary = {
             reference,
-            segmentName: 'RU'
+            segmentName: passiveSegmentmodel.segmentName
         };
 
         const boardPointDetail = {
@@ -176,30 +176,40 @@ export class RemarkService {
             identification: passiveSegmentmodel.vendor
         };
 
-        const travelProductProduct = {
-            depDate: passiveSegmentmodel.startDate,
-            depTime: '0000',
-            arrDate: passiveSegmentmodel.endDate,
-            arrTime: '0000'
+        const productDetails = {
+            identification: passiveSegmentmodel.flightNo,
+            classOfService: passiveSegmentmodel.classOfService
         };
 
-        const travelProduct = {
+        const travelProductProduct: { [k: string]: any } = {
+            depDate: passiveSegmentmodel.startDate,
+            depTime: passiveSegmentmodel.startTime,
+            arrDate: passiveSegmentmodel.endDate,
+            arrTime: passiveSegmentmodel.endTime
+        };
+
+        // if (passiveSegmentmodel.dayChangeIndicator) {
+        //     travelProductProduct.dayChangeIndicator = passiveSegmentmodel.dayChangeIndicator;
+        // }
+
+        const travelProduct: { [k: string]: any } = {
             product: travelProductProduct,
             boardpointDetail: boardPointDetail,
             offpointDetail: offPointDetail,
             company
         };
 
+        if (passiveSegmentmodel.passiveSegmentType === 'AIR') {
+            travelProduct.productDetails = productDetails;
+        }
+
         const relatedProduct = {
-            // quantity: '1',
-            quantity: passiveSegmentmodel.quantity,
+            quantity: passiveSegmentmodel.quantity.toString(),
             status: passiveSegmentmodel.status
-            // quantitySpecified: true,
-            // product: travelProductProduct
         };
 
         const messageActionBusiness = {
-            function: '12'
+            function: passiveSegmentmodel.function
         };
 
         const messageAction = {
@@ -216,13 +226,35 @@ export class RemarkService {
             longFreetext: passiveSegmentmodel.freeText
         };
 
-        const airAuxItinerary = {
+        const reservation = {
+            companyId: passiveSegmentmodel.vendor,
+            controlNumber: passiveSegmentmodel.controlNo
+        };
+
+        const reservation2 = {
+            reservation
+        };
+
+        const selection = {
+            option: 'P10'
+        };
+
+        const selection2 = {
+            selection
+        };
+
+        const airAuxItinerary: { [k: string]: any } = {
             travelProduct,
             messageAction,
-            relatedProduct,
-            freetextItinerary: freeTextItinerary
-
+            relatedProduct
         };
+
+        if (passiveSegmentmodel.passiveSegmentType === 'AIR') {
+            airAuxItinerary.selectionDetailsAir = selection2;
+            airAuxItinerary.reservationInfoSell = reservation2;
+        } else {
+            airAuxItinerary.freetextItinerary = freeTextItinerary;
+        }
 
         return { elementManagementItinerary, airAuxItinerary };
         // var summary = {originDestinationDetails};

@@ -36,9 +36,10 @@ import { SegmentsComponent } from './passive-segments/segments/segments.componen
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { MessageComponent } from './shared/message/message.component';
+
 import { CodeshareComponent } from './remarks/codeshare/codeshare.component';
 import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
-
+import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
 import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 
 
@@ -64,8 +65,7 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
-    VisaPassportComponent , CodeshareComponent, SegmentSelectComponent
-  
+    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective
 
   ],
   imports: [
@@ -85,7 +85,8 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective],
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
+    AllCapsMaskDirective, AlphaMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
     UpdateSegmentComponent, MessageComponent]
 

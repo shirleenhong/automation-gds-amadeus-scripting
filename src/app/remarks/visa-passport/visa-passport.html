@@ -23,32 +23,27 @@
 
   <div class="row form-group">
     <div class="col-6">
-      <b>International Travel Advisory Sent?</b>
+      <b>International Travel Advisory Request</b> 
     </div>
-    <div class="col-4" *ngIf="visaPassportView.advisory">
-        <input name="btnAdvisory" style={font-size:6px;} type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories"/>
+    <div class="col-4" *ngIf="hasAdvisoryLine()">
+      <span class="p2"><b> (Advisory already sent!) </b></span>
+    </div>
+    <div class="col-4" *ngIf="!hasAdvisoryLine()">
+      <input name="btnAdvisory" type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories"/>
     </div>
   </div>
 
   <div class="row form-group">
     <div class="col-8">
-      <input type="radio" name="advisory" formControlName="advisory" value="Yes" (change)="changedAdvisory()" disabled />
-      Consultant Needs to send International Travel Advisory to Traveller/Arranger
+      <span class="p1">1. Advice Verbal Visa and Passport Information to client. <br>
+      2. International Travel advisory must be sent to traveler / travel arranger <br>
+      3. Click on [Go to e-Traveladvisories] to send email to traveler (if not yet sent) <br></span>
     </div>
-  </div>
-
-
-  <div class="row form-group">
-    <div class="col-10">
-      <input type="radio" name="advisory" formControlName="advisory" value="No" (change)="changedAdvisory()" disabled />
-      International Travel Advisory already sent to Traveller/Arranger
-    </div>
-  </div>
-  <br />
+  </div><br>
 
   <div class="row form-group">
       <div class="col-10">
-        <b>Entry Requirements for Countries Traveled</b>
+        <b>Entry Requirements for Countries Travelled</b>
       </div>
     </div>
 
@@ -97,12 +92,10 @@
         <input type="text" class="form-control" formControlName="country" id="country" placeholder="country" disabled>
       </div>
       <div class="col-2">
-        <input type="checkbox" class="checkbox-control" [checked]="passport"
-          formControlName="passport" required>
+        <input type="checkbox" [checked]="passport" class="check-control" formControlName="passport" required>
       </div>
       <div class="col-2">
-        <input type="checkbox" class="checkbox-control" [checked]="visa" 
-          formControlName="visa" required>
+        <input type="checkbox" [checked]="visa" class="check-control" formControlName="visa" required>
       </div>
       <div class="col-3">
         <input type="text" class="form-control" required id="segmentLine" placeholder="segmentLine" formControlName="segmentLine" disabled>

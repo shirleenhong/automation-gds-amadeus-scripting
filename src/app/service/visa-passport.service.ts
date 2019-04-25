@@ -50,7 +50,7 @@ import { formatDate } from '@angular/common';
 
   AddAdvisory(): void {
      // tslint:disable-next-line:max-line-length
-    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', '*'));
+    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RI', 'R'));
     this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', '*'));
   }
 
@@ -58,11 +58,25 @@ import { formatDate } from '@angular/common';
     this.formGroup.controls.segments.value.forEach(x => {
       if (x.visa === '') {
         // tslint:disable-next-line:max-line-length
-        this.remarkGroup.remarks.push(this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED' + '/S' + x.segmentLine, 'RM', '*'));
+        this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED', 'RI', 'R', x.tatooNumber));
       } else if (x.visa) {
         // tslint:disable-next-line:max-line-length
-        this.remarkGroup.remarks.push(this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED' + '/S' + x.segmentLine, 'RM', '*'));
+        this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED', 'RI', 'R', x.tatooNumber));
       }
     });
   }
+
+  public getRemarksModel(remText, type, cat, segment?: string) {
+    let segmentrelate = [];
+    if (segment) {
+        segmentrelate = segment.split(',');
+    }
+
+    const rem = new RemarkModel();
+    rem.category = cat;
+    rem.remarkText = remText;
+    rem.remarkType = type;
+    rem.relatedSegments = segmentrelate;
+    return rem;
+}
 }

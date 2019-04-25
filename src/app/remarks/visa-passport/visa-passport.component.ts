@@ -21,7 +21,8 @@ export class VisaPassportComponent implements OnInit {
   travelPort: any[];
   hasRemarkLine: string;
   segments = [];
-
+  departureCountry: string;
+  arrivalCountry: string;
 
   constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService) {
   }
@@ -43,12 +44,12 @@ export class VisaPassportComponent implements OnInit {
     });
 
     if (this.pnrService.isPNRLoaded) {
-      if (!this.getAdvisoryLine()) {
+     // if (!this.hasAdvisoryLine()) {
         this.enableFormControls(['originDestination'], false);
-      } else {
-        this.enableFormControls(['originDestination'], true);
-      }
-      this.getVisaTrips();
+     // } else {
+     //   this.enableFormControls(['originDestination'], true);
+     // }
+        this.getVisaTrips();
     }
   }
 
@@ -71,7 +72,7 @@ export class VisaPassportComponent implements OnInit {
     if (originDestination === 'true') {
       this.enableFormControls(['citizenship'], false);
       this.getCitizenship();
-      if (!this.getAdvisoryLine()) {
+      if (!this.hasAdvisoryLine()) {
         this.enableFormControls(['advisory'], false);
       }
       this.enableFormControls(['passportName'], false);
@@ -127,8 +128,8 @@ export class VisaPassportComponent implements OnInit {
     return lastDepDate;
   }
 
-  getVisaTrips() {
-    const originDestination = [{ origin: '', destination: '', departuredate: '', segment: '' }];
+  async getVisaTrips() {
+    const originDestination = [{ origin: '', destination: '', departuredate: '', tatooNumber: '', segmentLine: '' }];
     let firstDepDate = new Date();
     let lastDepDate = new Date();
     let firstLoop = true;
@@ -136,12 +137,22 @@ export class VisaPassportComponent implements OnInit {
 
     if (this.pnrService.isPNRLoaded) {
 
-      const countryList = [{ country: '', passport: '' , visa: '', segmentLine: '' }];
+      const countryList = [{ country: '', passport: '' , visa: '', tatooNumber: '', segmentLine: '' }];
       for (const air of this.pnrService.pnrObj.airSegments) {
-        const departureCountry = this.ddbService.getCityCountry(air.departureAirport).country;
-        const arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country;
-        const airdate = air.departureDate;
 
+        await this.ddbService.getTravelPort(air.departureAirport).then(x => {
+          const c = JSON.stringify(x);
+          let obj: any;
+          obj = JSON.parse(c);
+          this.departureCountry = obj[0].countryName;
+        });
+        await this.ddbService.getTravelPort(air.arrivalAirport).then(x => {
+          const c = JSON.stringify(x);
+          let obj: any;
+          obj = JSON.parse(c);
+          this.arrivalCountry = obj[0].countryName;
+      });
+        const airdate = air.departureDate;
         if (firstLoop) {
           firstDepDate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
           firstLoop = false;
@@ -157,9 +168,9 @@ export class VisaPassportComponent implements OnInit {
         }
 
         // tslint:disable-next-line:max-line-length
-        originDestination.push({ origin: departureCountry, destination: arrivalCountry, departuredate: air.departureDate, segment: air.elementNumber });
+        originDestination.push({ origin: this.departureCountry, destination: this.arrivalCountry, departuredate: air.departureDate, tatooNumber: air.tatooNumber, segmentLine: air.elementNumber });
       }
-
+  
       let convertedDate = new Date();
       let mainOrigin: string;
       let mainDestination: string;
@@ -186,7 +197,7 @@ export class VisaPassportComponent implements OnInit {
         if (originDestination[i].destination !== excludeCity &&
           countryList.findIndex(x => x.country === originDestination[i].destination) === -1) {
           // tslint:disable-next-line:max-line-length
-          countryList.push({ country: originDestination[i].destination, passport: '' , visa: '', segmentLine: originDestination[i].segment });
+          countryList.push({ country: originDestination[i].destination, passport: '' , visa: '', tatooNumber: originDestination[i].tatooNumber, segmentLine: originDestination[i].segmentLine });
         }
       }
       countryList.splice(0, 1);
@@ -198,6 +209,7 @@ export class VisaPassportComponent implements OnInit {
           country: x.country,
           passport: x.passport,
           visa: x.visa,
+          tatooNumber : x.tatooNumber,
           segmentLine: x.segmentLine
         }));
       });
@@ -207,7 +219,7 @@ export class VisaPassportComponent implements OnInit {
   getCitizenship() {
     let citizenship: string;
     // let country: string;
-    citizenship = this.pnrService.getRemarkText('CITIZENSHIP-');
+    citizenship = this.pnrService.getRemarkText('CITIZENSHIP-').substr(12 , 3);
     if (citizenship !== '') {
       // citizenship = citizenship.substr(12, 3);
       // country = this.ddbService.getCitizenship(citizenship).country;
@@ -215,7 +227,7 @@ export class VisaPassportComponent implements OnInit {
     }
   }
 
-  getAdvisoryLine(): boolean {
+  hasAdvisoryLine(): boolean {
     this.hasRemarkLine = this.pnrService.getRemarkLineNumber('INTERNATIONAL TRAVEL ADVISORY SENT');
     if (this.hasRemarkLine !== '') {
       return true;

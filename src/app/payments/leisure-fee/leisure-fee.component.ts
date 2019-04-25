@@ -230,7 +230,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
       this.leisureFeeForm.controls.amount.setValue(amount);
       this.leisureFeeForm.controls.segmentNum.setValue(segNum);
-      if (ccNum !== undefined) {
+      if (ccNum !== undefined && ccNum !=='') {
         const provider = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?<=CC)([A-Z]{2})/);
         const expiryDate = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-EXP'), /([0-9]+[\.]*[0-9]*)/);
 

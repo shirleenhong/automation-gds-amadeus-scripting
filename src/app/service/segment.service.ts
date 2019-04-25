@@ -252,6 +252,7 @@ export class SegmentService {
         mis.startTime = '0000';
         mis.endTime = '0000';
         mis.segmentName = 'RU';
+        mis.function = '12';
         return mis;
     }
 

@@ -521,6 +521,11 @@ export class PnrService {
           }
         }
 
+        if (model.supplierCodeName === 'MLF') {
+          model.bsp = '2';
+        }
+
+
       }
     }
     return matrixModels;

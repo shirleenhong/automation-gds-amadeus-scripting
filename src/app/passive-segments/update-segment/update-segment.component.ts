@@ -264,6 +264,7 @@ export class UpdateSegmentComponent implements OnInit {
   onChangezz(controlValue, controlName) {
     let enable = false;
     let controlenable = '';
+    controlValue = controlValue.toUpperCase();
     switch (controlName) {
       case 'airlineCode':
         controlenable = 'zzairlineCode';

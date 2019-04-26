@@ -61,13 +61,12 @@ export class SegmentService {
                 passive.endTime = endTime;
                 passive.segmentName = segment.segmentType;
                 passive.function = '1';
-                passive.quantity = 1;
+                passive.quantity = Number(segment.noPeople);
                 passive.status = 'GK';
                 passive.classOfService = segment.classService;
                 passive.controlNo = 'C1';
                 passive.flightNo = segment.flightNumber;
                 if (segment.airlineRecloc) { passive.controlNo = segment.airlineRecloc; }
-                passive.dayChangeIndicator = segment.arrivalday;
             } else {
                 passive.vendor = '1A';
                 passive.startTime = '0000';

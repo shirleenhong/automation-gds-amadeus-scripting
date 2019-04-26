@@ -66,7 +66,6 @@ export class UpdateSegmentComponent implements OnInit {
       airlineCode: new FormControl('', [Validators.required]),
       flightNumber: new FormControl('', [Validators.required]),
       classService: new FormControl('', [Validators.required]),
-      arrivalday: new FormControl('', []),
       airlineRecloc: new FormControl('', []),
       othersText: new FormControl('', [Validators.required]),
       zzairlineCode: new FormControl('', []),
@@ -78,7 +77,7 @@ export class UpdateSegmentComponent implements OnInit {
     this.loadRoomType();
     this.loadSegmentType();
     this.loadStateRoom();
-    this.loadArrivalDay();
+    // this.loadArrivalDay();
     this.loadDining();
     this.getNoPassengers();
   }
@@ -161,10 +160,10 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblarrivalDate = 'Arrival Date';
         this.lblarrivalTime = 'Arrival Time';
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo',
-          'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan', 'policyNo', 'noPeople', 'othersText',
+          'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan', 'policyNo', 'othersText',
           'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['departureDate', 'departureCity', 'arrivalDate', 'departureTime', 'destinationCity',
-          'arrivalTime', 'airlineCode', 'flightNumber', 'classService', 'arrivalday', 'airlineRecloc'], false);
+          'arrivalTime', 'airlineCode', 'flightNumber', 'classService', 'airlineRecloc', 'noPeople'], false);
         break;
       case 'TOR':
         this.lblvendorName = 'Vendor Name';
@@ -180,7 +179,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblnoPeople = 'Number of People';
         this.lblnoNights = 'Number of Nights';
         this.enableFormControls(['stateRoom', 'cabinNo', 'dining', 'policyNo', 'airlineCode', 'flightNumber',
-          'classService', 'arrivalday', 'airlineRecloc', 'othersText', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
+          'classService', 'airlineRecloc', 'othersText', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo', 'departureDate',
           'departureTime', 'departureCity', 'destinationCity', 'arrivalDate',
           'arrivalTime', 'tourName', 'noPeople', 'noNights', 'roomType', 'mealPlan'], false);
@@ -199,7 +198,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblnoPeople = 'Number of People';
         this.lblnoNights = 'Number of Nights';
         this.enableFormControls(['roomType', 'mealPlan', 'policyNo', 'airlineCode', 'flightNumber',
-          'classService', 'arrivalday', 'airlineRecloc', 'othersText', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
+          'classService', 'airlineRecloc', 'othersText', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo', 'departureDate',
           'departureTime', 'departureCity', 'destinationCity', 'arrivalDate',
           'arrivalTime', 'tourName', 'noPeople', 'stateRoom', 'cabinNo', 'dining', 'noNights'], false);
@@ -211,7 +210,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblnoPeople = 'Number of Passengers';
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo', 'departureTime', 'destinationCity',
           'arrivalTime', 'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan',
-          'airlineCode', 'flightNumber', 'classService', 'arrivalday', 'airlineRecloc', 'othersText',
+          'airlineCode', 'flightNumber', 'classService', 'airlineRecloc', 'othersText',
           'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople'], false);
         break;

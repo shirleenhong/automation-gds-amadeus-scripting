@@ -183,7 +183,7 @@
     </div>
 
     <div
-      *ngIf="passiveSegments.segmentType == 'TOR' || passiveSegments.segmentType == 'SEA' || passiveSegments.segmentType == 'INS'">
+      *ngIf="passiveSegments.segmentType == 'TOR' || passiveSegments.segmentType == 'SEA' || passiveSegments.segmentType == 'INS' || passiveSegments.segmentType == 'AIR'">
       <div class="form-group  row">
         <div class="col-sm-4"><label id="lblName"> {{lblnoPeople}} </label></div>
         <div class="col-sm-8">
@@ -279,7 +279,7 @@
     </div>
 
     <div *ngIf="passiveSegments.segmentType == 'AIR'">
-      <div class="form-group  row">
+      <!-- <div class="form-group  row">
         <div class="col-sm-4">Arrival Day</div>
         <div class="col-sm-8">
           <select autofocus id="arrivalday" class="form-control" name="arrivalday" formControlName="arrivalday"
@@ -289,7 +289,7 @@
             </option>
           </select>
         </div>
-      </div>
+      </div> -->
 
       <div class="form-group  row">
         <div class="col-sm-4">Airline Record Locator</div>

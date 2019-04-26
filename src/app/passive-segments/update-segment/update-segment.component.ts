@@ -159,6 +159,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lbldestinationCity = 'Arrival City Code';
         this.lblarrivalDate = 'Arrival Date';
         this.lblarrivalTime = 'Arrival Time';
+        this.lblnoPeople = 'Number of Passengers';
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo',
           'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan', 'policyNo', 'othersText',
           'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);

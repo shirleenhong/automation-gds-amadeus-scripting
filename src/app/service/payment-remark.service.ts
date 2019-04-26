@@ -144,7 +144,7 @@ export class PaymentRemarkService {
 
 
   processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-
+    debugger;
     const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
       '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
       accounting.baseAmount.toString().trim() + '/-PT-' +
@@ -166,7 +166,7 @@ export class PaymentRemarkService {
       bknLine = '/-BKN-CWT';
     }
 
-    if (accounting.bsp === '1') {
+    if (accounting.bsp === '1' && accounting.otherTax) {
       facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim();
       // + line1;
     }
@@ -181,8 +181,8 @@ export class PaymentRemarkService {
 
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
-
-    if (accounting.bsp === '2') {
+    debugger;
+    if (accounting.bsp === '2' && accounting.supplierCodeName !== 'MLF') {
       this.extractApayRemark(accounting, remarkList, fopObj);
     }
   }
@@ -195,6 +195,7 @@ export class PaymentRemarkService {
     if (accounting.vendorCode) {
       vcode = accounting.vendorCode;
     }
+
     let acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
       ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
 

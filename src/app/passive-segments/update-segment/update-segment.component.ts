@@ -68,7 +68,10 @@ export class UpdateSegmentComponent implements OnInit {
       classService: new FormControl('', [Validators.required]),
       arrivalday: new FormControl('', []),
       airlineRecloc: new FormControl('', []),
-      othersText: new FormControl('', [Validators.required])
+      othersText: new FormControl('', [Validators.required]),
+      zzairlineCode: new FormControl('', []),
+      zzdepartureCity: new FormControl('', []),
+      zzdestinationCity: new FormControl('', []),
     });
 
     this.loadMealPlan();
@@ -110,8 +113,8 @@ export class UpdateSegmentComponent implements OnInit {
 
   loadArrivalDay() {
     this.arrivaldayList = [{ itemText: '', itemValue: '' },
-    { itemText: '+1', itemValue: '+1' },
-    { itemText: '+2', itemValue: '+2' }];
+    { itemText: '+1', itemValue: '1' },
+    { itemText: '+2', itemValue: '2' }];
   }
 
 
@@ -148,7 +151,7 @@ export class UpdateSegmentComponent implements OnInit {
     this.passiveSegments.noPeople = passengerCount.toString();
   }
 
-  changeControlLabel(type) {   
+  changeControlLabel(type) {
     switch (type) {
       case 'AIR':
         this.lbldepartureDate = 'Departure Date';
@@ -158,7 +161,8 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblarrivalDate = 'Arrival Date';
         this.lblarrivalTime = 'Arrival Time';
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo',
-          'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan', 'policyNo', 'noPeople', 'othersText'], true);
+          'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan', 'policyNo', 'noPeople', 'othersText',
+          'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['departureDate', 'departureCity', 'arrivalDate', 'departureTime', 'destinationCity',
           'arrivalTime', 'airlineCode', 'flightNumber', 'classService', 'arrivalday', 'airlineRecloc'], false);
         break;
@@ -176,7 +180,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblnoPeople = 'Number of People';
         this.lblnoNights = 'Number of Nights';
         this.enableFormControls(['stateRoom', 'cabinNo', 'dining', 'policyNo', 'airlineCode', 'flightNumber',
-          'classService', 'arrivalday', 'airlineRecloc', 'othersText'], true);
+          'classService', 'arrivalday', 'airlineRecloc', 'othersText', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo', 'departureDate',
           'departureTime', 'departureCity', 'destinationCity', 'arrivalDate',
           'arrivalTime', 'tourName', 'noPeople', 'noNights', 'roomType', 'mealPlan'], false);
@@ -195,7 +199,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblnoPeople = 'Number of People';
         this.lblnoNights = 'Number of Nights';
         this.enableFormControls(['roomType', 'mealPlan', 'policyNo', 'airlineCode', 'flightNumber',
-          'classService', 'arrivalday', 'airlineRecloc', 'othersText'], true);
+          'classService', 'arrivalday', 'airlineRecloc', 'othersText', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo', 'departureDate',
           'departureTime', 'departureCity', 'destinationCity', 'arrivalDate',
           'arrivalTime', 'tourName', 'noPeople', 'stateRoom', 'cabinNo', 'dining', 'noNights'], false);
@@ -207,7 +211,8 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblnoPeople = 'Number of Passengers';
         this.enableFormControls(['vendorName', 'vendorCode', 'confirmationNo', 'departureTime', 'destinationCity',
           'arrivalTime', 'tourName', 'stateRoom', 'cabinNo', 'dining', 'noNights', 'roomType', 'mealPlan',
-          'airlineCode', 'flightNumber', 'classService', 'arrivalday', 'airlineRecloc', 'othersText'], true);
+          'airlineCode', 'flightNumber', 'classService', 'arrivalday', 'airlineRecloc', 'othersText',
+          'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'], true);
         this.enableFormControls(['policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople'], false);
         break;
       default:
@@ -256,8 +261,42 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
+  onChangezz(controlValue, controlName) {
+    let enable = false;
+    let controlenable = '';
+    switch (controlName) {
+      case 'airlineCode':
+        controlenable = 'zzairlineCode';
+        if (controlValue === 'ZZ') {
+          enable = true;
+        }
+        break;
+      case 'departureCity':
+        controlenable = 'zzdepartureCity';
+        if (controlValue === 'ZZZ') {
+          enable = true;
+        }
+        break;
+      case 'destinationCity':
+        controlenable = 'zzdestinationCity';
+        if (controlValue === 'ZZZ') {
+          enable = true;
+        }
+        break;
+    }
 
-  onChangeStateRoom(type) {    
+    if (enable) {
+      this.segmentForm.get(controlenable).enable();
+      this.segmentForm.get(controlenable).setValidators(Validators.required);
+    } else {
+      this.segmentForm.get(controlenable).disable();
+      this.segmentForm.get(controlenable).setValidators(null);
+    }
+    this.segmentForm.get(controlenable).updateValueAndValidity();
+  }
+
+
+  onChangeStateRoom(type) {
     if (type === 'OTHER') {
       this.segmentForm.controls.othersText.enable();
       this.segmentForm.controls.othersText.setValidators(Validators.required);

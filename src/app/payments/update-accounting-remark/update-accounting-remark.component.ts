@@ -93,17 +93,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
       this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax'], false);
-      this.enableFormControls(['description'], true);
+      this.enableFormControls(['description', 'commisionPercentage'], true);
       this.accountingRemarks.bsp = '1';
     } else {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
-      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax'], true);
+      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
       this.enableFormControls(['description'], false);
       this.accountingRemarks.bsp = '2';
     }
 
-    this.setInsuranceValue();
+    // this.setInsuranceValue();
     // return true;
   }
 
@@ -288,25 +288,26 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
       });
 
-      if (isMLF && this.accountingRemarks.bsp === '2') {
-        this.IsInsurance = true;
-        this.name = 'Policy Confirmation Number:';
-        this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
-        this.matrixAccountingForm.controls.supplierCodeName.disable();
-        this.matrixAccountingForm.controls.commisionPercentage.enable();
-        this.matrixAccountingForm.controls.description.disable();
-      } else {
-        this.IsInsurance = false;
-        this.name = 'Supplier Confirmation Number:';
-        this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
-        this.matrixAccountingForm.controls.supplierCodeName.enable();
-        this.matrixAccountingForm.controls.description.disable();
-        this.matrixAccountingForm.controls.commisionPercentage.disable();
+      if (this.accountingRemarks.bsp === '2') {
+        if (isMLF) {
+          this.IsInsurance = true;
+          this.name = 'Policy Confirmation Number:';
+          this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
+          this.matrixAccountingForm.controls.supplierCodeName.disable();
+          this.matrixAccountingForm.controls.commisionPercentage.enable();
+          this.matrixAccountingForm.controls.description.disable();
+        } else {
+          this.IsInsurance = false;
+          this.name = 'Supplier Confirmation Number:';
+          this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
+          this.matrixAccountingForm.controls.supplierCodeName.enable();
+          this.matrixAccountingForm.controls.description.enable();
+          this.matrixAccountingForm.controls.commisionPercentage.disable();
+        }
       }
-
-      if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName !== 'MLF') {
-        this.matrixAccountingForm.controls.description.enable();
-      }
+      // if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName !== 'MLF') {
+      //   this.matrixAccountingForm.controls.description.enable();
+      // }
 
     }
   }
@@ -316,6 +317,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.IsInsurance = true;
       this.name = 'Policy Confirmation Number:';
       this.matrixAccountingForm.controls.supplierCodeName.disable();
+      this.matrixAccountingForm.controls.commisionPercentage.enable();
     } else {
       this.IsInsurance = false;
       this.name = 'Supplier Confirmation Number:';

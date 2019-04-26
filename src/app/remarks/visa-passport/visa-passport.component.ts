@@ -72,6 +72,7 @@ export class VisaPassportComponent implements OnInit {
     if (originDestination === 'true') {
       this.enableFormControls(['citizenship'], false);
       this.getCitizenship();
+      this.getPassportName();
       if (!this.hasAdvisoryLine()) {
         this.enableFormControls(['advisory'], false);
       }
@@ -110,6 +111,15 @@ export class VisaPassportComponent implements OnInit {
         this.visaPassportFormGroup.get(c).enable();
       }
     });
+  }
+
+  private hasAirSegments(): boolean {
+    if (this.pnrService.isPNRLoaded) {
+      const pnr = this.pnrService.pnrObj;
+      const airSegment = pnr.airSegments.length;
+
+      if (airSegment > 0) { return true; } else { return false; }
+    }
   }
 
   private getFirstDate(airdate: any, firstDepDate: Date) {
@@ -224,6 +234,15 @@ export class VisaPassportComponent implements OnInit {
       // citizenship = citizenship.substr(12, 3);
       // country = this.ddbService.getCitizenship(citizenship).country;
       this.f.citizenship.setValue(citizenship);
+    }
+  }
+
+  getPassportName() {
+    let remarkText: string;
+    remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 30);
+    remarkText = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
+    if (remarkText !== '') {
+      this.f.passportName.setValue(remarkText);
     }
   }
 

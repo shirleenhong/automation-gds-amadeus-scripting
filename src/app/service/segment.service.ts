@@ -33,6 +33,9 @@ export class SegmentService {
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
         const remarks = new Array<RemarkModel>();
+        let startTime = '';
+        let endTime = '';
+        let segdest = '';
 
         segmentRemarks.forEach(segment => {
             if (!segment.isNew) {
@@ -40,38 +43,47 @@ export class SegmentService {
             }
 
             const passive = new PassiveSegmentModel();
-            passive.vendor = '1A';
             passive.passiveSegmentType = segment.segmentType;
             passive.startDate = datePipe.transform(segment.departureDate, 'ddMMyy');
             passive.endDate = datePipe.transform(segment.arrivalDate, 'ddMMyy');
-            passive.startTime = '';
-            passive.endTime = '';
             passive.startPoint = segment.departureCity;
-            let segdest = '';
 
-            if (segment.destinationCity === undefined) {
-                segdest = segment.departureCity;
-            } else {
-                segdest = segment.destinationCity;
-            }
-
+            if (segment.destinationCity === undefined) { segdest = segment.departureCity; }
+            else { segdest = segment.destinationCity; }
             passive.endPoint = segdest;
-            passive.quantity = Number(segment.noPeople);
 
-            const datePipe2 = new DatePipe('en-US');
-            const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
-            const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMMM');
-            let startTime = '';
-            if (segment.departureTime) {
-                startTime = (segment.departureTime as string).replace(':', '');
+            if (segment.departureTime) { startTime = (segment.departureTime as string).replace(':', ''); }
+            if (segment.arrivalTime) { endTime = (segment.arrivalTime as string).replace(':', ''); }
+
+            if (segment.segmentType === 'AIR') {
+                passive.vendor = segment.airlineCode;
+                passive.startTime = startTime;
+                passive.endTime = endTime;
+                passive.segmentName = segment.segmentType;
+                passive.function = '1';
+                passive.quantity = 1;
+                passive.status = 'GK';
+                passive.classOfService = segment.classService;
+                passive.controlNo = 'C1';
+                passive.flightNo = segment.flightNumber;
+                if (segment.airlineRecloc) { passive.controlNo = segment.airlineRecloc; }
+                passive.dayChangeIndicator = segment.arrivalday;
+            } else {
+                passive.vendor = '1A';
+                passive.startTime = '0000';
+                passive.endTime = '0000';
+                passive.segmentName = 'RU';
+                passive.function = '12';
+                passive.quantity = Number(segment.noPeople);
+                passive.status = 'HK';
+                passive.flightNo = '1';
+                const datePipe2 = new DatePipe('en-US');
+                const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
+                const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMMM');
+                const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
+                passive.freeText = freetext;
             }
-            let endTime = '';
-            if (segment.arrivalTime) {
-                endTime = (segment.arrivalTime as string).replace(':', '');
-            }
-            passive.status = 'HK';
-            const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
-            passive.freeText = freetext;
+
             tourSegment.push(passive);
         });
 
@@ -92,28 +104,53 @@ export class SegmentService {
             if (!segmentrem.isNew) {
                 return;
             }
-            if (segmentrem.segmentType === 'SEA') {
-                segments.forEach(pnrSegment => {
+            segments.forEach(pnrSegment => {
+                if (segmentrem.segmentType === 'SEA') {
                     if (pnrSegment.segmentType === 'MIS') {
-                        const type = pnrSegment.freetext.substr(6, 3);
-                        if (type === 'SEA') {
-                            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
-                                let sroom = segmentrem.stateRoom;
-                                if (sroom === 'OTHER') {
-                                    sroom = segmentrem.othersText;
-                                }
-
-                                let remText = sroom + ' ' + segmentrem.cabinNo;
-                                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
-                            }
-                        }
+                        this.rirCruise(pnrSegment, datePipe, segmentrem, rmGroup);
                     }
-                });
-            }
+                }
+
+                if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
+                    this.rirAir(pnrSegment, datePipe, segmentrem, rmGroup);
+                }
+            });
         });
 
         return rmGroup;
+    }
+
+    private rirAir(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+        if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+            if (segmentrem.zzairlineCode) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            }
+            if (segmentrem.zzdepartureCity) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
+            if (segmentrem.zzdestinationCity) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        }
+    }
+
+    private rirCruise(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        if (type === 'SEA') {
+            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+                let sroom = segmentrem.stateRoom;
+                if (sroom === 'OTHER') {
+                    sroom = segmentrem.othersText;
+                }
+                let remText = sroom + ' ' + segmentrem.cabinNo;
+                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        }
     }
 
     public getRemarksModel(remText, type, cat, segment?: string) {
@@ -212,6 +249,10 @@ export class SegmentService {
         mis.endPoint = 'YYZ';
         mis.freeText = freetext;
         mis.quantity = 1;
+        mis.startTime = '0000';
+        mis.endTime = '0000';
+        mis.segmentName = 'RU';
+        mis.function = '12';
         return mis;
     }
 

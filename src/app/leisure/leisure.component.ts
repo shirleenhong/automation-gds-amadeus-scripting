@@ -22,7 +22,7 @@ import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
 import { invalid } from '@angular/compiler/src/render3/view/util';
 import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
-import { VisaPassportService} from '../service/visa-passport.service';
+import { VisaPassportService } from '../service/visa-passport.service';
 @Component({
   selector: 'app-leisure',
   templateUrl: './leisure.component.html',
@@ -235,7 +235,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   setControl() {
-    if (this.isPnrLoaded) {    
+    if (this.isPnrLoaded) {
       if (this.pnrService.hasRecordLocator() !== undefined) {
         this.cancelEnabled = false;
       }

@@ -18,12 +18,8 @@ import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
-<<<<<<< Updated upstream
-import { invalid } from '@angular/compiler/src/render3/view/util';
-import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
-=======
->>>>>>> Stashed changes
 import { VisaPassportService } from '../service/visa-passport.service';
+
 @Component({
   selector: 'app-leisure',
   templateUrl: './leisure.component.html',

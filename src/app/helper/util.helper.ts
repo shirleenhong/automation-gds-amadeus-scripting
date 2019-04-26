@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
 
 
 @Injectable({
@@ -15,6 +15,16 @@ export class UtilHelper {
         }
     }
 
+    getRegexValue(freeText: string, expression: RegExp) {
+        if (expression.test(freeText)) {
+            for (let result = expression.exec(freeText); result !== null;
+                result = expression.exec(freeText)) {
+                return result[0];
+            }
+        }
+        return '';
+    }
+
     validateAllFields(formGroup: FormGroup) {
         Object.keys(formGroup.controls).forEach(field => {
             const control = formGroup.get(field);
@@ -22,8 +32,14 @@ export class UtilHelper {
                 control.markAsTouched({ onlySelf: true });
             } else if (control instanceof FormGroup) {
                 this.validateAllFields(control);
+            } else if (control instanceof FormArray) {
+                for (const c of control.controls) {
+                    c.markAsTouched({ onlySelf: true });
+                }
             }
         });
     }
 
+
 }
+

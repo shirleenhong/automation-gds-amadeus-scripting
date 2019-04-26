@@ -8,7 +8,9 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
+import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -33,13 +35,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   segments = [];
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
+  name: string;
+  IsInsurance = false;
   // PaymentModeList: Array<SelectItem>;
 
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
 
   constructor(public activeModal: BsModalService, private pnrService: PnrService,
     public modalRef: BsModalRef, private ddbService: DDBService,
-    private paymentHelper: PaymentRemarkHelper) {
+    private paymentHelper: PaymentRemarkHelper, private utilHelper: UtilHelper) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
     this.accountingRemarks = new MatrixAccountingModel();
@@ -52,10 +56,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
+      confirmationLabel: new FormControl(''),
       segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
       validateSegmentNumbers(this.segments)]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
@@ -73,8 +79,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
       tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
       description: new FormControl('', [Validators.required]),
-      bsp: new FormControl('', [Validators.required])
+      bsp: new FormControl('', [Validators.required]),
+      commisionPercentage: new FormControl('', [Validators.required])
     });
+
+    this.name = 'Supplier Confirmation Number:';
   }
 
 
@@ -84,15 +93,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
       this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax'], false);
-      this.enableFormControls(['description'], true);
+      this.enableFormControls(['description', 'commisionPercentage'], true);
       this.accountingRemarks.bsp = '1';
     } else {
       this.loadAccountingRemarkList(testvalue);
       this.loadFormOfPaymentList(testvalue);
-      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax'], true);
+      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
       this.enableFormControls(['description'], false);
       this.accountingRemarks.bsp = '2';
     }
+
+    // this.setInsuranceValue();
     // return true;
   }
 
@@ -168,6 +179,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     } else {
       this.accountingRemarks.supplierCodeName = '';
     }
+    this.setInsuranceValue();
   }
 
   assignDescription(typeCode: any) {
@@ -265,4 +277,75 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
   }
+
+  setInsuranceValue() {
+    if (this.matrixAccountingForm.controls.segmentNo.value !== undefined) {
+      const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
+      let isMLF = false;
+      segmentList.forEach(segment => {
+        if (this.isTypeINSExist(segment)) {
+          isMLF = true;
+        }
+      });
+
+      if (this.accountingRemarks.bsp === '2') {
+        if (isMLF) {
+          this.IsInsurance = true;
+          this.name = 'Policy Confirmation Number:';
+          this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
+          this.matrixAccountingForm.controls.supplierCodeName.disable();
+          this.matrixAccountingForm.controls.commisionPercentage.enable();
+          this.matrixAccountingForm.controls.description.disable();
+        } else {
+          this.IsInsurance = false;
+          this.name = 'Supplier Confirmation Number:';
+          this.assignSupplierCode(this.matrixAccountingForm.controls.accountingTypeRemark.value);
+          this.matrixAccountingForm.controls.supplierCodeName.enable();
+          this.matrixAccountingForm.controls.description.enable();
+          this.matrixAccountingForm.controls.commisionPercentage.disable();
+        }
+      }
+      // if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName !== 'MLF') {
+      //   this.matrixAccountingForm.controls.description.enable();
+      // }
+
+    }
+  }
+
+  loadData() {
+    if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName === 'MLF') {
+      this.IsInsurance = true;
+      this.name = 'Policy Confirmation Number:';
+      this.matrixAccountingForm.controls.supplierCodeName.disable();
+      this.matrixAccountingForm.controls.commisionPercentage.enable();
+    } else {
+      this.IsInsurance = false;
+      this.name = 'Supplier Confirmation Number:';
+    }
+  }
+
+  isTypeINSExist(segmentNo: any) {
+    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    let res = false;
+    segmentDetails.forEach(element => {
+      if (segmentDetails.length > 0) {
+        const details = {
+          id: element.lineNo,
+          name: element.longFreeText,
+          status: element.status,
+          segmentType: element.segmentType,
+          airlineCode: element.airlineCode,
+          freeText: element.freetext
+        };
+        if (details.id === segmentNo) {
+          const regexp: RegExp = /(?<=TYP-)(\w{3})/;
+          if (this.utilHelper.getRegexValue(details.freeText, regexp) === 'INS') {
+            res = true;
+          }
+        }
+      }
+    });
+    return res;
+  }
+
 }

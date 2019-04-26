@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { formatDate } from '@angular/common';
-import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormArray } from '@angular/forms';
 import { RemarkHelper } from '../helper/remark-helper';
 import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
@@ -16,7 +16,7 @@ import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
 export class PackageRemarkService {
     decPipe = new DecimalPipe('en-US');
-    constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) { }
+    constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService : PnrService) { }
 
     public GetITCPackageRemarks(group: any) {
 
@@ -123,8 +123,6 @@ export class PackageRemarkService {
         rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'R'));
 
         if (Number(group.controls.adultNum.value) > 0) {
-
-
             rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT PACKAGE',
                 group.controls.baseCost.value, group.controls.adultNum.value));
             rmGroup.remarks.push(this.remarkHelper.processRIRRemark('ADULT TAXES',
@@ -177,5 +175,47 @@ export class PackageRemarkService {
 
         return rmGroup;
     }
+
+
+    public GetCodeShare(frmGroup: FormGroup) {
+
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Code Share';
+        rmGroup.remarks = new Array<RemarkModel>();
+        const arr = frmGroup.get('segments') as FormArray
+        const segmentList = this.pnrService.getSegmentTatooNumber();
+        const regex = /CHECK-IN AT (?<airline>.*) TICKET COUNTER/g;
+        const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+        if (rems.length>0){
+            rmGroup.deleteRemarkByIds = [];
+              rems.forEach(r => {
+                rmGroup.deleteRemarkByIds.push(r.lineNo);
+              });
+        }
+      
+        for (const c of arr.controls) {
+            const airline = c.get('airline').value;
+            const segments = c.get('segment').value.toString();
+            if (arr.controls.length === 1 && airline === '' && segments === '') {
+                return rmGroup;
+            }
+            const rm = (this.remarkHelper.createRemark('CHECK-IN AT ' + airline + ' TICKET COUNTER', 'RI', 'R'));
+            rm.relatedSegments = [];
+            const s = segments.split(',');
+            segmentList.forEach(x => {
+                if (s.indexOf(x.lineNo) >=0){
+                    rm.relatedSegments.push(x.tatooNo);
+                }
+                
+            });
+            
+
+            //rm.relatedSegments = segments.split(',');
+            rmGroup.remarks.push(rm);
+        }
+
+        return rmGroup;
+    }
+
 
 }

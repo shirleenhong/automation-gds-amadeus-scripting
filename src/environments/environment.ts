@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  clientId:'int.powerbaseaws.amadeus',
-  clientSecret:'GYRgkW1JaJvKOXbQ5eQaaqcPT7O6aG2W',
+  clientId:'int.powerbaseaws.traveler-selfservice',
+  clientSecret:'Nx5PG2Y4TheufMfDLUQ2SPrmf2nx9Qfi',
   tokenUrl:'',
   apiUrl:''
   

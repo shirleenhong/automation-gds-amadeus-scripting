@@ -2,13 +2,15 @@
 
 <div *ngIf="workflow === 'load' ">
   <accordion [closeOthers]="false">
-    <accordion-group [panelClass]="'customClass'">
+    <!-- <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class='fas fa-plane'></i> Passive Segment <i [ngClass]="validModel.segmentValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
-      <app-passive-segments></app-passive-segments>
-    </accordion-group>
+      <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
+      </app-passive-segments>
+    </accordion-group> -->
+
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class='fas fa-hand-holding-usd'></i> Payment <i [ngClass]="validModel.paymentValidCss"></i>
@@ -36,6 +38,31 @@
   <div class="form-group  row">
     <div class="col">
       <button class="leisureBtnSubmit" (click)="SubmitToPNR()">SUBMIT TO PNR</button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+
+
+</div>
+
+<div *ngIf="workflow === 'segment' ">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class='fas fa-plane'></i> Passive Segment
+        <span class="cwt-logo"></span>
+      </div>
+      <!-- <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
+      </app-passive-segments> -->
+      <app-passive-segments></app-passive-segments>
+
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="addSegmentToPNR()" [disabled]="segmentEnabled">Add Segments To
+        PNR</button>
       <button class="backMain" (click)="back()">Back To Main Menu</button>
     </div>
   </div>
@@ -77,6 +104,9 @@
 
     <div>Leisure <span class="cwt-logo"></span></div>
     <div>
+      <button class="leisureButton btnMenu" (click)="AddSegment()">Add Segment</button>
+    </div>
+    <div>
       <button class="leisureButton btnMenu" (click)="loadPnr()">Load PNR</button>
     </div>
     <div>
@@ -86,4 +116,5 @@
   <div class="loader" *ngIf="errorPnrMsg!=''">
     {{errorPnrMsg}}
   </div>
+
 </div>

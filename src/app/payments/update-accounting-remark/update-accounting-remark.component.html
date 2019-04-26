@@ -43,28 +43,28 @@
       <div class="col-sm-4">Itinerary Segment: </div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="segmentNo" [(ngModel)]="accountingRemarks.segmentNo"
-          formControlName="segmentNo" name="segmentNo" />
+          formControlName="segmentNo" name="segmentNo" (change)="setInsuranceValue()" />
       </div>
     </div>
 
-    <!-- <div class="form-group  row">
-      <div class="col-sm-4">Passenger No: </div>
-      <div class="col-sm-8">
-        <select autofocus id="passengerNo" class="form-control" formControlName="passengerNo" name="passengerNo"
-          [(ngModel)]="accountingRemarks.passengerNo" formControlName="passengerNo" required>
-          <option *ngFor="let item of  passengerList" [value]="item.itemValue">
-            {{item.itemText}}
-          </option>
-        </select>
-      </div>
-    </div> -->
+    <!-- <div class=" form-group row">
+        <div class="col-sm-4">Passenger No: </div>
+        <div class="col-sm-8">
+          <select autofocus id="passengerNo" class="form-control" formControlName="passengerNo" name="passengerNo"
+            [(ngModel)]="accountingRemarks.passengerNo" formControlName="passengerNo" required>
+            <option *ngFor="let item of  passengerList" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </div>
+      </div> -->
 
     <div class="form-group row">
       <div class="col-sm-4">Supplier Code: </div>
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="select a supplier Code" formControlName="supplierCodeName"
           id="supplierCodeName" list="dynamicSupplierCode" [(ngModel)]="accountingRemarks.supplierCodeName" AllCapsMask
-          formControlName="supplierCodeName" (change)="SetTktNumber($event.target.value)" />
+          formControlName="supplierCodeName" (change)="SetTktNumber($event.target.value)">
         <datalist id="dynamicSupplierCode">
           <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">{{item.supplierCode}} -
             {{item.supplierName}}</option>
@@ -73,7 +73,8 @@
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4">Supplier Confirmation No: </div>
+      <div class="col-sm-4"><label id="confirmationLabel">{{name}}
+        </label> </div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="supplierConfirmatioNo" formControlName="supplierConfirmatioNo"
           [(ngModel)]="accountingRemarks.supplierConfirmatioNo" formControlName="supplierConfirmatioNo"
@@ -161,6 +162,21 @@
 
 
     </div>
+    <div class="form-group  row" *ngIf="IsInsurance">
+      <div class="col-sm-4"></div>
+      <div class="col">
+        <div class="">Commission % :</div>
+        <input type="text" class="form-control" id="commisionPercentage" formControlName="commisionPercentage"
+          [(ngModel)]="accountingRemarks.commisionPercentage" name="commisionPercentage" required placeholder="00.00"
+          AmountMask />
+      </div>
+
+
+      <div class="col">
+      </div>
+
+
+    </div>
 
 
 
@@ -194,7 +210,7 @@
       </div>
     </div>
 
-    <div *ngIf="accountingRemarks.bsp == 2">
+    <div *ngIf="accountingRemarks.bsp == 2 && accountingRemarks.supplierCodeName !== 'MLF'">
       <div class="form-group  row">
         <div class="col-sm-4">Description: </div>
         <div class="col-sm-8">

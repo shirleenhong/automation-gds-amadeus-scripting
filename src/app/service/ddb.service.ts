@@ -2,8 +2,8 @@ import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { interval, Observable } from 'rxjs';
-
-
+import { jsonpCallbackContext } from '@angular/common/http/src/module';
+import { stringify } from '@angular/core/src/util';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,6 @@ export class DDBService implements OnInit {
   }
 
   constructor(private httpClient: HttpClient) {
-
   }
 
 
@@ -34,7 +33,6 @@ export class DDBService implements OnInit {
 
   }
 
-
   async getToken() {
     if (this.isTokenExpired === true || this.token === '') {
       const bodyInfo = { client_id: environment.clientId, client_secret: environment.clientSecret, grant_type: 'client_credentials' };
@@ -51,9 +49,12 @@ export class DDBService implements OnInit {
 
   }
 
+  async getTravelPort(travelportCode: string) {
+   return await this.getRequest('config/travelports/Airport?travelPortCode=' + travelportCode).toPromise();
+  }
 
   getRequest(apiUrl: string): Observable<any> {
-    this.getToken();
+    //this.getToken();
     const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient.get<any>('/api/' + apiUrl, { headers: hds });
   }
@@ -134,7 +135,7 @@ export class DDBService implements OnInit {
         itemValue: '1'
       },
       { itemText: 'Caribbean and Bermuda', itemValue: '2' },
-      { itemText: 'South America4', itemValue: '3' },
+      { itemText: 'South America', itemValue: '3' },
       {
         itemText: 'Europe-incl. Morocco/Tunisia/Algeria/Greenland',
         itemValue: '4'
@@ -339,5 +340,36 @@ export class DDBService implements OnInit {
     { itemText: 'Zimbabwe Dollarr', itemValue: 'ZWD' },
     { itemText: 'Zimbabwe Dollar', itemValue: 'ZWR' },
     ];
+  }
+
+  getCityCountry(search: string) {
+    let cityList = [];
+    cityList = [
+    { city: 'LHR' , countryCode: 'NL', country: 'Netherlands' },
+    { city: 'AMS' , countryCode: 'NL', country: 'Netherlands' },
+    { city: 'PAR' , countryCode: 'FR', country: 'France' },
+    { city: 'LON' , countryCode: 'UK', country: 'United Kingdom' },
+    { city: 'YUL' , countryCode: 'CA', country: 'Canada' },
+    { city: 'YYZ' , countryCode: 'CA', country: 'Canada' },
+    { city: 'YVR' , countryCode: 'CA', country: 'Canada' },
+    { city: 'CDG' , countryCode: 'FR', country: 'France' },
+    { city: 'MAD' , countryCode: 'ES', country: 'Spain' },
+    { city: 'ORD' , countryCode: 'US', country: 'United States' },
+    { city: 'FRA' , countryCode: 'DE', country: 'Germany' },
+    ];
+    return cityList.find(x => x.city === search);
+  }
+
+  getCitizenship(search: string) {
+    let countryList = [];
+    countryList = [
+    { countryCode: 'NL', country: 'Netherlands' },
+    { countryCode: 'FR', country: 'France' },
+    { countryCode: 'GB', country: 'United Kingdom' },
+    { countryCode: 'CA', country: 'Canada' },
+    { countryCode: 'ES', country: 'Spain' },
+    { countryCode: 'US', country: 'United States' }
+    ];
+    return countryList.find(x => x.countryCode === search);
   }
 }

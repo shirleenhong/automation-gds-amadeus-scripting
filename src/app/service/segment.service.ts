@@ -9,6 +9,7 @@ import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
+import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 
 @Injectable({
     providedIn: 'root',
@@ -28,37 +29,60 @@ export class SegmentService {
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
 
-    GetSegmentRemark(dataModel: TourSegmentViewModel) {
+    GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
+        const remarks = new Array<RemarkModel>();
+        let startTime = '';
+        let endTime = '';
+        let segdest = '';
 
-        // {
-        //     segmentList: PassiveSegmentModel
-        // };
+        segmentRemarks.forEach(segment => {
+            if (!segment.isNew) {
+                return;
+            }
 
-        dataModel.tourSegmentList.forEach(segment => {
             const passive = new PassiveSegmentModel();
-            passive.vendor = '1A';
-            passive.passiveSegmentType = 'Tour';
-            passive.startDate = datePipe.transform(segment.startDate, 'ddMMyy');
-            passive.endDate = datePipe.transform(segment.endDate, 'ddMMyy');
-            passive.startTime = '';
-            passive.endTime = '';
-            passive.startPoint = segment.startPoint;
-            passive.endPoint = segment.endPoint;
-            passive.quantity = 1;
+            passive.passiveSegmentType = segment.segmentType;
+            passive.startDate = datePipe.transform(segment.departureDate, 'ddMMyy');
+            passive.endDate = datePipe.transform(segment.arrivalDate, 'ddMMyy');
+            passive.startPoint = segment.departureCity;
 
-            const datePipe2 = new DatePipe('en-US');
-            const startdatevalue = datePipe2.transform(segment.startDate, 'ddMMM');
-            const enddatevalue = datePipe2.transform(segment.endDate, 'ddMM');
-            const startTime = (segment.startTime as string).replace(':', '');
-            const endTime = (segment.endTime as string).replace(':', '');
-            passive.status = 'HK';
+            if (segment.destinationCity === undefined) { segdest = segment.departureCity; }
+            else { segdest = segment.destinationCity; }
+            passive.endPoint = segdest;
 
-            const freetext = 'TYP-TOR/SUC-ZZ/SC' + segment.startPoint + '/SD-' + startdatevalue +
-                '/ST-' + startTime + '/EC-' + segment.endPoint + '/ED-' +
-                enddatevalue + '/ET-' + endTime + '/PS-1';
-            passive.freeText = freetext;
+            if (segment.departureTime) { startTime = (segment.departureTime as string).replace(':', ''); }
+            if (segment.arrivalTime) { endTime = (segment.arrivalTime as string).replace(':', ''); }
+
+            if (segment.segmentType === 'AIR') {
+                passive.vendor = segment.airlineCode;
+                passive.startTime = startTime;
+                passive.endTime = endTime;
+                passive.segmentName = segment.segmentType;
+                passive.function = '1';
+                passive.quantity = Number(segment.noPeople);
+                passive.status = 'GK';
+                passive.classOfService = segment.classService;
+                passive.controlNo = 'C1';
+                passive.flightNo = segment.flightNumber;
+                if (segment.airlineRecloc) { passive.controlNo = segment.airlineRecloc; }
+            } else {
+                passive.vendor = '1A';
+                passive.startTime = '0000';
+                passive.endTime = '0000';
+                passive.segmentName = 'RU';
+                passive.function = '12';
+                passive.quantity = Number(segment.noPeople);
+                passive.status = 'HK';
+                passive.flightNo = '1';
+                const datePipe2 = new DatePipe('en-US');
+                const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
+                const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMMM');
+                const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
+                passive.freeText = freetext;
+            }
+
             tourSegment.push(passive);
         });
 
@@ -66,7 +90,111 @@ export class SegmentService {
         passGroup.group = 'Segment Remark';
         passGroup.passiveSegments = tourSegment;
         return passGroup;
+    }
 
+    addSeaSegmentRir(segmentRemarks: PassiveSegmentsModel[]) {
+        const datePipe = new DatePipe('en-US');
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'RIR remark';
+        rmGroup.remarks = new Array<RemarkModel>();
+
+        const segments = this.pnrService.getSegmentTatooNumber();
+        segmentRemarks.forEach(segmentrem => {
+            if (!segmentrem.isNew) {
+                return;
+            }
+            segments.forEach(pnrSegment => {
+                if (segmentrem.segmentType === 'SEA') {
+                    if (pnrSegment.segmentType === 'MIS') {
+                        this.rirCruise(pnrSegment, datePipe, segmentrem, rmGroup);
+                    }
+                }
+
+                if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
+                    this.rirAir(pnrSegment, datePipe, segmentrem, rmGroup);
+                }
+            });
+        });
+
+        return rmGroup;
+    }
+
+    private rirAir(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+        if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+            if (segmentrem.zzairlineCode) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            }
+            if (segmentrem.zzdepartureCity) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
+            if (segmentrem.zzdestinationCity) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        }
+    }
+
+    private rirCruise(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        if (type === 'SEA') {
+            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+                let sroom = segmentrem.stateRoom;
+                if (sroom === 'OTHER') {
+                    sroom = segmentrem.othersText;
+                }
+                let remText = sroom + ' ' + segmentrem.cabinNo;
+                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        }
+    }
+
+    public getRemarksModel(remText, type, cat, segment?: string) {
+        let segmentrelate = [];
+        if (segment) {
+            segmentrelate = segment.split(',');
+        }
+
+        const rem = new RemarkModel();
+        rem.category = cat;
+        rem.remarkText = remText;
+        rem.remarkType = type;
+        rem.relatedSegments = segmentrelate;
+        return rem;
+    }
+
+    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
+        startTime: string, enddatevalue: string, endTime: string) {
+
+        let freetext = '';
+        switch (segment.segmentType) {
+            case 'TOR':
+                let tourName = segment.vendorName + ' ' + segment.tourName;
+                if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+                if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
+                    'NTS/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
+                    '/ST-' + startTime + '/EC-' + segment.destinationCity +
+                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                break;
+            case 'SEA':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + ' ' + segment.dining +
+                    ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
+                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                break;
+            case 'INS':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-MANULIFE INSURANCE/SUC-MLF/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-0900' + '/EC-' + segment.departureCity +
+                    '/ED-' + enddatevalue + '/ET-0900/CF-CWT' + segment.policyNo;
+                break;
+            default:
+                break;
+        }
+        return freetext;
     }
 
     getRetentionLine() {
@@ -105,9 +233,21 @@ export class SegmentService {
         return passGroup;
     }
 
+    removeTeamMateMisRetention() {
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'TeamMate Retention';
+        const lineNo = this.pnrService.getMISRetentionLineNumber('CWT RETENTION SEGMENT');
+        if (lineNo !== '') {
+            remGroup.deleteSegmentByIds = [];
+            remGroup.deleteSegmentByIds.push(lineNo);
+        }
+
+        return remGroup;
+    }
+
+
     private setMisRemark(finaldate: any, odate: any, freetext: string) {
         const mis = new PassiveSegmentModel();
-
         const day = this.padDate(finaldate.getDate().toString());
         const mo = this.padDate((finaldate.getMonth() + 1).toString());
         const yr = odate.getFullYear().toString().substr(-2);
@@ -119,10 +259,15 @@ export class SegmentService {
         mis.startPoint = 'YYZ';
         mis.endPoint = 'YYZ';
         mis.freeText = freetext;
+        mis.quantity = 1;
+        mis.startTime = '0000';
+        mis.endTime = '0000';
+        mis.segmentName = 'RU';
+        mis.function = '12';
         return mis;
     }
 
-    setMandatoryRemarks() {
+    getMandatoryRemarks() {
         const mandatoryRemarkGroup = new RemarkGroup();
         mandatoryRemarkGroup.group = 'Mandatory Remarks';
         let itinLanguage = this.pnrService.getItineraryLanguage();

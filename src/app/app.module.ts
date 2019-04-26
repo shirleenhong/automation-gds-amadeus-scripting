@@ -19,7 +19,7 @@ import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segme
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
 import { AccordionComponent } from './shared/accordion/accordion.component';
 
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 // import { TourPackageRemarksService } from './service/tour-package-remarks.service';
@@ -32,8 +32,15 @@ import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.direc
 import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
 import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
+import { SegmentsComponent } from './passive-segments/segments/segments.component';
+import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { MessageComponent } from './shared/message/message.component';
+
+import { CodeshareComponent } from './remarks/codeshare/codeshare.component';
+import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
+import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
+import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 
 
 
@@ -57,7 +64,8 @@ import { MessageComponent } from './shared/message/message.component';
     LeisureFeeComponent,
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, MessageComponent
+    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
+    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective
 
   ],
   imports: [
@@ -70,13 +78,17 @@ import { MessageComponent } from './shared/message/message.component';
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent, MessageComponent]
+  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
+    AllCapsMaskDirective, AlphaMaskDirective],
+  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
+    UpdateSegmentComponent, MessageComponent]
+
 })
 export class AppModule { }

@@ -15,6 +15,7 @@ export class RemarkService {
     remarksElement: Array<any>;
     crypticCommands = Array<string>();
     deleteRemarksByIds = Array<string>();
+    deleteSegmentByIds = Array<string>();
     passiveSegmentElement: Array<any>;
     passiveSegmentGroup: Array<PassiveSegmentModel>;
     responseMessage: string;
@@ -37,11 +38,18 @@ export class RemarkService {
 
         remarkGroups.forEach(group => {
             if (group !== undefined && group.group !== '') {
+                if (group.deleteSegmentByIds != null && group.deleteSegmentByIds.length > 0) {
+                    group.deleteSegmentByIds.forEach(c => {
+                        this.deleteSegmentByIds.push(c);
+                    });
+                }
+
                 if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
                     group.deleteRemarkByIds.forEach(c => {
                         this.deleteRemarksByIds.push(c);
                     });
                 }
+
 
                 if (group.cryptics != null && group.cryptics.length > 0) {
                     group.cryptics.forEach(c => {
@@ -268,14 +276,42 @@ export class RemarkService {
     }
 
 
+    deleteSegments() {
+        let deleteIds = '';
+        this.deleteSegmentByIds.forEach(ids => { deleteIds += ids + ','; });
+        if (deleteIds !== '') {
+            deleteIds = deleteIds.slice(0, -1);
+            smartScriptSession.send('XE' + deleteIds);
+        }
+    }
+
     deleteRemarks() {
         let deleteIds = '';
         this.deleteRemarksByIds.forEach(ids => { deleteIds += ids + ','; });
         if (deleteIds !== '') {
-
             deleteIds = deleteIds.slice(0, -1);
             smartScriptSession.send('XE' + deleteIds);
         }
+
+    }
+
+    sortDeleteIds(arr: Array<string>) {
+        arr.sort((a, b) => Number(a) - Number(b));
+        const newArr = [];
+        let temp = 0;
+        // tslint:disable-next-line: forin
+        for (const i in arr) {
+            if (temp !== 0) {
+                if (temp + 1 === Number(arr[i])) {
+
+                } else {
+                    newArr.push(temp + '-' + arr[i]);
+                }
+            } else {
+                temp = Number(arr[i]);
+            }
+        }
+        return arr;
 
     }
 
@@ -332,6 +368,7 @@ export class RemarkService {
     }
 
     async SubmitRemarks() {
+        this.deleteSegments();
         this.deleteRemarks();
         await this.sendCryptics();
         await this.sendRemarks();

@@ -409,7 +409,7 @@ export class PnrService {
           break;
       }
 
-      for (const rm of arr) {       
+      for (const rm of arr) {
         const rem = {
           remarkText: rm.fullNode.miscellaneousRemarks.remarks.freetext,
           category: rm.fullNode.miscellaneousRemarks.remarks.type,
@@ -429,10 +429,10 @@ export class PnrService {
         if (match !== null) {
           if (match.groups !== undefined && match.groups.value !== undefined) {
             rem.value = match.groups.value;
-          }    
-          remarks.push(rem);      
+          }
+          remarks.push(rem);
         }
-       
+
       }
     }
     return remarks;
@@ -713,7 +713,7 @@ export class PnrService {
 
   getModelPassiveSegments(): PassiveSegmentsModel[] {
     const pSegment: PassiveSegmentsModel[] = [];
-    let segment = this.getSegmentTatooNumber();
+    const segment = this.getSegmentTatooNumber();
     let index = 0;
     segment.forEach(element => {
       index++;
@@ -825,6 +825,15 @@ export class PnrService {
 
     return false;
 
+  }
+
+  getMISRetentionLineNumber(freetext) {
+    for (const misc of this.pnrObj.miscSegments) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf(freetext) > -1) {
+        return misc.elementNumber;
+      }
+    }
+    return '';
   }
 
 

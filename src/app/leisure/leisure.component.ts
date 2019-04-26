@@ -8,20 +8,21 @@ import { ReportingRemarkService } from '../service/reporting-remark.service';
 import { PaymentComponent } from '../payments/payment.component';
 import { SegmentService } from '../service/segment.service';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
-import { TourPackageComponent } from '../remarks/tour-package/tour-package.component';
 import { ReportingComponent } from '../reporting/reporting.component';
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
-import { SegmentsComponent } from '../passive-segments/segments/segments.component';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
+<<<<<<< Updated upstream
 import { invalid } from '@angular/compiler/src/render3/view/util';
 import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
+=======
+>>>>>>> Stashed changes
 import { VisaPassportService } from '../service/visa-passport.service';
 @Component({
   selector: 'app-leisure',
@@ -128,6 +129,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (!this.pnrService.hasAmendMISRetentionLine()) {
       remarkCollection.push(this.segmentService.getRetentionLine());
     }
+
+    remarkCollection.push(this.segmentService.removeTeamMateMisRetention());
     remarkCollection.push(this.segmentService.getMandatoryRemarks());
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
@@ -228,7 +231,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   back(): void {
-    //window.location.reload();
     if (this.isPnrLoaded) {
       this.workflow = '';
     }

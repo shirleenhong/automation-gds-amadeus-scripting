@@ -130,6 +130,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     } else {
       this.enableDisbleControls(['segmentAssoc'], false);
       this.processAssocValues(this.f.segmentAssoc.value);
+      const controls = ['vendorCode', 'ccNo', 'expDate'];
+      this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
     }
     // this.enableDisableCredits();
     // this.changeFeeState();
@@ -217,7 +219,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   private loadValues() {
     const remarkText = this.pnrService.getRemarkText('SFC');
     const remarkTax = this.pnrService.getRemarkText('TAX-');
-    this.f.paymentType.patchValue('C');
+    this.f.paymentType.setValue('C', { onlySelf: true });
     this.leisureFeeForm.controls.segmentAssoc.setValue('0');
     this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
@@ -237,7 +239,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         this.leisureFeeForm.controls.vendorCode.setValue(provider);
         this.leisureFeeForm.controls.expDate.setValue(expiryDate.slice(0, 2) + '/' + expiryDate.slice(2, 4));
       } else {
-        this.f.paymentType.patchValue('K');
+        this.f.paymentType.setValue('K', { onlySelf: true });
       }
     }
 

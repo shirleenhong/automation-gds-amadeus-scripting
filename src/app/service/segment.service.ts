@@ -234,9 +234,21 @@ export class SegmentService {
         return passGroup;
     }
 
+    removeTeamMateMisRetention() {
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'TeamMate Retention';
+        const lineNo = this.pnrService.getMISRetentionLineNumber('CWT RETENTION SEGMENT');
+        if (lineNo !== '') {
+            remGroup.deleteSegmentByIds = [];
+            remGroup.deleteSegmentByIds.push(lineNo);
+        }
+
+        return remGroup;
+    }
+
+
     private setMisRemark(finaldate: any, odate: any, freetext: string) {
         const mis = new PassiveSegmentModel();
-
         const day = this.padDate(finaldate.getDate().toString());
         const mo = this.padDate((finaldate.getMonth() + 1).toString());
         const yr = odate.getFullYear().toString().substr(-2);

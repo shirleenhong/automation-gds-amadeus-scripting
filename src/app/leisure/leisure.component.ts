@@ -173,6 +173,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelRemarks().then(x => {
+      this.isPnrLoaded = false;
+      this.getPnr();
     }, error => { alert(JSON.stringify(error)); });
 
     if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
@@ -191,16 +193,20 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(x => {
+      this.isPnrLoaded = false;
+      this.getPnr();
     }, error => { alert(JSON.stringify(error)); });
     await this.addRir();
   }
 
   async addRir() {
-    await this.pnrService.getPNR();
+    // await this.pnrService.getPNR();
     const remarkCollection2 = new Array<RemarkGroup>();
     remarkCollection2.push(this.segmentService.addSeaSegmentRir(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     await this.remarkService.BuildRemarks(remarkCollection2);
     this.remarkService.SubmitRemarks().then(x => {
+      this.isPnrLoaded = false;
+      this.getPnr();
     }, error => { alert(JSON.stringify(error)); });
     this.segmentEnabled = true;
   }

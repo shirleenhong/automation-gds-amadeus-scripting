@@ -419,7 +419,8 @@ export class PnrService {
           segments: []
         };
 
-        if (rm.associations !== undefined && rm.associations.length > 0) {
+        // if (rm.associations !== undefined && rm.associations && rm.associations.length > 0) {
+        if (rm.associations) {
           rm.associations.forEach(element => {
             rem.segments.push(element.tatooNumber);
           });

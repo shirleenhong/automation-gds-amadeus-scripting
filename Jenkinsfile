@@ -250,13 +250,7 @@ def deployDockerContainer(targetGroupARN) {
         script {
             waitUntil {
                 script {
-                    def describeClustersRS = ""
-                    if (env.ENVIRONMENT == 'prod')
-                    {
-                        describeClustersRS = sh(returnStdout: true, script: "aws ecs describe-clusters --cluster ${APPLICATION_NAME} --region ${REGION_NAME}").trim()
-                    } else {
-                        describeClustersRS = sh(returnStdout: true, script: "aws ecs describe-clusters --cluster ${ENVIRONMENT}-${APPLICATION_NAME} --region ${REGION_NAME}").trim()
-                    }
+                    def describeClustersRS = sh(returnStdout: true, script: "aws ecs describe-clusters --cluster ${CLUSTER_NAME} --region ${REGION_NAME}").trim()
                     echo 'describeClustersRS: '
                     def describeClustersJSON = new JsonSlurper().parseText(describeClustersRS)
                     def registeredContainerCount = describeClustersJSON.clusters[0].registeredContainerInstancesCount
@@ -270,16 +264,9 @@ def deployDockerContainer(targetGroupARN) {
     
   echo ' >>>>>>>>>>>>>>>>>> ECS Compose <<<<<<<<<<<<<<<< '
   echo "Cluster Name: ${CLUSTER_NAME}"
-  echo "Environment: ${ENVIRONMENT}"
   
-  if (env.ENVIRONMENT == 'prod')
-  {
-    sh "/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${APPLICATION_NAME} --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10"
-    sh "/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${APPLICATION_NAME} --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0"
-  } else {
-    sh "/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${ENVIRONMENT}-${APPLICATION_NAME} --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10"
-    sh "/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${ENVIRONMENT}-${APPLICATION_NAME} --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0"
-  }
+  sh "/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${CLUSTER_NAME} --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10"
+  sh "/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${CLUSTER_NAME} --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0"
 
   echo ' ============== ECS Deployment End ============== '
 }

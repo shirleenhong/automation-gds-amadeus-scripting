@@ -25,9 +25,10 @@ import { formatDate } from '@angular/common';
      this.remarkGroup.remarks = new Array<RemarkModel>();
      this.formGroup.get('segments').enable();
 
-     if (this.formGroup.controls.originDestination.value === 'true') {
+     //if (this.formGroup.controls.originDestination.value === 'true') {
      // this.AddCitizenship();
      this.AddAdvisory();
+     this.DeleteExistingVisaSegmentRemarks();
      this.AddSegments();
 
      let items: any;
@@ -40,7 +41,7 @@ import { formatDate } from '@angular/common';
       //  tslint:disable-next-line:no-string-literal
        items[i].controls['segmentLine'].disable();
           }
-    }
+      //}
      return this.remarkGroup;
   }
 
@@ -50,16 +51,36 @@ import { formatDate } from '@angular/common';
 
   AddAdvisory(): void {
      // tslint:disable-next-line:max-line-length
-    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', '*'));
-    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', '*'));
+    if (this.formGroup.controls.passportName.value !== '') {
+       // tslint:disable-next-line:max-line-length
+       if (this.pnrService.getRemarkText('ADVISED ' + this.formGroup.controls.passportName.value.toUpperCase() + ' VALID PASSPORT IS REQUIRED') === '') {
+        // tslint:disable-next-line:max-line-length
+        this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', '*'));
+       }
+     }
+    if (this.pnrService.getRemarkText('INTERNATIONAL TRAVEL ADVISORY SENT') === '') {
+      this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', '*'));
+     }
+  }
+
+  DeleteExistingVisaSegmentRemarks(): void {
+     const pnr = this.pnrService.pnrObj;
+     const rem = ' - A VALID PASSPORT';
+     pnr.rirElements.forEach(x => {
+     let remText: string;
+     remText = x.fullNode.miscellaneousRemarks.remarks.freetext;
+     if ( remText.indexOf(rem) !== -1 ) {
+        this.remarkGroup.deleteRemarkByIds.push(x.elementNumber);
+      }
+     });
   }
 
   AddSegments(): void {
     this.formGroup.controls.segments.value.forEach(x => {
-      if (x.visa === '') {
+      if (!x.visa) {
         // tslint:disable-next-line:max-line-length
         this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED', 'RI', 'R', x.tatooNumber));
-      } else if (x.visa) {
+      } else {
         // tslint:disable-next-line:max-line-length
         this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED', 'RI', 'R', x.tatooNumber));
       }

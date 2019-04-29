@@ -84,6 +84,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
 
     this.name = 'Supplier Confirmation Number:';
+
   }
 
 
@@ -280,6 +281,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   setInsuranceValue() {
     if (this.matrixAccountingForm.controls.segmentNo.value !== undefined) {
+      this.accountingRemarks.segmentNo = this.matrixAccountingForm.controls.segmentNo.value;
       const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
       let isMLF = false;
       segmentList.forEach(segment => {
@@ -322,6 +324,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.IsInsurance = false;
       this.name = 'Supplier Confirmation Number:';
     }
+    this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
   }
 
   isTypeINSExist(segmentNo: any) {

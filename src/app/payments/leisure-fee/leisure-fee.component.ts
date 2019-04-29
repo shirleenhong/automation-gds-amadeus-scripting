@@ -32,7 +32,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   leisureFeeForm: FormGroup;
   @Input()
   provinceList: SelectItem[];
-  segmentList: Array<number>;
+  segmentList: Array<string>;
   provinceTaxes: any;
   decPipe: DecimalPipe;
   datePipe: DatePipe;
@@ -227,12 +227,23 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
     if (remarkText !== '') {
+
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));
       this.leisureFeeForm.controls.segmentAssoc.setValue(segmentAssociation);
 
       const amount = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-AMT'), /([0-9]+[\.]*[0-9]*)/);
       const ccNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?:.*)/);
-      const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
+
+      // const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
+      let segNum = '';
+
+      if (segmentAssociation === '3') {
+        segNum = this.GetValueFromSFCRemark(remarkText, '-FA').replace('-FA-H', '');
+      }
+
+      if (segmentAssociation === '4') {
+        segNum = this.GetValueFromSFCRemark(remarkText, '-FA').replace('-FA-C', '');
+      }
       this.leisureFeeForm.controls.amount.setValue(amount);
       this.leisureFeeForm.controls.segmentNum.setValue(segNum);
       if (ccNum !== undefined && ccNum !== '') {

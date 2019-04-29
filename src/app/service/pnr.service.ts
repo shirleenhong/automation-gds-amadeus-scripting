@@ -222,19 +222,23 @@ export class PnrService {
   }
 
   getPassiveCarSegmentNumbers() {
-    const elementNumbers = new Array<number>();
-    for (const rm of this.pnrObj.auxCarSegments) {
-      elementNumbers.push(rm.elementNumber);
-    }
-    return elementNumbers;
+    return this.getPassiveSegmentTypes('CAR');
+  }
+
+  getPassiveSegmentTypes(segmentType: string) {
+    const elements = new Array<string>();
+
+    this.getSegmentTatooNumber().forEach(c => {
+      if (c.segmentType === segmentType) {
+        elements.push(c.lineNo + ' ' + c.longFreeText.toUpperCase());
+      }
+    });
+
+    return elements;
   }
 
   getPassiveHotelSegmentNumbers() {
-    const elementNumbers = new Array<number>();
-    for (const rm of this.pnrObj.auxHotelSegments) {
-      elementNumbers.push(rm.elementNumber);
-    }
-    return elementNumbers;
+    return this.getPassiveSegmentTypes('HTL');
   }
 
   getPassiveAirSegmentNumbers() {

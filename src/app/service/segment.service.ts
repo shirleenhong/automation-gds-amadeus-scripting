@@ -465,6 +465,9 @@ export class SegmentService {
         if (this.pnrService.getSegmentTatooNumber().length === segmentselected.length) {
             remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+
+            remText = 'FULLCXL**' + dateToday + '*';
+            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R'));
         } else {
             segmentselected.forEach(element => {
                 remText = dateToday + '/CANCELLED/CXLD SEG-' + element.lineNo;

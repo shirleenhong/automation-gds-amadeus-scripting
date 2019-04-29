@@ -44,7 +44,17 @@
 
     <div *ngIf="isAC">
 
+      <div class="row form-group">
+        <div class="col-4"> </div>
+        <div class="col-8">
+          <input type="checkbox" name="cancelNonRefAC" formControlName="cancelNonRefAC" id="cancelNonRefAC"
+            (change)="changeNonRefAC()" />
+          Are you cancelling Non Refundable AC Flight(s) due to IROP or schedule change?
+        </div>
+      </div>
+    </div>
 
+    <div *ngIf="isACNonRef">
       <div class="row form-group">
         <div class="col-4">AC Reason For Cancel: </div>
         <div class="col-8">
@@ -56,14 +66,6 @@
           </select>
         </div>
       </div>
-
-      <!-- <div class="row form-group">
-        <div class="col-sm-4"></div>
-        <div class="col-8">
-          <div class="">AC Ticket No:</div>
-          <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo" />
-        </div>
-      </div> -->
 
       <div class="row form-group">
         <div class="col-sm-4"></div>
@@ -118,6 +120,17 @@
     </div>
 
     <div *ngIf="isUA">
+
+      <div class="row form-group">
+        <div class="col-4"> </div>
+        <div class="col-8">
+          <input type="checkbox" name="cancelNonRefUA" formControlName="cancelNonRefUA" id="cancelNonRefUA"
+            (change)="changeNonRefUA()" />
+          Are you cancelling Non Refundable UA Flight(s) due to IROP or schedule change?
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isUANonRef">
       <div class="row form-group">
         <div class="col-4">UA Reason For Cancel: </div>
         <div class="col-8">

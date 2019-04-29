@@ -25,11 +25,11 @@ import { formatDate } from '@angular/common';
      this.remarkGroup.remarks = new Array<RemarkModel>();
      this.formGroup.get('segments').enable();
 
-     //if (this.formGroup.controls.originDestination.value === 'true') {
-     // this.AddCitizenship();
+     if (this.formGroup.get('isEnabled').value !== false) {
      this.AddAdvisory();
      this.DeleteExistingVisaSegmentRemarks();
      this.AddSegments();
+     }
 
      let items: any;
      // tslint:disable-next-line:no-string-literal

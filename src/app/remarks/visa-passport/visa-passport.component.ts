@@ -38,7 +38,8 @@ export class VisaPassportComponent implements OnInit {
       advisory: new FormControl('', []),
       btnAdvisory: new FormControl('', []),
       passportName: new FormControl('', [Validators.required]),
-      segments: new FormArray([])
+      segments: new FormArray([]),
+      isEnabled: new FormControl('' , []),
     });
     this.segmentGroup = this.fb.group({
       passport: new FormControl('', [Validators.required]),
@@ -52,13 +53,7 @@ export class VisaPassportComponent implements OnInit {
     this.visaPassportView.citizenship =  this.pnrService.getRemarkText('CITIZENSHIP-').substr(12 , 3);
     remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 30);
     this.visaPassportView.passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
-    //if (!this.hasAdvisoryLine()) {
-        // this.enableFormControls(['originDestination'], false);
     this.getVisaTrips();
-    //  } else {
-        // this.enableFormControls(['originDestination'], true);
-    // this.visaPassportFormGroup.get('segments').disable();
-      //}
     }
   }
 
@@ -80,12 +75,9 @@ export class VisaPassportComponent implements OnInit {
 
 
   changedOriginDestination() {
-    //const originDestination = this.f.originDestination.value;
-    //if (originDestination === 'true') {
       if (!this.hasAdvisoryLine()) {
         this.enableFormControls(['advisory'], false);
       }
-
       this.visaPassportFormGroup.get('segments').enable();
       let items: any;
       // tslint:disable-next-line:no-string-literal
@@ -98,13 +90,6 @@ export class VisaPassportComponent implements OnInit {
          //  tslint:disable-next-line:no-string-literal
           items[i].controls['segmentLine'].disable();
       }
-    // }
-    //   else {
-    //   this.enableFormControls(['citizenship'], true);
-    //   this.enableFormControls(['advisory'], true);
-    //   this.enableFormControls(['passportName'], true);
-    //   this.visaPassportFormGroup.get('segments').disable();
-    // }
   }
 
   get f() {
@@ -151,11 +136,10 @@ export class VisaPassportComponent implements OnInit {
 
       let hasInternationalFlight: boolean;
       destinations.forEach(x => {
-        if ( countryOrigin !== x )
-        { hasInternationalFlight = true; } else { hasInternationalFlight = false; }
+        if ( countryOrigin !== x ) { hasInternationalFlight = true; } else { hasInternationalFlight = false; }
       });
 
-      debugger;
+      this.visaPassportView.isEnabled = this.hasAdvisoryLine();
       return hasInternationalFlight;
     }
   }
@@ -247,7 +231,7 @@ export class VisaPassportComponent implements OnInit {
         if (originDestination[i].destination !== excludeCity &&
           countryList.findIndex(x => x.country === originDestination[i].destination) === -1) {
           // tslint:disable-next-line:max-line-length
-          countryList.push({ country: originDestination[i].destination, passport: true , visa: this.getVisaChecked(originDestination[i].destination), tatooNumber: originDestination[i].tatooNumber, segmentLine: originDestination[i].segmentLine });
+          countryList.push({ country: originDestination[i].destination, passport: this.getPassportChecked(originDestination[i].destination) , visa: this.getVisaChecked(originDestination[i].destination), tatooNumber: originDestination[i].tatooNumber, segmentLine: originDestination[i].segmentLine });
         }
       }
       countryList.splice(0, 1);
@@ -276,6 +260,17 @@ export class VisaPassportComponent implements OnInit {
       if ( x.fullNode.miscellaneousRemarks.remarks.freetext === rem ) { hasVisa = true; }
     });
     return hasVisa;
+  }
+
+  getPassportChecked(destination: string): boolean {
+    const pnr = this.pnrService.pnrObj;
+    const rem = destination.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED';
+    let hasPassport: boolean;
+    hasPassport = false;
+    pnr.rirElements.forEach(x => {
+      if ( x.fullNode.miscellaneousRemarks.remarks.freetext === rem ) { hasPassport = true; }
+    });
+    return hasPassport;
   }
 
   hasAdvisoryLine(): boolean {

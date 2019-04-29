@@ -3,4 +3,5 @@ export class VisaPassportModel {
    passportName: string;
    segments: [];
    advisory: boolean;
+   isEnabled: boolean;
 }

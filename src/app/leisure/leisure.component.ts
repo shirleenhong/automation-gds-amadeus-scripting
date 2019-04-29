@@ -184,6 +184,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.cancelRemarks().then(x => {
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
     }, error => { alert(JSON.stringify(error)); });
     this.remarkService.endPNR();
   }

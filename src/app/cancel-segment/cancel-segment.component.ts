@@ -17,6 +17,8 @@ export class CancelSegmentComponent implements OnInit {
   segments = [];
   isAC: boolean = false;
   isUA: boolean = false;
+  isACNonRef: boolean = false;
+  isUANonRef: boolean = false;
   passengers = [];
 
   // segmentDetails: any;
@@ -53,7 +55,9 @@ export class CancelSegmentComponent implements OnInit {
       validateSegmentNumbers(this.segments)]),
       uaPassengerNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'),
       validatePassengerNumbers(this.passengers)]),
-      acpassengerNo: new FormControl('', [])
+      acpassengerNo: new FormControl('', []),
+      cancelNonRefAC: new FormControl('', []),
+      cancelNonRefUA: new FormControl('', [])
     });
   }
 
@@ -285,6 +289,28 @@ export class CancelSegmentComponent implements OnInit {
       }
     });
 
+  }
+
+  changeNonRefAC() {
+    if (this.cancelForm.controls['cancelNonRefAC'].value) {
+      this.isACNonRef = true;
+      this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair',
+        'acdepDate', 'relationship', 'airlineNo', 'reasonACCancel'], false);
+    } else {
+      this.isACNonRef = false;
+      this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair',
+        'acdepDate', 'relationship', 'airlineNo', 'reasonACCancel'], true);
+    }
+  }
+
+  changeNonRefUA() {
+    if (this.cancelForm.controls['cancelNonRefUA'].value) {
+      this.isUANonRef = true;
+      this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
+    } else {
+      this.isUANonRef = false;
+      this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
+    }
   }
 
 }

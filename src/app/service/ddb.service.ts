@@ -356,6 +356,9 @@ export class DDBService implements OnInit {
     { city: 'MAD' , countryCode: 'ES', country: 'Spain' },
     { city: 'ORD' , countryCode: 'US', country: 'United States' },
     { city: 'FRA' , countryCode: 'DE', country: 'Germany' },
+    { city: 'SYD' , countryCode: 'AU', country: 'Australia' },
+    { city: 'VCE' , countryCode: 'IT', country: 'Italy' },
+    { city: 'MNL' , countryCode: 'PH', country: 'Philippines' },
     ];
     return cityList.find(x => x.city === search);
   }

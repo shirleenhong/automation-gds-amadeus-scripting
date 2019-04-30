@@ -4,6 +4,7 @@ import { VisaPassportModel } from '../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { VisaPassportService } from 'src/app/service/visa-passport.service';
 declare var smartScriptSession: any;
 
 @Component({
@@ -27,7 +28,8 @@ export class VisaPassportComponent implements OnInit {
   citizenship: string;
   passportName: string;
 
-  constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService) {
+  // tslint:disable-next-line:max-line-length
+  constructor(private fb: FormBuilder, private ddbService: DDBService, private pnrService: PnrService, private visaService: VisaPassportService) {
   }
 
   ngOnInit() {
@@ -39,7 +41,6 @@ export class VisaPassportComponent implements OnInit {
       btnAdvisory: new FormControl('', []),
       passportName: new FormControl('', [Validators.required]),
       segments: new FormArray([]),
-      isEnabled: new FormControl('' , []),
     });
     this.segmentGroup = this.fb.group({
       passport: new FormControl('', [Validators.required]),
@@ -63,6 +64,8 @@ export class VisaPassportComponent implements OnInit {
   }
 
   showTravelAdvisory(): void {
+    this.advisoryClicked = true;
+    this.visaService.isEnabled = true;
     const _popupId = smartScriptSession.getPopupId();
     smartScriptSession.requestService('popups.launchSmartTool', { popupId: _popupId, smartToolName: 'Traveladvisory' })
       .then(function (data) {
@@ -70,7 +73,6 @@ export class VisaPassportComponent implements OnInit {
       }, function (error) {
         console.log(error);
       });
-    this.advisoryClicked = true;
   }
 
 
@@ -139,7 +141,7 @@ export class VisaPassportComponent implements OnInit {
         if ( countryOrigin !== x ) { hasInternationalFlight = true; } else { hasInternationalFlight = false; }
       });
 
-      this.visaPassportView.isEnabled = this.hasAdvisoryLine();
+      this.visaService.isEnabled = this.hasAdvisoryLine();
       return hasInternationalFlight;
     }
   }

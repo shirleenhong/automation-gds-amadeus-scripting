@@ -15,6 +15,7 @@ import { formatDate } from '@angular/common';
     formGroup: FormGroup;
     remarkGroup: RemarkGroup;
     datePipe = new DatePipe('en-US');
+    isEnabled: boolean;
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
@@ -25,7 +26,7 @@ import { formatDate } from '@angular/common';
      this.remarkGroup.remarks = new Array<RemarkModel>();
      this.formGroup.get('segments').enable();
 
-     if (this.formGroup.get('isEnabled').value !== false) {
+     if (this.isEnabled === true) {
      this.AddAdvisory();
      this.DeleteExistingVisaSegmentRemarks();
      this.AddSegments();

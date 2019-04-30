@@ -54,6 +54,7 @@ export class VisaPassportComponent implements OnInit {
     this.visaPassportView.citizenship =  this.pnrService.getRemarkText('CITIZENSHIP-').substr(12 , 3);
     remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 30);
     this.visaPassportView.passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
+    this.visaService.isEnabled = this.hasAdvisoryLine();
     this.getVisaTrips();
     }
   }
@@ -140,8 +141,6 @@ export class VisaPassportComponent implements OnInit {
       destinations.forEach(x => {
         if ( countryOrigin !== x ) { hasInternationalFlight = true; } else { hasInternationalFlight = false; }
       });
-
-      this.visaService.isEnabled = this.hasAdvisoryLine();
       return hasInternationalFlight;
     }
   }

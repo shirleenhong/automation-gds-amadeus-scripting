@@ -265,7 +265,7 @@ export class VisaPassportComponent implements OnInit {
 
   getPassportChecked(destination: string): boolean {
     const pnr = this.pnrService.pnrObj;
-    const rem = destination.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED';
+    const rem = destination.toUpperCase() + ' - A VALID PASSPORT';
     let hasPassport: boolean;
     hasPassport = false;
     pnr.rirElements.forEach(x => {

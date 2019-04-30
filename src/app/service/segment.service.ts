@@ -466,7 +466,7 @@ export class SegmentService {
             remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
 
-            remText = 'FULLCXL**' + dateToday + '*';
+            remText = '*FULLCXL**' + dateToday + '*';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R'));
         } else {
             segmentselected.forEach(element => {

@@ -1,7 +1,0 @@
-{
-    "/api/token": {
-      "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com/config-services-rest/api",
-      "secure": false,
-      "pathRewrite": {"^/api" : ""}
-    }
-}

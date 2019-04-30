@@ -43,8 +43,6 @@ export class PaymentRemarkService {
   }
 
   public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
-
-
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -144,7 +142,6 @@ export class PaymentRemarkService {
 
 
   processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-    debugger;
     const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
       '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
       accounting.baseAmount.toString().trim() + '/-PT-' +
@@ -178,10 +175,9 @@ export class PaymentRemarkService {
       fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-ALL' +
       bknLine + accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
-
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
-    debugger;
+
     if (accounting.bsp === '2' && accounting.supplierCodeName !== 'MLF') {
       this.extractApayRemark(accounting, remarkList, fopObj);
     }
@@ -290,15 +286,22 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
+  getSegmentValue(value: string) {
+    if (value.length > 0) {
+      const output = value.split(' ');
+
+      return output[0];
+    }
+  }
 
   generateSFCRemark(fg: FormGroup, assoc) {
     let remark = 'SFC';
     switch (assoc) {
       case '3':
-        remark += '/-FA-H' + fg.get('segmentNum').value;
+        remark += '/-FA-H' + this.getSegmentValue(fg.get('segmentNum').value);
         break;
       case '4':
-        remark += '/-FA-C' + fg.get('segmentNum').value;
+        remark += '/-FA-C' + this.getSegmentValue(fg.get('segmentNum').value);
         break;
       case '1':
         remark += '/-FA-T1';

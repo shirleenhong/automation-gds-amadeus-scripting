@@ -226,11 +226,11 @@ export class PnrService {
   }
 
   getPassiveSegmentTypes(segmentType: string) {
-    const elements = new Array<string>();
+    const elements = new Array<any>();
 
     this.getSegmentTatooNumber().forEach(c => {
       if (c.segmentType === segmentType) {
-        elements.push(c.lineNo + ' ' + c.longFreeText.toUpperCase());
+        elements.push({ lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
       }
     });
 

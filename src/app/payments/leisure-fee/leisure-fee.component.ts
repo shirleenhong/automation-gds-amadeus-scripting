@@ -103,6 +103,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   changeFeeState() {
+    const controls = ['vendorCode', 'ccNo', 'expDate'];
+    this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
     // if (this.f.segmentAssoc.value === '0' && (this.IsPnrAvailable && this.f.chkUpdateRemove.value)) {
     //   this.enableDisbleControls(['noFeeReason'], this.checkSFC());
     // } else {

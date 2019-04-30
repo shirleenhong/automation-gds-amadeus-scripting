@@ -43,8 +43,7 @@ export class VisaPassportComponent implements OnInit {
     private pnrService: PnrService
   ) {}
 
-  ngOnInit() {
-    this.ddbService.sampleSupplier();
+  ngOnInit() {   
     this.visaPassportView = new VisaPassportModel();
     this.visaPassportFormGroup = new FormGroup({
       originDestination: new FormControl("", []),

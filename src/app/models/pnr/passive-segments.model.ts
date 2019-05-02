@@ -28,4 +28,7 @@ export class PassiveSegmentsModel {
     zzdepartureCity: string;
     zzdestinationCity: string;
     zzairlineCode: string;
+    trainNbr: string;
+    trainClass: string;
+
 }

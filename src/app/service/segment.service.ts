@@ -93,7 +93,7 @@ export class SegmentService {
         return passGroup;
     }
 
-    addSeaSegmentRir(segmentRemarks: PassiveSegmentsModel[]) {
+    addSegmentRir(segmentRemarks: PassiveSegmentsModel[]) {
         const datePipe = new DatePipe('en-US');
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'RIR remark';
@@ -105,9 +105,12 @@ export class SegmentService {
                 return;
             }
             segments.forEach(pnrSegment => {
-                if (segmentrem.segmentType === 'SEA') {
-                    if (pnrSegment.segmentType === 'MIS') {
+                if (pnrSegment.segmentType === 'MIS') {
+                    if (segmentrem.segmentType === 'SEA') {
                         this.rirCruise(pnrSegment, datePipe, segmentrem, rmGroup);
+                    }
+                    if (segmentrem.segmentType === 'TRN') {
+                        this.rirTrain(pnrSegment, segmentrem, rmGroup);
                     }
                 }
 
@@ -153,6 +156,18 @@ export class SegmentService {
         }
     }
 
+    private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        if (segmentrem.trainNbr && segmentrem.trainClass) {
+            rmGroup.remarks.push(this.getRemarksModel
+                ('TRAIN NUMBER – ' + segmentrem.trainNbr + ' CLASS-' + segmentrem.trainClass, 'RI', 'R', pnrSegment.tatooNo));
+        }
+
+        if (segmentrem.trainNbr && segmentrem.trainClass) {
+            rmGroup.remarks.push(this.getRemarksModel
+                ('TRAIN NUMBER – ' + segmentrem.trainNbr + ' CLASS-' + segmentrem.trainClass, 'RI', 'R', pnrSegment.tatooNo));
+        }
+    }
+
     public getRemarksModel(remText, type, cat, segment?: string) {
         let segmentrelate = [];
         if (segment) {
@@ -192,6 +207,10 @@ export class SegmentService {
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-0900' + '/EC-' + segment.departureCity +
                     '/ED-' + enddatevalue + '/ET-0900/CF-CWT' + segment.policyNo;
                 break;
+            case 'TRN':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + 'SUC-' + segment.vendorCode + '/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
+                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
             default:
                 break;
         }
@@ -206,15 +225,6 @@ export class SegmentService {
         const today = new Date();
         const maxdate = today;
         maxdate.setDate(maxdate.getDate() + 331);
-        // testing
-        // const lastDeptDate = new Date('12/10/2019');
-        // const odate = lastDeptDate;
-        // odate.setDate(odate.getDate() + 180);
-        // const test = odate.toDateString();
-        // const today = new Date('11/05/2019');
-        // const maxdate = today;
-        // const test2 = maxdate.toDateString();
-        // maxdate.setDate(maxdate.getDate() + 331);
 
         let finaldate = new Date();
         if (odate > maxdate) {

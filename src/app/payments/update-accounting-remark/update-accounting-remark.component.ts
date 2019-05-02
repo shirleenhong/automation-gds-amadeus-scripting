@@ -291,7 +291,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.IsInsurance = false;
           this.name = 'Supplier Confirmation Number:';
           // this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
-          this.matrixAccountingForm.controls.supplierCodeName.enable();
+          //this.matrixAccountingForm.controls.supplierCodeName.enable();
           this.matrixAccountingForm.controls.descriptionapay.enable();
           this.matrixAccountingForm.controls.commisionPercentage.disable();
         }

@@ -139,7 +139,6 @@ export class VisaPassportComponent implements OnInit {
         { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
       });
 
-      debugger;
       let hasInternationalFlight: boolean;
       destinations.forEach(x => {
         if ( x !== 'Canada' && x !== 'United States')

@@ -50,7 +50,6 @@ export class VisaPassportComponent implements OnInit {
 
     if (this.pnrService.isPNRLoaded) {
     let remarkText: string;
-
     this.visaPassportView.citizenship =  this.pnrService.getRemarkText('CITIZENSHIP-').substr(12 , 3);
     remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 30);
     this.visaPassportView.passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
@@ -115,12 +114,14 @@ export class VisaPassportComponent implements OnInit {
   hasInternationalFlights(): boolean {
     let firstDepDate = new Date();
     let firstLoop = true;
-
+    let cityCountry: string;
     if (this.pnrService.isPNRLoaded) {
       const destinations = Array<string>();
 
       this.pnrService.pnrObj.airSegments.forEach(x => {
-        destinations.push(this.ddbService.getCityCountry(x.departureAirport).country);
+        cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
+        if (this.ddbService.getCityCountry(x.departureAirport) !== '' )
+        { destinations.push(cityCountry); }
 
         const airdate = x.departureDate;
         if (firstLoop) {
@@ -135,15 +136,15 @@ export class VisaPassportComponent implements OnInit {
       this.pnrService.pnrObj.airSegments.forEach(x => {
         let depDate = new Date();
         depDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-        if ( depDate.toDateString() === firstDepDate.toDateString() )
-        { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
+        if ( depDate.toDateString() === firstDepDate.toDateString() ) {
+          if (this.ddbService.getCityCountry(x.departureAirport) !== '' )
+          { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
+        }
       });
 
-      debugger;
       let hasInternationalFlight: boolean;
       destinations.forEach(x => {
-        if ( x !== 'Canada' && x !== 'United States')
-        { hasInternationalFlight = true; }
+        if ( x !== 'Canada' && x !== 'United States') { hasInternationalFlight = true; }
       });
       return hasInternationalFlight;
     }
@@ -188,8 +189,10 @@ export class VisaPassportComponent implements OnInit {
         //   obj = JSON.parse(c);
         //   this.arrivalCountry = obj[0].countryName;
 
-        this.departureCountry = this.ddbService.getCityCountry(air.departureAirport).country;
-        this.arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country;
+        if (this.ddbService.getCityCountry(air.departureAirport) === '') {
+          this.departureCountry = ''; } else { this.departureCountry = this.ddbService.getCityCountry(air.departureAirport).country; }
+        if (this.ddbService.getCityCountry(air.arrivalAirport) === '') {
+          this.arrivalCountry = ''; } else {  this.arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country; }
        // });
         const airdate = air.departureDate;
         if (firstLoop) {

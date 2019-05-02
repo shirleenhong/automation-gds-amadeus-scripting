@@ -41,6 +41,8 @@ import { formatDate } from '@angular/common';
        items[i].controls['country'].disable();
       //  tslint:disable-next-line:no-string-literal
        items[i].controls['segmentLine'].disable();
+      //  tslint:disable-next-line:no-string-literal
+       items[i].controls['passport'].disable();
           }
       //}
      return this.remarkGroup;
@@ -53,10 +55,19 @@ import { formatDate } from '@angular/common';
   AddAdvisory(): void {
      // tslint:disable-next-line:max-line-length
     if (this.formGroup.controls.passportName.value !== '') {
-       // tslint:disable-next-line:max-line-length
-       if (this.pnrService.getRemarkText('ADVISED ' + this.formGroup.controls.passportName.value.toUpperCase() + ' VALID PASSPORT IS REQUIRED') === '') {
+
+      const remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 60);
+      const passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
+
+      debugger;
+      if (passportName !== this.formGroup.controls.passportName.value.toUpperCase()) {
+        const search = 'ADVISED ' + remarkText;
+        this.remarkGroup.deleteRemarkByIds.push(this.pnrService.getRemarkLineNumber(search));
         // tslint:disable-next-line:max-line-length
         this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', ''));
+      } else {
+        // tslint:disable-next-line:max-line-length
+      this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', ''));
        }
      }
     if (this.pnrService.getRemarkText('INTERNATIONAL TRAVEL ADVISORY SENT') === '') {
@@ -79,9 +90,6 @@ import { formatDate } from '@angular/common';
   AddSegments(): void {
     this.formGroup.controls.segments.value.forEach(x => {
       if (!x.visa) {
-        // tslint:disable-next-line:max-line-length
-        //this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED', 'RI', 'R', x.tatooNumber));
-
         const segments = x.tatooNumber;
         const rm = (this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED', 'RI', 'R'));
         rm.relatedSegments = [];

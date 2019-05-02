@@ -157,7 +157,6 @@ export class CancelSegmentComponent implements OnInit {
       if (look) {
         if (look.airlineCode === 'AC') {
           if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
-            this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], false);
             this.cancelForm.controls['acTicketNo'].setValue('');
             this.cancelForm.controls['acpassengerNo'].setValue('');
             this.cancelForm.controls['acFlightNo'].setValue('');
@@ -171,17 +170,17 @@ export class CancelSegmentComponent implements OnInit {
           this.isAC = true;
         }
         if (look.airlineCode === 'UA') {
+          this.enableFormControls(['reasonUACancel'], false);
           if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
-            this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], false);
-            this.cancelForm.controls['reasonUACancel'].setValue('');
+            // this.cancelForm.controls['reasonUACancel'].setValue('');
             this.cancelForm.controls['uasegNo'].setValue('');
             this.cancelForm.controls['uaPassengerNo'].setValue('');
           } else {
             this.uaChange(this.cancelForm.value.reasonUACancel);
           }
           this.defaultPassenger('UA');
+          this.defaultSegment();
           this.isUA = true;
-
         }
       }
     });
@@ -210,12 +209,12 @@ export class CancelSegmentComponent implements OnInit {
     if (passenger.length === 1) {
       if (airline === 'AC') {
         this.cancelForm.controls['acpassengerNo'].setValue('1');
-        this.cancelForm.controls['acpassengerNo'].disable();
+        // this.cancelForm.controls['acpassengerNo'].disable();
       }
 
       if (airline === 'UA') {
         this.cancelForm.controls['uaPassengerNo'].setValue('1');
-        this.cancelForm.controls['uaPassengerNo'].disable();
+        // this.cancelForm.controls['uaPassengerNo'].disable();
       }
 
     }

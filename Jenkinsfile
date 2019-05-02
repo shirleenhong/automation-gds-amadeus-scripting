@@ -13,11 +13,10 @@ pipeline {
     DOCKER_COMPOSE_FILE = "bpg-gds-scripting-amadeus.yml"
 
     ECR_URL = "379831576876.dkr.ecr.us-west-2.amazonaws.com/bpg-gds-scripting-amadeus"
-    // TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/dev-gds-scripting-amadeus/fdd76e1dc1f3f5d4'
     DEV_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/dev-gds-scripting-amadeus-tg/4960397b08f766e7'
     TST_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/tst-gds-scripting-amadeus-tg/96e7c9cc7c232266'
     STG_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/stg-gds-scripting-amadeus-tg/94c3ad6cc12221f0'
-    // PROD_TARGET_GROUP_ARN ='arn:aws:elasticloadbalancing:us-west-2:704608996963:targetgroup/bpg-gds-scripting-amadeus-tg/59e5073548e3d7f6'    
+    PROD_TARGET_GROUP_ARN ='arn:aws:elasticloadbalancing:us-west-2:704608996963:targetgroup/bpg-gds-scripting-amadeus-tg/59e5073548e3d7f6'    
   }
   // General Options
   options {
@@ -26,16 +25,13 @@ pipeline {
 
   parameters {
     string(name: 'TAG_VERSION', defaultValue: '1.0.0-SNAPSHOT', description: 'Docker tag version')
-
-    // booleanParam(name: 'RUN_STATIC_SCAN', defaultValue: false, description: 'Execute Static security Scan?')
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
-
-    //booleanParam(name: 'BUILD', defaultValue: false, description: 'Build?')    
+    booleanParam(name: 'BUILD', defaultValue: false, description: 'Build?')    
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
     // booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression against Dev Environment?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')
     booleanParam(name: 'DEPLOY_TO_STAGING', defaultValue: false, description: 'Deploy to Staging Environment?')
-    // booleanParam(name: 'DEPLOY_TO_PROD', defaultValue: false, description: 'Deploy to Production Environment?')
+    booleanParam(name: 'DEPLOY_TO_PROD', defaultValue: false, description: 'Deploy to Production Environment?')
     text(name: 'EMAIL_RECIPIENT_LIST', defaultValue: 'JCuenca@carlsonwagonlit.com;', description: 'Regression Test result sent to email recipient list (separated by semi-colon)')
     choice(name: 'DESIRED_NO_OF_TASKS', choices: '1\n2\n3', description: 'Desired number of running tasks to scale with')
   }
@@ -44,7 +40,7 @@ pipeline {
     stage('Build/Prepare') {
       when {
         expression { 
-          return params.DEPLOY_TO_DEV
+          return params.BUILD
         }
       }
       steps{
@@ -59,34 +55,7 @@ pipeline {
         }
       }
     }
-    stage('SecurityScan'){
-      when {
-        expression {
-          return params.RUN_STATIC_SCAN
-        }
-      }
-      steps{
-        dir('.') {
-          script {
-            echo "APPLICATION_NAME : ${APPLICATION_NAME}"
-            echo "WORKSPACE : ${WORKSPACE}"
-            def date = new Date().format('yyyy-MM-dd')
-            def buildId = params.APPLICATION_NAME
-            def report = buildId + "-fortify-report"
-            echo 'Security Scanning using HP Fortify (Code Review)...'
-            sh "${FORTIFY_BIN}/sourceanalyzer -b ${APPLICATION_NAME} -clean -verbose"
-            sh "${FORTIFY_BIN}/sourceanalyzer -b ${APPLICATION_NAME} ${WORKSPACE}"
-            sh "${FORTIFY_BIN}/sourceanalyzer -b ${APPLICATION_NAME} -scan -f '${WORKSPACE}/${APPLICATION_NAME}-${BUILD_NUMBER}.fpr'"
-            sh "${FORTIFY_BIN}/ReportGenerator -format \"pdf\" -template ${FORTIFY_TEMPLATE_FILE} -f ${APPLICATION_NAME}-${BUILD_NUMBER}.pdf -source ${APPLICATION_NAME}-${BUILD_NUMBER}.fpr -verbose"
-            //sh "'BIRTReportGenerator -template 'Developer Workbook' -source ''${WORKSPACE}/Assessment.fpr' -format 'PDF' -output '${WORKSPACE}/Security_Findings.pdf'"
-            sh "ls -lrt '${WORKSPACE}' "
-            //sh "fortifyclient -url ${fortifyUrl} -authtoken ${fortifyAuthToken} uploadFPR -file ${WORKSPACE}/Assessment.fpr -application ${JOB_NAME} -applicationVersion '1'"
-            //archiveArtifacts artifacts: '**/Security_Findings.pdf'
-            emailext attachmentsPattern: "**/${APPLICATION_NAME}-${BUILD_NUMBER}.pdf", body: "Attached is the HP Fortity report for ${APPLICATION_NAME}-${BUILD_NUMBER}", subject: "[Jenkins] HP Fortify Report ${APPLICATION_NAME}-${BUILD_NUMBER}", to: 'JCuenca@carlsonwagonlit.com'
-          }
-        }
-      }
-    }      
+ 
     stage('DEV:Deploy') {
       when {
           expression {
@@ -224,7 +193,7 @@ def deployDockerContainer(targetGroupARN) {
     env.CLUSTER_NAME = env.ENVIRONMENT + "-" + env.APPLICATION_NAME
     echo "After Setting Cluster Name :" + env.CLUSTER_NAME
 
-    if( env.ENVIRONMENT == 'prod') {
+    if(env.ENVIRONMENT == 'prod') {
         script {
             echo "Configuring Production user"
             def PROD_ROLE = sh(returnStdout: true, script: "aws sts assume-role --role-arn $AWS_PROD_ROLE --role-session-name $ENVIRONMENT-webapp-template-pipeline").trim()

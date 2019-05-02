@@ -10,6 +10,7 @@ import { RemarkHelper } from '../helper/remark-helper';
 import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
+import { FormArray } from '@angular/forms';
 
 @Injectable({
     providedIn: 'root',
@@ -33,6 +34,9 @@ export class SegmentService {
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
         const remarks = new Array<RemarkModel>();
+        let startTime = '';
+        let endTime = '';
+        let segdest = '';
 
         segmentRemarks.forEach(segment => {
             if (!segment.isNew) {
@@ -40,38 +44,46 @@ export class SegmentService {
             }
 
             const passive = new PassiveSegmentModel();
-            passive.vendor = '1A';
             passive.passiveSegmentType = segment.segmentType;
             passive.startDate = datePipe.transform(segment.departureDate, 'ddMMyy');
             passive.endDate = datePipe.transform(segment.arrivalDate, 'ddMMyy');
-            passive.startTime = '';
-            passive.endTime = '';
             passive.startPoint = segment.departureCity;
-            let segdest = '';
 
-            if (segment.destinationCity === undefined) {
-                segdest = segment.departureCity;
-            } else {
-                segdest = segment.destinationCity;
-            }
-
+            if (segment.destinationCity === undefined) { segdest = segment.departureCity; }
+            else { segdest = segment.destinationCity; }
             passive.endPoint = segdest;
-            passive.quantity = Number(segment.noPeople);
 
-            const datePipe2 = new DatePipe('en-US');
-            const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
-            const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMMM');
-            let startTime = '';
-            if (segment.departureTime) {
-                startTime = (segment.departureTime as string).replace(':', '');
+            if (segment.departureTime) { startTime = (segment.departureTime as string).replace(':', ''); }
+            if (segment.arrivalTime) { endTime = (segment.arrivalTime as string).replace(':', ''); }
+
+            if (segment.segmentType === 'AIR') {
+                passive.vendor = segment.airlineCode;
+                passive.startTime = startTime;
+                passive.endTime = endTime;
+                passive.segmentName = segment.segmentType;
+                passive.function = '1';
+                passive.quantity = Number(segment.noPeople);
+                passive.status = 'GK';
+                passive.classOfService = segment.classService;
+                passive.controlNo = 'C1';
+                passive.flightNo = segment.flightNumber;
+                if (segment.airlineRecloc) { passive.controlNo = segment.airlineRecloc; }
+            } else {
+                passive.vendor = '1A';
+                passive.startTime = '0000';
+                passive.endTime = '0000';
+                passive.segmentName = 'RU';
+                passive.function = '12';
+                passive.quantity = Number(segment.noPeople);
+                passive.status = 'HK';
+                passive.flightNo = '1';
+                const datePipe2 = new DatePipe('en-US');
+                const startdatevalue = datePipe2.transform(segment.departureDate, 'ddMMM');
+                const enddatevalue = datePipe2.transform(segment.arrivalDate, 'ddMMM');
+                const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
+                passive.freeText = freetext;
             }
-            let endTime = '';
-            if (segment.arrivalTime) {
-                endTime = (segment.arrivalTime as string).replace(':', '');
-            }
-            passive.status = 'HK';
-            const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
-            passive.freeText = freetext;
+
             tourSegment.push(passive);
         });
 
@@ -92,28 +104,53 @@ export class SegmentService {
             if (!segmentrem.isNew) {
                 return;
             }
-            if (segmentrem.segmentType === 'SEA') {
-                segments.forEach(pnrSegment => {
+            segments.forEach(pnrSegment => {
+                if (segmentrem.segmentType === 'SEA') {
                     if (pnrSegment.segmentType === 'MIS') {
-                        const type = pnrSegment.freetext.substr(6, 3);
-                        if (type === 'SEA') {
-                            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
-                                let sroom = segmentrem.stateRoom;
-                                if (sroom === 'OTHER') {
-                                    sroom = segmentrem.othersText;
-                                }
-
-                                let remText = sroom + ' ' + segmentrem.cabinNo;
-                                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
-                            }
-                        }
+                        this.rirCruise(pnrSegment, datePipe, segmentrem, rmGroup);
                     }
-                });
-            }
+                }
+
+                if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
+                    this.rirAir(pnrSegment, datePipe, segmentrem, rmGroup);
+                }
+            });
         });
 
         return rmGroup;
+    }
+
+    private rirAir(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+        if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+            if (segmentrem.zzairlineCode) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            }
+            if (segmentrem.zzdepartureCity) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
+            if (segmentrem.zzdestinationCity) {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        }
+    }
+
+    private rirCruise(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        if (type === 'SEA') {
+            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
+                let sroom = segmentrem.stateRoom;
+                if (sroom === 'OTHER') {
+                    sroom = segmentrem.othersText;
+                }
+                let remText = sroom + ' ' + segmentrem.cabinNo;
+                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        }
     }
 
     public getRemarksModel(remText, type, cat, segment?: string) {
@@ -197,12 +234,25 @@ export class SegmentService {
         return passGroup;
     }
 
+    removeTeamMateMisRetention() {
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'TeamMate Retention';
+        const lineNo = this.pnrService.getMISRetentionLineNumber('CWT RETENTION SEGMENT');
+        if (lineNo !== '') {
+            remGroup.deleteSegmentByIds = [];
+            remGroup.deleteSegmentByIds.push(lineNo);
+        }
+
+        return remGroup;
+    }
+
+
     private setMisRemark(finaldate: any, odate: any, freetext: string) {
         const mis = new PassiveSegmentModel();
-
         const day = this.padDate(finaldate.getDate().toString());
         const mo = this.padDate((finaldate.getMonth() + 1).toString());
         const yr = odate.getFullYear().toString().substr(-2);
+        const noOfPassenger = this.pnrService.getPassengers().length;
 
         mis.vendor = '1A';
         mis.status = 'HK';
@@ -211,7 +261,11 @@ export class SegmentService {
         mis.startPoint = 'YYZ';
         mis.endPoint = 'YYZ';
         mis.freeText = freetext;
-        mis.quantity = 1;
+        mis.quantity = noOfPassenger;
+        mis.startTime = '0000';
+        mis.endTime = '0000';
+        mis.segmentName = 'RU';
+        mis.function = '12';
         return mis;
     }
 
@@ -413,6 +467,9 @@ export class SegmentService {
         if (this.pnrService.getSegmentTatooNumber().length === segmentselected.length) {
             remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+
+            remText = '*FULLCXL**' + dateToday + '*';
+            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R'));
         } else {
             segmentselected.forEach(element => {
                 remText = dateToday + '/CANCELLED/CXLD SEG-' + element.lineNo;
@@ -434,36 +491,16 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        if (cancel.value.ticket1 && cancel.value.coupon1) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket1 + ' CPNS-' + cancel.value.coupon1;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
+        const arr = cancel.get('tickets') as FormArray
 
-        if (cancel.value.ticket2 && cancel.value.coupon2) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket2 + ' CPNS-' + cancel.value.coupon2;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        for (const c of arr.controls) {
+            const ticket = c.get('ticket').value;
+            const coupon = c.get('coupon').value.toString();
+            if (arr.controls.length >= 1 && ticket && coupon) {
+                remText = dateToday + '/TKT NBR-' + ticket + ' CPNS-' + coupon;
+                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+            }
         }
-
-        if (cancel.value.ticket3 && cancel.value.coupon3) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket3 + ' CPNS-' + cancel.value.coupon3;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-
-        }
-        if (cancel.value.ticket4 && cancel.value.coupon4) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket4 + ' CPNS-' + cancel.value.coupon4;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
-
-        if (cancel.value.ticket5 && cancel.value.coupon5) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket5 + ' CPNS-' + cancel.value.coupon5;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
-
-        if (cancel.value.ticket6 && cancel.value.coupon6) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket6 + ' CPNS-' + cancel.value.coupon6;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
-
 
         segmentselected.forEach(element => {
             rmGroup.deleteRemarkByIds.push(element.lineNo);

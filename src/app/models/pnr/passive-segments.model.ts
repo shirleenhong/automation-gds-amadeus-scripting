@@ -23,7 +23,9 @@ export class PassiveSegmentsModel {
     airlineCode: string;
     flightNumber: string;
     classService: string;
-    arrivalday: string;
     airlineRecloc: string;
     othersText: string;
+    zzdepartureCity: string;
+    zzdestinationCity: string;
+    zzairlineCode: string;
 }

@@ -222,19 +222,23 @@ export class PnrService {
   }
 
   getPassiveCarSegmentNumbers() {
-    const elementNumbers = new Array<number>();
-    for (const rm of this.pnrObj.auxCarSegments) {
-      elementNumbers.push(rm.elementNumber);
-    }
-    return elementNumbers;
+    return this.getPassiveSegmentTypes('CAR');
+  }
+
+  getPassiveSegmentTypes(segmentType: string) {
+    const elements = new Array<any>();
+
+    this.getSegmentTatooNumber().forEach(c => {
+      if (c.segmentType === segmentType) {
+        elements.push({ lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+      }
+    });
+
+    return elements;
   }
 
   getPassiveHotelSegmentNumbers() {
-    const elementNumbers = new Array<number>();
-    for (const rm of this.pnrObj.auxHotelSegments) {
-      elementNumbers.push(rm.elementNumber);
-    }
-    return elementNumbers;
+    return this.getPassiveSegmentTypes('HTL');
   }
 
   getPassiveAirSegmentNumbers() {
@@ -283,6 +287,14 @@ export class PnrService {
     let elemairlineCode = '';
     let elemdepdate = '';
     let elemcitycode = '';
+    let flightNumber = '';
+    let arrivalAirport = '';
+    let departureTime = '';
+    let departureDate = '';
+    let arrivalTime = '';
+    let arrivalDate = '';
+    let classservice = '';
+
 
     if (type === 'AIR') {
       elemText = elem.airlineCode + elem.flightNumber + ' ' + elem.class + this.formatDate(elem.departureDate) +
@@ -292,7 +304,13 @@ export class PnrService {
       elemairlineCode = elem.airlineCode;
       elemdepdate = elem.departureDate;
       elemcitycode = elem.departureAirport;
-
+      flightNumber = elem.flightNumber;
+      arrivalAirport = elem.arrivalAirport;
+      departureTime = elem.departureTime;
+      departureDate = elem.departureDate;
+      arrivalTime = elem.arrivalTime;
+      arrivalDate = elem.arrivalDate;
+      classservice = elem.class;
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
       elemText = type + ' ' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
@@ -316,7 +334,15 @@ export class PnrService {
       airlineCode: elemairlineCode,
       freetext: flongtext,
       deptdate: elemdepdate,
-      cityCode: elemcitycode
+      cityCode: elemcitycode,
+      arrivalStation: arrivalAirport,
+      flightNumber,
+      arrivalAirport,
+      departureTime,
+      departureDate,
+      arrivalTime,
+      arrivalDate,
+      classservice
     };
     this.segments.push(segment);
   }
@@ -387,7 +413,7 @@ export class PnrService {
           break;
       }
 
-      for (const rm of arr) {       
+      for (const rm of arr) {
         const rem = {
           remarkText: rm.fullNode.miscellaneousRemarks.remarks.freetext,
           category: rm.fullNode.miscellaneousRemarks.remarks.type,
@@ -397,7 +423,8 @@ export class PnrService {
           segments: []
         };
 
-        if (rm.associations !== undefined && rm.associations.length > 0) {
+        // if (rm.associations !== undefined && rm.associations && rm.associations.length > 0) {
+        if (rm.associations) {
           rm.associations.forEach(element => {
             rem.segments.push(element.tatooNumber);
           });
@@ -407,10 +434,10 @@ export class PnrService {
         if (match !== null) {
           if (match.groups !== undefined && match.groups.value !== undefined) {
             rem.value = match.groups.value;
-          }    
-          remarks.push(rem);      
+          }
+          remarks.push(rem);
         }
-       
+
       }
     }
     return remarks;
@@ -491,13 +518,19 @@ export class PnrService {
             apays.forEach(x => {
               if (x.segments === model.segmentNo) {
                 model.bsp = '2';
-                model.description = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
-                model.accountingTypeRemark = model.description;
+                model.descriptionapay = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
+                model.accountingTypeRemark = '0';
               }
 
             });
           }
         }
+
+        if (model.supplierCodeName === 'MLF') {
+          model.accountingTypeRemark = '0';
+          model.bsp = '2';
+        }
+
 
       }
     }
@@ -669,17 +702,42 @@ export class PnrService {
     }
   }
 
+  getAirSegmentModel(element, index) {
+    let segmentModel: PassiveSegmentsModel;
+    segmentModel = new PassiveSegmentsModel();
+    segmentModel.isNew = false;
+    segmentModel.segmentNo = index;
+    segmentModel.segmentType = element.segmentType;
+    segmentModel.flightNumber = element.flightNumber;
+    segmentModel.classService = element.classservice;
+    // segmentModel.arrivalday = element.classservice;
+    // segmentModel.airlineRecloc = elem.
+    segmentModel.departureDate = this.formatDate(element.departureDate);
+    segmentModel.departureTime = element.departureTime;
+    segmentModel.departureCity = element.cityCode;
+    segmentModel.destinationCity = element.arrivalStation;
+    segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
+    segmentModel.arrivalTime = element.arrivalTime;
+    segmentModel.airlineCode = element.airlineCode;
+    return segmentModel;
+  }
+
   getModelPassiveSegments(): PassiveSegmentsModel[] {
     const pSegment: PassiveSegmentsModel[] = [];
-    let segment = this.getSegmentTatooNumber();
+    const segment = this.getSegmentTatooNumber();
     let index = 0;
     segment.forEach(element => {
       index++;
-      pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+
+      switch (element.segmentType) {
+        case 'MIS':
+          pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+          break;
+        case 'AIR':
+          pSegment.push(this.getAirSegmentModel(element, index));
+      }
     });
-
     return pSegment;
-
   }
 
 
@@ -778,6 +836,15 @@ export class PnrService {
 
     return false;
 
+  }
+
+  getMISRetentionLineNumber(freetext) {
+    for (const misc of this.pnrObj.miscSegments) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf(freetext) > -1) {
+        return misc.elementNumber;
+      }
+    }
+    return '';
   }
 
 

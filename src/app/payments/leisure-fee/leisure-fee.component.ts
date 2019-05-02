@@ -32,7 +32,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   leisureFeeForm: FormGroup;
   @Input()
   provinceList: SelectItem[];
-  segmentList: Array<number>;
+  segmentList: Array<string>;
   provinceTaxes: any;
   decPipe: DecimalPipe;
   datePipe: DatePipe;
@@ -103,6 +103,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   changeFeeState() {
+    const controls = ['vendorCode', 'ccNo', 'expDate'];
+    this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
     // if (this.f.segmentAssoc.value === '0' && (this.IsPnrAvailable && this.f.chkUpdateRemove.value)) {
     //   this.enableDisbleControls(['noFeeReason'], this.checkSFC());
     // } else {
@@ -130,6 +132,8 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     } else {
       this.enableDisbleControls(['segmentAssoc'], false);
       this.processAssocValues(this.f.segmentAssoc.value);
+      const controls = ['vendorCode', 'ccNo', 'expDate'];
+      this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
     }
     // this.enableDisableCredits();
     // this.changeFeeState();
@@ -182,10 +186,13 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       case '0':
         this.enableDisbleControls(ctrls, true);
 
+
         if ((!this.IsPnrAvailable && !this.checkSFC()) ||
           (this.IsPnrAvailable && this.f.chkUpdateRemove.value === true && !this.checkSFC())) {
           this.enableDisbleControls(['noFeeReason'], false);
         }
+
+
         this.f.noFeeReason.setValidators(Validators.required);
         break;
       default:
@@ -217,28 +224,38 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   private loadValues() {
     const remarkText = this.pnrService.getRemarkText('SFC');
     const remarkTax = this.pnrService.getRemarkText('TAX-');
-    this.f.paymentType.patchValue('C');
+    this.f.paymentType.setValue('C', { onlySelf: true });
     this.leisureFeeForm.controls.segmentAssoc.setValue('0');
     this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
     if (remarkText !== '') {
+
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));
       this.leisureFeeForm.controls.segmentAssoc.setValue(segmentAssociation);
 
       const amount = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-AMT'), /([0-9]+[\.]*[0-9]*)/);
       const ccNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?:.*)/);
-      const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
+
+      // const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
+      let segNum = '';
+
+      if (segmentAssociation === '3') {
+        segNum = this.GetValueFromSFCRemark(remarkText, '-FA').replace('-FA-H', '');
+      }
+
+      if (segmentAssociation === '4') {
+        segNum = this.GetValueFromSFCRemark(remarkText, '-FA').replace('-FA-C', '');
+      }
       this.leisureFeeForm.controls.amount.setValue(amount);
       this.leisureFeeForm.controls.segmentNum.setValue(segNum);
-      if (ccNum !== undefined) {
+      if (ccNum !== undefined && ccNum !== '') {
         const provider = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?<=CC)([A-Z]{2})/);
         const expiryDate = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-EXP'), /([0-9]+[\.]*[0-9]*)/);
-
         this.leisureFeeForm.controls.ccNo.setValue(ccNum.substr(9));
         this.leisureFeeForm.controls.vendorCode.setValue(provider);
         this.leisureFeeForm.controls.expDate.setValue(expiryDate.slice(0, 2) + '/' + expiryDate.slice(2, 4));
       } else {
-        this.f.paymentType.patchValue('K');
+        this.f.paymentType.setValue('K', { onlySelf: true });
       }
     }
 

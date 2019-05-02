@@ -3,12 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  clientId:'int.powerbaseaws.traveler-selfservice',
-  clientSecret:'Nx5PG2Y4TheufMfDLUQ2SPrmf2nx9Qfi',
-  tokenUrl:'',
-  apiUrl:''
-  
+  production: false
 };
 
 /*

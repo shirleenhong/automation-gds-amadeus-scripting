@@ -415,22 +415,27 @@ export class DDBService implements OnInit {
   getCityCountry(search: string) {
     let cityList = [];
     cityList = [
-      { city: "LHR", countryCode: "NL", country: "Netherlands" },
-      { city: "AMS", countryCode: "NL", country: "Netherlands" },
-      { city: "PAR", countryCode: "FR", country: "France" },
-      { city: "LON", countryCode: "UK", country: "United Kingdom" },
-      { city: "YUL", countryCode: "CA", country: "Canada" },
-      { city: "YYZ", countryCode: "CA", country: "Canada" },
-      { city: "YVR", countryCode: "CA", country: "Canada" },
-      { city: "CDG", countryCode: "FR", country: "France" },
-      { city: "MAD", countryCode: "ES", country: "Spain" },
-      { city: "ORD", countryCode: "US", country: "United States" },
-      { city: "FRA", countryCode: "DE", country: "Germany" },
-      { city: "SYD", countryCode: "AU", country: "Australia" },
-      { city: "VCE", countryCode: "IT", country: "Italy" },
-      { city: "MNL", countryCode: "PH", country: "Philippines" }
+    { city: 'YUL' , countryCode: 'CA', country: 'Canada' },
+    { city: 'YYZ' , countryCode: 'CA', country: 'Canada' },
+    { city: 'YVR' , countryCode: 'CA', country: 'Canada' },
+    { city: 'LHR' , countryCode: 'NL', country: 'Netherlands' },
+    { city: 'AMS' , countryCode: 'NL', country: 'Netherlands' },
+    { city: 'PAR' , countryCode: 'FR', country: 'France' },
+    { city: 'LON' , countryCode: 'UK', country: 'United Kingdom' },
+    { city: 'CDG' , countryCode: 'FR', country: 'France' },
+    { city: 'MAD' , countryCode: 'ES', country: 'Spain' },
+    { city: 'ORD' , countryCode: 'US', country: 'United States' },
+    { city: 'FRA' , countryCode: 'DE', country: 'Germany' },
+    { city: 'SYD' , countryCode: 'AU', country: 'Australia' },
+    { city: 'VCE' , countryCode: 'IT', country: 'Italy' },
+    { city: 'MNL' , countryCode: 'PH', country: 'Philippines' },
+    { city: 'FLR' , countryCode: 'IT', country: 'Italy' },
     ];
-    return cityList.find(x => x.city === search);
+
+    if (cityList.findIndex(x => x.city === search) !== -1) {
+      return cityList.find(x => x.city === search);
+    } else { return ''; }
+
   }
 
   getCitizenship(search: string) {

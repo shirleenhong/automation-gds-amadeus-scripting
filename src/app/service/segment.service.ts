@@ -10,6 +10,7 @@ import { RemarkHelper } from '../helper/remark-helper';
 import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
+import { FormArray } from '@angular/forms';
 
 @Injectable({
     providedIn: 'root',
@@ -251,6 +252,7 @@ export class SegmentService {
         const day = this.padDate(finaldate.getDate().toString());
         const mo = this.padDate((finaldate.getMonth() + 1).toString());
         const yr = odate.getFullYear().toString().substr(-2);
+        const noOfPassenger = this.pnrService.getPassengers().length;
 
         mis.vendor = '1A';
         mis.status = 'HK';
@@ -259,7 +261,7 @@ export class SegmentService {
         mis.startPoint = 'YYZ';
         mis.endPoint = 'YYZ';
         mis.freeText = freetext;
-        mis.quantity = 1;
+        mis.quantity = noOfPassenger;
         mis.startTime = '0000';
         mis.endTime = '0000';
         mis.segmentName = 'RU';
@@ -489,36 +491,16 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        if (cancel.value.ticket1 && cancel.value.coupon1) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket1 + ' CPNS-' + cancel.value.coupon1;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
+        const arr = cancel.get('tickets') as FormArray
 
-        if (cancel.value.ticket2 && cancel.value.coupon2) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket2 + ' CPNS-' + cancel.value.coupon2;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        for (const c of arr.controls) {
+            const ticket = c.get('ticket').value;
+            const coupon = c.get('coupon').value.toString();
+            if (arr.controls.length >= 1 && ticket && coupon) {
+                remText = dateToday + '/TKT NBR-' + ticket + ' CPNS-' + coupon;
+                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+            }
         }
-
-        if (cancel.value.ticket3 && cancel.value.coupon3) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket3 + ' CPNS-' + cancel.value.coupon3;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-
-        }
-        if (cancel.value.ticket4 && cancel.value.coupon4) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket4 + ' CPNS-' + cancel.value.coupon4;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
-
-        if (cancel.value.ticket5 && cancel.value.coupon5) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket5 + ' CPNS-' + cancel.value.coupon5;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
-
-        if (cancel.value.ticket6 && cancel.value.coupon6) {
-            remText = dateToday + '/TKT NBR-' + cancel.value.ticket6 + ' CPNS-' + cancel.value.coupon6;
-            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-        }
-
 
         segmentselected.forEach(element => {
             rmGroup.deleteRemarkByIds.push(element.lineNo);

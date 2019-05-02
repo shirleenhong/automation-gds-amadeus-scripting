@@ -30,15 +30,15 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
     const segmentList = this.pnr.getSegmentTatooNumber();
     if (rems.length > 0) { items.controls = []; }
 
-    rems.forEach(r => {     
-      let airline = r.remarkText.replace('CHECK-IN AT','').replace('TICKET COUNTER',''.trim());
+    rems.forEach(r => {
+      let airline = r.remarkText.replace('CHECK-IN AT', '').replace('TICKET COUNTER', ''.trim());
       const segment = [];
       segmentList.forEach(x => {
-        if (r.segments.indexOf(x.tatooNo) >=0){
+        if (r.segments.indexOf(x.tatooNo) >= 0) {
           segment.push(x.lineNo);
         }
-        });
-      items.push(this.createFormGroup({ segment:segment.join(','), airline }));
+      });
+      items.push(this.createFormGroup({ segment: segment.join(','), airline }));
       this.total = items.length;
     });
 

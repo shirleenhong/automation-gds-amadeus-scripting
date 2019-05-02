@@ -52,188 +52,128 @@
           Are you cancelling Non Refundable AC Flight(s) due to IROP or schedule change?
         </div>
       </div>
-    </div>
-    <div *ngIf="isACNonRef">
-      <div class="row form-group">
-        <div class="col-4">AC Reason For Cancel: </div>
-        <div class="col-8">
-          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
-            (change)="acChange($event.target.value)">
-            <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
-              {{item.itemText}}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row form-group">
-        <div class="col-sm-4"></div>
-        <div class="col-4">
-          <div class="">AC Ticket No:</div>
-          <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo" />
-        </div>
-
-        <div class="col-4">
-          <div class="">Passenger No:</div>
-          <input type="text" class="form-control" id="acpassengerNo" formControlName="acpassengerNo"
-            name="acpassengerNo" />
-        </div>
-      </div>
-
-      <div class="row form-group">
-        <div class="col-sm-4"></div>
-        <div class="col-4">
-          <div class="">AC Flight No:</div>
-          <input type="text" class="form-control" id="acFlightNo" formControlName="acFlightNo" name="acFlightNo" />
-        </div>
-
-        <div class="col-4">
-          <div class="">City Pair:</div>
-          <input type="text" class="form-control" id="accityPair" formControlName="accityPair" name="accityPair" />
-        </div>
-      </div>
-
-      <div class="form-group  row">
-        <div class="col-sm-4"></div>
-        <div class="col-4">
-          <div class="">AC Departure Date:</div>
-          <input type="date" class="form-control" id="acdepDate" name="acdepDate" formControlName="acdepDate" />
-        </div>
-        <div class="col-4">
-          <div class="">Relationship:</div>
-          <input type="text" class="form-control" id="relationship" formControlName="relationship"
-            name="relationship" />
-        </div>
-      </div>
-
-      <div class="row form-group">
-        <div class="col-4"></div>
-        <div class="col-8">
-          <div class="">Type the affected Airline Flight Number(s)</div>
-          <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
-            maxlength="35" />
-          <div class="">Ex. Single flight AC4519, Multiple Flights AC4519/AC1234/AC5678</div>
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div *ngIf="isUA">
-      <div class="row form-group">
-        <div class="col-4"> </div>
-        <div class="col-8">
-          <input type="checkbox" name="cancelNonRefUA" formControlName="cancelNonRefUA" id="cancelNonRefUA"
-            (change)="changeNonRefUA()" />
-          Are you cancelling Non Refundable UA Flight(s) due to IROP or schedule change?
-        </div>
-      </div>
-      <div *ngIf="isUANonRef">
+      <div *ngIf="f.cancelNonRefAC.value === true">
         <div class="row form-group">
-          <div class="col-4">UA Reason For Cancel: </div>
+          <div class="col-4">AC Reason For Cancel: </div>
           <div class="col-8">
-            <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel"
-              (change)="uaChange($event.target.value)">
-              <option *ngFor="let item of reasonUaList" [value]="item.itemValue">
+            <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
+              (change)="acChange($event.target.value)">
+              <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
                 {{item.itemText}}
               </option>
             </select>
           </div>
         </div>
 
-        <div class="row form-group">
-          <div class="col-sm-4"></div>
-          <div class="col-4">
-            <div class="">UA Segment No:</div>
-            <input type="text" class="form-control" id="uasegNo" formControlName="uasegNo" name="uasegNo" />
+        <div *ngIf="f.reasonACCancel.value !== ''">
+          <div class="row form-group">
+            <div class="col-sm-4"></div>
+            <div class="col-4">
+              <div class="">AC Ticket Nbr:</div>
+              <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo" />
+            </div>
+
+            <div class="col-4">
+              <div class="">Passenger Name Nbr:</div>
+              <input type="text" class="form-control" id="acpassengerNo" formControlName="acpassengerNo"
+                name="acpassengerNo" />
+            </div>
           </div>
 
-          <div class="col-4">
-            <div class="">UA Passenger No:</div>
-            <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
-              name="uaPassengerNo" />
+          <div class="row form-group">
+            <div class="col-sm-4"></div>
+            <div class="col-4">
+              <div class="">AC Flight Nbr:</div>
+              <input type="text" class="form-control" id="acFlightNo" formControlName="acFlightNo" name="acFlightNo" />
+            </div>
+
+            <div class="col-4">
+              <div class="">City Pair:</div>
+              <input type="text" class="form-control" id="accityPair" formControlName="accityPair" name="accityPair" />
+            </div>
           </div>
+
+          <div class="form-group  row">
+            <div class="col-sm-4"></div>
+            <div class="col-4">
+              <div class="">AC Departure Date:</div>
+              <input type="date" class="form-control" id="acdepDate" name="acdepDate" formControlName="acdepDate" />
+            </div>
+            <div class="col-4">
+              <div class="">Relationship:</div>
+              <input type="text" class="form-control" id="relationship" formControlName="relationship"
+                name="relationship" />
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <div class="col-4"></div>
+            <div class="col-8">
+              <div class="">Type the affected Airline Flight Number(s)</div>
+              <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
+                maxlength="35" />
+              <div class="">Ex. Single flight AC4519, Multiple Flights AC4519/AC1234/AC5678</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div *ngIf="isUA">
+
+      <div class="row form-group">
+        <div class="col-4">UA Reason For Cancel: </div>
+        <div class="col-8">
+          <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel"
+            (change)="uaChange($event.target.value)">
+            <option *ngFor="let item of reasonUaList" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="f.reasonUACancel.value === '1'" class="row form-group">
+        <div class="col-sm-4"></div>
+        <div class="col-4">
+          <div class="">UA Itinerary Segment Nbr:</div>
+          <input type="text" class="form-control" id="uasegNo" formControlName="uasegNo" name="uasegNo" />
+        </div>
+
+        <div class="col-4">
+          <div class="">Passenger Name Nbr:</div>
+          <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
+            name="uaPassengerNo" />
         </div>
       </div>
     </div>
 
     <div class="row form-group">
       <div class="col-sm-4"></div>
-      <div class="col-4">
-        <div class="">Ticket No:</div>
-        <input type="text" class="form-control" id="ticket1" formControlName="ticket1" name="ticket1"
-          (change)="ticketCouponchange($event.target.name)" />
-      </div>
-
-      <div class="col-4">
-        <div class="">Coupons :</div>
-        <input type="text" class="form-control" id="coupon1" formControlName="coupon1" name="coupon1" />
-      </div>
+      <div class="col-4">Ticket Number:</div>
+      <div class="col-4">Coupon Number:</div>
     </div>
 
-    <div class="row form-group">
-      <div class="col-sm-4"></div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="ticket2" formControlName="ticket2" name="ticket2"
-          (change)="ticketCouponchange($event.target.name)" />
-      </div>
-
-      <div class="col-4">
-        <input type="text" class="form-control" id="coupon2" formControlName="coupon2" name="coupon2" />
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-sm-4"></div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="ticket3" formControlName="ticket3" name="ticket3"
-          (change)="ticketCouponchange($event.target.name)" />
-      </div>
-
-      <div class="col-4">
-        <input type="text" class="form-control" id="coupon3" formControlName="coupon3" name="coupon3" />
+    <div formArrayName="tickets" *ngFor="let item of cancelForm.get('tickets').controls; let i = index">
+      <div [formGroupName]="i" class="form-group row">
+        <div class="col-sm-4"></div>
+        <div class="col-3">
+          <input type="text" formControlName="ticket" class="form-control" maxlength="25">
+        </div>
+        <div class="col-3">
+          <input type="text" formControlName="coupon" class="form-control" maxlength="25">
+        </div>
+        <div *ngIf="remove" class="col-1">
+          <i class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
+        </div>
+        <div *ngIf="add" class="col-1">
+          &nbsp;
+          <i class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
+        </div>
       </div>
     </div>
-
-    <div class="row form-group">
-      <div class="col-sm-4"></div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="ticket4" formControlName="ticket4" name="ticket4"
-          (change)="ticketCouponchange($event.target.name)" />
-      </div>
-
-      <div class="col-4">
-        <input type="text" class="form-control" id="coupon4" formControlName="coupon4" name="coupon4" />
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-sm-4"></div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="ticket5" formControlName="ticket5" name="ticket5"
-          (change)="ticketCouponchange($event.target.name)" />
-      </div>
-
-      <div class="col-4">
-        <input type="text" class="form-control" id="coupon5" formControlName="coupon5" name="coupon5" />
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-sm-4"></div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="ticket6" formControlName="ticket6" name="ticket6"
-          (change)="ticketCouponchange($event.target.name)" />
-      </div>
-
-      <div class="col-4">
-        <input type="text" class="form-control" id="coupon6" formControlName="coupon6" name="coupon6" />
-      </div>
-    </div>
-
-
-
   </div>
 
 </form>

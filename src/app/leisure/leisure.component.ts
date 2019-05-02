@@ -164,6 +164,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async cancelPnr() {
+    if (!this.cancelSegmentComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = ('Please make sure all the inputs are valid and put required values!');
+      return;
+    }
+
     const osiCollection = new Array<RemarkGroup>();
     const remarkCollection = new Array<RemarkGroup>();
     const cancel = this.cancelSegmentComponent;

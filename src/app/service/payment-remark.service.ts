@@ -192,15 +192,15 @@ export class PaymentRemarkService {
       vcode = accounting.vendorCode;
     }
 
-    let acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
+    let acc3 = 'PAID ' + accounting.descriptionapay + ' CF-' + accounting.supplierConfirmatioNo +
       ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
 
     const maxlen = this.remarkHelper.getMaxLength('Itinerary');
 
     if (acc3.length > maxlen) {
       const lessChar: number = (acc3.length - Number(maxlen));
-      const templen: number = accounting.description.length - (lessChar + 1);
-      const tempdec = accounting.description.substr(0, templen);
+      const templen: number = accounting.descriptionapay.length - (lessChar + 1);
+      const tempdec = accounting.descriptionapay.substr(0, templen);
       acc3 = 'PAID ' + tempdec + ' CF-' + accounting.supplierConfirmatioNo +
         ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
     }

@@ -518,8 +518,8 @@ export class PnrService {
             apays.forEach(x => {
               if (x.segments === model.segmentNo) {
                 model.bsp = '2';
-                model.description = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
-                model.accountingTypeRemark = model.description;
+                model.descriptionapay = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
+                model.accountingTypeRemark = '0';
               }
 
             });
@@ -527,6 +527,7 @@ export class PnrService {
         }
 
         if (model.supplierCodeName === 'MLF') {
+          model.accountingTypeRemark = '0';
           model.bsp = '2';
         }
 

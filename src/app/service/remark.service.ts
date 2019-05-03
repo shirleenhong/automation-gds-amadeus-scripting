@@ -382,8 +382,8 @@ export class RemarkService {
         this.clear();
     }
 
-    endPNR() {
-        smartScriptSession.send('RFCWTPTEST');
+    endPNR(requestor) {
+        smartScriptSession.send('RF' + requestor);
         smartScriptSession.send('ER');
         smartScriptSession.send('RT');
     }

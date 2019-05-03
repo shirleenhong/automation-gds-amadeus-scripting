@@ -368,8 +368,8 @@ export class RemarkService {
     }
 
     async SubmitRemarks() {
-        this.deleteSegments();
         this.deleteRemarks();
+        this.deleteSegments();
         await this.sendCryptics();
         await this.sendRemarks();
         this.clear();

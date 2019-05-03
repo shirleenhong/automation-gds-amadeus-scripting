@@ -31,7 +31,7 @@ export class AmountMaskDirective {
 
         const lastChar = newVal.substr(newVal.length - 1);
 
-        if (lastChar.match(/[0-9]/g) === null && lastChar !== '.') {
+        if (lastChar.match(/[0-9]/g) === null || lastChar !== '.') {
             newVal = newVal.substr(0, newVal.length - 1);
         }
         if ((lastChar === '.') && (newVal.match(/\./g)).length > 1) {

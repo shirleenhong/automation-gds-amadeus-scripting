@@ -1,1 +1,44 @@
-<app-leisure></app-leisure>
+ <app-leisure></app-leisure>
+
+
+ <!-- 
+
+<form [formGroup]="segmentForm">
+    <ng-container *ngTemplateOutlet="railTmpl">
+
+    </ng-container>
+</form>
+
+
+<ng-template #railTmpl>
+    <div [formGroup]="segmentForm">
+        <div class="form-group  row">
+            <div class="col-sm-4"><label id="lblName"> From Station </label></div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="fromStation" name="fromStation" formControlName="vendorName"
+                    maxlength="20" AlphaNumericMask />
+            </div>
+        </div>
+        <ng-container *ngTemplateOutlet="travelDate" ></ng-container>
+
+
+    </div>
+</ng-template>
+
+
+<ng-template #travelDate >
+    <div [formGroup]="segmentForm" class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <label id="lblName"> {{depDate}} </label>
+            <input type="date" class="form-control" id="departureDate" name="departureDate"
+                formControlName="departureDate" (change)="checkDate($event.target.value, $event.target.name)" />
+        </div>
+
+        <div class="col-4">
+            <label id="lblName"> {{arrDate}} </label>
+            <input type="date" class="form-control" id="arrivalDate" name="arrivalDate" formControlName="arrivalDate"
+                (change)="checkDate($event.target.value, $event.target.name)" />
+        </div>
+    </div>
+</ng-template> -->

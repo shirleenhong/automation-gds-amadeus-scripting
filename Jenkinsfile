@@ -80,7 +80,7 @@ pipeline {
       steps {
         echo 'Running Regression Test'
         dir(".") {
-          runRobotTest(ENVIRONMENT, APPLICATION_NAME, '')
+          runRobotTest(env.ENVIRONMENT, env.APPLICATION_NAME, '')
         }
       }
     }

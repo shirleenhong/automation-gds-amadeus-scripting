@@ -160,7 +160,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.workflow = '';
 
     }, error => { alert(JSON.stringify(error)); });
-    this.remarkService.endPNR();
+    this.remarkService.endPNR('CWTSCRIPT');
   }
 
   async cancelPnr() {
@@ -196,18 +196,18 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.getPnr();
       this.workflow = '';
     }, error => { alert(JSON.stringify(error)); });
-    this.remarkService.endPNR();
+    this.remarkService.endPNR(cancel.cancelForm.value.requestor);
   }
 
   async addSegmentToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks().then(x => {
+    await this.remarkService.SubmitRemarks().then(async x => {
       this.isPnrLoaded = false;
-      this.getPnr();
+      await this.getPnr();
+      this.addRir();
     }, error => { alert(JSON.stringify(error)); });
-    await this.addRir();
   }
 
   async addRir() {

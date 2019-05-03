@@ -145,12 +145,12 @@ export class PnrService {
       const passengers = [];
 
       for (const rm of this.pnrObj.nameElements) {
-        const fname =
-          rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-            .otherPaxNamesDetails.givenName;
-        const lname =
-          rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-            .otherPaxNamesDetails.surname;
+        const fname = rm.firstName;
+        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
+        //   .otherPaxNamesDetails.givenName;
+        const lname = rm.lastName;
+        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
+        //   .otherPaxNamesDetails.surname;
 
         const fullname: any =
           lname +
@@ -267,7 +267,8 @@ export class PnrService {
 
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('CWT RETENTION SEGMENT') === -1) {
         this.getSegmentDetails(misc, 'MIS');
       }
     }

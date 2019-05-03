@@ -58,8 +58,6 @@ import { formatDate } from '@angular/common';
 
       const remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 60);
       const passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
-
-      debugger;
       if (passportName !== this.formGroup.controls.passportName.value.toUpperCase()) {
         const search = 'ADVISED ' + remarkText;
         this.remarkGroup.deleteRemarkByIds.push(this.pnrService.getRemarkLineNumber(search));

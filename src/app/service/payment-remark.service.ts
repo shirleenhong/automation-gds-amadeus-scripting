@@ -43,8 +43,6 @@ export class PaymentRemarkService {
   }
 
   public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
-
-
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -144,7 +142,6 @@ export class PaymentRemarkService {
 
 
   processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-    debugger;
     const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
       '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
       accounting.baseAmount.toString().trim() + '/-PT-' +
@@ -178,10 +175,9 @@ export class PaymentRemarkService {
       fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-ALL' +
       bknLine + accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
-
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
-    debugger;
+
     if (accounting.bsp === '2' && accounting.supplierCodeName !== 'MLF') {
       this.extractApayRemark(accounting, remarkList, fopObj);
     }
@@ -196,15 +192,15 @@ export class PaymentRemarkService {
       vcode = accounting.vendorCode;
     }
 
-    let acc3 = 'PAID ' + accounting.description + ' CF-' + accounting.supplierConfirmatioNo +
+    let acc3 = 'PAID ' + accounting.descriptionapay + ' CF-' + accounting.supplierConfirmatioNo +
       ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
 
     const maxlen = this.remarkHelper.getMaxLength('Itinerary');
 
     if (acc3.length > maxlen) {
       const lessChar: number = (acc3.length - Number(maxlen));
-      const templen: number = accounting.description.length - (lessChar + 1);
-      const tempdec = accounting.description.substr(0, templen);
+      const templen: number = accounting.descriptionapay.length - (lessChar + 1);
+      const tempdec = accounting.descriptionapay.substr(0, templen);
       acc3 = 'PAID ' + tempdec + ' CF-' + accounting.supplierConfirmatioNo +
         ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
     }
@@ -290,15 +286,22 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
+  getSegmentValue(value: string) {
+    if (value.length > 0) {
+      const output = value.split(' ');
+
+      return output[0];
+    }
+  }
 
   generateSFCRemark(fg: FormGroup, assoc) {
     let remark = 'SFC';
     switch (assoc) {
       case '3':
-        remark += '/-FA-H' + fg.get('segmentNum').value;
+        remark += '/-FA-H' + this.getSegmentValue(fg.get('segmentNum').value);
         break;
       case '4':
-        remark += '/-FA-C' + fg.get('segmentNum').value;
+        remark += '/-FA-C' + this.getSegmentValue(fg.get('segmentNum').value);
         break;
       case '1':
         remark += '/-FA-T1';

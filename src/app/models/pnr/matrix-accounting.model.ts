@@ -20,6 +20,6 @@ export class MatrixAccountingModel {
     supplierConfirmatioNo: string;
     airAccountingRemark: string;
     tktLine: string;
-    description: string;
+    descriptionapay: string;
     commisionPercentage: string;
 }

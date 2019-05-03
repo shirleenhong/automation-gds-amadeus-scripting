@@ -1,9 +1,12 @@
 {
-    "/api": {
-      "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com/config-services-rest/api",
-      "secure": false,
-      "pathRewrite": {"^/api" : ""}
-     }
-
-
+  "/config-services/api": {
+    "target": "https://dev.int.us-west-2.bpg-aws-cwt.com/service/ap/config-services/api",
+    "secure": false,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/profile-services/api": {
+    "target": "https://dev.int.us-west-2.bpg-aws-cwt.com/service/ap/profile-services/api",
+    "secure": false,
+    "pathRewrite": { "^/api": "" }
+  }
 }

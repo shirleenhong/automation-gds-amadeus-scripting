@@ -25,7 +25,7 @@ export class RemarkComponent implements OnInit {
   remarkForm: FormGroup;
 
 
-  
+
   packageList: Array<SelectItem>;
 
   constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
@@ -75,7 +75,6 @@ export class RemarkComponent implements OnInit {
       }
     }
     const arr = this.codeShareComponent.codeShareGroup.get('segments') as FormArray;
-    // debugger;
     if (arr.length === 1) {
       const val1 = arr.controls[0].get('segment').value;
       const val2 = arr.controls[0].get('airline').value;

@@ -15,6 +15,7 @@ import { formatDate } from '@angular/common';
     formGroup: FormGroup;
     remarkGroup: RemarkGroup;
     datePipe = new DatePipe('en-US');
+    isEnabled: boolean;
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
@@ -25,10 +26,11 @@ import { formatDate } from '@angular/common';
      this.remarkGroup.remarks = new Array<RemarkModel>();
      this.formGroup.get('segments').enable();
 
-     if (this.formGroup.controls.originDestination.value === 'true') {
-     // this.AddCitizenship();
+     if (this.isEnabled === true) {
      this.AddAdvisory();
+     this.DeleteExistingVisaSegmentRemarks();
      this.AddSegments();
+     }
 
      let items: any;
      // tslint:disable-next-line:no-string-literal
@@ -39,8 +41,10 @@ import { formatDate } from '@angular/common';
        items[i].controls['country'].disable();
       //  tslint:disable-next-line:no-string-literal
        items[i].controls['segmentLine'].disable();
+      //  tslint:disable-next-line:no-string-literal
+       items[i].controls['passport'].disable();
           }
-    }
+      //}
      return this.remarkGroup;
   }
 
@@ -50,18 +54,59 @@ import { formatDate } from '@angular/common';
 
   AddAdvisory(): void {
      // tslint:disable-next-line:max-line-length
-    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', '*'));
-    this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', '*'));
+    if (this.formGroup.controls.passportName.value !== '') {
+
+      const remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 60);
+      const passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
+      if (passportName !== this.formGroup.controls.passportName.value.toUpperCase()) {
+        const search = 'ADVISED ' + remarkText;
+        this.remarkGroup.deleteRemarkByIds.push(this.pnrService.getRemarkLineNumber(search));
+        // tslint:disable-next-line:max-line-length
+        this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', ''));
+      } else {
+        // tslint:disable-next-line:max-line-length
+        // this.remarkGroup.remarks.push(this.remarkHelper.createRemark('ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', ''));
+       }
+     }
+    if (this.pnrService.getRemarkText('INTERNATIONAL TRAVEL ADVISORY SENT') === '') {
+      this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', ''));
+     }
+  }
+
+  DeleteExistingVisaSegmentRemarks(): void {
+     const pnr = this.pnrService.pnrObj;
+     const rem = ' - A VALID PASSPORT';
+     pnr.rirElements.forEach(x => {
+     let remText: string;
+     remText = x.fullNode.miscellaneousRemarks.remarks.freetext;
+     if ( remText.indexOf(rem) !== -1 ) {
+        this.remarkGroup.deleteRemarkByIds.push(x.elementNumber);
+      }
+     });
   }
 
   AddSegments(): void {
     this.formGroup.controls.segments.value.forEach(x => {
-      if (x.visa === '') {
+      if (!x.visa) {
+        const segments = x.tatooNumber;
+        const rm = (this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED', 'RI', 'R'));
+        rm.relatedSegments = [];
+        const s = segments.split(',');
+        s.forEach(x => {
+          rm.relatedSegments.push(x);
+        });
+        this.remarkGroup.remarks.push(rm);
+
+      } else {
         // tslint:disable-next-line:max-line-length
-        this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT IS REQUIRED', 'RI', 'R', x.tatooNumber));
-      } else if (x.visa) {
-        // tslint:disable-next-line:max-line-length
-        this.remarkGroup.remarks.push(this.getRemarksModel(x.country.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED', 'RI', 'R', x.tatooNumber));
+        const segments = x.tatooNumber;
+        const rm = (this.remarkHelper.createRemark(x.country.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED', 'RI', 'R'));
+        rm.relatedSegments = [];
+        const s = segments.split(',');
+        s.forEach(x => {
+          rm.relatedSegments.push(x);
+        });
+        this.remarkGroup.remarks.push(rm);
       }
     });
   }

@@ -145,12 +145,12 @@ export class PnrService {
       const passengers = [];
 
       for (const rm of this.pnrObj.nameElements) {
-        const fname =
-          rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-            .otherPaxNamesDetails.givenName;
-        const lname =
-          rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-            .otherPaxNamesDetails.surname;
+        const fname = rm.firstName;
+        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
+        //   .otherPaxNamesDetails.givenName;
+        const lname = rm.lastName;
+        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
+        //   .otherPaxNamesDetails.surname;
 
         const fullname: any =
           lname +
@@ -222,19 +222,23 @@ export class PnrService {
   }
 
   getPassiveCarSegmentNumbers() {
-    const elementNumbers = new Array<number>();
-    for (const rm of this.pnrObj.auxCarSegments) {
-      elementNumbers.push(rm.elementNumber);
-    }
-    return elementNumbers;
+    return this.getPassiveSegmentTypes('CAR');
+  }
+
+  getPassiveSegmentTypes(segmentType: string) {
+    const elements = new Array<any>();
+
+    this.getSegmentTatooNumber().forEach(c => {
+      if (c.segmentType === segmentType) {
+        elements.push({ lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+      }
+    });
+
+    return elements;
   }
 
   getPassiveHotelSegmentNumbers() {
-    const elementNumbers = new Array<number>();
-    for (const rm of this.pnrObj.auxHotelSegments) {
-      elementNumbers.push(rm.elementNumber);
-    }
-    return elementNumbers;
+    return this.getPassiveSegmentTypes('HTL');
   }
 
   getPassiveAirSegmentNumbers() {
@@ -263,7 +267,8 @@ export class PnrService {
 
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('CWT RETENTION SEGMENT') === -1) {
         this.getSegmentDetails(misc, 'MIS');
       }
     }
@@ -514,8 +519,8 @@ export class PnrService {
             apays.forEach(x => {
               if (x.segments === model.segmentNo) {
                 model.bsp = '2';
-                model.description = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
-                model.accountingTypeRemark = model.description;
+                model.descriptionapay = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
+                model.accountingTypeRemark = '0';
               }
 
             });
@@ -523,6 +528,7 @@ export class PnrService {
         }
 
         if (model.supplierCodeName === 'MLF') {
+          model.accountingTypeRemark = '0';
           model.bsp = '2';
         }
 

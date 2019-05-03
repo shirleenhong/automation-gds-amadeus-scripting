@@ -95,7 +95,7 @@ export class AccountingRemarkComponent implements OnInit {
           let i = 1;
           this.accountingRemarks.forEach(x => {
             x.tkMacLine = i;
-            i++;           
+            i++;
           });
           this.checkSupplierCode();
           this.modalRef.content.response = '';
@@ -111,8 +111,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.title = 'Update Accounting Remarks';
     this.modalRef.content.accountingRemarks = new MatrixAccountingModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemarks);
-    this.modalRef.content.IsBSP(r.bsp);
-    this.modalRef.content.assignDescription(r.description);
+    this.modalRef.content.onChangeApayNonApay(r.accountingTypeRemark);
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();
   }

@@ -8,10 +8,9 @@ target
 **/.settings
 **/coverage
 **/node_modules
-dist
-<<<<<<< Updated upstream
+
+dist/
+node_modules/
+
 !index.html
-=======
-!index.html
->>>>>>> Stashed changes
 src/index.html

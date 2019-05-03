@@ -160,10 +160,18 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.workflow = '';
 
     }, error => { alert(JSON.stringify(error)); });
-    this.remarkService.endPNR();
+    this.remarkService.endPNR('CWTSCRIPT');
   }
 
   async cancelPnr() {
+    if (!this.cancelSegmentComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = ('Please make sure all the inputs are valid and put required values!');
+      return;
+    }
+
     const osiCollection = new Array<RemarkGroup>();
     const remarkCollection = new Array<RemarkGroup>();
     const cancel = this.cancelSegmentComponent;
@@ -173,8 +181,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelRemarks().then(x => {
-      this.isPnrLoaded = false;
-      this.getPnr();
+      // this.isPnrLoaded = false;
+      // this.getPnr();
     }, error => { alert(JSON.stringify(error)); });
 
     if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
@@ -184,25 +192,28 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.cancelRemarks().then(x => {
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
     }, error => { alert(JSON.stringify(error)); });
-    this.remarkService.endPNR();
+    this.remarkService.endPNR(cancel.cancelForm.value.requestor);
   }
 
   async addSegmentToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks().then(x => {
+    await this.remarkService.SubmitRemarks().then(async x => {
       this.isPnrLoaded = false;
-      this.getPnr();
+      await this.getPnr();
+      this.addRir();
     }, error => { alert(JSON.stringify(error)); });
-    await this.addRir();
   }
 
   async addRir() {
     // await this.pnrService.getPNR();
     const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSeaSegmentRir(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     await this.remarkService.BuildRemarks(remarkCollection2);
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;

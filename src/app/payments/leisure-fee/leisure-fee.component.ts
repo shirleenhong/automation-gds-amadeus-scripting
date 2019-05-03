@@ -211,6 +211,11 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   checkSFC() {
+    if (this.f.segmentAssoc.value === '0') {
+      const controls = ['vendorCode', 'ccNo', 'expDate'];
+      this.enableDisbleControls(controls, true);
+    }
+
     if (
       this.f.segmentAssoc.value === '0' &&
       (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')

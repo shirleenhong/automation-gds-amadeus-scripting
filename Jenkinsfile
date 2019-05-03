@@ -44,7 +44,7 @@ pipeline {
         }
       }
       steps{
-        dir("."){
+        dir(".") {
           echo 'Preparing docker container'
           sh 'docker build -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
           sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
@@ -79,7 +79,7 @@ pipeline {
       }
       steps {
         echo 'Running Regression Test'
-        dir(".") 
+        dir(".") {
           runRobotTest(ENVIRONMENT, APPLICATION_NAME, '')
         }
       }

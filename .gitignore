@@ -1,3 +1,7 @@
+# IDE
+.vscode/
+
+# Misc
 .project
 **/.project
 .classpath
@@ -9,8 +13,16 @@ target
 **/coverage
 **/node_modules
 
+# Generated
 dist/
 node_modules/
 
+# For devs
 !index.html
 src/index.html
+
+# RobotFramework
+log.html
+output.xml
+report.html
+test-suite/reports/

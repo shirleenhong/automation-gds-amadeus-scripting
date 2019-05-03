@@ -28,7 +28,7 @@ pipeline {
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
     booleanParam(name: 'BUILD', defaultValue: false, description: 'Build?')    
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
-    // booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression against Dev Environment?')
+    booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')
     booleanParam(name: 'DEPLOY_TO_STAGING', defaultValue: false, description: 'Deploy to Staging Environment?')
     booleanParam(name: 'DEPLOY_TO_PROD', defaultValue: false, description: 'Deploy to Production Environment?')
@@ -55,7 +55,6 @@ pipeline {
         }
       }
     }
- 
     stage('DEV:Deploy') {
       when {
           expression {
@@ -71,7 +70,20 @@ pipeline {
             deployDockerContainer(env.DEV_TARGET_GROUP_ARN)
         }
       }
-    }    
+    }
+    stage('DEV:Regression') {
+      when {
+        expression {
+          return params.RUN_REGRESSION_DEV
+        }
+      }
+      steps {
+        echo 'Running Regression Test'
+        dir(params.APPLICATION_NAME) {
+          runRobotTest(ENVIRONMENT, APPLICATION_NAME, '')
+        }
+      }
+    }
     stage('TEST:Deploy') {
       when {
         expression {
@@ -277,6 +289,33 @@ def deployDockerContainerToECR(String ecrUrl, String tagVersion, String region) 
     sh 'docker push ${ECR_URL}:${TAG_VERSION}'
 
     echo ' ============== ECR Push Complete ============== '
+}
+
+def runRobotTest(currEnv, appName, tagName) {
+    script {
+        def emailSubject = appName + ' (' + currEnv + ') ' + Instant.now()
+        def emailBody = ''
+        try {
+            sh '${ROBOT_BIN} -v timeout:10 -v env:' + currEnv + ' test-suite/*'
+        } catch (Exception error) {
+            emailBody = "Build failed (see ${env.BUILD_URL}): ${error} <br/><br/>"
+            if (currentBuild.result == 'UNSTABLE')
+                currentBuild.result = 'FAILURE'
+            throw error
+        } finally {
+            step([$class           : 'RobotPublisher',
+                  passThreshold    : 100,
+                  unstableThreshold: 100,
+                  logFileName      : 'log.html',
+                  outputPath       : '',
+                  outputFileName   : 'output.xml',
+                  reportFileName   : 'report.html',
+                  otherFiles       : ''])
+
+            emailBody = emailBody + '${SCRIPT, template="robot-email-template-custom.groovy"} <br/><br/> '
+            emailext(to: 'WGo@carlsonwagonlit.com, WGo@carlsonwagonlit.com', subject: emailSubject, body: emailBody)
+        }
+    }
 }
 
 @NonCPS

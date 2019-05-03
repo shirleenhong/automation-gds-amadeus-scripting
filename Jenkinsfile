@@ -79,7 +79,7 @@ pipeline {
       }
       steps {
         echo 'Running Regression Test'
-        dir(params.APPLICATION_NAME) {
+        dir(".") 
           runRobotTest(ENVIRONMENT, APPLICATION_NAME, '')
         }
       }

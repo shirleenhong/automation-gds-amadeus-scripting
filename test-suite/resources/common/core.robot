@@ -5,13 +5,15 @@ Resource          common_library.robot
 Add New Command Page
     #Open Command Page
     Click Element    css=#etoolbar_toolbarSection_newcommandpagebtn_id
-    Wait Until Page Contains Element    css=.cmdPromptDiv > textArea    60
+    Wait Until Page Contains Element    css=.cmdPromptDiv > textArea    180
 
 Close CA Migration Window
     #Close CA Migration Window
     Unselect Frame
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
-    Click Element    xpath=.//div[@class="xDialog_titleBar xDialog_std_titleBar"][@atdraggable='2']//span[2]//span
+    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]/following-sibling::span//span[@class='xWidget xICNstd']
+    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]
+    Comment    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
 
 Close Cryptic Display Window
     Click Element    css=#elgen-19
@@ -23,7 +25,7 @@ Enter Dutycode
 Enter GDS Command
     [Arguments]    @{gds_commands}
     #Wait For Page to Load before sending commands
-    Wait Until Element Is Visible    //span[contains(@class, 'title cryptic')]    60
+    Wait Until Element Is Visible    //span[contains(@class, 'title cryptic')]    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    css=.cmdPromptDiv > textArea    ${gds_command}
     \    Press Key    css=.cmdPromptDiv > textArea    \\13
@@ -34,7 +36,7 @@ Enter Office ID
 
 Enter Password
     [Arguments]    ${password}
-    Input Text    css=#password input    ${password}
+    Input Password    css=#password input    ${password}
 
 Enter Username
     [Arguments]    ${username}
@@ -52,17 +54,29 @@ Open CA Migration Window
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
     #Open and verify CA Migration window
-    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration"]
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    60
-    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com')]    60
-    Select Frame    xpath=//iframe[contains(@src,'https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com')]
-    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Submit To PNR')]    180
+    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration Test"]
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration Test')]    60
+    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
+    Select Frame    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
+    #Open and verify CA Migration window acceptance
+    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure Test"]
+    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure Test')]    60
+    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
+    Comment    Select Frame    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
+    #links when running for UAT
+    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration UAT"]
+    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration UAT')]    60
+    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://staging.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
+    Comment    Select Frame    xpath=//iframe[contains(@src,'https://staging.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
+    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Load PNR')]    180
 
 Open Cryptic Display Window
     #Open Cryptic Display window from Graphic Mode
-    Wait Until Element Is Enabled    css=#tpl1_FS
+    Wait Until Element Is Enabled    css=.bookingTool.FS    30
     Press Key    xpath=//button[contains(@id, 'crypticDisplay')]    \\32
-    Wait Until Element Is Visible    css=#epnrRetrieves1_crypticText    30
+    Wait Until Page Contains Element    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]    30
+    Sleep    10
+    [Teardown]    Take Screenshot
 
 Retrieve PNR In Command Page
     [Arguments]    ${current_pnr}

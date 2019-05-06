@@ -1,15 +1,200 @@
 *** Settings ***
-Resource          ../../resources/common/common_library.robot
-Resource          ../../resources/common/core.robot
-Resource          ../amadeus_ca_resource.robot
+Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
-Verify Acccounting Remarks Are Written For FOP Cash For Single Passenger
+Verify Accounting Remarks Are Written For FOP Cash For Single Passenger
+    [Tags]    us7538
     Login To Amadeus Sell Connect
-    Comment    Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    TKOK    APM -PAX*+1 763 2123364    RFCWTPTEST
-    ...    ER
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    TKOK    APM -PAX*+1 763 2123364    RFCWTPTEST    ER
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE TEST@EMAIL.COM    TKOK
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt    Cash    CAD Funds    LEISURE-AMADEUS    THIS IS A MAX OF 30 CHARACTERS    500.50
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CA/-LK-T/-BA-101000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}
+    Close Cryptic Display Window
+    Switch To Command Page
 
-Verify Acccounting Remarks Are Written For FOP Cash For Multiple Passenger
+Verify Accounting Remarks Are Updated For Single Passenger
+    [Tags]    us8621
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Payment Update Button    1
+    Select Bank Account    USD Trust
+    Enter Amount    1234.55
+    Enter GC Number    9878991
+    Enter Description    TESTING OF UPDATE MATRIX
+    Select Mode Of Payment    Cheque
+    Click Element    css=#amount
+    Click Save Button
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CK/-LK-T/-BA-108000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
+Verify Accounting Remarks Are Written For FOP Cash For Multiple Passengers
+    [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms
+    Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE TEST@EMAIL.COM    TKOK
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt    Cash    USD Funds    POLO-MARCO    SAMPLE DESCRIPTION    1250.00    123456
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CA/-LK-T/-BA-102000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}
+    Close Cryptic Display Window
+    Switch To Command Page
+
+Verify Accounting Remarks Are Deleted
+    [Tags]    us8621
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Payment Delete Button    1
+    Confirm Delete
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Not Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Not Written In The PNR    RM *REC/-RLN-1/-FOP-CA/-LK-T/-BA-102000/-GL-124000
+    Verify Specific Remark Is Not Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
+Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
+    [Tags]    us7538
+    Login To Amadeus Sell Connect
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt    Cheque    CAD Funds    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CK/-LK-T/-BA-101000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}    True
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
+Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passengers
+    [Tags]    us7538
+    Login To Amadeus Sell Connect
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt    Credit Card    CWT (Visa)    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
+    ...    4444333322221111    0323
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-LK-T/-BA-115000/-GL-124000    True
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}    True
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
+Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
+    [Tags]    us7537
+    Login To Amadeus Sell Connect
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE Test@email.com
+    ...    TKOK
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt For RBC Redemption    RBC Point Redemption    LEISURE-AMADEUS    200.75    12345    123456789    9999
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-PR${last_four_vi}/-BA-224000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-POINTS ${rbc_points} REF-${cwt_reference}
+    Close Cryptic Display Window
+    Switch To Command Page
+
+Verify Accounting Remarks Are Updated For RBC Redemption
+    [Tags]    us8621
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    BSL
+    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Panel    Payment
+    Click Payment Update Button    1
+    Select Passenger Name    POLO-LISA
+    Enter Amount    1234.55
+    Enter RBC Points    765432
+    Enter CWT Reference    999888111
+    Enter Last Four Digit VI    3214
+    Click Element    css=#amount
+    Click Save Button
+    Click Submit To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-PR${last_four_vi}/-BA-224000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-POINTS ${rbc_points} REF-${cwt_reference}
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser

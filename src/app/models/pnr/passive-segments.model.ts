@@ -6,8 +6,8 @@ export class PassiveSegmentsModel {
     confirmationNo: string;
     departureDate: string;
     departureTime: string;
-    departureCity: string;
-    destinationCity: string;
+    departureCity = '';
+    destinationCity = '';
     arrivalDate: string;
     arrivalTime: string;
     tourName: string;
@@ -54,8 +54,8 @@ export class PassiveSegmentsModel {
     // car
     carType: string;
     dropOffLoc: string;
-    pickupOffAdress: string;
-    dropOffAdress: string;
+    pickupOffAddress = '';
+    dropOffAddress = '';
     rentalCost: string;
     currency = 'CAD';
     duration = 'DAILY';

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -6,6 +6,7 @@ import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model'
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
 import { DeprecatedDatePipe, getLocaleExtraDayPeriodRules } from '@angular/common';
+import { UtilHelper } from 'src/app/helper/util.helper';
 declare var smartScriptSession: any;
 
 @Component({
@@ -13,7 +14,8 @@ declare var smartScriptSession: any;
   templateUrl: './update-segment.component.html',
   styleUrls: ['./update-segment.component.scss']
 })
-export class UpdateSegmentComponent implements OnInit {
+export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
+
 
   @Input()
   passiveSegments: PassiveSegmentsModel;
@@ -32,10 +34,14 @@ export class UpdateSegmentComponent implements OnInit {
   stateRoomList: Array<SelectItem>;
   arrivaldayList: Array<SelectItem>;
   diningList: Array<SelectItem>;
+  filterSupplierCodeList = [];
+  currencyList = [];
   segmentForm: FormGroup;
   isSubmitted: boolean;
   supplierCodeList: Array<any>;
   carTypeList: Array<any>;
+  pickupOffAddrList = [];
+  dropOffAddrList = [];
   lblvendorName: any;
   lblvendorCode: any;
   lblconfirmationNo: any;
@@ -78,10 +84,12 @@ export class UpdateSegmentComponent implements OnInit {
     zzdepartureCity: new FormControl('', []),
     zzdestinationCity: new FormControl('', []),
     seatNumber: new FormControl('', [Validators.required]),
+    //train
     trainNumber: new FormControl('', [Validators.required]),
     carNumber: new FormControl('', [Validators.required]),
     arrivalStation: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required]),
+    // limo
     rate: new FormControl('', [Validators.required]),
     rateType: new FormControl('', [Validators.required]),
     taxOnRate: new FormControl('', [Validators.required]),
@@ -98,21 +106,22 @@ export class UpdateSegmentComponent implements OnInit {
     includeToll: new FormControl(''),
     includeParking: new FormControl(''),
     includeGratuities: new FormControl(''),
+    //-- cars
     carType: new FormControl('', [Validators.required]),
     dropOffLoc: new FormControl('', [Validators.required]),
-    pickupOffAdress: new FormControl('', [Validators.required]),
-    dropOffAdress: new FormControl('', [Validators.required]),
+    pickupOffAddress: new FormControl(''),
+    dropOffAddress: new FormControl(''),
     rentalCost: new FormControl('', [Validators.required]),
     currency: new FormControl('', [Validators.required]),
     duration: new FormControl('', [Validators.required]),
     mileage: new FormControl('', [Validators.required]),
     mileagePer: new FormControl('', [Validators.required]),
-    dropOffFee: new FormControl('', [Validators.required]),
-    cdNumber: new FormControl('', [Validators.required]),
-    idNumber: new FormControl('', [Validators.required]),
-    frequentFlierNumber: new FormControl('', [Validators.required]),
-    specialEquipment: new FormControl('', [Validators.required]),
-    specialRequest: new FormControl('', [Validators.required])
+    dropOffFee: new FormControl(''),
+    cdNumber: new FormControl(''),
+    idNumber: new FormControl(''),
+    frequentFlierNumber: new FormControl(''),
+    specialEquipment: new FormControl(''),
+    specialRequest: new FormControl('')
   });
 
 
@@ -120,7 +129,8 @@ export class UpdateSegmentComponent implements OnInit {
     private pnrService: PnrService,
     private modalRef: BsModalRef,
     private ddbService: DDBService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private util: UtilHelper) {
     this.passiveSegments = new PassiveSegmentsModel();
     this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segmentForm = fb.group({ segmentType: new FormControl('', [Validators.required]) });
@@ -133,10 +143,21 @@ export class UpdateSegmentComponent implements OnInit {
     // this.loadArrivalDay();
     this.loadDining();
     this.getNoPassengers();
+    this.loadCurrencies();
+  }
+
+  loadCurrencies() {
+    // TODO: Get from API DDB
+    this.currencyList = this.ddbService.getCurrencies();
   }
 
   ngOnInit() {
-    this.changeControlLabel(this.passiveSegments.segmentType);
+    this.changeSegmentType(this.passiveSegments.segmentType);
+
+
+  }
+
+  ngAfterViewChecked(): void {
   }
 
   saveSegment() {
@@ -215,7 +236,7 @@ export class UpdateSegmentComponent implements OnInit {
 
   }
 
-  changeControlLabel(type) {
+  changeSegmentType(type) {
     this.selectedTmpl = null;
     this.lbldepartureDate = 'Departure Date';
     this.lbldepartureTime = 'Departure Time';
@@ -315,16 +336,28 @@ export class UpdateSegmentComponent implements OnInit {
         this.lbldestinationCity = 'Drop Off City';
 
         forms = ['segmentType', 'vendorName', 'vendorCode', 'confirmationNo', 'rentalCost', 'currency', 'carType',
-          'departureDate', 'departureTime', 'departureCity', 'duration', 'mileage', 'mileagePer', 'dropOffFee',
-          'additionalInfo', 'cancellationInfo', 'noPeople', 'pickupLoc', 'dropOffLoc', 'cdNumber', 'idNumber',
+          'departureDate', 'departureTime', 'departureCity', 'duration', 'mileage', 'mileagePer', 'dropOffFee', 'dropOffAddress',
+          'pickupLoc', 'dropOffLoc', 'cdNumber', 'idNumber', 'pickupOffAddress',
           'frequentFlierNumber', 'specialEquipment', 'specialRequest', 'destinationCity', 'arrivalTime', 'arrivalDate'];
         this.setForm(forms);
         this.selectedTmpl = this.carTmpl;
+
+
+        if (this.passiveSegments.departureCity !== '' && this.passiveSegments.vendorCode !== '') {
+          this.loadCarSupplier();
+          this.loadCarType();
+          this.loadDropOffAddr(this.passiveSegments.dropOffLoc);
+          this.loadPickupOffAddr(this.passiveSegments.pickupLoc);
+        }
+
+
         break;
       default:
         break;
     }
+    //this.passiveSegments.segmentType = (type);
     this.segmentForm.get('segmentType').setValue(type);
+    this.util.validateAllFields(this.segmentForm);
   }
 
   includeOnRate(name, checked) {
@@ -368,7 +401,7 @@ export class UpdateSegmentComponent implements OnInit {
 
 
   onChangeSegmentType(type) {
-    this.changeControlLabel(type);
+    this.changeSegmentType(type);
   }
 
   checkDate(tempdate, tempname) {
@@ -429,23 +462,148 @@ export class UpdateSegmentComponent implements OnInit {
       this.segmentForm.get(controlenable).updateValueAndValidity();
 
     } else if (this.segmentForm.get('segmentType').value === 'CAR') {
+      //this.loadCarType();
+
+    }
+  }
+
+  departureCityOnBlur() {
+    if (this.segmentForm.get('segmentType').value === 'CAR') {
+      this.loadCarSupplier();
+    }
+  }
+
+  vendorCodeChange() {
+    if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarType();
 
     }
   }
 
+  loadCarSupplier() {
+    this.filterSupplierCodeList = [];
+    const city = this.segmentForm.get('departureCity').value;
+    if (city === undefined || city.length < 3) { return; }
+    const response = smartScriptSession.send('CL' + city + '-T').then(async res => {
+      let lines = res.Response.split('\r\n');
+      const regex = /^(?<code>[A-Z]{2}) (?<text>([A-Z]{2})\+.+?(?=\s{2}))/g;
+      lines = await this.getMDResult(lines);
+      lines.forEach(x => {
+        const match = regex.exec(x);
+        if (match && match.groups) {
+          const obj = this.filterSupplierCodeList.find(z => z.supplierCode === match.groups.code);
+          if (obj === undefined) {
+            this.filterSupplierCodeList.push({ supplierCode: match.groups.code, supplierName: match.groups.text });
+          }
+          regex.lastIndex = 0;
+        }
+      });
+    });
+  }
 
-  loadCarType() {
-    debugger;
-    const response = smartScriptSession.send('CPOZEYYZ/VEH').then(res => {
-      debugger;
+  async getMDResult(lines) {
+    if (lines[lines.length - 2].indexOf('MORE') === 0) {
+      let stop = false;
+      while (!stop) {
+        await smartScriptSession.send('MD').then(x => {
+          const list = (x.Response.split('\r\n'));
+          lines = lines.concat(list);
+          if ((list.length < 4) || (list[list.length - 2].indexOf('NO MORE ITEMS') >= 0)) {
+            stop = true;
+          }
+
+        });
+
+      }
+    }
+    return lines;
+  }
+
+  loadPickupOffAddr(val) {
+    this.pickupOffAddrList = [];
+    if (val === 'OFF AIRPORT') {
+      const city = this.passiveSegments.departureCity;
+      if (city.length < 3) { return; }
+      const vendor = this.passiveSegments.vendorCode;
+      this.getOffAddress(this.pickupOffAddrList, 'CL' + vendor + city);
+      this.segmentForm.get('pickupOffAddress').enable();
+    } else {
+      this.segmentForm.get('pickupOffAddress').disable();
+    }
+
+    if (this.passiveSegments.dropOffLoc !== val) {
+      this.segmentForm.get('dropOffAddress').enable();
+      this.loadDropOffAddr(this.passiveSegments.dropOffLoc, val);
+    }
+
+  }
+
+  loadDropOffAddr(val, pickup?) {
+    if (pickup === undefined) {
+      pickup = this.passiveSegments.pickupLoc;
+    }
+
+    this.dropOffAddrList = [];
+    if (pickup !== val) {
+      const city = this.passiveSegments.departureCity;
+      if (city.length < 3) { return; }
+      const vendor = this.passiveSegments.vendorCode;
+      this.getOffAddress(this.dropOffAddrList, 'CL' + vendor + city);
+      this.segmentForm.get('dropOffAddress').enable();
+    } else {
+      this.segmentForm.get('dropOffAddress').disable();
+    }
+  }
 
 
+  getOffAddress(addrList, command) {
+    const response = smartScriptSession.send(command).then(async res => {
+      let lines = res.Response.split('\r\n');
+      const regex = /(?<code>[A-Z]{4}[0-9]{2}) (?<text>.+?(?=\s{2}))/g;
+
+      lines = await this.getMDResult(lines);
+      lines.forEach(x => {
+        const match = regex.exec(x);
+        if (match && match.groups) {
+          const obj = addrList.find(z => z.itemValue === match.groups.code);
+          if (obj === undefined) {
+            addrList.push({ itemValue: match.groups.code, itemText: match.groups.text });
+          }
+          regex.lastIndex = 0;
+        }
+      });
     });
 
-    if (response) {
+  }
 
-    }
+
+  loadCarType() {
+    this.carTypeList = [];
+    const city = this.passiveSegments.departureCity;
+    if (city.length < 3) { return; }
+    const vendor = this.passiveSegments.vendorCode;
+    // CPOZEYYZ
+    const response = smartScriptSession.send('CPO' + vendor + city + '/VEH').then(async res => {
+
+      let lines = res.Response.split('\r\n');
+      lines = await this.getMDResult(lines);
+      const regex = /\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
+      lines.forEach(x => {
+
+        const match = regex.exec(x);
+        if (match && match.groups) {
+          if (match.groups.text.trim() !== '') {
+            const obj = this.carTypeList.find(z => z.itemValue === match.groups.code);
+
+            if (obj === undefined) {
+              this.carTypeList.push({ itemValue: match.groups.code, itemText: match.groups.text });
+            }
+            regex.lastIndex = 0;
+          }
+        }
+
+      });
+    });
   }
 
   onChangeStateRoom(type) {

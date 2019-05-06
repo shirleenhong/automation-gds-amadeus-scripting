@@ -1,0 +1,5 @@
+*** Settings ***
+Documentation     This will initialize all pages.
+Resource          login.txt
+Resource          payment.txt
+Resource          leisure_window.txt

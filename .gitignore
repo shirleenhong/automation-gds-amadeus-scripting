@@ -22,7 +22,7 @@ node_modules/
 src/index.html
 
 # RobotFramework
+reports/
 log.html
 output.xml
 report.html
-test-suite/reports/

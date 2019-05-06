@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div *ngIf="accountingRemarks.bsp == 2 && accountingRemarks.supplierCodeName !== 'MLF'">
+    <div *ngIf="accountingRemarks.bsp == 2">
       <div class="form-group  row">
         <div class="col-sm-4">Description: </div>
         <div class="col-sm-8">
@@ -155,7 +155,7 @@
 
 
     </div>
-    <div class="form-group  row" *ngIf="IsInsurance">
+    <div class="form-group  row" *ngIf="accountingRemarks.bsp == 3">
       <div class="col-sm-4"></div>
       <div class="col">
         <div class="">Commission % :</div>

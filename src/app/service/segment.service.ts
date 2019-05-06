@@ -432,7 +432,7 @@ export class SegmentService {
         }
 
         if (remText !== '') {
-            rmGroup.cryptics.push('RFCWTPTEST');
+            rmGroup.cryptics.push('RF' + cancel.value.requestor);
             rmGroup.cryptics.push('ER');
         }
 

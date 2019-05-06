@@ -276,11 +276,9 @@ export class CancelSegmentComponent implements OnInit {
         case '2':
         case '3':
           controlsArr = [{ control: 'acpassengerNo', controlvalue: pass }];
-          this.initializeControl(controlsArr);
           break;
         case '5':
         case '6':
-          this.initializeControl(controlsArr);
           break;
         default:
           controlsArr = [];
@@ -289,8 +287,8 @@ export class CancelSegmentComponent implements OnInit {
     }
     else {
       controlsArr = [{ control: 'acpassengerNo', controlvalue: pass }];
-      this.initializeControl(controlsArr);
     }
+    this.initializeControl(controlsArr);
   }
 
   private getPassengerNo() {

@@ -4,6 +4,7 @@ import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
 import { validateSegmentNumbers, validatePassengerNumbers } from '../shared/validators/leisure.validators';
 import { UtilHelper } from '../helper/util.helper';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-cancel-segment',
@@ -108,7 +109,11 @@ export class CancelSegmentComponent implements OnInit {
           name: element.longFreeText,
           status: element.status,
           segmentType: element.segmentType,
-          airlineCode: element.airlineCode
+          airlineCode: element.airlineCode,
+          flightNumber: element.flightNumber,
+          departureDate: element.departureDate,
+          cityCode: element.cityCode,
+          arrivalAirport: element.arrivalAirport
         };
         this.segments.push(details);
       }
@@ -166,7 +171,6 @@ export class CancelSegmentComponent implements OnInit {
           } else {
             this.acChange(this.cancelForm.value.reasonACCancel);
           }
-          this.defaultPassenger('AC');
           this.isAC = true;
         }
         if (look.airlineCode === 'UA') {
@@ -178,7 +182,6 @@ export class CancelSegmentComponent implements OnInit {
           } else {
             this.uaChange(this.cancelForm.value.reasonUACancel);
           }
-          this.defaultPassenger('UA');
           this.defaultSegment();
           this.isUA = true;
         }
@@ -191,11 +194,9 @@ export class CancelSegmentComponent implements OnInit {
     this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
     if (this.segments.length > 0 && this.segments[0].segmentType) {
       if (this.segments[0].airlineCode === 'AC') {
-        this.defaultPassenger('AC');
         this.isAC = true;
       }
       if (this.segments[0].airlineCode === 'UA') {
-        this.defaultPassenger('UA');
         this.isUA = true;
         this.enableFormControls(['reasonUACancel'], false);
       }
@@ -204,24 +205,21 @@ export class CancelSegmentComponent implements OnInit {
     this.add = true;
   }
 
-  defaultPassenger(airline) {
-    let passenger = this.pnrService.getPassengers();
-    if (passenger.length === 1) {
-      if (airline === 'AC') {
-        this.cancelForm.controls['acpassengerNo'].setValue('1');
-        // this.cancelForm.controls['acpassengerNo'].disable();
-      }
+  // defaultPassenger(airline) {
+  //   let passenger = this.pnrService.getPassengers();
+  //   if (passenger.length === 1) {
+  //     if (airline === 'AC') {
+  //       this.cancelForm.controls['acpassengerNo'].setValue('1');
+  //     }
 
-      if (airline === 'UA') {
-        this.cancelForm.controls['uaPassengerNo'].setValue('1');
-        // this.cancelForm.controls['uaPassengerNo'].disable();
-      }
+  //     if (airline === 'UA') {
+  //       this.cancelForm.controls['uaPassengerNo'].setValue('1');
+  //     }
 
-    }
-  }
+  //   }
+  // }
 
   acChange(newValue) {
-
     switch (newValue) {
       case '1':
       case '2':
@@ -244,10 +242,78 @@ export class CancelSegmentComponent implements OnInit {
         this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
         break;
     }
+    this.defaultControls(newValue);
+  }
+
+  defaultControls(acControl) {
+    let acCount = 0;
+    let controlsArr = [];
+    let pass = this.getPassengerNo();
+
+    const selectedPreferences = this.cancelForm.value.segments
+      .map((checked, index) => checked ? this.segments[index].id : null)
+      .filter(value => value !== null);
+    selectedPreferences.forEach(element => {
+      const look = this.segments.find(x => x.id === element);
+      if (look) {
+        if (look.airlineCode === 'AC') {
+          acCount = acCount + 1;
+          const yr = new Date().getFullYear();
+          const year = Math.floor(yr / 100);
+          const acdate = year.toString() + look.departureDate.substr(4, 2) + '-'
+            + look.departureDate.substr(2, 2) + '-' + look.departureDate.substr(0, 2);
+          controlsArr = [{ control: 'acFlightNo', controlvalue: look.flightNumber },
+          { control: 'accityPair', controlvalue: look.cityCode + look.arrivalAirport },
+          { control: 'acdepDate', controlvalue: acdate },
+          { control: 'acpassengerNo', controlvalue: pass }];
+        }
+      }
+    });
+
+    if (acCount === 1) {
+      switch (acControl) {
+        case '1':
+        case '2':
+        case '3':
+          controlsArr = [{ control: 'acpassengerNo', controlvalue: pass }];
+          this.initializeControl(controlsArr);
+          break;
+        case '5':
+        case '6':
+          this.initializeControl(controlsArr);
+          break;
+        default:
+          controlsArr = [];
+          break;
+      }
+    }
+    else {
+      controlsArr = [{ control: 'acpassengerNo', controlvalue: pass }];
+      this.initializeControl(controlsArr);
+    }
+  }
+
+  private getPassengerNo() {
+    let passenger = this.pnrService.getPassengers();
+    let pass = '';
+    if (passenger.length === 1) {
+      pass = '1';
+    }
+    return pass;
+  }
+
+  initializeControl(controls: any) {
+    const acControls = ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'];
+    acControls.forEach(ac => {
+      this.cancelForm.get(ac).setValue('');
+    });
+    controls.forEach(c => {
+      this.cancelForm.get(c.control).setValue(c.controlvalue);
+    });
   }
 
   defaultSegment() {
-    let ua = ''
+    let ua = '';
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => checked ? this.segments[index].id : null)
       .filter(value => value !== null);
@@ -269,6 +335,7 @@ export class CancelSegmentComponent implements OnInit {
       case '1':
         this.enableFormControls(['uasegNo', 'uaPassengerNo'], false);
         this.defaultSegment();
+        this.cancelForm.controls['uaPassengerNo'].setValue(this.getPassengerNo());
         break;
       default:
         this.enableFormControls(['uasegNo', 'uaPassengerNo'], true);
@@ -313,7 +380,6 @@ export class CancelSegmentComponent implements OnInit {
         this.cancelForm.get(c).updateValueAndValidity();
       }
     });
-
   }
 
   changeNonRefAC() {

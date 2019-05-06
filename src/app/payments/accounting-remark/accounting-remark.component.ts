@@ -116,8 +116,6 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.loadData();
   }
 
-
-
   get f() { return this.accountingForm.controls; }
 
   addAccountingRemarks() {

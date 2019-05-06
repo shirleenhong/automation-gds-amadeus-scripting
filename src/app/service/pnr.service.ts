@@ -528,8 +528,8 @@ export class PnrService {
         }
 
         if (model.supplierCodeName === 'MLF') {
-          model.accountingTypeRemark = '0';
-          model.bsp = '2';
+          model.accountingTypeRemark = 'INS';
+          model.bsp = '3';
         }
 
 

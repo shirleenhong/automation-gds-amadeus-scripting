@@ -65,7 +65,7 @@ export class SegmentsComponent implements OnInit {
   updateItem(r: PassiveSegmentsModel) {
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateSegmentComponent, { backdrop: 'static' });
-    this.modalRef.content.title = 'Update Matrix Receipt';
+    this.modalRef.content.title = 'Update Segments';
     this.modalRef.content.matrixReceipt = new PassiveSegmentsModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.passiveSegments);
     this.modalRef.content.onChangeSegmentType(r.segmentType);

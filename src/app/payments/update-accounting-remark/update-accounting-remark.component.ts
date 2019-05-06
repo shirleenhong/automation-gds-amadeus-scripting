@@ -133,6 +133,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     { itemText: 'NonBSP Air Accounting Remark', itemValue: '1' },
     { itemText: 'Rail Accounting Remark', itemValue: '4' },
     { itemText: 'Limo Accounting Remark', itemValue: '6' },
+    { itemText: 'Insurance Remark', itemValue: 'INS' },
     { itemText: 'Apay Accounting Remark', itemValue: '0' }
     ];
   }
@@ -150,21 +151,34 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeApayNonApay(accRemark) {
-    if (accRemark !== '0') {
-      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
-      this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
-      this.accountingRemarks.bsp = '1';
-      this.filterSupplierCode(accRemark);
-      this.SetTktNumber();
-      this.IsInsurance = false;
-      this.name = 'Supplier Confirmation Number:';
-    } else {
-      this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage', 'supplierCodeName'], true);
-      this.enableFormControls(['descriptionapay'], false);
-      this.accountingRemarks.bsp = '2';
-      this.setInsuranceValue();
+    switch (accRemark) {
+      case 'INS':
+        this.IsInsurance = true;
+        this.name = 'Policy Confirmation Number:';
+        this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
+        this.enableFormControls(['supplierCodeName', 'descriptionapay', 'tktLine', 'otherTax', 'commisionWithoutTax'], true);
+        this.enableFormControls(['commisionPercentage'], false);
+        this.accountingRemarks.bsp = '3';
+        // this.eventEmitterService.onFirstComponentButtonClick();
+        break;
+      case '0':
+        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
+        this.enableFormControls(['descriptionapay', 'supplierCodeName'], false);
+        this.accountingRemarks.bsp = '2';
+        this.IsInsurance = false;
+        break;
+      default:
+        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
+        this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
+        this.accountingRemarks.bsp = '1';
+        this.filterSupplierCode(accRemark);
+        this.SetTktNumber();
+        this.IsInsurance = false;
+        this.name = 'Supplier Confirmation Number:';
+        break;
     }
     this.loadFormOfPaymentList(accRemark);
+    // this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
   }
 
   filterSupplierCode(typeCode) {
@@ -272,44 +286,20 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setInsuranceValue() {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       this.accountingRemarks.segmentNo = this.matrixAccountingForm.controls.segmentNo.value;
-      const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
-      let isMLF = false;
-      segmentList.forEach(segment => {
-        if (this.isTypeINSExist(segment)) {
-          isMLF = true;
-        }
-      });
-      if (this.accountingRemarks.bsp === '2') {
-        if (isMLF) {
-          this.IsInsurance = true;
-          this.name = 'Policy Confirmation Number:';
-          this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
-          this.matrixAccountingForm.controls.supplierCodeName.disable();
-          this.matrixAccountingForm.controls.commisionPercentage.enable();
-          this.matrixAccountingForm.controls.descriptionapay.disable();
-        } else {
-          this.IsInsurance = false;
-          this.name = 'Supplier Confirmation Number:';
-          // this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
-          //this.matrixAccountingForm.controls.supplierCodeName.enable();
-          this.matrixAccountingForm.controls.descriptionapay.enable();
-          this.matrixAccountingForm.controls.commisionPercentage.disable();
-        }
-      }
-
+      // const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
     }
   }
 
   loadData() {
-    if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName === 'MLF') {
-      this.IsInsurance = true;
-      this.name = 'Policy Confirmation Number:';
-      this.matrixAccountingForm.controls.supplierCodeName.disable();
-      this.matrixAccountingForm.controls.commisionPercentage.enable();
-    } else {
-      this.IsInsurance = false;
-      this.name = 'Supplier Confirmation Number:';
-    }
+    // if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName === 'MLF') {
+    //   this.IsInsurance = true;
+    //   this.name = 'Policy Confirmation Number:';
+    //   this.matrixAccountingForm.controls.supplierCodeName.disable();
+    //   this.matrixAccountingForm.controls.commisionPercentage.enable();
+    // } else {
+    //   this.IsInsurance = false;
+    //   this.name = 'Supplier Confirmation Number:';
+    // }
     this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
   }
 

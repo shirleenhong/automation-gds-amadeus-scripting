@@ -51,8 +51,6 @@ Handle Force Login Window
     Run Keyword If    ${is_force_sigin}    Click Element    xpath=//span[contains(text(),'Force Sign In')]
 
 Open CA Migration Window
-    #env is a param passed at the Robot command line, default is Test, possible values are Dev/Test/UAT
-    [Arguments]    ${env}=Test
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
     #Open and verify CA Migration window

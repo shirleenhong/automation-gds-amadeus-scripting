@@ -4,13 +4,13 @@ Resource          ../resources/common/core.robot
 
 *** Keywords ***
 Login To Amadeus Sell Connect
-    Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
+    Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=GB&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
     Maximize Browser Window
     Wait Until Element Is Visible    css=#username > span:first-child input    60
-    Enter Username    U068SXH
-    Enter Dutycode    GS
-    Enter Office ID    LONWL2220
-    Enter Password    Kamote1!
+    Enter Username    UWOG002
+    Enter Dutycode    SU
+    Enter Office ID    YTOWL2107
+    Enter Password    Sellco123+
     Wait Until Element Is Not Visible    css=#logi_confirmButton .xButtonDisabled    30
     Click Element    css=#logi_confirmButton .xButton
     Handle Force Login Window

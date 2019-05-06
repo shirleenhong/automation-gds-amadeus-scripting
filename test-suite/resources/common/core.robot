@@ -9,8 +9,9 @@ Add New Command Page
 
 Close CA Migration Window
     #Close CA Migration Window
+    [Arguments]    ${env}=Test
     Unselect Frame
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env})]    50
     Click Element    xpath=.//div[@class="xDialog_titleBar xDialog_std_titleBar"][@atdraggable='2']//span[2]//span
 
 Close Cryptic Display Window
@@ -49,13 +50,15 @@ Handle Force Login Window
     Run Keyword If    ${is_force_sigin}    Click Element    xpath=//span[contains(text(),'Force Sign In')]
 
 Open CA Migration Window
+    [Arguments]    ${env}=Test
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
     #Open and verify CA Migration window
-    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration"]
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    60
-    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com')]    60
-    Select Frame    xpath=//iframe[contains(@src,'https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com')]
+    #env is passed as a param in the robot run command, can be Local/Dev/Test/UAT
+    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration ${env}"]
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]    60
+    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://${env}.int.us-west-2.bpg-aws-cwt.com')]    60
+    Select Frame    xpath=//iframe[contains(@src,'https://${env}.int.us-west-2.bpg-aws-cwt.com')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Submit To PNR')]    180
 
 Open Cryptic Display Window

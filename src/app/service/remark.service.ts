@@ -189,16 +189,16 @@ export class RemarkService {
             classOfService: passiveSegmentmodel.classOfService
         };
 
+        const carDetails = {
+            identification: passiveSegmentmodel.carType
+        };
+
         const travelProductProduct: { [k: string]: any } = {
             depDate: passiveSegmentmodel.startDate,
             depTime: passiveSegmentmodel.startTime,
             arrDate: passiveSegmentmodel.endDate,
             arrTime: passiveSegmentmodel.endTime
         };
-
-        // if (passiveSegmentmodel.dayChangeIndicator) {
-        //     travelProductProduct.dayChangeIndicator = passiveSegmentmodel.dayChangeIndicator;
-        // }
 
         const travelProduct: { [k: string]: any } = {
             product: travelProductProduct,
@@ -209,6 +209,12 @@ export class RemarkService {
 
         if (passiveSegmentmodel.passiveSegmentType === 'AIR') {
             travelProduct.productDetails = productDetails;
+        }
+
+        if (passiveSegmentmodel.passiveSegmentType === 'CAR') {
+            travelProduct.productDetails = {
+                identification: passiveSegmentmodel.carType
+            };
         }
 
         const relatedProduct = {

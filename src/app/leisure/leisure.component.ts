@@ -195,17 +195,18 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks().then(x => {
+    await this.remarkService.SubmitRemarks().then(async x => {
       this.isPnrLoaded = false;
-      this.getPnr();
+      await this.getPnr();
+      this.addRir();
     }, error => { alert(JSON.stringify(error)); });
-    await this.addRir();
+    // await this.addRir();
   }
 
   async addRir() {
     // await this.pnrService.getPNR();
     const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSeaSegmentRir(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
     await this.remarkService.BuildRemarks(remarkCollection2);
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;

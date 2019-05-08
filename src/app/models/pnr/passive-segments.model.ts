@@ -46,6 +46,7 @@ export class PassiveSegmentsModel {
     meetDriveAt: string;
     additionalInfo: string;
     cancellationInfo: string;
+    toll: string;
     includeTax = false;
     includeToll = false;
     includeParking = false;
@@ -67,7 +68,5 @@ export class PassiveSegmentsModel {
     frequentFlierNumber: string;
     specialEquipment: string;
     specialRequest: string;
-
-
-
+    frequentflightNumber: string;
 }

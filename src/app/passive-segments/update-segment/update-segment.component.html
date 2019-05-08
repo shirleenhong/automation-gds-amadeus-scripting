@@ -352,7 +352,6 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="" formControlName="trainNumber" id="trainNumber"
           maxlength="5" [(ngModel)]="passiveSegments.trainNumber" AlphaNumericMask />
-
       </div>
     </div>
 
@@ -397,10 +396,17 @@
           [(ngModel)]="passiveSegments.seatNumber" maxlength="4" AlphaNumericMask />
       </div>
     </div>
-
-
+    <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <label id="lblName"> {{lbldepartureCity}} </label>
+          <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
+            formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity" 
+             AlphaNumericMask AllCapsMask />
+        </div>
+    </div>
   </div>
-  <ng-container *ngTemplateOutlet="travelCity"></ng-container>
+
   <ng-container *ngTemplateOutlet="travelDate"></ng-container>
   <ng-container *ngTemplateOutlet="travelTime"></ng-container>
   <ng-container *ngTemplateOutlet="vendor"></ng-container>
@@ -529,7 +535,7 @@
         <div>
           <input type="checkbox" id="includeParking" name="includeParking" formControlName="includeParking"
             (click)="includeOnRate($event.target.name,$event.target.checked)"
-            [(ngModel)]="passiveSegments.includeParking" /> Include on Rate
+            [(ngModel)]="passiveSegments.includeParking" /> Included on Rate
           <input type="text" class="form-control" id="parking" name="parking" formControlName="parking"
             [(ngModel)]="passiveSegments.parking" maxlength="7" AmountMask />
         </div>
@@ -567,8 +573,6 @@
 
 <ng-template #carTmpl>
   <div [formGroup]="segmentForm">
-
-
 
     <ng-container *ngTemplateOutlet="travelCity"></ng-container>
     <ng-container *ngTemplateOutlet="vendor"></ng-container>
@@ -667,7 +671,7 @@
       <div class="col">
         <label id="lblName"> Mileage </label>
         <input type="text" class="form-control" id="mileage" name="mileage" formControlName="mileage"
-          [(ngModel)]="passiveSegments.mileage" maxlength="10" maxlength="5" NumberOnlyMask />
+          [(ngModel)]="passiveSegments.mileage" maxlength="5" NumberOnlyMask />
       </div>
     </div>
 
@@ -693,7 +697,7 @@
       <div class="col-sm-4"> <label id="lblName"> CD Number</label></div>
       <div class="col">
         <input type="text" class="form-control" id="cdNumber" name="cdNumber" formControlName="cdNumber"
-          [(ngModel)]="passiveSegments.cdNumber" maxlength="15" maxlength="5" />
+          [(ngModel)]="passiveSegments.cdNumber" maxlength="15" />
       </div>
     </div>
 
@@ -701,7 +705,7 @@
       <div class="col-sm-4"><label id="lblName"> ID Number </label></div>
       <div class="col">
         <input type="text" class="form-control" id="idNumber" name="idNumber" formControlName="idNumber"
-          [(ngModel)]="passiveSegments.idNumber" maxlength="20" maxlength="5" />
+          [(ngModel)]="passiveSegments.idNumber" maxlength="20" />
       </div>
     </div>
 
@@ -709,8 +713,7 @@
       <div class="col-sm-4"><label id="lblName"> Airline Frequent Flier Number </label></div>
       <div class="col">
         <input type="text" class="form-control" id="frequentFlierNumber" name="frequentFlierNumber"
-          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="10"
-          maxlength="25" />
+          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="25" />
       </div>
     </div>
     <div class="form-group  row">
@@ -741,7 +744,7 @@
       <div class="col">
 
         <input type="text" class="form-control" id="specialRequest" name="specialRequest"
-          formControlName="specialRequest" [(ngModel)]="passiveSegments.specialRequest" maxlength="10" maxlength="25" />
+          formControlName="specialRequest" [(ngModel)]="passiveSegments.specialRequest" maxlength="25" />
       </div>
     </div>
     <div class="form-group  row">
@@ -749,10 +752,210 @@
       <div class="col">
 
         <input type="text" class="form-control" id="frequentFlierNumber" name="frequentFlierNumber"
-          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="10"
-          maxlength="25" />
+          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="25" />
       </div>
     </div>
+
+
+  </div>
+</ng-template>
+
+
+
+
+<ng-template #hotelTmpl>
+  <div [formGroup]="segmentForm">
+
+    <div class="form-group  row">
+      <div class="col-sm-4"> </div>
+      <div class="col">
+        <label id="lblName">Hotel Chain Code</label>
+        <input type="text" class="form-control" id="chainCode" name="chainCode" formControlName="chainCode"
+          [(ngModel)]="passiveSegments.chainCode" maxlength="2" (blur)="getHotels()" AllCapsMask />
+      </div>
+
+      <div class="col">
+        <label id="lblName">Hotel City Code </label>
+        <input type="text" class="form-control" id="cdNumber" name="departureCity" formControlName="departureCity"
+          [(ngModel)]="passiveSegments.departureCity" maxlength="3" (blur)="getHotels()" AllCapsMask />
+      </div>
+    </div>
+
+    <ng-container *ngTemplateOutlet="travelDate"></ng-container>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"> </div>
+      <div class="col">
+        <label id="lblName">Cancel Policy</label>
+        <input type="text" class="form-control" id="policyNo" name="policyNo" formControlName="policyNo"
+          [(ngModel)]="passiveSegments.policyNo" maxlength="5" />
+      </div>
+
+      <div class="col">
+        <label id="lblName">Nightly Rate</label>
+        <input type="text" class="form-control" id="nightlyRate" name="nightlyRate" formControlName="nightlyRate"
+          [(ngModel)]="passiveSegments.nightlyRate" maxlength="10" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"> </div>
+      <div class="col">
+        <label id="lblName">Currency</label>
+        <input type="text" class="form-control" id="currency" name="currency" formControlName="currency"
+          [(ngModel)]="passiveSegments.currency" list="dynamicCurrency" maxlength="3" />
+        <datalist id="dynamicCurrency">
+          <option *ngFor="let item of currencyList" [value]="item.itemValue">{{item.itemText}}</option>
+        </datalist>
+      </div>
+
+      <div class="col">
+        <label id="lblName">Rate Type</label>
+        <input type="text" class="form-control" id="rateType" name="rateType" formControlName="rateType"
+          [(ngModel)]="passiveSegments.rateType" maxlength="3" />
+
+      </div>
+    </div>
+
+
+    <div class="form-group  row">
+      <div class="col-sm-4"> </div>
+      <div class="col">
+        <label id="lblName">Number of Rooms</label>
+        <input type="text" class="form-control" id="numberOfRooms" name="numberOfRooms" formControlName="numberOfRooms"
+          [(ngModel)]="passiveSegments.numberOfRooms" maxlength="3" />
+      </div>
+
+      <div class="col">
+        <label id="lblName">Room Type</label>
+        <select class="form-control" id="roomType" name="roomType" formControlName="roomType"
+          [(ngModel)]="passiveSegments.roomType">
+          <option *ngFor="let item of  roomTypeList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+
+    <div class="form-group  row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-8">
+        <label id="lblName">Guaranteed for Late Arrival </label> <br />
+        <input type="radio" id="guaranteedLate" name="guaranteedLate" formControlName="guaranteedLate"
+          [(ngModel)]="passiveSegments.guaranteedLate" value="YES" /> YES
+        <input type="radio" id="guaranteedLate" name="guaranteedLate" formControlName="guaranteedLate"
+          [(ngModel)]="passiveSegments.guaranteedLate" value="NO" /> NO
+      </div>
+    </div>
+
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Confirmation Number </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="confirmationNo" name="confirmationNo"
+          formControlName="confirmationNo" [(ngModel)]="passiveSegments.confirmationNo" maxlength="15" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Additional Information</label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="additionalInfo" name="additionalInfo"
+          formControlName="additionalInfo" [(ngModel)]="passiveSegments.additionalInfo" maxlength="30" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Room Confirmed with </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="confirmedWith" name="confirmedWith" formControlName="confirmedWith"
+          [(ngModel)]="passiveSegments.confirmedWith" maxlength="15" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"> <label id="lblName">Hotels</label> </div>
+      <div class="col">
+        <select class="form-control" id="hotelCode" name="hotelCode" formControlName="hotelCode"
+          [(ngModel)]="passiveSegments.hotelCode" (change)="getHotelInfo($event)">
+          <option *ngFor="let item of  hotelList" [value]="item.itemValue">
+            {{item.itemValue + ' - ' + item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Hotel City </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="hotelCityName" name="hotelCityName" formControlName="hotelCityName"
+          [(ngModel)]="passiveSegments.hotelCityName" maxlength="20" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Hotel Name </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="hotelName" name="hotelName" formControlName="hotelName"
+          [(ngModel)]="passiveSegments.hotelName" maxLength="25" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Hotel Phone </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="phone" name="phone" formControlName="phone"
+          [(ngModel)]="passiveSegments.phone" maxlength="15" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Hotel Fax </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="fax" name="fax" formControlName="fax"
+          [(ngModel)]="passiveSegments.fax" maxlength="15" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Hotel Street Address </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="address" name="address" formControlName="address"
+          [(ngModel)]="passiveSegments.address" maxlength="35" />
+      </div>
+    </div>
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Country </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="country" name="country" formControlName="country"
+          [(ngModel)]="passiveSegments.country"  (change)="filterStateProvince($event.target.value)"/>
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName">Province/State </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="province" name="province" formControlName="province"
+          [(ngModel)]="passiveSegments.province" list="stateProvince" maxlength=" 15"
+          />
+
+        <datalist id="stateProvince">
+          <option *ngFor="let item of stateProvinceList" [value]="item.province">
+            {{item.code}} -
+            {{item.province}}</option>
+        </datalist>
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"><label id="lblName"> Zip Code </label></div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="zipCode" name="zipCode" formControlName="zipCode"
+          [(ngModel)]="passiveSegments.zipCode" maxlength="10" AlphaNumericMask />
+      </div>
+    </div>
+
 
 
   </div>

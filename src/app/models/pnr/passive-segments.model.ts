@@ -42,6 +42,7 @@ export class PassiveSegmentsModel {
     taxOnRate: string;
     gratuities: string;
     parking: string;
+    toll: string;
     limoCoAgent: string;
     meetDriveAt: string;
     additionalInfo: string;
@@ -68,6 +69,18 @@ export class PassiveSegmentsModel {
     specialEquipment: string;
     specialRequest: string;
 
-
-
+    //hotel
+    chainCode: string;
+    nightlyRate: string;
+    numberOfRooms = 1;
+    guaranteedLate = 'NO';
+    confirmedWith: string;
+    hotelCode: string;
+    hotelCityName: string;
+    hotelName: string;
+    fax: string;
+    address: string;
+    province: string;
+    zipCode: string;
+    country: string;
 }

@@ -35,6 +35,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   arrivaldayList: Array<SelectItem>;
   diningList: Array<SelectItem>;
   filterSupplierCodeList = [];
+  hotelList = [];
   currencyList = [];
   segmentForm: FormGroup;
   isSubmitted: boolean;
@@ -42,6 +43,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   carTypeList: Array<any>;
   pickupOffAddrList = [];
   dropOffAddrList = [];
+  stateProvinceList: any;
   lblvendorName: any;
   lblvendorCode: any;
   lblconfirmationNo: any;
@@ -87,15 +89,16 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     //train
     trainNumber: new FormControl('', [Validators.required]),
     carNumber: new FormControl('', [Validators.required]),
+    fromStation: new FormControl('', [Validators.required]),
     arrivalStation: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required]),
     // limo
     rate: new FormControl('', [Validators.required]),
     rateType: new FormControl('', [Validators.required]),
-    taxOnRate: new FormControl('', [Validators.required]),
-    toll: new FormControl('', [Validators.required]),
-    gratuities: new FormControl('', [Validators.required]),
-    parking: new FormControl('', [Validators.required]),
+    taxOnRate: new FormControl(''),
+    toll: new FormControl(''),
+    gratuities: new FormControl(''),
+    parking: new FormControl(''),
     limoCoAgent: new FormControl(''),
     meetDriveAt: new FormControl(''),
     additionalInfo: new FormControl(''),
@@ -121,7 +124,23 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     idNumber: new FormControl(''),
     frequentFlierNumber: new FormControl(''),
     specialEquipment: new FormControl(''),
-    specialRequest: new FormControl('')
+    specialRequest: new FormControl(''),
+
+    // hotel
+    chainCode: new FormControl('', [Validators.required]),
+    nightlyRate: new FormControl('', [Validators.required]),
+    numberOfRooms: new FormControl('', [Validators.required]),
+    guaranteedLate: new FormControl('', [Validators.required]),
+    confirmedWith: new FormControl('', [Validators.required]),
+    hotelCode: new FormControl(''),
+    hotelCityName: new FormControl('', [Validators.required]),
+    hotelName: new FormControl('', [Validators.required]),
+    fax: new FormControl(''),
+    address: new FormControl('', [Validators.required]),
+    province: new FormControl(''),
+    zipCode: new FormControl(''),
+    country: new FormControl('', [Validators.required])
+
   });
 
 
@@ -184,6 +203,22 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     { itemText: 'TRPL', itemValue: 'TRPL' }];
   }
 
+  loadRoomTypeHotel() {
+    this.roomTypeList = [{ itemText: '', itemValue: '' },
+    { itemText: 'Single Room', itemValue: 'SINGLE ROOM' },
+    { itemText: 'Double Room', itemValue: 'DOUBLE ROOM' },
+    { itemText: 'Triple Room', itemValue: 'TRIPLE ROOM' },
+    { itemText: 'Quad Room', itemValue: 'QUAD ROOM' },
+    { itemText: 'Queen Room', itemValue: 'QUEEN ROOM' },
+    { itemText: 'King Room', itemValue: 'KING ROOM' },
+    { itemText: 'Twin Room', itemValue: 'TWIN ROOM' },
+    { itemText: 'Double-double Room', itemValue: 'DOUBLE-DOUBLE ROOM' },
+    { itemText: 'Studio Room', itemValue: 'STUDIO ROOM' },
+    ];
+
+  }
+
+
   loadArrivalDay() {
     this.arrivaldayList = [{ itemText: '', itemValue: '' },
     { itemText: '+1', itemValue: '1' },
@@ -199,7 +234,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     { itemText: 'Tour', itemValue: 'TOR' },
     { itemText: 'Car', itemValue: 'CAR' },
     { itemText: 'Limo', itemValue: 'LIM' },
-    { itemText: 'Hotel', itemValue: 'HOT' },
+    { itemText: 'Hotel', itemValue: 'HTL' },
     { itemText: 'Rail', itemValue: 'RAIL' }];
   }
 
@@ -230,8 +265,14 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   setForm(forms) {
     this.segmentForm = this.fb.group({}, { updateOn: 'blur' });
+
     forms.forEach(x => {
-      this.segmentForm.addControl(x, this.formControls.get(x));
+      if (this.formControls.get(x) !== null) {
+        this.segmentForm.addControl(x, this.formControls.get(x));
+      } else {
+        debugger;
+        const xx = 1;
+      }
     });
 
   }
@@ -270,6 +311,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'departureTime', 'departureCity', 'destinationCity', 'arrivalDate',
           'arrivalTime', 'tourName', 'noPeople', 'noNights', 'roomType', 'mealPlan'];
         this.setForm(forms);
+        this.loadRoomType();
 
         this.selectedTmpl = this.tourTmpl;
         break;
@@ -308,7 +350,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'arrivalDate', 'arrivalTime', 'noPeople'];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
-
+        this.segmentForm.get('destinationCity').disable();
         break;
       case 'LIM':
         this.lblvendorName = 'Limo Company';
@@ -322,8 +364,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.includeOnRate('includeTax', this.passiveSegments.includeTax);
         this.includeOnRate('includeToll', this.passiveSegments.includeToll);
         this.includeOnRate('includeGratuities', this.passiveSegments.includeGratuities);
-        this.includeOnRate('includeParking', this.passiveSegments.includeParking);
+        this.includeOnRate('includeParking', this.passiveSegments.includeParking);        
         this.selectedTmpl = this.limoTmpl;
+      
+
         break;
       case 'CAR':
         this.lbldepartureDate = 'Pickup Date';
@@ -349,39 +393,102 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           this.loadDropOffAddr(this.passiveSegments.dropOffLoc);
           this.loadPickupOffAddr(this.passiveSegments.pickupLoc);
         }
+        break;
+      case 'HTL':
 
+        this.lbldepartureDate = 'Check In Date';
+        this.lblarrivalDate = 'Check Out Date';
+        this.lbldepartureCity = 'Hotel City';
 
+        forms = ['segmentType', 'confirmationNo', 'departureCity', 'departureDate', 'arrivalDate', 'policyNo', 'currency',
+          'chainCode', 'nightlyRate', 'numberOfRooms', 'guaranteedLate', 'confirmedWith', 'hotelCode', 'hotelCityName', 'rateType',
+          'hotelName', 'fax', 'phone', 'address', 'province', 'zipCode', 'country', 'roomType', 'additionalInfo'];
+        this.loadRoomTypeHotel();
+        this.stateProvinceList = this.ddbService.getStateProvinces();
+        this.getHotels();
+        this.setForm(forms);
+
+        this.selectedTmpl = this.hotelTmpl;
         break;
       default:
         break;
     }
-    //this.passiveSegments.segmentType = (type);
+
     this.segmentForm.get('segmentType').setValue(type);
     this.util.validateAllFields(this.segmentForm);
   }
 
   includeOnRate(name, checked) {
-    switch (name) {
-      case 'includeTax':
-        this.enableFormControls(['taxOnRate'], !checked);
-        break;
-      case 'includeToll':
-        this.enableFormControls(['toll'], !checked);
-        break;
-      case 'includeGratuities':
-        this.enableFormControls(['gratuities'], !checked);
-        break;
-      case 'includeParking':
-        this.enableFormControls(['parking'], !checked);
-        break;
-
-    }
+    // switch (name) {
+    //   case 'includeTax':
+    //     this.enableFormControls(['taxOnRate'], !checked);
+    //     break;
+    //   case 'includeToll':
+    //     this.enableFormControls(['toll'], !checked);
+    //     break;
+    //   case 'includeGratuities':
+    //     this.enableFormControls(['gratuities'], !checked);
+    //     break;
+    //   case 'includeParking':
+    //     this.enableFormControls(['parking'], !checked);
+    //     break;
+    // }
   }
 
   pickUpLocChange() {
 
   }
 
+  getHotels() {
+    const chainCode = this.passiveSegments.chainCode;
+    const cityCode = this.passiveSegments.departureCity;
+    if ((chainCode !== undefined && chainCode.length === 2) && (cityCode !== undefined && cityCode.length === 3)) {
+      this.hotelList = [];
+      smartScriptSession.send('HL' + chainCode + cityCode).then(async res => {
+        let lines = res.Response.split('\r\n');
+        const regex = /^(?<code>[A-Z]{2}) ([A-Z])(\s{1,2})([A-Z])(\s{2,3})([A-Z]{3})(\s{2})(?<text>.*)/g;
+        lines = await this.getMDResult(lines);
+        lines.forEach(r => {
+          const match = regex.exec(r);
+          if (match && match.groups) {
+            this.hotelList.push({ itemValue: match.groups.code, itemText: match.groups.text });
+            regex.lastIndex = 0;
+          }
+        });
+      });
+    }
+  }
+
+  getHotelInfo($event) {
+    const text = $event.target.options[$event.target.options.selectedIndex].text;
+    const hotelCode = $event.target.options[$event.target.options.selectedIndex].value;
+    this.passiveSegments.hotelName = text.split('!')[1];
+    smartScriptSession.send('HF' + hotelCode).then(async res => {
+      const lines = res.Response.split('\r\n');
+      if (this.stateProvinceList === undefined) {
+        this.stateProvinceList = this.ddbService.getStateProvinces();
+      }
+      const regex = /(?<city>(.*))\s\s(?<province>[A-Z]{2})\s\s(?<zip>([A-Z0-9]{3})\s([A-Z0-9]{3}))/g;
+      const match = regex.exec(lines[3].trim());
+      if (match && match.groups) {
+        this.passiveSegments.hotelCityName = match.groups.city;
+        this.passiveSegments.zipCode = match.groups.zip;
+        const prov = this.stateProvinceList.find(x => x.code === match.groups.province);
+        this.passiveSegments.province = prov.province;
+      }
+
+      this.passiveSegments.address = lines[2].trim();
+      this.passiveSegments.country = lines[4].trim();
+
+      lines.forEach(r => {
+        if (r.trim().indexOf('-TEL') === 0) {
+          this.passiveSegments.phone = r.trim().split(':')[1].trim();
+        } else if (r.trim().indexOf('-FAX') === 0) {
+          this.passiveSegments.fax = r.trim().split(':')[1].trim();
+        }
+      });
+    });
+  }
 
   enableFormControls(controls: string[], disabled: boolean) {
     controls.forEach(c => {
@@ -391,14 +498,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           this.segmentForm.get(c).setValue('');
         } else {
           this.segmentForm.get(c).enable();
-          // this.segmentForm.get(c).setValidators(Validators.required);
-          // this.segmentForm.get(c).updateValueAndValidity();
         }
       }
     });
-
   }
-
 
   onChangeSegmentType(type) {
     this.changeSegmentType(type);
@@ -427,6 +530,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   onChangezz(controlValue, controlName) {
+    debugger;
     if (this.segmentForm.get('segmentType').value === 'AIR') {
       let enable = false;
       let controlenable = '';
@@ -508,10 +612,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         await smartScriptSession.send('MD').then(x => {
           const list = (x.Response.split('\r\n'));
           lines = lines.concat(list);
-          if ((list.length < 4) || (list[list.length - 2].indexOf('NO MORE ITEMS') >= 0)) {
+          const lasItem = list[list.length - 2];
+          if ((list.length < 4) || (lasItem.indexOf('NO MORE ITEMS') >= 0) || lasItem.indexOf('END OF DISPLAY')) {
             stop = true;
           }
-
         });
 
       }
@@ -589,7 +693,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       lines = await this.getMDResult(lines);
       const regex = /\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
       lines.forEach(x => {
-
         const match = regex.exec(x);
         if (match && match.groups) {
           if (match.groups.text.trim() !== '') {
@@ -613,4 +716,23 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.segmentForm.controls.othersText.updateValueAndValidity();
     }
   }
+
+  filterStateProvince(country) {
+    if (country) {
+      switch (country.toUpperCase()) {
+        case 'US':
+        case 'United States':
+          this.stateProvinceList = this.ddbService.getStateProvinces('US');
+          break;
+        case 'CA':
+        case 'CANADA':
+          this.stateProvinceList = this.ddbService.getStateProvinces('CA');
+          break;
+        default:
+          this.stateProvinceList = this.ddbService.getStateProvinces();
+          break;
+      }
+    }
+  }
+
 }

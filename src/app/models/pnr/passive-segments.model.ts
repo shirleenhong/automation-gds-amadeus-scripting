@@ -6,8 +6,8 @@ export class PassiveSegmentsModel {
     confirmationNo: string;
     departureDate: string;
     departureTime: string;
-    departureCity: string;
-    destinationCity: string;
+    departureCity = '';
+    destinationCity = '';
     arrivalDate: string;
     arrivalTime: string;
     tourName: string;
@@ -28,7 +28,63 @@ export class PassiveSegmentsModel {
     zzdepartureCity: string;
     zzdestinationCity: string;
     zzairlineCode: string;
-    trainNbr: string;
-    trainClass: string;
+
+    //rail
+    trainNumber: string;
+    fromStation: string;
+    arrivalStation: string;
+    carNumber: string;
+    seatNumber: string;
+    pickupLoc = 'HOME';
+    transferTo = 'AIRPORT';
+    phone: string;
+    rateType: string;
+    rate: string;
+    taxOnRate: string;
+    gratuities: string;
+    parking: string;
+    toll: string;
+    limoCoAgent: string;
+    meetDriveAt: string;
+    additionalInfo: string;
+    cancellationInfo: string;  
+    includeTax = false;
+    includeToll = false;
+    includeParking = false;
+    includeGratuities = false;
+
+    // car
+    carType: string;
+    dropOffLoc: string;
+    pickupOffAddress = '';
+    dropOffAddress = '';
+    rentalCost: string;
+    currency = 'CAD';
+    duration = 'DAILY';
+    mileage: string;
+    mileagePer = 'KM';
+    dropOffFee: string;
+    cdNumber: string;
+    idNumber: string;
+    frequentFlierNumber: string;
+    specialEquipment: string;
+    specialRequest: string;
+    frequentflightNumber: string;
+
+    //hotel
+    chainCode: string;
+    nightlyRate: string;
+    numberOfRooms = 1;
+    guaranteedLate = 'NO';
+    confirmedWith: string;
+    hotelCode: string;
+    hotelCityName: string;
+    hotelName: string;
+    fax: string;
+    address: string;
+    province: string;
+    zipCode: string;
+    country: string;
+   
 
 }

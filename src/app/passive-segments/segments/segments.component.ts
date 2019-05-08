@@ -25,7 +25,6 @@ export class SegmentsComponent implements OnInit {
 
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
-  // segmentView: SegmentsViewModel;
 
   constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private pnrService: PnrService) {
     //
@@ -99,6 +98,8 @@ export class SegmentsComponent implements OnInit {
       'PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR',
       'TRAIN DEPARTURE/ARRIVAL TIMES.'
     ];
+    return this.vibEnglishRemark;
+
   }
 
   getVibFrenchRemark() {
@@ -113,6 +114,8 @@ export class SegmentsComponent implements OnInit {
       'VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR RECONFIRMER',
       'LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
     ];
+    return this.vibFrenchRemark;
+
   }
 
   getAmkRemark() {
@@ -136,6 +139,9 @@ export class SegmentsComponent implements OnInit {
       'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW RESERVATIONS',
       'WHICH MAY BE AT A HIGHER FARE.'
     ];
+
+    return this.amkRemark;
+
   }
 
 }

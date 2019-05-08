@@ -31,6 +31,7 @@ export class SegmentService {
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
+        debugger;
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
         const remarks = new Array<RemarkModel>();
@@ -74,6 +75,11 @@ export class SegmentService {
                 passive.endTime = '0000';
                 passive.segmentName = 'RU';
                 passive.function = '12';
+                if (segment.segmentType === 'CAR') {
+                    passive.segmentName = 'CU';
+                    passive.function = '9';
+                    passive.carType = segment.carType;
+                }
                 passive.quantity = Number(segment.noPeople);
                 passive.status = 'HK';
                 passive.flightNo = '1';
@@ -93,11 +99,18 @@ export class SegmentService {
         return passGroup;
     }
 
-    addSegmentRir(segmentRemarks: PassiveSegmentsModel[]) {
+
+    addSegmentRir(segRemark: any) {  
+        let segmentRemarks: PassiveSegmentsModel[];
+        segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'RIR remark';
         rmGroup.remarks = new Array<RemarkModel>();
+        let amk = 0;
+        let vib = 0;
+        let itinLanguage = this.pnrService.getItineraryLanguage();
+        itinLanguage = itinLanguage.substr(0, 2);
 
         const segments = this.pnrService.getSegmentTatooNumber();
         segmentRemarks.forEach(segmentrem => {
@@ -105,17 +118,36 @@ export class SegmentService {
                 return;
             }
             segments.forEach(pnrSegment => {
+
+                const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
+                if (pnrSegment.deptdate !== ddate && pnrSegment.cityCode !== segmentrem.departureCity) {
+                    return;
+                }
                 if (pnrSegment.segmentType === 'MIS') {
                     if (segmentrem.segmentType === 'SEA') {
-                        this.rirCruise(pnrSegment, datePipe, segmentrem, rmGroup);
+                        this.rirCruise(pnrSegment, segmentrem, rmGroup);
                     }
                     if (segmentrem.segmentType === 'TRN') {
-                        this.rirTrain(pnrSegment, segmentrem, rmGroup);
+                        if (segmentrem.vendorCode === 'AMK') {
+                            amk = amk + 1;
+                        }
+                        if (segmentrem.vendorCode === 'VIB') {
+                            vib = vib + 1;
+                        }
+                        this.rirTrain(pnrSegment, segmentrem, rmGroup, segRemark, amk, vib, itinLanguage);
                     }
+                    if (segmentrem.segmentType === 'LIM') {
+                        this.rirLimo(pnrSegment, segmentrem, rmGroup, segRemark, itinLanguage);
+                    }
+                   
                 }
 
                 if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
-                    this.rirAir(pnrSegment, datePipe, segmentrem, rmGroup);
+                    this.rirAir(pnrSegment, segmentrem, rmGroup);
+                }
+
+                if (segmentrem.segmentType === 'CAR' && pnrSegment.segmentType === 'CAR') {
+                    this.rirCar(pnrSegment, segmentrem, rmGroup);
                 }
             });
         });
@@ -123,49 +155,175 @@ export class SegmentService {
         return rmGroup;
     }
 
-    private rirAir(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
-        const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-        if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
-            if (segmentrem.zzairlineCode) {
-                rmGroup.remarks.push(this.getRemarksModel
-                    ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
-            }
-            if (segmentrem.zzdepartureCity) {
-                rmGroup.remarks.push(this.getRemarksModel
-                    ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
-            }
-            if (segmentrem.zzdestinationCity) {
-                rmGroup.remarks.push(this.getRemarksModel
-                    ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
-            }
+    private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        if (segmentrem.zzairlineCode) {
+            rmGroup.remarks.push(this.getRemarksModel
+                ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+        }
+        if (segmentrem.zzdepartureCity) {
+            rmGroup.remarks.push(this.getRemarksModel
+                ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+        }
+        if (segmentrem.zzdestinationCity) {
+            rmGroup.remarks.push(this.getRemarksModel
+                ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
         }
     }
 
-    private rirCruise(pnrSegment: any, datePipe: DatePipe, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+    private rirCar(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const optionalCarRemarks = [{ include: segmentrem.specialRequest, description: '' },
+        { include: segmentrem.specialEquipment, description: '' },
+        { include: segmentrem.pickupOffAddress, description: 'Pick Up-' },
+        { include: segmentrem.dropOffAddress, description: 'Drop off-' },
+        { include: segmentrem.dropOffFee, description: 'Drop Fee-' }];
+
+        const optionalcdid = [{ include: segmentrem.cdNumber, description: 'CD-' },
+        { include: segmentrem.idNumber, description: 'ID-' }];
+
+        optionalCarRemarks.forEach(c => {
+            if (c.include) {
+                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        });
+
+        let cdid = '';
+        optionalCarRemarks.forEach(c => {
+            if (c.include) {
+                cdid = cdid + c.description + c.include;
+            }
+        });
+
+        if (cdid !== '') {
+            rmGroup.remarks.push(this.getRemarksModel(cdid, 'RI', 'R', pnrSegment.tatooNo));
+        }
+
+        if (segmentrem.frequentFlierNumber && segmentrem.frequentflightNumber) {
+            rmGroup.remarks.push(this.getRemarksModel('Airline FF-' +
+                segmentrem.frequentFlierNumber + segmentrem.frequentflightNumber, 'RI', 'R', pnrSegment.tatooNo));
+        }
+    }
+
+    private rirCruise(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
         const type = pnrSegment.freetext.substr(6, 3);
         if (type === 'SEA') {
-            const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-            if (pnrSegment.deptdate === ddate && pnrSegment.cityCode === segmentrem.departureCity) {
-                let sroom = segmentrem.stateRoom;
-                if (sroom === 'OTHER') {
-                    sroom = segmentrem.othersText;
-                }
-                let remText = sroom + ' ' + segmentrem.cabinNo;
-                rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+            let sroom = segmentrem.stateRoom;
+            if (sroom === 'OTHER') {
+                sroom = segmentrem.othersText;
             }
+            let remText = sroom + ' ' + segmentrem.cabinNo;
+            rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
     }
 
-    private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
-        if (segmentrem.trainNbr && segmentrem.trainClass) {
+    private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
+        segRemark: any, amk: number, vib: number, itinLanguage: string) {
+
+        if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
-                ('TRAIN NUMBER – ' + segmentrem.trainNbr + ' CLASS-' + segmentrem.trainClass, 'RI', 'R', pnrSegment.tatooNo));
+                ('TRAIN NUMBER - ' + segmentrem.trainNumber.toString()
+                    + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
         }
 
-        if (segmentrem.trainNbr && segmentrem.trainClass) {
+        if (segmentrem.carNumber && segmentrem.seatNumber) {
             rmGroup.remarks.push(this.getRemarksModel
-                ('TRAIN NUMBER – ' + segmentrem.trainNbr + ' CLASS-' + segmentrem.trainClass, 'RI', 'R', pnrSegment.tatooNo));
+                ('CAR-' + segmentrem.carNumber.toString() + ' SEAT NUMBER-' + segmentrem.seatNumber, 'RI', 'R', pnrSegment.tatooNo));
         }
+
+        if (amk === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
+            if (itinLanguage === 'FR') {
+                segRemark.getVibFrenchRemark().forEach(c => {
+                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                });
+            } else {
+                segRemark.getVibEnglishRemark().forEach(c => {
+                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                });
+            }
+        }
+        if (vib === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
+            segRemark.getAmkRemark().forEach(c => {
+                rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+            });
+        }
+    }
+
+    private rirLimo(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, segRemark: any, itinLanguage: string) {
+        let taxRemarks = '';
+        let nottaxRemarks = '';
+
+        const rirTaxes = [{ include: segmentrem.includeTax, description: '-TAXES', rate: segmentrem.taxOnRate },
+        { include: segmentrem.includeToll, description: '-TOLLS', rate: segmentrem.toll },
+        { include: segmentrem.includeGratuities, description: '-Gratuities', rate: segmentrem.gratuities },
+        { include: segmentrem.includeGratuities, description: '-Parking', rate: segmentrem.parking }];
+
+        if (itinLanguage === 'FR') {
+            this.getLimoRirFrenckRemarks(rmGroup, segmentrem, pnrSegment);
+
+        } else {
+            this.getLimoEnglisgRemarks(rmGroup, segmentrem, pnrSegment);
+
+        }
+
+        rirTaxes.forEach(c => {
+            if (c.include) {
+                taxRemarks = taxRemarks + c.description;
+            } else {
+                if (c.rate) {
+                    nottaxRemarks = nottaxRemarks + c.description + ' ' + c.rate;
+                } else {
+                    nottaxRemarks = nottaxRemarks + c.description;
+                }
+            }
+        });
+
+        if (nottaxRemarks !== '') {
+            rmGroup.remarks.push(this.getRemarksModel(
+                'RATE DOES NOT INCLUDE ' + nottaxRemarks.substr(1), 'RI', 'R', pnrSegment.tatooNo));
+        }
+
+        if (taxRemarks !== '') {
+            rmGroup.remarks.push(this.getRemarksModel(
+                'Rate Includes ' + taxRemarks.substr(1), 'RI', 'R', pnrSegment.tatooNo));
+        }
+    }
+
+
+    private getLimoEnglisgRemarks(rmGroup: RemarkGroup, segmentrem: PassiveSegmentsModel, pnrSegment: any) {
+        const optionalEnglishRemarks = [{ include: segmentrem.limoCoAgent, description: 'CONFIRMED WITH ' },
+        { include: segmentrem.meetDriveAt, description: 'MEET DRIVER AT ' },
+        { include: segmentrem.additionalInfo, description: '' },
+        { include: segmentrem.cancellationInfo, description: 'CANCEL INFO-' }];
+
+        rmGroup.remarks.push(this.getRemarksModel('Phone Number ' + segmentrem.phone, 'RI', 'R', pnrSegment.tatooNo));
+        rmGroup.remarks.push(this.getRemarksModel('Pick Up-' + segmentrem.pickupLoc +
+            ' Time-' + segmentrem.departureTime, 'RI', 'R', pnrSegment.tatooNo));
+        rmGroup.remarks.push(this.getRemarksModel('Transfer To-' + segmentrem.transferTo, 'RI', 'R', pnrSegment.tatooNo));
+        rmGroup.remarks.push(this.getRemarksModel('Rate -' + segmentrem.rate + ' ' + segmentrem.rateType, 'RI', 'R', pnrSegment.tatooNo));
+
+        optionalEnglishRemarks.forEach(c => {
+            if (c.include) {
+                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        });
+    }
+
+    private getLimoRirFrenckRemarks(rmGroup: RemarkGroup, segmentrem: PassiveSegmentsModel, pnrSegment: any) {
+
+        const optionalFrenchRemarks = [{ include: segmentrem.limoCoAgent, description: 'CONFIRME PAR ' },
+        { include: segmentrem.meetDriveAt, description: 'LE CHAUFFEUR SERA A ' },
+        { include: segmentrem.additionalInfo, description: '' },
+        { include: segmentrem.cancellationInfo, description: 'CANCEL INFO-' }];
+
+        rmGroup.remarks.push(this.getRemarksModel('Phone ' + segmentrem.phone, 'RI', 'R', pnrSegment.tatooNo));
+        rmGroup.remarks.push(this.getRemarksModel('DE ' + segmentrem.pickupLoc + ' CUEILLETTE A-' +
+            segmentrem.departureTime, 'RI', 'R', pnrSegment.tatooNo));
+        rmGroup.remarks.push(this.getRemarksModel('A ' + segmentrem.transferTo, 'RI', 'R', pnrSegment.tatooNo));
+        rmGroup.remarks.push(this.getRemarksModel('TARIF -' + segmentrem.rate + ' ' + segmentrem.rateType, 'RI', 'R', pnrSegment.tatooNo));
+        optionalFrenchRemarks.forEach(c => {
+            if (c.include) {
+                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        });
     }
 
     public getRemarksModel(remText, type, cat, segment?: string) {
@@ -197,7 +355,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + ' ' + segment.dining +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + + ' ' + segment.tourName + ' ' + segment.dining +
                     ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
@@ -208,9 +366,22 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-0900/CF-CWT' + segment.policyNo;
                 break;
             case 'TRN':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + 'SUC-' + segment.vendorCode + '/SC-' +
-                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
+
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/SC-' +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.arrivalStation +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                break;
+            case 'LIM':
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + 'SUC-' + segment.vendorCode + '/STP-' +
+                    segment.transferTo + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.departureCity +
+                    '/ED-' + startdatevalue + '/ET-' + startTime + '/CF-' + segment.confirmationNo;
+                break;
+            case 'CAR':
+                freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +
+                    '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
+                    '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + ' FREE/CF-' +
+                    segment.confirmationNo;
+                break;
             default:
                 break;
         }

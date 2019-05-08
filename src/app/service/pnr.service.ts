@@ -11,6 +11,7 @@ import { DDBService } from './ddb.service';
 
 declare var PNR: any;
 declare var smartScriptSession: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,17 +21,15 @@ export class PnrService {
   errorMessage = '';
   destinationCity = [{ endpoint: '' }];
   cfLine: CfRemarkModel;
-
   segments = [];
-
   amountPipe = new AmountPipe();
 
 
   constructor() { }
 
   async getPNR(): Promise<void> {
-
     this.cfLine = null;
+    debugger;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
       (res: any) => {
@@ -145,13 +144,9 @@ export class PnrService {
       const passengers = [];
 
       for (const rm of this.pnrObj.nameElements) {
-        const fname = rm.firstName;
-        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-        //   .otherPaxNamesDetails.givenName;
+        const fname = rm.firstName;       
         const lname = rm.lastName;
-        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-        //   .otherPaxNamesDetails.surname;
-
+       
         const fullname: any =
           lname +
           '-' +
@@ -848,6 +843,28 @@ export class PnrService {
     return '';
   }
 
+
+  IsExistAmkVib(supCode) {
+    if (this.isPNRLoaded) {
+      for (const misc of this.pnrObj.miscSegments) {
+        if (supCode === 'vib') {
+          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION') > -1 ||
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf('POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS') > -1) {
+            return true;
+          }
+        }
+        if (supCode === 'amk') {
+          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf
+            ('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1) {
+            return true;
+          }
+        }
+
+      }
+    }
+
+    return false;
+  }
 
 
 

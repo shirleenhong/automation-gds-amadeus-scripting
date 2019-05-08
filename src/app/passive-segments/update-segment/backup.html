@@ -1,0 +1,450 @@
+<div class="modal-header">
+    <div class="modal-title">{{title}}</div>
+    <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+
+    <form [formGroup]="segmentForm">
+
+        <div class="form-group  row">
+            <div class="col-sm-4">Segment Type :</div>
+
+            <div class="col-sm-8">
+                <select autofocus id="segmentType" class="form-control" name="segmentType" formControlName="segmentType"
+                    [(ngModel)]="passiveSegments.segmentType" (change)="onChangeSegmentType($event.target.value)">
+                    <option *ngFor="let item of  segmentTypeList" [value]="item.itemValue">
+                        {{item.itemText}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div *ngIf="passiveSegments.segmentType == 'AIR'">
+            <div class="form-group  row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-2">Airline Code</div>
+                <div class="col-sm-3">Flight Number</div>
+                <div class="col-sm-3">Class of Service</div>
+            </div>
+
+            <div class="form-group  row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="airlineCode" name="airlineCode"
+                        formControlName="airlineCode" [(ngModel)]="passiveSegments.airlineCode" maxlength="2"
+                        (input)="onChangezz($event.target.value, $event.target.name)" AlphaNumericMask AllCapsMask />
+                </div>
+
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="flightNumber" name="flightNumber"
+                        formControlName="flightNumber" [(ngModel)]="passiveSegments.flightNumber" maxlength="4"
+                        AlphaNumericMask />
+                </div>
+
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="classService" name="classService"
+                        formControlName="classService" [(ngModel)]="passiveSegments.classService" maxlength="2"
+                        AlphaMask AllCapsMask />
+                </div>
+            </div>
+
+            <div *ngIf="passiveSegments.segmentType == 'AIR' && passiveSegments.airlineCode === 'ZZ'"
+                class="form-group  row">
+                <div class="col-sm-4">Airline Name for the ZZ carrier</div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="zzairlineCode" name="zzairlineCode"
+                        formControlName="zzairlineCode" [(ngModel)]="passiveSegments.zzairlineCode" maxlength="25" />
+                </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA'">
+            <div class="form-group  row">
+                <div class="col-sm-4"><label id="lblName"> {{lblvendorName}} </label></div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="vendorName" name="vendorName"
+                        formControlName="vendorName" [(ngModel)]="passiveSegments.vendorName" maxlength="20"
+                        AlphaNumericMask />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-4"><label id="lblName"> {{lblvendorCode}} </label></div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="select a vendor Code"
+                        formControlName="vendorCode" id="vendorCode" list="dynamicSupplierCode" maxlength="3"
+                        [(ngModel)]="passiveSegments.vendorCode" />
+                    <datalist id="dynamicSupplierCode">
+                        <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">
+                            {{item.supplierCode}} -
+                            {{item.supplierName}}</option>
+                    </datalist>
+                </div>
+            </div>
+
+            <div class="form-group  row">
+                <div class="col-sm-4"><label id="lblName"> {{lblconfirmationNo}} </label></div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="confirmationNo" name="confirmationNo"
+                        formControlName="confirmationNo" [(ngModel)]="passiveSegments.confirmationNo" maxlength="15" />
+                </div>
+            </div>
+        </div>
+
+        <div
+            *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA' ||  passiveSegments.segmentType == 'INS'  ||  passiveSegments.segmentType == 'AIR'">
+            <div class="form-group  row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <label id="lblName"> {{lbldepartureDate}} </label>
+                    <input type="date" class="form-control" id="departureDate" name="departureDate"
+                        formControlName="departureDate" [(ngModel)]="passiveSegments.departureDate"
+                        (change)="checkDate($event.target.value, $event.target.name)" />
+                </div>
+
+                <div class="col-4">
+                    <label id="lblName"> {{lblarrivalDate}} </label>
+                    <input type="date" class="form-control" id="arrivalDate" name="arrivalDate"
+                        formControlName="arrivalDate" [(ngModel)]="passiveSegments.arrivalDate"
+                        (change)="checkDate($event.target.value, $event.target.name)" />
+                </div>
+            </div>
+
+            <div class="form-group  row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <label id="lblName"> {{lbldepartureCity}} </label>
+                    <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
+                        formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity"
+                        (input)="onChangezz($event.target.value, $event.target.name)" AlphaNumericMask AllCapsMask />
+                </div>
+
+                <div *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA'  ||  passiveSegments.segmentType == 'AIR'"
+                    class="col-4">
+                    <label id="lblName"> {{lbldestinationCity}} </label>
+                    <input type="text" class="form-control" id="destinationCity" name="destinationCity" maxlength="3"
+                        formControlName="destinationCity" [(ngModel)]="passiveSegments.destinationCity"
+                        (change)="onChangezz($event.target.value, $event.target.name)" AlphaNumericMask AllCapsMask />
+                </div>
+            </div>
+
+            <div *ngIf="passiveSegments.segmentType == 'AIR' && passiveSegments.departureCity === 'ZZZ'"
+                class="form-group  row">
+                <div class="col-sm-4">ZZZ Dept City Code</div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="zzdepartureCity" name="zzdepartureCity" maxlength="25"
+                        formControlName="zzdepartureCity" [(ngModel)]="passiveSegments.zzdepartureCity" />
+                </div>
+            </div>
+
+            <div *ngIf="passiveSegments.segmentType == 'AIR' && passiveSegments.destinationCity === 'ZZZ'"
+                class="form-group  row">
+                <div class="col-sm-4">ZZZ Arrival City Code</div>
+                <div class="col-8">
+                    <input type="text" class="form-control" id="zzdestinationCity" name="zzdestinationCity"
+                        maxlength="25" formControlName="zzdestinationCity"
+                        [(ngModel)]="passiveSegments.zzdestinationCity" />
+                </div>
+            </div>
+        </div>
+
+        <div
+            *ngIf="passiveSegments.segmentType == 'TOR' ||  passiveSegments.segmentType == 'SEA' || passiveSegments.segmentType == 'AIR'">
+            <div class="form-group  row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <label id="lblName"> {{lbldepartureTime}} </label>
+                    <input type="time" class="form-control" id="departureTime" name="departureTime"
+                        formControlName="departureTime" [(ngModel)]="passiveSegments.departureTime" />
+                </div>
+
+                <div class="col-4">
+                    <label id="lblName"> {{lblarrivalTime}} </label>
+                    <input type="time" class="form-control" id="arrivalTime" name="arrivalTime"
+                        formControlName="arrivalTime" [(ngModel)]="passiveSegments.arrivalTime" />
+                </div>
+            </div>
+
+            <div *ngIf=" passiveSegments.segmentType !== 'AIR'">
+                <div class="form-group  row">
+                    <div class="col-sm-4"><label id="lblName"> {{lbltourName}} </label></div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="tourName" name="tourName" maxlength="20"
+                            formControlName="tourName" [(ngModel)]="passiveSegments.tourName" />
+                    </div>
+                </div>
+
+                <div class="form-group  row">
+                    <div class="col-sm-4"><label id="lblName"> {{lblnoNights}} </label></div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="noNights" name="noNights" maxlength="2"
+                            formControlName="noNights" [(ngModel)]="passiveSegments.noNights" NumberOnlyMask />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div
+            *ngIf="passiveSegments.segmentType == 'TOR' || passiveSegments.segmentType == 'SEA' || passiveSegments.segmentType == 'INS' || passiveSegments.segmentType == 'AIR'">
+            <div class="form-group  row">
+                <div class="col-sm-4"><label id="lblName"> {{lblnoPeople}} </label></div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="noPeople" name="noPeople" maxlength="2"
+                        formControlName="noPeople" [(ngModel)]="passiveSegments.noPeople" NumberOnlyMask />
+                </div>
+            </div>
+        </div>
+
+
+
+        <div *ngIf="passiveSegments.segmentType == 'TOR'">
+            <div class="form-group  row">
+                <div class="col-sm-4">Room Type</div>
+                <div class="col-sm-8">
+                    <select autofocus id="roomType" class="form-control" name="roomType" formControlName="roomType"
+                        [(ngModel)]="passiveSegments.roomType">
+                        <option *ngFor="let item of  roomTypeList" [value]="item.itemValue">
+                            {{item.itemText}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group  row">
+                <div class="col-sm-4">Meal Plan</div>
+                <div class="col-sm-8">
+                    <select autofocus id="mealPlan" class="form-control" name="mealPlan" formControlName="mealPlan"
+                        [(ngModel)]="passiveSegments.mealPlan">
+                        <option *ngFor="let item of  mealPlanList" [value]="item.itemValue">
+                            {{item.itemText}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div *ngIf="passiveSegments.segmentType == 'SEA'">
+            <div class="form-group  row">
+                <div class="col-sm-4">State Room</div>
+                <div class="col-sm-8">
+                    <select autofocus id="stateRoom" class="form-control" name="stateRoom" formControlName="stateRoom"
+                        [(ngModel)]="passiveSegments.stateRoom" (change)="onChangeStateRoom($event.target.value)">
+                        <option *ngFor="let item of  stateRoomList" [value]="item.itemValue">
+                            {{item.itemText}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div *ngIf="passiveSegments.stateRoom == 'OTHER'">
+                <div class="form-group  row">
+                    <div class="col-sm-4">State Room Others Description</div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="othersText" name="othersText" maxlength="15"
+                            formControlName="othersText" [(ngModel)]="passiveSegments.othersText" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group  row">
+                <div class="col-sm-4">Cabin Number</div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="cabinNo" name="cabinNo" maxlength="7"
+                        formControlName="cabinNo" [(ngModel)]="passiveSegments.cabinNo" />
+                </div>
+            </div>
+
+
+            <div class="form-group  row">
+                <div class="col-sm-4">Dining</div>
+                <div class="col-sm-8">
+                    <select autofocus id="dining" class="form-control" name="dining" formControlName="dining"
+                        [(ngModel)]="passiveSegments.dining">
+                        <option *ngFor="let item of  diningList" [value]="item.itemValue">
+                            {{item.itemText}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="passiveSegments.segmentType == 'INS'">
+            <div class="form-group  row">
+                <div class="col-sm-4">Policy Number</div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="policyNo" name="policyNo" maxlength="12"
+                        formControlName="policyNo" [(ngModel)]="passiveSegments.policyNo" />
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="passiveSegments.segmentType == 'AIR'">
+            <div class="form-group  row">
+                <div class="col-sm-4">Airline Record Locator</div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="airlineRecloc" name="airlineRecloc" maxlength="10"
+                        formControlName="airlineRecloc" [(ngModel)]="passiveSegments.airlineRecloc" />
+                </div>
+            </div>
+        </div>
+
+
+        <ng-container *ngTemplateOutlet="selectedTmpl">
+
+        </ng-container>
+
+
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="saveSegment()"
+        [disabled]="segmentForm.invalid">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+</div>
+
+
+
+<ng-template #railTmpl>
+
+
+    <div>
+        <div class="form-group  row">
+            <div class="col-sm-4"><label id="lblName"> From Station </label></div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="fromStation" name="fromStation" formControlName="vendorName"
+                    [(ngModel)]="passiveSegments.fromStation" maxlength="20" AlphaNumericMask />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-4"><label id="lblName"> Train Number </label></div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="" formControlName="trainNumber" id="trainNumber"
+                    maxlength="5" [(ngModel)]="passiveSegments.trainNumber" AlphaNumericMask />
+
+            </div>
+        </div>
+
+        <div class="form-group  row">
+            <div class="col-sm-4"><label id="lblName"> Class of Service </label></div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="classService" name="classService"
+                    formControlName="classService" [(ngModel)]="passiveSegments.classService" maxlength="8" />
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group  row">
+        <div class="col-sm-4">Departure City</div>
+        <div class="col">
+            <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
+                formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity"
+                (input)="onChangezz($event.target.value, $event.target.name)" AlphaNumericMask AllCapsMask />
+        </div>
+    </div>
+
+    <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <label id="lblName"> Departure Date </label>
+            <input type="date" class="form-control" id="departureDate" name="departureDate"
+                formControlName="departureDate" [(ngModel)]="passiveSegments.departureDate"
+                (change)="checkDate($event.target.value, $event.target.name)" />
+        </div>
+
+        <div class="col-sm-4">
+            <label id="lblName"> Departure Time</label>
+            <input type="time" class="form-control" id="departureTime" name="departureTime"
+                formControlName="departureTime" [(ngModel)]="passiveSegments.departureTime" />
+        </div>
+
+    </div>
+
+    <div class="form-group  row">
+        <div class="col-sm-4"> Arrival City </div>
+        <div class="col-8">
+            <input type="text" class="form-control" id="destinationCity" name="destinationCity" maxlength="3"
+                formControlName="destinationCity" [(ngModel)]="passiveSegments.destinationCity"
+                (change)="onChangezz($event.target.value, $event.target.name)" AlphaNumericMask AllCapsMask />
+        </div>
+    </div>
+
+    <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col-4">
+            <label id="lblName"> Arrival Date </label>
+            <input type="date" class="form-control" id="arrivalDate" name="arrivalDate" formControlName="arrivalDate"
+                [(ngModel)]="passiveSegments.arrivalDate"
+                (change)="checkDate($event.target.value, $event.target.name)" />
+        </div>
+
+        <div class="col-4">
+            <label id="lblName">Arrival Time</label>
+            <input type="time" class="form-control" id="arrivalTime" name="arrivalTime" formControlName="arrivalTime"
+                [(ngModel)]="passiveSegments.arrivalTime" />
+        </div>
+    </div>
+
+
+    <div class="form-group  row">
+        <div class="col-sm-4">ZZZ Dept City Code</div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="zzdepartureCity" name="zzdepartureCity" maxlength="25"
+                formControlName="zzdepartureCity" [(ngModel)]="passiveSegments.zzdepartureCity" />
+        </div>
+    </div>
+
+    <div *ngIf="passiveSegments.segmentType == 'AIR' && passiveSegments.destinationCity === 'ZZZ'"
+        class="form-group  row">
+        <div class="col-sm-4">ZZZ Arrival City Code</div>
+        <div class="col-8">
+            <input type="text" class="form-control" id="zzdestinationCity" name="zzdestinationCity" maxlength="25"
+                formControlName="zzdestinationCity" [(ngModel)]="passiveSegments.zzdestinationCity" />
+        </div>
+    </div>
+
+
+    <div *ngIf="">
+
+        <div>
+            <div class="form-group  row">
+                <div class="col-sm-4"><label id="lblName"> {{lbltourName}} </label></div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="tourName" name="tourName" maxlength="20"
+                        formControlName="tourName" [(ngModel)]="passiveSegments.tourName" />
+                </div>
+            </div>
+
+            <div class="form-group  row">
+                <div class="col-sm-4"><label id="lblName"> {{lblnoNights}} </label></div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="noNights" name="noNights" maxlength="2"
+                        formControlName="noNights" [(ngModel)]="passiveSegments.noNights" NumberOnlyMask />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div>
+        <div class="form-group  row">
+            <div class="col-sm-4"><label id="lblName"> {{lblnoPeople}} </label></div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="noPeople" name="noPeople" maxlength="2"
+                    formControlName="noPeople" [(ngModel)]="passiveSegments.noPeople" NumberOnlyMask />
+            </div>
+        </div>
+    </div>
+
+
+</ng-template>

@@ -396,6 +396,7 @@
           [(ngModel)]="passiveSegments.seatNumber" maxlength="4" AlphaNumericMask />
       </div>
     </div>
+
     <div class="form-group  row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
@@ -496,8 +497,7 @@
         <label id="lblName">TAX on Rate </label>
         <div>
           <input type="checkbox" id="includeTax" name="includeTax" [(ngModel)]="passiveSegments.includeTax"
-            (click)="includeOnRate($event.target.name,$event.target.checked)" #chkIncludeTax
-            formControlName="includeTax" />
+            #chkIncludeTax formControlName="includeTax" />
           Included on Rate
           <input type="text" class="form-control" id="taxOnRate" name="taxOnRate" formControlName="taxOnRate"
             [(ngModel)]="passiveSegments.taxOnRate" maxlength="7" AmountMask />
@@ -508,7 +508,6 @@
         <label id="lblName">Toll </label>
         <div>
           <input type="checkbox" id="includeToll" name="includeToll" formControlName="includeToll"
-            (click)="includeOnRate($event.target.name,$event.target.checked)"
             [(ngModel)]="passiveSegments.includeToll" /> Included on Rate
           <input type="text" class="form-control" id="toll" name="toll" formControlName="toll"
             [(ngModel)]="passiveSegments.toll" maxlength="7" AmountMask />
@@ -522,7 +521,6 @@
         <label id="lblName">Gratuities </label>
         <div>
           <input type="checkbox" id="includeGratuities" name="includeGratuities" formControlName="includeGratuities"
-            (click)="includeOnRate($event.target.name,$event.target.checked)"
             [(ngModel)]="passiveSegments.includeGratuities" /> Included on
           Rate
           <input type="text" class="form-control" id="gratuities" name="gratuities" formControlName="gratuities"
@@ -536,6 +534,7 @@
           <input type="checkbox" id="includeParking" name="includeParking" formControlName="includeParking"
             (click)="includeOnRate($event.target.name,$event.target.checked)"
             [(ngModel)]="passiveSegments.includeParking" /> Included on Rate
+
           <input type="text" class="form-control" id="parking" name="parking" formControlName="parking"
             [(ngModel)]="passiveSegments.parking" maxlength="7" AmountMask />
         </div>
@@ -710,12 +709,20 @@
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4"><label id="lblName"> Airline Frequent Flier Number </label></div>
+      <div class="col-sm-4">Airline Frequent Flier Number </div>
       <div class="col">
+        <label id="lblName">Airline Code</label>
         <input type="text" class="form-control" id="frequentFlierNumber" name="frequentFlierNumber"
-          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="25" />
+          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="2" />
+      </div>
+      <div class="col">
+        <label id="lblName">Flight Number</label>
+        <input type="text" class="form-control" id="frequentflightNumber" name="frequentflightNumber"
+          formControlName="frequentflightNumber" [(ngModel)]="passiveSegments.frequentflightNumber" maxlength="25" />
       </div>
     </div>
+
+
     <div class="form-group  row">
       <div class="col-sm-4"> <label id="lblName"> Special Equipment </label></div>
       <div class="col">
@@ -747,14 +754,7 @@
           formControlName="specialRequest" [(ngModel)]="passiveSegments.specialRequest" maxlength="25" />
       </div>
     </div>
-    <div class="form-group  row">
-      <div class="col-sm-4"> <label id="lblName"> Airline Frequent Flier Number </label></div>
-      <div class="col">
-
-        <input type="text" class="form-control" id="frequentFlierNumber" name="frequentFlierNumber"
-          formControlName="frequentFlierNumber" [(ngModel)]="passiveSegments.frequentFlierNumber" maxlength="25" />
-      </div>
-    </div>
+   
 
 
   </div>
@@ -779,7 +779,7 @@
         <input type="text" class="form-control" id="cdNumber" name="departureCity" formControlName="departureCity"
           [(ngModel)]="passiveSegments.departureCity" maxlength="3" (blur)="getHotels()" AllCapsMask />
       </div>
-    </div>
+    </div> 
 
     <ng-container *ngTemplateOutlet="travelDate"></ng-container>
 

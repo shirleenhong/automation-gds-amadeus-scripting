@@ -144,7 +144,6 @@ export class PaymentRemarkService {
 
 
   processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-    debugger;
     const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
       '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
       accounting.baseAmount.toString().trim() + '/-PT-' +
@@ -181,7 +180,6 @@ export class PaymentRemarkService {
 
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
-    debugger;
     if (accounting.bsp === '2' && accounting.supplierCodeName !== 'MLF') {
       this.extractApayRemark(accounting, remarkList, fopObj);
     }

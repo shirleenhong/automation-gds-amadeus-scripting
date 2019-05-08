@@ -17,4 +17,5 @@ export class PassiveSegmentModel {
     controlNo: string;
     dayChangeIndicator: string;
     flightNo: string;
+    carType: string;
 }

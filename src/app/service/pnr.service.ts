@@ -847,6 +847,28 @@ export class PnrService {
   }
 
 
+  IsExistAmkVib(supCode) {
+    if (this.isPNRLoaded) {
+      for (const misc of this.pnrObj.miscSegments) {
+        if (supCode === 'vib') {
+          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION') > -1 ||
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf('POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS') > -1) {
+            return true;
+          }
+        }
+        if (supCode === 'amk') {
+          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf
+            ('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1) {
+            return true;
+          }
+        }
+
+      }
+    }
+
+    return false;
+  }
+
 
 
 }

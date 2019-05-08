@@ -46,7 +46,7 @@ export class PassiveSegmentsModel {
     limoCoAgent: string;
     meetDriveAt: string;
     additionalInfo: string;
-    cancellationInfo: string;
+    cancellationInfo: string;  
     includeTax = false;
     includeToll = false;
     includeParking = false;
@@ -68,6 +68,7 @@ export class PassiveSegmentsModel {
     frequentFlierNumber: string;
     specialEquipment: string;
     specialRequest: string;
+    frequentflightNumber: string;
 
     //hotel
     chainCode: string;
@@ -83,4 +84,6 @@ export class PassiveSegmentsModel {
     province: string;
     zipCode: string;
     country: string;
+   
+
 }

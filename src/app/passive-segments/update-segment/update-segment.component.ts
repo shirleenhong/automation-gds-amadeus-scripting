@@ -91,7 +91,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     carNumber: new FormControl('', [Validators.required]),
     fromStation: new FormControl('', [Validators.required]),
     arrivalStation: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required]),
+    phone: new FormControl('', [Validators.required]), 
     // limo
     rate: new FormControl('', [Validators.required]),
     rateType: new FormControl('', [Validators.required]),
@@ -99,6 +99,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     toll: new FormControl(''),
     gratuities: new FormControl(''),
     parking: new FormControl(''),
+
     limoCoAgent: new FormControl(''),
     meetDriveAt: new FormControl(''),
     additionalInfo: new FormControl(''),
@@ -125,6 +126,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     frequentFlierNumber: new FormControl(''),
     specialEquipment: new FormControl(''),
     specialRequest: new FormControl(''),
+    frequentflightNumber: new FormControl(''),
 
     // hotel
     chainCode: new FormControl('', [Validators.required]),
@@ -235,7 +237,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     { itemText: 'Car', itemValue: 'CAR' },
     { itemText: 'Limo', itemValue: 'LIM' },
     { itemText: 'Hotel', itemValue: 'HTL' },
-    { itemText: 'Rail', itemValue: 'RAIL' }];
+    { itemText: 'Rail', itemValue: 'TRN' }];
+
   }
 
   loadStateRoom() {
@@ -342,11 +345,11 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.setForm(forms);
         this.selectedTmpl = this.insuranceTmpl;
         break;
-      case 'RAIL':
+      case 'TRN':
         this.lblvendorName = 'Supplier Name';
         this.lblvendorCode = 'Supplier Code';
         forms = ['segmentType', 'classService', 'seatNumber', 'trainNumber', 'carNumber', 'vendorName', 'vendorCode', 'confirmationNo',
-          'departureDate', 'departureTime', 'departureCity', 'destinationCity', 'arrivalStation', 'fromStation',
+          'departureDate', 'departureTime', 'departureCity', 'arrivalStation', 'fromStation',
           'arrivalDate', 'arrivalTime', 'noPeople'];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
@@ -361,10 +364,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'includeTax', 'includeToll', 'includeParking', 'includeGratuities'];
 
         this.setForm(forms);
-        this.includeOnRate('includeTax', this.passiveSegments.includeTax);
-        this.includeOnRate('includeToll', this.passiveSegments.includeToll);
-        this.includeOnRate('includeGratuities', this.passiveSegments.includeGratuities);
-        this.includeOnRate('includeParking', this.passiveSegments.includeParking);        
         this.selectedTmpl = this.limoTmpl;
       
 
@@ -374,7 +373,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.lbldepartureTime = 'Pickup Time';
         this.lblarrivalDate = 'Return Date';
         this.lblarrivalTime = 'Return Time';
-        this.lblvendorName = 'Car Name';
+        this.lblvendorName = 'Car Vendor Name';
         this.lblvendorCode = 'Car Vendor Code';
         this.lbldepartureCity = 'Pickup City';
         this.lbldestinationCity = 'Drop Off City';

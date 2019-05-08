@@ -228,7 +228,7 @@ export class SegmentService {
                 ('CAR-' + segmentrem.carNumber.toString() + ' SEAT NUMBER-' + segmentrem.seatNumber, 'RI', 'R', pnrSegment.tatooNo));
         }
 
-        if (amk === 1 && segmentrem.vendorCode === 'AMK') {
+        if (amk === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
             if (itinLanguage === 'FR') {
                 segRemark.getVibFrenchRemark().forEach(c => {
                     rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
@@ -239,7 +239,7 @@ export class SegmentService {
                 });
             }
         }
-        if (vib === 1 && segmentrem.vendorCode === 'VIB') {
+        if (vib === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
             segRemark.getAmkRemark().forEach(c => {
                 rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
             });
@@ -252,7 +252,7 @@ export class SegmentService {
 
         const rirTaxes = [{ include: segmentrem.includeTax, description: '-TAXES', rate: segmentrem.taxOnRate },
         { include: segmentrem.includeToll, description: '-TOLLS', rate: segmentrem.toll },
-        { include: segmentrem.gratuities, description: '-Gratuities', rate: segmentrem.gratuities },
+        { include: segmentrem.includeGratuities, description: '-Gratuities', rate: segmentrem.gratuities },
         { include: segmentrem.includeGratuities, description: '-Parking', rate: segmentrem.parking }];
 
         if (itinLanguage === 'FR') {
@@ -273,7 +273,6 @@ export class SegmentService {
                     nottaxRemarks = nottaxRemarks + c.description;
                 }
             }
-
         });
 
         if (nottaxRemarks !== '') {
@@ -289,37 +288,38 @@ export class SegmentService {
 
     private getLimoEnglisgRemarks(rmGroup: RemarkGroup, segmentrem: PassiveSegmentsModel, pnrSegment: any) {
         const optionalEnglishRemarks = [{ include: segmentrem.limoCoAgent, description: 'CONFIRMED WITH ' },
-        { include: segmentrem.meetDriveAt, description: 'MEET DRIVER AT' },
+        { include: segmentrem.meetDriveAt, description: 'MEET DRIVER AT ' },
         { include: segmentrem.additionalInfo, description: '' },
         { include: segmentrem.cancellationInfo, description: 'CANCEL INFO-' }];
 
         rmGroup.remarks.push(this.getRemarksModel('Phone Number ' + segmentrem.phone, 'RI', 'R', pnrSegment.tatooNo));
         rmGroup.remarks.push(this.getRemarksModel('Pick Up-' + segmentrem.pickupLoc +
-            ' Time- ' + segmentrem.departureTime, 'RI', 'R', pnrSegment.tatooNo));
+            ' Time-' + segmentrem.departureTime, 'RI', 'R', pnrSegment.tatooNo));
         rmGroup.remarks.push(this.getRemarksModel('Transfer To-' + segmentrem.transferTo, 'RI', 'R', pnrSegment.tatooNo));
         rmGroup.remarks.push(this.getRemarksModel('Rate -' + segmentrem.rate + ' ' + segmentrem.rateType, 'RI', 'R', pnrSegment.tatooNo));
+
         optionalEnglishRemarks.forEach(c => {
             if (c.include) {
-                rmGroup.remarks.push(this.getRemarksModel(c.description + ' ' + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
             }
         });
     }
 
     private getLimoRirFrenckRemarks(rmGroup: RemarkGroup, segmentrem: PassiveSegmentsModel, pnrSegment: any) {
 
-        const optionalFrenchRemarks = [{ include: segmentrem.limoCoAgent, description: 'CONFIRME PAR' },
-        { include: segmentrem.meetDriveAt, description: 'LE CHAUFFEUR SERA A' },
+        const optionalFrenchRemarks = [{ include: segmentrem.limoCoAgent, description: 'CONFIRME PAR ' },
+        { include: segmentrem.meetDriveAt, description: 'LE CHAUFFEUR SERA A ' },
         { include: segmentrem.additionalInfo, description: '' },
         { include: segmentrem.cancellationInfo, description: 'CANCEL INFO-' }];
 
         rmGroup.remarks.push(this.getRemarksModel('Phone ' + segmentrem.phone, 'RI', 'R', pnrSegment.tatooNo));
-        rmGroup.remarks.push(this.getRemarksModel('DE ' + segmentrem.pickupLoc + ' CUEILLETTE A- ' +
+        rmGroup.remarks.push(this.getRemarksModel('DE ' + segmentrem.pickupLoc + ' CUEILLETTE A-' +
             segmentrem.departureTime, 'RI', 'R', pnrSegment.tatooNo));
         rmGroup.remarks.push(this.getRemarksModel('A ' + segmentrem.transferTo, 'RI', 'R', pnrSegment.tatooNo));
         rmGroup.remarks.push(this.getRemarksModel('TARIF -' + segmentrem.rate + ' ' + segmentrem.rateType, 'RI', 'R', pnrSegment.tatooNo));
         optionalFrenchRemarks.forEach(c => {
             if (c.include) {
-                rmGroup.remarks.push(this.getRemarksModel(c.description + ' ' + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
             }
         });
     }
@@ -365,13 +365,13 @@ export class SegmentService {
                 break;
             case 'TRN':
                 freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/SC-' +
-                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
+                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.arrivalStation +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'LIM':
                 freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + 'SUC-' + segment.vendorCode + '/STP-' +
-                    segment.transferTo + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
-                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                    segment.transferTo + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.departureCity +
+                    '/ED-' + startdatevalue + '/ET-' + startTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'CAR':
                 freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +

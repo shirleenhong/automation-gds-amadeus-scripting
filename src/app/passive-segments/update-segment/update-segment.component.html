@@ -316,7 +316,7 @@
       <div class="col-sm-4"><label id="lblName"> {{lblvendorName}} </label></div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="vendorName" name="vendorName" formControlName="vendorName"
-          [(ngModel)]="passiveSegments.vendorName" maxlength="20" AlphaNumericMask />
+          [(ngModel)]="passiveSegments.vendorName" maxlength="25" AlphaNumericMask />
       </div>
     </div>
 
@@ -371,7 +371,7 @@
       <div class="col-sm-4"><label id="lblName"> From Station </label></div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="fromStation" name="fromStation" formControlName="fromStation"
-          [(ngModel)]="passiveSegments.fromStation" maxlength="20" AlphaNumericMask />
+          [(ngModel)]="passiveSegments.fromStation" maxlength="25" AlphaNumericMask />
       </div>
     </div>
     <div>
@@ -379,7 +379,7 @@
         <div class="col-sm-4"><label id="lblName"> Arrival Station </label></div>
         <div class="col-sm-8">
           <input type="text" class="form-control" id="arrivalStation" name="arrivalStation"
-            formControlName="arrivalStation" [(ngModel)]="passiveSegments.arrivalStation" maxlength="20"
+            formControlName="arrivalStation" [(ngModel)]="passiveSegments.arrivalStation" maxlength="25"
             AlphaNumericMask />
         </div>
       </div>
@@ -938,15 +938,13 @@
     <div class="form-group  row">
       <div class="col-sm-4"><label id="lblName">Province/State </label></div>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="province" name="province" formControlName="province"
-          [(ngModel)]="passiveSegments.province" list="stateProvince" maxlength=" 15"
-          />
-
-        <datalist id="stateProvince">
+        <select class="form-control" id="province" name="province" formControlName="province"
+          [(ngModel)]="passiveSegments.province" 
+          >       
           <option *ngFor="let item of stateProvinceList" [value]="item.province">
-            {{item.code}} -
+          {{item.countryCode}} -   {{item.code}} -
             {{item.province}}</option>
-        </datalist>
+       </select>
       </div>
     </div>
 

@@ -85,10 +85,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     zzairlineCode: new FormControl('', []),
     zzdepartureCity: new FormControl('', []),
     zzdestinationCity: new FormControl('', []),
-    seatNumber: new FormControl('', [Validators.required]),
+    seatNumber: new FormControl(''),
     //train
     trainNumber: new FormControl('', [Validators.required]),
-    carNumber: new FormControl('', [Validators.required]),
+    carNumber: new FormControl(''),
     fromStation: new FormControl('', [Validators.required]),
     arrivalStation: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required]), 
@@ -273,8 +273,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (this.formControls.get(x) !== null) {
         this.segmentForm.addControl(x, this.formControls.get(x));
       } else {
-        debugger;
-        const xx = 1;
+          const xx = 1;
       }
     });
 
@@ -353,7 +352,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'arrivalDate', 'arrivalTime', 'noPeople'];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
-        this.segmentForm.get('destinationCity').disable();
+       
         break;
       case 'LIM':
         this.lblvendorName = 'Limo Company';
@@ -528,8 +527,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  onChangezz(controlValue, controlName) {
-    debugger;
+  onChangezz(controlValue, controlName) {  
     if (this.segmentForm.get('segmentType').value === 'AIR') {
       let enable = false;
       let controlenable = '';

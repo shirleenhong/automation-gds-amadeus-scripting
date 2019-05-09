@@ -30,8 +30,7 @@ export class SegmentService {
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
 
-    GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
-        debugger;
+    GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {    
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
         const remarks = new Array<RemarkModel>();

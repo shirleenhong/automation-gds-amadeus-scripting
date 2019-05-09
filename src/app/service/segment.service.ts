@@ -31,7 +31,6 @@ export class SegmentService {
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
-        debugger;
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
         const remarks = new Array<RemarkModel>();
@@ -80,6 +79,10 @@ export class SegmentService {
                     passive.function = '9';
                     passive.carType = segment.carType;
                 }
+                if (segment.segmentType === 'HTL') {
+                    passive.segmentName = 'HU';
+                    passive.function = '8';
+                }
                 passive.quantity = Number(segment.noPeople);
                 passive.status = 'HK';
                 passive.flightNo = '1';
@@ -100,7 +103,7 @@ export class SegmentService {
     }
 
 
-    addSegmentRir(segRemark: any) {  
+    addSegmentRir(segRemark: any) {
         let segmentRemarks: PassiveSegmentsModel[];
         segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');
@@ -139,7 +142,6 @@ export class SegmentService {
                     if (segmentrem.segmentType === 'LIM') {
                         this.rirLimo(pnrSegment, segmentrem, rmGroup, segRemark, itinLanguage);
                     }
-                   
                 }
 
                 if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
@@ -147,6 +149,10 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'CAR' && pnrSegment.segmentType === 'CAR') {
+                    this.rirCar(pnrSegment, segmentrem, rmGroup);
+                }
+
+                if (segmentrem.segmentType === 'HTL' && pnrSegment.segmentType === 'HTL') {
                     this.rirCar(pnrSegment, segmentrem, rmGroup);
                 }
             });
@@ -220,7 +226,7 @@ export class SegmentService {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
-                ('TRAIN NUMBER - ' + segmentrem.trainNumber.toString()
+                ('TRAIN NUMBER-' + segmentrem.trainNumber.toString()
                     + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
         }
 
@@ -229,7 +235,7 @@ export class SegmentService {
                 ('CAR-' + segmentrem.carNumber.toString() + ' SEAT NUMBER-' + segmentrem.seatNumber, 'RI', 'R', pnrSegment.tatooNo));
         }
 
-        if (amk === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
+        if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
             if (itinLanguage === 'FR') {
                 segRemark.getVibFrenchRemark().forEach(c => {
                     rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
@@ -240,7 +246,7 @@ export class SegmentService {
                 });
             }
         }
-        if (vib === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
+        if (amk === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
             segRemark.getAmkRemark().forEach(c => {
                 rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
             });
@@ -368,7 +374,7 @@ export class SegmentService {
             case 'TRN':
 
                 freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/SC-' +
-                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.arrivalStation +
+                    segment.fromStation + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.arrivalStation +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'LIM':
@@ -381,6 +387,11 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
                     '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + ' FREE/CF-' +
                     segment.confirmationNo;
+                break;
+            case 'HTL':
+                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + ',FAX-' + segment.fax +
+                    ',CF:' + segment.confirmationNo + ',' + segment.roomType + ',RATE:' + segment.rateType + ' ' +
+                    segment.currency + segment.nightlyRate + '/NIGHT,SI-' + segment.additionalInfo;
                 break;
             default:
                 break;

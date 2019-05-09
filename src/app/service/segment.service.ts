@@ -153,7 +153,7 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'HTL' && pnrSegment.segmentType === 'HTL') {
-                    this.rirCar(pnrSegment, segmentrem, rmGroup);
+                    this.rirHotel(pnrSegment, segmentrem, rmGroup);
                 }
             });
         });
@@ -174,6 +174,27 @@ export class SegmentService {
             rmGroup.remarks.push(this.getRemarksModel
                 ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
         }
+    }
+
+    private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH – ' },
+        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION – ' }];
+
+        const mandatoryHotelRemarks = ['ADDRESS-' + segmentrem.address,
+        segmentrem.hotelCityName + ' ' + segmentrem.province,
+        segmentrem.country + ' ' + segmentrem.zipCode,
+        'GUARANTEED  FOR LATE ARRIVAL -' + segmentrem.guaranteedLate,
+        'CANCELLATION POLICY - ' + segmentrem.policyNo];
+
+        mandatoryHotelRemarks.forEach(c => {
+            rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+        });
+
+        optionalHotelRemarks.forEach(c => {
+            if (c.include) {
+                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+            }
+        });
     }
 
     private rirCar(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
@@ -230,9 +251,18 @@ export class SegmentService {
                     + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
         }
 
-        if (segmentrem.carNumber && segmentrem.seatNumber) {
+        let carseat = '';
+        if (segmentrem.carNumber) {
+            carseat = carseat + 'CAR-' + segmentrem.carNumber;
+        }
+
+        if (segmentrem.seatNumber) {
+            carseat = carseat + ' SEAT NUMBER-' + segmentrem.seatNumber;
+        }
+
+        if (carseat !== '') {
             rmGroup.remarks.push(this.getRemarksModel
-                ('CAR-' + segmentrem.carNumber.toString() + ' SEAT NUMBER-' + segmentrem.seatNumber, 'RI', 'R', pnrSegment.tatooNo));
+                (carseat, 'RI', 'R', pnrSegment.tatooNo));
         }
 
         if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {

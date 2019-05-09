@@ -325,7 +325,7 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="select a vendor Code" formControlName="vendorCode"
           id="vendorCode" list="dynamicSupplierCode" maxlength="3" [(ngModel)]="passiveSegments.vendorCode"
-          (blur)="vendorCodeChange()" />
+          (blur)="vendorCodeChange()" AllCapsMask />
         <datalist id="dynamicSupplierCode">
           <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">
             {{item.supplierCode}} -
@@ -400,13 +400,12 @@
     </div>
 
     <div class="form-group  row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-          <label id="lblName"> {{lbldepartureCity}} </label>
-          <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
-            formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity" 
-             AlphaNumericMask AllCapsMask />
-        </div>
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <label id="lblName"> {{lbldepartureCity}} </label>
+        <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
+          formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity" AlphaNumericMask AllCapsMask />
+      </div>
     </div>
   </div>
 
@@ -756,7 +755,7 @@
           formControlName="specialRequest" [(ngModel)]="passiveSegments.specialRequest" maxlength="25" />
       </div>
     </div>
-   
+
 
 
   </div>
@@ -781,7 +780,7 @@
         <input type="text" class="form-control" id="cdNumber" name="departureCity" formControlName="departureCity"
           [(ngModel)]="passiveSegments.departureCity" maxlength="3" (blur)="getHotels()" AllCapsMask />
       </div>
-    </div> 
+    </div>
 
     <ng-container *ngTemplateOutlet="travelDate"></ng-container>
 
@@ -931,7 +930,7 @@
       <div class="col-sm-4"><label id="lblName"> Country </label></div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="country" name="country" formControlName="country"
-          [(ngModel)]="passiveSegments.country"  (change)="filterStateProvince($event.target.value)"/>
+          [(ngModel)]="passiveSegments.country" (change)="filterStateProvince($event.target.value)" />
       </div>
     </div>
 
@@ -939,12 +938,11 @@
       <div class="col-sm-4"><label id="lblName">Province/State </label></div>
       <div class="col-sm-8">
         <select class="form-control" id="province" name="province" formControlName="province"
-          [(ngModel)]="passiveSegments.province" 
-          >       
+          [(ngModel)]="passiveSegments.province">
           <option *ngFor="let item of stateProvinceList" [value]="item.province">
-          {{item.countryCode}} -   {{item.code}} -
+            {{item.countryCode}} - {{item.code}} -
             {{item.province}}</option>
-       </select>
+        </select>
       </div>
     </div>
 

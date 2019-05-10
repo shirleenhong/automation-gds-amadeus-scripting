@@ -28,8 +28,7 @@ export class PnrService {
   constructor() { }
 
   async getPNR(): Promise<void> {
-    this.cfLine = null;
-    debugger;
+    this.cfLine = null;  
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
       (res: any) => {

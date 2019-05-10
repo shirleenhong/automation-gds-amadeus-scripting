@@ -43,6 +43,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   carTypeList: Array<any>;
   pickupOffAddrList = [];
   dropOffAddrList = [];
+  commandCache = { getHotels:'', loadCarSupplier:'',  loadCarType: '' , loadDropOffAddr: '', loadPickupOffAddr: ''};
   stateProvinceList: any;
   lblvendorName: any;
   lblvendorCode: any;
@@ -174,8 +175,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.changeSegmentType(this.passiveSegments.segmentType);
-
-
   }
 
   ngAfterViewChecked(): void {
@@ -379,7 +378,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
         forms = ['segmentType', 'vendorName', 'vendorCode', 'confirmationNo', 'rentalCost', 'currency', 'carType',
           'departureDate', 'departureTime', 'departureCity', 'duration', 'mileage', 'mileagePer', 'dropOffFee', 'dropOffAddress',
-          'pickupLoc', 'dropOffLoc', 'cdNumber', 'idNumber', 'pickupOffAddress',
+          'pickupLoc', 'dropOffLoc', 'cdNumber', 'idNumber', 'pickupOffAddress','frequentflightNumber',
           'frequentFlierNumber', 'specialEquipment', 'specialRequest', 'destinationCity', 'arrivalTime', 'arrivalDate'];
         this.setForm(forms);
         this.selectedTmpl = this.carTmpl;
@@ -417,20 +416,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   includeOnRate(name, checked) {
-    // switch (name) {
-    //   case 'includeTax':
-    //     this.enableFormControls(['taxOnRate'], !checked);
-    //     break;
-    //   case 'includeToll':
-    //     this.enableFormControls(['toll'], !checked);
-    //     break;
-    //   case 'includeGratuities':
-    //     this.enableFormControls(['gratuities'], !checked);
-    //     break;
-    //   case 'includeParking':
-    //     this.enableFormControls(['parking'], !checked);
-    //     break;
-    // }
+   
   }
 
   pickUpLocChange() {
@@ -442,7 +428,11 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     const cityCode = this.passiveSegments.departureCity;
     if ((chainCode !== undefined && chainCode.length === 2) && (cityCode !== undefined && cityCode.length === 3)) {
       this.hotelList = [];
-      smartScriptSession.send('HL' + chainCode + cityCode).then(async res => {
+      const command = 'HL' + chainCode + cityCode;
+       if (this.commandCache.getHotels === command) {return; }
+
+      smartScriptSession.send(command).then(async res => {
+        this.commandCache.getHotels = command;
         let lines = res.Response.split('\r\n');
         const regex = /^(?<code>[A-Z]{2}) ([A-Z])(\s{1,2})([A-Z])(\s{2,3})([A-Z]{3})(\s{2})(?<text>.*)/g;
         lines = await this.getMDResult(lines);
@@ -461,30 +451,40 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     const text = $event.target.options[$event.target.options.selectedIndex].text;
     const hotelCode = $event.target.options[$event.target.options.selectedIndex].value;
     this.passiveSegments.hotelName = text.split('!')[1];
+     this.passiveSegments.hotelCityName='';
+       this.passiveSegments.zipCode = '';
+         this.passiveSegments.address = '';
+         this.passiveSegments.country ='';
+         this.passiveSegments.phone = '';
+         this.passiveSegments.fax = '';
+         this.passiveSegments.province ='';
     smartScriptSession.send('HF' + hotelCode).then(async res => {
       const lines = res.Response.split('\r\n');
-      if (this.stateProvinceList === undefined) {
-        this.stateProvinceList = this.ddbService.getStateProvinces();
-      }
-      const regex = /(?<city>(.*))\s\s(?<province>[A-Z]{2})\s\s(?<zip>([A-Z0-9]{3})\s([A-Z0-9]{3}))/g;
-      const match = regex.exec(lines[3].trim());
-      if (match && match.groups) {
-        this.passiveSegments.hotelCityName = match.groups.city;
-        this.passiveSegments.zipCode = match.groups.zip;
-        const prov = this.stateProvinceList.find(x => x.code === match.groups.province);
-        this.passiveSegments.province = prov.province;
-      }
-
-      this.passiveSegments.address = lines[2].trim();
-      this.passiveSegments.country = lines[4].trim();
-
+   
+      let indx=0, telIndx=0; 
       lines.forEach(r => {
         if (r.trim().indexOf('-TEL') === 0) {
+          telIndx =indx;
           this.passiveSegments.phone = r.trim().split(':')[1].trim();
         } else if (r.trim().indexOf('-FAX') === 0) {
           this.passiveSegments.fax = r.trim().split(':')[1].trim();
         }
+        indx++;
       });
+        indx = 0;
+        indx = (telIndx>5 ? 1 : 0 );
+
+      this.passiveSegments.address = lines[2+indx].trim();
+      this.passiveSegments.country = lines[4+indx].trim();
+        const addr = lines[3+indx].trim().split(/\s\s/g);
+        this.passiveSegments.hotelCityName =addr[0];
+        this.passiveSegments.zipCode = addr[addr.length-1];
+        if (addr.length >=3 ){         
+          this.passiveSegments.province =addr[1].trim();
+          this.segmentForm.get('province').setValue(addr[1].trim());
+        }
+
+
     });
   }
 
@@ -585,9 +585,14 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  vendorCodeChange() {
-    if (this.segmentForm.get('segmentType').value === 'CAR') {
+  vendorCodeChange(value) {
+    if (this.segmentForm.get('segmentType').value === 'CAR') {      
       this.loadCarType();
+      const sup = this.filterSupplierCodeList.find(x=> x.supplierCode == value);
+      if (sup){
+        this.passiveSegments.vendorName  = sup.supplierName;
+      }
+    
 
     }
   }
@@ -596,19 +601,25 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.filterSupplierCodeList = [];
     const city = this.segmentForm.get('departureCity').value;
     if (city === undefined || city.length < 3) { return; }
-    const response = smartScriptSession.send('CL' + city + '-T').then(async res => {
+    const command = 'CL' + city + '-T';
+    if (this.commandCache.loadCarSupplier === command) {return; }
+    const response = smartScriptSession.send(command).then(async res => {
+      this.commandCache.loadCarSupplier = command;
       let lines = res.Response.split('\r\n');
-      const regex = /^(?<code>[A-Z]{2}) (?<text>([A-Z]{2})\+.+?(?=\s{2}))/g;
+     
+      const regex = /(?<code>([A-Z]{2}))\+(?<text>.+?(?=\s{2}))/g;
       lines = await this.getMDResult(lines);
       lines.forEach(x => {
+         debugger;
         const match = regex.exec(x);
         if (match && match.groups) {
           const obj = this.filterSupplierCodeList.find(z => z.supplierCode === match.groups.code);
           if (obj === undefined) {
             this.filterSupplierCodeList.push({ supplierCode: match.groups.code, supplierName: match.groups.text });
-          }
-          regex.lastIndex = 0;
+          }        
         }
+          regex.lastIndex = 0;
+
       });
     });
   }
@@ -625,7 +636,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
             stop = true;
           }
         });
-
       }
     }
     return lines;
@@ -637,7 +647,11 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       const city = this.passiveSegments.departureCity;
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
-      this.getOffAddress(this.pickupOffAddrList, 'CL' + vendor + city);
+      const command = 'CL' + vendor + city;
+    if (this.commandCache.loadPickupOffAddr === command  ) {return ;}
+      this.getOffAddress(this.pickupOffAddrList, command);
+      this.commandCache.loadPickupOffAddr  = command;
+      
       this.segmentForm.get('pickupOffAddress').enable();
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
@@ -654,13 +668,16 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     if (pickup === undefined) {
       pickup = this.passiveSegments.pickupLoc;
     }
-
     this.dropOffAddrList = [];
     if (pickup !== val) {
       const city = this.passiveSegments.departureCity;
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
-      this.getOffAddress(this.dropOffAddrList, 'CL' + vendor + city);
+      const command = 'CL' + vendor + city;
+      if (this.commandCache.loadDropOffAddr === command  ) {return ;}      
+      this.getOffAddress(this.dropOffAddrList, command);
+      this.commandCache.loadDropOffAddr = command;
+
       this.segmentForm.get('dropOffAddress').enable();
     } else {
       this.segmentForm.get('dropOffAddress').disable();
@@ -693,10 +710,11 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.carTypeList = [];
     const city = this.passiveSegments.departureCity;
     if (city.length < 3) { return; }
-    const vendor = this.passiveSegments.vendorCode;
-    // CPOZEYYZ
-    const response = smartScriptSession.send('CPO' + vendor + city + '/VEH').then(async res => {
-
+    const vendor = this.passiveSegments.vendorCode;    
+    const command = 'CPO' + vendor + city + '/VEH';
+    if (this.commandCache.loadCarType === command) {return true;}
+    const response = smartScriptSession.send(command).then(async res => {
+      this.commandCache.loadCarType = command;
       let lines = res.Response.split('\r\n');
       lines = await this.getMDResult(lines);
       const regex = /\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
@@ -726,21 +744,21 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   filterStateProvince(country) {
-    if (country) {
-      switch (country.toUpperCase()) {
-        case 'US':
-        case 'United States':
-          this.stateProvinceList = this.ddbService.getStateProvinces('US');
-          break;
-        case 'CA':
-        case 'CANADA':
-          this.stateProvinceList = this.ddbService.getStateProvinces('CA');
-          break;
-        default:
-          this.stateProvinceList = this.ddbService.getStateProvinces();
-          break;
-      }
-    }
+    // if (country) {
+    //   switch (country.toUpperCase()) {
+    //     case 'US':
+    //     case 'UNITED STA':
+    //       this.stateProvinceList = this.ddbService.getStateProvinces('US');
+    //       break;
+    //     case 'CA':
+    //     case 'CANADA':
+    //       this.stateProvinceList = this.ddbService.getStateProvinces('CA');
+    //       break;
+    //     default:
+    //       this.stateProvinceList = this.ddbService.getStateProvinces();
+    //       break;
+    //   }
+    // }
   }
 
 }

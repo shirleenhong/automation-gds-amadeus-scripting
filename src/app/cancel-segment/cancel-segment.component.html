@@ -49,7 +49,7 @@
         <div class="col-8">
           <input type="checkbox" name="cancelNonRefAC" formControlName="cancelNonRefAC" id="cancelNonRefAC"
             (change)="changeNonRefAC()" />
-          Are you cancelling Non Refundable AC Flight(s) due to IROP or schedule change?
+          Are you cancelling non refundable AC flight(s) due to IROP or schedule change?
         </div>
       </div>
       <div *ngIf="f.cancelNonRefAC.value === true">
@@ -69,12 +69,12 @@
           <div class="row form-group">
             <div class="col-sm-4"></div>
             <div class="col-4">
-              <div class="">AC Ticket Nbr:</div>
+              <div class="">AC Ticket Number:</div>
               <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo" />
             </div>
 
             <div class="col-4">
-              <div class="">Passenger Name Nbr:</div>
+              <div class="">Passenger Name Number:</div>
               <input type="text" class="form-control" id="acpassengerNo" formControlName="acpassengerNo"
                 name="acpassengerNo" />
             </div>
@@ -83,7 +83,7 @@
           <div class="row form-group">
             <div class="col-sm-4"></div>
             <div class="col-4">
-              <div class="">AC Flight Nbr:</div>
+              <div class="">AC Flight Number:</div>
               <input type="text" class="form-control" id="acFlightNo" formControlName="acFlightNo" name="acFlightNo" />
             </div>
 
@@ -109,10 +109,10 @@
           <div class="row form-group">
             <div class="col-4"></div>
             <div class="col-8">
-              <div class="">Type the affected Airline Flight Number(s)</div>
+              <div class="">Type the affected airline flight number(s)</div>
               <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
                 maxlength="35" />
-              <div class="">Ex. Single flight AC4519, Multiple Flights AC4519/AC1234/AC5678</div>
+              <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
             </div>
           </div>
         </div>
@@ -138,12 +138,12 @@
       <div *ngIf="f.reasonUACancel.value === '1'" class="row form-group">
         <div class="col-sm-4"></div>
         <div class="col-4">
-          <div class="">UA Itinerary Segment Nbr:</div>
+          <div class="">UA Itinerary Segment Number:</div>
           <input type="text" class="form-control" id="uasegNo" formControlName="uasegNo" name="uasegNo" />
         </div>
 
         <div class="col-4">
-          <div class="">Passenger Name Nbr:</div>
+          <div class="">Passenger Name Number:</div>
           <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
             name="uaPassengerNo" />
         </div>
@@ -152,8 +152,8 @@
 
     <div class="row form-group">
       <div class="col-sm-4"></div>
-      <div class="col-4">Ticket Number:</div>
-      <div class="col-4">Coupon Number:</div>
+      <div class="col-3">Ticket Number:</div>
+      <div class="col-3">Coupon Number:</div>
     </div>
 
     <div formArrayName="tickets" *ngFor="let item of cancelForm.get('tickets').controls; let i = index">

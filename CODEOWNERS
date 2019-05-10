@@ -1,0 +1,7 @@
+# These owners will be the default owners for everything in
+# the repo.
+
+*       @rizaliemallari @PhilipMon @MicoPerez @StanBTeh
+
+# For QA
+*-test-suite/       @maridelcastro @shirleenhong

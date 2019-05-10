@@ -158,7 +158,7 @@ export class PaymentRemarkService {
 
     let bknLine = '/-BKN-';
 
-    if (accounting.commisionPercentage !== undefined && accounting.bsp === '2') {
+    if (accounting.bsp === '3') {
       line1 = '/-CP-' + accounting.commisionPercentage.toString().trim();
       bknLine = '/-BKN-CWT';
     }
@@ -178,7 +178,7 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
 
-    if (accounting.bsp === '2' && accounting.supplierCodeName !== 'MLF') {
+    if (accounting.bsp === '2') {
       this.extractApayRemark(accounting, remarkList, fopObj);
     }
   }

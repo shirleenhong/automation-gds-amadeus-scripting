@@ -11,7 +11,7 @@ export class AmountPipe implements PipeTransform {
         let newVal = parseFloat(value);
         if (newVal === undefined || isNaN(newVal)) {
             newVal = 0;
-        }
+        }        
         return this.decPipe.transform(newVal, '1.2-2').replace(',', '');
     }
 

@@ -378,7 +378,6 @@ export class SegmentService {
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
         startTime: string, enddatevalue: string, endTime: string) {
-
         let freetext = '';
         switch (segment.segmentType) {
             case 'TOR':
@@ -391,7 +390,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + + ' ' + segment.tourName + ' ' + segment.dining +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + ' ' + segment.tourName + ' ' + segment.dining +
                     ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;

@@ -91,7 +91,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     carNumber: new FormControl(''),
     fromStation: new FormControl('', [Validators.required]),
     arrivalStation: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required]), 
+    phone: new FormControl('', [Validators.required]),
     // limo
     rate: new FormControl('', [Validators.required]),
     rateType: new FormControl('', [Validators.required]),
@@ -273,7 +273,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (this.formControls.get(x) !== null) {
         this.segmentForm.addControl(x, this.formControls.get(x));
       } else {
-          const xx = 1;
+        const xx = 1;
       }
     });
 
@@ -352,7 +352,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'arrivalDate', 'arrivalTime', 'noPeople'];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
-       
+
         break;
       case 'LIM':
         this.lblvendorName = 'Limo Company';
@@ -364,7 +364,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
         this.setForm(forms);
         this.selectedTmpl = this.limoTmpl;
-      
+
 
         break;
       case 'CAR':
@@ -508,26 +508,37 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   checkDate(tempdate, tempname) {
     const now = new Date();
     const tempdate2 = new Date(tempdate);
+    let depdate = new Date(this.passiveSegments.departureDate);
+    let arrDate = new Date(this.passiveSegments.arrivalDate);
+
+    if (tempname === 'departureDate') {
+      depdate = tempdate2;
+    }
+
+    if (tempname === 'arrivalDate') {
+      arrDate = tempdate2;
+    }
+
     if (tempdate2 < now) {
       this.segmentForm.get(tempname).setErrors({ incorrect: true });
     } else {
-      if (this.segmentForm.controls.arrivalDate.value !== undefined && this.segmentForm.controls.departureDate.value !== undefined) {
-        const depdate = new Date(this.segmentForm.controls.departureDate.value);
-        const arrDate = new Date(this.segmentForm.controls.arrivalDate.value);
+
+      if (depdate && arrDate) {
+
         if (depdate > arrDate) {
           this.segmentForm.get(tempname).setErrors({ incorrect: true });
           return;
         }
         const diff = arrDate.getTime() - depdate.getTime();
         const night = Math.ceil(diff / (1000 * 3600 * 24));
-        this.segmentForm.controls.noNights.patchValue(night);
+        this.segmentForm.controls.noNights.setValue(night.toString());
       }
       this.segmentForm.get(tempname).setErrors(null);
       // this.getNoPassengers();
     }
   }
 
-  onChangezz(controlValue, controlName) {  
+  onChangezz(controlValue, controlName) {
     if (this.segmentForm.get('segmentType').value === 'AIR') {
       let enable = false;
       let controlenable = '';

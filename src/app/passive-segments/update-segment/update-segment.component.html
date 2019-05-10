@@ -482,7 +482,7 @@
           [(ngModel)]="passiveSegments.rate" maxlength="10" AmountMask />
       </div>
       <div class="col">
-        <label id="lblName"> Rate Type </label>wqe
+        <label id="lblName"> Rate Type </label>
         <select class="form-control" id="rateType" name="rateType" formControlName="rateType"
           [(ngModel)]="passiveSegments.rateType">
           <option>Flat Rate</option>
@@ -498,7 +498,8 @@
         <label id="lblName">TAX on Rate </label>
         <div>
           <input type="checkbox" id="includeTax" name="includeTax" [(ngModel)]="passiveSegments.includeTax"
-            #chkIncludeTax formControlName="includeTax" />
+            (click)="includeOnRate($event.target.name,$event.target.checked)" #chkIncludeTax
+            formControlName="includeTax" />
           Included on Rate
           <input type="text" class="form-control" id="taxOnRate" name="taxOnRate" formControlName="taxOnRate"
             [(ngModel)]="passiveSegments.taxOnRate" maxlength="7" AmountMask />
@@ -509,6 +510,7 @@
         <label id="lblName">Toll </label>
         <div>
           <input type="checkbox" id="includeToll" name="includeToll" formControlName="includeToll"
+            (click)="includeOnRate($event.target.name,$event.target.checked)"
             [(ngModel)]="passiveSegments.includeToll" /> Included on Rate
           <input type="text" class="form-control" id="toll" name="toll" formControlName="toll"
             [(ngModel)]="passiveSegments.toll" maxlength="7" AmountMask />
@@ -522,6 +524,7 @@
         <label id="lblName">Gratuities </label>
         <div>
           <input type="checkbox" id="includeGratuities" name="includeGratuities" formControlName="includeGratuities"
+            (click)="includeOnRate($event.target.name,$event.target.checked)"
             [(ngModel)]="passiveSegments.includeGratuities" /> Included on
           Rate
           <input type="text" class="form-control" id="gratuities" name="gratuities" formControlName="gratuities"

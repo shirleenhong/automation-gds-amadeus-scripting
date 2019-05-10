@@ -417,20 +417,20 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   includeOnRate(name, checked) {
-    // switch (name) {
-    //   case 'includeTax':
-    //     this.enableFormControls(['taxOnRate'], !checked);
-    //     break;
-    //   case 'includeToll':
-    //     this.enableFormControls(['toll'], !checked);
-    //     break;
-    //   case 'includeGratuities':
-    //     this.enableFormControls(['gratuities'], !checked);
-    //     break;
-    //   case 'includeParking':
-    //     this.enableFormControls(['parking'], !checked);
-    //     break;
-    // }
+    switch (name) {
+      case 'includeTax':
+        this.enableFormControls(['taxOnRate'], checked);
+        break;
+      case 'includeToll':
+        this.enableFormControls(['toll'], checked);
+        break;
+      case 'includeGratuities':
+        this.enableFormControls(['gratuities'], checked);
+        break;
+      case 'includeParking':
+        this.enableFormControls(['parking'], checked);
+        break;
+    }
   }
 
   pickUpLocChange() {

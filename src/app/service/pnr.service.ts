@@ -29,7 +29,6 @@ export class PnrService {
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
-    debugger;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
       (res: any) => {
@@ -144,9 +143,9 @@ export class PnrService {
       const passengers = [];
 
       for (const rm of this.pnrObj.nameElements) {
-        const fname = rm.firstName;       
+        const fname = rm.firstName;
         const lname = rm.lastName;
-       
+
         const fullname: any =
           lname +
           '-' +
@@ -677,6 +676,10 @@ export class PnrService {
       let match = regex.exec(freetext);
       if (match === null) {
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(([0-9]{4})))(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
+      if (match === null) {
+        regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/STP-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
 

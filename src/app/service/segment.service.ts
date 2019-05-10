@@ -296,7 +296,7 @@ export class SegmentService {
         const rirTaxes = [{ include: segmentrem.includeTax, description: '-TAXES', rate: segmentrem.taxOnRate },
         { include: segmentrem.includeToll, description: '-TOLLS', rate: segmentrem.toll },
         { include: segmentrem.includeGratuities, description: '-Gratuities', rate: segmentrem.gratuities },
-        { include: segmentrem.includeGratuities, description: '-Parking', rate: segmentrem.parking }];
+        { include: segmentrem.includeParking, description: '-Parking', rate: segmentrem.parking }];
 
         if (itinLanguage === 'FR') {
             this.getLimoRirFrenckRemarks(rmGroup, segmentrem, pnrSegment);

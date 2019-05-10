@@ -232,12 +232,18 @@ export class SegmentService {
 
     private rirCruise(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
         const type = pnrSegment.freetext.substr(6, 3);
+        let remText = '';
         if (type === 'SEA') {
-            let sroom = segmentrem.stateRoom;
-            if (sroom === 'OTHER') {
-                sroom = segmentrem.othersText;
+            if (segmentrem.stateRoom) {
+                remText = segmentrem.stateRoom;
+                if (segmentrem.stateRoom === 'OTHER') {
+                    remText = segmentrem.othersText;
+                }
             }
-            let remText = sroom + ' ' + segmentrem.cabinNo;
+
+            if (segmentrem.cabinNo) {
+                remText = remText + ' ' + segmentrem.cabinNo;
+            }
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
     }
@@ -390,7 +396,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + ' ' + segment.tourName + ' ' + segment.dining +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + ' ' + segment.dining +
                     ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
@@ -407,7 +413,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'LIM':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + 'SUC-' + segment.vendorCode + '/STP-' +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/STP-' +
                     segment.transferTo + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.departureCity +
                     '/ED-' + startdatevalue + '/ET-' + startTime + '/CF-' + segment.confirmationNo;
                 break;

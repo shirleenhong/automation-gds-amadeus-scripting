@@ -28,6 +28,7 @@ export class PnrService {
   constructor() { }
 
   async getPNR(): Promise<void> {
+    debugger;
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
@@ -233,6 +234,24 @@ export class PnrService {
 
   getPassiveHotelSegmentNumbers() {
     return this.getPassiveSegmentTypes('HTL');
+  }
+
+  getPassiveAirSegments(lineNo: any) {
+    const elements = new Array<any>();
+
+    this.getSegmentTatooNumber().forEach(c => {
+      if (lineNo === '') {
+        if (c.segmentType === 'AIR') {
+          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        }
+      } else {
+        if (c.segmentType === 'AIR' && c.lineNo === lineNo) {
+          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        }
+      }
+    });
+
+    return elements;
   }
 
   getPassiveAirSegmentNumbers() {

@@ -10,8 +10,10 @@ import { RemarkHelper } from '../helper/remark-helper';
 import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { FormArray } from '@angular/forms';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
+import { RemarkService } from './remark.service';
 
+declare var smartScriptSession: any;
 @Injectable({
     providedIn: 'root',
 })
@@ -27,7 +29,7 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private remarkService: RemarkService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -750,6 +752,82 @@ export class SegmentService {
         passGroup.passiveSegments = misSegment;
 
         return passGroup;
+    }
+
+
+    executePDN(airlineCode: string) {
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Fare Rule PDN';
+        rmGroup.remarks = new Array<RemarkModel>();
+        rmGroup.cryptics.push('PDN/YTOWL210N/' + airlineCode + ' RULES');
+        const remarkCollection = new Array<RemarkGroup>();
+        remarkCollection.push(rmGroup);
+        this.remarkService.BuildRemarks(remarkCollection);
+    }
+
+    writeOptionalFareRule(fareRuleModels: any) {
+        debugger;
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Fare Rule';
+        rmGroup.remarks = new Array<RemarkModel>();
+
+        fareRuleModels.forEach(model => {
+            debugger;
+            if (model.fareRuleType !== '' && model.oid !== '') {
+                smartScriptSession.send('PBN/' + model.oid + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
+            } else {
+
+                // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.fareRuleList.value, 'RM', ''));
+                // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.cityPair.value, 'RM', ''));
+                if (model.isTicketNonRefundable === true) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RM', ''));
+                }
+
+                if (model.isTicketMinMax === true) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 'RM', ''));
+                }
+
+                if (model.isTicketNonRef.value === true) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RM', ''));
+                }
+
+                if (model.ticketAmount !== undefined && model.currencyType !== undefined) {
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
+                        model.currencyType.value + 'NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RM', ''));
+                }
+
+                if (model.nonRefundable !== undefined) {
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
+                        + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RM', ''));
+                }
+
+                if (model.minChangeFee !== undefined) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
+                        + ' ' + model.currencyType.value, 'RM', ''));
+                }
+            }
+
+            for (const fg of model.remark.controls) {
+                if (fg instanceof FormGroup) {
+                    // is a FormGroup
+
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark(fg.controls.remarkText.value + '/' + model.segmentNo, 'RM', ''));
+                }
+            }
+        });
+
+        return rmGroup;
     }
 
 }

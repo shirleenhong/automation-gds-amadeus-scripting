@@ -59,7 +59,7 @@ export class SegmentSelectComponent implements OnInit, ControlValueAccessor, Val
 
 
   validate(c: FormControl) {
-      
+
     return this.validateFn(c);
   }
 

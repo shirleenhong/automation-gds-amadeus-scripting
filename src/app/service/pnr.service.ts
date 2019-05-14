@@ -316,7 +316,7 @@ export class PnrService {
       elemcitycode = fullnodetemp.boardpointDetail.cityCode;
     }
     let flongtext = '';
-    if (type === 'MIS') {
+    if (type === 'MIS' || type === 'CAR') {
       flongtext = elem.fullNode.itineraryFreetext.longFreetext;
     }
 
@@ -667,10 +667,11 @@ export class PnrService {
   }
 
   getSegmentModel(freetext, index, type) {
+    debugger;
     let segmentModel: PassiveSegmentsModel;
     segmentModel = new PassiveSegmentsModel();
 
-    if (type === 'MIS') {
+    if (type === 'MIS' || type === 'CAR' || type === 'HTL') {
       // tslint:disable-next-line:max-line-length
       let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
       let match = regex.exec(freetext);
@@ -682,11 +683,23 @@ export class PnrService {
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/STP-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
+      if (match === null) {
+        regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
+
+      if (match === null) {
+        regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
 
       if (match !== null) {
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
         segmentModel.segmentType = match.groups.type;
+        if (!match.groups.type) {
+          segmentModel.segmentType = type;
+        }
         segmentModel.vendorName = match.groups.vendorName;
         segmentModel.vendorCode = match.groups.vendorCode;
         segmentModel.departureCity = match.groups.depCity;
@@ -696,8 +709,10 @@ export class PnrService {
         segmentModel.arrivalDate = match.groups.arrdate;
         segmentModel.arrivalTime = match.groups.arrtime;
         segmentModel.confirmationNo = match.groups.conf;
-        return segmentModel;
+      } else if (type === 'HTL') {
+        segmentModel.segmentType = type;
       }
+      return segmentModel;
     }
   }
 
@@ -722,6 +737,7 @@ export class PnrService {
   }
 
   getModelPassiveSegments(): PassiveSegmentsModel[] {
+    debugger;
     const pSegment: PassiveSegmentsModel[] = [];
     const segment = this.getSegmentTatooNumber();
     let index = 0;
@@ -730,9 +746,11 @@ export class PnrService {
 
       switch (element.segmentType) {
         case 'MIS':
+        case 'CAR':
           pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
           break;
         case 'AIR':
+        case 'HTL':
           pSegment.push(this.getAirSegmentModel(element, index));
       }
     });

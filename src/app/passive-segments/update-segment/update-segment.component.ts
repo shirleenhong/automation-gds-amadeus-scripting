@@ -5,7 +5,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import { DeprecatedDatePipe, getLocaleExtraDayPeriodRules } from '@angular/common';
+import { DeprecatedDatePipe, getLocaleExtraDayPeriodRules, DatePipe } from '@angular/common';
 import { UtilHelper } from 'src/app/helper/util.helper';
 declare var smartScriptSession: any;
 
@@ -42,8 +42,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   supplierCodeList: Array<any>;
   carTypeList: Array<any>;
   pickupOffAddrList = [];
+  pickupCityList = [];
   dropOffAddrList = [];
-  commandCache = { getHotels:'', loadCarSupplier:'',  loadCarType: '' , loadDropOffAddr: '', loadPickupOffAddr: ''};
+  dropOffCityList = [];
+  commandCache = { getHotels: '', loadCarSupplier: '', loadCarType: '', loadDropOffAddr: '', loadPickupOffAddr: '' };
   stateProvinceList: any;
   lblvendorName: any;
   lblvendorCode: any;
@@ -288,11 +290,15 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.lblarrivalTime = 'Arrival Time';
     this.lblnoPeople = 'Number of Passengers';
     this.lblconfirmationNo = 'Confirmation Number';
+    const destination = this.formControls.get('destinationCity');
+    if (destination !== undefined && destination !== null) {
+      destination.clearValidators();
+      destination.setValidators([Validators.required]);
+    }
     let forms = [];
     switch (type) {
       case 'AIR':
         this.selectedTmpl = this.airTmpl;
-
         forms = ['segmentType', 'airlineCode', 'flightNumber', 'classService',
           'departureDate', 'departureTime', 'departureCity', 'destinationCity', 'airlineRecloc',
           'arrivalDate', 'arrivalTime', 'noPeople', 'noNights', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'];
@@ -378,11 +384,12 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
         forms = ['segmentType', 'vendorName', 'vendorCode', 'confirmationNo', 'rentalCost', 'currency', 'carType',
           'departureDate', 'departureTime', 'departureCity', 'duration', 'mileage', 'mileagePer', 'dropOffFee', 'dropOffAddress',
-          'pickupLoc', 'dropOffLoc', 'cdNumber', 'idNumber', 'pickupOffAddress','frequentflightNumber',
+          'pickupLoc', 'dropOffLoc', 'cdNumber', 'idNumber', 'pickupOffAddress', 'frequentflightNumber',
           'frequentFlierNumber', 'specialEquipment', 'specialRequest', 'destinationCity', 'arrivalTime', 'arrivalDate'];
         this.setForm(forms);
+        this.segmentForm.get('destinationCity').clearValidators();
         this.selectedTmpl = this.carTmpl;
-
+        this.pickupCityList = this.pnrService.getPnrDestinations();
 
         if (this.passiveSegments.departureCity !== '' && this.passiveSegments.vendorCode !== '') {
           this.loadCarSupplier();
@@ -442,7 +449,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     if ((chainCode !== undefined && chainCode.length === 2) && (cityCode !== undefined && cityCode.length === 3)) {
       this.hotelList = [];
       const command = 'HL' + chainCode + cityCode;
-       if (this.commandCache.getHotels === command) {return; }
+      if (this.commandCache.getHotels === command) { return; }
 
       smartScriptSession.send(command).then(async res => {
         this.commandCache.getHotels = command;
@@ -464,38 +471,37 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     const text = $event.target.options[$event.target.options.selectedIndex].text;
     const hotelCode = $event.target.options[$event.target.options.selectedIndex].value;
     this.passiveSegments.hotelName = text.split('!')[1];
-     this.passiveSegments.hotelCityName='';
-       this.passiveSegments.zipCode = '';
-         this.passiveSegments.address = '';
-         this.passiveSegments.country ='';
-         this.passiveSegments.phone = '';
-         this.passiveSegments.fax = '';
-         this.passiveSegments.province ='';
+    this.passiveSegments.hotelCityName = '';
+    this.passiveSegments.zipCode = '';
+    this.passiveSegments.address = '';
+    this.passiveSegments.country = '';
+    this.passiveSegments.phone = '';
+    this.passiveSegments.fax = '';
+    this.passiveSegments.province = '';
     smartScriptSession.send('HF' + hotelCode).then(async res => {
       const lines = res.Response.split('\r\n');
-   
-      let indx=0, telIndx=0; 
+      let indx = 0, telIndx = 0;
       lines.forEach(r => {
         if (r.trim().indexOf('-TEL') === 0) {
-          telIndx =indx;
+          telIndx = indx;
           this.passiveSegments.phone = r.trim().split(':')[1].trim();
         } else if (r.trim().indexOf('-FAX') === 0) {
           this.passiveSegments.fax = r.trim().split(':')[1].trim();
         }
         indx++;
       });
-        indx = 0;
-        indx = (telIndx>5 ? 1 : 0 );
+      indx = 0;
+      indx = (telIndx > 5 ? 1 : 0);
 
-      this.passiveSegments.address = lines[2+indx].trim();
-      this.passiveSegments.country = lines[4+indx].trim();
-        const addr = lines[3+indx].trim().split(/\s\s/g);
-        this.passiveSegments.hotelCityName =addr[0];
-        this.passiveSegments.zipCode = addr[addr.length-1];
-        if (addr.length >=3 ){         
-          this.passiveSegments.province =addr[1].trim();
-          this.segmentForm.get('province').setValue(addr[1].trim());
-        }
+      this.passiveSegments.address = lines[2 + indx].trim();
+      this.passiveSegments.country = lines[4 + indx].trim();
+      const addr = lines[3 + indx].trim().split(/\s\s/g);
+      this.passiveSegments.hotelCityName = addr[0];
+      this.passiveSegments.zipCode = addr[addr.length - 1];
+      if (addr.length >= 3) {
+        this.passiveSegments.province = addr[1].trim();
+        this.segmentForm.get('province').setValue(addr[1].trim());
+      }
 
 
     });
@@ -526,6 +532,9 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
     if (tempname === 'departureDate') {
       depdate = tempdate2;
+      if ((this.passiveSegments.segmentType === 'CAR') || (this.passiveSegments.segmentType === 'TRN')) {
+        this.passiveSegments.arrivalDate = tempdate;
+      }
     }
 
     if (tempname === 'arrivalDate') {
@@ -587,26 +596,61 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.segmentForm.get(controlenable).updateValueAndValidity();
 
     } else if (this.segmentForm.get('segmentType').value === 'CAR') {
-      //this.loadCarType();
-
+      // this.loadCarType();
     }
   }
 
-  departureCityOnBlur() {
+  pickupCityOnBlur() {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarSupplier();
+      const airs = this.pnrService.getPassiveSegmentTypes('AIR');
+      let air = airs.find(x => x.arrivalAirport === this.passiveSegments.departureCity);
+      if (air) {
+        this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
+        this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
+        const indx = airs.indexOf(air);
+        if (indx < airs.length - 1) {
+          air = airs[indx + 1];
+          this.passiveSegments.arrivalDate = this.convertDateFormat(air.departureDate);
+          this.passiveSegments.arrivalTime = this.convert24to12Hr(air.departureTime);
+        }
+      }
+    }
+  }
+
+  convertDateFormat(date) {
+    if (date.match(/([0-9]{6})/g)) {
+      const day = date.substr(0, 2);
+      const month = date.substr(2, 2);
+      const year = date.substr(4, 2);
+      const dt = new Date();
+      const thisYr = dt.getFullYear().toString().substr(0, 2);
+      return thisYr + year + '-' + month + '-' + day;
+    }
+  }
+
+  convert24to12Hr(time): any {
+    if (time.match(/([0-9]{4})/g)) {
+      const hr = time.substr(0, 2);
+      const min = time.substr(2, 2);
+      return hr + ':' + min;
+    }
+    return time;
+  }
+
+  dropOffCityOnBlur() {
+    if (this.segmentForm.get('segmentType').value === 'CAR') {
+      this.loadDropOffAddr(this.passiveSegments.dropOffLoc, this.passiveSegments.pickupLoc);
     }
   }
 
   vendorCodeChange(value) {
-    if (this.segmentForm.get('segmentType').value === 'CAR') {      
+    if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarType();
-      const sup = this.filterSupplierCodeList.find(x=> x.supplierCode == value);
-      if (sup){
-        this.passiveSegments.vendorName  = sup.supplierName;
+      const sup = this.filterSupplierCodeList.find(x => x.supplierCode === value);
+      if (sup) {
+        this.passiveSegments.vendorName = sup.supplierName;
       }
-    
-
     }
   }
 
@@ -615,23 +659,22 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     const city = this.segmentForm.get('departureCity').value;
     if (city === undefined || city.length < 3) { return; }
     const command = 'CL' + city + '-T';
-    if (this.commandCache.loadCarSupplier === command) {return; }
+    if (this.commandCache.loadCarSupplier === command) { return; }
     const response = smartScriptSession.send(command).then(async res => {
       this.commandCache.loadCarSupplier = command;
       let lines = res.Response.split('\r\n');
-     
+
       const regex = /(?<code>([A-Z]{2}))\+(?<text>.+?(?=\s{2}))/g;
       lines = await this.getMDResult(lines);
       lines.forEach(x => {
-         debugger;
         const match = regex.exec(x);
         if (match && match.groups) {
           const obj = this.filterSupplierCodeList.find(z => z.supplierCode === match.groups.code);
           if (obj === undefined) {
             this.filterSupplierCodeList.push({ supplierCode: match.groups.code, supplierName: match.groups.text });
-          }        
+          }
         }
-          regex.lastIndex = 0;
+        regex.lastIndex = 0;
 
       });
     });
@@ -661,10 +704,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
-    if (this.commandCache.loadPickupOffAddr === command  ) {return ;}
+      if (this.commandCache.loadPickupOffAddr === command) { return; }
       this.getOffAddress(this.pickupOffAddrList, command);
-      this.commandCache.loadPickupOffAddr  = command;
-      
+      this.commandCache.loadPickupOffAddr = command;
+
       this.segmentForm.get('pickupOffAddress').enable();
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
@@ -678,6 +721,9 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   loadDropOffAddr(val, pickup?) {
+    if (val === undefined) {
+      return;
+    }
     if (pickup === undefined) {
       pickup = this.passiveSegments.pickupLoc;
     }
@@ -687,7 +733,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
-      if (this.commandCache.loadDropOffAddr === command  ) {return ;}      
+      if (this.commandCache.loadDropOffAddr === command) { return; }
       this.getOffAddress(this.dropOffAddrList, command);
       this.commandCache.loadDropOffAddr = command;
 
@@ -723,9 +769,9 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.carTypeList = [];
     const city = this.passiveSegments.departureCity;
     if (city.length < 3) { return; }
-    const vendor = this.passiveSegments.vendorCode;    
+    const vendor = this.passiveSegments.vendorCode;
     const command = 'CPO' + vendor + city + '/VEH';
-    if (this.commandCache.loadCarType === command) {return true;}
+    if (this.commandCache.loadCarType === command || vendor === undefined) { return true; }
     const response = smartScriptSession.send(command).then(async res => {
       this.commandCache.loadCarType = command;
       let lines = res.Response.split('\r\n');

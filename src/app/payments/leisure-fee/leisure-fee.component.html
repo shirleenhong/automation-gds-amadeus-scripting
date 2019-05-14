@@ -45,7 +45,7 @@
           <div class="col-5">
             <select id="segmentNum" name="segmentNum" class="form-control" formControlName="segmentNum">
               <option *ngFor="let item of  segmentList" [value]="item.lineNo">
-                {{item.lineNo + ' ' + item.freeText}}
+                {{item.lineNo + ' ' + item.longFreetext}}
               </option>
             </select>
           </div>

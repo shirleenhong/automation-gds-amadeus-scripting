@@ -19,7 +19,7 @@ export class PnrService {
   pnrObj: any;
   isPNRLoaded = false;
   errorMessage = '';
-  destinationCity = [{ endpoint: '' }];
+  destinationCity = [{ endpoint: '', startpoint: '' }];
   cfLine: CfRemarkModel;
   segments = [];
   amountPipe = new AmountPipe();
@@ -28,7 +28,6 @@ export class PnrService {
   constructor() { }
 
   async getPNR(): Promise<void> {
-    debugger;
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
@@ -172,11 +171,12 @@ export class PnrService {
     return new Array<string>();
   }
 
-  pushDestination(endpoint) {
+  pushDestination(endpoint, startpoint?) {
     const look = this.destinationCity.find(x => x.endpoint === endpoint);
     if (look == null) {
       const destination = {
-        endpoint
+        endpoint,
+        startpoint
       };
       this.destinationCity.push(destination);
     }
@@ -188,10 +188,8 @@ export class PnrService {
         const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
-
       for (const car of this.pnrObj.auxCarSegments) {
-        const carendpoint =
-          car.fullNode.travelProduct.boardpointDetail.cityCode;
+        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(carendpoint);
       }
 
@@ -225,7 +223,7 @@ export class PnrService {
 
     this.getSegmentTatooNumber().forEach(c => {
       if (c.segmentType === segmentType) {
-        elements.push({ lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        elements.push(c);
       }
     });
 

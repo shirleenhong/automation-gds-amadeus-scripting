@@ -179,8 +179,8 @@ export class SegmentService {
     }
 
     private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
-        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH – ' },
-        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION – ' }];
+        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH - ' },
+        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ' }];
 
         const mandatoryHotelRemarks = ['ADDRESS-' + segmentrem.address,
         segmentrem.hotelCityName + ' ' + segmentrem.province,

@@ -15,4 +15,14 @@ export class AllCapsMaskDirective {
         const newVal = this.ngControl.value.toString().toUpperCase();
         this.ngControl.control.setValue(newVal);
     }
+
+    @HostListener('ngModelChange', ['$event'])
+    onModelChange(event) {
+        this.onInputChange(event);
+    }
+    onInputChange(event) {
+        if (event) {
+            this.ngControl.valueAccessor.writeValue(event.toString().toUpperCase());
+        }
+    }
 }

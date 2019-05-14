@@ -1,0 +1,53 @@
+*** Settings ***
+Resource          libraries.txt
+
+*** Keywords ***
+Add New Command Page
+    #Open Command Page
+    Click Element    ${utility.new_command_page}
+    Wait Until Page Contains Element    ${utility.text_area}    60
+
+Close CA Migration Window
+    #Close CA Migration Window
+    Unselect Frame
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
+    Click Element    xpath=.//div[@class="xDialog_titleBar xDialog_std_titleBar"][@atdraggable='11']//span[2]//span
+
+Close Cryptic Display Window
+    Click Element    css=#elgen-19
+
+Open CA Migration Window
+    Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
+    Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
+    #Open and verify CA Migration window
+    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration Dev"]
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration Dev')]    60
+    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com')]    60
+    Select Frame    xpath=//iframe[contains(@src,'https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com')]
+    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Submit To PNR')]    180
+
+Open Cryptic Display Window
+    #Open Cryptic Display window from Graphic Mode
+    Wait Until Element Is Enabled    css=#tpl1_FS
+    Press Key    xpath=//button[contains(@id, 'crypticDisplay')]    \\32
+    Wait Until Element Is Visible    css=#epnrRetrieves1_crypticText    30
+
+Retrieve PNR In Command Page
+    [Arguments]    ${current_pnr}
+    Input Text    css=.cmdPromptDiv > textArea    IG
+    Press Key    css=.cmdPromptDiv > textArea    \\13
+    Input Text    css=.cmdPromptDiv > textArea    RT${current_pnr}
+    Press Key    css=.cmdPromptDiv > textArea    \\13
+    Wait Until Element Contains    css=#cryptics1_cmd_shellbridge_shellWindow_top_left_modeString_currentCommand    TST    30
+
+Switch To Command Page
+    Wait Until Page Contains Element    css=.showInCommandPage    60
+    Click Element    css=.showInCommandPage
+    Wait Until Element Is Visible    css=.cmdPromptDiv > textArea    60
+    [Teardown]    Take Screenshot
+
+Switch To Graphic Mode
+    Wait Until Element Is Visible    css=.showInGraphicMode    30
+    Click Element    css=.showInGraphicMode
+    Wait Until Page Contains Element    xpath=//span[contains(text(), 'Cryptic Display')]    60
+    [Teardown]    Take Screenshot

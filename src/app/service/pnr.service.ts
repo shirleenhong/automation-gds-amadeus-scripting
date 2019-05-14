@@ -11,6 +11,7 @@ import { DDBService } from './ddb.service';
 
 declare var PNR: any;
 declare var smartScriptSession: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,18 +19,15 @@ export class PnrService {
   pnrObj: any;
   isPNRLoaded = false;
   errorMessage = '';
-  destinationCity = [{ endpoint: '' }];
+  destinationCity = [{ endpoint: '', startpoint: '' }];
   cfLine: CfRemarkModel;
-
   segments = [];
-
   amountPipe = new AmountPipe();
 
 
   constructor() { }
 
   async getPNR(): Promise<void> {
-
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj.retrievePNR().then(
@@ -146,11 +144,7 @@ export class PnrService {
 
       for (const rm of this.pnrObj.nameElements) {
         const fname = rm.firstName;
-        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-        //   .otherPaxNamesDetails.givenName;
         const lname = rm.lastName;
-        // rm.fullNode.enhancedPassengerData.enhancedTravellerInformation
-        //   .otherPaxNamesDetails.surname;
 
         const fullname: any =
           lname +
@@ -177,11 +171,12 @@ export class PnrService {
     return new Array<string>();
   }
 
-  pushDestination(endpoint) {
+  pushDestination(endpoint, startpoint?) {
     const look = this.destinationCity.find(x => x.endpoint === endpoint);
     if (look == null) {
       const destination = {
-        endpoint
+        endpoint,
+        startpoint
       };
       this.destinationCity.push(destination);
     }
@@ -193,10 +188,8 @@ export class PnrService {
         const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
-
       for (const car of this.pnrObj.auxCarSegments) {
-        const carendpoint =
-          car.fullNode.travelProduct.boardpointDetail.cityCode;
+        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(carendpoint);
       }
 
@@ -230,7 +223,7 @@ export class PnrService {
 
     this.getSegmentTatooNumber().forEach(c => {
       if (c.segmentType === segmentType) {
-        elements.push({ lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        elements.push(c);
       }
     });
 
@@ -239,6 +232,24 @@ export class PnrService {
 
   getPassiveHotelSegmentNumbers() {
     return this.getPassiveSegmentTypes('HTL');
+  }
+
+  getPassiveAirSegments(lineNo: any) {
+    const elements = new Array<any>();
+
+    this.getSegmentTatooNumber().forEach(c => {
+      if (lineNo === '') {
+        if (c.segmentType === 'AIR') {
+          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        }
+      } else {
+        if (c.segmentType === 'AIR' && c.lineNo === lineNo) {
+          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        }
+      }
+    });
+
+    return elements;
   }
 
   getPassiveAirSegmentNumbers() {
@@ -322,7 +333,7 @@ export class PnrService {
       elemcitycode = fullnodetemp.boardpointDetail.cityCode;
     }
     let flongtext = '';
-    if (type === 'MIS') {
+    if (type === 'MIS' || type === 'CAR') {
       flongtext = elem.fullNode.itineraryFreetext.longFreetext;
     }
 
@@ -532,8 +543,8 @@ export class PnrService {
         }
 
         if (model.supplierCodeName === 'MLF') {
-          model.accountingTypeRemark = '0';
-          model.bsp = '2';
+          model.accountingTypeRemark = 'INS';
+          model.bsp = '3';
         }
 
 
@@ -677,10 +688,11 @@ export class PnrService {
   }
 
   getSegmentModel(freetext, index, type) {
+    debugger;
     let segmentModel: PassiveSegmentsModel;
     segmentModel = new PassiveSegmentsModel();
 
-    if (type === 'MIS') {
+    if (type === 'MIS' || type === 'CAR' || type === 'HTL') {
       // tslint:disable-next-line:max-line-length
       let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
       let match = regex.exec(freetext);
@@ -688,11 +700,27 @@ export class PnrService {
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(([0-9]{4})))(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
+      if (match === null) {
+        regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/STP-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
+      if (match === null) {
+        regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
+
+      if (match === null) {
+        regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
 
       if (match !== null) {
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
         segmentModel.segmentType = match.groups.type;
+        if (!match.groups.type) {
+          segmentModel.segmentType = type;
+        }
         segmentModel.vendorName = match.groups.vendorName;
         segmentModel.vendorCode = match.groups.vendorCode;
         segmentModel.departureCity = match.groups.depCity;
@@ -702,8 +730,10 @@ export class PnrService {
         segmentModel.arrivalDate = match.groups.arrdate;
         segmentModel.arrivalTime = match.groups.arrtime;
         segmentModel.confirmationNo = match.groups.conf;
-        return segmentModel;
+      } else if (type === 'HTL') {
+        segmentModel.segmentType = type;
       }
+      return segmentModel;
     }
   }
 
@@ -728,6 +758,7 @@ export class PnrService {
   }
 
   getModelPassiveSegments(): PassiveSegmentsModel[] {
+    debugger;
     const pSegment: PassiveSegmentsModel[] = [];
     const segment = this.getSegmentTatooNumber();
     let index = 0;
@@ -736,9 +767,11 @@ export class PnrService {
 
       switch (element.segmentType) {
         case 'MIS':
+        case 'CAR':
           pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
           break;
         case 'AIR':
+        case 'HTL':
           pSegment.push(this.getAirSegmentModel(element, index));
       }
     });
@@ -852,6 +885,28 @@ export class PnrService {
     return '';
   }
 
+
+  IsExistAmkVib(supCode) {
+    if (this.isPNRLoaded) {
+      for (const misc of this.pnrObj.miscSegments) {
+        if (supCode === 'vib') {
+          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION') > -1 ||
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf('POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS') > -1) {
+            return true;
+          }
+        }
+        if (supCode === 'amk') {
+          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf
+            ('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1) {
+            return true;
+          }
+        }
+
+      }
+    }
+
+    return false;
+  }
 
 
 

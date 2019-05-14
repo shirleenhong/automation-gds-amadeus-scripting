@@ -17,7 +17,6 @@ import { UpdateMatrixReceiptComponent } from './payments/update-matrix-receipt/u
 import { TourSegmentComponent } from './passive-segments/tour-segment/tour-segment.component';
 import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segment/update-tour-segment.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
-import { AccordionComponent } from './shared/accordion/accordion.component';
 
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
@@ -42,9 +41,8 @@ import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
 import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
-
-
-
+import { FareRuleSegmentComponent } from './passive-segments/fare-rule-segment/fare-rule-segment.component';
+import { UpdateFareRuleSegmentComponent } from './passive-segments/update-fare-rule-segment/update-fare-rule-segment.component';
 
 @NgModule({
   declarations: [
@@ -60,14 +58,15 @@ import { PassengerSelectComponent } from './shared/passenger-select/passenger-se
     TourSegmentComponent,
     UpdateTourSegmentComponent,
     PassiveSegmentsComponent,
-    AccordionComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
-    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective, MatrixInvoiceComponent, PassengerSelectComponent
+    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective,
+    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent
+
 
   ],
   imports: [
@@ -90,7 +89,7 @@ import { PassengerSelectComponent } from './shared/passenger-select/passenger-se
   exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
     AllCapsMaskDirective, AlphaMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
-    UpdateSegmentComponent, MessageComponent]
+    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent]
 
 })
 export class AppModule { }

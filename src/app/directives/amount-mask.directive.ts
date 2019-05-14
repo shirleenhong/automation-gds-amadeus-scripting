@@ -14,29 +14,28 @@ export class AmountMaskDirective {
 
     @HostListener('ngModelChange', ['$event'])
     onModelChange(event) {
-        this.onInputChange(event, false);
+        //this.onInputChange(event, false);
     }
 
     @HostListener('blur')
-    onBlur() {
+    onBlur() {      
         if (this.ngControl.value === null || this.ngControl.value === undefined || isNaN(this.ngControl.value)) { return; }
         const newVal = this.amountPipe.transform(this.ngControl.value.replace(',', ''));
         this.ngControl.control.setValue(newVal);
+
     }
 
-    onInputChange(event, backspace) {
-        let newVal = event;
-
-        if (newVal === null || newVal === undefined) { return newVal; }
-
-        const lastChar = newVal.substr(newVal.length - 1);
-
-        if (lastChar.match(/[0-9]/g) === null && lastChar !== '.') {
-            newVal = newVal.substr(0, newVal.length - 1);
+ @HostListener('keydown',["$event"])
+    onKeydown(e) {   
+        const regex = /[0-9]|\./g        
+       debugger;        
+        var key = e.keyCode ? e.keyCode : e.charCode;
+        var value = e.target.value;
+        if (key > 57 && ((e.key == '.' && value.indexOf('.')>=0 ) || e.key != '.')  && !(key >= 96 && key <= 106 )) {
+            e.preventDefault();
         }
-        if ((lastChar === '.') && (newVal.match(/\./g)).length > 1) {
-            newVal = newVal.substr(0, newVal.length - 1);
-        }
-        this.ngControl.valueAccessor.writeValue(newVal);
     }
+
+
+   
 }

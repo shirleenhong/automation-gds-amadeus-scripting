@@ -18,9 +18,15 @@ import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
+
+import { invalid } from '@angular/compiler/src/render3/view/util';
+// import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
+// >>>>>>> Stashed changes
 import { VisaPassportService } from '../service/visa-passport.service';
 import { InvoiceService } from '../service/invoice-remark.service';
 import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
+
+
 
 
 @Component({
@@ -48,6 +54,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(PassiveSegmentsComponent) passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
+
   errorPnrMsg = '';
   eventSubscribe = false;
   segment = [];
@@ -136,6 +143,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.segmentService.removeTeamMateMisRetention());
     remarkCollection.push(this.segmentService.getMandatoryRemarks());
 
+
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
       const concierge = this.reportingComponent.conciergeComponent;
       remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge.conciergeForm,
@@ -207,20 +215,25 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async addSegmentToPNR() {
+    debugger;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    // tslint:disable-next-line:max-line-length
+    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.passiveSegmentsComponent.fareRuleSegmentComponent.fareRuleRemarks));
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(async x => {
       this.isPnrLoaded = false;
       await this.getPnr();
       this.addRir();
     }, error => { alert(JSON.stringify(error)); });
+
   }
 
   async addRir() {
     // await this.pnrService.getPNR();
     const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
+
     await this.remarkService.BuildRemarks(remarkCollection2);
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;

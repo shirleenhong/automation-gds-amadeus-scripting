@@ -25,7 +25,6 @@ export class SegmentsComponent implements OnInit {
 
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
-  // segmentView: SegmentsViewModel;
 
   constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private pnrService: PnrService) {
     //
@@ -65,7 +64,7 @@ export class SegmentsComponent implements OnInit {
   updateItem(r: PassiveSegmentsModel) {
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateSegmentComponent, { backdrop: 'static' });
-    this.modalRef.content.title = 'Update Matrix Receipt';
+    this.modalRef.content.title = 'Update Segments';
     this.modalRef.content.matrixReceipt = new PassiveSegmentsModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.passiveSegments);
     this.modalRef.content.onChangeSegmentType(r.segmentType);
@@ -99,20 +98,24 @@ export class SegmentsComponent implements OnInit {
       'PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR',
       'TRAIN DEPARTURE/ARRIVAL TIMES.'
     ];
+    return this.vibEnglishRemark;
+
   }
 
   getVibFrenchRemark() {
     this.vibFrenchRemark = [
       'POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS',
       'PRESENTER A LA GARE AU MOINS 45 MINUTES AVANT L HEURE PREVUE DE',
-      'VOTRE DEPART SUIVANT LA POLITIQUE DE VIA RAIL-TOUS LES TRAINS SONT',
-      'NON FUMEUR. LES COUPONS VIA RAIL NE PEUVENT ETRE UTILISES POUR',
-      'DES DEPLACEMENTS AERIENS. SI VOUS DEVEZ MODIFIER VOTRE ITINERAIRE',
-      'EN COURS DE ROUTE ASSUREZ-VOUS QUE VOTRE BILLET EST ENDOSSE PAR',
-      'LA BILLETTERIE VIA 1.',
-      'VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR RECONFIRMER',
-      'LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
+      'VOTRE DEPART SUIVANT LA POLITIQUE DE VIA RAIL-TOUS LES',
+      'TRAINS SONT NON FUMEUR. LES COUPONS VIA RAIL NE PEUVENT ETRE',
+      'UTILISES POUR DES DEPLACEMENTS AERIENS. SI VOUS DEVEZ MODIFIER',
+      'VOTRE ITINERAIRE EN COURS DE ROUTE ASSUREZ-VOUS QUE VOTRE',
+      'BILLET EST ENDOSSE PAR LA BILLETTERIE VIA 1.',
+      'VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR',
+      'RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
     ];
+    return this.vibFrenchRemark;
+
   }
 
   getAmkRemark() {
@@ -125,17 +128,20 @@ export class SegmentsComponent implements OnInit {
       'RECOMMENDED ARRIVAL TIME AT THE STATION AT LEAST 30 MINUTES',
       'PRIOR TO YOUR SCHEDULES DEPARTURE.',
       'ALLOW ADDITIONAL TIME IF YOU NEED HELP WITH BAGGAGE OR TICKETS.',
-      'IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN AT LEAST',
-      '2 HOURS BEFORE SCHEDULED DEPARTURE.',
+      'IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN',
+      'AT LEAST 2 HOURS BEFORE SCHEDULED DEPARTURE.',
       'THIS CONFIRMATION NOTICE IS NOT A TICKET',
       'YOU MUST OBTAIN YOUR TICKET BEFORE BOARDING ANY TRAIN.',
       'THIS CONFIRMATION WILL NOT BE ACCEPTED ONBOARD.',
       'YOUR ENTIRE RESERVATION -ALL SEGMENTS- WILL BE CANCELLED',
       'IF YOU DO NOT PICK UP YOUR TICKET BEFORE YOUR FIRST DEPARTURE OR',
       'IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION.',
-      'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW RESERVATIONS',
-      'WHICH MAY BE AT A HIGHER FARE.'
+      'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW',
+      'RESERVATIONS WHICH MAY BE AT A HIGHER FARE.'
     ];
+
+    return this.amkRemark;
+
   }
 
 }

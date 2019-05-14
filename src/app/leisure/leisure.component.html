@@ -89,6 +89,27 @@
 
 </div>
 
+  <div *ngIf="workflow === 'invoice'">
+    <accordion>
+      <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+        <div accordion-heading>
+          <i class='fas fa-list-alt'></i> Send Invoice / Itinerary
+          <span class="cwt-logo"></span>
+        </div>
+        <app-matrix-invoice>
+        </app-matrix-invoice>
+      </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+      <div class="col">
+        <button class="leisureBtnSubmit" (click)="SendInvoiceItinerary()" [disabled]="segmentEnabled">Send
+          Invoice/Itinerary</button>
+        <button class="backMain" (click)="back()">Back To Main Menu</button>
+      </div>
+    </div>
+  </div>
+
 <div class="loaderBody" *ngIf="!isPnrLoaded">
   <div class="loader" *ngIf="errorPnrMsg==''">
     <div class="loaderlogo"></div><br /> Loading PNR...
@@ -111,6 +132,9 @@
     </div>
     <div>
       <button class="leisureButton btnMenu" (click)="cancelSegment()">Cancel Segments</button>
+    </div>
+    <div *ngIf="invoiceEnabled">
+      <button class="leisureButton btnMenu" (click)="sendInvoice()">Send Invoice/Itinerary</button>
     </div>
   </div>
   <div class="loader" *ngIf="errorPnrMsg!=''">

@@ -19,6 +19,9 @@ import { ValidateModel } from '../models/validate-model';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
 import { VisaPassportService } from '../service/visa-passport.service';
+import { InvoiceService } from '../service/invoice-remark.service';
+import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
+
 
 @Component({
   selector: 'app-leisure',
@@ -35,7 +38,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   cancelEnabled: boolean = true;
   segmentEnabled: boolean = false;
   validModel = new ValidateModel();
-
+  invoiceEnabled: boolean = false;
 
 
   @ViewChild(PassiveSegmentsComponent) segmentComponent: PassiveSegmentsComponent;
@@ -44,6 +47,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(PassiveSegmentsComponent) passiveSegmentsComponent: PassiveSegmentsComponent;
+  @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
   errorPnrMsg = '';
   eventSubscribe = false;
   segment = [];
@@ -59,7 +63,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private visaPassportService: VisaPassportService,
     private fb: FormBuilder,
     private ddbService: DDBService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private invoiceService: InvoiceService
   ) {
 
     this.getPnr();
@@ -91,6 +96,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
       this.isPnrLoaded = true;
     }
+    this.displayInvoice();
   }
 
   ngOnInit() {
@@ -106,7 +112,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     return this.validModel.isAllValid();
   }
 
-  public SubmitToPNR() {
+    public SubmitToPNR() {
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
       modalRef.content.modalRef = modalRef;
@@ -120,6 +126,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
+    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
 
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {
@@ -221,7 +228,28 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }, error => { alert(JSON.stringify(error)); });
     this.segmentEnabled = true;
   }
-  // }
+
+  displayInvoice() {
+    if (this.isPnrLoaded) {
+      if (this.pnrService.hasRecordLocator() !== undefined) {
+        this.invoiceEnabled = true;
+      } else { this.invoiceEnabled = false; }
+    }
+  }
+
+  public SendInvoiceItinerary() {
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
+    this.remarkService.BuildRemarks(remarkCollection);
+    this.remarkService.SubmitRemarks().then(x => {
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
+
+    }, error => { alert(JSON.stringify(error)); });
+    this.remarkService.endPNR('Agent Invoicing');
+  }
+
 
   public loadPnr() {
     if (this.isPnrLoaded) {
@@ -240,6 +268,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   public AddSegment() {
     if (this.isPnrLoaded) {
       this.workflow = 'segment';
+    }
+  }
+
+  public sendInvoice() {
+    if (this.isPnrLoaded) {
+      this.workflow = 'invoice';
     }
   }
 

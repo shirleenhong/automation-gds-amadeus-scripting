@@ -356,6 +356,10 @@ export class PnrService {
     return lastDeptDate;
   }
 
+  checkTST(): boolean {
+    debugger;
+    if (this.pnrObj.fullNode.response.model.output.response.tstData !== undefined) { return true; } else { return false; }
+   }
 
   getLatestDepartureDate() {
     let lastDeptDate = new Date();

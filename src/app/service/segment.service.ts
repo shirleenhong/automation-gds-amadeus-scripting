@@ -778,20 +778,20 @@ export class SegmentService {
 
                 // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.fareRuleList.value, 'RM', ''));
                 // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.cityPair.value, 'RM', ''));
-                if (model.isTicketNonRefundable === true) {
+                if (model.isTicketNonRefundable) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RM', ''));
                 }
 
-                if (model.isTicketMinMax === true) {
+                if (model.isTicketMinMax) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 'RM', ''));
                 }
 
-                if (model.isTicketNonRef.value === true) {
+                if (model.isTicketNonRef) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RM', ''));
                     rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RM', ''));
                 }
 
-                if (model.ticketAmount !== undefined && model.currencyType !== undefined) {
+                if (model.ticketAmount && model.currencyType) {
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
                         model.currencyType.value + 'NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
@@ -800,7 +800,7 @@ export class SegmentService {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RM', ''));
                 }
 
-                if (model.nonRefundable !== undefined) {
+                if (model.nonRefundable) {
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
                         + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
@@ -809,7 +809,7 @@ export class SegmentService {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RM', ''));
                 }
 
-                if (model.minChangeFee !== undefined) {
+                if (model.minChangeFee) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
                         + ' ' + model.currencyType.value, 'RM', ''));
                 }

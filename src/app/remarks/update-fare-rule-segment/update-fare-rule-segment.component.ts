@@ -172,6 +172,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   executeCryptic(lineNo: string): void {
 
     const airline = this.pnrService.getPassiveAirSegments(lineNo);
+    this.fareRuleList = [];
     if (airline !== undefined) {
       this.ShowFareRule = false;
       this.fareRules.airlineCode = airline[0].airlineCode;
@@ -215,7 +216,9 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   enableDisableBasedOnMinMax() {
-    if (this.fareRuleForm.controls.isTicketMinMax.value === true) {
+    if (this.fareRuleForm.controls.isTicketMinMax.value === true &&
+      this.fareRuleForm.controls.isTicketNonRefundable.value === false &&
+      this.fareRuleForm.controls.isTicketNonRef.value === false) {
       this.fareRuleForm.controls.currencyType.disable();
       this.fareRuleForm.controls.ticketAmount.disable();
       this.fareRuleForm.controls.nonRefundable.disable();

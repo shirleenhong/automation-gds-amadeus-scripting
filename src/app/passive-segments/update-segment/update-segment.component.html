@@ -265,7 +265,7 @@
     <div class="col-sm-4">
       <label id="lblName"> {{lbldepartureCity}}: </label>
       <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
-        formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity" (blur)="departureCityOnBlur()"
+        formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity"
         (change)="onChangezz($event.target.value, $event.target.name)" AlphaNumericMask AllCapsMask />
     </div>
 
@@ -578,13 +578,13 @@
     <div class="form-group  row" [formGroup]="segmentForm">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
-        <label id="lblName"> Pick Up City: </label>
+        <label id="lblName"> Pick up City: </label>
         <input type="text" class="form-control" id="departureCity" name="departureCity" maxlength="3"
           formControlName="departureCity" [(ngModel)]="passiveSegments.departureCity" (blur)="pickupCityOnBlur()"
           list="pickupCityList" AlphaNumericMask AllCapsMask />
       </div>
       <div class="col-4">
-        <label id="lblName">Drop Off City: </label>
+        <label id="lblName">Drop off City: </label>
         <input type="text" class="form-control" id="destinationCity" name="destinationCity" maxlength="3"
           formControlName="destinationCity" [(ngModel)]="passiveSegments.destinationCity" (blur)="dropOffCityOnBlur()"
           list="pickupCityList" AlphaNumericMask AllCapsMask />
@@ -609,7 +609,7 @@
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4"> <label id="lblName"> Pickup Location: </label></div>
+      <div class="col-sm-4"> <label id="lblName"> Pick up Location: </label></div>
       <div class="col">
         <select class="form-control" id="pickupLoc" name="pickupLoc" formControlName="pickupLoc"
           [(ngModel)]="passiveSegments.pickupLoc" (change)=" loadPickupOffAddr($event.target.value)" required>
@@ -619,7 +619,7 @@
       </div>
     </div>
     <div class="form-group  row" *ngIf="passiveSegments.pickupLoc=='OFF AIRPORT'">
-      <div class="col-sm-4"> <label id="lblName"> Pickup Address: </label></div>
+      <div class="col-sm-4"> <label id="lblName"> Pick up Address: </label></div>
       <div class="col">
         <select class="form-control" id="pickupOffAddress" name="pickupOffAddress" formControlName="pickupOffAddress"
           [(ngModel)]="passiveSegments.pickupOffAddress">
@@ -631,7 +631,7 @@
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4"><label id="lblName"> Dropoff Location: </label></div>
+      <div class="col-sm-4"><label id="lblName"> Drop off Location: </label></div>
       <div class="col">
         <select class="form-control" id="dropOffLoc" name="dropOffLoc" formControlName="dropOffLoc"
           [(ngModel)]="passiveSegments.dropOffLoc" (change)="loadDropOffAddr($event.target.value)" required>
@@ -642,7 +642,7 @@
     </div>
 
     <div class="form-group  row" *ngIf="passiveSegments.pickupLoc!=passiveSegments.dropOffLoc">
-      <div class="col-sm-4"> <label id="lblName"> Drop Off Address: </label></div>
+      <div class="col-sm-4"> <label id="lblName"> Drop off Address: </label></div>
       <div class="col">
         <select class="form-control" id="dropOffAddress" name="dropOffAddress" formControlName="dropOffAddress"
           [(ngModel)]="passiveSegments.dropOffAddress">
@@ -691,7 +691,7 @@
       <div class="col">
         <label id="lblName"> Mileage: </label>
         <input type="text" class="form-control" id="mileage" name="mileage" formControlName="mileage"
-          [(ngModel)]="passiveSegments.mileage" maxlength="5" NumberOnlyMask />
+          [(ngModel)]="passiveSegments.mileage" maxlength="5" AlphaNumericMask />
       </div>
     </div>
 

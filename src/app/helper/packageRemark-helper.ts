@@ -25,21 +25,20 @@ export class PackageRemarkHelper {
         const textSearch = this.pnrService.getRIIRemarkText(search + ' ' + category);
         if (textSearch !== '') {
             if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-                const regexp: RegExp = /X(\d+)\b/;
+                const regx = "/X(\d+)\b/";
                 // tslint:disable-next-line:max-line-length
-                group.controls[controlName].setValue(this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regexp).replace('X', ''));
+                group.controls[controlName].setValue(this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', ''));
             }
         }
     }
 
     getValues(search: string, category: string, controlName: string, group: FormGroup) {
-
         const textSearch = this.pnrService.getRIIRemarkText(search + ' ' + category);
-        const regexp: RegExp = /(\d+((?:,\d+)*,\d{3})?\.\d{2,3})(.*?X)/;
+        const regx = "/(\d+((?:,\d+)*,\d{3})?\.\d{2,3})(.*?X)/";
         if (textSearch !== '') {
             if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
                 // tslint:disable-next-line:max-line-length
-                group.controls[controlName].setValue(this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regexp).replace('X', ''));
+                group.controls[controlName].setValue(this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', ''));
                 // this.forDeletion.push(textSearch.elementNumber);
             }
         }
@@ -63,7 +62,6 @@ export class PackageRemarkHelper {
                 }
             }
         }
-
         return '';
     }
 
@@ -94,7 +92,6 @@ export class PackageRemarkHelper {
     }
 
     getBalanceDueDate() {
-
         const textSearch = this.pnrService.getRIIRemarkText('---- BALANCE OF');
         if (textSearch !== '') {
             if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
@@ -169,9 +166,8 @@ export class PackageRemarkHelper {
         }
     }
 
-
-
-    getRegexResult(rem: string, regexp: RegExp) {
+    getRegexResult(rem: string, regx: string) {
+        const regexp = new RegExp(regx);
         const textSearch = this.pnrService.getRIIRemarkText(rem);
         if (textSearch !== '') {
             if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {

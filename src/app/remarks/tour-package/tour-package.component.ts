@@ -9,7 +9,6 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { PackageRemarkHelper } from 'src/app/helper/packageRemark-helper';
 
-
 @Component({
   selector: 'app-tour-package',
   templateUrl: './tour-package.component.html',
@@ -48,7 +47,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     });
   }
 
-
   ngOnInit() {
     this.getCurrencies();
     this.group.get('adultNum').valueChanges.subscribe(e => {
@@ -74,7 +72,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
       this.tourPackageChange();
     }
     );
-
 
     this.group.get('childrenNumber').valueChanges.subscribe(e => {
       this.group.value.childrenNumber = e;
@@ -123,8 +120,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('form group: ', this.group);
-   
-  }
+     }
 
   public onTouched: () => void = () => { };
 
@@ -134,12 +130,13 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   registerOnChange(fn: any): void {
     console.log('on change');
     this.group.valueChanges.subscribe(fn);
-
   }
+
   registerOnTouched(fn: any): void {
     console.log('on blur');
     this.onTouched = fn;
   }
+
   setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.group.disable() : this.group.enable();
   }
@@ -150,8 +147,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   registerOnValidatorChange?(fn: () => void): void {
-
-
   }
 
   tourPackageChange() {
@@ -265,7 +260,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     return result;
   }
 
-
   getCurrencies() {
     // TODO: Get from API DDB
     this.bspCurrencyList = this.ddb.getCurrencies();
@@ -279,10 +273,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     }
   }
 
-
-
   private getRIITourPackageRemarksFromGDS() {
-
     this.group.controls.balanceDueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
     this.group.controls.tourCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
 
@@ -297,14 +288,10 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     this.packageRemarkHelper.getCount('CHILD', 'PACKAGE', 'childrenNumber', this.group);
     this.packageRemarkHelper.getCount('INFANT', 'PACKAGE', 'infantNumber', this.group);
 
-    const regexp: RegExp = /([0-9]+[\.]*[0-9]*)/;
-    this.group.controls.depositPaid.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regexp));
-    this.group.controls.totalCostHoliday.setValue(this.packageRemarkHelper.getRegexResult('TOTAL PACKAGE PRICE', regexp));
-    this.group.controls.balanceToBePaid.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regexp));
+    const regx = "/([0-9]+[\.]*[0-9]*)/";
+    this.group.controls.depositPaid.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regx));
+    this.group.controls.totalCostHoliday.setValue(this.packageRemarkHelper.getRegexResult('TOTAL PACKAGE PRICE', regx));
+    this.group.controls.balanceToBePaid.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regx));
     this.packageRemarkHelper.removeOtherTourRemark();
   }
-
-
-
 }
-

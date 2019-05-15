@@ -130,9 +130,7 @@ export class ItcPackageComponent implements OnInit {
     }
   }
 
-
   private getRIITourPackageRemarksFromGDS() {
-
     this.itcForm.controls.dueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
     this.itcForm.controls.itcCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
 
@@ -161,13 +159,13 @@ export class ItcPackageComponent implements OnInit {
     this.packageRemarkHelper.getCount('CHILD', 'PRICE', 'noChild', this.itcForm);
     this.packageRemarkHelper.getCount('INFANT', 'PRICE', 'noInfant', this.itcForm);
 
-    const regexp: RegExp = /([0-9]+[\.]*[0-9]*)/;
+    const regx = "/([0-9]+[\.]*[0-9]*)/";
 
-    this.itcForm.controls.hotelAdult.setValue(this.packageRemarkHelper.getRegexResult('HOTEL/ACCOMMODATION', regexp));
-    this.itcForm.controls.carAdult.setValue(this.packageRemarkHelper.getRegexResult('CAR RENTAL', regexp));
-    this.itcForm.controls.depAdult.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regexp));
-    this.itcForm.controls.holidayCost.setValue(this.packageRemarkHelper.getRegexResult('TOTAL HOLIDAY COST', regexp));
-    this.itcForm.controls.balance.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regexp));
+    this.itcForm.controls.hotelAdult.setValue(this.packageRemarkHelper.getRegexResult('HOTEL/ACCOMMODATION', regx));
+    this.itcForm.controls.carAdult.setValue(this.packageRemarkHelper.getRegexResult('CAR RENTAL', regx));
+    this.itcForm.controls.depAdult.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regx));
+    this.itcForm.controls.holidayCost.setValue(this.packageRemarkHelper.getRegexResult('TOTAL HOLIDAY COST', regx));
+    this.itcForm.controls.balance.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regx));
   }
 
 }

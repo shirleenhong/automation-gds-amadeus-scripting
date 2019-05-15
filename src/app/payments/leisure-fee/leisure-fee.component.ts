@@ -58,9 +58,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   creditcardMaxValidator(newValue) {
     // retrigger validation
     this.f.ccNo.setValue(this.f.ccNo.value);
-
   }
-
 
   ngAfterViewInit(): void {
     // throw new Error("Method not implemented.");
@@ -114,7 +112,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   setFormState(isDisabled: boolean) {
-
     if (isDisabled) {
       const ctrls = [
         'segmentAssoc',
@@ -186,12 +183,10 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       case '0':
         this.enableDisbleControls(ctrls, true);
 
-
         if ((!this.IsPnrAvailable && !this.checkSFC()) ||
           (this.IsPnrAvailable && this.f.chkUpdateRemove.value === true && !this.checkSFC())) {
           this.enableDisbleControls(['noFeeReason'], false);
         }
-
 
         this.f.noFeeReason.setValidators(Validators.required);
         break;
@@ -215,7 +210,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
       this.enableDisbleControls(controls, true);
     }
-
     if (
       this.f.segmentAssoc.value === '0' &&
       (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')
@@ -234,14 +228,12 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
     if (remarkText !== '') {
-
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));
       this.leisureFeeForm.controls.segmentAssoc.setValue(segmentAssociation);
 
-      const amount = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-AMT'), /([0-9]+[\.]*[0-9]*)/);
-      const ccNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?:.*)/);
-
-      // const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), /([0-9]+[\.]*[0-9]*)/);
+      const amount = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-AMT'), "/([0-9]+[\.]*[0-9]*)/");
+      const ccNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), "/(?:.*)/");
+      // const segNum = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FA'), "/([0-9]+[\.]*[0-9]*)/");
       let segNum = '';
 
       if (segmentAssociation === '3') {
@@ -251,11 +243,12 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
       if (segmentAssociation === '4') {
         segNum = this.GetValueFromSFCRemark(remarkText, '-FA').replace('-FA-C', '');
       }
+
       this.leisureFeeForm.controls.amount.setValue(amount);
       this.leisureFeeForm.controls.segmentNum.setValue(segNum);
       if (ccNum !== undefined && ccNum !== '') {
-        const provider = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), /(?<=CC)([A-Z]{2})/);
-        const expiryDate = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-EXP'), /([0-9]+[\.]*[0-9]*)/);
+        const provider = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-FOP-CC'), "/(?<=CC)([A-Z]{2})/");
+        const expiryDate = this.getValueByRegex(this.GetValueFromSFCRemark(remarkText, '-EXP'), "/([0-9]+[\.]*[0-9]*)/");
         this.leisureFeeForm.controls.ccNo.setValue(ccNum.substr(9));
         this.leisureFeeForm.controls.vendorCode.setValue(provider);
         this.leisureFeeForm.controls.expDate.setValue(expiryDate.slice(0, 2) + '/' + expiryDate.slice(2, 4));
@@ -265,12 +258,10 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     }
 
     if (remarkTax !== '') {
-      const tax = this.getValueByRegex(this.GetValueFromSFCRemark(remarkTax, 'TAX-'), /(?<=TAX-)([A-Z]{2})/);
+      const tax = this.getValueByRegex(this.GetValueFromSFCRemark(remarkTax, 'TAX-'), "/(?<=TAX-)([A-Z]{2})/");
       this.leisureFeeForm.controls.address.setValue(tax);
     }
   }
-
-
 
   private getSegmentAssociation(value: string) {
     if (value.indexOf('-FA-T') === 0) {
@@ -286,18 +277,15 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private getValueByRegex(value: string, expression: RegExp) {
+  private getValueByRegex(value: string, regx: string) {
+    const expression = new RegExp(regx);
     if (expression.test(value)) {
       for (let result = expression.exec(value); result !== null;
         result = expression.exec(value)) {
-        // if (!this.forDeletion.includes(textSearch.elementNumber)) {
-        //     this.forDeletion.push(textSearch.elementNumber);
-        // }
         return result[0];
       }
     }
   }
-
 
   private GetValueFromSFCRemark(value: string, searchString: string) {
     const results = value.split('/');
@@ -308,10 +296,6 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
         return;
       }
     });
-
     return res;
   }
-
-
-
 }

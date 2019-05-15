@@ -1,4 +1,4 @@
-FROM node:8.12.0 as build-stg
+FROM node:11.11.0 as build-stg
 COPY package*.json ./
 RUN npm ci && mkdir /ng-app && mv ./node_modules ./ng-app
 WORKDIR /ng-app

@@ -7,6 +7,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
 import { DeprecatedDatePipe, getLocaleExtraDayPeriodRules, DatePipe } from '@angular/common';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { FareRuleModel } from 'src/app/models/pnr/fare-rule.model';
 declare var smartScriptSession: any;
 
 @Component({
@@ -28,6 +29,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   @ViewChild('tourTmpl') tourTmpl: TemplateRef<any>;
   @ViewChild('limoTmpl') limoTmpl: TemplateRef<any>;
   @ViewChild('hotelTmpl') hotelTmpl: TemplateRef<any>;
+  isAddNew: boolean;
   mealPlanList: Array<SelectItem>;
   roomTypeList: Array<SelectItem>;
   segmentTypeList: Array<SelectItem>;
@@ -366,7 +368,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'departureDate', 'departureTime', 'departureCity', 'parking', 'limoCoAgent', 'meetDriveAt', 'phone',
           'additionalInfo', 'cancellationInfo', 'noPeople', 'pickupLoc', 'transferTo',
           'includeTax', 'includeToll', 'includeParking', 'includeGratuities'];
-
+        if (this.isAddNew) { this.passiveSegments.pickupLoc = 'HOME'; }
         this.setForm(forms);
         this.selectedTmpl = this.limoTmpl;
 
@@ -390,7 +392,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.segmentForm.get('destinationCity').clearValidators();
         this.selectedTmpl = this.carTmpl;
         this.pickupCityList = this.pnrService.getPnrDestinations();
-        if (this.passiveSegments.pickupLoc === undefined || this.passiveSegments.pickupLoc === '') {
+        if (this.passiveSegments.pickupLoc !== 'AIRPORT' && this.passiveSegments.pickupLoc !== 'OFF AIRPORT') {
           this.passiveSegments.pickupLoc = 'AIRPORT';
         }
 
@@ -402,11 +404,9 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         }
         break;
       case 'HTL':
-
         this.lbldepartureDate = 'Check In Date';
         this.lblarrivalDate = 'Check Out Date';
         this.lbldepartureCity = 'Hotel City';
-
         forms = ['segmentType', 'confirmationNo', 'departureCity', 'departureDate', 'arrivalDate', 'policyNo', 'currency',
           'chainCode', 'nightlyRate', 'numberOfRooms', 'guaranteedLate', 'confirmedWith', 'hotelCode', 'hotelCityName', 'rateType',
           'hotelName', 'fax', 'phone', 'address', 'province', 'zipCode', 'country', 'roomType', 'additionalInfo'];
@@ -414,7 +414,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.stateProvinceList = this.ddbService.getStateProvinces();
         this.getHotels();
         this.setForm(forms);
-
         this.selectedTmpl = this.hotelTmpl;
         break;
       default:
@@ -692,7 +691,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           const list = (x.Response.split('\r\n'));
           lines = lines.concat(list);
           const lasItem = list[list.length - 2];
-          if ((list.length < 4) || (lasItem.indexOf('NO MORE ITEMS') >= 0) || lasItem.indexOf('END OF DISPLAY')) {
+          if ((list.length < 4) || (x.Response.indexOf('NO MORE ITEMS') >= 0) || x.Response.indexOf('END OF DISPLAY')) {
             stop = true;
           }
         });
@@ -734,7 +733,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
     this.segmentForm.get('dropOffAddress').enable();
     if (pickup !== val) {
-      const city = this.passiveSegments.departureCity;
+      const city = this.passiveSegments.destinationCity;
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
@@ -742,7 +741,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.dropOffAddrList = [];
       this.getOffAddress(this.dropOffAddrList, command);
       this.commandCache.loadDropOffAddr = command;
-
       this.segmentForm.get('dropOffAddress').enable();
     } else {
       this.segmentForm.get('dropOffAddress').disable();

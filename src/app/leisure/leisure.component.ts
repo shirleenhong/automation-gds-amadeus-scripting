@@ -209,7 +209,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async addSegmentToPNR() {
-    debugger;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     // tslint:disable-next-line:max-line-length
@@ -220,7 +219,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       await this.getPnr();
       this.addRir();
     }, error => { alert(JSON.stringify(error)); });
-
   }
 
   async addRir() {

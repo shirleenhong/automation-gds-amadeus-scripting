@@ -766,13 +766,11 @@ export class SegmentService {
     }
 
     writeOptionalFareRule(fareRuleModels: any) {
-        debugger;
+
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();
-
         fareRuleModels.forEach(model => {
-            debugger;
             if (model.fareRuleType !== '' && model.oid !== '') {
                 smartScriptSession.send('PBN/' + model.oid + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
                 rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));

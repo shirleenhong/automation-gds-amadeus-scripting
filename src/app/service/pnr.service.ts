@@ -684,7 +684,6 @@ export class PnrService {
   }
 
   getSegmentModel(freetext, index, type) {
-    debugger;
     let segmentModel: PassiveSegmentsModel;
     segmentModel = new PassiveSegmentsModel();
 
@@ -754,7 +753,6 @@ export class PnrService {
   }
 
   getModelPassiveSegments(): PassiveSegmentsModel[] {
-    debugger;
     const pSegment: PassiveSegmentsModel[] = [];
     const segment = this.getSegmentTatooNumber();
     let index = 0;

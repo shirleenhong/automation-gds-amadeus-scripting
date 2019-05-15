@@ -1,5 +1,4 @@
 export class PassiveSegmentModel {
-
     passiveSegmentType: string;
     status: string;
     vendor: string;
@@ -17,5 +16,9 @@ export class PassiveSegmentModel {
     controlNo: string;
     dayChangeIndicator: string;
     flightNo: string;
+    suppliername: string;
+    confirmationNo: string;
+    currency: string;
     carType: string;
+    unitPrice: string;
 }

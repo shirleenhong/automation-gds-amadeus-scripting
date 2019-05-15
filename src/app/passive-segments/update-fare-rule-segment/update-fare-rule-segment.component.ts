@@ -36,7 +36,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
 
   constructor(private fb: FormBuilder, public activeModal: BsModalService, private pnrService: PnrService,
     // tslint:disable-next-line:align
-    private modalRef: BsModalRef, private ddb: DDBService, private segmentService: SegmentService) {
+    public modalRef: BsModalRef, private ddb: DDBService, private segmentService: SegmentService) {
     this.fareRules = new FareRuleModel();
     this.fareRules.mode = 'rbTicket';
   }

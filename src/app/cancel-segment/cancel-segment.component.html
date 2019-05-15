@@ -34,7 +34,7 @@
     <div class="row form-group">
       <div class="col-4">Segments: </div>
       <div class="col-8">
-        <label formArrayName="segments" *ngFor="let name of cancelForm.controls.segments.controls; let i = index"
+        <label formArrayName="segments" *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index"
           class="col-8">
           <input type="checkbox" [formControlName]="i" (change)="checkSegmentAirline()">
           {{segments[i].name}}
@@ -156,7 +156,7 @@
       <div class="col-3">Coupon Number:</div>
     </div>
 
-    <div formArrayName="tickets" *ngFor="let item of cancelForm.get('tickets').controls; let i = index">
+    <div formArrayName="tickets" *ngFor="let item of this.cancelForm.get('tickets')['controls']; let i = index">
       <div [formGroupName]="i" class="form-group row">
         <div class="col-sm-4"></div>
         <div class="col-3">

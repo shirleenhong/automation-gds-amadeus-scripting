@@ -119,7 +119,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     return this.validModel.isAllValid();
   }
 
-    public SubmitToPNR() {
+  public SubmitToPNR() {
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
       modalRef.content.modalRef = modalRef;
@@ -134,7 +134,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
     remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-
+    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {
       remarkCollection.push(this.segmentService.getRetentionLine());
@@ -218,7 +218,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     // tslint:disable-next-line:max-line-length
-    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.passiveSegmentsComponent.fareRuleSegmentComponent.fareRuleRemarks));
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(async x => {
       this.isPnrLoaded = false;

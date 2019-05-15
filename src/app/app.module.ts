@@ -41,8 +41,9 @@ import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
 import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
 import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
-import { FareRuleSegmentComponent } from './passive-segments/fare-rule-segment/fare-rule-segment.component';
-import { UpdateFareRuleSegmentComponent } from './passive-segments/update-fare-rule-segment/update-fare-rule-segment.component';
+import { FareRuleSegmentComponent } from './remarks/fare-rule-segment/fare-rule-segment.component';
+import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segment/update-fare-rule-segment.component';
+
 
 @NgModule({
   declarations: [

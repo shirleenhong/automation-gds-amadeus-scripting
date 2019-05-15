@@ -17,7 +17,7 @@ export class UpdateTourSegmentComponent implements OnInit {
   isSubmitted: boolean;
 
   @ViewChild('bankAccount') bankAccEl: ElementRef;
-  constructor(public activeModal: BsModalService, private pnrService: PnrService, private modalRef: BsModalRef) {
+  constructor(public activeModal: BsModalService, private pnrService: PnrService, public modalRef: BsModalRef) {
     this.passiveSegment = new PassiveSegmentModel();
 
   }

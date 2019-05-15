@@ -15,7 +15,7 @@ declare var smartScriptSession: any;
   styleUrls: ['./update-segment.component.scss']
 })
 export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
-
+  title: string;
 
   @Input()
   passiveSegments: PassiveSegmentsModel;
@@ -151,7 +151,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   constructor(public activeModal: BsModalService,
     private pnrService: PnrService,
-    private modalRef: BsModalRef,
+    public modalRef: BsModalRef,
     private ddbService: DDBService,
     private fb: FormBuilder,
     private util: UtilHelper) {

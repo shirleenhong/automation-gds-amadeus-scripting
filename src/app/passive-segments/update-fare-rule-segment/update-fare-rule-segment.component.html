@@ -125,7 +125,7 @@
       <div class="col-sm-4">Associated Remarks :</div>
       <div class="col-sm-8">
         <div style="padding-bottom:10px" formArrayName="items"
-          *ngFor="let item of fareRuleForm.get('items').controls; let i = index;">
+          *ngFor="let item of this.fareRuleForm.get('items')['controls']; let i = index;">
           <div [formGroupName]="i">
             <table style="width:100%">
               <tr>

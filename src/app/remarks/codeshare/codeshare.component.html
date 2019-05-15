@@ -4,7 +4,7 @@
     <span> Note: Please leave the boxes empty if no Codeshare is found in the PNR. <br /><br /></span>
 
   </div>
-  <div formArrayName="segments" *ngFor="let item of codeShareGroup.get('segments').controls; let i = index;"
+  <div formArrayName="segments" *ngFor="let item of this.codeShareGroup.get('segments')['controls']; let i = index;"
     class="col">
     <div [formGroupName]="i" class="codeShareRow form-group row">
       <div> <span> Segment(s) </span> </div>

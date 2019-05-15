@@ -172,7 +172,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemarks.bsp = '1';
         this.filterSupplierCode(accRemark);
-        this.SetTktNumber();
+        this.setTktNumber();
         this.IsInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
@@ -270,7 +270,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
 
 
-  SetTktNumber() {
+  setTktNumber() {
     const supCode = ['ACY', 'SOA', 'WJ3'];
 
     if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(this.accountingRemarks.supplierCodeName)) {

@@ -39,9 +39,10 @@ import { CodeshareComponent } from './remarks/codeshare/codeshare.component';
 import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
 import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
 import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
+import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
+import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
 import { FareRuleSegmentComponent } from './passive-segments/fare-rule-segment/fare-rule-segment.component';
 import { UpdateFareRuleSegmentComponent } from './passive-segments/update-fare-rule-segment/update-fare-rule-segment.component';
-
 
 @NgModule({
   declarations: [
@@ -64,7 +65,7 @@ import { UpdateFareRuleSegmentComponent } from './passive-segments/update-fare-r
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
     VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective,
-    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent
+    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent
 
 
   ],

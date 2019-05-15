@@ -1,0 +1,55 @@
+<br>
+
+<div class="col" [formGroup]="matrixInvoiceGroup">
+    <div class="row form-group">
+        <div class="col-10">
+            <b>Choose One</b>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-4">
+            <input type="radio" name="selection" formcontrolname="selection" id="selection" value="itinerary"
+                (click)="select('itinerary')" />
+            Send Itinerary Only into Matrix
+        </div>
+        <div class="col-3">
+            <input type="radio" name="selection" formcontrolname="selection" id="selection" value="invoice"
+                (click)="select('invoice')" />
+            Invoice PNR into Matrix
+        </div>
+
+    </div><br>
+
+    <div *ngIf="selection === 'invoice'">
+        <div class="row form-group">
+            <div class="col-10">
+                <b>Select Passengers and Segments That Applies to This Invoice</b>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-5">
+                <div class="row form-group">
+                    <div class="col-sm-5">Passenger(s): </div>
+                    <div class="col-sm-2">
+                        <app-passenger-select formControlName="passengerNo" name="passengerNo" id="passengerNo"
+                            #passengerApp>
+                        </app-passenger-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-5">
+                <div class="row form-group">
+                    <div class="col-sm-5">Segment(s): </div>
+                    <div class="col-sm-2">
+                        <app-segment-select formControlName="segmentNo" name="segmentNo" id="segmentNo" #segmentApp>
+                        </app-segment-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

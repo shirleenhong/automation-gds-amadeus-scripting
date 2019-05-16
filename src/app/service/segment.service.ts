@@ -179,12 +179,18 @@ export class SegmentService {
     }
 
     private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        let province = '';
+        let zip = '';
         const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH - ' },
         { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ' }];
 
+
+        if (segmentrem.province) { province = segmentrem.province; }
+        if (segmentrem.zipCode) { zip = segmentrem.zipCode; }
+
         const mandatoryHotelRemarks = ['ADDRESS-' + segmentrem.address,
-        segmentrem.hotelCityName + ' ' + segmentrem.province,
-        segmentrem.country + ' ' + segmentrem.zipCode,
+        segmentrem.hotelCityName + ' ' + province,
+        segmentrem.country + ' ' + zip,
         'GUARANTEED  FOR LATE ARRIVAL -' + segmentrem.guaranteedLate,
         'CANCELLATION POLICY - ' + segmentrem.policyNo];
 
@@ -216,14 +222,14 @@ export class SegmentService {
         });
 
         let cdid = '';
-        optionalCarRemarks.forEach(c => {
+        optionalcdid.forEach(c => {
             if (c.include) {
-                cdid = cdid + c.description + c.include;
+                cdid = cdid + ' ' + c.description + c.include;
             }
         });
 
         if (cdid !== '') {
-            rmGroup.remarks.push(this.getRemarksModel(cdid, 'RI', 'R', pnrSegment.tatooNo));
+            rmGroup.remarks.push(this.getRemarksModel(cdid.substr(1), 'RI', 'R', pnrSegment.tatooNo));
         }
 
         if (segmentrem.frequentFlierNumber && segmentrem.frequentflightNumber) {
@@ -426,9 +432,16 @@ export class SegmentService {
                     segment.confirmationNo;
                 break;
             case 'HTL':
-                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + ',FAX-' + segment.fax +
-                    ',CF:' + segment.confirmationNo + ',' + segment.roomType + ',RATE:' + segment.rateType + ' ' +
-                    segment.currency + segment.nightlyRate + '/NIGHT,SI-' + segment.additionalInfo;
+                let hotelfax = '';
+                let additionalInfo = '';
+                let roomType = '';
+                if (segment.fax) { hotelfax = ',FAX-' + segment.fax; }
+                if (segment.fax) { additionalInfo = ',SI-' + segment.additionalInfo; }
+                if (segment.roomType) { roomType = ',' + segment.roomType; }
+
+                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + segment.fax +
+                    ',CF:' + segment.confirmationNo + segment.roomType + ',RATE:' + segment.rateType + ' ' +
+                    segment.currency + segment.nightlyRate + '/NIGHT' + additionalInfo;
                 break;
             default:
                 break;

@@ -303,7 +303,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.selectedTmpl = this.airTmpl;
         forms = ['segmentType', 'airlineCode', 'flightNumber', 'classService',
           'departureDate', 'departureTime', 'departureCity', 'destinationCity', 'airlineRecloc',
-          'arrivalDate', 'arrivalTime', 'noPeople', 'noNights', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'];
+          'arrivalDate', 'arrivalTime', 'noPeople', 'zzairlineCode', 'zzdepartureCity', 'zzdestinationCity'];
         this.setForm(forms);
 
         break;

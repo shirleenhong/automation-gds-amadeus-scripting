@@ -216,9 +216,9 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   enableDisableBasedOnMinMax() {
-    if (this.fareRuleForm.controls.isTicketMinMax.value === true &&
-      this.fareRuleForm.controls.isTicketNonRefundable.value === false &&
-      this.fareRuleForm.controls.isTicketNonRef.value === false) {
+    if (this.fareRuleForm.controls.isTicketMinMax.value &&
+      !this.fareRuleForm.controls.isTicketNonRefundable.value &&
+      !this.fareRuleForm.controls.isTicketNonRef.value) {
       this.fareRuleForm.controls.currencyType.disable();
       this.fareRuleForm.controls.ticketAmount.disable();
       this.fareRuleForm.controls.nonRefundable.disable();

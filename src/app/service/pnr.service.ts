@@ -306,6 +306,7 @@ export class PnrService {
     let arrivalTime = '';
     let arrivalDate = '';
     let classservice = '';
+    let flongtext = '';
 
 
     if (type === 'AIR') {
@@ -330,10 +331,8 @@ export class PnrService {
         this.formatDate(fullnodetemp.product.depDate);
       elemStatus = elem.fullNode.relatedProduct.status;
       elemdepdate = fullnodetemp.product.depDate;
+      arrivalDate = fullnodetemp.product.arrDate;
       elemcitycode = fullnodetemp.boardpointDetail.cityCode;
-    }
-    let flongtext = '';
-    if (type === 'MIS' || type === 'CAR') {
       flongtext = elem.fullNode.itineraryFreetext.longFreetext;
     }
 
@@ -368,9 +367,8 @@ export class PnrService {
   }
 
   checkTST(): boolean {
-    debugger;
     if (this.pnrObj.fullNode.response.model.output.response.tstData !== undefined) { return true; } else { return false; }
-   }
+  }
 
   getLatestDepartureDate() {
     let lastDeptDate = new Date();
@@ -708,11 +706,6 @@ export class PnrService {
         match = regex.exec(freetext);
       }
 
-      if (match === null) {
-        regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
-        match = regex.exec(freetext);
-      }
-
       if (match !== null) {
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
@@ -744,8 +737,6 @@ export class PnrService {
     segmentModel.segmentType = element.segmentType;
     segmentModel.flightNumber = element.flightNumber;
     segmentModel.classService = element.classservice;
-    // segmentModel.arrivalday = element.classservice;
-    // segmentModel.airlineRecloc = elem.
     segmentModel.departureDate = this.formatDate(element.departureDate);
     segmentModel.departureTime = element.departureTime;
     segmentModel.departureCity = element.cityCode;
@@ -753,6 +744,28 @@ export class PnrService {
     segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
     segmentModel.arrivalTime = element.arrivalTime;
     segmentModel.airlineCode = element.airlineCode;
+    return segmentModel;
+  }
+
+
+  getHotelSegmentModel(element, index, freetext) {
+    let segmentModel: PassiveSegmentsModel;
+    segmentModel = new PassiveSegmentsModel();
+    segmentModel.isNew = false;
+    segmentModel.segmentNo = index;
+    segmentModel.segmentType = element.segmentType;
+    segmentModel.departureDate = this.formatDate(element.deptdate);
+    segmentModel.departureCity = element.cityCode;
+    segmentModel.destinationCity = element.arrivalStation;
+    segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
+
+    const regex = /(?<hotelInfo>(.*)),CF:(?<confirmationNumber>(.*?),)/g;
+    const match = regex.exec(freetext);
+
+    if (match) {
+      segmentModel.confirmationNo = match.groups.confirmationNumber.substr(0, match.groups.confirmationNumber.length - 1)
+    }
+
     return segmentModel;
   }
 
@@ -769,8 +782,11 @@ export class PnrService {
           pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
           break;
         case 'AIR':
-        case 'HTL':
           pSegment.push(this.getAirSegmentModel(element, index));
+          break;
+        case 'HTL':
+          pSegment.push(this.getHotelSegmentModel(element, index, element.freetext));
+          break;
       }
     });
     return pSegment;

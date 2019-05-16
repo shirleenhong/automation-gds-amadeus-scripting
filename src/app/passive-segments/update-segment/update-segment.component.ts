@@ -29,6 +29,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   @ViewChild('tourTmpl') tourTmpl: TemplateRef<any>;
   @ViewChild('limoTmpl') limoTmpl: TemplateRef<any>;
   @ViewChild('hotelTmpl') hotelTmpl: TemplateRef<any>;
+  segmentList: Array<PassiveSegmentsModel> = [];
   isAddNew: boolean;
   mealPlanList: Array<SelectItem>;
   roomTypeList: Array<SelectItem>;
@@ -391,7 +392,13 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.setForm(forms);
         this.segmentForm.get('destinationCity').clearValidators();
         this.selectedTmpl = this.carTmpl;
-        this.pickupCityList = this.pnrService.getPnrDestinations();
+        this.pickupCityList = [];
+        this.segmentList.forEach(s => {
+          if (!this.pickupCityList.find(x => x.endpoint === s.destinationCity)) {
+            this.pickupCityList.push({ endpoint: s.destinationCity });
+          }
+        });
+
         if (this.passiveSegments.pickupLoc !== 'AIRPORT' && this.passiveSegments.pickupLoc !== 'OFF AIRPORT') {
           this.passiveSegments.pickupLoc = 'AIRPORT';
         }

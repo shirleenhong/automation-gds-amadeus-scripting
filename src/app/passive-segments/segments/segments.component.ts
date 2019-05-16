@@ -40,12 +40,12 @@ export class SegmentsComponent implements OnInit {
     const passiveSegment = new PassiveSegmentsModel();
     this.modalRef = this.modalService.show(UpdateSegmentComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Add Passive Segment';
+    this.modalRef.content.segmentList = this.segmentRemarks;
     this.modalRef.content.isAddNew = true;
     passiveSegment.segmentNo = (this.segmentRemarks.length + 1);
     passiveSegment.isNew = true;
     passiveSegment.noPeople = this.getNoPassengers();
     this.modalRef.content.passiveSegments = passiveSegment;
-
   }
 
   modalSubscribeOnClose() {
@@ -66,6 +66,7 @@ export class SegmentsComponent implements OnInit {
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateSegmentComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Update Segments';
+    this.modalRef.content.segmentList = this.segmentRemarks;
     this.modalRef.content.isAddNew = false;
     this.modalRef.content.matrixReceipt = new PassiveSegmentsModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.passiveSegments);

@@ -138,7 +138,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     nightlyRate: new FormControl('', [Validators.required]),
     numberOfRooms: new FormControl('', [Validators.required]),
     guaranteedLate: new FormControl('', [Validators.required]),
-    confirmedWith: new FormControl('', [Validators.required]),
+    confirmedWith: new FormControl(''),
     hotelCode: new FormControl(''),
     hotelCityName: new FormControl('', [Validators.required]),
     hotelName: new FormControl('', [Validators.required]),
@@ -611,6 +611,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (air) {
         this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
         this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
+        this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
+
         const indx = airs.indexOf(air);
         if (indx < airs.length - 1) {
           air = airs[indx + 1];
@@ -643,7 +645,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   dropOffCityOnBlur() {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
-      this.loadDropOffAddr(this.passiveSegments.dropOffLoc, this.passiveSegments.pickupLoc);
+      this.loadDropOffAddr(this.passiveSegments.dropOffLoc);
     }
   }
 
@@ -707,7 +709,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
-      if (this.commandCache.loadPickupOffAddr === command) { return; }
+      if (this.commandCache.loadPickupOffAddr === command || vendor === undefined) { return; }
       this.pickupOffAddrList = [];
       this.getOffAddress(this.pickupOffAddrList, command);
       this.commandCache.loadPickupOffAddr = command;
@@ -716,28 +718,16 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
     }
-
-    if (this.passiveSegments.dropOffLoc !== val) {
-      this.segmentForm.get('dropOffAddress').enable();
-      this.loadDropOffAddr(this.passiveSegments.dropOffLoc, val);
-    }
-
   }
 
-  loadDropOffAddr(val, pickup?) {
-    if (val === undefined) {
-      return;
-    }
-    if (pickup === undefined) {
-      pickup = this.passiveSegments.pickupLoc;
-    }
-    this.segmentForm.get('dropOffAddress').enable();
-    if (pickup !== val) {
+  loadDropOffAddr(val) {
+
+    if (val === 'OFF AIRPORT') {
       const city = this.passiveSegments.destinationCity;
       if (city.length < 3) { return; }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
-      if (this.commandCache.loadDropOffAddr === command) { return; }
+      if (this.commandCache.loadDropOffAddr === command || vendor === undefined) { return; }
       this.dropOffAddrList = [];
       this.getOffAddress(this.dropOffAddrList, command);
       this.commandCache.loadDropOffAddr = command;

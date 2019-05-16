@@ -641,7 +641,7 @@
       </div>
     </div>
 
-    <div class="form-group  row" *ngIf="passiveSegments.pickupLoc!=passiveSegments.dropOffLoc">
+    <div class="form-group  row" *ngIf="passiveSegments.dropOffLoc=='OFF AIRPORT'">
       <div class="col-sm-4"> <label id="lblName"> Drop off Address: </label></div>
       <div class="col">
         <select class="form-control" id="dropOffAddress" name="dropOffAddress" formControlName="dropOffAddress"
@@ -776,12 +776,8 @@
       </div>
     </div>
 
-
-
   </div>
 </ng-template>
-
-
 
 
 <ng-template #hotelTmpl>
@@ -797,7 +793,7 @@
 
       <div class="col">
         <label id="lblName">Hotel City Code: </label>
-        <input type="text" class="form-control" id="cdNumber" name="departureCity" formControlName="departureCity"
+        <input type="text" class="form-control" id="departureCity" name="departureCity" formControlName="departureCity"
           [(ngModel)]="passiveSegments.departureCity" maxlength="3" (blur)="getHotels()" AllCapsMask />
       </div>
     </div>
@@ -815,7 +811,7 @@
       <div class="col">
         <label id="lblName">Nightly Rate: </label>
         <input type="text" class="form-control" id="nightlyRate" name="nightlyRate" formControlName="nightlyRate"
-          [(ngModel)]="passiveSegments.nightlyRate" maxlength="10" />
+          [(ngModel)]="passiveSegments.nightlyRate" maxlength="10" NumberOnlyMask />
       </div>
     </div>
 
@@ -833,7 +829,7 @@
       <div class="col">
         <label id="lblName">Rate Type: </label>
         <input type="text" class="form-control" id="rateType" name="rateType" formControlName="rateType"
-          [(ngModel)]="passiveSegments.rateType" maxlength="3" />
+          [(ngModel)]="passiveSegments.rateType" maxlength="15" />
 
       </div>
     </div>
@@ -844,7 +840,7 @@
       <div class="col">
         <label id="lblName">Number of Rooms: </label>
         <input type="text" class="form-control" id="numberOfRooms" name="numberOfRooms" formControlName="numberOfRooms"
-          [(ngModel)]="passiveSegments.numberOfRooms" maxlength="3" />
+          [(ngModel)]="passiveSegments.numberOfRooms" maxlength="1" />
       </div>
 
       <div class="col">

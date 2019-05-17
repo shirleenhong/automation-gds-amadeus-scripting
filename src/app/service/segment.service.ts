@@ -794,25 +794,26 @@ export class SegmentService {
                 // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.fareRuleList.value, 'RM', ''));
                 // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.cityPair.value, 'RM', ''));
                 if (model.isTicketNonRefundable) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
                 }
 
                 if (model.isTicketMinMax) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 
+                    'RI', 'R'));
                 }
 
                 if (model.isTicketNonRef) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RM', ''));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
                 }
 
                 if (model.ticketAmount && model.currencyType) {
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
-                        model.currencyType.value + 'NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
+                        model.currencyType.value + 'NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
                     // tslint:disable-next-line:max-line-length
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RM', ''));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
                 }
 
                 if (model.nonRefundable) {
@@ -820,13 +821,13 @@ export class SegmentService {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
                         + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
                     // tslint:disable-next-line:max-line-length
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RM', ''));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
                 }
 
                 if (model.minChangeFee) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
-                        + ' ' + model.currencyType.value, 'RM', ''));
+                        + ' ' + model.currencyType.value, 'RI', 'R'));
                 }
             }
 
@@ -835,7 +836,7 @@ export class SegmentService {
                     // is a FormGroup
 
                     // tslint:disable-next-line:max-line-length
-                    rmGroup.remarks.push(this.remarkHelper.createRemark(fg.controls.remarkText.value + '/' + model.segmentNo, 'RM', ''));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark(fg.controls.remarkText.value + '/' + model.segmentNo, 'RI', 'R'));
                 }
             }
         });

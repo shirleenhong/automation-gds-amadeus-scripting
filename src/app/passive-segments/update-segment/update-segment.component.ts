@@ -217,7 +217,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     { itemText: 'Queen Room', itemValue: 'QUEEN ROOM' },
     { itemText: 'King Room', itemValue: 'KING ROOM' },
     { itemText: 'Twin Room', itemValue: 'TWIN ROOM' },
-    { itemText: 'Double-double Room', itemValue: 'DOUBLE-DOUBLE ROOM' },
     { itemText: 'Studio Room', itemValue: 'STUDIO ROOM' },
     ];
 

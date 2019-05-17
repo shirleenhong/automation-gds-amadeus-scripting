@@ -119,25 +119,28 @@ export class VisaPassportComponent implements OnInit {
       const destinations = Array<string>();
 
       this.pnrService.pnrObj.airSegments.forEach(x => {
+        cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
+        if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') { destinations.push(cityCountry); }
+
         cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
         if (this.ddbService.getCityCountry(x.departureAirport) !== '') { destinations.push(cityCountry); }
 
-        const airdate = x.departureDate;
-        if (firstLoop) {
-          firstDepDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-          firstLoop = false;
-        } else {
-          firstDepDate = this.getFirstDate(airdate, firstDepDate);
-        }
-      });
+        //   const airdate = x.departureDate;
+        //   if (firstLoop) {
+        //     firstDepDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
+        //     firstLoop = false;
+        //   } else {
+        //     firstDepDate = this.getFirstDate(airdate, firstDepDate);
+        //   }
+        // });
 
-      let countryOrigin: string;
-      this.pnrService.pnrObj.airSegments.forEach(x => {
-        let depDate = new Date();
-        depDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-        if (depDate.toDateString() === firstDepDate.toDateString()) {
-          if (this.ddbService.getCityCountry(x.departureAirport) !== '') { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
-        }
+        // let countryOrigin: string;
+        // this.pnrService.pnrObj.airSegments.forEach(x => {
+        //   let depDate = new Date();
+        //   depDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
+        //   if (depDate.toDateString() === firstDepDate.toDateString()) {
+        //     if (this.ddbService.getCityCountry(x.departureAirport) !== '') { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
+        //   }
       });
 
       let hasInternationalFlight: boolean;

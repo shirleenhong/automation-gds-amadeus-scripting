@@ -120,7 +120,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('form group: ', this.group);
-     }
+  }
 
   public onTouched: () => void = () => { };
 
@@ -288,7 +288,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     this.packageRemarkHelper.getCount('CHILD', 'PACKAGE', 'childrenNumber', this.group);
     this.packageRemarkHelper.getCount('INFANT', 'PACKAGE', 'infantNumber', this.group);
 
-    const regx = "/([0-9]+[\.]*[0-9]*)/";
+    const regx = "([0-9]+[\\.]*[0-9]*)";
     this.group.controls.depositPaid.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regx));
     this.group.controls.totalCostHoliday.setValue(this.packageRemarkHelper.getRegexResult('TOTAL PACKAGE PRICE', regx));
     this.group.controls.balanceToBePaid.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regx));

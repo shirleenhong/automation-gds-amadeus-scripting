@@ -25,7 +25,7 @@ export class PackageRemarkHelper {
         const textSearch = this.pnrService.getRIIRemarkText(search + ' ' + category);
         if (textSearch !== '') {
             if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-                const regx = "/X(\d+)\b/";
+                const regx = "X(\\d+)\\b";
                 // tslint:disable-next-line:max-line-length
                 group.controls[controlName].setValue(this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', ''));
             }
@@ -34,7 +34,7 @@ export class PackageRemarkHelper {
 
     getValues(search: string, category: string, controlName: string, group: FormGroup) {
         const textSearch = this.pnrService.getRIIRemarkText(search + ' ' + category);
-        const regx = "/(\d+((?:,\d+)*,\d{3})?\.\d{2,3})(.*?X)/";
+        const regx = "(\\d+((?:,\\d+)*,\\d{3})?\\.\\d{2,3})(.*?X)";
         if (textSearch !== '') {
             if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
                 // tslint:disable-next-line:max-line-length

@@ -22,8 +22,17 @@ $ npm --version
 npm install
 ```
 
-4. Spin up a local version of the app in `https://localhost:5443`
+4. Spin up a local version of the webapp in `https://localhost:5443/portal/gds-scripting-amadeus/`
 
 ```
 npm run-script start
 ```
+
+5. Access webapp as a Smartscript via Amadeus Sellconnect, login to Amadeus acceptance environment using a Canada OID (YTOWL2107)
+Open a command line and add a name field and a CF line
+
+```
+nm1test/test
+RM*CF/-RBM
+```
+Finally open Scripts>CWT Canada Leisure Local to access your locally deployed webapp

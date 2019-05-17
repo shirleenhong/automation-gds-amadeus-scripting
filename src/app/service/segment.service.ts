@@ -10,8 +10,10 @@ import { RemarkHelper } from '../helper/remark-helper';
 import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { FormArray } from '@angular/forms';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
+import { RemarkService } from './remark.service';
 
+declare var smartScriptSession: any;
 @Injectable({
     providedIn: 'root',
 })
@@ -27,7 +29,7 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private remarkService: RemarkService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -74,6 +76,7 @@ export class SegmentService {
                 passive.endTime = '0000';
                 passive.segmentName = 'RU';
                 passive.function = '12';
+                passive.quantity = Number(segment.noPeople);
                 if (segment.segmentType === 'CAR') {
                     passive.segmentName = 'CU';
                     passive.function = '9';
@@ -82,8 +85,9 @@ export class SegmentService {
                 if (segment.segmentType === 'HTL') {
                     passive.segmentName = 'HU';
                     passive.function = '8';
+                    passive.quantity = Number(segment.numberOfRooms);
                 }
-                passive.quantity = Number(segment.noPeople);
+
                 passive.status = 'HK';
                 passive.flightNo = '1';
                 const datePipe2 = new DatePipe('en-US');
@@ -104,6 +108,7 @@ export class SegmentService {
 
 
     addSegmentRir(segRemark: any) {
+        debugger;
         let segmentRemarks: PassiveSegmentsModel[];
         segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');
@@ -121,9 +126,8 @@ export class SegmentService {
                 return;
             }
             segments.forEach(pnrSegment => {
-
                 const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                if (pnrSegment.deptdate !== ddate && pnrSegment.cityCode !== segmentrem.departureCity) {
+                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity) {
                     return;
                 }
                 if (pnrSegment.segmentType === 'MIS') {
@@ -177,13 +181,19 @@ export class SegmentService {
     }
 
     private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
-        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH – ' },
-        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION – ' }];
+        let province = '';
+        let zip = '';
+        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH - ' },
+        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ' }];
+
+
+        if (segmentrem.province) { province = segmentrem.province; }
+        if (segmentrem.zipCode) { zip = segmentrem.zipCode; }
 
         const mandatoryHotelRemarks = ['ADDRESS-' + segmentrem.address,
-        segmentrem.hotelCityName + ' ' + segmentrem.province,
-        segmentrem.country + ' ' + segmentrem.zipCode,
-        'GUARANTEED  FOR LATE ARRIVAL -' + segmentrem.guaranteedLate,
+        segmentrem.hotelCityName + ' ' + province,
+        segmentrem.country + ' ' + zip,
+        'GUARANTEED  FOR LATE ARRIVAL - ' + segmentrem.guaranteedLate,
         'CANCELLATION POLICY - ' + segmentrem.policyNo];
 
         mandatoryHotelRemarks.forEach(c => {
@@ -214,14 +224,14 @@ export class SegmentService {
         });
 
         let cdid = '';
-        optionalCarRemarks.forEach(c => {
+        optionalcdid.forEach(c => {
             if (c.include) {
-                cdid = cdid + c.description + c.include;
+                cdid = cdid + ' ' + c.description + c.include;
             }
         });
 
         if (cdid !== '') {
-            rmGroup.remarks.push(this.getRemarksModel(cdid, 'RI', 'R', pnrSegment.tatooNo));
+            rmGroup.remarks.push(this.getRemarksModel(cdid.substr(1), 'RI', 'R', pnrSegment.tatooNo));
         }
 
         if (segmentrem.frequentFlierNumber && segmentrem.frequentflightNumber) {
@@ -424,9 +434,16 @@ export class SegmentService {
                     segment.confirmationNo;
                 break;
             case 'HTL':
-                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + ',FAX-' + segment.fax +
-                    ',CF:' + segment.confirmationNo + ',' + segment.roomType + ',RATE:' + segment.rateType + ' ' +
-                    segment.currency + segment.nightlyRate + '/NIGHT,SI-' + segment.additionalInfo;
+                let hotelfax = '';
+                let additionalInfo = '';
+                let roomType = '';
+                if (segment.fax) { hotelfax = ',FAX-' + segment.fax; }
+                if (segment.additionalInfo) { additionalInfo = ',SI-' + segment.additionalInfo; }
+                if (segment.roomType) { roomType = ',' + segment.roomType; }
+
+                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-' + segment.phone + hotelfax +
+                    ',CF:' + segment.confirmationNo + roomType + ',RATE:' + segment.rateType + ' ' +
+                    segment.currency + segment.nightlyRate + '/NIGHT' + additionalInfo;
                 break;
             default:
                 break;
@@ -750,6 +767,81 @@ export class SegmentService {
         passGroup.passiveSegments = misSegment;
 
         return passGroup;
+    }
+
+
+    executePDN(airlineCode: string) {
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Fare Rule PDN';
+        rmGroup.remarks = new Array<RemarkModel>();
+        rmGroup.cryptics.push('PDN/YTOWL210N/' + airlineCode + ' RULES');
+        const remarkCollection = new Array<RemarkGroup>();
+        remarkCollection.push(rmGroup);
+        this.remarkService.BuildRemarks(remarkCollection);
+    }
+
+    writeOptionalFareRule(fareRuleModels: any) {
+
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Fare Rule';
+        rmGroup.remarks = new Array<RemarkModel>();
+        fareRuleModels.forEach(model => {
+            if (model.fareRuleType !== '' && model.oid !== '') {
+                smartScriptSession.send('PBN/' + model.oid + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
+            } else {
+
+                // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.fareRuleList.value, 'RM', ''));
+                // rmGroup.remarks.push(this.remarkHelper.createRemark(group.controls.cityPair.value, 'RM', ''));
+                if (model.isTicketNonRefundable) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
+                }
+
+                if (model.isTicketMinMax) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 
+                    'RI', 'R'));
+                }
+
+                if (model.isTicketNonRef) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
+                }
+
+                if (model.ticketAmount && model.currencyType) {
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
+                        model.currencyType.value + 'NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                }
+
+                if (model.nonRefundable) {
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
+                        + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                }
+
+                if (model.minChangeFee) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
+                        + ' ' + model.currencyType.value, 'RI', 'R'));
+                }
+            }
+
+            for (const fg of model.remark.controls) {
+                if (fg instanceof FormGroup) {
+                    // is a FormGroup
+
+                    // tslint:disable-next-line:max-line-length
+                    rmGroup.remarks.push(this.remarkHelper.createRemark(fg.controls.remarkText.value + '/' + model.segmentNo, 'RI', 'R'));
+                }
+            }
+        });
+
+        return rmGroup;
     }
 
 }

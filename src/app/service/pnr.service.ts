@@ -19,7 +19,7 @@ export class PnrService {
   pnrObj: any;
   isPNRLoaded = false;
   errorMessage = '';
-  destinationCity = [{ endpoint: '' }];
+  destinationCity = [{ endpoint: '', startpoint: '' }];
   cfLine: CfRemarkModel;
   segments = [];
   amountPipe = new AmountPipe();
@@ -171,11 +171,12 @@ export class PnrService {
     return new Array<string>();
   }
 
-  pushDestination(endpoint) {
+  pushDestination(endpoint, startpoint?) {
     const look = this.destinationCity.find(x => x.endpoint === endpoint);
     if (look == null) {
       const destination = {
-        endpoint
+        endpoint,
+        startpoint
       };
       this.destinationCity.push(destination);
     }
@@ -187,10 +188,8 @@ export class PnrService {
         const airendpoint = air.arrivalAirport;
         this.pushDestination(airendpoint);
       }
-
       for (const car of this.pnrObj.auxCarSegments) {
-        const carendpoint =
-          car.fullNode.travelProduct.boardpointDetail.cityCode;
+        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(carendpoint);
       }
 
@@ -224,7 +223,7 @@ export class PnrService {
 
     this.getSegmentTatooNumber().forEach(c => {
       if (c.segmentType === segmentType) {
-        elements.push({ lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        elements.push(c);
       }
     });
 
@@ -233,6 +232,24 @@ export class PnrService {
 
   getPassiveHotelSegmentNumbers() {
     return this.getPassiveSegmentTypes('HTL');
+  }
+
+  getPassiveAirSegments(lineNo: any) {
+    const elements = new Array<any>();
+
+    this.getSegmentTatooNumber().forEach(c => {
+      if (lineNo === '') {
+        if (c.segmentType === 'AIR') {
+          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        }
+      } else {
+        if (c.segmentType === 'AIR' && c.lineNo === lineNo) {
+          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+        }
+      }
+    });
+
+    return elements;
   }
 
   getPassiveAirSegmentNumbers() {
@@ -289,6 +306,7 @@ export class PnrService {
     let arrivalTime = '';
     let arrivalDate = '';
     let classservice = '';
+    let flongtext = '';
 
 
     if (type === 'AIR') {
@@ -313,10 +331,8 @@ export class PnrService {
         this.formatDate(fullnodetemp.product.depDate);
       elemStatus = elem.fullNode.relatedProduct.status;
       elemdepdate = fullnodetemp.product.depDate;
+      arrivalDate = fullnodetemp.product.arrDate;
       elemcitycode = fullnodetemp.boardpointDetail.cityCode;
-    }
-    let flongtext = '';
-    if (type === 'MIS') {
       flongtext = elem.fullNode.itineraryFreetext.longFreetext;
     }
 
@@ -350,6 +366,9 @@ export class PnrService {
     return lastDeptDate;
   }
 
+  checkTST(): boolean {
+    if (this.pnrObj.fullNode.response.model.output.response.tstData !== undefined) { return true; } else { return false; }
+  }
 
   getLatestDepartureDate() {
     let lastDeptDate = new Date();
@@ -670,7 +689,7 @@ export class PnrService {
     let segmentModel: PassiveSegmentsModel;
     segmentModel = new PassiveSegmentsModel();
 
-    if (type === 'MIS') {
+    if (type === 'MIS' || type === 'CAR' || type === 'HTL') {
       // tslint:disable-next-line:max-line-length
       let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
       let match = regex.exec(freetext);
@@ -682,11 +701,18 @@ export class PnrService {
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/STP-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
+      if (match === null) {
+        regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
+        match = regex.exec(freetext);
+      }
 
       if (match !== null) {
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
         segmentModel.segmentType = match.groups.type;
+        if (!match.groups.type) {
+          segmentModel.segmentType = type;
+        }
         segmentModel.vendorName = match.groups.vendorName;
         segmentModel.vendorCode = match.groups.vendorCode;
         segmentModel.departureCity = match.groups.depCity;
@@ -696,8 +722,10 @@ export class PnrService {
         segmentModel.arrivalDate = match.groups.arrdate;
         segmentModel.arrivalTime = match.groups.arrtime;
         segmentModel.confirmationNo = match.groups.conf;
-        return segmentModel;
+      } else if (type === 'HTL') {
+        segmentModel.segmentType = type;
       }
+      return segmentModel;
     }
   }
 
@@ -709,8 +737,6 @@ export class PnrService {
     segmentModel.segmentType = element.segmentType;
     segmentModel.flightNumber = element.flightNumber;
     segmentModel.classService = element.classservice;
-    // segmentModel.arrivalday = element.classservice;
-    // segmentModel.airlineRecloc = elem.
     segmentModel.departureDate = this.formatDate(element.departureDate);
     segmentModel.departureTime = element.departureTime;
     segmentModel.departureCity = element.cityCode;
@@ -718,6 +744,28 @@ export class PnrService {
     segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
     segmentModel.arrivalTime = element.arrivalTime;
     segmentModel.airlineCode = element.airlineCode;
+    return segmentModel;
+  }
+
+
+  getHotelSegmentModel(element, index, freetext) {
+    let segmentModel: PassiveSegmentsModel;
+    segmentModel = new PassiveSegmentsModel();
+    segmentModel.isNew = false;
+    segmentModel.segmentNo = index;
+    segmentModel.segmentType = element.segmentType;
+    segmentModel.departureDate = this.formatDate(element.deptdate);
+    segmentModel.departureCity = element.cityCode;
+    segmentModel.destinationCity = element.arrivalStation;
+    segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
+
+    const regex = /(?<hotelInfo>(.*)),CF:(?<confirmationNumber>(.*?),)/g;
+    const match = regex.exec(freetext);
+
+    if (match) {
+      segmentModel.confirmationNo = match.groups.confirmationNumber.substr(0, match.groups.confirmationNumber.length - 1)
+    }
+
     return segmentModel;
   }
 
@@ -730,10 +778,15 @@ export class PnrService {
 
       switch (element.segmentType) {
         case 'MIS':
+        case 'CAR':
           pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
           break;
         case 'AIR':
           pSegment.push(this.getAirSegmentModel(element, index));
+          break;
+        case 'HTL':
+          pSegment.push(this.getHotelSegmentModel(element, index, element.freetext));
+          break;
       }
     });
     return pSegment;

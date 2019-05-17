@@ -18,7 +18,6 @@ export class PassiveSegmentsComponent {
   // passiveSegmentView: PassiveSegmentViewModel;
   @ViewChild(TourSegmentComponent) tourSegmentComponent: TourSegmentComponent;
 
-
   constructor() {
 
   }

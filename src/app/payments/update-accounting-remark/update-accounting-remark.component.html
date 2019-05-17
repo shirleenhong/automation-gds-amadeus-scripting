@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div *ngIf="accountingRemarks.bsp == 2">
+    <div *ngIf="accountingRemarks.bsp == '2'">
       <div class="form-group  row">
         <div class="col-sm-4">Description: </div>
         <div class="col-sm-8">
@@ -57,7 +57,7 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="select a supplier Code" formControlName="supplierCodeName"
           id="supplierCodeName" list="dynamicSupplierCode" [(ngModel)]="accountingRemarks.supplierCodeName" AllCapsMask
-          formControlName="supplierCodeName" (change)="SetTktNumber($event.target.value)">
+          formControlName="supplierCodeName" (change)="setTktNumber()">
         <datalist id="dynamicSupplierCode">
           <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">{{item.supplierCode}} -
             {{item.supplierName}}</option>
@@ -155,7 +155,7 @@
 
 
     </div>
-    <div class="form-group  row" *ngIf="accountingRemarks.bsp == 3">
+    <div class="form-group  row" *ngIf="accountingRemarks.bsp == '3'">
       <div class="col-sm-4"></div>
       <div class="col">
         <div class="">Commission % :</div>
@@ -173,7 +173,7 @@
 
 
 
-    <div *ngIf="accountingRemarks.bsp == 1">
+    <div *ngIf="accountingRemarks.bsp == '1'">
 
 
       <div class="form-group  row">

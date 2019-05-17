@@ -57,6 +57,9 @@ body {
     color: black;
 }
 
+select.form-control option {
+    color:black;
+}
 
 .checkbox-control {
     padding: 2px 4px 2px 5px;

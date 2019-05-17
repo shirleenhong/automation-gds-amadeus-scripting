@@ -84,7 +84,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
 
     this.name = 'Supplier Confirmation Number:';
-
   }
 
   loadBSPList() {
@@ -114,7 +113,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'RBC Points', itemValue: 'CK' }
       ];
     }
-
   }
 
   loadVendorCode() {
@@ -172,7 +170,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemarks.bsp = '1';
         this.filterSupplierCode(accRemark);
-        this.SetTktNumber();
+        this.setTktNumber();
         this.IsInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
@@ -191,7 +189,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       // } else {
       //   this.accountingRemarks.supplierCodeName = '';
     }
-
   }
 
   private assignSupplierCode(typeCode: any) {
@@ -229,11 +226,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
   }
 
-
   get f() { return this.matrixAccountingForm.controls; }
 
   saveAccounting() {
-
     if (this.matrixAccountingForm.invalid) {
       alert('Please Complete And Complete all the required Information');
       this.isSubmitted = false;
@@ -242,7 +237,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.isSubmitted = true;
     this.modalRef.hide();
   }
-
 
   getAllErrors(form: FormGroup | FormArray): { [key: string]: any; } | null {
     let hasError = false;
@@ -268,9 +262,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
   }
 
-
-
-  SetTktNumber() {
+  setTktNumber() {
     const supCode = ['ACY', 'SOA', 'WJ3'];
 
     if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(this.accountingRemarks.supplierCodeName)) {
@@ -281,7 +273,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
   }
-
 
   setInsuranceValue() {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
@@ -317,8 +308,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           freeText: element.freetext
         };
         if (details.id === segmentNo) {
-          const regexp: RegExp = /(?<=TYP-)(\w{3})/;
-          if (this.utilHelper.getRegexValue(details.freeText, regexp) === 'INS') {
+          const regx = "/(?<=TYP-)(\w{3})/";
+          if (this.utilHelper.getRegexValue(details.freeText, regx) === 'INS') {
             res = true;
           }
         }

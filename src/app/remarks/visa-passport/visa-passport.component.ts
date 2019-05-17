@@ -49,18 +49,18 @@ export class VisaPassportComponent implements OnInit {
     });
 
     if (this.pnrService.isPNRLoaded) {
-    let remarkText: string;
-    this.visaPassportView.citizenship =  this.pnrService.getRemarkText('CITIZENSHIP-').substr(12 , 3);
-    remarkText = this.pnrService.getRemarkText('ADVISED').substr(8 , 30);
-    this.visaPassportView.passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
-    this.visaService.isEnabled = this.hasAdvisoryLine();
-    this.getVisaTrips();
+      let remarkText: string;
+      this.visaPassportView.citizenship = this.pnrService.getRemarkText('CITIZENSHIP-').substr(12, 3);
+      remarkText = this.pnrService.getRemarkText('ADVISED').substr(8, 30);
+      this.visaPassportView.passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
+      this.visaService.isEnabled = this.hasAdvisoryLine();
+      this.getVisaTrips();
     }
   }
 
 
   changedAdvisory(): void {
-     this.visaPassportView.advisory = this.f.advisory.value === 'Yes';
+    this.visaPassportView.advisory = this.f.advisory.value === 'Yes';
   }
 
   showTravelAdvisory(): void {
@@ -77,23 +77,23 @@ export class VisaPassportComponent implements OnInit {
 
 
   changedOriginDestination() {
-      if (!this.hasAdvisoryLine()) {
-        this.enableFormControls(['advisory'], false);
-      }
-      this.visaPassportFormGroup.get('segments').enable();
-      let items: any;
-      // tslint:disable-next-line:no-string-literal
-      items = this.visaPassportFormGroup.get('segments')['controls'];
+    if (!this.hasAdvisoryLine()) {
+      this.enableFormControls(['advisory'], false);
+    }
+    this.visaPassportFormGroup.get('segments').enable();
+    let items: any;
+    // tslint:disable-next-line:no-string-literal
+    items = this.visaPassportFormGroup.get('segments')['controls'];
 
-      // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < items.length; i ++) {
-         // tslint:disable-next-line:no-string-literal
-          items[i].controls['country'].disable();
-         //  tslint:disable-next-line:no-string-literal
-          items[i].controls['segmentLine'].disable();
-          //  tslint:disable-next-line:no-string-literal
-          items[i].controls['passport'].disable();
-      }
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < items.length; i++) {
+      // tslint:disable-next-line:no-string-literal
+      items[i].controls['country'].disable();
+      //  tslint:disable-next-line:no-string-literal
+      items[i].controls['segmentLine'].disable();
+      //  tslint:disable-next-line:no-string-literal
+      items[i].controls['passport'].disable();
+    }
   }
 
   get f() {
@@ -119,32 +119,33 @@ export class VisaPassportComponent implements OnInit {
       const destinations = Array<string>();
 
       this.pnrService.pnrObj.airSegments.forEach(x => {
+        cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
+        if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') { destinations.push(cityCountry); }
+
         cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
-        if (this.ddbService.getCityCountry(x.departureAirport) !== '' )
-        { destinations.push(cityCountry); }
+        if (this.ddbService.getCityCountry(x.departureAirport) !== '') { destinations.push(cityCountry); }
 
-        const airdate = x.departureDate;
-        if (firstLoop) {
-          firstDepDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-          firstLoop = false;
-        } else {
-          firstDepDate = this.getFirstDate(airdate, firstDepDate);
-        }
-      });
+        //   const airdate = x.departureDate;
+        //   if (firstLoop) {
+        //     firstDepDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
+        //     firstLoop = false;
+        //   } else {
+        //     firstDepDate = this.getFirstDate(airdate, firstDepDate);
+        //   }
+        // });
 
-      let countryOrigin: string;
-      this.pnrService.pnrObj.airSegments.forEach(x => {
-        let depDate = new Date();
-        depDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-        if ( depDate.toDateString() === firstDepDate.toDateString() ) {
-          if (this.ddbService.getCityCountry(x.departureAirport) !== '' )
-          { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
-        }
+        // let countryOrigin: string;
+        // this.pnrService.pnrObj.airSegments.forEach(x => {
+        //   let depDate = new Date();
+        //   depDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
+        //   if (depDate.toDateString() === firstDepDate.toDateString()) {
+        //     if (this.ddbService.getCityCountry(x.departureAirport) !== '') { countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country; }
+        //   }
       });
 
       let hasInternationalFlight: boolean;
       destinations.forEach(x => {
-        if ( x !== 'Canada' && x !== 'United States') { hasInternationalFlight = true; }
+        if (x !== 'Canada' && x !== 'United States') { hasInternationalFlight = true; }
       });
       return hasInternationalFlight;
     }
@@ -174,7 +175,7 @@ export class VisaPassportComponent implements OnInit {
     let lastLoop = true;
 
     if (this.pnrService.isPNRLoaded) {
-      const countryList = [{ country: '', passport: true , visa: true, tatooNumber: '', segmentLine: '' }];
+      const countryList = [{ country: '', passport: true, visa: true, tatooNumber: '', segmentLine: '' }];
       for (const air of this.pnrService.pnrObj.airSegments) {
 
         // await this.ddbService.getTravelPort(air.departureAirport).then(x => {
@@ -190,10 +191,12 @@ export class VisaPassportComponent implements OnInit {
         //   this.arrivalCountry = obj[0].countryName;
 
         if (this.ddbService.getCityCountry(air.departureAirport) === '') {
-          this.departureCountry = ''; } else { this.departureCountry = this.ddbService.getCityCountry(air.departureAirport).country; }
+          this.departureCountry = '';
+        } else { this.departureCountry = this.ddbService.getCityCountry(air.departureAirport).country; }
         if (this.ddbService.getCityCountry(air.arrivalAirport) === '') {
-          this.arrivalCountry = ''; } else {  this.arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country; }
-       // });
+          this.arrivalCountry = '';
+        } else { this.arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country; }
+        // });
         const airdate = air.departureDate;
         if (firstLoop) {
           firstDepDate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
@@ -238,17 +241,19 @@ export class VisaPassportComponent implements OnInit {
       for (let i = 1; i < originDestination.length; i++) {
         if (originDestination[i].destination !== excludeCity) {
           if (countryList.findIndex(x => x.country === originDestination[i].destination) === -1) {
-              countryList.push({ country: originDestination[i].destination,
-              passport: true ,
+            countryList.push({
+              country: originDestination[i].destination,
+              passport: true,
               visa: this.getVisaChecked(originDestination[i].destination),
               tatooNumber: originDestination[i].tatooNumber,
-              segmentLine: originDestination[i].segmentLine });
+              segmentLine: originDestination[i].segmentLine
+            });
           } else {
-              // tslint:disable-next-line:no-shadowed-variable
-              let index: number;
-              index = countryList.findIndex(x => x.country === originDestination[i].destination);
-              countryList[index].segmentLine = countryList[index].segmentLine + ',' + originDestination[i].segmentLine;
-              countryList[index].tatooNumber = countryList[index].tatooNumber + ',' + originDestination[i].tatooNumber;
+            // tslint:disable-next-line:no-shadowed-variable
+            let index: number;
+            index = countryList.findIndex(x => x.country === originDestination[i].destination);
+            countryList[index].segmentLine = countryList[index].segmentLine + ',' + originDestination[i].segmentLine;
+            countryList[index].tatooNumber = countryList[index].tatooNumber + ',' + originDestination[i].tatooNumber;
           }
         }
       }
@@ -261,7 +266,7 @@ export class VisaPassportComponent implements OnInit {
           country: x.country,
           passport: x.passport,
           visa: x.visa,
-          tatooNumber : x.tatooNumber,
+          tatooNumber: x.tatooNumber,
           segmentLine: x.segmentLine
         }));
       });
@@ -275,7 +280,7 @@ export class VisaPassportComponent implements OnInit {
     let hasVisa: boolean;
     hasVisa = false;
     pnr.rirElements.forEach(x => {
-      if ( x.fullNode.miscellaneousRemarks.remarks.freetext === rem ) { hasVisa = true; }
+      if (x.fullNode.miscellaneousRemarks.remarks.freetext === rem) { hasVisa = true; }
     });
     return hasVisa;
   }

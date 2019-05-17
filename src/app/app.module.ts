@@ -35,12 +35,14 @@ import { SegmentsComponent } from './passive-segments/segments/segments.componen
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { MessageComponent } from './shared/message/message.component';
-
 import { CodeshareComponent } from './remarks/codeshare/codeshare.component';
 import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
 import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
 import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.component';
-
+import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
+import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
+import { FareRuleSegmentComponent } from './remarks/fare-rule-segment/fare-rule-segment.component';
+import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segment/update-fare-rule-segment.component';
 
 
 @NgModule({
@@ -63,7 +65,9 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
     ItcPackageComponent,
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
-    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective
+    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective,
+    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent
+
 
   ],
   imports: [
@@ -86,7 +90,7 @@ import { VisaPassportComponent } from './remarks/visa-passport/visa-passport.com
   exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
     AllCapsMaskDirective, AlphaMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
-    UpdateSegmentComponent, MessageComponent]
+    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent]
 
 })
 export class AppModule { }

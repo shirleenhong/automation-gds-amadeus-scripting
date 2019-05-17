@@ -24,7 +24,8 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
   }
 
   getCodeShareFromPnr() {
-    const rirCheckin = "/CHECK-IN AT (?<airline>(.*)) TICKET COUNTER/g";
+    debugger;
+    const rirCheckin = "CHECK-IN AT (?<airline>(.*)) TICKET COUNTER";
     const regx = new RegExp(rirCheckin);
     const rems = this.pnr.getRemarksFromGDSByRegex(regx, 'RIR');
     const items = this.codeShareGroup.get('segments') as FormArray;

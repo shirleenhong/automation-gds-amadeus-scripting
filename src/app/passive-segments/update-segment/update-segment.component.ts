@@ -611,19 +611,20 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   pickupCityOnBlur() {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
+      debugger;
       this.loadCarSupplier();
-      const airs = this.pnrService.getPassiveSegmentTypes('AIR');
-      let air = airs.find(x => x.arrivalAirport === this.passiveSegments.departureCity);
+      const airs = this.segmentList.filter(x => x.segmentType === 'AIR' );
+      let air = airs.find(x => x.destinationCity === this.passiveSegments.departureCity);
       if (air) {
-        this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
-        this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
+        this.passiveSegments.departureDate = (air.arrivalDate);
+        this.passiveSegments.departureTime = (air.arrivalTime);
         this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
 
         const indx = airs.indexOf(air);
         if (indx < airs.length - 1) {
           air = airs[indx + 1];
-          this.passiveSegments.arrivalDate = this.convertDateFormat(air.departureDate);
-          this.passiveSegments.arrivalTime = this.convert24to12Hr(air.departureTime);
+          this.passiveSegments.arrivalDate = (air.departureDate);
+          this.passiveSegments.arrivalTime = (air.departureTime);
         }
       }
     }

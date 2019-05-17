@@ -19,8 +19,8 @@ export class NumberOnlyMaskDirective {
     }
 
     onInputChange(event, backspace) {
-        if (event === undefined) { return; }
-        const newVal = event.replace(/\D/g, '');
+        if (event === undefined || event === null) { return; }
+        const newVal = event.toString().replace(/\D/g, '');
 
         this.ngControl.valueAccessor.writeValue(newVal);
     }

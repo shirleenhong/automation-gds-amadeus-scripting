@@ -76,6 +76,7 @@ export class SegmentService {
                 passive.endTime = '0000';
                 passive.segmentName = 'RU';
                 passive.function = '12';
+                passive.quantity = Number(segment.noPeople);
                 if (segment.segmentType === 'CAR') {
                     passive.segmentName = 'CU';
                     passive.function = '9';
@@ -84,8 +85,9 @@ export class SegmentService {
                 if (segment.segmentType === 'HTL') {
                     passive.segmentName = 'HU';
                     passive.function = '8';
+                    passive.quantity = Number(segment.numberOfRooms);
                 }
-                passive.quantity = Number(segment.noPeople);
+
                 passive.status = 'HK';
                 passive.flightNo = '1';
                 const datePipe2 = new DatePipe('en-US');
@@ -191,7 +193,7 @@ export class SegmentService {
         const mandatoryHotelRemarks = ['ADDRESS-' + segmentrem.address,
         segmentrem.hotelCityName + ' ' + province,
         segmentrem.country + ' ' + zip,
-        'GUARANTEED  FOR LATE ARRIVAL -' + segmentrem.guaranteedLate,
+        'GUARANTEED  FOR LATE ARRIVAL - ' + segmentrem.guaranteedLate,
         'CANCELLATION POLICY - ' + segmentrem.policyNo];
 
         mandatoryHotelRemarks.forEach(c => {
@@ -439,7 +441,7 @@ export class SegmentService {
                 if (segment.additionalInfo) { additionalInfo = ',SI-' + segment.additionalInfo; }
                 if (segment.roomType) { roomType = ',' + segment.roomType; }
 
-                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + hotelfax +
+                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-' + segment.phone + hotelfax +
                     ',CF:' + segment.confirmationNo + roomType + ',RATE:' + segment.rateType + ' ' +
                     segment.currency + segment.nightlyRate + '/NIGHT' + additionalInfo;
                 break;

@@ -108,6 +108,7 @@ export class SegmentService {
 
 
     addSegmentRir(segRemark: any) {
+        debugger;
         let segmentRemarks: PassiveSegmentsModel[];
         segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');
@@ -125,9 +126,8 @@ export class SegmentService {
                 return;
             }
             segments.forEach(pnrSegment => {
-
                 const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                if (pnrSegment.deptdate !== ddate && pnrSegment.cityCode !== segmentrem.departureCity) {
+                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity) {
                     return;
                 }
                 if (pnrSegment.segmentType === 'MIS') {

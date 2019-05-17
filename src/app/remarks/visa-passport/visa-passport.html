@@ -1,4 +1,3 @@
-
 <div *ngIf="!hasInternationalFlights()" class="mx-auto"><br>
   <span class="p3">* No International Destinations Found in Itinerary *</span>
 </div>
@@ -30,14 +29,14 @@
       <div class="col-5">
         <b>International Travel Advisory Request</b>
       </div>
-      <div class="col-4" *ngIf="hasAdvisoryLine()">
+      <!-- <div class="col-4" *ngIf="hasAdvisoryLine()">
         <span class="p2"><b> (Advisory already sent!) </b></span>
-      </div>
-      <div class="col-4" *ngIf="!hasAdvisoryLine()">
-        <input name="btnAdvisory"  type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories" />
+      </div> -->
+      <div class="col-4">
+        <input name="btnAdvisory" type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories" />
       </div>
     </div>
-  
+
     <div class="row form-group">
       <div class="col-8">
         <span class="p1">1. Advice Verbal Visa and Passport Information to client. <br>
@@ -45,36 +44,36 @@
           3. Click on [Go to e-Traveladvisories] to send email to traveler (if not yet sent) <br></span>
       </div>
     </div><br>
-  
+
     <div *ngIf="this.advisoryClicked === true || hasAdvisoryLine()">
       <div class="row form-group">
         <div class="col-10">
           <b>Entry Requirements for Countries Travelled</b>
         </div>
       </div>
-  
+
       <div class="row form-group">
         <div class="col-5">
           Client Country Citizenship:
         </div>
         <div class="col-3">
-          <input [(ngModel)]="visaPassportView.citizenship" type="text" class="form-control" formControlName="citizenship"
-            name="citizenship" maxlength="35" id="citizenship" placeholder="e.g. Canada" 
+          <input [(ngModel)]="visaPassportView.citizenship" type="text" class="form-control"
+            formControlName="citizenship" name="citizenship" maxlength="35" id="citizenship" placeholder="e.g. Canada"
             [ngClass]="{ 'is-invalid': f.citizenship.touched && f.citizenship.invalid }" />
         </div>
       </div>
-  
+
       <div class="row form-group">
         <div class="col-5">
           Who did you advise of these requirements?
         </div>
         <div class="col-3">
           <input type="text" class="form-control" formControlName="passportName" maxlength="35" id="passportName"
-            name="passportName" placeholder="e.g. John" required [(ngModel)]="visaPassportView.passportName" 
+            name="passportName" placeholder="e.g. John" required [(ngModel)]="visaPassportView.passportName"
             [ngClass]="{ 'is-invalid': f.passportName.touched && f.passportName.invalid }" />
         </div>
       </div><br>
-  
+
       <div *ngIf="hasInternationalFlights()">
         <div class="row form-group">
           <div class="col-2">
@@ -88,9 +87,9 @@
           </div>
           <div class="col-2">
             <b>Visa</b>
-          </div>      
+          </div>
         </div>
-  
+
         <div formArrayName="segments"
           *ngFor="let item of this.visaPassportFormGroup.get('segments').controls; let i = index;">
           <div class="row" [formGroupName]="i">
@@ -103,15 +102,15 @@
                 formControlName="segmentLine" disabled>
             </div>
             <div class="col-2">
-              <input type="checkbox"  class="check-control" formControlName="passport">
+              <input type="checkbox" class="check-control" formControlName="passport">
             </div>
             <div class="col-2">
-              <input type="checkbox"  class="check-control" formControlName="visa">
+              <input type="checkbox" class="check-control" formControlName="visa">
             </div>
           </div>
         </div>
       </div>
     </div>
-  
+
   </form>
 </div>

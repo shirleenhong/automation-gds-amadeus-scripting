@@ -436,11 +436,11 @@ export class SegmentService {
                 let additionalInfo = '';
                 let roomType = '';
                 if (segment.fax) { hotelfax = ',FAX-' + segment.fax; }
-                if (segment.fax) { additionalInfo = ',SI-' + segment.additionalInfo; }
+                if (segment.additionalInfo) { additionalInfo = ',SI-' + segment.additionalInfo; }
                 if (segment.roomType) { roomType = ',' + segment.roomType; }
 
-                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + segment.fax +
-                    ',CF:' + segment.confirmationNo + segment.roomType + ',RATE:' + segment.rateType + ' ' +
+                freetext = segment.hotelCityName + ',' + segment.hotelName + ',TEL-+' + segment.phone + hotelfax +
+                    ',CF:' + segment.confirmationNo + roomType + ',RATE:' + segment.rateType + ' ' +
                     segment.currency + segment.nightlyRate + '/NIGHT' + additionalInfo;
                 break;
             default:

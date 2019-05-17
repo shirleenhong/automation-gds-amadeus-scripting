@@ -811,7 +811,7 @@
       <div class="col">
         <label id="lblName">Nightly Rate: </label>
         <input type="text" class="form-control" id="nightlyRate" name="nightlyRate" formControlName="nightlyRate"
-          [(ngModel)]="passiveSegments.nightlyRate" maxlength="10" NumberOnlyMask />
+          [(ngModel)]="passiveSegments.nightlyRate" maxlength="10" AmountMask />
       </div>
     </div>
 
@@ -840,7 +840,7 @@
       <div class="col">
         <label id="lblName">Number of Rooms: </label>
         <input type="text" class="form-control" id="numberOfRooms" name="numberOfRooms" formControlName="numberOfRooms"
-          [(ngModel)]="passiveSegments.numberOfRooms" maxlength="1" />
+          [(ngModel)]="passiveSegments.numberOfRooms" maxlength="1" NumberOnlyMask />
       </div>
 
       <div class="col">

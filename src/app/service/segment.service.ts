@@ -806,7 +806,7 @@ export class SegmentService {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
                     rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
                 }
-
+                debugger;
                 if (model.ticketAmount && model.currencyType) {
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +

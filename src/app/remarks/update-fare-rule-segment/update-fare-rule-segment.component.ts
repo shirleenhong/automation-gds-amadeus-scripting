@@ -163,9 +163,11 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
 
   getOID(): void {
     const response = smartScriptSession.send('jd').then(res => {
-      const output = res.Response.split('         ');
-      //      this.OID = output[1];
-      this.fareRules.oid = output[1];
+      if (res.Response !== undefined) {
+        const output = res.Response.split('         ');
+        //      this.OID = output[1];
+        this.fareRules.oid = output[1];
+      }
     });
   }
 
@@ -178,19 +180,19 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       this.fareRules.airlineCode = airline[0].airlineCode;
 
       const response = smartScriptSession.send('PDN/' + this.fareRules.oid + '/' + airline[0].airlineCode + ' RULES').then(res => {
-        const output = res.Response.toString().split('-------')[1].split('       ');
+        if (res.Response !== undefined) {
+          const output = res.Response.toString().split('-------')[1].split('       ');
 
-        output.forEach(element => {
-          if (element.indexOf('RM') > -1) {
-            const outputTwo = element.replace('RM', '').replace('S', '').replace(airline[0].airlineCode, '').split('       ');
-
-            this.fareRuleList.push({ itemText: airline[0].airlineCode + ' ' + outputTwo[1], itemValue: outputTwo[1] });
-            this.ShowFareRule = true;
-            this.showCrypticForm = true;
-            this.showOptionalFare = false;
-          }
-        });
-
+          output.forEach(element => {
+            if (element.indexOf('RM') > -1) {
+              const outputTwo = element.replace('RM', '').replace('S', '').replace(airline[0].airlineCode, '').split('       ');
+              this.fareRuleList.push({ itemText: airline[0].airlineCode + ' ' + outputTwo[1], itemValue: outputTwo[1] });
+              this.ShowFareRule = true;
+              this.showCrypticForm = true;
+              this.showOptionalFare = false;
+            }
+          });
+        }
         // need to store the temp value of fareRuleType and rebind it after cryptic call.
         if (this.tempFareRuleType !== undefined) {
           this.fareRules.fareRuleType = this.tempFareRuleType;

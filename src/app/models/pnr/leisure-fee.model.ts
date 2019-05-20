@@ -10,6 +10,3 @@ export class LeisureFeeModel {
     address: string;
     noFeeReason: string;
 }
-
-
-}

@@ -24,6 +24,7 @@ export class InvoiceService {
     } else if (this.formGroup.get('selection').value === 'invoice') {
       this.setInvoicePNRRemarks();
     }
+    this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator());
     return this.remGroup;
   }
 
@@ -36,10 +37,10 @@ export class InvoiceService {
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
     if (this.pnrService.checkTST()) {
-      if (passengers === '' && pax === 1) {
+      if (pax === 1) {
         this.remGroup.cryptics.push('inv/nofare');
       }
-      if (passengers === '' && pax > 1) {
+      if (pax > 1) {
         this.remGroup.cryptics.push('invj/nofare');
       }
     } else {
@@ -63,6 +64,8 @@ export class InvoiceService {
         this.remGroup.cryptics.push('invj/p' + passengers + '/s' + segments);
       }
     }
+
+
   }
 
 }

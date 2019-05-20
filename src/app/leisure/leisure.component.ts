@@ -93,8 +93,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.errorPnrMsg = '';
     // this.ddbService.sampleSupplier();
     // this.ddbService.sample();
-    await this.pnrService.getPNR();
-    this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
@@ -103,6 +102,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.isPnrLoaded = true;
     }
     this.displayInvoice();
+  }
+
+  async getPnrService() {
+    this.pnrService.isPNRLoaded = false;
+    await this.pnrService.getPNR();
+    this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
   ngOnInit() {
@@ -238,7 +243,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   displayInvoice() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.hasRecordLocator() !== undefined) {
+      if (this.pnrService.recordLocator() !== undefined) {
         this.invoiceEnabled = true;
       } else { this.invoiceEnabled = false; }
     }
@@ -263,22 +268,25 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
-  public cancelSegment() {
+  public async cancelSegment() {
     if (this.isPnrLoaded) {
+      await this.getPnrService();
       this.workflow = 'cancel';
       this.segment = this.pnrService.getSegmentTatooNumber();
       this.setControl();
     }
   }
 
-  public AddSegment() {
+  public async AddSegment() {
     if (this.isPnrLoaded) {
+      await this.getPnrService();
       this.workflow = 'segment';
     }
   }
 
-  public sendInvoice() {
+  public async sendInvoice() {
     if (this.isPnrLoaded) {
+      await this.getPnrService();
       this.workflow = 'invoice';
     }
   }
@@ -291,7 +299,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.hasRecordLocator() !== undefined) {
+      if (this.pnrService.recordLocator() !== undefined) {
         this.cancelEnabled = false;
       }
     }

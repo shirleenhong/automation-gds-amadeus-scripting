@@ -875,7 +875,7 @@ export class PnrService {
     return false;
   }
 
-  hasRecordLocator() {
+  recordLocator() {
     return this.pnrObj.header.recordLocator;
   }
 

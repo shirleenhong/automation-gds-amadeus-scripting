@@ -90,7 +90,7 @@ export class LeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   checkHasPnr() {
-    this.IsPnrAvailable = this.pnrService.hasRecordLocator() !== undefined;
+    this.IsPnrAvailable = this.pnrService.recordLocator() !== undefined;
     if (this.IsPnrAvailable) {
       this.setFormState(true);
     }

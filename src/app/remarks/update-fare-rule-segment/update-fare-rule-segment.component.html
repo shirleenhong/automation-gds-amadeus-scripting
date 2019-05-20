@@ -109,10 +109,11 @@
           <div [formGroupName]="i">
             <table style="width:100%">
               <tr>
-                <td style="width:80%">
+                <td style="width:78%">
                   <input formControlName="remarkText" class="form-control">
                 </td>
-                <td style="width:20%">
+                <td style="width:22%">
+                  &nbsp;
                   <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
                   &nbsp;
                   <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>

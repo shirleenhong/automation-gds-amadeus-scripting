@@ -133,7 +133,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
-    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
     remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {
@@ -162,6 +161,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
+    remarkCollection.push(this.packageRemarkService.GetRbcRedemptionRemarks
+      (this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption));
 
     const leisureFee = this.paymentComponent.leisureFee;
     if (leisureFee.leisureFeeForm.valid) {

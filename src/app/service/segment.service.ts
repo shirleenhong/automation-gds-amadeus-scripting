@@ -108,7 +108,7 @@ export class SegmentService {
 
 
     addSegmentRir(segRemark: any) {
-        debugger;
+
         let segmentRemarks: PassiveSegmentsModel[];
         segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');

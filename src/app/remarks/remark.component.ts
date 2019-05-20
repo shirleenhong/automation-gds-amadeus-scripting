@@ -9,6 +9,7 @@ import { CodeshareComponent } from './codeshare/codeshare.component';
 
 import { VisaPassportComponent } from './visa-passport/visa-passport.component';
 import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.component';
+import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
 
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
@@ -24,6 +25,7 @@ export class RemarkComponent implements OnInit {
   @ViewChild(VisaPassportComponent) viewPassportComponent: VisaPassportComponent;
   @ViewChild(CodeshareComponent) codeShareComponent: CodeshareComponent;
   @ViewChild(FareRuleSegmentComponent) fareRuleSegmentComponent: FareRuleSegmentComponent;
+  @ViewChild(RbcPointsRedemptionComponent) rbcPointsRedemptionComponent: RbcPointsRedemptionComponent;
   remarkForm: FormGroup;
 
 

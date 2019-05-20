@@ -42,7 +42,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   cfLine: CfRemarkModel;
   workflow: string = '';
   cancelEnabled: boolean = true;
-  segmentEnabled: boolean = false;
   validModel = new ValidateModel();
   invoiceEnabled: boolean = false;
 
@@ -235,7 +234,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.isPnrLoaded = false;
       this.getPnr();
     }, error => { alert(JSON.stringify(error)); });
-    this.segmentEnabled = true;
   }
 
   displayInvoice() {
@@ -249,14 +247,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   public SendInvoiceItinerary() {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
+    this.remarkService.endPNR(' Agent Invoicing'); // end PNR First before Invoice
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {
       this.isPnrLoaded = false;
       this.getPnr();
       this.workflow = '';
-
     }, error => { alert(JSON.stringify(error)); });
-    this.remarkService.endPNR('Agent Invoicing');
   }
 
 

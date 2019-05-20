@@ -13,13 +13,13 @@
       </div>
       <div> <span> Check-in at </span> </div>
       <input formControlName="airline" type="text" class="form-control" maxlength="25" />
-      <div *ngIf="i>0">
-        &nbsp;
-        <i class="fas fa-minus-circle" id="remove" (click)="removeCodeShare(i)"> </i>
-      </div>
       <div *ngIf="i==(total-1)">
         &nbsp;
         <i class="fas fa-plus-circle" id="add" (click)="addCodeShare()"></i>
+      </div>
+      <div *ngIf="i>0">
+        &nbsp;
+        <i class="fas fa-minus-circle" id="remove" (click)="removeCodeShare(i)"> </i>
       </div>
     </div>
   </div>

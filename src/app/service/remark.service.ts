@@ -150,21 +150,6 @@ export class RemarkService {
 
     }
 
-    // private segmentRelate(remarkModel: RemarkModel) {
-    //     const reference = [];
-    //     if (remarkModel.relatedSegments.length > 0) {
-    //         remarkModel.relatedSegments.forEach(element => {
-    //             const ref = {
-    //                 qualifier: 'ST',
-    //                 number: element
-    //             };
-    //             reference.push(ref);
-    //         });
-    //     }
-    //     const referenceForDataElement = {
-    //         reference
-    //     };
-    // }
 
     addPassiveSegmentElement(passiveSegmentmodel: PassiveSegmentModel) {
         // alert(passiveSegmentmodel.quantity);
@@ -275,9 +260,6 @@ export class RemarkService {
         }
 
         return { elementManagementItinerary, airAuxItinerary };
-        // var summary = {originDestinationDetails};
-        // RemarklistModel.addRemark(summary);
-        // alert(JSON.stringify(RemarklistModel.originDestinationDetails ))
 
     }
 

@@ -798,8 +798,8 @@ export class SegmentService {
                 }
 
                 if (model.isTicketMinMax) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 
-                    'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.',
+                        'RI', 'R'));
                 }
 
                 if (model.isTicketNonRef) {
@@ -810,7 +810,7 @@ export class SegmentService {
                 if (model.ticketAmount && model.currencyType) {
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
-                        model.currencyType.value + 'NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                        model.currencyType + 'NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
                     rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
@@ -819,7 +819,7 @@ export class SegmentService {
                 if (model.nonRefundable) {
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
-                        + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RM', ''));
+                        + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
                     // tslint:disable-next-line:max-line-length
                     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
                     rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
@@ -827,16 +827,14 @@ export class SegmentService {
 
                 if (model.minChangeFee) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
-                        + ' ' + model.currencyType.value, 'RI', 'R'));
+                        + ' ' + (model.currencyType), 'RI', 'R'));
                 }
             }
 
             for (const fg of model.remark.controls) {
                 if (fg instanceof FormGroup) {
-                    // is a FormGroup
-
                     // tslint:disable-next-line:max-line-length
-                    rmGroup.remarks.push(this.remarkHelper.createRemark(fg.controls.remarkText.value + '/' + model.segmentNo, 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark(fg.controls.remarkText.value + '/S' + model.segmentNo, 'RI', 'R'));
                 }
             }
         });

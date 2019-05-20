@@ -25,7 +25,7 @@ export class InvoiceService {
       this.setInvoicePNRRemarks();
     }
     return this.remGroup;
-    }
+  }
 
   public setItineraryOnlyRemarks() {
     this.remGroup.cryptics.push('BT');
@@ -35,35 +35,34 @@ export class InvoiceService {
     const passengers = this.formGroup.controls.passengerNo.value;
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
-
     if (this.pnrService.checkTST()) {
-      if (passengers === '' && segments === '' && pax === 1 ) {
+      if (passengers === '' && pax === 1) {
         this.remGroup.cryptics.push('inv/nofare');
       }
-      if (passengers === '' && segments === '' && pax > 1 ) {
+      if (passengers === '' && pax > 1) {
         this.remGroup.cryptics.push('invj/nofare');
       }
     } else {
 
-        if (passengers === '' && segments === '' && pax === 1 ) {
-          this.remGroup.cryptics.push('inv');
-        }
-        if (passengers === '' && segments === '' && pax > 1 ) {
-          this.remGroup.cryptics.push('invj');
-        }
-        if (passengers === '' && segments !== '' && pax === 1) {
-          this.remGroup.cryptics.push('inv/s' + segments);
-        }
-        if (passengers === '' && segments !== '' && pax > 1) {
-          this.remGroup.cryptics.push('invj/s' + segments);
-        }
-        if (passengers !== '' && segments === '' && pax > 1) {
-          this.remGroup.cryptics.push('invj/p' + passengers);
-        }
-        if (passengers !== '' && segments !== '' && pax > 1) {
-          this.remGroup.cryptics.push('invj/p' + passengers + '/s' + segments);
-        }
+      if (passengers === '' && segments === '' && pax === 1) {
+        this.remGroup.cryptics.push('inv');
+      }
+      if (passengers === '' && segments === '' && pax > 1) {
+        this.remGroup.cryptics.push('invj');
+      }
+      if (passengers === '' && segments !== '' && pax === 1) {
+        this.remGroup.cryptics.push('inv/s' + segments);
+      }
+      if (passengers === '' && segments !== '' && pax > 1) {
+        this.remGroup.cryptics.push('invj/s' + segments);
+      }
+      if (passengers !== '' && segments === '' && pax > 1) {
+        this.remGroup.cryptics.push('invj/p' + passengers);
+      }
+      if (passengers !== '' && segments !== '' && pax > 1) {
+        this.remGroup.cryptics.push('invj/p' + passengers + '/s' + segments);
+      }
+    }
   }
-}
 
 }

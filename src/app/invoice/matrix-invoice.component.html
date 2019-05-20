@@ -8,25 +8,21 @@
     </div>
     <div class="row form-group">
         <div class="col-4">
-
             <label class="control control-radio">
                 Send Itinerary Only into Matrix
                 <input type="radio" name="selection" formcontrolname="selection" id="selection" value="itinerary"
                     (click)="select('itinerary')" />
                 <div class="control_indicator"></div>
             </label>
-
         </div>
         <div class="col-3">
             <label class="control control-radio">
                 Invoice PNR into Matrix
                 <input type="radio" name="selection" formcontrolname="selection" id="selection" value="invoice"
                     (click)="select('invoice')" />
-
                 <div class="control_indicator"></div>
             </label>
         </div>
-
     </div><br>
 
     <div *ngIf="selection === 'invoice'">
@@ -35,7 +31,6 @@
                 <b>Select Passengers and Segments That Applies to This Invoice</b>
             </div>
         </div>
-
         <div class="row form-group">
             <div class="col-5">
                 <div class="row form-group">
@@ -60,5 +55,4 @@
             </div>
         </div>
     </div>
-
 </div>

@@ -27,10 +27,10 @@ export class PaymentComponent {
   }
 
   checkValid() {
-    this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);
-    if (!this.leisureFee.leisureFeeForm.valid) {
-      return false;
-    }
+    // this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);
+    // if (!this.leisureFee.leisureFeeForm.valid) {
+    //   return false;
+    // }
 
     this.utilHelper.validateAllFields(this.accountingRemark.accountingForm);
     if (!this.accountingRemark.accountingForm.valid) {

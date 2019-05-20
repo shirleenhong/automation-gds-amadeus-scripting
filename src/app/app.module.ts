@@ -43,6 +43,7 @@ import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
 import { FareRuleSegmentComponent } from './remarks/fare-rule-segment/fare-rule-segment.component';
 import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segment/update-fare-rule-segment.component';
+import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-leisure-fee.component';
 
 
 @NgModule({
@@ -66,7 +67,7 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
     CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
     VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective,
-    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent
+    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent, UpdateLeisureFeeComponent
 
 
   ],
@@ -90,7 +91,7 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
   exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
     AllCapsMaskDirective, AlphaMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
-    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent]
+    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent, UpdateLeisureFeeComponent]
 
 })
 export class AppModule { }

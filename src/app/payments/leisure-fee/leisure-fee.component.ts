@@ -6,6 +6,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 import { UpdateLeisureFeeComponent } from '../update-leisure-fee/update-leisure-fee.component';
+import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 
 
 @Component({
@@ -17,10 +18,19 @@ export class LeisureFeeComponent implements OnInit {
   leisureFeeList = new Array<LeisureFeeModel>();
   modalRef: BsModalRef;
   isAddNew = false;
+  showReasonFee = false;
+  leisureFeeForm: FormGroup;
 
-  constructor(private modalService: BsModalService, private pnrService: PnrService, private utilHelper: UtilHelper) { }
+  constructor(private modalService: BsModalService,
+    private pnrService: PnrService,
+    private fb: FormBuilder,
+    private utilHelper: UtilHelper) { }
   ngOnInit(): void {
     this.modalSubscribeOnClose();
+    this.leisureFeeForm = this.fb.group({
+      noFeeReason: new FormControl('', [Validators.required])
+    });
+    this.checkReasonFee();
   }
 
   modalSubscribeOnClose() {
@@ -46,6 +56,7 @@ export class LeisureFeeComponent implements OnInit {
           this.modalRef.content.response = '';
         }
       }
+      this.checkReasonFee();
     });
   }
 
@@ -86,4 +97,18 @@ export class LeisureFeeComponent implements OnInit {
     const assoclist = ['', 'Ticket', 'Tour/Cruise', 'Hotel', 'Car'];
     return assoclist[Number(assoc)];
   }
+
+  checkReasonFee() {
+    const cfa = this.pnrService.getCFLine();
+    if (cfa.cfa === 'RBM' || cfa.cfa === 'RBP' || this.leisureFeeList.length > 0) {
+      this.showReasonFee = false;
+      this.leisureFeeForm.get('noFeeReason').setValue('');
+      this.leisureFeeForm.get('noFeeReason').disable();
+    } else {
+      this.showReasonFee = true;
+      this.leisureFeeForm.get('noFeeReason').enable();
+    }
+  }
+
+
 }

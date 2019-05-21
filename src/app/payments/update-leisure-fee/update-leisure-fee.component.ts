@@ -85,11 +85,11 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
 
     this.onControlChanges();
     this.util.validateAllFields(this.leisureFeeForm);
-    //this.f.fln.setValue(this.leisureFee.fln);
+
   }
 
   ngAfterViewInit(): void {
-    //this.f.fln.setValue(this.leisureFee.fln);
+
   }
 
 
@@ -161,20 +161,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  checkSFC() {
-    if (this.f.segmentAssoc.value === '0') {
-      const controls = ['vendorCode', 'ccNo', 'expDate'];
-      this.enableDisbleControls(controls, true);
-    }
-    if (
-      this.f.segmentAssoc.value === '0' &&
-      (this.cfaLine.cfa !== 'RBM' && this.cfaLine.cfa !== 'RBP')
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+
 
   private loadValues() {
     const remarkText = this.pnrService.getRemarkText('SFC');

@@ -56,7 +56,7 @@ export class PnrService {
   }
 
   getRemarkLineNumbers(searchText: string) {
-    const lineNos = [];
+    const lineNos: Array<string> = [];
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
         if (rm.freeFlowText.indexOf(searchText) === 0) {

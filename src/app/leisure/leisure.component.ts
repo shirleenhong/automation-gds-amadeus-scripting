@@ -162,10 +162,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
 
-    // const leisureFee = this.paymentComponent.leisureFee;
-    // if (leisureFee.leisureFeeForm.valid) {
-    //   remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
-    // }
+    const leisureFee = this.paymentComponent.leisureFee;
+    if (leisureFee.leisureFeeForm.valid) {
+      remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
+    }
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {

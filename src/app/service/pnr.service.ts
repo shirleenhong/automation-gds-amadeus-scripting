@@ -45,11 +45,8 @@ export class PnrService {
 
 
   getPCC(): void {
-    const response = smartScriptSession.send('jd').then(res => {
-      if (res.Response !== undefined) {
-        const output = res.Response.split('         ');
-        this.PCC = output[1];
-      }
+    smartScriptSession.requestService('usermanagement.retrieveUser').then(x => {
+      this.PCC = x.ACTIVE_OFFICE_ID;
     });
   }
 

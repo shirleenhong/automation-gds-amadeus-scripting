@@ -73,7 +73,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
 
     this.fareRuleForm.controls.ticketAmount.enable();
     this.fareRuleForm.controls.nonRefundable.disable();
-    this.fareRules.oid = this.pnrService.PCC;
+
     this.fareRules.isTicketMinMax = false;
     this.fareRules.isTicketNonRef = false;
     this.fareRules.isTicketNonRefundable = false;
@@ -81,6 +81,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   loadModel() {
+
     if (this.fareRules.fareRuleType === '') {
       this.ShowFareRule = false;
     } else {
@@ -169,7 +170,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       this.ShowFareRule = false;
       this.fareRules.airlineCode = airline[0].airlineCode;
 
-      const response = smartScriptSession.send('PDN/' + this.fareRules.oid + '/' + airline[0].airlineCode + ' RULES').then(res => {
+      const response = smartScriptSession.send('PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES').then(res => {
 
         if (res.Response !== undefined && res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0) {
           const output = res.Response.toString().split('-------')[1].split('       ');

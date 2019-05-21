@@ -12,6 +12,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { RemarkService } from './remark.service';
+import { debug } from 'util';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -51,8 +52,7 @@ export class SegmentService {
             passive.endDate = datePipe.transform(segment.arrivalDate, 'ddMMyy');
             passive.startPoint = segment.departureCity;
 
-            if (segment.destinationCity === undefined) { segdest = segment.departureCity; }
-            else { segdest = segment.destinationCity; }
+            if (segment.destinationCity === undefined) { segdest = segment.departureCity; } else { segdest = segment.destinationCity; }
             passive.endPoint = segdest;
 
             if (segment.departureTime) { startTime = (segment.departureTime as string).replace(':', ''); }
@@ -610,7 +610,7 @@ export class SegmentService {
 
     osiCancelRemarks(cancel: any) {
         let remText = '';
-        let multiremText = '';
+        const multiremText = '';
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Cancel OSI';
         rmGroup.remarks = new Array<RemarkModel>();
@@ -649,9 +649,7 @@ export class SegmentService {
             }
 
             rmGroup.cryptics.push(remText);
-            // if (multiremText !== '') {
-            //     rmGroup.cryptics.push(multiremText);
-            // }
+
         }
 
         if (cancel.value.reasonUACancel) {
@@ -735,7 +733,7 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        const arr = cancel.get('tickets') as FormArray
+        const arr = cancel.get('tickets') as FormArray;
 
         for (const c of arr.controls) {
             const ticket = c.get('ticket').value;
@@ -757,7 +755,7 @@ export class SegmentService {
         const misSegment = new Array<PassiveSegmentModel>();
         const datePipe = new DatePipe('en-US');
         const dateToday = datePipe.transform(Date.now(), 'ddMMM');
-        let finaldate = new Date();
+        const finaldate = new Date();
 
         finaldate.setDate(finaldate.getDate() + 90);
         const mis = this.setMisRemark(finaldate, finaldate, 'PNR CANCELLED ' + dateToday);
@@ -809,10 +807,10 @@ export class SegmentService {
 
                 if (model.ticketAmount && model.currencyType) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
-                        model.currencyType + 'NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                        model.currencyType + ' NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
                     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
                         'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
                 }
 
                 if (model.nonRefundable) {
@@ -820,7 +818,7 @@ export class SegmentService {
                         + 'PERCENT NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
                     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
                         'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND / OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
                 }
 
                 if (model.minChangeFee) {
@@ -829,9 +827,16 @@ export class SegmentService {
                 }
             }
 
+            const segments = this.pnrService.getSegmentTatooNumber();
             for (const fg of model.remarkList) {
                 const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
-                remark.relatedSegments.push(model.segmentNo.split(','));
+                const s = model.segmentNo.split(',');
+                s.forEach(x => {
+                    const tat = segments.find(z => z.lineNo === x);
+                    if (tat) {
+                        remark.relatedSegments.push(tat.tatooNo);
+                    }
+                });
                 rmGroup.remarks.push(remark);
             }
         });

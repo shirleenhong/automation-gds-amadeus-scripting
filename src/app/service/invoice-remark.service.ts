@@ -12,12 +12,14 @@ export class InvoiceService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
   constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) {
+
+  }
+
+
+  public GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
     this.remGroup.group = 'Matrix Invoice';
     this.remGroup.remarks = new Array<RemarkModel>();
-  }
-
-  public GetMatrixInvoice(fg: FormGroup) {
     this.formGroup = fg;
     if (this.formGroup.get('selection').value === 'itinerary') {
       this.setItineraryOnlyRemarks();

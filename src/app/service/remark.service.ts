@@ -30,6 +30,8 @@ export class RemarkService {
         this.deleteRemarksByIds.length = 0;
         this.crypticCommands.length = 0;
         this.remarksElement.length = 0;
+        this.deleteSegmentByIds.length = 0;
+        this.passiveSegmentElement.length = 0;
     }
 
     BuildRemarks(remarkGroups: RemarkGroup[]) {
@@ -38,7 +40,7 @@ export class RemarkService {
         this.passiveSegmentElement = new Array<any>();
         this.deleteRemarksByIds = Array<string>();
         this.deleteSegmentByIds = Array<string>();
-
+        this.crypticCommands = new Array<string>();
 
         remarkGroups.forEach(group => {
             if (group !== undefined && group.group !== '') {

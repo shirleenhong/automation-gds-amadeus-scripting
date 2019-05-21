@@ -24,15 +24,17 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 import { LeisureFeeModel } from 'src/app/models/pnr/leisure-fee.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-update-leisure-fee',
   templateUrl: './update-leisure-fee.component.html',
   styleUrls: ['./update-leisure-fee.component.scss']
 })
-export class UpdateLeisureFeeComponent implements OnInit {
+export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
+
   leisureFeeForm: FormGroup;
-  leisureFee: LeisureFeeModel;
+  leisureFee = new LeisureFeeModel();
   @Input()
   provinceList: SelectItem[];
   segmentList: Array<string>;
@@ -42,13 +44,13 @@ export class UpdateLeisureFeeComponent implements OnInit {
   isInvalid = true;
   vendorCodeList: Array<SelectItem>;
   cfaLine: CfRemarkModel;
-  IsPnrAvailable = false;
-
+  isSubmitted = false;
   constructor(
     public modalRef: BsModalRef,
     private fb: FormBuilder,
     private ddbService: DDBService,
     private pnrService: PnrService,
+    private util: UtilHelper,
     private paymentHelper: PaymentRemarkHelper
   ) {
     this.provinceList = this.ddbService.getProvinces();
@@ -66,7 +68,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
 
   ngOnInit() {
     this.leisureFeeForm = this.fb.group({
-      chkUpdateRemove: new FormControl(''),
+      fln: new FormControl('', [Validators.required]),
       segmentAssoc: new FormControl('', [Validators.required]),
       segmentNum: new FormControl('', [Validators.required]),
       amount: new FormControl('', [Validators.required]),
@@ -78,56 +80,25 @@ export class UpdateLeisureFeeComponent implements OnInit {
       ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
-      noFeeReason: new FormControl(''),
 
     });
-    // this.enableDisbleControls(['noFeeReason'], true);
-    // this.onControlChanges();
-    // this.loadValues();
-    // this.checkHasPnr();
 
+    this.onControlChanges();
+    this.util.validateAllFields(this.leisureFeeForm);
+    //this.f.fln.setValue(this.leisureFee.fln);
   }
 
-  checkHasPnr() {
-    this.IsPnrAvailable = this.pnrService.hasRecordLocator() !== undefined;
-    if (this.IsPnrAvailable) {
-      this.setFormState(true);
-    }
+  ngAfterViewInit(): void {
+    //this.f.fln.setValue(this.leisureFee.fln);
   }
 
-  changeState() {
-    this.setFormState(!this.leisureFeeForm.controls.chkUpdateRemove.value);
-  }
+
+
 
   changeFeeState() {
     const controls = ['vendorCode', 'ccNo', 'expDate'];
     this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
 
-  }
-
-  setFormState(isDisabled: boolean) {
-    if (isDisabled) {
-      const ctrls = [
-        'segmentAssoc',
-        'segmentNum',
-        'amount',
-        'paymentType',
-        'vendorCode',
-        'ccNo',
-        'expDate',
-        'address',
-        'noFeeReason'
-      ];
-
-      this.enableDisbleControls(ctrls, isDisabled);
-    } else {
-      this.enableDisbleControls(['segmentAssoc'], false);
-      this.processAssocValues(this.f.segmentAssoc.value);
-      const controls = ['vendorCode', 'ccNo', 'expDate'];
-      this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
-    }
-    // this.enableDisableCredits();
-    // this.changeFeeState();
   }
 
   enableDisableCredits() {
@@ -162,7 +133,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
       'address'
     ];
     this.enableDisbleControls(ctrls, false);
-    this.enableDisbleControls(['noFeeReason'], true);
+
 
     switch (val) {
       case '3':
@@ -174,16 +145,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
           this.segmentList = this.pnrService.getPassiveCarSegmentNumbers();
         }
         break;
-      case '0':
-        this.enableDisbleControls(ctrls, true);
 
-        if ((!this.IsPnrAvailable && !this.checkSFC()) ||
-          (this.IsPnrAvailable && this.f.chkUpdateRemove.value === true && !this.checkSFC())) {
-          this.enableDisbleControls(['noFeeReason'], false);
-        }
-
-        this.f.noFeeReason.setValidators(Validators.required);
-        break;
       default:
         this.leisureFeeForm.get('segmentNum').disable();
     }
@@ -219,7 +181,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
     const remarkTax = this.pnrService.getRemarkText('TAX-');
     this.f.paymentType.setValue('C', { onlySelf: true });
     this.leisureFeeForm.controls.segmentAssoc.setValue('0');
-    this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
+    //  this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
 
     if (remarkText !== '') {
       const segmentAssociation = this.getSegmentAssociation(this.GetValueFromSFCRemark(remarkText, '-FA'));
@@ -292,4 +254,12 @@ export class UpdateLeisureFeeComponent implements OnInit {
     });
     return res;
   }
+
+  saveLeisureFee() {
+
+    this.isSubmitted = true;
+    this.modalRef.hide();
+
+  }
+
 }

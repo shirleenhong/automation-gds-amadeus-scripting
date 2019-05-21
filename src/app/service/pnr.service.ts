@@ -23,7 +23,7 @@ export class PnrService {
   cfLine: CfRemarkModel;
   segments = [];
   amountPipe = new AmountPipe();
-
+  PCC = '';
 
   constructor() { }
 
@@ -40,9 +40,19 @@ export class PnrService {
         this.errorMessage = 'Error: ' + error;
       }
     ).catch(err => { console.log(err); });
-
-    console.log(JSON.stringify(this.pnrObj));
+    this.getPCC();
   }
+
+
+  getPCC(): void {
+    const response = smartScriptSession.send('jd').then(res => {
+      if (res.Response !== undefined) {
+        const output = res.Response.split('         ');
+        this.PCC = output[1];
+      }
+    });
+  }
+
 
   getRemarkLineNumber(searchText: string) {
     if (this.isPNRLoaded) {

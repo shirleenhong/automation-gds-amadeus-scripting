@@ -73,7 +73,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
 
     this.fareRuleForm.controls.ticketAmount.enable();
     this.fareRuleForm.controls.nonRefundable.disable();
-    this.getOID();
+    this.fareRules.oid = this.pnrService.PCC;
     this.fareRules.isTicketMinMax = false;
     this.fareRules.isTicketNonRef = false;
     this.fareRules.isTicketNonRefundable = false;
@@ -161,16 +161,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
     this.bspCurrencyList = this.ddb.getCurrencies();
   }
 
-  getOID(): void {
-    const response = smartScriptSession.send('jd').then(res => {
-      if (res.Response !== undefined) {
-        const output = res.Response.split('         ');
-        //      this.OID = output[1];
-        this.fareRules.oid = output[1];
-      }
-    });
-  }
-
   executeCryptic(lineNo: string): void {
 
     const airline = this.pnrService.getPassiveAirSegments(lineNo);
@@ -180,7 +170,8 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       this.fareRules.airlineCode = airline[0].airlineCode;
 
       const response = smartScriptSession.send('PDN/' + this.fareRules.oid + '/' + airline[0].airlineCode + ' RULES').then(res => {
-        if (res.Response !== undefined) {
+
+        if (res.Response !== undefined && res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0) {
           const output = res.Response.toString().split('-------')[1].split('       ');
 
           output.forEach(element => {
@@ -235,17 +226,23 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   saveFareRule(): void {
-    this.fareRules.remark = this.fareRuleForm.controls.items;
+    this.fareRules.remarkList = [];
+    const itms = this.fareRuleForm.get('items') as FormArray;
+    for (const fg of itms.controls) {
+      if (fg instanceof FormGroup) {
+        this.fareRules.remarkList.push(fg.controls.remarkText.value);
+      }
+    }
     this.isSubmitted = true;
     this.modalRef.hide();
   }
 
   loadRemarks(): void {
-    for (const fg of this.fareRules.remark.controls) {
-      if (fg instanceof FormGroup) {
-        this.items = this.fareRuleForm.get('items') as FormArray;
-        this.items.push(this.createItem(fg.controls.remarkText.value));
-      }
+    for (const rem of this.fareRules.remarkList) {
+      // if (fg instanceof FormGroup) {
+      this.items = this.fareRuleForm.get('items') as FormArray;
+      this.items.push(this.createItem(rem));
+      // }
     }
 
     // need to remove the extra textbox as a workaround.

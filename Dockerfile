@@ -1,9 +1,15 @@
 FROM node:11.11.0 as build-stg
+#ARG ENV
 COPY package*.json ./
 RUN npm ci && mkdir /ng-app && mv ./node_modules ./ng-app
 WORKDIR /ng-app
 COPY . .
-RUN npm run ng build --output-path=dist
+#RUN if [ "$ENV" = "prod" ]; then \
+#    npm run ng build -- --prod --output-path=dist; \
+#    else \
+#    npm run ng build --configuration=$ENV --output-path=dist; \
+#    fi
+RUN npm run ng build --configuration=dev --output-path=dist
 # RUN npm run ng build -- --prod --output-path=dist
 
 FROM nginx:alpine

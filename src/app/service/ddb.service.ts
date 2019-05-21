@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from "@angular/core";
 import { environment } from "../../environments/environment";
+import { common } from "../../environments/common";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { interval, Observable } from "rxjs";
 import { jsonpCallbackContext } from "@angular/common/http/src/module";
@@ -11,12 +12,56 @@ import { stringify } from "@angular/core/src/util";
 export class DDBService implements OnInit {
   token: string;
   isTokenExpired = true;
+  countryList = [];
+  currencyList = [];
+
   ngOnInit(): void {}
 
   constructor(private httpClient: HttpClient) {}
 
+  async getToken() {
+    if (this.isTokenExpired || this.token === "") {
+      const bodyInfo = {
+        client_id: common.clientId,
+        client_secret: environment.clientSecret,
+        grant_type: "client_credentials"
+      };
+      const hds = new HttpHeaders({
+        "Content-Type": "application/json"
+      });
+      const res = await this.httpClient
+        .post<any>(common.tokenService, JSON.stringify(bodyInfo), {
+          headers: hds
+        })
+        .toPromise();
+      this.token = res.access_token;
+      localStorage.setItem("token", this.token);
+      this.isTokenExpired = false;
+      interval(res.expires_in * 1000).subscribe(x => {
+        this.isTokenExpired = true;
+      });
+    }
+  }
+
+  getRequest(serviceName: string): Observable<any> {
+    this.getToken();
+    const hds = new HttpHeaders().append("Content", "application/json");
+    return this.httpClient.get<any>(serviceName, {
+      headers: hds
+    });
+  }
+
   async sample() {
-    this.getRequest("Location/City/NYC?").subscribe(
+    this.getRequest(common.locationService).subscribe(
+      x => {
+        alert(JSON.stringify(x));
+      },
+      err => {
+        alert(JSON.stringify(err));
+      }
+    );
+
+    this.getRequest(common.travelportService + "MNL").subscribe(
       x => {
         alert(JSON.stringify(x));
       },
@@ -26,32 +71,27 @@ export class DDBService implements OnInit {
     );
   }
 
-  async sampleSupplier() {
-    this.getRequest(
-      "/service/ap/config-services/api/config/suppliers?countryCode=CA"
-    ).subscribe(
-      x => {
-        alert(JSON.stringify(x));
-      },
-      err => {
-        alert(JSON.stringify(err));
-      }
-    );
+  async getCountryAndCurrencyList() {
+    if (this.countryList.length === 0 || this.currencyList.length === 0) {
+      this.getRequest(common.locationService).subscribe(
+        result => {
+          let countryItems = result["CountryItems"];
+          this.countryList = countryItems.map(a => a.CountryCode);
+          this.currencyList = countryItems.map(a => a.CurrencyCode);
+          alert(this.countryList);
+          alert(this.currencyList);
+        },
+        err => {
+          alert(JSON.stringify(err));
+        }
+      );
+    }
   }
 
   async getTravelPort(travelportCode: string) {
     return await this.getRequest(
-      "config/travelports/Airport?travelPortCode=" + travelportCode
+      common.travelportService + travelportCode
     ).toPromise();
-  }
-
-  getRequest(apiUrl: string): Observable<any> {
-    const hds = new HttpHeaders().append("Content", "application/json");
-    return this.httpClient.get<any>(apiUrl, { headers: hds });
-  }
-
-  testsample() {
-    this.sample();
   }
 
   getProvinces(): any {
@@ -168,6 +208,7 @@ export class DDBService implements OnInit {
       }
     ];
   }
+
   getSupplierCode() {
     let SupplierCode = [];
 
@@ -415,27 +456,28 @@ export class DDBService implements OnInit {
   getCityCountry(search: string) {
     let cityList = [];
     cityList = [
-    { city: 'YUL' , countryCode: 'CA', country: 'Canada' },
-    { city: 'YYZ' , countryCode: 'CA', country: 'Canada' },
-    { city: 'YVR' , countryCode: 'CA', country: 'Canada' },
-    { city: 'LHR' , countryCode: 'NL', country: 'Netherlands' },
-    { city: 'AMS' , countryCode: 'NL', country: 'Netherlands' },
-    { city: 'PAR' , countryCode: 'FR', country: 'France' },
-    { city: 'LON' , countryCode: 'UK', country: 'United Kingdom' },
-    { city: 'CDG' , countryCode: 'FR', country: 'France' },
-    { city: 'MAD' , countryCode: 'ES', country: 'Spain' },
-    { city: 'ORD' , countryCode: 'US', country: 'United States' },
-    { city: 'FRA' , countryCode: 'DE', country: 'Germany' },
-    { city: 'SYD' , countryCode: 'AU', country: 'Australia' },
-    { city: 'VCE' , countryCode: 'IT', country: 'Italy' },
-    { city: 'MNL' , countryCode: 'PH', country: 'Philippines' },
-    { city: 'FLR' , countryCode: 'IT', country: 'Italy' },
+      { city: "YUL", countryCode: "CA", country: "Canada" },
+      { city: "YYZ", countryCode: "CA", country: "Canada" },
+      { city: "YVR", countryCode: "CA", country: "Canada" },
+      { city: "LHR", countryCode: "NL", country: "Netherlands" },
+      { city: "AMS", countryCode: "NL", country: "Netherlands" },
+      { city: "PAR", countryCode: "FR", country: "France" },
+      { city: "LON", countryCode: "UK", country: "United Kingdom" },
+      { city: "CDG", countryCode: "FR", country: "France" },
+      { city: "MAD", countryCode: "ES", country: "Spain" },
+      { city: "ORD", countryCode: "US", country: "United States" },
+      { city: "FRA", countryCode: "DE", country: "Germany" },
+      { city: "SYD", countryCode: "AU", country: "Australia" },
+      { city: "VCE", countryCode: "IT", country: "Italy" },
+      { city: "MNL", countryCode: "PH", country: "Philippines" },
+      { city: "FLR", countryCode: "IT", country: "Italy" }
     ];
 
     if (cityList.findIndex(x => x.city === search) !== -1) {
       return cityList.find(x => x.city === search);
-    } else { return ''; }
-
+    } else {
+      return "";
+    }
   }
 
   getCitizenship(search: string) {
@@ -450,86 +492,86 @@ export class DDBService implements OnInit {
     ];
     return countryList.find(x => x.countryCode === search);
   }
-  
- getStateProvinces(countryCode?) {
-    const states = [{ province: 'Alabama', code: 'AL', countryCode: 'US' },
-    { province: 'Alaska', code: 'AK', countryCode: 'US' },
-    { province: 'Arizona', code: 'AZ', countryCode: 'US' },
-    { province: 'Arkansas', code: 'AR', countryCode: 'US' },
-    { province: 'Alabama', countryCode: 'US', code: 'AL' },
-    { province: 'Alaska', countryCode: 'US', code: 'AK' },
-    { province: 'Arizona', countryCode: 'US', code: 'AZ' },
-    { province: 'Arkansas', countryCode: 'US', code: 'AR' },
-    { province: 'Armed Forces America ', countryCode: 'US', code: 'AA' },
-    { province: 'Armed Forces Europe ', countryCode: 'US', code: 'AE' },
-    { province: 'Armed Forces Pacific ', countryCode: 'US', code: 'AP' },
-    { province: 'California', countryCode: 'US', code: 'CA' },
-    { province: 'Colorado', countryCode: 'US', code: 'CO' },
-    { province: 'Connecticut', countryCode: 'US', code: 'CT ' },
-    { province: 'Delaware', countryCode: 'US', code: 'DE' },
-    { province: 'District of Columbia', countryCode: 'US', code: 'DC ' },
-    { province: 'Florida', countryCode: 'US', code: 'FL' },
-    { province: 'Georgia', countryCode: 'US', code: 'GA' },
-    { province: 'Hawaii', countryCode: 'US', code: 'HI' },
-    { province: 'Idaho', countryCode: 'US', code: 'ID' },
-    { province: 'Illinois', countryCode: 'US', code: 'IL' },
-    { province: 'Indiana', countryCode: 'US', code: 'IN' },
-    { province: 'Iowa', countryCode: 'US', code: 'IA' },
-    { province: 'Kansas', countryCode: 'US', code: 'KS' },
-    { province: 'Kentucky', countryCode: 'US', code: 'KY' },
-    { province: 'Louisiana', countryCode: 'US', code: 'LA' },
-    { province: 'Maine', countryCode: 'US', code: 'ME ' },
-    { province: 'Maryland', countryCode: 'US', code: 'MD' },
-    { province: 'Massachusetts', countryCode: 'US', code: 'MA' },
-    { province: 'Michigan', countryCode: 'US', code: 'MI' },
-    { province: 'Minnesota', countryCode: 'US', code: 'MN' },
-    { province: 'Mississippi', countryCode: 'US', code: 'MS' },
-    { province: 'Missouri', countryCode: 'US', code: 'MO' },
-    { province: 'Montana', countryCode: 'US', code: 'MT' },
-    { province: 'Nebraska', countryCode: 'US', code: 'NE' },
-    { province: 'Nevada', countryCode: 'US', code: 'NV' },
-    { province: 'New Hampshire', countryCode: 'US', code: 'NH' },
-    { province: 'New Jersey', countryCode: 'US', code: 'NJ' },
-    { province: 'New Mexico', countryCode: 'US', code: 'NM' },
-    { province: 'New York', countryCode: 'US', code: 'NY' },
-    { province: 'North Carolina', countryCode: 'US', code: 'NC' },
-    { province: 'North Dakota', countryCode: 'US', code: 'ND' },
-    { province: 'Ohio', countryCode: 'US', code: 'OH' },
-    { province: 'Oklahoma', countryCode: 'US', code: 'OK' },
-    { province: 'Oregon', countryCode: 'US', code: 'OR' },
-    { province: 'Pennsylvania', countryCode: 'US', code: 'PA' },
-    { province: 'Rhode Island', countryCode: 'US', code: 'RI' },
-    { province: 'South Carolina', countryCode: 'US', code: 'SC' },
-    { province: 'South Dakota', countryCode: 'US', code: 'SD' },
-    { province: 'Tennessee', countryCode: 'US', code: 'TN' },
-    { province: 'Texas', countryCode: 'US', code: 'TX' },
-    { province: 'Utah', countryCode: 'US', code: 'UT' },
-    { province: 'Vermont', countryCode: 'US', code: 'VT' },
-    { province: 'Virginia', countryCode: 'US', code: 'VA' },
-    { province: 'Washington', countryCode: 'US', code: 'WA' },
-    { province: 'West Virginia', countryCode: 'US', code: 'WV' },
-    { province: 'Wisconsin', countryCode: 'US', code: 'WI' },
-    { province: 'Wyoming', countryCode: 'US', code: 'WY' },
-    { province: 'Alberta', countryCode: 'CA', code: 'AB' },
-    { province: 'British Columbia', countryCode: 'CA', code: 'BC' },
-    { province: 'Manitoba', countryCode: 'CA', code: 'MB' },
-    { province: 'New Brunswick', countryCode: 'CA', code: 'NB' },
-    { province: 'Newfoundland and Labrador', countryCode: 'CA', code: 'NL' },
-    { province: 'Northwest Territories', countryCode: 'CA', code: 'NT' },
-    { province: 'Nova Scotia', countryCode: 'CA', code: 'NS' },
-    { province: 'Nunavut', countryCode: 'CA', code: 'NU' },
-    { province: 'Ontario', countryCode: 'CA', code: 'ON' },
-    { province: 'Prince Edward Island', countryCode: 'CA', code: 'PE' },
-    { province: 'Quebec', countryCode: 'CA', code: 'QC' },
-    { province: 'Saskatchewan', countryCode: 'CA', code: 'SK' },
-    { province: 'Yukon', countryCode: 'CA', code: 'YT' }];
+
+  getStateProvinces(countryCode?) {
+    const states = [
+      { province: "Alabama", code: "AL", countryCode: "US" },
+      { province: "Alaska", code: "AK", countryCode: "US" },
+      { province: "Arizona", code: "AZ", countryCode: "US" },
+      { province: "Arkansas", code: "AR", countryCode: "US" },
+      { province: "Alabama", countryCode: "US", code: "AL" },
+      { province: "Alaska", countryCode: "US", code: "AK" },
+      { province: "Arizona", countryCode: "US", code: "AZ" },
+      { province: "Arkansas", countryCode: "US", code: "AR" },
+      { province: "Armed Forces America ", countryCode: "US", code: "AA" },
+      { province: "Armed Forces Europe ", countryCode: "US", code: "AE" },
+      { province: "Armed Forces Pacific ", countryCode: "US", code: "AP" },
+      { province: "California", countryCode: "US", code: "CA" },
+      { province: "Colorado", countryCode: "US", code: "CO" },
+      { province: "Connecticut", countryCode: "US", code: "CT " },
+      { province: "Delaware", countryCode: "US", code: "DE" },
+      { province: "District of Columbia", countryCode: "US", code: "DC " },
+      { province: "Florida", countryCode: "US", code: "FL" },
+      { province: "Georgia", countryCode: "US", code: "GA" },
+      { province: "Hawaii", countryCode: "US", code: "HI" },
+      { province: "Idaho", countryCode: "US", code: "ID" },
+      { province: "Illinois", countryCode: "US", code: "IL" },
+      { province: "Indiana", countryCode: "US", code: "IN" },
+      { province: "Iowa", countryCode: "US", code: "IA" },
+      { province: "Kansas", countryCode: "US", code: "KS" },
+      { province: "Kentucky", countryCode: "US", code: "KY" },
+      { province: "Louisiana", countryCode: "US", code: "LA" },
+      { province: "Maine", countryCode: "US", code: "ME " },
+      { province: "Maryland", countryCode: "US", code: "MD" },
+      { province: "Massachusetts", countryCode: "US", code: "MA" },
+      { province: "Michigan", countryCode: "US", code: "MI" },
+      { province: "Minnesota", countryCode: "US", code: "MN" },
+      { province: "Mississippi", countryCode: "US", code: "MS" },
+      { province: "Missouri", countryCode: "US", code: "MO" },
+      { province: "Montana", countryCode: "US", code: "MT" },
+      { province: "Nebraska", countryCode: "US", code: "NE" },
+      { province: "Nevada", countryCode: "US", code: "NV" },
+      { province: "New Hampshire", countryCode: "US", code: "NH" },
+      { province: "New Jersey", countryCode: "US", code: "NJ" },
+      { province: "New Mexico", countryCode: "US", code: "NM" },
+      { province: "New York", countryCode: "US", code: "NY" },
+      { province: "North Carolina", countryCode: "US", code: "NC" },
+      { province: "North Dakota", countryCode: "US", code: "ND" },
+      { province: "Ohio", countryCode: "US", code: "OH" },
+      { province: "Oklahoma", countryCode: "US", code: "OK" },
+      { province: "Oregon", countryCode: "US", code: "OR" },
+      { province: "Pennsylvania", countryCode: "US", code: "PA" },
+      { province: "Rhode Island", countryCode: "US", code: "RI" },
+      { province: "South Carolina", countryCode: "US", code: "SC" },
+      { province: "South Dakota", countryCode: "US", code: "SD" },
+      { province: "Tennessee", countryCode: "US", code: "TN" },
+      { province: "Texas", countryCode: "US", code: "TX" },
+      { province: "Utah", countryCode: "US", code: "UT" },
+      { province: "Vermont", countryCode: "US", code: "VT" },
+      { province: "Virginia", countryCode: "US", code: "VA" },
+      { province: "Washington", countryCode: "US", code: "WA" },
+      { province: "West Virginia", countryCode: "US", code: "WV" },
+      { province: "Wisconsin", countryCode: "US", code: "WI" },
+      { province: "Wyoming", countryCode: "US", code: "WY" },
+      { province: "Alberta", countryCode: "CA", code: "AB" },
+      { province: "British Columbia", countryCode: "CA", code: "BC" },
+      { province: "Manitoba", countryCode: "CA", code: "MB" },
+      { province: "New Brunswick", countryCode: "CA", code: "NB" },
+      { province: "Newfoundland and Labrador", countryCode: "CA", code: "NL" },
+      { province: "Northwest Territories", countryCode: "CA", code: "NT" },
+      { province: "Nova Scotia", countryCode: "CA", code: "NS" },
+      { province: "Nunavut", countryCode: "CA", code: "NU" },
+      { province: "Ontario", countryCode: "CA", code: "ON" },
+      { province: "Prince Edward Island", countryCode: "CA", code: "PE" },
+      { province: "Quebec", countryCode: "CA", code: "QC" },
+      { province: "Saskatchewan", countryCode: "CA", code: "SK" },
+      { province: "Yukon", countryCode: "CA", code: "YT" }
+    ];
 
     if (countryCode !== undefined) {
       return states.find(x => x.countryCode === countryCode);
     } else {
       return states;
     }
-
   }
-
 }

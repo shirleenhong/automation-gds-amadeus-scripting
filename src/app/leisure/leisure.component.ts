@@ -264,8 +264,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
 
-  public loadPnr() {
+  public async loadPnr() {
     if (this.isPnrLoaded) {
+      await this.getPnrService();
       this.workflow = 'load';
     }
   }

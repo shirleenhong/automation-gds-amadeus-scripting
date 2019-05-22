@@ -8,6 +8,7 @@ import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { SegmentModel } from '../models/pnr/segment.model';
 
 import { DDBService } from './ddb.service';
+import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 
 declare var PNR: any;
 declare var smartScriptSession: any;
@@ -63,7 +64,7 @@ export class PnrService {
   }
 
   getRemarkLineNumbers(searchText: string) {
-    const lineNos = [];
+    const lineNos: Array<string> = [];
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
         if (rm.freeFlowText.indexOf(searchText) === 0) {
@@ -512,6 +513,70 @@ export class PnrService {
   getMatrixAccountingLineNumbers() {
     return this.getRemarkLineNumbers('MAC/-');
   }
+
+
+  getSFCRemarks(): Array<LeisureFeeModel> {
+    const fees = new Array<LeisureFeeModel>();
+    let taxProvince = this.getRemarkText('TAX-');
+
+    if (taxProvince !== '') {
+      taxProvince = taxProvince.substr(taxProvince.indexOf('-') + 1);
+    }
+
+    for (const rm of this.pnrObj.rmElements) {
+      if (rm.freeFlowText.indexOf('SFC/-') === 0) {
+        const fee = new LeisureFeeModel();
+        const rems = rm.freeFlowText.split('/-');
+        fee.segmentAssoc = '2';
+        fee.address = taxProvince;
+        rems.forEach(r => {
+          if (r.indexOf('-') >= 0) {
+            const arr = r.split('-');
+            switch (arr[0]) {
+              case 'FA':
+                const type = arr[1].substr(0, 1);
+                switch (type) {
+                  case 'C':
+                    fee.segmentAssoc = '4';
+                    break;
+                  case 'H':
+                    fee.segmentAssoc = '3';
+                    break;
+                  case 'T':
+                    fee.segmentAssoc = '1';
+                    break;
+                }
+                fee.segmentNum = arr[1].replace(type, '');
+                break;
+              case 'FLN':
+                fee.fln = arr[1].replace('F', '');
+                break;
+              case 'AMT':
+                fee.amount = arr[1].replace('CAD', '');
+                break;
+              case 'FOP':
+                if (arr[1] === 'CK') {
+                  fee.paymentType = 'K';
+                } else {
+                  fee.paymentType = 'C';
+                  fee.vendorCode = arr[1].substr(2, 2);
+                  fee.ccNo = arr[1].substr(4);
+                }
+                break;
+              case 'EXP':
+                fee.expDate = arr[1].substr(0, 2) + '/' + arr[1].substr(2, 2);
+                break;
+
+            }
+          }
+        });
+        fees.push(fee);
+      }
+    }
+
+    return fees;
+  }
+
 
   getAccountingRemarks(): Array<MatrixAccountingModel> {
     const matrixModels = new Array<MatrixAccountingModel>();

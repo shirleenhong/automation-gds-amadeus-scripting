@@ -45,6 +45,7 @@ import { FareRuleSegmentComponent } from './remarks/fare-rule-segment/fare-rule-
 import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segment/update-fare-rule-segment.component';
 import { RbcPointsRedemptionComponent } from './remarks/rbc-points-redemption/rbc-points-redemption.component';
 import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
+import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-leisure-fee.component';
 
 
 @NgModule({
@@ -69,7 +70,7 @@ import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-
     ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
     VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective,
     FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent,
-    RbcPointsRedemptionComponent, UpdateRbcPointsRedemptionComponent
+    RbcPointsRedemptionComponent, UpdateRbcPointsRedemptionComponent, UpdateLeisureFeeComponent
 
 
   ],
@@ -93,7 +94,7 @@ import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-
   exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
     AllCapsMaskDirective, AlphaMaskDirective],
   entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
-    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent, UpdateRbcPointsRedemptionComponent]
+    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent, UpdateRbcPointsRedemptionComponent, UpdateLeisureFeeComponent]
 
 })
 export class AppModule { }

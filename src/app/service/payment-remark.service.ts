@@ -10,6 +10,8 @@ import { FormGroup } from '@angular/forms';
 import { DDBService } from './ddb.service';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
+import { LeisureFeeComponent } from '../payments/leisure-fee/leisure-fee.component';
+import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 
 
 
@@ -247,36 +249,53 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
   }
 
-  public GetLeisureFeeRemarks(fg: FormGroup, cfa: string) {
+  public GetLeisureFeeRemarks(comp: LeisureFeeComponent, cfa: string) {
+    const fg = comp.leisureFeeForm;
+    const feeList = comp.leisureFeeList;
     const remGroup = new RemarkGroup();
     remGroup.group = 'Leisure Fee';
     remGroup.remarks = new Array<RemarkModel>();
-    const assoc = fg.get('segmentAssoc').value;
     remGroup.deleteRemarkByIds = [];
 
     let remark = '';
-    let lineNum = this.pnrService.getRemarkLineNumber('SFC/-');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
+    let lineNums = this.pnrService.getRemarkLineNumbers('SFC/-');
+    if (lineNums.length > 0) {
+      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
 
-    lineNum = this.pnrService.getRemarkLineNumber('TAX');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
+    lineNums = this.pnrService.getRemarkLineNumbers('TAX-');
+    if (lineNums.length > 0) {
+      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
-    if (assoc > 0) {
-      remark = this.generateSFCRemark(fg, assoc);
-      remGroup.remarks.push(this.getRemarksModel(remark, '*'));
-      remark = 'TAX-' + fg.get('address').value;
+    lineNums = this.pnrService.getRemarkLineNumbers('TEX/');
+    if (lineNums.length > 0) {
+      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+    }
+
+    if (feeList.length > 0) {
+      remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
+      feeList.forEach(f => {
+        remark = this.generateSFCRemark(f);
+        remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+        const ex = [];
+        comp.exemption.forEach(x => {
+          if (x.checked) {
+            ex.push('-' + x.value);
+          }
+        });
+        if (ex.length > 0) {
+          remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
+        }
+      });
     }
 
-    lineNum = this.pnrService.getRemarkLineNumber('U11/-');
+    const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
     if (lineNum !== '') {
       remGroup.deleteRemarkByIds.push(lineNum);
     }
 
-    if (assoc === '0' && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
+    if (feeList.length === 0 && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
       // *U11
       const noFeeReason = fg.get('noFeeReason').value;
       remark = 'U11/-' + noFeeReason;
@@ -294,45 +313,45 @@ export class PaymentRemarkService {
     }
   }
 
-  generateSFCRemark(fg: FormGroup, assoc) {
+  generateSFCRemark(fee: LeisureFeeModel) {
     let remark = 'SFC';
-    switch (assoc) {
+    switch (fee.segmentAssoc) {
       case '3':
-        remark += '/-FA-H' + this.getSegmentValue(fg.get('segmentNum').value);
+        remark += '/-FA-H' + this.getSegmentValue((fee.segmentNum.toString()));
         break;
       case '4':
-        remark += '/-FA-C' + this.getSegmentValue(fg.get('segmentNum').value);
+        remark += '/-FA-C' + this.getSegmentValue(fee.segmentNum.toString());
         break;
       case '1':
         remark += '/-FA-T1';
         break;
     }
 
-    remark += '/-FLN-F1/-FP-TRF';
-    remark += '/-AMT-CAD' + this.amountPipe.transform(fg.get('amount').value);
+    remark += '/-FLN-F' + fee.fln + '/-FP-TRF';
+    remark += '/-AMT-CAD' + this.amountPipe.transform(fee.amount);
 
-    remark += this.getProvinceTaxRemark(fg);
-    if (fg.get('paymentType').value === 'C') {
-      remark += '/-FOP-CC' + fg.get('vendorCode').value + fg.get('ccNo').value;
-      remark += '/-EXP-' + fg.get('expDate').value.replace('/', '');
+    remark += this.getProvinceTaxRemark(fee);
+    if (fee.paymentType === 'C') {
+      remark += '/-FOP-CC' + fee.vendorCode + fee.ccNo;
+      remark += '/-EXP-' + fee.expDate.replace('/', '');
     } else {
       remark += '/-FOP-CK';
     }
     return remark;
   }
 
-  getProvinceTaxRemark(fg: FormGroup) {
+  getProvinceTaxRemark(fee: LeisureFeeModel) {
     const provTax = this.ddbService.getProvinceTax().filter(
-      x => x.provinceCode === fg.get('address').value
+      x => x.provinceCode === fee.address
     );
     let tax1 = '0.00';
     let tax2 = '0.00';
     let taxType1 = 'XG';
     if (provTax.length > 0) {
       tax1 = this.amountPipe.transform(
-        + fg.get('amount').value * +provTax[0].tax1);
+        + fee.amount * +provTax[0].tax1);
       tax2 = this.amountPipe.transform(
-        + fg.get('amount').value * +provTax[0].tax2);
+        +  fee.amount * +provTax[0].tax2);
       taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
     }
     let txt = '/-PT-' + tax1 + taxType1;

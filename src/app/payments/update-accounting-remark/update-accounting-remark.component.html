@@ -211,3 +211,149 @@
     [disabled]="matrixAccountingForm.invalid">Save</button>
   <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
 </div>
+
+
+
+<div class="modal-header">
+  <div class="modal-title">{{title}}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+    <div class="contentPanel">
+
+        <form [formGroup]="leisureFeeForm">
+          <div class="row form-group" *ngIf="IsPnrAvailable">
+            <div class="col-3">Update Leisure Fee :</div>
+            <div class="col-8">
+              <input type="checkbox" name="chkUpdateRemove" formControlName="chkUpdateRemove" id="chkUpdateRemove"
+                (change)="changeState()" />
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-3">Segment Association :</div>
+            <div class="col-8">
+              <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control"
+                (change)="changeFeeState()">
+                <option value="0">No Fee Applies to PNR</option>
+                <option value="1">Ticket Segment</option>
+                <option value="2">Tour/Cruise Segment</option>
+                <option value="3">Hotel Segment</option>
+                <option value="4">Car Segment</option>
+              </select>
+            </div>
+          </div>
+      
+          <div class="form-group row" *ngIf="!checkSFC()">
+            <div class="col-3">No Fee Reason:</div>
+            <div class="col-8">
+      
+              <input type="text" class="form-control" maxlength="35" id="noFeeReason" required formControlName="noFeeReason"
+                placeholder="Enter No Fee Reason" [disabled]="checkSFC()" />
+            </div>
+          </div>
+      
+          <div *ngIf="f.segmentAssoc.value != 0">
+      
+            <div *ngIf="f.segmentAssoc.value == 3 || f.segmentAssoc.value == 4">
+              <div class="row form-group">
+                <div class="col-3"></div>
+                <div class="col">
+                  Do you wish to attach the service fee to a specific itinerary segment?
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-3"></div>
+                <div class="col-5">
+                  <select id="segmentNum" name="segmentNum" class="form-control" formControlName="segmentNum">
+                    <option *ngFor="let item of  segmentList" [value]="item.lineNo">
+                      {{item.lineNo + ' ' + item.longFreeText}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-3">
+                Amount :
+              </div>
+              <div class="col-2">
+                <input type="text" id="amount" name="amount" class="form-control" formControlName="amount" AmountMask>
+              </div>
+            </div>
+      
+      
+            <div class="row form-group">
+              <div class="col-3">
+                Form of Payment :
+              </div>
+              <div class="col-3">
+                <select id="paymentType" name="paymentType" class="form-control" formControlName="paymentType">
+                  <option value="C">Credit Card</option>
+                  <option value="K">Cheque</option>
+                </select>
+              </div>
+            </div>
+            <div class="row form-group" *ngIf="f.paymentType.value=='C'">
+              <div class="col-3">
+                Credit Card Info:
+              </div>
+              <div class="col ccinfo ">
+                <div class="d-flex flex-row ">
+                  <div style="width:160px;">
+                    <select id="vendorCode" class="form-control" name="vendorCode" formControlName="vendorCode"
+                      (change)="creditcardMaxValidator($event.target.value)">
+                      <option *ngFor="let item of  vendorCodeList" [value]="item.itemValue">
+                        {{item.itemText}}
+                      </option>
+                    </select>
+                  </div>
+                  <div style="width:160px;">
+                    <input type="text" id="ccNo" name="ccNo" class="form-control" formControlName="ccNo" maxlength="16"
+                      NumberOnlyMask />
+                  </div>
+                  <div style="width:60px">
+                    <input type="text" class="form-control" bsDatePicker placeHolder="MM/YY" id="expDate" required
+                      maxlength="5" name="expDate" formControlName="expDate" CCDateExpMask />
+                  </div>
+                </div>
+              </div>
+      
+            </div>
+      
+            <div class="row form-group">
+              <div class="col-3"></div>
+              <div class="col">
+                Select the Province of the traveler's Home Address
+              </div>
+            </div>
+      
+            <div class="row form-group">
+              <div class="col-3"></div>
+              <div class="col-4">
+                <select id="address" name="address" class="form-control" formControlName="address">
+                  <option *ngFor="let item of  provinceList" [value]="item.itemValue">
+                    {{item.itemText}}
+                  </option>
+                </select>
+      
+              </div>
+            </div>
+      
+          </div>
+      
+        </form>
+      
+      
+      </div>
+
+
+  
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="saveAccounting()"
+    [disabled]="matrixAccountingForm.invalid">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+</div>

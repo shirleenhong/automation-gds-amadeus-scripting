@@ -169,9 +169,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       (this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption));
 
     const leisureFee = this.paymentComponent.leisureFee;
-    if (leisureFee.leisureFeeForm.valid) {
-      remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee.leisureFeeForm, this.cfLine.cfa));
-    }
+    remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
+
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(x => {

@@ -58,7 +58,7 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
     { itemText: 'CAR', itemValue: 'CAR' },
     { itemText: 'HOTEL', itemValue: 'HOTEL' },
     { itemText: 'CRUISE', itemValue: 'CRUISE' },
-    { itemText: 'PROPERTY/VACATION PACKAGE', itemValue: 'PROPERTY' }];
+    { itemText: 'PROPERTY/VACATION PACKAGE', itemValue: 'PROPERTY/VACATION PACKAGE' }];
   }
 
   onChangeProductType(productType) {

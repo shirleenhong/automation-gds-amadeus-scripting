@@ -18,9 +18,8 @@
     <div class="form-group  row">
       <div class="col-sm-4">Product Type:</div>
       <div class="col-sm-8">
-        <input type="text" class="form-control" placeholder="select a product Type" formControlName="productType"
-          id="productType" list="dynamicProductType" [(ngModel)]="rbcPoints.productType"
-          (change)="onChangeProductType($event.target.value)" />
+        <input type="text" class="form-control" formControlName="productType" id="productType" list="dynamicProductType"
+          [(ngModel)]="rbcPoints.productType" (change)="onChangeProductType($event.target.value)" />
         <datalist id="dynamicProductType">
           <option *ngFor="let item of productTypeList" [value]="item.itemValue">{{item.itemText}}</option>
         </datalist>
@@ -100,6 +99,25 @@
         </div>
       </div>
     </div>
+    <div *ngIf="rbcPoints.productType !== 'CAR' && rbcPoints.productType !== 'HOTEL'">
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div></div>
+          <div class="">
+            Number Of <br>
+            Adults:
+          </div>
+          <input type="text" class="form-control" id="noofadult" name="noofadult" formControlName="noofadult"
+            [(ngModel)]="rbcPoints.noofadult" maxlength="2" NumberOnlyMask />
+        </div>
+        <div class="col">
+          <div class="">Total Base Cost Per Adult:</div>
+          <input type="text" class="form-control" id="totalbasecostadult" name="totalbasecostadult"
+            formControlName="totalbasecostadult" [(ngModel)]="rbcPoints.totalbasecostadult" AmountMask />
+        </div>
+      </div>
+    </div>
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
@@ -131,21 +149,7 @@
       <div class="form-group  row">
         <div class="col-sm-4"></div>
         <div class="col">
-          <div class="">Number Of Adults:</div>
-          <input type="text" class="form-control" id="noofadult" name="noofadult" formControlName="noofadult"
-            [(ngModel)]="rbcPoints.noofadult" maxlength="2" NumberOnlyMask />
-        </div>
-        <div class="col">
-          <div class="">Total Base Cost Per Adult:</div>
-          <input type="text" class="form-control" id="totalbasecostadult" name="totalbasecostadult"
-            formControlName="totalbasecostadult" [(ngModel)]="rbcPoints.totalbasecostadult" AmountMask />
-        </div>
-      </div>
-
-      <div class="form-group  row">
-        <div class="col-sm-4"></div>
-        <div class="col">
-          <div class="">Number Of Children:</div>
+          <div class="">Number Of <br> Children:</div>
           <input type="text" class="form-control" id="noofchildren" name="noofchildren" formControlName="noofchildren"
             [(ngModel)]="rbcPoints.noofchildren" maxlength="2" NumberOnlyMask />
         </div>
@@ -166,7 +170,7 @@
         <div class="col">
           <div class="">HST per Child:</div>
           <input type="text" class="form-control" id="chst" name="chst" formControlName="chst"
-            [(ngModel)]="rbcPoints.cgst" AmountMask />
+            [(ngModel)]="rbcPoints.chst" AmountMask />
         </div>
       </div>
 

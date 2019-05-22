@@ -260,6 +260,7 @@ export class PackageRemarkService {
         { include: point.hst, description: 'HST COST  PER BOOKING - ' },
         { include: point.qst, description: 'QST COST  PER BOOKING - ' },
         { include: point.otherTaxes, description: 'ALL OTHER TAXES PER BOOKING - ' },
+        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER ADULT - ' },
         { include: point.noofadult, description: 'NUMBER OF ADULTS - ' },
         { include: point.totalbasecostadult, description: 'TOTAL BASE COST PER ADULT - ' },
         { include: point.noofchildren, description: 'NUMBER OF CHILDREN - ' },
@@ -272,7 +273,12 @@ export class PackageRemarkService {
 
         rbcRemarks.forEach(c => {
             if (c.include) {
-                remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+                if (c.description === 'ALL OTHER TAXES PER BOOKING - ' && point.numberbookings
+                    || c.description === 'ALL OTHER TAXES PER ADULT - ' && point.noofadult
+                    || (c.description !== 'ALL OTHER TAXES PER ADULT - ' &&
+                        c.description !== 'ALL OTHER TAXES PER BOOKING - ')) {
+                    remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+                }
             }
         });
 

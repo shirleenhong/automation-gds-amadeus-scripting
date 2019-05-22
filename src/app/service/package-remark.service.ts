@@ -256,11 +256,6 @@ export class PackageRemarkService {
 
         const rbcRemarks = [{ include: point.numberbookings, description: 'NUMBER OF BOOKINGS - ' },
         { include: point.totalbasecost, description: 'TOTAL BASE COST PER BOOKING - ' },
-        { include: point.gst, description: 'GST COST  PER BOOKING - ' },
-        { include: point.hst, description: 'HST COST  PER BOOKING - ' },
-        { include: point.qst, description: 'QST COST  PER BOOKING - ' },
-        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER BOOKING - ' },
-        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER ADULT - ' },
         { include: point.noofadult, description: 'NUMBER OF ADULTS - ' },
         { include: point.totalbasecostadult, description: 'TOTAL BASE COST PER ADULT - ' },
         { include: point.noofchildren, description: 'NUMBER OF CHILDREN - ' },
@@ -271,17 +266,38 @@ export class PackageRemarkService {
         { include: point.cotherTaxes, description: 'ALL OTHER TAXES PER CHILD - ' }
         ];
 
+        const rbcRemarksAir = [{ include: point.gst, description: 'GST COST  PER ADULT - ' },
+        { include: point.hst, description: 'HST COST  PER ADULT - ' },
+        { include: point.qst, description: 'QST COST  PER ADULT - ' },
+        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER ADULT - ' }];
+
+
+        const rbcRemarksCarHotel = [{ include: point.gst, description: 'GST COST  PER BOOKING - ' },
+        { include: point.hst, description: 'HST COST  PER BOOKING - ' },
+        { include: point.qst, description: 'QST COST  PER BOOKING - ' },
+        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER BOOKING - ' }];
+
         rbcRemarks.forEach(c => {
             if (c.include) {
-                if (c.description === 'ALL OTHER TAXES PER BOOKING - ' && point.numberbookings
-                    || c.description === 'ALL OTHER TAXES PER ADULT - ' && point.noofadult
-                    || (c.description !== 'ALL OTHER TAXES PER ADULT - ' &&
-                        c.description !== 'ALL OTHER TAXES PER BOOKING - ')) {
-                    remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
-                }
+                remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
             }
         });
 
+        if (point.numberbookings) {
+            rbcRemarksCarHotel.forEach(c => {
+                if (c.include) {
+                    remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+                }
+            });
+        }
+
+        if (point.noofadult) {
+            rbcRemarksAir.forEach(c => {
+                if (c.include) {
+                    remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+                }
+            });
+        }
     }
 
 

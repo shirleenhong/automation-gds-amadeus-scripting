@@ -45,6 +45,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   vendorCodeList: Array<SelectItem>;
   cfaLine: CfRemarkModel;
   isSubmitted = false;
+  exemption = [];
   constructor(
     public modalRef: BsModalRef,
     private fb: FormBuilder,
@@ -80,7 +81,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
       ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
-
+      exempt: new FormControl('')
     });
 
     this.onControlChanges();
@@ -113,6 +114,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   onControlChanges() {
+
     this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
       this.processAssocValues(val);
     });
@@ -149,6 +151,8 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
       default:
         this.leisureFeeForm.get('segmentNum').disable();
     }
+
+    this.enableDisbleControls(['address'], this.leisureFee.fln !== 1);
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {
@@ -243,7 +247,11 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   saveLeisureFee() {
-
+    this.exemption.forEach(x => {
+      if (x.fln === '' && x.checked) {
+        x.fln = this.leisureFee.fln;
+      }
+    });
     this.isSubmitted = true;
     this.modalRef.hide();
 

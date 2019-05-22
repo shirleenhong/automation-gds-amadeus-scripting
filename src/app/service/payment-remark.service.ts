@@ -263,16 +263,30 @@ export class PaymentRemarkService {
       remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
 
-    lineNums = this.pnrService.getRemarkLineNumbers('TAX');
+    lineNums = this.pnrService.getRemarkLineNumbers('TAX-');
     if (lineNums.length > 0) {
       remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
+    lineNums = this.pnrService.getRemarkLineNumbers('TEX/');
+    if (lineNums.length > 0) {
+      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+    }
+
     if (feeList.length > 0) {
+      remark = 'TAX-' + feeList[0].address;
+      remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
       feeList.forEach(f => {
         remark = this.generateSFCRemark(f);
         remGroup.remarks.push(this.getRemarksModel(remark, '*'));
-        remark = 'TAX-' + fg.get('address').value;
-        remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
+        const ex = [];
+        comp.exemption.forEach(x => {
+          if (x.checked) {
+            ex.push('-' + x.value);
+          }
+        });
+        if (ex.length > 0) {
+          remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
+        }
       });
     }
 

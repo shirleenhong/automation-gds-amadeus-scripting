@@ -20,17 +20,37 @@ export class LeisureFeeComponent implements OnInit {
   isAddNew = false;
   showReasonFee = false;
   leisureFeeForm: FormGroup;
+  exemption = [{ label: 'HST Exempt', value: 'RC', checked: false, fln: '' },
+  { label: 'GST Exempt', value: 'XG', checked: false, fln: '' },
+  { label: 'QST Exempt', value: 'XQ', checked: false, fln: '' }];
 
   constructor(private modalService: BsModalService,
     private pnrService: PnrService,
     private fb: FormBuilder,
     private utilHelper: UtilHelper) { }
+
   ngOnInit(): void {
     this.modalSubscribeOnClose();
     this.leisureFeeForm = this.fb.group({
       noFeeReason: new FormControl('', [Validators.required])
     });
+    this.leisureFeeList = this.pnrService.getSFCRemarks();
+    this.loadExemption();
     this.checkReasonFee();
+  }
+
+  loadExemption() {
+    const ex = this.pnrService.getRemarkText('TEX/');
+    if (ex) {
+      const arr = ex.split('/-');
+      arr.forEach(x => {
+        const e = this.exemption.find(e => e.value === x);
+        if (e) {
+          e.checked = true;
+          e.fln = '1';
+        }
+      });
+    }
   }
 
   modalSubscribeOnClose() {
@@ -74,22 +94,32 @@ export class LeisureFeeComponent implements OnInit {
 
   updateItem(r: LeisureFeeModel) {
     this.isAddNew = false;
+
     this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Update Leisure Fee Collection';
     this.modalRef.content.leisureFee = new LeisureFeeModel();
+    this.modalRef.content.exemption = this.exemption;
     this.utilHelper.modelCopy(r, this.modalRef.content.leisureFee);
 
   }
 
-
-
-
   addLeisureFee() {
     this.isAddNew = true;
     const leisureFee = new LeisureFeeModel();
+
+    if (this.leisureFeeList.length > 0) {
+      this.utilHelper.modelCopy(this.leisureFeeList[0], leisureFee);
+      leisureFee.amount = undefined;
+      leisureFee.paymentType = '';
+      leisureFee.vendorCode = '';
+      leisureFee.ccNo = '';
+      leisureFee.expDate = undefined;
+    }
+
     leisureFee.fln = (this.leisureFeeList.length + 1);
     this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Add Leisure Fee Collection';
+    this.modalRef.content.exemption = this.exemption;
     this.modalRef.content.leisureFee = leisureFee;
   }
 

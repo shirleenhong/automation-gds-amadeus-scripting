@@ -611,9 +611,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   pickupCityOnBlur() {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
-      debugger;
       this.loadCarSupplier();
-      const airs = this.segmentList.filter(x => x.segmentType === 'AIR' );
+      const airs = this.segmentList.filter(x => x.segmentType === 'AIR');
       let air = airs.find(x => x.destinationCity === this.passiveSegments.departureCity);
       if (air) {
         this.passiveSegments.departureDate = (air.arrivalDate);

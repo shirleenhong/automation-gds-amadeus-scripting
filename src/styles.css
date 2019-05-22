@@ -274,3 +274,10 @@ input[type=checkbox]:checked:after {
     top: 2px;
     left: 6px;
 }
+
+
+input[type="checkbox"]:disabled + label:before {
+    border-color: #eee;
+    color: #ccc;
+    background: linear-gradient(to top, #e6e6e6 0px, #fff 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}

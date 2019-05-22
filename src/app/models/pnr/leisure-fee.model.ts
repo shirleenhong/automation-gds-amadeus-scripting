@@ -8,7 +8,6 @@ export class LeisureFeeModel {
     ccNo: string;
     expDate: string;
     address: string;
-    noFeeReason: string;
 }
 
 

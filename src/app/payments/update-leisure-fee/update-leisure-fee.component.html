@@ -127,6 +127,26 @@
           </div>
         </div>
 
+
+        <div class="row form-group">
+          <div class="col-4">Tax Exemption:</div>
+          <div class="col-8">
+            <div *ngFor="let option of exemption">
+              <div *ngIf="!(option.fln !== '' && (option.fln) !== (leisureFee.fln))">
+                <label>
+                  <input type="checkbox" name="exempt" [(ngModel)]="option.checked" value="{{option.value}}"
+                    [ngModelOptions]="{standalone: true}" [disabled]="option.fln !==''" />
+                  {{option.label}}
+                </label>
+              </div>
+              <div *ngIf="option.fln !== '' && option.fln !== leisureFee.fln">
+                <label> {{option.label}} is already applied </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
 
     </form>

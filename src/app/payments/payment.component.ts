@@ -27,9 +27,8 @@ export class PaymentComponent {
   }
 
   checkValid() {
-    debugger;
     this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);
-    if (!this.leisureFee.leisureFeeForm.valid && !this.leisureFee.leisureFeeForm.disabled ) {
+    if (!this.leisureFee.leisureFeeForm.valid && !this.leisureFee.leisureFeeForm.disabled) {
       return false;
     }
 

@@ -41,8 +41,6 @@
       <button class="backMain" (click)="back()">Back To Main Menu</button>
     </div>
   </div>
-
-
 </div>
 
 <div *ngIf="workflow === 'segment' ">
@@ -86,7 +84,6 @@
       <button class="backMain" (click)="back()">Back To Main Menu</button>
     </div>
   </div>
-
 </div>
 
 <div *ngIf="workflow === 'invoice'">
@@ -112,7 +109,7 @@
 
 <div class="loaderBody" *ngIf="!isPnrLoaded">
   <div class="loader" *ngIf="errorPnrMsg==''">
-    <div class="loaderlogo"></div><br /> Loading PNR...
+    <div class="loaderlogo"></div><br /><br />Loading PNR...
   </div>
   <div class="loader" *ngIf="errorPnrMsg!=''">
     {{errorPnrMsg}}
@@ -136,7 +133,6 @@
     <div>
       <button class="leisureButton btnMenu" (click)="cancelSegment()">Cancel Segments</button>
     </div>
-
   </div>
   <div class="loader" *ngIf="errorPnrMsg!=''">
     {{errorPnrMsg}}

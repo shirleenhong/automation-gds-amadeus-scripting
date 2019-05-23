@@ -351,7 +351,7 @@ export class PackageRemarkService {
                     match = regex.exec(rm.freeFlowText);
                     if (match) {
                         model.firstvisanumber = match.groups.firstvisa;
-                        model.lastvisanumber = match.groups.lastvisa;
+                        model.lastvisanumber = match.groups.lastvisa.replace('USED TO REDEEM POINTS', '');
                         this.rbcForDeletion.push(rm.elementNumber);
                     }
 

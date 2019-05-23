@@ -183,7 +183,7 @@ post {
 
 def buildAndPrepare() {
     echo 'Preparing docker container'
-    sh 'docker build --build-arg ENV=${ENVIRONMENT} -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'          
+    sh 'docker build --build-arg ENV=${ENVIRONMENT} -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
     sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
 
     echo 'Pushing docker container to ECR'
@@ -274,7 +274,7 @@ def deployDockerContainerToECR(String ecrUrl, String tagVersion, String region) 
     env.REGISTERY_ID = registryId
 
     echo ' ============== docker build ============== '
-    sh 'docker build -t bpg-csp/bpg-gds-scripting-amadeus:${TAG_VERSION} .'
+    sh 'docker build --build-arg ENV=${ENVIRONMENT} -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
     echo ' ============== docker tag ============== '
     sh 'docker tag bpg-csp/bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
     echo 'Pushing docker container to ECR triggered by ' + getBuildUserName()

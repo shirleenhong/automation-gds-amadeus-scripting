@@ -271,23 +271,24 @@ export class PaymentRemarkService {
     if (lineNums.length > 0) {
       remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
-
     if (feeList.length > 0) {
       remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
+
       feeList.forEach(f => {
         remark = this.generateSFCRemark(f);
         remGroup.remarks.push(this.getRemarksModel(remark, '*'));
-        const ex = [];
-        comp.exemption.forEach(x => {
-          if (x.checked) {
-            ex.push('-' + x.value);
-          }
-        });
-        if (ex.length > 0) {
-          remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
+      });
+      const ex = [];
+      comp.exemption.forEach(x => {
+        if (x.checked) {
+          ex.push('-' + x.value);
         }
       });
+      if (ex.length > 0) {
+        remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
+      }
+
     }
 
     const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
@@ -323,6 +324,7 @@ export class PaymentRemarkService {
         remark += '/-FA-C' + this.getSegmentValue(fee.segmentNum.toString());
         break;
       case '1':
+      case '2':
         remark += '/-FA-T1';
         break;
     }

@@ -167,7 +167,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
     const remarkTax = this.pnrService.getRemarkText('TAX-');
     this.f.paymentType.setValue('C', { onlySelf: true });
     this.leisureFeeForm.controls.segmentAssoc.setValue('0');
-    //  this.f.noFeeReason.setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
+
 
     if (remarkText !== '') {
       const segmentAssociation = this.getSegmentAssociation(

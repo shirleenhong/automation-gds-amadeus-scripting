@@ -363,7 +363,7 @@ export class ItcPackageComponent implements OnInit {
       this.itcForm
     );
 
-    const regx = '/([0-9]+[.]*[0-9]*)/';
+    const regx = /([0-9]+[.]*[0-9]*)/g;
 
     this.itcForm.controls.hotelAdult.setValue(
       this.packageRemarkHelper.getRegexResult('HOTEL/ACCOMMODATION', regx)

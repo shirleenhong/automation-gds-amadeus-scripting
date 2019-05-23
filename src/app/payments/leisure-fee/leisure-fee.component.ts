@@ -6,8 +6,12 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 import { UpdateLeisureFeeComponent } from '../update-leisure-fee/update-leisure-fee.component';
-import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
-
+import {
+  FormGroup,
+  Validators,
+  FormControl,
+  FormBuilder
+} from '@angular/forms';
 
 @Component({
   selector: 'app-leisure-fee',
@@ -20,14 +24,18 @@ export class LeisureFeeComponent implements OnInit {
   isAddNew = false;
   showReasonFee = false;
   leisureFeeForm: FormGroup;
-  exemption = [{ label: 'HST Exempt', value: 'RC', checked: false, fln: '' },
-  { label: 'GST Exempt', value: 'XG', checked: false, fln: '' },
-  { label: 'QST Exempt', value: 'XQ', checked: false, fln: '' }];
+  exemption = [
+    { label: 'HST Exempt', value: 'RC', checked: false, fln: '' },
+    { label: 'GST Exempt', value: 'XG', checked: false, fln: '' },
+    { label: 'QST Exempt', value: 'XQ', checked: false, fln: '' }
+  ];
 
-  constructor(private modalService: BsModalService,
+  constructor(
+    private modalService: BsModalService,
     private pnrService: PnrService,
     private fb: FormBuilder,
-    private utilHelper: UtilHelper) { }
+    private utilHelper: UtilHelper
+  ) {}
 
   ngOnInit(): void {
     this.modalSubscribeOnClose();
@@ -37,7 +45,9 @@ export class LeisureFeeComponent implements OnInit {
     this.leisureFeeList = this.pnrService.getSFCRemarks();
     this.loadExemption();
     this.checkReasonFee();
-    this.leisureFeeForm.get('noFeeReason').setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
+    this.leisureFeeForm
+      .get('noFeeReason')
+      .setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
   }
 
   loadExemption() {
@@ -59,14 +69,19 @@ export class LeisureFeeComponent implements OnInit {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
-            const cur = this.leisureFeeList.find(x => x.fln === this.modalRef.content.leisureFee.fln);
+            const cur = this.leisureFeeList.find(
+              x => x.fln === this.modalRef.content.leisureFee.fln
+            );
             this.utilHelper.modelCopy(this.modalRef.content.leisureFee, cur);
           } else {
             this.leisureFeeList.push(this.modalRef.content.leisureFee);
           }
           this.modalRef.content.isSubmitted = false;
         }
-        if (this.modalRef.content.callerName === 'leisureFee' && this.modalRef.content.response === 'YES') {
+        if (
+          this.modalRef.content.callerName === 'leisureFee' &&
+          this.modalRef.content.response === 'YES'
+        ) {
           const r = this.modalRef.content.paramValue;
           this.leisureFeeList.splice(this.leisureFeeList.indexOf(r), 1);
           let i = 1;
@@ -81,27 +96,29 @@ export class LeisureFeeComponent implements OnInit {
     });
   }
 
-
   deleteItem(r: LeisureFeeModel) {
-    this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
-    this.modalRef.content.message = 'Are you sure you want to delete this Leisure Fee?';
+    this.modalRef.content.message =
+      'Are you sure you want to delete this Leisure Fee?';
     this.modalRef.content.callerName = 'leisureFee';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);
   }
 
-
   updateItem(r: LeisureFeeModel) {
     this.isAddNew = false;
 
-    this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Update Leisure Fee Collection';
     this.modalRef.content.leisureFee = new LeisureFeeModel();
     this.modalRef.content.exemption = this.exemption;
     this.utilHelper.modelCopy(r, this.modalRef.content.leisureFee);
-
   }
 
   addLeisureFee() {
@@ -118,7 +135,9 @@ export class LeisureFeeComponent implements OnInit {
     }
 
     leisureFee.fln = (this.leisureFeeList.length + 1).toString();
-    this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Add Leisure Fee Collection';
     this.modalRef.content.exemption = this.exemption;
     this.modalRef.content.leisureFee = leisureFee;
@@ -131,7 +150,11 @@ export class LeisureFeeComponent implements OnInit {
 
   checkReasonFee() {
     const cfa = this.pnrService.getCFLine();
-    if (cfa.cfa === 'RBM' || cfa.cfa === 'RBP' || this.leisureFeeList.length > 0) {
+    if (
+      cfa.cfa === 'RBM' ||
+      cfa.cfa === 'RBP' ||
+      this.leisureFeeList.length > 0
+    ) {
       this.showReasonFee = false;
       this.leisureFeeForm.get('noFeeReason').setValue('');
       this.leisureFeeForm.get('noFeeReason').disable();
@@ -140,6 +163,4 @@ export class LeisureFeeComponent implements OnInit {
       this.leisureFeeForm.get('noFeeReason').enable();
     }
   }
-
-
 }

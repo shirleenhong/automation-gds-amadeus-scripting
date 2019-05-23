@@ -216,32 +216,25 @@ export class PackageRemarkHelper {
     }
   }
 
-  getRegexResult(rem: string, regx: string) {
+  getRegexResult(rem: string, regx) {
     const regexp = new RegExp(regx);
     const textSearch = this.pnrService.getRirRemarkText(rem);
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-        console.log(
-          regexp.test(textSearch.fullNode.miscellaneousRemarks.remarks.freetext)
+        let result = regexp.exec(
+          textSearch.fullNode.miscellaneousRemarks.remarks.freetext
         );
-        if (
-          regexp.test(textSearch.fullNode.miscellaneousRemarks.remarks.freetext)
-        ) {
-          for (
-            let result = regexp.exec(
-              textSearch.fullNode.miscellaneousRemarks.remarks.freetext
-            );
-            result !== null;
-            result = regexp.exec(
-              textSearch.fullNode.miscellaneousRemarks.remarks.freetext
-            )
-          ) {
-            console.log('result ' + result[0].toLocaleLowerCase());
-            if (!this.forDeletion.includes(textSearch.elementNumber)) {
-              this.forDeletion.push(textSearch.elementNumber);
-            }
-            return result[0];
+        if (!result) {
+          regexp.lastIndex = 0;
+          result = regexp.exec(
+            textSearch.fullNode.miscellaneousRemarks.remarks.freetext
+          );
+        }
+        if (result) {
+          if (!this.forDeletion.includes(textSearch.elementNumber)) {
+            this.forDeletion.push(textSearch.elementNumber);
           }
+          return result[0];
         }
       }
     }

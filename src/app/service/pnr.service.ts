@@ -101,7 +101,7 @@ export class PnrService {
   }
 
   getCFLine(): CfRemarkModel {
-    if (this.cfLine == null) {
+    if (this.cfLine === undefined || this.cfLine === null) {
       const cfLine = new CfRemarkModel();
       if (this.isPNRLoaded) {
         for (const rm of this.pnrObj.rmElements) {

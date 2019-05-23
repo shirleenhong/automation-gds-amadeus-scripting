@@ -100,8 +100,8 @@ export class LeisureComponent
 
   async getPnr() {
     this.errorPnrMsg = "";
-    this.ddbService.sample();
-    this.ddbService.getCountryAndCurrencyList();
+    // this.ddbService.sample();
+    // this.ddbService.getCountryAndCurrencyList();
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
     if (this.pnrService.errorMessage.indexOf("Error") === 0) {

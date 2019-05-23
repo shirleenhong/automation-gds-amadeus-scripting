@@ -98,7 +98,6 @@ export class TranslationService {
 
     getRemarkGroup(groupName, lang) {
         const group = this.groupRemarks.find(x => x.groupName === groupName);
-        debugger;
         if (group) {
             return group.remarks[this.getLangIndex(lang)];
         } else {

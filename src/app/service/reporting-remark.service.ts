@@ -136,7 +136,6 @@ export class ReportingRemarkService {
     //Add Group of Remarks
     rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
     const groups = this.transService.getRemarkGroup('DeclinedReason', this.language);
-    debugger;
     if (groups) {
       groups.forEach(x => {
         rmGroup.remarks.push(this.getRemark(prefix + x, 'RI', 'R'));

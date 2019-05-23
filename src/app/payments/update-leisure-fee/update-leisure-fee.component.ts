@@ -122,6 +122,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
       this.enableDisbleControls(controls, val === 'K');
     });
+
   }
 
   processAssocValues(val) {
@@ -151,8 +152,8 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
       default:
         this.leisureFeeForm.get('segmentNum').disable();
     }
+    this.enableDisbleControls(['address'], this.leisureFee.fln !== '1');
 
-    this.enableDisbleControls(['address'], this.leisureFee.fln !== 1);
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {

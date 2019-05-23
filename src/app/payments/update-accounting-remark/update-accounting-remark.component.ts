@@ -1,16 +1,32 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormArray,
+  FormControl
+} from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
-
+import {
+  validateSegmentNumbers,
+  validateCreditCard,
+  validateExpDate
+} from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -18,7 +34,6 @@ import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src
   styleUrls: ['./update-accounting-remark.component.scss']
 })
 export class UpdateAccountingRemarkComponent implements OnInit {
-
   title: string;
 
   @Input()
@@ -35,16 +50,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   passengerList: Array<any>;
   segments = [];
   matrixAccountingForm: FormGroup;
+  leisureFeeForm: FormGroup;
   isSubmitted: boolean;
   name: string;
   IsInsurance = false;
+  IsPnrAvailable: boolean;
   // PaymentModeList: Array<SelectItem>;
 
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
 
-  constructor(public activeModal: BsModalService, private pnrService: PnrService,
-    public modalRef: BsModalRef, private ddbService: DDBService,
-    private paymentHelper: PaymentRemarkHelper, private utilHelper: UtilHelper) {
+  constructor(
+    public activeModal: BsModalService,
+    private pnrService: PnrService,
+    public modalRef: BsModalRef,
+    private ddbService: DDBService,
+    private paymentHelper: PaymentRemarkHelper,
+    private utilHelper: UtilHelper
+  ) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
     this.accountingRemarks = new MatrixAccountingModel();
@@ -56,17 +78,25 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
       confirmationLabel: new FormControl(''),
-      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
-      validateSegmentNumbers(this.segments)]),
-      supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
+      segmentNo: new FormControl('', [
+        Validators.required,
+        Validators.pattern('[0-9]+(,[0-9]+)*'),
+        validateSegmentNumbers(this.segments)
+      ]),
+      supplierCodeName: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(3)
+      ]),
       // passengerNo: new FormControl('', [Validators.required]),
-      supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      supplierConfirmatioNo: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(20)
+      ]),
       baseAmount: new FormControl('', [Validators.required]),
       commisionWithoutTax: new FormControl('', [Validators.required]),
       gst: new FormControl('', [Validators.required]),
@@ -75,9 +105,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       otherTax: new FormControl('', [Validators.required]),
       fop: new FormControl('', [Validators.required]),
       vendorCode: new FormControl('', [Validators.required]),
-      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      cardNumber: new FormControl('', [
+        Validators.required,
+        validateCreditCard('vendorCode')
+      ]),
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
-      tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
+      tktLine: new FormControl('', [
+        Validators.maxLength(10),
+        Validators.pattern('[0-9]*')
+      ]),
       descriptionapay: new FormControl('', [Validators.required]),
       // bsp: new FormControl('', [Validators.required]),
       commisionPercentage: new FormControl('', [Validators.required])
@@ -87,64 +123,73 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   loadBSPList() {
-    this.bspList = [{ itemText: '', itemValue: '' },
-    { itemText: 'NO', itemValue: '1' },
-    { itemText: 'YES', itemValue: '2' }];
+    this.bspList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'NO', itemValue: '1' },
+      { itemText: 'YES', itemValue: '2' }
+    ];
   }
 
   loadPassengerList() {
-    this.passengerList = [{ itemText: '', itemValue: '' },
-    { itemText: 'ALL Passenger', itemValue: 'ALL' },
-    { itemText: 'PER Passenger', itemValue: 'PER' }];
+    this.passengerList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'ALL Passenger', itemValue: 'ALL' },
+      { itemText: 'PER Passenger', itemValue: 'PER' }
+    ];
   }
 
   loadFormOfPaymentList(testvalue) {
     if (testvalue !== '0') {
-      this.formOfPaymentList = [{ itemText: '', itemValue: '' },
-      { itemText: 'Credit Card', itemValue: 'CC' },
-      { itemText: 'Cash', itemValue: 'CA' },
-      { itemText: 'Cheque', itemValue: 'CK' },
-      { itemText: 'Agency Plastic Card', itemValue: 'AP' }
+      this.formOfPaymentList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'Credit Card', itemValue: 'CC' },
+        { itemText: 'Cash', itemValue: 'CA' },
+        { itemText: 'Cheque', itemValue: 'CK' },
+        { itemText: 'Agency Plastic Card', itemValue: 'AP' }
       ];
     } else {
-      this.formOfPaymentList = [{ itemText: '', itemValue: '' },
-      { itemText: 'Credit Card', itemValue: 'CC' },
-      { itemText: 'Agency Plastic Card', itemValue: 'AP' },
-      { itemText: 'RBC Points', itemValue: 'CK' }
+      this.formOfPaymentList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'Credit Card', itemValue: 'CC' },
+        { itemText: 'Agency Plastic Card', itemValue: 'AP' },
+        { itemText: 'RBC Points', itemValue: 'CK' }
       ];
     }
   }
 
   loadVendorCode() {
-    this.vendorCodeList = [{ itemText: '', itemValue: '' },
-    { itemText: 'VI- Visa', itemValue: 'VI' },
-    { itemText: 'MC - Mastercard', itemValue: 'MC' },
-    { itemText: 'AX - American Express', itemValue: 'AX' },
-    { itemText: 'DC -Diners', itemValue: 'DC' }
+    this.vendorCodeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'VI- Visa', itemValue: 'VI' },
+      { itemText: 'MC - Mastercard', itemValue: 'MC' },
+      { itemText: 'AX - American Express', itemValue: 'AX' },
+      { itemText: 'DC -Diners', itemValue: 'DC' }
     ];
   }
 
   loadAccountingRemarkList() {
-    this.accountingRemarkList = [{ itemText: '', itemValue: '' },
-    { itemText: 'Tour Accounting Remark  ', itemValue: '12' },
-    { itemText: 'Cruise Accounting Remark', itemValue: '5' },
-    { itemText: 'NonBSP Air Accounting Remark', itemValue: '1' },
-    { itemText: 'Rail Accounting Remark', itemValue: '4' },
-    { itemText: 'Limo Accounting Remark', itemValue: '6' },
-    { itemText: 'Insurance Remark', itemValue: 'INS' },
-    { itemText: 'Apay Accounting Remark', itemValue: '0' }
+    this.accountingRemarkList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'Tour Accounting Remark  ', itemValue: '12' },
+      { itemText: 'Cruise Accounting Remark', itemValue: '5' },
+      { itemText: 'NonBSP Air Accounting Remark', itemValue: '1' },
+      { itemText: 'Rail Accounting Remark', itemValue: '4' },
+      { itemText: 'Limo Accounting Remark', itemValue: '6' },
+      { itemText: 'Insurance Remark', itemValue: 'INS' },
+      { itemText: 'Apay Accounting Remark', itemValue: '0' }
     ];
   }
 
   loadDescription() {
-    this.descriptionList = [{ itemText: '', itemValue: '' },
-    { itemText: 'SEAT COSTS', itemValue: 'SEAT COSTS' },
-    { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MAPLE LEAF' },
-    { itemText: 'PET TRANSPORTATION', itemValue: 'PET TRANSPORTATION' },
-    { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT COSTS' },
-    { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE FEES' },
-    { itemText: 'FOOD COSTS', itemValue: 'FOOD COSTS' },
-    { itemText: 'OTHER COSTS', itemValue: 'OTHER COSTS' }
+    this.descriptionList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'SEAT COSTS', itemValue: 'SEAT COSTS' },
+      { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MAPLE LEAF' },
+      { itemText: 'PET TRANSPORTATION', itemValue: 'PET TRANSPORTATION' },
+      { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT COSTS' },
+      { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE FEES' },
+      { itemText: 'FOOD COSTS', itemValue: 'FOOD COSTS' },
+      { itemText: 'OTHER COSTS', itemValue: 'OTHER COSTS' }
     ];
   }
 
@@ -154,20 +199,38 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.IsInsurance = true;
         this.name = 'Policy Confirmation Number:';
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
-        this.enableFormControls(['supplierCodeName', 'descriptionapay', 'tktLine', 'otherTax', 'commisionWithoutTax'], true);
+        this.enableFormControls(
+          [
+            'supplierCodeName',
+            'descriptionapay',
+            'tktLine',
+            'otherTax',
+            'commisionWithoutTax'
+          ],
+          true
+        );
         this.enableFormControls(['commisionPercentage'], false);
         this.accountingRemarks.bsp = '3';
         // this.eventEmitterService.onFirstComponentButtonClick();
         break;
       case '0':
-        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
+        this.enableFormControls(
+          ['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'],
+          true
+        );
         this.enableFormControls(['descriptionapay', 'supplierCodeName'], false);
         this.accountingRemarks.bsp = '2';
         this.IsInsurance = false;
         break;
       default:
-        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
-        this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
+        this.enableFormControls(
+          ['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'],
+          false
+        );
+        this.enableFormControls(
+          ['descriptionapay', 'commisionPercentage'],
+          true
+        );
         this.accountingRemarks.bsp = '1';
         this.filterSupplierCode(accRemark);
         this.setTktNumber();
@@ -181,7 +244,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   filterSupplierCode(typeCode) {
     this.filterSupplierCodeList = this.supplierCodeList.filter(
-      supplier => supplier.type === typeCode);
+      supplier => supplier.type === typeCode
+    );
 
     if (this.accountingRemarks.bsp === '2') {
       this.assignSupplierCode(typeCode);
@@ -226,7 +290,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
   }
 
-  get f() { return this.matrixAccountingForm.controls; }
+  get f() {
+    return this.matrixAccountingForm.controls;
+  }
 
   saveAccounting() {
     if (this.matrixAccountingForm.invalid) {
@@ -238,20 +304,26 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  getAllErrors(form: FormGroup | FormArray): { [key: string]: any; } | null {
+  getAllErrors(form: FormGroup | FormArray): { [key: string]: any } | null {
     let hasError = false;
-    const result = Object.keys(this.matrixAccountingForm.controls).reduce((acc, key) => {
-      const control = this.matrixAccountingForm.get(key);
+    const result = Object.keys(this.matrixAccountingForm.controls).reduce(
+      (acc, key) => {
+        const control = this.matrixAccountingForm.get(key);
 
-      const errors = (control instanceof FormGroup || control instanceof FormArray)
-        ? this.getAllErrors(control)
-        : (control.touched ? control.errors : '');
-      if (errors) {
-        acc[key] = errors;
-        hasError = true;
-      }
-      return acc;
-    }, {} as { [key: string]: any; });
+        const errors =
+          control instanceof FormGroup || control instanceof FormArray
+            ? this.getAllErrors(control)
+            : control.touched
+            ? control.errors
+            : '';
+        if (errors) {
+          acc[key] = errors;
+          hasError = true;
+        }
+        return acc;
+      },
+      {} as { [key: string]: any }
+    );
     return hasError ? result : null;
   }
 
@@ -265,8 +337,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setTktNumber() {
     const supCode = ['ACY', 'SOA', 'WJ3'];
 
-    if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(this.accountingRemarks.supplierCodeName)) {
-      this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+    if (
+      this.accountingRemarks.accountingTypeRemark === '1' &&
+      supCode.includes(this.accountingRemarks.supplierCodeName)
+    ) {
+      this.matrixAccountingForm.controls.tktLine.setValidators(
+        Validators.required
+      );
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
     }
@@ -291,7 +368,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     //   this.IsInsurance = false;
     //   this.name = 'Supplier Confirmation Number:';
     // }
-    this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
+    this.matrixAccountingForm.controls.segmentNo.setValue(
+      this.accountingRemarks.segmentNo
+    );
   }
 
   isTypeINSExist(segmentNo: any) {
@@ -308,7 +387,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           freeText: element.freetext
         };
         if (details.id === segmentNo) {
-          const regx = "/(?<=TYP-)(\w{3})/";
+          const regx = '/(?<=TYP-)(w{3})/';
           if (this.utilHelper.getRegexValue(details.freeText, regx) === 'INS') {
             res = true;
           }
@@ -317,5 +396,4 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
     return res;
   }
-
 }

@@ -1,5 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  FormArray,
+  Validators
+} from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { RBCRedemptionModel } from 'src/app/models/pnr/rbc-redemption.model';
@@ -10,13 +16,18 @@ import { RBCRedemptionModel } from 'src/app/models/pnr/rbc-redemption.model';
   styleUrls: ['./update-rbc-points-redemption.component.scss']
 })
 export class UpdateRbcPointsRedemptionComponent implements OnInit {
+  title: string;
   @Input()
   rbcPoints: RBCRedemptionModel;
   isSubmitted: boolean;
 
   rbcPointsForm: FormGroup;
   productTypeList: Array<SelectItem>;
-  constructor(private fb: FormBuilder, public activeModal: BsModalService, public modalRef: BsModalRef) {
+  constructor(
+    private fb: FormBuilder,
+    public activeModal: BsModalService,
+    public modalRef: BsModalRef
+  ) {
     this.rbcPoints = new RBCRedemptionModel();
   }
 
@@ -50,23 +61,41 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
     this.loadProductTypeList();
   }
 
-  get f() { return this.rbcPointsForm.controls; }
+  get f() {
+    return this.rbcPointsForm.controls;
+  }
 
   loadProductTypeList() {
-    this.productTypeList = [{ itemText: '', itemValue: '' },
-    { itemText: 'AIR', itemValue: 'AIR' },
-    { itemText: 'CAR', itemValue: 'CAR' },
-    { itemText: 'HOTEL', itemValue: 'HOTEL' },
-    { itemText: 'CRUISE', itemValue: 'CRUISE' },
-    { itemText: 'PROPERTY/VACATION PACKAGE', itemValue: 'PROPERTY/VACATION PACKAGE' }];
+    this.productTypeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'AIR', itemValue: 'AIR' },
+      { itemText: 'CAR', itemValue: 'CAR' },
+      { itemText: 'HOTEL', itemValue: 'HOTEL' },
+      { itemText: 'CRUISE', itemValue: 'CRUISE' },
+      {
+        itemText: 'PROPERTY/VACATION PACKAGE',
+        itemValue: 'PROPERTY/VACATION PACKAGE'
+      }
+    ];
   }
 
   onChangeProductType(productType) {
     switch (productType) {
       case 'CAR':
       case 'HOTEL':
-        this.enableFormControls(['totalbasecostadult', 'noofadult', 'noofchildren',
-          'totalbasecostchild', 'cgst', 'chst', 'cqst', 'cotherTaxes'], true);
+        this.enableFormControls(
+          [
+            'totalbasecostadult',
+            'noofadult',
+            'noofchildren',
+            'totalbasecostchild',
+            'cgst',
+            'chst',
+            'cqst',
+            'cotherTaxes'
+          ],
+          true
+        );
         this.enableFormControls(['numberbookings', 'totalbasecost'], false);
         this.rbcPointsForm.controls['pct'].setValue('1');
 
@@ -78,8 +107,19 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
         } else {
           this.rbcPointsForm.controls['pct'].setValue('1');
         }
-        this.enableFormControls(['totalbasecostadult', 'noofadult', 'noofchildren',
-          'totalbasecostchild', 'cgst', 'chst', 'cqst', 'cotherTaxes'], false);
+        this.enableFormControls(
+          [
+            'totalbasecostadult',
+            'noofadult',
+            'noofchildren',
+            'totalbasecostchild',
+            'cgst',
+            'chst',
+            'cqst',
+            'cotherTaxes'
+          ],
+          false
+        );
         this.enableFormControls(['numberbookings', 'totalbasecost'], true);
         break;
     }
@@ -109,5 +149,4 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
   //   debuger;
   //   let test = this.rbcPointsForm.invalid
   // }
-
 }

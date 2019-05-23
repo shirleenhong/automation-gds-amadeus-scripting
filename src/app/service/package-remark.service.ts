@@ -20,7 +20,7 @@ export class PackageRemarkService {
     rbcForDeletion = [];
 
     constructor(private remarkHelper: RemarkHelper,
-        private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
+                private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
 
     public GetITCPackageRemarks(group: any) {
 
@@ -186,7 +186,7 @@ export class PackageRemarkService {
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Code Share';
         rmGroup.remarks = new Array<RemarkModel>();
-        const arr = frmGroup.get('segments') as FormArray
+        const arr = frmGroup.get('segments') as FormArray;
         const segmentList = this.pnrService.getSegmentTatooNumber();
         const regex = /CHECK-IN AT (?<airline>.*) TICKET COUNTER/g;
         const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
@@ -214,7 +214,7 @@ export class PackageRemarkService {
             });
 
 
-            //rm.relatedSegments = segments.split(',');
+            // rm.relatedSegments = segments.split(',');
             rmGroup.remarks.push(rm);
         }
 
@@ -310,17 +310,21 @@ export class PackageRemarkService {
     getRbcPointsRemarksFromPnr(): Array<RBCRedemptionModel> {
         const rbcModels = new Array<RBCRedemptionModel>();
         let model: RBCRedemptionModel;
-        let rbcNo = '0';
+        let rbcNo = '';
+
         for (const rm of this.pnrService.pnrObj.rmElements) {
             if (rm.category === 'K') {
-                if (rm.freeFlowText.indexOf('CARDHOLDER NAME') > -1) {
-                    if (rbcNo !== rm.freeFlowText.substr(0, 1) && rbcNo !== '0') {
+                debugger;
+                rbcNo = rm.freeFlowText.substr(0, 1);
+                if (rbcNo) {
+                    model = rbcModels.find(x => x.rbcNo === Number(rbcNo));
+                    if (model === undefined || model === null) {
+                        model = new RBCRedemptionModel();
+                        model.rbcNo = Number(rbcNo);
                         rbcModels.push(model);
                     }
-                    model = new RBCRedemptionModel();
-                    rbcNo = rm.freeFlowText.substr(0, rm.freeFlowText.indexOf(' '));
-                    model.rbcNo = Number(rbcNo);
                 }
+            
                 if (rm.freeFlowText.substr(0, 1) === rbcNo) {
                     if (rm.freeFlowText.indexOf('NUMBER OF BOOKINGS') > -1) { model.numberbookings = this.getKelements(rm); }
                     if (rm.freeFlowText.indexOf('TOTAL BASE COST PER BOOKING') > -1) { model.totalbasecost = this.getKelements(rm); }
@@ -328,6 +332,12 @@ export class PackageRemarkService {
                     if (rm.freeFlowText.indexOf('HST COST PER BOOKING') > -1) { model.hst = this.getKelements(rm); }
                     if (rm.freeFlowText.indexOf('QST COST PER BOOKING') > -1) { model.qst = this.getKelements(rm); }
                     if (rm.freeFlowText.indexOf('ALL OTHER TAXES PER BOOKING') > -1) { model.otherTaxes = this.getKelements(rm); }
+
+                    if (rm.freeFlowText.indexOf('GST COST PER ADULT') > -1) { model.gst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('HST COST PER ADULT') > -1) { model.hst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('QST COST PER ADULT') > -1) { model.qst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('ALL OTHER TAXES PER ADULT') > -1) { model.otherTaxes = this.getKelements(rm); }
+
                     if (rm.freeFlowText.indexOf('NUMBER OF ADULTS') > -1) { model.noofadult = this.getKelements(rm); }
                     if (rm.freeFlowText.indexOf('TOTAL BASE COST PER ADULT') > -1) { model.totalbasecostadult = this.getKelements(rm); }
                     if (rm.freeFlowText.indexOf('NUMBER OF CHILDREN') > -1) { model.noofchildren = this.getKelements(rm); }
@@ -351,7 +361,7 @@ export class PackageRemarkService {
                     match = regex.exec(rm.freeFlowText);
                     if (match) {
                         model.firstvisanumber = match.groups.firstvisa;
-                        model.lastvisanumber = match.groups.lastvisa.replace('USED TO REDEEM POINTS', '');
+                        model.lastvisanumber = match.groups.lastvisa.replace('USED TO REDEEM POINTS', '').trim();
                         this.rbcForDeletion.push(rm.elementNumber);
                     }
 
@@ -369,14 +379,9 @@ export class PackageRemarkService {
                         model.pct = match.groups.pct;
                         this.rbcForDeletion.push(rm.elementNumber);
                     }
-
                 }
-                // model = new MatrixAccountingModel();
             }
 
-        }
-        if (model) {
-            rbcModels.push(model);
         }
 
         return rbcModels;

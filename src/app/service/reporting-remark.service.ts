@@ -11,7 +11,20 @@ import { TranslationService } from './translation.service';
 })
 export class ReportingRemarkService {
   language = '';
-  constructor(private pnrService: PnrService, private transService: TranslationService) { }
+  // YES/NO insurance
+  insuranceNo = [
+    'I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
+    'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'
+  ];
+  insuranceYes = [
+    'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN PURCHASED.',
+    'FOR THE FULL VALUE OF THE TRIP.'
+  ];
+
+  constructor(
+    private pnrService: PnrService,
+    private transService: TranslationService
+  ) {}
 
   public GetRoutingRemark(reporting: ReportingViewModel) {
     this.language = this.pnrService.getItineraryLanguage();
@@ -26,8 +39,9 @@ export class ReportingRemarkService {
   }
 
   getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
-
-    if (reporting.routeCode == null) { return; }
+    if (reporting.routeCode == null) {
+      return;
+    }
     const remText = reporting.routeCode + '' + reporting.tripType;
     rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 
@@ -35,7 +49,6 @@ export class ReportingRemarkService {
     if (existNumber !== '') {
       rmGroup.deleteRemarkByIds.push(existNumber);
     }
-
   }
 
   getDestinationRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
@@ -58,9 +71,9 @@ export class ReportingRemarkService {
       remText = 'U86/-OVERRIDE LEI';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
+
     if (!(reporting.cfLine.cfa === 'RBM' || reporting.cfLine.cfa === 'RBP')) {
-
-
+      this.deleteDeclinedRemarsk(rmGroup);
       this.deleteRemarks(['U10/-', 'U12/-'], rmGroup);
       // *U10
       if (reporting.cfLine.cfa === 'CVC') {
@@ -68,11 +81,6 @@ export class ReportingRemarkService {
         remText = 'U10/-' + companyname;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
       }
-      const arrNo = ['I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
-        'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'];
-      const arrYes = ['ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN PURCHASED.',
-        'FOR THE FULL VALUE OF THE TRIP.'];
-      this.deleteRemarks(arrNo.concat(arrYes), rmGroup);
 
       if (!reporting.showInsurance) {
         // *U12
@@ -80,14 +88,11 @@ export class ReportingRemarkService {
         if (insuranceDeclined !== null && insuranceDeclined !== '') {
           remText = 'U12/-' + insuranceDeclined;
           rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-          this.addRemarksLang(arrNo, rmGroup, 'RI', 'R');
+          this.addRemarksLang(this.insuranceNo, rmGroup, 'RI', 'R');
           this.addDeclinedOptionRemarks(reporting.declinedOption, rmGroup);
-
         }
       } else {
-
-        this.addRemarksLang(arrYes, rmGroup, 'RI', 'R');
-
+        this.addRemarksLang(this.insuranceYes, rmGroup, 'RI', 'R');
       }
 
       // todo : uncomment for ummend story
@@ -104,38 +109,66 @@ export class ReportingRemarkService {
 
   addRemarksLang(remarks: string[], rmGroup, type, category, prefix?) {
     remarks.forEach(x => {
-      rmGroup.remarks.push(this.getRemark((prefix ? prefix : '') + this.transService.translate(x, this.language), type, category));
+      rmGroup.remarks.push(
+        this.getRemark(
+          (prefix ? prefix : '') +
+            this.transService.translate(x, this.language),
+          type,
+          category
+        )
+      );
     });
   }
 
+  deleteDeclinedRemarsk(rmGroup) {
+    this.deleteRemarks(
+      this.insuranceNo.concat(this.insuranceYes),
+      rmGroup,
+      'RIR'
+    );
 
+    // all RIR lines starts with ...
+    const lines = this.pnrService.getRIRLineNumbers('...');
+    let r = '';
+    if (lines.length > 1) {
+      r = lines[0] + '-' + lines[lines.length - 1];
+    } else {
+      r = lines[0];
+    }
+    rmGroup.deleteRemarkByIds.push(r);
+  }
 
   addDeclinedOptionRemarks(option, rmGroup) {
     const prefix = '...';
+    let text = [];
     switch (option) {
       case '1':
-        this.addRemarksLang(['DELUXE PACKAGE INSURANCE'], rmGroup, 'RI', 'R', prefix);
+        text = ['DELUXE PACKAGE INSURANCE'];
         break;
       case '2':
-        this.addRemarksLang(['CANCELLATION/INTERUPTION'], rmGroup, 'RI', 'R', prefix);
+        text = ['CANCELLATION/INTERUPTION'];
         break;
       case '3':
-        this.addRemarksLang(['EMERGENCY MEDICAL/TRANSPORTATION'], rmGroup, 'RI', 'R', prefix);
+        text = ['EMERGENCY MEDICAL/TRANSPORTATION'];
         break;
       case '4':
-        this.addRemarksLang(['FLIGHT AND TRAVEL ACCIDENT'], rmGroup, 'RI', 'R', prefix);
+        text = ['FLIGHT AND TRAVEL ACCIDENT'];
         break;
       case '5':
-        this.addRemarksLang(['RENTAL CAR PHYSICAL DAMAGE'], rmGroup, 'RI', 'R', prefix);
+        text = ['RENTAL CAR PHYSICAL DAMAGE'];
         break;
       case '6':
-        this.addRemarksLang(['COVERAGE FOR THE FULL DOLLAR VALUE OF THE TRIP'], rmGroup, 'RI', 'R', prefix);
+        text = ['COVERAGE FOR THE FULL DOLLAR VALUE OF THE TRIP'];
         break;
     }
 
-    //Add Group of Remarks
+    this.addRemarksLang(text, rmGroup, 'RI', 'R', prefix);
+    // Add Group of Remarks
     rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
-    const groups = this.transService.getRemarkGroup('DeclinedReason', this.language);
+    const groups = this.transService.getRemarkGroup(
+      'DeclinedReason',
+      this.language
+    );
     if (groups) {
       groups.forEach(x => {
         rmGroup.remarks.push(this.getRemark(prefix + x, 'RI', 'R'));
@@ -144,9 +177,15 @@ export class ReportingRemarkService {
     rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
   }
 
-  deleteRemarks(udids, rmGroup) {
+  deleteRemarks(udids, rmGroup, type?) {
     udids.forEach(x => {
-      const existNumber = this.pnrService.getRemarkLineNumber(x);
+      let existNumber = '';
+      if (type === 'RIR') {
+        existNumber = this.pnrService.getRIRLineNumber(x);
+      } else {
+        existNumber = this.pnrService.getRemarkLineNumber(x);
+      }
+
       if (existNumber !== '') {
         rmGroup.deleteRemarkByIds.push(existNumber);
       }
@@ -161,15 +200,20 @@ export class ReportingRemarkService {
     return rem;
   }
 
-
-  getConciergeUdids(concierge: any, forDeletion: Array<any>, forRetain: Array<any>) {
+  getConciergeUdids(
+    concierge: any,
+    forDeletion: Array<any>,
+    forRetain: Array<any>
+  ) {
     let remText = '';
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Concierge';
     rmGroup.remarks = new Array<RemarkModel>();
     rmGroup.deleteRemarkByIds = new Array<string>();
 
-    if (!concierge.valid) { return; }
+    if (!concierge.valid) {
+      return;
+    }
 
     if (concierge.value.redemptionAdded) {
       if (concierge.value.redemptionAdded === 'WITHIN 48HRS OF BKNG') {

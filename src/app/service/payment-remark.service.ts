@@ -13,20 +13,20 @@ import { AccountingRemarkComponent } from '../payments/accounting-remark/account
 import { LeisureFeeComponent } from '../payments/leisure-fee/leisure-fee.component';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 
-
-
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {
-  }
+  constructor(
+    private pnrService: PnrService,
+    private remarkHelper: RemarkHelper,
+    private ddbService: DDBService
+  ) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
   public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
-
     const remGroup = new RemarkGroup();
     remGroup.group = 'Matrix Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -41,7 +41,6 @@ export class PaymentRemarkService {
       });
     }
     return remGroup;
-
   }
 
   public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
@@ -53,7 +52,7 @@ export class PaymentRemarkService {
     if (existingLines.length > 0) {
       remGroup.deleteRemarkByIds = existingLines;
     }
-    const apays = this.pnrService.getApayRiiRemarkLines();
+    const apays = this.pnrService.getApayRirRemarkLines();
     if (apays !== null && apays.length > 0) {
       if (remGroup.deleteRemarkByIds === undefined) {
         remGroup.deleteRemarkByIds = [];
@@ -64,14 +63,12 @@ export class PaymentRemarkService {
       });
     }
 
-
     if (accountingRemarks !== null) {
       accountingRemarks.forEach(account => {
         this.processAccountingRemarks(account, remGroup.remarks);
       });
     }
     return remGroup;
-
   }
 
   public getRemarksModel(remText, cat, type?, segment?: string) {
@@ -79,7 +76,9 @@ export class PaymentRemarkService {
     if (segment) {
       segmentrelate = segment.split(',');
     }
-    if (type == null) { type = 'RM'; }
+    if (type == null) {
+      type = 'RM';
+    }
 
     const rem = new RemarkModel();
     rem.category = cat;
@@ -110,10 +109,14 @@ export class PaymentRemarkService {
     const formOfPaymentList = [];
     let payment: { foptxt: string; vendorCode: string };
 
-
     switch (modeofPayment) {
       case 'CC': {
-        fop = 'CC' + fopvendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
+        fop =
+          'CC' +
+          fopvendorCode +
+          creditCardNo +
+          '/-EXP-' +
+          expDate.replace('/', '');
         break;
       }
       case 'AP': {
@@ -126,7 +129,6 @@ export class PaymentRemarkService {
         paymentvendorCode = modeofPayment;
         break;
       }
-
     }
     payment = { foptxt: fop, vendorCode: paymentvendorCode };
     formOfPaymentList.push(payment);
@@ -142,13 +144,24 @@ export class PaymentRemarkService {
     return tline;
   }
 
-
-  processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
-    const acc1 = 'MAC/-SUP-' + accounting.supplierCodeName.trim() +
-      '/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-AMT-' +
-      accounting.baseAmount.toString().trim() + '/-PT-' +
-      accounting.hst.toString().trim() + 'RC/-PT-' + accounting.gst.toString().trim() +
-      'XG/-PT-' + accounting.qst.toString().trim() + 'XQ';
+  processAccountingRemarks(
+    accounting: MatrixAccountingModel,
+    remarkList: Array<RemarkModel>
+  ) {
+    const acc1 =
+      'MAC/-SUP-' +
+      accounting.supplierCodeName.trim() +
+      '/-LK-MAC' +
+      accounting.tkMacLine.toString().trim() +
+      '/-AMT-' +
+      accounting.baseAmount.toString().trim() +
+      '/-PT-' +
+      accounting.hst.toString().trim() +
+      'RC/-PT-' +
+      accounting.gst.toString().trim() +
+      'XG/-PT-' +
+      accounting.qst.toString().trim() +
+      'XQ';
 
     let facc = acc1;
 
@@ -172,21 +185,39 @@ export class PaymentRemarkService {
 
     facc = facc + line1;
 
-    const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
-    const acc2 = 'MAC/-LK-MAC' + accounting.tkMacLine.toString().trim() + '/-FOP-' +
-      fopObj[0].foptxt + this.getTKTline(accounting.tktLine) + '/-MP-ALL' +
-      bknLine + accounting.supplierConfirmatioNo.toString().trim();
+    const fopObj = this.getFOP(
+      accounting.fop,
+      accounting.cardNumber,
+      accounting.vendorCode,
+      accounting.expDate
+    );
+    const acc2 =
+      'MAC/-LK-MAC' +
+      accounting.tkMacLine.toString().trim() +
+      '/-FOP-' +
+      fopObj[0].foptxt +
+      this.getTKTline(accounting.tktLine) +
+      '/-MP-ALL' +
+      bknLine +
+      accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
     remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
-    remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString()));
+    remarkList.push(
+      this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString())
+    );
 
     if (accounting.bsp === '2') {
       this.extractApayRemark(accounting, remarkList, fopObj);
     }
   }
 
-  private extractApayRemark(accounting: MatrixAccountingModel, remarkList: RemarkModel[], fopObj: Array<any>) {
-    let ttltax: number = Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
+  private extractApayRemark(
+    accounting: MatrixAccountingModel,
+    remarkList: RemarkModel[],
+    fopObj: Array<any>
+  ) {
+    let ttltax: number =
+      Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
     ttltax = Math.round(ttltax * 100) / 100;
     const decPipe = new DecimalPipe('en-Us');
     let vcode = '';
@@ -194,32 +225,79 @@ export class PaymentRemarkService {
       vcode = accounting.vendorCode;
     }
 
-    let acc3 = 'PAID ' + accounting.descriptionapay + ' CF-' + accounting.supplierConfirmatioNo +
-      ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
+    let acc3 =
+      'PAID ' +
+      accounting.descriptionapay +
+      ' CF-' +
+      accounting.supplierConfirmatioNo +
+      ' CAD' +
+      accounting.baseAmount +
+      ' PLUS ' +
+      decPipe.transform(ttltax, '1.2-2') +
+      ' TAX ON ' +
+      fopObj[0].vendorCode;
 
     const maxlen = this.remarkHelper.getMaxLength('Itinerary');
 
     if (acc3.length > maxlen) {
-      const lessChar: number = (acc3.length - Number(maxlen));
-      const templen: number = accounting.descriptionapay.length - (lessChar + 1);
+      const lessChar: number = acc3.length - Number(maxlen);
+      const templen: number =
+        accounting.descriptionapay.length - (lessChar + 1);
       const tempdec = accounting.descriptionapay.substr(0, templen);
-      acc3 = 'PAID ' + tempdec + ' CF-' + accounting.supplierConfirmatioNo +
-        ' CAD' + accounting.baseAmount + ' PLUS ' + decPipe.transform(ttltax, '1.2-2') + ' TAX ON ' + fopObj[0].vendorCode;
+      acc3 =
+        'PAID ' +
+        tempdec +
+        ' CF-' +
+        accounting.supplierConfirmatioNo +
+        ' CAD' +
+        accounting.baseAmount +
+        ' PLUS ' +
+        decPipe.transform(ttltax, '1.2-2') +
+        ' TAX ON ' +
+        fopObj[0].vendorCode;
     }
 
-    remarkList.push(this.getRemarksModel(acc3, 'R', 'RI', accounting.segmentNo.toString()));
+    remarkList.push(
+      this.getRemarksModel(acc3, 'R', 'RI', accounting.segmentNo.toString())
+    );
   }
 
-  processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
-    const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
-    const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
-    const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-POINTS ' + matrix.points + ' REF-' + matrix.cwtRef;
+  processRBCredemptionRemarks(
+    matrix: MatrixReceiptModel,
+    remarkList: Array<RemarkModel>
+  ) {
+    const rem1 =
+      'REC/-RLN-' +
+      matrix.rln +
+      '/-RF-' +
+      matrix.passengerName +
+      '/-AMT-' +
+      matrix.amount;
+    const rem2 =
+      'REC/-RLN-' +
+      matrix.rln +
+      '/-PR' +
+      matrix.lastFourVi +
+      '/-BA-' +
+      matrix.bankAccount +
+      '/-GL-' +
+      matrix.glCode;
+    const rem3 =
+      'REC/-RLN-' +
+      matrix.rln +
+      '/-RM-POINTS ' +
+      matrix.points +
+      ' REF-' +
+      matrix.cwtRef;
     remarkList.push(this.getRemarksModel(rem1, '*', 'RM'));
     remarkList.push(this.getRemarksModel(rem2, '*', 'RM'));
     remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
   }
 
-  processOtherPaymentRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
+  processOtherPaymentRemarks(
+    matrix: MatrixReceiptModel,
+    remarkList: Array<RemarkModel>
+  ) {
     enum CardType {
       VI = '115000',
       MC = '116000',
@@ -229,19 +307,38 @@ export class PaymentRemarkService {
     const datePipe = new DatePipe('en-US');
     let fop = '';
     if (Object.values(CardType).includes(matrix.bankAccount)) {
-      fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
+      fop =
+        'CC' +
+        matrix.vendorCode +
+        matrix.ccNo +
+        '/-EXP-' +
+        matrix.expDate.replace('/', '');
     } else {
       fop = matrix.modePayment;
     }
 
     let gcNo = '';
 
-    if (matrix.gcNumber != null && (matrix.gcNumber.toString() !== '')) {
+    if (matrix.gcNumber != null && matrix.gcNumber.toString() !== '') {
       gcNo = '/-GC-' + matrix.gcNumber;
     }
 
-    const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
-    const rem2 = 'REC/-RLN-' + matrix.rln + '/-FOP-' + fop + '/-LK-T/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
+    const rem1 =
+      'REC/-RLN-' +
+      matrix.rln +
+      '/-RF-' +
+      matrix.passengerName +
+      '/-AMT-' +
+      matrix.amount;
+    const rem2 =
+      'REC/-RLN-' +
+      matrix.rln +
+      '/-FOP-' +
+      fop +
+      '/-LK-T/-BA-' +
+      matrix.bankAccount +
+      '/-GL-' +
+      matrix.glCode;
     const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-' + matrix.description + gcNo;
 
     remarkList.push(this.getRemarksModel(rem1, '*', 'RM'));
@@ -288,7 +385,6 @@ export class PaymentRemarkService {
       if (ex.length > 0) {
         remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
       }
-
     }
 
     const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
@@ -296,7 +392,11 @@ export class PaymentRemarkService {
       remGroup.deleteRemarkByIds.push(lineNum);
     }
 
-    if (feeList.length === 0 && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
+    if (
+      feeList.length === 0 &&
+      (cfa !== 'RBM' && cfa !== 'RBP') &&
+      fg.get('noFeeReason').value !== ''
+    ) {
       // *U11
       const noFeeReason = fg.get('noFeeReason').value;
       remark = 'U11/-' + noFeeReason;
@@ -318,7 +418,7 @@ export class PaymentRemarkService {
     let remark = 'SFC';
     switch (fee.segmentAssoc) {
       case '3':
-        remark += '/-FA-H' + this.getSegmentValue((fee.segmentNum.toString()));
+        remark += '/-FA-H' + this.getSegmentValue(fee.segmentNum.toString());
         break;
       case '4':
         remark += '/-FA-C' + this.getSegmentValue(fee.segmentNum.toString());
@@ -343,17 +443,15 @@ export class PaymentRemarkService {
   }
 
   getProvinceTaxRemark(fee: LeisureFeeModel) {
-    const provTax = this.ddbService.getProvinceTax().filter(
-      x => x.provinceCode === fee.address
-    );
+    const provTax = this.ddbService
+      .getProvinceTax()
+      .filter(x => x.provinceCode === fee.address);
     let tax1 = '0.00';
     let tax2 = '0.00';
     let taxType1 = 'XG';
     if (provTax.length > 0) {
-      tax1 = this.amountPipe.transform(
-        + fee.amount * +provTax[0].tax1);
-      tax2 = this.amountPipe.transform(
-        +  fee.amount * +provTax[0].tax2);
+      tax1 = this.amountPipe.transform(+fee.amount * +provTax[0].tax1);
+      tax2 = this.amountPipe.transform(+fee.amount * +provTax[0].tax2);
       taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
     }
     let txt = '/-PT-' + tax1 + taxType1;
@@ -362,15 +460,30 @@ export class PaymentRemarkService {
   }
 
   public GetAccountingUdids(acc: AccountingRemarkComponent) {
-
     const fg = acc.accountingForm;
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting UDIDs';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
     let remark = '';
-    const udids = ['U76/-', 'U71/-', 'U75/-', 'U72/-', 'U73/-', 'U74/-', 'U77/-'];
-    const values = ['airOnly', 'exclusiveProperty', 'propertyName', 'flightType', 'priceVsSupplier', 'group', 'preferredVendor'];
+    const udids = [
+      'U76/-',
+      'U71/-',
+      'U75/-',
+      'U72/-',
+      'U73/-',
+      'U74/-',
+      'U77/-'
+    ];
+    const values = [
+      'airOnly',
+      'exclusiveProperty',
+      'propertyName',
+      'flightType',
+      'priceVsSupplier',
+      'group',
+      'preferredVendor'
+    ];
     let i = 0;
 
     if (acc.isAd1SwgSupplier) {
@@ -378,7 +491,12 @@ export class PaymentRemarkService {
         const line = this.pnrService.getRemarkLineNumber(udid);
         if (line === '') {
           const val = fg.get(values[i]).value;
-          if (val !== null && val !== undefined && val !== '' && !fg.get(values[i]).disabled) {
+          if (
+            val !== null &&
+            val !== undefined &&
+            val !== '' &&
+            !fg.get(values[i]).disabled
+          ) {
             remark = udid + val;
             remGroup.remarks.push(this.getRemarksModel(remark, '*'));
           }
@@ -395,7 +513,4 @@ export class PaymentRemarkService {
     }
     return remGroup;
   }
-
-
-
 }

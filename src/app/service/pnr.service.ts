@@ -26,31 +26,34 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
     this.pnrObj = new PNR();
-    await this.pnrObj.retrievePNR().then(
-      (res: any) => {
-        this.isPNRLoaded = true;
-        this.errorMessage = 'PNR Loaded Successfully';
-      },
-      (error: string) => {
-        this.isPNRLoaded = false;
-        this.errorMessage = 'Error: ' + error;
-      }
-    ).catch(err => { console.log(err); });
+    await this.pnrObj
+      .retrievePNR()
+      .then(
+        (res: any) => {
+          this.isPNRLoaded = true;
+          this.errorMessage = 'PNR Loaded Successfully';
+        },
+        (error: string) => {
+          this.isPNRLoaded = false;
+          this.errorMessage = 'Error: ' + error;
+        }
+      )
+      .catch(err => {
+        console.log(err);
+      });
     this.getPCC();
   }
-
 
   getPCC(): void {
     smartScriptSession.requestService('usermanagement.retrieveUser').then(x => {
       this.PCC = x.ACTIVE_OFFICE_ID;
     });
   }
-
 
   getRemarkLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
@@ -74,7 +77,6 @@ export class PnrService {
     }
     return lineNos;
   }
-
 
   getRemarkText(searchText: string) {
     if (this.isPNRLoaded) {
@@ -138,12 +140,26 @@ export class PnrService {
   getRIRLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rii of this.pnrObj.rirElements) {
-        if (rii.fullNode.extendedRemark.structuredRemark.freetext.indexOf(searchText) === 0) {
+        const text = rii.fullNode.extendedRemark.structuredRemark.freetext;
+        if (text.indexOf(searchText) === 0) {
           return rii.elementNumber;
         }
       }
     }
     return '';
+  }
+
+  getRIRLineNumbers(searchText: string) {
+    const lines = [];
+    if (this.isPNRLoaded) {
+      for (const rii of this.pnrObj.rirElements) {
+        const text = rii.fullNode.extendedRemark.structuredRemark.freetext;
+        if (text.indexOf(searchText) === 0) {
+          lines.push(rii.elementNumber);
+        }
+      }
+    }
+    return lines;
   }
 
   getPassengers() {
@@ -197,7 +213,8 @@ export class PnrService {
         this.pushDestination(airendpoint);
       }
       for (const car of this.pnrObj.auxCarSegments) {
-        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
+        const carendpoint =
+          car.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(carendpoint);
       }
 
@@ -248,11 +265,19 @@ export class PnrService {
     this.getSegmentTatooNumber().forEach(c => {
       if (lineNo === '') {
         if (c.segmentType === 'AIR') {
-          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+          elements.push({
+            airlineCode: c.airlineCode,
+            lineNo: c.lineNo,
+            freeText: c.longFreeText.toUpperCase()
+          });
         }
       } else {
         if (c.segmentType === 'AIR' && c.lineNo === lineNo) {
-          elements.push({ airlineCode: c.airlineCode, lineNo: c.lineNo, freeText: c.longFreeText.toUpperCase() });
+          elements.push({
+            airlineCode: c.airlineCode,
+            lineNo: c.lineNo,
+            freeText: c.longFreeText.toUpperCase()
+          });
         }
       }
     });
@@ -267,7 +292,6 @@ export class PnrService {
     }
     return elementNumbers;
   }
-
 
   getSegmentTatooNumber() {
     // const segments = new Array<any>();
@@ -285,9 +309,17 @@ export class PnrService {
     }
 
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1 &&
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('CWT RETENTION SEGMENT') === -1) {
+      if (
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+          'THANK YOU FOR CHOOSING CARLSON'
+        ) === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+          'PNR CANCELLED'
+        ) === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+          'CWT RETENTION SEGMENT'
+        ) === -1
+      ) {
         this.getSegmentDetails(misc, 'MIS');
       }
     }
@@ -295,7 +327,13 @@ export class PnrService {
   }
 
   private formatDate(tempDate) {
-    const lairdate = new Date(tempDate.substr(2, 2) + '/' + tempDate.substr(0, 2) + '/' + tempDate.substr(4, 2));
+    const lairdate = new Date(
+      tempDate.substr(2, 2) +
+        '/' +
+        tempDate.substr(0, 2) +
+        '/' +
+        tempDate.substr(4, 2)
+    );
     const datePipe = new DatePipe('en-US');
     const tdate = datePipe.transform(lairdate, 'ddMMM');
     return tdate;
@@ -316,11 +354,27 @@ export class PnrService {
     let classservice = '';
     let flongtext = '';
 
-
     if (type === 'AIR') {
-      elemText = elem.airlineCode + elem.flightNumber + ' ' + elem.class + this.formatDate(elem.departureDate) +
-        ' ' + elem.departureAirport + elem.arrivalAirport + ' ' + elem.status + elem.bookedQuantity +
-        ' ' + elem.departureTime + ' ' + elem.arrivalTime + ' ' + this.formatDate(elem.arrivalDate) + ' ' + elem.airlineReference;
+      elemText =
+        elem.airlineCode +
+        elem.flightNumber +
+        ' ' +
+        elem.class +
+        this.formatDate(elem.departureDate) +
+        ' ' +
+        elem.departureAirport +
+        elem.arrivalAirport +
+        ' ' +
+        elem.status +
+        elem.bookedQuantity +
+        ' ' +
+        elem.departureTime +
+        ' ' +
+        elem.arrivalTime +
+        ' ' +
+        this.formatDate(elem.arrivalDate) +
+        ' ' +
+        elem.airlineReference;
       elemStatus = elem.status;
       elemairlineCode = elem.airlineCode;
       elemdepdate = elem.departureDate;
@@ -334,8 +388,16 @@ export class PnrService {
       classservice = elem.class;
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
-      elemText = type + ' ' + fullnodetemp.companyDetail.identification + ' ' + elem.fullNode.relatedProduct.status
-        + elem.fullNode.relatedProduct.quantity + ' ' + fullnodetemp.boardpointDetail.cityCode + ' ' +
+      elemText =
+        type +
+        ' ' +
+        fullnodetemp.companyDetail.identification +
+        ' ' +
+        elem.fullNode.relatedProduct.status +
+        elem.fullNode.relatedProduct.quantity +
+        ' ' +
+        fullnodetemp.boardpointDetail.cityCode +
+        ' ' +
         this.formatDate(fullnodetemp.product.depDate);
       elemStatus = elem.fullNode.relatedProduct.status;
       elemdepdate = fullnodetemp.product.depDate;
@@ -367,15 +429,29 @@ export class PnrService {
   }
 
   private getLastDate(airdate: any, lastDeptDate: Date) {
-    const lairdate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
-    if (lairdate > lastDeptDate) { } {
+    const lairdate = new Date(
+      airdate.substr(2, 2) +
+        '/' +
+        airdate.substr(0, 2) +
+        '/' +
+        airdate.substr(4, 2)
+    );
+    if (lairdate > lastDeptDate) {
+    }
+    {
       lastDeptDate = lairdate;
     }
     return lastDeptDate;
   }
 
   checkTST(): boolean {
-    if (this.pnrObj.fullNode.response.model.output.response.tstData !== undefined) { return true; } else { return false; }
+    if (
+      this.pnrObj.fullNode.response.model.output.response.tstData !== undefined
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getLatestDepartureDate() {
@@ -459,16 +535,12 @@ export class PnrService {
           }
           remarks.push(rem);
         }
-
       }
     }
     return remarks;
   }
 
-
-
-
-  getRIIRemarksFromGDS() {
+  getRirRemarksFromGDS() {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rirElements) {
@@ -483,10 +555,11 @@ export class PnrService {
     return remarks;
   }
 
-  getRIIRemarkText(searchText: string) {
+  getRirRemarkText(searchText: string) {
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rirElements) {
-        if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
+        const text = ri.fullNode.miscellaneousRemarks.remarks.freetext;
+        if (text.indexOf(searchText) === 0) {
           return ri;
         }
       }
@@ -497,7 +570,11 @@ export class PnrService {
   getUDIDText(searchText: string) {
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rmElements) {
-        if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
+        if (
+          ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(
+            searchText
+          ) === 0
+        ) {
           // return ri.fullNode.miscellaneousRemarks.remarks.freetext;
           return ri;
         }
@@ -513,7 +590,6 @@ export class PnrService {
   getMatrixAccountingLineNumbers() {
     return this.getRemarkLineNumbers('MAC/-');
   }
-
 
   getSFCRemarks(): Array<LeisureFeeModel> {
     const fees = new Array<LeisureFeeModel>();
@@ -566,7 +642,6 @@ export class PnrService {
               case 'EXP':
                 fee.expDate = arr[1].substr(0, 2) + '/' + arr[1].substr(2, 2);
                 break;
-
             }
           }
         });
@@ -577,10 +652,9 @@ export class PnrService {
     return fees;
   }
 
-
   getAccountingRemarks(): Array<MatrixAccountingModel> {
     const matrixModels = new Array<MatrixAccountingModel>();
-    const apays = this.getApayRiiRemarkLines();
+    const apays = this.getApayRirRemarkLines();
     let macNum = '';
     for (const rm of this.pnrObj.rmElements) {
       if (rm.freeFlowText.indexOf('MAC/-') === 0) {
@@ -596,18 +670,28 @@ export class PnrService {
         } else {
           this.extractMatrixAccount(model, rm.freeFlowText);
         }
-        if (model.bsp === undefined || model.bsp == null || model.bsp === '') { model.bsp = '1'; }// default
-        if (rm.associations !== null && rm.associations !== undefined && model !== undefined) {
+        if (model.bsp === undefined || model.bsp == null || model.bsp === '') {
+          model.bsp = '1';
+        } // default
+        if (
+          rm.associations !== null &&
+          rm.associations !== undefined &&
+          model !== undefined
+        ) {
           model.segmentNo = this.getAssocNumbers(rm.associations);
 
           if (apays !== null && apays.length > 0) {
             apays.forEach(x => {
               if (x.segments === model.segmentNo) {
                 model.bsp = '2';
-                model.descriptionapay = x.remark.match(/PAID (.*) CF-/g).toString().replace('CF-', '').replace('PAID ', '').trim();
+                model.descriptionapay = x.remark
+                  .match(/PAID (.*) CF-/g)
+                  .toString()
+                  .replace('CF-', '')
+                  .replace('PAID ', '')
+                  .trim();
                 model.accountingTypeRemark = '0';
               }
-
             });
           }
         }
@@ -616,14 +700,15 @@ export class PnrService {
           model.accountingTypeRemark = 'INS';
           model.bsp = '3';
         }
-
-
       }
     }
     return matrixModels;
   }
 
-  private extractMatrixAccount(model: MatrixAccountingModel, remark: string): MatrixAccountingModel {
+  private extractMatrixAccount(
+    model: MatrixAccountingModel,
+    remark: string
+  ): MatrixAccountingModel {
     const rem = remark.split('/-');
 
     rem.forEach(r => {
@@ -639,7 +724,10 @@ export class PnrService {
           model.baseAmount = this.amountPipe.transform(val[1]);
           break;
         case 'PT':
-          const pt = val[1].replace('XG', '').replace('XQ', '').replace('XT', '');
+          const pt = val[1]
+            .replace('XG', '')
+            .replace('XQ', '')
+            .replace('XT', '');
           if (model.hst == null) {
             model.hst = this.amountPipe.transform(parseFloat(pt));
           } else if (model.gst == null) {
@@ -668,18 +756,16 @@ export class PnrService {
           model.passengerNo = val[1];
           break;
         case 'BKN':
-          model.supplierConfirmatioNo = (val[1]).replace('CWT', '');
+          model.supplierConfirmatioNo = val[1].replace('CWT', '');
           break;
         case 'CD':
-          model.commisionWithoutTax = (val[1]);
+          model.commisionWithoutTax = val[1];
           break;
         case 'CP':
-          model.commisionPercentage = (val[1]);
+          model.commisionPercentage = val[1];
           break;
         case '':
-
       }
-
     });
 
     return model;
@@ -691,25 +777,32 @@ export class PnrService {
     }
     const s = [];
     assoc.forEach(x => {
-      const segment = this.getSegmentTatooNumber().find(z => z.tatooNo === x.tatooNumber);
-      if (segment !== null && segment !== undefined) { s.push(segment.lineNo); }
+      const segment = this.getSegmentTatooNumber().find(
+        z => z.tatooNo === x.tatooNumber
+      );
+      if (segment !== null && segment !== undefined) {
+        s.push(segment.lineNo);
+      }
     });
     return s.join(',');
   }
 
-  getApayRiiRemarkLines() {
+  getApayRirRemarkLines() {
     const apays = [];
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rirElements) {
         const rem = rm.fullNode.miscellaneousRemarks.remarks.freetext;
         if (rem.match(/PAID (.*) CF-(.*) PLUS (.*) TAX ON (.*)/g) !== null) {
-          apays.push({ lineNum: rm.elementNumber, remark: rem, segments: this.getAssocNumbers(rm.associations) });
+          apays.push({
+            lineNum: rm.elementNumber,
+            remark: rem,
+            segments: this.getAssocNumbers(rm.associations)
+          });
         }
       }
     }
     return apays;
   }
-
 
   hasNUCRemarks() {
     if (this.isPNRLoaded) {
@@ -746,11 +839,12 @@ export class PnrService {
         if (model === null || model === undefined) {
           model = new MatrixReceiptModel();
 
-          matrixReceipts.push(this.extractMatrixReceipt(model, rm.freeFlowText));
+          matrixReceipts.push(
+            this.extractMatrixReceipt(model, rm.freeFlowText)
+          );
         } else {
           this.extractMatrixReceipt(model, rm.freeFlowText);
         }
-
       }
     }
 
@@ -819,7 +913,6 @@ export class PnrService {
     return segmentModel;
   }
 
-
   getHotelSegmentModel(element, index, freetext) {
     let segmentModel: PassiveSegmentsModel;
     segmentModel = new PassiveSegmentsModel();
@@ -835,7 +928,10 @@ export class PnrService {
     const match = regex.exec(freetext);
 
     if (match) {
-      segmentModel.confirmationNo = match.groups.confirmationNumber.substr(0, match.groups.confirmationNumber.length - 1)
+      segmentModel.confirmationNo = match.groups.confirmationNumber.substr(
+        0,
+        match.groups.confirmationNumber.length - 1
+      );
     }
 
     return segmentModel;
@@ -851,19 +947,22 @@ export class PnrService {
       switch (element.segmentType) {
         case 'MIS':
         case 'CAR':
-          pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+          pSegment.push(
+            this.getSegmentModel(element.freetext, index, element.segmentType)
+          );
           break;
         case 'AIR':
           pSegment.push(this.getAirSegmentModel(element, index));
           break;
         case 'HTL':
-          pSegment.push(this.getHotelSegmentModel(element, index, element.freetext));
+          pSegment.push(
+            this.getHotelSegmentModel(element, index, element.freetext)
+          );
           break;
       }
     });
     return pSegment;
   }
-
 
   // getRirSeaSegments() {
   //   const pSegment = [];
@@ -874,8 +973,10 @@ export class PnrService {
   //   return pSegment;
   // }
 
-  private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
-
+  private extractMatrixReceipt(
+    model: MatrixReceiptModel,
+    remark: string
+  ): MatrixReceiptModel {
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
     let match = regex.exec(remark);
     if (match !== null) {
@@ -916,7 +1017,8 @@ export class PnrService {
         if (match !== null) {
           model.vendorCode = match.groups.vendor;
           model.ccNo = Number(match.groups.cardNo);
-          model.expDate = match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
+          model.expDate =
+            match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
         }
 
         return model;
@@ -927,18 +1029,23 @@ export class PnrService {
     if (match !== null) {
       model.rln = Number(match.groups.rln);
       model.description = match.groups.desc;
-      if (model.gcNumber !== null) { model.gcNumber = (match.groups.gc); }
+      if (model.gcNumber !== null) {
+        model.gcNumber = match.groups.gc;
+      }
       return model;
     }
 
     return model;
-
   }
 
   IsMISRetention() {
     if (this.isPNRLoaded) {
       for (const misc of this.pnrObj.miscSegments) {
-        if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
+        if (
+          misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+            'PNR CANCELLED'
+          ) > -1
+        ) {
           return true;
         }
       }
@@ -953,13 +1060,16 @@ export class PnrService {
 
   hasAmendMISRetentionLine() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
+      if (
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+          'THANK YOU FOR CHOOSING CARLSON'
+        ) > -1
+      ) {
         return true;
       }
     }
 
     return false;
-
   }
 
   getMISRetentionLineNumber(freetext) {
@@ -971,29 +1081,33 @@ export class PnrService {
     return '';
   }
 
-
   IsExistAmkVib(supCode) {
     if (this.isPNRLoaded) {
       for (const misc of this.pnrObj.miscSegments) {
         if (supCode === 'vib') {
-          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION') > -1 ||
-            misc.fullNode.itineraryFreetext.longFreetext.indexOf('POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS') > -1) {
+          if (
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+              'FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION'
+            ) > -1 ||
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+              'POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS'
+            ) > -1
+          ) {
             return true;
           }
         }
         if (supCode === 'amk') {
-          if (misc.fullNode.itineraryFreetext.longFreetext.indexOf
-            ('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1) {
+          if (
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf(
+              'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER'
+            ) > -1
+          ) {
             return true;
           }
         }
-
       }
     }
 
     return false;
   }
-
-
-
 }

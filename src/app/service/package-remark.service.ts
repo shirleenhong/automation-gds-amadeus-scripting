@@ -314,7 +314,6 @@ export class PackageRemarkService {
 
         for (const rm of this.pnrService.pnrObj.rmElements) {
             if (rm.category === 'K') {
-                debugger;
                 rbcNo = rm.freeFlowText.substr(0, 1);
                 if (rbcNo) {
                     model = rbcModels.find(x => x.rbcNo === Number(rbcNo));

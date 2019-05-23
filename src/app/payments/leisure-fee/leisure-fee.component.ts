@@ -37,6 +37,7 @@ export class LeisureFeeComponent implements OnInit {
     this.leisureFeeList = this.pnrService.getSFCRemarks();
     this.loadExemption();
     this.checkReasonFee();
+    this.leisureFeeForm.get('noFeeReason').setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
   }
 
   loadExemption() {

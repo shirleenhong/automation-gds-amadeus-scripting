@@ -242,8 +242,7 @@ export class PackageRemarkService {
         const name = point.lastname + '/' + point.firstname;
         const visa = point.firstvisanumber + 'XXXXXX' + point.lastvisanumber;
         const pointsRedeemed = point.pointsRedeemed + ' VALUE ' + point.valuepoints;
-        const mandatoryHotelRemarks = ['CARDHOLDER NAME - ' + name,
-        'CARDHOLDER VISA VI' + visa,
+        const mandatoryHotelRemarks = ['CARDHOLDER NAME - ' + name, 'CARDHOLDER VISA VI' + visa + ' USED TO REDEEM POINTS',
         point.pct + ' PERCENT POINTS REDEMPTION',
         'POINTS REDEEMED ' + pointsRedeemed,
         'PRODUCT TYPE - ' + point.productType,
@@ -257,14 +256,15 @@ export class PackageRemarkService {
         const rbcRemarks = [{ include: point.numberbookings, description: 'NUMBER OF BOOKINGS - ' },
         { include: point.totalbasecost, description: 'TOTAL BASE COST PER BOOKING - ' },
         { include: point.noofadult, description: 'NUMBER OF ADULTS - ' },
-        { include: point.totalbasecostadult, description: 'TOTAL BASE COST PER ADULT - ' },
-        { include: point.noofchildren, description: 'NUMBER OF CHILDREN - ' },
+        { include: point.totalbasecostadult, description: 'TOTAL BASE COST PER ADULT - ' }
+        ];
+
+        const rbcChildren = [{ include: point.noofchildren, description: 'NUMBER OF CHILDREN - ' },
         { include: point.totalbasecostchild, description: 'TOTAL BASE COST PER CHILD - ' },
         { include: point.cgst, description: 'GST COST PER CHILD - ' },
         { include: point.chst, description: 'HST COST PER CHILD - ' },
         { include: point.cqst, description: 'QST COST PER CHILD - ' },
-        { include: point.cotherTaxes, description: 'ALL OTHER TAXES PER CHILD - ' }
-        ];
+        { include: point.cotherTaxes, description: 'ALL OTHER TAXES PER CHILD - ' }];
 
         const rbcRemarksAir = [{ include: point.gst, description: 'GST COST  PER ADULT - ' },
         { include: point.hst, description: 'HST COST  PER ADULT - ' },
@@ -298,6 +298,12 @@ export class PackageRemarkService {
                 }
             });
         }
+
+        rbcChildren.forEach(c => {
+            if (c.include) {
+                remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+            }
+        });
     }
 
 

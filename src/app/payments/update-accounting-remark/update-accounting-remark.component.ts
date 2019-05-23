@@ -84,6 +84,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
 
     this.name = 'Supplier Confirmation Number:';
+    this.utilHelper.validateAllFields(this.matrixAccountingForm);
   }
 
   loadBSPList() {

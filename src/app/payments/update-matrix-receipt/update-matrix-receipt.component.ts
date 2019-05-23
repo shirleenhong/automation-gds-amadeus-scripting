@@ -10,6 +10,7 @@ import { BankAccount } from 'src/app/models/bank-account.model';
 import { DatePipe } from '@angular/common';
 import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-update-matrix-receipt',
@@ -32,9 +33,11 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 
   @ViewChild('bankAccount') bankAccEl: ElementRef;
 
-  constructor(public activeModal: BsModalService, private pnrService: PnrService,
+  constructor(public activeModal: BsModalService,
+    private pnrService: PnrService,
     public modalRef: BsModalRef,
-    private paymentHelper: PaymentRemarkHelper) {
+    private util: UtilHelper
+  ) {
     this.bankAccountList = new Array<SelectItem>();
     this.matrixReceipt = new MatrixReceiptModel();
     this.loadBankAccount();
@@ -55,7 +58,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
 
     });
 
-
+    this.util.validateAllFields(this.matrixForm);
   }
 
   ngOnInit() {

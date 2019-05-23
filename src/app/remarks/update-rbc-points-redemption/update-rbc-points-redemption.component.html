@@ -94,7 +94,7 @@
       <div class="form-group  row">
         <div class="col-sm-4">Total Base Cost Per Booking:</div>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="totalbasecost" name="totalbasecost"
+          <input type="text" class="form-control" id="totalbasecost" name="totalbasecost" maxlength="8"
             formControlName="totalbasecost" [(ngModel)]="rbcPoints.totalbasecost" AmountMask />
         </div>
       </div>
@@ -113,7 +113,7 @@
         </div>
         <div class="col">
           <div class="">Total Base Cost Per Adult:</div>
-          <input type="text" class="form-control" id="totalbasecostadult" name="totalbasecostadult"
+          <input type="text" class="form-control" id="totalbasecostadult" name="totalbasecostadult" maxlength="8"
             formControlName="totalbasecostadult" [(ngModel)]="rbcPoints.totalbasecostadult" AmountMask />
         </div>
       </div>
@@ -123,12 +123,12 @@
       <div class="col">
         <div class="">GST :</div>
         <input type="text" class="form-control" id="gst" name="gst" formControlName="gst" [(ngModel)]="rbcPoints.gst"
-          AmountMask />
+          AmountMask maxlength="8" />
       </div>
       <div class="col">
         <div class="">HST :</div>
         <input type="text" class="form-control" id="hst" name="hst" formControlName="hst" [(ngModel)]="rbcPoints.hst"
-          AmountMask />
+          AmountMask maxlength="8" />
       </div>
     </div>
 
@@ -137,12 +137,12 @@
       <div class="col">
         <div class="">QST :</div>
         <input type="text" class="form-control" id="qst" name="qst" formControlName="qst" [(ngModel)]="rbcPoints.qst"
-          AmountMask />
+          AmountMask maxlength="8" />
       </div>
       <div class="col">
         <div class="">All Other Taxes:</div>
         <input type="text" class="form-control" id="otherTaxes" name="otherTaxes" formControlName="otherTaxes"
-          [(ngModel)]="rbcPoints.otherTaxes" AmountMask />
+          [(ngModel)]="rbcPoints.otherTaxes" AmountMask maxlength="8" />
       </div>
     </div>
     <div *ngIf="rbcPoints.productType !== 'CAR' && rbcPoints.productType !== 'HOTEL'">
@@ -156,7 +156,7 @@
         <div class="col">
           <div class="">Total Base Cost Per Child:</div>
           <input type="text" class="form-control" id="totalbasecostchild" name="totalbasecostchild"
-            formControlName="totalbasecostchild" [(ngModel)]="rbcPoints.totalbasecostchild" AmountMask />
+            formControlName="totalbasecostchild" [(ngModel)]="rbcPoints.totalbasecostchild" AmountMask maxlength="8" />
         </div>
       </div>
 
@@ -165,12 +165,12 @@
         <div class="col">
           <div class="">GST per Child:</div>
           <input type="text" class="form-control" id="cgst" name="cgst" formControlName="cgst"
-            [(ngModel)]="rbcPoints.cgst" AmountMask />
+            [(ngModel)]="rbcPoints.cgst" AmountMask maxlength="8" />
         </div>
         <div class="col">
           <div class="">HST per Child:</div>
           <input type="text" class="form-control" id="chst" name="chst" formControlName="chst"
-            [(ngModel)]="rbcPoints.chst" AmountMask />
+            [(ngModel)]="rbcPoints.chst" AmountMask maxlength="8" />
         </div>
       </div>
 
@@ -179,12 +179,12 @@
         <div class="col">
           <div class="">QST per Child:</div>
           <input type="text" class="form-control" id="cqst" name="cqst" formControlName="cqst"
-            [(ngModel)]="rbcPoints.cqst" AmountMask />
+            [(ngModel)]="rbcPoints.cqst" AmountMask maxlength="8" />
         </div>
         <div class="col">
           <div class="">All Other Taxes:</div>
           <input type="text" class="form-control" id="cotherTaxes" name="cotherTaxes" formControlName="cotherTaxes"
-            [(ngModel)]="rbcPoints.cotherTaxes" AmountMask />
+            [(ngModel)]="rbcPoints.cotherTaxes" AmountMask maxlength="8" />
         </div>
       </div>
     </div>

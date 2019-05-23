@@ -4,14 +4,17 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
 import { DatePipe } from '@angular/common';
+import { TranslationService } from './translation.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportingRemarkService {
-  constructor(private pnrService: PnrService) { }
+  language = '';
+  constructor(private pnrService: PnrService, private transService: TranslationService) { }
 
   public GetRoutingRemark(reporting: ReportingViewModel) {
+    this.language = this.pnrService.getItineraryLanguage();
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Routing';
     rmGroup.remarks = new Array<RemarkModel>();
@@ -65,7 +68,11 @@ export class ReportingRemarkService {
         remText = 'U10/-' + companyname;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
       }
-
+      const arrNo = ['I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
+        'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'];
+      const arrYes = ['ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN PURCHASED.',
+        'FOR THE FULL VALUE OF THE TRIP.'];
+      this.deleteRemarks(arrNo.concat(arrYes), rmGroup);
 
       if (!reporting.showInsurance) {
         // *U12
@@ -73,7 +80,14 @@ export class ReportingRemarkService {
         if (insuranceDeclined !== null && insuranceDeclined !== '') {
           remText = 'U12/-' + insuranceDeclined;
           rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
+          this.addRemarksLang(arrNo, rmGroup, 'RI', 'R');
+          this.addDeclinedOptionRemarks(reporting.declinedOption, rmGroup);
+
         }
+      } else {
+
+        this.addRemarksLang(arrYes, rmGroup, 'RI', 'R');
+
       }
 
       // todo : uncomment for ummend story
@@ -86,6 +100,49 @@ export class ReportingRemarkService {
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
       }
     }
+  }
+
+  addRemarksLang(remarks: string[], rmGroup, type, category, prefix?) {
+    remarks.forEach(x => {
+      rmGroup.remarks.push(this.getRemark((prefix ? prefix : '') + this.transService.translate(x, this.language), type, category));
+    });
+  }
+
+
+
+  addDeclinedOptionRemarks(option, rmGroup) {
+    const prefix = '...';
+    switch (option) {
+      case '1':
+        this.addRemarksLang(['DELUXE PACKAGE INSURANCE'], rmGroup, 'RI', 'R', prefix);
+        break;
+      case '2':
+        this.addRemarksLang(['CANCELLATION/INTERUPTION'], rmGroup, 'RI', 'R', prefix);
+        break;
+      case '3':
+        this.addRemarksLang(['EMERGENCY MEDICAL/TRANSPORTATION'], rmGroup, 'RI', 'R', prefix);
+        break;
+      case '4':
+        this.addRemarksLang(['FLIGHT AND TRAVEL ACCIDENT'], rmGroup, 'RI', 'R', prefix);
+        break;
+      case '5':
+        this.addRemarksLang(['RENTAL CAR PHYSICAL DAMAGE'], rmGroup, 'RI', 'R', prefix);
+        break;
+      case '6':
+        this.addRemarksLang(['COVERAGE FOR THE FULL DOLLAR VALUE OF THE TRIP'], rmGroup, 'RI', 'R', prefix);
+        break;
+    }
+
+    //Add Group of Remarks
+    rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
+    const groups = this.transService.getRemarkGroup('DeclinedReason', this.language);
+    debugger;
+    if (groups) {
+      groups.forEach(x => {
+        rmGroup.remarks.push(this.getRemark(prefix + x, 'RI', 'R'));
+      });
+    }
+    rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
   }
 
   deleteRemarks(udids, rmGroup) {

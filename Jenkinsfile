@@ -26,7 +26,7 @@ pipeline {
   parameters {
     string(name: 'TAG_VERSION', defaultValue: '1.0.0-SNAPSHOT', description: 'Docker tag version')
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
-    booleanParam(name: 'BUILD', defaultValue: false, description: 'Build?')    
+    // booleanParam(name: 'BUILD', defaultValue: false, description: 'Build?')    
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
     booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')
@@ -37,24 +37,24 @@ pipeline {
   }
 
   stages {
-    stage('Build/Prepare') {
-      when {
-        expression { 
-          return params.BUILD
-        }
-      }
-      steps{
-        dir(".") {
-          echo 'Preparing docker container'
-          sh 'docker build -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
-          sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
+    // stage('Build/Prepare') {
+    //   when {
+    //     expression { 
+    //       return params.BUILD
+    //     }
+    //   }
+    //   steps{
+    //     dir(".") {
+    //       echo 'Preparing docker container'
+    //       sh 'docker build -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
+    //       sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
 
-          echo 'Pushing docker container to ECR'
-          sh 'eval $(aws ecr get-login --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
-          sh 'docker push ${ECR_URL}:${TAG_VERSION}'
-        }
-      }
-    }
+    //       echo 'Pushing docker container to ECR'
+    //       sh 'eval $(aws ecr get-login --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
+    //       sh 'docker push ${ECR_URL}:${TAG_VERSION}'
+    //     }
+    //   }
+    // }
     stage('DEV:Deploy') {
       when {
           expression {
@@ -66,6 +66,7 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.DEV_TARGET_GROUP_ARN : " + env.DEV_TARGET_GROUP_ARN
             deployDockerContainer(env.DEV_TARGET_GROUP_ARN)
         }
@@ -87,7 +88,7 @@ pipeline {
     stage('TEST:Deploy') {
       when {
         expression {
-            return params.DEPLOY_TO_TEST
+          return params.DEPLOY_TO_TEST
         }
       }
       environment {
@@ -95,6 +96,7 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.TST_TARGET_GROUP_ARN : " + env.TST_TARGET_GROUP_ARN
             deployDockerContainer(env.TST_TARGET_GROUP_ARN)
         }
@@ -126,6 +128,7 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.STG_TARGET_GROUP_ARN : " + env.STG_TARGET_GROUP_ARN
             deployDockerContainer(env.STG_TARGET_GROUP_ARN)
         }
@@ -164,6 +167,7 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.PROD_TARGET_GROUP_ARN : " + env.PROD_TARGET_GROUP_ARN
             deployDockerContainer(env.PROD_TARGET_GROUP_ARN)
         }
@@ -194,6 +198,16 @@ post {
           echo "failure!"
       }
   }
+}
+
+def buildAndPrepare() {
+    echo 'Preparing docker container'
+    sh 'docker build --build-arg ENV=${ENVIRONMENT} -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'          
+    sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
+
+    echo 'Pushing docker container to ECR'
+    sh 'eval $(aws ecr get-login --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
+    sh 'docker push ${ECR_URL}:${TAG_VERSION}'
 }
 
 def deployDockerContainer(targetGroupARN) {

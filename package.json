@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --ssl true --port=5443 --ssl-cert '/ssl/localhost.crt' --ssl-key '/ssl/localhost.key' --deploy-url '/portal/gds-scripting-amadeus/'",
-    "build": "ng build --prod --output-path=dist",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -50,11 +50,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   passengerList: Array<any>;
   segments = [];
   matrixAccountingForm: FormGroup;
-  leisureFeeForm: FormGroup;
   isSubmitted: boolean;
   name: string;
   IsInsurance = false;
-  IsPnrAvailable: boolean;
   // PaymentModeList: Array<SelectItem>;
 
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
@@ -120,6 +118,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
 
     this.name = 'Supplier Confirmation Number:';
+    this.utilHelper.validateAllFields(this.matrixAccountingForm);
   }
 
   loadBSPList() {

@@ -6,6 +6,7 @@ import { SelectItem } from 'src/app/models/select-item.model';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SegmentService } from 'src/app/service/segment.service';
 import { FareRuleModel } from 'src/app/models/pnr/fare-rule.model';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 
 declare var smartScriptSession: any;
@@ -35,7 +36,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   tempFareRuleType: string;
 
   constructor(private fb: FormBuilder, public activeModal: BsModalService, private pnrService: PnrService,
-    // tslint:disable-next-line:align
+    private util: UtilHelper,
     public modalRef: BsModalRef, private ddb: DDBService, private segmentService: SegmentService) {
     this.fareRules = new FareRuleModel();
     this.fareRules.mode = 'rbTicket';
@@ -46,7 +47,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       segmentNum: new FormControl(''),
       airlineCode: new FormControl(''),
       cityPair: new FormControl(''),
-      //itemCityPair: this.fb.array([this.createCityPairs()]),
       checkInWith: new FormControl(''),
       fareRuleList: new FormControl(''),
       isTicketNonRefundable: new FormControl(''),
@@ -69,7 +69,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
     this.showCrypticForm = true;
     this.showOptionalFare = false;
     this.ShowFareRule = false;
-    //    this.fareRules.mode = true;
 
     this.fareRuleForm.controls.ticketAmount.enable();
     this.fareRuleForm.controls.nonRefundable.disable();
@@ -105,12 +104,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       remarkText: value
     });
   }
-
-  // createCityPairs(): FormGroup {
-  //   return this.fb.group({
-  //     cityPair: ''
-  //   });
-  // }
 
   loadSegmentList(): void {
     this.segmentList = this.pnrService.getPassiveAirSegmentNumbers();

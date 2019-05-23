@@ -20,8 +20,8 @@ export class AmountMaskDirective {
     @HostListener('blur')
     onBlur() {
         if (this.ngControl.value === null || this.ngControl.value === undefined || isNaN(this.ngControl.value)) { return; }
-        const newVal = this.amountPipe.transform(this.ngControl.value.replace(',', ''));
-        this.ngControl.control.setValue(newVal);
+        const newVal = this.amountPipe.transform(this.ngControl.value);
+        this.ngControl.control.setValue(newVal.replace(/\,/g, ''));
 
     }
 

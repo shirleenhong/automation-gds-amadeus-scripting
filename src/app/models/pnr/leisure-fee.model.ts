@@ -1,5 +1,5 @@
 export class LeisureFeeModel {
-    fln: number;
+    fln: string;
     segmentAssoc: string;
     segmentNum: number;
     amount: string;

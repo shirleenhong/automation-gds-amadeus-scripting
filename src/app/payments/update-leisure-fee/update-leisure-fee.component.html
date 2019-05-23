@@ -135,7 +135,7 @@
               <div *ngIf="!(option.fln !== '' && (option.fln) !== (leisureFee.fln))">
                 <label>
                   <input type="checkbox" name="exempt" [(ngModel)]="option.checked" value="{{option.value}}"
-                    [ngModelOptions]="{standalone: true}" [disabled]="option.fln !==''" />
+                    [ngModelOptions]="{standalone: true}" />
                   {{option.label}}
                 </label>
               </div>

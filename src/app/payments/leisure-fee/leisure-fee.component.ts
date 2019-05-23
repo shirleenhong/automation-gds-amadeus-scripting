@@ -71,7 +71,7 @@ export class LeisureFeeComponent implements OnInit {
           this.leisureFeeList.splice(this.leisureFeeList.indexOf(r), 1);
           let i = 1;
           this.leisureFeeList.forEach(x => {
-            x.fln = i;
+            x.fln = i.toString();
             i++;
           });
           this.modalRef.content.response = '';
@@ -117,7 +117,7 @@ export class LeisureFeeComponent implements OnInit {
       leisureFee.expDate = undefined;
     }
 
-    leisureFee.fln = (this.leisureFeeList.length + 1);
+    leisureFee.fln = (this.leisureFeeList.length + 1).toString();
     this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, { backdrop: 'static' });
     this.modalRef.content.title = 'Add Leisure Fee Collection';
     this.modalRef.content.exemption = this.exemption;

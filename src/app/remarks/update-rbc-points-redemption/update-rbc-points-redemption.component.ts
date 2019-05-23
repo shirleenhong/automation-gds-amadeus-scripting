@@ -9,6 +9,7 @@ import {
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { RBCRedemptionModel } from 'src/app/models/pnr/rbc-redemption.model';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-update-rbc-points-redemption',
@@ -23,10 +24,12 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
 
   rbcPointsForm: FormGroup;
   productTypeList: Array<SelectItem>;
+
   constructor(
     private fb: FormBuilder,
     public activeModal: BsModalService,
-    public modalRef: BsModalRef
+    public modalRef: BsModalRef,
+    private util: UtilHelper
   ) {
     this.rbcPoints = new RBCRedemptionModel();
   }
@@ -59,6 +62,8 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
       pct: new FormControl('')
     });
     this.loadProductTypeList();
+
+    this.util.validateAllFields(this.rbcPointsForm);
   }
 
   get f() {

@@ -378,6 +378,7 @@ export class RemarkService {
   }
 
   endPNR(requestor) {
+    smartScriptSession.send('RT');
     smartScriptSession.send('RF' + requestor);
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');

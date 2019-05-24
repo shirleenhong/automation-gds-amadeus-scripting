@@ -323,7 +323,6 @@ export class PackageRemarkService {
                         rbcModels.push(model);
                     }
                 }
-            
                 if (rm.freeFlowText.substr(0, 1) === rbcNo) {
                     if (rm.freeFlowText.indexOf('NUMBER OF BOOKINGS') > -1) { model.numberbookings = this.getKelements(rm); }
                     if (rm.freeFlowText.indexOf('TOTAL BASE COST PER BOOKING') > -1) { model.totalbasecost = this.getKelements(rm); }

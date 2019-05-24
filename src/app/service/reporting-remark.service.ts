@@ -17,8 +17,8 @@ export class ReportingRemarkService {
     'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'
   ];
   insuranceYes = [
-    'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN PURCHASED.',
-    'FOR THE FULL VALUE OF THE TRIP.'
+    'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN',
+    'PURCHASED FOR THE FULL VALUE OF THE TRIP.'
   ];
 
   constructor(
@@ -73,7 +73,7 @@ export class ReportingRemarkService {
     }
 
     if (!(reporting.cfLine.cfa === 'RBM' || reporting.cfLine.cfa === 'RBP')) {
-      this.deleteDeclinedRemarsk(rmGroup);
+      this.deleteDeclinedRemarks(rmGroup);
       this.deleteRemarks(['U10/-', 'U12/-'], rmGroup);
       // *U10
       if (reporting.cfLine.cfa === 'CVC') {
@@ -120,7 +120,7 @@ export class ReportingRemarkService {
     });
   }
 
-  deleteDeclinedRemarsk(rmGroup) {
+  deleteDeclinedRemarks(rmGroup) {
     this.deleteRemarks(
       this.insuranceNo.concat(this.insuranceYes),
       rmGroup,
@@ -135,7 +135,9 @@ export class ReportingRemarkService {
     } else {
       r = lines[0];
     }
-    rmGroup.deleteRemarkByIds.push(r);
+    if (r) {
+      rmGroup.deleteRemarkByIds.push(r);
+    }
   }
 
   addDeclinedOptionRemarks(option, rmGroup) {

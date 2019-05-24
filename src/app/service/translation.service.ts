@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TranslationService {
-  language = ['EN-GB', 'FR-FR'];
+  language = ['EN', 'FR'];
   remarkLines = [
     [
       'I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
@@ -97,9 +97,9 @@ export class TranslationService {
   ];
 
   translate(remark, lang) {
-    const langIndx = this.getLangIndex(lang);
+    const l = lang.split('-');
+    const langIndx = this.getLangIndex(l[0]);
     const rem = this.remarkLines.find(r => r[0] === remark);
-
     return rem ? rem[langIndx] : remark;
   }
 

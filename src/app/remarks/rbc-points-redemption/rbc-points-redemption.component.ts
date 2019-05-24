@@ -12,7 +12,6 @@ import { PackageRemarkService } from 'src/app/service/package-remark.service';
   styleUrls: ['./rbc-points-redemption.component.scss']
 })
 export class RbcPointsRedemptionComponent implements OnInit {
-
   // @Input()
   // rbcRemarks = new Array<RBCRedemptionModel>();
 
@@ -22,10 +21,12 @@ export class RbcPointsRedemptionComponent implements OnInit {
   // @Input()
   rbcRedemption: RBCRedemptionModel[] = [];
 
-  constructor(private modalService: BsModalService,
+  constructor(
+    private modalService: BsModalService,
     private utilHelper: UtilHelper,
     private pnrService: PnrService,
-    private PackageRemarkService: PackageRemarkService) { }
+    private PackageRemarkService: PackageRemarkService
+  ) {}
 
   ngOnInit() {
     // this.rbcRedemption = this.pnrService.getAccountingRemarks();
@@ -36,9 +37,11 @@ export class RbcPointsRedemptionComponent implements OnInit {
   addRBCRedemptionPoints() {
     this.isAddNew = true;
     const rbcPoints = new RBCRedemptionModel();
-    this.modalRef = this.modalService.show(UpdateRbcPointsRedemptionComponent, { backdrop: 'static' });
-    rbcPoints.rbcNo = (this.rbcRedemption.length + 1);
-    this.modalRef.content.title = 'Add RBC Redemption Points';
+    this.modalRef = this.modalService.show(UpdateRbcPointsRedemptionComponent, {
+      backdrop: 'static'
+    });
+    rbcPoints.rbcNo = this.rbcRedemption.length + 1;
+    this.modalRef.content.title = 'Add RBC Points Redemption';
     this.modalRef.content.rbcPoints = rbcPoints;
   }
 
@@ -46,7 +49,9 @@ export class RbcPointsRedemptionComponent implements OnInit {
     this.modalService.onHide.subscribe(result => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const rbcNo = this.rbcRedemption.find(x => x.rbcNo === this.modalRef.content.rbcPoints.rbcNo);
+          const rbcNo = this.rbcRedemption.find(
+            x => x.rbcNo === this.modalRef.content.rbcPoints.rbcNo
+          );
           this.utilHelper.modelCopy(this.modalRef.content.rbcPoints, rbcNo);
         } else {
           this.rbcRedemption.push(this.modalRef.content.rbcPoints);
@@ -58,8 +63,10 @@ export class RbcPointsRedemptionComponent implements OnInit {
 
   updateItem(r: RBCRedemptionModel) {
     this.isAddNew = false;
-    this.modalRef = this.modalService.show(UpdateRbcPointsRedemptionComponent, { backdrop: 'static' });
-    this.modalRef.content.title = 'Update RBC Redemption Points';
+    this.modalRef = this.modalService.show(UpdateRbcPointsRedemptionComponent, {
+      backdrop: 'static'
+    });
+    this.modalRef.content.title = 'Update RBC Points Redemption';
     this.modalRef.content.rbcPoints = new RBCRedemptionModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.rbcPoints);
     this.modalRef.content.onChangeProductType(r.productType);
@@ -67,7 +74,9 @@ export class RbcPointsRedemptionComponent implements OnInit {
   }
 
   deleteItem(r: RBCRedemptionModel) {
-    if (confirm('Are you sure you want to delete this RBC redeption points?')) {
+    if (
+      confirm('Are you sure you want to delete this RBC points redemption?')
+    ) {
       this.rbcRedemption.splice(this.rbcRedemption.indexOf(r), 1);
       let i = 1;
       this.rbcRedemption.forEach(x => {

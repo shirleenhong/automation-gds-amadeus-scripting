@@ -38,6 +38,7 @@ import { invalid } from '@angular/compiler/src/render3/view/util';
 import { VisaPassportService } from '../service/visa-passport.service';
 import { InvoiceService } from '../service/invoice-remark.service';
 import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
+import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
 @Component({
   selector: 'app-leisure',
@@ -50,10 +51,10 @@ export class LeisureComponent
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
-  workflow: string = '';
-  cancelEnabled: boolean = true;
+  workflow = '';
+  cancelEnabled = true;
   validModel = new ValidateModel();
-  invoiceEnabled: boolean = false;
+  invoiceEnabled = false;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -78,7 +79,6 @@ export class LeisureComponent
     private segmentService: SegmentService,
     private packageRemarkService: PackageRemarkService,
     private visaPassportService: VisaPassportService,
-    private fb: FormBuilder,
     private ddbService: DDBService,
     private modalService: BsModalService,
     private invoiceService: InvoiceService
@@ -88,20 +88,12 @@ export class LeisureComponent
 
   ngAfterViewChecked() {
     // Subscribe to event from child Component
-    // if (this.eventSubscribe) { return; }
-    // this.paymentComponent.leisureFee.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
-    //   this.reportingComponent.reportingView.leisureFeeType = val;
-    //   this.reportingComponent.checkSFC();
-    // });
-    // this.eventSubscribe = true;
   }
 
   ngAfterViewInit(): void {}
 
   async getPnr() {
     this.errorPnrMsg = '';
-    // this.ddbService.sample();
-    // this.ddbService.getCountryAndCurrencyList();
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
@@ -196,7 +188,7 @@ export class LeisureComponent
 
     // tslint:disable-next-line:no-string-literal
     if (
-      this.remarkComponent.remarkForm.controls['packageList'].value !== null &&
+      this.remarkComponent.remarkForm.controls.packageList.value !== null &&
       this.remarkComponent.remarkForm.controls.packageList.value !== '' &&
       this.remarkComponent.remarkForm.controls.packageList.value !== '1'
     ) {

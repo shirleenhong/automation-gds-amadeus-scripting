@@ -815,24 +815,28 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       );
       if (air) {
         this.passiveSegments.departureDate = this.convertDateFormat(
-          air.arrivalDate.toUpperCase()
+          air.arrivalDate
         );
         this.passiveSegments.departureTime = this.convert24to12Hr(
           air.arrivalTime
         );
         this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
-
         const indx = airs.indexOf(air);
         if (indx < airs.length - 1) {
           air = airs[indx + 1];
-          this.passiveSegments.arrivalDate = air.departureDate;
-          this.passiveSegments.arrivalTime = air.departureTime;
+          this.passiveSegments.arrivalDate = this.convertDateFormat(
+            air.departureDate
+          );
+          this.passiveSegments.arrivalTime = this.convert24to12Hr(
+            air.departureTime
+          );
         }
       }
     }
   }
 
   convertDateFormat(date) {
+    date = date.toUpperCase();
     if (date.match(/([0-9]{2}[A-Z]{3})/g)) {
       const m = [
         'JAN',

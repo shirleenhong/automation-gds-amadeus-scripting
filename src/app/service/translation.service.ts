@@ -6,14 +6,6 @@ import { Injectable } from '@angular/core';
 export class TranslationService {
   language = ['EN', 'FR'];
   remarkLines = [
-    [
-      'I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
-      'J AI REFUSE D ACHETER LES OPTIONS D ASSURANCES VOYAGES CI-DESSOUS'
-    ],
-    [
-      'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME',
-      'M AYANT ETE OFFERTES ET EXPLIQUEES PAR MON CONSEILLER EN VOYAGES'
-    ],
     ['DELUXE PACKAGE INSURANCE', 'FORFAIT SUPERIEUR D ASSURANCE'],
     ['CANCELLATION/INTERUPTION', 'ANNULATION/INTERRUPTION'],
     [
@@ -21,14 +13,6 @@ export class TranslationService {
       'FRAIS MEDICAUX D URGENCES/DE TRANSPORT'
     ],
     ['FLIGHT AND TRAVEL ACCIDENT', 'ACCIDENTS DE VOL ET DE VOYAGES'],
-    [
-      'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN',
-      'LE FORFAIT D ASSURANCE SUPERIEUR A ETE ACHETE.'
-    ],
-    [
-      'PURCHASED FOR THE FULL VALUE OF THE TRIP.',
-      'RIR POUR LE MONTANT TOTAL DU VOYAGE.'
-    ],
     ['', ''],
     ['', '']
   ];
@@ -96,18 +80,45 @@ export class TranslationService {
           'QUAND MEME'
         ]
       ]
+    },
+    {
+      groupName: 'InsuranceDeclinedNo',
+      remarks: [
+        [
+          'I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
+          'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'
+        ],
+        [
+          'J AI REFUSE D ACHETER LES OPTIONS D ASSURANCES VOYAGES',
+          'CI-DESSOUS M AYANT ETE OFFERTES ET EXPLIQUEES PAR MON ',
+          'CONSEILLER EN VOYAGES'
+        ]
+      ]
+    },
+    {
+      groupName: 'InsuranceDeclinedYes',
+      remarks: [
+        [
+          'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN',
+          'PURCHASED FOR THE FULL VALUE OF THE TRIP.'
+        ],
+        [
+          'LE FORFAIT D ASSURANCE SUPERIEUR A ETE ACHETE.',
+          'RIR POUR LE MONTANT TOTAL DU VOYAGE.'
+        ]
+      ]
     }
   ];
 
   translate(remark, lang) {
-    const l = lang.split('-');
-    const langIndx = this.getLangIndex(l[0]);
+    const langIndx = this.getLangIndex(lang);
     const rem = this.remarkLines.find(r => r[0] === remark);
     return rem ? rem[langIndx] : remark;
   }
 
   getLangIndex(lang: string) {
-    const langIndx = this.language.indexOf(lang.toUpperCase());
+    const l = lang.split('-');
+    const langIndx = this.language.indexOf(l[0].toUpperCase());
     return langIndx < 0 ? 0 : langIndx;
   }
 

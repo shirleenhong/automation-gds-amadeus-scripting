@@ -12,14 +12,8 @@ import { TranslationService } from './translation.service';
 export class ReportingRemarkService {
   language = '';
   // YES/NO insurance
-  insuranceNo = [
-    'I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
-    'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'
-  ];
-  insuranceYes = [
-    'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN',
-    'PURCHASED FOR THE FULL VALUE OF THE TRIP.'
-  ];
+  insuranceNo = [];
+  insuranceYes = [];
 
   constructor(
     private pnrService: PnrService,
@@ -28,6 +22,16 @@ export class ReportingRemarkService {
 
   public GetRoutingRemark(reporting: ReportingViewModel) {
     this.language = this.pnrService.getItineraryLanguage();
+
+    this.insuranceNo = this.transService.getRemarkGroup(
+      'InsuranceDeclinedNo',
+      this.language
+    );
+    this.insuranceYes = this.transService.getRemarkGroup(
+      'InsuranceDeclinedYes',
+      this.language
+    );
+
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Routing';
     rmGroup.remarks = new Array<RemarkModel>();
@@ -95,7 +99,6 @@ export class ReportingRemarkService {
         this.addRemarksLang(this.insuranceYes, rmGroup, 'RI', 'R');
       }
 
-      // todo : uncomment for ummend story
       const existNumber = this.pnrService.getRemarkLineNumber('U30/-NEWLEI');
       if (existNumber === '') {
         // *U30

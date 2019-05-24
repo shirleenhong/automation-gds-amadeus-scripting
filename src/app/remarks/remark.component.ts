@@ -1,5 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormBuilder,
+  FormArray
+} from '@angular/forms';
 import { SelectItem } from '../models/select-item.model';
 import { TourPackageComponent } from './tour-package/tour-package.component';
 import { ItcPackageComponent } from './itc-package/itc-package.component';
@@ -9,6 +15,7 @@ import { CodeshareComponent } from './codeshare/codeshare.component';
 
 import { VisaPassportComponent } from './visa-passport/visa-passport.component';
 import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.component';
+import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
 
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
@@ -18,19 +25,24 @@ import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.
   styleUrls: ['./remark.component.scss']
 })
 export class RemarkComponent implements OnInit {
-
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
   @ViewChild(ItcPackageComponent) itcPackageComponent: ItcPackageComponent;
-  @ViewChild(VisaPassportComponent) viewPassportComponent: VisaPassportComponent;
+  @ViewChild(VisaPassportComponent)
+  viewPassportComponent: VisaPassportComponent;
   @ViewChild(CodeshareComponent) codeShareComponent: CodeshareComponent;
-  @ViewChild(FareRuleSegmentComponent) fareRuleSegmentComponent: FareRuleSegmentComponent;
+  @ViewChild(FareRuleSegmentComponent)
+  fareRuleSegmentComponent: FareRuleSegmentComponent;
+  @ViewChild(RbcPointsRedemptionComponent)
+  rbcPointsRedemptionComponent: RbcPointsRedemptionComponent;
   remarkForm: FormGroup;
-
-
 
   packageList: Array<SelectItem>;
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
+  constructor(
+    private fb: FormBuilder,
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper
+  ) {
     this.loadtourPackage();
     this.remarkForm = this.fb.group({
       packageList: new FormControl('', [Validators.required])
@@ -45,26 +57,27 @@ export class RemarkComponent implements OnInit {
     // this.group.priceRemarkSelector = '1';
   }
 
-
   loadtourPackage() {
-    this.packageList = [{ itemText: '', itemValue: '' },
-    { itemText: 'Itemize Package Cost Remarks', itemValue: 'ITC' },
-    { itemText: 'Tour Package', itemValue: 'TP' }
+    this.packageList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'Itemize Package Cost Remarks', itemValue: 'ITC' },
+      { itemText: 'Tour Package', itemValue: 'TP' }
     ];
   }
 
   private setPackageListValue() {
-    if (this.pnrService.getRIIRemarkText('THE FOLLOWING COSTS ARE SHOWN IN')) {
+    if (this.pnrService.getRirRemarkText('THE FOLLOWING COSTS ARE SHOWN IN')) {
       this.remarkForm.controls.packageList.patchValue('TP');
-      if (this.pnrService.getRIIRemarkText('HOTEL/ACCOMMODATION') !== '' ||
-        this.pnrService.getRIIRemarkText('CAR RENTAL') !== '') {
+      if (
+        this.pnrService.getRirRemarkText('HOTEL/ACCOMMODATION') !== '' ||
+        this.pnrService.getRirRemarkText('CAR RENTAL') !== ''
+      ) {
         this.remarkForm.controls.packageList.patchValue('ITC');
       }
     }
   }
 
   checkValid() {
-
     if (this.f.packageList.value === 'ITC') {
       this.utilHelper.validateAllFields(this.itcPackageComponent.itcForm);
       if (!this.itcPackageComponent.itcForm.valid) {
@@ -76,28 +89,31 @@ export class RemarkComponent implements OnInit {
         return false;
       }
     }
-    const arr = this.codeShareComponent.codeShareGroup.get('segments') as FormArray;
+    const arr = this.codeShareComponent.codeShareGroup.get(
+      'segments'
+    ) as FormArray;
     if (arr.length === 1) {
       const val1 = arr.controls[0].get('segment').value;
       const val2 = arr.controls[0].get('airline').value;
-      if ((val1 === '' && val2 === '')) { } else if ((val1 === '' || val2 === '')) {
-        this.utilHelper.validateAllFields(this.codeShareComponent.codeShareGroup);
+      if (val1 === '' && val2 === '') {
+      } else if (val1 === '' || val2 === '') {
+        this.utilHelper.validateAllFields(
+          this.codeShareComponent.codeShareGroup
+        );
         return false;
       }
     } else {
-
       if (arr.length > 1 && !this.codeShareComponent.codeShareGroup.valid) {
-        this.utilHelper.validateAllFields(this.codeShareComponent.codeShareGroup);
+        this.utilHelper.validateAllFields(
+          this.codeShareComponent.codeShareGroup
+        );
         return false;
       }
     }
     return true;
   }
 
-
   get f() {
     return this.remarkForm.controls;
   }
-
 }
-

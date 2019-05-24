@@ -25,35 +25,12 @@
             [(ngModel)]="fareRules.cityPair" />
         </div>
       </div>
-      <!-- <div class="form-group  row">
-        <div class="col-sm-4">City Pair :</div>
-        <div class="col-sm-8">
-          <div style="padding-bottom:10px" formArrayName="itemCityPair"
-            *ngFor="let item of fareRuleForm.get('itemCityPair').controls; let i = index;">
-            <div [formGroupName]="i">
-              <table style="width:100%">
-                <tr>
-                  <td style="width:86%">
-                    <input formControlName="cityPair" class="form-control">
-                  </td>
-                  <td style="width:14%">
-                    <i class="fas fa-plus-circle iconPlus" (click)="addCityPair()"></i>
-                    &nbsp;
-                    <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeCityPair(i)"></i>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
     <div class="form-group  row" *ngIf="ShowFareRule">
       <div class="col-sm-4">Fare Rule :</div>
       <div class="col-sm-8">
         <select id="fareRuleList" class="form-control" name="fareRuleList" formControlName="fareRuleList" required
           [(ngModel)]="fareRules.fareRuleType">
-          <!-- (change)="executeFareRuleCryptic($event.target.value)" -->
           <option *ngFor="let item of  fareRuleList" [value]="item.itemValue">
             {{item.itemText}}
           </option>
@@ -67,61 +44,62 @@
         <div class="col-sm-8">
           <input type="checkbox" name="isTicketNonRefundable" formControlName="isTicketNonRefundable"
             id="isTicketNonRefundable" [(ngModel)]="fareRules.isTicketNonRefundable"
-            (change)="enableDisableBasedOnMinMax()" />&nbsp;&nbsp;Ticket
-          Non-Refundable/No Changes <br />
+            (change)="enableDisableBasedOnMinMax()" />Ticket Non-Refundable/No Changes <br />
           <input type="checkbox" name="isTicketMinMax" formControlName="isTicketMinMax"
-            [(ngModel)]="fareRules.isTicketMinMax" id="isTicketMinMax"
-            (change)="enableDisableBasedOnMinMax()" />&nbsp;&nbsp; Ticket has MIN/MAX Stay
-          Requirements <br />
+            [(ngModel)]="fareRules.isTicketMinMax" id="isTicketMinMax" (change)="enableDisableBasedOnMinMax()" />Ticket
+          has MIN/MAX Stay Requirements <br />
           <input type="checkbox" name="isTicketNonRef" formControlName="isTicketNonRef"
             [(ngModel)]="fareRules.isTicketNonRef" id="isTicketNonRef"
-            (change)="enableDisableBasedOnMinMax()" />&nbsp;&nbsp; Non-Ref/Tkt Value may be applied
-          for Future Travel<br />
+            (change)="enableDisableBasedOnMinMax()" />Non-Ref/Tkt Value may be applied
+          for Future &nbsp;&nbsp; &nbsp;Travel<br />
         </div>
       </div>
+
       <div class="form-group  row">
-        <div class="col-sm-4">Currency:</div>
-        <div class="col-sm-8">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <label>Currency:</label>
           <input type="text" class="form-control" placeholder="select a currency" formControlName="currencyType"
             id="currencyType" list="dynamicCurrency" [(ngModel)]="fareRules.currencyType" />
           <datalist id="dynamicCurrency">
             <option *ngFor="let item of bspCurrencyList" [value]="item.itemValue">{{item.itemText}}</option>
           </datalist>
         </div>
-      </div>
-      <div class="form-group  row">
-        <div class="col-sm-4">
-          <input type="radio" formControlName="mode" name="mode" value="rbTicket" (change)="checkChanged()"
-            [(ngModel)]="fareRules.mode">
-          Ticket Amount:</div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="ticketAmount" name="ticketAmount"
-            [(ngModel)]="fareRules.ticketAmount" formControlName="ticketAmount" AmountMask />
-        </div>
-      </div>
-
-      <div class="form-group  row">
-        <div class="col-sm-4"><input type="radio" formControlName="mode" name="mode" value="rbNonRefundable"
-            (change)="checkChanged()" [(ngModel)]="fareRules.mode"> Non-Refundable %:</div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="nonRefundable" name="nonRefundable"
-            formControlName="nonRefundable" [(ngModel)]="fareRules.nonRefundable" />
-        </div>
-      </div>
-      <div class="form-group  row">
-        <div class="col-sm-4">Minimum Change Fee:</div>
-        <div class="col-sm-8">
+        <div class="col">
+          <label>Minimum Change Fee:</label>
           <input type="text" class="form-control" id="minChangeFee" name="minChangeFee" formControlName="minChangeFee"
             [(ngModel)]="fareRules.minChangeFee" AmountMask />
         </div>
       </div>
-      <!-- <div class="form-group  row">
-        <div class="col-sm-4">Check-in w/ :</div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="checkInWith" name="checkInWith" formControlName="checkInWith"
-            [(ngModel)]="fareRules.checkInWith" />
+
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+
+          <label class="control control-radio">
+            Ticket Amount:
+            <input type="radio" formControlName="mode" name="mode" value="rbTicket" (change)="checkChanged()"
+              [(ngModel)]="fareRules.mode">
+            <div class="control_indicator"></div>
+          </label>
+
+          <input type="text" class="form-control" id="ticketAmount" name="ticketAmount"
+            [(ngModel)]="fareRules.ticketAmount" formControlName="ticketAmount" AmountMask />
         </div>
-      </div> -->
+        <div class="col">
+          <label class="control control-radio">
+            <span> Non-Refundable%:</span>
+            <input type="radio" formControlName="mode" name="mode" value="rbNonRefundable" (change)="checkChanged()"
+              [(ngModel)]="fareRules.mode">
+            <div class="control_indicator"></div>
+          </label>
+          <input type="text" class="form-control" id="nonRefundable" name="nonRefundable"
+            formControlName="nonRefundable" [(ngModel)]="fareRules.nonRefundable" />
+        </div>
+
+      </div>
+
+
     </div>
     <div class="form-group  row">
       <div class="col-sm-4">Associated Remarks :</div>
@@ -131,10 +109,11 @@
           <div [formGroupName]="i">
             <table style="width:100%">
               <tr>
-                <td style="width:86%">
+                <td style="width:78%">
                   <input formControlName="remarkText" class="form-control">
                 </td>
-                <td style="width:14%">
+                <td style="width:22%">
+                  &nbsp;
                   <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
                   &nbsp;
                   <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>

@@ -14,4 +14,5 @@ export class ReportingViewModel {
     sfcLineAdded: boolean;
     leisureFeeType = 0;
     showInsurance = false;
+    declinedOption: string;
 }

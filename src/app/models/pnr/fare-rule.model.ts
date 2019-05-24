@@ -16,4 +16,5 @@ export class FareRuleModel {
     airlineCode: string;
     mode: string;
     oid: string;
+    remarkList = [];
 }

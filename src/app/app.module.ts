@@ -11,17 +11,18 @@ import { RemarkComponent } from './remarks/remark.component';
 import { TourPackageComponent } from './remarks/tour-package/tour-package.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
-
 import { MatrixReceiptComponent } from './payments/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './payments/update-matrix-receipt/update-matrix-receipt.component';
-import { TourSegmentComponent } from './passive-segments/tour-segment/tour-segment.component';
-import { UpdateTourSegmentComponent } from './passive-segments/update-tour-segment/update-tour-segment.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
-
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
+import {
+  AccordionModule,
+  ModalModule,
+  TabsModule,
+  BsDatepickerModule,
+  BsDropdownModule
+} from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
-// import { TourPackageRemarksService } from './service/tour-package-remarks.service';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
 import { ItcPackageComponent } from './remarks/itc-package/itc-package.component';
 import { CCDateExpMaskDirective } from './directives/cc-date-exp-mask.directive';
@@ -43,7 +44,9 @@ import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
 import { FareRuleSegmentComponent } from './remarks/fare-rule-segment/fare-rule-segment.component';
 import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segment/update-fare-rule-segment.component';
-
+import { RbcPointsRedemptionComponent } from './remarks/rbc-points-redemption/rbc-points-redemption.component';
+import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
+import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-leisure-fee.component';
 
 @NgModule({
   declarations: [
@@ -56,19 +59,33 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
     PaymentComponent,
     MatrixReceiptComponent,
     UpdateMatrixReceiptComponent,
-    TourSegmentComponent,
-    UpdateTourSegmentComponent,
     PassiveSegmentsComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
     LeisureFeeComponent,
     ItcPackageComponent,
-    CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective, AllCapsMaskDirective,
-    ConciergeUdidsComponent, AmountPipe, CancelSegmentComponent, SegmentsComponent, UpdateSegmentComponent, MessageComponent,
-    VisaPassportComponent, CodeshareComponent, SegmentSelectComponent, AlphaMaskDirective,
-    FareRuleSegmentComponent, UpdateFareRuleSegmentComponent, MatrixInvoiceComponent, PassengerSelectComponent
-
-
+    CCDateExpMaskDirective,
+    AmountMaskDirective,
+    NumberOnlyMaskDirective,
+    AlphaNumericMaskDirective,
+    AllCapsMaskDirective,
+    ConciergeUdidsComponent,
+    AmountPipe,
+    CancelSegmentComponent,
+    SegmentsComponent,
+    UpdateSegmentComponent,
+    MessageComponent,
+    VisaPassportComponent,
+    CodeshareComponent,
+    SegmentSelectComponent,
+    AlphaMaskDirective,
+    FareRuleSegmentComponent,
+    UpdateFareRuleSegmentComponent,
+    MatrixInvoiceComponent,
+    PassengerSelectComponent,
+    RbcPointsRedemptionComponent,
+    UpdateRbcPointsRedemptionComponent,
+    UpdateLeisureFeeComponent
   ],
   imports: [
     BrowserModule,
@@ -87,10 +104,22 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [AppComponent],
-  exports: [CCDateExpMaskDirective, AmountMaskDirective, NumberOnlyMaskDirective, AlphaNumericMaskDirective,
-    AllCapsMaskDirective, AlphaMaskDirective],
-  entryComponents: [UpdateMatrixReceiptComponent, UpdateTourSegmentComponent, UpdateAccountingRemarkComponent,
-    UpdateSegmentComponent, MessageComponent, UpdateFareRuleSegmentComponent]
-
+  exports: [
+    CCDateExpMaskDirective,
+    AmountMaskDirective,
+    NumberOnlyMaskDirective,
+    AlphaNumericMaskDirective,
+    AllCapsMaskDirective,
+    AlphaMaskDirective
+  ],
+  entryComponents: [
+    UpdateMatrixReceiptComponent,
+    UpdateAccountingRemarkComponent,
+    UpdateSegmentComponent,
+    MessageComponent,
+    UpdateFareRuleSegmentComponent,
+    UpdateRbcPointsRedemptionComponent,
+    UpdateLeisureFeeComponent
+  ]
 })
-export class AppModule { }
+export class AppModule {}

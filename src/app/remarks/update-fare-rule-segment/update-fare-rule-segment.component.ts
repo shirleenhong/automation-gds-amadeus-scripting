@@ -6,6 +6,7 @@ import { SelectItem } from 'src/app/models/select-item.model';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SegmentService } from 'src/app/service/segment.service';
 import { FareRuleModel } from 'src/app/models/pnr/fare-rule.model';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 
 declare var smartScriptSession: any;
@@ -35,7 +36,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   tempFareRuleType: string;
 
   constructor(private fb: FormBuilder, public activeModal: BsModalService, private pnrService: PnrService,
-    // tslint:disable-next-line:align
+    private util: UtilHelper,
     public modalRef: BsModalRef, private ddb: DDBService, private segmentService: SegmentService) {
     this.fareRules = new FareRuleModel();
     this.fareRules.mode = 'rbTicket';
@@ -46,7 +47,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       segmentNum: new FormControl(''),
       airlineCode: new FormControl(''),
       cityPair: new FormControl(''),
-      //itemCityPair: this.fb.array([this.createCityPairs()]),
       checkInWith: new FormControl(''),
       fareRuleList: new FormControl(''),
       isTicketNonRefundable: new FormControl(''),
@@ -69,11 +69,10 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
     this.showCrypticForm = true;
     this.showOptionalFare = false;
     this.ShowFareRule = false;
-    //    this.fareRules.mode = true;
 
     this.fareRuleForm.controls.ticketAmount.enable();
     this.fareRuleForm.controls.nonRefundable.disable();
-    this.getOID();
+
     this.fareRules.isTicketMinMax = false;
     this.fareRules.isTicketNonRef = false;
     this.fareRules.isTicketNonRefundable = false;
@@ -81,6 +80,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   loadModel() {
+
     if (this.fareRules.fareRuleType === '') {
       this.ShowFareRule = false;
     } else {
@@ -104,12 +104,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       remarkText: value
     });
   }
-
-  // createCityPairs(): FormGroup {
-  //   return this.fb.group({
-  //     cityPair: ''
-  //   });
-  // }
 
   loadSegmentList(): void {
     this.segmentList = this.pnrService.getPassiveAirSegmentNumbers();
@@ -161,14 +155,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
     this.bspCurrencyList = this.ddb.getCurrencies();
   }
 
-  getOID(): void {
-    const response = smartScriptSession.send('jd').then(res => {
-      const output = res.Response.split('         ');
-      //      this.OID = output[1];
-      this.fareRules.oid = output[1];
-    });
-  }
-
   executeCryptic(lineNo: string): void {
 
     const airline = this.pnrService.getPassiveAirSegments(lineNo);
@@ -177,20 +163,21 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       this.ShowFareRule = false;
       this.fareRules.airlineCode = airline[0].airlineCode;
 
-      const response = smartScriptSession.send('PDN/' + this.fareRules.oid + '/' + airline[0].airlineCode + ' RULES').then(res => {
-        const output = res.Response.toString().split('-------')[1].split('       ');
+      const response = smartScriptSession.send('PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES').then(res => {
 
-        output.forEach(element => {
-          if (element.indexOf('RM') > -1) {
-            const outputTwo = element.replace('RM', '').replace('S', '').replace(airline[0].airlineCode, '').split('       ');
+        if (res.Response !== undefined && res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0) {
+          const output = res.Response.toString().split('-------')[1].split('       ');
 
-            this.fareRuleList.push({ itemText: airline[0].airlineCode + ' ' + outputTwo[1], itemValue: outputTwo[1] });
-            this.ShowFareRule = true;
-            this.showCrypticForm = true;
-            this.showOptionalFare = false;
-          }
-        });
-
+          output.forEach(element => {
+            if (element.indexOf('RM') > -1) {
+              const outputTwo = element.replace('RM', '').replace('S', '').replace(airline[0].airlineCode, '').split('       ');
+              this.fareRuleList.push({ itemText: airline[0].airlineCode + ' ' + outputTwo[1], itemValue: outputTwo[1] });
+              this.ShowFareRule = true;
+              this.showCrypticForm = true;
+              this.showOptionalFare = false;
+            }
+          });
+        }
         // need to store the temp value of fareRuleType and rebind it after cryptic call.
         if (this.tempFareRuleType !== undefined) {
           this.fareRules.fareRuleType = this.tempFareRuleType;
@@ -233,17 +220,23 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   saveFareRule(): void {
-    this.fareRules.remark = this.fareRuleForm.controls.items;
+    this.fareRules.remarkList = [];
+    const itms = this.fareRuleForm.get('items') as FormArray;
+    for (const fg of itms.controls) {
+      if (fg instanceof FormGroup) {
+        this.fareRules.remarkList.push(fg.controls.remarkText.value);
+      }
+    }
     this.isSubmitted = true;
     this.modalRef.hide();
   }
 
   loadRemarks(): void {
-    for (const fg of this.fareRules.remark.controls) {
-      if (fg instanceof FormGroup) {
-        this.items = this.fareRuleForm.get('items') as FormArray;
-        this.items.push(this.createItem(fg.controls.remarkText.value));
-      }
+    for (const rem of this.fareRules.remarkList) {
+      // if (fg instanceof FormGroup) {
+      this.items = this.fareRuleForm.get('items') as FormArray;
+      this.items.push(this.createItem(rem));
+      // }
     }
 
     // need to remove the extra textbox as a workaround.

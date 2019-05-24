@@ -22,14 +22,15 @@ import {
 import { DDBService } from '../service/ddb.service';
 import { ConciergeUdidsComponent } from './concierge-udids/concierge-udids.component';
 import { UtilHelper } from '../helper/util.helper';
+import { TranslationService } from '../service/translation.service';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit, OnChanges {
-
-  @ViewChild(ConciergeUdidsComponent) conciergeComponent: ConciergeUdidsComponent;
+  @ViewChild(ConciergeUdidsComponent)
+  conciergeComponent: ConciergeUdidsComponent;
 
   @Input()
   reportingView: ReportingViewModel;
@@ -42,12 +43,17 @@ export class ReportingComponent implements OnInit, OnChanges {
   countryList: Array<string>;
   isCVC = false;
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {
-
+  constructor(
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private utilHelper: UtilHelper,
+    private translation: TranslationService
+  ) {}
+  get f() {
+    return this.reportingForm.controls;
   }
-  get f() { return this.reportingForm.controls; }
 
-  ngOnChanges(changes: SimpleChanges) { }
+  ngOnChanges(changes: SimpleChanges) {}
 
   ngOnInit() {
     this.reportingForm = new FormGroup({
@@ -56,7 +62,8 @@ export class ReportingComponent implements OnInit, OnChanges {
       destinationList: new FormControl('', [Validators.required]),
       u86: new FormControl('', [Validators.required]),
       showInsurance: new FormControl('', []),
-      insuranceDeclinedReason: new FormControl('')
+      insuranceDeclinedReason: new FormControl(''),
+      declinedOption: new FormControl('')
     });
 
     this.getRouteCodes();
@@ -74,34 +81,59 @@ export class ReportingComponent implements OnInit, OnChanges {
     this.loadRemarksFromGds();
   }
 
-
   loadRemarksFromGds() {
     const company = this.pnrService.getRemarkText('U10/-').replace('U10/-', '');
-    const insuranceDeclinedReason = this.pnrService.getRemarkText('U12/-').replace('U12/-', '');
-    // this.f.companyName.setValue(company);
-    // this.f.insuranceDeclinedReason.setValue(insuranceDeclinedReason);
-    // 
-    const fs = this.pnrService.getFSRemark();
+    const insuranceDeclinedReason = this.pnrService
+      .getRemarkText('U12/-')
+      .replace('U12/-', '');
+    this.checkInsurance(insuranceDeclinedReason === '' ? 'YES' : 'NO');
 
-    //  if (fs !== '') { this.f.bspRouteCode.setValue(fs.substr(0, 1), { onlySelf: false }); }
+    const fs = this.pnrService.getFSRemark();
     const dest = this.pnrService.getRemarkText('DE/-').replace('DE/-', '');
-    // this.f.destinationList.setValue(dest);
+
     // todo remove model and use reactive form
     this.reportingView.companyName = company;
     this.reportingView.insuranceDeclinedReason = insuranceDeclinedReason;
     this.reportingView.destination = dest;
-    this.reportingView.showInsurance = (insuranceDeclinedReason === '');
-    this.f.showInsurance.setValue(insuranceDeclinedReason === '' ? 'Yes' : 'No');
-    if (fs !== undefined && fs !== '') { this.reportingView.routeCode = fs.substr(0, 1); }
+    this.reportingView.showInsurance = insuranceDeclinedReason === '';
+    this.f.showInsurance.setValue(
+      insuranceDeclinedReason === '' ? 'YES' : 'NO'
+    );
+    if (fs !== undefined && fs !== '') {
+      this.reportingView.routeCode = fs.substr(0, 1);
+    }
 
+    if (insuranceDeclinedReason !== '') {
+      const rems = [
+        'DELUXE PACKAGE INSURANCE',
+        'CANCELLATION/INTERUPTION',
+        'EMERGENCY MEDICAL/TRANSPORTATION',
+        'FLIGHT AND TRAVEL ACCIDENT',
+        'RENTAL CAR PHYSICAL DAMAGE',
+        'COVERAGE FOR THE FULL DOLLAR VALUE OF THE TRIP'
+      ];
+      const lang = this.pnrService.getItineraryLanguage();
+      let i = 1;
+      rems.forEach(x => {
+        const rem = '...' + this.translation.translate(x, lang);
 
+        if (this.pnrService.getRirRemarkText(rem) !== '') {
+          this.reportingView.declinedOption = i.toString();
+          return;
+        }
+        i++;
+      });
+    }
   }
 
-
   isRbmRbp() {
-    if (this.reportingView.cfLine === null) { return false; }
-    return ((this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP'));
-
+    if (this.reportingView.cfLine === null) {
+      return false;
+    }
+    return (
+      this.reportingView.cfLine.cfa === 'RBM' ||
+      this.reportingView.cfLine.cfa === 'RBP'
+    );
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {
@@ -114,7 +146,6 @@ export class ReportingComponent implements OnInit, OnChanges {
     });
   }
 
-
   getRouteCodes() {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
@@ -124,24 +155,27 @@ export class ReportingComponent implements OnInit, OnChanges {
   }
 
   checkDestination() {
-    if (this.destinationList !== undefined && this.destinationList.length <= 1) {
+    if (
+      this.destinationList !== undefined &&
+      this.destinationList.length <= 1
+    ) {
       this.reportingView.isDisabledDest = true;
     } else {
       this.reportingView.isDisabledDest = false;
     }
   }
 
-  showInsurance() {
-    this.f.insuranceDeclinedReason.clearValidators();
-    this.reportingView.showInsurance = (this.f.showInsurance.value === 'Yes');
-    this.f.insuranceDeclinedReason.setValidators(Validators.required);
-  }
-
-  checkInsurance() {
-    this.enableDisbleControls(['insuranceDeclinedReason'], (this.f.showInsurance.value === 'YES'));
-    if (this.f.showInsurance.value === 'YES') {
+  checkInsurance(val) {
+    this.enableDisbleControls(['insuranceDeclinedReason'], val === 'YES');
+    this.reportingView.showInsurance = val === 'YES';
+    if (val === 'YES') {
       this.reportingView.insuranceDeclinedReason = '';
       this.f.insuranceDeclinedReason.setValue('');
+      this.f.insuranceDeclinedReason.clearValidators();
+      this.f.declinedOption.clearValidators();
+    } else {
+      this.f.insuranceDeclinedReason.setValidators(Validators.required);
+      this.f.declinedOption.setValidators(Validators.required);
     }
   }
 
@@ -155,17 +189,18 @@ export class ReportingComponent implements OnInit, OnChanges {
         } else if (this.reportingView.cfLine.lastLetter === 'C') {
           this.reportingView.tripType = 1;
         }
-        if (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP') {
+        if (
+          this.reportingView.cfLine.cfa === 'RBM' ||
+          this.reportingView.cfLine.cfa === 'RBP'
+        ) {
           this.reportingView.tripType = 2;
         }
         this.reportingView.isDisabled = false;
-        this.isCVC = (this.reportingView.cfLine.cfa === 'CVC');
+        this.isCVC = this.reportingView.cfLine.cfa === 'CVC';
         if (this.isCVC) {
           this.f.companyName.setValidators(Validators.required);
         }
         this.checkDestination();
-
-
       } else {
         this.reportingView.isDisabledDest = true;
         this.reportingView.isDisabled = true;
@@ -176,9 +211,10 @@ export class ReportingComponent implements OnInit, OnChanges {
   checkValid() {
     if (this.isRbmRbp()) {
       this.utilHelper.validateAllFields(this.conciergeComponent.conciergeForm);
-      if (!this.conciergeComponent.conciergeForm.valid) { return false; }
+      if (!this.conciergeComponent.conciergeForm.valid) {
+        return false;
+      }
     }
-
 
     this.utilHelper.validateAllFields(this.reportingForm);
     if (!this.reportingForm.valid) {
@@ -187,5 +223,4 @@ export class ReportingComponent implements OnInit, OnChanges {
 
     return true;
   }
-
 }

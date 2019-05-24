@@ -1,0 +1,162 @@
+<div class="modal-header">
+  <div class="modal-title">{{title}}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <div class="contentPanel">
+
+    <form [formGroup]="leisureFeeForm">
+      <div class="row form-group">
+        <div class="col-4">
+          FLN:
+        </div>
+        <div class="col-4">
+          <input type="text" id="fln" name="fln" class="form-control" formControlName="fln" NumberOnlyMask disabled
+            [(ngModel)]="leisureFee.fln">
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-4">Segment Association:</div>
+        <div class="col-8">
+          <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control"
+            [(ngModel)]="leisureFee.segmentAssoc" (change)="changeFeeState()">
+            <option value="1">Ticket Segment</option>
+            <option value="2">Tour/Cruise Segment</option>
+            <option value="3">Hotel Segment</option>
+            <option value="4">Car Segment</option>
+          </select>
+        </div>
+      </div>
+
+
+
+      <div *ngIf="f.segmentAssoc.value != 0">
+
+        <div *ngIf="f.segmentAssoc.value == 3 || f.segmentAssoc.value == 4">
+          <div class="row form-group">
+            <div class="col-4"></div>
+            <div class="col">
+              Do you wish to attach the service fee to a specific itinerary segment?
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-4"></div>
+            <div class="col-4">
+              <select id="segmentNum" name="segmentNum" class="form-control" formControlName="segmentNum"
+                [(ngModel)]="leisureFee.segmentNum">
+                <option *ngFor="let item of  segmentList" [value]="item.lineNo">
+                  {{item.lineNo + ' ' + item.longFreeText}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            Amount:
+          </div>
+          <div class="col-4">
+            <input type="text" id="amount" name="amount" class="form-control" formControlName="amount"
+              [(ngModel)]="leisureFee.amount" AmountMask>
+          </div>
+        </div>
+
+
+        <div class="row form-group">
+          <div class="col-4">
+            Form of Payment:
+          </div>
+          <div class="col-8">
+            <select id="paymentType" name="paymentType" class="form-control" formControlName="paymentType"
+              [(ngModel)]="leisureFee.paymentType">
+              <option value="C">Credit Card</option>
+              <option value="K">Cheque</option>
+            </select>
+          </div>
+        </div>
+        <div class="row form-group" *ngIf="f.paymentType.value=='C'">
+          <div class="col-4">
+            Credit Card Info:
+          </div>
+          <div class="col ccinfo">
+            <div style="width:160px;">
+              <select id="vendorCode" class="form-control" name="vendorCode" formControlName="vendorCode"
+                [(ngModel)]="leisureFee.vendorCode" (change)="creditcardMaxValidator($event.target.value)">
+                <option *ngFor="let item of  vendorCodeList" [value]="item.itemValue">
+                  {{item.itemText}}
+                </option>
+              </select>
+            </div>
+            <div class="d-flex flex-row ">
+
+              <div style="width:160px;">
+                <input type="text" id="ccNo" name="ccNo" class="form-control" formControlName="ccNo" maxlength="16"
+                  [(ngModel)]="leisureFee.ccNo" NumberOnlyMask />
+              </div>
+              <div style="width:60px">
+                <input type="text" class="form-control" bsDatePicker placeHolder="MM/YY" id="expDate" required
+                  [(ngModel)]="leisureFee.expDate" maxlength="5" name="expDate" formControlName="expDate"
+                  CCDateExpMask />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4"></div>
+          <div class="col">
+            Select the Province of the traveler's Home Address.
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4"></div>
+          <div class="col-8">
+            <select id="address" name="address" class="form-control" formControlName="address"
+              [(ngModel)]="leisureFee.address">
+              <option *ngFor="let item of  provinceList" [value]="item.itemValue">
+                {{item.itemText}}
+              </option>
+            </select>
+
+          </div>
+        </div>
+
+
+        <div class="row form-group">
+          <div class="col-4">Tax Exemption:</div>
+          <div class="col-8">
+            <div *ngFor="let option of exemption">
+              <div *ngIf="!(option.fln !== '' && (option.fln) !== (leisureFee.fln))">
+                <label>
+                  <input type="checkbox" name="exempt" [(ngModel)]="option.checked" value="{{option.value}}"
+                    [ngModelOptions]="{standalone: true}" />
+                  {{option.label}}
+                </label>
+              </div>
+              <div *ngIf="option.fln !== '' && option.fln !== leisureFee.fln">
+                <label> {{option.label}} is already applied </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+    </form>
+
+
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="saveLeisureFee()"
+    [disabled]="leisureFeeForm.invalid">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+</div>

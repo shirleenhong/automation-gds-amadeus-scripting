@@ -9,6 +9,7 @@ import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormArray } from '@angular/forms';
 import { RemarkHelper } from '../helper/remark-helper';
 import { PackageRemarkHelper } from '../helper/packageRemark-helper';
+import { RBCRedemptionModel } from '../models/pnr/rbc-redemption.model';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +17,10 @@ import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
 export class PackageRemarkService {
     decPipe = new DecimalPipe('en-US');
-    constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService : PnrService) { }
+    rbcForDeletion = [];
+
+    constructor(private remarkHelper: RemarkHelper,
+                private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
 
     public GetITCPackageRemarks(group: any) {
 
@@ -102,7 +106,7 @@ export class PackageRemarkService {
             rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.value.commission, 'RM', '*'));
         }
 
-        console.log(rmGroup);
+        console.log(rmGroup);        
         return rmGroup;
     }
 
@@ -176,23 +180,24 @@ export class PackageRemarkService {
         return rmGroup;
     }
 
+ 
 
     public GetCodeShare(frmGroup: FormGroup) {
 
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Code Share';
         rmGroup.remarks = new Array<RemarkModel>();
-        const arr = frmGroup.get('segments') as FormArray
+        const arr = frmGroup.get('segments') as FormArray;
         const segmentList = this.pnrService.getSegmentTatooNumber();
         const regex = /CHECK-IN AT (?<airline>.*) TICKET COUNTER/g;
         const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
-        if (rems.length>0){
+        if (rems.length > 0) {
             rmGroup.deleteRemarkByIds = [];
-              rems.forEach(r => {
+            rems.forEach(r => {
                 rmGroup.deleteRemarkByIds.push(r.lineNo);
-              });
+            });
         }
-      
+
         for (const c of arr.controls) {
             const airline = c.get('airline').value;
             const segments = c.get('segment').value.toString();
@@ -203,18 +208,189 @@ export class PackageRemarkService {
             rm.relatedSegments = [];
             const s = segments.split(',');
             segmentList.forEach(x => {
-                if (s.indexOf(x.lineNo) >=0){
+                if (s.indexOf(x.lineNo) >= 0) {
                     rm.relatedSegments.push(x.tatooNo);
                 }
-                
-            });
-            
 
-            //rm.relatedSegments = segments.split(',');
+            });
+
+
+            // rm.relatedSegments = segments.split(',');
             rmGroup.remarks.push(rm);
         }
 
         return rmGroup;
+    }
+    public GetRbcRedemptionRemarks(rbcPoints: RBCRedemptionModel[]) {
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'RBC Remark';
+        remGroup.remarks = new Array<RemarkModel>();
+
+        if (rbcPoints !== null) {
+            rbcPoints.forEach(point => {
+                this.processRbcPointsRemarks(point, remGroup.remarks);
+            });
+        }
+
+        this.rbcForDeletion.forEach(c => {
+            remGroup.deleteRemarkByIds.push(c);
+        });
+        this.rbcForDeletion = [];
+        return remGroup;
+    }
+
+    processRbcPointsRemarks(point: RBCRedemptionModel, remarkList: Array<RemarkModel>) {
+        const name = point.lastname + '/' + point.firstname;
+        const visa = point.firstvisanumber + 'XXXXXX' + point.lastvisanumber;
+        const pointsRedeemed = point.pointsRedeemed + ' VALUE ' + point.valuepoints;
+        const mandatoryHotelRemarks = ['CARDHOLDER NAME - ' + name, 'CARDHOLDER VISA VI' + visa + ' USED TO REDEEM POINTS',
+        point.pct + ' PERCENT POINTS REDEMPTION',
+        'POINTS REDEEMED ' + pointsRedeemed,
+        'PRODUCT TYPE - ' + point.productType,
+        'SUPPLIER NAME - ' + point.suppliername];
+
+        mandatoryHotelRemarks.forEach(c => {
+            remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c, 'RM', 'K'));
+        });
+
+
+        const rbcRemarks = [{ include: point.numberbookings, description: 'NUMBER OF BOOKINGS - ' },
+        { include: point.totalbasecost, description: 'TOTAL BASE COST PER BOOKING - ' },
+        { include: point.noofadult, description: 'NUMBER OF ADULTS - ' },
+        { include: point.totalbasecostadult, description: 'TOTAL BASE COST PER ADULT - ' }
+        ];
+
+        const rbcChildren = [{ include: point.noofchildren, description: 'NUMBER OF CHILDREN - ' },
+        { include: point.totalbasecostchild, description: 'TOTAL BASE COST PER CHILD - ' },
+        { include: point.cgst, description: 'GST COST PER CHILD - ' },
+        { include: point.chst, description: 'HST COST PER CHILD - ' },
+        { include: point.cqst, description: 'QST COST PER CHILD - ' },
+        { include: point.cotherTaxes, description: 'ALL OTHER TAXES PER CHILD - ' }];
+
+        const rbcRemarksAir = [{ include: point.gst, description: 'GST COST  PER ADULT - ' },
+        { include: point.hst, description: 'HST COST  PER ADULT - ' },
+        { include: point.qst, description: 'QST COST  PER ADULT - ' },
+        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER ADULT - ' }];
+
+
+        const rbcRemarksCarHotel = [{ include: point.gst, description: 'GST COST  PER BOOKING - ' },
+        { include: point.hst, description: 'HST COST  PER BOOKING - ' },
+        { include: point.qst, description: 'QST COST  PER BOOKING - ' },
+        { include: point.otherTaxes, description: 'ALL OTHER TAXES PER BOOKING - ' }];
+
+        rbcRemarks.forEach(c => {
+            if (c.include) {
+                remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+            }
+        });
+
+        if (point.numberbookings) {
+            rbcRemarksCarHotel.forEach(c => {
+                if (c.include) {
+                    remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+                }
+            });
+        }
+
+        if (point.noofadult) {
+            rbcRemarksAir.forEach(c => {
+                if (c.include) {
+                    remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+                }
+            });
+        }
+
+        rbcChildren.forEach(c => {
+            if (c.include) {
+                remarkList.push(this.remarkHelper.createRemark(point.rbcNo + ' ' + c.description + c.include, 'RM', 'K'));
+            }
+        });
+    }
+
+
+    getRbcPointsRemarksFromPnr(): Array<RBCRedemptionModel> {
+        const rbcModels = new Array<RBCRedemptionModel>();
+        let model: RBCRedemptionModel;
+        let rbcNo = '';
+
+        for (const rm of this.pnrService.pnrObj.rmElements) {
+            if (rm.category === 'K') {
+                rbcNo = rm.freeFlowText.substr(0, 1);
+                if (rbcNo) {
+                    model = rbcModels.find(x => x.rbcNo === Number(rbcNo));
+                    if (model === undefined || model === null) {
+                        model = new RBCRedemptionModel();
+                        model.rbcNo = Number(rbcNo);
+                        rbcModels.push(model);
+                    }
+                }
+                if (rm.freeFlowText.substr(0, 1) === rbcNo) {
+                    if (rm.freeFlowText.indexOf('NUMBER OF BOOKINGS') > -1) { model.numberbookings = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('TOTAL BASE COST PER BOOKING') > -1) { model.totalbasecost = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('GST COST PER BOOKING') > -1) { model.gst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('HST COST PER BOOKING') > -1) { model.hst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('QST COST PER BOOKING') > -1) { model.qst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('ALL OTHER TAXES PER BOOKING') > -1) { model.otherTaxes = this.getKelements(rm); }
+
+                    if (rm.freeFlowText.indexOf('GST COST PER ADULT') > -1) { model.gst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('HST COST PER ADULT') > -1) { model.hst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('QST COST PER ADULT') > -1) { model.qst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('ALL OTHER TAXES PER ADULT') > -1) { model.otherTaxes = this.getKelements(rm); }
+
+                    if (rm.freeFlowText.indexOf('NUMBER OF ADULTS') > -1) { model.noofadult = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('TOTAL BASE COST PER ADULT') > -1) { model.totalbasecostadult = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('NUMBER OF CHILDREN') > -1) { model.noofchildren = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('TOTAL BASE COST PER CHILD') > -1) { model.totalbasecostchild = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('GST COST PER CHILD') > -1) { model.cgst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('HST COST PER CHILD') > -1) { model.chst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('QST COST PER CHILD') > -1) { model.cqst = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('ALL OTHER TAXES PER CHILD') > -1) { model.cotherTaxes = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('PRODUCT TYPE') > -1) { model.productType = this.getKelements(rm); }
+                    if (rm.freeFlowText.indexOf('SUPPLIER NAME') > -1) { model.suppliername = this.getKelements(rm); }
+
+                    let regex = /CARDHOLDER NAME - (?<lastname>.*)\/(?<firstname>.*)/g;
+                    let match = regex.exec(rm.freeFlowText);
+                    if (match) {
+                        model.lastname = match.groups.lastname;
+                        model.firstname = match.groups.firstname;
+                        this.rbcForDeletion.push(rm.elementNumber);
+                    }
+
+                    regex = /CARDHOLDER VISA VI(?<firstvisa>.*)XXXXXX(?<lastvisa>.*)/g;
+                    match = regex.exec(rm.freeFlowText);
+                    if (match) {
+                        model.firstvisanumber = match.groups.firstvisa;
+                        model.lastvisanumber = match.groups.lastvisa.replace('USED TO REDEEM POINTS', '').trim();
+                        this.rbcForDeletion.push(rm.elementNumber);
+                    }
+
+                    regex = /POINTS REDEEMED (?<pointsRedeemed>.*) VALUE (?<valuepoints>.*)/g;
+                    match = regex.exec(rm.freeFlowText);
+                    if (match) {
+                        model.pointsRedeemed = match.groups.pointsRedeemed;
+                        model.valuepoints = match.groups.valuepoints;
+                        this.rbcForDeletion.push(rm.elementNumber);
+                    }
+
+                    regex = /(?<rbcNo>.*) (?<pct>.*) PERCENT POINTS REDEMPTION/g;
+                    match = regex.exec(rm.freeFlowText);
+                    if (match) {
+                        model.pct = match.groups.pct;
+                        this.rbcForDeletion.push(rm.elementNumber);
+                    }
+                }
+            }
+
+        }
+debugger;
+        return rbcModels;
+    }
+
+
+    private getKelements(rm: any): string {
+        this.rbcForDeletion.push(rm.elementNumber);
+        return rm.freeFlowText.substr(rm.freeFlowText.indexOf('-') + 2, rm.freeFlowText.length);
+
     }
 
 

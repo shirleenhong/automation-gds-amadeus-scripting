@@ -1,5 +1,24 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors, FormBuilder, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  SimpleChange,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+  FormGroup,
+  Validator,
+  AbstractControl,
+  ValidationErrors,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DecimalPipe, DatePipe } from '@angular/common';
@@ -15,7 +34,8 @@ import { PackageRemarkHelper } from 'src/app/helper/packageRemark-helper';
   styleUrls: ['./tour-package.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TourPackageComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
+export class TourPackageComponent
+  implements OnInit, OnChanges, ControlValueAccessor, Validator {
   decPipe = new DecimalPipe('en-US');
   bspCurrencyList: SelectItem[];
   tourPackage: TourPackageViewModel;
@@ -24,19 +44,36 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   group: FormGroup;
   datePipe = new DatePipe('en-US');
 
-  constructor(private fb: FormBuilder, private ddb: DDBService, private pnrService: PnrService,
-    private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper) {
+  constructor(
+    private fb: FormBuilder,
+    private ddb: DDBService,
+    private pnrService: PnrService,
+    private remarkHelper: RemarkHelper,
+    private packageRemarkHelper: PackageRemarkHelper
+  ) {
     this.group = this.fb.group({
-      adultNum: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      adultNum: new FormControl('', [
+        Validators.min(1),
+        Validators.max(9),
+        Validators.maxLength(1)
+      ]),
       tourCurrencyType: new FormControl('', [Validators.required]),
       baseCost: new FormControl('', [Validators.maxLength(8)]),
       taxesPerAdult: new FormControl('', [Validators.maxLength(7)]),
-      childrenNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      childrenNumber: new FormControl('', [
+        Validators.min(1),
+        Validators.max(9),
+        Validators.maxLength(1)
+      ]),
       childBaseCost: new FormControl('', [Validators.maxLength(8)]),
       insurancePerAdult: new FormControl('', [Validators.maxLength(7)]),
       insurancePerChild: new FormControl('', [Validators.maxLength(7)]),
       taxesPerChild: new FormControl('', [Validators.maxLength(7)]),
-      infantNumber: new FormControl('', [Validators.min(1), Validators.max(9), Validators.maxLength(1)]),
+      infantNumber: new FormControl('', [
+        Validators.min(1),
+        Validators.max(9),
+        Validators.maxLength(1)
+      ]),
       totalCostPerInfant: new FormControl(''),
       depositPaid: new FormControl(''),
       totalCostHoliday: new FormControl(''),
@@ -52,68 +89,57 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     this.group.get('adultNum').valueChanges.subscribe(e => {
       this.group.value.adultNum = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('baseCost').valueChanges.subscribe(e => {
       this.group.value.baseCost = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('taxesPerAdult').valueChanges.subscribe(e => {
       this.group.value.taxesPerAdult = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('insurancePerAdult').valueChanges.subscribe(e => {
       this.group.value.insurancePerAdult = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('childrenNumber').valueChanges.subscribe(e => {
       this.group.value.childrenNumber = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('childBaseCost').valueChanges.subscribe(e => {
       this.group.value.childBaseCost = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('taxesPerChild').valueChanges.subscribe(e => {
       this.group.value.taxesPerChild = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('insurancePerChild').valueChanges.subscribe(e => {
       this.group.value.insurancePerChild = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('infantNumber').valueChanges.subscribe(e => {
       this.group.value.infantNumber = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('totalCostPerInfant').valueChanges.subscribe(e => {
       this.group.value.totalCostPerInfant = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.group.get('depositPaid').valueChanges.subscribe(e => {
       this.group.value.depositPaid = e;
       this.tourPackageChange();
-    }
-    );
+    });
 
     this.loadValues();
   }
@@ -122,7 +148,7 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     console.log('form group: ', this.group);
   }
 
-  public onTouched: () => void = () => { };
+  public onTouched: () => void = () => {};
 
   writeValue(val: any): void {
     val && this.group.setValue(val, { emitEvent: false });
@@ -143,16 +169,27 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   validate(c: AbstractControl): ValidationErrors {
     console.log('Basic Info validation', c);
-    return this.group.valid ? null : { invalidForm: { valid: false, message: 'basic InfoForm fields are invalid' } };
+    return this.group.valid
+      ? null
+      : {
+          invalidForm: {
+            valid: false,
+            message: 'basic InfoForm fields are invalid'
+          }
+        };
   }
 
-  registerOnValidatorChange?(fn: () => void): void {
-  }
+  registerOnValidatorChange?(fn: () => void): void {}
 
   tourPackageChange() {
     console.log('tour package call');
-    const v = this.computeAdultCost() + this.computeChildCost() + this.computeInfantCost();
-    this.group.patchValue({ totalCostHoliday: this.decPipe.transform(v, '1.2-2').replace(',', '') });
+    const v =
+      this.computeAdultCost() +
+      this.computeChildCost() +
+      this.computeInfantCost();
+    this.group.patchValue({
+      totalCostHoliday: this.decPipe.transform(v, '1.2-2').replace(',', '')
+    });
 
     this.computeBalanceToBePaid();
     // console.log('total cost holiday');
@@ -167,36 +204,40 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   computeBalanceToBePaid() {
     let dp = 0;
     if (this.group.value.depositPaid !== '') {
-      dp = (parseInt(this.group.value.depositPaid, 0));
+      dp = parseInt(this.group.value.depositPaid, 0);
     }
     const totalCost = this.group.value.totalCostHoliday.replace(',', '');
-    this.group.patchValue({ balanceToBePaid: this.decPipe.transform(parseFloat(totalCost) - dp, '1.2-2').replace(',', '') });
+    this.group.patchValue({
+      balanceToBePaid: this.decPipe
+        .transform(parseFloat(totalCost) - dp, '1.2-2')
+        .replace(',', '')
+    });
   }
 
   computeAdultCost() {
     let baseCost = 0;
     if (this.group.value.baseCost !== '') {
-      baseCost = (Number(this.group.value.baseCost));
+      baseCost = Number(this.group.value.baseCost);
     }
     console.log('basecost ' + baseCost);
     let ipa = 0;
     if (this.group.value.insurancePerAdult !== '') {
-      ipa = (Number(this.group.value.insurancePerAdult));
+      ipa = Number(this.group.value.insurancePerAdult);
     }
     let tpa = 0;
     if (this.group.value.taxesPerAdult !== '') {
-      tpa = (Number(this.group.value.taxesPerAdult));
+      tpa = Number(this.group.value.taxesPerAdult);
     }
-    const sum = (baseCost + ipa + tpa);
+    const sum = baseCost + ipa + tpa;
 
     console.log('sum ' + sum);
 
     let adultCount = 0;
     if (this.group.value.adultNum !== '') {
-      adultCount = (Number(this.group.value.adultNum));
+      adultCount = Number(this.group.value.adultNum);
     }
 
-    let result = (adultCount * sum);
+    let result = adultCount * sum;
     console.log('result adult ' + result);
     if (Number.isNaN(result)) {
       result = 0;
@@ -207,24 +248,24 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   computeChildCost() {
     let childBaseCost = 0;
     if (this.group.value.childBaseCost !== '') {
-      childBaseCost = (Number(this.group.value.childBaseCost));
+      childBaseCost = Number(this.group.value.childBaseCost);
     }
 
     let ipc = 0;
     if (this.group.value.insurancePerChild !== '') {
-      ipc = (Number(this.group.value.insurancePerChild));
+      ipc = Number(this.group.value.insurancePerChild);
     }
 
     let tpc = 0;
     if (this.group.value.taxesPerChild !== '') {
-      tpc = (Number(this.group.value.taxesPerChild));
+      tpc = Number(this.group.value.taxesPerChild);
     }
 
-    const sum = (childBaseCost + ipc + tpc);
+    const sum = childBaseCost + ipc + tpc;
 
     let childCount = 0;
     if (this.group.value.childrenNumber !== '') {
-      childCount = (Number(this.group.value.childrenNumber));
+      childCount = Number(this.group.value.childrenNumber);
     }
 
     let result = childCount * sum;
@@ -241,14 +282,14 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
     let tcpa = 0;
     if (this.group.value.totalCostPerInfant !== '') {
-      tcpa = (Number(this.group.value.totalCostPerInfant));
+      tcpa = Number(this.group.value.totalCostPerInfant);
     }
 
     const sum = tcpa;
 
     let infantCount = 0;
     if (this.group.value.infantNumber !== '') {
-      infantCount = (Number(this.group.value.infantNumber));
+      infantCount = Number(this.group.value.infantNumber);
     }
 
     let result = infantCount * sum;
@@ -266,32 +307,94 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   private loadValues() {
-    if (this.pnrService.getRIIRemarkText('HOTEL/ACCOMMODATION') === '' ||
-      this.pnrService.getRIIRemarkText('CAR RENTAL') === '') {
+    if (
+      this.pnrService.getRirRemarkText('HOTEL/ACCOMMODATION') === '' ||
+      this.pnrService.getRirRemarkText('CAR RENTAL') === ''
+    ) {
       this.getRIITourPackageRemarksFromGDS();
       this.packageRemarkHelper.getUDIDPackageRemarksFromGds(this.group);
     }
   }
 
   private getRIITourPackageRemarksFromGDS() {
-    this.group.controls.balanceDueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
-    this.group.controls.tourCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
+    this.group.controls.balanceDueDate.setValue(
+      this.packageRemarkHelper.getBalanceDueDate()
+    );
+    this.group.controls.tourCurrencyType.setValue(
+      this.packageRemarkHelper.getCurrency()
+    );
 
-    this.packageRemarkHelper.getValues('ADULT', 'PACKAGE', 'baseCost', this.group);
-    this.packageRemarkHelper.getValues('ADULT', 'TAXES', 'taxesPerAdult', this.group);
-    this.packageRemarkHelper.getValues('ADULT', 'INSURANCE', 'insurancePerAdult', this.group);
-    this.packageRemarkHelper.getValues('CHILD', 'PACKAGE', 'childBaseCost', this.group);
-    this.packageRemarkHelper.getValues('CHILD', 'TAXES', 'taxesPerChild', this.group);
-    this.packageRemarkHelper.getValues('CHILD', 'INSURANCE', 'insurancePerChild', this.group);
-    this.packageRemarkHelper.getValues('INFANT', 'PACKAGE', 'totalCostPerInfant', this.group);
-    this.packageRemarkHelper.getCount('ADULT', 'PACKAGE', 'adultNum', this.group);
-    this.packageRemarkHelper.getCount('CHILD', 'PACKAGE', 'childrenNumber', this.group);
-    this.packageRemarkHelper.getCount('INFANT', 'PACKAGE', 'infantNumber', this.group);
+    this.packageRemarkHelper.getValues(
+      'ADULT',
+      'PACKAGE',
+      'baseCost',
+      this.group
+    );
+    this.packageRemarkHelper.getValues(
+      'ADULT',
+      'TAXES',
+      'taxesPerAdult',
+      this.group
+    );
+    this.packageRemarkHelper.getValues(
+      'ADULT',
+      'INSURANCE',
+      'insurancePerAdult',
+      this.group
+    );
+    this.packageRemarkHelper.getValues(
+      'CHILD',
+      'PACKAGE',
+      'childBaseCost',
+      this.group
+    );
+    this.packageRemarkHelper.getValues(
+      'CHILD',
+      'TAXES',
+      'taxesPerChild',
+      this.group
+    );
+    this.packageRemarkHelper.getValues(
+      'CHILD',
+      'INSURANCE',
+      'insurancePerChild',
+      this.group
+    );
+    this.packageRemarkHelper.getValues(
+      'INFANT',
+      'PACKAGE',
+      'totalCostPerInfant',
+      this.group
+    );
+    this.packageRemarkHelper.getCount(
+      'ADULT',
+      'PACKAGE',
+      'adultNum',
+      this.group
+    );
+    this.packageRemarkHelper.getCount(
+      'CHILD',
+      'PACKAGE',
+      'childrenNumber',
+      this.group
+    );
+    this.packageRemarkHelper.getCount(
+      'INFANT',
+      'PACKAGE',
+      'infantNumber',
+      this.group
+    );
 
-    const regx = "([0-9]+[\\.]*[0-9]*)";
-    this.group.controls.depositPaid.setValue(this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regx));
-    this.group.controls.totalCostHoliday.setValue(this.packageRemarkHelper.getRegexResult('TOTAL PACKAGE PRICE', regx));
-    this.group.controls.balanceToBePaid.setValue(this.packageRemarkHelper.getRegexResult('BALANCE DUE', regx));
+    const regx = '([0-9]+[\\.]*[0-9]*)';
+    this.group.controls.depositPaid.setValue(
+      this.packageRemarkHelper.getRegexResult('LESS DEPOSIT PAID', regx)
+    );
+    this.group.controls.totalCostHoliday.setValue(
+      this.packageRemarkHelper.getRegexResult('TOTAL PACKAGE PRICE', regx)
+    );
+    this.group.controls.balanceToBePaid.setValue(
+      this.packageRemarkHelper.getRegexResult('BALANCE DUE', regx)
+    );
     this.packageRemarkHelper.removeOtherTourRemark();
   }
 }

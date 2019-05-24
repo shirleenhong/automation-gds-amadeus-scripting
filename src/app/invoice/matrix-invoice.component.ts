@@ -19,19 +19,20 @@ export class MatrixInvoiceComponent implements OnInit {
 
   ngOnInit() {
     this.matrixInvoiceGroup = this.fb.group({
-        segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
-        validateSegmentNumbers(this.segments)]),
-        passengerNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
-        validatePassengerNumbers(this.passengers)]),
-        selection: new FormControl('', []),
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      validateSegmentNumbers(this.segments)]),
+      passengerNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
+      validatePassengerNumbers(this.passengers)]),
+      selection: new FormControl('', []),
     });
- }
+    this.select('itinerary');
+  }
 
- get f() { return this.matrixInvoiceGroup.controls; }
+  get f() { return this.matrixInvoiceGroup.controls; }
 
- select(selected: string) {
-   this.selection = selected;
-   this.f['selection'].setValue(selected);
- }
+  select(selected: string) {
+    this.selection = selected;
+    this.f['selection'].setValue(selected);
+  }
 
 }

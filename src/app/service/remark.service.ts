@@ -345,14 +345,14 @@ export class RemarkService {
       .then(
         data => {
           this.responseMessage = 'Remarks Updated';
+          this.endPNR('CWTSCRIPT');
+
           smartScriptSession.getActiveTask().then(x => {
             if (x.subtype === 'PNR') {
               smartScriptSession.requestService('bookingfile.refresh', null, {
                 fn: '',
                 scope: this
               });
-            } else {
-              smartScriptSession.send('RT');
             }
           });
         },
@@ -378,7 +378,6 @@ export class RemarkService {
   }
 
   endPNR(requestor) {
-    smartScriptSession.send('RT');
     smartScriptSession.send('RF' + requestor);
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');

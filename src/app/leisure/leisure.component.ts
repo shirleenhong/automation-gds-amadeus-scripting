@@ -121,7 +121,6 @@ export class LeisureComponent
   checkValid() {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
-    // this.validModel.isSegmentValid = this.segmentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
     return this.validModel.isAllValid();
@@ -239,7 +238,6 @@ export class LeisureComponent
         alert(JSON.stringify(error));
       }
     );
-    this.remarkService.endPNR('CWTSCRIPT');
   }
 
   async cancelPnr() {

@@ -71,12 +71,12 @@ export class ReportingRemarkService {
       remText = 'U86/-OVERRIDE LEI';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
-
-    if (!(reporting.cfLine.cfa === 'RBM' || reporting.cfLine.cfa === 'RBP')) {
+    const cfLine = this.pnrService.getCFLine();
+    if (!(cfLine.cfa === 'RBM' || cfLine.cfa === 'RBP')) {
       this.deleteDeclinedRemarks(rmGroup);
       this.deleteRemarks(['U10/-', 'U12/-'], rmGroup);
       // *U10
-      if (reporting.cfLine.cfa === 'CVC') {
+      if (cfLine.cfa === 'CVC') {
         const companyname = reporting.companyName;
         remText = 'U10/-' + companyname;
         rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));

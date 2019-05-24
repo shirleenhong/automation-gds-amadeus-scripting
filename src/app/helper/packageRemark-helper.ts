@@ -240,4 +240,8 @@ export class PackageRemarkHelper {
     }
     return '0.00';
   }
+
+  clearForDeletionRemarks() {
+    this.forDeletion = [];
+  }
 }

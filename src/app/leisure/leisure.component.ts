@@ -4,15 +4,15 @@ import {
   ViewChild,
   AfterViewInit,
   AfterViewChecked
-} from "@angular/core";
-import { PnrService } from "../service/pnr.service";
-import { RemarkService } from "../service/remark.service";
-import { LeisureViewModel } from "../models/leisure-view.model";
-import { PaymentRemarkService } from "../service/payment-remark.service";
-import { RemarkGroup } from "../models/pnr/remark.group.model";
-import { ReportingRemarkService } from "../service/reporting-remark.service";
-import { PaymentComponent } from "../payments/payment.component";
-import { SegmentService } from "../service/segment.service";
+} from '@angular/core';
+import { PnrService } from '../service/pnr.service';
+import { RemarkService } from '../service/remark.service';
+import { LeisureViewModel } from '../models/leisure-view.model';
+import { PaymentRemarkService } from '../service/payment-remark.service';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { ReportingRemarkService } from '../service/reporting-remark.service';
+import { PaymentComponent } from '../payments/payment.component';
+import { SegmentService } from '../service/segment.service';
 import {
   FormGroup,
   FormBuilder,
@@ -20,29 +20,29 @@ import {
   FormControl,
   NG_VALUE_ACCESSOR,
   NG_VALIDATORS
-} from "@angular/forms";
-import { ReportingComponent } from "../reporting/reporting.component";
-import { RemarkComponent } from "../remarks/remark.component";
-import { DDBService } from "../service/ddb.service";
-import { CfRemarkModel } from "../models/pnr/cf-remark.model";
-import { CancelSegmentComponent } from "../cancel-segment/cancel-segment.component";
-import { PassiveSegmentsComponent } from "../passive-segments/passive-segments.component";
-import { PackageRemarkService } from "../service/package-remark.service";
-import { ValidateModel } from "../models/validate-model";
-import { BsModalService } from "ngx-bootstrap";
-import { MessageComponent } from "../shared/message/message.component";
+} from '@angular/forms';
+import { ReportingComponent } from '../reporting/reporting.component';
+import { RemarkComponent } from '../remarks/remark.component';
+import { DDBService } from '../service/ddb.service';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
+import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
+import { PackageRemarkService } from '../service/package-remark.service';
+import { ValidateModel } from '../models/validate-model';
+import { BsModalService } from 'ngx-bootstrap';
+import { MessageComponent } from '../shared/message/message.component';
 
-import { invalid } from "@angular/compiler/src/render3/view/util";
+import { invalid } from '@angular/compiler/src/render3/view/util';
 // import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
 // >>>>>>> Stashed changes
-import { VisaPassportService } from "../service/visa-passport.service";
-import { InvoiceService } from "../service/invoice-remark.service";
-import { MatrixInvoiceComponent } from "../invoice/matrix-invoice.component";
+import { VisaPassportService } from '../service/visa-passport.service';
+import { InvoiceService } from '../service/invoice-remark.service';
+import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
 
 @Component({
-  selector: "app-leisure",
-  templateUrl: "./leisure.component.html",
-  styleUrls: ["./leisure.component.scss"]
+  selector: 'app-leisure',
+  templateUrl: './leisure.component.html',
+  styleUrls: ['./leisure.component.scss']
 })
 export class LeisureComponent
   implements OnInit, AfterViewInit, AfterViewChecked {
@@ -50,7 +50,7 @@ export class LeisureComponent
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
-  workflow: string = "";
+  workflow: string = '';
   cancelEnabled: boolean = true;
   validModel = new ValidateModel();
   invoiceEnabled: boolean = false;
@@ -66,7 +66,7 @@ export class LeisureComponent
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
 
-  errorPnrMsg = "";
+  errorPnrMsg = '';
   eventSubscribe = false;
   segment = [];
 
@@ -99,18 +99,18 @@ export class LeisureComponent
   ngAfterViewInit(): void {}
 
   async getPnr() {
-    this.errorPnrMsg = "";
+    this.errorPnrMsg = '';
     // this.ddbService.sample();
     // this.ddbService.getCountryAndCurrencyList();
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
-    if (this.pnrService.errorMessage.indexOf("Error") === 0) {
+    if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg =
-        "Unable to load PNR or no PNR is loaded in Amadeus. \r\n" +
+        'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' +
         this.pnrService.errorMessage;
     } else if (this.cfLine == null || this.cfLine === undefined) {
       this.errorPnrMsg =
-        "PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.";
+        'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
       this.isPnrLoaded = true;
     }
     this.displayInvoice();
@@ -138,12 +138,12 @@ export class LeisureComponent
   public SubmitToPNR() {
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: "static"
+        backdrop: 'static'
       });
       modalRef.content.modalRef = modalRef;
-      modalRef.content.title = "Invalid Inputs";
+      modalRef.content.title = 'Invalid Inputs';
       modalRef.content.message =
-        "Please make sure all the inputs are valid and put required values!";
+        'Please make sure all the inputs are valid and put required values!';
       return;
     }
 
@@ -183,7 +183,7 @@ export class LeisureComponent
     remarkCollection.push(this.segmentService.removeTeamMateMisRetention());
     remarkCollection.push(this.segmentService.getMandatoryRemarks());
 
-    if (this.cfLine.cfa === "RBM" || this.cfLine.cfa === "RBP") {
+    if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
       const concierge = this.reportingComponent.conciergeComponent;
       remarkCollection.push(
         this.reportingRemarkService.getConciergeUdids(
@@ -196,12 +196,12 @@ export class LeisureComponent
 
     // tslint:disable-next-line:no-string-literal
     if (
-      this.remarkComponent.remarkForm.controls["packageList"].value !== null &&
-      this.remarkComponent.remarkForm.controls.packageList.value !== "" &&
-      this.remarkComponent.remarkForm.controls.packageList.value !== "1"
+      this.remarkComponent.remarkForm.controls['packageList'].value !== null &&
+      this.remarkComponent.remarkForm.controls.packageList.value !== '' &&
+      this.remarkComponent.remarkForm.controls.packageList.value !== '1'
     ) {
       if (
-        this.remarkComponent.remarkForm.controls.packageList.value === "ITC"
+        this.remarkComponent.remarkForm.controls.packageList.value === 'ITC'
       ) {
         remarkCollection.push(
           this.packageRemarkService.GetITCPackageRemarks(
@@ -241,24 +241,24 @@ export class LeisureComponent
       x => {
         this.isPnrLoaded = false;
         this.getPnr();
-        this.workflow = "";
+        this.workflow = '';
       },
       error => {
         alert(JSON.stringify(error));
       }
     );
-    this.remarkService.endPNR("CWTSCRIPT");
+    this.remarkService.endPNR('CWTSCRIPT');
   }
 
   async cancelPnr() {
     if (!this.cancelSegmentComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: "static"
+        backdrop: 'static'
       });
       modalRef.content.modalRef = modalRef;
-      modalRef.content.title = "Invalid Inputs";
+      modalRef.content.title = 'Invalid Inputs';
       modalRef.content.message =
-        "Please make sure all the inputs are valid and put required values!";
+        'Please make sure all the inputs are valid and put required values!';
       return;
     }
 
@@ -295,7 +295,7 @@ export class LeisureComponent
       x => {
         this.isPnrLoaded = false;
         this.getPnr();
-        this.workflow = "";
+        this.workflow = '';
       },
       error => {
         alert(JSON.stringify(error));
@@ -363,13 +363,13 @@ export class LeisureComponent
         this.invoiceComponent.matrixInvoiceGroup
       )
     );
-    this.remarkService.endPNR(" Agent Invoicing"); // end PNR First before Invoice
+    this.remarkService.endPNR(' Agent Invoicing'); // end PNR First before Invoice
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
       x => {
         this.isPnrLoaded = false;
         this.getPnr();
-        this.workflow = "";
+        this.workflow = '';
       },
       error => {
         alert(JSON.stringify(error));
@@ -380,14 +380,14 @@ export class LeisureComponent
   public async loadPnr() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
-      this.workflow = "load";
+      this.workflow = 'load';
     }
   }
 
   public async cancelSegment() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
-      this.workflow = "cancel";
+      this.workflow = 'cancel';
       this.segment = this.pnrService.getSegmentTatooNumber();
       this.setControl();
     }
@@ -396,20 +396,20 @@ export class LeisureComponent
   public async AddSegment() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
-      this.workflow = "segment";
+      this.workflow = 'segment';
     }
   }
 
   public async sendInvoice() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
-      this.workflow = "invoice";
+      this.workflow = 'invoice';
     }
   }
 
   back(): void {
     if (this.isPnrLoaded) {
-      this.workflow = "";
+      this.workflow = '';
     }
   }
 

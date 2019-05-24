@@ -106,7 +106,7 @@ export class PackageRemarkService {
             rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.value.commission, 'RM', '*'));
         }
 
-        console.log(rmGroup);
+        console.log(rmGroup);        
         return rmGroup;
     }
 
@@ -180,6 +180,7 @@ export class PackageRemarkService {
         return rmGroup;
     }
 
+ 
 
     public GetCodeShare(frmGroup: FormGroup) {
 
@@ -234,7 +235,7 @@ export class PackageRemarkService {
         this.rbcForDeletion.forEach(c => {
             remGroup.deleteRemarkByIds.push(c);
         });
-
+        this.rbcForDeletion = [];
         return remGroup;
     }
 
@@ -381,7 +382,7 @@ export class PackageRemarkService {
             }
 
         }
-
+debugger;
         return rbcModels;
     }
 

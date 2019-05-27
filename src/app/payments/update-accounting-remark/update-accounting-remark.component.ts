@@ -78,6 +78,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   ngOnInit() {
     this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segments = this.pnrService.getSegmentTatooNumber();
+    this.passengerList = this.pnrService.getPassengers();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
       confirmationLabel: new FormControl(''),
@@ -90,7 +91,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         Validators.required,
         Validators.maxLength(3)
       ]),
-      // passengerNo: new FormControl('', [Validators.required]),
+      passengerNo: new FormControl('', []),
       supplierConfirmatioNo: new FormControl('', [
         Validators.required,
         Validators.maxLength(20)
@@ -114,7 +115,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       ]),
       descriptionapay: new FormControl('', [Validators.required]),
       // bsp: new FormControl('', [Validators.required]),
-      commisionPercentage: new FormControl('', [Validators.required])
+      commisionPercentage: new FormControl('', [Validators.required]),
+      passRelate: new FormControl('', [])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -370,6 +372,18 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.controls.segmentNo.setValue(
       this.accountingRemarks.segmentNo
     );
+  }
+
+  showPassengerRelate() {
+    if (this.matrixAccountingForm.controls['passRelate'].value) {
+      this.enableFormControls(['passengerNo'], false);
+      this.matrixAccountingForm.controls.passengerNo.setValidators(
+        Validators.required
+      );
+    } else {
+      this.enableFormControls(['passengerNo'], true);
+      this.matrixAccountingForm.controls.tktLine.clearValidators();
+    }
   }
 
   isTypeINSExist(segmentNo: any) {

@@ -188,7 +188,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     private util: UtilHelper
   ) {
     this.passiveSegments = new PassiveSegmentsModel();
-    this.supplierCodeList = this.ddbService.getSupplierCode();
+    // this.supplierCodeList ;//= this.ddbService.getSupplierCode();
     this.segmentForm = fb.group({
       segmentType: new FormControl('', [Validators.required])
     });

@@ -47,6 +47,7 @@ export class PnrService {
         console.log(err);
       });
     this.getPCC();
+    console.log(JSON.stringify(this.pnrObj));
   }
 
   getPCC(): void {
@@ -186,6 +187,7 @@ export class PnrService {
           firstname: fname,
           surname: lname,
           id: rm.elementNumber,
+          tatooNo: rm.tatooNumber,
           fullname
         };
         passengers.push(passenger);
@@ -679,6 +681,11 @@ export class PnrService {
           model !== undefined
         ) {
           model.segmentNo = this.getAssocNumbers(rm.associations);
+          model.passengerNo = this.getPassengerAssocNumbers(rm.associations);
+          model.passRelate = false;
+          if (model.passengerNo) {
+            model.passRelate = true;
+          }
 
           if (apays !== null && apays.length > 0) {
             apays.forEach(x => {
@@ -778,10 +785,26 @@ export class PnrService {
     const s = [];
     assoc.forEach(x => {
       const segment = this.getSegmentTatooNumber().find(
-        z => z.tatooNo === x.tatooNumber
+        z => z.tatooNo === x.tatooNumber && x.segmentType === 'ST'
       );
       if (segment !== null && segment !== undefined) {
         s.push(segment.lineNo);
+      }
+    });
+    return s.join(',');
+  }
+
+  getPassengerAssocNumbers(assoc) {
+    if (assoc === null || assoc === undefined) {
+      return '';
+    }
+    const s = [];
+    assoc.forEach(x => {
+      const passenger = this.getPassengers().find(
+        z => z.tatooNo === x.tatooNumber && x.segmentType === 'PT'
+      );
+      if (passenger !== null && passenger !== undefined) {
+        s.push(passenger.id);
       }
     });
     return s.join(',');

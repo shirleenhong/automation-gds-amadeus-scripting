@@ -71,11 +71,23 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
-  public getRemarksModel(remText, cat, type?, segment?: string) {
+  public getRemarksModel(
+    remText,
+    cat,
+    type?,
+    segment?: string,
+    passenger?: string
+  ) {
     let segmentrelate = [];
+    let passengerRelate = [];
     if (segment) {
       segmentrelate = segment.split(',');
     }
+
+    if (passenger) {
+      passengerRelate = passenger.split(',');
+    }
+
     if (type == null) {
       type = 'RM';
     }
@@ -85,6 +97,7 @@ export class PaymentRemarkService {
     rem.remarkText = remText;
     rem.remarkType = type;
     rem.relatedSegments = this.getSegmentTatooValue(segmentrelate);
+    rem.relatedPassengers = this.getPassengerTatooValue(passengerRelate);
     return rem;
   }
 
@@ -101,6 +114,21 @@ export class PaymentRemarkService {
     });
 
     return relatedSegment;
+  }
+
+  getPassengerTatooValue(passengerRelate) {
+    const relatedPassenger = [];
+    const tatooPassenger = this.pnrService.getPassengers();
+    passengerRelate.forEach(element => {
+      if (tatooPassenger.length > 0) {
+        const look = tatooPassenger.find(x => x.id === element);
+        if (look) {
+          relatedPassenger.push(look.tatooNo);
+        }
+      }
+    });
+
+    return relatedPassenger;
   }
 
   getFOP(modeofPayment, creditCardNo, fopvendorCode, expDate) {
@@ -201,9 +229,23 @@ export class PaymentRemarkService {
       bknLine +
       accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
-    remarkList.push(this.getRemarksModel(facc, '*', 'RM'));
     remarkList.push(
-      this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString())
+      this.getRemarksModel(
+        facc,
+        '*',
+        'RM',
+        '',
+        accounting.passengerNo.toString()
+      )
+    );
+    remarkList.push(
+      this.getRemarksModel(
+        acc2,
+        '*',
+        'RM',
+        accounting.segmentNo.toString(),
+        accounting.passengerNo.toString()
+      )
     );
 
     if (accounting.bsp === '2') {

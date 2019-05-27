@@ -203,6 +203,27 @@
       </div>
     </div>
 
+    <div class="row form-group">
+      <div class="col-4"> </div>
+      <div class="col-8">
+        <input type="checkbox" name="passRelate" formControlName="passRelate" id="passRelate" (change)="showPassengerRelate()" 
+        [(ngModel)]="accountingRemarks.passRelate"/>
+        Does the travellers require separate Invoices?
+      </div>
+    </div>
+
+    <div *ngIf="f.passRelate.value === true" class="form-group row">
+      <div class="col-sm-4">Passenger :</div>
+      <div class="col-sm-8">
+        <select class="form-control " id="passengerNo" [(ngModel)]="accountingRemarks.passengerNo"
+          formControlName="passengerNo" name="passengerNo">
+          <option *ngFor="let pass of  passengerList" [value]="pass.id">
+            {{pass.surname}}-{{pass.firstname}}
+          </option>
+        </select>
+      </div>
+    </div>
+
   </form>
 
 </div>

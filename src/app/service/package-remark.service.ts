@@ -382,7 +382,6 @@ export class PackageRemarkService {
             }
 
         }
-debugger;
         return rbcModels;
     }
 

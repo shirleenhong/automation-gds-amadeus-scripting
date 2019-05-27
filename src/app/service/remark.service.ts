@@ -138,6 +138,16 @@ export class RemarkService {
         temp.push(ref);
       });
     }
+
+    if (remarkModel.relatedPassengers) {
+      remarkModel.relatedPassengers.forEach(element => {
+        const ref = {
+          qualifier: 'PT',
+          number: element
+        };
+        temp.push(ref);
+      });
+    }
     const referenceForDataElement = {
       reference: temp
     };

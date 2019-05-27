@@ -14,8 +14,11 @@ export class DDBService implements OnInit {
   isTokenExpired = true;
   countryList = [];
   currencyList = [];
+  supplierCodes = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getSupplierCodesFromPowerBase();
+  }
 
   constructor(private httpClient: HttpClient) {}
 
@@ -52,15 +55,6 @@ export class DDBService implements OnInit {
   }
 
   async sample() {
-    this.getRequest(common.locationService).subscribe(
-      x => {
-        alert(JSON.stringify(x));
-      },
-      err => {
-        alert(JSON.stringify(err));
-      }
-    );
-
     this.getRequest(common.travelportService + 'MNL').subscribe(
       x => {
         alert(JSON.stringify(x));
@@ -209,19 +203,33 @@ export class DDBService implements OnInit {
     ];
   }
 
-  getSupplierCode() {
-    let SupplierCode = [];
+  async getSupplierCodesFromPowerBase() {
+    this.supplierCodes = [];
+    await this.getRequest(common.supplierCodes).subscribe(
+      x => {
+        x.SupplierList.forEach(s => {
+          const supplier = {
+            type: s.productName,
+            supplierCode: s.SupplierCode,
+            supplierName: s.SupplierName
+          };
+          this.supplierCodes.push(supplier);
+        });
+      },
+      err => {
+        alert(JSON.stringify(err));
+      }
+    );
+  }
 
-    // let passesupplier = {type: type,suppliercode: suppliercode,supplierName: supplierName,};
-    SupplierCode = [
-      { type: '', supplierCode: '', supplierName: '' },
-      { type: '1', supplierCode: 'AC', supplierName: 'Air Canada' },
-      { type: '1', supplierCode: 'QK', supplierName: 'Air Canada Jazz' },
-      { type: '1', supplierCode: 'RV', supplierName: 'Air Canada Rouge' },
-      { type: '6', supplierCode: 'G69', supplierName: 'Autos Tucan S.L.L' },
-      { type: '6', supplierCode: 'G70', supplierName: 'G70	Autocars Rufo' }
-    ];
-    return SupplierCode;
+  getSupplierCodes(type: string) {
+    if (this.supplierCodes.length === 0) {
+      this.getSupplierCodesFromPowerBase();
+    }
+    if (this.supplierCodes.length > 0) {
+      return this.supplierCodes.filter(x => x.type === type.toUpperCase());
+    }
+    return this.supplierCodes;
   }
 
   getCcVendorCodeList() {

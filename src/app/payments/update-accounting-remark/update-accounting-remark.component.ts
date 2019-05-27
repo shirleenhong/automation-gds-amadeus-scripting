@@ -76,7 +76,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
@@ -192,7 +191,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     ];
   }
 
-  onChangeApayNonApay(accRemark) {
+  onChangeAccountingType(accRemark) {
+    this.accountingRemarks.vendorCode = '';
     switch (accRemark) {
       case 'INS':
         this.IsInsurance = true;
@@ -238,19 +238,21 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
     }
     this.loadFormOfPaymentList(accRemark);
-    // this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
+    this.assignSupplierCode(accRemark);
   }
 
   filterSupplierCode(typeCode) {
-    this.filterSupplierCodeList = this.supplierCodeList.filter(
-      supplier => supplier.type === typeCode
-    );
-
     if (this.accountingRemarks.bsp === '2') {
       this.assignSupplierCode(typeCode);
-      // this.assignDescription(typeCode);
-      // } else {
-      //   this.accountingRemarks.supplierCodeName = '';
+    }
+
+    const val = ['12', '5', '1', '6'];
+    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO'];
+    const indx = val.indexOf(typeCode);
+    if (indx >= 0) {
+      this.filterSupplierCodeList = this.ddbService.getSupplierCodes(
+        type[indx]
+      );
     }
   }
 
@@ -265,8 +267,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       }
     }
   }
-
-  // get PaymentType() { return PaymentType; }
 
   FormOfPaymentChange(newValue) {
     switch (newValue) {

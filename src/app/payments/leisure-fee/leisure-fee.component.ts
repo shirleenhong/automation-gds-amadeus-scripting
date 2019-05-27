@@ -150,17 +150,19 @@ export class LeisureFeeComponent implements OnInit {
 
   checkReasonFee() {
     const cfa = this.pnrService.getCFLine();
-    if (
-      cfa.cfa === 'RBM' ||
-      cfa.cfa === 'RBP' ||
-      this.leisureFeeList.length > 0
-    ) {
-      this.showReasonFee = false;
-      this.leisureFeeForm.get('noFeeReason').setValue('');
-      this.leisureFeeForm.get('noFeeReason').disable();
-    } else {
-      this.showReasonFee = true;
-      this.leisureFeeForm.get('noFeeReason').enable();
+    if (cfa) {
+      if (
+        cfa.cfa === 'RBM' ||
+        cfa.cfa === 'RBP' ||
+        this.leisureFeeList.length > 0
+      ) {
+        this.showReasonFee = false;
+        this.leisureFeeForm.get('noFeeReason').setValue('');
+        this.leisureFeeForm.get('noFeeReason').disable();
+      } else {
+        this.showReasonFee = true;
+        this.leisureFeeForm.get('noFeeReason').enable();
+      }
     }
   }
 }

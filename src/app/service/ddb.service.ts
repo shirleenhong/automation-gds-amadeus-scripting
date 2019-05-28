@@ -2,9 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { common } from '../../environments/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { interval, Observable } from 'rxjs';
-import { jsonpCallbackContext } from '@angular/common/http/src/module';
-import { stringify } from '@angular/core/src/util';
+import { interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +36,8 @@ export class DDBService implements OnInit {
       this.token = res.access_token;
       localStorage.setItem('token', this.token);
       this.isTokenExpired = false;
-      interval(res.expires_in * 1000).subscribe(x => {
+      // expire token 30 seconds earlier
+      interval((res.expires_in - 30) * 1000).subscribe(x => {
         this.isTokenExpired = true;
       });
     }
@@ -78,10 +77,14 @@ export class DDBService implements OnInit {
       this.getRequest(common.locationService).then(
         result => {
           const countryItems = result.CountryItems;
-          this.countryList = countryItems.map(a => a.CountryCode);
-          this.currencyList = countryItems.map(a => a.CurrencyCode);
-          alert(this.countryList);
-          alert(this.currencyList);
+          this.countryList = countryItems.map(item => ({
+            itemValue: item.CountryCode,
+            itemText: item.CountryName
+          }));
+          this.currencyList = countryItems.map(item => ({
+            itemValue: item.CurrencyCode,
+            itemText: item.CurrencyCode
+          }));
         },
         err => {
           alert(JSON.stringify(err));

@@ -13,14 +13,6 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
 import { PaymentComponent } from '../payments/payment.component';
 import { SegmentService } from '../service/segment.service';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS
-} from '@angular/forms';
 import { ReportingComponent } from '../reporting/reporting.component';
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
@@ -31,14 +23,9 @@ import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
-
-import { invalid } from '@angular/compiler/src/render3/view/util';
-// import { VisaPassportComponent } from '../remarks/visa-passport/visa-passport.component';
-// >>>>>>> Stashed changes
 import { VisaPassportService } from '../service/visa-passport.service';
 import { InvoiceService } from '../service/invoice-remark.service';
 import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
-import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
 @Component({
   selector: 'app-leisure',
@@ -94,6 +81,7 @@ export class LeisureComponent
   ngAfterViewInit(): void {}
 
   async getPnr() {
+    // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();

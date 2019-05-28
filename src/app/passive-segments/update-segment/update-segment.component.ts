@@ -389,7 +389,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         ];
         this.setForm(forms);
         this.loadRoomType();
-
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('TOUR');
         this.selectedTmpl = this.tourTmpl;
         break;
       case 'SEA':
@@ -423,6 +423,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('FERRY');
         break;
 
       case 'INS':
@@ -463,7 +464,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         ];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
-
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('RAIL');
         break;
       case 'LIM':
         this.lblvendorName = 'Limo Company';
@@ -500,7 +501,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         }
         this.setForm(forms);
         this.selectedTmpl = this.limoTmpl;
-
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('LIMO');
         break;
       case 'CAR':
         this.lbldepartureDate = 'Pickup Date';

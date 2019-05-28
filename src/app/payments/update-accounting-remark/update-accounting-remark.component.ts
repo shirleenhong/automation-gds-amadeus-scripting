@@ -231,12 +231,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           true
         );
         this.accountingRemarks.bsp = '1';
-        this.filterSupplierCode(accRemark);
         this.setTktNumber();
         this.IsInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
     }
+    this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
     this.assignSupplierCode(accRemark);
   }
@@ -245,7 +245,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (this.accountingRemarks.bsp === '2') {
       this.assignSupplierCode(typeCode);
     }
-
     const val = ['12', '5', '1', '6'];
     const type = ['TOUR', 'FERRY', 'AIR', 'LIMO'];
     const indx = val.indexOf(typeCode);
@@ -253,6 +252,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(
         type[indx]
       );
+    } else {
+      this.filterSupplierCodeList = this.ddbService.getSupplierCodes();
     }
   }
 
@@ -260,10 +261,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (!this.IsInsurance) {
       if (typeCode === 'SEAT COSTS') {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
-        // this.accountingRemarks.supplierCodeName = 'PFS';
       } else {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
-        // this.accountingRemarks.supplierCodeName = 'CGO';
       }
     }
   }

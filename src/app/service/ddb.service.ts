@@ -14,11 +14,9 @@ export class DDBService implements OnInit {
   isTokenExpired = true;
   countryList = [];
   currencyList = [];
-  supplierCodes = [];
-
-  ngOnInit(): void {
-    this.getSupplierCodesFromPowerBase();
-  }
+  cachedSupplierCodes = [];
+  retry = 0;
+  ngOnInit(): void {}
 
   constructor(private httpClient: HttpClient) {}
 
@@ -46,16 +44,26 @@ export class DDBService implements OnInit {
     }
   }
 
-  getRequest(serviceName: string): Observable<any> {
+  getRequest(serviceName: string) {
     this.getToken();
     const hds = new HttpHeaders().append('Content', 'application/json');
-    return this.httpClient.get<any>(serviceName, {
-      headers: hds
-    });
+    return this.httpClient
+      .get<any>(serviceName, {
+        headers: hds
+      })
+      .toPromise()
+      .catch(e => {
+        // retry if unauthorize to get new token
+        if (e.status === 401 && this.retry < 3) {
+          this.getRequest(serviceName);
+          this.isTokenExpired = true;
+          this.retry += 1;
+        }
+      });
   }
 
   async sample() {
-    this.getRequest(common.travelportService + 'MNL').subscribe(
+    this.getRequest(common.travelportService + 'MNL').then(
       x => {
         alert(JSON.stringify(x));
       },
@@ -67,7 +75,7 @@ export class DDBService implements OnInit {
 
   async getCountryAndCurrencyList() {
     if (this.countryList.length === 0 || this.currencyList.length === 0) {
-      this.getRequest(common.locationService).subscribe(
+      this.getRequest(common.locationService).then(
         result => {
           const countryItems = result.CountryItems;
           this.countryList = countryItems.map(a => a.CountryCode);
@@ -83,9 +91,7 @@ export class DDBService implements OnInit {
   }
 
   async getTravelPort(travelportCode: string) {
-    return await this.getRequest(
-      common.travelportService + travelportCode
-    ).toPromise();
+    return await this.getRequest(common.travelportService + travelportCode);
   }
 
   getProvinces(): any {
@@ -203,17 +209,17 @@ export class DDBService implements OnInit {
     ];
   }
 
-  async getSupplierCodesFromPowerBase() {
-    this.supplierCodes = [];
-    await this.getRequest(common.supplierCodes).subscribe(
+  async loadSupplierCodesFromPowerBase() {
+    await this.getRequest(common.supplierCodes).then(
       x => {
+        this.cachedSupplierCodes = [];
         x.SupplierList.forEach(s => {
           const supplier = {
-            type: s.productName,
+            type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
             supplierCode: s.SupplierCode,
             supplierName: s.SupplierName
           };
-          this.supplierCodes.push(supplier);
+          this.cachedSupplierCodes.push(supplier);
         });
       },
       err => {
@@ -222,14 +228,16 @@ export class DDBService implements OnInit {
     );
   }
 
-  getSupplierCodes(type: string) {
-    if (this.supplierCodes.length === 0) {
-      this.getSupplierCodesFromPowerBase();
+  getSupplierCodes(type?: string) {
+    if (this.cachedSupplierCodes.length === 0) {
+      this.loadSupplierCodesFromPowerBase();
     }
-    if (this.supplierCodes.length > 0) {
-      return this.supplierCodes.filter(x => x.type === type.toUpperCase());
+    if (this.cachedSupplierCodes.length > 0 && type !== undefined) {
+      return this.cachedSupplierCodes.filter(
+        x => x.type.toUpperCase() === type.toUpperCase()
+      );
     }
-    return this.supplierCodes;
+    return this.cachedSupplierCodes;
   }
 
   getCcVendorCodeList() {

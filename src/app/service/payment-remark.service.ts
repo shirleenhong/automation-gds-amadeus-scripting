@@ -3,10 +3,9 @@ import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
-import { FormGroup } from '@angular/forms';
 import { DDBService } from './ddb.service';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
@@ -262,10 +261,6 @@ export class PaymentRemarkService {
       Number(accounting.gst) + Number(accounting.hst) + Number(accounting.qst);
     ttltax = Math.round(ttltax * 100) / 100;
     const decPipe = new DecimalPipe('en-Us');
-    let vcode = '';
-    if (accounting.vendorCode) {
-      vcode = accounting.vendorCode;
-    }
 
     let acc3 =
       'PAID ' +
@@ -346,7 +341,6 @@ export class PaymentRemarkService {
       AMEX = '117000',
       Diners = '118000'
     }
-    const datePipe = new DatePipe('en-US');
     let fop = '';
     if (Object.values(CardType).includes(matrix.bankAccount)) {
       fop =

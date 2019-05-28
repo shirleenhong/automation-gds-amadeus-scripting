@@ -3,7 +3,6 @@ import {
   FormGroup,
   FormBuilder,
   FormControl,
-  FormArray,
   Validators
 } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
@@ -102,15 +101,15 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
           true
         );
         this.enableFormControls(['numberbookings', 'totalbasecost'], false);
-        this.rbcPointsForm.controls['pct'].setValue('1');
+        this.rbcPointsForm.controls.pct.setValue('1');
 
         break;
       default:
         if (productType === 'AIR') {
           // this.itcForm.controls['holidayCost'].setValue(
-          this.rbcPointsForm.controls['pct'].setValue('1.5');
+          this.rbcPointsForm.controls.pct.setValue('1.5');
         } else {
-          this.rbcPointsForm.controls['pct'].setValue('1');
+          this.rbcPointsForm.controls.pct.setValue('1');
         }
         this.enableFormControls(
           [

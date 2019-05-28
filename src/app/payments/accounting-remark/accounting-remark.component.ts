@@ -10,7 +10,6 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
-import { Alert } from 'selenium-webdriver';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
@@ -89,7 +88,7 @@ export class AccountingRemarkComponent implements OnInit {
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {

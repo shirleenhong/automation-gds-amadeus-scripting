@@ -1,5 +1,4 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
-import { setTheme } from 'ngx-bootstrap';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +7,4 @@ import { setTheme } from 'ngx-bootstrap';
 })
 export class AppComponent {
   title = 'bpg-gds-scripting-amadeus';
-
-
-
 }

@@ -37,7 +37,7 @@ export class DDBService implements OnInit {
       localStorage.setItem('token', this.token);
       this.isTokenExpired = false;
       // expire token 30 seconds earlier
-      interval((res.expires_in - 30) * 1000).subscribe(x => {
+      interval((res.expires_in - 30) * 1000).subscribe(() => {
         this.isTokenExpired = true;
       });
     }

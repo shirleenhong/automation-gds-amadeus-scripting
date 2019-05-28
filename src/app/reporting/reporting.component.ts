@@ -2,9 +2,7 @@ import {
   Component,
   OnInit,
   Input,
-  AfterViewInit,
   OnChanges,
-  SimpleChange,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -12,13 +10,7 @@ import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { ReportingViewModel } from '../models/reporting-view.model';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  FormControl
-} from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { DDBService } from '../service/ddb.service';
 import { ConciergeUdidsComponent } from './concierge-udids/concierge-udids.component';
 import { UtilHelper } from '../helper/util.helper';
@@ -53,7 +45,8 @@ export class ReportingComponent implements OnInit, OnChanges {
     return this.reportingForm.controls;
   }
 
-  ngOnChanges(changes: SimpleChanges) {}
+  // tslint:disable-next-line: variable-name
+  ngOnChanges(_changes: SimpleChanges) {}
 
   ngOnInit() {
     this.reportingForm = new FormGroup({

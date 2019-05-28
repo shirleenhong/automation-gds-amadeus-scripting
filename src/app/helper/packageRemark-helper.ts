@@ -1,11 +1,6 @@
-import { RemarkModel } from '../models/pnr/remark.model';
 import { Injectable } from '@angular/core';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { formatDate } from '@angular/common';
 import { PnrService } from '../service/pnr.service';
 import { FormGroup } from '@angular/forms';
-import { debug } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -64,10 +59,6 @@ export class PackageRemarkHelper {
         // this.forDeletion.push(textSearch.elementNumber);
       }
     }
-  }
-
-  private replaceText(value: string, find: string, replace: string) {
-    return value.replace(new RegExp(find, 'g'), replace);
   }
 
   getCurrency() {

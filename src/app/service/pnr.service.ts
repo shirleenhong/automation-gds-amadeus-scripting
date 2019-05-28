@@ -5,9 +5,6 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { SegmentModel } from '../models/pnr/segment.model';
-
-import { DDBService } from './ddb.service';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 
 declare var PNR: any;
@@ -34,7 +31,7 @@ export class PnrService {
     await this.pnrObj
       .retrievePNR()
       .then(
-        (res: any) => {
+        () => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
         },

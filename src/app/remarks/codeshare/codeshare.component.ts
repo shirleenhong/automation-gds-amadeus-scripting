@@ -1,5 +1,11 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  FormArray,
+  Validators
+} from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
@@ -11,7 +17,7 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
   codeShareGroup: FormGroup;
   total = 1;
 
-  constructor(private fb: FormBuilder, private pnr: PnrService) { }
+  constructor(private fb: FormBuilder, private pnr: PnrService) {}
 
   ngOnInit() {
     this.codeShareGroup = this.fb.group({
@@ -19,20 +25,22 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
     });
     this.getCodeShareFromPnr();
   }
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
 
   getCodeShareFromPnr() {
-    const rirCheckin = "CHECK-IN AT (?<airline>(.*)) TICKET COUNTER";
+    const rirCheckin = 'CHECK-IN AT (?<airline>(.*)) TICKET COUNTER';
     const regx = new RegExp(rirCheckin);
     const rems = this.pnr.getRemarksFromGDSByRegex(regx, 'RIR');
     const items = this.codeShareGroup.get('segments') as FormArray;
     const segmentList = this.pnr.getSegmentTatooNumber();
-    if (rems.length > 0) { items.controls = []; }
+    if (rems.length > 0) {
+      items.controls = [];
+    }
 
     rems.forEach(r => {
-      let airline = r.remarkText.replace('CHECK-IN AT', '').replace('TICKET COUNTER', ''.trim());
+      const airline = r.remarkText
+        .replace('CHECK-IN AT', '')
+        .replace('TICKET COUNTER', ''.trim());
       const segment = [];
       segmentList.forEach(x => {
         if (r.segments.indexOf(x.tatooNo) >= 0) {
@@ -42,7 +50,6 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
       items.push(this.createFormGroup({ segment: segment.join(','), airline }));
       this.total = items.length;
     });
-
   }
 
   createFormGroup(defaultValue?: any): FormGroup {
@@ -66,5 +73,4 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
     items.removeAt(i);
     this.total = items.length;
   }
-
 }

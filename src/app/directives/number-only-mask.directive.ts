@@ -2,26 +2,28 @@ import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-    selector: '[formControlName][NumberOnlyMask]'
+  // tslint:disable-next-line: directive-selector
+  selector: '[formControlName][NumberOnlyMask]'
 })
 export class NumberOnlyMaskDirective {
+  constructor(public ngControl: NgControl) {}
 
-    constructor(public ngControl: NgControl) { }
+  @HostListener('ngModelChange', ['$event'])
+  onModelChange(event) {
+    this.onInputChange({ event, backspace: false });
+  }
 
-    @HostListener('ngModelChange', ['$event'])
-    onModelChange(event) {
-        this.onInputChange(event, false);
+  @HostListener('keydown.backspace', ['$event'])
+  keydownBackspace(event) {
+    this.onInputChange({ event: event.target.value, backspace: false });
+  }
+
+  onInputChange({ event }: { event; backspace }) {
+    if (event === undefined || event === null) {
+      return;
     }
+    const newVal = event.toString().replace(/\D/g, '');
 
-    @HostListener('keydown.backspace', ['$event'])
-    keydownBackspace(event) {
-        this.onInputChange(event.target.value, false);
-    }
-
-    onInputChange(event, backspace) {
-        if (event === undefined || event === null) { return; }
-        const newVal = event.toString().replace(/\D/g, '');
-
-        this.ngControl.valueAccessor.writeValue(newVal);
-    }
+    this.ngControl.valueAccessor.writeValue(newVal);
+  }
 }

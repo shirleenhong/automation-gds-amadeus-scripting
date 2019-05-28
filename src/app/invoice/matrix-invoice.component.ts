@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { PnrService } from 'src/app/service/pnr.service';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from '@angular/forms';
+import {
+  validateSegmentNumbers,
+  validatePassengerNumbers
+} from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-matrix-invoice',
@@ -15,24 +22,31 @@ export class MatrixInvoiceComponent implements OnInit {
   passengers = [];
   selection: string;
 
-  constructor(private fb: FormBuilder, private pnr: PnrService) { }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     this.matrixInvoiceGroup = this.fb.group({
-      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
-      validateSegmentNumbers(this.segments)]),
-      passengerNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*'),
-      validatePassengerNumbers(this.passengers)]),
-      selection: new FormControl('', []),
+      segmentNo: new FormControl('', [
+        Validators.required,
+        Validators.pattern('[0-9]+(,[0-9]+)*'),
+        validateSegmentNumbers(this.segments)
+      ]),
+      passengerNo: new FormControl('', [
+        Validators.required,
+        Validators.pattern('[0-9]+(,[0-9]+)*'),
+        validatePassengerNumbers(this.passengers)
+      ]),
+      selection: new FormControl('', [])
     });
     this.select('itinerary');
   }
 
-  get f() { return this.matrixInvoiceGroup.controls; }
+  get f() {
+    return this.matrixInvoiceGroup.controls;
+  }
 
   select(selected: string) {
     this.selection = selected;
-    this.f['selection'].setValue(selected);
+    this.f.selection.setValue(selected);
   }
-
 }

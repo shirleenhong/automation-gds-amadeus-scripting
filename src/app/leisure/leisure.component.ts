@@ -222,7 +222,7 @@ export class LeisureComponent
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
-      x => {
+      () => {
         this.isPnrLoaded = false;
         this.getPnr();
         this.workflow = '';
@@ -254,7 +254,7 @@ export class LeisureComponent
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelRemarks().then(
-      x => {
+      () => {
         // this.isPnrLoaded = false;
         // this.getPnr();
       },
@@ -275,7 +275,7 @@ export class LeisureComponent
     );
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.cancelRemarks().then(
-      x => {
+      () => {
         this.isPnrLoaded = false;
         this.getPnr();
         this.workflow = '';
@@ -297,7 +297,7 @@ export class LeisureComponent
     // tslint:disable-next-line:max-line-length
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(
-      async x => {
+      async () => {
         this.isPnrLoaded = false;
         await this.getPnr();
         this.addRir();
@@ -319,7 +319,7 @@ export class LeisureComponent
 
     await this.remarkService.BuildRemarks(remarkCollection2);
     this.remarkService.SubmitRemarks().then(
-      x => {
+      () => {
         this.isPnrLoaded = false;
         this.getPnr();
       },
@@ -349,7 +349,7 @@ export class LeisureComponent
     this.remarkService.endPNR(' Agent Invoicing'); // end PNR First before Invoice
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
-      x => {
+      () => {
         this.isPnrLoaded = false;
         this.getPnr();
         this.workflow = '';

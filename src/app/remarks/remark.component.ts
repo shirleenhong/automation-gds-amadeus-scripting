@@ -74,6 +74,9 @@ export class RemarkComponent implements OnInit {
       ) {
         this.remarkForm.controls.packageList.patchValue('ITC');
       }
+      this.packageList[0].itemText = 'Delete Package Remarks';
+    } else {
+      this.packageList[0].itemText = '';
     }
   }
 

@@ -3,7 +3,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { iterateListLike } from '@angular/core/src/change_detection/change_detection_util';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { analyzeAndValidateNgModules, ArrayType } from '@angular/compiler';
 
 declare var smartScriptSession: any;
 
@@ -290,7 +290,8 @@ export class RemarkService {
 
   deleteRemarks() {
     let deleteIds = '';
-    this.deleteRemarksByIds.forEach(ids => {
+    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
+    filteredIds.forEach(ids => {
       deleteIds += ids + ',';
     });
     if (deleteIds !== '') {
@@ -299,22 +300,38 @@ export class RemarkService {
     }
   }
 
-  sortDeleteIds(arr: Array<string>) {
-    arr.sort((a, b) => Number(a) - Number(b));
+  sortArrayForDelete(arr) {
+    const dl = arr.sort((a, b) => {
+      return (
+        Number(a.toString().split('-')[0]) - Number(b.toString().split('-')[0])
+      );
+    });
+    // return dl;
     const newArr = [];
-    let temp = 0;
-    // tslint:disable-next-line: forin
-    for (const i in arr) {
-      if (temp !== 0) {
-        if (temp + 1 === Number(arr[i])) {
-        } else {
-          newArr.push(temp + '-' + arr[i]);
+    let tmp = '';
+    let tmpIndx = 0;
+    for (let i = 0; i < dl.length; i++) {
+      tmp = '';
+      tmpIndx = 0;
+      for (let j = i + 1; j < dl.length; j++) {
+        if (dl[j - 1].indexOf('-') >= 0 || dl[j].indexOf('-') >= 0) {
+          break;
         }
+        if (Number(dl[j - 1]) + 1 === Number(dl[j])) {
+          tmp = dl[j];
+          tmpIndx = j;
+        } else {
+          break;
+        }
+      }
+      if (tmp === '') {
+        newArr.push(dl[i]);
       } else {
-        temp = Number(arr[i]);
+        newArr.push(dl[i] + '-' + tmp);
+        i = tmpIndx;
       }
     }
-    return arr;
+    return newArr;
   }
 
   async sendRemarks() {

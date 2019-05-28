@@ -181,6 +181,15 @@ export class PackageRemarkService {
     }
 
  
+    public GetPackageRemarksForDeletion(){
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Tour Package';
+        rmGroup.remarks = new Array<RemarkModel>();
+        this.packageRemarkHelper.getForDeletion().forEach(c => {
+            rmGroup.deleteRemarkByIds.push(c);
+        });
+        return rmGroup;
+    }
 
     public GetCodeShare(frmGroup: FormGroup) {
 

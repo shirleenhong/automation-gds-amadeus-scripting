@@ -211,6 +211,10 @@ export class LeisureComponent
           )
         );
       }
+    } else {
+      remarkCollection.push(
+        this.packageRemarkService.GetPackageRemarksForDeletion()
+      );
     }
 
     remarkCollection.push(

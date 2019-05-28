@@ -2,8 +2,6 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
-import { iterateListLike } from '@angular/core/src/change_detection/change_detection_util';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 declare var smartScriptSession: any;
 
@@ -187,10 +185,6 @@ export class RemarkService {
       classOfService: passiveSegmentmodel.classOfService
     };
 
-    const carDetails = {
-      identification: passiveSegmentmodel.carType
-    };
-
     const travelProductProduct: { [k: string]: any } = {
       depDate: passiveSegmentmodel.startDate,
       depTime: passiveSegmentmodel.startTime,
@@ -353,7 +347,7 @@ export class RemarkService {
     await smartScriptSession
       .requestService('ws.addMultiElement_v14.1', remarkElements)
       .then(
-        data => {
+        () => {
           this.responseMessage = 'Remarks Updated';
           this.endPNR('CWTSCRIPT');
 

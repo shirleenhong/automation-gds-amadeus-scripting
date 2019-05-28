@@ -1,26 +1,10 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
-
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  FormControl
-} from '@angular/forms';
+import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { DatePipe } from '@angular/common';
-import { PaymentRemarkHelper } from 'src/app/helper/payment-helper';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import {
   validateSegmentNumbers,
@@ -54,7 +38,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   name: string;
   IsInsurance = false;
   // PaymentModeList: Array<SelectItem>;
-
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
 
   constructor(
@@ -62,7 +45,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     private pnrService: PnrService,
     public modalRef: BsModalRef,
     private ddbService: DDBService,
-    private paymentHelper: PaymentRemarkHelper,
     private utilHelper: UtilHelper
   ) {
     this.accountingRemarkList = new Array<SelectItem>();
@@ -304,7 +286,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  getAllErrors(form: FormGroup | FormArray): { [key: string]: any } | null {
+  getAllErrors(): { [key: string]: any } | null {
     let hasError = false;
     const result = Object.keys(this.matrixAccountingForm.controls).reduce(
       (acc, key) => {
@@ -312,7 +294,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
         const errors =
           control instanceof FormGroup || control instanceof FormArray
-            ? this.getAllErrors(control)
+            ? this.getAllErrors()
             : control.touched
             ? control.errors
             : '';
@@ -327,7 +309,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     return hasError ? result : null;
   }
 
-  creditcardMaxValidator(newValue) {
+  creditcardMaxValidator() {
     this.f.cardNumber.setValue('');
     // let pattern = '';
     // pattern = this.paymentHelper.creditcardMaxValidator(newValue);
@@ -374,7 +356,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   showPassengerRelate() {
-    if (this.matrixAccountingForm.controls['passRelate'].value) {
+    if (this.matrixAccountingForm.controls.passRelate.value) {
       this.enableFormControls(['passengerNo'], false);
       this.matrixAccountingForm.controls.passengerNo.setValidators(
         Validators.required

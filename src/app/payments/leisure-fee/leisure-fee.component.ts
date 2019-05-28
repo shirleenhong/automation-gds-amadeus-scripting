@@ -55,6 +55,7 @@ export class LeisureFeeComponent implements OnInit {
     if (ex) {
       const arr = ex.split('/-');
       arr.forEach(x => {
+        // tslint:disable-next-line: no-shadowed-variable
         const e = this.exemption.find(e => e.value === x);
         if (e) {
           e.checked = true;
@@ -65,7 +66,7 @@ export class LeisureFeeComponent implements OnInit {
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {

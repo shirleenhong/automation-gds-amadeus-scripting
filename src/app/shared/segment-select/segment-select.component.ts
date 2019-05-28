@@ -1,7 +1,15 @@
-import { Component, OnInit, forwardRef, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, NG_VALIDATORS, FormControl, FormBuilder, FormGroup, Validators, Validator } from '@angular/forms';
+import { Component, OnInit, forwardRef } from '@angular/core';
+import {
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  FormControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  Validator
+} from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
-import { BsDropdownConfig } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-segment-select',
@@ -13,39 +21,38 @@ import { BsDropdownConfig } from 'ngx-bootstrap';
       useExisting: forwardRef(() => SegmentSelectComponent),
       multi: true
     },
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => SegmentSelectComponent), multi: true },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => SegmentSelectComponent),
+      multi: true
+    }
     /// { provide: BsDropdownConfig, useValue: { autoClose: false } }
   ]
 })
-export class SegmentSelectComponent implements OnInit, ControlValueAccessor, Validator {
-
+export class SegmentSelectComponent
+  implements OnInit, ControlValueAccessor, Validator {
   val = '';
   segmentGroup: FormGroup;
   segmentList = [];
   segmentSelected = [];
 
-
-  propagateChange: any = () => { };
-  validateFn: any = () => { };
-  onTouched: any = () => { };
-  onChange: any = () => { };
-
-
+  propagateChange: any = () => {};
+  validateFn: any = () => {};
+  onTouched: any = () => {};
+  onChange: any = () => {};
 
   writeValue(obj: any): void {
     this.segmentGroup.get('segment').setValue(obj);
     this.val = obj;
-
-
-
   }
-
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void { this.onTouched = fn; }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 
   setDisabledState?(isDisabled: boolean): void {
     if (isDisabled) {
@@ -53,17 +60,13 @@ export class SegmentSelectComponent implements OnInit, ControlValueAccessor, Val
     } else {
       this.segmentGroup.get('segment').enable();
     }
-
   }
 
-
-
   validate(c: FormControl) {
-
     return this.validateFn(c);
   }
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService) {
+  constructor(fb: FormBuilder, private pnrService: PnrService) {
     this.segmentGroup = fb.group({
       segment: new FormControl('', [Validators.required])
     });
@@ -86,7 +89,7 @@ export class SegmentSelectComponent implements OnInit, ControlValueAccessor, Val
   }
 
   updateValue(val) {
-    const newVal = (val.currentTarget.value);
+    const newVal = val.currentTarget.value;
     const isChecked = val.currentTarget.checked;
 
     if (isChecked) {

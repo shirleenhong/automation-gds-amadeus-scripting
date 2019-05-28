@@ -1,13 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DDBService } from 'src/app/service/ddb.service';
-import { SegmentService } from 'src/app/service/segment.service';
 import { FareRuleModel } from 'src/app/models/pnr/fare-rule.model';
-import { UtilHelper } from 'src/app/helper/util.helper';
-
 
 declare var smartScriptSession: any;
 @Component({
@@ -15,7 +12,6 @@ declare var smartScriptSession: any;
   templateUrl: './update-fare-rule-segment.component.html',
   styleUrls: ['./update-fare-rule-segment.component.scss']
 })
-
 export class UpdateFareRuleSegmentComponent implements OnInit {
   @Input()
   fareRules: FareRuleModel;
@@ -35,9 +31,13 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   //  OID: string;
   tempFareRuleType: string;
 
-  constructor(private fb: FormBuilder, public activeModal: BsModalService, private pnrService: PnrService,
-    private util: UtilHelper,
-    public modalRef: BsModalRef, private ddb: DDBService, private segmentService: SegmentService) {
+  constructor(
+    private fb: FormBuilder,
+    public activeModal: BsModalService,
+    private pnrService: PnrService,
+    public modalRef: BsModalRef,
+    private ddb: DDBService
+  ) {
     this.fareRules = new FareRuleModel();
     this.fareRules.mode = 'rbTicket';
   }
@@ -80,7 +80,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   loadModel() {
-
     if (this.fareRules.fareRuleType === '') {
       this.ShowFareRule = false;
     } else {
@@ -110,7 +109,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   checkChanged() {
-
     if (this.fareRules.mode === 'rbTicket') {
       this.fareRuleForm.controls.ticketAmount.enable();
       this.fareRuleForm.controls.nonRefundable.disable();
@@ -118,7 +116,6 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       this.fareRuleForm.controls.ticketAmount.disable();
       this.fareRuleForm.controls.nonRefundable.enable();
     }
-
   }
 
   addCityPair(): void {
@@ -146,8 +143,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   loadFareRule(): void {
-    this.fareRuleList = [{ itemText: 'SELECT FARE RULE', itemValue: 'S' },
-    ];
+    this.fareRuleList = [{ itemText: 'SELECT FARE RULE', itemValue: 'S' }];
   }
 
   getCurrencies(): void {
@@ -156,34 +152,48 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
   }
 
   executeCryptic(lineNo: string): void {
-
     const airline = this.pnrService.getPassiveAirSegments(lineNo);
     this.fareRuleList = [];
     if (airline !== undefined) {
       this.ShowFareRule = false;
       this.fareRules.airlineCode = airline[0].airlineCode;
 
-      const response = smartScriptSession.send('PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES').then(res => {
+      // const response =
+      smartScriptSession
+        .send(
+          'PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES'
+        )
+        .then(res => {
+          if (
+            res.Response !== undefined &&
+            res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0
+          ) {
+            const output = res.Response.toString()
+              .split('-------')[1]
+              .split('       ');
 
-        if (res.Response !== undefined && res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0) {
-          const output = res.Response.toString().split('-------')[1].split('       ');
-
-          output.forEach(element => {
-            if (element.indexOf('RM') > -1) {
-              const outputTwo = element.replace('RM', '').replace('S', '').replace(airline[0].airlineCode, '').split('       ');
-              this.fareRuleList.push({ itemText: airline[0].airlineCode + ' ' + outputTwo[1], itemValue: outputTwo[1] });
-              this.ShowFareRule = true;
-              this.showCrypticForm = true;
-              this.showOptionalFare = false;
-            }
-          });
-        }
-        // need to store the temp value of fareRuleType and rebind it after cryptic call.
-        if (this.tempFareRuleType !== undefined) {
-          this.fareRules.fareRuleType = this.tempFareRuleType;
-        }
-      });
-
+            output.forEach(element => {
+              if (element.indexOf('RM') > -1) {
+                const outputTwo = element
+                  .replace('RM', '')
+                  .replace('S', '')
+                  .replace(airline[0].airlineCode, '')
+                  .split('       ');
+                this.fareRuleList.push({
+                  itemText: airline[0].airlineCode + ' ' + outputTwo[1],
+                  itemValue: outputTwo[1]
+                });
+                this.ShowFareRule = true;
+                this.showCrypticForm = true;
+                this.showOptionalFare = false;
+              }
+            });
+          }
+          // need to store the temp value of fareRuleType and rebind it after cryptic call.
+          if (this.tempFareRuleType !== undefined) {
+            this.fareRules.fareRuleType = this.tempFareRuleType;
+          }
+        });
     }
 
     if (this.ShowFareRule === true) {
@@ -198,14 +208,24 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
 
   executeFareRuleCryptic(fareRule: string) {
     if (fareRule.indexOf('SELECT') === -1) {
-      smartScriptSession.send('PBN/' + this.fareRules.oid + '/' + this.fareRules.airlineCode + ' ' + fareRule + '*');
+      smartScriptSession.send(
+        'PBN/' +
+          this.fareRules.oid +
+          '/' +
+          this.fareRules.airlineCode +
+          ' ' +
+          fareRule +
+          '*'
+      );
     }
   }
 
   enableDisableBasedOnMinMax() {
-    if (this.fareRuleForm.controls.isTicketMinMax.value &&
+    if (
+      this.fareRuleForm.controls.isTicketMinMax.value &&
       !this.fareRuleForm.controls.isTicketNonRefundable.value &&
-      !this.fareRuleForm.controls.isTicketNonRef.value) {
+      !this.fareRuleForm.controls.isTicketNonRef.value
+    ) {
       this.fareRuleForm.controls.currencyType.disable();
       this.fareRuleForm.controls.ticketAmount.disable();
       this.fareRuleForm.controls.nonRefundable.disable();

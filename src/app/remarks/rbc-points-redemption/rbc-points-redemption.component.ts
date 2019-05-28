@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { RBCRedemptionModel } from 'src/app/models/pnr/rbc-redemption.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { PnrService } from 'src/app/service/pnr.service';
 import { UpdateRbcPointsRedemptionComponent } from '../update-rbc-points-redemption/update-rbc-points-redemption.component';
 import { PackageRemarkService } from 'src/app/service/package-remark.service';
 
@@ -24,14 +23,13 @@ export class RbcPointsRedemptionComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private utilHelper: UtilHelper,
-    private pnrService: PnrService,
-    private PackageRemarkService: PackageRemarkService
+    private packageRemarkService: PackageRemarkService
   ) {}
 
   ngOnInit() {
     // this.rbcRedemption = this.pnrService.getAccountingRemarks();
     this.modalSubscribeOnClose();
-    this.rbcRedemption = this.PackageRemarkService.getRbcPointsRemarksFromPnr();
+    this.rbcRedemption = this.packageRemarkService.getRbcPointsRemarksFromPnr();
   }
 
   addRBCRedemptionPoints() {
@@ -46,7 +44,7 @@ export class RbcPointsRedemptionComponent implements OnInit {
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
           const rbcNo = this.rbcRedemption.find(

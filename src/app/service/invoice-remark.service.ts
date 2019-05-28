@@ -2,19 +2,15 @@ import { Injectable } from '@angular/core';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
-import { RemarkHelper } from '../helper/remark-helper';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class InvoiceService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) {
-
-  }
-
+  constructor(private pnrService: PnrService) {}
 
   public GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
@@ -46,7 +42,6 @@ export class InvoiceService {
         this.remGroup.cryptics.push('invj/nofare');
       }
     } else {
-
       if (passengers === '' && segments === '' && pax === 1) {
         this.remGroup.cryptics.push('inv');
       }
@@ -66,8 +61,5 @@ export class InvoiceService {
         this.remGroup.cryptics.push('invj/p' + passengers + '/s' + segments);
       }
     }
-
-
   }
-
 }

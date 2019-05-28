@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap';
 import { MessageType } from './MessageType';
 
 @Component({
@@ -16,10 +16,9 @@ export class MessageComponent implements OnInit {
   response = '';
   iconClass = '';
   paramValue: any;
-  constructor(private modalService: BsModalService) { }
+  constructor() {}
   ngOnInit() {
     this.setMessageType(MessageType.Default);
-
   }
 
   setMessageType(type: MessageType) {

@@ -4,7 +4,6 @@ import {
   Input,
   TemplateRef,
   ViewChild,
-  AfterViewInit,
   AfterViewChecked
 } from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
@@ -18,13 +17,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import {
-  DeprecatedDatePipe,
-  getLocaleExtraDayPeriodRules,
-  DatePipe
-} from '@angular/common';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { FareRuleModel } from 'src/app/models/pnr/fare-rule.model';
+
 declare var smartScriptSession: any;
 
 @Component({
@@ -317,7 +311,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       if (this.formControls.get(x) !== null) {
         this.segmentForm.addControl(x, this.formControls.get(x));
       } else {
-        const xx = 1;
       }
     });
   }
@@ -682,8 +675,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.passiveSegments.province = '';
     smartScriptSession.send('HF' + hotelCode).then(async res => {
       const lines = res.Response.split('\r\n');
-      let indx = 0,
-        telIndx = 0;
+      let indx = 0;
+      let telIndx = 0;
       lines.forEach(r => {
         if (r.trim().indexOf('-TEL') === 0) {
           telIndx = indx;
@@ -904,7 +897,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       return;
     }
     this.filterSupplierCodeList = [];
-    const response = smartScriptSession.send(command).then(async res => {
+    // const response =
+    smartScriptSession.send(command).then(async res => {
       this.commandCache.loadCarSupplier = command;
       let lines = res.Response.split('\r\n');
 
@@ -935,7 +929,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         await smartScriptSession.send('MD').then(x => {
           const list = x.Response.split('\r\n');
           lines = lines.concat(list);
-          const lasItem = list[list.length - 2];
           if (
             list.length < 4 ||
             x.Response.indexOf('NO MORE ITEMS') >= 0 ||
@@ -997,10 +990,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   getOffAddress(addrList, command) {
-    const response = smartScriptSession.send(command).then(async res => {
+    // const response =
+    smartScriptSession.send(command).then(async res => {
       let lines = res.Response.split('\r\n');
       const regex = /(?<code>[A-Z]{4}[0-9]{2}) (?<text>.+?(?=\s{2}))/g;
-
       lines = await this.getMDResult(lines);
       lines.forEach(x => {
         const match = regex.exec(x);
@@ -1029,7 +1022,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       return true;
     }
     this.carTypeList = [];
-    const response = smartScriptSession.send(command).then(async res => {
+    // const response =
+    smartScriptSession.send(command).then(async res => {
       this.commandCache.loadCarType = command;
       let lines = res.Response.split('\r\n');
       lines = await this.getMDResult(lines);
@@ -1063,7 +1057,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  filterStateProvince(country) {
+  filterStateProvince() {
     // if (country) {
     //   switch (country.toUpperCase()) {
     //     case 'US':

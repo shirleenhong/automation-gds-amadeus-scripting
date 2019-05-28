@@ -1,17 +1,13 @@
 import {
   Component,
   OnInit,
-  Input,
   OnChanges,
   SimpleChanges,
-  SimpleChange,
   ViewEncapsulation
 } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
   FormGroup,
   Validator,
   AbstractControl,
@@ -22,10 +18,8 @@ import {
 import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DecimalPipe, DatePipe } from '@angular/common';
-import { formatDate } from '@angular/common';
 import { DDBService } from 'src/app/service/ddb.service';
 import { PnrService } from 'src/app/service/pnr.service';
-import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { PackageRemarkHelper } from 'src/app/helper/packageRemark-helper';
 
 @Component({
@@ -48,7 +42,6 @@ export class TourPackageComponent
     private fb: FormBuilder,
     private ddb: DDBService,
     private pnrService: PnrService,
-    private remarkHelper: RemarkHelper,
     private packageRemarkHelper: PackageRemarkHelper
   ) {
     this.group = this.fb.group({
@@ -144,13 +137,15 @@ export class TourPackageComponent
     this.loadValues();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  // tslint:disable-next-line: variable-name
+  ngOnChanges(_changes: SimpleChanges): void {
     console.log('form group: ', this.group);
   }
 
   public onTouched: () => void = () => {};
 
   writeValue(val: any): void {
+    // tslint:disable-next-line: no-unused-expression
     val && this.group.setValue(val, { emitEvent: false });
   }
   registerOnChange(fn: any): void {
@@ -179,7 +174,8 @@ export class TourPackageComponent
         };
   }
 
-  registerOnValidatorChange?(fn: () => void): void {}
+  // tslint:disable-next-line: variable-name
+  registerOnValidatorChange?(_fn: () => void): void {}
 
   tourPackageChange() {
     console.log('tour package call');

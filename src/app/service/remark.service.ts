@@ -39,10 +39,7 @@ export class RemarkService {
 
     remarkGroups.forEach(group => {
       if (group !== undefined && group.group !== '') {
-        if (
-          group.deleteSegmentByIds != null &&
-          group.deleteSegmentByIds.length > 0
-        ) {
+        if (group.deleteSegmentByIds != null && group.deleteSegmentByIds.length > 0) {
           group.deleteSegmentByIds.forEach(c => {
             if (!this.deleteSegmentByIds.find(z => z === c)) {
               this.deleteSegmentByIds.push(c);
@@ -50,10 +47,7 @@ export class RemarkService {
           });
         }
 
-        if (
-          group.deleteRemarkByIds != null &&
-          group.deleteRemarkByIds.length > 0
-        ) {
+        if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
           group.deleteRemarkByIds.forEach(c => {
             if (!this.deleteRemarksByIds.find(z => z === c)) {
               this.deleteRemarksByIds.push(c);
@@ -284,7 +278,8 @@ export class RemarkService {
 
   deleteRemarks() {
     let deleteIds = '';
-    this.deleteRemarksByIds.forEach(ids => {
+    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
+    filteredIds.forEach(ids => {
       deleteIds += ids + ',';
     });
     if (deleteIds !== '') {
@@ -293,22 +288,36 @@ export class RemarkService {
     }
   }
 
-  sortDeleteIds(arr: Array<string>) {
-    arr.sort((a, b) => Number(a) - Number(b));
+  sortArrayForDelete(arr) {
+    const dl = arr.sort((a, b) => {
+      return Number(a.toString().split('-')[0]) - Number(b.toString().split('-')[0]);
+    });
+    // return dl;
     const newArr = [];
-    let temp = 0;
-    // tslint:disable-next-line: forin
-    for (const i in arr) {
-      if (temp !== 0) {
-        if (temp + 1 === Number(arr[i])) {
-        } else {
-          newArr.push(temp + '-' + arr[i]);
+    let tmp = '';
+    let tmpIndx = 0;
+    for (let i = 0; i < dl.length; i++) {
+      tmp = '';
+      tmpIndx = 0;
+      for (let j = i + 1; j < dl.length; j++) {
+        if (dl[j - 1].indexOf('-') >= 0 || dl[j].indexOf('-') >= 0) {
+          break;
         }
+        if (Number(dl[j - 1]) + 1 === Number(dl[j])) {
+          tmp = dl[j];
+          tmpIndx = j;
+        } else {
+          break;
+        }
+      }
+      if (tmp === '') {
+        newArr.push(dl[i]);
       } else {
-        temp = Number(arr[i]);
+        newArr.push(dl[i] + '-' + tmp);
+        i = tmpIndx;
       }
     }
-    return arr;
+    return newArr;
   }
 
   async sendRemarks() {
@@ -344,26 +353,24 @@ export class RemarkService {
       dataElementsMaster
     };
     console.log(JSON.stringify(remarkElements));
-    await smartScriptSession
-      .requestService('ws.addMultiElement_v14.1', remarkElements)
-      .then(
-        () => {
-          this.responseMessage = 'Remarks Updated';
-          this.endPNR('CWTSCRIPT');
+    await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
+      () => {
+        this.responseMessage = 'Remarks Updated';
+        this.endPNR('CWTSCRIPT');
 
-          smartScriptSession.getActiveTask().then(x => {
-            if (x.subtype === 'PNR') {
-              smartScriptSession.requestService('bookingfile.refresh', null, {
-                fn: '',
-                scope: this
-              });
-            }
-          });
-        },
-        error => {
-          this.responseMessage = JSON.stringify(error);
-        }
-      );
+        smartScriptSession.getActiveTask().then(x => {
+          if (x.subtype === 'PNR') {
+            smartScriptSession.requestService('bookingfile.refresh', null, {
+              fn: '',
+              scope: this
+            });
+          }
+        });
+      },
+      error => {
+        this.responseMessage = JSON.stringify(error);
+      }
+    );
   }
 
   async SubmitRemarks() {

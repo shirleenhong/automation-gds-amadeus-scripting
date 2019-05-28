@@ -2,11 +2,11 @@ import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[formControlName][CCDateExpMask]',
+  // tslint:disable-next-line: directive-selector
+  selector: '[formControlName][CCDateExpMask]'
 })
 export class CCDateExpMaskDirective {
-
-  constructor(public ngControl: NgControl) { }
+  constructor(public ngControl: NgControl) {}
 
   @HostListener('ngModelChange', ['$event'])
   onModelChange(event) {
@@ -19,7 +19,9 @@ export class CCDateExpMaskDirective {
   }
 
   onInputChange(event, backspace) {
-    if (event === undefined) { return; }
+    if (event === undefined) {
+      return;
+    }
 
     let newVal = event.replace(/\D/g, '');
     if (backspace && newVal.length <= 6) {

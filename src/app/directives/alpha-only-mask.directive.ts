@@ -2,6 +2,7 @@ import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
+  // tslint:disable-next-line: directive-selector
   selector: '[formControlName][AlphaMask]'
 })
 export class AlphaMaskDirective {
@@ -20,10 +21,7 @@ export class AlphaMaskDirective {
     }
     const lastChar = newVal.toString().substr(newVal.length - 1);
 
-    if (
-      lastChar.match(/[a-z]/g) === null &&
-      lastChar.match(/[A-Z]/g) === null
-    ) {
+    if (lastChar.match(/[a-z]/g) === null && lastChar.match(/[A-Z]/g) === null) {
       newVal = newVal.substr(0, newVal.length - 1);
     }
     this.ngControl.valueAccessor.writeValue(newVal);

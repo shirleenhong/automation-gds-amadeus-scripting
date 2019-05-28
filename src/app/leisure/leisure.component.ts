@@ -84,6 +84,7 @@ export class LeisureComponent
     private invoiceService: InvoiceService
   ) {
     this.getPnr();
+    this.initData();
   }
 
   ngAfterViewChecked() {
@@ -106,6 +107,10 @@ export class LeisureComponent
       this.isPnrLoaded = true;
     }
     this.displayInvoice();
+  }
+
+  initData() {
+    this.ddbService.loadSupplierCodesFromPowerBase();
   }
 
   async getPnrService() {

@@ -76,7 +76,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.supplierCodeList = this.ddbService.getSupplierCode();
     this.segments = this.pnrService.getSegmentTatooNumber();
     this.passengerList = this.pnrService.getPassengers();
     this.matrixAccountingForm = new FormGroup({
@@ -194,7 +193,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     ];
   }
 
-  onChangeApayNonApay(accRemark) {
+  onChangeAccountingType(accRemark) {
+    this.accountingRemarks.vendorCode = '';
     switch (accRemark) {
       case 'INS':
         this.IsInsurance = true;
@@ -233,26 +233,29 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           true
         );
         this.accountingRemarks.bsp = '1';
-        this.filterSupplierCode(accRemark);
         this.setTktNumber();
         this.IsInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
     }
+    this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
-    // this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
+    this.assignSupplierCode(accRemark);
   }
 
   filterSupplierCode(typeCode) {
-    this.filterSupplierCodeList = this.supplierCodeList.filter(
-      supplier => supplier.type === typeCode
-    );
-
     if (this.accountingRemarks.bsp === '2') {
       this.assignSupplierCode(typeCode);
-      // this.assignDescription(typeCode);
-      // } else {
-      //   this.accountingRemarks.supplierCodeName = '';
+    }
+    const val = ['12', '5', '1', '6'];
+    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO'];
+    const indx = val.indexOf(typeCode);
+    if (indx >= 0) {
+      this.filterSupplierCodeList = this.ddbService.getSupplierCodes(
+        type[indx]
+      );
+    } else {
+      this.filterSupplierCodeList = this.ddbService.getSupplierCodes();
     }
   }
 
@@ -260,15 +263,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (!this.IsInsurance) {
       if (typeCode === 'SEAT COSTS') {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
-        // this.accountingRemarks.supplierCodeName = 'PFS';
       } else {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
-        // this.accountingRemarks.supplierCodeName = 'CGO';
       }
     }
   }
-
-  // get PaymentType() { return PaymentType; }
 
   FormOfPaymentChange(newValue) {
     switch (newValue) {

@@ -14,7 +14,8 @@ export class DDBService implements OnInit {
   isTokenExpired = true;
   countryList = [];
   currencyList = [];
-
+  cachedSupplierCodes = [];
+  retry = 0;
   ngOnInit(): void {}
 
   constructor(private httpClient: HttpClient) {}
@@ -43,25 +44,26 @@ export class DDBService implements OnInit {
     }
   }
 
-  getRequest(serviceName: string): Observable<any> {
+  getRequest(serviceName: string) {
     this.getToken();
     const hds = new HttpHeaders().append('Content', 'application/json');
-    return this.httpClient.get<any>(serviceName, {
-      headers: hds
-    });
+    return this.httpClient
+      .get<any>(serviceName, {
+        headers: hds
+      })
+      .toPromise()
+      .catch(e => {
+        // retry if unauthorize to get new token
+        if (e.status === 401 && this.retry < 3) {
+          this.getRequest(serviceName);
+          this.isTokenExpired = true;
+          this.retry += 1;
+        }
+      });
   }
 
   async sample() {
-    this.getRequest(common.locationService).subscribe(
-      x => {
-        alert(JSON.stringify(x));
-      },
-      err => {
-        alert(JSON.stringify(err));
-      }
-    );
-
-    this.getRequest(common.travelportService + 'MNL').subscribe(
+    this.getRequest(common.travelportService + 'MNL').then(
       x => {
         alert(JSON.stringify(x));
       },
@@ -73,7 +75,7 @@ export class DDBService implements OnInit {
 
   async getCountryAndCurrencyList() {
     if (this.countryList.length === 0 || this.currencyList.length === 0) {
-      this.getRequest(common.locationService).subscribe(
+      this.getRequest(common.locationService).then(
         result => {
           const countryItems = result.CountryItems;
           this.countryList = countryItems.map(a => a.CountryCode);
@@ -89,9 +91,7 @@ export class DDBService implements OnInit {
   }
 
   async getTravelPort(travelportCode: string) {
-    return await this.getRequest(
-      common.travelportService + travelportCode
-    ).toPromise();
+    return await this.getRequest(common.travelportService + travelportCode);
   }
 
   getProvinces(): any {
@@ -209,19 +209,35 @@ export class DDBService implements OnInit {
     ];
   }
 
-  getSupplierCode() {
-    let SupplierCode = [];
+  async loadSupplierCodesFromPowerBase() {
+    await this.getRequest(common.supplierCodes).then(
+      x => {
+        this.cachedSupplierCodes = [];
+        x.SupplierList.forEach(s => {
+          const supplier = {
+            type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
+            supplierCode: s.SupplierCode,
+            supplierName: s.SupplierName
+          };
+          this.cachedSupplierCodes.push(supplier);
+        });
+      },
+      err => {
+        alert(JSON.stringify(err));
+      }
+    );
+  }
 
-    // let passesupplier = {type: type,suppliercode: suppliercode,supplierName: supplierName,};
-    SupplierCode = [
-      { type: '', supplierCode: '', supplierName: '' },
-      { type: '1', supplierCode: 'AC', supplierName: 'Air Canada' },
-      { type: '1', supplierCode: 'QK', supplierName: 'Air Canada Jazz' },
-      { type: '1', supplierCode: 'RV', supplierName: 'Air Canada Rouge' },
-      { type: '6', supplierCode: 'G69', supplierName: 'Autos Tucan S.L.L' },
-      { type: '6', supplierCode: 'G70', supplierName: 'G70	Autocars Rufo' }
-    ];
-    return SupplierCode;
+  getSupplierCodes(type?: string) {
+    if (this.cachedSupplierCodes.length === 0) {
+      this.loadSupplierCodesFromPowerBase();
+    }
+    if (this.cachedSupplierCodes.length > 0 && type !== undefined) {
+      return this.cachedSupplierCodes.filter(
+        x => x.type.toUpperCase() === type.toUpperCase()
+      );
+    }
+    return this.cachedSupplierCodes;
   }
 
   getCcVendorCodeList() {

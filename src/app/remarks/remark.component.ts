@@ -1,11 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  Validators,
-  FormBuilder,
-  FormArray
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { SelectItem } from '../models/select-item.model';
 import { TourPackageComponent } from './tour-package/tour-package.component';
 import { ItcPackageComponent } from './itc-package/itc-package.component';
@@ -22,7 +16,7 @@ import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points
 @Component({
   selector: 'app-remarks',
   templateUrl: './remark.component.html',
-  styleUrls: ['./remark.component.scss']
+  styleUrls: ['./remark.component.scss'],
 })
 export class RemarkComponent implements OnInit {
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
@@ -38,14 +32,10 @@ export class RemarkComponent implements OnInit {
 
   packageList: Array<SelectItem>;
 
-  constructor(
-    private fb: FormBuilder,
-    private pnrService: PnrService,
-    private utilHelper: UtilHelper
-  ) {
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
     this.loadtourPackage();
     this.remarkForm = this.fb.group({
-      packageList: new FormControl('', [Validators.required])
+      packageList: new FormControl('', [Validators.required]),
     });
   }
   ngOnInit() {
@@ -61,17 +51,14 @@ export class RemarkComponent implements OnInit {
     this.packageList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Itemize Package Cost Remarks', itemValue: 'ITC' },
-      { itemText: 'Tour Package', itemValue: 'TP' }
+      { itemText: 'Tour Package', itemValue: 'TP' },
     ];
   }
 
   private setPackageListValue() {
     if (this.pnrService.getRirRemarkText('THE FOLLOWING COSTS ARE SHOWN IN')) {
       this.remarkForm.controls.packageList.patchValue('TP');
-      if (
-        this.pnrService.getRirRemarkText('HOTEL/ACCOMMODATION') !== '' ||
-        this.pnrService.getRirRemarkText('CAR RENTAL') !== ''
-      ) {
+      if (this.pnrService.getRirRemarkText('HOTEL/ACCOMMODATION') !== '' || this.pnrService.getRirRemarkText('CAR RENTAL') !== '') {
         this.remarkForm.controls.packageList.patchValue('ITC');
       }
       this.packageList[0].itemText = 'Delete Package Remarks';
@@ -92,24 +79,18 @@ export class RemarkComponent implements OnInit {
         return false;
       }
     }
-    const arr = this.codeShareComponent.codeShareGroup.get(
-      'segments'
-    ) as FormArray;
+    const arr = this.codeShareComponent.codeShareGroup.get('segments') as FormArray;
     if (arr.length === 1) {
       const val1 = arr.controls[0].get('segment').value;
       const val2 = arr.controls[0].get('airline').value;
       if (val1 === '' && val2 === '') {
       } else if (val1 === '' || val2 === '') {
-        this.utilHelper.validateAllFields(
-          this.codeShareComponent.codeShareGroup
-        );
+        this.utilHelper.validateAllFields(this.codeShareComponent.codeShareGroup);
         return false;
       }
     } else {
       if (arr.length > 1 && !this.codeShareComponent.codeShareGroup.valid) {
-        this.utilHelper.validateAllFields(
-          this.codeShareComponent.codeShareGroup
-        );
+        this.utilHelper.validateAllFields(this.codeShareComponent.codeShareGroup);
         return false;
       }
     }

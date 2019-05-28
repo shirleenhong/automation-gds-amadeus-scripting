@@ -30,7 +30,7 @@ export class PackageRemarkService {
         this.packageRemarkHelper.getForDeletion().forEach(c => {
             rmGroup.deleteRemarkByIds.push(c);
         });
-
+        this.packageRemarkHelper.clearForDeletionRemarks();
 
         // tslint:disable-next-line:max-line-length
         rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'R'));
@@ -119,6 +119,7 @@ export class PackageRemarkService {
             this.packageRemarkHelper.getForDeletion().forEach(c => {
                 rmGroup.deleteRemarkByIds.push(c);
             });
+            this.packageRemarkHelper.clearForDeletionRemarks();
         }
 
         // tslint:disable-next-line:max-line-length
@@ -186,6 +187,7 @@ export class PackageRemarkService {
         this.packageRemarkHelper.getForDeletion().forEach(c => {
             rmGroup.deleteRemarkByIds.push(c);
         });
+        this.packageRemarkHelper.clearForDeletionRemarks();
         return rmGroup;
     }
 

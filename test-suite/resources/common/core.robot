@@ -54,20 +54,15 @@ Open CA Migration Window
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
     #Open and verify CA Migration window
-    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration Test"]
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration Test')]    60
-    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
-    Select Frame    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
+    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration ${env}"]
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]    60
+    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
+    Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     #Open and verify CA Migration window acceptance
-    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure Test"]
-    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure Test')]    60
-    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
-    Comment    Select Frame    xpath=//iframe[contains(@src,'https://test.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
-    #links when running for UAT
-    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration UAT"]
-    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration UAT')]    60
-    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://staging.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
-    Comment    Select Frame    xpath=//iframe[contains(@src,'https://staging.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
+    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
+    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
+    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
+    Comment    Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Load PNR')]    180
 
 Open Cryptic Display Window

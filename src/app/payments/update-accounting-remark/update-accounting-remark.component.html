@@ -1,11 +1,6 @@
 <div class="modal-header">
   <div class="modal-title">{{ title }}</div>
-  <button
-    type="button"
-    class="close"
-    aria-label="Close"
-    (click)="modalRef.hide()"
-  >
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -40,10 +35,7 @@
           (change)="onChangeAccountingType($event.target.value)"
           required
         >
-          <option
-            *ngFor="let item of accountingRemarkList"
-            [value]="item.itemValue"
-          >
+          <option *ngFor="let item of accountingRemarkList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
         </select>
@@ -67,11 +59,7 @@
             (change)="assignSupplierCode($event.target.value)"
           />
           <datalist id="dynamicSupplierCode1">
-            <option
-              *ngFor="let item of descriptionList"
-              [value]="item.itemValue"
-              >{{ item.itemValue }}
-            </option>
+            <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>
           </datalist>
         </div>
       </div>
@@ -106,9 +94,7 @@
           (change)="setTktNumber()"
         />
         <datalist id="dynamicSupplierCode">
-          <option
-            *ngFor="let item of filterSupplierCodeList"
-            [value]="item.supplierCode"
+          <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode"
             >{{ item.supplierCode }} - {{ item.supplierName }}</option
           >
         </datalist>
@@ -148,10 +134,7 @@
           (change)="FormOfPaymentChange($event.target.value)"
           required
         >
-          <option
-            *ngFor="let item of formOfPaymentList"
-            [value]="item.itemValue"
-          >
+          <option *ngFor="let item of formOfPaymentList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
         </select>
@@ -172,10 +155,7 @@
             required
             (change)="creditcardMaxValidator($event.target.value)"
           >
-            <option
-              *ngFor="let item of vendorCodeList"
-              [value]="item.itemValue"
-            >
+            <option *ngFor="let item of vendorCodeList" [value]="item.itemValue">
               {{ item.itemText }}
             </option>
           </select>
@@ -204,7 +184,7 @@
             required
             formControlName="expDate"
             name="expDate"
-            placeholder="MM/YY"           
+            placeholder="MM/YY"
             [(ngModel)]="accountingRemarks.expDate"
             CCDateExpMask
             formControlName="expDate"
@@ -354,35 +334,38 @@
     </div>
 
     <div class="row form-group">
-      <div class="col-4"> </div>
+      <div class="col-4"></div>
       <div class="col-8">
-        <input type="checkbox" name="passRelate" formControlName="passRelate" id="passRelate" (change)="showPassengerRelate()" 
-        [(ngModel)]="accountingRemarks.passRelate"/>
-        Does the travellers require separate Invoices?
+        <input
+          type="checkbox"
+          name="passRelate"
+          formControlName="passRelate"
+          id="passRelate"
+          (change)="showPassengerRelate()"
+          [(ngModel)]="accountingRemarks.passRelate"
+        />
+        Do the travellers require separate Invoices?
       </div>
     </div>
 
     <div *ngIf="f.passRelate.value === true" class="form-group row">
       <div class="col-sm-4">Passenger :</div>
       <div class="col-sm-8">
-        <select class="form-control " id="passengerNo" [(ngModel)]="accountingRemarks.passengerNo"
-          formControlName="passengerNo" name="passengerNo">
-          <option *ngFor="let pass of  passengerList" [value]="pass.id">
-            {{pass.surname}}-{{pass.firstname}}
-          </option>
+        <select
+          class="form-control "
+          id="passengerNo"
+          [(ngModel)]="accountingRemarks.passengerNo"
+          formControlName="passengerNo"
+          name="passengerNo"
+        >
+          <option *ngFor="let pass of passengerList" [value]="pass.id"> {{ pass.surname }}-{{ pass.firstname }} </option>
         </select>
       </div>
     </div>
-
   </form>
 </div>
 <div class="modal-footer">
-  <button
-    type="button"
-    class="btn btn-outline-dark"
-    (click)="saveAccounting()"
-    [disabled]="matrixAccountingForm.invalid"
-  >
+  <button type="button" class="btn btn-outline-dark" (click)="saveAccounting()" [disabled]="matrixAccountingForm.invalid">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">

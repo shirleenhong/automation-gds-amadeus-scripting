@@ -2,13 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MatrixAccountingModel } from '../../models/pnr/matrix-accounting.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/update-accounting-remark.component';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  AbstractControl,
-  FormBuilder
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
@@ -17,7 +11,7 @@ import { MessageType } from 'src/app/shared/message/MessageType';
 @Component({
   selector: 'app-accounting-remark',
   templateUrl: './accounting-remark.component.html',
-  styleUrls: ['./accounting-remark.component.scss']
+  styleUrls: ['./accounting-remark.component.scss'],
 })
 export class AccountingRemarkComponent implements OnInit {
   @Input()
@@ -38,7 +32,7 @@ export class AccountingRemarkComponent implements OnInit {
     private modalService: BsModalService,
     private pnrService: PnrService,
     private fb: FormBuilder,
-    private utilHelper: UtilHelper
+    private utilHelper: UtilHelper,
   ) {}
 
   ngOnInit() {
@@ -52,20 +46,14 @@ export class AccountingRemarkComponent implements OnInit {
         flightType: new FormControl(''),
         priceVsSupplier: new FormControl(''),
         group: new FormControl(''),
-        preferredVendor: new FormControl('')
+        preferredVendor: new FormControl(''),
       },
-      { updateOn: 'change' }
+      { updateOn: 'change' },
     );
 
-    this.f.airOnly.valueChanges.subscribe(x => {
-      this.showU71 =
-        this.showU76 &&
-        x === 'NO' &&
-        this.pnrService.getRemarkLineNumber('U71/-') === '';
-      this.showU75 =
-        this.showU76 &&
-        x === 'NO' &&
-        this.pnrService.getRemarkLineNumber('U75/-') === '';
+    this.f.airOnly.valueChanges.subscribe((x) => {
+      this.showU71 = this.showU76 && x === 'NO' && this.pnrService.getRemarkLineNumber('U71/-') === '';
+      this.showU75 = this.showU76 && x === 'NO' && this.pnrService.getRemarkLineNumber('U75/-') === '';
       this.setControlValidator(this.f.exclusiveProperty, this.showU71);
       this.setControlValidator(this.f.propertyName, this.showU75);
     });
@@ -75,12 +63,11 @@ export class AccountingRemarkComponent implements OnInit {
 
   deleteItem(r: MatrixAccountingModel) {
     this.modalRef = this.modalService.show(MessageComponent, {
-      backdrop: 'static'
+      backdrop: 'static',
     });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
-    this.modalRef.content.message =
-      'Are you sure you want to delete this Accounting Remark?';
+    this.modalRef.content.message = 'Are you sure you want to delete this Accounting Remark?';
     this.modalRef.content.callerName = 'Accounting';
     this.modalRef.content.response = '';
     this.modalRef.content.paramValue = r;
@@ -92,31 +79,19 @@ export class AccountingRemarkComponent implements OnInit {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
-            const cur = this.accountingRemarks.find(
-              x =>
-                x.tkMacLine ===
-                this.modalRef.content.accountingRemarks.tkMacLine
-            );
-            this.utilHelper.modelCopy(
-              this.modalRef.content.accountingRemarks,
-              cur
-            );
+            const cur = this.accountingRemarks.find((x) => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
+            this.utilHelper.modelCopy(this.modalRef.content.accountingRemarks, cur);
           } else {
-            this.accountingRemarks.push(
-              this.modalRef.content.accountingRemarks
-            );
+            this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
           }
           this.modalRef.content.isSubmitted = false;
           this.checkSupplierCode();
         }
-        if (
-          this.modalRef.content.callerName === 'Accounting' &&
-          this.modalRef.content.response === 'YES'
-        ) {
+        if (this.modalRef.content.callerName === 'Accounting' && this.modalRef.content.response === 'YES') {
           const r = this.modalRef.content.paramValue;
           this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
           let i = 1;
-          this.accountingRemarks.forEach(x => {
+          this.accountingRemarks.forEach((x) => {
             x.tkMacLine = i;
             i++;
           });
@@ -130,12 +105,16 @@ export class AccountingRemarkComponent implements OnInit {
   updateItem(r: MatrixAccountingModel) {
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
-      backdrop: 'static'
+      backdrop: 'static',
     });
     this.modalRef.content.title = 'Update Accounting Remarks';
     this.modalRef.content.accountingRemarks = new MatrixAccountingModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemarks);
+    const code = r.supplierCodeName;
+    this.modalRef.content.isAddNew = false;
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
+    //prevent using the default
+    r.supplierCodeName = code;
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();
   }
@@ -147,10 +126,11 @@ export class AccountingRemarkComponent implements OnInit {
   addAccountingRemarks() {
     const accountingRemarks = new MatrixAccountingModel();
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
-      backdrop: 'static'
+      backdrop: 'static',
     });
     this.modalRef.content.title = 'Add Accounting Remarks';
     accountingRemarks.tkMacLine = this.accountingRemarks.length + 1;
+    this.modalRef.content.isAddNew = true;
     this.modalRef.content.accountingRemarks = accountingRemarks;
     this.isAddNew = true;
     this.modalSubscribeOnClose();
@@ -159,7 +139,7 @@ export class AccountingRemarkComponent implements OnInit {
   checkSupplierCode() {
     this.isAd1SwgSupplier = false;
     if (this.accountingRemarks.length > 0) {
-      this.accountingRemarks.forEach(acc => {
+      this.accountingRemarks.forEach((acc) => {
         if (acc.supplierCodeName === 'AD1' || acc.supplierCodeName === 'SWG') {
           this.isAd1SwgSupplier = true;
           this.showUdids();

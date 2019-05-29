@@ -1,18 +1,6 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  TemplateRef,
-  ViewChild,
-  AfterViewChecked
-} from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormBuilder
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model';
 import { PnrService } from 'src/app/service/pnr.service';
@@ -24,7 +12,7 @@ declare var smartScriptSession: any;
 @Component({
   selector: 'app-update-segment',
   templateUrl: './update-segment.component.html',
-  styleUrls: ['./update-segment.component.scss']
+  styleUrls: ['./update-segment.component.scss'],
 })
 export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   title: string;
@@ -64,7 +52,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     loadCarSupplier: '',
     loadCarType: '',
     loadDropOffAddr: '',
-    loadPickupOffAddr: ''
+    loadPickupOffAddr: '',
   };
   stateProvinceList: any;
   lblvendorName: any;
@@ -92,14 +80,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     arrivalDate: new FormControl('', [Validators.required]),
     arrivalTime: new FormControl('', [Validators.required]),
     tourName: new FormControl('', [Validators.required]),
-    noPeople: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[1-9][0-9]?$')
-    ]),
-    noNights: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[1-9][0-9]?$')
-    ]),
+    noPeople: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
+    noNights: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
     roomType: new FormControl('', []),
     mealPlan: new FormControl('', []),
     stateRoom: new FormControl('', []),
@@ -170,7 +152,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     address: new FormControl('', [Validators.required]),
     province: new FormControl(''),
     zipCode: new FormControl(''),
-    country: new FormControl('', [Validators.required])
+    country: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -179,12 +161,12 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     public modalRef: BsModalRef,
     private ddbService: DDBService,
     private fb: FormBuilder,
-    private util: UtilHelper
+    private util: UtilHelper,
   ) {
     this.passiveSegments = new PassiveSegmentsModel();
     // this.supplierCodeList ;//= this.ddbService.getSupplierCode();
     this.segmentForm = fb.group({
-      segmentType: new FormControl('', [Validators.required])
+      segmentType: new FormControl('', [Validators.required]),
     });
 
     this.loadMealPlan();
@@ -223,7 +205,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.mealPlanList = [
       { itemText: '', itemValue: '' },
       { itemText: 'All Inclusive', itemValue: 'ALL INCLUSIVE' },
-      { itemText: 'American Plan', itemValue: 'AMERICAN PLAN' }
+      { itemText: 'American Plan', itemValue: 'AMERICAN PLAN' },
     ];
   }
 
@@ -232,7 +214,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: '', itemValue: '' },
       { itemText: 'SGLB', itemValue: 'SGLB' },
       { itemText: 'DBLB', itemValue: 'DBLB' },
-      { itemText: 'TRPL', itemValue: 'TRPL' }
+      { itemText: 'TRPL', itemValue: 'TRPL' },
     ];
   }
 
@@ -246,16 +228,12 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Queen Room', itemValue: 'QUEEN ROOM' },
       { itemText: 'King Room', itemValue: 'KING ROOM' },
       { itemText: 'Twin Room', itemValue: 'TWIN ROOM' },
-      { itemText: 'Studio Room', itemValue: 'STUDIO ROOM' }
+      { itemText: 'Studio Room', itemValue: 'STUDIO ROOM' },
     ];
   }
 
   loadArrivalDay() {
-    this.arrivaldayList = [
-      { itemText: '', itemValue: '' },
-      { itemText: '+1', itemValue: '1' },
-      { itemText: '+2', itemValue: '2' }
-    ];
+    this.arrivaldayList = [{ itemText: '', itemValue: '' }, { itemText: '+1', itemValue: '1' }, { itemText: '+2', itemValue: '2' }];
   }
 
   loadSegmentType() {
@@ -268,7 +246,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Car', itemValue: 'CAR' },
       { itemText: 'Limo', itemValue: 'LIM' },
       { itemText: 'Hotel', itemValue: 'HTL' },
-      { itemText: 'Rail', itemValue: 'TRN' }
+      { itemText: 'Rail', itemValue: 'TRN' },
     ];
   }
 
@@ -280,10 +258,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Ocean View', itemValue: 'OCEAN VIEW' },
       {
         itemText: 'Stateroom with Balcony',
-        itemValue: 'STATEROOM WITH BALCONY'
+        itemValue: 'STATEROOM WITH BALCONY',
       },
       { itemText: 'Suite', itemValue: 'SUITE' },
-      { itemText: 'Other', itemValue: 'OTHER' }
+      { itemText: 'Other', itemValue: 'OTHER' },
     ];
   }
 
@@ -294,7 +272,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Late Dining', itemValue: 'LATE DINING' },
       { itemText: 'Open Dining', itemValue: 'OPEN DINING' },
       { itemText: 'Waitlist Early', itemValue: 'WAITLIST EARLY' },
-      { itemText: 'Waitlist Late', itemValue: 'WAITLIST LATE' }
+      { itemText: 'Waitlist Late', itemValue: 'WAITLIST LATE' },
     ];
   }
 
@@ -307,7 +285,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   setForm(forms) {
     this.segmentForm = this.fb.group({}, { updateOn: 'blur' });
 
-    forms.forEach(x => {
+    forms.forEach((x) => {
       if (this.formControls.get(x) !== null) {
         this.segmentForm.addControl(x, this.formControls.get(x));
       } else {
@@ -349,7 +327,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'noPeople',
           'zzairlineCode',
           'zzdepartureCity',
-          'zzdestinationCity'
+          'zzdestinationCity',
         ];
         this.setForm(forms);
 
@@ -378,7 +356,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'noPeople',
           'noNights',
           'roomType',
-          'mealPlan'
+          'mealPlan',
         ];
         this.setForm(forms);
         this.loadRoomType();
@@ -412,7 +390,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'stateRoom',
           'cabinNo',
           'dining',
-          'noNights'
+          'noNights',
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;
@@ -423,14 +401,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.lbldepartureCity = 'Departure City';
         this.lblarrivalDate = 'Return Date';
         this.lblnoPeople = 'Number of Passengers';
-        forms = [
-          'segmentType',
-          'policyNo',
-          'departureDate',
-          'departureCity',
-          'arrivalDate',
-          'noPeople'
-        ];
+        forms = ['segmentType', 'policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople'];
         this.setForm(forms);
         this.selectedTmpl = this.insuranceTmpl;
         break;
@@ -453,7 +424,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'fromStation',
           'arrivalDate',
           'arrivalTime',
-          'noPeople'
+          'noPeople',
         ];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
@@ -487,7 +458,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'includeTax',
           'includeToll',
           'includeParking',
-          'includeGratuities'
+          'includeGratuities',
         ];
         if (this.isAddNew) {
           this.passiveSegments.pickupLoc = 'HOME';
@@ -533,31 +504,23 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'specialRequest',
           'destinationCity',
           'arrivalTime',
-          'arrivalDate'
+          'arrivalDate',
         ];
         this.setForm(forms);
         this.segmentForm.get('destinationCity').clearValidators();
         this.selectedTmpl = this.carTmpl;
         this.pickupCityList = [];
-        this.segmentList.forEach(s => {
-          if (
-            !this.pickupCityList.find(x => x.endpoint === s.destinationCity)
-          ) {
+        this.segmentList.forEach((s) => {
+          if (!this.pickupCityList.find((x) => x.endpoint === s.destinationCity)) {
             this.pickupCityList.push({ endpoint: s.destinationCity });
           }
         });
 
-        if (
-          this.passiveSegments.pickupLoc !== 'AIRPORT' &&
-          this.passiveSegments.pickupLoc !== 'OFF AIRPORT'
-        ) {
+        if (this.passiveSegments.pickupLoc !== 'AIRPORT' && this.passiveSegments.pickupLoc !== 'OFF AIRPORT') {
           this.passiveSegments.pickupLoc = 'AIRPORT';
         }
 
-        if (
-          this.passiveSegments.departureCity !== '' &&
-          this.passiveSegments.vendorCode !== ''
-        ) {
+        if (this.passiveSegments.departureCity !== '' && this.passiveSegments.vendorCode !== '') {
           this.loadCarSupplier();
           this.loadCarType();
           this.loadDropOffAddr(this.passiveSegments.dropOffLoc);
@@ -592,7 +555,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'zipCode',
           'country',
           'roomType',
-          'additionalInfo'
+          'additionalInfo',
         ];
         this.loadRoomTypeHotel();
         this.stateProvinceList = this.ddbService.getStateProvinces();
@@ -630,28 +593,24 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;
     const cityCode = this.passiveSegments.departureCity;
-    if (
-      chainCode !== undefined &&
-      chainCode.length === 2 &&
-      (cityCode !== undefined && cityCode.length === 3)
-    ) {
+    if (chainCode !== undefined && chainCode.length === 2 && (cityCode !== undefined && cityCode.length === 3)) {
       this.hotelList = [];
       const command = 'HL' + chainCode + cityCode;
       if (this.commandCache.getHotels === command) {
         return;
       }
 
-      smartScriptSession.send(command).then(async res => {
+      smartScriptSession.send(command).then(async (res) => {
         this.commandCache.getHotels = command;
         let lines = res.Response.split('\r\n');
         const regex = /^(?<code>[A-Z]{2}) ([A-Z])(\s{1,2})([A-Z])(\s{2,3})([A-Z]{3})(\s{2})(?<text>.*)/g;
         lines = await this.getMDResult(lines);
-        lines.forEach(r => {
+        lines.forEach((r) => {
           const match = regex.exec(r);
           if (match && match.groups) {
             this.hotelList.push({
               itemValue: match.groups.code,
-              itemText: match.groups.text
+              itemText: match.groups.text,
             });
             regex.lastIndex = 0;
           }
@@ -661,10 +620,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   getHotelInfo($event) {
-    const text =
-      $event.target.options[$event.target.options.selectedIndex].text;
-    const hotelCode =
-      $event.target.options[$event.target.options.selectedIndex].value;
+    const text = $event.target.options[$event.target.options.selectedIndex].text;
+    const hotelCode = $event.target.options[$event.target.options.selectedIndex].value;
     this.passiveSegments.hotelName = text.split('!')[1];
     this.passiveSegments.hotelCityName = '';
     this.passiveSegments.zipCode = '';
@@ -673,11 +630,11 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.passiveSegments.phone = '';
     this.passiveSegments.fax = '';
     this.passiveSegments.province = '';
-    smartScriptSession.send('HF' + hotelCode).then(async res => {
+    smartScriptSession.send('HF' + hotelCode).then(async (res) => {
       const lines = res.Response.split('\r\n');
       let indx = 0;
       let telIndx = 0;
-      lines.forEach(r => {
+      lines.forEach((r) => {
         if (r.trim().indexOf('-TEL') === 0) {
           telIndx = indx;
           this.passiveSegments.phone = r
@@ -708,7 +665,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   }
 
   enableFormControls(controls: string[], disabled: boolean) {
-    controls.forEach(c => {
+    controls.forEach((c) => {
       if (this.segmentForm.get(c) !== null) {
         if (disabled) {
           this.segmentForm.get(c).disable();
@@ -732,10 +689,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
     if (tempname === 'departureDate') {
       depdate = tempdate2;
-      if (
-        this.passiveSegments.segmentType === 'CAR' ||
-        this.passiveSegments.segmentType === 'TRN'
-      ) {
+      if (this.passiveSegments.segmentType === 'CAR' || this.passiveSegments.segmentType === 'TRN') {
         this.passiveSegments.arrivalDate = tempdate;
       }
     }
@@ -803,27 +757,17 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   pickupCityOnBlur() {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarSupplier();
-      const airs = this.segmentList.filter(x => x.segmentType === 'AIR');
-      let air = airs.find(
-        x => x.destinationCity === this.passiveSegments.departureCity
-      );
+      const airs = this.segmentList.filter((x) => x.segmentType === 'AIR');
+      let air = airs.find((x) => x.destinationCity === this.passiveSegments.departureCity);
       if (air) {
-        this.passiveSegments.departureDate = this.convertDateFormat(
-          air.arrivalDate
-        );
-        this.passiveSegments.departureTime = this.convert24to12Hr(
-          air.arrivalTime
-        );
+        this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
+        this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
         this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
         const indx = airs.indexOf(air);
         if (indx < airs.length - 1) {
           air = airs[indx + 1];
-          this.passiveSegments.arrivalDate = this.convertDateFormat(
-            air.departureDate
-          );
-          this.passiveSegments.arrivalTime = this.convert24to12Hr(
-            air.departureTime
-          );
+          this.passiveSegments.arrivalDate = this.convertDateFormat(air.departureDate);
+          this.passiveSegments.arrivalTime = this.convert24to12Hr(air.departureTime);
         }
       }
     }
@@ -832,20 +776,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   convertDateFormat(date) {
     date = date.toUpperCase();
     if (date.match(/([0-9]{2}[A-Z]{3})/g)) {
-      const m = [
-        'JAN',
-        'FEB',
-        'MAR',
-        'APR',
-        'MAY',
-        'JUN',
-        'JUL',
-        'AUG',
-        'SEP',
-        'OCT',
-        'NOV',
-        'DEC'
-      ];
+      const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
       const day = date.substr(0, 2);
       const month = m.indexOf(date.substr(2, 3)) + 1;
 
@@ -878,9 +809,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   vendorCodeChange(value) {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarType();
-      const sup = this.filterSupplierCodeList.find(
-        x => x.supplierCode === value
-      );
+      const sup = this.filterSupplierCodeList.find((x) => x.supplierCode === value);
       if (sup) {
         this.passiveSegments.vendorName = sup.supplierName;
       }
@@ -898,22 +827,20 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
     this.filterSupplierCodeList = [];
     // const response =
-    smartScriptSession.send(command).then(async res => {
+    smartScriptSession.send(command).then(async (res) => {
       this.commandCache.loadCarSupplier = command;
       let lines = res.Response.split('\r\n');
 
       const regex = /(?<code>([A-Z]{2}))\+(?<text>.+?(?=\s{2}))/g;
       lines = await this.getMDResult(lines);
-      lines.forEach(x => {
+      lines.forEach((x) => {
         const match = regex.exec(x);
         if (match && match.groups) {
-          const obj = this.filterSupplierCodeList.find(
-            z => z.supplierCode === match.groups.code
-          );
+          const obj = this.filterSupplierCodeList.find((z) => z.supplierCode === match.groups.code);
           if (obj === undefined) {
             this.filterSupplierCodeList.push({
               supplierCode: match.groups.code,
-              supplierName: match.groups.text
+              supplierName: match.groups.text,
             });
           }
         }
@@ -926,14 +853,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     if (lines[lines.length - 2].indexOf('MORE') === 0) {
       let stop = false;
       while (!stop) {
-        await smartScriptSession.send('MD').then(x => {
+        await smartScriptSession.send('MD').then((x) => {
           const list = x.Response.split('\r\n');
           lines = lines.concat(list);
-          if (
-            list.length < 4 ||
-            x.Response.indexOf('NO MORE ITEMS') >= 0 ||
-            x.Response.indexOf('END OF DISPLAY')
-          ) {
+          if (list.length < 4 || x.Response.indexOf('NO MORE ITEMS') >= 0 || x.Response.indexOf('END OF DISPLAY')) {
             stop = true;
           }
         });
@@ -950,10 +873,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
-      if (
-        this.commandCache.loadPickupOffAddr === command ||
-        vendor === undefined
-      ) {
+      if (this.commandCache.loadPickupOffAddr === command || vendor === undefined) {
         return;
       }
       this.pickupOffAddrList = [];
@@ -974,10 +894,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
-      if (
-        this.commandCache.loadDropOffAddr === command ||
-        vendor === undefined
-      ) {
+      if (this.commandCache.loadDropOffAddr === command || vendor === undefined) {
         return;
       }
       this.dropOffAddrList = [];
@@ -991,18 +908,18 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   getOffAddress(addrList, command) {
     // const response =
-    smartScriptSession.send(command).then(async res => {
+    smartScriptSession.send(command).then(async (res) => {
       let lines = res.Response.split('\r\n');
       const regex = /(?<code>[A-Z]{4}[0-9]{2}) (?<text>.+?(?=\s{2}))/g;
       lines = await this.getMDResult(lines);
-      lines.forEach(x => {
+      lines.forEach((x) => {
         const match = regex.exec(x);
         if (match && match.groups) {
-          const obj = addrList.find(z => z.itemValue === match.groups.code);
+          const obj = addrList.find((z) => z.itemValue === match.groups.code);
           if (obj === undefined) {
             addrList.push({
               itemValue: match.groups.code,
-              itemText: match.groups.text
+              itemText: match.groups.text,
             });
           }
           regex.lastIndex = 0;
@@ -1023,23 +940,21 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
     this.carTypeList = [];
     // const response =
-    smartScriptSession.send(command).then(async res => {
+    smartScriptSession.send(command).then(async (res) => {
       this.commandCache.loadCarType = command;
       let lines = res.Response.split('\r\n');
       lines = await this.getMDResult(lines);
       const regex = /\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
-      lines.forEach(x => {
+      lines.forEach((x) => {
         const match = regex.exec(x);
         if (match && match.groups) {
           if (match.groups.text.trim() !== '') {
-            const obj = this.carTypeList.find(
-              z => z.itemValue === match.groups.code
-            );
+            const obj = this.carTypeList.find((z) => z.itemValue === match.groups.code);
 
             if (obj === undefined) {
               this.carTypeList.push({
                 itemValue: match.groups.code,
-                itemText: match.groups.text
+                itemText: match.groups.text,
               });
             }
             regex.lastIndex = 0;

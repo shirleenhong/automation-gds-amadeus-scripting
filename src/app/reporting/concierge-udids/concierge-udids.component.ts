@@ -137,7 +137,6 @@ export class ConciergeUdidsComponent implements OnInit {
       const rem = this.getTextLineNo(udids[i].id);
       if (rem) {
         this.pnrRemarksFound.push(udids[i].control);
-
         this.setControls(rem.remarkText, udids[i].id, udids[i].control, rem.lineNo);
       }
     }
@@ -145,6 +144,7 @@ export class ConciergeUdidsComponent implements OnInit {
 
   private setControls(rem: string, id: string, control: string, lineNo: string) {
     this.forDeletion.push(lineNo);
+
     if (id === '*U13/-') {
       if (rem.replace(id, '') === 'NO HTL BKD') {
         return;

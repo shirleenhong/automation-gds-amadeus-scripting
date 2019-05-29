@@ -5,7 +5,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify Codeshare Remark Is Written In The PNR
     [Tags]    us8269
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345    TKOK
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -14,7 +14,7 @@ Verify Codeshare Remark Is Written In The PNR
     Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
     Click Panel    Remarks
     Click Remarks Tab    Codeshare
-    Select Segment From The List    1    2
+    Select Segment From The List    1    3
     Enter Check-in At Details    1    Codeshare Testing
     Click Submit To PNR
     Close CA Migration Window
@@ -41,7 +41,7 @@ Verify Multiple Codeshare Remarks Are Written In The PNR
     [Tags]    us8269
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC CDGMAD GK1 / 11551440 / 1234567    SS AC1074 Y 18DEC MADORD GK1 / 11551440 / ABCD123    SS AC1074 Y 22DEC ORDCDG GK1 / 11551440 / ABCD464    RM*CF/-RBM000000N
-    ...    APE12345    TKOK
+    ...    APE12345    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -50,10 +50,10 @@ Verify Multiple Codeshare Remarks Are Written In The PNR
     Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
     Click Panel    Remarks
     Click Remarks Tab    Codeshare
-    Select Segment From The List    1    2    3
+    Select Segment From The List    1    3    4
     Enter Check-in At Details    1    Codeshare Testing
     Click Add Codeshare Button
-    Select Segment From The List    2    4
+    Select Segment From The List    2    5
     Enter Check-in At Details    2    2nd codeshare remark
     Click Submit To PNR
     Close CA Migration Window

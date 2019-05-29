@@ -63,7 +63,7 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written When 
     [Teardown]    Close Browser
 
 Verify That UA Segment Is Cancelled And Cancel Remarks Are Written
-    [Tags]    us8214
+    [Tags]    us8214    us8882
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    SS UA1074 Y 13NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RM*CF/-RBM000000N    RM*NUC
     ...    APE12345    TKOK
@@ -100,9 +100,9 @@ Verify That UA Segment Is Cancelled And Cancel Remarks Are Written
     [Teardown]    Close Browser
 
 Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
-    [Tags]    us8214
+    [Tags]    us8214    us8882
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS AC1074 Y 13NOV CDGYYZ GK1 / 11551440 / ABCDEFG    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    SS AC1074 Y 20NOV YYZFRA GK1 / 11551440 / ABCDEFG    RU1AHK1SIN21NOV-/TYP-TOR/SUC-ZZ/SC-sin/SD-21NOV/ST-0900/EC-sin/ED-21NOV/ET-1800/PS-X
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS AC1075 Y 13NOV CDGYYZ GK1 / 11551440 / ABCDEFG    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    SS AC1076 Y 20NOV YYZFRA GK1 / 11551440 / ABCDEFG    RU1AHK1SIN21NOV-/TYP-TOR/SUC-ZZ/SC-sin/SD-21NOV/ST-0900/EC-sin/ED-21NOV/ET-1800/PS-X
     ...    RM*CF/-RBM000000N    RM*NUC    APE12345    TKOK
     Open CA Migration Window
     Click Load PNR
@@ -155,7 +155,6 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-2
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-PRE
     Close Cryptic Display Window
-    Switch To Command Page
     Open CA Migration Window
     Click Cancel Segment
     Select Passive Segment    1    2
@@ -165,7 +164,6 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Enter Coupon Number For Refund    1    7654321
     Click Cancel Segments Button
     Close CA Migration Window
-    Switch To Graphic Mode
     Sleep    5
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY LEISURE CANADA
@@ -174,6 +172,61 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
     Verify Specific Remark Is Written In The PNR    /TKT NBR-1234567 CPNS-7654321
     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
+Verify That OSI Fields Have Default Values And Cancel Remarks Are Written
+    [Tags]    us8214    us8882
+    Login To Amadeus Sell Connect
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS UA1234 Y 10NOV YYZYTO GK1 / 11551440 / ABCDEFG    SS AC1074 Y 13NOV YTOCDG GK1 / 11551440 / ABCDEFG    SS AC1075 Y 15NOV CDGYYZ GK1 / 11551440 / ABCDEFG    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    SS AC1076 Y 20NOV YYZFRA GK1 / 11551440 / ABCDEFG
+    ...    RU1AHK1SIN21NOV-/TYP-TOR/SUC-ZZ/SC-sin/SD-21NOV/ST-0900/EC-sin/ED-21NOV/ET-1800/PS-X    RM*CF/-RBM000000N    RM*NUC    APE12345    TKOK
+    Open CA Migration Window
+    Click Load PNR
+    Click Panel    Reporting
+    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
+    Enter Destination Code    CDG
+    Select If PNR Travel to Any Countries Listed    NIGERIA
+    Click Submit To PNR
+    Click Cancel Segment
+    Enter Requestor Name    Amadeus Leisure
+    Enter Cancel Notes    1    Test cancel notes1
+    Enter Cancel Notes    2    Test cancel notes2
+    Select Passive Segment    2
+    Select NonRefundable AC Flight Checkbox
+    Select AC Reason For Cancel    DEATH/IMMINENT DEATH
+    Enter Relationship    Test Relationship
+    Select UA Reason For Cancel    UA FLIGHT NOT TICKETED YET
+    Click Cancel Segments Button
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY AMADEUS LEISURE
+    Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES1
+    Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES2
+    Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-2
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-4
+    Close Cryptic Display Window
+    Open CA Migration Window
+    Click Cancel Segment
+    Select Passive Segment    1    2
+    Enter Requestor Name    Leisure Canada
+    Enter Cancel Notes    1    Notes Cancellation
+    Enter Ticket Number For Refund    1    1234567
+    Enter Coupon Number For Refund    1    7654321
+    Click Cancel Segments Button
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY AMADEUS LEISURE
+    Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES1
+    Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES2
+    Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-2
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-4
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-3
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-PRE
+    Verify Specific Remark Is Written In The PNR    /TKT NBR-1234567 CPNS-7654321
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser

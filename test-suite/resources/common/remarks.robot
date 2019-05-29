@@ -187,6 +187,7 @@ Enter ITC Balance Due Date
     #enter balance due date
     Clear Element Text    css=#dueDate
     Input Text    css=#dueDate    ${itc_balance_due_date}
+    [Teardown]    Take Screenshot
 
 Enter ITC Commission Amount
     [Arguments]    ${commission_amount}
@@ -194,6 +195,7 @@ Enter ITC Commission Amount
     Double Click Element    css=#commission
     Press Key    css=#commission    \\08
     Input Text    css=#commission    ${commission_amount}
+    [Teardown]    Take Screenshot
 
 Select Tour Package Currency Type
     [Arguments]    ${tour_currency_type}
@@ -292,14 +294,14 @@ Click Remarks Tab
     Click Element    xpath=//span[contains(text(), '${remarks_tab}')]
 
 Select Segment From The List
-    [Arguments]    ${button_order}  @{segment_number}
+    [Arguments]    ${button_order}    @{segment_number}
     Click Element    xpath=//div[@formarrayname='segments'][${button_order}]//button[@id='button-basic']
-    Focus  xpath=//div[@formarrayname='segments'][${button_order}]//ul[@id='dropdown-basic']
+    Focus    xpath=//div[@formarrayname='segments'][${button_order}]//ul[@id='dropdown-basic']
     : FOR    ${segment_number}    IN    @{segment_number}
     \    Select Checkbox    xpath=//div[@formarrayname='segments'][${button_order}]//input[@value='${segment_number}']
 
 Enter Check-in At Details
-    [Arguments]    ${checkin_order}  ${checkin_at}
+    [Arguments]    ${checkin_order}    ${checkin_at}
     Double Click Element    xpath=//div[@formarrayname='segments'][${checkin_order}]//input[@formcontrolname='airline']
     Press Key    xpath=//div[@formarrayname='segments'][${checkin_order}]//input[@formcontrolname='airline']    \\08
     Input Text    xpath=//div[@formarrayname='segments'][${checkin_order}]//input[@formcontrolname='airline']    ${checkin_at}
@@ -308,3 +310,140 @@ Enter Check-in At Details
 
 Click Add Codeshare Button
     Click Element    xpath=//i[@id='add']
+
+Click Add Fare Rule button
+    Click Element    xpath=//button[contains(text(), 'Add Fare Rule')]
+
+Select Airline
+    [Arguments]    ${airline}
+    Select From List    css=#airlineCode    ${airline}
+
+Select Fare Rule Remarks
+    [Arguments]    ${fare_rule_remark}=EMPTY
+    Run Keyword If    '${fare_rule_remark}' == 'Ticket MIN/MAX Stay'    Select Checkbox    css=#isTicketMinMax
+    Run keyword if    '${fare_rule_remark}' == 'Ticket Non-Refundable'    Select Checkbox    css=#isTicketNonRefundable
+    Run keyword if    '${fare_rule_remark}' == 'Non-Ref/Tkt Value'    Select Checkbox    css=#isTicketNonRef
+
+Add Associated Remarks
+    [Arguments]    ${associated_remark}
+    Input Text    xpath=//input[@formcontrolname='remarkText']    ${associated_remark}
+    Press Key    xpath=//input[@formcontrolname='remarkText']    \\09
+    [Teardown]    Take Screenshot
+
+Enter Currency
+    [Arguments]    ${currency}
+    Input Text    css=#currencyType    ${currency}
+
+Enter Minimum Change Fee
+    [Arguments]    ${min_change_fee}
+    Input Text    css=#minChangeFee    ${min_change_fee}
+    [Teardown]    Take Screenshot
+
+Enter Ticket Amount
+    [Arguments]    ${ticket_amt}
+    Input Text    css=#ticketAmount    ${ticket_amt}
+    [Teardown]    Take Screenshot
+
+Enter Non-Refundable Percentage
+    [Arguments]    ${nonref_percentage}
+    Input Text    css=#nonRefundable    ${nonref_percentage}
+    [Teardown]    Take Screenshot
+
+Select Ticket Amount Or Percentage
+    [Arguments]    ${amt_percentage}
+    Wait Until Page Contains Element    //label[@class='control control-radio']    30
+    Run Keyword If    '${amt_percentage}' == 'Non-Refundable'       Click Element    xpath=//span[contains(text(), 'Non-Refundable%')]
+    Run Keyword If    '${amt_percentage}' == 'Ticket Amount'        Click Element    xpath=//label[contains(text(), 'Ticket Amount')]
+
+Enter Departure/Arrival
+    [Arguments]     ${city_pair}
+    Wait Until Element Is Visible   css=#cityPair   30
+    Input Text      css=#cityPair       ${city_pair} 
+
+Select Fare Rule
+    Select From List By Index  css=#fareRuleList  0
+    [Teardown]    Take Screenshot
+
+Select RBC Product Type
+    [Arguments]     ${rbc_product_type}
+    Input Text      css=#productType    ${rbc_product_type}
+
+Enter Cardholder First Name And Last Name
+    [Arguments]     ${cc_first_name}        ${cc_last_name}
+    Input Text  css=#firstname      ${cc_first_name} 
+    Input Text  css=#lastname      ${cc_last_name}
+
+Enter First And Last Visa Number
+    [Arguments]     ${visa_first_number}        ${visa_last_number}     
+    Input Text      css=#firstvisanumber    ${visa_first_number}  
+    Input Text      css=#lastvisanumber    ${visa_last_number}  
+
+Enter RBC Points Redeemed
+    [Arguments]     ${points_redeemed}
+    Input Text  css=#pointsRedeemed    ${points_redeemed}
+
+Enter Value Of Points
+    [Arguments]     ${points_value}
+    Input Text  css=#valuepoints    ${points_value}
+
+Enter Supplier Name
+    [Arguments]     ${supplier_name}
+    Input Text      css=#suppliername       ${supplier_name}
+
+Click Add RBC Redemption Points Button
+    Click Element    xpath=//button[contains(text(), 'Add RBC Redemption Points')]
+
+Enter GST Per Adult
+    [Arguments]     ${gst_adult}
+    Input Text  css=#gst    ${gst_adult}       
+
+Enter HST Per Adult
+    [Arguments]     ${hst_adult}
+    Input Text  css=#hst    ${hst_adult}
+
+Enter QST Per Adult
+    [Arguments]     ${qst_adult}
+    Input Text  css=#qst    ${qst_adult}
+
+Enter All Other Taxes
+    [Arguments]     ${other_tax_adult}
+    Input Text  css=#otherTaxes    ${other_tax_adult}
+
+Enter Number of Adults
+    [Arguments]     ${number_adult}
+    Input Text  css=#noofadult    ${number_adult}
+
+Enter Total Base Cost Per Adult
+    [Arguments]     ${total_base_adult}
+    Input Text  css=#totalbasecostadult    ${total_base_adult}  
+
+Enter Number Of Children
+    [Arguments]    ${number_children}
+    Input Text  css=#noofchildren    ${number_children}
+
+Enter Total Base Cost Per Child
+    [Arguments]     ${total_base_child}
+    Input Text  css=#totalbasecostchild    ${total_base_child} 
+
+Enter GST Per Child
+    [Arguments]     ${gst_child}
+    Input Text  css=#cgst    ${gst_child}       
+
+Enter HST Per Child
+    [Arguments]     ${hst_child}
+    Input Text  css=#chst    ${hst_child}
+
+Enter QST Per Child
+    [Arguments]     ${qst_child}
+    Input Text  css=#cqst    ${qst_child}
+
+Enter All Other Taxes For Child
+    [Arguments]     ${other_tax_child}
+    Input Text  css=#cotherTaxes    ${other_tax_child}
+    Press Key    css=#cotherTaxes   \\09
+
+Enter PCT
+    [Arguments]     ${pct}
+    Input Text  css=#pct    ${pct}
+
+    

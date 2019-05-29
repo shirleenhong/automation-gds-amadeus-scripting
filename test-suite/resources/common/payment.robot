@@ -18,13 +18,6 @@ Select Passenger Name
     Click Element    xpath=//option[contains(text(), '${passenger_name}')]
     Set Suite Variable    ${passenger_name}
 
-Enter Description
-    [Arguments]    ${description}
-    Double Click Element    css=#description
-    Press Key    css=#description    \\08
-    Input Text    css=#description    ${description}
-    Set Suite Variable    ${description}
-
 Enter Amount
     [Arguments]    ${amount}
     Double Click Element    css=#amount
@@ -46,7 +39,8 @@ Select Mode Of Payment
 
 Click Save Button
     Click Element    xpath=//button[contains(text(), 'Save')]
-    Wait Until Page Contains Element    xpath=//tr[1]//i[@class='fas fa-edit']    30
+    # Wait Until Page Contains Element    xpath=//tr[1]//i[@class='fas fa-edit']    30
+    Wait Until Page Contains Element    xpath=//i[@class='fas fa-edit']     30
     Focus    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     [Teardown]    Take Screenshot
 
@@ -92,6 +86,7 @@ Click Payment Tab
 Select Traveler Province
     [Arguments]    ${province}
     Select From List    css=#address    ${province}
+    [Teardown]    Take Screenshot
 
 Select Segment Association
     [Arguments]    ${segment_assoc}
@@ -129,8 +124,9 @@ Click Add Accounting Line Button
 Enter Matrix Accounting Description
     [Arguments]    ${remark_description}
     Wait Until Page Contains Element    css=#descriptionapay    30
-    Click Element  css=#descriptionapay
-    Input Text  css=#descriptionapay    ${remark_description}
+    Double Click Element    css=#descriptionapay
+    Press Key    css=#descriptionapay    \\08
+    Input Text    css=#descriptionapay    ${remark_description}
     Set Suite Variable    ${remark_description}
 
 Select Accounting Remark Type
@@ -269,6 +265,7 @@ Click Payment Update Button
 Click Payment Delete Button
     [Arguments]    ${delete_order}
     Click Element    xpath=//tr[${delete_order}]//i[@class=' fas fa-trash-alt']
+    Sleep    3
 
 Tick Update Leisure Fee
     Click Element    xpath=//input[@id='chkUpdateRemove']
@@ -281,10 +278,17 @@ Enter Commission Percentage
 
 Select Segment
     [Arguments]    @{segment_number}
-    Wait Until Element Is Visible  xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']  30
+    Wait Until Element Is Visible    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']    30
     Click Button    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
-    Wait Until Element Is Visible    xpath=//ul[@id='dropdown-basic']       30
-    :FOR    ${segment_number}    IN    @{segment_number}
+    Wait Until Element Is Visible    xpath=//ul[@id='dropdown-basic']    30
+    : FOR    ${segment_number}    IN    @{segment_number}
     \    Click Element    xpath=//ul[@id='dropdown-basic']//input[@value='${segment_number}']
     Click Element    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
     Take Screenshot
+
+Enter Description
+    [Arguments]    ${description}
+    Double Click Element    xpath=//textarea[@id='description']
+    Press Key    xpath=//textarea[@id='description']    \\08
+    Input Text    xpath=//textarea[@id='description']    ${description}
+    Set Suite Variable    ${description}

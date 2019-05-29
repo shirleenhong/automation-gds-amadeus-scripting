@@ -7,7 +7,7 @@ Verify That Tour Package And UDID Remarks Are Written For Single Passenger
     [Tags]    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    ape1234
-    ...    tkok
+    ...    tkok    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -191,7 +191,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     [Teardown]    Close Browser
 
 Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers With Child And Infant
-    [Tags]    us7762    DE1204
+    [Tags]    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Dhel (CHD)    NM1Leisure/Infant (INF/ANN/10DEC18)    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
     ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape13134    tkok
@@ -262,7 +262,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *U43/-NOV23
     Verify Specific Remark Is Written In The PNR    RM *U41/-1908.25
-    Verify Specific Remark Is Not Written In The PNR    RM *U42/-
+    Verify Specific Remark Is Written In The PNR    RM *U42/-0.00
     Verify Specific Remark Is Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN ${tour_currency_type}
     Verify Specific Remark Is Written In The PNR    RIR ADULT PACKAGE-----------500.00X3------1,500.00
     Verify Specific Remark Is Written In The PNR    RIR ADULT TAXES--------------52.00X3--------156.00

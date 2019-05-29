@@ -6,7 +6,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 @Component({
   selector: 'app-concierge-udids',
   templateUrl: './concierge-udids.component.html',
-  styleUrls: ['./concierge-udids.component.scss'],
+  styleUrls: ['./concierge-udids.component.scss']
 })
 export class ConciergeUdidsComponent implements OnInit {
   conciergeForm: FormGroup;
@@ -31,7 +31,7 @@ export class ConciergeUdidsComponent implements OnInit {
       hotelName: new FormControl('', []),
       businessTravel: new FormControl('', []),
       hotelRes: new FormControl('', []),
-      reasonHotelBooked: new FormControl('', []),
+      reasonHotelBooked: new FormControl('', [])
     });
   }
 
@@ -52,24 +52,24 @@ export class ConciergeUdidsComponent implements OnInit {
       { itemText: '', itemValue: '' },
       {
         itemText: 'WITHIN 48 Hours of Original Booking',
-        itemValue: 'WITHIN 48HRS OF BKNG',
+        itemValue: 'WITHIN 48HRS OF BKNG'
       },
       {
         itemText: 'OUTSIDE 48 Hours of Original Booking',
-        itemValue: 'OUTSIDE 48HRS OF BKNG',
-      },
+        itemValue: 'OUTSIDE 48HRS OF BKNG'
+      }
     ];
 
     this.reservationReqList = [
       { itemText: '', itemValue: '' },
       {
         itemText: 'Reservation was generated via EMAIL',
-        itemValue: 'EMAIL REQUEST',
+        itemValue: 'EMAIL REQUEST'
       },
       {
         itemText: 'Reservation was generated via Phone Request',
-        itemValue: 'PHONE REQUEST',
-      },
+        itemValue: 'PHONE REQUEST'
+      }
     ];
 
     this.bookingTypeList = [
@@ -77,9 +77,9 @@ export class ConciergeUdidsComponent implements OnInit {
       { itemText: 'Air Only Booking', itemValue: 'AIR ONLY BOOKING' },
       {
         itemText: 'Air and Hotel and/or Car',
-        itemValue: 'AIR AND HOTEL AND/OR CAR',
+        itemValue: 'AIR AND HOTEL AND/OR CAR'
       },
-      { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' },
+      { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' }
     ];
 
     this.yesNoList = [{ itemText: '', itemValue: '' }, { itemText: 'Yes', itemValue: 'YES' }, { itemText: 'No', itemValue: 'NO' }];
@@ -89,13 +89,13 @@ export class ConciergeUdidsComponent implements OnInit {
       { itemText: 'Conference', itemValue: 'CONFERENCE' },
       {
         itemText: 'Personal Accommodations',
-        itemValue: 'PERSONAL ACCOMMODATIONS',
+        itemValue: 'PERSONAL ACCOMMODATIONS'
       },
       { itemText: 'Booked Elsewhere', itemValue: 'BOOKED ELSEWHERE' },
       {
         itemText: 'Booking to be Completed/Confirmed',
-        itemValue: 'BOOKING TO BE COMPLETED/CONFIRMED',
-      },
+        itemValue: 'BOOKING TO BE COMPLETED/CONFIRMED'
+      }
     ];
   }
 
@@ -105,7 +105,7 @@ export class ConciergeUdidsComponent implements OnInit {
     if (look) {
       textLine = {
         remarkText: look.remarkText,
-        lineNo: look.lineNo,
+        lineNo: look.lineNo
       };
     }
 
@@ -130,20 +130,21 @@ export class ConciergeUdidsComponent implements OnInit {
       { id: '*U15/-', control: 'businessTravel' },
       { id: '*U17/-', control: 'hotelRes' },
       { id: '*U18/-', control: 'reasonHotelBooked' },
-      { id: '*U30/-', control: '' },
+      { id: '*U30/-', control: '' }
     ];
 
     for (let i = 0; i <= udids.length - 1; i++) {
       const rem = this.getTextLineNo(udids[i].id);
       if (rem) {
         this.pnrRemarksFound.push(udids[i].control);
-        this.forDeletion.push(rem.lineNo);
+
         this.setControls(rem.remarkText, udids[i].id, udids[i].control, rem.lineNo);
       }
     }
   }
 
   private setControls(rem: string, id: string, control: string, lineNo: string) {
+    this.forDeletion.push(lineNo);
     if (id === '*U13/-') {
       if (rem.replace(id, '') === 'NO HTL BKD') {
         return;

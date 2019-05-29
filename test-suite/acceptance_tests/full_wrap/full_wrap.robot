@@ -182,3 +182,72 @@ Verify That Matrix Receipt, Matrix Accounting, Leisure, Package Cost, And Report
     Verify Specific Remark Is Written In The PNR    RIR BALANCE DUE 670.85
     Verify Specific Remark Is Written In The PNR    RIR ---- BALANCE OF 670.85 IS DUE 22OCT24 ----
     Verify Specific Remark Is Written In The PNR    RIR SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE
+
+Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Written In The PNR
+    [Documentation]    Multiple Air, Tour, Hotel
+    ...    Matrix Receipt
+    ...    Matrix Accounting
+    ...    Codeshare
+    ...    ITC
+    ...    Visa and Passport
+    ...    Leisure
+    ...    Reporting
+    ...    	BSP
+    ...    	Conceirge
+    ...    	Leisure
+    ...    	Destination
+    Login To Amadeus Sell Connect
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Open CA Migration Window
+    Click Add Segment Main Menu
+    Click Add Segment Button
+    Select Segment Type    Air
+    Enter Airline Code    AC
+    Enter Flight Number    1234
+    Enter Class Of Service    Y
+    Enter Departure Date    01022020
+    Enter Arrival Date    01032020
+    Enter Departure City    YUL
+    Enter Destination City    CDG
+    Enter Departure Time    0330PM
+    Enter Arrival Time    0515PM
+    Enter Airline Record Locator    ARL1234
+    Click Add Passive Save Button
+    Click Add Segment Button
+    Select Segment Type    Air
+    Enter Airline Code    ZZ
+    Enter Airline Name For ZZ    Air Canada
+    Enter Flight Number    1234
+    Enter Class Of Service    Y
+    Enter Departure Date    01122020
+    Enter Arrival Date    01142020
+    Enter Departure City    ZZZ
+    Enter Departure Name For ZZZ    Departure ZZZ
+    Enter Destination City    ZZZ
+    Enter Arrival Name For ZZZ    Arrival ZZZ
+    Enter Departure Time    0330PM
+    Enter Arrival Time    0515PM
+    Enter Airline Record Locator    ARL7656
+    Click Add Passive Save Button
+    Click Add Segment Button
+    Select Segment Type    Tour
+    Enter Vendor Name    TEST VENDOR
+    Enter Vendor Code    ABC
+    Enter Confirmation Number    CN12345678
+    Enter Departure Date    01142020
+    Enter Arrival Date    01202020
+    Enter Departure City    CDG
+    Enter Destination City    AMS
+    Enter Departure Time    0100PM
+    Enter Arrival Time    1200PM
+    Enter Segment Name    TOUR NAME TEST
+    Enter Number Of Nights    8
+    Enter Number Of People    1
+    Select Room Type    TRPL
+    Select Meal Plan    All Inclusive
+    Click Add Passive Save Button
+    Click Add Segments To PNR
+
+Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Update In the PNR
+
+Verify That Passive Segments Can Be Cancelled

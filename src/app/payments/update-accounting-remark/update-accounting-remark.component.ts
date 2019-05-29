@@ -181,11 +181,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
     this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
-    ///this.assignSupplierCode(accRemark);
+    this.assignSupplierCode(this.accountingRemarks.descriptionapay);
   }
 
   filterSupplierCode(typeCode) {
-    this.assignSupplierCode(typeCode);
+    //this.assignSupplierCode(typeCode);
 
     const val = ['12', '5', '1', '6', '4'];
     const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL'];

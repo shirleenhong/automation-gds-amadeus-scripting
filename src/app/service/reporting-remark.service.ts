@@ -5,6 +5,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
 import { DatePipe } from '@angular/common';
 import { TranslationService } from './translation.service';
+import { ConciergeUdidsComponent } from '../reporting/concierge-udids/concierge-udids.component';
 
 @Injectable({
   providedIn: 'root'
@@ -15,22 +16,13 @@ export class ReportingRemarkService {
   insuranceNo = [];
   insuranceYes = [];
 
-  constructor(
-    private pnrService: PnrService,
-    private transService: TranslationService
-  ) {}
+  constructor(private pnrService: PnrService, private transService: TranslationService) {}
 
   public GetRoutingRemark(reporting: ReportingViewModel) {
     this.language = this.pnrService.getItineraryLanguage();
 
-    this.insuranceNo = this.transService.getRemarkGroup(
-      'InsuranceDeclinedNo',
-      this.language
-    );
-    this.insuranceYes = this.transService.getRemarkGroup(
-      'InsuranceDeclinedYes',
-      this.language
-    );
+    this.insuranceNo = this.transService.getRemarkGroup('InsuranceDeclinedNo', this.language);
+    this.insuranceYes = this.transService.getRemarkGroup('InsuranceDeclinedYes', this.language);
 
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Routing';
@@ -111,24 +103,13 @@ export class ReportingRemarkService {
   }
 
   addRemarksLang(remarks: string[], rmGroup, type, category, prefix?) {
-    remarks.forEach(x => {
-      rmGroup.remarks.push(
-        this.getRemark(
-          (prefix ? prefix : '') +
-            this.transService.translate(x, this.language),
-          type,
-          category
-        )
-      );
+    remarks.forEach((x) => {
+      rmGroup.remarks.push(this.getRemark((prefix ? prefix : '') + this.transService.translate(x, this.language), type, category));
     });
   }
 
   deleteDeclinedRemarks(rmGroup) {
-    this.deleteRemarks(
-      this.insuranceNo.concat(this.insuranceYes),
-      rmGroup,
-      'RIR'
-    );
+    this.deleteRemarks(this.insuranceNo.concat(this.insuranceYes), rmGroup, 'RIR');
 
     // all RIR lines starts with ...
     const lines = this.pnrService.getRIRLineNumbers('...');
@@ -170,12 +151,9 @@ export class ReportingRemarkService {
     this.addRemarksLang(text, rmGroup, 'RI', 'R', prefix);
     // Add Group of Remarks
     rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
-    const groups = this.transService.getRemarkGroup(
-      'DeclinedReason',
-      this.language
-    );
+    const groups = this.transService.getRemarkGroup('DeclinedReason', this.language);
     if (groups) {
-      groups.forEach(x => {
+      groups.forEach((x) => {
         rmGroup.remarks.push(this.getRemark(prefix + x, 'RI', 'R'));
       });
     }
@@ -183,7 +161,7 @@ export class ReportingRemarkService {
   }
 
   deleteRemarks(udids, rmGroup, type?) {
-    udids.forEach(x => {
+    udids.forEach((x) => {
       let existNumber = '';
       if (type === 'RIR') {
         existNumber = this.pnrService.getRIRLineNumber(x);
@@ -205,11 +183,11 @@ export class ReportingRemarkService {
     return rem;
   }
 
-  getConciergeUdids(
-    concierge: any,
-    forDeletion: Array<any>,
-    forRetain: Array<any>
-  ) {
+  public GetConciergeUdids(conciergeComp: ConciergeUdidsComponent) {
+    const concierge = conciergeComp.conciergeForm;
+    const forDeletion = conciergeComp.getConciergeForDeletion();
+    const forRetain = conciergeComp.getConciergeRetain();
+
     let remText = '';
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Concierge';
@@ -220,8 +198,8 @@ export class ReportingRemarkService {
       return;
     }
 
-    if (concierge.value.redemptionAdded) {
-      if (concierge.value.redemptionAdded === 'WITHIN 48HRS OF BKNG') {
+    if (concierge.get('redemptionAdded').value) {
+      if (concierge.get('redemptionAdded').value === 'WITHIN 48HRS OF BKNG') {
         remText = 'U3/-WITHIN 48HRS OF BKNG';
       } else {
         remText = 'U4/-OUTSIDE 48HRS OF BKNG';
@@ -229,8 +207,8 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.reservationReq) {
-      if (concierge.value.reservationReq === 'EMAIL REQUEST') {
+    if (concierge.get('reservationReq').value) {
+      if (concierge.get('reservationReq').value === 'EMAIL REQUEST') {
         remText = 'U6/-EMAIL REQUEST';
       } else {
         remText = 'U5/-PHONE REQUEST';
@@ -238,8 +216,8 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.bookingType) {
-      switch (concierge.value.bookingType) {
+    if (concierge.get('bookingType').value) {
+      switch (concierge.get('bookingType').value) {
         case 'AIR ONLY BOOKING':
           remText = 'U8/-AIR ONLY BOOKING';
           break;
@@ -255,17 +233,17 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.chCallerName !== '') {
-      remText = 'U11/-' + concierge.value.chCallerName;
+    if (concierge.get('chCallerName').value) {
+      remText = 'U11/-' + concierge.get('chCallerName').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.delegateName !== '') {
-      remText = 'U12/-' + concierge.value.delegateName;
+    if (concierge.get('delegateName').value) {
+      remText = 'U12/-' + concierge.get('delegateName').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.hotelName !== '') {
+    if (concierge.get('hotelName').value) {
       remText = 'U13/-' + concierge.value.hotelName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     } else if (forRetain.indexOf('U13') === -1) {
@@ -273,18 +251,18 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.businessTravel) {
-      remText = 'U15/-' + concierge.value.businessTravel;
+    if (concierge.get('businessTravel').value) {
+      remText = 'U15/-' + concierge.get('businessTravel').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.hotelRes) {
-      remText = 'U17/-' + concierge.value.hotelRes;
+    if (concierge.get('hotelRes').value) {
+      remText = 'U17/-' + concierge.get('hotelRes').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.value.reasonHotelBooked) {
-      remText = 'U18/-' + concierge.value.reasonHotelBooked;
+    if (concierge.get('reasonHotelBooked').value) {
+      remText = 'U18/-' + concierge.get('reasonHotelBooked').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
@@ -295,7 +273,7 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    forDeletion.forEach(element => {
+    forDeletion.forEach((element) => {
       rmGroup.deleteRemarkByIds.push(element);
     });
 

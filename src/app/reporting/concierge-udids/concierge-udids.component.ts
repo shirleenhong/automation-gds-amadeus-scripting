@@ -6,7 +6,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 @Component({
   selector: 'app-concierge-udids',
   templateUrl: './concierge-udids.component.html',
-  styleUrls: ['./concierge-udids.component.scss']
+  styleUrls: ['./concierge-udids.component.scss'],
 })
 export class ConciergeUdidsComponent implements OnInit {
   conciergeForm: FormGroup;
@@ -18,6 +18,7 @@ export class ConciergeUdidsComponent implements OnInit {
   remarks: Array<any>;
   forDeletion = [];
   forReference = [];
+  pnrRemarksFound = [];
   // u30: boolean = false;
 
   constructor(private pnrService: PnrService) {
@@ -30,11 +31,14 @@ export class ConciergeUdidsComponent implements OnInit {
       hotelName: new FormControl('', []),
       businessTravel: new FormControl('', []),
       hotelRes: new FormControl('', []),
-      reasonHotelBooked: new FormControl('', [])
+      reasonHotelBooked: new FormControl('', []),
     });
   }
 
   ngOnInit() {
+    this.forDeletion = [];
+    this.forReference = [];
+    this.pnrRemarksFound = [];
     this.loadStaticValue();
     this.getRemarksFromGds();
   }
@@ -48,24 +52,24 @@ export class ConciergeUdidsComponent implements OnInit {
       { itemText: '', itemValue: '' },
       {
         itemText: 'WITHIN 48 Hours of Original Booking',
-        itemValue: 'WITHIN 48HRS OF BKNG'
+        itemValue: 'WITHIN 48HRS OF BKNG',
       },
       {
         itemText: 'OUTSIDE 48 Hours of Original Booking',
-        itemValue: 'OUTSIDE 48HRS OF BKNG'
-      }
+        itemValue: 'OUTSIDE 48HRS OF BKNG',
+      },
     ];
 
     this.reservationReqList = [
       { itemText: '', itemValue: '' },
       {
         itemText: 'Reservation was generated via EMAIL',
-        itemValue: 'EMAIL REQUEST'
+        itemValue: 'EMAIL REQUEST',
       },
       {
         itemText: 'Reservation was generated via Phone Request',
-        itemValue: 'PHONE REQUEST'
-      }
+        itemValue: 'PHONE REQUEST',
+      },
     ];
 
     this.bookingTypeList = [
@@ -73,39 +77,35 @@ export class ConciergeUdidsComponent implements OnInit {
       { itemText: 'Air Only Booking', itemValue: 'AIR ONLY BOOKING' },
       {
         itemText: 'Air and Hotel and/or Car',
-        itemValue: 'AIR AND HOTEL AND/OR CAR'
+        itemValue: 'AIR AND HOTEL AND/OR CAR',
       },
-      { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' }
+      { itemText: 'Cruise/Tour/FIT', itemValue: 'CRUISE/TOUR/FIT' },
     ];
 
-    this.yesNoList = [
-      { itemText: '', itemValue: '' },
-      { itemText: 'Yes', itemValue: 'YES' },
-      { itemText: 'No', itemValue: 'NO' }
-    ];
+    this.yesNoList = [{ itemText: '', itemValue: '' }, { itemText: 'Yes', itemValue: 'YES' }, { itemText: 'No', itemValue: 'NO' }];
 
     this.reasonHotelBooked = [
       { itemText: '', itemValue: '' },
       { itemText: 'Conference', itemValue: 'CONFERENCE' },
       {
         itemText: 'Personal Accommodations',
-        itemValue: 'PERSONAL ACCOMMODATIONS'
+        itemValue: 'PERSONAL ACCOMMODATIONS',
       },
       { itemText: 'Booked Elsewhere', itemValue: 'BOOKED ELSEWHERE' },
       {
         itemText: 'Booking to be Completed/Confirmed',
-        itemValue: 'BOOKING TO BE COMPLETED/CONFIRMED'
-      }
+        itemValue: 'BOOKING TO BE COMPLETED/CONFIRMED',
+      },
     ];
   }
 
   getTextLineNo(remark) {
     let textLine: { remarkText: string; lineNo: string };
-    const look = this.remarks.find(x => x.remarkText.indexOf(remark) > -1);
+    const look = this.remarks.find((x) => x.remarkText.indexOf(remark) > -1);
     if (look) {
       textLine = {
         remarkText: look.remarkText,
-        lineNo: look.lineNo
+        lineNo: look.lineNo,
       };
     }
 
@@ -113,6 +113,8 @@ export class ConciergeUdidsComponent implements OnInit {
   }
 
   getRemarksFromGds() {
+    this.pnrRemarksFound = [];
+    this.forDeletion = [];
     this.remarks = this.pnrService.getRemarksFromGDS();
     const udids = [
       { id: '*U3/-', control: 'redemptionAdded' },
@@ -128,36 +130,31 @@ export class ConciergeUdidsComponent implements OnInit {
       { id: '*U15/-', control: 'businessTravel' },
       { id: '*U17/-', control: 'hotelRes' },
       { id: '*U18/-', control: 'reasonHotelBooked' },
-      { id: '*U30/-', control: '' }
+      { id: '*U30/-', control: '' },
     ];
 
     for (let i = 0; i <= udids.length - 1; i++) {
       const rem = this.getTextLineNo(udids[i].id);
       if (rem) {
-        this.setControls(
-          rem.remarkText,
-          udids[i].id,
-          udids[i].control,
-          rem.lineNo
-        );
+        this.pnrRemarksFound.push(udids[i].control);
+        this.forDeletion.push(rem.lineNo);
+        this.setControls(rem.remarkText, udids[i].id, udids[i].control, rem.lineNo);
       }
     }
   }
 
-  private setControls(
-    rem: string,
-    id: string,
-    control: string,
-    lineNo: string
-  ) {
+  private setControls(rem: string, id: string, control: string, lineNo: string) {
     if (id === '*U13/-') {
       if (rem.replace(id, '') === 'NO HTL BKD') {
-        this.forDeletion.push(lineNo);
         return;
       } else {
         this.forReference.push('U13');
       }
     }
+
+    // if (control === 'reasonHotelBooked') {
+    //   this.conciergeForm.controls[control].setValue('NO');
+    // }
 
     if (id === '*U30/-') {
       this.forReference.push('U30');
@@ -165,7 +162,11 @@ export class ConciergeUdidsComponent implements OnInit {
     }
 
     this.conciergeForm.controls[control].setValue(rem.replace(id, ''));
-    this.conciergeForm.controls[control].disable();
+
+    if (['*U13/-', '*U17/-', '*U18/-'].indexOf(id) < 0) {
+      this.conciergeForm.controls[control].disable();
+    }
+
     // this.forDeletion.push(lineNo);
   }
 

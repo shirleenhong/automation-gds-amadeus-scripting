@@ -35,6 +35,14 @@
       </div>
       <app-remarks></app-remarks>
     </accordion-group>
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i> CWT Itinerary
+        <i [ngClass]="validModel.itineraryValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-itinerary></app-itinerary>
+    </accordion-group>
   </accordion>
   <br />
 
@@ -63,11 +71,7 @@
   <br />
   <div class="form-group  row">
     <div class="col">
-      <button
-        class="leisureBtnSubmit"
-        (click)="addSegmentToPNR()"
-        [disabled]="segmentEnabled"
-      >
+      <button class="leisureBtnSubmit" (click)="addSegmentToPNR()" [disabled]="segmentEnabled">
         Add Segments To PNR
       </button>
       <button class="backMain" (click)="back()">Back To Main Menu</button>
@@ -88,11 +92,7 @@
   <br />
   <div class="form-group  row">
     <div class="col">
-      <button
-        class="cancelsegment"
-        (click)="cancelPnr()"
-        [disabled]="cancelEnabled"
-      >
+      <button class="cancelsegment" (click)="cancelPnr()" [disabled]="cancelEnabled">
         Cancel Segments
       </button>
       <button class="backMain" (click)="back()">Back To Main Menu</button>
@@ -141,7 +141,7 @@
     </div>
     <div>
       <button class="leisureButton btnMenu" (click)="loadPnr()">
-        Load PNR
+        Wrap PNR
       </button>
     </div>
     <div *ngIf="invoiceEnabled">

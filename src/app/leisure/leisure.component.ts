@@ -20,6 +20,8 @@ import { MessageComponent } from '../shared/message/message.component';
 import { VisaPassportService } from '../service/visa-passport.service';
 import { InvoiceService } from '../service/invoice-remark.service';
 import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
+import { ItineraryComponent } from '../itinerary/itinerary.component';
+import { ItineraryService } from '../service/itinerary.service';
 
 @Component({
   selector: 'app-leisure',
@@ -46,6 +48,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
+  @ViewChild(ItineraryComponent) itineraryComponent: ItineraryComponent;
 
   errorPnrMsg = '';
   eventSubscribe = false;
@@ -62,6 +65,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private ddbService: DDBService,
     private modalService: BsModalService,
     private invoiceService: InvoiceService,
+    private itineraryService: ItineraryService
   ) {
     this.getPnr();
     this.initData();
@@ -71,7 +75,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr() {
     // this.ddbService.getCountryAndCurrencyList();
@@ -106,6 +110,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+    this.validModel.isItineraryValid = this.itineraryComponent.checkValid();
     return this.validModel.isAllValid();
   }
 
@@ -157,6 +162,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
     remarkCollection.push(
       this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption),
+    );
+
+    remarkCollection.push(
+      this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm)
     );
 
     const leisureFee = this.paymentComponent.leisureFee;

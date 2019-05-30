@@ -23,7 +23,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -328,10 +328,10 @@ export class PnrService {
   private formatDate(tempDate) {
     const lairdate = new Date(
       tempDate.substr(2, 2) +
-        '/' +
-        tempDate.substr(0, 2) +
-        '/' +
-        tempDate.substr(4, 2)
+      '/' +
+      tempDate.substr(0, 2) +
+      '/' +
+      tempDate.substr(4, 2)
     );
     const datePipe = new DatePipe('en-US');
     const tdate = datePipe.transform(lairdate, 'ddMMM');
@@ -430,10 +430,10 @@ export class PnrService {
   private getLastDate(airdate: any, lastDeptDate: Date) {
     const lairdate = new Date(
       airdate.substr(2, 2) +
-        '/' +
-        airdate.substr(0, 2) +
-        '/' +
-        airdate.substr(4, 2)
+      '/' +
+      airdate.substr(0, 2) +
+      '/' +
+      airdate.substr(4, 2)
     );
     if (lairdate > lastDeptDate) {
     }
@@ -504,7 +504,6 @@ export class PnrService {
         case 'RIR':
           arr = this.pnrObj.rirElements;
           break;
-
         default:
           arr = this.pnrObj.rmElements;
           break;
@@ -1128,6 +1127,29 @@ export class PnrService {
       }
     }
 
+    return false;
+  }
+
+  getEmailAddressesFromGds() {
+    const emailList = [];
+    if (this.isPNRLoaded) {
+      for (const ape of this.pnrObj.apElements) {
+        if (ape.type === 'E') {
+          emailList.push(ape.fullNode.otherDataFreetext.longFreetext);
+        }
+      }
+    }
+    return emailList;
+  }
+
+  getRmqEmail() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.category === 'Q' && rm.freeFlowText === 'EMAIL ADD-NO') {
+          return true;
+        }
+      }
+    }
     return false;
   }
 }

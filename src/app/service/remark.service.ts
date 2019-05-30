@@ -2,6 +2,7 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
+import { PnrService } from './pnr.service';
 
 declare var smartScriptSession: any;
 
@@ -16,7 +17,7 @@ export class RemarkService {
   passiveSegmentElement: Array<any>;
   passiveSegmentGroup: Array<PassiveSegmentModel>;
   responseMessage: string;
-  constructor() {
+  constructor(private pnrService: PnrService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
     this.remarksElement = new Array<any>();
@@ -389,6 +390,9 @@ export class RemarkService {
   }
 
   endPNR(requestor) {
+    if (this.pnrService.pnrObj.tkElements.length < 1) {
+      smartScriptSession.send('TKOK');
+    }
     smartScriptSession.send('RF' + requestor);
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');

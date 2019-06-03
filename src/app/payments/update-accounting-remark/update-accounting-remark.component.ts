@@ -11,7 +11,7 @@ import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src
 @Component({
   selector: 'app-update-accounting-remark',
   templateUrl: './update-accounting-remark.component.html',
-  styleUrls: ['./update-accounting-remark.component.scss'],
+  styleUrls: ['./update-accounting-remark.component.scss']
 })
 export class UpdateAccountingRemarkComponent implements OnInit {
   title: string;
@@ -42,7 +42,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     private pnrService: PnrService,
     public modalRef: BsModalRef,
     private ddbService: DDBService,
-    private utilHelper: UtilHelper,
+    private utilHelper: UtilHelper
   ) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
@@ -78,7 +78,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       descriptionapay: new FormControl('', [Validators.required]),
       // bsp: new FormControl('', [Validators.required]),
       commisionPercentage: new FormControl('', [Validators.required]),
-      passRelate: new FormControl('', []),
+      passRelate: new FormControl('', [])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -93,7 +93,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.passengerList = [
       { itemText: '', itemValue: '' },
       { itemText: 'ALL Passenger', itemValue: 'ALL' },
-      { itemText: 'PER Passenger', itemValue: 'PER' },
+      { itemText: 'PER Passenger', itemValue: 'PER' }
     ];
   }
 
@@ -104,14 +104,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         { itemText: 'Credit Card', itemValue: 'CC' },
         { itemText: 'Cash', itemValue: 'CA' },
         { itemText: 'Cheque', itemValue: 'CK' },
-        { itemText: 'Agency Plastic Card', itemValue: 'AP' },
+        { itemText: 'Agency Plastic Card', itemValue: 'AP' }
       ];
     } else {
       this.formOfPaymentList = [
         { itemText: '', itemValue: '' },
         { itemText: 'Credit Card', itemValue: 'CC' },
         { itemText: 'Agency Plastic Card', itemValue: 'AP' },
-        { itemText: 'RBC Points', itemValue: 'CK' },
+        { itemText: 'RBC Points', itemValue: 'CK' }
       ];
     }
   }
@@ -122,7 +122,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'VI- Visa', itemValue: 'VI' },
       { itemText: 'MC - Mastercard', itemValue: 'MC' },
       { itemText: 'AX - American Express', itemValue: 'AX' },
-      { itemText: 'DC -Diners', itemValue: 'DC' },
+      { itemText: 'DC -Diners', itemValue: 'DC' }
     ];
   }
 
@@ -135,7 +135,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Rail Accounting Remark', itemValue: '4' },
       { itemText: 'Limo Accounting Remark', itemValue: '6' },
       { itemText: 'Insurance Remark', itemValue: 'INS' },
-      { itemText: 'Apay Accounting Remark', itemValue: '0' },
+      { itemText: 'Apay Accounting Remark', itemValue: '0' }
     ];
   }
 
@@ -148,7 +148,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT COSTS' },
       { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE FEES' },
       { itemText: 'FOOD COSTS', itemValue: 'FOOD COSTS' },
-      { itemText: 'OTHER COSTS', itemValue: 'OTHER COSTS' },
+      { itemText: 'OTHER COSTS', itemValue: 'OTHER COSTS' }
     ];
   }
 
@@ -192,8 +192,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
-    } else {
-      this.filterSupplierCodeList = this.ddbService.getSupplierCodes();
     }
   }
 
@@ -258,7 +256,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
         return acc;
       },
-      {} as { [key: string]: any },
+      {} as { [key: string]: any }
     );
     return hasError ? result : null;
   }
@@ -323,7 +321,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           status: element.status,
           segmentType: element.segmentType,
           airlineCode: element.airlineCode,
-          freeText: element.freetext,
+          freeText: element.freetext
         };
         if (details.id === segmentNo) {
           const regx = '/(?<=TYP-)(w{3})/';

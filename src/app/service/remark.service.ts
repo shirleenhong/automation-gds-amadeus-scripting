@@ -306,6 +306,7 @@ export class RemarkService {
         if (dl[j - 1].indexOf('-') >= 0 || dl[j].indexOf('-') >= 0) {
           break;
         }
+
         if (Number(dl[j - 1]) + 1 === Number(dl[j])) {
           tmp = dl[j];
           tmpIndx = j;
@@ -314,7 +315,13 @@ export class RemarkService {
         }
       }
       if (tmp === '') {
-        newArr.push(dl[i]);
+        if (i > 0 && dl[i - 1].indexOf('-') > 0) {
+          if (Number(dl[i - 1].split('-')[1]) < Number(dl[i])) {
+            newArr.push(dl[i]);
+          }
+        } else {
+          newArr.push(dl[i]);
+        }
       } else {
         newArr.push(dl[i] + '-' + tmp);
         i = tmpIndx;

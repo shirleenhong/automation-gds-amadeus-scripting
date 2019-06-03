@@ -12,6 +12,7 @@ import { ConciergeUdidsComponent } from '../reporting/concierge-udids/concierge-
 })
 export class ReportingRemarkService {
   language = '';
+  prefix = '...';
   // YES/NO insurance
   insuranceNo = [];
   insuranceYes = [];
@@ -84,7 +85,21 @@ export class ReportingRemarkService {
           remText = 'U12/-' + insuranceDeclined;
           rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
           this.addRemarksLang(this.insuranceNo, rmGroup, 'RI', 'R');
-          this.addDeclinedOptionRemarks(reporting.declinedOption, rmGroup);
+
+          reporting.declinedOption.forEach((x) => {
+            if (x.checked) {
+              this.addDeclinedOptionRemarks(x.value, rmGroup);
+            }
+          });
+          // Add Group of Remarks
+          rmGroup.remarks.push(this.getRemark(this.prefix, 'RI', 'R'));
+          const groups = this.transService.getRemarkGroup('DeclinedReason', this.language);
+          if (groups) {
+            groups.forEach((x) => {
+              rmGroup.remarks.push(this.getRemark(this.prefix + x, 'RI', 'R'));
+            });
+          }
+          rmGroup.remarks.push(this.getRemark(this.prefix, 'RI', 'R'));
         }
       } else {
         this.addRemarksLang(this.insuranceYes, rmGroup, 'RI', 'R');
@@ -124,7 +139,6 @@ export class ReportingRemarkService {
   }
 
   addDeclinedOptionRemarks(option, rmGroup) {
-    const prefix = '...';
     let text = [];
     switch (option) {
       case '1':
@@ -147,16 +161,7 @@ export class ReportingRemarkService {
         break;
     }
 
-    this.addRemarksLang(text, rmGroup, 'RI', 'R', prefix);
-    // Add Group of Remarks
-    rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
-    const groups = this.transService.getRemarkGroup('DeclinedReason', this.language);
-    if (groups) {
-      groups.forEach((x) => {
-        rmGroup.remarks.push(this.getRemark(prefix + x, 'RI', 'R'));
-      });
-    }
-    rmGroup.remarks.push(this.getRemark(prefix, 'RI', 'R'));
+    this.addRemarksLang(text, rmGroup, 'RI', 'R', this.prefix);
   }
 
   deleteRemarks(udids, rmGroup, type?) {

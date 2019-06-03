@@ -11,7 +11,7 @@ import { TranslationService } from '../service/translation.service';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
-  styleUrls: ['./reporting.component.scss'],
+  styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit, OnChanges {
   @ViewChild(ConciergeUdidsComponent)
@@ -32,14 +32,14 @@ export class ReportingComponent implements OnInit, OnChanges {
     private pnrService: PnrService,
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
-    private translation: TranslationService,
-  ) { }
+    private translation: TranslationService
+  ) {}
   get f() {
     return this.reportingForm.controls;
   }
 
   // tslint:disable-next-line: variable-name
-  ngOnChanges(_changes: SimpleChanges) { }
+  ngOnChanges(_changes: SimpleChanges) {}
 
   ngOnInit() {
     this.reportingForm = new FormGroup({
@@ -49,7 +49,12 @@ export class ReportingComponent implements OnInit, OnChanges {
       // u86: new FormControl('', [Validators.required]),
       showInsurance: new FormControl('', []),
       insuranceDeclinedReason: new FormControl(''),
-      declinedOption: new FormControl(''),
+      aa: new FormControl(''),
+      bb: new FormControl(''),
+      cc: new FormControl(''),
+      dd: new FormControl(''),
+      ee: new FormControl(''),
+      ff: new FormControl('')
     });
 
     this.getRouteCodes();
@@ -85,16 +90,15 @@ export class ReportingComponent implements OnInit, OnChanges {
         'EMERGENCY MEDICAL/TRANSPORTATION',
         'FLIGHT AND TRAVEL ACCIDENT',
         'RENTAL CAR PHYSICAL DAMAGE',
-        'COVERAGE FOR THE FULL DOLLAR VALUE OF THE TRIP',
+        'COVERAGE FOR THE FULL DOLLAR VALUE OF THE TRIP'
       ];
       const lang = this.pnrService.getItineraryLanguage();
       let i = 1;
       rems.forEach((x) => {
         const rem = '...' + this.translation.translate(x, lang);
-
         if (this.pnrService.getRirRemarkText(rem) !== '') {
-          this.reportingView.declinedOption = i.toString();
-          return;
+          const opt = this.reportingView.declinedOption.find((x) => x.value == i.toString());
+          opt.checked == (opt !== undefined && opt !== null);
         }
         i++;
       });
@@ -135,16 +139,16 @@ export class ReportingComponent implements OnInit, OnChanges {
   }
 
   checkInsurance(val) {
-    this.enableDisbleControls(['insuranceDeclinedReason', 'declinedOption'], val === 'YES');
+    this.enableDisbleControls(['insuranceDeclinedReason'], val === 'YES');
     this.reportingView.showInsurance = val === 'YES';
     if (val === 'YES') {
       this.reportingView.insuranceDeclinedReason = '';
       this.f.insuranceDeclinedReason.setValue('');
       this.f.insuranceDeclinedReason.clearValidators();
-      this.f.declinedOption.clearValidators();
+      //this.f.declinedOption.clearValidators();
     } else {
       this.f.insuranceDeclinedReason.setValidators(Validators.required);
-      this.f.declinedOption.setValidators(Validators.required);
+      //this.f.declinedOption.setValidators(Validators.required);
     }
   }
 
@@ -177,7 +181,7 @@ export class ReportingComponent implements OnInit, OnChanges {
   checkValid() {
     if (this.isRbmRbp()) {
       this.utilHelper.validateAllFields(this.conciergeComponent.conciergeForm);
-      this.enableDisbleControls(['insuranceDeclinedReason', 'declinedOption'], true);
+      this.enableDisbleControls(['insuranceDeclinedReason'], true);
       if (!this.conciergeComponent.conciergeForm.valid) {
         return false;
       }

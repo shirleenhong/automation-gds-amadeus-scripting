@@ -33,20 +33,20 @@ export class ReportingComponent implements OnInit, OnChanges {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private translation: TranslationService,
-  ) {}
+  ) { }
   get f() {
     return this.reportingForm.controls;
   }
 
   // tslint:disable-next-line: variable-name
-  ngOnChanges(_changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges) { }
 
   ngOnInit() {
     this.reportingForm = new FormGroup({
       bspRouteCode: new FormControl('', [Validators.required]),
       companyName: new FormControl(''),
       destinationList: new FormControl('', [Validators.required]),
-      u86: new FormControl('', [Validators.required]),
+      // u86: new FormControl('', [Validators.required]),
       showInsurance: new FormControl('', []),
       insuranceDeclinedReason: new FormControl(''),
       declinedOption: new FormControl(''),

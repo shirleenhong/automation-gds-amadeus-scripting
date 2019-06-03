@@ -6,18 +6,9 @@
         <div class="row form-group">
           <div class="col">
             BSP Routing Code :
-            <select
-              id="bspRouteCode"
-              class="form-control"
-              formControlName="bspRouteCode"
-              name="bspRouteCode"
-              [(ngModel)]="reportingView.routeCode"
-              required
-            >
-              <option
-                *ngFor="let item of bspRouteCodeList"
-                [value]="item.itemValue"
-              >
+            <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode"
+              [(ngModel)]="reportingView.routeCode" required>
+              <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
                 {{ item.itemText }}
               </option>
             </select>
@@ -25,22 +16,11 @@
 
           <div class="col">
             Destination Code:
-            <input
-              type="text"
-              class="form-control"
-              formControlName="destinationList"
-              name="destinationList"
-              placeholder="select a destination Code"
-              [(ngModel)]="reportingView.destination"
-              id="destinationList"
-              list="dynamicDestinationCode"
-              [disabled]="reportingView.isDisabledDest"
-            />
+            <input type="text" class="form-control" formControlName="destinationList" name="destinationList"
+              placeholder="select a destination Code" [(ngModel)]="reportingView.destination" id="destinationList"
+              list="dynamicDestinationCode" [disabled]="reportingView.isDisabledDest" />
             <datalist id="dynamicDestinationCode">
-              <option
-                *ngFor="let item of destinationList"
-                [value]="item.endpoint"
-                >{{ item.endpoint }}
+              <option *ngFor="let item of destinationList" [value]="item.endpoint">{{ item.endpoint }}
               </option>
             </datalist>
           </div>
@@ -48,7 +28,7 @@
 
         <div class="">
           <div class="row form-group">
-            <div class="col-6">
+            <!-- <div class="col-6">
               Does this PNR contain travel to any countries listed below?
               <select
                 class="form-control"
@@ -59,20 +39,11 @@
               >
                 <option *ngFor="let item of countryList">{{ item }}</option>
               </select>
-            </div>
+            </div> -->
             <div class="col" *ngIf="isCVC">
               Name of Company Traveller Works For :
-              <input
-                class="form-control"
-                [(ngModel)]="reportingView.companyName"
-                id="companyName"
-                [disabled]="!isCVC"
-                formControlName="companyName"
-                required
-                maxlength="35"
-                placeholder="e.g. CWT"
-                required
-              />
+              <input class="form-control" [(ngModel)]="reportingView.companyName" id="companyName" [disabled]="!isCVC"
+                formControlName="companyName" required maxlength="35" placeholder="e.g. CWT" required />
             </div>
           </div>
         </div>
@@ -87,20 +58,11 @@
 
             <div class="row form-group">
               <div class="col">
-                <select
-                  class="form-control"
-                  required
-                  id="showInsurance"
-                  name="showInsurance"
-                  formControlName="showInsurance"
-                  (change)="checkInsurance($event.target.value)"
-                >
-                  <option value="YES"
-                    >All Inclusive or Premium Protection Insurance Purchased for
-                    the Full Value of the Trip</option
-                  >
-                  <option value="NO"
-                    >Traveller Declined to Purchase the following Travel
+                <select class="form-control" required id="showInsurance" name="showInsurance"
+                  formControlName="showInsurance" (change)="checkInsurance($event.target.value)">
+                  <option value="YES">All Inclusive or Premium Protection Insurance Purchased for
+                    the Full Value of the Trip</option>
+                  <option value="NO">Traveller Declined to Purchase the following Travel
                     Insurance
                   </option>
                 </select>
@@ -111,38 +73,21 @@
           <div class="row form-group" *ngIf="!reportingView.showInsurance">
             <div class="col">
               Insurance Declined Reason:
-              <select
-                class="form-control"
-                required
-                id="declinedOption"
-                name="declinedOption"
-                [(ngModel)]="reportingView.declinedOption"
-                formControlName="declinedOption"
-              >
-                <option value="1"
-                  >All Inclusive or Premium Protection Insurance</option
-                >
+              <select class="form-control" required id="declinedOption" name="declinedOption"
+                [(ngModel)]="reportingView.declinedOption" formControlName="declinedOption">
+                <option value="1">All Inclusive or Premium Protection Insurance</option>
                 <option value="2">Cancellation/Interruption</option>
                 <option value="3">Emergency Medical/Transportation</option>
                 <option value="4">Flight and Travel Accident</option>
                 <option value="5">Rental Car Physical Damage</option>
-                <option value="6"
-                  >Coverage for the Full Dollar Value of the trip</option
-                >
+                <option value="6">Coverage for the Full Dollar Value of the trip</option>
               </select>
             </div>
             <div class="col">
               &nbsp;
-              <input
-                type="text"
-                class="form-control"
-                formControlName="insuranceDeclinedReason"
-                maxLength="35"
-                [(ngModel)]="reportingView.insuranceDeclinedReason"
-                id="insuranceDeclinedReason"
-                [disabled]="reportingView.showInsurance"
-                placeholder="Reason Why Insurance Declined"
-              />
+              <input type="text" class="form-control" formControlName="insuranceDeclinedReason" maxLength="35"
+                [(ngModel)]="reportingView.insuranceDeclinedReason" id="insuranceDeclinedReason"
+                [disabled]="reportingView.showInsurance" placeholder="Reason Why Insurance Declined" />
             </div>
           </div>
         </div>

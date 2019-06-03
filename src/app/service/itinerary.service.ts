@@ -30,40 +30,51 @@ export class ItineraryService {
       }
     }
 
-    arr = frmGroup.get('services') as FormArray;
-    for (const c of arr.controls) {
-      const service = c.get('service').value;
-      if (service) {
-        rm = (this.remarkHelper.createRemark('*SERVICE**' + service, 'RI', 'R'));
-        rmGroup.remarks.push(rm);
-      }
-    }
-
-    arr = frmGroup.get('tickets') as FormArray;
-    for (const c of arr.controls) {
-      const ticket = c.get('ticket').value;
-      if (ticket) {
-        rm = (this.remarkHelper.createRemark('*TICKET**' + ticket, 'RI', 'R'));
-        rmGroup.remarks.push(rm);
-      }
-    }
-
-    arr = frmGroup.get('offers') as FormArray;
-    for (const c of arr.controls) {
-      if (frmGroup.value.typeTransaction === 'itinerary') {
-        const offer = c.get('offer').value;
-        if (offer) {
-          rm = (this.remarkHelper.createRemark('*OFFER**' + offer, 'RI', 'R'));
+    if (frmGroup.value.typeTransaction) {
+      arr = frmGroup.get('services') as FormArray;
+      for (const c of arr.controls) {
+        const service = c.get('service').value;
+        if (service) {
+          rm = (this.remarkHelper.createRemark('*SERVICE**' + service + '*', 'RI', 'R'));
           rmGroup.remarks.push(rm);
+        }
+      }
+
+      arr = frmGroup.get('tickets') as FormArray;
+      for (const c of arr.controls) {
+        const ticket = c.get('ticket').value;
+        if (ticket) {
+          rm = (this.remarkHelper.createRemark('*TICKET**' + ticket + '*', 'RI', 'R'));
+          rmGroup.remarks.push(rm);
+        }
+      }
+
+      arr = frmGroup.get('offers') as FormArray;
+      for (const c of arr.controls) {
+        if (frmGroup.value.typeTransaction === 'itinerary') {
+          const offer = c.get('offer').value;
+          if (offer) {
+            rm = (this.remarkHelper.createRemark('*OFFER**' + offer + '*', 'RI', 'R'));
+            rmGroup.remarks.push(rm);
+          }
         }
       }
     }
 
+
     if (frmGroup.value.language) {
-      rm = (this.remarkHelper.createRemark('LANGUAGE-' + frmGroup.value.language, 'RM', 'Z'));
-      rmGroup.remarks.push(rm);
-      rm = (this.remarkHelper.createRemark('CONF*LANG:' + frmGroup.value.language.substr(0, 2), 'RM', 'Z'));
-      rmGroup.remarks.push(rm);
+      const rirService = 'LANGUAGE-(EN-US|FR-CA)';
+      const regx = new RegExp(rirService);
+      const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+      if (rems.length === 0) {
+        rm = (this.remarkHelper.createRemark('LANGUAGE-' + frmGroup.value.language, 'RM', 'Z'));
+        rmGroup.remarks.push(rm);
+      }
+
+      if (rems.length > 0 && rems[0].remarkText.substr(-5) !== frmGroup.value.language) {
+        rm = (this.remarkHelper.createRemark('CONF*LANG:' + frmGroup.value.language.substr(0, 2), 'RM', 'Z'));
+        rmGroup.remarks.push(rm);
+      }
     }
 
     if (!this.pnrService.getRmqEmail()) {
@@ -77,9 +88,7 @@ export class ItineraryService {
 
 
   private deleteItineraryRemarks(rmGroup: RemarkGroup, frmGroup: FormGroup) {
-
     const listRegex = ['SEND TO MAIL (?<temp>.*)',
-      'LANGUAGE-(EN-US|FR-CA)',
       'LANG:(EN|FR)'];
     let regx: RegExp;
     let rems: any[];
@@ -110,8 +119,18 @@ export class ItineraryService {
 
   private writeTktLine(rm: any, rmGroup: RemarkGroup) {
     const destinations = Array<string>();
+
     let air = this.pnrService.pnrObj.airSegments;
-    if (air > 0) {
+    const regx = new RegExp('TKT-(?<service>(.*))');
+    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+    let writetkt = true;
+    rems.forEach(element => {
+      if (element.qualifier === 'T') {
+        writetkt = false;
+      }
+    });
+
+    if (air.length > 0 && writetkt) {
       air.forEach(x => {
         let cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
         if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') {

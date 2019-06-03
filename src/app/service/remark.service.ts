@@ -38,43 +38,45 @@ export class RemarkService {
     this.deleteSegmentByIds = Array<string>();
     this.crypticCommands = new Array<string>();
 
-    remarkGroups.forEach(group => {
+    remarkGroups.forEach((group) => {
       if (group !== undefined && group.group !== '') {
         if (group.deleteSegmentByIds != null && group.deleteSegmentByIds.length > 0) {
-          group.deleteSegmentByIds.forEach(c => {
-            if (!this.deleteSegmentByIds.find(z => z === c)) {
+          group.deleteSegmentByIds.forEach((c) => {
+            if (!this.deleteSegmentByIds.find((z) => z === c)) {
               this.deleteSegmentByIds.push(c);
             }
           });
         }
 
         if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
-          group.deleteRemarkByIds.forEach(c => {
-            if (!this.deleteRemarksByIds.find(z => z === c)) {
+          group.deleteRemarkByIds.forEach((c) => {
+            if (!this.deleteRemarksByIds.find((z) => z === c)) {
               this.deleteRemarksByIds.push(c);
             }
           });
         }
 
         if (group.cryptics != null && group.cryptics.length > 0) {
-          group.cryptics.forEach(c => {
+          group.cryptics.forEach((c) => {
             this.crypticCommands.push(c);
           });
         }
 
         if (group.passiveSegments != null && group.passiveSegments.length > 0) {
-          group.passiveSegments.forEach(pas => {
+          group.passiveSegments.forEach((pas) => {
             this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
           });
         }
 
         if (group.remarks != null && group.remarks.length > 0) {
-          group.remarks.forEach(rem => {
-            if (rem.remarkType === 'FS') {
-              this.remarksElement.push(this.getFSRemarksElement(rem));
-            } else {
-              // let test = this.getRemarkElement(rem);
-              this.remarksElement.push(this.getRemarkElement(rem));
+          group.remarks.forEach((rem) => {
+            if (rem) {
+              if (rem.remarkType === 'FS') {
+                this.remarksElement.push(this.getFSRemarksElement(rem));
+              } else {
+                // let test = this.getRemarkElement(rem);
+                this.remarksElement.push(this.getRemarkElement(rem));
+              }
             }
           });
         }
@@ -123,7 +125,7 @@ export class RemarkService {
 
     const temp = new Array<any>();
     if (remarkModel.relatedSegments) {
-      remarkModel.relatedSegments.forEach(element => {
+      remarkModel.relatedSegments.forEach((element) => {
         const ref = {
           qualifier: 'ST',
           number: element
@@ -133,7 +135,7 @@ export class RemarkService {
     }
 
     if (remarkModel.relatedPassengers) {
-      remarkModel.relatedPassengers.forEach(element => {
+      remarkModel.relatedPassengers.forEach((element) => {
         const ref = {
           qualifier: 'PT',
           number: element
@@ -261,14 +263,14 @@ export class RemarkService {
   }
 
   sendCryptics() {
-    this.crypticCommands.forEach(command => {
+    this.crypticCommands.forEach((command) => {
       smartScriptSession.send(command);
     });
   }
 
   deleteSegments() {
     let deleteIds = '';
-    this.deleteSegmentByIds.forEach(ids => {
+    this.deleteSegmentByIds.forEach((ids) => {
       deleteIds += ids + ',';
     });
     if (deleteIds !== '') {
@@ -280,7 +282,7 @@ export class RemarkService {
   deleteRemarks() {
     let deleteIds = '';
     const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
-    filteredIds.forEach(ids => {
+    filteredIds.forEach((ids) => {
       deleteIds += ids + ',';
     });
     if (deleteIds !== '') {
@@ -359,7 +361,7 @@ export class RemarkService {
         this.responseMessage = 'Remarks Updated';
         this.endPNR('CWTSCRIPT');
 
-        smartScriptSession.getActiveTask().then(x => {
+        smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
               fn: '',
@@ -368,7 +370,7 @@ export class RemarkService {
           }
         });
       },
-      error => {
+      (error) => {
         this.responseMessage = JSON.stringify(error);
       }
     );

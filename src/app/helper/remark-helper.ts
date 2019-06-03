@@ -34,41 +34,6 @@ export class RemarkHelper {
     return newformat;
   }
 
-  processRIRRemark(label, amount, count) {
-    if (
-      isNaN(amount) ||
-      amount === null ||
-      amount === undefined ||
-      amount === ''
-    ) {
-      amount = '0.00';
-    }
-
-    const r = 15;
-    const l = 30;
-
-    const amtStr = this.decPipe
-      .transform(amount.toString().replace(',', ''), '1.2-2')
-      .replace(',', '');
-    const z = l - (label.length + amtStr.length);
-    let remark = '';
-
-    if (count === null) {
-      remark = label + '-'.repeat(z) + amtStr;
-    } else {
-      // const total = Math.round(Number(amount) * Number(count));
-      const total = parseFloat(amount) * Number(count);
-      const totalStr = this.decPipe.transform(total, '1.2-2');
-      // console.log('Amount ' + parseFloat(amount));
-      // console.log('total ' + total);
-      const x = r - (count.toString().length + totalStr.length);
-      remark =
-        label + '-'.repeat(z) + amtStr + 'X' + count + '-'.repeat(x) + totalStr;
-    }
-
-    return this.createRemark(remark, 'RI', 'R');
-  }
-
   getMaxLength(remtype) {
     let maxlen = 0;
     switch (remtype) {

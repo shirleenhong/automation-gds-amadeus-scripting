@@ -26,7 +26,7 @@ import { ItineraryService } from '../service/itinerary.service';
 @Component({
   selector: 'app-leisure',
   templateUrl: './leisure.component.html',
-  styleUrls: ['./leisure.component.scss'],
+  styleUrls: ['./leisure.component.scss']
 })
 export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked {
   isPnrLoaded: boolean;
@@ -75,7 +75,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr() {
     // this.ddbService.getCountryAndCurrencyList();
@@ -117,7 +117,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   public SubmitToPNR() {
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static',
+        backdrop: 'static'
       });
       modalRef.content.modalRef = modalRef;
       modalRef.content.title = 'Invalid Inputs';
@@ -161,12 +161,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
     remarkCollection.push(
-      this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption),
+      this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
     );
 
-    remarkCollection.push(
-      this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm)
-    );
+    remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
@@ -180,14 +178,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       },
       (error) => {
         alert(JSON.stringify(error));
-      },
+      }
     );
   }
 
   async cancelPnr() {
     if (!this.cancelSegmentComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static',
+        backdrop: 'static'
       });
       modalRef.content.modalRef = modalRef;
       modalRef.content.title = 'Invalid Inputs';
@@ -210,7 +208,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       },
       (error) => {
         alert(JSON.stringify(error));
-      },
+      }
     );
 
     if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
@@ -227,7 +225,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       },
       (error) => {
         alert(JSON.stringify(error));
-      },
+      }
     );
     this.remarkService.endPNR(cancel.cancelForm.value.requestor);
   }
@@ -245,7 +243,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       },
       (error) => {
         alert(JSON.stringify(error));
-      },
+      }
     );
   }
 
@@ -262,7 +260,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       },
       (error) => {
         alert(JSON.stringify(error));
-      },
+      }
     );
   }
 
@@ -289,7 +287,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       },
       (error) => {
         alert(JSON.stringify(error));
-      },
+      }
     );
   }
 

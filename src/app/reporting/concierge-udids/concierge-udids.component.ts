@@ -143,8 +143,6 @@ export class ConciergeUdidsComponent implements OnInit {
   }
 
   private setControls(rem: string, id: string, control: string, lineNo: string) {
-    this.forDeletion.push(lineNo);
-
     if (id === '*U13/-') {
       if (rem.replace(id, '') === 'NO HTL BKD') {
         return;
@@ -159,15 +157,18 @@ export class ConciergeUdidsComponent implements OnInit {
 
     if (id === '*U30/-') {
       this.forReference.push('U30');
-      return;
+      //return;
+    } else {
+      this.forDeletion.push(lineNo);
     }
 
-    this.conciergeForm.controls[control].setValue(rem.replace(id, ''));
+    if (this.conciergeForm.controls[control]) {
+      this.conciergeForm.controls[control].setValue(rem.replace(id, ''));
 
-    if (['*U13/-', '*U17/-', '*U18/-'].indexOf(id) < 0) {
-      this.conciergeForm.controls[control].disable();
+      if (['*U13/-', '*U17/-', '*U18/-'].indexOf(id) < 0) {
+        this.conciergeForm.controls[control].disable();
+      }
     }
-
     // this.forDeletion.push(lineNo);
   }
 

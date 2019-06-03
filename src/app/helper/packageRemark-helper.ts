@@ -14,66 +14,64 @@ export class PackageRemarkHelper {
     return this.forDeletion;
   }
 
-  getCount(
-    search: string,
-    category: string,
-    controlName: string,
-    group: FormGroup
-  ) {
-    const textSearch = this.pnrService.getRirRemarkText(
-      search + ' ' + category
-    );
+  getCount(search: string, category: string, controlName: string, group: FormGroup) {
+    const textSearch = this.pnrService.getRirRemarkText(search + ' ' + category);
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
         const regx = 'X(\\d+)\\b';
         // tslint:disable-next-line:max-line-length
         group.controls[controlName].setValue(
-          this.getRegexResult(
-            textSearch.fullNode.miscellaneousRemarks.remarks.freetext,
-            regx
-          ).replace('X', '')
+          this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', '')
         );
       }
     }
   }
 
-  getValues(
-    search: string,
-    category: string,
-    controlName: string,
-    group: FormGroup
-  ) {
-    const textSearch = this.pnrService.getRirRemarkText(
-      search + ' ' + category
-    );
+  getValues(search: string, category: string, controlName: string, group: FormGroup) {
+    const textSearch = this.pnrService.getRirRemarkText(search + ' ' + category);
     const regx = '(\\d+((?:,\\d+)*,\\d{3})?\\.\\d{2,3})(.*?X)';
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
         // tslint:disable-next-line:max-line-length
         group.controls[controlName].setValue(
-          this.getRegexResult(
-            textSearch.fullNode.miscellaneousRemarks.remarks.freetext,
-            regx
-          ).replace('X', '')
+          this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', '')
         );
         // this.forDeletion.push(textSearch.elementNumber);
       }
     }
   }
 
+  getValuesFromPnr(searchString: string) {
+    // tslint:disable-next-line: max-line-length
+    const regex = /(?<name>.*?)(?<amount>(\d+((?:,\d+)*,\d{3})?\.\d{2,3}))(X)(?<count>[0-9])(\-*)(?<total>(\d+((?:,\d+)*,\d{3})?\.\d{2,3}))/g;
+
+    const textSearch = this.pnrService.getRirRemarkText(searchString);
+    if (textSearch !== '') {
+      const rem = textSearch.fullNode.miscellaneousRemarks.remarks.freetext;
+      if (rem !== '') {
+        const match = regex.exec(rem);
+        if (match) {
+          const result = { amount: match.groups.amount, count: match.groups.count, total: match.groups.count };
+          regex.lastIndex = 0;
+          if (!this.forDeletion.includes(textSearch.elementNumber)) {
+            this.forDeletion.push(textSearch.elementNumber);
+          }
+          return result;
+        }
+      }
+    }
+    return null;
+  }
+
   getCurrency() {
     // tslint:disable-next-line:max-line-length
-    const textSearch = this.pnrService.getRirRemarkText(
-      'THE FOLLOWING COSTS ARE SHOWN IN'
-    );
+    const textSearch = this.pnrService.getRirRemarkText('THE FOLLOWING COSTS ARE SHOWN IN');
     if (textSearch !== '') {
       if (!this.forDeletion.includes(textSearch.elementNumber)) {
         this.forDeletion.push(textSearch.elementNumber);
       }
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-        const currency = textSearch.fullNode.miscellaneousRemarks.remarks.freetext.split(
-          ' '
-        );
+        const currency = textSearch.fullNode.miscellaneousRemarks.remarks.freetext.split(' ');
         if (currency.length === 7) {
           return currency[6];
         }
@@ -83,9 +81,7 @@ export class PackageRemarkHelper {
   }
 
   removeOtherTourRemark() {
-    const textOne = this.pnrService.getRirRemarkText(
-      'SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE'
-    );
+    const textOne = this.pnrService.getRirRemarkText('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE');
     if (textOne !== '') {
       this.forDeletion.push(textOne.elementNumber);
     }
@@ -94,15 +90,9 @@ export class PackageRemarkHelper {
   getUDIDPackageRemarksFromGds(group: FormGroup) {
     const commAmount = this.pnrService.getUDIDText('*U42/');
     if (commAmount !== '') {
-      group.controls.commission.setValue(
-        commAmount.fullNode.miscellaneousRemarks.remarks.freetext.replace(
-          '*U42/-',
-          ''
-        )
-      );
+      group.controls.commission.setValue(commAmount.fullNode.miscellaneousRemarks.remarks.freetext.replace('*U42/-', ''));
       this.forDeletion.push(commAmount.elementNumber);
     }
-
     const ufortyOne = this.pnrService.getUDIDText('*U41/');
     const ufortyThree = this.pnrService.getUDIDText('*U43/');
     if (ufortyOne !== '') {
@@ -118,9 +108,7 @@ export class PackageRemarkHelper {
     const textSearch = this.pnrService.getRirRemarkText('---- BALANCE OF');
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-        const values = textSearch.fullNode.miscellaneousRemarks.remarks.freetext.split(
-          ' '
-        );
+        const values = textSearch.fullNode.miscellaneousRemarks.remarks.freetext.split(' ');
         if (values.length === 8) {
           // 15MAR19 7
           // 1JAN19  6
@@ -132,23 +120,11 @@ export class PackageRemarkHelper {
 
           const myDate: Date = new Date();
           const currentYear = new Date().getFullYear();
-          const dueDateYear = Number(
-            this.sliceValuesInString(values[6], 4 + lenV, 4 + lenV + 2)
-          );
+          const dueDateYear = Number(this.sliceValuesInString(values[6], 4 + lenV, 4 + lenV + 2));
           // const year = currentYear - dueDateYear;
-          myDate.setMonth(
-            this.getMonthNumber(
-              this.sliceValuesInString(values[6], 1 + lenV, 1 + lenV + 3)
-            )
-          );
-          myDate.setFullYear(
-            Number(
-              Math.floor(currentYear / 100).toString() + dueDateYear.toString()
-            )
-          );
-          myDate.setDate(
-            Number(this.sliceValuesInString(values[6], 0, 1 + lenV))
-          );
+          myDate.setMonth(this.getMonthNumber(this.sliceValuesInString(values[6], 1 + lenV, 1 + lenV + 3)));
+          myDate.setFullYear(Number(Math.floor(currentYear / 100).toString() + dueDateYear.toString()));
+          myDate.setDate(Number(this.sliceValuesInString(values[6], 0, 1 + lenV)));
           if (!this.forDeletion.includes(textSearch.elementNumber)) {
             this.forDeletion.push(textSearch.elementNumber);
           }
@@ -160,11 +136,7 @@ export class PackageRemarkHelper {
     return '';
   }
 
-  private sliceValuesInString(
-    value: string,
-    startIndex: number,
-    endIndex: number
-  ) {
+  private sliceValuesInString(value: string, startIndex: number, endIndex: number) {
     return value.slice(startIndex, endIndex);
   }
 
@@ -207,19 +179,15 @@ export class PackageRemarkHelper {
     }
   }
 
-  getRegexResult(rem: string, regx) {
+  getRegexResult(rem: string, regx: string | RegExp) {
     const regexp = new RegExp(regx);
     const textSearch = this.pnrService.getRirRemarkText(rem);
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-        let result = regexp.exec(
-          textSearch.fullNode.miscellaneousRemarks.remarks.freetext
-        );
+        let result = regexp.exec(textSearch.fullNode.miscellaneousRemarks.remarks.freetext);
         if (!result) {
           regexp.lastIndex = 0;
-          result = regexp.exec(
-            textSearch.fullNode.miscellaneousRemarks.remarks.freetext
-          );
+          result = regexp.exec(textSearch.fullNode.miscellaneousRemarks.remarks.freetext);
         }
         if (result) {
           if (!this.forDeletion.includes(textSearch.elementNumber)) {

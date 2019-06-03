@@ -10,13 +10,14 @@ import { CodeshareComponent } from './codeshare/codeshare.component';
 import { VisaPassportComponent } from './visa-passport/visa-passport.component';
 import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.component';
 import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
+import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
   selector: 'app-remarks',
   templateUrl: './remark.component.html',
-  styleUrls: ['./remark.component.scss'],
+  styleUrls: ['./remark.component.scss']
 })
 export class RemarkComponent implements OnInit {
   @ViewChild(TourPackageComponent) tourPackageComponent: TourPackageComponent;
@@ -32,13 +33,19 @@ export class RemarkComponent implements OnInit {
 
   packageList: Array<SelectItem>;
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
+  constructor(
+    private fb: FormBuilder,
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper,
+    private packageRemarkHelper: PackageRemarkHelper
+  ) {
     this.loadtourPackage();
     this.remarkForm = this.fb.group({
-      packageList: new FormControl('', [Validators.required]),
+      packageList: new FormControl('', [Validators.required])
     });
   }
   ngOnInit() {
+    this.packageRemarkHelper.clearForDeletionRemarks();
     this.remarkForm.controls.packageList.patchValue('1');
     this.setPackageListValue();
   }
@@ -51,14 +58,14 @@ export class RemarkComponent implements OnInit {
     this.packageList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Itemize Package Cost Remarks', itemValue: 'ITC' },
-      { itemText: 'Tour Package', itemValue: 'TP' },
+      { itemText: 'Tour Package', itemValue: 'TP' }
     ];
   }
 
   private setPackageListValue() {
     if (this.pnrService.getRirRemarkText('THE FOLLOWING COSTS ARE SHOWN IN')) {
       this.remarkForm.controls.packageList.patchValue('TP');
-      if (this.pnrService.getRirRemarkText('HOTEL/ACCOMMODATION') !== '' || this.pnrService.getRirRemarkText('CAR RENTAL') !== '') {
+      if (this.pnrService.getRirRemarkText('ADULT PRICE--') !== '') {
         this.remarkForm.controls.packageList.patchValue('ITC');
       }
       this.packageList[0].itemText = 'Delete Package Remarks';

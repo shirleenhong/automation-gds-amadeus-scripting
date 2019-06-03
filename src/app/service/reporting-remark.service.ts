@@ -15,7 +15,6 @@ export class ReportingRemarkService {
   // YES/NO insurance
   insuranceNo = [];
   insuranceYes = [];
-
   constructor(private pnrService: PnrService, private transService: TranslationService) {}
 
   public GetRoutingRemark(reporting: ReportingViewModel) {
@@ -186,7 +185,6 @@ export class ReportingRemarkService {
   public GetConciergeUdids(conciergeComp: ConciergeUdidsComponent) {
     const concierge = conciergeComp.conciergeForm;
     const forDeletion = conciergeComp.getConciergeForDeletion();
-    const forRetain = conciergeComp.getConciergeRetain();
 
     let remText = '';
     const rmGroup = new RemarkGroup();
@@ -246,7 +244,7 @@ export class ReportingRemarkService {
     if (concierge.get('hotelName').value) {
       remText = 'U13/-' + concierge.value.hotelName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-    } else if (forRetain.indexOf('U13') === -1) {
+    } else if (this.pnrService.getRemarkLineNumber('U13/-') === '') {
       remText = 'U13/-' + 'NO HTL BKD';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
@@ -265,8 +263,8 @@ export class ReportingRemarkService {
       remText = 'U18/-' + concierge.get('reasonHotelBooked').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
-
-    if (forRetain.indexOf('U30') === -1) {
+    const existNumber = this.pnrService.getRemarkLineNumber('U30/-');
+    if (existNumber === '') {
       const datePipe = new DatePipe('en-US');
       const dateToday = datePipe.transform(Date.now(), 'ddMMM');
       remText = 'U30/-TGIF' + dateToday;

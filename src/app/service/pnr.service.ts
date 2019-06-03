@@ -604,6 +604,7 @@ export class PnrService {
         const rems = rm.freeFlowText.split('/-');
         fee.segmentAssoc = '2';
         fee.address = taxProvince;
+        fee.passengerNo = this.getPassengerAssocNumbers(rm.associations);
         rems.forEach(r => {
           if (r.indexOf('-') >= 0) {
             const arr = r.split('-');

@@ -17,7 +17,7 @@ import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -85,7 +85,7 @@ export class PaymentRemarkService {
       passengerRelate = passenger.split(',');
     }
 
-    if (type == null) {
+    if (!type) {
       type = 'RM';
     }
 
@@ -326,10 +326,11 @@ export class PaymentRemarkService {
     if (feeList.length > 0) {
       remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
-
       feeList.forEach((f) => {
         remark = this.generateSFCRemark(f);
-        remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+        const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
+        remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
+        // remGroup.remarks.push(this.getRemarksModel(remark, '*'));
       });
       const ex = [];
       comp.exemption.forEach((x) => {

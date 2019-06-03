@@ -38,6 +38,8 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   cfaLine: CfRemarkModel;
   isSubmitted = false;
   exemption = [];
+  passengerList: Array<any>;
+
   constructor(
     public modalRef: BsModalRef,
     private fb: FormBuilder,
@@ -75,14 +77,16 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
       ]),
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
-      exempt: new FormControl('')
+      exempt: new FormControl(''),
+      passengerNo: new FormControl('')
     });
 
     this.onControlChanges();
     this.util.validateAllFields(this.leisureFeeForm);
+    this.passengerList = this.pnrService.getPassengers();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   changeFeeState() {
     const controls = ['vendorCode', 'ccNo', 'expDate'];

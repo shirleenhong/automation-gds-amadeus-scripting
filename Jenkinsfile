@@ -312,7 +312,7 @@ def runRobotTest(currEnv, appName, tagName) {
                   otherFiles       : ''])
 
             emailBody = emailBody + '${SCRIPT, template="robot-email-template-custom.groovy"} <br/><br/> '
-            emailext(to: 'WGo@carlsonwagonlit.com, JCuenca@carlsonwagonlit.com', subject: emailSubject, body: emailBody)
+            emailext(to: 'WGo@carlsonwagonlit.com, Maridel.Castro@carlsonwagonlit.com', subject: emailSubject, body: emailBody)
         }
     }
 }

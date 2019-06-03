@@ -78,7 +78,7 @@ export class PackageRemarkService {
         )
       );
     }
-
+    this.deleteRemarks(['U43/-', 'U41/-', 'U42/-'], rmGroup);
     if (group.value.dueDate.length > 0) {
       rmGroup.remarks.push(this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.value.dueDate, 'MMMyy'), 'RM', '*'));
     }
@@ -92,6 +92,21 @@ export class PackageRemarkService {
     }
 
     return rmGroup;
+  }
+
+  deleteRemarks(udids, rmGroup, type?) {
+    udids.forEach((x) => {
+      let existNumber = '';
+      if (type === 'RIR') {
+        existNumber = this.pnrService.getRIRLineNumber(x);
+      } else {
+        existNumber = this.pnrService.getRemarkLineNumber(x);
+      }
+
+      if (existNumber !== '') {
+        rmGroup.deleteRemarkByIds.push(existNumber);
+      }
+    });
   }
 
   public GetTourPackageRemarks(group: FormGroup) {
@@ -168,6 +183,7 @@ export class PackageRemarkService {
     }
 
     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'R'));
+    this.deleteRemarks(['U43/-', 'U41/-', 'U42/-'], rmGroup, 'RM');
     if (group.controls.balanceDueDate.value.length > 0) {
       // tslint:disable-next-line:max-line-length
       rmGroup.remarks.push(
@@ -190,6 +206,7 @@ export class PackageRemarkService {
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Tour Package';
     rmGroup.remarks = new Array<RemarkModel>();
+    this.deleteRemarks(['U43/-', 'U41/-', 'U42/-'], rmGroup);
     this.packageRemarkHelper.getForDeletion().forEach((c) => {
       rmGroup.deleteRemarkByIds.push(c);
     });

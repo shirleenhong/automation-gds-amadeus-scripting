@@ -516,7 +516,8 @@ export class PnrService {
           lineNo: rm.elementNumber,
           tattooNumber: rm.tatooNumber,
           value: '',
-          segments: []
+          segments: [],
+          qualifier: rm.category
         };
 
         // if (rm.associations !== undefined && rm.associations && rm.associations.length > 0) {

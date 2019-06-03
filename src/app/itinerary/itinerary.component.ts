@@ -104,7 +104,7 @@ export class ItineraryComponent implements OnInit {
         const match = regx.exec(r.remarkText);
         let retText = '';
         if (match !== null) {
-          retText = match.groups.service.substr(2);
+          retText = match.groups.service.substr(2, match.groups.service.length - 3);
         }
         if (element === 'SERVICE') {
           items.push(this.createServiceFormGroup(element, { service: retText }));

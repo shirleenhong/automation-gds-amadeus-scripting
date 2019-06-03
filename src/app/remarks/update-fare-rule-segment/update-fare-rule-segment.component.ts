@@ -175,12 +175,12 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
             output.forEach(element => {
               if (element.indexOf('RM') > -1) {
                 const outputTwo = element
-                  .replace('RM', '')
-                  .replace('S', '')
-                  .replace(airline[0].airlineCode, '')
-                  .split('       ');
+                  .replace('RM', '/')
+                  .replace('S', '/')
+                  .replace(airline[0].airlineCode, '/')
+                  .split('/');
                 this.fareRuleList.push({
-                  itemText: airline[0].airlineCode + ' ' + outputTwo[1],
+                  itemText: airline[0].airlineCode + ' ' + outputTwo[outputTwo.length - 1].trimStart(),
                   itemValue: outputTwo[1]
                 });
                 this.ShowFareRule = true;
@@ -210,12 +210,12 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
     if (fareRule.indexOf('SELECT') === -1) {
       smartScriptSession.send(
         'PBN/' +
-          this.fareRules.oid +
-          '/' +
-          this.fareRules.airlineCode +
-          ' ' +
-          fareRule +
-          '*'
+        this.fareRules.oid +
+        '/' +
+        this.fareRules.airlineCode +
+        ' ' +
+        fareRule +
+        '*'
       );
     }
   }

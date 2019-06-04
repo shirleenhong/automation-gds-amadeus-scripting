@@ -98,7 +98,7 @@ export class ReportingComponent implements OnInit, OnChanges {
         const rem = '...' + this.translation.translate(x, lang);
         if (this.pnrService.getRirRemarkText(rem) !== '') {
           const opt = this.reportingView.declinedOption.find((x) => x.value == i.toString());
-          opt.checked == (opt !== undefined && opt !== null);
+          opt.checked = opt !== undefined && opt !== null;
         }
         i++;
       });

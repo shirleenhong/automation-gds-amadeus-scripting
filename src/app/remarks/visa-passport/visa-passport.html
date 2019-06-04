@@ -36,6 +36,13 @@
         <input name="btnAdvisory" type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories" />
       </div>
     </div>
+    <div class="row form-group">
+      <div class="col-5">
+      </div>
+      <div class="col-6"> <input type="checkbox" name="senttraveladvicory" formControlName="senttraveladvicory"
+          id="senttraveladvicory" (change)="showsenttraveladvicory($event.target.checked)" />
+        International Travel Advisory Already Sent</div>
+    </div>
 
     <div class="row form-group">
       <div class="col-8">
@@ -45,7 +52,7 @@
       </div>
     </div><br>
 
-    <div *ngIf="this.advisoryClicked === true || hasAdvisoryLine()">
+    <div *ngIf="this.advisoryClicked === true || hasAdvisoryLine() || f.senttraveladvicory.value">
       <div class="row form-group">
         <div class="col-10">
           <b>Entry Requirements for Countries Travelled</b>

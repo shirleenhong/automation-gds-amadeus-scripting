@@ -759,7 +759,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.loadCarSupplier();
       const airs = this.segmentList.filter((x) => x.segmentType === 'AIR');
       let air = airs.find((x) => x.destinationCity === this.passiveSegments.departureCity);
-      debugger;
       if (air) {
         this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
         this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);

@@ -213,7 +213,7 @@ export class PaymentRemarkService {
       bknLine +
       accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
-    const pass = accounting.passengerNo !== undefined ? accounting.passengerNo : '';
+    const pass = accounting.passengerNo !== undefined ? accounting.passengerNo : '1';
 
     remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
 

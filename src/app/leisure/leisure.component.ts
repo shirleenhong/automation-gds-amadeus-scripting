@@ -75,7 +75,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr() {
     // this.ddbService.getCountryAndCurrencyList();
@@ -164,7 +164,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
     );
 
-    remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
+    if (this.itineraryComponent.itineraryForm.touched) {
+      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
+    }
+
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));

@@ -10,9 +10,11 @@ import { DDBService } from './ddb.service';
   providedIn: 'root'
 })
 export class ItineraryService {
-
+  destination = [];
   constructor(private remarkHelper: RemarkHelper,
-    private pnrService: PnrService, private ddbService: DDBService) { }
+    private pnrService: PnrService, private ddbService: DDBService) {
+  }
+
 
   getItineraryRemarks(frmGroup: FormGroup) {
     const rmGroup = new RemarkGroup();
@@ -81,7 +83,7 @@ export class ItineraryService {
       rm = (this.remarkHelper.createRemark('EMAIL ADD-NO', 'RM', 'Q'));
       rmGroup.remarks.push(rm);
     }
-    rm = this.writeTktLine(rm, rmGroup);
+    rm = this.writeTktLine(rmGroup);
     this.deleteItineraryRemarks(rmGroup, frmGroup);
     return rmGroup;
   }
@@ -117,10 +119,9 @@ export class ItineraryService {
     });
   }
 
-  private writeTktLine(rm: any, rmGroup: RemarkGroup) {
-    const destinations = Array<string>();
 
-    let air = this.pnrService.pnrObj.airSegments;
+  async writeTktLine(rmGroup: RemarkGroup) {
+    const air = this.pnrService.pnrObj.airSegments;
     const regx = new RegExp('TKT-(?<service>(.*))');
     const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
     let writetkt = true;
@@ -129,33 +130,41 @@ export class ItineraryService {
         writetkt = false;
       }
     });
-
+    let route = '';
     if (air.length > 0 && writetkt) {
-      air.forEach(x => {
-        let cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
-        if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') {
-          destinations.push(cityCountry);
-        }
-        cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
-        if (this.ddbService.getCityCountry(x.departureAirport) !== '') {
-          destinations.push(cityCountry);
-        }
-      });
-      const route = this.getRouteType(destinations);
-      rm = (this.remarkHelper.createRemark('TKT-' + route, 'RM', 'T'));
+      route = this.writeRouteType();
+      const rm = (this.remarkHelper.createRemark('TKT-' + route, 'RM', 'T'));
       rmGroup.remarks.push(rm);
     }
-    return rm;
+
   }
 
+  async getCountry(air) {
+    // const air = this.pnrService.pnrObj.airSegments;
+    air.forEach(async x => {
+      await this.ddbService.getTravelPort(x.arrivalAirport).then(x => {
+        const c = JSON.stringify(x);
+        let obj: any;
+        obj = JSON.parse(c);
+        this.destination.push(obj.TravelPorts[0].CountryName);
+      });
 
-  private getRouteType(destinations: string[]) {
+      await this.ddbService.getTravelPort(x.departureAirport).then(x => {
+        const c = JSON.stringify(x);
+        let obj: any;
+        obj = JSON.parse(c);
+        this.destination.push(obj.TravelPorts[0].CountryName);
+      });
+    });
+  }
+
+  writeRouteType() {
     let route = 'DOM';
-    destinations.forEach(x => {
-      if (x !== 'Canada' && x !== 'United States') {
-        return 'INTL';
+    this.destination.forEach(element => {
+      if (element !== 'Canada' && element !== 'United States') {
+        route = 'INTL';
       }
-      if (x === 'United States') {
+      if (element === 'United States' && route !== 'INTL') {
         route = 'TRANS';
       }
     });

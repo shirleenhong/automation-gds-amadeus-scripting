@@ -37,7 +37,7 @@ export class VisaPassportComponent implements OnInit {
     private ddbService: DDBService,
     private pnrService: PnrService,
     private visaService: VisaPassportService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.visaPassportView = new VisaPassportModel();
@@ -47,7 +47,8 @@ export class VisaPassportComponent implements OnInit {
       advisory: new FormControl('', []),
       btnAdvisory: new FormControl('', []),
       passportName: new FormControl('', [Validators.required]),
-      segments: new FormArray([])
+      segments: new FormArray([]),
+      senttraveladvicory: new FormControl('', [])
     });
     this.segmentGroup = this.fb.group({
       passport: new FormControl('', [Validators.required]),
@@ -86,14 +87,22 @@ export class VisaPassportComponent implements OnInit {
       })
       .then(
         // tslint:disable-next-line: only-arrow-functions
-        function(data) {
+        function (data) {
           console.log(data);
         },
         // tslint:disable-next-line: only-arrow-functions
-        function(error) {
+        function (error) {
           console.log(error);
         }
       );
+  }
+
+  showsenttraveladvicory(checkValue): void {
+    if (checkValue) {
+      this.visaService.isEnabled = true;
+    } else if (!this.advisoryClicked) {
+      this.visaService.isEnabled = false;
+    }
   }
 
   changedOriginDestination() {
@@ -184,10 +193,10 @@ export class VisaPassportComponent implements OnInit {
   getFirstDate(airdate: any, firstDepDate: Date) {
     const lairdate = new Date(
       airdate.substr(2, 2) +
-        '/' +
-        airdate.substr(0, 2) +
-        '/' +
-        airdate.substr(4, 2)
+      '/' +
+      airdate.substr(0, 2) +
+      '/' +
+      airdate.substr(4, 2)
     );
     if (lairdate < firstDepDate) {
       firstDepDate = lairdate;
@@ -198,10 +207,10 @@ export class VisaPassportComponent implements OnInit {
   getLastDate(airdate: any, lastDepDate: Date) {
     const lairdate = new Date(
       airdate.substr(2, 2) +
-        '/' +
-        airdate.substr(0, 2) +
-        '/' +
-        airdate.substr(4, 2)
+      '/' +
+      airdate.substr(0, 2) +
+      '/' +
+      airdate.substr(4, 2)
     );
     if (lairdate > lastDepDate) {
       lastDepDate = lairdate;
@@ -266,10 +275,10 @@ export class VisaPassportComponent implements OnInit {
         if (firstLoop) {
           firstDepDate = new Date(
             airdate.substr(2, 2) +
-              '/' +
-              airdate.substr(0, 2) +
-              '/' +
-              airdate.substr(4, 2)
+            '/' +
+            airdate.substr(0, 2) +
+            '/' +
+            airdate.substr(4, 2)
           );
           firstLoop = false;
         } else {
@@ -279,10 +288,10 @@ export class VisaPassportComponent implements OnInit {
         if (lastLoop) {
           lastDepDate = new Date(
             airdate.substr(2, 2) +
-              '/' +
-              airdate.substr(0, 2) +
-              '/' +
-              airdate.substr(4, 2)
+            '/' +
+            airdate.substr(0, 2) +
+            '/' +
+            airdate.substr(4, 2)
           );
           lastLoop = false;
         } else {
@@ -307,10 +316,10 @@ export class VisaPassportComponent implements OnInit {
         // tslint:disable-next-line:max-line-length
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
-            '/' +
-            originDestination[i].departuredate.substr(0, 2) +
-            '/' +
-            originDestination[i].departuredate.substr(4, 2)
+          '/' +
+          originDestination[i].departuredate.substr(0, 2) +
+          '/' +
+          originDestination[i].departuredate.substr(4, 2)
         );
         if (convertedDate.toDateString() === firstDepDate.toDateString()) {
           mainOrigin = originDestination[i].origin;

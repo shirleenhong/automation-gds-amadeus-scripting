@@ -249,7 +249,7 @@ export class ReportingRemarkService {
     if (concierge.get('hotelName').value) {
       remText = 'U13/-' + concierge.value.hotelName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-    } else if (this.pnrService.getRemarkLineNumber('U13/-') === '') {
+    } else if (this.pnrService.getRemarkLineNumber('U13/-NO HTL BKD') === '') {
       remText = 'U13/-' + 'NO HTL BKD';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }

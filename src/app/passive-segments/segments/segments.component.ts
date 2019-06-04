@@ -1,12 +1,9 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { TourSegmentViewModel } from 'src/app/models/tour-segment-view.model';
 import { UpdateSegmentComponent } from '../update-segment/update-segment.component';
 import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model';
-import { SegmentsViewModel } from 'src/app/models/segments-view.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { PnrService } from 'src/app/service/pnr.service';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-segments',
@@ -14,7 +11,6 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./segments.component.scss']
 })
 export class SegmentsComponent implements OnInit {
-
   private modalRef: BsModalRef;
   isAddNew = false;
   passengers = [];
@@ -22,11 +18,14 @@ export class SegmentsComponent implements OnInit {
   vibFrenchRemark = [];
   amkRemark = [];
 
-
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
 
-  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private pnrService: PnrService) {
+  constructor(
+    private modalService: BsModalService,
+    private utilHelper: UtilHelper,
+    private pnrService: PnrService
+  ) {
     //
   }
 
@@ -38,22 +37,29 @@ export class SegmentsComponent implements OnInit {
   addPassiveSegment() {
     this.isAddNew = true;
     const passiveSegment = new PassiveSegmentsModel();
-    this.modalRef = this.modalService.show(UpdateSegmentComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateSegmentComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Add Passive Segment';
     this.modalRef.content.segmentList = this.segmentRemarks;
     this.modalRef.content.isAddNew = true;
-    passiveSegment.segmentNo = (this.segmentRemarks.length + 1);
+    passiveSegment.segmentNo = this.segmentRemarks.length + 1;
     passiveSegment.isNew = true;
     passiveSegment.noPeople = this.getNoPassengers();
     this.modalRef.content.passiveSegments = passiveSegment;
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const segmentNo = this.segmentRemarks.find(x => x.segmentNo === this.modalRef.content.passiveSegments.segmentNo);
-          this.utilHelper.modelCopy(this.modalRef.content.passiveSegments, segmentNo);
+          const segmentNo = this.segmentRemarks.find(
+            x => x.segmentNo === this.modalRef.content.passiveSegments.segmentNo
+          );
+          this.utilHelper.modelCopy(
+            this.modalRef.content.passiveSegments,
+            segmentNo
+          );
         } else {
           this.segmentRemarks.push(this.modalRef.content.passiveSegments);
         }
@@ -64,7 +70,9 @@ export class SegmentsComponent implements OnInit {
 
   updateItem(r: PassiveSegmentsModel) {
     this.isAddNew = false;
-    this.modalRef = this.modalService.show(UpdateSegmentComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateSegmentComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Update Segments';
     this.modalRef.content.segmentList = this.segmentRemarks;
     this.modalRef.content.isAddNew = false;
@@ -102,7 +110,6 @@ export class SegmentsComponent implements OnInit {
       'TRAIN DEPARTURE/ARRIVAL TIMES.'
     ];
     return this.vibEnglishRemark;
-
   }
 
   getVibFrenchRemark() {
@@ -118,7 +125,6 @@ export class SegmentsComponent implements OnInit {
       'RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
     ];
     return this.vibFrenchRemark;
-
   }
 
   getAmkRemark() {
@@ -144,7 +150,5 @@ export class SegmentsComponent implements OnInit {
     ];
 
     return this.amkRemark;
-
   }
-
 }

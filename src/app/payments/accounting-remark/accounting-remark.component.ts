@@ -4,20 +4,16 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/update-accounting-remark.component';
 import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
-import { Alert } from 'selenium-webdriver';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 
-
 @Component({
   selector: 'app-accounting-remark',
   templateUrl: './accounting-remark.component.html',
-  styleUrls: ['./accounting-remark.component.scss']
+  styleUrls: ['./accounting-remark.component.scss'],
 })
 export class AccountingRemarkComponent implements OnInit {
-
-
   @Input()
   accountingRemarks = new Array<MatrixAccountingModel>();
   modalRef: BsModalRef;
@@ -32,40 +28,43 @@ export class AccountingRemarkComponent implements OnInit {
   showU77 = false;
   isAddNew = false;
 
-
-  constructor(private modalService: BsModalService,
+  constructor(
+    private modalService: BsModalService,
     private pnrService: PnrService,
     private fb: FormBuilder,
-    private utilHelper: UtilHelper) {
-  }
+    private utilHelper: UtilHelper,
+  ) {}
 
   ngOnInit() {
     this.accountingRemarks = this.pnrService.getAccountingRemarks();
 
-    this.accountingForm = this.fb.group({
-      airOnly: new FormControl(''),
-      exclusiveProperty: new FormControl(''),
-      propertyName: new FormControl(''),
-      flightType: new FormControl(''),
-      priceVsSupplier: new FormControl(''),
-      group: new FormControl(''),
-      preferredVendor: new FormControl('')
-    }, { updateOn: 'change' });
+    this.accountingForm = this.fb.group(
+      {
+        airOnly: new FormControl(''),
+        exclusiveProperty: new FormControl(''),
+        propertyName: new FormControl(''),
+        flightType: new FormControl(''),
+        priceVsSupplier: new FormControl(''),
+        group: new FormControl(''),
+        preferredVendor: new FormControl(''),
+      },
+      { updateOn: 'change' },
+    );
 
-    this.f.airOnly.valueChanges.subscribe(x => {
-      this.showU71 = (this.showU76 && (x === 'NO') && (this.pnrService.getRemarkLineNumber('U71/-') === ''));
-      this.showU75 = (this.showU76 && (x === 'NO') && (this.pnrService.getRemarkLineNumber('U75/-') === ''));
+    this.f.airOnly.valueChanges.subscribe((x) => {
+      this.showU71 = this.showU76 && x === 'NO' && this.pnrService.getRemarkLineNumber('U71/-') === '';
+      this.showU75 = this.showU76 && x === 'NO' && this.pnrService.getRemarkLineNumber('U75/-') === '';
       this.setControlValidator(this.f.exclusiveProperty, this.showU71);
       this.setControlValidator(this.f.propertyName, this.showU75);
     });
     this.checkSupplierCode();
     this.modalSubscribeOnClose();
-
   }
 
-
   deleteItem(r: MatrixAccountingModel) {
-    this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static',
+    });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
     this.modalRef.content.message = 'Are you sure you want to delete this Accounting Remark?';
@@ -76,11 +75,11 @@ export class AccountingRemarkComponent implements OnInit {
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
-            const cur = this.accountingRemarks.find(x => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
+            const cur = this.accountingRemarks.find((x) => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
             this.utilHelper.modelCopy(this.modalRef.content.accountingRemarks, cur);
           } else {
             this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
@@ -89,11 +88,10 @@ export class AccountingRemarkComponent implements OnInit {
           this.checkSupplierCode();
         }
         if (this.modalRef.content.callerName === 'Accounting' && this.modalRef.content.response === 'YES') {
-
           const r = this.modalRef.content.paramValue;
           this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
           let i = 1;
-          this.accountingRemarks.forEach(x => {
+          this.accountingRemarks.forEach((x) => {
             x.tkMacLine = i;
             i++;
           });
@@ -104,25 +102,35 @@ export class AccountingRemarkComponent implements OnInit {
     });
   }
 
-
   updateItem(r: MatrixAccountingModel) {
     this.isAddNew = false;
-    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
+      backdrop: 'static',
+    });
     this.modalRef.content.title = 'Update Accounting Remarks';
     this.modalRef.content.accountingRemarks = new MatrixAccountingModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemarks);
-    this.modalRef.content.onChangeApayNonApay(r.accountingTypeRemark);
+    const code = r.supplierCodeName;
+    this.modalRef.content.isAddNew = false;
+    this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
+    //prevent using the default
+    r.supplierCodeName = code;
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();
   }
 
-  get f() { return this.accountingForm.controls; }
+  get f() {
+    return this.accountingForm.controls;
+  }
 
   addAccountingRemarks() {
     const accountingRemarks = new MatrixAccountingModel();
-    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
+      backdrop: 'static',
+    });
     this.modalRef.content.title = 'Add Accounting Remarks';
-    accountingRemarks.tkMacLine = (this.accountingRemarks.length + 1);
+    accountingRemarks.tkMacLine = this.accountingRemarks.length + 1;
+    this.modalRef.content.isAddNew = true;
     this.modalRef.content.accountingRemarks = accountingRemarks;
     this.isAddNew = true;
     this.modalSubscribeOnClose();
@@ -131,7 +139,7 @@ export class AccountingRemarkComponent implements OnInit {
   checkSupplierCode() {
     this.isAd1SwgSupplier = false;
     if (this.accountingRemarks.length > 0) {
-      this.accountingRemarks.forEach(acc => {
+      this.accountingRemarks.forEach((acc) => {
         if (acc.supplierCodeName === 'AD1' || acc.supplierCodeName === 'SWG') {
           this.isAd1SwgSupplier = true;
           this.showUdids();
@@ -140,20 +148,18 @@ export class AccountingRemarkComponent implements OnInit {
     }
   }
 
-
   showUdids() {
-    this.showU76 = (this.pnrService.getRemarkLineNumber('U76/-') === '');
-    this.showU72 = ((this.pnrService.getRemarkLineNumber('U72/-') === ''));
-    this.showU73 = ((this.pnrService.getRemarkLineNumber('U73/-') === ''));
-    this.showU74 = ((this.pnrService.getRemarkLineNumber('U74/-') === ''));
-    this.showU77 = ((this.pnrService.getRemarkLineNumber('U77/-') === ''));
+    this.showU76 = this.pnrService.getRemarkLineNumber('U76/-') === '';
+    this.showU72 = this.pnrService.getRemarkLineNumber('U72/-') === '';
+    this.showU73 = this.pnrService.getRemarkLineNumber('U73/-') === '';
+    this.showU74 = this.pnrService.getRemarkLineNumber('U74/-') === '';
+    this.showU77 = this.pnrService.getRemarkLineNumber('U77/-') === '';
 
     this.setControlValidator(this.f.airOnly, this.showU76);
     this.setControlValidator(this.f.flightType, this.showU72);
     this.setControlValidator(this.f.priceVsSupplier, this.showU73);
     // this.setControlValidator(this.f.group, this.showU74);
     this.setControlValidator(this.f.preferredVendor, this.showU77);
-
   }
 
   setControlValidator(ctrl: AbstractControl, val: boolean) {

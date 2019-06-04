@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, forwardRef } from '@angular/core';
-import { FormsModule, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LeisureComponent } from './leisure/leisure.component';
@@ -47,6 +47,7 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
 import { RbcPointsRedemptionComponent } from './remarks/rbc-points-redemption/rbc-points-redemption.component';
 import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
 import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-leisure-fee.component';
+import { ItineraryComponent } from './itinerary/itinerary.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-
     PassengerSelectComponent,
     RbcPointsRedemptionComponent,
     UpdateRbcPointsRedemptionComponent,
-    UpdateLeisureFeeComponent
+    UpdateLeisureFeeComponent,
+    ItineraryComponent
   ],
   imports: [
     BrowserModule,

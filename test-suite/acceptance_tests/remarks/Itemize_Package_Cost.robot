@@ -6,7 +6,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify that ITC package cost and UDID Remarks Are Written for Single Passenger
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345
-    ...    TKOK
+    ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -105,7 +105,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     [Tags]    DE1204
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    APE TEST@email.com    TKOK
+    ...    APE TEST@email.com    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -209,7 +209,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *U43/-NOV19
     Verify Specific Remark Is Written In The PNR    RM *U41/-1090.44
-    Verify Specific Remark Is Not Written In The PNR    RM *U42/-
+    Verify Specific Remark Is Written In The PNR    RM *U42/-0.00
     Verify Specific Remark Is Only Written Once    RIR THE FOLLOWING COSTS ARE SHOWN IN USD
     Verify Specific Remark Is Only Written Once    RIR ADULT PRICE------------1222.00X1------1,222.00
     Verify Specific Remark Is Only Written Once    RIR ADULT TAXES-------------212.00X1--------212.0
@@ -233,7 +233,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     [Tags]    DE1204
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345
-    ...    TKOK
+    ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -283,7 +283,6 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Verify Specific Remark Is Not Written In The PNR    CHILD
     Verify Specific Remark Is Not Written In The PNR    RM *U42/-
     Close Cryptic Display Window
-    Switch To Command Page
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -303,7 +302,6 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Enter ITC Balance Due Date    12142019
     Click Submit To PNR
     Close CA Migration Window
-    Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *U43/-DEC19
     Verify Specific Remark Is Written In The PNR    RM *U41/-8546.80

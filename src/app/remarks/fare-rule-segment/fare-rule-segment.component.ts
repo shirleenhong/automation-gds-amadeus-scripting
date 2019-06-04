@@ -1,10 +1,8 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UpdateFareRuleSegmentComponent } from '../update-fare-rule-segment/update-fare-rule-segment.component';
 import { FareRuleModel } from 'src/app/models/pnr/fare-rule.model';
-import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { FormArray, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-fare-rule-segment',
@@ -12,35 +10,39 @@ import { FormArray, FormControl } from '@angular/forms';
   styleUrls: ['./fare-rule-segment.component.scss']
 })
 export class FareRuleSegmentComponent implements OnInit {
-
   private modalRef: BsModalRef;
   isAddNew = false;
 
   // @Input()
   fareRuleRemarks: FareRuleModel[] = [];
 
-  constructor(private modalService: BsModalService,
-    private utilHelper: UtilHelper,
-    private pnrService: PnrService) { }
+  constructor(
+    private modalService: BsModalService,
+    private utilHelper: UtilHelper
+  ) {}
 
   ngOnInit() {
-    //this.fareRuleRemarks = this.pnrService.getModelPassiveSegments();
+    // this.fareRuleRemarks = this.pnrService.getModelPassiveSegments();
     this.modalSubscribeOnClose();
   }
 
   addFareRuleSegment() {
     this.isAddNew = true;
     const fareRule = new FareRuleModel();
-    this.modalRef = this.modalService.show(UpdateFareRuleSegmentComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateFareRuleSegmentComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Add Fare Rule';
     this.modalRef.content.fareRules = fareRule;
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const segmentNo = this.fareRuleRemarks.find(x => x.segmentNo === this.modalRef.content.fareRules.segmentNo);
+          const segmentNo = this.fareRuleRemarks.find(
+            x => x.segmentNo === this.modalRef.content.fareRules.segmentNo
+          );
           this.utilHelper.modelCopy(this.modalRef.content.fareRules, segmentNo);
         } else {
           this.fareRuleRemarks.push(this.modalRef.content.fareRules);
@@ -52,7 +54,9 @@ export class FareRuleSegmentComponent implements OnInit {
 
   updateItem(r: FareRuleModel) {
     this.isAddNew = false;
-    this.modalRef = this.modalService.show(UpdateFareRuleSegmentComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateFareRuleSegmentComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Update Matrix Receipt';
     this.modalRef.content.fareRules = new FareRuleModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.fareRules);
@@ -71,5 +75,4 @@ export class FareRuleSegmentComponent implements OnInit {
       });
     }
   }
-
 }

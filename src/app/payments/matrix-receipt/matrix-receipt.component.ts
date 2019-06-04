@@ -13,13 +13,16 @@ import { MessageType } from 'src/app/shared/message/MessageType';
   styleUrls: ['./matrix-receipt.component.scss']
 })
 export class MatrixReceiptComponent implements OnInit {
-
   @Input()
   matrixReceipts: MatrixReceiptModel[] = [];
   modalRef: BsModalRef;
   isAddNew = false;
 
-  constructor(private modalService: BsModalService, private pnrService: PnrService, private utilHelper: UtilHelper) { }
+  constructor(
+    private modalService: BsModalService,
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper
+  ) {}
 
   ngOnInit() {
     this.loadMatrixReceipt();
@@ -31,18 +34,23 @@ export class MatrixReceiptComponent implements OnInit {
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
-            const cur = this.matrixReceipts.find(x => x.rln === this.modalRef.content.matrixReceipt.rln);
+            const cur = this.matrixReceipts.find(
+              x => x.rln === this.modalRef.content.matrixReceipt.rln
+            );
             this.utilHelper.modelCopy(this.modalRef.content.matrixReceipt, cur);
           } else {
             this.matrixReceipts.push(this.modalRef.content.matrixReceipt);
           }
           this.modalRef.content.isSubmitted = false;
         }
-        if (this.modalRef.content.callerName === 'MatrixReceipt' && this.modalRef.content.response === 'YES') {
+        if (
+          this.modalRef.content.callerName === 'MatrixReceipt' &&
+          this.modalRef.content.response === 'YES'
+        ) {
           const r = this.modalRef.content.paramValue;
           this.matrixReceipts.splice(this.matrixReceipts.indexOf(r), 1);
           let i = 1;
@@ -56,39 +64,38 @@ export class MatrixReceiptComponent implements OnInit {
     });
   }
 
-
   deleteItem(r: MatrixReceiptModel) {
-    this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
-    this.modalRef.content.message = 'Are you sure you want to delete this Matrix Receipt?';
+    this.modalRef.content.message =
+      'Are you sure you want to delete this Matrix Receipt?';
     this.modalRef.content.callerName = 'MatrixReceipt';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);
   }
 
-
   updateItem(r: MatrixReceiptModel) {
     this.isAddNew = false;
-    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Update Matrix Receipt';
     this.modalRef.content.matrixReceipt = new MatrixReceiptModel();
     this.utilHelper.modelCopy(r, this.modalRef.content.matrixReceipt);
     this.modalRef.content.bankAccountChange(r.bankAccount);
   }
 
-
-
-
   addMatrixReceipt() {
     this.isAddNew = true;
     const matrixReceipt = new MatrixReceiptModel();
-    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, {
+      backdrop: 'static'
+    });
     this.modalRef.content.title = 'Add Matrix Receipt';
-    matrixReceipt.rln = (this.matrixReceipts.length + 1);
+    matrixReceipt.rln = this.matrixReceipts.length + 1;
     this.modalRef.content.matrixReceipt = matrixReceipt;
   }
-
-
-
 }

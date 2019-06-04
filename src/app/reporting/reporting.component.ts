@@ -1,24 +1,9 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  AfterViewInit,
-  OnChanges,
-  SimpleChange,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { ReportingViewModel } from '../models/reporting-view.model';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  FormControl
-} from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { DDBService } from '../service/ddb.service';
 import { ConciergeUdidsComponent } from './concierge-udids/concierge-udids.component';
 import { UtilHelper } from '../helper/util.helper';
@@ -42,6 +27,7 @@ export class ReportingComponent implements OnInit, OnChanges {
   enableInsurance = false;
   countryList: Array<string>;
   isCVC = false;
+  warningMessage = '';
 
   constructor(
     private pnrService: PnrService,
@@ -53,39 +39,37 @@ export class ReportingComponent implements OnInit, OnChanges {
     return this.reportingForm.controls;
   }
 
-  ngOnChanges(changes: SimpleChanges) {}
+  // tslint:disable-next-line: variable-name
+  ngOnChanges(_changes: SimpleChanges) {}
 
   ngOnInit() {
     this.reportingForm = new FormGroup({
       bspRouteCode: new FormControl('', [Validators.required]),
       companyName: new FormControl(''),
       destinationList: new FormControl('', [Validators.required]),
-      u86: new FormControl('', [Validators.required]),
+      // u86: new FormControl('', [Validators.required]),
       showInsurance: new FormControl('', []),
       insuranceDeclinedReason: new FormControl(''),
-      declinedOption: new FormControl('')
+      aa: new FormControl(''),
+      bb: new FormControl(''),
+      cc: new FormControl(''),
+      dd: new FormControl(''),
+      ee: new FormControl(''),
+      ff: new FormControl('')
     });
+    this.warningMessage = '';
 
     this.getRouteCodes();
     this.getPnrCFLine();
     this.getDestination();
-    this.countryList = [
-      '',
-      'GHANA',
-      'NIGERIA',
-      'PAKISTAN',
-      'JOHANNESBURG-SOUTH AFRICA',
-      'NONE OF THE ABOVE'
-    ];
+    this.countryList = ['', 'GHANA', 'NIGERIA', 'PAKISTAN', 'JOHANNESBURG-SOUTH AFRICA', 'NONE OF THE ABOVE'];
     this.reportingView.showInsurance = true;
     this.loadRemarksFromGds();
   }
 
   loadRemarksFromGds() {
     const company = this.pnrService.getRemarkText('U10/-').replace('U10/-', '');
-    const insuranceDeclinedReason = this.pnrService
-      .getRemarkText('U12/-')
-      .replace('U12/-', '');
+    const insuranceDeclinedReason = this.pnrService.getRemarkText('U12/-').replace('U12/-', '');
     this.checkInsurance(insuranceDeclinedReason === '' ? 'YES' : 'NO');
 
     const fs = this.pnrService.getFSRemark();
@@ -96,9 +80,7 @@ export class ReportingComponent implements OnInit, OnChanges {
     this.reportingView.insuranceDeclinedReason = insuranceDeclinedReason;
     this.reportingView.destination = dest;
     this.reportingView.showInsurance = insuranceDeclinedReason === '';
-    this.f.showInsurance.setValue(
-      insuranceDeclinedReason === '' ? 'YES' : 'NO'
-    );
+    this.f.showInsurance.setValue(insuranceDeclinedReason === '' ? 'YES' : 'NO');
     if (fs !== undefined && fs !== '') {
       this.reportingView.routeCode = fs.substr(0, 1);
     }
@@ -114,12 +96,11 @@ export class ReportingComponent implements OnInit, OnChanges {
       ];
       const lang = this.pnrService.getItineraryLanguage();
       let i = 1;
-      rems.forEach(x => {
+      rems.forEach((x) => {
         const rem = '...' + this.translation.translate(x, lang);
-
         if (this.pnrService.getRirRemarkText(rem) !== '') {
-          this.reportingView.declinedOption = i.toString();
-          return;
+          const opt = this.reportingView.declinedOption.find((x) => x.value == i.toString());
+          opt.checked = opt !== undefined && opt !== null;
         }
         i++;
       });
@@ -130,14 +111,11 @@ export class ReportingComponent implements OnInit, OnChanges {
     if (this.reportingView.cfLine === null) {
       return false;
     }
-    return (
-      this.reportingView.cfLine.cfa === 'RBM' ||
-      this.reportingView.cfLine.cfa === 'RBP'
-    );
+    return this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP';
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {
-    ctrls.forEach(x => {
+    ctrls.forEach((x) => {
       if (isDisabled) {
         this.reportingForm.get(x).disable();
       } else {
@@ -155,10 +133,7 @@ export class ReportingComponent implements OnInit, OnChanges {
   }
 
   checkDestination() {
-    if (
-      this.destinationList !== undefined &&
-      this.destinationList.length <= 1
-    ) {
+    if (this.destinationList !== undefined && this.destinationList.length <= 1) {
       this.reportingView.isDisabledDest = true;
     } else {
       this.reportingView.isDisabledDest = false;
@@ -172,10 +147,10 @@ export class ReportingComponent implements OnInit, OnChanges {
       this.reportingView.insuranceDeclinedReason = '';
       this.f.insuranceDeclinedReason.setValue('');
       this.f.insuranceDeclinedReason.clearValidators();
-      this.f.declinedOption.clearValidators();
+      //this.f.declinedOption.clearValidators();
     } else {
       this.f.insuranceDeclinedReason.setValidators(Validators.required);
-      this.f.declinedOption.setValidators(Validators.required);
+      //this.f.declinedOption.setValidators(Validators.required);
     }
   }
 
@@ -189,10 +164,7 @@ export class ReportingComponent implements OnInit, OnChanges {
         } else if (this.reportingView.cfLine.lastLetter === 'C') {
           this.reportingView.tripType = 1;
         }
-        if (
-          this.reportingView.cfLine.cfa === 'RBM' ||
-          this.reportingView.cfLine.cfa === 'RBP'
-        ) {
+        if (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP') {
           this.reportingView.tripType = 2;
         }
         this.reportingView.isDisabled = false;
@@ -211,7 +183,16 @@ export class ReportingComponent implements OnInit, OnChanges {
   checkValid() {
     if (this.isRbmRbp()) {
       this.utilHelper.validateAllFields(this.conciergeComponent.conciergeForm);
+      this.enableDisbleControls(['insuranceDeclinedReason'], true);
       if (!this.conciergeComponent.conciergeForm.valid) {
+        return false;
+      }
+    }
+
+    if (!this.reportingView.showInsurance) {
+      const opt = this.reportingView.declinedOption.find((x) => x.checked === true);
+      if (!opt) {
+        this.warningMessage = '*Please select insurance type.';
         return false;
       }
     }

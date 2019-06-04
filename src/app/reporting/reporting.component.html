@@ -14,10 +14,7 @@
               [(ngModel)]="reportingView.routeCode"
               required
             >
-              <option
-                *ngFor="let item of bspRouteCodeList"
-                [value]="item.itemValue"
-              >
+              <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
                 {{ item.itemText }}
               </option>
             </select>
@@ -37,18 +34,14 @@
               [disabled]="reportingView.isDisabledDest"
             />
             <datalist id="dynamicDestinationCode">
-              <option
-                *ngFor="let item of destinationList"
-                [value]="item.endpoint"
-                >{{ item.endpoint }}
-              </option>
+              <option *ngFor="let item of destinationList" [value]="item.endpoint">{{ item.endpoint }} </option>
             </datalist>
           </div>
         </div>
 
         <div class="">
           <div class="row form-group">
-            <div class="col-6">
+            <!-- <div class="col-6">
               Does this PNR contain travel to any countries listed below?
               <select
                 class="form-control"
@@ -59,7 +52,7 @@
               >
                 <option *ngFor="let item of countryList">{{ item }}</option>
               </select>
-            </div>
+            </div> -->
             <div class="col" *ngIf="isCVC">
               Name of Company Traveller Works For :
               <input
@@ -95,14 +88,8 @@
                   formControlName="showInsurance"
                   (change)="checkInsurance($event.target.value)"
                 >
-                  <option value="YES"
-                    >All Inclusive or Premium Protection Insurance Purchased for
-                    the Full Value of the Trip</option
-                  >
-                  <option value="NO"
-                    >Traveller Declined to Purchase the following Travel
-                    Insurance
-                  </option>
+                  <option value="YES">All Inclusive or Premium Protection Insurance Purchased for the Full Value of the Trip</option>
+                  <option value="NO">Traveller Declined to Purchase the following Travel Insurance </option>
                 </select>
               </div>
             </div>
@@ -110,29 +97,49 @@
 
           <div class="row form-group" *ngIf="!reportingView.showInsurance">
             <div class="col">
-              Insurance Declined Reason:
-              <select
-                class="form-control"
-                required
-                id="declinedOption"
-                name="declinedOption"
-                [(ngModel)]="reportingView.declinedOption"
-                formControlName="declinedOption"
+              Insurance Type:
+              <label>
+                <input
+                  type="checkbox"
+                  name="aa"
+                  formControlName="aa"
+                  value="1"
+                  [(ngModel)]="reportingView.declinedOption[0].checked"
+                  [checked]="reportingView.declinedOption[0].checked"
+                />
+                All Inclusive or Premium Protection Insurance
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="bb"
+                  formControlName="bb"
+                  value="2"
+                  [(ngModel)]="reportingView.declinedOption[1].checked"
+                  [checked]="reportingView.declinedOption[1].checked"
+                />
+                Cancellation/Interruption
+              </label>
+              <label>
+                <input type="checkbox" name="cc" formControlName="cc" value="3" [(ngModel)]="reportingView.declinedOption[2].checked" />
+                Emergency Medical/Transportation</label
               >
-                <option value="1"
-                  >All Inclusive or Premium Protection Insurance</option
-                >
-                <option value="2">Cancellation/Interruption</option>
-                <option value="3">Emergency Medical/Transportation</option>
-                <option value="4">Flight and Travel Accident</option>
-                <option value="5">Rental Car Physical Damage</option>
-                <option value="6"
-                  >Coverage for the Full Dollar Value of the trip</option
-                >
-              </select>
+              <label>
+                <input type="checkbox" name="dd" formControlName="dd" value="4" [(ngModel)]="reportingView.declinedOption[3].checked" />
+                Flight and Travel Accident</label
+              >
+              <br />
+              <label>
+                <input type="checkbox" name="ee" formControlName="ee" value="5" [(ngModel)]="reportingView.declinedOption[4].checked" />
+                Rental Car Physical Damage</label
+              >
+              <label>
+                <input type="checkbox" name="ff" formControlName="ff" value="6" [(ngModel)]="reportingView.declinedOption[5].checked" />
+                Coverage for the Full Dollar Value of the trip
+              </label>
             </div>
             <div class="col">
-              &nbsp;
+              Insurance Declined Reason:
               <input
                 type="text"
                 class="form-control"
@@ -149,7 +156,10 @@
       </div>
     </form>
   </tab>
-
+  <div class="ng-warning" *ngIf="warningMessage != ''">
+    {{ warningMessage }}
+  </div>
+  <br />
   <tab *ngIf="isRbmRbp()" heading="Royal Bank - Concierge" id="tab2">
     <app-concierge-udids></app-concierge-udids>
   </tab>

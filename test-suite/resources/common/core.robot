@@ -61,18 +61,14 @@ Open CA Migration Window
     #Open and verify CA Migration window acceptance
     Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
     Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
-    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://${env.lower()}.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
-    Comment    Select Frame    xpath=//iframe[contains(@src,'https://${env.lower()}.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
-    #links when running for UAT
-    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration UAT"]
-    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration UAT')]    60
-    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'https://staging.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]    60
-    Comment    Select Frame    xpath=//iframe[contains(@src,'https://staging.int.us-west-2.bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
+    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
+    Comment    Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Load PNR')]    180
 
 Open Cryptic Display Window
     #Open Cryptic Display window from Graphic Mode
     Wait Until Element Is Enabled    css=.bookingTool.FS    30
+    Wait Until Element Is Visible    xpath=//button[contains(@id, 'crypticDisplay')]    30
     Press Key    xpath=//button[contains(@id, 'crypticDisplay')]    \\32
     Wait Until Page Contains Element    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]    30
     Sleep    10

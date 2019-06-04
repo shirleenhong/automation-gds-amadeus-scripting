@@ -5,5 +5,5 @@ export const common = {
     '/service/repo/powerbaseaws/Location/Country?LanguageCode=en-GB',
   travelportService:
     '/service/repo/powerbaseaws/TravelPorts/Airport?TravelPortCode=',
-  supplierCodes: '/service/repo/powerbaseaws/Suppliers?countryCode=CA'
+  supplierCodes: '/service/repo/powerbaseaws/Suppliers?CountryCode=CA'
 };

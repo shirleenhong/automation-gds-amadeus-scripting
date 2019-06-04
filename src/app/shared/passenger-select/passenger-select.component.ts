@@ -1,8 +1,15 @@
-import { Component, OnInit, forwardRef, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, NG_VALIDATORS, FormControl,
-         FormBuilder, FormGroup, Validators, Validator } from '@angular/forms';
+import { Component, OnInit, forwardRef } from '@angular/core';
+import {
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  FormControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  Validator
+} from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
-import { BsDropdownConfig } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-passenger-select',
@@ -14,21 +21,25 @@ import { BsDropdownConfig } from 'ngx-bootstrap';
       useExisting: forwardRef(() => PassengerSelectComponent),
       multi: true
     },
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => PassengerSelectComponent), multi: true },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => PassengerSelectComponent),
+      multi: true
+    }
   ]
 })
-export class PassengerSelectComponent implements OnInit, ControlValueAccessor, Validator {
-
+export class PassengerSelectComponent
+  implements OnInit, ControlValueAccessor, Validator {
   val = '';
   passengerGroup: FormGroup;
   passengerList = [];
   passengerSelected = [];
-  isSinglePassenger: boolean = false;
+  isSinglePassenger = false;
 
-  propagateChange: any = () => { };
-  validateFn: any = () => { };
-  onTouched: any = () => { };
-  onChange: any = () => { };
+  propagateChange: any = () => {};
+  validateFn: any = () => {};
+  onTouched: any = () => {};
+  onChange: any = () => {};
 
   writeValue(obj: any): void {
     this.passengerGroup.get('passenger').setValue(obj);
@@ -39,7 +50,9 @@ export class PassengerSelectComponent implements OnInit, ControlValueAccessor, V
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void { this.onTouched = fn; }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 
   setDisabledState?(isDisabled: boolean): void {
     if (isDisabled) {
@@ -47,23 +60,26 @@ export class PassengerSelectComponent implements OnInit, ControlValueAccessor, V
     } else {
       this.passengerGroup.get('passenger').enable();
     }
-
   }
 
   validate(c: FormControl) {
     return this.validateFn(c);
   }
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService) {
+  constructor(fb: FormBuilder, private pnrService: PnrService) {
     this.passengerGroup = fb.group({
       passenger: new FormControl('', [Validators.required])
     });
   }
 
   ngOnInit() {
-      this.passengerList = this.pnrService.getPassengers();
-      this.passengerGroup.get('passenger').markAsDirty();
-      if (this.passengerList.length === 1) { this.isSinglePassenger = true; } else { this.isSinglePassenger = false; }
+    this.passengerList = this.pnrService.getPassengers();
+    this.passengerGroup.get('passenger').markAsDirty();
+    if (this.passengerList.length === 1) {
+      this.isSinglePassenger = true;
+    } else {
+      this.isSinglePassenger = false;
+    }
   }
 
   get value() {
@@ -78,7 +94,7 @@ export class PassengerSelectComponent implements OnInit, ControlValueAccessor, V
   }
 
   updateValue(val) {
-    const newVal = (val.currentTarget.value);
+    const newVal = val.currentTarget.value;
     const isChecked = val.currentTarget.checked;
 
     if (isChecked) {

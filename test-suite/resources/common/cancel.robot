@@ -31,10 +31,11 @@ Enter Ticket Number For Refund
 Enter Coupon Number For Refund
     [Arguments]    ${coupon_field_order}    ${coupon_refund}
     Input Text    xpath=//div[@ng-reflect-name='tickets'][${coupon_field_order}]//input[@formcontrolname='coupon']    ${coupon_refund}
+    [Teardown]    Take Screenshot
 
 Click Cancel Segments Button
     Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
-    Sleep    10
+    Sleep    15
     [Teardown]    Take Screenshot
 
 Select UA Reason For Cancel
@@ -66,3 +67,8 @@ Unselect Passive Segment
 Select NonRefundable AC Flight Checkbox
     Select Checkbox    css=#cancelNonRefAC
     Wait Until Page Contains Element    css=#reasonACCancel    30
+
+Enter Relationship
+    [Arguments]    ${relationship}
+    Input Text    css=#relationship    ${relationship}
+    [Teardown]    Take Screenshot

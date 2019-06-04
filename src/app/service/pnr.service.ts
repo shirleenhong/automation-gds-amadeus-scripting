@@ -5,9 +5,6 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { SegmentModel } from '../models/pnr/segment.model';
-
-import { DDBService } from './ddb.service';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 
 declare var PNR: any;
@@ -26,7 +23,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -34,7 +31,7 @@ export class PnrService {
     await this.pnrObj
       .retrievePNR()
       .then(
-        (res: any) => {
+        () => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
         },
@@ -47,6 +44,7 @@ export class PnrService {
         console.log(err);
       });
     this.getPCC();
+    console.log(JSON.stringify(this.pnrObj));
   }
 
   getPCC(): void {
@@ -186,6 +184,7 @@ export class PnrService {
           firstname: fname,
           surname: lname,
           id: rm.elementNumber,
+          tatooNo: rm.tatooNumber,
           fullname
         };
         passengers.push(passenger);
@@ -329,10 +328,10 @@ export class PnrService {
   private formatDate(tempDate) {
     const lairdate = new Date(
       tempDate.substr(2, 2) +
-        '/' +
-        tempDate.substr(0, 2) +
-        '/' +
-        tempDate.substr(4, 2)
+      '/' +
+      tempDate.substr(0, 2) +
+      '/' +
+      tempDate.substr(4, 2)
     );
     const datePipe = new DatePipe('en-US');
     const tdate = datePipe.transform(lairdate, 'ddMMM');
@@ -431,10 +430,10 @@ export class PnrService {
   private getLastDate(airdate: any, lastDeptDate: Date) {
     const lairdate = new Date(
       airdate.substr(2, 2) +
-        '/' +
-        airdate.substr(0, 2) +
-        '/' +
-        airdate.substr(4, 2)
+      '/' +
+      airdate.substr(0, 2) +
+      '/' +
+      airdate.substr(4, 2)
     );
     if (lairdate > lastDeptDate) {
     }
@@ -505,7 +504,6 @@ export class PnrService {
         case 'RIR':
           arr = this.pnrObj.rirElements;
           break;
-
         default:
           arr = this.pnrObj.rmElements;
           break;
@@ -518,7 +516,8 @@ export class PnrService {
           lineNo: rm.elementNumber,
           tattooNumber: rm.tatooNumber,
           value: '',
-          segments: []
+          segments: [],
+          qualifier: rm.category
         };
 
         // if (rm.associations !== undefined && rm.associations && rm.associations.length > 0) {
@@ -605,6 +604,7 @@ export class PnrService {
         const rems = rm.freeFlowText.split('/-');
         fee.segmentAssoc = '2';
         fee.address = taxProvince;
+        fee.passengerNo = this.getPassengerAssocNumbers(rm.associations);
         rems.forEach(r => {
           if (r.indexOf('-') >= 0) {
             const arr = r.split('-');
@@ -679,6 +679,11 @@ export class PnrService {
           model !== undefined
         ) {
           model.segmentNo = this.getAssocNumbers(rm.associations);
+          model.passengerNo = this.getPassengerAssocNumbers(rm.associations);
+          model.passRelate = false;
+          if (model.passengerNo) {
+            model.passRelate = true;
+          }
 
           if (apays !== null && apays.length > 0) {
             apays.forEach(x => {
@@ -778,10 +783,26 @@ export class PnrService {
     const s = [];
     assoc.forEach(x => {
       const segment = this.getSegmentTatooNumber().find(
-        z => z.tatooNo === x.tatooNumber
+        z => z.tatooNo === x.tatooNumber && x.segmentType === 'ST'
       );
       if (segment !== null && segment !== undefined) {
         s.push(segment.lineNo);
+      }
+    });
+    return s.join(',');
+  }
+
+  getPassengerAssocNumbers(assoc) {
+    if (assoc === null || assoc === undefined) {
+      return '';
+    }
+    const s = [];
+    assoc.forEach(x => {
+      const passenger = this.getPassengers().find(
+        z => z.tatooNo === x.tatooNumber && x.segmentType === 'PT'
+      );
+      if (passenger !== null && passenger !== undefined) {
+        s.push(passenger.id);
       }
     });
     return s.join(',');
@@ -1108,6 +1129,29 @@ export class PnrService {
       }
     }
 
+    return false;
+  }
+
+  getEmailAddressesFromGds() {
+    const emailList = [];
+    if (this.isPNRLoaded) {
+      for (const ape of this.pnrObj.apElements) {
+        if (ape.type === 'E') {
+          emailList.push(ape.fullNode.otherDataFreetext.longFreetext);
+        }
+      }
+    }
+    return emailList;
+  }
+
+  getRmqEmail() {
+    if (this.isPNRLoaded) {
+      for (const rm of this.pnrObj.rmElements) {
+        if (rm.category === 'Q' && rm.freeFlowText === 'EMAIL ADD-NO') {
+          return true;
+        }
+      }
+    }
     return false;
   }
 }

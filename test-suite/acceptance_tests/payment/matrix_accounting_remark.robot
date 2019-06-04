@@ -6,7 +6,7 @@ Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     [Tags]    US7747    US8001
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
-    ...    APETEST@EMAIL.COM    TKOK
+    ...    RU1AHK1SIN21DEC-CWT RETENTION SEGMENT    APETEST@EMAIL.COM    TKOK
     Open CA Migration Window
     Click Load PNR
     Click Panel    Payment
@@ -85,8 +85,8 @@ Verify That Matrix Accounting Remark Is Updated For Tour Accounting Remark Type
 Verify That Matrix Accounting Remark Is Written For Cruise Accounting Remark Type
     [Tags]    US7747    US8001
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3KEL12NOV-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-12NOV/ST-1800OSL/ED-13NOV/ET-0800/CF-12345    RM*CF/-RBM0000000N
-    ...    APETest@email.com    TKOK
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS AC1074 Y 20NOV YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3KEL21NOV-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-12NOV/ST-1800OSL/ED-13NOV/ET-0800/CF-12345    RM*CF/-RBM0000000N
+    ...    RU1AHK1SIN23NOV-CWT RETENTION SEGMENT    APETest@email.com    TKOK
     Open CA Migration Window
     Click Load PNR
     Click Panel    Payment
@@ -281,7 +281,7 @@ Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark
     [Tags]    us7747
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N
-    ...    APE21345    TKOK
+    ...    RU1AHK1SIN27DEC-CWT RETENTION SEGMENT    APE21345    TKOK
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -374,7 +374,8 @@ Verify That APAY Matrix Accounting Remark Is Updated For Seat Costs Accounting R
 Verify That APAY Matrix Accounting Remark Is Written For Maple Leaf Accounting Remark Type
     [Tags]    us7761
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    RU1AHK1SIN26DEC-CWT RETENTION SEGMENT
+    ...    APE1132    TKOK
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -457,7 +458,8 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for APAY
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Segment    3    4
-    Create Matrix Accounting Remark    YES    Apay Accounting Remark    AD1    123555    Agency Plastic    MAPLE LEAF
+    Create Matrix Accounting Remark    YES    Apay Accounting Remark    AD1    123555    Agency Plastic    ${EMPTY}
+    ...    \    \    MAPLE LEAF
     Enter Base Amount    100.75
     Enter GST Tax Amount    3.00
     Enter HST Tax Amount    2.50
@@ -524,6 +526,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Food Costs Accounting R
     [Tags]    us7761
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N
+    ...    RU1AHK1SIN19DEC-CWT RETENTION SEGMENT    APE123123    TKOK
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -533,7 +536,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Food Costs Accounting R
     Click Panel    Payment
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
-    Select Segment    4
+    Select Segment    5
     Create Matrix Accounting Remark    YES    Apay Accounting Remark    CGO    123555    Credit Card    VI
     ...    4444333322221111    0323    FOOD COSTS
     Enter Base Amount    2125.75
@@ -557,6 +560,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Acco
     [Tags]    us7761
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N
+    ...    APE123123    TKOK
     Open CA Migration Window
     Click Load PNR
     Click Panel    Reporting
@@ -589,8 +593,6 @@ Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Acco
 *** Keywords ***
 Verify Matrix Accounting Default Values Are Correct
     [Arguments]    ${matrix_accounting}    ${is_ticket_blank}=True
-    Comment    ${default_segment_no}    Get Element Attribute    xpath=//input[@id='segmentNo']@ng-reflect-model
-    Comment    Should be Equal    ${default_segment_no}    ${segment_number}
     ${default_supplier_code}    Get Element Attribute    xpath=//input[@id='supplierCodeName']@ng-reflect-model
     Should Be Equal    ${default_supplier_code}    ${supplier_code}
     ${default_confirmation_no}    Get Element Attribute    xpath=//input[@id='supplierConfirmatioNo']@ng-reflect-model

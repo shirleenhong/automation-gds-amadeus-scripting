@@ -55,6 +55,7 @@ export class LeisureFeeComponent implements OnInit {
     if (ex) {
       const arr = ex.split('/-');
       arr.forEach(x => {
+        // tslint:disable-next-line: no-shadowed-variable
         const e = this.exemption.find(e => e.value === x);
         if (e) {
           e.checked = true;
@@ -65,7 +66,7 @@ export class LeisureFeeComponent implements OnInit {
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(result => {
+    this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
@@ -150,17 +151,19 @@ export class LeisureFeeComponent implements OnInit {
 
   checkReasonFee() {
     const cfa = this.pnrService.getCFLine();
-    if (
-      cfa.cfa === 'RBM' ||
-      cfa.cfa === 'RBP' ||
-      this.leisureFeeList.length > 0
-    ) {
-      this.showReasonFee = false;
-      this.leisureFeeForm.get('noFeeReason').setValue('');
-      this.leisureFeeForm.get('noFeeReason').disable();
-    } else {
-      this.showReasonFee = true;
-      this.leisureFeeForm.get('noFeeReason').enable();
+    if (cfa) {
+      if (
+        cfa.cfa === 'RBM' ||
+        cfa.cfa === 'RBP' ||
+        this.leisureFeeList.length > 0
+      ) {
+        this.showReasonFee = false;
+        this.leisureFeeForm.get('noFeeReason').setValue('');
+        this.leisureFeeForm.get('noFeeReason').disable();
+      } else {
+        this.showReasonFee = true;
+        this.leisureFeeForm.get('noFeeReason').enable();
+      }
     }
   }
 }

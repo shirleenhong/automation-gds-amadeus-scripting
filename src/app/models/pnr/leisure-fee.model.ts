@@ -8,6 +8,7 @@ export class LeisureFeeModel {
     ccNo: string;
     expDate: string;
     address: string;
+    passengerNo: string;
 }
 
 

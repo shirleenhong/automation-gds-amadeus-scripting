@@ -8,10 +8,10 @@ Login To Amadeus Sell Connect
     Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
     Maximize Browser Window
     Wait Until Element Is Visible    css=#username > span:first-child input    60
-    Enter Username    U002MCC
+    Enter Username    ${username} 
     Enter Dutycode    GS
     Enter Office ID    YTOWL2107
-    Enter Password    Amasel03@
+    Enter Password    ${password}
     Wait Until Element Is Not Visible    css=#logi_confirmButton .xButtonDisabled    30
     Click Element    css=#logi_confirmButton .xButton
     Handle Force Login Window
@@ -122,3 +122,48 @@ Verify Package Costs UDID Remarks Are Written In the PNR
     Verify Specific Remark Is Written In The PNR    RM *U43/-${balance_due_date}
     Verify Specific Remark Is Written In The PNR    RM *U42/-${tour_commission_amount}
     Verify Specific Remark Is Written In The PNR    RM *U41/-${balance_due_amt}
+
+Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR
+    [Arguments]    ${segment_number}    ${language}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION/S${segment_number}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR AT LEAST 45 MINUTES PRIOR TO DEPARTURE./S${segment_number}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR VIA RAIL POLICY-NONSMOKING ENVIRONMENT ON ALL TRAINS./S${segment_number}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR VIA COUPONS ARE NOT VALID FOR AIR TRAVEL./S${segment_number}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR IF CHANGES ARE MADE ENROUTE PLEASE ENSURE YOUR/S${segment_number}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE./S${segment_number}
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR/S${segment_number}    True
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TRAIN DEPARTURE/ARRIVAL TIMES./S${segment_number}
+    #french
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR PRESENTER A LA GARE AU MOINS 45 MINUTES AVANT L HEURE PREVUE DE/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR VOTRE DEPART SUIVANT LA POLITIQUE DE VIA RAIL-TOUS LES/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR TRAINS SONT NON FUMEUR. LES COUPONS VIA RAIL NE PEUVENT ETRE/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR UTILISES POUR DES DEPLACEMENTS AERIENS. SI VOUS DEVEZ MODIFIER/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR VOTRE ITINERAIRE EN COURS DE ROUTE ASSUREZ-VOUS QUE VOTRE/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR BILLET EST ENDOSSE PAR LA BILLETTERIE VIA 1./S${segment_number}
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR/S${segment_number}    True
+    Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN./S${segment_number}    True
+
+Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR
+    [Arguments]    ${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER./S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR ALL AMTRAK TRAINS EXCEPT AUTO TRAIN ARE NON-SMOKING./S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR TRAIN CHANGES ARE PERMITTED ANYTIME SUBJECT TO AVAILABILITY/S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR IF YOU NEED TO CHANGE OR CANCEL YOUR RESERVATION-/S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR REFUND/CHANGE FEES MAY APPLY/S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR RECOMMENDED ARRIVAL TIME AT THE STATION AT LEAST 30 MINUTES/S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR PRIOR TO YOUR SCHEDULES DEPARTURE./S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR ALLOW ADDITIONAL TIME IF YOU NEED HELP WITH BAGGAGE OR TICKETS./S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN/S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR AT LEAST 2 HOURS BEFORE SCHEDULED DEPARTURE./S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR THIS CONFIRMATION NOTICE IS NOT A TICKET/S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR YOU MUST OBTAIN YOUR TICKET BEFORE BOARDING ANY TRAIN./S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR THIS CONFIRMATION WILL NOT BE ACCEPTED ONBOARD./S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR YOUR ENTIRE RESERVATION -ALL SEGMENTS- WILL BE CANCELLED/S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR IF YOU DO NOT PICK UP YOUR TICKET BEFORE YOUR FIRST DEPARTURE OR/S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION./S${segment_number}
+    Verify Specific Remark Is Written In The PNR    RIR IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW/S${segment_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR RESERVATIONS WHICH MAY BE AT A HIGHER FARE./S${segment_number}
+
+Get Hotel Address Details
+    

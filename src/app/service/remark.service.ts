@@ -2,8 +2,7 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
-import { iterateListLike } from '@angular/core/src/change_detection/change_detection_util';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { PnrService } from './pnr.service';
 
 declare var smartScriptSession: any;
 
@@ -18,7 +17,7 @@ export class RemarkService {
   passiveSegmentElement: Array<any>;
   passiveSegmentGroup: Array<PassiveSegmentModel>;
   responseMessage: string;
-  constructor() {
+  constructor(private pnrService: PnrService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
     this.remarksElement = new Array<any>();
@@ -39,49 +38,45 @@ export class RemarkService {
     this.deleteSegmentByIds = Array<string>();
     this.crypticCommands = new Array<string>();
 
-    remarkGroups.forEach(group => {
+    remarkGroups.forEach((group) => {
       if (group !== undefined && group.group !== '') {
-        if (
-          group.deleteSegmentByIds != null &&
-          group.deleteSegmentByIds.length > 0
-        ) {
-          group.deleteSegmentByIds.forEach(c => {
-            if (!this.deleteSegmentByIds.find(z => z === c)) {
+        if (group.deleteSegmentByIds != null && group.deleteSegmentByIds.length > 0) {
+          group.deleteSegmentByIds.forEach((c) => {
+            if (!this.deleteSegmentByIds.find((z) => z === c)) {
               this.deleteSegmentByIds.push(c);
             }
           });
         }
 
-        if (
-          group.deleteRemarkByIds != null &&
-          group.deleteRemarkByIds.length > 0
-        ) {
-          group.deleteRemarkByIds.forEach(c => {
-            if (!this.deleteRemarksByIds.find(z => z === c)) {
+        if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
+          group.deleteRemarkByIds.forEach((c) => {
+            if (!this.deleteRemarksByIds.find((z) => z === c)) {
               this.deleteRemarksByIds.push(c);
             }
           });
         }
 
         if (group.cryptics != null && group.cryptics.length > 0) {
-          group.cryptics.forEach(c => {
+          group.cryptics.forEach((c) => {
             this.crypticCommands.push(c);
           });
         }
 
         if (group.passiveSegments != null && group.passiveSegments.length > 0) {
-          group.passiveSegments.forEach(pas => {
+          group.passiveSegments.forEach((pas) => {
             this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
           });
         }
 
         if (group.remarks != null && group.remarks.length > 0) {
-          group.remarks.forEach(rem => {
-            if (rem.remarkType === 'FS') {
-              this.remarksElement.push(this.getFSRemarksElement(rem));
-            } else {
-              // let test = this.getRemarkElement(rem);
-              this.remarksElement.push(this.getRemarkElement(rem));
+          group.remarks.forEach((rem) => {
+            if (rem) {
+              if (rem.remarkType === 'FS') {
+                this.remarksElement.push(this.getFSRemarksElement(rem));
+              } else {
+                // let test = this.getRemarkElement(rem);
+                this.remarksElement.push(this.getRemarkElement(rem));
+              }
             }
           });
         }
@@ -130,9 +125,19 @@ export class RemarkService {
 
     const temp = new Array<any>();
     if (remarkModel.relatedSegments) {
-      remarkModel.relatedSegments.forEach(element => {
+      remarkModel.relatedSegments.forEach((element) => {
         const ref = {
           qualifier: 'ST',
+          number: element
+        };
+        temp.push(ref);
+      });
+    }
+
+    if (remarkModel.relatedPassengers) {
+      remarkModel.relatedPassengers.forEach((element) => {
+        const ref = {
+          qualifier: 'PT',
           number: element
         };
         temp.push(ref);
@@ -175,10 +180,6 @@ export class RemarkService {
     const productDetails = {
       identification: passiveSegmentmodel.flightNo,
       classOfService: passiveSegmentmodel.classOfService
-    };
-
-    const carDetails = {
-      identification: passiveSegmentmodel.carType
     };
 
     const travelProductProduct: { [k: string]: any } = {
@@ -262,14 +263,14 @@ export class RemarkService {
   }
 
   sendCryptics() {
-    this.crypticCommands.forEach(command => {
+    this.crypticCommands.forEach((command) => {
       smartScriptSession.send(command);
     });
   }
 
   deleteSegments() {
     let deleteIds = '';
-    this.deleteSegmentByIds.forEach(ids => {
+    this.deleteSegmentByIds.forEach((ids) => {
       deleteIds += ids + ',';
     });
     if (deleteIds !== '') {
@@ -280,7 +281,8 @@ export class RemarkService {
 
   deleteRemarks() {
     let deleteIds = '';
-    this.deleteRemarksByIds.forEach(ids => {
+    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
+    filteredIds.forEach((ids) => {
       deleteIds += ids + ',';
     });
     if (deleteIds !== '') {
@@ -289,22 +291,43 @@ export class RemarkService {
     }
   }
 
-  sortDeleteIds(arr: Array<string>) {
-    arr.sort((a, b) => Number(a) - Number(b));
+  sortArrayForDelete(arr) {
+    const dl = arr.sort((a, b) => {
+      return Number(a.toString().split('-')[0]) - Number(b.toString().split('-')[0]);
+    });
+    // return dl;
     const newArr = [];
-    let temp = 0;
-    // tslint:disable-next-line: forin
-    for (const i in arr) {
-      if (temp !== 0) {
-        if (temp + 1 === Number(arr[i])) {
+    let tmp = '';
+    let tmpIndx = 0;
+    for (let i = 0; i < dl.length; i++) {
+      tmp = '';
+      tmpIndx = 0;
+      for (let j = i + 1; j < dl.length; j++) {
+        if (dl[j - 1].indexOf('-') >= 0 || dl[j].indexOf('-') >= 0) {
+          break;
+        }
+
+        if (Number(dl[j - 1]) + 1 === Number(dl[j])) {
+          tmp = dl[j];
+          tmpIndx = j;
         } else {
-          newArr.push(temp + '-' + arr[i]);
+          break;
+        }
+      }
+      if (tmp === '') {
+        if (i > 0 && dl[i - 1].indexOf('-') > 0) {
+          if (Number(dl[i - 1].split('-')[1]) < Number(dl[i])) {
+            newArr.push(dl[i]);
+          }
+        } else {
+          newArr.push(dl[i]);
         }
       } else {
-        temp = Number(arr[i]);
+        newArr.push(dl[i] + '-' + tmp);
+        i = tmpIndx;
       }
     }
-    return arr;
+    return newArr;
   }
 
   async sendRemarks() {
@@ -340,26 +363,24 @@ export class RemarkService {
       dataElementsMaster
     };
     console.log(JSON.stringify(remarkElements));
-    await smartScriptSession
-      .requestService('ws.addMultiElement_v14.1', remarkElements)
-      .then(
-        data => {
-          this.responseMessage = 'Remarks Updated';
-          this.endPNR('CWTSCRIPT');
+    await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
+      () => {
+        this.responseMessage = 'Remarks Updated';
+        this.endPNR('CWTSCRIPT');
 
-          smartScriptSession.getActiveTask().then(x => {
-            if (x.subtype === 'PNR') {
-              smartScriptSession.requestService('bookingfile.refresh', null, {
-                fn: '',
-                scope: this
-              });
-            }
-          });
-        },
-        error => {
-          this.responseMessage = JSON.stringify(error);
-        }
-      );
+        smartScriptSession.getActiveTask().then((x) => {
+          if (x.subtype === 'PNR') {
+            smartScriptSession.requestService('bookingfile.refresh', null, {
+              fn: '',
+              scope: this
+            });
+          }
+        });
+      },
+      (error) => {
+        this.responseMessage = JSON.stringify(error);
+      }
+    );
   }
 
   async SubmitRemarks() {
@@ -378,6 +399,9 @@ export class RemarkService {
   }
 
   endPNR(requestor) {
+    if (this.pnrService.pnrObj.tkElements.length < 1) {
+      smartScriptSession.send('TKOK');
+    }
     smartScriptSession.send('RF' + requestor);
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');

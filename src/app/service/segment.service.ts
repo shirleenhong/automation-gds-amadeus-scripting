@@ -1,18 +1,12 @@
-
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
-// import { UpdateTourSegmentComponent } from '../passive-segments/tour-segment/update-tour-segment.component';
 import { DatePipe } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { TourSegmentViewModel } from 'src/app/models/tour-segment-view.model';
 import { Injectable } from '@angular/core';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
-import { SwitchView } from '@angular/common/src/directives/ng_switch';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { FormControl, FormGroup, FormArray } from '@angular/forms';
-import { RemarkService } from './remark.service';
-import { debug } from 'util';
+import { FormArray } from '@angular/forms';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -30,13 +24,12 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private remarkService: RemarkService) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
-        const remarks = new Array<RemarkModel>();
         let startTime = '';
         let endTime = '';
         let segdest = '';
@@ -144,7 +137,7 @@ export class SegmentService {
                         this.rirTrain(pnrSegment, segmentrem, rmGroup, segRemark, amk, vib, itinLanguage);
                     }
                     if (segmentrem.segmentType === 'LIM') {
-                        this.rirLimo(pnrSegment, segmentrem, rmGroup, segRemark, itinLanguage);
+                        this.rirLimo(pnrSegment, segmentrem, rmGroup, itinLanguage);
                     }
                 }
 
@@ -259,7 +252,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        segRemark: any, amk: number, vib: number, itinLanguage: string) {
+                     segRemark: any, amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -299,7 +292,7 @@ export class SegmentService {
         }
     }
 
-    private rirLimo(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, segRemark: any, itinLanguage: string) {
+    private rirLimo(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, itinLanguage: string) {
         let taxRemarks = '';
         let nottaxRemarks = '';
 
@@ -393,7 +386,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
             case 'TOR':
@@ -610,7 +603,6 @@ export class SegmentService {
 
     osiCancelRemarks(cancel: any) {
         let remText = '';
-        const multiremText = '';
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Cancel OSI';
         rmGroup.remarks = new Array<RemarkModel>();

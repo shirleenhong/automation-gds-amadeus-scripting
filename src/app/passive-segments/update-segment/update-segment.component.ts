@@ -12,7 +12,7 @@ declare var smartScriptSession: any;
 @Component({
   selector: 'app-update-segment',
   templateUrl: './update-segment.component.html',
-  styleUrls: ['./update-segment.component.scss'],
+  styleUrls: ['./update-segment.component.scss']
 })
 export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   title: string;
@@ -52,7 +52,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     loadCarSupplier: '',
     loadCarType: '',
     loadDropOffAddr: '',
-    loadPickupOffAddr: '',
+    loadPickupOffAddr: ''
   };
   stateProvinceList: any;
   lblvendorName: any;
@@ -152,7 +152,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     address: new FormControl('', [Validators.required]),
     province: new FormControl(''),
     zipCode: new FormControl(''),
-    country: new FormControl('', [Validators.required]),
+    country: new FormControl('', [Validators.required])
   });
 
   constructor(
@@ -161,12 +161,12 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     public modalRef: BsModalRef,
     private ddbService: DDBService,
     private fb: FormBuilder,
-    private util: UtilHelper,
+    private util: UtilHelper
   ) {
     this.passiveSegments = new PassiveSegmentsModel();
     // this.supplierCodeList ;//= this.ddbService.getSupplierCode();
     this.segmentForm = fb.group({
-      segmentType: new FormControl('', [Validators.required]),
+      segmentType: new FormControl('', [Validators.required])
     });
 
     this.loadMealPlan();
@@ -205,7 +205,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     this.mealPlanList = [
       { itemText: '', itemValue: '' },
       { itemText: 'All Inclusive', itemValue: 'ALL INCLUSIVE' },
-      { itemText: 'American Plan', itemValue: 'AMERICAN PLAN' },
+      { itemText: 'American Plan', itemValue: 'AMERICAN PLAN' }
     ];
   }
 
@@ -214,7 +214,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: '', itemValue: '' },
       { itemText: 'SGLB', itemValue: 'SGLB' },
       { itemText: 'DBLB', itemValue: 'DBLB' },
-      { itemText: 'TRPL', itemValue: 'TRPL' },
+      { itemText: 'TRPL', itemValue: 'TRPL' }
     ];
   }
 
@@ -228,7 +228,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Queen Room', itemValue: 'QUEEN ROOM' },
       { itemText: 'King Room', itemValue: 'KING ROOM' },
       { itemText: 'Twin Room', itemValue: 'TWIN ROOM' },
-      { itemText: 'Studio Room', itemValue: 'STUDIO ROOM' },
+      { itemText: 'Studio Room', itemValue: 'STUDIO ROOM' }
     ];
   }
 
@@ -246,7 +246,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Car', itemValue: 'CAR' },
       { itemText: 'Limo', itemValue: 'LIM' },
       { itemText: 'Hotel', itemValue: 'HTL' },
-      { itemText: 'Rail', itemValue: 'TRN' },
+      { itemText: 'Rail', itemValue: 'TRN' }
     ];
   }
 
@@ -258,10 +258,10 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Ocean View', itemValue: 'OCEAN VIEW' },
       {
         itemText: 'Stateroom with Balcony',
-        itemValue: 'STATEROOM WITH BALCONY',
+        itemValue: 'STATEROOM WITH BALCONY'
       },
       { itemText: 'Suite', itemValue: 'SUITE' },
-      { itemText: 'Other', itemValue: 'OTHER' },
+      { itemText: 'Other', itemValue: 'OTHER' }
     ];
   }
 
@@ -272,7 +272,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       { itemText: 'Late Dining', itemValue: 'LATE DINING' },
       { itemText: 'Open Dining', itemValue: 'OPEN DINING' },
       { itemText: 'Waitlist Early', itemValue: 'WAITLIST EARLY' },
-      { itemText: 'Waitlist Late', itemValue: 'WAITLIST LATE' },
+      { itemText: 'Waitlist Late', itemValue: 'WAITLIST LATE' }
     ];
   }
 
@@ -327,7 +327,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'noPeople',
           'zzairlineCode',
           'zzdepartureCity',
-          'zzdestinationCity',
+          'zzdestinationCity'
         ];
         this.setForm(forms);
 
@@ -356,7 +356,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'noPeople',
           'noNights',
           'roomType',
-          'mealPlan',
+          'mealPlan'
         ];
         this.setForm(forms);
         this.loadRoomType();
@@ -390,7 +390,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'stateRoom',
           'cabinNo',
           'dining',
-          'noNights',
+          'noNights'
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;
@@ -424,7 +424,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'fromStation',
           'arrivalDate',
           'arrivalTime',
-          'noPeople',
+          'noPeople'
         ];
         this.setForm(forms);
         this.selectedTmpl = this.railTmpl;
@@ -458,7 +458,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'includeTax',
           'includeToll',
           'includeParking',
-          'includeGratuities',
+          'includeGratuities'
         ];
         if (this.isAddNew) {
           this.passiveSegments.pickupLoc = 'HOME';
@@ -504,7 +504,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'specialRequest',
           'destinationCity',
           'arrivalTime',
-          'arrivalDate',
+          'arrivalDate'
         ];
         this.setForm(forms);
         this.segmentForm.get('destinationCity').clearValidators();
@@ -555,7 +555,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'zipCode',
           'country',
           'roomType',
-          'additionalInfo',
+          'additionalInfo'
         ];
         this.loadRoomTypeHotel();
         this.stateProvinceList = this.ddbService.getStateProvinces();
@@ -610,7 +610,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           if (match && match.groups) {
             this.hotelList.push({
               itemValue: match.groups.code,
-              itemText: match.groups.text,
+              itemText: match.groups.text
             });
             regex.lastIndex = 0;
           }
@@ -759,6 +759,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.loadCarSupplier();
       const airs = this.segmentList.filter((x) => x.segmentType === 'AIR');
       let air = airs.find((x) => x.destinationCity === this.passiveSegments.departureCity);
+      debugger;
       if (air) {
         this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
         this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
@@ -773,20 +774,23 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  padLeft(text, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr(size * -1, size);
+  }
+
   convertDateFormat(date) {
     date = date.toUpperCase();
     if (date.match(/([0-9]{2}[A-Z]{3})/g)) {
       const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
       const day = date.substr(0, 2);
       const month = m.indexOf(date.substr(2, 3)) + 1;
-
       const dtNow = new Date();
       let thisYr = dtNow.getFullYear().toString();
       const cdate = new Date(thisYr + '-' + month + '-' + day);
       if (cdate < dtNow) {
         thisYr = (dtNow.getFullYear() + 1).toString();
       }
-      return thisYr + '-' + month + '-' + day;
+      return thisYr + '-' + this.padLeft(month, '0', 2) + '-' + this.padLeft(day, '0', 2);
     }
     return date;
   }
@@ -840,7 +844,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           if (obj === undefined) {
             this.filterSupplierCodeList.push({
               supplierCode: match.groups.code,
-              supplierName: match.groups.text,
+              supplierName: match.groups.text
             });
           }
         }
@@ -919,7 +923,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           if (obj === undefined) {
             addrList.push({
               itemValue: match.groups.code,
-              itemText: match.groups.text,
+              itemText: match.groups.text
             });
           }
           regex.lastIndex = 0;
@@ -954,7 +958,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
             if (obj === undefined) {
               this.carTypeList.push({
                 itemValue: match.groups.code,
-                itemText: match.groups.text,
+                itemText: match.groups.text
               });
             }
             regex.lastIndex = 0;

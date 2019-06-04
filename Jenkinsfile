@@ -6,7 +6,7 @@ import java.time.Instant
 pipeline {
   agent any
   environment {
-    NODE_VERSION = "v8.12.0"
+    NODE_VERSION = "v11.11.0"
     CLUSTER_NAME = "bpg-gds-scripting-amadeus"
     REGION_NAME = "us-west-2"
     APPLICATION_NAME = "bpg-gds-scripting-amadeus"
@@ -27,11 +27,12 @@ pipeline {
     string(name: 'TAG_VERSION', defaultValue: '1.0.0-SNAPSHOT', description: 'Docker tag version')
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
-    booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression?')
+    booleanParam(name: 'RUN_SANITY_DEV', defaultValue: false, description: 'Run Sanity on Dev Environment?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')
+    booleanParam(name: 'RUN_SANITY_TEST', defaultValue: false, description: 'Run Sanity on Test Environment?')
     booleanParam(name: 'DEPLOY_TO_STAGING', defaultValue: false, description: 'Deploy to Staging Environment?')
+    booleanParam(name: 'RUN_SANITY_STAGING', defaultValue: false, description: 'Run Sanity on Staging Environment?')
     booleanParam(name: 'DEPLOY_TO_PROD', defaultValue: false, description: 'Deploy to Production Environment?')
-    text(name: 'EMAIL_RECIPIENT_LIST', defaultValue: 'WGo@carlsonwagonlit.com;JCuenca@carlsonwagonlit.com;', description: 'Regression Test result sent to email recipient list (separated by semi-colon)')
     choice(name: 'DESIRED_NO_OF_TASKS', choices: '1\n2\n3', description: 'Desired number of running tasks to scale with')
   }
 
@@ -52,20 +53,7 @@ pipeline {
             deployDockerContainer(env.DEV_TARGET_GROUP_ARN)
         }
       }
-    }
-    stage('DEV:Regression') {
-      when {
-        expression {
-          return params.RUN_REGRESSION_DEV
-        }
-      }
-      steps {
-        echo 'Running Regression Test'
-        dir(".") {
-          runRobotTest(env.ENVIRONMENT, env.APPLICATION_NAME, '')
-        }
-      }
-    }
+    }    
     stage('TEST:Deploy') {
       when {
         expression {
@@ -82,12 +70,7 @@ pipeline {
             deployDockerContainer(env.TST_TARGET_GROUP_ARN)
         }
       }
-    }    
-    stage('TEST:Sanity') {
-      steps {
-        echo 'Running Sanity Test'
-      }
-    }    
+    } 
     stage('TEST:Run Perf Test') {
       when {
         expression {
@@ -97,7 +80,7 @@ pipeline {
       steps {
         echo 'Running Performance Test'
       }
-    }    
+    }
     stage('STAGING:Deploy') {
       when {
         expression {
@@ -153,16 +136,6 @@ pipeline {
         }
       }
     }
-    stage('STAGING:Sanity') {
-      steps {
-        echo 'Running Sanity Test'
-      }
-    }
-    stage('PROD:Sanity') {
-      steps {
-        echo 'Running Sanity Test'
-      }
-    }
   }
 
 // Post Pipeline Job Actions
@@ -172,12 +145,30 @@ post {
           cleanWs()
       }
       success {
-          echo "success!"
+          echo "Build success!"
+          script {
+            runRobotTests()
+          }
       }
       failure {
-          echo "failure!"
+          echo "Build failure!"
       }
   }
+}
+
+def runRobotTests() {
+    if (params.RUN_SANITY_DEV) {
+      echo 'Running Sanity Test in Dev Environment'
+      build job: 'Amadeus GDS Scripting Robot', parameters: [string(name: 'ENV', value: "dev"), string(name: 'TAG', value: "sanity")]
+    }            
+    if (params.RUN_SANITY_TEST) {
+      echo 'Running Sanity Test in Test Environment'
+      build job: 'Amadeus GDS Scripting Robot', parameters: [string(name: 'ENV', value: "test"), string(name: 'TAG', value: "sanity")]
+    }
+    if ($params.RUN_SANITY_STAGING) {
+      echo 'Running Sanity Test in Staging Environment'
+      build job: 'Amadeus GDS Scripting Robot', parameters: [string(name: 'ENV', value: "staging"), string(name: 'TAG', value: "sanity"), string(name: 'BRANCH', value: "staging")]
+    }
 }
 
 def buildAndPrepare() {
@@ -245,7 +236,7 @@ def deployDockerContainer(targetGroupARN) {
     
   echo ' >>>>>>>>>>>>>>>>>> ECS Compose <<<<<<<<<<<<<<<< '
   echo "Cluster Name: ${CLUSTER_NAME}"
-  
+
   if(env.ENVIRONMENT == 'prod') {
     sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10'
     sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0'
@@ -288,33 +279,6 @@ def deployDockerContainerToECR(String ecrUrl, String tagVersion, String region) 
     sh 'eval $(aws ecr get-login --registry-ids ${REGISTERY_ID} --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
     sh 'docker push ${ECR_URL}:${TAG_VERSION}'
     echo ' ============== ECR Push Complete ============== '
-}
-
-def runRobotTest(currEnv, appName, tagName) {
-    script {
-        def emailSubject = appName + ' (' + currEnv + ') ' + Instant.now()
-        def emailBody = ''
-        try {
-            sh '${ROBOT_BIN} -v timeout:10 -v env:' + currEnv + ' test-suite/*'
-        } catch (Exception error) {
-            emailBody = "Build failed (see ${env.BUILD_URL}): ${error} <br/><br/>"
-            if (currentBuild.result == 'UNSTABLE')
-                currentBuild.result = 'FAILURE'
-            throw error
-        } finally {
-            step([$class           : 'RobotPublisher',
-                  passThreshold    : 100,
-                  unstableThreshold: 100,
-                  logFileName      : 'log.html',
-                  outputPath       : '',
-                  outputFileName   : 'output.xml',
-                  reportFileName   : 'report.html',
-                  otherFiles       : ''])
-
-            emailBody = emailBody + '${SCRIPT, template="robot-email-template-custom.groovy"} <br/><br/> '
-            emailext(to: 'WGo@carlsonwagonlit.com, Maridel.Castro@carlsonwagonlit.com', subject: emailSubject, body: emailBody)
-        }
-    }
 }
 
 @NonCPS

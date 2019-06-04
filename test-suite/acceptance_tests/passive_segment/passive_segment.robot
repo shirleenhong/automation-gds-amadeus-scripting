@@ -111,7 +111,7 @@ Verify Insurance Passive Segment Is Added In the PNR
     [Teardown]    Close Browser
 
 Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
-    [Tags]    us8720
+    [Tags]    us8720    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
@@ -146,7 +146,7 @@ Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
     [Teardown]    Close Browser
 
 Verify Passive Air Segment Is Added In the PNR For ZZ Details
-    [Tags]    us8720
+    [Tags]    us8720    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window

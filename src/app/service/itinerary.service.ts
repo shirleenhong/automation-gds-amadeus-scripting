@@ -10,9 +10,11 @@ import { DDBService } from './ddb.service';
   providedIn: 'root'
 })
 export class ItineraryService {
-
+  destination = [];
   constructor(private remarkHelper: RemarkHelper,
-    private pnrService: PnrService, private ddbService: DDBService) { }
+    private pnrService: PnrService, private ddbService: DDBService) {
+  }
+
 
   getItineraryRemarks(frmGroup: FormGroup) {
     const rmGroup = new RemarkGroup();
@@ -119,8 +121,6 @@ export class ItineraryService {
 
 
   async writeTktLine(rmGroup: RemarkGroup) {
-    debugger;
-    // let destinations = Array<string>();
     const air = this.pnrService.pnrObj.airSegments;
     const regx = new RegExp('TKT-(?<service>(.*))');
     const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
@@ -130,62 +130,44 @@ export class ItineraryService {
         writetkt = false;
       }
     });
-
-    // destinations = this.getCountry(air);
-    debugger;
+    let route = '';
     if (air.length > 0 && writetkt) {
-      // destinations = await this.getCountry(air, rmGroup);
-      await this.getCountry(air).then(
-        async (x) => {
-          await this.writeRouteType(x, rmGroup);
-        },
-        (error) => {
-          alert(JSON.stringify(error));
-        });
+      route = this.writeRouteType();
+      const rm = (this.remarkHelper.createRemark('TKT-' + route, 'RM', 'T'));
+      rmGroup.remarks.push(rm);
     }
+
   }
 
-
-  // async getCountry(airpot) {
-  //   await this.ddbService.getTravelPort(airpot).then(x => {
-  //     const c = JSON.stringify(x);
-  //     let obj: any;
-  //     obj = JSON.parse(c);
-  //     return obj.TravelPorts[0].CountryName;
-  //   });
-  // }
-
   async getCountry(air) {
-    const destination = Array<string>();
+    // const air = this.pnrService.pnrObj.airSegments;
     air.forEach(async x => {
       await this.ddbService.getTravelPort(x.arrivalAirport).then(x => {
         const c = JSON.stringify(x);
         let obj: any;
         obj = JSON.parse(c);
-        destination.push(obj.TravelPorts[0].CountryName);
+        this.destination.push(obj.TravelPorts[0].CountryName);
       });
 
       await this.ddbService.getTravelPort(x.departureAirport).then(x => {
         const c = JSON.stringify(x);
         let obj: any;
         obj = JSON.parse(c);
-        destination.push(obj.TravelPorts[0].CountryName);
+        this.destination.push(obj.TravelPorts[0].CountryName);
       });
     });
-    await Promise.all(destination);
   }
 
-  writeRouteType(destinations, rmGroup: RemarkGroup) {
+  writeRouteType() {
     let route = 'DOM';
-    destinations.forEach(x => {
-      if (x !== 'Canada' && x !== 'United States') {
-        return 'INTL';
+    this.destination.forEach(element => {
+      if (element !== 'Canada' && element !== 'United States') {
+        route = 'INTL';
       }
-      if (x === 'United States') {
+      if (element === 'United States' && route !== 'INTL') {
         route = 'TRANS';
       }
     });
-    let rm = (this.remarkHelper.createRemark('TKT-' + route, 'RM', 'T'));
-    rmGroup.remarks.push(rm);
+    return route;
   }
 }

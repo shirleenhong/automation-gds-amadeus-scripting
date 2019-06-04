@@ -159,15 +159,15 @@ post {
 def runRobotTests() {
     if (params.RUN_SANITY_DEV) {
       echo 'Running Sanity Test in Dev Environment'
-      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "dev"), string(name: 'TAG', value: "sanity")]
+      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "Dev"), string(name: 'TAG', value: "sanity")]
     }            
     if (params.RUN_SANITY_TEST) {
       echo 'Running Sanity Test in Test Environment'
-      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "test"), string(name: 'TAG', value: "sanity")]
+      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "Test"), string(name: 'TAG', value: "sanity")]
     }
     if ($params.RUN_SANITY_STAGING) {
       echo 'Running Sanity Test in Staging Environment'
-      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "staging"), string(name: 'TAG', value: "sanity"), string(name: 'BRANCH', value: "staging")]
+      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "UAT"), string(name: 'TAG', value: "sanity"), string(name: 'BRANCH', value: "staging")]
     }
 }
 

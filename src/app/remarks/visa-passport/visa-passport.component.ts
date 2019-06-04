@@ -245,13 +245,13 @@ export class VisaPassportComponent implements OnInit {
       ];
       for (const air of this.pnrService.pnrObj.airSegments) {
 
-        debugger;
-        await this.ddbService.getTravelPort(air.departureAirport).then(x => {
-          const c = JSON.stringify(x);
-          let obj: any;
-          obj = JSON.parse(c);
-          this.departureCountry = obj[0].countryName;
-        });
+        // debugger;
+        // await this.ddbService.getTravelPort(air.departureAirport).then(x => {
+        //   const c = JSON.stringify(x);
+        //   let obj: any;
+        //   obj = JSON.parse(c);
+        //   this.departureCountry = obj[0].countryName;
+        // });
         // await this.ddbService.getTravelPort(air.arrivalAirport).then(x => {
         //   const c = JSON.stringify(x);
         //   let obj: any;

@@ -97,7 +97,7 @@
 
           <div class="row form-group" *ngIf="!reportingView.showInsurance">
             <div class="col">
-              Insurance Declined Reason:
+              Insurance Type:
               <!-- <select class="form-control" required id="declinedOption" name="declinedOption"
                 [(ngModel)]="reportingView.declinedOption" formControlName="declinedOption">
                 <option value="1">All Inclusive or Premium Protection Insurance</option>
@@ -148,7 +148,7 @@
               </label>
             </div>
             <div class="col">
-              Reason Remark:
+              Insurance Declined Reason:
               <input
                 type="text"
                 class="form-control"
@@ -165,7 +165,10 @@
       </div>
     </form>
   </tab>
-
+  <div class="ng-invalid" *ngIf="warningMessage != ''">
+    {{ warningMessage }}
+  </div>
+  <br />
   <tab *ngIf="isRbmRbp()" heading="Royal Bank - Concierge" id="tab2">
     <app-concierge-udids></app-concierge-udids>
   </tab>

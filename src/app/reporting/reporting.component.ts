@@ -27,6 +27,7 @@ export class ReportingComponent implements OnInit, OnChanges {
   enableInsurance = false;
   countryList: Array<string>;
   isCVC = false;
+  warningMessage = '';
 
   constructor(
     private pnrService: PnrService,
@@ -56,6 +57,7 @@ export class ReportingComponent implements OnInit, OnChanges {
       ee: new FormControl(''),
       ff: new FormControl('')
     });
+    this.warningMessage = '';
 
     this.getRouteCodes();
     this.getPnrCFLine();
@@ -183,6 +185,14 @@ export class ReportingComponent implements OnInit, OnChanges {
       this.utilHelper.validateAllFields(this.conciergeComponent.conciergeForm);
       this.enableDisbleControls(['insuranceDeclinedReason'], true);
       if (!this.conciergeComponent.conciergeForm.valid) {
+        return false;
+      }
+    }
+
+    if (!this.reportingView.showInsurance) {
+      const opt = this.reportingView.declinedOption.find((x) => x.checked === true);
+      if (!opt) {
+        this.warningMessage = '*Please select insurance type.';
         return false;
       }
     }

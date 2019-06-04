@@ -78,7 +78,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   ngAfterViewInit(): void { }
 
   async getPnr() {
-    debugger;
+    // debugger;
     // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();

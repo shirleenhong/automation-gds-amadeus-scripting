@@ -18,7 +18,7 @@ Click Add Segment Button
 
 Select Segment Type
     [Arguments]    ${segment_type}
-    Select From List    xpath=//select[@name='segmentType']    ${segment_type}
+    Select From List By Label    xpath=//select[@name='segmentType']    ${segment_type}
     Wait Until Page Contains Element    css=#departureDate    30
 
 Enter Vendor Name
@@ -86,12 +86,12 @@ Enter Number Of People
 
 Select Room Type
     [Arguments]    ${room_type}
-    Select From List    css=#roomType    ${room_type}
+    Select From List By Value    css=#roomType    ${room_type}
     Set Test Variable    ${room_type}
 
 Select Meal Plan
     [Arguments]    ${meal_plan}
-    Select From List    css=#mealPlan    ${meal_plan}
+    Select From List By Label    css=#mealPlan    ${meal_plan}
     Set Test Variable    ${meal_plan.upper()}
     [Teardown]    Take Screenshot
 
@@ -102,7 +102,7 @@ Click Add Segments To PNR
 
 Select State Room
     [Arguments]    ${state_room}
-    Select From List    css=#stateRoom    ${state_room}
+    Select From List By Value    css=#stateRoom    ${state_room}
     Set Test Variable    ${state_room}
 
 Enter State Room Others Description
@@ -117,7 +117,7 @@ Enter Cabin Number
 
 Select Dining
     [Arguments]    ${dining}
-    Select From List    css=#dining    ${dining}
+    Select From List By Value    css=#dining    ${dining}
     Press Key    css=#dining    \\09
     Set Test Variable    ${dining.upper()}
     [Teardown]    Take Screenshot
@@ -262,7 +262,7 @@ Select Limo Rate Type
     [Arguments]    ${limo_rate_type}
     #Select Limo Rate Type
     Wait Until Element Is Visible    css=#rateType    10
-    Select From List    css=#rateType    ${limo_rate_type}
+    Select From List By Value    css=#rateType    ${limo_rate_type}
 
 Tick Limo Include Toll On Rate
     #Tick Limo Include Toll On Rate
@@ -325,29 +325,29 @@ Select Car Type
     [Arguments]    ${car_type}
     Sleep   2
     Click Element    css=#carType
-    Select from List    css=#carType    ${car_type}
+    Select From List By Value    css=#carType    ${car_type}
 
 Select Pickup Location
     [Arguments]    ${pickup_location}
-    Select From List    css=#pickupLoc    ${pickup_location}
+    Select From List By Value    css=#pickupLoc    ${pickup_location}
     Press Key    css=#pickupLoc    \\09
 
 Select Pickup Address
     [Arguments]     ${pickup_address}
     Wait Until Element Is Visible   css=#pickupOffAddress       30
     Sleep  2
-    Select From List  css=#pickupOffAddress     ${pickup_address}
+    Select From List By Value  css=#pickupOffAddress     ${pickup_address}
 
 Select Drop Off Location
     [Arguments]     ${dropoff_location}
-    Select From List  css=#dropOffLoc  ${dropoff_location}
+    Select From List By Value  css=#dropOffLoc  ${dropoff_location}
     Press Key    css=#dropOffLoc    \\09   
 
 Select Drop Off Address
     [Arguments]     ${dropoff_address}
     Wait Until Element Is Visible  css=#dropOffAddress   30
     Sleep  2
-    Select From List  css=#dropOffAddress     ${dropoff_address}
+    Select From List By Value  css=#dropOffAddress     ${dropoff_address}
 
 Enter Rental Cost
     [Arguments]     ${rental_cost}
@@ -381,7 +381,7 @@ Enter Frequent Flyer Number
 
 Select Special Equipment
     [Arguments]     ${special_equipment}
-    Select From List  css=#specialEquipment     ${special_equipment}  
+    Select From List By Value  css=#specialEquipment     ${special_equipment}  
     Sleep   2
     [Teardown]    Take Screenshot     
 
@@ -420,7 +420,7 @@ Select Hotel
     [Arguments]     ${hotel_index}
     Sleep  2
     Click Element   css=#hotelCode
-    Select From List By Index  css=#hotelCode  ${hotel_index}
+    Select From List By Value By Index  css=#hotelCode  ${hotel_index}
     Press Key    css=#hotelCode    \\09
     Sleep  2
 
@@ -430,7 +430,7 @@ Enter Currency Type
 
 Select Duration
     [Arguments]     ${duration}
-    Select From List  css=#duration     ${duration}
+    Select From List By Value  css=#duration     ${duration}
 
 Enter Number Of Rooms
     [Arguments]     ${number_room}

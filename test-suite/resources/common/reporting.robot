@@ -6,7 +6,7 @@ Select Routing Code
     [Arguments]    ${routecode}
     #Select BSP Routing Code    Select BSP Routing Code
     Wait Until Element Is Visible    css=#bspRouteCode
-    Select From List    css=#bspRouteCode    ${routecode}
+    Select From List By Label    css=#bspRouteCode    ${routecode}
     Take Screenshot
 
 Enter Destination Code
@@ -22,17 +22,17 @@ Click Reporting Tab
 
 Select Redemption Added
     [Arguments]    ${redemption_added}
-    Select From List    css=#redemptionAdded    ${redemption_added}
+    Select From List By Value    css=#redemptionAdded    ${redemption_added}
     Set Suite Variable    ${redemption_added}
 
 Select Reservation Request
     [Arguments]    ${reservation_request}
-    Select From List    css=#reservationReq    ${reservation_request}
+    Select From List By Value    css=#reservationReq    ${reservation_request}
     Set Suite Variable    ${reservation_request}
 
 Select Booking Type
     [Arguments]    ${booking_type}
-    Select From List    css=#bookingType    ${booking_type}
+    Select From List By Value    css=#bookingType    ${booking_type}
     Set Suite Variable    ${booking_type}
 
 Enter Caller Name
@@ -52,29 +52,29 @@ Enter Hotel Name
 
 Select Reservation For Business Travel
     [Arguments]    ${is_business_reserved}
-    Select From List    css=#businessTravel    ${is_business_reserved}
+    Select From List By Value    css=#businessTravel    ${is_business_reserved}
     Set Suite Variable    ${is_business_reserved}
 
 Select Hotel Reservation Booked
     [Arguments]    ${is_hotel_booked}
-    Select From List    css=#hotelRes    ${is_hotel_booked}
+    Select From List By Value    css=#hotelRes    ${is_hotel_booked}
     Set Suite Variable    ${is_hotel_booked}
     [Teardown]    Take Screenshot
 
 Select Reason Hotel Booked
     [Arguments]    ${reason_hotel_booked}
-    Select From List    css=#reasonHotelBooked    ${reason_hotel_booked}
+    Select From List By Value    css=#reasonHotelBooked    ${reason_hotel_booked}
     Set Suite Variable    ${reason_hotel_booked}
     [Teardown]    Take Screenshot
 
 Select Did Client Accept Insurance
     [Arguments]    ${is_accepted}
-    Run Keyword if    '${is_accepted}' == 'Yes'    Select From List    css=#showInsurance    YES
-    ...    ELSE    Select From List    css=#showInsurance    NO
+    Run Keyword if    '${is_accepted}' == 'Yes'    Select From List By Value    css=#showInsurance    YES
+    ...    ELSE    Select From List By Value    css=#showInsurance    NO
 
 Select Insurance Declined Reason
     [Arguments]    @{declined_insurance}
-    # Select From List    css=#declinedOption    ${declined_insurance}
+    # Select From List By Value    css=#declinedOption    ${declined_insurance}
     : FOR    ${declined_insurance}    IN    @{declined_insurance}
     \    Run Keyword If    '${declined_insurance}' == 'All Inclusive or Premium'    Select Checkbox    xpath=//input[@value='1']
     \    Run Keyword If    '${declined_insurance}' == 'Cancellation/Interruption'    Select Checkbox    xpath=//input[@value='2']

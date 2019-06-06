@@ -40,7 +40,7 @@ Click Cancel Segments Button
 
 Select UA Reason For Cancel
     [Arguments]    ${ua_reason}
-    Select From List    css=#reasonUACancel    ${ua_reason}
+    Select From List By Value    css=#reasonUACancel    ${ua_reason}
 
 Enter UA Segment Number
     [Arguments]    ${ua_segment_no}
@@ -53,7 +53,7 @@ Enter UA Passenger Number
 
 Select AC Reason For Cancel
     [Arguments]    ${ac_reason}
-    Select From List    css=#reasonACCancel    ${ac_reason}
+    Select From List By Value    css=#reasonACCancel    ${ac_reason}
 
 Enter AC Ticket Number
     [Arguments]    ${ac_ticket_number}

@@ -86,12 +86,12 @@ Click Payment Tab
 
 Select Traveler Province
     [Arguments]    ${province}
-    Select From List    css=#address    ${province}
+    Select From List By Value    css=#address    ${province}
     [Teardown]    Take Screenshot
 
 Select Segment Association
     [Arguments]    ${segment_assoc}
-    Select From List    xpath=//select[@id=' segmentAssoc']    ${segment_assoc}
+    Select From List By Value    xpath=//select[@id=' segmentAssoc']    ${segment_assoc}
 
 Enter Credit Card Vendor
     [Arguments]    ${cc_vendor}
@@ -99,11 +99,11 @@ Enter Credit Card Vendor
 
 Select Segment Number
     [Arguments]    ${segment_num}
-    Select From List    xpath=//select[@id='segmentNum']    ${segment_num}
+    Select From List By Value    xpath=//select[@id='segmentNum']    ${segment_num}
 
 Select Leisure Fee Form of Payment
     [Arguments]    ${form_of_payment}
-    Select From List    css=#paymentType    ${form_of_payment}
+    Select From List By Value    css=#paymentType    ${form_of_payment}
 
 Select Credit Card Vendor Code
     [Arguments]    ${cc_vendor_code}
@@ -236,7 +236,7 @@ Select Is This Air Only?
     [Arguments]    ${is_this_air}
     #select is this air only
     Wait Until Element Is Visible    css=#airOnly    30
-    Select from list    css=#airOnly    ${is_this_air}
+    Select From List By Value    css=#airOnly    ${is_this_air}
 
 Enter Hotel/ Property Name
     [Arguments]    ${property_name}
@@ -246,23 +246,23 @@ Enter Hotel/ Property Name
 Select Flights
     [Arguments]    ${select_flight}
     #select flight
-    Select From List    css=#flightType    ${select_flight}
+    Select From List By Value    css=#flightType    ${select_flight}
 
 Select Exclusive Property
     [Arguments]    ${exclusive_property}
     #select exclusive property?
-    Select From List    css=#exclusiveProperty    ${exclusive_property}
+    Select From List By Value    css=#exclusiveProperty    ${exclusive_property}
 
 Enter Group
     [Arguments]    ${group}
     #select group
-    Select From List    css=#group    ${group}
+    Select From List By Value    css=#group    ${group}
     [Teardown]    Take Screenshot
 
 Select Preferred Vendor
     [Arguments]    ${preferred_vendor}
     #select preferred vendor
-    Select From List    css=#preferredVendor    ${preferred_vendor}
+    Select From List By Value    css=#preferredVendor    ${preferred_vendor}
     [Teardown]    Take Screenshot
 
 Click Update Button

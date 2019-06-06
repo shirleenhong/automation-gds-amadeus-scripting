@@ -58,7 +58,8 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
       chst: new FormControl(''),
       cqst: new FormControl(''),
       cotherTaxes: new FormControl(''),
-      pct: new FormControl('')
+      pct: new FormControl(''),
+      othValue: new FormControl('')
     });
     this.loadProductTypeList();
 
@@ -72,14 +73,15 @@ export class UpdateRbcPointsRedemptionComponent implements OnInit {
   loadProductTypeList() {
     this.productTypeList = [
       { itemText: '', itemValue: '' },
-      { itemText: 'AIR', itemValue: 'AIR' },
+      { itemText: 'AIR PRODUCT', itemValue: 'AIR PRODUCT' },
       { itemText: 'CAR', itemValue: 'CAR' },
-      { itemText: 'HOTEL', itemValue: 'HOTEL' },
       { itemText: 'CRUISE', itemValue: 'CRUISE' },
-      {
-        itemText: 'PROPERTY/VACATION PACKAGE',
-        itemValue: 'PROPERTY/VACATION PACKAGE'
-      }
+      { itemText: 'HOTEL', itemValue: 'HOTEL' },
+      { itemText: 'INSURANCE', itemValue: 'INSURANCE' },
+      { itemText: 'RAIL', itemValue: 'RAIL' },
+      { itemText: 'TOUR', itemValue: 'TOUR' },
+      { itemText: 'VACATION PACKAGE', itemValue: 'VACATION PACKAGE' },
+      { itemText: 'OTHER', itemValue: 'OTHER' }
     ];
   }
 

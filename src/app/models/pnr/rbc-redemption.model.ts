@@ -23,4 +23,5 @@ export class RBCRedemptionModel {
   cqst: string;
   cotherTaxes: string;
   pct: string;
+  othValue: string;
 }

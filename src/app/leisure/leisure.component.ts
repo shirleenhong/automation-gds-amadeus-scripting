@@ -78,7 +78,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   ngAfterViewInit(): void { }
 
   async getPnr() {
-    // debugger;
     // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();
@@ -166,7 +165,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
     );
 
-    if (this.itineraryComponent.itineraryForm.touched) {
+    if (!this.itineraryComponent.itineraryForm.pristine) {
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
     }
 

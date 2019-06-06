@@ -76,7 +76,10 @@ export class ItineraryComponent implements OnInit {
     const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
     if (rems.length > 0) {
       this.itineraryForm.controls.typeTransaction.setValue('itinerary');
+    } else {
+      this.itineraryForm.controls.typeTransaction.setValue('invoice');
     }
+
   }
 
   createFormGroup(): FormGroup {

@@ -33,6 +33,7 @@ export class SegmentService {
         let startTime = '';
         let endTime = '';
         let segdest = '';
+        const noOfPassenger = this.pnrService.getPassengers().length;
 
         segmentRemarks.forEach(segment => {
             if (!segment.isNew) {
@@ -70,17 +71,27 @@ export class SegmentService {
                 passive.segmentName = 'RU';
                 passive.function = '12';
                 passive.quantity = Number(segment.noPeople);
+                let relatePass = [];
                 if (segment.segmentType === 'CAR') {
                     passive.segmentName = 'CU';
                     passive.function = '9';
                     passive.carType = segment.carType;
+                    passive.quantity = noOfPassenger;
+                    for (let i = 1; i <= noOfPassenger; i++) {
+                        relatePass.push(i.toString());
+                    }
                 }
+
                 if (segment.segmentType === 'HTL') {
                     passive.segmentName = 'HU';
                     passive.function = '8';
-                    passive.quantity = Number(segment.numberOfRooms);
+                    passive.quantity = noOfPassenger;
+                    for (let i = 1; i <= noOfPassenger; i++) {
+                        relatePass.push(i.toString());
+                    }
+                    // passive.quantity = Number(segment.numberOfRooms);
                 }
-
+                passive.relatedPassengers = relatePass;
                 passive.status = 'HK';
                 passive.flightNo = '1';
                 const datePipe2 = new DatePipe('en-US');
@@ -252,7 +263,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                     segRemark: any, amk: number, vib: number, itinLanguage: string) {
+        segRemark: any, amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -386,7 +397,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-                            startTime: string, enddatevalue: string, endTime: string) {
+        startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
             case 'TOR':
@@ -766,58 +777,58 @@ export class SegmentService {
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();
         fareRuleModels.forEach(model => {
-        if (model.fareRuleType !== '') {
-            smartScriptSession.send('PBN/' + this.pnrService.PCC + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
-            rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
-        } else {
+            if (model.fareRuleType !== '') {
+                smartScriptSession.send('PBN/' + this.pnrService.PCC + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
+            } else {
 
-            if (model.isTicketNonRefundable) {
-                rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
-            }
-
-            if (model.isTicketMinMax) {
-                rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.',
-                    'RI', 'R'));
-            }
-
-            if (model.isTicketNonRef) {
-                rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
-                rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
-            }
-
-            if (model.ticketAmount && model.currencyType) {
-                rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
-                    model.currencyType + ' NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
-                rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
-                    'RI', 'R'));
-                rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
-            }
-
-            if (model.nonRefundable) {
-                rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
-                    + ' PERCENT NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
-                rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
-                    'RI', 'R'));
-                rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
-            }
-
-            if (model.minChangeFee) {
-                rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
-                    + ' ' + (model.currencyType), 'RI', 'R'));
-            }
-        }
-
-        const segments = this.pnrService.getSegmentTatooNumber();
-        for (const fg of model.remarkList) {
-            const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
-            const s = model.segmentNo.split(',');
-            s.forEach(x => {
-                const tat = segments.find(z => z.lineNo === x);
-                if (tat) {
-                    remark.relatedSegments.push(tat.tatooNo);
+                if (model.isTicketNonRefundable) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
                 }
-            });
-            rmGroup.remarks.push(remark);
+
+                if (model.isTicketMinMax) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.',
+                        'RI', 'R'));
+                }
+
+                if (model.isTicketNonRef) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
+                }
+
+                if (model.ticketAmount && model.currencyType) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
+                        model.currencyType + ' NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
+                        'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                }
+
+                if (model.nonRefundable) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
+                        + ' PERCENT NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
+                        'RI', 'R'));
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                }
+
+                if (model.minChangeFee) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
+                        + ' ' + (model.currencyType), 'RI', 'R'));
+                }
+            }
+
+            const segments = this.pnrService.getSegmentTatooNumber();
+            for (const fg of model.remarkList) {
+                const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
+                const s = model.segmentNo.split(',');
+                s.forEach(x => {
+                    const tat = segments.find(z => z.lineNo === x);
+                    if (tat) {
+                        remark.relatedSegments.push(tat.tatooNo);
+                    }
+                });
+                rmGroup.remarks.push(remark);
             }
         });
 

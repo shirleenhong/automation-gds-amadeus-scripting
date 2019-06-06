@@ -16,6 +16,7 @@ Select Passenger Name
     [Arguments]    ${passenger_name}
     Click Element    css=#pasenger
     Click Element    xpath=//option[contains(text(), '${passenger_name}')]
+    Press Key    css=#pasenger    \\09
     Set Suite Variable    ${passenger_name}
 
 Enter Amount
@@ -40,7 +41,7 @@ Select Mode Of Payment
 Click Save Button
     Click Element    xpath=//button[contains(text(), 'Save')]
     # Wait Until Page Contains Element    xpath=//tr[1]//i[@class='fas fa-edit']    30
-    Wait Until Page Contains Element    xpath=//i[@class='fas fa-edit']     30
+    Wait Until Page Contains Element    xpath=//i[@class='fas fa-edit']    30
     Focus    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     [Teardown]    Take Screenshot
 
@@ -136,18 +137,21 @@ Select Accounting Remark Type
     ${remark_description}    Set Variable    ${accounting_remark_type}
     Set Suite Variable    ${accounting_remark_type}
 
-Select Passenger Number
+Select Passenger
     [Arguments]    ${passenger_number}
     Click Element    css=#passengerNo
     Click Element    xpath=//option[contains(text(),'${passenger_number}')]
     Press Key    css=#passengerNo    \\09
     Set Suite Variable    ${passenger_number}
+    [Teardown]    Take Screenshot
 
 Enter Supplier Code
     [Arguments]    ${supplier_code}
     Double Click Element    css=#supplierCodeName
+    Press Key    css=#supplierCodeName    \\01
     Press Key    css=#supplierCodeName    \\08
     Input Text    css=#supplierCodeName    ${supplier_code}
+    Press Key    css=#supplierCodeName    \\09
     Set Suite Variable    ${supplier_code}
 
 Enter Supplier Confirmation Number
@@ -178,6 +182,7 @@ Enter Commission With Tax Amount
     Double Click Element    css=#commisionWithoutTax
     Press Key    css=#commisionWithoutTax    \\08
     Input Text    css=#commisionWithoutTax    ${commission_with_tax}
+    Press Key    css=#commisionWithoutTax    \\09
     Set Suite Variable    ${commission_with_tax}
     [Teardown]    Take Screenshot
 
@@ -202,6 +207,7 @@ Enter QST Tax Amount
     Double Click Element    css=#qst
     Press Key    css=#qst    \\08
     Input Text    css=#qst    ${qst_tax}
+    Press Key    css=#qst    \\09
     Set Suite Variable    ${qst_tax}
     [Teardown]    Take Screenshot
 
@@ -218,6 +224,7 @@ Enter Ticket Number
     Double Click Element    css=#tktLine
     Press Key    css=#tktLine    \\08
     Input Text    css=#tktLine    ${ticket_number}
+    Press Key    css=#tktLine    \\09
     Set Suite Variable    ${ticket_number}
 
 Enter Price Vs Other Supplier
@@ -258,7 +265,7 @@ Select Preferred Vendor
     Select From List    css=#preferredVendor    ${preferred_vendor}
     [Teardown]    Take Screenshot
 
-Click Payment Update Button
+Click Update Button
     [Arguments]    ${edit_order}
     Click Element    xpath=//tr[${edit_order}]//i[@class='fas fa-edit']
 
@@ -267,14 +274,12 @@ Click Payment Delete Button
     Click Element    xpath=//tr[${delete_order}]//i[@class=' fas fa-trash-alt']
     Sleep    3
 
-Tick Update Leisure Fee
-    Click Element    xpath=//input[@id='chkUpdateRemove']
-
 Enter Commission Percentage
     [Arguments]    ${commission_percent}
     Double Click Element    css=#commisionPercentage
     Press Key    css=#commisionPercentage    \\08
     Input Text    css=#commisionPercentage    ${commission_percent}
+    Press Key    css=#commisionPercentage    \\09
 
 Select Segment
     [Arguments]    @{segment_number}
@@ -292,3 +297,23 @@ Enter Description
     Press Key    xpath=//textarea[@id='description']    \\08
     Input Text    xpath=//textarea[@id='description']    ${description}
     Set Suite Variable    ${description}
+
+Click Add Leisure Fee Collection Button
+    Click Element    xpath=//button[contains(text(), 'Add Leisure Fee Collection')]
+
+Select Tax Exemption
+    [Arguments]    @{tax_exemption}
+    : FOR    ${tax_exemption}    IN    @{tax_exemption}
+    \    Run Keyword If    '${tax_exemption}' == 'HST Exempt'    Select Checkbox    xpath=//input[@value='RC']
+    \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Select Checkbox    xpath=//input[@value='XG']
+    \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Select Checkbox    xpath=//input[@value='XQ']
+
+Unselect Tax Exemption
+    [Arguments]    @{tax_exemption}
+    : FOR    ${tax_exemption}    IN    @{tax_exemption}
+    \    Run Keyword If    '${tax_exemption}' == 'HST Exempt'    Unselect Checkbox    xpath=//input[@value='RC']
+    \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Unselect Checkbox    xpath=//input[@value='XG']
+    \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Unselect Checkbox    xpath=//input[@value='XQ']
+
+Tick Require Separate Passenger
+    Select Checkbox    css=#passRelate

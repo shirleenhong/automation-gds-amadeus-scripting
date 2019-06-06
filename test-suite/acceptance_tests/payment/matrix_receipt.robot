@@ -7,11 +7,8 @@ Verify Accounting Remarks Are Written For FOP Cash For Single Passenger
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE TEST@EMAIL.COM    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    CAD Funds    LEISURE-AMADEUS    THIS IS A MAX OF 30 CHARACTERS    500.50
@@ -28,13 +25,9 @@ Verify Accounting Remarks Are Written For FOP Cash For Single Passenger
 Verify Accounting Remarks Are Updated For Single Passenger
     [Tags]    us8621
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Payment
-    Click Payment Update Button    1
+    Click Update Button    1
     Select Bank Account    USD Trust
     Enter Amount    1234.55
     Enter GC Number    9878991
@@ -58,11 +51,8 @@ Verify Accounting Remarks Are Written For FOP Cash For Multiple Passengers
     Login To Amadeus Sell Connect
     Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE TEST@EMAIL.COM    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    USD Funds    POLO-MARCO    SAMPLE DESCRIPTION    1250.00    123456
@@ -79,11 +69,7 @@ Verify Accounting Remarks Are Written For FOP Cash For Multiple Passengers
 Verify Accounting Remarks Are Deleted
     [Tags]    us8621
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Payment
     Click Payment Delete Button    1
     Confirm Delete
@@ -104,11 +90,8 @@ Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12313
     ...    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cheque    CAD Funds    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
@@ -129,11 +112,8 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     ...    APE123123    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Credit Card    CWT (Visa)    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
@@ -155,11 +135,8 @@ Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE Test@email.com
     ...    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt For RBC Redemption    RBC Point Redemption    LEISURE-AMADEUS    200.75    12345    123456789    9999
@@ -176,13 +153,9 @@ Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
 Verify Accounting Remarks Are Updated For RBC Redemption
     [Tags]    us8621
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Payment
-    Click Payment Update Button    1
+    Click Update Button    1
     Select Passenger Name    POLO-LISA
     Enter Amount    1234.55
     Enter RBC Points    765432

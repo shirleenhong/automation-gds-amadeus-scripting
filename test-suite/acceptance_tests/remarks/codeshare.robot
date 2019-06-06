@@ -7,11 +7,8 @@ Verify Codeshare Remark Is Written In The PNR
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Codeshare
     Select Segment From The List    1    3
@@ -23,9 +20,7 @@ Verify Codeshare Remark Is Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR CHECK-IN AT ${checkin_at.upper()} TICKET COUNTER/S2
     Close Cryptic Display Window
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Click Remarks Tab    Codeshare
     Enter Check-in At Details    1    Codeshare update
@@ -43,11 +38,8 @@ Verify Multiple Codeshare Remarks Are Written In The PNR
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC CDGMAD GK1 / 11551440 / 1234567    SS AC1074 Y 18DEC MADORD GK1 / 11551440 / ABCD123    SS AC1074 Y 22DEC ORDCDG GK1 / 11551440 / ABCD464    RM*CF/-RBM000000N
     ...    APE12345    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Codeshare
     Select Segment From The List    1    3    4

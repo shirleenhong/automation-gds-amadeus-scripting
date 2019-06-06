@@ -165,7 +165,7 @@ def runRobotTests() {
       echo 'Running Sanity Test in Test Environment'
       build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "Test"), string(name: 'TAG', value: "sanity")]
     }
-    if ($params.RUN_SANITY_STAGING) {
+    if (params.RUN_SANITY_STAGING) {
       echo 'Running Sanity Test in Staging Environment'
       build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "UAT"), string(name: 'TAG', value: "sanity"), string(name: 'BRANCH', value: "staging")]
     }

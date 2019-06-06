@@ -91,7 +91,7 @@ Select Traveler Province
 
 Select Segment Association
     [Arguments]    ${segment_assoc}
-    Select From List By Value    xpath=//select[@id=' segmentAssoc']    ${segment_assoc}
+    Select From List By Label    xpath=//select[@id=' segmentAssoc']    ${segment_assoc}
 
 Enter Credit Card Vendor
     [Arguments]    ${cc_vendor}
@@ -251,7 +251,7 @@ Select Flights
 Select Exclusive Property
     [Arguments]    ${exclusive_property}
     #select exclusive property?
-    Select From List By Value    css=#exclusiveProperty    ${exclusive_property}
+    Select From List By Label    css=#exclusiveProperty    ${exclusive_property}
 
 Enter Group
     [Arguments]    ${group}

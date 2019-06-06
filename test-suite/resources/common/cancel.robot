@@ -53,7 +53,7 @@ Enter UA Passenger Number
 
 Select AC Reason For Cancel
     [Arguments]    ${ac_reason}
-    Select From List By Value    css=#reasonACCancel    ${ac_reason}
+    Select From List By Label    css=#reasonACCancel    ${ac_reason}
 
 Enter AC Ticket Number
     [Arguments]    ${ac_ticket_number}

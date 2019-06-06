@@ -86,7 +86,7 @@ Enter Number Of People
 
 Select Room Type
     [Arguments]    ${room_type}
-    Select From List By Value    css=#roomType    ${room_type}
+    Select From List By Label    css=#roomType    ${room_type}
     Set Test Variable    ${room_type}
 
 Select Meal Plan
@@ -102,7 +102,7 @@ Click Add Segments To PNR
 
 Select State Room
     [Arguments]    ${state_room}
-    Select From List By Value    css=#stateRoom    ${state_room}
+    Select From List By Label    css=#stateRoom    ${state_room}
     Set Test Variable    ${state_room}
 
 Enter State Room Others Description
@@ -262,7 +262,7 @@ Select Limo Rate Type
     [Arguments]    ${limo_rate_type}
     #Select Limo Rate Type
     Wait Until Element Is Visible    css=#rateType    10
-    Select From List By Value    css=#rateType    ${limo_rate_type}
+    Select From List By Label    css=#rateType    ${limo_rate_type}
 
 Tick Limo Include Toll On Rate
     #Tick Limo Include Toll On Rate
@@ -325,7 +325,7 @@ Select Car Type
     [Arguments]    ${car_type}
     Sleep   2
     Click Element    css=#carType
-    Select From List By Value    css=#carType    ${car_type}
+    Select From List By Label    css=#carType    ${car_type}
 
 Select Pickup Location
     [Arguments]    ${pickup_location}
@@ -420,7 +420,7 @@ Select Hotel
     [Arguments]     ${hotel_index}
     Sleep  2
     Click Element   css=#hotelCode
-    Select From List By Value By Index  css=#hotelCode  ${hotel_index}
+    Select From List By Index  css=#hotelCode  ${hotel_index}
     Press Key    css=#hotelCode    \\09
     Sleep  2
 

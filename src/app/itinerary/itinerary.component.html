@@ -64,7 +64,7 @@
           <div class="col-sm-4"></div>
           <div class="col-4">
             <input type="text" class="form-control" formControlName="service" id="service" AllCapsMask
-              formControlName="service" maxlength="35" />
+              formControlName="service" maxlength="65" />
           </div>
           <div *ngIf="removeservice" class="">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'service')"> </i>
@@ -78,6 +78,10 @@
 
       <div class="row form-group">
         <div class="col-sm-4"></div>
+        <div class="col-sm-6">Remarks Appear at top of Invoice in RED.</div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-4"></div>
         <div class="col-sm-4 note">Tickets:</div>
       </div>
       <div formArrayName="tickets" *ngFor="let item of this.itineraryForm.get('tickets')['controls']; let i = index">
@@ -85,7 +89,7 @@
           <div class="col-sm-4"></div>
           <div class="col-4">
             <input type="text" class="form-control" formControlName="ticket" id="ticket" AllCapsMask
-              formControlName="ticket" maxlength="35" />
+              formControlName="ticket" maxlength="65" />
           </div>
           <div *ngIf="removeticket">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'ticket')"> </i>
@@ -101,6 +105,10 @@
     <div *ngIf="f.typeTransaction.value === 'itinerary'">
       <div class="row form-group">
         <div class="col-sm-4"></div>
+        <div class="col-sm-6">Remarks Appear at top of Invoice in RED.</div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-4"></div>
         <div class="col-sm-4 note">Offers:</div>
       </div>
       <div formArrayName="offers" *ngFor="let item of this.itineraryForm.get('offers')['controls']; let i = index">
@@ -108,7 +116,7 @@
           <div class="col-sm-4"></div>
           <div class="col-4">
             <input type="text" class="form-control" formControlName="offer" id="offer" AllCapsMask
-              formControlName="offer" maxlength="35" />
+              formControlName="offer" maxlength="65" />
           </div>
           <span *ngIf="removeoffer" class="">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'offer')"> </i>

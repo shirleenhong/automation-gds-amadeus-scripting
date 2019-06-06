@@ -9,11 +9,8 @@ Verify Visa And Passport Remarks Are Written In The PNR
     ...    SS AC1074 Y 30DEC FRAYYZ GK1 / 11551440 / YYYD123    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Enter GDS Command    RMP/CITIZENSHIP-CA    RM*CF/-RBM000000N    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Visa and Passport
     Click E-Traveladvisories Button
@@ -34,9 +31,7 @@ Verify Visa And Passport Remarks Are Written In The PNR
 Verify Visa And Passport Remarks Are Updated In The PNR
     [Tags]    us8912
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Click Remarks Tab    Visa and Passport
     Enter Passport Name    Leisure Lastname

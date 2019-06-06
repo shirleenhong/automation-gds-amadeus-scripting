@@ -391,7 +391,7 @@ Enter Supplier Name
     Input Text      css=#suppliername       ${supplier_name}
 
 Click Add RBC Redemption Points Button
-    Click Element    xpath=//button[contains(text(), 'Add RBC Redemption Points')]
+    Click Element    xpath=//button[contains(text(), 'Add RBC Points Redemption ')]
 
 Enter GST Per Adult
     [Arguments]     ${gst_adult}
@@ -408,7 +408,8 @@ Enter QST Per Adult
 Enter All Other Taxes
     [Arguments]     ${other_tax_adult}
     Input Text  css=#otherTaxes    ${other_tax_adult}
-
+    [Teardown]    Take Screenshot
+    
 Enter Number of Adults
     [Arguments]     ${number_adult}
     Input Text  css=#noofadult    ${number_adult}
@@ -439,11 +440,20 @@ Enter QST Per Child
 
 Enter All Other Taxes For Child
     [Arguments]     ${other_tax_child}
-    Input Text  css=#cotherTaxes    ${other_tax_child}
+    Input Text    css=#cotherTaxes    ${other_tax_child}
     Press Key    css=#cotherTaxes   \\09
+    [Teardown]    Take Screenshot
 
 Enter PCT
     [Arguments]     ${pct}
-    Input Text  css=#pct    ${pct}
+    Input Text    css=#pct    ${pct}
+    [Teardown]    Take Screenshot
 
-    
+Enter Number of Bookings
+    [Arguments]     ${number_bookings}
+    Input Text    css=#numberbookings    ${number_bookings}
+
+Enter Total Base Cost Per Booking
+    [Arguments]     ${total_base_cost}
+    Input Text  css=#totalbasecost    ${total_base_cost} 
+    [Teardown]    Take Screenshot

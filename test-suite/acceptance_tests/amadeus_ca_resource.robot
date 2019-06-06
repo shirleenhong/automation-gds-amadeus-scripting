@@ -1,14 +1,12 @@
 *** Settings ***
-Resource          ../resources/common/common_library.robot
-Resource          ../resources/common/core.robot
-Resource          ../resources/common/payment.robot
+Resource          ../resources/common/global_resources.robot
 
 *** Keywords ***
 Login To Amadeus Sell Connect
     Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
     Maximize Browser Window
     Wait Until Element Is Visible    css=#username > span:first-child input    60
-    Enter Username    ${username} 
+    Enter Username    ${username}
     Enter Dutycode    GS
     Enter Office ID    YTOWL2107
     Enter Password    ${password}
@@ -114,7 +112,7 @@ Verify Royal Bank Concierge UDID Remarks Are Written
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *U13/-${hotel_name.upper()}
     Verify Specific Remark Is Written In The PNR    RM *U15/-${is_business_reserved}
     Verify Specific Remark Is Written In The PNR    RM *U17/-${is_hotel_booked}
-    Run Keyword If    "${is_hotel_booked}" == "No"    Verify Specific Remark Is Written In The PNR    RM *U18/-
+    Run Keyword If    "${is_hotel_booked}" == "NO"    Verify Specific Remark Is Written In The PNR    RM *U18/-${reason_hotel_booked.upper()}
     Verify Specific Remark Is Written In The PNR    RM *U30/-TGIF
 
 Verify Package Costs UDID Remarks Are Written In the PNR
@@ -165,5 +163,25 @@ Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR
     Verify Specific Remark Is Written In The PNR    RIR IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW/S${segment_number}    True
     Verify Specific Remark Is Written In The PNR    RIR RESERVATIONS WHICH MAY BE AT A HIGHER FARE./S${segment_number}
 
-Get Hotel Address Details
-    
+Populate Reporting Required Fields
+    Click Panel    Reporting
+    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
+    Enter Destination Code    CDG
+
+Get Hotel Details Values
+    ${hotel_city}    Get Element Attribute    xpath=//input[@id='hotelCityName']@ng-reflect-model
+    ${hotel_name}    Get Element Attribute    xpath=//input[@id='hotelName']@ng-reflect-model
+    ${hotel_phone}    Get Element Attribute    xpath=//input[@id='phone']@ng-reflect-model
+    ${hotel_fax}    Get Element Attribute    xpath=//input[@id='fax']@ng-reflect-model
+    ${hotel_address}    Get Element Attribute    xpath=//input[@id='address']@ng-reflect-model
+    ${hotel_country}    Get Element Attribute    xpath=//input[@id='country']@ng-reflect-model
+    ${hotel_zip_code}    Get Element Attribute    xpath=//input[@id='zipCode']@ng-reflect-model
+    Press Key    css=#zipCode    \\09
+    Set Test Variable    ${hotel_city}
+    Set Test Variable    ${hotel_name}
+    Set Test Variable    ${hotel_phone}
+    Set Test Variable    ${hotel_fax}
+    Set Test Variable    ${hotel_address}
+    Set Test Variable    ${hotel_country}
+    Set Test Variable    ${hotel_zip_code}
+    [Teardown]    Take Screenshot

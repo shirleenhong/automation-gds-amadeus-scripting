@@ -3,7 +3,7 @@ Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify Tour Passive Segment Is Added In the PNR
-    [Tags]    us8892
+    [Tags]    us8892    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
@@ -27,11 +27,8 @@ Verify Tour Passive Segment Is Added In the PNR
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -66,11 +63,8 @@ Verify Cruise Passive Segment Is Added In the PNR
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -96,11 +90,8 @@ Verify Insurance Passive Segment Is Added In the PNR
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -131,11 +122,8 @@ Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -169,11 +157,8 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -233,11 +218,8 @@ Verify Passive Limo Segment Is Added In the PNR For EN Language
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -309,11 +291,8 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
     Click Add Passive Save Button
     Click Add Segments To PNR
     Click Back To Main Menu
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    GHANA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -609,20 +588,3 @@ Verify Hotel Passive Segment Without Optional Values Written In The PNR
     Verify Specific Remark Is Not Written In The PNR    RIR ADDITONAL INFORMATION
 
 *** Keywords ***
-Get Hotel Details Values
-    ${hotel_city}    Get Element Attribute    xpath=//input[@id='hotelCityName']@ng-reflect-model
-    ${hotel_name}    Get Element Attribute    xpath=//input[@id='hotelName']@ng-reflect-model
-    ${hotel_phone}    Get Element Attribute    xpath=//input[@id='phone']@ng-reflect-model
-    ${hotel_fax}    Get Element Attribute    xpath=//input[@id='fax']@ng-reflect-model
-    ${hotel_address}    Get Element Attribute    xpath=//input[@id='address']@ng-reflect-model
-    ${hotel_country}    Get Element Attribute    xpath=//input[@id='country']@ng-reflect-model
-    ${hotel_zip_code}    Get Element Attribute    xpath=//input[@id='zipCode']@ng-reflect-model
-    Press Key    css=#zipCode    \\09
-    Set Test Variable    ${hotel_city}
-    Set Test Variable    ${hotel_name}
-    Set Test Variable    ${hotel_phone}
-    Set Test Variable    ${hotel_fax}
-    Set Test Variable    ${hotel_address}
-    Set Test Variable    ${hotel_country}
-    Set Test Variable    ${hotel_zip_code}
-    [Teardown]    Take Screenshot

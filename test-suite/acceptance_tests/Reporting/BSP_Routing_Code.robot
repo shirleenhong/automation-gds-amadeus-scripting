@@ -7,11 +7,10 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBM, and T
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
+    Click Wrap PNR
     Click Panel    Reporting
     Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
     Enter Destination Code    YYZ
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -25,11 +24,10 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBP, and T
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBP0000000C    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
+    Click Wrap PNR
     Click Panel    Reporting
     Select Routing Code    Africa
     Enter Destination Code    YYZ
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -43,11 +41,10 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is Not RBM an
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-HIJ0000000N    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
+    Click Wrap PNR
     Click Panel    Reporting
     Select Routing Code    Caribbean and Bermuda
     Enter Destination Code    YYZ
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
@@ -64,10 +61,9 @@ Verify That "Reason for Travel" In FS Remark Is "1" If the CF Line Is Not RBM an
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-AAA0000000C    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
+    Click Wrap PNR
     Click Panel    Reporting
     Select Routing Code    Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
     Enter Destination Code    YYZ
     Click Panel    Payment
     Click Payment Tab    Leisure Fee

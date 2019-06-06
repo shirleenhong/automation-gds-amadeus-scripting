@@ -21,20 +21,8 @@ Enter Company Name
     Wait Until Element Is Visible    css=#companyName    30
     Input Text    css=#companyName    ${company_name}
 
-Select Cancellation Insurance Declined
-    [Arguments]    ${declined_reason}
-    #select Decline insurance
-    Wait Until Element Is Visible    xpath=//div[@class='row form-group'][3]//input[@name='showInsurance']    30
-    Click Element    xpath=//div[@class='row form-group'][3]//input[@name='showInsurance']
-    #type reason decline
-    Input Text    css=#insuranceDeclinedReason    ${declined_reason}
-
-Select If PNR Travel to Any Countries Listed
-    [Arguments]    ${countries_listed}
-    Select From List    css=#u86    ${countries_listed}
-
-Click Load PNR
-    Click Element    xpath=//button[contains(text(), 'Load PNR')]
+Click Wrap PNR
+    Click Element    xpath=//button[contains(text(), 'Wrap PNR')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
 
 Click Cancel Segment
@@ -54,4 +42,4 @@ Click Add Segment Main Menu
 
 Click Back To Main Menu
     Click Element    xpath=//button[contains(text(),'Back To Main Menu')]
-    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Load PNR')]    30
+    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    30

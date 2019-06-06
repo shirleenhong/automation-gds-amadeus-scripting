@@ -8,11 +8,8 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Ticket Min/Max Stay
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 01301240 / 1234567    SS AC1074 Y 18DEC YYTMSP GK1 / 12551140 / ABCD123    RM*CF/-RBM000000N    APE12345
     ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Fare Rule
     Click Add Fare Rule Button
@@ -36,11 +33,8 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Ticket Non-Refundabl
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 01301240 / 1234567    SS AC1074 Y 18DEC YYTMSP GK1 / 12551140 / ABCD123    RM*CF/-RBM000000N    APE12345
     ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Fare Rule
     Click Add Fare Rule Button
@@ -67,11 +61,8 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Ticket Amount
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 01301240 / 1234567    SS AC1074 Y 18DEC YYTMSP GK1 / 12551140 / ABCD123    RM*CF/-RBM000000N    APE12345
     ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Fare Rule
     Click Add Fare Rule Button
@@ -99,11 +90,8 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Non-Refundable %
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS U21074 Y 10DEC YYZORD GK2 / 11551440 / ABCDEFG    SS AF1075 Y 15DEC ORDYYT GK2 / 01301240 / 1234567    SS AC1074 Y 18DEC YYTMSP GK2 / 12551140 / ABCD123    RM*CF/-RBM000000N
     ...    APE12345    TKOK    RU1AHK1SIN2JAN-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Fare Rule
     Click Add Fare Rule Button
@@ -131,11 +119,8 @@ Verify That Multiple Fare Rule Can Be Added In the PNR
     Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS U21074 Y 10DEC YYZORD GK2 / 11551440 / ABCDEFG    SS AF1075 Y 15DEC ORDYYT GK2 / 01301240 / 1234567    SS AC1074 Y 18DEC YYTMSP GK2 / 12551140 / ABCD123    RM*CF/-RBM000000N
     ...    APE12345    TKOK    RU1AHK1SIN2JAN-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Click Remarks Tab    Fare Rule
     Click Add Fare Rule Button

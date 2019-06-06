@@ -59,8 +59,30 @@ Select Hotel Reservation Booked
     [Arguments]    ${is_hotel_booked}
     Select From List    css=#hotelRes    ${is_hotel_booked}
     Set Suite Variable    ${is_hotel_booked}
+    [Teardown]    Take Screenshot
 
 Select Reason Hotel Booked
     [Arguments]    ${reason_hotel_booked}
     Select From List    css=#reasonHotelBooked    ${reason_hotel_booked}
     Set Suite Variable    ${reason_hotel_booked}
+    [Teardown]    Take Screenshot
+
+Select Did Client Accept Insurance
+    [Arguments]    ${is_accepted}
+    Run Keyword if    '${is_accepted}' == 'Yes'    Select From List    css=#showInsurance    YES
+    ...    ELSE    Select From List    css=#showInsurance    NO
+
+Select Insurance Declined Reason
+    [Arguments]    @{declined_insurance}
+    # Select From List    css=#declinedOption    ${declined_insurance}
+    : FOR    ${declined_insurance}    IN    @{declined_insurance}
+    \    Run Keyword If    '${declined_insurance}' == 'All Inclusive or Premium'    Select Checkbox    xpath=//input[@value='1']
+    \    Run Keyword If    '${declined_insurance}' == 'Cancellation/Interruption'    Select Checkbox    xpath=//input[@value='2']
+    \    Run Keyword If    '${declined_insurance}' == 'Emergency Medical/Transportation'    Select Checkbox    xpath=//input[@value='3']
+    \    Run Keyword If    '${declined_insurance}' == 'Flight and Travel Accident'    Select Checkbox    xpath=//input[@value='4']
+    \    Run Keyword If    '${declined_insurance}' == 'Rental Car Physical Damage'    Select Checkbox    xpath=//input[@value='5']
+    \    Run Keyword If    '${declined_insurance}' == 'Coverage for the Full Dollar Value'    Select Checkbox    xpath=//input[@value='6']
+
+Enter Insurance Declined Reason
+    [Arguments]    ${declined_reason}
+    Input Text    css=#insuranceDeclinedReason    ${declined_reason}

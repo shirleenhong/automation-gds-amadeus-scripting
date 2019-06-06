@@ -40,7 +40,7 @@ Click Cancel Segments Button
 
 Select UA Reason For Cancel
     [Arguments]    ${ua_reason}
-    Select From List By Value    css=#reasonUACancel    ${ua_reason}
+    Select From List By Label    css=#reasonUACancel    ${ua_reason}
 
 Enter UA Segment Number
     [Arguments]    ${ua_segment_no}

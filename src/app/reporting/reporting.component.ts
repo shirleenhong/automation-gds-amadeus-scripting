@@ -187,9 +187,7 @@ export class ReportingComponent implements OnInit, OnChanges {
       if (!this.conciergeComponent.conciergeForm.valid) {
         return false;
       }
-    }
-
-    if (!this.reportingView.showInsurance) {
+    } else if (!this.reportingView.showInsurance) {
       const opt = this.reportingView.declinedOption.find((x) => x.checked === true);
       if (!opt) {
         this.warningMessage = '*Please select insurance type.';

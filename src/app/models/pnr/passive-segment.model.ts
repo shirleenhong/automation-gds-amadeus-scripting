@@ -21,4 +21,5 @@ export class PassiveSegmentModel {
     currency: string;
     carType: string;
     unitPrice: string;
+    relatedPassengers: string[];
 }

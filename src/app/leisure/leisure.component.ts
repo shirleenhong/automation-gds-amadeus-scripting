@@ -75,13 +75,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr() {
     // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
+    this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
     } else if (this.cfLine == null || this.cfLine === undefined) {
@@ -164,7 +165,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
     );
 
-    remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
+    if (!this.itineraryComponent.itineraryForm.pristine) {
+      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
+    }
+
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));

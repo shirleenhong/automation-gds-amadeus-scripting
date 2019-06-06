@@ -1,19 +1,15 @@
 *** Settings ***
-Force Tags        US7994
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify That Tour Package And UDID Remarks Are Written For Single Passenger
-    [Tags]    us7762
+    [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    ape1234
     ...    tkok    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    CAD
@@ -43,16 +39,13 @@ Verify That Tour Package And UDID Remarks Are Written For Single Passenger
     [Teardown]    Close Browser
 
 Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers
-    [Tags]    us7762
+    [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Maridel    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
     ...    RM*CF/-RBM000000N    ape1234    tkok
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    USD
@@ -80,11 +73,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers
     Close Cryptic Display Window
     Switch To Command Page
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    CAD
@@ -102,10 +91,8 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers
     Verify Specific Remark Is Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN ${tour_currency_type}
     Verify Specific Remark Is Written In The PNR    RIR ADULT PACKAGE-----------450.00X2--------900.00
     Verify Specific Remark Is Written In The PNR    RIR ADULT TAXES--------------26.75X2---------53.50
-    Verify Specific Remark Is Written In The PNR    RIR ADULT INSURANCE-----------0.00X2----------0.00
     Verify Specific Remark Is Written In The PNR    RIR CHILD PACKAGE-----------100.75X1--------100.75
     Verify Specific Remark Is Written In The PNR    RIR CHILD TAXES--------------55.60X1---------55.60
-    Verify Specific Remark Is Written In The PNR    RIR CHILD INSURANCE-----------0.00X1----------0.00
     Verify Specific Remark Is Written In The PNR    RIR TOTAL PACKAGE PRICE 1109.85
     Verify Specific Remark Is Written In The PNR    RIR LESS DEPOSIT PAID 120.99 -
     Verify Specific Remark Is Written In The PNR    RIR BALANCE DUE 989.85
@@ -116,16 +103,13 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers
     [Teardown]    Close Browser
 
 Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers With Child
-    [Tags]    us7762
+    [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Dhel (CHD)    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
     ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234    tkok
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    PHP
@@ -146,10 +130,8 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     Verify Specific Remark Is Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN ${tour_currency_type}
     Verify Specific Remark Is Written In The PNR    RIR ADULT PACKAGE-----------350.00X2--------700.00
     Verify Specific Remark Is Written In The PNR    RIR ADULT TAXES--------------31.00X2---------62.00
-    Verify Specific Remark Is Written In The PNR    RIR ADULT INSURANCE-----------0.00X2----------0.00
     Verify Specific Remark Is Written In The PNR    RIR CHILD PACKAGE-----------100.75X1--------100.75
     Verify Specific Remark Is Written In The PNR    RIR CHILD TAXES--------------55.60X1---------55.60
-    Verify Specific Remark Is Written In The PNR    RIR CHILD INSURANCE-----------0.00X1----------0.00
     Verify Specific Remark Is Written In The PNR    RIR TOTAL PACKAGE PRICE 918.35
     Verify Specific Remark Is Written In The PNR    RIR LESS DEPOSIT PAID 200.00 -
     Verify Specific Remark Is Written In The PNR    RIR BALANCE DUE 718.35
@@ -158,9 +140,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     Close Cryptic Display Window
     Switch To Command Page
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    CAD
@@ -176,10 +156,8 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     Verify Specific Remark Is Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN ${tour_currency_type}
     Verify Specific Remark Is Written In The PNR    RIR ADULT PACKAGE-----------350.00X2--------700.00
     Verify Specific Remark Is Written In The PNR    RIR ADULT TAXES--------------31.00X2---------62.00
-    Verify Specific Remark Is Written In The PNR    RIR ADULT INSURANCE-----------0.00X2----------0.00
     Verify Specific Remark Is Written In The PNR    RIR CHILD PACKAGE-----------100.75X1--------100.75
     Verify Specific Remark Is Written In The PNR    RIR CHILD TAXES--------------55.60X1---------55.60
-    Verify Specific Remark Is Written In The PNR    RIR CHILD INSURANCE-----------0.00X1----------0.00
     Verify Specific Remark Is Written In The PNR    RIR INFANT PACKAGE----------129.42X1--------129.42
     Verify Specific Remark Is Written In The PNR    RIR TOTAL PACKAGE PRICE 1047.77
     Verify Specific Remark Is Written In The PNR    RIR LESS DEPOSIT PAID 300.00 -
@@ -191,16 +169,13 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     [Teardown]    Close Browser
 
 Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers With Child And Infant
-    [Tags]    us7762
+    [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Dhel (CHD)    NM1Leisure/Infant (INF/ANN/10DEC18)    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
     ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape13134    tkok
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    CAD
@@ -238,11 +213,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     Close Cryptic Display Window
     Switch To Command Page
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Select Package    Tour Package
     Select Tour Package Currency Type    CAD
@@ -272,6 +243,29 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     Verify Specific Remark Is Written In The PNR    RIR BALANCE DUE 1908.25
     Verify Specific Remark Is Written In The PNR    RIR ---- BALANCE OF 1908.25 IS DUE 22NOV23 ----
     Verify Specific Remark Is Written In The PNR    RIR SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE
+    Close Cryptic Display Window
+
+Verify That Tour Package And UDID Remarks Are Deleted
+    [Tags]    us7998
+    Open CA Migration Window
+    Click Wrap PNR
+    Click Panel    Remarks
+    Select Package    Delete Package Remarks
+    Click Submit To PNR
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Not Written In The PNR    RM *U43/-NOV23
+    Verify Specific Remark Is Not Written In The PNR    RM *U41/-1908.25
+    Verify Specific Remark Is Not Written In The PNR    RM *U42/-0.00
+    Verify Specific Remark Is Not Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN
+    Verify Specific Remark Is Not Written In The PNR    RIR ADULT PACKAGE-----------500.00X3------1,500.00
+    Verify Specific Remark Is Not Written In The PNR    RIR ADULT TAXES--------------52.00X3--------156.00
+    Verify Specific Remark Is Not Written In The PNR    RIR ADULT INSURANCE---------100.75X3--------302.25
+    Verify Specific Remark Is Not Written In The PNR    RIR TOTAL PACKAGE PRICE 1958.25
+    Verify Specific Remark Is Not Written In The PNR    RIR LESS DEPOSIT PAID 50.00 -
+    Verify Specific Remark Is Not Written In The PNR    RIR BALANCE DUE 1908.25
+    Verify Specific Remark Is Not Written In The PNR    RIR ---- BALANCE OF 1908.25 IS DUE 22NOV23 ----
+    Verify Specific Remark Is Not Written In The PNR    RIR SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

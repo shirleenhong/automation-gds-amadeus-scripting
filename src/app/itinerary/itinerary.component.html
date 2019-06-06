@@ -3,24 +3,19 @@
     <div class="row form-group">
       <div class="col-4"></div>
       <div class="col-8">
-        <input type="checkbox" name="sendItinerary" formControlName="sendItinerary" id="sendItinerary" (change)="showEmailAddress()" /> Send
+        <input type="checkbox" name="sendItinerary" formControlName="sendItinerary" id="sendItinerary"
+          (change)="showEmailAddress()" /> Send
         Itinerary
       </div>
     </div>
 
-    <div formArrayName="emailAddresses" *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
+    <div formArrayName="emailAddresses"
+      *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
       <div [formGroupName]="i" class="form-group row">
         <div class="col-sm-4">Email Address {{ i + 1 }}:</div>
         <div class="col-4">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="emailAddress"
-            id="emailAddress"
-            list="dynamicEmail"
-            AllCapsMask
-            formControlName="emailAddress"
-          />
+          <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" list="dynamicEmail"
+            AllCapsMask formControlName="emailAddress" />
           <datalist id="dynamicEmail">
             <option *ngFor="let item of listEmail" [value]="item">{{ item }} </option>
           </datalist>
@@ -49,7 +44,8 @@
     <div class="form-group  row">
       <div class="col-sm-4">Type of Transanction:</div>
       <div class="col-sm-4">
-        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction" name="typeTransaction">
+        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction"
+          name="typeTransaction">
           <option *ngFor="let item of transactionTypeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
@@ -67,7 +63,8 @@
         <div [formGroupName]="i" class="form-group row">
           <div class="col-sm-4"></div>
           <div class="col-4">
-            <input type="text" class="form-control" formControlName="service" id="service" AllCapsMask formControlName="service" />
+            <input type="text" class="form-control" formControlName="service" id="service" AllCapsMask
+              formControlName="service" maxlength="65" />
           </div>
           <div *ngIf="removeservice" class="">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'service')"> </i>
@@ -81,13 +78,18 @@
 
       <div class="row form-group">
         <div class="col-sm-4"></div>
+        <div class="col-sm-6">Remarks Appear at top of Invoice in RED.</div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-4"></div>
         <div class="col-sm-4 note">Tickets:</div>
       </div>
       <div formArrayName="tickets" *ngFor="let item of this.itineraryForm.get('tickets')['controls']; let i = index">
         <div [formGroupName]="i" class="form-group row">
           <div class="col-sm-4"></div>
           <div class="col-4">
-            <input type="text" class="form-control" formControlName="ticket" id="ticket" AllCapsMask formControlName="ticket" />
+            <input type="text" class="form-control" formControlName="ticket" id="ticket" AllCapsMask
+              formControlName="ticket" maxlength="65" />
           </div>
           <div *ngIf="removeticket">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'ticket')"> </i>
@@ -103,13 +105,18 @@
     <div *ngIf="f.typeTransaction.value === 'itinerary'">
       <div class="row form-group">
         <div class="col-sm-4"></div>
+        <div class="col-sm-6">Remarks Appear at top of Invoice in RED.</div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-4"></div>
         <div class="col-sm-4 note">Offers:</div>
       </div>
       <div formArrayName="offers" *ngFor="let item of this.itineraryForm.get('offers')['controls']; let i = index">
         <div [formGroupName]="i" class="form-group row">
           <div class="col-sm-4"></div>
           <div class="col-4">
-            <input type="text" class="form-control" formControlName="offer" id="offer" AllCapsMask formControlName="offer" />
+            <input type="text" class="form-control" formControlName="offer" id="offer" AllCapsMask
+              formControlName="offer" maxlength="65" />
           </div>
           <span *ngIf="removeoffer" class="">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'offer')"> </i>

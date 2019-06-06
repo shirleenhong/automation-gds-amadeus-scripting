@@ -244,6 +244,8 @@ export class VisaPassportComponent implements OnInit {
         }
       ];
       for (const air of this.pnrService.pnrObj.airSegments) {
+
+        // debugger;
         // await this.ddbService.getTravelPort(air.departureAirport).then(x => {
         //   const c = JSON.stringify(x);
         //   let obj: any;
@@ -255,7 +257,7 @@ export class VisaPassportComponent implements OnInit {
         //   let obj: any;
         //   obj = JSON.parse(c);
         //   this.arrivalCountry = obj[0].countryName;
-
+        // test
         if (this.ddbService.getCityCountry(air.departureAirport) === '') {
           this.departureCountry = '';
         } else {

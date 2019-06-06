@@ -71,6 +71,15 @@ export class ItineraryComponent implements OnInit {
       { itemText: 'Invoice', itemValue: 'invoice' },
       { itemText: 'Itinerary', itemValue: 'itinerary' }
     ];
+    const offer = '/*' + 'OFFER' + '/*/*(?<service>(.*))/*';
+    const regx = new RegExp(offer);
+    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
+    if (rems.length > 0) {
+      this.itineraryForm.controls.typeTransaction.setValue('itinerary');
+    } else {
+      this.itineraryForm.controls.typeTransaction.setValue('invoice');
+    }
+
   }
 
   createFormGroup(): FormGroup {

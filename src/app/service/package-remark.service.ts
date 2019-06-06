@@ -16,7 +16,7 @@ export class PackageRemarkService {
   decPipe = new DecimalPipe('en-US');
   rbcForDeletion = [];
 
-  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) {}
+  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
 
   public GetITCPackageRemarks(group: any) {
     const rmGroup = new RemarkGroup();
@@ -159,9 +159,9 @@ export class PackageRemarkService {
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'LESS DEPOSIT PAID ' +
-          (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
-          ' - ' +
-          formatDate(Date.now(), 'dMMM', 'en'),
+        (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
+        ' - ' +
+        formatDate(Date.now(), 'dMMM', 'en'),
         'RI',
         'R'
       )
@@ -172,10 +172,10 @@ export class PackageRemarkService {
       rmGroup.remarks.push(
         this.remarkHelper.createRemark(
           '---- BALANCE OF ' +
-            (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
-            ' IS DUE ' +
-            datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
-            ' ----',
+          (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
+          ' IS DUE ' +
+          datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
+          ' ----',
           'RI',
           'R'
         )
@@ -272,12 +272,16 @@ export class PackageRemarkService {
     const name = point.lastname + '/' + point.firstname;
     const visa = point.firstvisanumber + 'XXXXXX' + point.lastvisanumber;
     const pointsRedeemed = point.pointsRedeemed + ' VALUE ' + point.valuepoints;
+    let prodtype = point.productType;
+    if (point.productType === 'OTHER') {
+      prodtype = 'OTHER-' + point.othValue;
+    }
     const mandatoryHotelRemarks = [
       'CARDHOLDER NAME - ' + name,
       'CARDHOLDER VISA VI' + visa + ' USED TO REDEEM POINTS',
       point.pct + ' PERCENT POINTS REDEMPTION',
       'POINTS REDEEMED ' + pointsRedeemed,
-      'PRODUCT TYPE - ' + point.productType,
+      'PRODUCT TYPE - ' + prodtype,
       'SUPPLIER NAME - ' + point.suppliername
     ];
 
@@ -418,8 +422,14 @@ export class PackageRemarkService {
             model.cotherTaxes = this.getKelements(rm);
           }
           if (rm.freeFlowText.indexOf('PRODUCT TYPE') > -1) {
-            model.productType = this.getKelements(rm);
+            const productType = this.getKelements(rm);
+            model.productType = productType;
+            if (productType.substr(0, productType.indexOf('-')) === 'OTHER') {
+              model.productType = 'OTHER';
+              model.othValue = productType.substr(6, productType.length - 6);
+            }
           }
+
           if (rm.freeFlowText.indexOf('SUPPLIER NAME') > -1) {
             model.suppliername = this.getKelements(rm);
           }

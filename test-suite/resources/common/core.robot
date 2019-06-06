@@ -58,17 +58,20 @@ Open CA Migration Window
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
+    Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'amazonaws.com/bpg-gds-scripting-amadeus')]    60
+    Comment    Select Frame    xpath=//iframe[contains(@src,'amazonaws.com/bpg-gds-scripting-amadeus')]
     #Open and verify CA Migration window acceptance
     Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
     Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
     Comment    Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Comment    Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
-    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Load PNR')]    180
+    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
 
 Open Cryptic Display Window
     #Open Cryptic Display window from Graphic Mode
     Wait Until Element Is Enabled    css=.bookingTool.FS    30
     Wait Until Element Is Visible    xpath=//button[contains(@id, 'crypticDisplay')]    30
+    Sleep    5
     Press Key    xpath=//button[contains(@id, 'crypticDisplay')]    \\32
     Wait Until Page Contains Element    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]    30
     Sleep    10

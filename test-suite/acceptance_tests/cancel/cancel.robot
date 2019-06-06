@@ -8,11 +8,8 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1SIN21NOV-/TYP-TOR/SUC-ZZ/SC-sin/SD-12NOV/ST-0900/EC-sin/ED-12NOV/ET-1800/PS-X    RM*CF/-RBM000000N
     ...    RM*NUC    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NIGERIA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure
@@ -68,11 +65,8 @@ Verify That UA Segment Is Cancelled And Cancel Remarks Are Written
     Enter GDS Command    NM1Lastname/Firstname Mr    SS UA1074 Y 13NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RM*CF/-RBM000000N    RM*NUC
     ...    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NIGERIA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure
@@ -105,11 +99,8 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS AC1075 Y 13NOV CDGYYZ GK1 / 11551440 / ABCDEFG    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    SS AC1076 Y 20NOV YYZFRA GK1 / 11551440 / ABCDEFG    RU1AHK1SIN21NOV-/TYP-TOR/SUC-ZZ/SC-sin/SD-21NOV/ST-0900/EC-sin/ED-21NOV/ET-1800/PS-X
     ...    RM*CF/-RBM000000N    RM*NUC    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NIGERIA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure
@@ -182,11 +173,8 @@ Verify That OSI Fields Have Default Values And Cancel Remarks Are Written
     Enter GDS Command    NM1Lastname/Firstname Mr    SS UA1234 Y 10NOV YYZYTO GK1 / 11551440 / ABCDEFG    SS AC1074 Y 13NOV YTOCDG GK1 / 11551440 / ABCDEFG    SS AC1075 Y 15NOV CDGYYZ GK1 / 11551440 / ABCDEFG    HU1AHK1STR15NOV-17NOV/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    SS AC1076 Y 20NOV YYZFRA GK1 / 11551440 / ABCDEFG
     ...    RU1AHK1SIN21NOV-/TYP-TOR/SUC-ZZ/SC-sin/SD-21NOV/ST-0900/EC-sin/ED-21NOV/ET-1800/PS-X    RM*CF/-RBM000000N    RM*NUC    APE12345    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    CDG
-    Select If PNR Travel to Any Countries Listed    NIGERIA
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Submit To PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure

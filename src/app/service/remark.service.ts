@@ -416,6 +416,7 @@ export class RemarkService {
   }
 
   endPNR(requestor) {
+    debugger;
     if (this.pnrService.pnrObj.tkElements.length < 1) {
       smartScriptSession.send('TKOK');
     }

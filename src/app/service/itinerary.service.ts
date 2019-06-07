@@ -160,14 +160,22 @@ export class ItineraryService {
 
   writeRouteType() {
     let route = 'DOM';
-    this.destination.forEach(element => {
-      if (element !== 'Canada' && element !== 'United States') {
-        route = 'INTL';
-      }
-      if (element === 'United States' && route !== 'INTL') {
-        route = 'TRANS';
-      }
+    this.pnrService.pnrObj.airSegments.forEach(element => {
+      const arrival = this.ddbService.getCityCountry(element.arrivalAirport);
+      route = this.getRoute(arrival, route);
+      const departure = this.ddbService.getCityCountry(element.departureAirport);
+      route = this.getRoute(departure, route);
     });
+    return route;
+  }
+
+  private getRoute(element: any, route: string) {
+    if (element !== 'Canada' && element !== 'United States') {
+      route = 'INTL';
+    }
+    if (element === 'United States' && route !== 'INTL') {
+      route = 'TRANS';
+    }
     return route;
   }
 }

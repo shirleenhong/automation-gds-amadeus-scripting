@@ -8,7 +8,14 @@
           maxlength="35" />
       </div>
     </div>
-
+    <div class="row form-group">
+      <div class="col-4"></div>
+      <div class="col-8 note">
+        Please specify what has been cancelled, include Non Refundable
+        <br>
+        Amounts and Waiver Info if applicable. (Mandatory)
+      </div>
+    </div>
     <div class="row form-group">
       <div class="col-4">Notes:</div>
       <div class="col-8">
@@ -34,43 +41,52 @@
     <div class="row form-group">
       <div class="col-4">Segments: </div>
       <div class="col-8">
-        <label formArrayName="segments" *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index"
-          class="col-8">
+        <label formArrayName="segments"
+          *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index">
           <input type="checkbox" [formControlName]="i" (change)="checkSegmentAirline()">
           {{segments[i].name}}
         </label>
       </div>
     </div>
 
-    <div *ngIf="isAC">
-
-      <div class="row form-group">
+    <div class="row form-group">
+      <div class="col-4"> </div>
+      <div class="col-8 emphasize">
+        <input type="checkbox" name="cancelAll" formControlName="cancelAll" id="cancelAll"
+          (change)="cancelAll($event.target.checked)" />
+        Cancel All Segments
+      </div>
+    </div>
+    <!-- <div *ngIf="f.cancelNonRefAC.value === true">
+        <div class="row form-group">
         <div class="col-4"> </div>
         <div class="col-8">
           <input type="checkbox" name="cancelNonRefAC" formControlName="cancelNonRefAC" id="cancelNonRefAC"
             (change)="changeNonRefAC()" />
           Are you cancelling non refundable AC flight(s) due to IROP or schedule change?
         </div>
-      </div>
-      <div *ngIf="f.cancelNonRefAC.value === true">
-        <div class="row form-group">
-          <div class="col-4">AC Reason For Cancel: </div>
-          <div class="col-8">
-            <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
-              (change)="acChange($event.target.value)">
-              <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
-                {{item.itemText}}
-              </option>
-            </select>
-          </div>
+      </div> -->
+    <!-- <div *ngIf="f.cancelNonRefAC.value === true"> -->
+    <div>
+      <div class="row form-group">
+        <div class="col-4">Reason For Cancel: </div>
+        <div class="col-8">
+          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
+            (change)="acChange($event.target.value)">
+            <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
         </div>
-
+      </div>
+      <div *ngIf="isAC">
         <div *ngIf="f.reasonACCancel.value !== ''">
           <div class="row form-group">
             <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">AC Ticket Number:</div>
-              <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo" />
+              <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo"
+                (change)="acTicketChange($event.target.value)" />
             </div>
 
             <div class="col-4">
@@ -105,19 +121,20 @@
                 name="relationship" />
             </div>
           </div>
+        </div>
+      </div>
 
-          <div class="row form-group">
-            <div class="col-4"></div>
-            <div class="col-8">
-              <div class="">Type the affected airline flight number(s)</div>
-              <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
-                maxlength="35" />
-              <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
-            </div>
-          </div>
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <div class="">Type the affected airline flight number(s)</div>
+          <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
+            maxlength="35" />
+          <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
         </div>
       </div>
     </div>
+
 
 
 

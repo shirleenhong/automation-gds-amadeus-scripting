@@ -644,8 +644,12 @@ export class SegmentService {
                         + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
                     break;
                 case '6':
-                    remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                        + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + pass;
+                    if (cancel.value.acFlightNo) {
+                        remText = 'OS AC ' + cancel.value.acFlightNo + ' '
+                            + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + pass;
+                    } else {
+                        remText = '';
+                    }
                     break;
                 default:
                     break;
@@ -666,6 +670,7 @@ export class SegmentService {
             rmGroup.cryptics.push(remText);
         }
 
+        debugger;
         if (remText !== '') {
             rmGroup.cryptics.push('RF' + cancel.value.requestor);
             rmGroup.cryptics.push('ER');
@@ -766,6 +771,11 @@ export class SegmentService {
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);
         passGroup.passiveSegments = misSegment;
+
+        const fordeletion = this.pnrService.getmisCancel();
+        if (fordeletion > 0) {
+            passGroup.deleteRemarkByIds.push(fordeletion);
+        }
 
         return passGroup;
     }

@@ -296,7 +296,7 @@ Click Remarks Tab
 Select Segment From The List
     [Arguments]    ${button_order}    @{segment_number}
     Click Element    xpath=//div[@formarrayname='segments'][${button_order}]//button[@id='button-basic']
-    Focus    xpath=//div[@formarrayname='segments'][${button_order}]//ul[@id='dropdown-basic']
+    Set Focus To Element    xpath=//div[@formarrayname='segments'][${button_order}]//ul[@id='dropdown-basic']
     : FOR    ${segment_number}    IN    @{segment_number}
     \    Select Checkbox    xpath=//div[@formarrayname='segments'][${button_order}]//input[@value='${segment_number}']
 

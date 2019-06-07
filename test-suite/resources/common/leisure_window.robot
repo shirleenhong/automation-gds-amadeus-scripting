@@ -30,10 +30,10 @@ Click Cancel Segment
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Back To Main Menu')]    30
 
 Confirm Delete
-    Focus    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]
+    Set Focus To Element    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]
     Click Button    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
-    Focus    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
+    Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     Take Screenshot
 
 Click Add Segment Main Menu

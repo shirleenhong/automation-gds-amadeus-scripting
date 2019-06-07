@@ -42,7 +42,7 @@ Click Save Button
     Click Element    xpath=//button[contains(text(), 'Save')]
     # Wait Until Page Contains Element    xpath=//tr[1]//i[@class='fas fa-edit']    30
     Wait Until Page Contains Element    xpath=//i[@class='fas fa-edit']    30
-    Focus    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
+    Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     [Teardown]    Take Screenshot
 
 Enter Credit Card Number

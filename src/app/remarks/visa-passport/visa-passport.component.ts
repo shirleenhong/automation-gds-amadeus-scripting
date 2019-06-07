@@ -146,7 +146,6 @@ export class VisaPassportComponent implements OnInit {
     let cityCountry: string;
     if (this.pnrService.isPNRLoaded) {
       const destinations = Array<string>();
-
       this.pnrService.pnrObj.airSegments.forEach(x => {
         cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
         if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') {

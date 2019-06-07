@@ -1154,4 +1154,14 @@ export class PnrService {
     }
     return false;
   }
+
+  getmisCancel() {
+    for (const misc of this.pnrObj.miscSegments) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
+        // this.getSegmentDetails(misc, 'MIS');
+        return misc.tatooNumber;
+      }
+    }
+    return 0;
+  }
 }

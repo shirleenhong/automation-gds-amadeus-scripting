@@ -13,10 +13,11 @@ export class DDBService implements OnInit {
   countryList = [];
   currencyList = [];
   cachedSupplierCodes = [];
+  airTravelPortInformation = [];
   retry = 0;
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   async getToken() {
     if (this.isTokenExpired || this.token === '') {
@@ -95,6 +96,10 @@ export class DDBService implements OnInit {
 
   async getTravelPort(travelportCode: string) {
     return await this.getRequest(common.travelportService + travelportCode);
+  }
+
+  async getAllTravelPort() {
+    return await this.getRequest(common.airTravelportsService);
   }
 
   getProvinces(): any {
@@ -241,6 +246,50 @@ export class DDBService implements OnInit {
       );
     }
     return this.cachedSupplierCodes;
+  }
+
+  // async getCountryInformation(air) {
+  //   debugger;
+  //   // const air = this.pnrService.pnrObj.airSegments;
+  //   air.forEach(async x => {
+  //     await this.getTravelPortInformation(x.arrivalAirport);
+  //     await this.getTravelPortInformation(x.departureAirport);
+  //   });
+  // }
+
+  async getTravelPortInformation() {
+    // await this.getTravelPort(station).then(x => {
+    //   const c = JSON.stringify(x);
+    //   let obj: any;
+    //   obj = JSON.parse(c);
+    //   const ref = {
+    //     city: obj.TravelPorts[0].CityCode,
+    //     countryCode: obj.TravelPorts[0].CountryCode,
+    //     country: obj.TravelPorts[0].CountryName
+    //   };
+    //   this.travelPortInformation.push(ref);
+    // });
+    if (this.airTravelPortInformation.length === 0) {
+      await this.getAllTravelPort().then(x => {
+        x.TravelPorts.forEach(port => {
+          const ref = {
+            travelPortCode: port.TravelPortCode,
+            city: port.CityCode,
+            countryCode: port.CountryCode,
+            country: port.CountryName
+          };
+          this.airTravelPortInformation.push(ref);
+        });
+      });
+    }
+  }
+
+  getCityCountry(search: string) {
+    if (this.airTravelPortInformation.findIndex(x => x.travelPortCode === search) !== -1) {
+      return this.airTravelPortInformation.find(x => x.travelPortCode === search);
+    } else {
+      return '';
+    }
   }
 
   getCcVendorCodeList() {
@@ -470,33 +519,6 @@ export class DDBService implements OnInit {
       { itemText: 'Zimbabwe Dollarr', itemValue: 'ZWD' },
       { itemText: 'Zimbabwe Dollar', itemValue: 'ZWR' }
     ];
-  }
-
-  getCityCountry(search: string) {
-    let cityList = [];
-    cityList = [
-      { city: 'YUL', countryCode: 'CA', country: 'Canada' },
-      { city: 'YYZ', countryCode: 'CA', country: 'Canada' },
-      { city: 'YVR', countryCode: 'CA', country: 'Canada' },
-      { city: 'LHR', countryCode: 'NL', country: 'Netherlands' },
-      { city: 'AMS', countryCode: 'NL', country: 'Netherlands' },
-      { city: 'PAR', countryCode: 'FR', country: 'France' },
-      { city: 'LON', countryCode: 'UK', country: 'United Kingdom' },
-      { city: 'CDG', countryCode: 'FR', country: 'France' },
-      { city: 'MAD', countryCode: 'ES', country: 'Spain' },
-      { city: 'ORD', countryCode: 'US', country: 'United States' },
-      { city: 'FRA', countryCode: 'DE', country: 'Germany' },
-      { city: 'SYD', countryCode: 'AU', country: 'Australia' },
-      { city: 'VCE', countryCode: 'IT', country: 'Italy' },
-      { city: 'MNL', countryCode: 'PH', country: 'Philippines' },
-      { city: 'FLR', countryCode: 'IT', country: 'Italy' }
-    ];
-
-    if (cityList.findIndex(x => x.city === search) !== -1) {
-      return cityList.find(x => x.city === search);
-    } else {
-      return '';
-    }
   }
 
   getCitizenship(search: string) {

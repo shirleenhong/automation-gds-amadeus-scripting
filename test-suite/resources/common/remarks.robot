@@ -5,7 +5,7 @@ Resource          common_library.robot
 Select Package
     [Arguments]    ${package}
     Wait Until Element Is Visible    css=#packageList
-    Select From List By Value    css=#packageList    ${package}
+    Select From List By Label    css=#packageList    ${package}
 
 Enter Number of Pax for Adult
     [Arguments]    ${pax_adult}
@@ -316,7 +316,7 @@ Click Add Fare Rule button
 
 Select Airline
     [Arguments]    ${airline}
-    Select From List By Value    css=#airlineCode    ${airline}
+    Select From List By Label    css=#airlineCode    ${airline}
 
 Select Fare Rule Remarks
     [Arguments]    ${fare_rule_remark}=EMPTY

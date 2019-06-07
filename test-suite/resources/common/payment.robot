@@ -99,11 +99,11 @@ Enter Credit Card Vendor
 
 Select Segment Number
     [Arguments]    ${segment_num}
-    Select From List By Value    xpath=//select[@id='segmentNum']    ${segment_num}
+    Select From List By Label    xpath=//select[@id='segmentNum']    ${segment_num}
 
 Select Leisure Fee Form of Payment
     [Arguments]    ${form_of_payment}
-    Select From List By Value    css=#paymentType    ${form_of_payment}
+    Select From List By Label    css=#paymentType    ${form_of_payment}
 
 Select Credit Card Vendor Code
     [Arguments]    ${cc_vendor_code}
@@ -256,7 +256,7 @@ Select Exclusive Property
 Enter Group
     [Arguments]    ${group}
     #select group
-    Select From List By Value    css=#group    ${group}
+    Select From List By Label    css=#group    ${group}
     [Teardown]    Take Screenshot
 
 Select Preferred Vendor

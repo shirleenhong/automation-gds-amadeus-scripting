@@ -22,7 +22,7 @@ Click Reporting Tab
 
 Select Redemption Added
     [Arguments]    ${redemption_added}
-    Select From List By Value    css=#redemptionAdded    ${redemption_added}
+    Select From List By Label    css=#redemptionAdded    ${redemption_added}
     Set Suite Variable    ${redemption_added}
 
 Select Reservation Request

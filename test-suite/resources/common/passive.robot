@@ -117,7 +117,7 @@ Enter Cabin Number
 
 Select Dining
     [Arguments]    ${dining}
-    Select From List By Value    css=#dining    ${dining}
+    Select From List By Label    css=#dining    ${dining}
     Press Key    css=#dining    \\09
     Set Test Variable    ${dining.upper()}
     [Teardown]    Take Screenshot
@@ -329,7 +329,7 @@ Select Car Type
 
 Select Pickup Location
     [Arguments]    ${pickup_location}
-    Select From List By Value    css=#pickupLoc    ${pickup_location}
+    Select From List By Label    css=#pickupLoc    ${pickup_location}
     Press Key    css=#pickupLoc    \\09
 
 Select Pickup Address
@@ -340,7 +340,7 @@ Select Pickup Address
 
 Select Drop Off Location
     [Arguments]     ${dropoff_location}
-    Select From List By Value  css=#dropOffLoc  ${dropoff_location}
+    Select From List By Label  css=#dropOffLoc  ${dropoff_location}
     Press Key    css=#dropOffLoc    \\09   
 
 Select Drop Off Address

@@ -32,7 +32,7 @@ Select Reservation Request
 
 Select Booking Type
     [Arguments]    ${booking_type}
-    Select From List By Value    css=#bookingType    ${booking_type}
+    Select From List By Label    css=#bookingType    ${booking_type}
     Set Suite Variable    ${booking_type}
 
 Enter Caller Name

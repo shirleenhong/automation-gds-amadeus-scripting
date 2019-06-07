@@ -14,7 +14,7 @@ Click Add Email Address Button
 
 Select Itinerary Language
     [Arguments]    ${itinerary_language}
-    Select From List By Value    css=#language    ${itinerary_language}
+    Select From List By Label    css=#language    ${itinerary_language}
 
 Select Itinerary Type Of Transaction
     [Arguments]    ${transaction_type}

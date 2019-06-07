@@ -336,7 +336,7 @@ Select Pickup Address
     [Arguments]     ${pickup_address}
     Wait Until Element Is Visible   css=#pickupOffAddress       30
     Sleep  2
-    Select From List By Value  css=#pickupOffAddress     ${pickup_address}
+    Select From List By Label  css=#pickupOffAddress     ${pickup_address}
 
 Select Drop Off Location
     [Arguments]     ${dropoff_location}
@@ -347,7 +347,7 @@ Select Drop Off Address
     [Arguments]     ${dropoff_address}
     Wait Until Element Is Visible  css=#dropOffAddress   30
     Sleep  2
-    Select From List By Value  css=#dropOffAddress     ${dropoff_address}
+    Select From List By Label  css=#dropOffAddress     ${dropoff_address}
 
 Enter Rental Cost
     [Arguments]     ${rental_cost}

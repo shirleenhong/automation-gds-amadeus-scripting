@@ -27,7 +27,7 @@ Select Redemption Added
 
 Select Reservation Request
     [Arguments]    ${reservation_request}
-    Select From List By Value    css=#reservationReq    ${reservation_request}
+    Select From List By Label    css=#reservationReq    ${reservation_request}
     Set Suite Variable    ${reservation_request}
 
 Select Booking Type

@@ -86,7 +86,7 @@ Click Payment Tab
 
 Select Traveler Province
     [Arguments]    ${province}
-    Select From List By Value    css=#address    ${province}
+    Select From List By Label    css=#address    ${province}
     [Teardown]    Take Screenshot
 
 Select Segment Association
@@ -262,7 +262,7 @@ Enter Group
 Select Preferred Vendor
     [Arguments]    ${preferred_vendor}
     #select preferred vendor
-    Select From List By Value    css=#preferredVendor    ${preferred_vendor}
+    Select From List By Label    css=#preferredVendor    ${preferred_vendor}
     [Teardown]    Take Screenshot
 
 Click Update Button

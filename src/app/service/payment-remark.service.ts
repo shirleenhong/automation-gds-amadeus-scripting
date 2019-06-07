@@ -3,7 +3,7 @@ import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { RemarkModel } from '../models/pnr/remark.model';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, DatePipe } from '@angular/common';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { DDBService } from './ddb.service';
@@ -11,13 +11,14 @@ import { AmountPipe } from '../pipes/amount.pipe';
 import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
 import { LeisureFeeComponent } from '../payments/leisure-fee/leisure-fee.component';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
+import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -42,7 +43,7 @@ export class PaymentRemarkService {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-
+    // - delete existing lines
     const existingLines = this.pnrService.getMatrixAccountingLineNumbers();
     if (existingLines.length > 0) {
       remGroup.deleteRemarkByIds = existingLines;
@@ -57,14 +58,20 @@ export class PaymentRemarkService {
         remGroup.deleteRemarkByIds.push(x.lineNum);
       });
     }
+
+    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup);
+    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup);
+
     const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
     if (lineNums.length > 0) {
       remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
+
+    // write new Lines
     if (accountingRemarks !== null) {
       let found = false;
       accountingRemarks.forEach((account) => {
-        this.processAccountingRemarks(account, remGroup.remarks);
+        this.processAccountingRemarks(account, remGroup);
         if (!found && account.supplierCodeName === 'ACJ') {
           remGroup.remarks.push(this.getRemarksModel('U14/-ACPASS-INDIVIDUAL', '*', 'RM'));
           found = true;
@@ -72,6 +79,15 @@ export class PaymentRemarkService {
       });
     }
     return remGroup;
+  }
+
+  deleteRemarksByRegex(regex, remGroup) {
+    const redemRIR = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+    if (redemRIR.length > 0) {
+      redemRIR.forEach((x) => {
+        remGroup.deleteRemarkByIds.push(x.lineNo);
+      });
+    }
   }
 
   public getRemarksModel(remText, cat, type?, segment?: string, passenger?: string) {
@@ -164,7 +180,9 @@ export class PaymentRemarkService {
     return tline;
   }
 
-  processAccountingRemarks(accounting: MatrixAccountingModel, remarkList: Array<RemarkModel>) {
+  processAccountingRemarks(accounting: MatrixAccountingModel, remGroup: RemarkGroup) {
+    const remarkList = remGroup.remarks;
+
     const acc1 =
       'MAC/-SUP-' +
       accounting.supplierCodeName.trim() +
@@ -218,6 +236,41 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
 
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString(), pass.toString()));
+
+    if (accounting.accountingTypeRemark === 'ACPR') {
+      remarkList.push(
+        this.getRemarksModel(
+          accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE',
+          'R',
+          'RI',
+          accounting.segmentNo.toString()
+        )
+      );
+    } else if (accounting.accountingTypeRemark === 'ACPP') {
+      remarkList.push(
+        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo.toString())
+      );
+      const datePipe = new DatePipe('en-US');
+      // add dummy segment
+      const passive = new PassiveSegmentModel();
+      passive.startPoint = accounting.departureCity;
+      passive.endPoint = accounting.departureCity;
+      passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
+      passive.vendor = 'AC';
+      passive.startTime = '0700';
+      passive.endTime = '0800';
+      passive.segmentName = 'AIR';
+      passive.passiveSegmentType = 'AIR';
+      passive.function = '1';
+      passive.quantity = 1;
+      passive.status = 'GK';
+      passive.classOfService = 'Y';
+      passive.controlNo = 'C1';
+      passive.flightNo = '123Q';
+      passive.confirmationNo = accounting.supplierConfirmatioNo;
+      remGroup.passiveSegments = [];
+      remGroup.passiveSegments.push(passive);
+    }
 
     if (accounting.bsp === '2') {
       this.extractApayRemark(accounting, remarkList, fopObj);
@@ -277,7 +330,7 @@ export class PaymentRemarkService {
       VI = '115000',
       MC = '116000',
       AMEX = '117000',
-      Diners = '118000',
+      Diners = '118000'
     }
     let fop = '';
     if (Object.values(CardType).includes(matrix.bankAccount)) {
@@ -330,7 +383,17 @@ export class PaymentRemarkService {
         remark = this.generateSFCRemark(f);
         const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
         remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
-        // remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+        // RM FEE
+        const remarkFee = [];
+        remark.split('/').forEach((x) => {
+          if (x.indexOf('SFC') < 0 && x.indexOf('-PT') < 0 && x.indexOf('-FP-TRF') < 0) {
+            remarkFee.push(x);
+            if (x.indexOf('-AMT') >= 0) {
+              remarkFee.push('-FP-FEE');
+            }
+          }
+        });
+        remGroup.remarks.push(this.getRemarksModel('FEE/' + remarkFee.join('/'), '*', '', '', pass));
       });
       const ex = [];
       comp.exemption.forEach((x) => {

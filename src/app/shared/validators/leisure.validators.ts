@@ -10,8 +10,8 @@ export function validateSegmentNumbers(segments: any[]): ValidatorFn {
     }
     let response = null;
     const segs = currentControl.value.toString().split(',');
-    segs.forEach(x => {
-      const s = segments.find(z => z.lineNo === x);
+    segs.forEach((x) => {
+      const s = segments.find((z) => z.lineNo === x);
       if (s == null || s === undefined) {
         response = { segment_not_found: true };
         return response;
@@ -32,8 +32,8 @@ export function validatePassengerNumbers(passenger: any[]): ValidatorFn {
     }
     let response = null;
     const pass = currentControl.value.toString().split(',');
-    pass.forEach(x => {
-      const s = passenger.find(z => z.id === x);
+    pass.forEach((x) => {
+      const s = passenger.find((z) => z.id === x);
       if (s == null || s === undefined) {
         response = { passenger_not_found: true };
         return response;
@@ -43,6 +43,7 @@ export function validatePassengerNumbers(passenger: any[]): ValidatorFn {
     return response;
   };
 }
+
 export function validateCreditCard(vendorControlName): ValidatorFn {
   return (currentControl: AbstractControl): { [key: string]: any } => {
     if (currentControl.value === undefined) {
@@ -118,5 +119,23 @@ export function validateExpDate(): ValidatorFn {
     } else {
       return { INVALID_EXP_DATE: true };
     }
+  };
+}
+
+export function validateNotEqualTo(compareValue: string): ValidatorFn {
+  return (currentControl: AbstractControl): { [key: string]: any } => {
+    if (currentControl.value === undefined) {
+      return { no_value: true };
+    }
+    if (currentControl.parent === undefined) {
+      return { no_value: true };
+    }
+
+    if (compareValue !== '' && currentControl.value.toString() === compareValue) {
+      return { EQUAL_VALUE_NOT_ALLOWED: true };
+    }
+
+    // currentControl.setValidators(Validators.pattern(pat));
+    return null;
   };
 }

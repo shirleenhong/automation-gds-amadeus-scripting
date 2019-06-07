@@ -23,7 +23,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -40,7 +40,7 @@ export class PnrService {
           this.errorMessage = 'Error: ' + error;
         }
       )
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
     this.getPCC();
@@ -48,7 +48,7 @@ export class PnrService {
   }
 
   getPCC(): void {
-    smartScriptSession.requestService('usermanagement.retrieveUser').then(x => {
+    smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.PCC = x.ACTIVE_OFFICE_ID;
     });
   }
@@ -195,7 +195,7 @@ export class PnrService {
   }
 
   pushDestination(endpoint, startpoint?) {
-    const look = this.destinationCity.find(x => x.endpoint === endpoint);
+    const look = this.destinationCity.find((x) => x.endpoint === endpoint);
     if (look == null) {
       const destination = {
         endpoint,
@@ -212,20 +212,17 @@ export class PnrService {
         this.pushDestination(airendpoint);
       }
       for (const car of this.pnrObj.auxCarSegments) {
-        const carendpoint =
-          car.fullNode.travelProduct.boardpointDetail.cityCode;
+        const carendpoint = car.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(carendpoint);
       }
 
       for (const hotel of this.pnrObj.auxHotelSegments) {
-        const hotelendpoint =
-          hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+        const hotelendpoint = hotel.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(hotelendpoint);
       }
 
       for (const misc of this.pnrObj.miscSegments) {
-        const miscendpoint =
-          misc.fullNode.travelProduct.boardpointDetail.cityCode;
+        const miscendpoint = misc.fullNode.travelProduct.boardpointDetail.cityCode;
         this.pushDestination(miscendpoint);
       }
       return this.destinationCity;
@@ -245,7 +242,7 @@ export class PnrService {
   getPassiveSegmentTypes(segmentType: string) {
     const elements = new Array<any>();
 
-    this.getSegmentTatooNumber().forEach(c => {
+    this.getSegmentTatooNumber().forEach((c) => {
       if (c.segmentType === segmentType) {
         elements.push(c);
       }
@@ -261,7 +258,7 @@ export class PnrService {
   getPassiveAirSegments(lineNo: any) {
     const elements = new Array<any>();
 
-    this.getSegmentTatooNumber().forEach(c => {
+    this.getSegmentTatooNumber().forEach((c) => {
       if (lineNo === '') {
         if (c.segmentType === 'AIR') {
           elements.push({
@@ -309,15 +306,9 @@ export class PnrService {
 
     for (const misc of this.pnrObj.miscSegments) {
       if (
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-          'THANK YOU FOR CHOOSING CARLSON'
-        ) === -1 &&
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-          'PNR CANCELLED'
-        ) === -1 &&
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-          'CWT RETENTION SEGMENT'
-        ) === -1
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('CWT RETENTION SEGMENT') === -1
       ) {
         this.getSegmentDetails(misc, 'MIS');
       }
@@ -326,13 +317,7 @@ export class PnrService {
   }
 
   private formatDate(tempDate) {
-    const lairdate = new Date(
-      tempDate.substr(2, 2) +
-      '/' +
-      tempDate.substr(0, 2) +
-      '/' +
-      tempDate.substr(4, 2)
-    );
+    const lairdate = new Date(tempDate.substr(2, 2) + '/' + tempDate.substr(0, 2) + '/' + tempDate.substr(4, 2));
     const datePipe = new DatePipe('en-US');
     const tdate = datePipe.transform(lairdate, 'ddMMM');
     return tdate;
@@ -428,13 +413,7 @@ export class PnrService {
   }
 
   private getLastDate(airdate: any, lastDeptDate: Date) {
-    const lairdate = new Date(
-      airdate.substr(2, 2) +
-      '/' +
-      airdate.substr(0, 2) +
-      '/' +
-      airdate.substr(4, 2)
-    );
+    const lairdate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
     if (lairdate > lastDeptDate) {
     }
     {
@@ -444,9 +423,7 @@ export class PnrService {
   }
 
   checkTST(): boolean {
-    if (
-      this.pnrObj.fullNode.response.model.output.response.tstData !== undefined
-    ) {
+    if (this.pnrObj.fullNode.response.model.output.response.tstData !== undefined) {
       return true;
     } else {
       return false;
@@ -522,7 +499,7 @@ export class PnrService {
 
         // if (rm.associations !== undefined && rm.associations && rm.associations.length > 0) {
         if (rm.associations) {
-          rm.associations.forEach(element => {
+          rm.associations.forEach((element) => {
             rem.segments.push(element.tatooNumber);
           });
         }
@@ -569,11 +546,7 @@ export class PnrService {
   getUDIDText(searchText: string) {
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rmElements) {
-        if (
-          ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(
-            searchText
-          ) === 0
-        ) {
+        if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
           // return ri.fullNode.miscellaneousRemarks.remarks.freetext;
           return ri;
         }
@@ -605,7 +578,7 @@ export class PnrService {
         fee.segmentAssoc = '2';
         fee.address = taxProvince;
         fee.passengerNo = this.getPassengerAssocNumbers(rm.associations);
-        rems.forEach(r => {
+        rems.forEach((r) => {
           if (r.indexOf('-') >= 0) {
             const arr = r.split('-');
             switch (arr[0]) {
@@ -656,14 +629,16 @@ export class PnrService {
     const matrixModels = new Array<MatrixAccountingModel>();
     const apays = this.getApayRirRemarkLines();
     let macNum = '';
+
     for (const rm of this.pnrObj.rmElements) {
       if (rm.freeFlowText.indexOf('MAC/-') === 0) {
         let model: MatrixAccountingModel;
         macNum = rm.freeFlowText.match(/LK-MAC[0-9]*/g);
         if (macNum !== undefined && macNum !== '') {
           macNum = macNum.toString().replace('LK-MAC', '');
-          model = matrixModels.find(x => x.tkMacLine === Number(macNum));
+          model = matrixModels.find((x) => x.tkMacLine === Number(macNum));
         }
+
         if (model === null || model === undefined) {
           model = new MatrixAccountingModel();
           matrixModels.push(this.extractMatrixAccount(model, rm.freeFlowText));
@@ -673,20 +648,19 @@ export class PnrService {
         if (model.bsp === undefined || model.bsp == null || model.bsp === '') {
           model.bsp = '1';
         } // default
-        if (
-          rm.associations !== null &&
-          rm.associations !== undefined &&
-          model !== undefined
-        ) {
+        if (rm.associations !== null && rm.associations !== undefined && model !== undefined) {
           model.segmentNo = this.getAssocNumbers(rm.associations);
           model.passengerNo = this.getPassengerAssocNumbers(rm.associations);
           model.passRelate = false;
           if (model.passengerNo) {
             model.passRelate = true;
           }
+          if (model.supplierCodeName === 'ACJ') {
+            model = this.extractCanadaPass(model, rm.associations);
+          }
 
           if (apays !== null && apays.length > 0) {
-            apays.forEach(x => {
+            apays.forEach((x) => {
               if (x.segments === model.segmentNo) {
                 model.bsp = '2';
                 model.descriptionapay = x.remark
@@ -709,18 +683,48 @@ export class PnrService {
     }
     return matrixModels;
   }
+  extractCanadaPass(model: MatrixAccountingModel, assoc) {
+    let pass = this.getRemarksFromGDSByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
+    if (pass.length > 0) {
+      pass.forEach((x) => {
+        const list = assoc.filter((s) => x.segments.indexOf(s.tatooNumber) >= 0);
+        if (list.length === x.segments.length) {
+          const text = x.remarkText;
+          const vals = text.split(' PASS REDEMPTION-');
+          model.passPurchase = vals[0].trim();
+          model.fareType = vals[1].replace('FARE', '').trim();
+          model.accountingTypeRemark = 'ACPR';
+        }
+      });
+      return model;
+    }
 
-  private extractMatrixAccount(
-    model: MatrixAccountingModel,
-    remark: string
-  ): MatrixAccountingModel {
+    pass = this.getRemarksFromGDSByRegex(/(.*) PASS-(.*) FARE/g, 'RIR');
+    if (pass.length > 0) {
+      pass.forEach((x) => {
+        const list = assoc.filter((s) => x.segments.indexOf(s.tatooNumber) >= 0);
+        if (list.length === x.segments.length) {
+          const text = x.remarkText;
+          const vals = text.split(' PASS-');
+          model.passPurchase = vals[0].trim();
+          model.fareType = vals[1].replace('FARE', '').trim();
+          model.accountingTypeRemark = 'ACPP';
+        }
+      });
+    }
+
+    return model;
+  }
+
+  private extractMatrixAccount(model: MatrixAccountingModel, remark: string): MatrixAccountingModel {
     const rem = remark.split('/-');
 
-    rem.forEach(r => {
+    rem.forEach((r) => {
       const val = r.split('-');
       switch (val[0]) {
         case 'SUP':
           model.supplierCodeName = val[1];
+
           break;
         case 'LK':
           model.tkMacLine = Number(val[1].replace('MAC', ''));
@@ -781,10 +785,8 @@ export class PnrService {
       return '';
     }
     const s = [];
-    assoc.forEach(x => {
-      const segment = this.getSegmentTatooNumber().find(
-        z => z.tatooNo === x.tatooNumber && x.segmentType === 'ST'
-      );
+    assoc.forEach((x) => {
+      const segment = this.getSegmentTatooNumber().find((z) => z.tatooNo === x.tatooNumber && x.segmentType === 'ST');
       if (segment !== null && segment !== undefined) {
         s.push(segment.lineNo);
       }
@@ -797,10 +799,8 @@ export class PnrService {
       return '';
     }
     const s = [];
-    assoc.forEach(x => {
-      const passenger = this.getPassengers().find(
-        z => z.tatooNo === x.tatooNumber && x.segmentType === 'PT'
-      );
+    assoc.forEach((x) => {
+      const passenger = this.getPassengers().find((z) => z.tatooNo === x.tatooNumber && x.segmentType === 'PT');
       if (passenger !== null && passenger !== undefined) {
         s.push(passenger.id);
       }
@@ -855,14 +855,12 @@ export class PnrService {
         let rln = rm.freeFlowText.match(/REC\/-RLN-[0-9]*/g);
         if (rln !== undefined && rln !== '') {
           rln = rln.toString().replace('REC/-RLN-', '');
-          model = matrixReceipts.find(x => x.rln === Number(rln));
+          model = matrixReceipts.find((x) => x.rln === Number(rln));
         }
         if (model === null || model === undefined) {
           model = new MatrixReceiptModel();
 
-          matrixReceipts.push(
-            this.extractMatrixReceipt(model, rm.freeFlowText)
-          );
+          matrixReceipts.push(this.extractMatrixReceipt(model, rm.freeFlowText));
         } else {
           this.extractMatrixReceipt(model, rm.freeFlowText);
         }
@@ -949,10 +947,7 @@ export class PnrService {
     const match = regex.exec(freetext);
 
     if (match) {
-      segmentModel.confirmationNo = match.groups.confirmationNumber.substr(
-        0,
-        match.groups.confirmationNumber.length - 1
-      );
+      segmentModel.confirmationNo = match.groups.confirmationNumber.substr(0, match.groups.confirmationNumber.length - 1);
     }
 
     return segmentModel;
@@ -962,23 +957,19 @@ export class PnrService {
     const pSegment: PassiveSegmentsModel[] = [];
     const segment = this.getSegmentTatooNumber();
     let index = 0;
-    segment.forEach(element => {
+    segment.forEach((element) => {
       index++;
 
       switch (element.segmentType) {
         case 'MIS':
         case 'CAR':
-          pSegment.push(
-            this.getSegmentModel(element.freetext, index, element.segmentType)
-          );
+          pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
           break;
         case 'AIR':
           pSegment.push(this.getAirSegmentModel(element, index));
           break;
         case 'HTL':
-          pSegment.push(
-            this.getHotelSegmentModel(element, index, element.freetext)
-          );
+          pSegment.push(this.getHotelSegmentModel(element, index, element.freetext));
           break;
       }
     });
@@ -994,10 +985,7 @@ export class PnrService {
   //   return pSegment;
   // }
 
-  private extractMatrixReceipt(
-    model: MatrixReceiptModel,
-    remark: string
-  ): MatrixReceiptModel {
+  private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
     let match = regex.exec(remark);
     if (match !== null) {
@@ -1038,8 +1026,7 @@ export class PnrService {
         if (match !== null) {
           model.vendorCode = match.groups.vendor;
           model.ccNo = Number(match.groups.cardNo);
-          model.expDate =
-            match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
+          model.expDate = match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
         }
 
         return model;
@@ -1062,11 +1049,7 @@ export class PnrService {
   IsMISRetention() {
     if (this.isPNRLoaded) {
       for (const misc of this.pnrObj.miscSegments) {
-        if (
-          misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-            'PNR CANCELLED'
-          ) > -1
-        ) {
+        if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
           return true;
         }
       }
@@ -1081,11 +1064,7 @@ export class PnrService {
 
   hasAmendMISRetentionLine() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-          'THANK YOU FOR CHOOSING CARLSON'
-        ) > -1
-      ) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
         return true;
       }
     }
@@ -1107,21 +1086,15 @@ export class PnrService {
       for (const misc of this.pnrObj.miscSegments) {
         if (supCode === 'vib') {
           if (
-            misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-              'FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION'
-            ) > -1 ||
-            misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-              'POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS'
-            ) > -1
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf('FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION') > -1 ||
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf('POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS') > -1
           ) {
             return true;
           }
         }
         if (supCode === 'amk') {
           if (
-            misc.fullNode.itineraryFreetext.longFreetext.indexOf(
-              'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER'
-            ) > -1
+            misc.fullNode.itineraryFreetext.longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
           ) {
             return true;
           }

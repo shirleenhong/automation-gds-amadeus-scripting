@@ -51,7 +51,7 @@ export class DDBService implements OnInit {
         headers: hds
       })
       .toPromise()
-      .catch(e => {
+      .catch((e) => {
         // retry if unauthorize to get new token
         if (e.status === 401 && this.retry < 3) {
           this.getRequest(serviceName);
@@ -63,10 +63,10 @@ export class DDBService implements OnInit {
 
   async sample() {
     this.getRequest(common.travelportService + 'MNL').then(
-      x => {
+      (x) => {
         alert(JSON.stringify(x));
       },
-      err => {
+      (err) => {
         alert(JSON.stringify(err));
       }
     );
@@ -75,18 +75,18 @@ export class DDBService implements OnInit {
   async getCountryAndCurrencyList() {
     if (this.countryList.length === 0 || this.currencyList.length === 0) {
       this.getRequest(common.locationService).then(
-        result => {
+        (result) => {
           const countryItems = result.CountryItems;
-          this.countryList = countryItems.map(item => ({
+          this.countryList = countryItems.map((item) => ({
             itemValue: item.CountryCode,
             itemText: item.CountryName
           }));
-          this.currencyList = countryItems.map(item => ({
+          this.currencyList = countryItems.map((item) => ({
             itemValue: item.CurrencyCode,
             itemText: item.CurrencyCode
           }));
         },
-        err => {
+        (err) => {
           alert(JSON.stringify(err));
         }
       );
@@ -214,9 +214,9 @@ export class DDBService implements OnInit {
 
   async loadSupplierCodesFromPowerBase() {
     await this.getRequest(common.supplierCodes).then(
-      x => {
+      (x) => {
         this.cachedSupplierCodes = [];
-        x.SupplierList.forEach(s => {
+        x.SupplierList.forEach((s) => {
           const supplier = {
             type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
             supplierCode: s.SupplierCode,
@@ -225,7 +225,7 @@ export class DDBService implements OnInit {
           this.cachedSupplierCodes.push(supplier);
         });
       },
-      err => {
+      (err) => {
         alert(JSON.stringify(err));
       }
     );
@@ -236,9 +236,7 @@ export class DDBService implements OnInit {
       this.loadSupplierCodesFromPowerBase();
     }
     if (this.cachedSupplierCodes.length > 0 && type !== undefined) {
-      return this.cachedSupplierCodes.filter(
-        x => x.type.toUpperCase() === type.toUpperCase()
-      );
+      return this.cachedSupplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase());
     }
     return this.cachedSupplierCodes;
   }
@@ -274,8 +272,7 @@ export class DDBService implements OnInit {
       { itemText: 'Middle East/Western Asia', itemValue: '6' },
       { itemText: 'Asia incl. India', itemValue: '7' },
       {
-        itemText:
-          'Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam',
+        itemText: 'Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam',
         itemValue: '8'
       },
       { itemText: 'Canada and St. Pierre et Miquelon', itemValue: '9' }
@@ -492,8 +489,8 @@ export class DDBService implements OnInit {
       { city: 'FLR', countryCode: 'IT', country: 'Italy' }
     ];
 
-    if (cityList.findIndex(x => x.city === search) !== -1) {
-      return cityList.find(x => x.city === search);
+    if (cityList.findIndex((x) => x.city === search) !== -1) {
+      return cityList.find((x) => x.city === search);
     } else {
       return '';
     }
@@ -509,7 +506,7 @@ export class DDBService implements OnInit {
       { countryCode: 'ES', country: 'Spain' },
       { countryCode: 'US', country: 'United States' }
     ];
-    return countryList.find(x => x.countryCode === search);
+    return countryList.find((x) => x.countryCode === search);
   }
 
   getStateProvinces(countryCode?) {
@@ -588,9 +585,65 @@ export class DDBService implements OnInit {
     ];
 
     if (countryCode !== undefined) {
-      return states.find(x => x.countryCode === countryCode);
+      return states.find((x) => x.countryCode === countryCode);
     } else {
       return states;
     }
+  }
+
+  getACPassPurchaseList() {
+    return [
+      { itemText: '', itemValue: '' },
+      { itemText: 'COMMUTER-RAPIDAIR', itemValue: 'RAPIDAIR' },
+      { itemText: 'COMMUTER-WESTERN COMMUTER', itemValue: 'WESTERN COMMUTER' },
+      { itemText: 'COMMUTER-ALBERTA COMMUTER', itemValue: 'ALBERTA COMMUTER' },
+      { itemText: 'COMMUTER-VANCOUVER COMMUTER', itemValue: 'VANCOUVER COMMUTER' },
+      { itemText: 'COMMUTER-BRITISH COLUMBIA COMMUTER', itemValue: 'BRITISH COLUMBIA COMMUTER' },
+      { itemText: 'COMMUTER-TORONTO CITY AIRPORT', itemValue: 'TORONTO CITY AIRPORT' },
+      { itemText: 'COMMUTER-PRAIRIES COMMUTER', itemValue: 'PRAIRIES COMMUTER' },
+      { itemText: 'COMMUTER-U.S COMMUTER', itemValue: 'U.S COMMUTER' },
+      { itemText: 'REGIONAL-QUEBEC', itemValue: 'QUEBEC' },
+      { itemText: 'REGIONAL-CENTRAL REGIONAL', itemValue: 'CENTRAL REGIONAL' },
+      { itemText: 'REGIONAL-HALIFAX', itemValue: 'HALIFAX' },
+      { itemText: 'REGIONAL-MARITIMES', itemValue: 'MARITIMES' },
+      { itemText: 'REGIONAL-ATLANTIC', itemValue: 'ATLANTIC' },
+      { itemText: 'REGIONAL-QUEBEC-ONTARIO CONNECTOR', itemValue: 'QUEBEC-ONTARIO CONNECTOR' },
+      { itemText: 'REGIONAL-EASTERN CANADA', itemValue: 'EASTERN CANADA' },
+      { itemText: 'REGIONAL-ONTARIO', itemValue: 'ONTARIO' },
+      { itemText: 'REGIONAL-PRAIRIES REGIONAL', itemValue: 'PRAIRIES REGIONAL' },
+      { itemText: 'REGIONAL-WESTERN CANADA', itemValue: 'WESTERN CANADA' },
+      { itemText: 'TRANSCONTINENTAL-OIL CONTINTAL', itemValue: 'OIL CONTINTAL' },
+      { itemText: 'TRANSCONTINENTAL-EAST WEST CONNECTOR', itemValue: 'EAST WEST CONNECTOR' },
+      { itemText: 'TRANSCONTINENTAL-OIL REGIONAL', itemValue: 'OIL REGIONAL' },
+      { itemText: 'TRANSCONTINENTAL-NORTH AMERICA', itemValue: 'NORTH AMERICA' },
+      { itemText: 'TRANSCONTINENTAL-TRANSCONTINENTAL', itemValue: 'TRANSCONTINENTAL' },
+      { itemText: 'TRANSBORDER-NEW YORK COMMUTER', itemValue: 'NEW YORK COMMUTER' },
+      { itemText: 'TRANSBORDER-WESTERN USA', itemValue: 'WESTERN USA' },
+      { itemText: 'TRANSBORDER-WESTERN USA PLUS', itemValue: 'WESTERN USA PLUS' },
+      { itemText: 'TRANSBORDER-WEST TRI NORTHEAST AND MIDWEST USA', itemValue: 'WEST TRI NORTHEAST AND MIDWEST USA' },
+      { itemText: 'TRANSBORDER-EASTERN TRIANGLE-NORTHEAST MIDWEST USA', itemValue: 'EASTERN TRIANGLE-NORTHEAST MIDWEST USA' },
+      { itemText: 'TRANSBORDER-EASTERN TRIANGLE SOUTHEAST USA AND TEXAS', itemValue: 'EASTERN TRIANGLE SOUTHEAST USA AND TEXAS' },
+      { itemText: 'TRANSBORDER-EASTERN TRIANGLE-WESTERN USA', itemValue: 'EASTERN TRIANGLE-WESTERN USA' },
+      { itemText: 'TRANSBORDER-EASTERN CANADA NORTHEAST MIDWEST US', itemValue: 'EASTERN CANADA NORTHEAST MIDWEST US' },
+      { itemText: 'TRANSBORDER-EASTERN CANADA SOUTHEAST USA AND TEXAS', itemValue: 'EASTERN CANADA SOUTHEAST USA AND TEXAS' },
+      { itemText: 'SUN DESTINATIONS-SOUTHWESTERN', itemValue: 'SOUTHWESTERN' },
+      { itemText: 'SUN DESTINATIONS-FLORIDA SUN ', itemValue: 'FLORIDA SUN' },
+      { itemText: 'SUN DESTINATIONS-FLORIDA SUN PLUS', itemValue: 'FLORIDA SUN PLUS' },
+      { itemText: 'SUN DESTINATIONS-HAWAII ', itemValue: 'HAWAII' },
+      { itemText: 'INTERNATIONAL-EUROPE AND MOROCCO EST', itemValue: 'EUROPE AND MOROCCO EST' },
+      { itemText: 'INTERNATIONAL-SOUTH AMERICA EAST', itemValue: 'SOUTH AMERICA EAST' },
+      { itemText: 'INTERNATIONAL-EUROPE AND MOROCCO WST', itemValue: 'EUROPE AND MOROCCO WST' },
+      { itemText: 'INTERNATIONAL-WESTERN CANADA TO ASIA', itemValue: 'WESTERN CANADA TO ASIA' },
+      { itemText: 'INTERNATIONAL-MIDDLE EAST AND INDIA EAST CANADA', itemValue: 'MIDDLE EAST AND INDIA EAST CANADA' },
+      { itemText: 'INTERNATIONAL-SOUTH AMERICA WEST CDA', itemValue: 'SOUTH AMERICA WEST CDA' },
+      { itemText: 'INTERNATIONAL-EASTERN CANADA TO ASIA', itemValue: 'EASTERN CANADA TO ASIA' },
+      { itemText: 'INTERNATIONAL-MIDDLE EAST AND INDIA WEST CANADA', itemValue: 'MIDDLE EAST AND INDIA WEST CANADA' },
+      { itemText: 'WORLD TRAVEL-NORTH AMERICA', itemValue: 'NORTH AMERICA' },
+      { itemText: 'WORLD TRAVEL-EUR/N AFRICA', itemValue: 'EUR/N AFRICA' },
+      { itemText: 'WORLD TRAVEL-ASIA', itemValue: 'ASIA' },
+      { itemText: 'WORLD TRAVEL-SOUTH AMERICA', itemValue: 'SOUTH AMERICA' },
+      { itemText: 'WORLD TRAVEL-MIDDLE EAST/INDIAWORLD ME INDIA', itemValue: 'MIDDLE EAST/INDIAWORLD ME INDIA' },
+      { itemText: 'WORLD TRAVEL-WORLDWIDE', itemValue: 'WORLDWIDE' }
+    ];
   }
 }

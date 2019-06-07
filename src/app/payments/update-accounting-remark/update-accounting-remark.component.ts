@@ -17,7 +17,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   title: string;
 
   @Input()
-  accountingRemarks: MatrixAccountingModel;
+  accountingRemark: MatrixAccountingModel;
 
   // // TODO: Via service
   accountingRemarkList: Array<SelectItem>;
@@ -28,6 +28,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   supplierCodeList: Array<any>;
   filterSupplierCodeList: Array<any>;
   passengerList: Array<any>;
+  fareTypeList = [];
+  passPurchaseList = [];
   segments = [];
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
@@ -46,11 +48,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   ) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
-    this.accountingRemarks = new MatrixAccountingModel();
+    this.accountingRemark = new MatrixAccountingModel();
     this.loadBSPList();
     this.loadVendorCode();
     this.loadAccountingRemarkList();
     this.loadDescription();
+    this.loadFareType();
+    this.passPurchaseList = this.ddbService.getACPassPurchaseList();
     // this.loadPassengerList();
   }
 
@@ -78,7 +82,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       descriptionapay: new FormControl('', [Validators.required]),
       // bsp: new FormControl('', [Validators.required]),
       commisionPercentage: new FormControl('', [Validators.required]),
-      passRelate: new FormControl('', [])
+      passRelate: new FormControl('', []),
+      passPurchase: new FormControl('', []),
+      fareType: new FormControl('', []),
+      departureCity: new FormControl('', [])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -125,6 +132,16 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'DC -Diners', itemValue: 'DC' }
     ];
   }
+  loadFareType() {
+    this.fareTypeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'FLEX', itemValue: 'FLEX' },
+      { itemText: 'LATITUDE', itemValue: 'LATITUDE' },
+      { itemText: 'EXECUTIVE', itemValue: 'EXECUTIVE' },
+      { itemText: 'TANGO ', itemValue: 'TANGO' },
+      { itemText: 'PREMIUM ECONOMY', itemValue: 'PREMIUM ECONOMY' }
+    ];
+  }
 
   loadAccountingRemarkList() {
     this.accountingRemarkList = [
@@ -135,7 +152,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Rail Accounting Remark', itemValue: '4' },
       { itemText: 'Limo Accounting Remark', itemValue: '6' },
       { itemText: 'Insurance Remark', itemValue: 'INS' },
-      { itemText: 'Apay Accounting Remark', itemValue: '0' }
+      { itemText: 'Apay Accounting Remark', itemValue: '0' },
+      { itemText: 'Air Canada Pass Redemption', itemValue: 'ACPR' },
+      { itemText: 'Air Canada Pass Purchase', itemValue: 'ACPP' }
     ];
   }
 
@@ -153,7 +172,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
-    this.accountingRemarks.vendorCode = '';
+    if (this.isAddNew) {
+      this.accountingRemark.vendorCode = '';
+    }
+    // initial state
+    this.enableFormControls(['fop'], false);
+    this.enableFormControls(['departureCity'], true);
+    this.matrixAccountingForm.get('departureCity').clearValidators();
     switch (accRemark) {
       case 'INS':
         this.IsInsurance = true;
@@ -161,32 +186,58 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
         this.enableFormControls(['supplierCodeName', 'descriptionapay', 'tktLine', 'otherTax', 'commisionWithoutTax'], true);
         this.enableFormControls(['commisionPercentage'], false);
-        this.accountingRemarks.bsp = '3';
+        this.accountingRemark.bsp = '3';
         // this.eventEmitterService.onFirstComponentButtonClick();
         break;
       case '0':
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
         this.enableFormControls(['descriptionapay', 'supplierCodeName'], false);
-        this.accountingRemarks.bsp = '2';
+        this.accountingRemark.bsp = '2';
         this.IsInsurance = false;
+        break;
+      case 'ACPR':
+      case 'ACPP':
+        this.accountingRemark.fop = 'CC';
+        this.accountingRemark.supplierCodeName = 'ACJ';
+        this.enableFormControls(
+          ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay', 'commisionPercentage', 'departureCity'],
+          true
+        );
+        this.enableFormControls(['tktLine'], false);
+        if (accRemark === 'ACPR') {
+          if (this.isAddNew) {
+            this.accountingRemark.qst = '0.00';
+            this.accountingRemark.baseAmount = '0.00';
+            this.accountingRemark.hst = '0.00';
+            this.accountingRemark.gst = '0.00';
+          }
+        } else {
+          if (this.isAddNew) {
+            this.accountingRemark.qst = '';
+            this.accountingRemark.baseAmount = '';
+            this.accountingRemark.hst = '';
+            this.accountingRemark.gst = '';
+          }
+          this.enableFormControls(['departureCity'], false);
+          this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
+        }
         break;
       default:
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
-        this.accountingRemarks.bsp = '1';
+        this.accountingRemark.bsp = '1';
         this.setTktNumber();
         this.IsInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
     }
+    this.filterSupplierCodeList = [];
     this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
-    this.assignSupplierCode(this.accountingRemarks.descriptionapay);
+    this.assignSupplierCode(this.accountingRemark.descriptionapay);
   }
 
   filterSupplierCode(typeCode) {
-    //this.assignSupplierCode(typeCode);
-
     const val = ['12', '5', '1', '6', '4'];
     const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL'];
     const indx = val.indexOf(typeCode);
@@ -196,7 +247,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   private assignSupplierCode(typeCode: any) {
-    if (this.accountingRemarks.bsp === '2') {
+    if (this.accountingRemark.bsp === '2') {
       if (!this.IsInsurance) {
         if (typeCode === 'SEAT COSTS') {
           this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
@@ -271,7 +322,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setTktNumber() {
     const supCode = ['ACY', 'SOA', 'WJ3'];
 
-    if (this.accountingRemarks.accountingTypeRemark === '1' && supCode.includes(this.accountingRemarks.supplierCodeName)) {
+    if (this.accountingRemark.accountingTypeRemark === '1' && supCode.includes(this.accountingRemark.supplierCodeName)) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
@@ -282,7 +333,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   setInsuranceValue() {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
-      this.accountingRemarks.segmentNo = this.matrixAccountingForm.controls.segmentNo.value;
+      this.accountingRemark.segmentNo = this.matrixAccountingForm.controls.segmentNo.value;
       // const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
     }
   }
@@ -297,7 +348,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     //   this.IsInsurance = false;
     //   this.name = 'Supplier Confirmation Number:';
     // }
-    this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemarks.segmentNo);
+    this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemark.segmentNo);
   }
 
   showPassengerRelate() {

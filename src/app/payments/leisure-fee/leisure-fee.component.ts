@@ -6,12 +6,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 import { UpdateLeisureFeeComponent } from '../update-leisure-fee/update-leisure-fee.component';
-import {
-  FormGroup,
-  Validators,
-  FormControl,
-  FormBuilder
-} from '@angular/forms';
+import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-leisure-fee',
@@ -24,6 +19,7 @@ export class LeisureFeeComponent implements OnInit {
   isAddNew = false;
   showReasonFee = false;
   leisureFeeForm: FormGroup;
+  disableAdd = false;
   exemption = [
     { label: 'HST Exempt', value: 'RC', checked: false, fln: '' },
     { label: 'GST Exempt', value: 'XG', checked: false, fln: '' },
@@ -45,18 +41,16 @@ export class LeisureFeeComponent implements OnInit {
     this.leisureFeeList = this.pnrService.getSFCRemarks();
     this.loadExemption();
     this.checkReasonFee();
-    this.leisureFeeForm
-      .get('noFeeReason')
-      .setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
+    this.leisureFeeForm.get('noFeeReason').setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
   }
 
   loadExemption() {
     const ex = this.pnrService.getRemarkText('TEX/');
     if (ex) {
       const arr = ex.split('/-');
-      arr.forEach(x => {
+      arr.forEach((x) => {
         // tslint:disable-next-line: no-shadowed-variable
-        const e = this.exemption.find(e => e.value === x);
+        const e = this.exemption.find((e) => e.value === x);
         if (e) {
           e.checked = true;
           e.fln = '1';
@@ -70,23 +64,18 @@ export class LeisureFeeComponent implements OnInit {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
-            const cur = this.leisureFeeList.find(
-              x => x.fln === this.modalRef.content.leisureFee.fln
-            );
+            const cur = this.leisureFeeList.find((x) => x.fln === this.modalRef.content.leisureFee.fln);
             this.utilHelper.modelCopy(this.modalRef.content.leisureFee, cur);
           } else {
             this.leisureFeeList.push(this.modalRef.content.leisureFee);
           }
           this.modalRef.content.isSubmitted = false;
         }
-        if (
-          this.modalRef.content.callerName === 'leisureFee' &&
-          this.modalRef.content.response === 'YES'
-        ) {
+        if (this.modalRef.content.callerName === 'leisureFee' && this.modalRef.content.response === 'YES') {
           const r = this.modalRef.content.paramValue;
           this.leisureFeeList.splice(this.leisureFeeList.indexOf(r), 1);
           let i = 1;
-          this.leisureFeeList.forEach(x => {
+          this.leisureFeeList.forEach((x) => {
             x.fln = i.toString();
             i++;
           });
@@ -103,8 +92,7 @@ export class LeisureFeeComponent implements OnInit {
     });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
-    this.modalRef.content.message =
-      'Are you sure you want to delete this Leisure Fee?';
+    this.modalRef.content.message = 'Are you sure you want to delete this Leisure Fee?';
     this.modalRef.content.callerName = 'leisureFee';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);
@@ -139,6 +127,11 @@ export class LeisureFeeComponent implements OnInit {
     this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, {
       backdrop: 'static'
     });
+
+    if (this.leisureFeeList.length > 0) {
+      this.modalRef.content.setPreviousCCno(this.leisureFeeList[0].ccNo);
+    }
+
     this.modalRef.content.title = 'Add Leisure Fee Collection';
     this.modalRef.content.exemption = this.exemption;
     this.modalRef.content.leisureFee = leisureFee;
@@ -152,11 +145,7 @@ export class LeisureFeeComponent implements OnInit {
   checkReasonFee() {
     const cfa = this.pnrService.getCFLine();
     if (cfa) {
-      if (
-        cfa.cfa === 'RBM' ||
-        cfa.cfa === 'RBP' ||
-        this.leisureFeeList.length > 0
-      ) {
+      if (cfa.cfa === 'RBM' || cfa.cfa === 'RBP' || this.leisureFeeList.length > 0) {
         this.showReasonFee = false;
         this.leisureFeeForm.get('noFeeReason').setValue('');
         this.leisureFeeForm.get('noFeeReason').disable();
@@ -164,6 +153,12 @@ export class LeisureFeeComponent implements OnInit {
         this.showReasonFee = true;
         this.leisureFeeForm.get('noFeeReason').enable();
       }
+    }
+    const exempts = this.exemption.find((x) => x.checked === true);
+    if (exempts) {
+      this.disableAdd = true;
+    } else {
+      this.disableAdd = false;
     }
   }
 }

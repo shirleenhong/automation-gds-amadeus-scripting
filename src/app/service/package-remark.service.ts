@@ -244,7 +244,7 @@ export class PackageRemarkService {
         }
       });
 
-      // rm.relatedSegments = segments.split(',');
+      //rm.relatedSegments = segments.split(',');
       rmGroup.remarks.push(rm);
     }
 

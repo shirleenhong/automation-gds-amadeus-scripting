@@ -182,7 +182,7 @@ export class ItcPackageComponent implements OnInit {
 
     const categories = ['Adult', 'Child', 'Infant'];
     const payables = ['PRICE', 'TAXES', 'INSURANCE', 'CRUISE', 'TAX/PORT CHARGES', 'RAIL'];
-    const controls = ['base', 'tax', 'ins', 'tcruise', 'bcruise', 'rail'];
+    const controls = ['base', 'tax', 'ins', 'bcruise', 'tcruise', 'rail'];
     categories.forEach((c) => {
       let count = '0';
       payables.forEach((p, i) => {
@@ -194,31 +194,6 @@ export class ItcPackageComponent implements OnInit {
       });
       this.itcForm.get('no' + c).setValue(count);
     });
-
-    // this.packageRemarkHelper.getValues('ADULT', 'PRICE', 'baseAdult', this.itcForm);
-    // this.packageRemarkHelper.getValues('ADULT', 'TAXES', 'taxAdult', this.itcForm);
-    // this.packageRemarkHelper.getValues('ADULT', 'INSURANCE', 'insAdult', this.itcForm);
-    // this.packageRemarkHelper.getValues('ADULT', 'TAX/PORT CHARGES', 'tcruiseAdult', this.itcForm);
-    // this.packageRemarkHelper.getValues('ADULT', 'CRUISE', 'bcruiseAdult', this.itcForm);
-    // this.packageRemarkHelper.getValues('ADULT', 'RAIL', 'railAdult', this.itcForm);
-
-    // this.packageRemarkHelper.getValues('CHILD', 'PRICE', 'baseChild', this.itcForm);
-    // this.packageRemarkHelper.getValues('CHILD', 'TAXES', 'taxChild', this.itcForm);
-    // this.packageRemarkHelper.getValues('CHILD', 'INSURANCE', 'insChild', this.itcForm);
-    // this.packageRemarkHelper.getValues('CHILD', 'TAX/PORT CHARGES', 'tcruiseChild', this.itcForm);
-    // this.packageRemarkHelper.getValues('CHILD', 'CRUISE', 'bcruiseChild', this.itcForm);
-    // this.packageRemarkHelper.getValues('CHILD', 'RAIL', 'railChild', this.itcForm);
-
-    // this.packageRemarkHelper.getValues('INFANT', 'PRICE', 'baseInfant', this.itcForm);
-    // this.packageRemarkHelper.getValues('INFANT', 'TAXES', 'taxInfant', this.itcForm);
-    // this.packageRemarkHelper.getValues('INFANT', 'INSURANCE', 'insInfant', this.itcForm);
-    // this.packageRemarkHelper.getValues('INFANT', 'TAX/PORT CHARGES', 'tcruiseInfant', this.itcForm);
-    // this.packageRemarkHelper.getValues('INFANT', 'CRUISE', 'bcruiseInfant', this.itcForm);
-    // this.packageRemarkHelper.getValues('INFANT', 'RAIL', 'railInfant', this.itcForm);
-
-    // this.packageRemarkHelper.getCount('ADULT', 'PRICE', 'noAdult', this.itcForm);
-    // this.packageRemarkHelper.getCount('CHILD', 'PRICE', 'noChild', this.itcForm);
-    // this.packageRemarkHelper.getCount('INFANT', 'PRICE', 'noInfant', this.itcForm);
 
     const regx = /([0-9]+[.]*[0-9]*)/g;
 

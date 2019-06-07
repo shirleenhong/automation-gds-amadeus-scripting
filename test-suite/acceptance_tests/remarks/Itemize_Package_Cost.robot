@@ -1,18 +1,15 @@
 *** Settings ***
-Force Tags        US7746    US7994
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify that ITC package cost and UDID Remarks Are Written for Single Passenger
+    [Tags]    us7746    us7994
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345
     ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    YYZ
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Itemize Package Cost Remarks
     Enter Currency for ITC    CAD
@@ -53,11 +50,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Single Passenger
     Close Cryptic Display Window
     Switch To Command Page
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    YYZ
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Select Package    Itemize Package Cost Remarks
     Enter Currency for ITC    USD
@@ -84,9 +77,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Single Passenger
     Verify Specific Remark Is Only Written Once    RIR ADULT CRUISE------------552.00X2------1,104.00
     Verify Specific Remark Is Only Written Once    RIR ADULT TAX/PORT CHARGES---34.54X2---------69.08
     Verify Specific Remark Is Only Written Once    RIR ADULT RAIL--------------124.00X2--------248.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT INSURANCE-----------0.00X2----------0.00
     Verify Specific Remark Is Only Written Once    RIR INFANT PRICE------------322.00X1--------322.00
-    Verify Specific Remark Is Only Written Once    RIR INFANT TAXES--------------0.00X1----------0.00
     Verify Specific Remark Is Only Written Once    RIR INFANT CRUISE-----------230.00X1--------230.00
     Verify Specific Remark Is Only Written Once    RIR INFANT TAX/PORT CHARGES--16.54X1---------16.54
     Verify Specific Remark Is Only Written Once    RIR INFANT RAIL--------------40.00X1---------40.00
@@ -102,16 +93,13 @@ Verify that ITC package cost and UDID Remarks Are Written for Single Passenger
     [Teardown]    Close Browser
 
 Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger with Child and Infant
-    [Tags]    DE1204
+    [Tags]    us7746    us7994
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    APE TEST@email.com    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
+    ...    APE TEST@email.com    TKOK
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Itemize Package Cost Remarks
     Enter Currency for ITC    CAD
@@ -176,11 +164,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Close Cryptic Display Window
     Switch To Command Page
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Select Package    Itemize Package Cost Remarks
     Enter Currency for ITC    USD
@@ -215,7 +199,6 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Verify Specific Remark Is Only Written Once    RIR ADULT TAXES-------------212.00X1--------212.0
     Verify Specific Remark Is Only Written Once    RIR ADULT CRUISE------------552.00X1--------552.00
     Verify Specific Remark Is Only Written Once    RIR ADULT TAX/PORT CHARGES---34.54X1---------34.54
-    Verify Specific Remark Is Only Written Once    RIR ADULT RAIL----------------0.00X1----------0.00
     Verify Specific Remark Is Only Written Once    RIR ADULT INSURANCE---------111.00X1--------111.00
     Verify Specific Remark Is Only Written Once    RIR HOTEL/ACCOMMODATION-----335.67
     Verify Specific Remark Is Only Written Once    RIR CAR RENTAL--------------123.23
@@ -230,16 +213,13 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     [Teardown]    Close Browser
 
 Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger with Infant
-    [Tags]    DE1204
+    [Tags]    us7746    us7994
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345
     ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
+    Populate Reporting Required Fields
     Click Panel    Remarks
     Select Package    Itemize Package Cost Remarks
     Enter Currency for ITC    CAD
@@ -264,18 +244,12 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Verify Specific Remark Is Only Written Once    RIR THE FOLLOWING COSTS ARE SHOWN IN CAD
     Verify Specific Remark Is Only Written Once    RIR ADULT PRICE------------1234.00X2------2,468.00
     Verify Specific Remark Is Only Written Once    RIR ADULT TAXES-------------567.80X2------1,135.60
-    Verify Specific Remark Is Only Written Once    RIR ADULT CRUISE--------------0.00X2----------0.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT TAX/PORT CHARGES----0.00X2----------0.00
     Verify Specific Remark Is Only Written Once    RIR ADULT RAIL--------------244.00X2--------488.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT INSURANCE-----------0.00X2----------0.00
     Verify Specific Remark Is Only Written Once    RIR INFANT PRICE------------670.00X1--------670.00
     Verify Specific Remark Is Only Written Once    RIR INFANT TAXES------------231.00X1--------231.00
-    Verify Specific Remark Is Only Written Once    RIR INFANT CRUISE-------------0.00X1----------0.00
-    Verify Specific Remark Is Only Written Once    RIR INFANT TAX/PORT CHARGES---0.00X1----------0.00
     Verify Specific Remark Is Only Written Once    RIR INFANT RAIL-------------122.30X1--------122.30
     Verify Specific Remark Is Only Written Once    RIR INFANT INSURANCE--------126.50X1--------126.50
     Verify Specific Remark Is Only Written Once    RIR HOTEL/ACCOMMODATION----1222.00
-    Verify Specific Remark Is Only Written Once    RIR CAR RENTAL----------------0.00
     Verify Specific Remark Is Only Written Once    RIR LESS DEPOSIT PAID-------405.20
     Verify Specific Remark Is Only Written Once    RIR TOTAL HOLIDAY COST-----9405.20
     Verify Specific Remark Is Only Written Once    RIR BALANCE DUE------------9000.00
@@ -284,11 +258,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Verify Specific Remark Is Not Written In The PNR    RM *U42/-
     Close Cryptic Display Window
     Open CA Migration Window
-    Click Load PNR
-    Click Panel    Reporting
-    Select Routing Code    Asia incl. India
-    Enter Destination Code    BSL
-    Select If PNR Travel to Any Countries Listed    NONE OF THE ABOVE
+    Click Wrap PNR
     Click Panel    Remarks
     Select Package    Itemize Package Cost Remarks
     Enter Currency for ITC    PHP
@@ -309,20 +279,13 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Verify Specific Remark Is Only Written Once    RIR THE FOLLOWING COSTS ARE SHOWN IN PHP
     Verify Specific Remark Is Only Written Once    RIR ADULT PRICE------------1234.00X2------2,468.00
     Verify Specific Remark Is Only Written Once    RIR ADULT TAXES-------------567.80X2------1,135.60
-    Verify Specific Remark Is Only Written Once    RIR ADULT CRUISE--------------0.00X2----------0.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT TAX/PORT CHARGES----0.00X2----------0.00
     Verify Specific Remark Is Only Written Once    RIR ADULT RAIL--------------244.00X2--------488.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT INSURANCE-----------0.00X2----------0.00
     Verify Specific Remark Is Only Written Once    RIR CHILD PRICE-------------670.00X1--------670.00
     Verify Specific Remark Is Only Written Once    RIR CHILD TAXES-------------244.00X1--------244.00
-    Verify Specific Remark Is Only Written Once    RIR CHILD CRUISE--------------0.00X1----------0.00
-    Verify Specific Remark Is Only Written Once    RIR CHILD TAX/PORT CHARGES----0.00X1----------0.00
     Verify Specific Remark Is Only Written Once    RIR CHILD RAIL--------------129.00X1--------129.00
     Verify Specific Remark Is Only Written Once    RIR CHILD INSURANCE---------150.00X1--------150.00
     Verify Specific Remark Is Only Written Once    RIR INFANT PRICE------------670.00X1--------670.00
     Verify Specific Remark Is Only Written Once    RIR INFANT TAXES------------231.00X1--------231.00
-    Verify Specific Remark Is Only Written Once    RIR INFANT CRUISE-------------0.00X1----------0.00
-    Verify Specific Remark Is Only Written Once    RIR INFANT TAX/PORT CHARGES---0.00X1----------0.00
     Verify Specific Remark Is Only Written Once    RIR INFANT RAIL-------------122.30X1--------122.30
     Verify Specific Remark Is Only Written Once    RIR INFANT INSURANCE--------126.50X1--------126.50
     Verify Specific Remark Is Only Written Once    RIR HOTEL/ACCOMMODATION----1222.00
@@ -331,6 +294,38 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     Verify Specific Remark Is Only Written Once    RIR TOTAL HOLIDAY COST----13546.80
     Verify Specific Remark Is Only Written Once    RIR BALANCE DUE------------8546.80
     Verify Specific Remark Is Only Written Once    RIR ---- BALANCE OF 8546.80 IS DUE 14DEC19 ----
+    Close Cryptic Display Window
+
+Verify that ITC package cost and UDID Remarks Are Deleted
+    [Tags]    us7998
+    Open CA Migration Window
+    Click Wrap PNR
+    Click Panel    Remarks
+    Select Package    Delete Package Remarks
+    Click Submit To PNR
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Not Written In The PNR    RM *U43/-DEC19
+    Verify Specific Remark Is Not Written In The PNR    RM *U41/-8546.80
+    Verify Specific Remark Is Not Written In The PNR    RM *U42/-
+    Verify Specific Remark Is Not Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN PHP
+    Verify Specific Remark Is Not Written In The PNR    RIR ADULT PRICE------------1234.00X2------2,468.00
+    Verify Specific Remark Is Not Written In The PNR    RIR ADULT TAXES-------------567.80X2------1,135.60
+    Verify Specific Remark Is Not Written In The PNR    RIR ADULT RAIL--------------244.00X2--------488.00
+    Verify Specific Remark Is Not Written In The PNR    RIR CHILD PRICE-------------670.00X1--------670.00
+    Verify Specific Remark Is Not Written In The PNR    RIR CHILD TAXES-------------244.00X1--------244.00
+    Verify Specific Remark Is Not Written In The PNR    RIR CHILD RAIL--------------129.00X1--------129.00
+    Verify Specific Remark Is Not Written In The PNR    RIR CHILD INSURANCE---------150.00X1--------150.00
+    Verify Specific Remark Is Not Written In The PNR    RIR INFANT PRICE------------670.00X1--------670.00
+    Verify Specific Remark Is Not Written In The PNR    RIR INFANT TAXES------------231.00X1--------231.00
+    Verify Specific Remark Is Not Written In The PNR    RIR INFANT RAIL-------------122.30X1--------122.30
+    Verify Specific Remark Is Not Written In The PNR    RIR INFANT INSURANCE--------126.50X1--------126.50
+    Verify Specific Remark Is Not Written In The PNR    RIR HOTEL/ACCOMMODATION----1222.00
+    Verify Specific Remark Is Not Written In The PNR    RIR CAR RENTAL---------------50.00
+    Verify Specific Remark Is Not Written In The PNR    RIR LESS DEPOSIT PAID------5000.00
+    Verify Specific Remark Is Not Written In The PNR    RIR TOTAL HOLIDAY COST----13546.80
+    Verify Specific Remark Is Not Written In The PNR    RIR BALANCE DUE------------8546.80
+    Verify Specific Remark Is Not Written In The PNR    RIR ---- BALANCE OF 8546.80 IS DUE 14DEC19 ----
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

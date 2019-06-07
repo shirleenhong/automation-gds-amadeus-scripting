@@ -258,8 +258,25 @@ export class RemarkService {
     } else {
       airAuxItinerary.freetextItinerary = freeTextItinerary;
     }
+    const temp = new Array<any>();
+    if (passiveSegmentmodel.relatedPassengers) {
+      passiveSegmentmodel.relatedPassengers.forEach((element) => {
+        const ref = {
+          qualifier: 'PT',
+          number: element
+        };
+        temp.push(ref);
+      });
+    }
+    const referenceForSegment = {
+      reference: temp
+    };
 
-    return { elementManagementItinerary, airAuxItinerary };
+    return {
+      elementManagementItinerary,
+      airAuxItinerary,
+      referenceForSegment
+    };
   }
 
   sendCryptics() {

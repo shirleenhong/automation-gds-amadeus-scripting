@@ -381,7 +381,7 @@ Enter Frequent Flyer Number
 
 Select Special Equipment
     [Arguments]     ${special_equipment}
-    Select From List By Value  css=#specialEquipment     ${special_equipment}  
+    Select From List By Label  css=#specialEquipment     ${special_equipment}  
     Sleep   2
     [Teardown]    Take Screenshot     
 
@@ -430,7 +430,7 @@ Enter Currency Type
 
 Select Duration
     [Arguments]     ${duration}
-    Select From List By Value  css=#duration     ${duration}
+    Select From List By Label  css=#duration     ${duration}
 
 Enter Number Of Rooms
     [Arguments]     ${number_room}

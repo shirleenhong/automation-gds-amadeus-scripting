@@ -102,7 +102,7 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With All Inc
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
     Select Did Client Accept Insurance    No
-    Select Insurance Declined Reason    All Inclusive or Premium Protection Insurance
+    Select Insurance Declined Reason    All Inclusive or Premium
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
@@ -383,7 +383,7 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Coverag
     [Teardown]    Close Browser
 
 Verify RIR remarks is written in the PNR when Insurance Is Declined With Multiple Insurance Type
-   [Tags]    us9029
+    [Tags]    us9029
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
     ...    RMZ/LANGUAGE-FR-CA
@@ -413,9 +413,9 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Multipl
     Verify Specific Remark Is Written In The PNR    RM *U11/-NOT APPLICABLE
     Verify Specific Remark Is Written In The PNR    RM *U12/-TESTING INSURANCE DECLINE REASON
     Verify Insurance Decline Information Is Written For FR
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 *** Keywords ***
 Verify Insurance Decline Information Is Written For EN

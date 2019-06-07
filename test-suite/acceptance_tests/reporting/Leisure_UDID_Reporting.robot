@@ -126,6 +126,8 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Enter Destination Code    YYT
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
+    Click Payment Delete Button    1
+    Confirm Delete
     Enter Reason for No Association Fees    Not applicable
     Click Submit To PNR
     Close CA Migration Window

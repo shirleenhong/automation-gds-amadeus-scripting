@@ -3,10 +3,10 @@ Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
-    [Tags]    us7747    us8001
+    [Tags]    us7747    us8001    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
-    ...    RU1AHK1SIN21DEC-CWT RETENTION SEGMENT    APETEST@EMAIL.COM    TKOK
+    ...    RU1AHK1SIN21DEC-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Payment
@@ -34,8 +34,8 @@ Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P1    True
     Verify Specific Remark Is Written In The PNR    RM *U76/-NO
     Verify Specific Remark Is Written In The PNR    RM *U71/-YES
     Verify Specific Remark Is Written In The PNR    RM *U75/-COZY ARMS HOTEL
@@ -44,10 +44,9 @@ Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     Verify Specific Remark Is Written In The PNR    RM *U74/-FAMILY GROUP
     Verify Specific Remark Is Written In The PNR    RM *U77/-PREFERRED OPTION NOT AVAILABLE
     Close Cryptic Display Window
-    Switch To Command Page
 
 Verify That Matrix Accounting Remark Is Updated For Tour Accounting Remark Type
-    [Tags]    us8583
+    [Tags]    us8583    us10877
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Payment
@@ -66,16 +65,15 @@ Verify That Matrix Accounting Remark Is Updated For Tour Accounting Remark Type
     Click Save Button
     Click Submit To PNR
     Close CA Migration Window
-    Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CA/-MP-ALL/-BKN-${supplier_confirmation_number}/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CA/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P1    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
 Verify That Matrix Accounting Remark Is Written For Cruise Accounting Remark Type
-    [Tags]    us7747    us8001    us9850
+    [Tags]    us7747    us8001    us9850    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS AC1074 Y 20NOV YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3KEL21NOV-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-12NOV/ST-1800OSL/ED-13NOV/ET-0800/CF-12345    RM*CF/-RBM0000000N
     ...    RU1AHK1SIN23NOV-CWT RETENTION SEGMENT    APETest@email.com    TKOK
@@ -93,7 +91,6 @@ Verify That Matrix Accounting Remark Is Written For Cruise Accounting Remark Typ
     Enter Ticket Number    123456789
     Enter Other Tax Amount    4.50
     Enter Commission With Tax Amount    10.50
-    Tick Require Separate Passenger
     Select Passenger    LEISURE-AMADEUS MR
     Click Save Button
     Select Is This Air Only?    YES
@@ -189,7 +186,7 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for Non-APAY
     [Teardown]    Close Browser
 
 Verify That Matrix Accounting Remark Is Written For Rail Accounting Remark Type
-    [Tags]    us7747    us9850
+    [Tags]    us7747    us9850    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    RU1AHK3BRU12NOV-/TYP-TRN/SUN-NS/SUC-YY/SC-BEBMI/SD-12NOV/ST-1010/EC-DEFRH/ED-12NOV/ET-1320/CF-12345    RM*CF/-RBM000000N
     ...    APE1234    TKOK
@@ -208,7 +205,6 @@ Verify That Matrix Accounting Remark Is Written For Rail Accounting Remark Type
     Enter Ticket Number    123456789
     Enter Other Tax Amount    0.00
     Enter Commission With Tax Amount    20.50
-    Tick Require Separate Passenger
     Select Passenger    LASTNAME-FIRSTNAME MR
     Click Save Button
     Click Submit To PNR
@@ -222,7 +218,7 @@ Verify That Matrix Accounting Remark Is Written For Rail Accounting Remark Type
     [Teardown]    Close Browser
 
 Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark Type
-    [Tags]    us7747
+    [Tags]    us7747    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
     ...    RM*CF/-RBM000000N    APE1235    TKOK
@@ -246,14 +242,14 @@ Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CK/-TK-${ticket_number}/-MP-ALL/-BKN-${supplier_confirmation_number}/S5-6    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CK/-TK-${ticket_number}/-MP-ALL/-BKN-${supplier_confirmation_number}/S5-6/P1    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
 Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark Type With Other Supplier Code
-    [Tags]    us7747    us9850
+    [Tags]    us7747    us9850    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    RU1AHK2SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N
     ...    RU1AHK1SIN27DEC-CWT RETENTION SEGMENT    APE21345    TKOK
@@ -272,7 +268,6 @@ Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark
     Enter Ticket Number    123456789
     Enter Other Tax Amount    4.50
     Enter Commission With Tax Amount    10.50
-    Tick Require Separate Passenger
     Select Passenger    LASTNAME-FIRSTNAME MR
     Click Save Button
     Click Submit To PNR
@@ -286,7 +281,7 @@ Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark
     [Teardown]    Close Browser
 
 Verify That APAY Matrix Accounting Remark Is Written For Seat Costs Accounting Remark Type
-    [Tags]    us7761    us9850
+    [Tags]    us7761    us9850    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
     ...    APETEST@EMAIL.COM    TKOK
@@ -303,7 +298,6 @@ Verify That APAY Matrix Accounting Remark Is Written For Seat Costs Accounting R
     Enter GST Tax Amount    2.00
     Enter HST Tax Amount    1.00
     Enter QST Tax Amount    0.00
-    Tick Require Separate Passenger
     Select Passenger    POLO-LISA MR
     Click Save Button
     Click Submit To PNR
@@ -340,7 +334,7 @@ Verify That APAY Matrix Accounting Remark Is Updated For Seat Costs Accounting R
     [Teardown]    Close Browser
 
 Verify That APAY Matrix Accounting Remark Is Written For Maple Leaf Accounting Remark Type
-    [Tags]    us7761
+    [Tags]    us7761    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N    RU1AHK1SIN26DEC-CWT RETENTION SEGMENT
     ...    APE1132    TKOK
@@ -367,8 +361,8 @@ Verify That APAY Matrix Accounting Remark Is Written For Maple Leaf Accounting R
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-APVIXXXXXXXXXXXX1111/-EXP-1229/-MP-ALL/-BKN-${supplier_confirmation_number}/S3-4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-APVIXXXXXXXXXXXX1111/-EXP-1229/-MP-ALL/-BKN-${supplier_confirmation_number}/S3-4/P1    True
     Verify Specific Remark Is Written In The PNR    RIR PAID MAPLE LEAF CF-${supplier_confirmation_number} CAD${base_amount} PLUS 5.50 TAX ON VI/S3-4    True
     Verify Specific Remark Is Written In The PNR    RM *U76/-YES
     Verify Specific Remark Is Not Written In The PNR    RM *U75/-
@@ -380,7 +374,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Maple Leaf Accounting R
     Close Cryptic Display Window
 
 Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for APAY
-    [Tags]    us8916
+    [Tags]    us8916    us10877
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Payment
@@ -407,8 +401,8 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for APAY
     Verify Specific Remark Is Not Written In The PNR    RM *U73/-ATH
     Verify Specific Remark Is Not Written In The PNR    RM *U74/-WEDDING GROUP
     Verify Specific Remark Is Not Written In The PNR    RM *U77/-PREFERRED OPTION NOT AVAILABLE
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-APVIXXXXXXXXXXXX1111/-EXP-1229/-MP-ALL/-BKN-${supplier_confirmation_number}/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-APVIXXXXXXXXXXXX1111/-EXP-1229/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P1    True
     Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 8.50 TAX ON VI/S4    True
     Close Cryptic Display Window
     Open CA Migration Window
@@ -439,15 +433,15 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for APAY
     Verify Specific Remark Is Written In The PNR    RM *U73/-ATH
     Verify Specific Remark Is Written In The PNR    RM *U74/-WEDDING GROUP
     Verify Specific Remark Is Written In The PNR    RM *U77/-PREFERRED OPTION NOT AVAILABLE
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC2/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-APVIXXXXXXXXXXXX1111/-EXP-1229/-MP-ALL/-BKN-${supplier_confirmation_number}/S3-4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC2/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-APVIXXXXXXXXXXXX1111/-EXP-1229/-MP-ALL/-BKN-${supplier_confirmation_number}/S3-4/P1    True
     Verify Specific Remark Is Written In The PNR    RIR PAID MAPLE LEAF CF-${supplier_confirmation_number} CAD${base_amount} PLUS 5.50 TAX ON VI/S3-4    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
 Verify That APAY Matrix Accounting Remark Is Written For Other Costs Accounting Remark Type
-    [Tags]    us7761    us9850
+    [Tags]    us7761    us9850    us10877
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N    APETEST@EMAIL.COM
     ...    TKOK
@@ -464,7 +458,6 @@ Verify That APAY Matrix Accounting Remark Is Written For Other Costs Accounting 
     Enter GST Tax Amount    12.00
     Enter HST Tax Amount    10.00
     Enter QST Tax Amount    5.40
-    Tick Require Separate Passenger
     Select Passenger    LEISURE-AMADEUS MR
     Click Save Button
     Click Submit To PNR
@@ -501,7 +494,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Food Costs Accounting R
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ   True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4    True
     Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 8.00 TAX ON VI/S4    True
     Close Cryptic Display Window
@@ -526,7 +519,6 @@ Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Acco
     Enter GST Tax Amount    15.00
     Enter HST Tax Amount    21.00
     Enter QST Tax Amount    12.00
-    Click Element    css=#qst
     Click Save Button
     Click Submit To PNR
     Close CA Migration Window
@@ -564,8 +556,8 @@ Verify That Matrix Accounting Remark And UDID Is Written For Limo Accounting Rem
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P1    True
     Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL
     Close Cryptic Display Window
 
@@ -585,7 +577,6 @@ Verify That Matrix Accounting Remark And UDID 14 Are Not Duplicated On Update
     Enter QST Tax Amount    6.00
     Enter Other Tax Amount    12.00
     Enter Commission With Tax Amount    51.00
-    Tick Require Separate Passenger
     Select Passenger    LEISURE-AMADEUS MR
     Click Save Button
     Click Submit To PNR

@@ -74,7 +74,6 @@ Select Did Client Accept Insurance
 
 Select Insurance Declined Reason
     [Arguments]    @{declined_insurance}
-    # Select From List By Value    css=#declinedOption    ${declined_insurance}
     : FOR    ${declined_insurance}    IN    @{declined_insurance}
     \    Run Keyword If    '${declined_insurance}' == 'All Inclusive or Premium'    Select Checkbox    xpath=//input[@value='1']
     \    Run Keyword If    '${declined_insurance}' == 'Cancellation/Interruption'    Select Checkbox    xpath=//input[@value='2']
@@ -86,3 +85,4 @@ Select Insurance Declined Reason
 Enter Insurance Declined Reason
     [Arguments]    ${declined_reason}
     Input Text    css=#insuranceDeclinedReason    ${declined_reason}
+    [Teardown]    Take Screenshot

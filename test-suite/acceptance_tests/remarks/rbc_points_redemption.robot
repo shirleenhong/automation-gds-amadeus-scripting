@@ -98,9 +98,9 @@ Verify that RBC redemption RMK remarks are written in the PNR for CAR
     Verify Specific Remark Is Written In The PNR    RMK 1 HST COST PER BOOKING - 4.00
     Verify Specific Remark Is Written In The PNR    RMK 1 QST COST PER BOOKING - 5.00
     Verify Specific Remark Is Written In The PNR    RMK 1 ALL OTHER TAXES PER BOOKING - 1.99
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 Verify that RBC redemption RMK remarks are written in the PNR for HOTEL
     [Tags]    us9199
@@ -143,9 +143,9 @@ Verify that RBC redemption RMK remarks are written in the PNR for HOTEL
     Verify Specific Remark Is Written In The PNR    RMK 1 HST COST PER BOOKING - 1.00
     Verify Specific Remark Is Written In The PNR    RMK 1 QST COST PER BOOKING - 5.00
     Verify Specific Remark Is Written In The PNR    RMK 1 ALL OTHER TAXES PER BOOKING - 8.99
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 Verify that RBC redemption RMK remarks are written in the PNR for CRUISE
     [Tags]    us9199
@@ -199,12 +199,12 @@ Verify that RBC redemption RMK remarks are written in the PNR for CRUISE
     Verify Specific Remark Is Written In The PNR    RMK 1 HST COST PER CHILD - 2.51
     Verify Specific Remark Is Written In The PNR    RMK 1 QST COST PER CHILD - 6.00
     Verify Specific Remark Is Written In The PNR    RMK 1 ALL OTHER TAXES PER CHILD - 2.75
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
-Verify that RBC redemption RMK remarks are written in the PNR for PROPERTY And OTHER
-    [Tags]    us9199
+Verify that RBC redemption RMK remarks are written in the PNR for VACATION And OTHER
+    [Tags]    us9199    us10913
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    RU1AHK2SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N
     ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234    tkok
@@ -214,7 +214,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for PROPERTY And O
     Click Panel    Remarks
     Click Remarks Tab    RBC Points Redemption
     Click Add RBC Redemption Points Button
-    Select RBC Product Type    PROPERTY/VACATION PACKAGE
+    Select RBC Product Type    VACATION PACKAGE
     Enter Cardholder First Name And Last Name    Leisure firstname    Leisure lastname
     Enter First And Last Visa Number    321234    4321
     Enter RBC Points Redeemed    1234567
@@ -231,7 +231,8 @@ Verify that RBC redemption RMK remarks are written in the PNR for PROPERTY And O
     Enter All Other Taxes For Child    2.75
     Click Save Button
     Click Add RBC Redemption Points Button
-    Select RBC Product Type    Other Product Type
+    Select RBC Product Type    OTHER
+    Enter Other Product Type Description    Other Product description
     Enter Cardholder First Name And Last Name    firstname    lastname
     Enter First And Last Visa Number    654321    2222
     Enter RBC Points Redeemed    1111
@@ -258,7 +259,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for PROPERTY And O
     Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VIXXXXXXXXXXXX4321 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 1 1 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 1 POINTS REDEEMED 1234567 VALUE 123456.00
-    Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - PROPERTY/VACATION PACKAGE
+    Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - VACATION PACKAGE
     Verify Specific Remark Is Written In The PNR    RMK 1 SUPPLIER NAME - TESTING PROPERTY SUPPLIER
     Verify Specific Remark Is Written In The PNR    RMK 1 NUMBER OF ADULTS - 2
     Verify Specific Remark Is Written In The PNR    RMK 1 TOTAL BASE COST PER ADULT - 10000.50
@@ -276,7 +277,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for PROPERTY And O
     Verify Specific Remark Is Written In The PNR    RMK 2 CARDHOLDER VISA VIXXXXXXXXXXXX2222 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 2 1 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 2 POINTS REDEEMED 1111 VALUE 10000.00
-    Verify Specific Remark Is Written In The PNR    RMK 2 PRODUCT TYPE - OTHER PRODUCT TYPE
+    Verify Specific Remark Is Written In The PNR    RMK 2 PRODUCT TYPE - OTHER-OTHER PRODUCT DESCRIPTION
     Verify Specific Remark Is Written In The PNR    RMK 2 SUPPLIER NAME - TESTING OTHER SUPPLIER
     Verify Specific Remark Is Written In The PNR    RMK 2 NUMBER OF ADULTS - 2
     Verify Specific Remark Is Written In The PNR    RMK 2 TOTAL BASE COST PER ADULT - 123.50
@@ -290,6 +291,6 @@ Verify that RBC redemption RMK remarks are written in the PNR for PROPERTY And O
     Verify Specific Remark Is Written In The PNR    RMK 2 HST COST PER CHILD - 2.51
     Verify Specific Remark Is Written In The PNR    RMK 2 QST COST PER CHILD - 6.00
     Verify Specific Remark Is Written In The PNR    RMK 2 ALL OTHER TAXES PER CHILD - 3.00
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser

@@ -118,6 +118,7 @@ Enter Reason for No Association Fees
     Wait Until Element Is Visible    css=#noFeeReason    30
     Clear Element Text    css=#noFeeReason
     Input Text    css=#noFeeReason    ${no_fee_reason}
+    [Teardown]    Take Screenshot
 
 Click Add Accounting Line Button
     Click Element    xpath=//button[contains(text(), 'Add Accounting Line')]
@@ -314,6 +315,3 @@ Unselect Tax Exemption
     \    Run Keyword If    '${tax_exemption}' == 'HST Exempt'    Unselect Checkbox    xpath=//input[@value='RC']
     \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Unselect Checkbox    xpath=//input[@value='XG']
     \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Unselect Checkbox    xpath=//input[@value='XQ']
-
-Tick Require Separate Passenger
-    Select Checkbox    css=#passRelate

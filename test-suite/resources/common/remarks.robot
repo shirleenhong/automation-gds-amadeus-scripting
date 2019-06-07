@@ -457,3 +457,8 @@ Enter Total Base Cost Per Booking
     [Arguments]     ${total_base_cost}
     Input Text  css=#totalbasecost    ${total_base_cost} 
     [Teardown]    Take Screenshot
+
+Enter Other Product Type Description
+    [Arguments]     ${other_description}
+    Input Text    css=#othValue    ${other_description}
+    [Teardown]    Take Screenshot

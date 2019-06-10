@@ -347,7 +347,7 @@ export class RemarkService {
     return newArr;
   }
 
-  async sendRemarks() {
+  async sendRemarks(requestor?: string) {
     const pnrActions = {
       optionCode: '0'
     };
@@ -383,7 +383,13 @@ export class RemarkService {
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
       () => {
         this.responseMessage = 'Remarks Updated';
-        this.endPNR('CWTSCRIPT');
+
+        if (requestor) {
+          this.endPNR(requestor);
+        } else {
+          this.endPNR('CWTSCRIPT');
+        }
+
 
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
@@ -408,10 +414,15 @@ export class RemarkService {
     this.clear();
   }
 
-  async cancelRemarks() {
+  async cancelRemarks(requestor) {
     await this.deleteRemarks();
     await this.sendCryptics();
-    await this.sendRemarks();
+    await this.sendRemarks(requestor);
+    this.clear();
+  }
+
+  async cancelOSIRemarks() {
+    await this.sendCryptics();
     this.clear();
   }
 

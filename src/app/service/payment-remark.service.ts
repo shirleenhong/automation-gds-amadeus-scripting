@@ -362,20 +362,16 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
-    let remark = '';
-    let lineNums = this.pnrService.getRemarkLineNumbers('SFC/-');
-    if (lineNums.length > 0) {
-      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
-    }
+    const remarksForDelete = ['SFC/-', 'FEE/-', 'TAX-', 'TEX/'];
+    remarksForDelete.forEach((rem) => {
+      const lineNums = this.pnrService.getRemarkLineNumbers(rem);
+      if (lineNums.length > 0) {
+        remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+      }
+    });
 
-    lineNums = this.pnrService.getRemarkLineNumbers('TAX-');
-    if (lineNums.length > 0) {
-      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
-    }
-    lineNums = this.pnrService.getRemarkLineNumbers('TEX/');
-    if (lineNums.length > 0) {
-      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
-    }
+    let remark = '';
+
     if (feeList.length > 0) {
       remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));

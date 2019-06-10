@@ -281,45 +281,42 @@
       <div class="col"></div>
     </div>
 
-    <div
-      *ngIf="
-        accountingRemark.bsp == '1' && accountingRemark.accountingTypeRemark !== 'ACPP' && accountingRemark.accountingTypeRemark !== 'ACPR'
-      "
-    >
-      <div class="form-group  row">
-        <div class="col-sm-4"></div>
-        <div class="col">
-          <div class="">Other Tax:</div>
-          <input
-            type="text"
-            class="form-control"
-            id="otherTax"
-            formControlName="otherTax"
-            [(ngModel)]="accountingRemark.otherTax"
-            formControlName="otherTax"
-            name="otherTax"
-            required
-            placeholder="00.00"
-            AmountMask
-          />
-        </div>
+    <div *ngIf="accountingRemark.bsp == '1'">
+      <div *ngIf="accountingRemark.accountingTypeRemark !== 'ACPP' && accountingRemark.accountingTypeRemark !== 'ACPR'">
+        <div class="form-group  row">
+          <div class="col-sm-4"></div>
+          <div class="col">
+            <div class="">Other Tax:</div>
+            <input
+              type="text"
+              class="form-control"
+              id="otherTax"
+              formControlName="otherTax"
+              [(ngModel)]="accountingRemark.otherTax"
+              formControlName="otherTax"
+              name="otherTax"
+              required
+              placeholder="00.00"
+              AmountMask
+            />
+          </div>
 
-        <div class="col">
-          <div class="">Commision w/o Tax:</div>
-          <input
-            type="text"
-            class="form-control"
-            id="commisionWithoutTax"
-            [(ngModel)]="accountingRemark.commisionWithoutTax"
-            formControlName="commisionWithoutTax"
-            name="commisionWithoutTax"
-            required
-            placeholder="00.00"
-            AmountMask
-          />
+          <div class="col">
+            <div class="">Commision w/o Tax:</div>
+            <input
+              type="text"
+              class="form-control"
+              id="commisionWithoutTax"
+              [(ngModel)]="accountingRemark.commisionWithoutTax"
+              formControlName="commisionWithoutTax"
+              name="commisionWithoutTax"
+              required
+              placeholder="00.00"
+              AmountMask
+            />
+          </div>
         </div>
       </div>
-
       <div class="form-group  row">
         <div class="col-sm-4">Ticket Number:</div>
         <div class="col-sm-8">
@@ -357,7 +354,7 @@
 
     <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPR' || accountingRemark.accountingTypeRemark === 'ACPP'">
       <div class="form-group  row">
-        <div class="col-sm-4">Pass Purchase:</div>
+        <div class="col-sm-4">Pass Purchase Type:</div>
         <div class="col-sm-8">
           <select
             autofocus
@@ -411,7 +408,7 @@
       </div>
     </div> -->
 
-    <div *ngIf="f.passRelate.value === true" class="form-group row">
+    <div class="form-group row">
       <div class="col-sm-4">Passenger:</div>
       <div class="col-sm-8">
         <select

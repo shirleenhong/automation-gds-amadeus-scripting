@@ -771,7 +771,7 @@ export class SegmentService {
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);
         passGroup.passiveSegments = misSegment;
-
+        debugger;
         const fordeletion = this.pnrService.getmisCancel();
         if (fordeletion > 0) {
             passGroup.deleteRemarkByIds.push(fordeletion);

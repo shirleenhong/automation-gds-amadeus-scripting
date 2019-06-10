@@ -206,23 +206,21 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // if (getSelected.length >= 1) {
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
-    await this.remarkService.cancelRemarks().then(
+    await this.remarkService.cancelOSIRemarks().then(
       () => {
-        // this.isPnrLoaded = false;
-        // this.getPnr();
       },
       (error) => {
         alert(JSON.stringify(error));
       }
     );
 
-    if (getSelected.length === this.segment.length && !this.pnrService.IsMISRetention()) {
+    if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.cancelRemarks().then(
+    await this.remarkService.cancelRemarks(cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -232,7 +230,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         alert(JSON.stringify(error));
       }
     );
-    this.remarkService.endPNR(cancel.cancelForm.value.requestor);
+    // this.remarkService.endPNR(cancel.cancelForm.value.requestor);
   }
 
   async addSegmentToPNR() {

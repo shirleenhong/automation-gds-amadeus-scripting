@@ -23,7 +23,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -1046,17 +1046,6 @@ export class PnrService {
     return model;
   }
 
-  IsMISRetention() {
-    if (this.isPNRLoaded) {
-      for (const misc of this.pnrObj.miscSegments) {
-        if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
 
   recordLocator() {
     return this.pnrObj.header.recordLocator;
@@ -1130,9 +1119,9 @@ export class PnrService {
 
   getmisCancel() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
         // this.getSegmentDetails(misc, 'MIS');
-        return misc.tatooNumber;
+        return misc.elementNumber;
       }
     }
     return 0;

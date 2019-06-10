@@ -5,7 +5,7 @@ Resource          common_library.robot
 Select Package
     [Arguments]    ${package}
     Wait Until Element Is Visible    css=#packageList
-    Select From List    css=#packageList    ${package}
+    Select From List By Label    css=#packageList    ${package}
 
 Enter Number of Pax for Adult
     [Arguments]    ${pax_adult}
@@ -296,7 +296,7 @@ Click Remarks Tab
 Select Segment From The List
     [Arguments]    ${button_order}    @{segment_number}
     Click Element    xpath=//div[@formarrayname='segments'][${button_order}]//button[@id='button-basic']
-    Focus    xpath=//div[@formarrayname='segments'][${button_order}]//ul[@id='dropdown-basic']
+    Set Focus To Element    xpath=//div[@formarrayname='segments'][${button_order}]//ul[@id='dropdown-basic']
     : FOR    ${segment_number}    IN    @{segment_number}
     \    Select Checkbox    xpath=//div[@formarrayname='segments'][${button_order}]//input[@value='${segment_number}']
 
@@ -316,7 +316,7 @@ Click Add Fare Rule button
 
 Select Airline
     [Arguments]    ${airline}
-    Select From List    css=#airlineCode    ${airline}
+    Select From List By Label    css=#airlineCode    ${airline}
 
 Select Fare Rule Remarks
     [Arguments]    ${fare_rule_remark}=EMPTY
@@ -456,4 +456,9 @@ Enter Number of Bookings
 Enter Total Base Cost Per Booking
     [Arguments]     ${total_base_cost}
     Input Text  css=#totalbasecost    ${total_base_cost} 
+    [Teardown]    Take Screenshot
+
+Enter Other Product Type Description
+    [Arguments]     ${other_description}
+    Input Text    css=#othValue    ${other_description}
     [Teardown]    Take Screenshot

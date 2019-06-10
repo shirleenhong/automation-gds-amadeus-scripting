@@ -12,7 +12,6 @@ Verify That Insurance Accounting Remark Is Correct
     Populate Reporting Required Fields
     Click Panel    Payment
     Click Payment Tab    Matrix Accounting Remark
-    #add insurance acct remark
     Click Add Accounting Line Button
     Select Accounting Remark Type    Insurance Remark
     Select Segment    4
@@ -27,7 +26,6 @@ Verify That Insurance Accounting Remark Is Correct
     Enter QST Tax Amount    3.00
     Enter Commission Percentage    10.00
     Click Save Button
-    #add non-apay remark
     Click Add Accounting Line Button
     Select Segment    2    3
     Create Matrix Accounting Remark    NO    NonBSP Air Accounting Remark    ABC    1234561    Cash
@@ -43,15 +41,12 @@ Verify That Insurance Accounting Remark Is Correct
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    #verify insurance acct remark
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC1/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S4    True
     Close Cryptic Display Window
     Open CA Migration Window
-    #start update
     Click Wrap PNR
     Click Panel    Payment
-    #update insurance acct remark
     Click Payment Tab    Matrix Accounting Remark
     Click Update Button    1
     Select Accounting Remark Type    Apay Accounting Remark
@@ -67,7 +62,6 @@ Verify That Insurance Accounting Remark Is Correct
     Click Submit To PNR
     Close CA Migration Window
     Open Cryptic Display Window
-    #verify updated insurance acct remark
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-PFS/-LK-MAC1/-AMT-150.23/-PT-3.98RC/-PT-2.05XG/-PT-4.54XQ    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CK/-MP-ALL/-BKN-14433/S4    True
     Verify Specific Remark Is Written In The PNR    RIR PAID SEAT COSTS CF-14433 CAD150.23 PLUS 10.57 TAX ON CK/S4    True
@@ -98,7 +92,6 @@ Verify That Insurance Accounting Remark Is Correct For Multiple Passengers
     Enter HST Tax Amount    4.00
     Enter QST Tax Amount    3.00
     Enter Commission Percentage    10.00
-    Tick Require Separate Passenger
     Select Passenger    LEISURE-AMADEUS MR
     Click Save Button
     Click Add Accounting Line Button
@@ -111,7 +104,6 @@ Verify That Insurance Accounting Remark Is Correct For Multiple Passengers
     Enter HST Tax Amount    3.00
     Enter QST Tax Amount    4.00
     Enter Commission Percentage    12.00
-    Tick Require Separate Passenger
     Select Passenger    LEISURE-DHEL
     Click Save Button
     Click Submit To PNR

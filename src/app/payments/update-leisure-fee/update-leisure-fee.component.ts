@@ -73,7 +73,6 @@ export class UpdateLeisureFeeComponent implements OnInit {
   }
 
   setPreviousCCno(ccNo) {
-    debugger;
     this.leisureFeeForm.get('ccNo').clearValidators();
     this.leisureFeeForm.get('ccNo').setValidators([Validators.required, validateCreditCard('vendorCode'), validateNotEqualTo(ccNo)]);
   }

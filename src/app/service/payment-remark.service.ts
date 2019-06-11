@@ -250,26 +250,33 @@ export class PaymentRemarkService {
       remarkList.push(
         this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo.toString())
       );
-      const datePipe = new DatePipe('en-US');
-      // add dummy segment
-      const passive = new PassiveSegmentModel();
-      passive.startPoint = accounting.departureCity;
-      passive.endPoint = accounting.departureCity;
-      passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
-      passive.vendor = 'AC';
-      passive.startTime = '0700';
-      passive.endTime = '0800';
-      passive.segmentName = 'AIR';
-      passive.passiveSegmentType = 'AIR';
-      passive.function = '1';
-      passive.quantity = 1;
-      passive.status = 'GK';
-      passive.classOfService = 'Y';
-      passive.controlNo = 'C1';
-      passive.flightNo = '123Q';
-      passive.confirmationNo = accounting.supplierConfirmatioNo;
-      remGroup.passiveSegments = [];
-      remGroup.passiveSegments.push(passive);
+
+      const air = this.pnrService
+        .getSegmentTatooNumber()
+        .find((x) => x.segmentType === 'AIR' && x.controlNumber === accounting.supplierConfirmatioNo);
+
+      if (!air) {
+        const datePipe = new DatePipe('en-US');
+        // add dummy segment
+        const passive = new PassiveSegmentModel();
+        passive.startPoint = accounting.departureCity;
+        passive.endPoint = accounting.departureCity;
+        passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
+        passive.vendor = 'AC';
+        passive.startTime = '0700';
+        passive.endTime = '0800';
+        passive.segmentName = 'AIR';
+        passive.passiveSegmentType = 'AIR';
+        passive.function = '1';
+        passive.quantity = 1;
+        passive.status = 'GK';
+        passive.classOfService = 'Q';
+        passive.controlNo = accounting.supplierConfirmatioNo; //'C1';
+        passive.flightNo = '123';
+        //  passive.confirmationNo = accounting.supplierConfirmatioNo;
+        remGroup.passiveSegments = [];
+        remGroup.passiveSegments.push(passive);
+      }
     }
 
     if (accounting.bsp === '2') {

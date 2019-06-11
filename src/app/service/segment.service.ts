@@ -670,7 +670,6 @@ export class SegmentService {
             rmGroup.cryptics.push(remText);
         }
 
-        debugger;
         if (remText !== '') {
             rmGroup.cryptics.push('RF' + cancel.value.requestor);
             rmGroup.cryptics.push('ER');
@@ -770,8 +769,7 @@ export class SegmentService {
         const passGroup = new RemarkGroup();
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);
-        passGroup.passiveSegments = misSegment;
-        debugger;
+        passGroup.passiveSegments = misSegment;       
         const fordeletion = this.pnrService.getmisCancel();
         if (fordeletion > 0) {
             passGroup.deleteRemarkByIds.push(fordeletion);

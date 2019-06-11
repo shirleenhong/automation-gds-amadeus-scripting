@@ -23,7 +23,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -337,6 +337,7 @@ export class PnrService {
     let arrivalDate = '';
     let classservice = '';
     let flongtext = '';
+    let controlNumber = '';
 
     if (type === 'AIR') {
       elemText =
@@ -370,6 +371,7 @@ export class PnrService {
       arrivalTime = elem.arrivalTime;
       arrivalDate = elem.arrivalDate;
       classservice = elem.class;
+      controlNumber = elem.airlineReference;
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
       elemText =
@@ -407,7 +409,8 @@ export class PnrService {
       departureDate,
       arrivalTime,
       arrivalDate,
-      classservice
+      classservice,
+      controlNumber
     };
     this.segments.push(segment);
   }
@@ -709,6 +712,10 @@ export class PnrService {
           model.passPurchase = vals[0].trim();
           model.fareType = vals[1].replace('FARE', '').trim();
           model.accountingTypeRemark = 'ACPP';
+          const air = this.getSegmentTatooNumber().find((x) => x.segmentType === 'AIR' && x.controlNumber === model.supplierConfirmatioNo);
+          if (air) {
+            model.departureCity = air.cityCode;
+          }
         }
       });
     }
@@ -1045,7 +1052,6 @@ export class PnrService {
 
     return model;
   }
-
 
   recordLocator() {
     return this.pnrObj.header.recordLocator;

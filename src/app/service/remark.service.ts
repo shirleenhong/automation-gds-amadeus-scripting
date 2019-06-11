@@ -390,7 +390,6 @@ export class RemarkService {
           this.endPNR('CWTSCRIPT');
         }
 
-
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
@@ -427,7 +426,6 @@ export class RemarkService {
   }
 
   endPNR(requestor) {
-    debugger;
     if (this.pnrService.pnrObj.tkElements.length < 1) {
       smartScriptSession.send('TKOK');
     }

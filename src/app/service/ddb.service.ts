@@ -8,19 +8,19 @@ import { interval } from 'rxjs';
   providedIn: 'root'
 })
 export class DDBService implements OnInit {
+  retry = 0;
   token: string;
   isTokenExpired = true;
   countryList = [];
   currencyList = [];
-  cachedSupplierCodes = [];
-  airTravelPortInformation = [];
-  retry = 0;
-  ngOnInit(): void { }
+  supplierCodes = [];
+  airTravelPortInformation = [];  
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   async getToken() {
-    if (this.isTokenExpired || this.token === '') {
+    if (this.isTokenExpired) {
       const bodyInfo = {
         client_id: common.clientId,
         client_secret: environment.clientSecret,
@@ -44,8 +44,10 @@ export class DDBService implements OnInit {
     }
   }
 
-  getRequest(serviceName: string) {
-    this.getToken();
+  async getRequest(serviceName: string) {
+    if (!environment.proxy) {
+      await this.getToken();
+    }
     const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient
       .get<any>(serviceName, {
@@ -53,11 +55,11 @@ export class DDBService implements OnInit {
       })
       .toPromise()
       .catch((e) => {
-        // retry if unauthorize to get new token
+        // retry if unauthorized to get new token
         if (e.status === 401 && this.retry < 3) {
-          this.getRequest(serviceName);
-          this.isTokenExpired = true;
           this.retry += 1;
+          this.isTokenExpired = true;
+          this.getRequest(serviceName);
         }
       });
   }
@@ -220,14 +222,14 @@ export class DDBService implements OnInit {
   async loadSupplierCodesFromPowerBase() {
     await this.getRequest(common.supplierCodes).then(
       (x) => {
-        this.cachedSupplierCodes = [];
+        this.supplierCodes = [];
         x.SupplierList.forEach((s) => {
           const supplier = {
             type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
             supplierCode: s.SupplierCode,
             supplierName: s.SupplierName
           };
-          this.cachedSupplierCodes.push(supplier);
+          this.supplierCodes.push(supplier);
         });
       },
       (err) => {
@@ -237,13 +239,13 @@ export class DDBService implements OnInit {
   }
 
   getSupplierCodes(type?: string) {
-    if (this.cachedSupplierCodes.length === 0) {
+    if (this.supplierCodes.length === 0) {
       this.loadSupplierCodesFromPowerBase();
     }
-    if (this.cachedSupplierCodes.length > 0 && type !== undefined) {
-      return this.cachedSupplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase());
+    if (this.supplierCodes.length > 0 && type !== undefined) {
+      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase());
     }
-    return this.cachedSupplierCodes;
+    return this.supplierCodes;
   }
 
   // async getCountryInformation(air) {
@@ -268,8 +270,8 @@ export class DDBService implements OnInit {
     //   this.travelPortInformation.push(ref);
     // });
     if (this.airTravelPortInformation.length === 0) {
-      await this.getAllTravelPort().then(x => {
-        x.TravelPorts.forEach(port => {
+      await this.getAllTravelPort().then((x) => {
+        x.TravelPorts.forEach((port) => {
           const ref = {
             travelPortCode: port.TravelPortCode,
             city: port.CityCode,
@@ -283,8 +285,8 @@ export class DDBService implements OnInit {
   }
 
   getCityCountry(search: string) {
-    if (this.airTravelPortInformation.findIndex(x => x.travelPortCode === search) !== -1) {
-      return this.airTravelPortInformation.find(x => x.travelPortCode === search);
+    if (this.airTravelPortInformation.findIndex((x) => x.travelPortCode === search) !== -1) {
+      return this.airTravelPortInformation.find((x) => x.travelPortCode === search);
     } else {
       return '';
     }

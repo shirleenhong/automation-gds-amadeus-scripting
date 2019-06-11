@@ -63,7 +63,7 @@ Select Hotel Reservation Booked
 
 Select Reason Hotel Booked
     [Arguments]    ${reason_hotel_booked}
-    Select From List By Value    css=#reasonHotelBooked    ${reason_hotel_booked}
+    Select From List By Label    css=#reasonHotelBooked    ${reason_hotel_booked}
     Set Suite Variable    ${reason_hotel_booked}
     [Teardown]    Take Screenshot
 

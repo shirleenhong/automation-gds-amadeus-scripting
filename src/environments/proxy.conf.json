@@ -1,10 +1,14 @@
 {
   "/service/repo/powerbaseaws/*": {
-    "target": "https://test.int.us-west-2.bpg-aws-cwt.com",
+    "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com",
     "secure": false,
     "logLevel": "debug",
+    "changeOrigin": true,
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJQb3dlcmJhc2UgQVBJIFRlc3QiLCJleHAiOjM3MzM4ODgwMTcsIm5hbWUiOiJmcmFuY2lyIiwicm9sZSI6IkFkbWluIn0.O8iskIN869jpwOzshS6-aCOWGX83N08kwSnAS5w1-z8"
+    },
     "pathRewrite": {
-      "^/service/repo/powerbaseaws": "/service/repo/powerbaseaws"
+      "^/service/repo/powerbaseaws": "/powerbase-api"
     }
   }
 }

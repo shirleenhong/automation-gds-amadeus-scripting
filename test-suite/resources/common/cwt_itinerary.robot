@@ -18,7 +18,7 @@ Select Itinerary Language
 
 Select Itinerary Type Of Transaction
     [Arguments]    ${transaction_type}
-    Select From List By Value    css=#typeTransaction    ${transaction_type}
+    Select From List By Label    css=#typeTransaction    ${transaction_type}
 
 Enter Service Remark
     [Arguments]    ${service_order}    ${service_remark}

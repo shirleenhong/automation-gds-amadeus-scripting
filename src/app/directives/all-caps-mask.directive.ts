@@ -21,6 +21,7 @@ export class AllCapsMaskDirective {
   onModelChange(event) {
     this.onInputChange(event);
   }
+
   onInputChange(event) {
     if (event) {
       this.ngControl.valueAccessor.writeValue(event.toString().toUpperCase());

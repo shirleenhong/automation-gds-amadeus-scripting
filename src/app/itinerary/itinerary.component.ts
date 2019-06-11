@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  FormControl,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { PnrService } from '../service/pnr.service';
 import { UtilHelper } from '../helper/util.helper';
 import { SelectItem } from '../models/select-item.model';
@@ -31,11 +25,7 @@ export class ItineraryComponent implements OnInit {
   // itineraryRemarks: ItineraryModel;
   listRemark: Array<string>;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private pnrService: PnrService,
-    private utilHelper: UtilHelper
-  ) {
+  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
     this.itineraryForm = new FormGroup({
       emailAddresses: new FormArray([this.createFormGroup()]),
       sendItinerary: new FormControl('', []),
@@ -73,13 +63,12 @@ export class ItineraryComponent implements OnInit {
     ];
     const offer = '/*' + 'OFFER' + '/*/*(?<service>(.*))/*';
     const regx = new RegExp(offer);
-    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
+    const rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RIR');
     if (rems.length > 0) {
       this.itineraryForm.controls.typeTransaction.setValue('itinerary');
     } else {
       this.itineraryForm.controls.typeTransaction.setValue('invoice');
     }
-
   }
 
   createFormGroup(): FormGroup {
@@ -93,22 +82,22 @@ export class ItineraryComponent implements OnInit {
   readDefaultLanguage() {
     const rirService = 'LANGUAGE-(EN-US|FR-CA)';
     const regx = new RegExp(rirService);
-    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+    const rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RM');
     if (rems.length > 0) {
       this.itineraryForm.controls.language.setValue(rems[0].remarkText.substr(-5));
     }
   }
 
   readServiceFromPnr() {
-    this.listRemark.forEach(element => {
+    this.listRemark.forEach((element) => {
       const rirService = '/*' + element + '/*/*(?<service>(.*))/*';
       const regx = new RegExp(rirService);
-      const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
+      const rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RIR');
       const items = this.itineraryForm.get(element.toLowerCase() + 's') as FormArray;
       if (rems.length > 0) {
         items.controls = [];
       }
-      rems.forEach(r => {
+      rems.forEach((r) => {
         // const index = r.remarkText.lastIndexOf('*SERVICE**');
         const match = regx.exec(r.remarkText);
         let retText = '';
@@ -164,11 +153,13 @@ export class ItineraryComponent implements OnInit {
     return group;
   }
 
-  get f() { return this.itineraryForm.controls; }
+  get f() {
+    return this.itineraryForm.controls;
+  }
 
   showEmailAddress() {
-    let arr = this.itineraryForm.get('emailAddresses') as FormArray;
-    if (this.itineraryForm.controls['sendItinerary'].value) {
+    const arr = this.itineraryForm.get('emailAddresses') as FormArray;
+    if (this.itineraryForm.controls.sendItinerary.value) {
       for (const c of arr.controls) {
         c.get('emailAddress').setValidators([Validators.required, Validators.pattern('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')]);
         c.get('emailAddress').updateValueAndValidity();

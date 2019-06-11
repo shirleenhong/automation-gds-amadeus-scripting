@@ -16,9 +16,9 @@ export class PackageRemarkService {
   decPipe = new DecimalPipe('en-US');
   rbcForDeletion = [];
 
-  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
+  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) {}
 
-  public GetITCPackageRemarks(group: any) {
+  public getItcPackageRemarks(group: any) {
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Tour Package';
     rmGroup.remarks = new Array<RemarkModel>();
@@ -29,45 +29,44 @@ export class PackageRemarkService {
     });
     this.packageRemarkHelper.clearForDeletionRemarks();
 
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'R'));
 
     if (Number(group.value.noAdult) > 0) {
-      rmGroup.remarks.push(this.processRIRRemark('ADULT PRICE', group.value.baseAdult, group.value.noAdult));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT TAXES', group.value.taxAdult, group.value.noAdult));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT INSURANCE', group.value.insAdult, group.value.noAdult));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT CRUISE', group.value.bcruiseAdult, group.value.noAdult));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT TAX/PORT CHARGES', group.value.tcruiseAdult, group.value.noAdult));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT RAIL', group.value.railAdult, group.value.noAdult));
+      rmGroup.remarks.push(this.processRirRemark('ADULT PRICE', group.value.baseAdult, group.value.noAdult));
+      rmGroup.remarks.push(this.processRirRemark('ADULT TAXES', group.value.taxAdult, group.value.noAdult));
+      rmGroup.remarks.push(this.processRirRemark('ADULT INSURANCE', group.value.insAdult, group.value.noAdult));
+      rmGroup.remarks.push(this.processRirRemark('ADULT CRUISE', group.value.bcruiseAdult, group.value.noAdult));
+      rmGroup.remarks.push(this.processRirRemark('ADULT TAX/PORT CHARGES', group.value.tcruiseAdult, group.value.noAdult));
+      rmGroup.remarks.push(this.processRirRemark('ADULT RAIL', group.value.railAdult, group.value.noAdult));
     }
 
     if (Number(group.value.noChild) > 0) {
-      rmGroup.remarks.push(this.processRIRRemark('CHILD PRICE', group.value.baseChild, group.value.noChild));
-      rmGroup.remarks.push(this.processRIRRemark('CHILD TAXES', group.value.taxChild, group.value.noChild));
-      rmGroup.remarks.push(this.processRIRRemark('CHILD INSURANCE', group.value.insChild, group.value.noChild));
-      rmGroup.remarks.push(this.processRIRRemark('CHILD CRUISE', group.value.bcruiseChild, group.value.noChild));
-      rmGroup.remarks.push(this.processRIRRemark('CHILD TAX/PORT CHARGES', group.value.tcruiseChild, group.value.noChild));
-      rmGroup.remarks.push(this.processRIRRemark('CHILD RAIL', group.value.railChild, group.value.noChild));
+      rmGroup.remarks.push(this.processRirRemark('CHILD PRICE', group.value.baseChild, group.value.noChild));
+      rmGroup.remarks.push(this.processRirRemark('CHILD TAXES', group.value.taxChild, group.value.noChild));
+      rmGroup.remarks.push(this.processRirRemark('CHILD INSURANCE', group.value.insChild, group.value.noChild));
+      rmGroup.remarks.push(this.processRirRemark('CHILD CRUISE', group.value.bcruiseChild, group.value.noChild));
+      rmGroup.remarks.push(this.processRirRemark('CHILD TAX/PORT CHARGES', group.value.tcruiseChild, group.value.noChild));
+      rmGroup.remarks.push(this.processRirRemark('CHILD RAIL', group.value.railChild, group.value.noChild));
     }
 
     if (Number(group.value.noInfant) > 0) {
-      rmGroup.remarks.push(this.processRIRRemark('INFANT PRICE', group.value.baseInfant, group.value.noInfant));
-      rmGroup.remarks.push(this.processRIRRemark('INFANT TAXES', group.value.taxInfant, group.value.noInfant));
-      rmGroup.remarks.push(this.processRIRRemark('INFANT INSURANCE', group.value.insInfant, group.value.noInfant));
-      rmGroup.remarks.push(this.processRIRRemark('INFANT CRUISE', group.value.bcruiseInfant, group.value.noInfant));
-      rmGroup.remarks.push(this.processRIRRemark('INFANT TAX/PORT CHARGES', group.value.tcruiseInfant, group.value.noInfant));
-      rmGroup.remarks.push(this.processRIRRemark('INFANT RAIL', group.value.railInfant, group.value.noInfant));
+      rmGroup.remarks.push(this.processRirRemark('INFANT PRICE', group.value.baseInfant, group.value.noInfant));
+      rmGroup.remarks.push(this.processRirRemark('INFANT TAXES', group.value.taxInfant, group.value.noInfant));
+      rmGroup.remarks.push(this.processRirRemark('INFANT INSURANCE', group.value.insInfant, group.value.noInfant));
+      rmGroup.remarks.push(this.processRirRemark('INFANT CRUISE', group.value.bcruiseInfant, group.value.noInfant));
+      rmGroup.remarks.push(this.processRirRemark('INFANT TAX/PORT CHARGES', group.value.tcruiseInfant, group.value.noInfant));
+      rmGroup.remarks.push(this.processRirRemark('INFANT RAIL', group.value.railInfant, group.value.noInfant));
     }
 
-    rmGroup.remarks.push(this.processRIRRemark('HOTEL/ACCOMMODATION', group.value.hotelAdult, null));
+    rmGroup.remarks.push(this.processRirRemark('HOTEL/ACCOMMODATION', group.value.hotelAdult, null));
 
-    rmGroup.remarks.push(this.processRIRRemark('CAR RENTAL', group.value.carAdult, null));
+    rmGroup.remarks.push(this.processRirRemark('CAR RENTAL', group.value.carAdult, null));
 
-    rmGroup.remarks.push(this.processRIRRemark('TOTAL HOLIDAY COST', parseFloat(group.value.holidayCost), null));
+    rmGroup.remarks.push(this.processRirRemark('TOTAL HOLIDAY COST', parseFloat(group.value.holidayCost), null));
 
-    rmGroup.remarks.push(this.processRIRRemark('LESS DEPOSIT PAID', group.value.depAdult, null));
+    rmGroup.remarks.push(this.processRirRemark('LESS DEPOSIT PAID', group.value.depAdult, null));
 
-    rmGroup.remarks.push(this.processRIRRemark('BALANCE DUE', group.value.balance, null));
+    rmGroup.remarks.push(this.processRirRemark('BALANCE DUE', group.value.balance, null));
 
     if (group.value.dueDate) {
       rmGroup.remarks.push(
@@ -98,7 +97,7 @@ export class PackageRemarkService {
     udids.forEach((x) => {
       let existNumber = '';
       if (type === 'RIR') {
-        existNumber = this.pnrService.getRIRLineNumber(x);
+        existNumber = this.pnrService.getRirLineNumber(x);
       } else {
         existNumber = this.pnrService.getRemarkLineNumber(x);
       }
@@ -109,7 +108,7 @@ export class PackageRemarkService {
     });
   }
 
-  public GetTourPackageRemarks(group: FormGroup) {
+  public getTourPackageRemarks(group: FormGroup) {
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Tour Package';
     rmGroup.remarks = new Array<RemarkModel>();
@@ -122,32 +121,30 @@ export class PackageRemarkService {
       this.packageRemarkHelper.clearForDeletionRemarks();
     }
 
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(
       this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'R')
     );
 
     if (Number(group.controls.adultNum.value) > 0) {
-      rmGroup.remarks.push(this.processRIRRemark('ADULT PACKAGE', group.controls.baseCost.value, group.controls.adultNum.value));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT TAXES', group.controls.taxesPerAdult.value, group.controls.adultNum.value));
-      rmGroup.remarks.push(this.processRIRRemark('ADULT INSURANCE', group.controls.insurancePerAdult.value, group.controls.adultNum.value));
+      rmGroup.remarks.push(this.processRirRemark('ADULT PACKAGE', group.controls.baseCost.value, group.controls.adultNum.value));
+      rmGroup.remarks.push(this.processRirRemark('ADULT TAXES', group.controls.taxesPerAdult.value, group.controls.adultNum.value));
+      rmGroup.remarks.push(this.processRirRemark('ADULT INSURANCE', group.controls.insurancePerAdult.value, group.controls.adultNum.value));
     }
 
     if (Number(group.controls.childrenNumber.value) > 0) {
-      rmGroup.remarks.push(this.processRIRRemark('CHILD PACKAGE', group.controls.childBaseCost.value, group.controls.childrenNumber.value));
-      rmGroup.remarks.push(this.processRIRRemark('CHILD TAXES', group.controls.taxesPerChild.value, group.controls.childrenNumber.value));
+      rmGroup.remarks.push(this.processRirRemark('CHILD PACKAGE', group.controls.childBaseCost.value, group.controls.childrenNumber.value));
+      rmGroup.remarks.push(this.processRirRemark('CHILD TAXES', group.controls.taxesPerChild.value, group.controls.childrenNumber.value));
       rmGroup.remarks.push(
-        this.processRIRRemark('CHILD INSURANCE', group.controls.insurancePerChild.value, group.controls.childrenNumber.value)
+        this.processRirRemark('CHILD INSURANCE', group.controls.insurancePerChild.value, group.controls.childrenNumber.value)
       );
     }
 
     if (Number(group.controls.infantNumber.value) > 0) {
       rmGroup.remarks.push(
-        this.processRIRRemark('INFANT PACKAGE', group.controls.totalCostPerInfant.value, group.controls.infantNumber.value)
+        this.processRirRemark('INFANT PACKAGE', group.controls.totalCostPerInfant.value, group.controls.infantNumber.value)
       );
     }
 
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'TOTAL PACKAGE PRICE ' + (group.controls.totalCostHoliday.value === '' ? '0.00' : group.controls.totalCostHoliday.value),
@@ -155,27 +152,25 @@ export class PackageRemarkService {
         'R'
       )
     );
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'LESS DEPOSIT PAID ' +
-        (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
-        ' - ' +
-        formatDate(Date.now(), 'dMMM', 'en'),
+          (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
+          ' - ' +
+          formatDate(Date.now(), 'dMMM', 'en'),
         'RI',
         'R'
       )
     );
     rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'R'));
-    // tslint:disable-next-line:max-line-length
     if (group.controls.balanceDueDate.value) {
       rmGroup.remarks.push(
         this.remarkHelper.createRemark(
           '---- BALANCE OF ' +
-          (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
-          ' IS DUE ' +
-          datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
-          ' ----',
+            (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
+            ' IS DUE ' +
+            datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
+            ' ----',
           'RI',
           'R'
         )
@@ -185,24 +180,20 @@ export class PackageRemarkService {
     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'R'));
     this.deleteRemarks(['U43/-', 'U41/-', 'U42/-'], rmGroup, 'RM');
     if (group.controls.balanceDueDate.value.length > 0) {
-      // tslint:disable-next-line:max-line-length
       rmGroup.remarks.push(
         this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.controls.balanceDueDate.value, 'MMMyy'), 'RM', '*')
       );
     }
-
     if (group.controls.balanceToBePaid.value.length > 0) {
       rmGroup.remarks.push(this.remarkHelper.createRemark('U41/-' + group.controls.balanceToBePaid.value, 'RM', '*'));
     }
-
     if (group.controls.commission.value.length > 0) {
       rmGroup.remarks.push(this.remarkHelper.createRemark('U42/-' + group.controls.commission.value, 'RM', '*'));
     }
-
     return rmGroup;
   }
 
-  public GetPackageRemarksForDeletion() {
+  public getPackageRemarksForDeletion() {
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Tour Package';
     rmGroup.remarks = new Array<RemarkModel>();
@@ -214,14 +205,14 @@ export class PackageRemarkService {
     return rmGroup;
   }
 
-  public GetCodeShare(frmGroup: FormGroup) {
+  public getCodeShare(frmGroup: FormGroup) {
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Code Share';
     rmGroup.remarks = new Array<RemarkModel>();
     const arr = frmGroup.get('segments') as FormArray;
     const segmentList = this.pnrService.getSegmentTatooNumber();
     const regex = /CHECK-IN AT (?<airline>.*) TICKET COUNTER/g;
-    const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+    const rems = this.pnrService.getRemarksFromGdsByRegex(regex, 'RIR');
     if (rems.length > 0) {
       rmGroup.deleteRemarkByIds = [];
       rems.forEach((r) => {
@@ -243,14 +234,12 @@ export class PackageRemarkService {
           rm.relatedSegments.push(x.tatooNo);
         }
       });
-
-      //rm.relatedSegments = segments.split(',');
+      // rm.relatedSegments = segments.split(',');
       rmGroup.remarks.push(rm);
     }
-
     return rmGroup;
   }
-  public GetRbcRedemptionRemarks(rbcPoints: RBCRedemptionModel[]) {
+  public getRbcRedemptionRemarks(rbcPoints: RBCRedemptionModel[]) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'RBC Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -475,12 +464,10 @@ export class PackageRemarkService {
     return rm.freeFlowText.substr(rm.freeFlowText.indexOf('-') + 2, rm.freeFlowText.length);
   }
 
-  processRIRRemark(label, amount, count) {
+  processRirRemark(label, amount, count) {
     if (isNaN(amount) || amount === null || amount === undefined || amount === '' || Number(amount) === 0) {
       amount = '0.00';
     }
-
-    //alert(amount);
     if (amount === '0.00') {
       return null;
     }

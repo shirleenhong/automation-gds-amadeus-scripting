@@ -1,7 +1,6 @@
 <form [formGroup]="conciergeForm" class="col">
   <br />
   <!-- <div class="reportingContainer"> -->
-
   <!-- <div class="row">
     <div class="col-3">Select Package :</div>
     <div class="col-4">
@@ -23,7 +22,6 @@
         </select>
       </div>
     </div>
-
     <div class="row form-group" *ngIf="pnrRemarksFound.indexOf('reservationReq') < 0">
       <div class="col-4">How was this Reservation Requested?</div>
       <div class="col-4">
@@ -34,7 +32,6 @@
         </select>
       </div>
     </div>
-
     <div class="row form-group" *ngIf="pnrRemarksFound.indexOf('bookingType') < 0">
       <div class="col-4">What type of booking are you making?</div>
       <div class="col-4">
@@ -45,28 +42,24 @@
         </select>
       </div>
     </div>
-
     <div class="row form-group" *ngIf="pnrRemarksFound.indexOf('chCallerName') < 0">
       <div class="col-4">Card Holder Caller Name:</div>
       <div class="col-4">
         <input type="text" class="form-control" id="chCallerName" name="chCallerName" formControlName="chCallerName" maxlength="35" />
       </div>
     </div>
-
     <div class="row form-group" *ngIf="pnrRemarksFound.indexOf('delegateName') < 0">
       <div class="col-4">Delegate Caller Name:</div>
       <div class="col-4">
         <input type="text" class="form-control" id="delegateName" name="delegateName" formControlName="delegateName" maxlength="35" />
       </div>
     </div>
-
     <div class="row form-group">
       <div class="col-4">Hotel Name:</div>
       <div class="col-4">
         <input type="text" class="form-control" id="hotelName" name="hotelName" formControlName="hotelName" maxlength="35" />
       </div>
     </div>
-
     <div class="row form-group" *ngIf="pnrRemarksFound.indexOf('businessTravel') < 0">
       <div class="col-4">Is this Reservation for Business Travel?</div>
       <div class="col-4">
@@ -77,18 +70,16 @@
         </select>
       </div>
     </div>
-
     <div class="row form-group">
       <div class="col-4">Hotel Reservation Booked by CWT?</div>
       <div class="col-4">
-        <select id="hotelRes" class="form-control" formControlName="hotelRes" name="hotelRes" (change)="onchangeHotel($event.target.value)">
+        <select id="hotelRes" class="form-control" formControlName="hotelRes" name="hotelRes" (change)="onChangeHotel($event.target.value)">
           <option *ngFor="let item of yesNoList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
         </select>
       </div>
     </div>
-
     <div *ngIf="f.hotelRes.value === 'NO'">
       <div class="row form-group">
         <div class="col-4">Select Reason Why No Hotel Booked?</div>
@@ -102,6 +93,5 @@
       </div>
     </div>
   </div>
-
   <!-- </div> -->
 </form>

@@ -75,13 +75,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr() {
     // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();
-    this.cfLine = this.pnrService.getCFLine();
+    this.cfLine = this.pnrService.getCfLine();
     // this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
     this.ddbService.getTravelPortInformation();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
@@ -99,7 +99,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   async getPnrService() {
     this.pnrService.isPNRLoaded = false;
-    await this.pnrService.getPNR();
+    await this.pnrService.getPnr();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
@@ -116,7 +116,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     return this.validModel.isAllValid();
   }
 
-  public SubmitToPNR() {
+  public submitToPnr() {
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -128,13 +128,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
-    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
-    remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
-    remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
+    remarkCollection.push(this.paymentRemarkService.getMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
+    remarkCollection.push(this.paymentRemarkService.getAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
+    remarkCollection.push(this.paymentRemarkService.getAccountingUdids(this.paymentComponent.accountingRemark));
+    remarkCollection.push(this.visaPassportService.getRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
     remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
-    remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
-    if (!this.pnrService.hasAmendMISRetentionLine()) {
+    remarkCollection.push(this.reportingRemarkService.getRoutingRemark(this.leisure.reportingView));
+    if (!this.pnrService.hasAmendMisRetentionLine()) {
       remarkCollection.push(this.segmentService.getRetentionLine());
     }
 
@@ -143,46 +143,44 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     if (this.cfLine.cfa === 'RBM' || this.cfLine.cfa === 'RBP') {
       const concierge = this.reportingComponent.conciergeComponent;
-      remarkCollection.push(this.reportingRemarkService.GetConciergeUdids(concierge));
+      remarkCollection.push(this.reportingRemarkService.getConciergeUdids(concierge));
     }
 
-    // tslint:disable-next-line:no-string-literal
     if (
       this.remarkComponent.remarkForm.controls.packageList.value !== null &&
       this.remarkComponent.remarkForm.controls.packageList.value !== '' &&
       this.remarkComponent.remarkForm.controls.packageList.value !== '1'
     ) {
       if (this.remarkComponent.remarkForm.controls.packageList.value === 'ITC') {
-        remarkCollection.push(this.packageRemarkService.GetITCPackageRemarks(this.remarkComponent.itcPackageComponent.itcForm));
+        remarkCollection.push(this.packageRemarkService.getItcPackageRemarks(this.remarkComponent.itcPackageComponent.itcForm));
       } else {
-        remarkCollection.push(this.packageRemarkService.GetTourPackageRemarks(this.remarkComponent.tourPackageComponent.group));
+        remarkCollection.push(this.packageRemarkService.getTourPackageRemarks(this.remarkComponent.tourPackageComponent.group));
       }
     } else {
-      remarkCollection.push(this.packageRemarkService.GetPackageRemarksForDeletion());
+      remarkCollection.push(this.packageRemarkService.getPackageRemarksForDeletion());
     }
 
-    remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
+    remarkCollection.push(this.packageRemarkService.getCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
     remarkCollection.push(
-      this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
+      this.packageRemarkService.getRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
     );
 
     if (!this.itineraryComponent.itineraryForm.pristine) {
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryComponent.itineraryForm));
     }
 
-
     const leisureFee = this.paymentComponent.leisureFee;
-    remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
+    remarkCollection.push(this.paymentRemarkService.getLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
 
-    this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
+    this.remarkService.buildRemarks(remarkCollection);
+    this.remarkService.submitRemarks().then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
         this.workflow = '';
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -205,12 +203,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     // if (getSelected.length >= 1) {
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-    this.remarkService.BuildRemarks(osiCollection);
-    await this.remarkService.cancelOSIRemarks().then(
-      () => {
-      },
+    this.remarkService.buildRemarks(osiCollection);
+    await this.remarkService.cancelOsiRemarks().then(
+      () => {},
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
 
@@ -219,7 +216,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    this.remarkService.BuildRemarks(remarkCollection);
+    this.remarkService.buildRemarks(remarkCollection);
     await this.remarkService.cancelRemarks(cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
@@ -227,25 +224,24 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
     // this.remarkService.endPNR(cancel.cancelForm.value.requestor);
   }
 
-  async addSegmentToPNR() {
+  async addSegmentToPnr() {
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
-    // tslint:disable-next-line:max-line-length
-    this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks().then(
+    remarkCollection.push(this.segmentService.getSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    this.remarkService.buildRemarks(remarkCollection);
+    await this.remarkService.submitRemarks().then(
       async () => {
         this.isPnrLoaded = false;
         await this.getPnr();
         this.addRir();
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -255,14 +251,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const remarkCollection2 = new Array<RemarkGroup>();
     remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
 
-    await this.remarkService.BuildRemarks(remarkCollection2);
-    this.remarkService.SubmitRemarks().then(
+    await this.remarkService.buildRemarks(remarkCollection2);
+    this.remarkService.submitRemarks().then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -277,19 +273,19 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
-  public SendInvoiceItinerary() {
+  public sendInvoiceItinerary() {
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-    this.remarkService.endPNR(' Agent Invoicing'); // end PNR First before Invoice
-    this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
+    remarkCollection.push(this.invoiceService.getMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
+    this.remarkService.endPnr(' Agent Invoicing'); // end PNR First before Invoice
+    this.remarkService.buildRemarks(remarkCollection);
+    this.remarkService.submitRemarks().then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
         this.workflow = '';
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -310,7 +306,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
-  public async AddSegment() {
+  public async addSegment() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
       this.workflow = 'segment';

@@ -1,17 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  FormArray,
-  FormControl,
-  Validators
-} from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { SelectItem } from '../models/select-item.model';
 import { PnrService } from '../service/pnr.service';
-import {
-  validateSegmentNumbers,
-  validatePassengerNumbers
-} from '../shared/validators/leisure.validators';
+import { validateSegmentNumbers, validatePassengerNumbers } from '../shared/validators/leisure.validators';
 import { UtilHelper } from '../helper/util.helper';
 
 @Component({
@@ -34,11 +25,7 @@ export class CancelSegmentComponent implements OnInit {
   add = true;
   // segmentDetails: any;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private pnrService: PnrService,
-    private utilHelper: UtilHelper
-  ) {
+  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
       requestor: new FormControl('', [Validators.required]),
@@ -53,14 +40,8 @@ export class CancelSegmentComponent implements OnInit {
       accityPair: new FormControl('', []),
       acdepDate: new FormControl('', []),
       relationship: new FormControl('', []),
-      uasegNo: new FormControl('', [
-        Validators.pattern('[0-9]+(,[0-9]+)*'),
-        validateSegmentNumbers(this.segments)
-      ]),
-      uaPassengerNo: new FormControl('', [
-        Validators.pattern('[0-9]+(,[0-9]+)*'),
-        validatePassengerNumbers(this.passengers)
-      ]),
+      uasegNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'), validateSegmentNumbers(this.segments)]),
+      uaPassengerNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*'), validatePassengerNumbers(this.passengers)]),
       acpassengerNo: new FormControl('', []),
       cancelNonRefAC: new FormControl('', []),
       cancelNonRefUA: new FormControl('', []),
@@ -106,25 +87,20 @@ export class CancelSegmentComponent implements OnInit {
         { itemText: 'DEATH/IMMINENT DEATH', itemValue: '5' },
         { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' },
         {
-          itemText:
-            'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET',
+          itemText: 'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET',
           itemValue: '7'
         },
         { itemText: 'AC FLIGHT NOT TICKETED YET', itemValue: '8' }
       ];
     } else {
-      this.reasonAcList = [
-        { itemText: '', itemValue: '' },
-        { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' }
-      ];
+      this.reasonAcList = [{ itemText: '', itemValue: '' }, { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' }];
     }
 
     this.reasonUaList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '1' },
       {
-        itemText:
-          'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET',
+        itemText: 'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET',
         itemValue: '2'
       },
       { itemText: 'UA FLIGHT NOT TICKETED YET', itemValue: '3' }
@@ -137,7 +113,7 @@ export class CancelSegmentComponent implements OnInit {
 
   getSegmentTatooValue() {
     const segmentDetails = this.pnrService.getSegmentTatooNumber();
-    segmentDetails.forEach(element => {
+    segmentDetails.forEach((element) => {
       if (segmentDetails.length > 0) {
         const details = {
           id: element.lineNo,
@@ -162,15 +138,12 @@ export class CancelSegmentComponent implements OnInit {
 
   submit() {
     // Filter out the unselected ids
-    // tslint:disable-next-line:prefer-const
-    let checkSegment = [];
+    const checkSegment = [];
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
-      .filter(value => value !== null);
-    selectedPreferences.forEach(element => {
-      // tslint:disable-next-line:prefer-const
-
-      const look = this.segments.find(x => x.id === element);
+      .filter((value) => value !== null);
+    selectedPreferences.forEach((element) => {
+      const look = this.segments.find((x) => x.id === element);
       if (look) {
         const textLine = {
           lineNo: look.id,
@@ -186,33 +159,17 @@ export class CancelSegmentComponent implements OnInit {
     this.isAC = false;
     this.isUA = false;
     // this.cancelForm.controls['cancelNonRefAC'].setValue(false);
-    this.enableFormControls(
-      [
-        'acTicketNo',
-        'acpassengerNo',
-        'acFlightNo',
-        'accityPair',
-        'acdepDate',
-        'relationship'
-      ],
-      true
-    );
-    this.enableFormControls(
-      ['reasonUACancel', 'uasegNo', 'uaPassengerNo'],
-      true
-    );
+    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+    this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
 
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
-      .filter(value => value !== null);
-    selectedPreferences.forEach(element => {
-      const look = this.segments.find(x => x.id === element);
+      .filter((value) => value !== null);
+    selectedPreferences.forEach((element) => {
+      const look = this.segments.find((x) => x.id === element);
       if (look) {
         if (look.airlineCode === 'AC') {
-          if (
-            this.cancelForm.value.reasonACCancel === '' ||
-            this.cancelForm.value.reasonACCancel === undefined
-          ) {
+          if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
             this.cancelForm.controls.acTicketNo.setValue('');
             this.cancelForm.controls.acpassengerNo.setValue('');
             this.cancelForm.controls.acFlightNo.setValue('');
@@ -226,10 +183,7 @@ export class CancelSegmentComponent implements OnInit {
         }
         if (look.airlineCode === 'UA') {
           this.enableFormControls(['reasonUACancel'], false);
-          if (
-            this.cancelForm.value.reasonUACancel === '' ||
-            this.cancelForm.value.reasonUACancel === undefined
-          ) {
+          if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
             // this.cancelForm.controls['reasonUACancel'].setValue('');
             this.cancelForm.controls.uasegNo.setValue('');
             this.cancelForm.controls.uaPassengerNo.setValue('');
@@ -245,21 +199,8 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   checkFirstSegment() {
-    this.enableFormControls(
-      [
-        'acTicketNo',
-        'acpassengerNo',
-        'acFlightNo',
-        'accityPair',
-        'acdepDate',
-        'relationship'
-      ],
-      true
-    );
-    this.enableFormControls(
-      ['reasonUACancel', 'uasegNo', 'uaPassengerNo'],
-      true
-    );
+    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
+    this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
     if (this.segments.length > 0 && this.segments[0].segmentType) {
       if (this.segments[0].airlineCode === 'AC') {
         this.isAC = true;
@@ -294,44 +235,21 @@ export class CancelSegmentComponent implements OnInit {
       case '2':
       case '3':
         this.enableFormControls(['acTicketNo', 'acpassengerNo'], false);
-        this.enableFormControls(
-          ['acFlightNo', 'accityPair', 'acdepDate', 'relationship', 'airlineNo'],
-          true
-        );
+        this.enableFormControls(['acFlightNo', 'accityPair', 'acdepDate', 'relationship', 'airlineNo'], true);
         break;
       case '4':
         this.enableFormControls(
-          [
-            'acTicketNo',
-            'acpassengerNo',
-            'acFlightNo',
-            'accityPair',
-            'acdepDate',
-            'relationship',
-            'airlineNo'
-          ],
+          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship', 'airlineNo'],
           true
         );
         break;
       case '5':
-        this.enableFormControls(
-          [
-            'acFlightNo',
-            'accityPair',
-            'acdepDate',
-            'relationship',
-            'acpassengerNo'
-          ],
-          false
-        );
+        this.enableFormControls(['acFlightNo', 'accityPair', 'acdepDate', 'relationship', 'acpassengerNo'], false);
         this.enableFormControls(['acTicketNo', 'airlineNo'], true);
         break;
       case '6':
         if (this.isAC) {
-          this.enableFormControls(
-            ['acFlightNo', 'accityPair', 'acdepDate', 'acpassengerNo', 'airlineNo'],
-            false
-          );
+          this.enableFormControls(['acFlightNo', 'accityPair', 'acdepDate', 'acpassengerNo', 'airlineNo'], false);
           this.enableFormControls(['acTicketNo', 'relationship'], true);
         } else {
           this.enableFormControls(['acFlightNo', 'accityPair', 'acdepDate', 'acpassengerNo', 'acTicketNo', 'relationship'], true);
@@ -340,15 +258,7 @@ export class CancelSegmentComponent implements OnInit {
         break;
       default:
         this.enableFormControls(
-          [
-            'acTicketNo',
-            'acpassengerNo',
-            'acFlightNo',
-            'accityPair',
-            'acdepDate',
-            'relationship',
-            'airlineNo'
-          ],
+          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship', 'airlineNo'],
           true
         );
         break;
@@ -363,9 +273,9 @@ export class CancelSegmentComponent implements OnInit {
 
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
-      .filter(value => value !== null);
-    selectedPreferences.forEach(element => {
-      const look = this.segments.find(x => x.id === element);
+      .filter((value) => value !== null);
+    selectedPreferences.forEach((element) => {
+      const look = this.segments.find((x) => x.id === element);
       if (look) {
         if (look.airlineCode === 'AC') {
           acCount = acCount + 1;
@@ -421,18 +331,11 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   initializeControl(controls: any) {
-    const acControls = [
-      'acTicketNo',
-      'acpassengerNo',
-      'acFlightNo',
-      'accityPair',
-      'acdepDate',
-      'relationship'
-    ];
-    acControls.forEach(ac => {
+    const acControls = ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'];
+    acControls.forEach((ac) => {
       this.cancelForm.get(ac).setValue('');
     });
-    controls.forEach(c => {
+    controls.forEach((c) => {
       this.cancelForm.get(c.control).setValue(c.controlvalue);
     });
   }
@@ -441,9 +344,9 @@ export class CancelSegmentComponent implements OnInit {
     let ua = '';
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
-      .filter(value => value !== null);
-    selectedPreferences.forEach(element => {
-      const look = this.segments.find(x => x.id === element);
+      .filter((value) => value !== null);
+    selectedPreferences.forEach((element) => {
+      const look = this.segments.find((x) => x.id === element);
       if (look) {
         if (look.airlineCode === 'UA') {
           ua = ua + ',' + look.id;
@@ -467,7 +370,7 @@ export class CancelSegmentComponent implements OnInit {
     }
   }
 
-  ticketCouponchange(name) {
+  ticketCouponChange(name) {
     name = name.substr(-1);
     switch (name) {
       case '1':
@@ -494,7 +397,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   enableFormControls(controls: string[], disabled: boolean) {
-    controls.forEach(c => {
+    controls.forEach((c) => {
       if (disabled) {
         this.cancelForm.get(c).disable();
       } else {
@@ -505,7 +408,7 @@ export class CancelSegmentComponent implements OnInit {
     });
   }
 
-  changeNonRefAC() {
+  changeNonRefAc() {
     if (this.cancelForm.controls.cancelNonRefAC.value) {
       this.isACNonRef = true;
       this.enableFormControls(['reasonACCancel'], false);
@@ -513,15 +416,7 @@ export class CancelSegmentComponent implements OnInit {
     } else {
       this.isACNonRef = false;
       this.enableFormControls(
-        [
-          'acTicketNo',
-          'acpassengerNo',
-          'acFlightNo',
-          'accityPair',
-          'acdepDate',
-          'relationship',
-          'reasonACCancel'
-        ],
+        ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship', 'reasonACCancel'],
         true
       );
     }
@@ -567,7 +462,7 @@ export class CancelSegmentComponent implements OnInit {
 
   cancelAll(checkValue) {
     const segment = this.cancelForm.controls.segments as FormArray;
-    segment.controls.forEach(element => {
+    segment.controls.forEach((element) => {
       element.setValue(checkValue);
     });
   }

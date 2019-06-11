@@ -26,8 +26,7 @@ export class SegmentService {
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
 
-
-    GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
+    getSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
         const datePipe = new DatePipe('en-US');
         const tourSegment = new Array<PassiveSegmentModel>();
         let startTime = '';
@@ -71,7 +70,7 @@ export class SegmentService {
                 passive.segmentName = 'RU';
                 passive.function = '12';
                 passive.quantity = Number(segment.noPeople);
-                let relatePass = [];
+                const relatePass = [];
                 if (segment.segmentType === 'CAR') {
                     passive.segmentName = 'CU';
                     passive.function = '9';
@@ -109,7 +108,6 @@ export class SegmentService {
         passGroup.passiveSegments = tourSegment;
         return passGroup;
     }
-
 
     addSegmentRir(segRemark: any) {
 
@@ -263,7 +261,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        segRemark: any, amk: number, vib: number, itinLanguage: string) {
+                     segRemark: any, amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -285,7 +283,7 @@ export class SegmentService {
                 (carseat, 'RI', 'R', pnrSegment.tatooNo));
         }
 
-        if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
+        if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.isExistAmkVib('vib')) {
             if (itinLanguage === 'FR') {
                 segRemark.getVibFrenchRemark().forEach(c => {
                     rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
@@ -296,7 +294,7 @@ export class SegmentService {
                 });
             }
         }
-        if (amk === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
+        if (amk === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.isExistAmkVib('AMK')) {
             segRemark.getAmkRemark().forEach(c => {
                 rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
             });
@@ -316,7 +314,7 @@ export class SegmentService {
             this.getLimoRirFrenckRemarks(rmGroup, segmentrem, pnrSegment);
 
         } else {
-            this.getLimoEnglisgRemarks(rmGroup, segmentrem, pnrSegment);
+            this.getLimoEnglishRemarks(rmGroup, segmentrem, pnrSegment);
 
         }
 
@@ -343,8 +341,7 @@ export class SegmentService {
         }
     }
 
-
-    private getLimoEnglisgRemarks(rmGroup: RemarkGroup, segmentrem: PassiveSegmentsModel, pnrSegment: any) {
+    private getLimoEnglishRemarks(rmGroup: RemarkGroup, segmentrem: PassiveSegmentsModel, pnrSegment: any) {
         const optionalEnglishRemarks = [{ include: segmentrem.limoCoAgent, description: 'CONFIRMED WITH ' },
         { include: segmentrem.meetDriveAt, description: 'MEET DRIVER AT ' },
         { include: segmentrem.additionalInfo, description: '' },
@@ -397,7 +394,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
             case 'TOR':
@@ -485,7 +482,7 @@ export class SegmentService {
     removeTeamMateMisRetention() {
         const remGroup = new RemarkGroup();
         remGroup.group = 'TeamMate Retention';
-        const lineNo = this.pnrService.getMISRetentionLineNumber('CWT RETENTION SEGMENT');
+        const lineNo = this.pnrService.getMisRetentionLineNumber('CWT RETENTION SEGMENT');
         if (lineNo !== '') {
             remGroup.deleteSegmentByIds = [];
             remGroup.deleteSegmentByIds.push(lineNo);
@@ -493,7 +490,6 @@ export class SegmentService {
 
         return remGroup;
     }
-
 
     private setMisRemark(finaldate: any, odate: any, freetext: string) {
         const mis = new PassiveSegmentModel();
@@ -524,12 +520,12 @@ export class SegmentService {
         itinLanguage = itinLanguage.substr(0, 2);
         switch (true) {
             case (itinLanguage === 'EN'): {
-                const LLBMandatoryRemarkEN = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
+                const LLBMandatoryRemarkEN = this.pnrService.getRirLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
                 if (LLBMandatoryRemarkEN === '') {
                     const commandEN = 'PBN/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
-                const MexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+                const MexicoMandatoryRemark = this.pnrService.getRirLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
                 if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
                     const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
                     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
@@ -537,12 +533,12 @@ export class SegmentService {
                 break;
             }
             case (itinLanguage === 'FR'): {
-                const LLBMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
+                const LLBMandatoryRemarkFR = this.pnrService.getRirLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
                 if (LLBMandatoryRemarkFR === '') {
                     const commandFR = 'PBN/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
-                const MexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
+                const MexicoMandatoryRemark = this.pnrService.getRirLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
                 if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
                     let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
                     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
@@ -602,7 +598,6 @@ export class SegmentService {
 
         return res;
     }
-
 
     padDate(num: string) {
         let padnum = num;
@@ -675,7 +670,7 @@ export class SegmentService {
             rmGroup.cryptics.push('ER');
         }
 
-        const nuRemarks = this.pnrService.hasNUCRemarks();
+        const nuRemarks = this.pnrService.hasNucRemarks();
         if (nuRemarks !== '0') {
             rmGroup.deleteRemarkByIds.push(nuRemarks);
         }
@@ -724,8 +719,8 @@ export class SegmentService {
                 remText = dateToday + '/CANCELLED/CXLD SEG-' + element.lineNo;
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             });
-            const prevCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG') > -1);
-            const preCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG-PRE') === -1);
+            const prevCancel = this.pnrService.getRemarksFromGds().find(x => x.remarkText.indexOf('/CXLD SEG') > -1);
+            const preCancel = this.pnrService.getRemarksFromGds().find(x => x.remarkText.indexOf('/CXLD SEG-PRE') === -1);
             if (prevCancel && preCancel) {
                 remText = dateToday + '/CANCELLED/CXLD SEG-PRE';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
@@ -769,8 +764,8 @@ export class SegmentService {
         const passGroup = new RemarkGroup();
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);
-        passGroup.passiveSegments = misSegment;       
-        const fordeletion = this.pnrService.getmisCancel();
+        passGroup.passiveSegments = misSegment;
+        const fordeletion = this.pnrService.getMisCancel();
         if (fordeletion > 0) {
             passGroup.deleteRemarkByIds.push(fordeletion);
         }
@@ -778,9 +773,7 @@ export class SegmentService {
         return passGroup;
     }
 
-
     writeOptionalFareRule(fareRuleModels: any) {
-
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();
@@ -842,6 +835,5 @@ export class SegmentService {
 
         return rmGroup;
     }
-
 }
 

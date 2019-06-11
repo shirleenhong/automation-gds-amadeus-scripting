@@ -16,10 +16,7 @@ export class FareRuleSegmentComponent implements OnInit {
   // @Input()
   fareRuleRemarks: FareRuleModel[] = [];
 
-  constructor(
-    private modalService: BsModalService,
-    private utilHelper: UtilHelper
-  ) {}
+  constructor(private modalService: BsModalService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
     // this.fareRuleRemarks = this.pnrService.getModelPassiveSegments();
@@ -40,9 +37,7 @@ export class FareRuleSegmentComponent implements OnInit {
     this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const segmentNo = this.fareRuleRemarks.find(
-            x => x.segmentNo === this.modalRef.content.fareRules.segmentNo
-          );
+          const segmentNo = this.fareRuleRemarks.find((x) => x.segmentNo === this.modalRef.content.fareRules.segmentNo);
           this.utilHelper.modelCopy(this.modalRef.content.fareRules, segmentNo);
         } else {
           this.fareRuleRemarks.push(this.modalRef.content.fareRules);
@@ -69,7 +64,7 @@ export class FareRuleSegmentComponent implements OnInit {
     if (confirm('Are you sure you want to delete this Fare Rule?')) {
       this.fareRuleRemarks.splice(this.fareRuleRemarks.indexOf(r), 1);
       let i = 1;
-      this.fareRuleRemarks.forEach(x => {
+      this.fareRuleRemarks.forEach((x) => {
         x.segmentNo = i;
         i++;
       });

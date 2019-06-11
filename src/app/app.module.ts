@@ -14,13 +14,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { MatrixReceiptComponent } from './payments/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './payments/update-matrix-receipt/update-matrix-receipt.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
-import {
-  AccordionModule,
-  ModalModule,
-  TabsModule,
-  BsDatepickerModule,
-  BsDropdownModule
-} from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';

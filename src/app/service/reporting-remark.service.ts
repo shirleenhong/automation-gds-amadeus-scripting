@@ -18,7 +18,7 @@ export class ReportingRemarkService {
   insuranceYes = [];
   constructor(private pnrService: PnrService, private transService: TranslationService) {}
 
-  public GetRoutingRemark(reporting: ReportingViewModel) {
+  public getRoutingRemark(reporting: ReportingViewModel) {
     this.language = this.pnrService.getItineraryLanguage();
 
     this.insuranceNo = this.transService.getRemarkGroup('InsuranceDeclinedNo', this.language);
@@ -28,20 +28,20 @@ export class ReportingRemarkService {
     rmGroup.group = 'Routing';
     rmGroup.remarks = new Array<RemarkModel>();
     rmGroup.deleteRemarkByIds = new Array<string>();
-    this.getFSRemarks(reporting, rmGroup);
+    this.getFsRemarks(reporting, rmGroup);
     this.getDestinationRemarks(reporting, rmGroup);
-    this.getUDIDRemarks(reporting, rmGroup);
+    this.getUdidRemarks(reporting, rmGroup);
     return rmGroup;
   }
 
-  getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
+  getFsRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
     if (reporting.routeCode == null) {
       return;
     }
     const remText = reporting.routeCode + '' + reporting.tripType;
     rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
 
-    const existNumber = this.pnrService.getFSLineNumber();
+    const existNumber = this.pnrService.getFsLineNumber();
     if (existNumber !== '') {
       rmGroup.deleteRemarkByIds.push(existNumber);
     }
@@ -60,14 +60,14 @@ export class ReportingRemarkService {
     }
   }
 
-  getUDIDRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
+  getUdidRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
     let remText = '';
     if (this.pnrService.getRemarkLineNumber('U86/-') === '') {
       // *U86
       remText = 'U86/-OVERRIDE LEI';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
-    const cfLine = this.pnrService.getCFLine();
+    const cfLine = this.pnrService.getCfLine();
     if (!(cfLine.cfa === 'RBM' || cfLine.cfa === 'RBP')) {
       this.deleteDeclinedRemarks(rmGroup);
       this.deleteRemarks(['U10/-', 'U12/-'], rmGroup);
@@ -126,7 +126,7 @@ export class ReportingRemarkService {
     this.deleteRemarks(this.insuranceNo.concat(this.insuranceYes), rmGroup, 'RIR');
 
     // all RIR lines starts with ...
-    const lines = this.pnrService.getRIRLineNumbers('...');
+    const lines = this.pnrService.getRirLineNumbers('...');
     let r = '';
     if (lines.length > 1) {
       r = lines[0] + '-' + lines[lines.length - 1];
@@ -168,7 +168,7 @@ export class ReportingRemarkService {
     udids.forEach((x) => {
       let existNumber = '';
       if (type === 'RIR') {
-        existNumber = this.pnrService.getRIRLineNumber(x);
+        existNumber = this.pnrService.getRirLineNumber(x);
       } else {
         existNumber = this.pnrService.getRemarkLineNumber(x);
       }
@@ -187,7 +187,7 @@ export class ReportingRemarkService {
     return rem;
   }
 
-  public GetConciergeUdids(conciergeComp: ConciergeUdidsComponent) {
+  public getConciergeUdids(conciergeComp: ConciergeUdidsComponent) {
     const concierge = conciergeComp.conciergeForm;
     const forDeletion = conciergeComp.getConciergeForDeletion();
 

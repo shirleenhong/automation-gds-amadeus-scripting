@@ -21,7 +21,6 @@
         />
       </div>
     </div>
-
     <div class="form-group  row">
       <div class="col-sm-4">Accounting Remark:</div>
       <div class="col-sm-8">
@@ -41,7 +40,6 @@
         </select>
       </div>
     </div>
-
     <div *ngIf="accountingRemark.bsp == '2'">
       <div class="form-group  row">
         <div class="col-sm-4">Description:</div>
@@ -64,7 +62,6 @@
         </div>
       </div>
     </div>
-
     <div class="form-group  row">
       <div class="col-sm-4">Itinerary Segment:</div>
       <div class="col-sm-8">
@@ -77,7 +74,6 @@
         ></app-segment-select>
       </div>
     </div>
-
     <div class="form-group row">
       <div class="col-sm-4">Supplier Code:</div>
       <div class="col-sm-8">
@@ -100,7 +96,6 @@
         </datalist>
       </div>
     </div>
-
     <div class="form-group  row">
       <div class="col-sm-4">
         <label id="confirmationLabel">{{ name }} </label>
@@ -118,7 +113,6 @@
         />
       </div>
     </div>
-
     <div></div>
     <div class="form-group  row">
       <div class="col-sm-4">Form of Payment:</div>
@@ -131,7 +125,7 @@
           name="fop"
           [(ngModel)]="accountingRemark.fop"
           formControlName="fop"
-          (change)="FormOfPaymentChange($event.target.value)"
+          (change)="formOfPaymentChange($event.target.value)"
           required
         >
           <option *ngFor="let item of formOfPaymentList" [value]="item.itemValue">
@@ -140,7 +134,6 @@
         </select>
       </div>
     </div>
-
     <div *ngIf="accountingRemark.fop == 'CC'">
       <div class="form-group  row">
         <div class="col-sm-4">Vendor Code:</div>
@@ -161,7 +154,6 @@
           </select>
         </div>
       </div>
-
       <div class="form-group  row">
         <div class="col-sm-4">Card Number:</div>
         <div class="col">
@@ -192,7 +184,6 @@
         </div>
       </div>
     </div>
-
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
@@ -209,7 +200,6 @@
           AmountMask
         />
       </div>
-
       <div class="col">
         <div class="">GST:</div>
         <input
@@ -226,7 +216,6 @@
         />
       </div>
     </div>
-
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
@@ -244,7 +233,6 @@
           AmountMask
         />
       </div>
-
       <div class="col">
         <div class="">QST:</div>
         <input
@@ -277,10 +265,8 @@
           AmountMask
         />
       </div>
-
       <div class="col"></div>
     </div>
-
     <div *ngIf="accountingRemark.bsp == '1'">
       <div *ngIf="accountingRemark.accountingTypeRemark !== 'ACPP' && accountingRemark.accountingTypeRemark !== 'ACPR'">
         <div class="form-group  row">
@@ -300,7 +286,6 @@
               AmountMask
             />
           </div>
-
           <div class="col">
             <div class="">Commision w/o Tax:</div>
             <input
@@ -333,7 +318,6 @@
         </div>
       </div>
     </div>
-
     <div class="form-group  row" *ngIf="accountingRemark.accountingTypeRemark === 'ACPP'">
       <div class="col-sm-4">Departure City:</div>
       <div class="col-sm-4">
@@ -351,7 +335,6 @@
         />
       </div>
     </div>
-
     <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPR' || accountingRemark.accountingTypeRemark === 'ACPP'">
       <div class="form-group  row">
         <div class="col-sm-4">Pass Purchase Type:</div>
@@ -371,7 +354,6 @@
           </select>
         </div>
       </div>
-
       <div class="form-group  row">
         <div class="col-sm-4">Fare Type:</div>
         <div class="col-sm-8">
@@ -391,7 +373,6 @@
         </div>
       </div>
     </div>
-
     <!-- 
     <div class="row form-group">
       <div class="col-4"></div>
@@ -407,7 +388,6 @@
         Do the travellers require separate Invoices?
       </div>
     </div> -->
-
     <div class="form-group row">
       <div class="col-sm-4">Passenger:</div>
       <div class="col-sm-8">

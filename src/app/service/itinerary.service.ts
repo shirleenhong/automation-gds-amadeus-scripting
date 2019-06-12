@@ -5,6 +5,8 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { DDBService } from './ddb.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -177,5 +179,52 @@ export class ItineraryService {
       route = 'TRANS';
     }
     return route;
+  }
+
+
+  addQueue(frmGroup: FormGroup) {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'Queue';
+    remGroup.queuePlace = new Array<QueuePlaceModel>();
+
+    if (frmGroup.controls.nonBsp.value) { this.getQueueMinder(remGroup, 'nonBsp'); }
+    if (frmGroup.controls.ticketExchange.value) { this.getQueueMinder(remGroup, 'ticketExchange'); }
+    if (frmGroup.controls.bspTicket.value) { this.getQueueMinder(remGroup, 'bspTicket'); }
+    if (frmGroup.controls.refund.value) { this.getQueueMinder(remGroup, 'refund'); }
+    if (frmGroup.controls.cwtItinerary.value) { this.getQueueMinder(remGroup, 'cwtItinerary'); }
+    if (frmGroup.controls.bspRefund.value) { this.getQueueMinder(remGroup, 'bspRefund'); }
+    if (frmGroup.controls.personalQueue.value && frmGroup.controls.queueNo.value) {
+      this.getQueueMinder(remGroup, 'personalQueue', frmGroup.controls.queueNo.value);
+    }
+    return (remGroup);
+  }
+
+  private getQueueMinder(remGroup: RemarkGroup, controlname: string, queueno?: string) {
+    const queue = new QueuePlaceModel();
+
+    const queuePlaceDescription = [
+      { control: 'nonBsp', queueNo: '12', pcc: '', text: 'NON BSP', category: '' },
+      { control: 'ticketExchange', queueNo: '4', pcc: '', text: 'ticket Exchange', category: '' },
+      { control: 'bspTicket', queueNo: '87', pcc: '', text: 'bsp Ticket', category: '' },
+      { control: 'refund', queueNo: '1', pcc: '', text: 'refund', category: '' },
+      { control: 'cwtItinerary', queueNo: '12', pcc: '', text: 'cwt Itinerary', category: '' },
+      { control: 'bspRefund', queueNo: '4', pcc: '', text: 'bsp Refund', category: '' },
+      { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' }
+    ];
+    const look = queuePlaceDescription.find((x) => x.control === controlname);
+    if (look) {
+      queue.queueNo = look.queueNo;
+      if (queueno) {
+        queue.queueNo = queueno;
+      }
+      queue.pcc = look.pcc;
+      if (look.pcc === '') {
+        queue.pcc = this.pnrService.PCC;
+      }
+      queue.freetext = look.text;
+      queue.category = look.category;
+      queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+      remGroup.queuePlace.push(queue);
+    }
   }
 }

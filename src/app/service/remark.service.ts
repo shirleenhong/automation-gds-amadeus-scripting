@@ -3,6 +3,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 
 declare var smartScriptSession: any;
 
@@ -17,6 +18,7 @@ export class RemarkService {
   passiveSegmentElement: Array<any>;
   passiveSegmentGroup: Array<PassiveSegmentModel>;
   responseMessage: string;
+
   constructor(private pnrService: PnrService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
@@ -80,6 +82,12 @@ export class RemarkService {
             }
           });
         }
+
+        if (group.queuePlace != null && group.queuePlace.length > 0) {
+          group.queuePlace.forEach((queue) => {
+            this.remarksElement.push(this.getQueueElement(queue));
+          });
+        }
       }
     });
   }
@@ -101,6 +109,31 @@ export class RemarkService {
     };
 
     return { elementManagementData, fareElement };
+  }
+
+  getQueueElement(queueModel: QueuePlaceModel) {
+    const reference = {
+      qualifier: 'OT',
+      number: '1'
+    };
+    const elementManagementData = {
+      reference,
+      segmentName: 'OP'
+    };
+
+    const optionDetail = {
+      officeId: queueModel.pcc,
+      date: queueModel.date,
+      queue: queueModel.queueNo,
+      category: queueModel.category,
+      freetext: queueModel.freetext
+    };
+
+    const optionElement = {
+      optionDetail
+    };
+
+    return { elementManagementData, optionElement };
   }
 
   getRemarkElement(remarkModel: RemarkModel) {

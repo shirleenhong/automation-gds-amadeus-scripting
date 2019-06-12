@@ -6,9 +6,9 @@ import {
   FormControl,
   Validators
 } from '@angular/forms';
-import { PnrService } from '../service/pnr.service';
-import { UtilHelper } from '../helper/util.helper';
-import { SelectItem } from '../models/select-item.model';
+import { SelectItem } from 'src/app/models/select-item.model';
+import { PnrService } from 'src/app/service/pnr.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-itinerary',

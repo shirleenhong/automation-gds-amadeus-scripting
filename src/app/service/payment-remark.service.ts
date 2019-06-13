@@ -18,7 +18,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -260,6 +260,7 @@ export class PaymentRemarkService {
         .find((x) => x.segmentType === 'AIR' && x.controlNumber === accounting.supplierConfirmatioNo);
 
       if (!air) {
+        const noOfPassenger = this.pnrService.getPassengers().length;
         const datePipe = new DatePipe('en-US');
         // add dummy segment
         const passive = new PassiveSegmentModel();
@@ -272,7 +273,7 @@ export class PaymentRemarkService {
         passive.segmentName = 'AIR';
         passive.passiveSegmentType = 'AIR';
         passive.function = '1';
-        passive.quantity = 1;
+        passive.quantity = noOfPassenger;
         passive.status = 'GK';
         passive.classOfService = 'Q';
         passive.controlNo = accounting.supplierConfirmatioNo; //'C1';

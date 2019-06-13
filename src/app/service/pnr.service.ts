@@ -687,26 +687,29 @@ export class PnrService {
     return matrixModels;
   }
   extractCanadaPass(model: MatrixAccountingModel, assoc) {
+    debugger;
     let pass = this.getRemarksFromGDSByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
+    let found = false;
     if (pass.length > 0) {
       pass.forEach((x) => {
         const list = assoc.filter((s) => x.segments.indexOf(s.tatooNumber) >= 0);
-        if (list.length === x.segments.length) {
+        if (!found && list.length === x.segments.length) {
           const text = x.remarkText;
           const vals = text.split(' PASS REDEMPTION-');
           model.passPurchase = vals[0].trim();
           model.fareType = vals[1].replace('FARE', '').trim();
           model.accountingTypeRemark = 'ACPR';
+          found = true;
         }
       });
       return model;
     }
-
+    found = false;
     pass = this.getRemarksFromGDSByRegex(/(.*) PASS-(.*) FARE/g, 'RIR');
     if (pass.length > 0) {
       pass.forEach((x) => {
         const list = assoc.filter((s) => x.segments.indexOf(s.tatooNumber) >= 0);
-        if (list.length === x.segments.length) {
+        if (!found && list.length === x.segments.length) {
           const text = x.remarkText;
           const vals = text.split(' PASS-');
           model.passPurchase = vals[0].trim();
@@ -716,8 +719,10 @@ export class PnrService {
           if (air) {
             model.departureCity = air.cityCode;
           }
+          found = true;
         }
       });
+      return model;
     }
 
     return model;

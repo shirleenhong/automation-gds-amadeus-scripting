@@ -202,7 +202,7 @@ export class PaymentRemarkService {
 
     let line1 = '';
 
-    if (accounting.commisionWithoutTax !== undefined) {
+    if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) < 0 && accounting.commisionWithoutTax !== undefined) {
       line1 = 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
     }
 
@@ -218,10 +218,11 @@ export class PaymentRemarkService {
       // + line1;
     }
 
-    facc = facc + line1;
-    if (accounting.supplierCodeName === 'ACJ') {
+    if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) >= 0) {
       facc += '/-CD-0.00';
     }
+
+    facc = facc + line1;
 
     const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
     const acc2 =

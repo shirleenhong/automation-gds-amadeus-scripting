@@ -75,7 +75,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr() {
     // this.ddbService.getCountryAndCurrencyList();
@@ -146,7 +146,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.reportingRemarkService.GetConciergeUdids(concierge));
     }
 
-    // tslint:disable-next-line:no-string-literal
     if (
       this.remarkComponent.remarkForm.controls.packageList.value !== null &&
       this.remarkComponent.remarkForm.controls.packageList.value !== '' &&
@@ -183,7 +182,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -208,10 +207,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {
-      },
+      () => {},
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
 
@@ -228,7 +226,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
     // this.remarkService.endPNR(cancel.cancelForm.value.requestor);
@@ -237,7 +235,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   async addSegmentToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
-    // tslint:disable-next-line:max-line-length
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(
       async () => {
@@ -246,7 +243,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.addRir();
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -263,7 +260,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.getPnr();
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }
@@ -290,7 +287,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
       }
     );
   }

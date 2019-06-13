@@ -14,7 +14,7 @@ export class DDBService implements OnInit {
   countryList = [];
   currencyList = [];
   supplierCodes = [];
-  airTravelPortInformation = [];  
+  airTravelPortInformation = [];
   ngOnInit(): void {}
 
   constructor(private httpClient: HttpClient) {}
@@ -70,7 +70,7 @@ export class DDBService implements OnInit {
         alert(JSON.stringify(x));
       },
       (err) => {
-        alert(JSON.stringify(err));
+        console.log(JSON.stringify(err));
       }
     );
   }
@@ -90,7 +90,7 @@ export class DDBService implements OnInit {
           }));
         },
         (err) => {
-          alert(JSON.stringify(err));
+          console.log(JSON.stringify(err));
         }
       );
     }
@@ -125,97 +125,19 @@ export class DDBService implements OnInit {
 
   getProvinceTax(): any {
     return [
-      {
-        provinceCode: 'AB',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'BC',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'MB',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'NB',
-        tax1: 0.15,
-        taxType1: 'HST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'NL',
-        tax1: 0.15,
-        taxType1: 'HST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'NS',
-        tax1: 0.15,
-        taxType1: 'HST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'NT',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'NU',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'ON',
-        tax1: 0.13,
-        taxType1: 'HST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'PE',
-        tax1: 0.15,
-        taxType1: 'HST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'QC',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.09975,
-        taxType2: 'QST'
-      },
-      {
-        provinceCode: 'SK',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      },
-      {
-        provinceCode: 'YT',
-        tax1: 0.05,
-        taxType1: 'GST',
-        tax2: 0.0,
-        taxType2: ''
-      }
+      { provinceCode: 'AB', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'BC', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'MB', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'NB', tax1: 0.15, taxType1: 'HST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'NL', tax1: 0.15, taxType1: 'HST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'NS', tax1: 0.15, taxType1: 'HST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'NT', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'NU', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'ON', tax1: 0.13, taxType1: 'HST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'PE', tax1: 0.15, taxType1: 'HST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'QC', tax1: 0.05, taxType1: 'GST', tax2: 0.09975, taxType2: 'QST' },
+      { provinceCode: 'SK', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' },
+      { provinceCode: 'YT', tax1: 0.05, taxType1: 'GST', tax2: 0.0, taxType2: '' }
     ];
   }
 
@@ -233,7 +155,7 @@ export class DDBService implements OnInit {
         });
       },
       (err) => {
-        alert(JSON.stringify(err));
+        console.log(JSON.stringify(err));
       }
     );
   }
@@ -305,27 +227,15 @@ export class DDBService implements OnInit {
   getRouteCodeList() {
     return [
       { itemText: '', itemValue: '' },
-      {
-        itemText: 'USA incl. all US Territories and Possessions',
-        itemValue: '0'
-      },
-      {
-        itemText: 'Mexico/Central America/Canal Zone/Costa Rica',
-        itemValue: '1'
-      },
+      { itemText: 'USA incl. all US Territories and Possessions', itemValue: '0' },
+      { itemText: 'Mexico/Central America/Canal Zone/Costa Rica', itemValue: '1' },
       { itemText: 'Caribbean and Bermuda', itemValue: '2' },
       { itemText: 'South America', itemValue: '3' },
-      {
-        itemText: 'Europe-incl. Morocco/Tunisia/Algeria/Greenland',
-        itemValue: '4'
-      },
+      { itemText: 'Europe-incl. Morocco/Tunisia/Algeria/Greenland', itemValue: '4' },
       { itemText: 'Africa', itemValue: '5' },
       { itemText: 'Middle East/Western Asia', itemValue: '6' },
       { itemText: 'Asia incl. India', itemValue: '7' },
-      {
-        itemText: 'Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam',
-        itemValue: '8'
-      },
+      { itemText: 'Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam', itemValue: '8' },
       { itemText: 'Canada and St. Pierre et Miquelon', itemValue: '9' }
     ];
   }

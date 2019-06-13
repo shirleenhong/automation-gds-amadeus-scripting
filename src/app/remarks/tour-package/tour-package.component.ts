@@ -118,7 +118,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     this.loadValues();
   }
 
-  // tslint:disable-next-line: variable-name
   ngOnChanges(_changes: SimpleChanges): void {
     console.log('form group: ', this.group);
   }
@@ -155,7 +154,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
         };
   }
 
-  // tslint:disable-next-line: variable-name
   registerOnValidatorChange?(_fn: () => void): void {}
 
   tourPackageChange() {

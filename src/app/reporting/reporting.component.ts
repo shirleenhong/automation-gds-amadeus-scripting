@@ -39,7 +39,6 @@ export class ReportingComponent implements OnInit, OnChanges {
     return this.reportingForm.controls;
   }
 
-  // tslint:disable-next-line: variable-name
   ngOnChanges(_changes: SimpleChanges) {}
 
   ngOnInit() {
@@ -99,7 +98,8 @@ export class ReportingComponent implements OnInit, OnChanges {
       rems.forEach((x) => {
         const rem = '...' + this.translation.translate(x, lang);
         if (this.pnrService.getRirRemarkText(rem) !== '') {
-          const opt = this.reportingView.declinedOption.find((x) => x.value == i.toString());
+          // tslint:disable-next-line: no-shadowed-variable
+          const opt = this.reportingView.declinedOption.find((x) => x.value === i.toString());
           opt.checked = opt !== undefined && opt !== null;
         }
         i++;
@@ -147,10 +147,10 @@ export class ReportingComponent implements OnInit, OnChanges {
       this.reportingView.insuranceDeclinedReason = '';
       this.f.insuranceDeclinedReason.setValue('');
       this.f.insuranceDeclinedReason.clearValidators();
-      //this.f.declinedOption.clearValidators();
+      // this.f.declinedOption.clearValidators();
     } else {
       this.f.insuranceDeclinedReason.setValidators(Validators.required);
-      //this.f.declinedOption.setValidators(Validators.required);
+      // this.f.declinedOption.setValidators(Validators.required);
     }
   }
 

@@ -1,5 +1,5 @@
 export class CfRemarkModel {
-    lastLetter: string;
-    cfa = '';
-    code: string;
+  lastLetter: string;
+  cfa = '';
+  code: string;
 }

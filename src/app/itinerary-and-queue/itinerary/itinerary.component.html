@@ -9,6 +9,15 @@
       </div>
     </div>
 
+    <div class="row form-group">
+      <div class="col-4"></div>
+      <div class="col-8">
+        <input type="checkbox" name="cwtItinerary" formControlName="cwtItinerary" id="cwtItinerary" />
+        CWT Itinerary Queue
+      </div>
+    </div>
+
+
     <div formArrayName="emailAddresses"
       *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
       <div [formGroupName]="i" class="form-group row">

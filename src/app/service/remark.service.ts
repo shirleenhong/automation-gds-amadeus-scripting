@@ -83,11 +83,11 @@ export class RemarkService {
           });
         }
 
-        if (group.queuePlace != null && group.queuePlace.length > 0) {
-          group.queuePlace.forEach((queue) => {
-            this.remarksElement.push(this.getQueueElement(queue));
-          });
-        }
+        // if (group.queuePlace != null && group.queuePlace.length > 0) {
+        //   group.queuePlace.forEach((queue) => {
+        //     this.remarksElement.push(this.getQueueElement(queue));
+        //   });
+        // }
       }
     });
   }
@@ -458,7 +458,7 @@ export class RemarkService {
     this.clear();
   }
 
-  endPNR(requestor) {
+  async endPNR(requestor) {
     if (this.pnrService.pnrObj.tkElements.length < 1) {
       smartScriptSession.send('TKOK');
     }

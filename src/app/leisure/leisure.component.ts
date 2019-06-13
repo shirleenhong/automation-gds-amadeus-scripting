@@ -22,6 +22,8 @@ import { InvoiceService } from '../service/invoice-remark.service';
 import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
 import { ItineraryService } from '../service/itinerary.service';
 import { ItineraryAndQueueComponent } from '../itinerary-and-queue/itinerary-and-queue.component';
+import { QueueService } from '../service/queue.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 
 @Component({
   selector: 'app-leisure',
@@ -65,7 +67,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private ddbService: DDBService,
     private modalService: BsModalService,
     private invoiceService: InvoiceService,
-    private itineraryService: ItineraryService
+    private itineraryService: ItineraryService,
+    private queueService: QueueService,
   ) {
     this.getPnr();
     this.initData();
@@ -128,6 +131,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     const remarkCollection = new Array<RemarkGroup>();
+    let queueCollection = Array<QueuePlaceModel>();
+
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
@@ -169,7 +174,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
     }
 
-    remarkCollection.push(this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm));
+    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    const itireraryQueue = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
+    queueCollection = queueCollection.concat(itireraryQueue);
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
@@ -179,6 +186,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
+        this.queueService.queuePNR(queueCollection);
         this.workflow = '';
       },
       (error) => {
@@ -223,6 +231,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
+
         this.workflow = '';
       },
       (error) => {
@@ -267,7 +276,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   displayInvoice() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.recordLocator() !== undefined) {
+      if (this.pnrService.recordLocator) {
         this.invoiceEnabled = true;
       } else {
         this.invoiceEnabled = false;
@@ -330,7 +339,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.recordLocator() !== undefined) {
+      if (this.pnrService.recordLocator) {
         this.cancelEnabled = false;
       }
     }

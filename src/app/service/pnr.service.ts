@@ -22,8 +22,9 @@ export class PnrService {
   segments = [];
   amountPipe = new AmountPipe();
   PCC = '';
+  // recordLocator = '';
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -44,12 +45,19 @@ export class PnrService {
         console.log(err);
       });
     this.getPCC();
+    this.getRecordLocator();
     console.log(JSON.stringify(this.pnrObj));
   }
 
   getPCC(): void {
     smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.PCC = x.ACTIVE_OFFICE_ID;
+    });
+  }
+
+  getRecordLocator(): void {
+    smartScriptSession.getRecordLocator().then((x) => {
+      this.recordLocator = x;
     });
   }
 

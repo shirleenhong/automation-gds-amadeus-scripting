@@ -183,34 +183,40 @@ export class ItineraryService {
 
 
   addQueue(frmGroup: FormGroup) {
-    const remGroup = new RemarkGroup();
-    remGroup.group = 'Queue';
-    remGroup.queuePlace = new Array<QueuePlaceModel>();
+    const queueGroup = Array<QueuePlaceModel>();
 
-    if (frmGroup.controls.nonBsp.value) { this.getQueueMinder(remGroup, 'nonBsp'); }
-    if (frmGroup.controls.ticketExchange.value) { this.getQueueMinder(remGroup, 'ticketExchange'); }
-    if (frmGroup.controls.bspTicket.value) { this.getQueueMinder(remGroup, 'bspTicket'); }
-    if (frmGroup.controls.refund.value) { this.getQueueMinder(remGroup, 'refund'); }
-    if (frmGroup.controls.cwtItinerary.value) { this.getQueueMinder(remGroup, 'cwtItinerary'); }
-    if (frmGroup.controls.bspRefund.value) { this.getQueueMinder(remGroup, 'bspRefund'); }
+    if (frmGroup.controls.nonBsp.value) { this.getQueueMinder(queueGroup, 'nonBsp'); }
+    if (frmGroup.controls.ticketExchange.value) { this.getQueueMinder(queueGroup, 'ticketExchange'); }
+    if (frmGroup.controls.bspTicket.value) { this.getQueueMinder(queueGroup, 'bspTicket'); }
+    if (frmGroup.controls.refund.value) { this.getQueueMinder(queueGroup, 'refund'); }
+    // if (frmGroup.controls.cwtItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
+    if (frmGroup.controls.bspRefund.value) { this.getQueueMinder(queueGroup, 'bspRefund'); }
     if (frmGroup.controls.personalQueue.value && frmGroup.controls.queueNo.value) {
-      this.getQueueMinder(remGroup, 'personalQueue', frmGroup.controls.queueNo.value);
+      this.getQueueMinder(queueGroup, 'personalQueue', frmGroup.controls.queueNo.value);
     }
-    return (remGroup);
+    return (queueGroup);
   }
 
-  private getQueueMinder(remGroup: RemarkGroup, controlname: string, queueno?: string) {
+  private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
     const queue = new QueuePlaceModel();
 
     const queuePlaceDescription = [
-      { control: 'nonBsp', queueNo: '12', pcc: '', text: 'NON BSP', category: '' },
+      { control: 'nonBsp', queueNo: '12', pcc: 'YTOWL2104', text: 'NON BSP', category: '' },
       { control: 'ticketExchange', queueNo: '4', pcc: '', text: 'ticket Exchange', category: '' },
-      { control: 'bspTicket', queueNo: '87', pcc: '', text: 'bsp Ticket', category: '' },
+      { control: 'bspTicket', queueNo: '87', pcc: 'YTOWL2104', text: 'bsp Ticket', category: '' },
       { control: 'refund', queueNo: '1', pcc: '', text: 'refund', category: '' },
       { control: 'cwtItinerary', queueNo: '12', pcc: '', text: 'cwt Itinerary', category: '' },
       { control: 'bspRefund', queueNo: '4', pcc: '', text: 'bsp Refund', category: '' },
-      { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' }
+      { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
+      { control: 'invoice', queueNo: '87', pcc: '', text: 'invoice', category: '' },
+      { control: 'itinerary', queueNo: '1', pcc: '', text: 'itinerary', category: '' }
     ];
+
+    // const queuePlaceDescription = [
+    //   { control: 'nonBsp', queueNo: '10', pcc: '', text: 'NON BSP', category: '' },
+    //   { control: 'ticketExchange', queueNo: '33', pcc: 'PARWL210G', text: 'ticket Exchange', category: '' }
+    // ];
+
     const look = queuePlaceDescription.find((x) => x.control === controlname);
     if (look) {
       queue.queueNo = look.queueNo;
@@ -224,7 +230,23 @@ export class ItineraryService {
       queue.freetext = look.text;
       queue.category = look.category;
       queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
-      remGroup.queuePlace.push(queue);
+      queueGroup.push(queue);
     }
+  }
+
+  addItineraryQueue(frmGroup: FormGroup) {
+    const queueGroup = Array<QueuePlaceModel>();
+
+    if (frmGroup.controls.cwtItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
+    if (frmGroup.controls.typeTransaction.value) {
+      let tanstype = '';
+      if (frmGroup.controls.typeTransaction.value === 'invoice') {
+        tanstype = 'invoice';
+      } else if (frmGroup.controls.typeTransaction.value === 'itinerary') {
+        tanstype = 'itinerary';
+      }
+      this.getQueueMinder(queueGroup, tanstype);
+    }
+    return queueGroup;
   }
 }

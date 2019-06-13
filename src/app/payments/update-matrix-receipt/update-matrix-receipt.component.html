@@ -1,259 +1,172 @@
 <div class="modal-header">
-  <div class="modal-title">{{ title }}</div>
+  <div class="modal-title">{{title}}</div>
   <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
+
   <form [formGroup]="matrixForm">
+
     <div class="form-group  row">
-      <div class="col-sm-4">RLN # :</div>
+      <div class="col-sm-4">RLN # : </div>
       <div class="col-sm-8">
-        <input
-          type="text"
-          maxlength="4"
-          class="form-control"
-          id="rln"
-          [(ngModel)]="matrixReceipt.rln"
-          name="rln"
-          [ngModelOptions]="{ standalone: true }"
-          disabled
-        />
+        <input type="text" maxlength="4" class="form-control" id="rln" [(ngModel)]="matrixReceipt.rln" name="rln"
+          [ngModelOptions]="{standalone: true}" disabled />
       </div>
     </div>
+
     <div class="form-group  row">
-      <div class="col-sm-4">Bank Account :</div>
+
+      <div class="col-sm-4">Bank Account : </div>
       <div class="col-sm-8">
-        <select
-          autofocus
-          id="bankAccount"
-          class="form-control"
-          (change)="bankAccountChange($event.target.value)"
-          [(ngModel)]="matrixReceipt.bankAccount"
-          formControlName="bankAccount"
-          name="bankAccount"
-          [ngClass]="{ 'is-invalid': f.bankAccount.touched && f.bankAccount.invalid }"
-          required
-        >
-          <option *ngFor="let item of bankAccountList" [value]="item.itemValue">
-            {{ item.itemText }}
+        <select autofocus id="bankAccount" class="form-control" (change)="bankAccountChange($event.target.value)"
+          [(ngModel)]="matrixReceipt.bankAccount" formControlName="bankAccount" name="bankAccount"
+          [ngClass]="{ 'is-invalid': f.bankAccount.touched && f.bankAccount.invalid }" required>
+          <option *ngFor="let item of  bankAccountList" [value]="item.itemValue">
+            {{item.itemText}}
           </option>
         </select>
       </div>
     </div>
+
     <div class="form-group row">
       <div class="col-sm-4">Passenger :</div>
       <div class="col-sm-8">
-        <select
-          class="form-control "
-          id="pasenger"
-          [(ngModel)]="matrixReceipt.passengerName"
-          formControlName="passengerName"
-          name="passengerName"
-          required
-          [ngClass]="{ 'is-invalid': f.passengerName.touched && f.passengerName.invalid }"
-        >
-          <option *ngFor="let pass of passengerList" [value]="pass.fullname"> {{ pass.surname }}-{{ pass.firstname }} </option>
+        <select class="form-control " id="pasenger" [(ngModel)]="matrixReceipt.passengerName"
+          formControlName="passengerName" name="passengerName" required
+          [ngClass]="{ 'is-invalid': f.passengerName.touched && f.passengerName.invalid }">
+
+          <option *ngFor="let pass of  passengerList" [value]="pass.fullname">
+            {{pass.surname}}-{{pass.firstname}}
+          </option>
         </select>
       </div>
     </div>
+
     <div class="form-group  row">
       <div class="col-sm-4">GL Code :</div>
       <div class="col-sm-8">
-        <input
-          type="text"
-          class="form-control"
-          id="glCode"
-          name="glCode"
-          [(ngModel)]="matrixReceipt.glCode"
-          [ngModelOptions]="{ standalone: true }"
-          disabled
-        />
+        <input type="text" class="form-control" id="glCode" name="glCode" [(ngModel)]="matrixReceipt.glCode"
+          [ngModelOptions]="{standalone: true}" disabled />
       </div>
     </div>
+
     <div class="form-group  row">
       <div class="col-sm-4">Amount :</div>
       <div class="col-sm-8">
-        <input
-          type="text"
-          class="form-control"
-          id="amount"
-          formControlName="amount"
-          [ngClass]="{ 'is-invalid': f.amount.touched && f.amount.invalid }"
-          name="amount"
-          [(ngModel)]="matrixReceipt.amount"
-          required
-          placeholder="00.00"
-          AmountMask
-        />
+        <input type="text" class="form-control" id="amount" formControlName="amount"
+          [ngClass]="{ 'is-invalid': f.amount.touched && f.amount.invalid }" name="amount"
+          [(ngModel)]="matrixReceipt.amount" required placeholder="00.00" AmountMask />
       </div>
+
     </div>
-    <div *ngIf="matrixReceipt.paymentType == paymentType.Rbc">
+
+    <div *ngIf="matrixReceipt.paymentType == PaymentType.Rbc">
       <div class="form-group  row">
         <div class="col-sm-4">Points :</div>
         <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="points"
-            formControlName="points"
-            name="points"
-            required
-            maxlength="7"
-            NumberOnlyMask
-            [ngClass]="{ 'is-invalid': f.points.touched && f.points.invalid }"
-            [(ngModel)]="matrixReceipt.points"
-          />
+
+          <input type="text" class="form-control" id="points" formControlName="points" name="points" required
+            maxlength="7" NumberOnlyMask [ngClass]="{ 'is-invalid': f.points.touched && f.points.invalid }"
+            [(ngModel)]="matrixReceipt.points" />
         </div>
       </div>
+
       <div class="form-group  row">
         <div class="col-sm-4">CWT Reference :</div>
         <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="cwtRef"
-            name="cwtRef"
-            placeholder="0000000000"
-            NumberOnlyMask
-            maxlength="10"
-            minlength="6"
-            [ngClass]="{ 'is-invalid': f.cwtRef.touched && f.cwtRef.invalid }"
-            required
-            formControlName="cwtRef"
-            [(ngModel)]="matrixReceipt.cwtRef"
-          />
+          <input type="text" class="form-control" id="cwtRef" name="cwtRef" placeholder="0000000000" NumberOnlyMask
+            maxlength="10" minlength="6" [ngClass]="{ 'is-invalid': f.cwtRef.touched && f.cwtRef.invalid }" required
+            formControlName="cwtRef" [(ngModel)]="matrixReceipt.cwtRef" />
         </div>
       </div>
       <div class="form-group  row">
         <div class="col-sm-4">
-          Last Four digit VI :
-        </div>
+          Last Four digit VI :</div>
         <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="lastFourVi"
-            placeholder="0000"
-            required
-            maxlength="4"
-            NumberOnlyMask
-            [ngClass]="{ 'is-invalid': f.lastFourVi.touched && f.lastFourVi.invalid }"
-            formControlName="lastFourVi"
-            NumberOnlyMask
-            name="lastFourVi"
-            [(ngModel)]="matrixReceipt.lastFourVi"
-          />
+
+          <input type="text" class="form-control" id="lastFourVi" placeholder="0000" required maxlength="4"
+            NumberOnlyMask [ngClass]="{ 'is-invalid': f.lastFourVi.touched && f.lastFourVi.invalid }"
+            formControlName="lastFourVi" NumberOnlyMask name="lastFourVi" [(ngModel)]="matrixReceipt.lastFourVi" />
         </div>
       </div>
     </div>
-    <div *ngIf="matrixReceipt.paymentType != paymentType.Rbc">
+
+    <div *ngIf="matrixReceipt.paymentType != PaymentType.Rbc">
       <div class="form-group  row">
         <div class="col-sm-4">GC Number :</div>
         <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="gcNumber"
-            [ngClass]="{ 'is-invalid': f.gcNumber.touched && f.gcNumber.invalid }"
-            name="gcNumber"
-            AlphaNumericMask
-            formControlName="gcNumber"
-            [(ngModel)]="matrixReceipt.gcNumber"
-          />
+          <input type="text" class="form-control" id="gcNumber"
+            [ngClass]="{ 'is-invalid': f.gcNumber.touched && f.gcNumber.invalid }" name="gcNumber" AlphaNumericMask
+            formControlName="gcNumber" [(ngModel)]="matrixReceipt.gcNumber" />
         </div>
       </div>
+
       <div class="form-group  row">
         <div class="col-sm-4">Description :</div>
         <div class="col-sm-8">
-          <textarea
-            type="text"
-            class="form-control"
-            id="description"
-            formControlName="description"
+
+          <textarea type="text" class="form-control" id="description" formControlName="description"
             [(ngModel)]="matrixReceipt.description"
-            [ngClass]="{ 'is-invalid': f.description.touched && f.description.invalid }"
-            name="description"
-            required
-          ></textarea>
+            [ngClass]="{ 'is-invalid': f.description.touched && f.description.invalid }" name="description"
+            required></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="matrixReceipt.paymentType == PaymentType.CreditCard">
+      <div class="form-group  row">
+        <div class="col-sm-4">Credit Card No: </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="ccNo" required [(ngModel)]="matrixReceipt.ccNo" maxlength="16"
+            formControlName="ccNo" name="ccNo" [ngClass]="{ 'is-invalid': f.ccNo.touched && f.ccNo.invalid }" />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Expiration Date: </div>
+        <div class="col-sm-8">
+          <input type="input" class="form-control" id="expDate" required [(ngModel)]="matrixReceipt.expDate"
+            formControlName="expDate" name="expDate" CCDateExpMask
+            [ngClass]="{ 'is-invalid': f.expDate.touched && f.expDate.invalid }" />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Vendor Code : </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="vendorCode" required
+            [ngClass]="{ 'is-invalid': f.vendorCode.touched && f.vendorCode.invalid }"
+            [(ngModel)]="matrixReceipt.vendorCode" formControlName="vendorCode" name="vendorCode"
+            (change)="creditcardMaxValidator($event.target.value)" disabled />
+
         </div>
       </div>
     </div>
-    <div *ngIf="matrixReceipt.paymentType == paymentType.CreditCard">
+    <div *ngIf="matrixReceipt.paymentType == PaymentType.Undefined">
       <div class="form-group  row">
-        <div class="col-sm-4">Credit Card No:</div>
+        <div class="col-sm-4">Type of Payment: </div>
         <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="ccNo"
-            required
-            [(ngModel)]="matrixReceipt.ccNo"
-            maxlength="16"
-            formControlName="ccNo"
-            name="ccNo"
-            [ngClass]="{ 'is-invalid': f.ccNo.touched && f.ccNo.invalid }"
-          />
-        </div>
-      </div>
-      <div class="form-group  row">
-        <div class="col-sm-4">Expiration Date:</div>
-        <div class="col-sm-8">
-          <input
-            type="input"
-            class="form-control"
-            id="expDate"
-            required
-            [(ngModel)]="matrixReceipt.expDate"
-            formControlName="expDate"
-            name="expDate"
-            CCDateExpMask
-            [ngClass]="{ 'is-invalid': f.expDate.touched && f.expDate.invalid }"
-          />
-        </div>
-      </div>
-      <div class="form-group  row">
-        <div class="col-sm-4">Vendor Code :</div>
-        <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="vendorCode"
-            required
-            [ngClass]="{ 'is-invalid': f.vendorCode.touched && f.vendorCode.invalid }"
-            [(ngModel)]="matrixReceipt.vendorCode"
-            formControlName="vendorCode"
-            name="vendorCode"
-            (change)="creditcardMaxValidator($event.target.value)"
-            disabled
-          />
-        </div>
-      </div>
-    </div>
-    <div *ngIf="matrixReceipt.paymentType == paymentType.Undefined">
-      <div class="form-group  row">
-        <div class="col-sm-4">Type of Payment:</div>
-        <div class="col-sm-8">
-          <select
-            autofocus
-            id="modePayment"
-            class="form-control"
-            [(ngModel)]="matrixReceipt.modePayment"
-            formControlName="modePayment"
-            name="modePayment"
-            [ngClass]="{ 'is-invalid': f.vendorCode.touched && f.vendorCode.invalid }"
-            required
-          >
-            <option *ngFor="let item of PaymentModeList" [value]="item.itemValue">
-              {{ item.itemText }}
+          <select autofocus id="modePayment" class="form-control" [(ngModel)]="matrixReceipt.modePayment"
+            formControlName="modePayment" name="modePayment"
+            [ngClass]="{ 'is-invalid': f.vendorCode.touched && f.vendorCode.invalid }" required>
+            <option *ngFor="let item of  PaymentModeList" [value]="item.itemValue">
+              {{item.itemText}}
             </option>
           </select>
         </div>
       </div>
     </div>
+
+
+
   </form>
+
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="saveReceipt()" [disabled]="matrixForm.invalid">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="saveReceipt()"
+    [disabled]="matrixForm.invalid">Save</button>
   <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
 </div>

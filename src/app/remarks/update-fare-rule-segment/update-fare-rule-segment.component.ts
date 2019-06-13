@@ -159,34 +159,41 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       this.fareRules.airlineCode = airline[0].airlineCode;
 
       // const response =
-      smartScriptSession.send('PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES').then((res) => {
-        if (res.Response !== undefined && res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0) {
-          const output = res.Response.toString()
-            .split('-------')[1]
-            .split('       ');
+      smartScriptSession
+        .send(
+          'PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES'
+        )
+        .then(res => {
+          if (
+            res.Response !== undefined &&
+            res.Response.indexOf('NO COMPANY PROFILE FOUND') < 0
+          ) {
+            const output = res.Response.toString()
+              .split('-------')[1]
+              .split('       ');
 
-          output.forEach((element) => {
-            if (element.indexOf('RM') > -1) {
-              const outputTwo = element
-                .replace('RM', '/')
-                .replace('S', '/')
-                .replace(airline[0].airlineCode, '/')
-                .split('/');
-              this.fareRuleList.push({
-                itemText: airline[0].airlineCode + ' ' + outputTwo[outputTwo.length - 1].trimStart(),
-                itemValue: outputTwo[1]
-              });
-              this.ShowFareRule = true;
-              this.showCrypticForm = true;
-              this.showOptionalFare = false;
-            }
-          });
-        }
-        // need to store the temp value of fareRuleType and rebind it after cryptic call.
-        if (this.tempFareRuleType !== undefined) {
-          this.fareRules.fareRuleType = this.tempFareRuleType;
-        }
-      });
+            output.forEach(element => {
+              if (element.indexOf('RM') > -1) {
+                const outputTwo = element
+                  .replace('RM', '/')
+                  .replace('S', '/')
+                  .replace(airline[0].airlineCode, '/')
+                  .split('/');
+                this.fareRuleList.push({
+                  itemText: airline[0].airlineCode + ' ' + outputTwo[outputTwo.length - 1].trimStart(),
+                  itemValue: outputTwo[1]
+                });
+                this.ShowFareRule = true;
+                this.showCrypticForm = true;
+                this.showOptionalFare = false;
+              }
+            });
+          }
+          // need to store the temp value of fareRuleType and rebind it after cryptic call.
+          if (this.tempFareRuleType !== undefined) {
+            this.fareRules.fareRuleType = this.tempFareRuleType;
+          }
+        });
     }
 
     if (this.ShowFareRule === true) {
@@ -201,7 +208,15 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
 
   executeFareRuleCryptic(fareRule: string) {
     if (fareRule.indexOf('SELECT') === -1) {
-      smartScriptSession.send('PBN/' + this.fareRules.oid + '/' + this.fareRules.airlineCode + ' ' + fareRule + '*');
+      smartScriptSession.send(
+        'PBN/' +
+        this.fareRules.oid +
+        '/' +
+        this.fareRules.airlineCode +
+        ' ' +
+        fareRule +
+        '*'
+      );
     }
   }
 

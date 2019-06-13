@@ -12,6 +12,8 @@ import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.
 import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
 import { PackageRemarkHelper } from '../helper/packageRemark-helper';
 
+// import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
+
 @Component({
   selector: 'app-remarks',
   templateUrl: './remark.component.html',
@@ -37,7 +39,7 @@ export class RemarkComponent implements OnInit {
     private utilHelper: UtilHelper,
     private packageRemarkHelper: PackageRemarkHelper
   ) {
-    this.loadTourPackage();
+    this.loadtourPackage();
     this.remarkForm = this.fb.group({
       packageList: new FormControl('', [Validators.required])
     });
@@ -52,7 +54,7 @@ export class RemarkComponent implements OnInit {
     // this.group.priceRemarkSelector = '1';
   }
 
-  loadTourPackage() {
+  loadtourPackage() {
     this.packageList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Itemize Package Cost Remarks', itemValue: 'ITC' },

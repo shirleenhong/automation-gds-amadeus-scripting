@@ -22,7 +22,7 @@ export class PaymentRemarkService {
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
-  public getMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
+  public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Matrix Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -30,7 +30,7 @@ export class PaymentRemarkService {
     if (matrixRemarks !== undefined) {
       matrixRemarks.forEach((matrix) => {
         if (matrix.bankAccount === '224000') {
-          this.processRbcRedemptionRemarks(matrix, remGroup.remarks);
+          this.processRBCredemptionRemarks(matrix, remGroup.remarks);
         } else {
           this.processOtherPaymentRemarks(matrix, remGroup.remarks);
         }
@@ -39,7 +39,7 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
-  public getAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
+  public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -82,7 +82,7 @@ export class PaymentRemarkService {
   }
 
   deleteRemarksByRegex(regex, remGroup) {
-    const redemRIR = this.pnrService.getRemarksFromGdsByRegex(regex, 'RIR');
+    const redemRIR = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
     if (redemRIR.length > 0) {
       redemRIR.forEach((x) => {
         remGroup.deleteRemarkByIds.push(x.lineNo);
@@ -144,7 +144,7 @@ export class PaymentRemarkService {
     return relatedPassenger;
   }
 
-  getFop(modeofPayment, creditCardNo, fopvendorCode, expDate) {
+  getFOP(modeofPayment, creditCardNo, fopvendorCode, expDate) {
     let fop = '';
     let paymentvendorCode = fopvendorCode;
     const formOfPaymentList = [];
@@ -171,7 +171,7 @@ export class PaymentRemarkService {
     return formOfPaymentList;
   }
 
-  getTktLine(tktLine) {
+  getTKTline(tktLine) {
     let tline = '';
     // if (tktLine tktLine !== null && tktLine !== '') {
     if (tktLine) {
@@ -223,13 +223,13 @@ export class PaymentRemarkService {
       facc += '/-CD-0.00';
     }
 
-    const fopObj = this.getFop(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
+    const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
     const acc2 =
       'MAC/-LK-MAC' +
       accounting.tkMacLine.toString().trim() +
       '/-FOP-' +
       fopObj[0].foptxt +
-      this.getTktLine(accounting.tktLine) +
+      this.getTKTline(accounting.tktLine) +
       '/-MP-ALL' +
       bknLine +
       accounting.supplierConfirmatioNo.toString().trim();
@@ -274,9 +274,9 @@ export class PaymentRemarkService {
         passive.quantity = 1;
         passive.status = 'GK';
         passive.classOfService = 'Q';
-        passive.controlNo = accounting.supplierConfirmatioNo; // 'C1';
+        passive.controlNo = accounting.supplierConfirmatioNo; //'C1';
         passive.flightNo = '123';
-        // passive.confirmationNo = accounting.supplierConfirmatioNo;
+        //  passive.confirmationNo = accounting.supplierConfirmatioNo;
         remGroup.passiveSegments = [];
         remGroup.passiveSegments.push(passive);
       }
@@ -326,7 +326,7 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(acc3, 'R', 'RI', accounting.segmentNo.toString()));
   }
 
-  processRbcRedemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
+  processRBCredemptionRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
     const rem1 = 'REC/-RLN-' + matrix.rln + '/-RF-' + matrix.passengerName + '/-AMT-' + matrix.amount;
     const rem2 = 'REC/-RLN-' + matrix.rln + '/-PR' + matrix.lastFourVi + '/-BA-' + matrix.bankAccount + '/-GL-' + matrix.glCode;
     const rem3 = 'REC/-RLN-' + matrix.rln + '/-RM-POINTS ' + matrix.points + ' REF-' + matrix.cwtRef;
@@ -364,7 +364,7 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
   }
 
-  public getLeisureFeeRemarks(comp: LeisureFeeComponent, cfa: string) {
+  public GetLeisureFeeRemarks(comp: LeisureFeeComponent, cfa: string) {
     const fg = comp.leisureFeeForm;
     const feeList = comp.leisureFeeList;
     const remGroup = new RemarkGroup();
@@ -386,7 +386,7 @@ export class PaymentRemarkService {
       remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
       feeList.forEach((f) => {
-        remark = this.generateSfcRemark(f);
+        remark = this.generateSFCRemark(f);
         const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
         remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
         // RM FEE
@@ -435,7 +435,7 @@ export class PaymentRemarkService {
     }
   }
 
-  generateSfcRemark(fee: LeisureFeeModel) {
+  generateSFCRemark(fee: LeisureFeeModel) {
     let remark = 'SFC';
     switch (fee.segmentAssoc) {
       case '3':
@@ -478,7 +478,7 @@ export class PaymentRemarkService {
     return txt;
   }
 
-  public getAccountingUdids(acc: AccountingRemarkComponent) {
+  public GetAccountingUdids(acc: AccountingRemarkComponent) {
     const fg = acc.accountingForm;
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting UDIDs';

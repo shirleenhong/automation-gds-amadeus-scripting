@@ -21,7 +21,13 @@ export class SegmentsComponent implements OnInit {
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
 
-  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private pnrService: PnrService) {}
+  constructor(
+    private modalService: BsModalService,
+    private utilHelper: UtilHelper,
+    private pnrService: PnrService
+  ) {
+    //
+  }
 
   ngOnInit() {
     this.segmentRemarks = this.pnrService.getModelPassiveSegments();
@@ -47,8 +53,13 @@ export class SegmentsComponent implements OnInit {
     this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const segmentNo = this.segmentRemarks.find((x) => x.segmentNo === this.modalRef.content.passiveSegments.segmentNo);
-          this.utilHelper.modelCopy(this.modalRef.content.passiveSegments, segmentNo);
+          const segmentNo = this.segmentRemarks.find(
+            x => x.segmentNo === this.modalRef.content.passiveSegments.segmentNo
+          );
+          this.utilHelper.modelCopy(
+            this.modalRef.content.passiveSegments,
+            segmentNo
+          );
         } else {
           this.segmentRemarks.push(this.modalRef.content.passiveSegments);
         }
@@ -75,7 +86,7 @@ export class SegmentsComponent implements OnInit {
     if (confirm('Are you sure you want to delete this Segment?')) {
       this.segmentRemarks.splice(this.segmentRemarks.indexOf(r), 1);
       let i = 1;
-      this.segmentRemarks.forEach((x) => {
+      this.segmentRemarks.forEach(x => {
         x.segmentNo = i;
         i++;
       });

@@ -115,7 +115,7 @@ export class ConciergeUdidsComponent implements OnInit {
   getRemarksFromGds() {
     this.pnrRemarksFound = [];
     this.forDeletion = [];
-    this.remarks = this.pnrService.getRemarksFromGds();
+    this.remarks = this.pnrService.getRemarksFromGDS();
     const udids = [
       { id: '*U3/-', control: 'redemptionAdded' },
       { id: '*U4/-', control: 'redemptionAdded' },
@@ -157,7 +157,7 @@ export class ConciergeUdidsComponent implements OnInit {
 
     if (id === '*U30/-') {
       this.forReference.push('U30');
-      // return;
+      //return;
     } else {
       this.forDeletion.push(lineNo);
     }
@@ -180,7 +180,7 @@ export class ConciergeUdidsComponent implements OnInit {
     return this.forReference;
   }
 
-  onChangeHotel(newValue) {
+  onchangeHotel(newValue) {
     if (newValue === 'YES') {
       this.conciergeForm.controls.reasonHotelBooked.setValue('');
       this.conciergeForm.controls.reasonHotelBooked.disable();
@@ -192,7 +192,6 @@ export class ConciergeUdidsComponent implements OnInit {
   private newMethod() {
     return 'reasonHotelBooked';
   }
-
   // getConciergeForDeletion() {
   //   return this.forDeletion;
   // }

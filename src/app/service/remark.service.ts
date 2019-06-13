@@ -33,7 +33,7 @@ export class RemarkService {
     this.passiveSegmentElement = [];
   }
 
-  buildRemarks(remarkGroups: RemarkGroup[]) {
+  BuildRemarks(remarkGroups: RemarkGroup[]) {
     this.remarksElement = new Array<any>();
     this.passiveSegmentElement = new Array<any>();
     this.deleteRemarksByIds = Array<string>();
@@ -74,7 +74,7 @@ export class RemarkService {
           group.remarks.forEach((rem) => {
             if (rem) {
               if (rem.remarkType === 'FS') {
-                this.remarksElement.push(this.getFsRemarksElement(rem));
+                this.remarksElement.push(this.getFSRemarksElement(rem));
               } else {
                 // let test = this.getRemarkElement(rem);
                 this.remarksElement.push(this.getRemarkElement(rem));
@@ -92,7 +92,7 @@ export class RemarkService {
     });
   }
 
-  getFsRemarksElement(remarkModel: RemarkModel) {
+  getFSRemarksElement(remarkModel: RemarkModel) {
     const reference = {
       qualifier: 'OT',
       number: '1'
@@ -180,6 +180,7 @@ export class RemarkService {
       reference: temp
     };
 
+    // alert(JSON.stringify(referenceForDataElement));
     return {
       elementManagementData,
       miscellaneousRemark,
@@ -188,6 +189,7 @@ export class RemarkService {
   }
 
   addPassiveSegmentElement(passiveSegmentmodel: PassiveSegmentModel) {
+    // alert(passiveSegmentmodel.quantity);
     const reference = {
       qualifier: 'SR',
       number: '1'
@@ -416,9 +418,9 @@ export class RemarkService {
         this.responseMessage = 'Remarks Updated';
 
         if (requestor) {
-          this.endPnr(requestor);
+          this.endPNR(requestor);
         } else {
-          this.endPnr('CWTSCRIPT');
+          this.endPNR('CWTSCRIPT');
         }
 
         smartScriptSession.getActiveTask().then((x) => {
@@ -436,7 +438,7 @@ export class RemarkService {
     );
   }
 
-  async submitRemarks() {
+  async SubmitRemarks() {
     this.deleteRemarks();
     this.deleteSegments();
     await this.sendCryptics();
@@ -451,12 +453,12 @@ export class RemarkService {
     this.clear();
   }
 
-  async cancelOsiRemarks() {
+  async cancelOSIRemarks() {
     await this.sendCryptics();
     this.clear();
   }
 
-  endPnr(requestor) {
+  endPNR(requestor) {
     if (this.pnrService.pnrObj.tkElements.length < 1) {
       smartScriptSession.send('TKOK');
     }

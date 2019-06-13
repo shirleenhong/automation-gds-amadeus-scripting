@@ -14,7 +14,13 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { MatrixReceiptComponent } from './payments/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './payments/update-matrix-receipt/update-matrix-receipt.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
+import {
+  AccordionModule,
+  ModalModule,
+  TabsModule,
+  BsDatepickerModule,
+  BsDropdownModule
+} from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
@@ -44,6 +50,8 @@ import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-
 import { ItineraryComponent } from './itinerary-and-queue/itinerary/itinerary.component';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
+
+
 
 @NgModule({
   declarations: [
@@ -122,4 +130,4 @@ import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
     UpdateLeisureFeeComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }

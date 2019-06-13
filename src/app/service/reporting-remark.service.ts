@@ -246,10 +246,12 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.get('hotelName').value) {
+    // this.deleteRemarks(['U13/-', 'U17/-', 'U18/-'], rmGroup);
+
+    if (concierge.value.hotelName) {
       remText = 'U13/-' + concierge.value.hotelName;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
-    } else if (this.pnrService.getRemarkLineNumber('U13/-NO HTL BKD') === '') {
+    } else {
       remText = 'U13/-' + 'NO HTL BKD';
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
@@ -264,7 +266,7 @@ export class ReportingRemarkService {
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }
 
-    if (concierge.get('reasonHotelBooked').value) {
+    if (concierge.get('hotelRes').value === 'NO' && concierge.get('reasonHotelBooked').value) {
       remText = 'U18/-' + concierge.get('reasonHotelBooked').value;
       rmGroup.remarks.push(this.getRemark(remText, 'RM', '*'));
     }

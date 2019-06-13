@@ -1,5 +1,6 @@
 import { RemarkModel } from './remark.model';
 import { PassiveSegmentModel } from './passive-segment.model';
+import { QueuePlaceModel } from './queue-place.model';
 
 export class RemarkGroup {
   group: string;
@@ -8,6 +9,7 @@ export class RemarkGroup {
   deleteRemarkByIds: Array<string>;
   deleteSegmentByIds: Array<string>;
   passiveSegments: Array<PassiveSegmentModel>;
+  queuePlace: Array<QueuePlaceModel>;
 
   constructor() {
     this.remarks = new Array<RemarkModel>();

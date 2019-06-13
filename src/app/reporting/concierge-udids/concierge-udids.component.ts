@@ -143,13 +143,13 @@ export class ConciergeUdidsComponent implements OnInit {
   }
 
   private setControls(rem: string, id: string, control: string, lineNo: string) {
-    if (id === '*U13/-') {
-      if (rem.replace(id, '') === 'NO HTL BKD') {
-        return;
-      } else {
-        this.forReference.push('U13');
-      }
-    }
+    // if (id === '*U13/-') {
+    //   if (rem.replace(id, '') === 'NO HTL BKD') {
+    //     return;
+    //   } else {
+    //     this.forReference.push('U13');
+    //   }
+    // }
 
     // if (control === 'reasonHotelBooked') {
     //   this.conciergeForm.controls[control].setValue('NO');

@@ -129,7 +129,13 @@ export class LeisureFeeComponent implements OnInit {
     });
 
     if (this.leisureFeeList.length > 0) {
-      this.modalRef.content.setPreviousCCno(this.leisureFeeList[0].ccNo);
+      const ccs = [];
+      this.leisureFeeList.forEach((x) => {
+        if (x.ccNo !== undefined && x.ccNo !== '') {
+          ccs.push(x.ccNo);
+        }
+      });
+      this.modalRef.content.setPreviousCCno(ccs);
     }
 
     this.modalRef.content.title = 'Add Leisure Fee Collection';

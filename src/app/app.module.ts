@@ -41,7 +41,9 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
 import { RbcPointsRedemptionComponent } from './remarks/rbc-points-redemption/rbc-points-redemption.component';
 import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
 import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-leisure-fee.component';
-import { ItineraryComponent } from './itinerary/itinerary.component';
+import { ItineraryComponent } from './itinerary-and-queue/itinerary/itinerary.component';
+import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
+import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,9 @@ import { ItineraryComponent } from './itinerary/itinerary.component';
     RbcPointsRedemptionComponent,
     UpdateRbcPointsRedemptionComponent,
     UpdateLeisureFeeComponent,
-    ItineraryComponent
+    ItineraryComponent,
+    ItineraryAndQueueComponent,
+    QueueComponent
   ],
   imports: [
     BrowserModule,

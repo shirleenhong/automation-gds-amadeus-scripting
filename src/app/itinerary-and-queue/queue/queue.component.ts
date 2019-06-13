@@ -18,7 +18,7 @@ export class QueueComponent implements OnInit {
       ticketExchange: new FormControl('', []),
       bspTicket: new FormControl('', []),
       refund: new FormControl('', []),
-      cwtItinerary: new FormControl('', []),
+      // cwtItinerary: new FormControl('', []),
       bspRefund: new FormControl('', []),
       personalQueue: new FormControl('', []),
       queueNo: new FormControl('', [])

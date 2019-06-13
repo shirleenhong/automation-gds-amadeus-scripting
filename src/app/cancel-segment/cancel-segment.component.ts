@@ -17,6 +17,7 @@ export class CancelSegmentComponent implements OnInit {
   segments = [];
   isAC = false;
   isUA = false;
+  isOthers = false;
   isACNonRef = false;
   isUANonRef = false;
   passengers = [];
@@ -89,7 +90,12 @@ export class CancelSegmentComponent implements OnInit {
         { itemText: 'AC FLIGHT NOT TICKETED YET', itemValue: '8' }
       ];
     } else {
-      this.reasonAcList = [{ itemText: '', itemValue: '' }, { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' }];
+      this.reasonAcList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' },
+        { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: '6' },
+        { itemText: 'NONE OF THE ABOVE', itemValue: '9' },
+      ];
     }
 
     this.reasonUaList = [
@@ -151,10 +157,24 @@ export class CancelSegmentComponent implements OnInit {
   checkSegmentAirline() {
     this.isAC = false;
     this.isUA = false;
+    this.isOthers = false;
     // this.cancelForm.controls['cancelNonRefAC'].setValue(false);
-    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'acdepDate', 'relationship'], true);
-    this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
-
+    this.enableFormControls(
+      [
+        'acTicketNo',
+        'acpassengerNo',
+        'acFlightNo',
+        'accityPair',
+        'acdepDate',
+        'relationship',
+        'airlineNo'
+      ],
+      true
+    );
+    this.enableFormControls(
+      ['reasonUACancel', 'uasegNo', 'uaPassengerNo'],
+      true
+    );
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
       .filter((value) => value !== null);
@@ -162,19 +182,24 @@ export class CancelSegmentComponent implements OnInit {
       const look = this.segments.find((x) => x.id === element);
       if (look) {
         if (look.airlineCode === 'AC') {
-          if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
+          this.isAC = true;
+          if (
+            this.cancelForm.value.reasonACCancel === '' ||
+            this.cancelForm.value.reasonACCancel === undefined
+          ) {
             this.cancelForm.controls.acTicketNo.setValue('');
             this.cancelForm.controls.acpassengerNo.setValue('');
             this.cancelForm.controls.acFlightNo.setValue('');
             this.cancelForm.controls.accityPair.setValue('');
             this.cancelForm.controls.acdepDate.setValue('');
             this.cancelForm.controls.relationship.setValue('');
+            this.cancelForm.controls.airlineNo.setValue('');
           } else {
             this.acChange(this.cancelForm.value.reasonACCancel);
           }
-          this.isAC = true;
         }
         if (look.airlineCode === 'UA') {
+          this.isUA = true;
           this.enableFormControls(['reasonUACancel'], false);
           if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
             // this.cancelForm.controls['reasonUACancel'].setValue('');
@@ -184,7 +209,14 @@ export class CancelSegmentComponent implements OnInit {
             this.uaChange(this.cancelForm.value.reasonUACancel);
           }
           this.defaultSegment();
-          this.isUA = true;
+        }
+        if (look.airlineCode !== 'UA' && look.airlineCode !== 'AC') {
+          this.isOthers = true;
+          if (this.cancelForm.value.reasonUACancel) {
+            this.cancelForm.controls.airlineNo.setValue('');
+          } else {
+            this.acChange(this.cancelForm.value.reasonACCancel);
+          }
         }
       }
     });
@@ -201,6 +233,9 @@ export class CancelSegmentComponent implements OnInit {
       if (this.segments[0].airlineCode === 'UA') {
         this.isUA = true;
         this.enableFormControls(['reasonUACancel'], false);
+      }
+      if (this.segments[0].airlineCode !== 'AC' && this.segments[0].airlineCode !== 'US') {
+        this.isOthers = true;
       }
     }
     this.remove = false;
@@ -456,5 +491,6 @@ export class CancelSegmentComponent implements OnInit {
     segment.controls.forEach((element) => {
       element.setValue(checkValue);
     });
+    this.checkSegmentAirline();
   }
 }

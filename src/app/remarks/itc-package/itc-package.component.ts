@@ -78,9 +78,8 @@ export class ItcPackageComponent implements OnInit {
       holidayCost = totalBalance + Number(this.f.depAdult.value);
     }
 
-    this.itcForm.controls['holidayCost'].setValue(this.decPipe.transform(holidayCost, '1.2-2').replace(',', ''));
-    // tslint:disable-next-line:no-string-literal
-    this.itcForm.controls['balance'].setValue(this.decPipe.transform(totalBalance, '1.2-2').replace(',', ''));
+    this.itcForm.controls.holidayCost.setValue(this.decPipe.transform(holidayCost, '1.2-2').replace(',', ''));
+    this.itcForm.controls.balance.setValue(this.decPipe.transform(totalBalance, '1.2-2').replace(',', ''));
   }
 
   ComputeAdult() {

@@ -72,9 +72,11 @@ export class UpdateLeisureFeeComponent implements OnInit {
     this.passengerList = this.pnrService.getPassengers();
   }
 
-  setPreviousCCno(ccNo) {
-    this.leisureFeeForm.get('ccNo').clearValidators();
-    this.leisureFeeForm.get('ccNo').setValidators([Validators.required, validateCreditCard('vendorCode'), validateNotEqualTo(ccNo)]);
+  setPreviousCCno(ccNumbers) {
+    if (ccNumbers && ccNumbers.length > 0) {
+      this.leisureFeeForm.get('ccNo').clearValidators();
+      this.leisureFeeForm.get('ccNo').setValidators([Validators.required, validateCreditCard('vendorCode'), validateNotEqualTo(ccNumbers)]);
+    }
   }
 
   changeFeeState() {

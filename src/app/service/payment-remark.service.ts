@@ -219,6 +219,9 @@ export class PaymentRemarkService {
     }
 
     facc = facc + line1;
+    if (accounting.supplierCodeName === 'ACJ') {
+      facc += '/-CD-0.00';
+    }
 
     const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
     const acc2 =

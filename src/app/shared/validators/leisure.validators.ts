@@ -122,7 +122,7 @@ export function validateExpDate(): ValidatorFn {
   };
 }
 
-export function validateNotEqualTo(compareValue: string): ValidatorFn {
+export function validateNotEqualTo(compareValues: string[]): ValidatorFn {
   return (currentControl: AbstractControl): { [key: string]: any } => {
     if (currentControl.value === undefined) {
       return { no_value: true };
@@ -131,7 +131,7 @@ export function validateNotEqualTo(compareValue: string): ValidatorFn {
       return { no_value: true };
     }
 
-    if (compareValue !== '' && currentControl.value.toString() === compareValue) {
+    if (compareValues && compareValues.length > 0 && compareValues.indexOf(currentControl.value) >= 0) {
       return { EQUAL_VALUE_NOT_ALLOWED: true };
     }
 

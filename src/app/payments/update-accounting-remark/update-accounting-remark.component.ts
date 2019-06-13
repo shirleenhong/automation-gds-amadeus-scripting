@@ -203,7 +203,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay', 'commisionPercentage', 'departureCity'],
           true
         );
+        this.accountingRemark.bsp = '1';
         this.enableFormControls(['tktLine'], false);
+        this.matrixAccountingForm.controls.tktLine.clearValidators();
+        this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
         if (accRemark === 'ACPR') {
           if (this.isAddNew) {
             this.accountingRemark.qst = '0.00';
@@ -221,6 +224,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.enableFormControls(['departureCity'], false);
           this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
         }
+
         break;
       default:
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
@@ -320,7 +324,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   setTktNumber() {
-    const supCode = ['ACY', 'SOA', 'WJ3'];
+    const supCode = ['ACY', 'SOA', 'WJ3', 'ACJ'];
 
     if (this.accountingRemark.accountingTypeRemark === '1' && supCode.includes(this.accountingRemark.supplierCodeName)) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
@@ -339,15 +343,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   loadData() {
-    // if (this.accountingRemarks.bsp === '2' && this.accountingRemarks.supplierCodeName === 'MLF') {
-    //   this.IsInsurance = true;
-    //   this.name = 'Policy Confirmation Number:';
-    //   this.matrixAccountingForm.controls.supplierCodeName.disable();
-    //   this.matrixAccountingForm.controls.commisionPercentage.enable();
-    // } else {
-    //   this.IsInsurance = false;
-    //   this.name = 'Supplier Confirmation Number:';
-    // }
     this.matrixAccountingForm.controls.segmentNo.setValue(this.accountingRemark.segmentNo);
   }
 

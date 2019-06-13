@@ -64,11 +64,11 @@ export class ItcPackageComponent implements OnInit {
     return this.itcForm.controls;
   }
 
-  computeBalance() {
+  ComputeBalance() {
     let totalBalance = 0;
     let holidayCost = 0;
 
-    totalBalance = this.computeAdult() + this.computeChild() + this.computeInfant();
+    totalBalance = this.ComputeAdult() + this.ComputeChild() + this.ComputeInfant();
     if (this.f.depAdult.value) {
       totalBalance = totalBalance - Number(this.f.depAdult.value);
     }
@@ -78,11 +78,12 @@ export class ItcPackageComponent implements OnInit {
       holidayCost = totalBalance + Number(this.f.depAdult.value);
     }
 
-    this.itcForm.controls.holidayCost.setValue(this.decPipe.transform(holidayCost, '1.2-2').replace(',', ''));
-    this.itcForm.controls.balance.setValue(this.decPipe.transform(totalBalance, '1.2-2').replace(',', ''));
+    this.itcForm.controls['holidayCost'].setValue(this.decPipe.transform(holidayCost, '1.2-2').replace(',', ''));
+    // tslint:disable-next-line:no-string-literal
+    this.itcForm.controls['balance'].setValue(this.decPipe.transform(totalBalance, '1.2-2').replace(',', ''));
   }
 
-  computeAdult() {
+  ComputeAdult() {
     let adultsum = 0;
     if (this.f.noAdult.value) {
       if (this.f.baseAdult.value) {
@@ -113,7 +114,7 @@ export class ItcPackageComponent implements OnInit {
     return adultsum;
   }
 
-  computeChild() {
+  ComputeChild() {
     let childsum = 0;
     if (this.f.noChild.value) {
       if (this.f.baseChild.value) {
@@ -138,7 +139,7 @@ export class ItcPackageComponent implements OnInit {
     return childsum;
   }
 
-  computeInfant() {
+  ComputeInfant() {
     let infantsum = 0;
     if (this.f.noInfant.value) {
       if (this.f.baseInfant.value) {
@@ -170,12 +171,12 @@ export class ItcPackageComponent implements OnInit {
 
   private loadValues() {
     if (this.pnrService.getRirRemarkText('ADULT PRICE--') !== '') {
-      this.getRiiTourPackageRemarksFromGds();
-      this.packageRemarkHelper.getUdidPackageRemarksFromGds(this.itcForm);
+      this.getRIITourPackageRemarksFromGDS();
+      this.packageRemarkHelper.getUDIDPackageRemarksFromGds(this.itcForm);
     }
   }
 
-  private getRiiTourPackageRemarksFromGds() {
+  private getRIITourPackageRemarksFromGDS() {
     this.itcForm.controls.dueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
     this.itcForm.controls.itcCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
 

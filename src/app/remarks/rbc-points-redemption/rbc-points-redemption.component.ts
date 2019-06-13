@@ -20,7 +20,11 @@ export class RbcPointsRedemptionComponent implements OnInit {
   // @Input()
   rbcRedemption: RBCRedemptionModel[] = [];
 
-  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private packageRemarkService: PackageRemarkService) {}
+  constructor(
+    private modalService: BsModalService,
+    private utilHelper: UtilHelper,
+    private packageRemarkService: PackageRemarkService
+  ) {}
 
   ngOnInit() {
     // this.rbcRedemption = this.pnrService.getAccountingRemarks();
@@ -28,7 +32,7 @@ export class RbcPointsRedemptionComponent implements OnInit {
     this.rbcRedemption = this.packageRemarkService.getRbcPointsRemarksFromPnr();
   }
 
-  addRbcRedemptionPoints() {
+  addRBCRedemptionPoints() {
     this.isAddNew = true;
     const rbcPoints = new RBCRedemptionModel();
     this.modalRef = this.modalService.show(UpdateRbcPointsRedemptionComponent, {
@@ -43,7 +47,9 @@ export class RbcPointsRedemptionComponent implements OnInit {
     this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const rbcNo = this.rbcRedemption.find((x) => x.rbcNo === this.modalRef.content.rbcPoints.rbcNo);
+          const rbcNo = this.rbcRedemption.find(
+            x => x.rbcNo === this.modalRef.content.rbcPoints.rbcNo
+          );
           this.utilHelper.modelCopy(this.modalRef.content.rbcPoints, rbcNo);
         } else {
           this.rbcRedemption.push(this.modalRef.content.rbcPoints);
@@ -66,10 +72,12 @@ export class RbcPointsRedemptionComponent implements OnInit {
   }
 
   deleteItem(r: RBCRedemptionModel) {
-    if (confirm('Are you sure you want to delete this RBC points redemption?')) {
+    if (
+      confirm('Are you sure you want to delete this RBC points redemption?')
+    ) {
       this.rbcRedemption.splice(this.rbcRedemption.indexOf(r), 1);
       let i = 1;
-      this.rbcRedemption.forEach((x) => {
+      this.rbcRedemption.forEach(x => {
         x.rbcNo = i;
         i++;
       });

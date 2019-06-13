@@ -129,7 +129,6 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
     // tslint:disable-next-line: no-unused-expression
     val && this.group.setValue(val, { emitEvent: false });
   }
-
   registerOnChange(fn: any): void {
     console.log('on change');
     this.group.valueChanges.subscribe(fn);
@@ -281,12 +280,12 @@ export class TourPackageComponent implements OnInit, OnChanges, ControlValueAcce
 
   private loadValues() {
     if (this.pnrService.getRirRemarkText('ADULT PRICE--') === '') {
-      this.getRiiTourPackageRemarksFromGds();
-      this.packageRemarkHelper.getUdidPackageRemarksFromGds(this.group);
+      this.getRIITourPackageRemarksFromGDS();
+      this.packageRemarkHelper.getUDIDPackageRemarksFromGds(this.group);
     }
   }
 
-  private getRiiTourPackageRemarksFromGds() {
+  private getRIITourPackageRemarksFromGDS() {
     this.group.controls.balanceDueDate.setValue(this.packageRemarkHelper.getBalanceDueDate());
     this.group.controls.tourCurrencyType.setValue(this.packageRemarkHelper.getCurrency());
 

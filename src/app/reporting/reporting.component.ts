@@ -60,7 +60,7 @@ export class ReportingComponent implements OnInit, OnChanges {
     this.warningMessage = '';
 
     this.getRouteCodes();
-    this.getPnrCfLine();
+    this.getPnrCFLine();
     this.getDestination();
     this.countryList = ['', 'GHANA', 'NIGERIA', 'PAKISTAN', 'JOHANNESBURG-SOUTH AFRICA', 'NONE OF THE ABOVE'];
     this.reportingView.showInsurance = true;
@@ -72,7 +72,7 @@ export class ReportingComponent implements OnInit, OnChanges {
     const insuranceDeclinedReason = this.pnrService.getRemarkText('U12/-').replace('U12/-', '');
     this.checkInsurance(insuranceDeclinedReason === '' ? 'YES' : 'NO');
 
-    const fs = this.pnrService.getFsRemark();
+    const fs = this.pnrService.getFSRemark();
     const dest = this.pnrService.getRemarkText('DE/-').replace('DE/-', '');
 
     // todo remove model and use reactive form
@@ -99,8 +99,7 @@ export class ReportingComponent implements OnInit, OnChanges {
       rems.forEach((x) => {
         const rem = '...' + this.translation.translate(x, lang);
         if (this.pnrService.getRirRemarkText(rem) !== '') {
-          // tslint:disable-next-line: no-shadowed-variable
-          const opt = this.reportingView.declinedOption.find((x) => x.value === i.toString());
+          const opt = this.reportingView.declinedOption.find((x) => x.value == i.toString());
           opt.checked = opt !== undefined && opt !== null;
         }
         i++;
@@ -115,7 +114,7 @@ export class ReportingComponent implements OnInit, OnChanges {
     return this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP';
   }
 
-  enableDisableControls(ctrls: string[], isDisabled: boolean) {
+  enableDisbleControls(ctrls: string[], isDisabled: boolean) {
     ctrls.forEach((x) => {
       if (isDisabled) {
         this.reportingForm.get(x).disable();
@@ -142,21 +141,21 @@ export class ReportingComponent implements OnInit, OnChanges {
   }
 
   checkInsurance(val) {
-    this.enableDisableControls(['insuranceDeclinedReason'], val === 'YES');
+    this.enableDisbleControls(['insuranceDeclinedReason'], val === 'YES');
     this.reportingView.showInsurance = val === 'YES';
     if (val === 'YES') {
       this.reportingView.insuranceDeclinedReason = '';
       this.f.insuranceDeclinedReason.setValue('');
       this.f.insuranceDeclinedReason.clearValidators();
-      // this.f.declinedOption.clearValidators();
+      //this.f.declinedOption.clearValidators();
     } else {
       this.f.insuranceDeclinedReason.setValidators(Validators.required);
-      // this.f.declinedOption.setValidators(Validators.required);
+      //this.f.declinedOption.setValidators(Validators.required);
     }
   }
 
-  getPnrCfLine() {
-    this.reportingView.cfLine = this.pnrService.getCfLine();
+  getPnrCFLine() {
+    this.reportingView.cfLine = this.pnrService.getCFLine();
 
     if (this.reportingView.cfLine != null) {
       if (this.reportingView.cfLine.code !== '') {
@@ -184,7 +183,7 @@ export class ReportingComponent implements OnInit, OnChanges {
   checkValid() {
     if (this.isRbmRbp()) {
       this.utilHelper.validateAllFields(this.conciergeComponent.conciergeForm);
-      this.enableDisableControls(['insuranceDeclinedReason'], true);
+      this.enableDisbleControls(['insuranceDeclinedReason'], true);
       if (!this.conciergeComponent.conciergeForm.valid) {
         return false;
       }

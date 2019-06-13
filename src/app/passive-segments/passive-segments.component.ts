@@ -14,7 +14,6 @@ export class PassiveSegmentsComponent {
   onEditReceipt() {}
 
   onAddReceipt() {}
-
   checkValid() {
     // add validation here if theres need to validate
     return true;

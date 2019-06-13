@@ -396,7 +396,7 @@ export class SegmentService {
         return rem;
     }
 
-    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
+    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string, 
         startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
@@ -434,10 +434,11 @@ export class SegmentService {
             case 'CAR':
                 freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
-                    '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + ' FREE/CF-' +
-                    segment.confirmationNo;
+                    '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + (segment.mileage === 'UNL' ? '' : ' FREE') +
+                    '/URA-' + segment.rateBooked +  segment.currency + '/CF-' + segment.confirmationNo;
                 break;
             case 'HTL':
+
                 let hotelfax = '';
                 let additionalInfo = '';
                 let roomType = '';

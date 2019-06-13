@@ -70,8 +70,8 @@ export class PassiveSegmentsModel {
   specialEquipment: string;
   specialRequest: string;
   frequentflightNumber: string;
-
-  // hotel
+  rateBooked: string;
+  //hotel
   chainCode: string;
   nightlyRate: string;
   numberOfRooms = 1;

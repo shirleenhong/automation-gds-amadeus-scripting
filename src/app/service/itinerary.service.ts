@@ -13,10 +13,7 @@ import { formatDate } from '@angular/common';
 })
 export class ItineraryService {
   destination = [];
-  constructor(private remarkHelper: RemarkHelper,
-    private pnrService: PnrService, private ddbService: DDBService) {
-  }
-
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ddbService: DDBService) {}
 
   getItineraryRemarks(frmGroup: FormGroup) {
     const rmGroup = new RemarkGroup();
@@ -29,7 +26,7 @@ export class ItineraryService {
     for (const c of arr.controls) {
       const email = c.get('emailAddress').value;
       if (email) {
-        rm = (this.remarkHelper.createRemark('CONF*SEND TO MAIL ' + email, 'RM', 'Z'));
+        rm = this.remarkHelper.createRemark('CONF*SEND TO MAIL ' + email, 'RM', 'Z');
         rmGroup.remarks.push(rm);
       }
     }
@@ -39,7 +36,7 @@ export class ItineraryService {
       for (const c of arr.controls) {
         const service = c.get('service').value;
         if (service) {
-          rm = (this.remarkHelper.createRemark('*SERVICE**' + service + '*', 'RI', 'R'));
+          rm = this.remarkHelper.createRemark('*SERVICE**' + service + '*', 'RI', 'R');
           rmGroup.remarks.push(rm);
         }
       }
@@ -48,7 +45,7 @@ export class ItineraryService {
       for (const c of arr.controls) {
         const ticket = c.get('ticket').value;
         if (ticket) {
-          rm = (this.remarkHelper.createRemark('*TICKET**' + ticket + '*', 'RI', 'R'));
+          rm = this.remarkHelper.createRemark('*TICKET**' + ticket + '*', 'RI', 'R');
           rmGroup.remarks.push(rm);
         }
       }
@@ -58,31 +55,30 @@ export class ItineraryService {
         if (frmGroup.value.typeTransaction === 'itinerary') {
           const offer = c.get('offer').value;
           if (offer) {
-            rm = (this.remarkHelper.createRemark('*OFFER**' + offer + '*', 'RI', 'R'));
+            rm = this.remarkHelper.createRemark('*OFFER**' + offer + '*', 'RI', 'R');
             rmGroup.remarks.push(rm);
           }
         }
       }
     }
 
-
     if (frmGroup.value.language) {
       const rirService = 'LANGUAGE-(EN-US|FR-CA)';
       const regx = new RegExp(rirService);
-      const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+      const rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RM');
       if (rems.length === 0) {
-        rm = (this.remarkHelper.createRemark('LANGUAGE-' + frmGroup.value.language, 'RM', 'Z'));
+        rm = this.remarkHelper.createRemark('LANGUAGE-' + frmGroup.value.language, 'RM', 'Z');
         rmGroup.remarks.push(rm);
       }
 
       if (rems.length > 0 && rems[0].remarkText.substr(-5) !== frmGroup.value.language) {
-        rm = (this.remarkHelper.createRemark('CONF*LANG:' + frmGroup.value.language.substr(0, 2), 'RM', 'Z'));
+        rm = this.remarkHelper.createRemark('CONF*LANG:' + frmGroup.value.language.substr(0, 2), 'RM', 'Z');
         rmGroup.remarks.push(rm);
       }
     }
 
     if (!this.pnrService.getRmqEmail()) {
-      rm = (this.remarkHelper.createRemark('EMAIL ADD-NO', 'RM', 'Q'));
+      rm = this.remarkHelper.createRemark('EMAIL ADD-NO', 'RM', 'Q');
       rmGroup.remarks.push(rm);
     }
     rm = this.writeTktLine(rmGroup);
@@ -90,18 +86,16 @@ export class ItineraryService {
     return rmGroup;
   }
 
-
   private deleteItineraryRemarks(rmGroup: RemarkGroup, frmGroup: FormGroup) {
-    const listRegex = ['SEND TO MAIL (?<temp>.*)',
-      'LANG:(EN|FR)'];
+    const listRegex = ['SEND TO MAIL (?<temp>.*)', 'LANG:(EN|FR)'];
     let regx: RegExp;
     let rems: any[];
-    listRegex.forEach(element => {
+    listRegex.forEach((element) => {
       if ((element.indexOf('LANG') > -1 && frmGroup.value.language) || element.indexOf('LANG') === -1) {
         regx = new RegExp(element);
-        rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+        rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RM');
         if (rems.length > 0) {
-          rems.forEach(r => {
+          rems.forEach((r) => {
             rmGroup.deleteRemarkByIds.push(r.lineNo);
           });
         }
@@ -109,25 +103,24 @@ export class ItineraryService {
     });
 
     const listRemark = ['SERVICE', 'TICKET', 'OFFER'];
-    listRemark.forEach(element => {
+    listRemark.forEach((element) => {
       const rirService = '/*' + element + '/*/*(?<service>(.*))/*';
       regx = new RegExp(rirService);
-      rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
+      rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RIR');
       if (rems.length > 0) {
-        rems.forEach(r => {
+        rems.forEach((r) => {
           rmGroup.deleteRemarkByIds.push(r.lineNo);
         });
       }
     });
   }
 
-
   async writeTktLine(rmGroup: RemarkGroup) {
     const air = this.pnrService.pnrObj.airSegments;
     const regx = new RegExp('TKT-(?<service>(.*))');
-    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+    const rems = this.pnrService.getRemarksFromGdsByRegex(regx, 'RM');
     let writetkt = true;
-    rems.forEach(element => {
+    rems.forEach((element) => {
       if (element.qualifier === 'T') {
         writetkt = false;
       }
@@ -135,23 +128,24 @@ export class ItineraryService {
     let route = '';
     if (air.length > 0 && writetkt) {
       route = this.writeRouteType();
-      const rm = (this.remarkHelper.createRemark('TKT-' + route, 'RM', 'T'));
+      const rm = this.remarkHelper.createRemark('TKT-' + route, 'RM', 'T');
       rmGroup.remarks.push(rm);
     }
-
   }
 
   async getCountry(air) {
     // const air = this.pnrService.pnrObj.airSegments;
-    air.forEach(async x => {
-      await this.ddbService.getTravelPort(x.arrivalAirport).then(x => {
+    air.forEach(async (x) => {
+      // tslint:disable-next-line: no-shadowed-variable
+      await this.ddbService.getTravelPort(x.arrivalAirport).then((x) => {
         const c = JSON.stringify(x);
         let obj: any;
         obj = JSON.parse(c);
         this.destination.push(obj.TravelPorts[0].CountryName);
       });
 
-      await this.ddbService.getTravelPort(x.departureAirport).then(x => {
+      // tslint:disable-next-line: no-shadowed-variable
+      await this.ddbService.getTravelPort(x.departureAirport).then((x) => {
         const c = JSON.stringify(x);
         let obj: any;
         obj = JSON.parse(c);
@@ -162,7 +156,7 @@ export class ItineraryService {
 
   writeRouteType() {
     let route = 'DOM';
-    this.pnrService.pnrObj.airSegments.forEach(element => {
+    this.pnrService.pnrObj.airSegments.forEach((element) => {
       const arrival = this.ddbService.getCityCountry(element.arrivalAirport);
       route = this.getRoute(arrival, route);
       const departure = this.ddbService.getCityCountry(element.departureAirport);

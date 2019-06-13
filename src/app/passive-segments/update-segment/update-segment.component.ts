@@ -110,7 +110,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     toll: new FormControl(''),
     gratuities: new FormControl(''),
     parking: new FormControl(''),
-
     limoCoAgent: new FormControl(''),
     meetDriveAt: new FormControl(''),
     additionalInfo: new FormControl(''),
@@ -121,7 +120,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     includeToll: new FormControl(''),
     includeParking: new FormControl(''),
     includeGratuities: new FormControl(''),
-    // -- cars
+    // cars
     carType: new FormControl('', [Validators.required]),
     dropOffLoc: new FormControl('', [Validators.required]),
     pickupOffAddress: new FormControl(''),
@@ -138,7 +137,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     specialEquipment: new FormControl(''),
     specialRequest: new FormControl(''),
     frequentflightNumber: new FormControl(''),
-
     // hotel
     chainCode: new FormControl('', [Validators.required]),
     nightlyRate: new FormControl('', [Validators.required]),
@@ -604,7 +602,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
         this.commandCache.getHotels = command;
         let lines = res.Response.split('\r\n');
         const regex = /^(?<code>[A-Z]{2}) ([A-Z])(\s{1,2})([A-Z])(\s{2,3})([A-Z]{3})(\s{2})(?<text>.*)/g;
-        lines = await this.getMDResult(lines);
+        lines = await this.getMdResult(lines);
         lines.forEach((r) => {
           const match = regex.exec(r);
           if (match && match.groups) {
@@ -761,13 +759,13 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       let air = airs.find((x) => x.destinationCity === this.passiveSegments.departureCity);
       if (air) {
         this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
-        this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
+        this.passiveSegments.departureTime = this.convert24To12Hr(air.arrivalTime);
         this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
         const indx = airs.indexOf(air);
         if (indx < airs.length - 1) {
           air = airs[indx + 1];
           this.passiveSegments.arrivalDate = this.convertDateFormat(air.departureDate);
-          this.passiveSegments.arrivalTime = this.convert24to12Hr(air.departureTime);
+          this.passiveSegments.arrivalTime = this.convert24To12Hr(air.departureTime);
         }
       }
     }
@@ -794,7 +792,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     return date;
   }
 
-  convert24to12Hr(time): any {
+  convert24To12Hr(time): any {
     if (time.match(/([0-9]{4})/g)) {
       const hr = time.substr(0, 2);
       const min = time.substr(2, 2);
@@ -835,7 +833,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       let lines = res.Response.split('\r\n');
 
       const regex = /(?<code>([A-Z]{2}))\+(?<text>.+?(?=\s{2}))/g;
-      lines = await this.getMDResult(lines);
+      lines = await this.getMdResult(lines);
       lines.forEach((x) => {
         const match = regex.exec(x);
         if (match && match.groups) {
@@ -852,7 +850,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  async getMDResult(lines) {
+  async getMdResult(lines) {
     if (lines[lines.length - 2].indexOf('MORE') === 0) {
       let stop = false;
       while (!stop) {
@@ -914,7 +912,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     smartScriptSession.send(command).then(async (res) => {
       let lines = res.Response.split('\r\n');
       const regex = /(?<code>[A-Z]{4}[0-9]{2}) (?<text>.+?(?=\s{2}))/g;
-      lines = await this.getMDResult(lines);
+      lines = await this.getMdResult(lines);
       lines.forEach((x) => {
         const match = regex.exec(x);
         if (match && match.groups) {
@@ -946,7 +944,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     smartScriptSession.send(command).then(async (res) => {
       this.commandCache.loadCarType = command;
       let lines = res.Response.split('\r\n');
-      lines = await this.getMDResult(lines);
+      lines = await this.getMdResult(lines);
       const regex = /\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
       lines.forEach((x) => {
         const match = regex.exec(x);

@@ -12,7 +12,7 @@ export class InvoiceService {
   remGroup: RemarkGroup;
   constructor(private pnrService: PnrService) {}
 
-  public GetMatrixInvoice(fg: FormGroup) {
+  public getMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
     this.remGroup.group = 'Matrix Invoice';
     this.remGroup.remarks = new Array<RemarkModel>();
@@ -20,7 +20,7 @@ export class InvoiceService {
     if (this.formGroup.get('selection').value === 'itinerary') {
       this.setItineraryOnlyRemarks();
     } else if (this.formGroup.get('selection').value === 'invoice') {
-      this.setInvoicePNRRemarks();
+      this.setInvoicePnrRemarks();
     }
     this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator());
     return this.remGroup;
@@ -30,11 +30,11 @@ export class InvoiceService {
     this.remGroup.cryptics.push('BT');
   }
 
-  public setInvoicePNRRemarks() {
+  public setInvoicePnrRemarks() {
     const passengers = this.formGroup.controls.passengerNo.value;
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
-    if (this.pnrService.checkTST()) {
+    if (this.pnrService.checkTst()) {
       if (pax === 1) {
         this.remGroup.cryptics.push('inv/nofare');
       }

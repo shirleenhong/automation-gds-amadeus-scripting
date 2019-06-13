@@ -14,7 +14,7 @@ export class DDBService implements OnInit {
   countryList = [];
   currencyList = [];
   supplierCodes = [];
-  airTravelPortInformation = [];  
+  airTravelPortInformation = [];
   ngOnInit(): void {}
 
   constructor(private httpClient: HttpClient) {}
@@ -70,7 +70,7 @@ export class DDBService implements OnInit {
         alert(JSON.stringify(x));
       },
       (err) => {
-        alert(JSON.stringify(err));
+        console.log(JSON.stringify(err));
       }
     );
   }
@@ -90,7 +90,7 @@ export class DDBService implements OnInit {
           }));
         },
         (err) => {
-          alert(JSON.stringify(err));
+          console.log(JSON.stringify(err));
         }
       );
     }
@@ -233,7 +233,7 @@ export class DDBService implements OnInit {
         });
       },
       (err) => {
-        alert(JSON.stringify(err));
+        console.log(JSON.stringify(err));
       }
     );
   }
@@ -615,7 +615,7 @@ export class DDBService implements OnInit {
     }
   }
 
-  getACPassPurchaseList() {
+  getAcPassPurchaseList() {
     return [
       { itemText: '', itemValue: '' },
       { itemText: 'COMMUTER-RAPIDAIR', itemValue: 'RAPIDAIR' },

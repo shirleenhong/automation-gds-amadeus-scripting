@@ -25,7 +25,7 @@ export class PnrService {
 
   constructor() {}
 
-  async getPNR(): Promise<void> {
+  async getPnr(): Promise<void> {
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj
@@ -43,11 +43,11 @@ export class PnrService {
       .catch((err) => {
         console.log(err);
       });
-    this.getPCC();
+    this.getPcc();
     console.log(JSON.stringify(this.pnrObj));
   }
 
-  getPCC(): void {
+  getPcc(): void {
     smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.PCC = x.ACTIVE_OFFICE_ID;
     });
@@ -98,7 +98,7 @@ export class PnrService {
     return '';
   }
 
-  getCFLine(): CfRemarkModel {
+  getCfLine(): CfRemarkModel {
     if (this.cfLine === undefined || this.cfLine === null) {
       const cfLine = new CfRemarkModel();
       if (this.isPNRLoaded) {
@@ -117,7 +117,7 @@ export class PnrService {
     return null;
   }
 
-  getFSRemark() {
+  getFsRemark() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.fsElements) {
         return rm.fullNode.otherDataFreetext.longFreetext;
@@ -126,7 +126,7 @@ export class PnrService {
     return '';
   }
 
-  getFSLineNumber() {
+  getFsLineNumber() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.fsElements) {
         return rm.elementNumber;
@@ -135,7 +135,7 @@ export class PnrService {
     return '';
   }
 
-  getRIRLineNumber(searchText: string) {
+  getRirLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rii of this.pnrObj.rirElements) {
         const text = rii.fullNode.extendedRemark.structuredRemark.freetext;
@@ -147,7 +147,7 @@ export class PnrService {
     return '';
   }
 
-  getRIRLineNumbers(searchText: string) {
+  getRirLineNumbers(searchText: string) {
     const lines = [];
     if (this.isPNRLoaded) {
       for (const rii of this.pnrObj.rirElements) {
@@ -425,7 +425,7 @@ export class PnrService {
     return lastDeptDate;
   }
 
-  checkTST(): boolean {
+  checkTst(): boolean {
     if (this.pnrObj.fullNode.response.model.output.response.tstData !== undefined) {
       return true;
     } else {
@@ -457,7 +457,7 @@ export class PnrService {
     return lastDeptDate;
   }
 
-  getRemarksFromGDS() {
+  getRemarksFromGds() {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
@@ -473,10 +473,10 @@ export class PnrService {
   }
 
   getAllUdidRemarks() {
-    return this.getRemarksFromGDSByRegex(/U[0-9]{1,2}\/-(?<value>(.*))/g);
+    return this.getRemarksFromGdsByRegex(/U[0-9]{1,2}\/-(?<value>(.*))/g);
   }
 
-  getRemarksFromGDSByRegex(regex, category?) {
+  getRemarksFromGdsByRegex(regex, category?) {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
       let arr = [];
@@ -519,7 +519,7 @@ export class PnrService {
     return remarks;
   }
 
-  getRirRemarksFromGDS() {
+  getRirRemarksFromGds() {
     const remarks = new Array<any>();
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rirElements) {
@@ -546,7 +546,7 @@ export class PnrService {
     return '';
   }
 
-  getUDIDText(searchText: string) {
+  getUdidText(searchText: string) {
     if (this.isPNRLoaded) {
       for (const ri of this.pnrObj.rmElements) {
         if (ri.fullNode.miscellaneousRemarks.remarks.freetext.indexOf(searchText) === 0) {
@@ -566,7 +566,7 @@ export class PnrService {
     return this.getRemarkLineNumbers('MAC/-');
   }
 
-  getSFCRemarks(): Array<LeisureFeeModel> {
+  getSfcRemarks(): Array<LeisureFeeModel> {
     const fees = new Array<LeisureFeeModel>();
     let taxProvince = this.getRemarkText('TAX-');
 
@@ -686,8 +686,9 @@ export class PnrService {
     }
     return matrixModels;
   }
+
   extractCanadaPass(model: MatrixAccountingModel, assoc) {
-    let pass = this.getRemarksFromGDSByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
+    let pass = this.getRemarksFromGdsByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
     if (pass.length > 0) {
       pass.forEach((x) => {
         const list = assoc.filter((s) => x.segments.indexOf(s.tatooNumber) >= 0);
@@ -702,7 +703,7 @@ export class PnrService {
       return model;
     }
 
-    pass = this.getRemarksFromGDSByRegex(/(.*) PASS-(.*) FARE/g, 'RIR');
+    pass = this.getRemarksFromGdsByRegex(/(.*) PASS-(.*) FARE/g, 'RIR');
     if (pass.length > 0) {
       pass.forEach((x) => {
         const list = assoc.filter((s) => x.segments.indexOf(s.tatooNumber) >= 0);
@@ -712,6 +713,7 @@ export class PnrService {
           model.passPurchase = vals[0].trim();
           model.fareType = vals[1].replace('FARE', '').trim();
           model.accountingTypeRemark = 'ACPP';
+          // tslint:disable-next-line: no-shadowed-variable
           const air = this.getSegmentTatooNumber().find((x) => x.segmentType === 'AIR' && x.controlNumber === model.supplierConfirmatioNo);
           if (air) {
             model.departureCity = air.cityCode;
@@ -832,7 +834,7 @@ export class PnrService {
     return apays;
   }
 
-  hasNUCRemarks() {
+  hasNucRemarks() {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {
         if (rm.freeFlowText === 'NUC') {
@@ -886,14 +888,17 @@ export class PnrService {
       let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
       let match = regex.exec(freetext);
       if (match === null) {
+        // tslint:disable-next-line: max-line-length
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(([0-9]{4})))(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
       if (match === null) {
+        // tslint:disable-next-line: max-line-length
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/STP-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
       if (match === null) {
+        // tslint:disable-next-line: max-line-length
         regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
@@ -1057,7 +1062,7 @@ export class PnrService {
     return this.pnrObj.header.recordLocator;
   }
 
-  hasAmendMISRetentionLine() {
+  hasAmendMisRetentionLine() {
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
         return true;
@@ -1067,7 +1072,7 @@ export class PnrService {
     return false;
   }
 
-  getMISRetentionLineNumber(freetext) {
+  getMisRetentionLineNumber(freetext) {
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf(freetext) > -1) {
         return misc.elementNumber;
@@ -1076,7 +1081,7 @@ export class PnrService {
     return '';
   }
 
-  IsExistAmkVib(supCode) {
+  isExistAmkVib(supCode) {
     if (this.isPNRLoaded) {
       for (const misc of this.pnrObj.miscSegments) {
         if (supCode === 'vib') {
@@ -1123,7 +1128,7 @@ export class PnrService {
     return false;
   }
 
-  getmisCancel() {
+  getMisCancel() {
     for (const misc of this.pnrObj.miscSegments) {
       if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
         // this.getSegmentDetails(misc, 'MIS');

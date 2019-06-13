@@ -49,12 +49,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
     this.accountingRemark = new MatrixAccountingModel();
-    this.loadBSPList();
+    this.loadBspList();
     this.loadVendorCode();
     this.loadAccountingRemarkList();
     this.loadDescription();
     this.loadFareType();
-    this.passPurchaseList = this.ddbService.getACPassPurchaseList();
+    this.passPurchaseList = this.ddbService.getAcPassPurchaseList();
     // this.loadPassengerList();
   }
 
@@ -92,7 +92,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.utilHelper.validateAllFields(this.matrixAccountingForm);
   }
 
-  loadBSPList() {
+  loadBspList() {
     this.bspList = [{ itemText: '', itemValue: '' }, { itemText: 'NO', itemValue: '1' }, { itemText: 'YES', itemValue: '2' }];
   }
 
@@ -132,6 +132,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'DC -Diners', itemValue: 'DC' }
     ];
   }
+
   loadFareType() {
     this.fareTypeList = [
       { itemText: '', itemValue: '' },
@@ -262,7 +263,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
   }
 
-  FormOfPaymentChange(newValue) {
+  formOfPaymentChange(newValue) {
     switch (newValue) {
       case 'CC':
         this.enableFormControls(['cardNumber', 'expDate', 'vendorCode'], false);
@@ -356,7 +357,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
   }
 
-  isTypeINSExist(segmentNo: any) {
+  isTypeInsExist(segmentNo: any) {
     const segmentDetails = this.pnrService.getSegmentTatooNumber();
     let res = false;
     segmentDetails.forEach((element) => {

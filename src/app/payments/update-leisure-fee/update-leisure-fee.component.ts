@@ -44,7 +44,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
     this.vendorCodeList = this.ddbService.getCcVendorCodeList();
     this.decPipe = new DecimalPipe('en-US');
     this.datePipe = new DatePipe('en-US');
-    this.cfaLine = this.pnrService.getCFLine();
+    this.cfaLine = this.pnrService.getCfLine();
   }
 
   creditcardMaxValidator() {
@@ -81,13 +81,13 @@ export class UpdateLeisureFeeComponent implements OnInit {
 
   changeFeeState() {
     const controls = ['vendorCode', 'ccNo', 'expDate'];
-    this.enableDisbleControls(controls, this.f.paymentType.value === 'K');
+    this.enableDisableControls(controls, this.f.paymentType.value === 'K');
   }
 
   enableDisableCredits() {
     if (this.leisureFeeForm.controls.paymentType.value === 'K') {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
-      this.enableDisbleControls(controls, true);
+      this.enableDisableControls(controls, true);
     }
   }
 
@@ -101,13 +101,13 @@ export class UpdateLeisureFeeComponent implements OnInit {
     });
     this.leisureFeeForm.get('paymentType').valueChanges.subscribe((val) => {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
-      this.enableDisbleControls(controls, val === 'K');
+      this.enableDisableControls(controls, val === 'K');
     });
   }
 
   processAssocValues(val) {
     const ctrls = ['segmentNum', 'amount', 'paymentType', 'vendorCode', 'ccNo', 'expDate', 'address'];
-    this.enableDisbleControls(ctrls, false);
+    this.enableDisableControls(ctrls, false);
 
     switch (val) {
       case '3':
@@ -123,10 +123,10 @@ export class UpdateLeisureFeeComponent implements OnInit {
       default:
         this.leisureFeeForm.get('segmentNum').disable();
     }
-    this.enableDisbleControls(['address'], this.leisureFee.fln !== '1');
+    this.enableDisableControls(['address'], this.leisureFee.fln !== '1');
   }
 
-  enableDisbleControls(ctrls: string[], isDisabled: boolean) {
+  enableDisableControls(ctrls: string[], isDisabled: boolean) {
     ctrls.forEach((x) => {
       if (isDisabled) {
         this.leisureFeeForm.get(x).disable();

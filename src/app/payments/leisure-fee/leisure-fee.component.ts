@@ -38,7 +38,7 @@ export class LeisureFeeComponent implements OnInit {
     this.leisureFeeForm = this.fb.group({
       noFeeReason: new FormControl('', [Validators.required])
     });
-    this.leisureFeeList = this.pnrService.getSFCRemarks();
+    this.leisureFeeList = this.pnrService.getSfcRemarks();
     this.loadExemption();
     this.checkReasonFee();
     this.leisureFeeForm.get('noFeeReason').setValue(this.pnrService.getRemarkText('U11/-').replace('U11/-', ''));
@@ -149,7 +149,7 @@ export class LeisureFeeComponent implements OnInit {
   }
 
   checkReasonFee() {
-    const cfa = this.pnrService.getCFLine();
+    const cfa = this.pnrService.getCfLine();
     if (cfa) {
       if (cfa.cfa === 'RBM' || cfa.cfa === 'RBP' || this.leisureFeeList.length > 0) {
         this.showReasonFee = false;

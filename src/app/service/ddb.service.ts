@@ -15,9 +15,9 @@ export class DDBService implements OnInit {
   currencyList = [];
   supplierCodes = [];
   airTravelPortInformation = [];
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -179,30 +179,27 @@ export class DDBService implements OnInit {
   //   });
   // }
 
-  async getTravelPortInformation() {
-    // await this.getTravelPort(station).then(x => {
-    //   const c = JSON.stringify(x);
-    //   let obj: any;
-    //   obj = JSON.parse(c);
-    //   const ref = {
-    //     city: obj.TravelPorts[0].CityCode,
-    //     countryCode: obj.TravelPorts[0].CountryCode,
-    //     country: obj.TravelPorts[0].CountryName
-    //   };
-    //   this.travelPortInformation.push(ref);
-    // });
-    if (this.airTravelPortInformation.length === 0) {
-      await this.getAllTravelPort().then((x) => {
-        x.TravelPorts.forEach((port) => {
-          const ref = {
-            travelPortCode: port.TravelPortCode,
-            city: port.CityCode,
-            countryCode: port.CountryCode,
-            country: port.CountryName
-          };
-          this.airTravelPortInformation.push(ref);
-        });
+  async getTravelPortInformation(airSegments) {
+    airSegments.forEach(async station => {
+      await this.getTravelPort(station.arrivalAirport).then(port => {
+        this.extractDataPort(port);
       });
+
+      await this.getTravelPort(station.departureAirport).then(port => {
+        this.extractDataPort(port);
+      });
+    });
+  }
+
+  private extractDataPort(port: any) {
+    const ref = {
+      travelPortCode: port.TravelPorts[0].TravelPortCode,
+      city: port.TravelPorts[0].CityCode,
+      countryCode: port.TravelPorts[0].CountryCode,
+      country: port.TravelPorts[0].CountryName
+    };
+    if (this.airTravelPortInformation.findIndex((x) => x.travelPortCode === port.TravelPorts[0].TravelPortCode) === -1) {
+      this.airTravelPortInformation.push(ref);
     }
   }
 

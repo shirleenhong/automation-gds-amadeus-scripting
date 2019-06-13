@@ -164,9 +164,9 @@ export class ItineraryService {
     let route = 'DOM';
     this.pnrService.pnrObj.airSegments.forEach(element => {
       const arrival = this.ddbService.getCityCountry(element.arrivalAirport);
-      route = this.getRoute(arrival, route);
+      route = this.getRoute(arrival.country, route);
       const departure = this.ddbService.getCityCountry(element.departureAirport);
-      route = this.getRoute(departure, route);
+      route = this.getRoute(departure.country, route);
     });
     return route;
   }

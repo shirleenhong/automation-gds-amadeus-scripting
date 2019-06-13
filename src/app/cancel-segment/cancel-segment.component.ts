@@ -17,7 +17,7 @@ export class CancelSegmentComponent implements OnInit {
   segments = [];
   isAC = false;
   isUA = false;
-  isOthers = false;
+  isOthers = true;
   isACNonRef = false;
   isUANonRef = false;
   passengers = [];
@@ -157,7 +157,6 @@ export class CancelSegmentComponent implements OnInit {
   checkSegmentAirline() {
     this.isAC = false;
     this.isUA = false;
-    this.isOthers = false;
     // this.cancelForm.controls['cancelNonRefAC'].setValue(false);
     this.enableFormControls(
       [

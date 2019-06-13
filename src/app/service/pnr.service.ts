@@ -695,7 +695,6 @@ export class PnrService {
     return matrixModels;
   }
   extractCanadaPass(model: MatrixAccountingModel, assoc) {
-    debugger;
     let pass = this.getRemarksFromGDSByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
     let found = false;
     if (pass.length > 0) {

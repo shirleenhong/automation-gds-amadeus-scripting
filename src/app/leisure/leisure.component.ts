@@ -86,7 +86,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
     // this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
-    this.ddbService.getTravelPortInformation();
+    this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
     } else if (this.cfLine == null || this.cfLine === undefined) {

@@ -26,12 +26,10 @@ export class QueueComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cfLine = this.pnrService.getCFLine();
+    this.cfLine = this.pnrService.getCfLine();
   }
-
 
   get f() {
     return this.queueForm.controls;
   }
-
 }

@@ -45,7 +45,7 @@ export class PnrService {
         console.log(err);
       });
     this.getPCC();
-    this.getRecordLocator();
+    // this.getRecordLocator();
     console.log(JSON.stringify(this.pnrObj));
   }
 

@@ -39,7 +39,6 @@ export class ItineraryComponent implements OnInit {
     this.itineraryForm = new FormGroup({
       emailAddresses: new FormArray([this.createFormGroup()]),
       sendItinerary: new FormControl('', []),
-      cwtItinerary: new FormControl('', []),
       language: new FormControl('', []),
       test: new FormControl('', []),
       typeTransaction: new FormControl('', []),

@@ -24,7 +24,7 @@ export class QueueService {
       selectionDetails
     };
 
-    const pnr = this.pnrService.recordLocator;
+    const pnr = this.pnrService.recordLocator();
     const reservation = {
       controlNumber: pnr
     };

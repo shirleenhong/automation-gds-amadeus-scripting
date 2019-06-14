@@ -78,13 +78,17 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
-  async getPnr() {
+  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
+    debugger;
     // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
+    if (queueCollection) {
+      this.queueService.queuePNR(queueCollection);
+    }
     // this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
     this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
@@ -185,8 +189,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.SubmitRemarks().then(
       () => {
         this.isPnrLoaded = false;
-        this.getPnr();
-        this.queueService.queuePNR(queueCollection);
+        this.getPnr(queueCollection);
         this.workflow = '';
       },
       (error) => {
@@ -215,7 +218,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -276,7 +279,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   displayInvoice() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.recordLocator) {
+      if (this.pnrService.recordLocator()) {
         this.invoiceEnabled = true;
       } else {
         this.invoiceEnabled = false;
@@ -339,7 +342,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   setControl() {
     if (this.isPnrLoaded) {
-      if (this.pnrService.recordLocator) {
+      if (this.pnrService.recordLocator()) {
         this.cancelEnabled = false;
       }
     }

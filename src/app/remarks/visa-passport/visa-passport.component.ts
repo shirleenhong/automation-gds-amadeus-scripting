@@ -24,13 +24,14 @@ export class VisaPassportComponent implements OnInit {
   advisoryClicked: boolean;
   citizenship: string;
   passportName: string;
+  isInternational = false;
 
   constructor(
     private fb: FormBuilder,
     private ddbService: DDBService,
     private pnrService: PnrService,
     private visaService: VisaPassportService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.visaPassportView = new VisaPassportModel();
@@ -57,6 +58,7 @@ export class VisaPassportComponent implements OnInit {
       this.visaService.isEnabled = this.hasAdvisoryLine();
       this.getVisaTrips();
     }
+    this.hasInternationalFlights();
   }
 
   changedAdvisory(): void {
@@ -74,11 +76,11 @@ export class VisaPassportComponent implements OnInit {
       })
       .then(
         // tslint:disable-next-line: only-arrow-functions
-        function(data) {
+        function (data) {
           console.log(data);
         },
         // tslint:disable-next-line: only-arrow-functions
-        function(error) {
+        function (error) {
           console.log(error);
         }
       );
@@ -124,7 +126,7 @@ export class VisaPassportComponent implements OnInit {
     });
   }
 
-  hasInternationalFlights(): boolean {
+  hasInternationalFlights() {
     // let firstDepDate = new Date();
     // let firstLoop = true;
     let cityCountry: string;
@@ -133,11 +135,13 @@ export class VisaPassportComponent implements OnInit {
       this.pnrService.pnrObj.airSegments.forEach((x) => {
         cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
         if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') {
+          console.log(cityCountry);
           destinations.push(cityCountry);
         }
 
         cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
         if (this.ddbService.getCityCountry(x.departureAirport) !== '') {
+          console.log(cityCountry);
           destinations.push(cityCountry);
         }
 
@@ -168,7 +172,8 @@ export class VisaPassportComponent implements OnInit {
           hasInternationalFlight = true;
         }
       });
-      return hasInternationalFlight;
+      this.isInternational = hasInternationalFlight;
+      // return hasInternationalFlight;
     }
   }
 
@@ -269,10 +274,10 @@ export class VisaPassportComponent implements OnInit {
       for (let i = 1; i < originDestination.length; i++) {
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
-            '/' +
-            originDestination[i].departuredate.substr(0, 2) +
-            '/' +
-            originDestination[i].departuredate.substr(4, 2)
+          '/' +
+          originDestination[i].departuredate.substr(0, 2) +
+          '/' +
+          originDestination[i].departuredate.substr(4, 2)
         );
         if (convertedDate.toDateString() === firstDepDate.toDateString()) {
           mainOrigin = originDestination[i].origin;

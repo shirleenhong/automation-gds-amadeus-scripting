@@ -238,7 +238,7 @@ export class ItineraryService {
     const queueGroup = Array<QueuePlaceModel>();
 
     if (frmGroup.controls.sendItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
-    if (frmGroup.controls.typeTransaction.value) {
+    if (frmGroup.controls.typeTransaction.value && frmGroup.controls.sendItinerary.value) {
       let tanstype = '';
       if (frmGroup.controls.typeTransaction.value === 'invoice') {
         tanstype = 'invoice';

@@ -44,6 +44,7 @@ import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-
 import { ItineraryComponent } from './itinerary-and-queue/itinerary/itinerary.component';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
     SegmentsComponent,
     UpdateSegmentComponent,
     MessageComponent,
+    LoadingComponent,
     VisaPassportComponent,
     CodeshareComponent,
     SegmentSelectComponent,
@@ -117,6 +119,7 @@ import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
     UpdateAccountingRemarkComponent,
     UpdateSegmentComponent,
     MessageComponent,
+    LoadingComponent,
     UpdateFareRuleSegmentComponent,
     UpdateRbcPointsRedemptionComponent,
     UpdateLeisureFeeComponent

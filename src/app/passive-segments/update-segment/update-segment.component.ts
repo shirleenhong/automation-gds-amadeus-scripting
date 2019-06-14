@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild } from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -14,7 +14,7 @@ declare var smartScriptSession: any;
   templateUrl: './update-segment.component.html',
   styleUrls: ['./update-segment.component.scss']
 })
-export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
+export class UpdateSegmentComponent implements OnInit {
   title: string;
 
   @Input()
@@ -187,8 +187,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.changeSegmentType(this.passiveSegments.segmentType);
   }
-
-  ngAfterViewChecked(): void {}
 
   saveSegment() {
     if (this.segmentForm.invalid) {

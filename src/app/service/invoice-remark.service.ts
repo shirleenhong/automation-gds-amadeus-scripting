@@ -22,7 +22,7 @@ export class InvoiceService {
     } else if (this.formGroup.get('selection').value === 'invoice') {
       this.setInvoicePNRRemarks();
     }
-    this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator());
+    this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator);
     return this.remGroup;
   }
 

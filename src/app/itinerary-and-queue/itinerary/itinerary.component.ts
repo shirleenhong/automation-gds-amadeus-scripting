@@ -173,14 +173,12 @@ export class ItineraryComponent implements OnInit {
         c.get('emailAddress').setValidators([Validators.required, Validators.pattern('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')]);
         c.get('emailAddress').updateValueAndValidity();
       }
-      this.itineraryForm.controls.cwtItinerary.setValue(true);
     } else {
       for (const c of arr.controls) {
         c.get('emailAddress').clearValidators();
         c.get('emailAddress').setValidators([Validators.pattern('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')]);
         c.get('emailAddress').updateValueAndValidity();
       }
-      this.itineraryForm.controls.cwtItinerary.setValue(false);
     }
   }
 

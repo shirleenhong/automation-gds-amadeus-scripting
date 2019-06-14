@@ -1,7 +1,7 @@
-<div *ngIf="!hasInternationalFlights()" class="mx-auto"><br>
+<div *ngIf="!isInternational" class="mx-auto"><br>
   <span class="p3">* No International Destinations Found in Itinerary *</span>
 </div>
-<div *ngIf="hasInternationalFlights()">
+<div *ngIf="isInternational">
   <form [formGroup]="visaPassportFormGroup" class="col">
     <!-- <div class="row form-group">
       <div class="col-4">
@@ -81,7 +81,7 @@
         </div>
       </div><br>
 
-      <div *ngIf="hasInternationalFlights()">
+      <div *ngIf="isInternational">
         <div class="row form-group">
           <div class="col-2">
             <b>Country</b>

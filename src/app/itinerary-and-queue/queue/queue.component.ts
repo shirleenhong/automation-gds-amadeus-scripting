@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 import { CfRemarkModel } from 'src/app/models/pnr/cf-remark.model';
 
@@ -32,6 +32,16 @@ export class QueueComponent implements OnInit {
 
   get f() {
     return this.queueForm.controls;
+  }
+
+  showQueueNumber(controlValue) {
+    if (controlValue) {
+      this.queueForm.get('queueNo').enable();
+      this.queueForm.get('queueNo').setValidators(Validators.required);
+      this.queueForm.get('queueNo').updateValueAndValidity();
+    } else {
+      this.queueForm.get('queueNo').disable();
+    }
   }
 
 }

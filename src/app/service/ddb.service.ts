@@ -180,18 +180,18 @@ export class DDBService implements OnInit {
   // }
 
   async getTravelPortInformation(airSegments) {
-    airSegments.forEach(async station => {
-      await this.getTravelPort(station.arrivalAirport).then(port => {
-        this.extractDataPort(port);
+    await airSegments.forEach(async station => {
+      await this.getTravelPort(station.arrivalAirport).then(async port => {
+        await this.extractDataPort(port);
       });
 
-      await this.getTravelPort(station.departureAirport).then(port => {
-        this.extractDataPort(port);
+      await this.getTravelPort(station.departureAirport).then(async port => {
+        await this.extractDataPort(port);
       });
     });
   }
 
-  private extractDataPort(port: any) {
+  async extractDataPort(port: any) {
     const ref = {
       travelPortCode: port.TravelPorts[0].TravelPortCode,
       city: port.TravelPorts[0].CityCode,
@@ -204,6 +204,7 @@ export class DDBService implements OnInit {
   }
 
   getCityCountry(search: string) {
+    console.log(JSON.stringify(this.airTravelPortInformation));
     if (this.airTravelPortInformation.findIndex((x) => x.travelPortCode === search) !== -1) {
       return this.airTravelPortInformation.find((x) => x.travelPortCode === search);
     } else {

@@ -1144,4 +1144,10 @@ export class PnrService {
     }
     return 0;
   }
+
+  // public async endPNR(requestor) {
+  //   smartScriptSession.send('RF' + requestor);
+  //   smartScriptSession.send('ER');
+  //   smartScriptSession.send('RT');
+  // }
 }

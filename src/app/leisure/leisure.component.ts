@@ -35,7 +35,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
-  workflow = '';
+  workflow = 'test';
   cancelEnabled = true;
   validModel = new ValidateModel();
   invoiceEnabled = false;
@@ -81,7 +81,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
-    debugger;
     // this.ddbService.getCountryAndCurrencyList();
     this.errorPnrMsg = '';
     await this.getPnrService();
@@ -90,7 +89,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.queueService.queuePNR(queueCollection);
     }
     // this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
-    this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+    await this.getCountryTravelInformation();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
     } else if (this.cfLine == null || this.cfLine === undefined) {
@@ -108,6 +107,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+  }
+
+  async getCountryTravelInformation() {
+    await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+    this.workflow = '';
   }
 
   ngOnInit() {
@@ -234,7 +238,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
-
         this.workflow = '';
       },
       (error) => {
@@ -308,6 +311,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.isPnrLoaded) {
       await this.getPnrService();
       this.workflow = 'load';
+
     }
   }
 

@@ -23,4 +23,7 @@ export class MatrixAccountingModel {
   descriptionapay: string;
   commisionPercentage: string;
   passRelate: boolean;
+  passPurchase = '';
+  fareType = '';
+  departureCity: string;
 }

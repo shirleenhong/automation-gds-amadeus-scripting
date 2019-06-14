@@ -31,6 +31,12 @@ export class MessageComponent implements OnInit {
       case MessageType.YesNo:
         this.iconClass = 'fas fa-question-circle fa-w-16 fa-3x';
         break;
+      case MessageType.Success:
+        this.iconClass = 'fas fa-thumbs-up fa-w-16 fa-3x';
+        break;
+      case MessageType.Error:
+        this.iconClass = 'fas fa-exclamation-triangle fa-w-16 fa-3x';
+        break;
     }
   }
 

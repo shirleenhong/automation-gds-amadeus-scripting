@@ -5,6 +5,8 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { DDBService } from './ddb.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -160,14 +162,91 @@ export class ItineraryService {
 
   writeRouteType() {
     let route = 'DOM';
-    this.destination.forEach(element => {
-      if (element !== 'Canada' && element !== 'United States') {
-        route = 'INTL';
-      }
-      if (element === 'United States' && route !== 'INTL') {
-        route = 'TRANS';
-      }
+    this.pnrService.pnrObj.airSegments.forEach(element => {
+      const arrival = this.ddbService.getCityCountry(element.arrivalAirport);
+      route = this.getRoute(arrival.country, route);
+      const departure = this.ddbService.getCityCountry(element.departureAirport);
+      route = this.getRoute(departure.country, route);
     });
     return route;
+  }
+
+  private getRoute(element: any, route: string) {
+    if (element !== 'Canada' && element !== 'United States') {
+      route = 'INTL';
+    }
+    if (element === 'United States' && route !== 'INTL') {
+      route = 'TRANS';
+    }
+    return route;
+  }
+
+
+  addQueue(frmGroup: FormGroup) {
+    const queueGroup = Array<QueuePlaceModel>();
+
+    if (frmGroup.controls.nonBsp.value) { this.getQueueMinder(queueGroup, 'nonBsp'); }
+    if (frmGroup.controls.ticketExchange.value) { this.getQueueMinder(queueGroup, 'ticketExchange'); }
+    if (frmGroup.controls.bspTicket.value) { this.getQueueMinder(queueGroup, 'bspTicket'); }
+    if (frmGroup.controls.refund.value) { this.getQueueMinder(queueGroup, 'refund'); }
+    // if (frmGroup.controls.cwtItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
+    if (frmGroup.controls.bspRefund.value) { this.getQueueMinder(queueGroup, 'bspRefund'); }
+    if (frmGroup.controls.personalQueue.value && frmGroup.controls.queueNo.value) {
+      this.getQueueMinder(queueGroup, 'personalQueue', frmGroup.controls.queueNo.value);
+    }
+    return (queueGroup);
+  }
+
+  private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
+    const queue = new QueuePlaceModel();
+
+    const queuePlaceDescription = [
+      { control: 'nonBsp', queueNo: '12', pcc: 'YTOWL2104', text: 'NON BSP', category: '' },
+      { control: 'ticketExchange', queueNo: '4', pcc: '', text: 'ticket Exchange', category: '' },
+      { control: 'bspTicket', queueNo: '87', pcc: 'YTOWL2104', text: 'bsp Ticket', category: '' },
+      { control: 'refund', queueNo: '1', pcc: '', text: 'refund', category: '' },
+      { control: 'cwtItinerary', queueNo: '12', pcc: '', text: 'cwt Itinerary', category: '' },
+      { control: 'bspRefund', queueNo: '4', pcc: '', text: 'bsp Refund', category: '' },
+      { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
+      { control: 'invoice', queueNo: '87', pcc: '', text: 'invoice', category: '' },
+      { control: 'itinerary', queueNo: '1', pcc: '', text: 'itinerary', category: '' }
+    ];
+
+    // const queuePlaceDescription = [
+    //   { control: 'nonBsp', queueNo: '10', pcc: '', text: 'NON BSP', category: '' },
+    //   { control: 'ticketExchange', queueNo: '33', pcc: 'PARWL210G', text: 'ticket Exchange', category: '' }
+    // ];
+
+    const look = queuePlaceDescription.find((x) => x.control === controlname);
+    if (look) {
+      queue.queueNo = look.queueNo;
+      if (queueno) {
+        queue.queueNo = queueno;
+      }
+      queue.pcc = look.pcc;
+      if (look.pcc === '') {
+        queue.pcc = this.pnrService.PCC;
+      }
+      queue.freetext = look.text;
+      queue.category = look.category;
+      queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+      queueGroup.push(queue);
+    }
+  }
+
+  addItineraryQueue(frmGroup: FormGroup) {
+    const queueGroup = Array<QueuePlaceModel>();
+
+    if (frmGroup.controls.sendItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
+    if (frmGroup.controls.typeTransaction.value && frmGroup.controls.sendItinerary.value) {
+      let tanstype = '';
+      if (frmGroup.controls.typeTransaction.value === 'invoice') {
+        tanstype = 'invoice';
+      } else if (frmGroup.controls.typeTransaction.value === 'itinerary') {
+        tanstype = 'itinerary';
+      }
+      this.getQueueMinder(queueGroup, tanstype);
+    }
+    return queueGroup;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild } from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -14,7 +14,7 @@ declare var smartScriptSession: any;
   templateUrl: './update-segment.component.html',
   styleUrls: ['./update-segment.component.scss']
 })
-export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
+export class UpdateSegmentComponent implements OnInit {
   title: string;
 
   @Input()
@@ -138,7 +138,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
     specialEquipment: new FormControl(''),
     specialRequest: new FormControl(''),
     frequentflightNumber: new FormControl(''),
-
+    rateBooked: new FormControl('', [Validators.required]),
     // hotel
     chainCode: new FormControl('', [Validators.required]),
     nightlyRate: new FormControl('', [Validators.required]),
@@ -187,8 +187,6 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.changeSegmentType(this.passiveSegments.segmentType);
   }
-
-  ngAfterViewChecked(): void {}
 
   saveSegment() {
     if (this.segmentForm.invalid) {
@@ -504,7 +502,8 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
           'specialRequest',
           'destinationCity',
           'arrivalTime',
-          'arrivalDate'
+          'arrivalDate',
+          'rateBooked'
         ];
         this.setForm(forms);
         this.segmentForm.get('destinationCity').clearValidators();
@@ -757,18 +756,24 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
   pickupCityOnBlur() {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarSupplier();
-      const airs = this.segmentList.filter((x) => x.segmentType === 'AIR');
-      let air = airs.find((x) => x.destinationCity === this.passiveSegments.departureCity);
-      if (air) {
-        this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
-        this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
-        this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
-        const indx = airs.indexOf(air);
-        if (indx < airs.length - 1) {
-          air = airs[indx + 1];
-          this.passiveSegments.arrivalDate = this.convertDateFormat(air.departureDate);
-          this.passiveSegments.arrivalTime = this.convert24to12Hr(air.departureTime);
-        }
+      if (this.passiveSegments.pickupLoc === 'AIRPORT') {
+        this.defaultTravelDateTime();
+      }
+    }
+  }
+
+  defaultTravelDateTime() {
+    const airs = this.segmentList.filter((x) => x.segmentType === 'AIR');
+    let air = airs.find((x) => x.destinationCity === this.passiveSegments.departureCity);
+    if (air) {
+      this.passiveSegments.departureDate = this.convertDateFormat(air.arrivalDate);
+      this.passiveSegments.departureTime = this.convert24to12Hr(air.arrivalTime);
+      this.passiveSegments.arrivalDate = this.passiveSegments.departureDate;
+      const indx = airs.indexOf(air);
+      if (indx < airs.length - 1) {
+        air = airs[indx + 1];
+        this.passiveSegments.arrivalDate = this.convertDateFormat(air.departureDate);
+        this.passiveSegments.arrivalTime = this.convert24to12Hr(air.departureTime);
       }
     }
   }
@@ -870,6 +875,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
 
   loadPickupOffAddr(val) {
     if (val === 'OFF AIRPORT') {
+      this.clearTravelDateTime();
       const city = this.passiveSegments.departureCity;
       if (city.length < 3) {
         return;
@@ -882,15 +888,23 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.pickupOffAddrList = [];
       this.getOffAddress(this.pickupOffAddrList, command);
       this.commandCache.loadPickupOffAddr = command;
-
       this.segmentForm.get('pickupOffAddress').enable();
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
+      this.defaultTravelDateTime();
     }
+  }
+
+  clearTravelDateTime() {
+    this.passiveSegments.departureDate = '';
+    this.passiveSegments.departureTime = '';
+    this.passiveSegments.arrivalDate = '';
+    this.passiveSegments.arrivalTime = '';
   }
 
   loadDropOffAddr(val) {
     if (val === 'OFF AIRPORT') {
+      this.clearTravelDateTime();
       const city = this.passiveSegments.destinationCity;
       if (city.length < 3) {
         return;
@@ -906,6 +920,7 @@ export class UpdateSegmentComponent implements OnInit, AfterViewChecked {
       this.segmentForm.get('dropOffAddress').enable();
     } else {
       this.segmentForm.get('dropOffAddress').disable();
+      this.defaultTravelDateTime();
     }
   }
 

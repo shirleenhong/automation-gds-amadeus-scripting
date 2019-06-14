@@ -10,6 +10,7 @@ Verify That Matrix Receipt, Matrix Accounting, Leisure, And ITC Remarks Are Writ
     ...    - Matrix Receipt
     ...    - Leisure fee
     ...    - ITC package Cost
+    [Tags]    not_ready
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1SIN12DEC-/TYP-TOR/SUC-ZZ/SC-mla/SD-12dec/ST-0900/EC-sin/ED-24dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG
     Open CA Migration Window
@@ -104,6 +105,7 @@ Verify That Matrix Receipt, Matrix Accounting, Leisure, Package Cost, And Report
     ...    - Matrix Accounting
     ...    - Leisure fee
     ...    - Package Cost
+    [Tags]    not_ready
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1SIN12DEC-/TYP-TOR/SUC-ZZ/SC-mla/SD-12dec/ST-0900/EC-sin/ED-24dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG
     Open CA Migration Window
@@ -191,6 +193,7 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     ...    ITC
     ...    Visa and Passport
     ...    Codeshare
+    [Tags]    not_ready
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
@@ -234,10 +237,12 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     ...    Codeshare
     ...    Fare Rule
     ...    RBC Points Redemption
+    [Tags]    not_ready
 
 Verify That Passive Segments Can Be Cancelled
     [Documentation]    Cancel All segments
-
+    [Tags]    not_ready
+    
 *** Keywords ***
 Add Passive Air Segment
     Click Add Segment Button

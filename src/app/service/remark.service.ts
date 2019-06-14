@@ -3,6 +3,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 
 declare var smartScriptSession: any;
 
@@ -17,6 +18,7 @@ export class RemarkService {
   passiveSegmentElement: Array<any>;
   passiveSegmentGroup: Array<PassiveSegmentModel>;
   responseMessage: string;
+
   constructor(private pnrService: PnrService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
@@ -80,6 +82,12 @@ export class RemarkService {
             }
           });
         }
+
+        // if (group.queuePlace != null && group.queuePlace.length > 0) {
+        //   group.queuePlace.forEach((queue) => {
+        //     this.remarksElement.push(this.getQueueElement(queue));
+        //   });
+        // }
       }
     });
   }
@@ -101,6 +109,31 @@ export class RemarkService {
     };
 
     return { elementManagementData, fareElement };
+  }
+
+  getQueueElement(queueModel: QueuePlaceModel) {
+    const reference = {
+      qualifier: 'OT',
+      number: '1'
+    };
+    const elementManagementData = {
+      reference,
+      segmentName: 'OP'
+    };
+
+    const optionDetail = {
+      officeId: queueModel.pcc,
+      date: queueModel.date,
+      queue: queueModel.queueNo,
+      category: queueModel.category,
+      freetext: queueModel.freetext
+    };
+
+    const optionElement = {
+      optionDetail
+    };
+
+    return { elementManagementData, optionElement };
   }
 
   getRemarkElement(remarkModel: RemarkModel) {
@@ -347,7 +380,7 @@ export class RemarkService {
     return newArr;
   }
 
-  async sendRemarks() {
+  async sendRemarks(requestor?: string) {
     const pnrActions = {
       optionCode: '0'
     };
@@ -383,7 +416,12 @@ export class RemarkService {
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
       () => {
         this.responseMessage = 'Remarks Updated';
-        this.endPNR('CWTSCRIPT');
+
+        if (requestor) {
+          this.endPNR(requestor);
+        } else {
+          this.endPNR('CWTSCRIPT');
+        }
 
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
@@ -408,14 +446,19 @@ export class RemarkService {
     this.clear();
   }
 
-  async cancelRemarks() {
+  async cancelRemarks(requestor) {
     await this.deleteRemarks();
     await this.sendCryptics();
-    await this.sendRemarks();
+    await this.sendRemarks(requestor);
     this.clear();
   }
 
-  endPNR(requestor) {
+  async cancelOSIRemarks() {
+    await this.sendCryptics();
+    this.clear();
+  }
+
+  async endPNR(requestor) {
     if (this.pnrService.pnrObj.tkElements.length < 1) {
       smartScriptSession.send('TKOK');
     }

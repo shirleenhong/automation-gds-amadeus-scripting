@@ -464,7 +464,7 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK2 YYZ 10JAN-10JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-10JAN/ST-0100/ED-10JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/CF-CONF1234    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK2 YYZ 10JAN-10JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-10JAN/ST-0100/ED-10JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/CF-CONF1234/P1-2    True
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S4
     Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S4
     Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S4
@@ -479,7 +479,7 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
 Verify Car Passive Segment Without Optional Values Are Written In The PNR
     [Tags]    us8718
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1YYJ21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1YYJ21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Enter GDS Command    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 11551440 / 1234567    SS AC1074 Y 30DEC YYTMSP GK1 / 11551440 / YYYD123
     Open CA Migration Window
     Click Add Segment Main Menu
@@ -506,8 +506,8 @@ Verify Car Passive Segment Without Optional Values Are Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-1234MKM FREE/CF-CONF555555    True
-    Verify Specific Remark Is Only Written Once    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S6
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK3 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-1234MKM FREE/CF-CONF555555/P1-3    True
+    Verify Specific Remark Is Only Written Once    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S8
     Verify Specific Remark Is Not Written In The PNR    RIR CD-
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF
     Verify Specific Remark Is Not Written In The PNR    RIR DROP OFF-
@@ -543,7 +543,7 @@ Verify Hotel Passive Segment Is Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    HTL 1A HK1 YYZ 10JAN-15JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12312414,TWIN ROOM,RATE:TEST RATE TYPE CAD100.55/NIGHT,SI-HOTEL ADDITIONAL INFO    True
+    Verify Specific Remark Is Written In The PNR    HTL 1A HK2 YYZ 10JAN-15JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12312414,TWIN ROOM,RATE:TEST RATE TYPE CAD100.55/NIGHT,SI-HOTEL ADDITIONAL INFO/P1-2    True
     Verify Specific Remark Is Written In The PNR    RIR ADDRESS-${hotel_address}/S4
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_city} ON/S4
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_country} ${hotel_zip_code}/S4
@@ -551,6 +551,9 @@ Verify Hotel Passive Segment Is Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR CANCELLATION POLICY - 12HRS/S4
     Verify Specific Remark Is Written In The PNR    RIR ROOM CONFIRMED WITH - HOTEL TESTING/S4
     Verify Specific Remark Is Written In The PNR    RIR ADDITONAL INFORMATION - HOTEL ADDITIONAL INFO/S4
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 Verify Hotel Passive Segment Without Optional Values Written In The PNR
     [Tags]    us8881
@@ -578,7 +581,7 @@ Verify Hotel Passive Segment Without Optional Values Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    HTL 1A HK2 YYT 12JAN-18JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF222222,RATE:TEST RATE TYPE CAD555.75/NIGHT    True
+    Verify Specific Remark Is Written In The PNR    HTL 1A HK2 YYT 12JAN-18JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF222222,RATE:TEST RATE TYPE CAD555.75/NIGHT/P1-2    True
     Verify Specific Remark Is Written In The PNR    RIR ADDRESS-${hotel_address}/S4
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_city} NL/S4
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_country} ${hotel_zip_code}/S4
@@ -586,5 +589,6 @@ Verify Hotel Passive Segment Without Optional Values Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR CANCELLATION POLICY - 6P/S4
     Verify Specific Remark Is Not Written In The PNR    RIR ROOM CONFIRMED WITH
     Verify Specific Remark Is Not Written In The PNR    RIR ADDITONAL INFORMATION
-
-*** Keywords ***
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser

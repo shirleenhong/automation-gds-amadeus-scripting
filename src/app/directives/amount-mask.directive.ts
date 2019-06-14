@@ -1,4 +1,4 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, HostListener, ElementRef } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { AmountPipe } from '../pipes/amount.pipe';
 
@@ -9,7 +9,7 @@ import { AmountPipe } from '../pipes/amount.pipe';
 export class AmountMaskDirective {
   amountPipe = new AmountPipe();
 
-  constructor(public ngControl: NgControl) {}
+  constructor(public ngControl: NgControl, private el: ElementRef) {}
 
   @HostListener('ngModelChange', ['$event'])
   onModelChange() {
@@ -18,26 +18,24 @@ export class AmountMaskDirective {
 
   @HostListener('blur')
   onBlur() {
-    if (
-      this.ngControl.value === null ||
-      this.ngControl.value === undefined ||
-      isNaN(this.ngControl.value)
-    ) {
+    if (this.ngControl.value === null || this.ngControl.value === undefined || isNaN(this.ngControl.value)) {
       return;
     }
-    const newVal = this.amountPipe.transform(this.ngControl.value);
-    this.ngControl.control.setValue(newVal.replace(/\,/g, ''));
+
+    let newVal = this.amountPipe.transform(this.ngControl.value);
+    newVal = newVal.replace(/\,/g, '');
+    const max = this.el.nativeElement.maxLength;
+    if (max > 0 && newVal.length > max) {
+      newVal = newVal.replace('.00', '');
+    }
+    this.ngControl.control.setValue(newVal);
   }
 
   @HostListener('keydown', ['$event'])
   onKeydown(e) {
     const key = e.keyCode ? e.keyCode : e.charCode;
     const value = e.target.value;
-    if (
-      key > 57 &&
-      ((e.key === '.' && value.indexOf('.') >= 0) || e.key !== '.') &&
-      !(key >= 96 && key <= 106)
-    ) {
+    if (key > 57 && ((e.key === '.' && value.indexOf('.') >= 0) || e.key !== '.') && !(key >= 96 && key <= 106)) {
       e.preventDefault();
     }
   }

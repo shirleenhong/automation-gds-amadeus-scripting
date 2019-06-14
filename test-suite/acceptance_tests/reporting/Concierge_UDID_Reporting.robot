@@ -76,3 +76,6 @@ Verify That Royal Bank Of Canada Concierge Hotel UDIDs Are Updated In The PNR
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Royal Bank Concierge UDID Remarks Are Written    Within    Email    Cruise
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser

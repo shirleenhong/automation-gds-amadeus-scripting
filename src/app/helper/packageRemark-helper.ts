@@ -19,7 +19,6 @@ export class PackageRemarkHelper {
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
         const regx = 'X(\\d+)\\b';
-        // tslint:disable-next-line:max-line-length
         group.controls[controlName].setValue(
           this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', '')
         );
@@ -32,7 +31,6 @@ export class PackageRemarkHelper {
     const regx = '(\\d+((?:,\\d+)*,\\d{3})?\\.\\d{2,3})(.*?X)';
     if (textSearch !== '') {
       if (textSearch.fullNode.miscellaneousRemarks.remarks.freetext !== '') {
-        // tslint:disable-next-line:max-line-length
         group.controls[controlName].setValue(
           this.getRegexResult(textSearch.fullNode.miscellaneousRemarks.remarks.freetext, regx).replace('X', '')
         );
@@ -64,7 +62,6 @@ export class PackageRemarkHelper {
   }
 
   getCurrency() {
-    // tslint:disable-next-line:max-line-length
     const textSearch = this.pnrService.getRirRemarkText('THE FOLLOWING COSTS ARE SHOWN IN');
     if (textSearch !== '') {
       if (!this.forDeletion.includes(textSearch.elementNumber)) {

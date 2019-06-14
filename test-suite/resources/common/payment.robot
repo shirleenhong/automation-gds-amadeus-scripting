@@ -42,7 +42,7 @@ Click Save Button
     Click Element    xpath=//button[contains(text(), 'Save')]
     # Wait Until Page Contains Element    xpath=//tr[1]//i[@class='fas fa-edit']    30
     Wait Until Page Contains Element    xpath=//i[@class='fas fa-edit']    30
-    Focus    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
+    Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     [Teardown]    Take Screenshot
 
 Enter Credit Card Number
@@ -86,12 +86,12 @@ Click Payment Tab
 
 Select Traveler Province
     [Arguments]    ${province}
-    Select From List    css=#address    ${province}
+    Select From List By Label    css=#address    ${province}
     [Teardown]    Take Screenshot
 
 Select Segment Association
     [Arguments]    ${segment_assoc}
-    Select From List    xpath=//select[@id=' segmentAssoc']    ${segment_assoc}
+    Select From List By Label    xpath=//select[@id=' segmentAssoc']    ${segment_assoc}
 
 Enter Credit Card Vendor
     [Arguments]    ${cc_vendor}
@@ -99,11 +99,11 @@ Enter Credit Card Vendor
 
 Select Segment Number
     [Arguments]    ${segment_num}
-    Select From List    xpath=//select[@id='segmentNum']    ${segment_num}
+    Select From List By Label    xpath=//select[@id='segmentNum']    ${segment_num}
 
 Select Leisure Fee Form of Payment
     [Arguments]    ${form_of_payment}
-    Select From List    css=#paymentType    ${form_of_payment}
+    Select From List By Label    css=#paymentType    ${form_of_payment}
 
 Select Credit Card Vendor Code
     [Arguments]    ${cc_vendor_code}
@@ -118,6 +118,7 @@ Enter Reason for No Association Fees
     Wait Until Element Is Visible    css=#noFeeReason    30
     Clear Element Text    css=#noFeeReason
     Input Text    css=#noFeeReason    ${no_fee_reason}
+    [Teardown]    Take Screenshot
 
 Click Add Accounting Line Button
     Click Element    xpath=//button[contains(text(), 'Add Accounting Line')]
@@ -236,7 +237,7 @@ Select Is This Air Only?
     [Arguments]    ${is_this_air}
     #select is this air only
     Wait Until Element Is Visible    css=#airOnly    30
-    Select from list    css=#airOnly    ${is_this_air}
+    Select From List By Value    css=#airOnly    ${is_this_air}
 
 Enter Hotel/ Property Name
     [Arguments]    ${property_name}
@@ -246,23 +247,23 @@ Enter Hotel/ Property Name
 Select Flights
     [Arguments]    ${select_flight}
     #select flight
-    Select From List    css=#flightType    ${select_flight}
+    Select From List By Value    css=#flightType    ${select_flight}
 
 Select Exclusive Property
     [Arguments]    ${exclusive_property}
     #select exclusive property?
-    Select From List    css=#exclusiveProperty    ${exclusive_property}
+    Select From List By Label    css=#exclusiveProperty    ${exclusive_property}
 
 Enter Group
     [Arguments]    ${group}
     #select group
-    Select From List    css=#group    ${group}
+    Select From List By Label    css=#group    ${group}
     [Teardown]    Take Screenshot
 
 Select Preferred Vendor
     [Arguments]    ${preferred_vendor}
     #select preferred vendor
-    Select From List    css=#preferredVendor    ${preferred_vendor}
+    Select From List By Label    css=#preferredVendor    ${preferred_vendor}
     [Teardown]    Take Screenshot
 
 Click Update Button
@@ -314,6 +315,3 @@ Unselect Tax Exemption
     \    Run Keyword If    '${tax_exemption}' == 'HST Exempt'    Unselect Checkbox    xpath=//input[@value='RC']
     \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Unselect Checkbox    xpath=//input[@value='XG']
     \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Unselect Checkbox    xpath=//input[@value='XQ']
-
-Tick Require Separate Passenger
-    Select Checkbox    css=#passRelate

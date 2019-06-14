@@ -1,3 +1,3 @@
 export class ItineraryModel {
-    test: string
+  test: string;
 }

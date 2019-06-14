@@ -11,7 +11,7 @@ import { MessageType } from 'src/app/shared/message/MessageType';
 @Component({
   selector: 'app-accounting-remark',
   templateUrl: './accounting-remark.component.html',
-  styleUrls: ['./accounting-remark.component.scss'],
+  styleUrls: ['./accounting-remark.component.scss']
 })
 export class AccountingRemarkComponent implements OnInit {
   @Input()
@@ -32,7 +32,7 @@ export class AccountingRemarkComponent implements OnInit {
     private modalService: BsModalService,
     private pnrService: PnrService,
     private fb: FormBuilder,
-    private utilHelper: UtilHelper,
+    private utilHelper: UtilHelper
   ) {}
 
   ngOnInit() {
@@ -46,9 +46,9 @@ export class AccountingRemarkComponent implements OnInit {
         flightType: new FormControl(''),
         priceVsSupplier: new FormControl(''),
         group: new FormControl(''),
-        preferredVendor: new FormControl(''),
+        preferredVendor: new FormControl('')
       },
-      { updateOn: 'change' },
+      { updateOn: 'change' }
     );
 
     this.f.airOnly.valueChanges.subscribe((x) => {
@@ -63,7 +63,7 @@ export class AccountingRemarkComponent implements OnInit {
 
   deleteItem(r: MatrixAccountingModel) {
     this.modalRef = this.modalService.show(MessageComponent, {
-      backdrop: 'static',
+      backdrop: 'static'
     });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
@@ -79,10 +79,10 @@ export class AccountingRemarkComponent implements OnInit {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
-            const cur = this.accountingRemarks.find((x) => x.tkMacLine === this.modalRef.content.accountingRemarks.tkMacLine);
-            this.utilHelper.modelCopy(this.modalRef.content.accountingRemarks, cur);
+            const cur = this.accountingRemarks.find((x) => x.tkMacLine === this.modalRef.content.accountingRemark.tkMacLine);
+            this.utilHelper.modelCopy(this.modalRef.content.accountingRemark, cur);
           } else {
-            this.accountingRemarks.push(this.modalRef.content.accountingRemarks);
+            this.accountingRemarks.push(this.modalRef.content.accountingRemark);
           }
           this.modalRef.content.isSubmitted = false;
           this.checkSupplierCode();
@@ -105,11 +105,11 @@ export class AccountingRemarkComponent implements OnInit {
   updateItem(r: MatrixAccountingModel) {
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
-      backdrop: 'static',
+      backdrop: 'static'
     });
     this.modalRef.content.title = 'Update Accounting Remarks';
-    this.modalRef.content.accountingRemarks = new MatrixAccountingModel();
-    this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemarks);
+    this.modalRef.content.accountingRemark = new MatrixAccountingModel();
+    this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemark);
     const code = r.supplierCodeName;
     this.modalRef.content.isAddNew = false;
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
@@ -124,14 +124,14 @@ export class AccountingRemarkComponent implements OnInit {
   }
 
   addAccountingRemarks() {
-    const accountingRemarks = new MatrixAccountingModel();
+    const accountingRemark = new MatrixAccountingModel();
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
-      backdrop: 'static',
+      backdrop: 'static'
     });
     this.modalRef.content.title = 'Add Accounting Remarks';
-    accountingRemarks.tkMacLine = this.accountingRemarks.length + 1;
+    accountingRemark.tkMacLine = this.accountingRemarks.length + 1;
     this.modalRef.content.isAddNew = true;
-    this.modalRef.content.accountingRemarks = accountingRemarks;
+    this.modalRef.content.accountingRemark = accountingRemark;
     this.isAddNew = true;
     this.modalSubscribeOnClose();
   }

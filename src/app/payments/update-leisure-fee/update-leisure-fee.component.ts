@@ -1,19 +1,11 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators
-} from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { CfRemarkModel } from 'src/app/models/pnr/cf-remark.model';
-import {
-  validateCreditCard,
-  validateExpDate
-} from 'src/app/shared/validators/leisure.validators';
+import { validateCreditCard, validateExpDate, validateNotEqualTo } from 'src/app/shared/validators/leisure.validators';
 import { LeisureFeeModel } from 'src/app/models/pnr/leisure-fee.model';
 import { BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
@@ -23,7 +15,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
   templateUrl: './update-leisure-fee.component.html',
   styleUrls: ['./update-leisure-fee.component.scss']
 })
-export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
+export class UpdateLeisureFeeComponent implements OnInit {
   title: string;
   leisureFeeForm: FormGroup;
   leisureFee = new LeisureFeeModel();
@@ -67,14 +59,8 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
       segmentNum: new FormControl('', [Validators.required]),
       amount: new FormControl('', [Validators.required]),
       paymentType: new FormControl('', [Validators.required]),
-      vendorCode: new FormControl('', [
-        Validators.required,
-        Validators.pattern('[A-Z]{2}')
-      ]),
-      ccNo: new FormControl('', [
-        Validators.required,
-        validateCreditCard('vendorCode')
-      ]),
+      vendorCode: new FormControl('', [Validators.required, Validators.pattern('[A-Z]{2}')]),
+      ccNo: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
       expDate: new FormControl('', [Validators.required, validateExpDate()]),
       address: new FormControl('', [Validators.required]),
       exempt: new FormControl(''),
@@ -86,7 +72,12 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
     this.passengerList = this.pnrService.getPassengers();
   }
 
-  ngAfterViewInit(): void { }
+  setPreviousCCno(ccNumbers) {
+    if (ccNumbers && ccNumbers.length > 0) {
+      this.leisureFeeForm.get('ccNo').clearValidators();
+      this.leisureFeeForm.get('ccNo').setValidators([Validators.required, validateCreditCard('vendorCode'), validateNotEqualTo(ccNumbers)]);
+    }
+  }
 
   changeFeeState() {
     const controls = ['vendorCode', 'ccNo', 'expDate'];
@@ -105,25 +96,17 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   onControlChanges() {
-    this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe(val => {
+    this.leisureFeeForm.get('segmentAssoc').valueChanges.subscribe((val) => {
       this.processAssocValues(val);
     });
-    this.leisureFeeForm.get('paymentType').valueChanges.subscribe(val => {
+    this.leisureFeeForm.get('paymentType').valueChanges.subscribe((val) => {
       const controls = ['vendorCode', 'ccNo', 'expDate'];
       this.enableDisbleControls(controls, val === 'K');
     });
   }
 
   processAssocValues(val) {
-    const ctrls = [
-      'segmentNum',
-      'amount',
-      'paymentType',
-      'vendorCode',
-      'ccNo',
-      'expDate',
-      'address'
-    ];
+    const ctrls = ['segmentNum', 'amount', 'paymentType', 'vendorCode', 'ccNo', 'expDate', 'address'];
     this.enableDisbleControls(ctrls, false);
 
     switch (val) {
@@ -144,7 +127,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {
-    ctrls.forEach(x => {
+    ctrls.forEach((x) => {
       if (isDisabled) {
         this.leisureFeeForm.get(x).disable();
       } else {
@@ -154,7 +137,7 @@ export class UpdateLeisureFeeComponent implements OnInit, AfterViewInit {
   }
 
   saveLeisureFee() {
-    this.exemption.forEach(x => {
+    this.exemption.forEach((x) => {
       if (x.fln === '' && x.checked) {
         x.fln = this.leisureFee.fln;
       }

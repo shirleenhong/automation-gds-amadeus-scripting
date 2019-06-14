@@ -14,13 +14,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { MatrixReceiptComponent } from './payments/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './payments/update-matrix-receipt/update-matrix-receipt.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
-import {
-  AccordionModule,
-  ModalModule,
-  TabsModule,
-  BsDatepickerModule,
-  BsDropdownModule
-} from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './payments/accounting-remark/accounting-remark.component';
 import { LeisureFeeComponent } from './payments/leisure-fee/leisure-fee.component';
@@ -47,7 +41,10 @@ import { UpdateFareRuleSegmentComponent } from './remarks/update-fare-rule-segme
 import { RbcPointsRedemptionComponent } from './remarks/rbc-points-redemption/rbc-points-redemption.component';
 import { UpdateRbcPointsRedemptionComponent } from './remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
 import { UpdateLeisureFeeComponent } from './payments/update-leisure-fee/update-leisure-fee.component';
-import { ItineraryComponent } from './itinerary/itinerary.component';
+import { ItineraryComponent } from './itinerary-and-queue/itinerary/itinerary.component';
+import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
+import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +73,7 @@ import { ItineraryComponent } from './itinerary/itinerary.component';
     SegmentsComponent,
     UpdateSegmentComponent,
     MessageComponent,
+    LoadingComponent,
     VisaPassportComponent,
     CodeshareComponent,
     SegmentSelectComponent,
@@ -87,7 +85,9 @@ import { ItineraryComponent } from './itinerary/itinerary.component';
     RbcPointsRedemptionComponent,
     UpdateRbcPointsRedemptionComponent,
     UpdateLeisureFeeComponent,
-    ItineraryComponent
+    ItineraryComponent,
+    ItineraryAndQueueComponent,
+    QueueComponent
   ],
   imports: [
     BrowserModule,
@@ -119,6 +119,7 @@ import { ItineraryComponent } from './itinerary/itinerary.component';
     UpdateAccountingRemarkComponent,
     UpdateSegmentComponent,
     MessageComponent,
+    LoadingComponent,
     UpdateFareRuleSegmentComponent,
     UpdateRbcPointsRedemptionComponent,
     UpdateLeisureFeeComponent

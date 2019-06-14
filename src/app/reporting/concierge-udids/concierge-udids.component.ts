@@ -144,10 +144,9 @@ export class ConciergeUdidsComponent implements OnInit {
 
   private setControls(rem: string, id: string, control: string, lineNo: string) {
     if (id === '*U13/-') {
-      if (rem.replace(id, '') === 'NO HTL BKD') {
+      if (rem.replace(id, '').trim() === 'NO HTL BKD') {
+        this.forDeletion.push(lineNo);
         return;
-      } else {
-        this.forReference.push('U13');
       }
     }
 

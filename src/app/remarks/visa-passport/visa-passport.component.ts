@@ -2,13 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DDBService } from 'src/app/service/ddb.service';
 import { VisaPassportModel } from '../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  FormControl,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { VisaPassportService } from 'src/app/service/visa-passport.service';
 declare var smartScriptSession: any;
 
@@ -30,8 +24,8 @@ export class VisaPassportComponent implements OnInit {
   advisoryClicked: boolean;
   citizenship: string;
   passportName: string;
+  isInternational = false;
 
-  // tslint:disable-next-line:max-line-length
   constructor(
     private fb: FormBuilder,
     private ddbService: DDBService,
@@ -58,17 +52,13 @@ export class VisaPassportComponent implements OnInit {
 
     if (this.pnrService.isPNRLoaded) {
       let remarkText: string;
-      this.visaPassportView.citizenship = this.pnrService
-        .getRemarkText('CITIZENSHIP-')
-        .substr(12, 3);
+      this.visaPassportView.citizenship = this.pnrService.getRemarkText('CITIZENSHIP-').substr(12, 3);
       remarkText = this.pnrService.getRemarkText('ADVISED').substr(8, 30);
-      this.visaPassportView.passportName = remarkText.substr(
-        0,
-        remarkText.indexOf('VALID') - 1
-      );
+      this.visaPassportView.passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
       this.visaService.isEnabled = this.hasAdvisoryLine();
       this.getVisaTrips();
     }
+    this.hasInternationalFlights();
   }
 
   changedAdvisory(): void {
@@ -78,7 +68,6 @@ export class VisaPassportComponent implements OnInit {
   showTravelAdvisory(): void {
     this.advisoryClicked = true;
     this.visaService.isEnabled = true;
-    // tslint:disable-next-line: variable-name
     const _popupId = smartScriptSession.getPopupId();
     smartScriptSession
       .requestService('popups.launchSmartTool', {
@@ -116,12 +105,9 @@ export class VisaPassportComponent implements OnInit {
 
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < items.length; i++) {
-      // tslint:disable-next-line:no-string-literal
-      items[i].controls['country'].disable();
-      //  tslint:disable-next-line:no-string-literal
-      items[i].controls['segmentLine'].disable();
-      //  tslint:disable-next-line:no-string-literal
-      items[i].controls['passport'].disable();
+      items[i].controls.country.disable();
+      items[i].controls.segmentLine.disable();
+      items[i].controls.passport.disable();
     }
   }
 
@@ -130,7 +116,7 @@ export class VisaPassportComponent implements OnInit {
   }
 
   enableFormControls(controls: string[], disabled: boolean) {
-    controls.forEach(c => {
+    controls.forEach((c) => {
       if (disabled) {
         this.visaPassportFormGroup.get(c).disable();
         this.visaPassportFormGroup.get(c).reset();
@@ -140,22 +126,22 @@ export class VisaPassportComponent implements OnInit {
     });
   }
 
-  hasInternationalFlights(): boolean {
+  hasInternationalFlights() {
     // let firstDepDate = new Date();
     // let firstLoop = true;
     let cityCountry: string;
     if (this.pnrService.isPNRLoaded) {
       const destinations = Array<string>();
-
-      this.pnrService.pnrObj.airSegments.forEach(x => {
+      this.pnrService.pnrObj.airSegments.forEach((x) => {
         cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
         if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') {
+          console.log(cityCountry);
           destinations.push(cityCountry);
         }
 
-        cityCountry = this.ddbService.getCityCountry(x.departureAirport)
-          .country;
+        cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
         if (this.ddbService.getCityCountry(x.departureAirport) !== '') {
+          console.log(cityCountry);
           destinations.push(cityCountry);
         }
 
@@ -181,23 +167,18 @@ export class VisaPassportComponent implements OnInit {
       });
 
       let hasInternationalFlight: boolean;
-      destinations.forEach(x => {
+      destinations.forEach((x) => {
         if (x !== 'Canada' && x !== 'United States') {
           hasInternationalFlight = true;
         }
       });
-      return hasInternationalFlight;
+      this.isInternational = hasInternationalFlight;
+      // return hasInternationalFlight;
     }
   }
 
   getFirstDate(airdate: any, firstDepDate: Date) {
-    const lairdate = new Date(
-      airdate.substr(2, 2) +
-      '/' +
-      airdate.substr(0, 2) +
-      '/' +
-      airdate.substr(4, 2)
-    );
+    const lairdate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
     if (lairdate < firstDepDate) {
       firstDepDate = lairdate;
     }
@@ -205,13 +186,7 @@ export class VisaPassportComponent implements OnInit {
   }
 
   getLastDate(airdate: any, lastDepDate: Date) {
-    const lairdate = new Date(
-      airdate.substr(2, 2) +
-      '/' +
-      airdate.substr(0, 2) +
-      '/' +
-      airdate.substr(4, 2)
-    );
+    const lairdate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
     if (lairdate > lastDepDate) {
       lastDepDate = lairdate;
     }
@@ -244,7 +219,6 @@ export class VisaPassportComponent implements OnInit {
         }
       ];
       for (const air of this.pnrService.pnrObj.airSegments) {
-
         // debugger;
         // await this.ddbService.getTravelPort(air.departureAirport).then(x => {
         //   const c = JSON.stringify(x);
@@ -261,46 +235,29 @@ export class VisaPassportComponent implements OnInit {
         if (this.ddbService.getCityCountry(air.departureAirport) === '') {
           this.departureCountry = '';
         } else {
-          this.departureCountry = this.ddbService.getCityCountry(
-            air.departureAirport
-          ).country;
+          this.departureCountry = this.ddbService.getCityCountry(air.departureAirport).country;
         }
         if (this.ddbService.getCityCountry(air.arrivalAirport) === '') {
           this.arrivalCountry = '';
         } else {
-          this.arrivalCountry = this.ddbService.getCityCountry(
-            air.arrivalAirport
-          ).country;
+          this.arrivalCountry = this.ddbService.getCityCountry(air.arrivalAirport).country;
         }
         // });
         const airdate = air.departureDate;
         if (firstLoop) {
-          firstDepDate = new Date(
-            airdate.substr(2, 2) +
-            '/' +
-            airdate.substr(0, 2) +
-            '/' +
-            airdate.substr(4, 2)
-          );
+          firstDepDate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
           firstLoop = false;
         } else {
           firstDepDate = this.getFirstDate(airdate, firstDepDate);
         }
 
         if (lastLoop) {
-          lastDepDate = new Date(
-            airdate.substr(2, 2) +
-            '/' +
-            airdate.substr(0, 2) +
-            '/' +
-            airdate.substr(4, 2)
-          );
+          lastDepDate = new Date(airdate.substr(2, 2) + '/' + airdate.substr(0, 2) + '/' + airdate.substr(4, 2));
           lastLoop = false;
         } else {
           lastDepDate = this.getLastDate(airdate, lastDepDate);
         }
 
-        // tslint:disable-next-line:max-line-length
         originDestination.push({
           origin: this.departureCountry,
           destination: this.arrivalCountry,
@@ -315,7 +272,6 @@ export class VisaPassportComponent implements OnInit {
       let excludeCity: string;
 
       for (let i = 1; i < originDestination.length; i++) {
-        // tslint:disable-next-line:max-line-length
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
           '/' +
@@ -336,15 +292,10 @@ export class VisaPassportComponent implements OnInit {
       } else {
         excludeCity = '';
       }
-      // tslint:disable-next-line:prefer-for-of
 
       for (let i = 1; i < originDestination.length; i++) {
         if (originDestination[i].destination !== excludeCity) {
-          if (
-            countryList.findIndex(
-              x => x.country === originDestination[i].destination
-            ) === -1
-          ) {
+          if (countryList.findIndex((x) => x.country === originDestination[i].destination) === -1) {
             countryList.push({
               country: originDestination[i].destination,
               passport: true,
@@ -353,28 +304,18 @@ export class VisaPassportComponent implements OnInit {
               segmentLine: originDestination[i].segmentLine
             });
           } else {
-            // tslint:disable-next-line:no-shadowed-variable
             let index: number;
-            index = countryList.findIndex(
-              x => x.country === originDestination[i].destination
-            );
-            countryList[index].segmentLine =
-              countryList[index].segmentLine +
-              ',' +
-              originDestination[i].segmentLine;
-            countryList[index].tatooNumber =
-              countryList[index].tatooNumber +
-              ',' +
-              originDestination[i].tatooNumber;
+            index = countryList.findIndex((x) => x.country === originDestination[i].destination);
+            countryList[index].segmentLine = countryList[index].segmentLine + ',' + originDestination[i].segmentLine;
+            countryList[index].tatooNumber = countryList[index].tatooNumber + ',' + originDestination[i].tatooNumber;
           }
         }
       }
       countryList.splice(0, 1);
       this.segments = countryList;
 
-      const segmentArray = this.visaPassportFormGroup.controls
-        .segments as FormArray;
-      this.segments.forEach(x => {
+      const segmentArray = this.visaPassportFormGroup.controls.segments as FormArray;
+      this.segments.forEach((x) => {
         segmentArray.push(
           this.fb.group({
             country: x.country,
@@ -391,11 +332,10 @@ export class VisaPassportComponent implements OnInit {
 
   getVisaChecked(destination: string): boolean {
     const pnr = this.pnrService.pnrObj;
-    const rem =
-      destination.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED';
+    const rem = destination.toUpperCase() + ' - A VALID PASSPORT AND VISA ARE REQUIRED';
     let hasVisa: boolean;
     hasVisa = false;
-    pnr.rirElements.forEach(x => {
+    pnr.rirElements.forEach((x) => {
       if (x.fullNode.miscellaneousRemarks.remarks.freetext === rem) {
         hasVisa = true;
       }
@@ -404,9 +344,7 @@ export class VisaPassportComponent implements OnInit {
   }
 
   hasAdvisoryLine(): boolean {
-    this.hasRemarkLine = this.pnrService.getRemarkLineNumber(
-      'INTERNATIONAL TRAVEL ADVISORY SENT'
-    );
+    this.hasRemarkLine = this.pnrService.getRemarkLineNumber('INTERNATIONAL TRAVEL ADVISORY SENT');
     if (this.hasRemarkLine !== '') {
       this.advisoryClicked = true;
       return true;

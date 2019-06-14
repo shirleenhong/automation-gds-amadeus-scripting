@@ -24,6 +24,6 @@ export class AlphaMaskDirective {
     if (lastChar.match(/[a-z]/g) === null && lastChar.match(/[A-Z]/g) === null) {
       newVal = newVal.substr(0, newVal.length - 1);
     }
-    this.ngControl.valueAccessor.writeValue(newVal);
+    this.ngControl.valueAccessor.writeValue(newVal.toString().toUpperCase());
   }
 }

@@ -29,7 +29,6 @@ export class PackageRemarkService {
     });
     this.packageRemarkHelper.clearForDeletionRemarks();
 
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.value.itcCurrencyType, 'RI', 'R'));
 
     if (Number(group.value.noAdult) > 0) {
@@ -122,7 +121,6 @@ export class PackageRemarkService {
       this.packageRemarkHelper.clearForDeletionRemarks();
     }
 
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(
       this.remarkHelper.createRemark('THE FOLLOWING COSTS ARE SHOWN IN ' + group.controls.tourCurrencyType.value, 'RI', 'R')
     );
@@ -147,7 +145,6 @@ export class PackageRemarkService {
       );
     }
 
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'TOTAL PACKAGE PRICE ' + (group.controls.totalCostHoliday.value === '' ? '0.00' : group.controls.totalCostHoliday.value),
@@ -155,7 +152,6 @@ export class PackageRemarkService {
         'R'
       )
     );
-    // tslint:disable-next-line:max-line-length
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'LESS DEPOSIT PAID ' +
@@ -167,7 +163,6 @@ export class PackageRemarkService {
       )
     );
     rmGroup.remarks.push(this.remarkHelper.createRemark('BALANCE DUE ' + group.controls.balanceToBePaid.value, 'RI', 'R'));
-    // tslint:disable-next-line:max-line-length
     if (group.controls.balanceDueDate.value) {
       rmGroup.remarks.push(
         this.remarkHelper.createRemark(
@@ -185,7 +180,6 @@ export class PackageRemarkService {
     rmGroup.remarks.push(this.remarkHelper.createRemark('SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE', 'RI', 'R'));
     this.deleteRemarks(['U43/-', 'U41/-', 'U42/-'], rmGroup, 'RM');
     if (group.controls.balanceDueDate.value.length > 0) {
-      // tslint:disable-next-line:max-line-length
       rmGroup.remarks.push(
         this.remarkHelper.createRemark('U43/-' + datePipe.transform(group.controls.balanceDueDate.value, 'MMMyy'), 'RM', '*')
       );
@@ -480,7 +474,7 @@ export class PackageRemarkService {
       amount = '0.00';
     }
 
-    //alert(amount);
+    // alert(amount);
     if (amount === '0.00') {
       return null;
     }

@@ -61,7 +61,7 @@ export class PassiveSegmentsModel {
   rentalCost: string;
   currency = 'CAD';
   duration = 'DAILY';
-  mileage: string;
+  mileage: 'UNL';
   mileagePer = 'KM';
   dropOffFee: string;
   cdNumber: string;

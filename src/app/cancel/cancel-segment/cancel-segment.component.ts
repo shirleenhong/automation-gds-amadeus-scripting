@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
-import { SelectItem } from '../models/select-item.model';
-import { PnrService } from '../service/pnr.service';
-import { validateSegmentNumbers, validatePassengerNumbers } from '../shared/validators/leisure.validators';
-import { UtilHelper } from '../helper/util.helper';
+import { SelectItem } from 'src/app/models/select-item.model';
+import { PnrService } from 'src/app/service/pnr.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
+import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
+
 
 @Component({
   selector: 'app-cancel-segment',

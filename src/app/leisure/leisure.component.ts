@@ -11,7 +11,6 @@ import { ReportingComponent } from '../reporting/reporting.component';
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
-import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
@@ -26,6 +25,7 @@ import { QueueService } from '../service/queue.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
+import { CancelSegmentComponent } from '../cancel/cancel-segment/cancel-segment.component';
 
 @Component({
   selector: 'app-leisure',
@@ -82,7 +82,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -263,7 +263,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

@@ -28,7 +28,8 @@ export class RefundComponent implements OnInit {
       commissionPoint: new FormControl('', []),
       taxRecall: new FormControl('', []),
       comments: new FormControl('', []),
-      supplier: new FormControl('', [])
+      supplier: new FormControl('', []),
+      isBsp: new FormControl('', [])
     });
     this.loadCancelList();
     this.filterSupplierCodeList = this.ddbService.getSupplierCodes();
@@ -43,6 +44,10 @@ export class RefundComponent implements OnInit {
       { itemText: 'YES', itemValue: 'YES' },
       { itemText: 'NO', itemValue: 'NO' }
     ];
+  }
+
+  get f() {
+    return this.refundForm.controls;
   }
 
 }

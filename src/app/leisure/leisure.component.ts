@@ -25,7 +25,7 @@ import { QueueService } from '../service/queue.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
-import { CancelSegmentComponent } from '../cancel/cancel-segment/cancel-segment.component';
+import { CancelComponent } from '../cancel/cancel.component';
 
 @Component({
   selector: 'app-leisure',
@@ -49,12 +49,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
-  @ViewChild(CancelSegmentComponent)
-  cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
+  @ViewChild(CancelComponent) cancelComponent: CancelComponent;
 
   errorPnrMsg = '';
   eventSubscribe = false;
@@ -239,11 +238,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async cancelPnr() {
+    let queueCollection = Array<QueuePlaceModel>();
+
     if (this.submitProcess) {
       return;
     }
 
-    if (!this.cancelSegmentComponent.checkValid()) {
+    if (!this.cancelComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
       });
@@ -252,11 +253,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
+
     this.showLoading('Applying cancellation to PNR...');
     this.submitProcess = true;
     const osiCollection = new Array<RemarkGroup>();
     const remarkCollection = new Array<RemarkGroup>();
-    const cancel = this.cancelSegmentComponent;
+    const cancel = this.cancelComponent.cancelSegmentComponent;
     const getSelected = cancel.submit();
 
     // if (getSelected.length >= 1) {
@@ -273,12 +275,15 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
+    queueCollection = this.segmentService.queueRefund(this.cancelComponent.refundComponent.refundForm);
+    remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.cancelRemarks(cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
-        this.getPnr();
+        this.getPnr(queueCollection);
         this.workflow = '';
       },
       (error) => {

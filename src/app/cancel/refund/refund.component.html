@@ -2,8 +2,9 @@
   <div class="refundContainer">
     <div class="row form-group">
       <div class="col-4">BSP Refund? </div>
-      <div class="col-4">
-        <select id="isBsp" class="form-control" formControlName="isBsp" name="isBsp">
+      <div class="col-5">
+        <select id="isBsp" class="form-control" formControlName="isBsp" name="isBsp"
+          (change)="enableControls($event.target.value)">
           <option *ngFor="let item of cancellationList" [value]="item.itemValue">
             {{item.itemText}}
           </option>
@@ -14,14 +15,14 @@
     <div *ngIf="f.isBsp.value === 'NO'">
       <div class="row form-group">
         <div class="col-4">Branch Number</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="branch" name="branch" formControlName="branch" maxlength="6" />
         </div>
       </div>
 
       <div class="row form-group">
         <div class="col-4">Person Requesting</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="personRequesting" name="personRequesting"
             formControlName="personRequesting" maxlength="35" />
         </div>
@@ -29,7 +30,7 @@
 
       <div class="row form-group">
         <div class="col-4">Passenger Name</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="passengerName" name="passengerName"
             formControlName="passengerName" maxlength="35" />
         </div>
@@ -37,14 +38,14 @@
 
       <div class="row form-group">
         <div class="col-4">CFA</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="cfa" name="cfa" formControlName="cfa" maxlength="35" />
         </div>
       </div>
 
       <div class="row form-group">
         <div class="col-4">Cancellation </div>
-        <div class="col-4">
+        <div class="col-5">
           <select id="cancellation" class="form-control" formControlName="cancellation" name="cancellation">
             <option *ngFor="let item of cancellationList" [value]="item.itemValue">
               {{item.itemText}}
@@ -55,7 +56,7 @@
 
       <div class="row form-group">
         <div class="col-4">Commission Recall Only</div>
-        <div class="col-4">
+        <div class="col-5">
           <select id="commission" class="form-control" formControlName="commission" name="commission">
             <option *ngFor="let item of cancellationList" [value]="item.itemValue">
               {{item.itemText}}
@@ -65,8 +66,8 @@
       </div>
 
       <div class="form-group row">
-        <div class="col-sm-4"><label id="lblName"> {{lblvendorCode}}: </label></div>
-        <div class="col-sm-4">
+        <div class="col-sm-4"><label id="lblName"> Supplier </label></div>
+        <div class="col-sm-5">
           <input type="text" class="form-control" formControlName="supplier" id="supplier" list="dynamicSupplierCode"
             maxlength="3" AllCapsMask />
 
@@ -80,7 +81,7 @@
 
       <div class="form-group  row">
         <div class="col-sm-4">Base Refund Before Penalty Point</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="baseRefund" formControlName="baseRefund"
             formControlName="baseRefund" name="baseRefund" placeholder="00.00" AmountMask maxlength="7" />
         </div>
@@ -88,7 +89,7 @@
 
       <div class="form-group  row">
         <div class="col-sm-4">Taxes being refunded</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="taxesRef" formControlName="taxesRef" formControlName="taxesRef"
             name="taxesRef" placeholder="00.00RC" maxlength="36" />
         </div>
@@ -96,7 +97,7 @@
 
       <div class="form-group  row">
         <div class="col-sm-4">Penalty If Applicable Point</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="penaltyPoint" formControlName="penaltyPoint"
             formControlName="penaltyPoint" name="penaltyPoint" placeholder="00.00" AmountMask maxlength="7" />
         </div>
@@ -104,7 +105,7 @@
 
       <div class="form-group  row">
         <div class="col-sm-4">Commission Recall Point</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="commissionPoint" formControlName="commissionPoint"
             formControlName="commissionPoint" name="commissionPoint" placeholder="00.00" AmountMask maxlength="7" />
         </div>
@@ -112,7 +113,7 @@
 
       <div class="form-group  row">
         <div class="col-sm-4">Tax on Com. Recall</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="taxRecall" formControlName="taxRecall" formControlName="taxRecall"
             name="taxRecall" placeholder="5.00XG" AmountMask maxlength="35" />
         </div>
@@ -120,7 +121,7 @@
 
       <div class="row form-group">
         <div class="col-4">Comments</div>
-        <div class="col-4">
+        <div class="col-5">
           <input type="text" class="form-control" id="comments" name="comments" formControlName="comments"
             maxlength="35" />
         </div>

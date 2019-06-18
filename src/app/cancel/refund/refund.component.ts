@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DDBService } from 'src/app/service/ddb.service';
 
@@ -50,4 +50,27 @@ export class RefundComponent implements OnInit {
     return this.refundForm.controls;
   }
 
+  enableFormControls(controls: string[], disabled: boolean) {
+    controls.forEach((c) => {
+      if (disabled) {
+        this.refundForm.get(c).disable();
+      } else {
+        this.refundForm.get(c).enable();
+        this.refundForm.get(c).setValidators(Validators.required);
+        this.refundForm.get(c).updateValueAndValidity();
+      }
+    });
+  }
+
+  enableControls(bspValue) {
+    if (bspValue === 'NO') {
+      this.enableFormControls(
+        ['branch', 'personRequesting', 'passengerName', 'cfa'], false
+      );
+    } else {
+      this.enableFormControls(
+        ['branch', 'personRequesting', 'passengerName', 'cfa'], true
+      );
+    }
+  }
 }

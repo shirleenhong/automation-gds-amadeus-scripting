@@ -1,5 +1,5 @@
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { Injectable } from '@angular/core';
 import { PnrService } from './pnr.service';
@@ -7,6 +7,7 @@ import { RemarkHelper } from '../helper/remark-helper';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { FormArray, FormGroup } from '@angular/forms';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -870,21 +871,59 @@ export class SegmentService {
             { include: refund.controls.comments.value, description: 'COMMENTS ', include2: 'ok' }
         ];
 
-        rmxRemarks.forEach((c) => {
-            if (c.include && c.include2 === 'ok') {
-                remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'K'));
-            } else if (c.include || c.include2) {
-                let remarkText = '';
-                if (c.include) {
-                    remarkText = c.description + c.include;
+        if (refund.controls.isBsp.value === 'NO') {
+            rmxRemarks.forEach((c) => {
+                if (c.include && c.include2 === 'ok') {
+                    remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'K'));
+                } else if (c.include || c.include2) {
+                    let remarkText = '';
+                    if (c.include) {
+                        remarkText = c.description + c.include + ' ';
+                    }
+                    if (c.include2) {
+                        remarkText = remarkText + c.description2 + c.include2;
+                    }
+                    remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'K'));
                 }
-                if (c.include2) {
-                    remarkText = remarkText + c.description2 + c.include2;
-                }
-                remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'K'));
-            }
-        });
+            });
+        }
+        return remGroup;
     }
 
+    queueRefund(frmrefund: FormGroup) {
+        const queueGroup = Array<QueuePlaceModel>();
+
+        if (frmrefund.controls.isBsp.value === 'YES') {
+            this.getQueueMinder(queueGroup, 'nonIsBsp');
+        } else {
+            this.getQueueMinder(queueGroup, 'nonIsBsp');
+            this.getQueueMinder(queueGroup, 'nonBsp');
+        }
+        return queueGroup;
+    }
+
+    private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
+        const queue = new QueuePlaceModel();
+
+        const queuePlaceDescription = [
+            { control: 'nonIsBsp', queueNo: '41', pcc: 'YTOWL2104', text: 'NON BSP', category: '98' },
+            { control: 'nonBsp', queueNo: '41', pcc: 'YTOWL2107', text: 'BSP', category: '98' }
+        ];
+        const look = queuePlaceDescription.find((x) => x.control === controlname);
+        if (look) {
+            queue.queueNo = look.queueNo;
+            if (queueno) {
+                queue.queueNo = queueno;
+            }
+            queue.pcc = look.pcc;
+            if (look.pcc === '') {
+                queue.pcc = this.pnrService.PCC;
+            }
+            queue.freetext = look.text;
+            queue.category = look.category;
+            queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+            queueGroup.push(queue);
+        }
+    }
 }
 

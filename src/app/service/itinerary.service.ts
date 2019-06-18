@@ -92,6 +92,7 @@ export class ItineraryService {
 
 
   private deleteItineraryRemarks(rmGroup: RemarkGroup, frmGroup: FormGroup) {
+    debugger;
     const listRegex = ['SEND TO MAIL (?<temp>.*)',
       'LANG:(EN|FR)'];
     let regx: RegExp;

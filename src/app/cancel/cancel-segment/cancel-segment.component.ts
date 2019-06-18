@@ -93,7 +93,7 @@ export class CancelSegmentComponent implements OnInit {
     } else {
       this.reasonAcList = [
         { itemText: '', itemValue: '' },
-        { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' },
+        { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO IROP', itemValue: '6' },
         { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: '6' },
         { itemText: 'NONE OF THE ABOVE', itemValue: '9' },
       ];

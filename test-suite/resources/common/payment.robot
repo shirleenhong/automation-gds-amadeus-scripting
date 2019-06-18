@@ -290,7 +290,7 @@ Select Segment
     : FOR    ${segment_number}    IN    @{segment_number}
     \    Click Element    xpath=//ul[@id='dropdown-basic']//input[@value='${segment_number}']
     Click Element    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
-    Take Screenshot
+    [Teardown]    Take Screenshot
 
 Enter Description
     [Arguments]    ${description}
@@ -308,10 +308,21 @@ Select Tax Exemption
     \    Run Keyword If    '${tax_exemption}' == 'HST Exempt'    Select Checkbox    xpath=//input[@value='RC']
     \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Select Checkbox    xpath=//input[@value='XG']
     \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Select Checkbox    xpath=//input[@value='XQ']
-
+    [Teardown]    Take Screenshot
+    
 Unselect Tax Exemption
     [Arguments]    @{tax_exemption}
     : FOR    ${tax_exemption}    IN    @{tax_exemption}
     \    Run Keyword If    '${tax_exemption}' == 'HST Exempt'    Unselect Checkbox    xpath=//input[@value='RC']
     \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Unselect Checkbox    xpath=//input[@value='XG']
     \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Unselect Checkbox    xpath=//input[@value='XQ']
+
+Select Type Of Pass Purchase
+    [Arguments]    ${pass_purchase_type}
+    Select From List By Value    css=#passPurchase    ${pass_purchase_type}
+    [Teardown]    Take Screenshot
+
+Select Fare Type
+    [Arguments]    ${fare_type}
+    Select From List By Value    css=#fareType    ${fare_type}
+    [Teardown]    Take Screenshot

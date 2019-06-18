@@ -13,7 +13,7 @@ Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Segment    4
-    Create Matrix Accounting Remark    NO    Tour Accounting Remark    AD1    ABC4567891EFG4567890    Credit Card    VI
+    Create Matrix Accounting Remark    NO    Tour Accounting Remark    AD1    ABC4567891EFG4567890    Credit Card    Visa
     ...    4444333322221111    0323
     Enter Base Amount    100.75
     Enter GST Tax Amount    2.00
@@ -35,7 +35,7 @@ Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}/P1    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P1    True
     Verify Specific Remark Is Written In The PNR    RM *U76/-NO
     Verify Specific Remark Is Written In The PNR    RM *U71/-YES
     Verify Specific Remark Is Written In The PNR    RM *U75/-COZY ARMS HOTEL
@@ -592,17 +592,17 @@ Verify That Matrix Accounting Remark And UDID 14 Are Not Duplicated On Update
 *** Keywords ***
 Verify Matrix Accounting Default Values Are Correct
     [Arguments]    ${matrix_accounting}    ${is_ticket_blank}=True
-    ${default_supplier_code}    Get Element Attribute    xpath=//input[@id='supplierCodeName']@ng-reflect-model
+    ${default_supplier_code}    Get Element Attribute    xpath=//input[@id='supplierCodeName']    ng-reflect-model
     Should Be Equal    ${default_supplier_code}    ${supplier_code}
-    ${default_confirmation_no}    Get Element Attribute    xpath=//input[@id='supplierConfirmatioNo']@ng-reflect-model
+    ${default_confirmation_no}    Get Element Attribute    xpath=//input[@id='supplierConfirmatioNo']    ng-reflect-model
     Should Be Equal    ${default_confirmation_no}    ${supplier_confirmation_number}
-    ${default_base_amount}    Get Element Attribute    xpath=//input[@id='baseAmount']@ng-reflect-model
+    ${default_base_amount}    Get Element Attribute    xpath=//input[@id='baseAmount']    ng-reflect-model
     Should Be Equal    ${default_base_amount}    ${base_amount}
-    ${default_gst_tax}    Get Element Attribute    xpath=//input[@id='gst']@ng-reflect-model
+    ${default_gst_tax}    Get Element Attribute    xpath=//input[@id='gst']    ng-reflect-model
     Should Be Equal    ${default_gst_tax}    ${gst_tax}
-    ${default_hst_tax}    Get Element Attribute    xpath=//input[@id='hst']@ng-reflect-model
+    ${default_hst_tax}    Get Element Attribute    xpath=//input[@id='hst']     ng-reflect-model
     Should Be Equal    ${default_hst_tax}    ${hst_tax}
-    ${default_qst_tax}    Get Element Attribute    xpath=//input[@id='qst']@ng-reflect-model
+    ${default_qst_tax}    Get Element Attribute    xpath=//input[@id='qst']    ng-reflect-model
     Should Be Equal    ${default_qst_tax}    ${qst_tax}
     ${default_ticket_number}    Run Keyword If    "${is_ticket_blank}" == "False"    Get Element Attribute    css=#tktLine
     Run Keyword If    "${is_ticket_blank}" == "False"    Should Be Equal    ${default_ticket_number}    ${ticket_number}

@@ -6,7 +6,7 @@ Tick On Send Itinerary
     Select Checkbox    css=#sendItinerary
 
 Enter Email Address
-    [Arguments]     ${email_address_order}    ${email_address}
+    [Arguments]    ${email_address_order}    ${email_address}
     Input Text    //div[@ng-reflect-name='emailAddresses'][${email_address_order}]//input[@id='emailAddress']    ${email_address}
 
 Click Add Email Address Button
@@ -34,7 +34,7 @@ Enter Offer Remark
     [Arguments]    ${offer_order}    ${offer_remark}
     Input Text    xpath=//div[@ng-reflect-name='offers'][${offer_order}]//input[@id='offer']    ${offer_remark}
     [Teardown]    Take Screenshot
-    
+
 Add Type Of Transaction Remark Field
     [Arguments]    ${type}
-    Click Element    xpath=//div[@ng-reflect-name='${type}']//i[@id='add'] 
+    Click Element    xpath=//div[@ng-reflect-name='${type}']//i[@id='add']

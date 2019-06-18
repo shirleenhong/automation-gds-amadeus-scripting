@@ -437,3 +437,9 @@ Enter Number Of Rooms
     Double Click Element    css=#numberOfRooms
     Press Key    css=#numberOfRooms    \\08
     Input text      css=#numberOfRooms      ${number_room}
+
+Enter Rate Booked
+    [Arguments]    ${rate_booked}
+    Double Click Element    css=#rateBooked
+    Press Key    css=#rateBooked    \\08
+    Input text      css=#rateBooked      ${rate_booked}

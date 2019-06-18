@@ -51,7 +51,7 @@ Enter UA Passenger Number
     Input Text    css=#uaPassengerNo    ${ua_passenger_no}
     [Teardown]    Take Screenshot
 
-Select AC Reason For Cancel
+Select Reason For Cancel
     [Arguments]    ${ac_reason}
     Select From List By Label    css=#reasonACCancel    ${ac_reason}
 
@@ -64,11 +64,11 @@ Unselect Passive Segment
     Unselect Checkbox    //div[@class='cancelContainer']//input[@ng-reflect-name='${passive_segment_order}']
     [Teardown]    Take Screenshot
 
-Select NonRefundable AC Flight Checkbox
-    Select Checkbox    css=#cancelNonRefAC
-    Wait Until Page Contains Element    css=#reasonACCancel    30
-
 Enter Relationship
     [Arguments]    ${relationship}
     Input Text    css=#relationship    ${relationship}
+    [Teardown]    Take Screenshot
+
+Select Cancel All Segments
+    Select Checkbox    css=#cancelAll
     [Teardown]    Take Screenshot

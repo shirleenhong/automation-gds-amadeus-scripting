@@ -45,6 +45,8 @@ import { ItineraryComponent } from './itinerary-and-queue/itinerary/itinerary.co
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { CancelComponent } from './cancel/cancel.component';
+import { RefundComponent } from './cancel/refund/refund.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +89,9 @@ import { LoadingComponent } from './shared/loading/loading.component';
     UpdateLeisureFeeComponent,
     ItineraryComponent,
     ItineraryAndQueueComponent,
-    QueueComponent
+    QueueComponent,
+    CancelComponent,
+    RefundComponent
   ],
   imports: [
     BrowserModule,
@@ -125,4 +129,4 @@ import { LoadingComponent } from './shared/loading/loading.component';
     UpdateLeisureFeeComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }

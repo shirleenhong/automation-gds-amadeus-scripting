@@ -110,7 +110,7 @@ export class PaymentRemarkService {
     rem.remarkText = remText;
     rem.remarkType = type;
     rem.relatedSegments = this.getSegmentTatooValue(segmentrelate);
-    rem.relatedPassengers = this.getPassengerTatooValue(passengerRelate);
+    rem.relatedPassengers = this.pnrService.getPassengerTatooValue(passengerRelate);
     return rem;
   }
 
@@ -127,21 +127,6 @@ export class PaymentRemarkService {
     });
 
     return relatedSegment;
-  }
-
-  getPassengerTatooValue(passengerRelate) {
-    const relatedPassenger = [];
-    const tatooPassenger = this.pnrService.getPassengers();
-    passengerRelate.forEach((element) => {
-      if (tatooPassenger.length > 0) {
-        const look = tatooPassenger.find((x) => x.id === element);
-        if (look) {
-          relatedPassenger.push(look.tatooNo);
-        }
-      }
-    });
-
-    return relatedPassenger;
   }
 
   getFOP(modeofPayment, creditCardNo, fopvendorCode, expDate) {

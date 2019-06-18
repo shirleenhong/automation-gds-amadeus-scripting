@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
 export class InvoiceService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService) { }
 
   public GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();

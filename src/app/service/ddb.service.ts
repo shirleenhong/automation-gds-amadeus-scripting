@@ -189,6 +189,11 @@ export class DDBService implements OnInit {
         await this.extractDataPort(port);
       });
     });
+    await this.delay(1500);
+  }
+
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async extractDataPort(port: any) {

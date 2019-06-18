@@ -37,7 +37,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
-  workflow = 'test';
+  workflow = 'start';
   cancelEnabled = true;
   validModel = new ValidateModel();
   invoiceEnabled = false;

@@ -6,7 +6,7 @@ import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -80,6 +80,7 @@ export class SegmentService {
                     for (let i = 1; i <= noOfPassenger; i++) {
                         relatePass.push(i.toString());
                     }
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
 
                 if (segment.segmentType === 'HTL') {
@@ -89,7 +90,7 @@ export class SegmentService {
                     for (let i = 1; i <= noOfPassenger; i++) {
                         relatePass.push(i.toString());
                     }
-                    // passive.quantity = Number(segment.numberOfRooms);
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
                 passive.relatedPassengers = relatePass;
                 passive.status = 'HK';
@@ -100,7 +101,6 @@ export class SegmentService {
                 const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
                 passive.freeText = freetext;
             }
-
             tourSegment.push(passive);
         });
 
@@ -109,7 +109,6 @@ export class SegmentService {
         passGroup.passiveSegments = tourSegment;
         return passGroup;
     }
-
 
     addSegmentRir(segRemark: any) {
 
@@ -396,7 +395,7 @@ export class SegmentService {
         return rem;
     }
 
-    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string, 
+    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
         startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
@@ -435,7 +434,7 @@ export class SegmentService {
                 freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
                     '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + (segment.mileage === 'UNL' ? '' : ' FREE') +
-                    '/URA-' + segment.rateBooked +  segment.currency + '/CF-' + segment.confirmationNo;
+                    '/URA-' + segment.rateBooked + segment.currency + '/CF-' + segment.confirmationNo;
                 break;
             case 'HTL':
 
@@ -842,6 +841,49 @@ export class SegmentService {
         });
 
         return rmGroup;
+    }
+
+    writeRefundRemarks(refund: FormGroup) {
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'Refund Remark';
+        remGroup.remarks = new Array<RemarkModel>();
+
+        const rmxRemarks = [
+            { include: refund.controls.branch.value, description: 'BRANCH ', include2: 'ok' },
+            { include: refund.controls.personRequesting.value, description: 'PERSON REQUESTING ', include2: 'ok' },
+            { include: refund.controls.passengerName.value, description: 'PASSENGER ', include2: 'ok' },
+            {
+                include: refund.controls.cfa.value, description: 'CFA ',
+                include2: refund.controls.cancellation.value, description2: 'CANCELLATION '
+            },
+            {
+                include: refund.controls.commission.value, description: 'COMM RECALL ONLY ',
+                include2: refund.controls.supplier.value, description2: 'SUPPLIER '
+            },
+            { include: refund.controls.baseRefund.value, description: 'BASE REFUND BEFORE PENALTY  ', include2: 'ok' },
+            { include: refund.controls.taxesRef.value, description: 'TAXES REFUNDED ', include2: 'ok' },
+            { include: refund.controls.penaltyPoint.value, description: 'PENALTY ', include2: 'ok' },
+            {
+                include: refund.controls.commissionPoint.value, description: 'COMM RECALL ',
+                include2: refund.controls.taxRecall.value, description2: 'TAX ON COMM RECALL '
+            },
+            { include: refund.controls.comments.value, description: 'COMMENTS ', include2: 'ok' }
+        ];
+
+        rmxRemarks.forEach((c) => {
+            if (c.include && c.include2 === 'ok') {
+                remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'K'));
+            } else if (c.include || c.include2) {
+                let remarkText = '';
+                if (c.include) {
+                    remarkText = c.description + c.include;
+                }
+                if (c.include2) {
+                    remarkText = remarkText + c.description2 + c.include2;
+                }
+                remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'K'));
+            }
+        });
     }
 
 }

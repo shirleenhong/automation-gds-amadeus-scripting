@@ -1145,9 +1145,18 @@ export class PnrService {
     return 0;
   }
 
-  // public async endPNR(requestor) {
-  //   smartScriptSession.send('RF' + requestor);
-  //   smartScriptSession.send('ER');
-  //   smartScriptSession.send('RT');
-  // }
+  getPassengerTatooValue(passengerRelate) {
+    const relatedPassenger = [];
+    const tatooPassenger = this.getPassengers();
+    passengerRelate.forEach((element) => {
+      if (tatooPassenger.length > 0) {
+        const look = tatooPassenger.find((x) => x.id === element);
+        if (look) {
+          relatedPassenger.push(look.tatooNo);
+        }
+      }
+    });
+
+    return relatedPassenger;
+  }
 }

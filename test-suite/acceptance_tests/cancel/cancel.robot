@@ -16,6 +16,8 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written
     Enter Cancel Notes    1    Test cancel notes1
     Enter Cancel Notes    2    Test cancel notes2
     Select Passive Segment    2
+    Select Reason For Cancel    NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE
+    Enter Affected Airline Number    NO12345
     Enter Ticket Number For Refund    1    ABC123
     Enter Coupon Number For Refund    1    123456
     Click Cancel Segments Button
@@ -29,12 +31,12 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-2
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-4
     Verify Specific Remark Is Written In The PNR    /TKT NBR-ABC123 CPNS-123456
+    Verify Specific Remark Is Written In The PNR    /NO12345
     Verify Specific Remark Is Not Written In The PNR    AF1074 Y 10NOV 7 YYZCDG GK1 \ 1155 1440 \ 10NOV \ \ \ \ ABCDEFG
     Verify Specific Remark Is Not Written In The PNR    HTL 1A HK1 STR 15NOV-17NOV/GERMANY,PARK INN
     Verify Specific Remark Is Not Written In The PNR    RM *NUC
     Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
     Close Cryptic Display Window
-    Switch To Command Page
 
 Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written When PNR Have Previoulsy Cancelled Segments
     [Tags]    us8214
@@ -43,11 +45,11 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written When 
     Enter Requestor Name    Test Leisure
     Enter Cancel Notes    1    Test Description Cancel
     Select Passive Segment    1
+    Select Reason For Cancel    NONE OF THE ABOVE
     Enter Ticket Number For Refund    1    1234ABC
     Enter Coupon Number For Refund    1    9825252
     Click Cancel Segments Button
     Close CA Migration Window
-    Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY TEST LEISURE
     Verify Specific Remark Is Written In The PNR    /TEST DESCRIPTION CANCEL
@@ -89,6 +91,7 @@ Verify That UA Segment Is Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Not Written In The PNR    /CANCEL NR DUE TO IROP OR SKD CHG
     Verify Specific Remark Is Not Written In The PNR    /TKT NBR-1234ABC CPNS-9825252
     Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
+    Verify Specific Remark Is Not Written In The PNR    RM *NUC
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -108,64 +111,61 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Enter Cancel Notes    2    Test cancel notes2
     Unselect Passive Segment    0
     Select Passive Segment    1
-    Select NonRefundable AC Flight Checkbox
-    Select AC Reason For Cancel    NAME CORRECTION NCC WITH OAL
+    Select Reason For Cancel    NAME CORRECTION NCC WITH OAL
     Enter AC Ticket Number    1234512
-    Enter Affected Airline Number    U21075
     Enter Ticket Number For Refund    1    1234ABC
     Enter Coupon Number For Refund    1    9825252
-    Click Cancel Segments Button
-    Close CA Migration Window
-    Switch To Graphic Mode
-    Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY AMADEUS LEISURE
-    Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES1
-    Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES2
-    Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
-    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-3
-    Verify Specific Remark Is Written In The PNR    /U21075
-    Verify Specific Remark Is Written In The PNR    /CANCEL NR DUE TO IROP OR SKD CHG
-    Verify Specific Remark Is Written In The PNR    /TKT NBR-1234ABC CPNS-9825252
-    Close Cryptic Display Window
-    Switch To Command Page
-    Open CA Migration Window
-    Click Cancel Segment
-    Enter Requestor Name    FirstName LastName
-    Enter Cancel Notes    1    2nd Cancel Segment
-    Select NonRefundable AC Flight Checkbox
-    Select AC Reason For Cancel    DUPLICATE TICKETS
-    Enter AC Ticket Number    532523
-    Click Cancel Segments Button
-    Close CA Migration Window
-    Switch To Graphic Mode
-    Sleep    5
-    Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY FIRSTNAME LASTNAME
-    Verify Specific Remark Is Written In The PNR    /2ND CANCEL SEGMENT
-    Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
-    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-2
-    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-PRE
-    Close Cryptic Display Window
-    Open CA Migration Window
-    Click Cancel Segment
-    Select Passive Segment    1    2
-    Enter Requestor Name    Leisure Canada
-    Enter Cancel Notes    1    3rd Cancel Segment
-    Enter Ticket Number For Refund    1    1234567
-    Enter Coupon Number For Refund    1    7654321
-    Click Cancel Segments Button
-    Close CA Migration Window
-    Sleep    5
-    Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY LEISURE CANADA
-    Verify Specific Remark Is Written In The PNR    /3RD CANCEL SEGMENT
-    Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
-    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
-    Verify Specific Remark Is Written In The PNR    /TKT NBR-1234567 CPNS-7654321
-    Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
-    Close Cryptic Display Window
-    Logout To Amadeus Sell Connect
-    [Teardown]    Close Browser
+    # Click Cancel Segments Button
+    # Close CA Migration Window
+    # Switch To Graphic Mode
+    # Open Cryptic Display Window
+    # Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY AMADEUS LEISURE
+    # Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES1
+    # Verify Specific Remark Is Written In The PNR    /TEST CANCEL NOTES2
+    # Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
+    # Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-3
+    # Verify Specific Remark Is Written In The PNR    /U21075
+    # Verify Specific Remark Is Written In The PNR    /CANCEL NR DUE TO IROP OR SKD CHG
+    # Verify Specific Remark Is Written In The PNR    /TKT NBR-1234ABC CPNS-9825252
+    # Close Cryptic Display Window
+    # Switch To Command Page
+    # Open CA Migration Window
+    # Click Cancel Segment
+    # Enter Requestor Name    FirstName LastName
+    # Enter Cancel Notes    1    2nd Cancel Segment
+    # Select Reason For Cancel    DUPLICATE TICKETS
+    # Enter AC Ticket Number    532523
+    # Click Cancel Segments Button
+    # Close CA Migration Window
+    # Switch To Graphic Mode
+    # Sleep    5
+    # Open Cryptic Display Window
+    # Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY FIRSTNAME LASTNAME
+    # Verify Specific Remark Is Written In The PNR    /2ND CANCEL SEGMENT
+    # Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
+    # Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-2
+    # Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-PRE
+    # Close Cryptic Display Window
+    # Open CA Migration Window
+    # Click Cancel Segment
+    # Select Passive Segment    1    2
+    # Enter Requestor Name    Leisure Canada
+    # Enter Cancel Notes    1    3rd Cancel Segment
+    # Enter Ticket Number For Refund    1    1234567
+    # Enter Coupon Number For Refund    1    7654321
+    # Click Cancel Segments Button
+    # Close CA Migration Window
+    # Sleep    5
+    # Open Cryptic Display Window
+    # Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY LEISURE CANADA
+    # Verify Specific Remark Is Written In The PNR    /3RD CANCEL SEGMENT
+    # Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
+    # Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
+    # Verify Specific Remark Is Written In The PNR    /TKT NBR-1234567 CPNS-7654321
+    # Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
+    # Close Cryptic Display Window
+    # Logout To Amadeus Sell Connect
+    # [Teardown]    Close Browser
 
 Verify That OSI Fields Have Default Values And Cancel Remarks Are Written
     [Tags]    us8214    us8882
@@ -181,8 +181,7 @@ Verify That OSI Fields Have Default Values And Cancel Remarks Are Written
     Enter Cancel Notes    1    Test cancel notes1
     Enter Cancel Notes    2    Test cancel notes2
     Select Passive Segment    2
-    Select NonRefundable AC Flight Checkbox
-    Select AC Reason For Cancel    DEATH/IMMINENT DEATH
+    Select Reason For Cancel    DEATH/IMMINENT DEATH
     Enter Relationship    Test Relationship
     Select UA Reason For Cancel    UA FLIGHT NOT TICKETED YET
     Click Cancel Segments Button

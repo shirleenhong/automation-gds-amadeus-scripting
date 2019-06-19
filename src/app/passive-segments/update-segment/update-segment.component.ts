@@ -817,10 +817,10 @@ export class UpdateSegmentComponent implements OnInit {
   vendorCodeChange(value) {
     if (this.segmentForm.get('segmentType').value === 'CAR') {
       this.loadCarType();
-      const sup = this.filterSupplierCodeList.find((x) => x.supplierCode === value);
-      if (sup) {
-        this.passiveSegments.vendorName = sup.supplierName;
-      }
+    }
+    const sup = this.filterSupplierCodeList.find((x) => x.supplierCode === value);
+    if (sup) {
+      this.passiveSegments.vendorName = sup.supplierName;
     }
   }
 

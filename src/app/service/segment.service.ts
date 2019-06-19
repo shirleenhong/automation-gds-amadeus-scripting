@@ -781,7 +781,6 @@ export class SegmentService {
 
 
     writeOptionalFareRule(fareRuleModels: any) {
-
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();

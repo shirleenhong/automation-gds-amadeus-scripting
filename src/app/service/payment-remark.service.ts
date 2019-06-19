@@ -141,8 +141,10 @@ export class PaymentRemarkService {
         break;
       }
       case 'AP': {
-        fop = 'APVI4111111111111111/-EXP-1229';
-        paymentvendorCode = 'VI';
+        // fop = 'APVI4111111111111111/-EXP-1229';
+        // paymentvendorCode = 'VI';
+        fop = 'AP' + fopvendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
+        break;
         break;
       }
       default: {

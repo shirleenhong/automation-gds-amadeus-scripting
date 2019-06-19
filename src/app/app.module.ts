@@ -25,7 +25,6 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
 import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
 import { ConciergeUdidsComponent } from './reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
-import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
 import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
@@ -45,6 +44,9 @@ import { ItineraryComponent } from './itinerary-and-queue/itinerary/itinerary.co
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { QueueComponent } from './itinerary-and-queue/queue/queue.component';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { CancelComponent } from './cancel/cancel.component';
+import { RefundComponent } from './cancel/refund/refund.component';
+import { CancelSegmentComponent } from './cancel/cancel-segment/cancel-segment.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +89,9 @@ import { LoadingComponent } from './shared/loading/loading.component';
     UpdateLeisureFeeComponent,
     ItineraryComponent,
     ItineraryAndQueueComponent,
-    QueueComponent
+    QueueComponent,
+    CancelComponent,
+    RefundComponent
   ],
   imports: [
     BrowserModule,
@@ -125,4 +129,4 @@ import { LoadingComponent } from './shared/loading/loading.component';
     UpdateLeisureFeeComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }

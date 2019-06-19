@@ -26,10 +26,10 @@ Verify Tour Passive Segment Is Added In the PNR
     Select Meal Plan    All Inclusive
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -62,10 +62,10 @@ Verify Cruise Passive Segment Is Added In the PNR
     Select Dining    Early Dining
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -89,10 +89,10 @@ Verify Insurance Passive Segment Is Added In the PNR
     Enter Policy Number    123456789
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -121,10 +121,10 @@ Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
     Enter Airline Record Locator    ARL1234
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -156,10 +156,10 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
     Enter Airline Record Locator    ARL7656
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -217,10 +217,10 @@ Verify Passive Limo Segment Is Added In the PNR For EN Language
     Tick Limo Include Parking On Rate
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -290,10 +290,10 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
     Enter Limo Meet Drive At    Lux Nightclub
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Click Back To Main Menu
-    Click Wrap PNR
-    Populate Reporting Required Fields
-    Click Submit To PNR
+    Comment    Click Back To Main Menu
+    Comment    Click Wrap PNR
+    Comment    Populate Reporting Required Fields
+    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -451,6 +451,7 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
     Enter Departure Time    0100AM
     Enter Arrival Time    0200PM
     Enter Rental Cost    123.50
+    Enter Rate Booked    210.75
     Enter Mileage    200F
     Enter Drop off Fee    212
     Enter Car CD Number    CD123456
@@ -464,7 +465,7 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK2 YYZ 10JAN-10JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-10JAN/ST-0100/ED-10JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/CF-CONF1234/P1-2    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK2 YYZ 10JAN-10JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-10JAN/ST-0100/ED-10JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234/P1-2    True
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S4
     Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S4
     Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S4
@@ -477,9 +478,10 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
     [Teardown]    Close Browser
 
 Verify Car Passive Segment Without Optional Values Are Written In The PNR
-    [Tags]    us8718
+    [Tags]    us8718    us11172
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1YYJ21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1YYJ21NOV-CWT RETENTION SEGMENT
+    ...    RMZ/LANGUAGE-EN-CA
     Enter GDS Command    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 11551440 / 1234567    SS AC1074 Y 30DEC YYTMSP GK1 / 11551440 / YYYD123
     Open CA Migration Window
     Click Add Segment Main Menu
@@ -498,15 +500,16 @@ Verify Car Passive Segment Without Optional Values Are Written In The PNR
     Enter Departure Time    1100AM
     Enter Arrival Time    0200AM
     Enter Rental Cost    210.55
+    Enter Rate Booked    100.00
     Enter Currency Type    USD
     Select Duration    WEEKLY
-    Enter Mileage    1234M
+    Enter Mileage    UNL
     Click Add Passive Save Button
     Click Add Segments To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK3 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-1234MKM FREE/CF-CONF555555/P1-3    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK3 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555/P1-3    True
     Verify Specific Remark Is Only Written Once    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S8
     Verify Specific Remark Is Not Written In The PNR    RIR CD-
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF

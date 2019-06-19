@@ -4,10 +4,10 @@ Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruise Segment, FOP is Check, and Province is Quebec
-    [Tags]    us7648    us9429    us10878
+    [Tags]    us7648    us9429    us10878    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    RU1AHK3YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RM*CF/-RBM0000000N    APE-test@email.com
-    ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    RU1AHK3YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RM*CF/-RBM0000000N
+    ...    APE-test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -26,6 +26,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK/P2    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK/P2
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XG
     Close Cryptic Display Window
@@ -49,16 +50,19 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-130.00RC/-PT-0.00XQ/-FOP-CCVI4444333322221111/-EXP-0921/P2    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-H5/-FLN-F1/-AMT-CAD1000.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P2    True
     Verify Specific Remark Is Only Written Once    RMY TAX-ON
     Verify Specific Remark Is Only Written Once    RM *TEX/-RC
+    Verify Specific Remark Is Not Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK/P2
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Segment, FOP is Credit Card, and Province is Outside of Canada
-    [Tags]    us7648    us9429    us10878
+    [Tags]    us7648    us9429    us10878    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS AC1074 Y 20NOV YYZYUL GK2 / 11551440 / ABCDEFG    CU1AHK2YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24NOV/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    RM*CF/-RBM000000N    RU1AHK1SIN25NOV-CWT RETENTION SEGMENT    APE-12345
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS AC1074 Y 20NOV YYZYUL GK2 / 11551440 / ABCDEFG    CU1AHK2YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24NOV/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    RM*CF/-RBM000000N    RU1AHK1SIN25NOV-CWT RETENTION SEGMENT
+    ...    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -78,12 +82,12 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Seg
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P1    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-ZZ
     Verify Specific Remark Is Not Written In The PNR    RM *TEX/
     Close Cryptic Display Window
     Open CA Migration Window
     Click Wrap PNR
-    Populate Reporting Required Fields
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Click Update Button    1
@@ -99,17 +103,19 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Seg
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-C4/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-150.00RC/-PT-0.00XQ/-FOP-CK/P2    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-C4/-FLN-F1/-AMT-CAD1000.00/-FP-FEE/-FOP-CK/P2    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-PE
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XQ
+    Verify Specific Remark Is Not Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P1    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segment, FOP is Check, and Province is New Brunswick
-    [Tags]    us7648    us9429
+    [Tags]    us7648    us9429    us10977
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    CU1AHK1YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    CU1AHK1YQM23DEC-24DECCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    SS AC1074 Y 20NOV YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM0000000N    APE-12345
-    ...     RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -128,6 +134,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-C4/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-15.00RC/-PT-0.00XQ/-FOP-CK    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-C4/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-NB
     Verify Specific Remark Is Written In The PNR    RM *TEX/-RC/-XG/-XQ
     Close Cryptic Display Window
@@ -148,14 +155,16 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-50.00XG/-PT-99.75XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD1000.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
     Verify Specific Remark Is Only Written Once    RM *TEX/-RC/-XG/-XQ
+    Verify Specific Remark Is Not Written In The PNR    RM *FEE/-FA-C4/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segment, FOP is Credit Card, and Province is Saskatchewan
-    [Tags]    us7648    us9429
+    [Tags]    us7648    us9429    us10977
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N    APE12345    TKOK
     ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
@@ -179,7 +188,8 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segm
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H3/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-0.00XQ/-FOP- CCVIXXXXXXXXXXXX1111/-EXP-0921    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H3/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-0.00XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-H3/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-SK
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XG/-XQ
     Close Cryptic Display Window
@@ -199,9 +209,11 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segm
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CK    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD1000.00/-FP-FEE/-FOP-CK    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-ZZ
     Verify Specific Remark Is Written In The PNR    RM *TEX/-RC/-XG
     Verify Specific Remark Is Not Written In The PNR    RM *TEX/-XG/-XQ
+    Verify Specific Remark Is Not Written In The PNR    RM *FEE/-FA-H3/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -209,8 +221,8 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segm
 Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     [Tags]    us7648    us9429    us10878
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RU1AHK3YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N    APE-12345
-    ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RU1AHK3YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N
+    ...    APE-12345    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -221,18 +233,17 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     Enter Amount    100.00
     Select Leisure Fee Form of Payment    Cheque
     Select Traveler Province    Quebec
-    Select Tax Exemption    GST Exempt
     Select Passenger    LEISURE-AMADEUS MR
     Click Save Button
     Click Add Leisure Fee Collection Button
     Select Segment Association    Hotel Segment
     Select Segment Number    5 HTL 1A HK3 YXE 23Nov
-    Enter Amount    100.00
+    Enter Amount    541.00
     Select Leisure Fee Form of Payment    Credit Card
     Select Credit Card Vendor Code    VI- Visa
     Enter Credit Card Number    4444333322221111
     Enter Credit Card Expiration Date    0921
-    Select Tax Exemption    QST Exempt
+    Select Tax Exemption    QST Exempt    GST Exempt
     Select Passenger    LEISURE-TEST
     Click Save Button
     Click Submit To PNR
@@ -240,7 +251,9 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK/P2    True
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F2/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP- CCVIXXXXXXXXXXXX1111/-EXP-0921/P3    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK/P2
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F2/-FP-TRF/-AMT-CAD541.00/-PT-27.05XG/-PT-53.96XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P3    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-H5/-FLN-F2/-AMT-CAD541.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P3    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
     Verify Specific Remark Is Only Written Once    RM *TEX/-XG/-XQ
     Close Cryptic Display Window
@@ -250,8 +263,8 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
 Verify Multiple Leisure Fee Remarks Without Tax Exemption Are Written In The PNR
     [Tags]    us7648    us9429    us10878
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Leisure/test    CU1AHK1YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N    APE12345
-    ...    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Leisure/test    CU1AHK1YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N
+    ...    APE12345    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -259,7 +272,7 @@ Verify Multiple Leisure Fee Remarks Without Tax Exemption Are Written In The PNR
     Click Payment Tab    Leisure Fee
     Click Add Leisure Fee Collection Button
     Select Segment Association    Ticket Segment
-    Enter Amount    100.00
+    Enter Amount    5351.00
     Select Leisure Fee Form of Payment    Credit Card
     Select Credit Card Vendor Code    VI- Visa
     Enter Credit Card Number    4444333322221111
@@ -268,15 +281,17 @@ Verify Multiple Leisure Fee Remarks Without Tax Exemption Are Written In The PNR
     Click Save Button
     Click Add Leisure Fee Collection Button
     Select Segment Association    Tour/Cruise Segment
-    Enter Amount    100.00
+    Enter Amount    1231.00
     Select Leisure Fee Form of Payment    Cheque
     Click Save Button
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P1    True
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F2/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CK/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD5351.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD5351.00/-FP-FEE/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F2/-FP-TRF/-AMT-CAD1231.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CK/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F2/-AMT-CAD1231.00/-FP-FEE/-FOP-CK/P1    True
     Verify Specific Remark Is Only Written Once    RMY TAX-ZZ
     Verify Specific Remark Is Not Written In The PNR    RM *TEX/
     Close Cryptic Display Window

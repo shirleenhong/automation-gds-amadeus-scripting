@@ -16,7 +16,8 @@
       <div class="row form-group">
         <div class="col-4">Branch Number</div>
         <div class="col-5">
-          <input type="text" class="form-control" id="branch" name="branch" formControlName="branch" maxlength="6" />
+          <input type="text" class="form-control" id="branch" name="branch" formControlName="branch" maxlength="6"
+            NumberOnlyMask />
         </div>
       </div>
 
@@ -39,7 +40,8 @@
       <div class="row form-group">
         <div class="col-4">CFA</div>
         <div class="col-5">
-          <input type="text" class="form-control" id="cfa" name="cfa" formControlName="cfa" maxlength="35" />
+          <input type="text" class="form-control" id="cfa" name="cfa" formControlName="cfa" maxlength="3"
+            AlphaNumericMask />
         </div>
       </div>
 
@@ -88,7 +90,7 @@
       </div>
 
       <div class="form-group  row">
-        <div class="col-sm-4">Taxes being refunded</div>
+        <div class="col-sm-4">Taxes Being Refunded</div>
         <div class="col-5">
           <input type="text" class="form-control" id="taxesRef" formControlName="taxesRef" formControlName="taxesRef"
             name="taxesRef" placeholder="00.00RC" maxlength="36" />

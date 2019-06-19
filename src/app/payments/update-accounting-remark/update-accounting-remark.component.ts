@@ -191,13 +191,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.name = 'Policy Confirmation Number:';
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
         this.enableFormControls(['supplierCodeName', 'descriptionapay', 'tktLine', 'otherTax', 'commisionWithoutTax'], true);
-        this.enableFormControls(['commisionPercentage'], false);
+        this.enableFormControls(['commisionPercentage', 'segmentNo'], false);
         this.accountingRemark.bsp = '3';
         // this.eventEmitterService.onFirstComponentButtonClick();
         break;
       case '0':
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
-        this.enableFormControls(['descriptionapay', 'supplierCodeName'], false);
+        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'segmentNo'], false);
         this.accountingRemark.bsp = '2';
         this.IsInsurance = false;
         break;
@@ -206,7 +206,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
         this.enableFormControls(
-          ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay', 'commisionPercentage', 'departureCity'],
+          ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay'
+            , 'commisionPercentage', 'departureCity', 'segmentNo'],
           true
         );
         this.accountingRemark.bsp = '1';
@@ -239,7 +240,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
         break;
       default:
-        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
+        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
         this.setTktNumber();

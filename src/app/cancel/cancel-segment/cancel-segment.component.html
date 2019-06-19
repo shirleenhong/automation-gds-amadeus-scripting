@@ -39,12 +39,14 @@
     </div>
 
     <div class="row form-group">
-      <div class="col-4">Segments: </div>
+      <div class="col-4">Segments:</div>
       <div class="col-8">
-        <label formArrayName="segments"
-          *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index">
-          <input type="checkbox" [formControlName]="i" (change)="checkSegmentAirline()">
-          {{segments[i].name}}
+        <label>
+          <div formArrayName="segments"
+            *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index">
+            <input type="checkbox" [formControlName]="i" (change)="checkSegmentAirline()">
+            {{segments[i].name}}
+          </div>
         </label>
       </div>
     </div>

@@ -26,4 +26,10 @@ export class MatrixAccountingModel {
   passPurchase = '';
   fareType = '';
   departureCity: string;
+  originalTktLine: string;
+  penaltyBaseAmount = '0.00';
+  penaltyGst = '0.00';
+  penaltyHst = '0.00';
+  penaltyQst = '0.00';
+  penaltyOtherTax = '0.00';
 }

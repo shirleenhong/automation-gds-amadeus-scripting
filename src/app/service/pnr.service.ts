@@ -24,7 +24,7 @@ export class PnrService {
   PCC = '';
   // recordLocator = '';
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -668,6 +668,23 @@ export class PnrService {
           }
           if (model.supplierCodeName === 'ACJ') {
             model = this.extractCanadaPass(model, rm.associations);
+          } else {
+            if (!model.accountingTypeRemark) {
+              const tkt = this.getRemarksFromGDSByRegex(/\*NE\/-EX-Y\/-OTK-(?<originalTicket>.*)/g);
+              if (tkt.length > 0) {
+                model.originalTktLine = tkt[0].remarkText.replace('*NE/-EX-Y/-OTK-', '');
+                model.accountingTypeRemark = 'NAE';
+              }
+            }
+
+            model.penaltyBaseAmount = '0.00';
+            model.penaltyGst = '0.00';
+            model.penaltyHst = '0.00';
+            model.penaltyQst = '0.00';
+          }
+
+          if (model.supplierCodeName === 'A22') {
+            this.extractExchange(model, matrixModels);
           }
 
           if (apays !== null && apays.length > 0) {
@@ -694,6 +711,23 @@ export class PnrService {
     }
     return matrixModels;
   }
+
+  extractExchange(model, matrixModels) {
+    const tkt = this.getRemarksFromGDSByRegex(/\*NE\/-EX-Y\/-OTK-(?<originalTicket>.*)/g);
+    if (tkt.length > 0) {
+      const indx = matrixModels.indexOf(model);
+      const acy = matrixModels[indx - 1];
+      acy.originalTktLine = tkt[0].remarkText.replace('*NE/-EX-Y/-OTK-', '');
+      acy.penaltyBaseAmount = model.baseAmount;
+      acy.penaltyGst = model.gst;
+      acy.penaltyHst = model.hst;
+      acy.penaltyQst = model.qst;
+      acy.accountingTypeRemark = 'NAE';
+      model.originalTktLine = acy.originalTktLine;
+      model.accountingTypeRemark = 'NAE';
+    }
+  }
+
   extractCanadaPass(model: MatrixAccountingModel, assoc) {
     let pass = this.getRemarksFromGDSByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
     let found = false;

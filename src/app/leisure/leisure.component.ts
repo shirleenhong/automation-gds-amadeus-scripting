@@ -101,7 +101,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
     this.submitProcess = false;
     this.displayInvoice();
-    this.modalRef.hide();
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
   }
 
   initData() {
@@ -149,7 +151,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     this.submitProcess = true;
-    this.showLoading('Updating info to PNR...');
+    this.showLoading('Updating PNR remarks...');
 
     const remarkCollection = new Array<RemarkGroup>();
     let queueCollection = Array<QueuePlaceModel>();

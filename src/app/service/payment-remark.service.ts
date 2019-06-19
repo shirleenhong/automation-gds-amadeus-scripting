@@ -18,7 +18,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -59,8 +59,9 @@ export class PaymentRemarkService {
       });
     }
 
-    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup);
-    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup);
+    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
+    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
+    // this.deleteRemarksByRegex(/\*NE\/-EX-Y\/-OTK-(.*)/g, remGroup);
 
     const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
     if (lineNums.length > 0) {
@@ -70,8 +71,25 @@ export class PaymentRemarkService {
     // write new Lines
     if (accountingRemarks !== null) {
       let found = false;
+
       accountingRemarks.forEach((account) => {
+        if (account.accountingTypeRemark === 'NAE') {
+          if (account.supplierCodeName !== 'ACY') {
+            account.baseAmount = this.amountPipe.transform(Number(account.baseAmount) + Number(account.penaltyBaseAmount)).toString();
+            account.gst = this.amountPipe.transform(Number(account.gst) + Number(account.penaltyGst)).toString();
+            account.hst = this.amountPipe.transform(Number(account.hst) + Number(account.penaltyHst)).toString();
+            account.qst = this.amountPipe.transform(Number(account.qst) + Number(account.penaltyQst)).toString();
+          }
+          if (account.supplierCodeName !== 'A22') {
+            const neRem = 'NE/-EX-Y/-OTK-' + account.originalTktLine;
+            if (account.originalTktLine && this.pnrService.getRemarkLineNumber(neRem) === '') {
+              remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
+            }
+          }
+        }
+
         this.processAccountingRemarks(account, remGroup);
+
         if (!found && account.supplierCodeName === 'ACJ') {
           remGroup.remarks.push(this.getRemarksModel('U14/-ACPASS-INDIVIDUAL', '*', 'RM'));
           found = true;
@@ -81,8 +99,9 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
-  deleteRemarksByRegex(regex, remGroup) {
-    const redemRIR = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+  deleteRemarksByRegex(regex, remGroup, type?) {
+    const redemRIR = this.pnrService.getRemarksFromGDSByRegex(regex, type);
+
     if (redemRIR.length > 0) {
       redemRIR.forEach((x) => {
         remGroup.deleteRemarkByIds.push(x.lineNo);
@@ -240,7 +259,14 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
 
     remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString(), pass.toString()));
+    this.processAirCanadaPass(accounting, remGroup);
+    if (accounting.bsp === '2') {
+      this.extractApayRemark(accounting, remarkList, fopObj);
+    }
+  }
 
+  processAirCanadaPass(accounting, remGroup) {
+    const remarkList = remGroup.remarks;
     if (accounting.accountingTypeRemark === 'ACPR') {
       remarkList.push(
         this.getRemarksModel(
@@ -276,16 +302,12 @@ export class PaymentRemarkService {
         passive.quantity = noOfPassenger;
         passive.status = 'GK';
         passive.classOfService = 'Q';
-        passive.controlNo = accounting.supplierConfirmatioNo; //'C1';
+        passive.controlNo = accounting.supplierConfirmatioNo;
         passive.flightNo = '123';
         //  passive.confirmationNo = accounting.supplierConfirmatioNo;
         remGroup.passiveSegments = [];
         remGroup.passiveSegments.push(passive);
       }
-    }
-
-    if (accounting.bsp === '2') {
-      this.extractApayRemark(accounting, remarkList, fopObj);
     }
   }
 

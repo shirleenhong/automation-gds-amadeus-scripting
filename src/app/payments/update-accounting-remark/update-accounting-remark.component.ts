@@ -85,7 +85,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       passRelate: new FormControl('', []),
       passPurchase: new FormControl('', []),
       fareType: new FormControl('', []),
-      departureCity: new FormControl('', [])
+      departureCity: new FormControl('', []),
+      penaltyGst: new FormControl(''),
+      penaltyHst: new FormControl(''),
+      penaltyQst: new FormControl(''),
+      penaltyBaseAmount: new FormControl(''),
+      originalTktLine: new FormControl('')
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -154,7 +159,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Insurance Remark', itemValue: 'INS' },
       { itemText: 'Apay Accounting Remark', itemValue: '0' },
       { itemText: 'Air Canada Pass Redemption', itemValue: 'ACPR' },
-      { itemText: 'Air Canada Pass Purchase', itemValue: 'ACPP' }
+      { itemText: 'Air Canada Pass Purchase', itemValue: 'ACPP' },
+      { itemText: 'NonBSP Air Exchange', itemValue: 'NAE' }
     ];
   }
 
@@ -178,7 +184,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.enableFormControls(['fop'], false);
     this.enableFormControls(['departureCity'], true);
-    this.matrixAccountingForm.get('departureCity').clearValidators();
+    this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     switch (accRemark) {
       case 'INS':
         this.IsInsurance = true;
@@ -224,6 +230,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.enableFormControls(['departureCity'], false);
           this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
         }
+        break;
+      case 'NAE':
+        this.accountingRemark.bsp = '1';
+        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
+        this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
+        this.setRequired(['tktLine', 'originalTktLine'], true);
 
         break;
       default:
@@ -241,9 +253,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.assignSupplierCode(this.accountingRemark.descriptionapay);
   }
 
+  setRequired(controls: string[], isRequired: boolean) {
+    controls.forEach((x) => {
+      try {
+        if (isRequired) {
+          this.matrixAccountingForm.get(x).setValidators([Validators.required]);
+        } else {
+          this.matrixAccountingForm.get(x).clearValidators();
+        }
+      } catch (e) {
+        console.log(JSON.stringify(e));
+      }
+    });
+  }
+
   filterSupplierCode(typeCode) {
-    const val = ['12', '5', '1', '6', '4'];
-    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL'];
+    const val = ['12', '5', '1', '6', '4', 'NAE'];
+    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL', 'AIR'];
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
@@ -293,6 +319,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.isSubmitted = false;
       return;
     }
+
     this.isSubmitted = true;
     this.modalRef.hide();
   }
@@ -326,7 +353,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setTktNumber() {
     const supCode = ['ACY', 'SOA', 'WJ3', 'ACJ'];
 
-    if (this.accountingRemark.accountingTypeRemark === '1' && supCode.includes(this.accountingRemark.supplierCodeName)) {
+    if (
+      (this.accountingRemark.accountingTypeRemark === '1' || this.accountingRemark.accountingTypeRemark === 'NAE') &&
+      supCode.includes(this.accountingRemark.supplierCodeName)
+    ) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();

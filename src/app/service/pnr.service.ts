@@ -1137,7 +1137,8 @@ export class PnrService {
 
   getmisCancel() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1 ||
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
         // this.getSegmentDetails(misc, 'MIS');
         return misc.elementNumber;
       }

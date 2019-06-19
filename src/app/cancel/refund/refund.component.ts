@@ -65,11 +65,11 @@ export class RefundComponent implements OnInit {
   enableControls(bspValue) {
     if (bspValue === 'NO') {
       this.enableFormControls(
-        ['branch', 'personRequesting', 'passengerName', 'cfa'], false
+        ['branch', 'personRequesting', 'passengerName', 'cfa', 'cancellation', 'commission', 'supplier'], false
       );
     } else {
       this.enableFormControls(
-        ['branch', 'personRequesting', 'passengerName', 'cfa'], true
+        ['branch', 'personRequesting', 'passengerName', 'cfa', 'cancellation', 'commission', 'supplier'], true
       );
     }
   }

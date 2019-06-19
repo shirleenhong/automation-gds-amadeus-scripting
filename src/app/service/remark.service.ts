@@ -454,6 +454,7 @@ export class RemarkService {
   }
 
   async cancelOSIRemarks() {
+    await this.deleteRemarks();
     await this.sendCryptics();
     this.clear();
   }

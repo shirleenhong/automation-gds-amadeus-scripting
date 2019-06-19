@@ -870,11 +870,12 @@ export class SegmentService {
             { include: refund.controls.comments.value, description: 'COMMENTS ', include2: 'ok' }
         ];
 
+        debugger;
         if (refund.controls.isBsp.value === 'NO') {
             rmxRemarks.forEach((c) => {
                 if (c.include && c.include2 === 'ok') {
                     remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'X'));
-                } else if (c.include || c.include2) {
+                } else if ((c.include && c.include2 !== 'ok') || (c.include2 && c.include2 !== 'ok')) {
                     let remarkText = '';
                     if (c.include) {
                         remarkText = c.description + c.include + ' ';

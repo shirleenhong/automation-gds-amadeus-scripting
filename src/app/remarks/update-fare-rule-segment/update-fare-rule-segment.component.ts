@@ -181,7 +181,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
                   .split('/');
                 this.fareRuleList.push({
                   itemText: airline[0].airlineCode + ' ' + outputTwo[outputTwo.length - 1].trimStart(),
-                  itemValue: outputTwo[1]
+                  itemValue: outputTwo[outputTwo.length - 1].trimStart().replace(/(\r\n|\n|\r)/gm, '')
                 });
                 this.ShowFareRule = true;
                 this.showCrypticForm = true;

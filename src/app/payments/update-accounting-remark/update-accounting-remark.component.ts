@@ -291,6 +291,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   FormOfPaymentChange(newValue) {
     switch (newValue) {
       case 'CC':
+      case 'AP':
         this.enableFormControls(['cardNumber', 'expDate', 'vendorCode'], false);
         break;
       default:

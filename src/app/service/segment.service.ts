@@ -874,7 +874,7 @@ export class SegmentService {
         if (refund.controls.isBsp.value === 'NO') {
             rmxRemarks.forEach((c) => {
                 if (c.include && c.include2 === 'ok') {
-                    remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'K'));
+                    remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'X'));
                 } else if (c.include || c.include2) {
                     let remarkText = '';
                     if (c.include) {
@@ -883,7 +883,7 @@ export class SegmentService {
                     if (c.include2) {
                         remarkText = remarkText + c.description2 + c.include2;
                     }
-                    remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'K'));
+                    remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'X'));
                 }
             });
         }

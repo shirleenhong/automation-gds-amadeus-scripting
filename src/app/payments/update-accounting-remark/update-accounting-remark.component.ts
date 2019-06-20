@@ -205,19 +205,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       case 'ACPP':
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
-        this.enableFormControls(
-          [
-            'fop',
-            'otherTax',
-            'commisionWithoutTax',
-            'supplierCodeName',
-            'descriptionapay',
-            'commisionPercentage',
-            'departureCity',
-            'segmentNo'
-          ],
-          true
-        );
+        if (accRemark === 'ACPP') {
+          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
+            'commisionPercentage', 'departureCity', 'segmentNo'], true);
+        } else {
+          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
+            'commisionPercentage', 'departureCity'], true);
+          this.enableFormControls(['segmentNo'], false);
+        }
+
         this.accountingRemark.bsp = '1';
         this.enableFormControls(['tktLine'], false);
         this.matrixAccountingForm.controls.tktLine.clearValidators();

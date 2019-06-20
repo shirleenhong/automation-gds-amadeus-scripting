@@ -74,7 +74,7 @@ export class PaymentRemarkService {
       let nucFound = false;
       accountingRemarks.forEach((account) => {
         if (account.accountingTypeRemark === 'NAE') {
-          if (account.supplierCodeName !== 'ACY') {
+          if (account.supplierCodeName !== 'ACY' && account.supplierCodeName !== 'A22') {
             account.baseAmount = this.amountPipe.transform(Number(account.baseAmount) + Number(account.penaltyBaseAmount)).toString();
             account.gst = this.amountPipe.transform(Number(account.gst) + Number(account.penaltyGst)).toString();
             account.hst = this.amountPipe.transform(Number(account.hst) + Number(account.penaltyHst)).toString();

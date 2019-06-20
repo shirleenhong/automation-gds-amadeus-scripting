@@ -138,7 +138,7 @@ export class AccountingRemarkComponent implements OnInit {
     acc2.gst = acc.penaltyGst;
     acc2.hst = acc.penaltyHst;
     acc2.qst = acc.penaltyQst;
-    acc2.otherTax = '0.00';
+    acc2.otherTax = undefined;
     acc2.commisionWithoutTax = '0.00';
     return acc2;
   }

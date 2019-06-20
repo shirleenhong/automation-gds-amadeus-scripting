@@ -8,6 +8,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { FormArray, FormGroup } from '@angular/forms';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -889,14 +890,17 @@ export class SegmentService {
         return remGroup;
     }
 
-    queueRefund(frmrefund: FormGroup) {
+    queueRefund(frmrefund: FormGroup, cfa: CfRemarkModel) {
         const queueGroup = Array<QueuePlaceModel>();
 
-        if (frmrefund.controls.isBsp.value === 'YES') {
-            this.getQueueMinder(queueGroup, 'nonIsBsp');
+        if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
+            this.getQueueMinder(queueGroup, 'rbpRbm');
         } else {
-            this.getQueueMinder(queueGroup, 'nonIsBsp');
-            this.getQueueMinder(queueGroup, 'nonBsp');
+            if (frmrefund.controls.isBsp.value === 'YES') {
+                this.getQueueMinder(queueGroup, 'bspAllCfa');
+            } else {
+                this.getQueueMinder(queueGroup, 'nonBspAllCfa');
+            }
         }
         return queueGroup;
     }
@@ -905,8 +909,9 @@ export class SegmentService {
         const queue = new QueuePlaceModel();
 
         const queuePlaceDescription = [
-            { control: 'nonIsBsp', queueNo: '41', pcc: 'YTOWL2104', text: 'NON BSP', category: '98' },
-            { control: 'nonBsp', queueNo: '41', pcc: 'YTOWL2107', text: 'BSP', category: '98' }
+            { control: 'rbpRbm', queueNo: '41', pcc: 'YTOWL2104', text: 'RBP RBM', category: '98' },
+            { control: 'bspAllCfa', queueNo: '41', pcc: 'YTOWL210O', text: 'BSP ALL CFA', category: '94' },
+            { control: 'nonBspAllCfa', queueNo: '41', pcc: 'YTOWL2108', text: 'NON BSP', category: '98' }
         ];
         const look = queuePlaceDescription.find((x) => x.control === controlname);
         if (look) {

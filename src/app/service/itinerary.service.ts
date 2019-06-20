@@ -201,15 +201,13 @@ export class ItineraryService {
     const queue = new QueuePlaceModel();
 
     const queuePlaceDescription = [
-      { control: 'nonBsp', queueNo: '12', pcc: 'YTOWL2104', text: 'NON BSP', category: '' },
-      { control: 'ticketExchange', queueNo: '4', pcc: '', text: 'ticket Exchange', category: '' },
-      { control: 'bspTicket', queueNo: '87', pcc: 'YTOWL2104', text: 'bsp Ticket', category: '' },
-      { control: 'refund', queueNo: '1', pcc: '', text: 'refund', category: '' },
-      { control: 'cwtItinerary', queueNo: '12', pcc: '', text: 'cwt Itinerary', category: '' },
-      { control: 'bspRefund', queueNo: '4', pcc: '', text: 'bsp Refund', category: '' },
+      { control: 'nonBsp', queueNo: '41', pcc: 'YTOWL2104', text: 'NON BSP', category: '96' },
+      { control: 'ticketExchange', queueNo: '41', pcc: 'YTOWL2104', text: 'ticket Exchange', category: '97' },
+      { control: 'bspTicket', queueNo: '41', pcc: 'YTOWL2104', text: 'bsp Ticket', category: '95' },
+      { control: 'refund', queueNo: '41', pcc: 'YTOWL2104', text: 'refund', category: '95' },
       { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
-      { control: 'invoice', queueNo: '87', pcc: '', text: 'invoice', category: '' },
-      { control: 'itinerary', queueNo: '1', pcc: '', text: 'itinerary', category: '' }
+      { control: 'invoice', queueNo: '62', pcc: 'PARWL2877', text: 'invoice', category: '' },
+      { control: 'itinerary', queueNo: '63', pcc: 'PARWL2877', text: 'itinerary', category: '' }
     ];
 
     // const queuePlaceDescription = [
@@ -237,7 +235,7 @@ export class ItineraryService {
   addItineraryQueue(frmGroup: FormGroup) {
     const queueGroup = Array<QueuePlaceModel>();
 
-    if (frmGroup.controls.sendItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
+    // if (frmGroup.controls.sendItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
     if (frmGroup.controls.typeTransaction.value && frmGroup.controls.sendItinerary.value) {
       let tanstype = '';
       if (frmGroup.controls.typeTransaction.value === 'invoice') {

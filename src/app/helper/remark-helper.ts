@@ -7,7 +7,7 @@ import { DecimalPipe } from '@angular/common';
 })
 export class RemarkHelper {
   decPipe = new DecimalPipe('en-US');
-  constructor() {}
+  constructor() { }
 
   createRemark(remarkText, remarkType, remarkCategory) {
     const rem = new RemarkModel();
@@ -53,11 +53,17 @@ export class RemarkHelper {
     return maxlen;
   }
 
-  getRemark(remarkText, remarkType, remarkCategory) {
+  getRemark(remarkText, remarkType, remarkCategory, segmentAssoc?: any) {
+
+    let segmentrelate = [];
+    if (segmentAssoc) {
+      segmentrelate = segmentAssoc.split(',');
+    }
     const rem = new RemarkModel();
     rem.remarkType = remarkType;
     rem.remarkText = remarkText;
     rem.category = remarkCategory;
+    rem.relatedSegments = segmentrelate;
     return rem;
   }
 }

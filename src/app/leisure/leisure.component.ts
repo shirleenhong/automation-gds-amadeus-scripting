@@ -129,7 +129,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
-    this.validModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
+    if (this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.validModel.isItineraryValid = true;
+    } else {
+      this.validModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
+    }
+
     return this.validModel.isAllValid();
   }
 
@@ -203,6 +208,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
+    remarkCollection.push(this.packageRemarkService.buildAssociatedRemarks
+      (this.remarkComponent.associatedRemarksComponent.associatedRemarksForm));
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
@@ -278,7 +285,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
-    queueCollection = this.segmentService.queueRefund(this.cancelComponent.refundComponent.refundForm);
+    queueCollection = this.segmentService.queueRefund(this.cancelComponent.refundComponent.refundForm, this.cfLine);
     remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
 

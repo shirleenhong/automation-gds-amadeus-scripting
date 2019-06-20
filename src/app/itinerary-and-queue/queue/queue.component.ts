@@ -26,7 +26,6 @@ export class QueueComponent implements OnInit {
   }
 
   ngOnInit() {
-    debugger;
     this.cfLine = this.pnrService.getCFLine();
   }
 

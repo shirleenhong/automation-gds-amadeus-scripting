@@ -870,7 +870,6 @@ export class SegmentService {
             { include: refund.controls.comments.value, description: 'COMMENTS ', include2: 'ok' }
         ];
 
-        debugger;
         if (refund.controls.isBsp.value === 'NO') {
             rmxRemarks.forEach((c) => {
                 if (c.include && c.include2 === 'ok') {

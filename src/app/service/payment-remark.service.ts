@@ -18,7 +18,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -218,8 +218,8 @@ export class PaymentRemarkService {
 
     let line1 = '';
 
-    if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) < 0 && accounting.commisionWithoutTax !== undefined) {
-      line1 = 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
+    if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) < 0 && accounting.commisionWithoutTax) {
+      line1 = '/-CD-' + accounting.commisionWithoutTax.toString().trim();
     }
 
     let bknLine = '/-BKN-';
@@ -230,8 +230,7 @@ export class PaymentRemarkService {
     }
 
     if (accounting.bsp === '1' && accounting.otherTax) {
-      facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim();
-      // + line1;
+      facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim() + 'XT';
     }
 
     if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) >= 0) {
@@ -276,9 +275,7 @@ export class PaymentRemarkService {
         )
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
-      remarkList.push(
-        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI')
-      );
+      remarkList.push(this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI'));
 
       const air = this.pnrService
         .getSegmentTatooNumber()

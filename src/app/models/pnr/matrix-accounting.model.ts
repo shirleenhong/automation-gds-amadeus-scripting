@@ -17,7 +17,7 @@ export class MatrixAccountingModel {
   qst: string;
   otherTax: string;
   supplierCodeName: string;
-  supplierConfirmatioNo: string;
+  supplierConfirmatioNo = '';
   airAccountingRemark: string;
   tktLine: string;
   descriptionapay: string;

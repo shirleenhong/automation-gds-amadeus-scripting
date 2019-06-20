@@ -26,9 +26,9 @@ export class QueueComponent implements OnInit {
   }
 
   ngOnInit() {
+    debugger;
     this.cfLine = this.pnrService.getCFLine();
   }
-
 
   get f() {
     return this.queueForm.controls;
@@ -43,5 +43,4 @@ export class QueueComponent implements OnInit {
       this.queueForm.get('queueNo').disable();
     }
   }
-
 }

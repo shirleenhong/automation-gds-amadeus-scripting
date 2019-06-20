@@ -71,7 +71,7 @@ export class PaymentRemarkService {
     // write new Lines
     if (accountingRemarks !== null) {
       let found = false;
-
+      let nucFound = false;
       accountingRemarks.forEach((account) => {
         if (account.accountingTypeRemark === 'NAE') {
           if (account.supplierCodeName !== 'ACY') {
@@ -81,10 +81,20 @@ export class PaymentRemarkService {
             account.qst = this.amountPipe.transform(Number(account.qst) + Number(account.penaltyQst)).toString();
           }
           if (account.supplierCodeName !== 'A22') {
-            const neRem = 'NE/-EX-Y/-OTK-' + account.originalTktLine;
-            if (account.originalTktLine && this.pnrService.getRemarkLineNumber(neRem) === '') {
+            let neRem = 'NE/-EX-Y';
+            if (account.originalTktLine) {
+              neRem += '/-OTK-' + account.originalTktLine;
+              if (this.pnrService.getRemarkLineNumber(neRem) === '') {
+                remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
+              }
+            } else if (this.pnrService.getRemarkLineNumber(neRem) === '') {
               remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
             }
+          }
+          const nuc = 'NUC';
+          if (!nucFound && this.pnrService.getRemarkLineNumber(nuc) === '') {
+            remGroup.remarks.push(this.getRemarksModel(nuc, '*', 'RM'));
+            nucFound = true;
           }
         }
 

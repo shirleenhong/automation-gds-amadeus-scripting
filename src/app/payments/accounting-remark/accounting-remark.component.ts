@@ -82,17 +82,29 @@ export class AccountingRemarkComponent implements OnInit {
           const acc = this.modalRef.content.accountingRemark;
           if (!this.isAddNew) {
             const cur = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine);
-            if (cur.accountingTypeRemark === 'NAE' && cur.supplierCodeName !== 'ACY' && acc.supplierCodeName === 'ACY') {
+            if (
+              cur.accountingTypeRemark === 'NAE' &&
+              cur.supplierCodeName !== 'ACY' &&
+              acc.supplierCodeName === 'ACY' &&
+              Number(acc.penaltyBaseAmount) > 0
+            ) {
               this.accountingRemarks.push(this.getA22Account(acc));
             } else if (acc.supplierCodeName === 'ACY' && cur.supplierCodeName === 'ACY') {
               const a22 = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine + 1);
-              this.getA22Account(acc, a22);
+              if (Number(acc.penaltyBaseAmount) > 0) {
+                this.getA22Account(acc, a22);
+              } else {
+                const indx = this.accountingRemarks.indexOf(a22);
+                if (indx >= 0) {
+                  this.accountingRemarks.splice(indx, 1);
+                }
+              }
             }
 
             this.utilHelper.modelCopy(acc, cur);
           } else {
             this.accountingRemarks.push(acc);
-            if (acc.accountingTypeRemark === 'NAE' && acc.supplierCodeName === 'ACY') {
+            if (acc.accountingTypeRemark === 'NAE' && acc.supplierCodeName === 'ACY' && Number(acc.penaltyBaseAmount) > 0) {
               this.accountingRemarks.push(this.getA22Account(acc));
             }
           }

@@ -34,7 +34,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
   name: string;
-  IsInsurance = false;
+  isInsurance = false;
   isAddNew = false;
   // PaymentModeList: Array<SelectItem>;
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
@@ -187,7 +187,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     switch (accRemark) {
       case 'INS':
-        this.IsInsurance = true;
+        this.isInsurance = true;
         this.name = 'Policy Confirmation Number:';
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
         this.enableFormControls(['supplierCodeName', 'descriptionapay', 'tktLine', 'otherTax', 'commisionWithoutTax'], true);
@@ -199,15 +199,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
         this.enableFormControls(['descriptionapay', 'supplierCodeName', 'segmentNo'], false);
         this.accountingRemark.bsp = '2';
-        this.IsInsurance = false;
+        this.isInsurance = false;
         break;
       case 'ACPR':
       case 'ACPP':
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
         this.enableFormControls(
-          ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay'
-            , 'commisionPercentage', 'departureCity', 'segmentNo'],
+          [
+            'fop',
+            'otherTax',
+            'commisionWithoutTax',
+            'supplierCodeName',
+            'descriptionapay',
+            'commisionPercentage',
+            'departureCity',
+            'segmentNo'
+          ],
           true
         );
         this.accountingRemark.bsp = '1';
@@ -236,22 +244,27 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.accountingRemark.bsp = '1';
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
-        this.setRequired(['tktLine', 'originalTktLine'], true);
-
+        if (this.isAddNew) {
+          this.accountingRemark.supplierCodeName = 'ACY';
+        }
         break;
       default:
+        if (this.isAddNew && accRemark === '1') {
+          this.accountingRemark.supplierCodeName = 'ACY';
+        }
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
-        this.setTktNumber();
-        this.IsInsurance = false;
+        this.isInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
     }
+
     this.filterSupplierCodeList = [];
     this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
     this.assignSupplierCode(this.accountingRemark.descriptionapay);
+    this.setTktNumber(this.accountingRemark.supplierCodeName);
   }
 
   setRequired(controls: string[], isRequired: boolean) {
@@ -279,12 +292,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   private assignSupplierCode(typeCode: any) {
     if (this.accountingRemark.bsp === '2') {
-      if (!this.IsInsurance) {
+      if (!this.isInsurance) {
         if (typeCode === 'SEAT COSTS') {
           this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
         } else {
           this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
         }
+        this.setTktNumber(this.matrixAccountingForm.controls.supplierCodeName);
       }
     }
   }
@@ -352,19 +366,21 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
   }
 
-  setTktNumber() {
-    const supCode = ['ACY', 'SOA', 'WJ3', 'ACJ'];
-
-    if (
-      (this.accountingRemark.accountingTypeRemark === '1' || this.accountingRemark.accountingTypeRemark === 'NAE') &&
-      supCode.includes(this.accountingRemark.supplierCodeName)
-    ) {
+  setTktNumber(code) {
+    const supCode = ['ACY', 'SOA', 'WJ3'];
+    const type = this.accountingRemark.accountingTypeRemark;
+    if ((type === '1' || type === 'NAE') && supCode.indexOf(code) >= 0) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+      if (type === 'NAE') {
+        this.matrixAccountingForm.controls.originalTktLine.setValidators(Validators.required);
+      }
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
+      this.matrixAccountingForm.controls.originalTktLine.clearValidators();
     }
 
     this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
+    this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
   }
 
   setInsuranceValue() {

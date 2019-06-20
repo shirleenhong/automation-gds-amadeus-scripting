@@ -49,6 +49,16 @@ export class PnrService {
     console.log(JSON.stringify(this.pnrObj));
   }
 
+  isRbpRbm() {
+    if (!this.cfLine) {
+      this.cfLine = this.getCFLine();
+    }
+    if (this.cfLine.cfa === 'RBP' || this.cfLine.cfa === 'RBM') {
+      return true;
+    }
+    return false;
+  }
+
   getPCC(): void {
     smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.PCC = x.ACTIVE_OFFICE_ID;
@@ -107,7 +117,7 @@ export class PnrService {
   }
 
   getCFLine(): CfRemarkModel {
-    if (this.cfLine === undefined || this.cfLine === null) {
+    if (!this.cfLine) {
       const cfLine = new CfRemarkModel();
       if (this.isPNRLoaded) {
         for (const rm of this.pnrObj.rmElements) {
@@ -118,11 +128,10 @@ export class PnrService {
             return cfLine;
           }
         }
-      } else {
-        return this.cfLine;
       }
+    } else {
+      return this.cfLine;
     }
-    return null;
   }
 
   getFSRemark() {
@@ -1171,8 +1180,10 @@ export class PnrService {
 
   getmisCancel() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1 ||
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
+      if (
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1 ||
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1
+      ) {
         // this.getSegmentDetails(misc, 'MIS');
         return misc.elementNumber;
       }

@@ -30,7 +30,7 @@ export class RemarkComponent implements OnInit {
   @ViewChild(RbcPointsRedemptionComponent)
   rbcPointsRedemptionComponent: RbcPointsRedemptionComponent;
   remarkForm: FormGroup;
-
+  isRbmRbp = false;
   packageList: Array<SelectItem>;
 
   constructor(
@@ -48,6 +48,7 @@ export class RemarkComponent implements OnInit {
     this.packageRemarkHelper.clearForDeletionRemarks();
     this.remarkForm.controls.packageList.patchValue('1');
     this.setPackageListValue();
+    this.isRbmRbp = this.pnrService.isRbpRbm();
   }
 
   getSelector() {

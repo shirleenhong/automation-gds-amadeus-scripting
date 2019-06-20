@@ -81,7 +81,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -208,6 +208,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
+
     remarkCollection.push(this.packageRemarkService.buildAssociatedRemarks
       (this.remarkComponent.associatedRemarksComponent.associatedRemarksForm));
 
@@ -275,7 +276,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

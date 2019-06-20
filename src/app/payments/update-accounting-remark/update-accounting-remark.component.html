@@ -33,7 +33,7 @@
         <div class="col-sm-8">
           <input type="text" class="form-control" placeholder="select a supplier Code" formControlName="descriptionapay"
             id="descriptionapay" list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
-            formControlName="descriptionapay" (change)="assignSupplierCode($event.target.value)"  />
+            formControlName="descriptionapay" (change)="assignSupplierCode($event.target.value)" />
           <datalist id="dynamicSupplierCode1">
             <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>
           </datalist>
@@ -41,8 +41,7 @@
       </div>
     </div>
 
-    <div *ngIf="accountingRemark.accountingTypeRemark !== 'ACPR' && accountingRemark.accountingTypeRemark !== 'ACPP'"
-      class="form-group  row">
+    <div *ngIf="accountingRemark.accountingTypeRemark !== 'ACPP'" class="form-group  row">
       <div class="col-sm-4">Itinerary Segment:</div>
       <div class="col-sm-8">
         <app-segment-select formControlName="segmentNo" name="segmentNo" id="segmentNo" #segmentApp
@@ -184,32 +183,15 @@
           <div class="col-sm-4"></div>
           <div class="col">
             <div class="">Penalty Amount:</div>
-            <input
-              type="text"
-              class="form-control"
-              id="penaltyBaseAmount"
-              [(ngModel)]="accountingRemark.penaltyBaseAmount"
-              formControlName="penaltyBaseAmount"
-              name="penaltyBaseAmount"
-              required
-              placeholder="00.00"
-              AmountMask
-            />
+            <input type="text" class="form-control" id="penaltyBaseAmount"
+              [(ngModel)]="accountingRemark.penaltyBaseAmount" formControlName="penaltyBaseAmount"
+              name="penaltyBaseAmount" required placeholder="00.00" AmountMask />
           </div>
 
           <div class="col">
             <div class="">GST on Penalty:</div>
-            <input
-              type="text"
-              class="form-control"
-              id="penaltyGst"
-              [(ngModel)]="accountingRemark.penaltyGst"
-              formControlName="penaltyGst"
-              name="penaltyGst"
-              required
-              placeholder="00.00"
-              AmountMask
-            />
+            <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst"
+              formControlName="penaltyGst" name="penaltyGst" required placeholder="00.00" AmountMask />
           </div>
         </div>
 
@@ -217,33 +199,15 @@
           <div class="col-sm-4"></div>
           <div class="col">
             <div class="">HST on Penalty:</div>
-            <input
-              type="text"
-              class="form-control"
-              id="penaltyHst"
-              formControlName="penaltyHst"
-              [(ngModel)]="accountingRemark.penaltyHst"
-              name="penaltyHst"
-              required
-              placeholder="00.00"
-              AmountMask
-            />
+            <input type="text" class="form-control" id="penaltyHst" formControlName="penaltyHst"
+              [(ngModel)]="accountingRemark.penaltyHst" name="penaltyHst" required placeholder="00.00" AmountMask />
           </div>
 
           <div class="col">
             <div class="">QST on Penalty:</div>
-            <input
-              type="text"
-              class="form-control"
-              id="penaltyQst"
-              formControlName="penaltyQst"
-              [(ngModel)]="accountingRemark.penaltyQst"
-              formControlName="penaltyQst"
-              name="penaltyQst"
-              required
-              placeholder="00.00"
-              AmountMask
-            />
+            <input type="text" class="form-control" id="penaltyQst" formControlName="penaltyQst"
+              [(ngModel)]="accountingRemark.penaltyQst" formControlName="penaltyQst" name="penaltyQst" required
+              placeholder="00.00" AmountMask />
           </div>
         </div>
       </div>
@@ -257,16 +221,9 @@
       <div class="form-group  row" *ngIf="accountingRemark.accountingTypeRemark === 'NAE'">
         <div class="col-sm-4">Original Ticket Number:</div>
         <div class="col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="originalTktLine"
-            formControlName="originalTktLine"
-            [(ngModel)]="accountingRemark.originalTktLine"
-            formControlName="originalTktLine"
-            name="originalTktLine"
-            NumberOnlyMask
-          />
+          <input type="text" class="form-control" id="originalTktLine" formControlName="originalTktLine"
+            [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine"
+            NumberOnlyMask />
         </div>
       </div>
     </div>

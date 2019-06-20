@@ -18,7 +18,7 @@ export class AssociatedRemarksComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.associatedRemarksForm = this.fb.group({
+    this.associatedRemarksForm = new FormGroup({
       segmentNo: new FormControl(''),
       items: this.fb.array([this.createItem('')])
     });

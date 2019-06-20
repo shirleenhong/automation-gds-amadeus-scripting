@@ -18,7 +18,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -251,11 +251,13 @@ export class PaymentRemarkService {
       bknLine +
       accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
+
     const pass = accounting.passengerNo !== undefined ? accounting.passengerNo : '1';
+    const segmentrelate = accounting.segmentNo !== undefined ? accounting.segmentNo.toString() : '';
 
     remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
 
-    remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString(), pass.toString()));
+    remarkList.push(this.getRemarksModel(acc2, '*', 'RM', segmentrelate, pass.toString()));
     this.processAirCanadaPass(accounting, remGroup);
     if (accounting.bsp === '2') {
       this.extractApayRemark(accounting, remarkList, fopObj);
@@ -275,7 +277,7 @@ export class PaymentRemarkService {
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
       remarkList.push(
-        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo.toString())
+        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI')
       );
 
       const air = this.pnrService

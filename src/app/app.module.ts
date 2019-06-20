@@ -47,6 +47,7 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
 import { RefundComponent } from './cancel/refund/refund.component';
 import { CancelSegmentComponent } from './cancel/cancel-segment/cancel-segment.component';
+import { AssociatedRemarksComponent } from './remarks/associated-remarks/associated-remarks.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { CancelSegmentComponent } from './cancel/cancel-segment/cancel-segment.c
     ItineraryAndQueueComponent,
     QueueComponent,
     CancelComponent,
-    RefundComponent
+    RefundComponent,
+    AssociatedRemarksComponent
   ],
   imports: [
     BrowserModule,

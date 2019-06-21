@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
 export class InvoiceService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService) { }
 
   public GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
@@ -22,7 +22,7 @@ export class InvoiceService {
     } else if (this.formGroup.get('selection').value === 'invoice') {
       this.setInvoicePNRRemarks();
     }
-    this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator);
+    this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator());
     return this.remGroup;
   }
 

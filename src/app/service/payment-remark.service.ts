@@ -18,7 +18,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -59,8 +59,9 @@ export class PaymentRemarkService {
       });
     }
 
-    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup);
-    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup);
+    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
+    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
+    // this.deleteRemarksByRegex(/\*NE\/-EX-Y\/-OTK-(.*)/g, remGroup);
 
     const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
     if (lineNums.length > 0) {
@@ -70,8 +71,35 @@ export class PaymentRemarkService {
     // write new Lines
     if (accountingRemarks !== null) {
       let found = false;
+      let nucFound = false;
       accountingRemarks.forEach((account) => {
+        if (account.accountingTypeRemark === 'NAE') {
+          if (account.supplierCodeName !== 'ACY' && account.supplierCodeName !== 'A22') {
+            account.baseAmount = this.amountPipe.transform(Number(account.baseAmount) + Number(account.penaltyBaseAmount)).toString();
+            account.gst = this.amountPipe.transform(Number(account.gst) + Number(account.penaltyGst)).toString();
+            account.hst = this.amountPipe.transform(Number(account.hst) + Number(account.penaltyHst)).toString();
+            account.qst = this.amountPipe.transform(Number(account.qst) + Number(account.penaltyQst)).toString();
+          }
+          if (account.supplierCodeName !== 'A22') {
+            let neRem = 'NE/-EX-Y';
+            if (account.originalTktLine) {
+              neRem += '/-OTK-' + account.originalTktLine;
+              if (this.pnrService.getRemarkLineNumber(neRem) === '') {
+                remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
+              }
+            } else if (this.pnrService.getRemarkLineNumber(neRem) === '') {
+              remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
+            }
+          }
+          const nuc = 'NUC';
+          if (!nucFound && this.pnrService.getRemarkLineNumber(nuc) === '') {
+            remGroup.remarks.push(this.getRemarksModel(nuc, '*', 'RM'));
+            nucFound = true;
+          }
+        }
+
         this.processAccountingRemarks(account, remGroup);
+
         if (!found && account.supplierCodeName === 'ACJ') {
           remGroup.remarks.push(this.getRemarksModel('U14/-ACPASS-INDIVIDUAL', '*', 'RM'));
           found = true;
@@ -81,8 +109,9 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
-  deleteRemarksByRegex(regex, remGroup) {
-    const redemRIR = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+  deleteRemarksByRegex(regex, remGroup, type?) {
+    const redemRIR = this.pnrService.getRemarksFromGDSByRegex(regex, type);
+
     if (redemRIR.length > 0) {
       redemRIR.forEach((x) => {
         remGroup.deleteRemarkByIds.push(x.lineNo);
@@ -110,11 +139,14 @@ export class PaymentRemarkService {
     rem.remarkText = remText;
     rem.remarkType = type;
     rem.relatedSegments = this.getSegmentTatooValue(segmentrelate);
-    rem.relatedPassengers = this.getPassengerTatooValue(passengerRelate);
+    rem.relatedPassengers = this.pnrService.getPassengerTatooValue(passengerRelate);
     return rem;
   }
 
   getSegmentTatooValue(segmentrelate) {
+    if (!segmentrelate) {
+      return null;
+    }
     const relatedSegment = [];
     const tatooSegment = this.pnrService.getSegmentTatooNumber();
     segmentrelate.forEach((element) => {
@@ -129,21 +161,6 @@ export class PaymentRemarkService {
     return relatedSegment;
   }
 
-  getPassengerTatooValue(passengerRelate) {
-    const relatedPassenger = [];
-    const tatooPassenger = this.pnrService.getPassengers();
-    passengerRelate.forEach((element) => {
-      if (tatooPassenger.length > 0) {
-        const look = tatooPassenger.find((x) => x.id === element);
-        if (look) {
-          relatedPassenger.push(look.tatooNo);
-        }
-      }
-    });
-
-    return relatedPassenger;
-  }
-
   getFOP(modeofPayment, creditCardNo, fopvendorCode, expDate) {
     let fop = '';
     let paymentvendorCode = fopvendorCode;
@@ -156,8 +173,10 @@ export class PaymentRemarkService {
         break;
       }
       case 'AP': {
-        fop = 'APVI4111111111111111/-EXP-1229';
-        paymentvendorCode = 'VI';
+        // fop = 'APVI4111111111111111/-EXP-1229';
+        // paymentvendorCode = 'VI';
+        fop = 'AP' + fopvendorCode + creditCardNo + '/-EXP-' + expDate.replace('/', '');
+        break;
         break;
       }
       default: {
@@ -202,8 +221,8 @@ export class PaymentRemarkService {
 
     let line1 = '';
 
-    if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) < 0 && accounting.commisionWithoutTax !== undefined) {
-      line1 = 'XT/-CD-' + accounting.commisionWithoutTax.toString().trim();
+    if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) < 0 && accounting.commisionWithoutTax) {
+      line1 = '/-CD-' + accounting.commisionWithoutTax.toString().trim();
     }
 
     let bknLine = '/-BKN-';
@@ -214,8 +233,7 @@ export class PaymentRemarkService {
     }
 
     if (accounting.bsp === '1' && accounting.otherTax) {
-      facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim();
-      // + line1;
+      facc = acc1 + '/-PT-' + accounting.otherTax.toString().trim() + 'XT';
     }
 
     if (['ACPP', 'ACPR'].indexOf(accounting.accountingTypeRemark) >= 0) {
@@ -235,24 +253,28 @@ export class PaymentRemarkService {
       bknLine +
       accounting.supplierConfirmatioNo.toString().trim();
     // + '/S' + accounting.segmentNo.toString().trim();
+
     const pass = accounting.passengerNo !== undefined ? accounting.passengerNo : '1';
+    const segmentrelate = accounting.segmentNo !== undefined ? accounting.segmentNo.toString() : '';
 
     remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
 
-    remarkList.push(this.getRemarksModel(acc2, '*', 'RM', accounting.segmentNo.toString(), pass.toString()));
+    remarkList.push(this.getRemarksModel(acc2, '*', 'RM', segmentrelate, pass.toString()));
+    this.processAirCanadaPass(accounting, remGroup);
+    if (accounting.bsp === '2') {
+      this.extractApayRemark(accounting, remarkList, fopObj);
+    }
+  }
 
+  processAirCanadaPass(accounting, remGroup) {
+    const remarkList = remGroup.remarks;
     if (accounting.accountingTypeRemark === 'ACPR') {
       remarkList.push(
-        this.getRemarksModel(
-          accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE',
-          'R',
-          'RI',
-          accounting.segmentNo.toString()
-        )
+        this.getRemarksModel(accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
       remarkList.push(
-        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo.toString())
+        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
       );
 
       const air = this.pnrService
@@ -276,16 +298,12 @@ export class PaymentRemarkService {
         passive.quantity = noOfPassenger;
         passive.status = 'GK';
         passive.classOfService = 'Q';
-        passive.controlNo = accounting.supplierConfirmatioNo; //'C1';
+        passive.controlNo = accounting.supplierConfirmatioNo;
         passive.flightNo = '123';
         //  passive.confirmationNo = accounting.supplierConfirmatioNo;
         remGroup.passiveSegments = [];
         remGroup.passiveSegments.push(passive);
       }
-    }
-
-    if (accounting.bsp === '2') {
-      this.extractApayRemark(accounting, remarkList, fopObj);
     }
   }
 

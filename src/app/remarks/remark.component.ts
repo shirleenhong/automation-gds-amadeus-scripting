@@ -11,6 +11,7 @@ import { VisaPassportComponent } from './visa-passport/visa-passport.component';
 import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.component';
 import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
 import { PackageRemarkHelper } from '../helper/packageRemark-helper';
+import { AssociatedRemarksComponent } from './associated-remarks/associated-remarks.component';
 
 // import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
@@ -29,8 +30,11 @@ export class RemarkComponent implements OnInit {
   fareRuleSegmentComponent: FareRuleSegmentComponent;
   @ViewChild(RbcPointsRedemptionComponent)
   rbcPointsRedemptionComponent: RbcPointsRedemptionComponent;
-  remarkForm: FormGroup;
+  @ViewChild(AssociatedRemarksComponent)
+  associatedRemarksComponent: AssociatedRemarksComponent;
 
+  remarkForm: FormGroup;
+  isRbmRbp = false;
   packageList: Array<SelectItem>;
 
   constructor(
@@ -48,6 +52,7 @@ export class RemarkComponent implements OnInit {
     this.packageRemarkHelper.clearForDeletionRemarks();
     this.remarkForm.controls.packageList.patchValue('1');
     this.setPackageListValue();
+    this.isRbmRbp = this.pnrService.isRbpRbm();
   }
 
   getSelector() {

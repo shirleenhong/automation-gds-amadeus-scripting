@@ -9,7 +9,7 @@ Verify That CWT Itinerary Remarks Are Written When There Are No Air Passive Segm
     Enter GDS Command    APE-test@email.com    APE-leisure@email.com    APE-Canada@email.com    RMZ/LANGUAGE-EN-US
     Open CA Migration Window
     Click Wrap PNR
-    Click Panel    CWT Itinerary
+    Click Panel    Itinerary and Queue
     Tick On Send Itinerary
     Enter Email Address    1    testingemail@cwt.com
     Click Add Email Address Button
@@ -37,7 +37,7 @@ Verify That CWT Itinerary Remarks Are Written When There Are No Air Passive Segm
     Close Cryptic Display Window
     Open CA Migration Window
     Click Wrap PNR
-    Click Panel    CWT Itinerary
+    Click Panel    Itinerary and Queue
     Tick On Send Itinerary
     Enter Email Address    1    testingemailnew@cwt.com
     Select Itinerary Type Of Transaction    Itinerary
@@ -76,7 +76,7 @@ Verify That CWT Itinerary Remarks Are Written When Air Passive Segment is Domest
     Enter GDS Command    APE-test@email.com    APE-leisure@email.com    APE-Canada@email.com    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
-    Click Panel    CWT Itinerary
+    Click Panel    Itinerary and Queue
     Tick On Send Itinerary
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    English
@@ -109,7 +109,7 @@ Verify That CWT Invoice Remarks Are Written When Air Passive Segment Is Between 
     Enter GDS Command    APE-test@email.com    APE-leisure@email.com    APE-Canada@email.com    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
-    Click Panel    CWT Itinerary
+    Click Panel    Itinerary and Queue
     Tick On Send Itinerary
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    English
@@ -140,7 +140,7 @@ Verify That CWT Invoice Remarks Are Written When Air Passive Segment Is Internat
     Enter GDS Command    APE-test@email.com    APE-leisure@email.com    APE-Canada@email.com
     Open CA Migration Window
     Click Wrap PNR
-    Click Panel    CWT Itinerary
+    Click Panel    Itinerary and Queue
     Select Itinerary Language    English
     Select Itinerary Type Of Transaction    Invoice
     Enter Service Remark    1    Testing Service Remark invoice
@@ -160,7 +160,7 @@ Verify That CWT Invoice Remarks Are Written When Air Passive Segment Is Internat
     Close Cryptic Display Window
     Open CA Migration Window
     Click Wrap PNR
-    Click Panel    CWT Itinerary
+    Click Panel    Itinerary and Queue
     Tick On Send Itinerary
     Enter Email Address    1    testingemail@cwt.com
     Click Submit To PNR

@@ -11,7 +11,6 @@ import { ReportingComponent } from '../reporting/reporting.component';
 import { RemarkComponent } from '../remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
-import { CancelSegmentComponent } from '../cancel-segment/cancel-segment.component';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { PackageRemarkService } from '../service/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
@@ -26,6 +25,7 @@ import { QueueService } from '../service/queue.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
+import { CancelComponent } from '../cancel/cancel.component';
 
 @Component({
   selector: 'app-leisure',
@@ -37,7 +37,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   message: string;
   leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
-  workflow = 'test';
+  workflow = 'start';
   cancelEnabled = true;
   validModel = new ValidateModel();
   invoiceEnabled = false;
@@ -49,12 +49,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(RemarkComponent) remarkComponent: RemarkComponent;
-  @ViewChild(CancelSegmentComponent)
-  cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
+  @ViewChild(CancelComponent) cancelComponent: CancelComponent;
 
   errorPnrMsg = '';
   eventSubscribe = false;
@@ -101,7 +100,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
     this.submitProcess = false;
     this.displayInvoice();
-    this.modalRef.hide();
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
   }
 
   initData() {
@@ -128,7 +129,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
-    this.validModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
+    if (this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.validModel.isItineraryValid = true;
+    } else {
+      this.validModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
+    }
+
     return this.validModel.isAllValid();
   }
 
@@ -149,10 +155,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     this.submitProcess = true;
-    this.showLoading('Updating info to PNR...');
+    this.showLoading('Updating PNR remarks...');
 
     const remarkCollection = new Array<RemarkGroup>();
     let queueCollection = Array<QueuePlaceModel>();
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+
+    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
 
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
@@ -187,34 +196,72 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
 
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
-    remarkCollection.push(
-      this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
-    );
-
+    if (this.remarkComponent.rbcPointsRedemptionComponent) {
+      remarkCollection.push(
+        this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
+      );
+    }
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-
     queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-    const itireraryQueue = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
-    queueCollection = queueCollection.concat(itireraryQueue);
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
 
+    remarkCollection.push(
+      this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
+    );
+
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
       () => {
-        this.submitProcess = false;
-        this.isPnrLoaded = false;
-        this.getPnr(queueCollection);
-        this.workflow = '';
+        if (acpp && acpp.length > 0) {
+          this.processPassPurchase();
+        } else {
+          this.resetReloadUI(queueCollection);
+        }
       },
       (error) => {
         this.showMessage('An Error occured upon updating PNR', MessageType.Error);
         console.log(JSON.stringify(error));
       }
     );
+  }
+
+  processPassPurchase() {
+    // this will associate the dummy segment to pass purchase
+    this.getPnrService().then(async () => {
+      const accounts = this.pnrService.getAccountingRemarks();
+      const acpp = accounts.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+      let found = false;
+      acpp.forEach((a) => {
+        const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);
+        if (dummy) {
+          found = true;
+          a.segmentNo = dummy.lineNo;
+        }
+      });
+      if (found) {
+        const accRemarks = new Array<RemarkGroup>();
+        accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
+        this.remarkService.BuildRemarks(accRemarks);
+        await this.remarkService.SubmitRemarks().then(() => {
+          this.resetReloadUI();
+        });
+      } else {
+        this.resetReloadUI();
+      }
+    });
+  }
+
+  resetReloadUI(queueCollection?) {
+    this.submitProcess = false;
+    this.isPnrLoaded = false;
+    this.getPnr(queueCollection);
+    this.workflow = '';
   }
 
   showMessage(msg, type: MessageType) {
@@ -239,11 +286,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async cancelPnr() {
+    let queueCollection = Array<QueuePlaceModel>();
+
     if (this.submitProcess) {
       return;
     }
 
-    if (!this.cancelSegmentComponent.checkValid()) {
+    if (!this.cancelComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
       });
@@ -252,11 +301,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
+
     this.showLoading('Applying cancellation to PNR...');
     this.submitProcess = true;
     const osiCollection = new Array<RemarkGroup>();
     const remarkCollection = new Array<RemarkGroup>();
-    const cancel = this.cancelSegmentComponent;
+    const cancel = this.cancelComponent.cancelSegmentComponent;
     const getSelected = cancel.submit();
 
     // if (getSelected.length >= 1) {
@@ -273,12 +323,15 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
+    queueCollection = this.segmentService.queueRefund(this.cancelComponent.refundComponent.refundForm, this.cfLine);
+    remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+
     this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.cancelRemarks(cancel.cancelForm.value.requestor).then(
+    await this.remarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
-        this.getPnr();
+        this.getPnr(queueCollection);
         this.workflow = '';
       },
       (error) => {
@@ -312,7 +365,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async addSemgentsRirRemarks() {
-    // await this.pnrService.getPNR();
     const remarkCollection2 = new Array<RemarkGroup>();
     remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
 
@@ -346,7 +398,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.submitProcess = true;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-    this.remarkService.endPNR(' Agent Invoicing'); // end PNR First before Invoice
+    this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
       () => {

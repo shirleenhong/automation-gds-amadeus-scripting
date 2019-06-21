@@ -315,7 +315,7 @@ Verify That Hotel RIR Remarks Are Written
 Add Matrix Accounting
     Click Add Accounting Line Button
     Select Segment    4
-    Create Matrix Accounting Remark    NO    Tour Accounting Remark    AN7    ABC4567891EFG4567890    Credit Card    VI
+    Create Matrix Accounting Remark    NO    Tour Accounting Remark    AN7    ABC4567891EFG4567890    Credit Card    Visa
     ...    4444333322221111    0323
     Enter Base Amount    100.75
     Enter GST Tax Amount    2.00

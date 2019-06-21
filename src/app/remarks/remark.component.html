@@ -5,13 +5,7 @@
         <div class="row">
           <div class="col-3">Select Package :</div>
           <div class="col-6">
-            <select
-              id="packageList"
-              class="form-control"
-              name="packageList"
-              formControlName="packageList"
-              required
-            >
+            <select id="packageList" class="form-control" name="packageList" formControlName="packageList" required>
               <option *ngFor="let item of packageList" [value]="item.itemValue">
                 {{ item.itemText }}
               </option>
@@ -36,7 +30,10 @@
   <tab heading="Fare Rule">
     <app-fare-rule-segment></app-fare-rule-segment>
   </tab>
-  <tab heading="RBC Points Redemption">
+  <tab heading="RBC Points Redemption" *ngIf="isRbmRbp">
     <app-rbc-points-redemption></app-rbc-points-redemption>
+  </tab>
+  <tab heading="Associated Remarks">
+    <app-associated-remarks></app-associated-remarks>
   </tab>
 </tabset>

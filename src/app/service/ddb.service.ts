@@ -170,14 +170,6 @@ export class DDBService implements OnInit {
     return this.supplierCodes;
   }
 
-  // async getCountryInformation(air) {
-  //   debugger;
-  //   // const air = this.pnrService.pnrObj.airSegments;
-  //   air.forEach(async x => {
-  //     await this.getTravelPortInformation(x.arrivalAirport);
-  //     await this.getTravelPortInformation(x.departureAirport);
-  //   });
-  // }
 
   async getTravelPortInformation(airSegments) {
     await airSegments.forEach(async station => {
@@ -189,6 +181,11 @@ export class DDBService implements OnInit {
         await this.extractDataPort(port);
       });
     });
+    await this.delay(1500);
+  }
+
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async extractDataPort(port: any) {

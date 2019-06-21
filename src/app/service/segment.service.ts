@@ -1,12 +1,14 @@
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { Injectable } from '@angular/core';
 import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -80,6 +82,7 @@ export class SegmentService {
                     for (let i = 1; i <= noOfPassenger; i++) {
                         relatePass.push(i.toString());
                     }
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
 
                 if (segment.segmentType === 'HTL') {
@@ -89,7 +92,7 @@ export class SegmentService {
                     for (let i = 1; i <= noOfPassenger; i++) {
                         relatePass.push(i.toString());
                     }
-                    // passive.quantity = Number(segment.numberOfRooms);
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
                 passive.relatedPassengers = relatePass;
                 passive.status = 'HK';
@@ -100,7 +103,6 @@ export class SegmentService {
                 const freetext = this.extractFreeText(segment, startdatevalue, startTime, enddatevalue, endTime);
                 passive.freeText = freetext;
             }
-
             tourSegment.push(passive);
         });
 
@@ -109,7 +111,6 @@ export class SegmentService {
         passGroup.passiveSegments = tourSegment;
         return passGroup;
     }
-
 
     addSegmentRir(segRemark: any) {
 
@@ -396,7 +397,7 @@ export class SegmentService {
         return rem;
     }
 
-    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string, 
+    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
         startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
@@ -435,7 +436,7 @@ export class SegmentService {
                 freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
                     '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + (segment.mileage === 'UNL' ? '' : ' FREE') +
-                    '/URA-' + segment.rateBooked +  segment.currency + '/CF-' + segment.confirmationNo;
+                    '/URA-' + segment.rateBooked + segment.currency + '/CF-' + segment.confirmationNo;
                 break;
             case 'HTL':
 
@@ -753,8 +754,18 @@ export class SegmentService {
         }
 
         segmentselected.forEach(element => {
-            rmGroup.deleteRemarkByIds.push(element.lineNo);
+            rmGroup.deleteSegmentByIds.push(element.lineNo);
         });
+
+        const regex = /\*FULLCXL\*\*(?<date>.*)/g;
+        const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+        if (rems.length > 0) {
+            rems.forEach((r) => {
+                rmGroup.deleteRemarkByIds.push(r.lineNo);
+            });
+        }
+
+
 
         return rmGroup;
     }
@@ -773,15 +784,13 @@ export class SegmentService {
         passGroup.passiveSegments = misSegment;
         const fordeletion = this.pnrService.getmisCancel();
         if (fordeletion > 0) {
-            passGroup.deleteRemarkByIds.push(fordeletion);
+            passGroup.deleteSegmentByIds.push(fordeletion);
         }
-
         return passGroup;
     }
 
 
     writeOptionalFareRule(fareRuleModels: any) {
-
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();
@@ -844,5 +853,93 @@ export class SegmentService {
         return rmGroup;
     }
 
+    writeRefundRemarks(refund: FormGroup) {
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'Refund Remark';
+        remGroup.remarks = new Array<RemarkModel>();
+
+        const rmxRemarks = [
+            { include: refund.controls.branch.value, description: 'BRANCH ', include2: 'ok' },
+            { include: refund.controls.personRequesting.value, description: 'PERSON REQUESTING ', include2: 'ok' },
+            { include: refund.controls.passengerName.value, description: 'PASSENGER ', include2: 'ok' },
+            {
+                include: refund.controls.cfa.value, description: 'CFA ',
+                include2: refund.controls.cancellation.value, description2: 'CANCELLATION '
+            },
+            {
+                include: refund.controls.commission.value, description: 'COMM RECALL ONLY ',
+                include2: refund.controls.supplier.value, description2: 'SUPPLIER '
+            },
+            { include: refund.controls.baseRefund.value, description: 'BASE REFUND BEFORE PENALTY  ', include2: 'ok' },
+            { include: refund.controls.taxesRef.value, description: 'TAXES REFUNDED ', include2: 'ok' },
+            { include: refund.controls.penaltyPoint.value, description: 'PENALTY ', include2: 'ok' },
+            {
+                include: refund.controls.commissionPoint.value, description: 'COMM RECALL ',
+                include2: refund.controls.taxRecall.value, description2: 'TAX ON COMM RECALL '
+            },
+            { include: refund.controls.comments.value, description: 'COMMENTS ', include2: 'ok' }
+        ];
+
+        if (refund.controls.isBsp.value === 'NO') {
+            rmxRemarks.forEach((c) => {
+                if (c.include && c.include2 === 'ok') {
+                    remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'X'));
+                } else if ((c.include && c.include2 !== 'ok') || (c.include2 && c.include2 !== 'ok')) {
+                    let remarkText = '';
+                    if (c.include) {
+                        remarkText = c.description + c.include + ' ';
+                    }
+                    if (c.include2) {
+                        remarkText = remarkText + c.description2 + c.include2;
+                    }
+                    remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'X'));
+                }
+            });
+        }
+        return remGroup;
+    }
+
+    queueRefund(frmrefund: FormGroup, cfa: CfRemarkModel) {
+        const queueGroup = Array<QueuePlaceModel>();
+
+        if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
+            this.getQueueMinder(queueGroup, 'rbpRbm');
+            if (frmrefund.controls.isBsp.value === 'YES') {
+                this.getQueueMinder(queueGroup, 'bspAllCfa');
+            }
+        } else {
+            if (frmrefund.controls.isBsp.value === 'YES') {
+                this.getQueueMinder(queueGroup, 'bspAllCfa');
+            } else {
+                this.getQueueMinder(queueGroup, 'nonBspAllCfa');
+            }
+        }
+        return queueGroup;
+    }
+
+    private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
+        const queue = new QueuePlaceModel();
+
+        const queuePlaceDescription = [
+            { control: 'rbpRbm', queueNo: '41', pcc: 'YTOWL2104', text: 'RBP RBM', category: '98' },
+            { control: 'bspAllCfa', queueNo: '41', pcc: 'YTOWL2107', text: 'BSP ALL CFA', category: '94' },
+            { control: 'nonBspAllCfa', queueNo: '41', pcc: 'YTOWL2108', text: 'NON BSP', category: '98' }
+        ];
+        const look = queuePlaceDescription.find((x) => x.control === controlname);
+        if (look) {
+            queue.queueNo = look.queueNo;
+            if (queueno) {
+                queue.queueNo = queueno;
+            }
+            queue.pcc = look.pcc;
+            if (look.pcc === '') {
+                queue.pcc = this.pnrService.PCC;
+            }
+            queue.freetext = look.text;
+            queue.category = look.category;
+            queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+            queueGroup.push(queue);
+        }
+    }
 }
 

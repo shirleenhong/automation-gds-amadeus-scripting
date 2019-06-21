@@ -40,7 +40,7 @@ Verify Specific Remark Is Not Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
     ${pnr_details}    Get Text    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
     Log    ${pnr_details}
-    Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}
+    Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
     Run Keyword And Continue On Failure    Should Not Contain    ${pnr_details}    ${expected_remark}
     Log    Expected: ${expected_remark}
     Log    Expected: ${pnr_details}
@@ -169,13 +169,13 @@ Populate Reporting Required Fields
     Enter Destination Code    CDG
 
 Get Hotel Details Values
-    ${hotel_city}    Get Element Attribute    xpath=//input[@id='hotelCityName']@ng-reflect-model
-    ${hotel_name}    Get Element Attribute    xpath=//input[@id='hotelName']@ng-reflect-model
-    ${hotel_phone}    Get Element Attribute    xpath=//input[@id='phone']@ng-reflect-model
-    ${hotel_fax}    Get Element Attribute    xpath=//input[@id='fax']@ng-reflect-model
-    ${hotel_address}    Get Element Attribute    xpath=//input[@id='address']@ng-reflect-model
-    ${hotel_country}    Get Element Attribute    xpath=//input[@id='country']@ng-reflect-model
-    ${hotel_zip_code}    Get Element Attribute    xpath=//input[@id='zipCode']@ng-reflect-model
+    ${hotel_city}    Get Element Attribute    xpath=//input[@id='hotelCityName']    ng-reflect-model
+    ${hotel_name}    Get Element Attribute    xpath=//input[@id='hotelName']    ng-reflect-model
+    ${hotel_phone}    Get Element Attribute    xpath=//input[@id='phone']    ng-reflect-model
+    ${hotel_fax}    Get Element Attribute    xpath=//input[@id='fax']    ng-reflect-model
+    ${hotel_address}    Get Element Attribute    xpath=//input[@id='address']    ng-reflect-model
+    ${hotel_country}    Get Element Attribute    xpath=//input[@id='country']    ng-reflect-model
+    ${hotel_zip_code}    Get Element Attribute    xpath=//input[@id='zipCode']    ng-reflect-model
     Press Key    css=#zipCode    \\09
     Set Test Variable    ${hotel_city}
     Set Test Variable    ${hotel_name}

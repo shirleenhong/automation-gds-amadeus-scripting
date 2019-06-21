@@ -15,7 +15,6 @@
     </tr>
   </thead>
   <tbody>
-
     <tr *ngFor="let r of accountingRemarks">
       <td>{{ r.tkMacLine }}</td>
       <td>{{ r.passengerNo }}</td>
@@ -27,8 +26,9 @@
       <td>{{ r.qst }}</td>
       <td>{{ r.commisionWithoutTax }}</td>
       <td>{{ r.otherTax }}</td>
-      <td><i class="fas fa-edit" (click)="updateItem(r)"></i>&nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt"
-          (click)="deleteItem(r)"></i>
+      <td>
+        <i class="fas fa-edit" (click)="updateItem(r)" *ngIf="r.supplierCodeName !== 'A22'"></i>
+        &nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt" (click)="deleteItem(r)"></i>
       </td>
     </tr>
   </tbody>
@@ -41,7 +41,6 @@
 </div>
 
 <div class="col-8" *ngIf="isAd1SwgSupplier">
-
   <form [formGroup]="accountingForm">
     <div class="row form-group" *ngIf="showU76">
       <div class="col-4">
@@ -60,8 +59,7 @@
         Exclusive Property ?
       </div>
       <div class="col">
-        <select class="form-control" formControlName="exclusiveProperty" name="exclusiveProperty"
-          id="exclusiveProperty">
+        <select class="form-control" formControlName="exclusiveProperty" name="exclusiveProperty" id="exclusiveProperty">
           <option>YES</option>
           <option>NO</option>
         </select>
@@ -73,11 +71,9 @@
         Hotel/Property Name :
       </div>
       <div class="col">
-        <input class='form-control' type="text" id="propertyName" name="propertyName" formControlName="propertyName"
-          maxlength="35" />
+        <input class="form-control" type="text" id="propertyName" name="propertyName" formControlName="propertyName" maxlength="35" />
       </div>
     </div>
-
 
     <div class="row form-group" *ngIf="showU72">
       <div class="col-4">
@@ -96,11 +92,16 @@
         Price vs Other Supplier :
       </div>
       <div class="col">
-        <input class='form-control' type="text" id="priceVsSupplier" name="priceVsSupplier"
-          formControlName="priceVsSupplier" maxlength="35" />
+        <input
+          class="form-control"
+          type="text"
+          id="priceVsSupplier"
+          name="priceVsSupplier"
+          formControlName="priceVsSupplier"
+          maxlength="35"
+        />
       </div>
     </div>
-
 
     <div class="row form-group" *ngIf="showU74">
       <div class="col-4">
@@ -127,5 +128,4 @@
       </div>
     </div>
   </form>
-
 </div>

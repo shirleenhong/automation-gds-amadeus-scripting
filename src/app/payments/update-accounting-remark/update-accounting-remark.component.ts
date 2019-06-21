@@ -34,7 +34,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
   name: string;
-  IsInsurance = false;
+  isInsurance = false;
   isAddNew = false;
   // PaymentModeList: Array<SelectItem>;
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
@@ -85,7 +85,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       passRelate: new FormControl('', []),
       passPurchase: new FormControl('', []),
       fareType: new FormControl('', []),
-      departureCity: new FormControl('', [])
+      departureCity: new FormControl('', []),
+      penaltyGst: new FormControl(''),
+      penaltyHst: new FormControl(''),
+      penaltyQst: new FormControl(''),
+      penaltyBaseAmount: new FormControl(''),
+      originalTktLine: new FormControl('')
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -154,7 +159,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Insurance Remark', itemValue: 'INS' },
       { itemText: 'Apay Accounting Remark', itemValue: '0' },
       { itemText: 'Air Canada Pass Redemption', itemValue: 'ACPR' },
-      { itemText: 'Air Canada Pass Purchase', itemValue: 'ACPP' }
+      { itemText: 'Air Canada Pass Purchase', itemValue: 'ACPP' },
+      { itemText: 'NonBSP Air Exchange', itemValue: 'NAE' }
     ];
   }
 
@@ -178,31 +184,36 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.enableFormControls(['fop'], false);
     this.enableFormControls(['departureCity'], true);
-    this.matrixAccountingForm.get('departureCity').clearValidators();
+    this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     switch (accRemark) {
       case 'INS':
-        this.IsInsurance = true;
+        this.isInsurance = true;
         this.name = 'Policy Confirmation Number:';
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('MLF');
         this.enableFormControls(['supplierCodeName', 'descriptionapay', 'tktLine', 'otherTax', 'commisionWithoutTax'], true);
-        this.enableFormControls(['commisionPercentage'], false);
+        this.enableFormControls(['commisionPercentage', 'segmentNo'], false);
         this.accountingRemark.bsp = '3';
         // this.eventEmitterService.onFirstComponentButtonClick();
         break;
       case '0':
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'commisionPercentage'], true);
-        this.enableFormControls(['descriptionapay', 'supplierCodeName'], false);
+        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'segmentNo'], false);
         this.accountingRemark.bsp = '2';
-        this.IsInsurance = false;
+        this.isInsurance = false;
         break;
       case 'ACPR':
       case 'ACPP':
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
-        this.enableFormControls(
-          ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay', 'commisionPercentage', 'departureCity'],
-          true
-        );
+        if (accRemark === 'ACPP') {
+          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
+            'commisionPercentage', 'departureCity', 'segmentNo'], true);
+        } else {
+          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
+            'commisionPercentage', 'departureCity'], true);
+          this.enableFormControls(['segmentNo'], false);
+        }
+
         this.accountingRemark.bsp = '1';
         this.enableFormControls(['tktLine'], false);
         this.matrixAccountingForm.controls.tktLine.clearValidators();
@@ -224,26 +235,51 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.enableFormControls(['departureCity'], false);
           this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
         }
-
         break;
-      default:
+      case 'NAE':
+        this.accountingRemark.bsp = '1';
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
+        if (this.isAddNew) {
+          this.accountingRemark.supplierCodeName = 'ACY';
+        }
+        break;
+      default:
+        if (this.isAddNew && accRemark === '1') {
+          this.accountingRemark.supplierCodeName = 'ACY';
+        }
+        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
+        this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
-        this.setTktNumber();
-        this.IsInsurance = false;
+        this.isInsurance = false;
         this.name = 'Supplier Confirmation Number:';
         break;
     }
+
     this.filterSupplierCodeList = [];
     this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
     this.assignSupplierCode(this.accountingRemark.descriptionapay);
+    this.setTktNumber(this.accountingRemark.supplierCodeName);
+  }
+
+  setRequired(controls: string[], isRequired: boolean) {
+    controls.forEach((x) => {
+      try {
+        if (isRequired) {
+          this.matrixAccountingForm.get(x).setValidators([Validators.required]);
+        } else {
+          this.matrixAccountingForm.get(x).clearValidators();
+        }
+      } catch (e) {
+        console.log(JSON.stringify(e));
+      }
+    });
   }
 
   filterSupplierCode(typeCode) {
-    const val = ['12', '5', '1', '6', '4'];
-    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL'];
+    const val = ['12', '5', '1', '6', '4', 'NAE'];
+    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL', 'AIR'];
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
@@ -252,12 +288,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   private assignSupplierCode(typeCode: any) {
     if (this.accountingRemark.bsp === '2') {
-      if (!this.IsInsurance) {
+      if (!this.isInsurance) {
         if (typeCode === 'SEAT COSTS') {
           this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
         } else {
           this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
         }
+        this.setTktNumber(this.matrixAccountingForm.controls.supplierCodeName);
       }
     }
   }
@@ -265,6 +302,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   FormOfPaymentChange(newValue) {
     switch (newValue) {
       case 'CC':
+      case 'AP':
         this.enableFormControls(['cardNumber', 'expDate', 'vendorCode'], false);
         break;
       default:
@@ -293,6 +331,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.isSubmitted = false;
       return;
     }
+
     this.isSubmitted = true;
     this.modalRef.hide();
   }
@@ -323,16 +362,21 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
   }
 
-  setTktNumber() {
-    const supCode = ['ACY', 'SOA', 'WJ3', 'ACJ'];
-
-    if (this.accountingRemark.accountingTypeRemark === '1' && supCode.includes(this.accountingRemark.supplierCodeName)) {
+  setTktNumber(code) {
+    const supCode = ['ACY', 'SOA', 'WJ3'];
+    const type = this.accountingRemark.accountingTypeRemark;
+    if ((type === '1' || type === 'NAE') && supCode.indexOf(code) >= 0) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+      if (type === 'NAE') {
+        this.matrixAccountingForm.controls.originalTktLine.setValidators(Validators.required);
+      }
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
+      this.matrixAccountingForm.controls.originalTktLine.clearValidators();
     }
 
     this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
+    this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
   }
 
   setInsuranceValue() {

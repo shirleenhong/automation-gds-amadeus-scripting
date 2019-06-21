@@ -78,11 +78,35 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
         if (this.modalRef.content.isSubmitted) {
+          // new/Updated
+          const acc = this.modalRef.content.accountingRemark;
           if (!this.isAddNew) {
-            const cur = this.accountingRemarks.find((x) => x.tkMacLine === this.modalRef.content.accountingRemark.tkMacLine);
-            this.utilHelper.modelCopy(this.modalRef.content.accountingRemark, cur);
+            const cur = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine);
+            if (
+              cur.accountingTypeRemark === 'NAE' &&
+              cur.supplierCodeName !== 'ACY' &&
+              acc.supplierCodeName === 'ACY' &&
+              Number(acc.penaltyBaseAmount) > 0
+            ) {
+              this.accountingRemarks.push(this.getA22Account(acc));
+            } else if (acc.supplierCodeName === 'ACY' && cur.supplierCodeName === 'ACY') {
+              const a22 = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine + 1);
+              if (Number(acc.penaltyBaseAmount) > 0) {
+                this.getA22Account(acc, a22);
+              } else {
+                const indx = this.accountingRemarks.indexOf(a22);
+                if (indx >= 0) {
+                  this.accountingRemarks.splice(indx, 1);
+                }
+              }
+            }
+
+            this.utilHelper.modelCopy(acc, cur);
           } else {
-            this.accountingRemarks.push(this.modalRef.content.accountingRemark);
+            this.accountingRemarks.push(acc);
+            if (acc.accountingTypeRemark === 'NAE' && acc.supplierCodeName === 'ACY' && Number(acc.penaltyBaseAmount) > 0) {
+              this.accountingRemarks.push(this.getA22Account(acc));
+            }
           }
           this.modalRef.content.isSubmitted = false;
           this.checkSupplierCode();
@@ -100,6 +124,23 @@ export class AccountingRemarkComponent implements OnInit {
         }
       }
     });
+  }
+
+  getA22Account(acc, acc2?) {
+    if (!acc2) {
+      acc2 = new MatrixAccountingModel();
+    }
+
+    this.utilHelper.modelCopy(acc, acc2);
+    acc2.tkMacLine = Number(acc.tkMacLine) + 1;
+    acc2.supplierCodeName = 'A22';
+    acc2.baseAmount = acc.penaltyBaseAmount;
+    acc2.gst = acc.penaltyGst;
+    acc2.hst = acc.penaltyHst;
+    acc2.qst = acc.penaltyQst;
+    acc2.otherTax = undefined;
+    acc2.commisionWithoutTax = '0.00';
+    return acc2;
   }
 
   updateItem(r: MatrixAccountingModel) {

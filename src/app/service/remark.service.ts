@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { formatDate } from '@angular/common';
 
 declare var smartScriptSession: any;
 
@@ -90,6 +91,9 @@ export class RemarkService {
         // }
       }
     });
+    if (this.pnrService.pnrObj.tkElements.length < 1) {
+      this.remarksElement.push(this.getTicketingElement());
+    }
   }
 
   getFSRemarksElement(remarkModel: RemarkModel) {
@@ -134,6 +138,34 @@ export class RemarkService {
     };
 
     return { elementManagementData, optionElement };
+  }
+
+  getTicketingElement() {
+    const reference = {
+      qualifier: 'OT',
+      number: '1'
+    };
+    const elementManagementData = {
+      reference,
+      segmentName: 'TK'
+    };
+
+    const ticket = {
+      indicator: 'OK',
+      date: formatDate(Date.now(), 'ddMMyy', 'en').toString(),
+      time: '',
+      officeId: '',
+      freetext: '',
+      airlineCode: '',
+      queueNumber: '',
+      queueCategory: '',
+    };
+
+    const ticketElement = {
+      ticket
+    };
+
+    return { elementManagementData, ticketElement };
   }
 
   getRemarkElement(remarkModel: RemarkModel) {
@@ -383,6 +415,7 @@ export class RemarkService {
   async sendRemarks(requestor?: string) {
     const pnrActions = {
       optionCode: '0'
+      // optionCode: '11'
     };
     let dataElementsMaster;
     let originDestination;
@@ -416,13 +449,11 @@ export class RemarkService {
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
       () => {
         this.responseMessage = 'Remarks Updated';
-
-        if (requestor) {
-          this.endPNR(requestor);
-        } else {
-          this.endPNR('CWTSCRIPT');
+        if (!requestor) {
+          requestor = 'CWTSCRIPT';
         }
 
+        this.endPNR(requestor);
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
@@ -438,28 +469,22 @@ export class RemarkService {
     );
   }
 
-  async SubmitRemarks() {
+  async SubmitRemarks(requestor?: string) {
     this.deleteRemarks();
     this.deleteSegments();
-    await this.sendCryptics();
-    await this.sendRemarks();
-    this.clear();
-  }
-
-  async cancelRemarks(requestor) {
-    await this.deleteRemarks();
     await this.sendCryptics();
     await this.sendRemarks(requestor);
     this.clear();
   }
 
   async cancelOSIRemarks() {
+    await this.deleteRemarks();
     await this.sendCryptics();
     this.clear();
   }
 
-  async endPNR(requestor) {
-    if (this.pnrService.pnrObj.tkElements.length < 1) {
+  async endPNR(requestor, ticket?: boolean) {
+    if (this.pnrService.pnrObj.tkElements.length < 1 && ticket) {
       smartScriptSession.send('TKOK');
     }
     smartScriptSession.send('RF' + requestor);

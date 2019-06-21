@@ -24,7 +24,7 @@ export class PnrService {
   PCC = '';
   // recordLocator = '';
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -47,6 +47,16 @@ export class PnrService {
     this.getPCC();
     // this.getRecordLocator();
     console.log(JSON.stringify(this.pnrObj));
+  }
+
+  isRbpRbm() {
+    if (!this.cfLine) {
+      this.cfLine = this.getCFLine();
+    }
+    if (this.cfLine.cfa === 'RBP' || this.cfLine.cfa === 'RBM') {
+      return true;
+    }
+    return false;
   }
 
   getPCC(): void {
@@ -107,7 +117,7 @@ export class PnrService {
   }
 
   getCFLine(): CfRemarkModel {
-    if (this.cfLine === undefined || this.cfLine === null) {
+    if (!this.cfLine) {
       const cfLine = new CfRemarkModel();
       if (this.isPNRLoaded) {
         for (const rm of this.pnrObj.rmElements) {
@@ -118,11 +128,10 @@ export class PnrService {
             return cfLine;
           }
         }
-      } else {
-        return this.cfLine;
       }
+    } else {
+      return this.cfLine;
     }
-    return null;
   }
 
   getFSRemark() {
@@ -668,6 +677,23 @@ export class PnrService {
           }
           if (model.supplierCodeName === 'ACJ') {
             model = this.extractCanadaPass(model, rm.associations);
+          } else {
+            if (!model.accountingTypeRemark) {
+              const tkt = this.getRemarksFromGDSByRegex(/\*NE\/-EX-Y\/-OTK-(?<originalTicket>.*)/g);
+              if (tkt.length > 0) {
+                model.originalTktLine = tkt[0].remarkText.replace('*NE/-EX-Y/-OTK-', '');
+                model.accountingTypeRemark = 'NAE';
+              }
+            }
+
+            model.penaltyBaseAmount = '0.00';
+            model.penaltyGst = '0.00';
+            model.penaltyHst = '0.00';
+            model.penaltyQst = '0.00';
+          }
+
+          if (model.supplierCodeName === 'A22') {
+            this.extractExchange(model, matrixModels);
           }
 
           if (apays !== null && apays.length > 0) {
@@ -694,6 +720,23 @@ export class PnrService {
     }
     return matrixModels;
   }
+
+  extractExchange(model, matrixModels) {
+    const tkt = this.getRemarksFromGDSByRegex(/\*NE\/-EX-Y\/-OTK-(?<originalTicket>.*)/g);
+    if (tkt.length > 0) {
+      const indx = matrixModels.indexOf(model);
+      const acy = matrixModels[indx - 1];
+      acy.originalTktLine = tkt[0].remarkText.replace('*NE/-EX-Y/-OTK-', '');
+      acy.penaltyBaseAmount = model.baseAmount;
+      acy.penaltyGst = model.gst;
+      acy.penaltyHst = model.hst;
+      acy.penaltyQst = model.qst;
+      acy.accountingTypeRemark = 'NAE';
+      model.originalTktLine = acy.originalTktLine;
+      model.accountingTypeRemark = 'NAE';
+    }
+  }
+
   extractCanadaPass(model: MatrixAccountingModel, assoc) {
     let pass = this.getRemarksFromGDSByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, 'RIR');
     let found = false;
@@ -1137,7 +1180,10 @@ export class PnrService {
 
   getmisCancel() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1) {
+      if (
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1 ||
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1
+      ) {
         // this.getSegmentDetails(misc, 'MIS');
         return misc.elementNumber;
       }
@@ -1145,9 +1191,18 @@ export class PnrService {
     return 0;
   }
 
-  // public async endPNR(requestor) {
-  //   smartScriptSession.send('RF' + requestor);
-  //   smartScriptSession.send('ER');
-  //   smartScriptSession.send('RT');
-  // }
+  getPassengerTatooValue(passengerRelate) {
+    const relatedPassenger = [];
+    const tatooPassenger = this.getPassengers();
+    passengerRelate.forEach((element) => {
+      if (tatooPassenger.length > 0) {
+        const look = tatooPassenger.find((x) => x.id === element);
+        if (look) {
+          relatedPassenger.push(look.tatooNo);
+        }
+      }
+    });
+
+    return relatedPassenger;
+  }
 }

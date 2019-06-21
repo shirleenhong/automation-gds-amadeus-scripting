@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
-import { SelectItem } from '../models/select-item.model';
-import { PnrService } from '../service/pnr.service';
-import { validateSegmentNumbers, validatePassengerNumbers } from '../shared/validators/leisure.validators';
-import { UtilHelper } from '../helper/util.helper';
+import { SelectItem } from 'src/app/models/select-item.model';
+import { PnrService } from 'src/app/service/pnr.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
+import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
+
 
 @Component({
   selector: 'app-cancel-segment',
@@ -51,8 +52,12 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   private addCheckboxes() {
+    let forchecking = true;
+    if (this.segments.length > 1) {
+      forchecking = false;
+    }
     this.segments.map((_o, i) => {
-      const control = new FormControl(i === 0); // if first item set to true, else false
+      const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.cancelForm.controls.segments as FormArray).push(control);
     });
   }
@@ -92,7 +97,7 @@ export class CancelSegmentComponent implements OnInit {
     } else {
       this.reasonAcList = [
         { itemText: '', itemValue: '' },
-        { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' },
+        { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO IROP', itemValue: '6' },
         { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: '6' },
         { itemText: 'NONE OF THE ABOVE', itemValue: '9' },
       ];

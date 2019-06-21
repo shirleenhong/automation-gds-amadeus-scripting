@@ -500,4 +500,22 @@ export class PackageRemarkService {
 
     return this.remarkHelper.createRemark(remark, 'RI', 'R');
   }
+
+  public buildAssociatedRemarks(group: FormGroup) {
+    let remText = '';
+    const rmGroup = new RemarkGroup();
+    rmGroup.group = 'Associated Remarks';
+    rmGroup.remarks = new Array<RemarkModel>();
+    rmGroup.deleteRemarkByIds = new Array<string>();
+
+    const arr = group.get('items') as FormArray;
+
+    for (const c of arr.controls) {
+      if (arr.controls.length >= 1) {
+        remText = c.get('remarkText').value;
+        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', group.get('segmentNo').value));
+      }
+    }
+    return rmGroup;
+  }
 }

@@ -200,11 +200,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
+      queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      const itireraryQueue = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
+      queueCollection = queueCollection.concat(itireraryQueue);
     }
-
-    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-    const itireraryQueue = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
-    queueCollection = queueCollection.concat(itireraryQueue);
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
@@ -362,7 +361,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.submitProcess = true;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-    this.remarkService.endPNR(' Agent Invoicing'); // end PNR First before Invoice
+    this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
       () => {

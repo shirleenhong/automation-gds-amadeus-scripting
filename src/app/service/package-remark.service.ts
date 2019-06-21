@@ -513,7 +513,7 @@ export class PackageRemarkService {
     for (const c of arr.controls) {
       if (arr.controls.length >= 1) {
         remText = c.get('remarkText').value;
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X', group.get('segmentNo').value));
+        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', group.get('segmentNo').value));
       }
     }
     return rmGroup;

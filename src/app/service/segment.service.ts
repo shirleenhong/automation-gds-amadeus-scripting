@@ -757,6 +757,16 @@ export class SegmentService {
             rmGroup.deleteRemarkByIds.push(element.lineNo);
         });
 
+        const regex = /\*FULLCXL\*\*(?<date>.*)/g;
+        const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
+        if (rems.length > 0) {
+            rems.forEach((r) => {
+                rmGroup.deleteRemarkByIds.push(r.lineNo);
+            });
+        }
+
+
+
         return rmGroup;
     }
 
@@ -895,6 +905,9 @@ export class SegmentService {
 
         if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
             this.getQueueMinder(queueGroup, 'rbpRbm');
+            if (frmrefund.controls.isBsp.value === 'YES') {
+                this.getQueueMinder(queueGroup, 'bspAllCfa');
+            }
         } else {
             if (frmrefund.controls.isBsp.value === 'YES') {
                 this.getQueueMinder(queueGroup, 'bspAllCfa');

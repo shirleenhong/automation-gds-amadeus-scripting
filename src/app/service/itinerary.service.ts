@@ -206,8 +206,8 @@ export class ItineraryService {
       { control: 'bspTicket', queueNo: '41', pcc: 'YTOWL2104', text: 'bsp Ticket', category: '95' },
       { control: 'refund', queueNo: '41', pcc: 'YTOWL2104', text: 'refund', category: '95' },
       { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
-      { control: 'invoice', queueNo: '62', pcc: 'PARWL2877', text: 'invoice', category: '' },
-      { control: 'itinerary', queueNo: '63', pcc: 'PARWL2877', text: 'itinerary', category: '' }
+      { control: 'invoice', queueNo: '63', pcc: 'PARWL2877', text: 'invoice', category: '' },
+      { control: 'itinerary', queueNo: '62', pcc: 'PARWL2877', text: 'itinerary', category: '' }
     ];
 
     // const queuePlaceDescription = [

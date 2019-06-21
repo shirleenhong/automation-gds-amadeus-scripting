@@ -413,15 +413,9 @@ export class RemarkService {
   }
 
   async sendRemarks(requestor?: string) {
-    if (requestor) {
-      smartScriptSession.send('RF' + requestor);
-    } else {
-      smartScriptSession.send('RFCWTSCRIPT');
-    }
-
     const pnrActions = {
-      // optionCode: '0'
-      optionCode: '11'
+      optionCode: '0'
+      // optionCode: '11'
     };
     let dataElementsMaster;
     let originDestination;
@@ -455,7 +449,11 @@ export class RemarkService {
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
       () => {
         this.responseMessage = 'Remarks Updated';
-        smartScriptSession.send('RT');
+        if (!requestor) {
+          requestor = 'CWTSCRIPT';
+        }
+
+        this.endPNR(requestor);
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
@@ -492,8 +490,8 @@ export class RemarkService {
     this.clear();
   }
 
-  async endPNR(requestor) {
-    if (this.pnrService.pnrObj.tkElements.length < 1) {
+  async endPNR(requestor, ticket?: boolean) {
+    if (this.pnrService.pnrObj.tkElements.length < 1 && ticket) {
       smartScriptSession.send('TKOK');
     }
     smartScriptSession.send('RF' + requestor);

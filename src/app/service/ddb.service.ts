@@ -170,14 +170,6 @@ export class DDBService implements OnInit {
     return this.supplierCodes;
   }
 
-  // async getCountryInformation(air) {
-  //   debugger;
-  //   // const air = this.pnrService.pnrObj.airSegments;
-  //   air.forEach(async x => {
-  //     await this.getTravelPortInformation(x.arrivalAirport);
-  //     await this.getTravelPortInformation(x.departureAirport);
-  //   });
-  // }
 
   async getTravelPortInformation(airSegments) {
     await airSegments.forEach(async station => {

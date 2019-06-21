@@ -81,7 +81,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -160,6 +160,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const remarkCollection = new Array<RemarkGroup>();
     let queueCollection = Array<QueuePlaceModel>();
 
+    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
@@ -208,22 +210,57 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
 
-    remarkCollection.push(this.packageRemarkService.buildAssociatedRemarks
-      (this.remarkComponent.associatedRemarksComponent.associatedRemarksForm));
+    remarkCollection.push(
+      this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
+    );
 
     this.remarkService.BuildRemarks(remarkCollection);
     this.remarkService.SubmitRemarks().then(
       () => {
-        this.submitProcess = false;
-        this.isPnrLoaded = false;
-        this.getPnr(queueCollection);
-        this.workflow = '';
+        if (acpp && acpp.length > 0) {
+          this.processPassPurchase();
+        } else {
+          this.resetReloadUI(queueCollection);
+        }
       },
       (error) => {
         this.showMessage('An Error occured upon updating PNR', MessageType.Error);
         console.log(JSON.stringify(error));
       }
     );
+  }
+
+  processPassPurchase() {
+    // this will associate the dummy segment to pass purchase
+    this.getPnrService().then(async () => {
+      const accounts = this.pnrService.getAccountingRemarks();
+      const acpp = accounts.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+      let found = false;
+      acpp.forEach((a) => {
+        const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);
+        if (dummy) {
+          found = true;
+          a.segmentNo = dummy.lineNo;
+        }
+      });
+      if (found) {
+        const accRemarks = new Array<RemarkGroup>();
+        accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
+        this.remarkService.BuildRemarks(accRemarks);
+        await this.remarkService.SubmitRemarks().then(() => {
+          this.resetReloadUI();
+        });
+      } else {
+        this.resetReloadUI();
+      }
+    });
+  }
+
+  resetReloadUI(queueCollection?) {
+    this.submitProcess = false;
+    this.isPnrLoaded = false;
+    this.getPnr(queueCollection);
+    this.workflow = '';
   }
 
   showMessage(msg, type: MessageType) {
@@ -275,7 +312,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => { },
+      () => {},
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -327,7 +364,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async addSemgentsRirRemarks() {
-    // await this.pnrService.getPNR();
     const remarkCollection2 = new Array<RemarkGroup>();
     remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
 

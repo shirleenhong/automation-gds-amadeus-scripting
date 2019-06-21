@@ -753,8 +753,9 @@ export class SegmentService {
             }
         }
 
+        debugger;
         segmentselected.forEach(element => {
-            rmGroup.deleteRemarkByIds.push(element.lineNo);
+            rmGroup.deleteSegmentByIds.push(element.lineNo);
         });
 
         const regex = /\*FULLCXL\*\*(?<date>.*)/g;
@@ -784,9 +785,8 @@ export class SegmentService {
         passGroup.passiveSegments = misSegment;
         const fordeletion = this.pnrService.getmisCancel();
         if (fordeletion > 0) {
-            passGroup.deleteRemarkByIds.push(fordeletion);
+            passGroup.deleteSegmentByIds.push(fordeletion);
         }
-
         return passGroup;
     }
 

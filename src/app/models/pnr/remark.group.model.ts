@@ -15,5 +15,6 @@ export class RemarkGroup {
     this.remarks = new Array<RemarkModel>();
     this.cryptics = new Array<string>();
     this.deleteRemarkByIds = new Array<string>();
+    this.deleteSegmentByIds = new Array<string>();
   }
 }

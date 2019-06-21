@@ -52,8 +52,12 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   private addCheckboxes() {
+    let segmentNumbers = 0;
+    if (this.segments.length > 1) {
+      segmentNumbers = 2;
+    }
     this.segments.map((_o, i) => {
-      const control = new FormControl(i === 0); // if first item set to true, else false
+      const control = new FormControl(i === segmentNumbers); // if first item set to true, else false
       (this.cancelForm.controls.segments as FormArray).push(control);
     });
   }

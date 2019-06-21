@@ -753,7 +753,6 @@ export class SegmentService {
             }
         }
 
-        debugger;
         segmentselected.forEach(element => {
             rmGroup.deleteSegmentByIds.push(element.lineNo);
         });

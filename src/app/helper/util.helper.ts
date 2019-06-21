@@ -35,6 +35,9 @@ export class UtilHelper {
                 this.validateAllFields(control);
             } else if (control instanceof FormArray) {
                 for (const c of control.controls) {
+                    if (c instanceof FormGroup) {
+                        this.validateAllFields(c);
+                    }
                     c.markAsTouched({ onlySelf: true });
                 }
             }

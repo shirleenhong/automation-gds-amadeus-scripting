@@ -159,6 +159,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     const remarkCollection = new Array<RemarkGroup>();
     let queueCollection = Array<QueuePlaceModel>();
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
 
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
 
@@ -202,10 +203,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
-      queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-      const itireraryQueue = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
-      queueCollection = queueCollection.concat(itireraryQueue);
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
+    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));

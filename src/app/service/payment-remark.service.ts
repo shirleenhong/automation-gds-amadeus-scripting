@@ -144,6 +144,9 @@ export class PaymentRemarkService {
   }
 
   getSegmentTatooValue(segmentrelate) {
+    if (!segmentrelate) {
+      return null;
+    }
     const relatedSegment = [];
     const tatooSegment = this.pnrService.getSegmentTatooNumber();
     segmentrelate.forEach((element) => {
@@ -267,16 +270,11 @@ export class PaymentRemarkService {
     const remarkList = remGroup.remarks;
     if (accounting.accountingTypeRemark === 'ACPR') {
       remarkList.push(
-        this.getRemarksModel(
-          accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE',
-          'R',
-          'RI',
-          accounting.segmentNo.toString()
-        )
+        this.getRemarksModel(accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
       remarkList.push(
-        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo.toString())
+        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
       );
 
       const air = this.pnrService

@@ -469,16 +469,9 @@ export class RemarkService {
     );
   }
 
-  async SubmitRemarks() {
+  async SubmitRemarks(requestor?: string) {
     this.deleteRemarks();
     this.deleteSegments();
-    await this.sendCryptics();
-    await this.sendRemarks();
-    this.clear();
-  }
-
-  async cancelRemarks(requestor) {
-    await this.deleteRemarks();
     await this.sendCryptics();
     await this.sendRemarks(requestor);
     this.clear();

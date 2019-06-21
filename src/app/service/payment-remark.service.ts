@@ -275,7 +275,9 @@ export class PaymentRemarkService {
         )
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
-      remarkList.push(this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI'));
+      remarkList.push(
+        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo.toString())
+      );
 
       const air = this.pnrService
         .getSegmentTatooNumber()

@@ -462,3 +462,9 @@ Enter Other Product Type Description
     [Arguments]     ${other_description}
     Input Text    css=#othValue    ${other_description}
     [Teardown]    Take Screenshot
+
+Select Segment For Associated Remark
+    [Arguments]    ${segment}
+    Wait Until Element Is Visible    css=#segmentNo
+    Select From List By Label    css=#segmentNo    ${segment}
+    [Teardown]    Take Screenshot

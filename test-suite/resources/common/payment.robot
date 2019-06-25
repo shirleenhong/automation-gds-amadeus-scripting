@@ -40,7 +40,6 @@ Select Mode Of Payment
 
 Click Save Button
     Click Element    xpath=//button[contains(text(), 'Save')]
-    # Wait Until Page Contains Element    xpath=//tr[1]//i[@class='fas fa-edit']    30
     Wait Until Page Contains Element    xpath=//i[@class='fas fa-edit']    30
     Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     [Teardown]    Take Screenshot
@@ -177,7 +176,7 @@ Enter Base Amount
     Set Suite Variable    ${base_amount}
     [Teardown]    Take Screenshot
 
-Enter Commission With Tax Amount
+Enter Commission Without Tax Amount
     [Arguments]    ${commission_with_tax}
     # Press Key    css=#baseAmount    \\09
     Double Click Element    css=#commisionWithoutTax
@@ -272,6 +271,7 @@ Click Update Button
 
 Click Payment Delete Button
     [Arguments]    ${delete_order}
+    Sleep    3
     Click Element    xpath=//tr[${delete_order}]//i[@class=' fas fa-trash-alt']
     Sleep    3
 
@@ -309,7 +309,7 @@ Select Tax Exemption
     \    Run Keyword If    '${tax_exemption}' == 'GST Exempt'    Select Checkbox    xpath=//input[@value='XG']
     \    Run Keyword If    '${tax_exemption}' == 'QST Exempt'    Select Checkbox    xpath=//input[@value='XQ']
     [Teardown]    Take Screenshot
-    
+
 Unselect Tax Exemption
     [Arguments]    @{tax_exemption}
     : FOR    ${tax_exemption}    IN    @{tax_exemption}
@@ -325,4 +325,44 @@ Select Type Of Pass Purchase
 Select Fare Type
     [Arguments]    ${fare_type}
     Select From List By Value    css=#fareType    ${fare_type}
+    [Teardown]    Take Screenshot
+
+Enter Penalty Amount
+    [Arguments]    ${penalty_amount}
+    Double Click Element    css=#penaltyBaseAmount
+    Press Key    css=#penaltyBaseAmount    \\08
+    Input Text    css=#penaltyBaseAmount    ${penalty_amount}
+    Set Suite Variable    ${penalty_amount}
+    [Teardown]    Take Screenshot
+
+Enter Penalty GST Amount
+    [Arguments]    ${penalty_gst}
+    Double Click Element    css=#penaltyGst
+    Press Key    css=#penaltyGst    \\08
+    Input Text    css=#penaltyGst    ${penalty_gst}
+    Set Suite Variable    ${penalty_gst}
+    [Teardown]    Take Screenshot
+
+Enter Penalty HST Amount
+    [Arguments]    ${penalty_hst}
+    Double Click Element    css=#penaltyHst
+    Press Key    css=#penaltyHst    \\08
+    Input Text    css=#penaltyHst    ${penalty_hst}
+    Set Suite Variable    ${penalty_hst}
+    [Teardown]    Take Screenshot
+
+Enter Penalty QST Amount
+    [Arguments]    ${penalty_qst}
+    Double Click Element    css=#penaltyQst
+    Press Key    css=#penaltyQst    \\08
+    Input Text    css=#penaltyQst    ${penalty_qst}
+    Set Suite Variable    ${penalty_qst}
+    [Teardown]    Take Screenshot
+
+Enter Original Ticket Number
+    [Arguments]    ${original_ticket}
+    Double Click Element    css=#originalTktLine
+    Press Key    css=#originalTktLine    \\08
+    Input Text    css=#originalTktLine    ${original_ticket}
+    Set Suite Variable    ${original_ticket}
     [Teardown]    Take Screenshot

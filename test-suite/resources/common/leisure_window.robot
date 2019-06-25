@@ -34,6 +34,7 @@ Confirm Delete
     Click Button    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
     Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
+    Sleep    3
     Take Screenshot
 
 Click Add Segment Main Menu

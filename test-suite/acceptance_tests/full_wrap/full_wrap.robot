@@ -128,7 +128,7 @@ Verify That Matrix Receipt, Matrix Accounting, Leisure, Package Cost, And Report
     Enter HST Tax Amount    1.00
     Enter QST Tax Amount    3.00
     Enter Other Tax Amount    4.00
-    Enter Commission With Tax Amount    12.00
+    Enter Commission Without Tax Amount    12.00
     Click Element    css=#qst
     Click Save Button
     Select Is This Air Only?    NO
@@ -322,7 +322,7 @@ Add Matrix Accounting
     Enter HST Tax Amount    1.00
     Enter QST Tax Amount    3.00
     Enter Other Tax Amount    4.00
-    Enter Commission With Tax Amount    12.00
+    Enter Commission Without Tax Amount    12.00
     Click Save Button
 
 Add Leisure Fee Collection

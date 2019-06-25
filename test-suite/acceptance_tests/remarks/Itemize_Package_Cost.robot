@@ -5,8 +5,8 @@ Resource          ../../resources/common/global_resources.robot
 Verify that ITC package cost and UDID Remarks Are Written for Single Passenger
     [Tags]    us7746    us7994
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345
-    ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-Test@email.com
+    ...    RU1AHK3SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -96,7 +96,7 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
     [Tags]    us7746    us7994
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    APE TEST@email.com    TKOK
+    ...    APE-TEST@email.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -215,8 +215,8 @@ Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger
 Verify that ITC package cost and UDID Remarks Are Written for Multiple Passenger with Infant
     [Tags]    us7746    us7994
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12345
-    ...    TKOK    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-12345
+    ...    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

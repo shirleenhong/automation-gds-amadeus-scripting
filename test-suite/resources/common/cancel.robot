@@ -5,6 +5,7 @@ Resource          common_library.robot
 Enter Requestor Name
     [Arguments]    ${requestor_name}
     Input Text    css=#requestor    ${requestor_name}
+    [Teardown]    Take Screenshot
 
 Enter Cancel Notes
     [Arguments]    ${notes_field}    ${cancel_notes}
@@ -72,3 +73,70 @@ Enter Relationship
 Select Cancel All Segments
     Select Checkbox    css=#cancelAll
     [Teardown]    Take Screenshot
+
+Click Tab
+    [Arguments]    ${cancel_tab}
+    Click Element    xpath=//span[contains(text(), '${cancel_tab}')]
+
+Select Is BSP
+    [Arguments]    ${is_bsp}
+    Select From List By Label    css=#isBsp    ${is_bsp}
+
+Enter Branch Number
+    [Arguments]    ${branch_number}
+    Input Text    css=#branch    ${branch_number}
+
+Enter Person Requesting
+    [Arguments]    ${person_requesting}
+    Input Text    css=#personRequesting    ${person_requesting}
+    [Teardown]    Take Screenshot
+
+Enter Passenger Name
+    [Arguments]    ${passenger_name}
+    Input Text    css=#passengerName    ${passenger_name}
+
+Enter CFA 
+    [Arguments]    ${cfa}
+    Input Text    css=#cfa    ${cfa}
+
+Select Cancellation
+    [Arguments]    ${is_cancellation}
+    Select From List By Label    css=#cancellation    ${is_cancellation}
+
+Select Commission Recall Only
+    [Arguments]    ${commisson_recall}
+    Select From List By Label    css=#commission    ${commisson_recall}
+    [Teardown]    Take Screenshot
+
+Enter Supplier
+    [Arguments]    ${supplier}
+    Input Text    css=#supplier    ${supplier}
+    [Teardown]    Take Screenshot
+
+Enter Base Refund Before Penalty
+    [Arguments]    ${base_refund}
+    Input Text    css=#baseRefund    ${base_refund}
+    [Teardown]    Take Screenshot
+
+Enter Taxes Being Refunded
+    [Arguments]    ${taxes_refund}
+    Input Text    css=#taxesRef    ${taxes_refund}
+
+Enter Penalty
+    [Arguments]    ${penalty}
+    Input Text    css=#penaltyPoint    ${penalty}
+    [Teardown]    Take Screenshot
+
+Enter Commission Recall Cost
+    [Arguments]    ${commission_cost}
+    Input Text    css=#commissionPoint    ${commission_cost}
+
+Enter Tax on Commission Recall
+    [Arguments]    ${commission_tax}
+    Input Text    css=#taxRecall    ${commission_tax}
+
+Enter Comments
+    [Arguments]    ${refund_comment}
+    Input Text    css=#comments    ${refund_comment}
+    [Teardown]    Take Screenshot
+

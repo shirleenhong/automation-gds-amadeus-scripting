@@ -13,7 +13,7 @@ Add Passive Segment
     Wait Until Page Contains Element    xpath=//td[contains(text(), '${supplier_name}')]    30
 
 Click Add Segment Button
-    Click Element    xpath=//tab[@heading='Passive Segments']//button[contains(text(), 'Add Segment')]
+    Click Element    xpath=//div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
     wait until Page Contains Element    //button[contains(text(),'Save')]    30
 
 Select Segment Type

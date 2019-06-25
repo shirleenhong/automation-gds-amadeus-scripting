@@ -8,7 +8,7 @@ Click Add Matrix Receipt Button
 
 Select Bank Account
     [Arguments]    ${bank_account}
-    Click Element    css=#bankAccount    #${payment.bank_account}
+    Click Element    css=#bankAccount
     Click Element    xpath=//option[contains(text(), '${bank_account}')]
     Set Suite Variable    ${bank_account}
 

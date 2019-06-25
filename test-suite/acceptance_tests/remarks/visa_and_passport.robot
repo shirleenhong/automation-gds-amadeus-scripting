@@ -3,11 +3,11 @@ Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify Visa And Passport Remarks Are Written In The PNR
-    [Tags]    us8912
+    [Tags]    us8912    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC CDGMAD GK1 / 11551440 / 1234567    SS AC1074 Y 18DEC MADORD GK1 / 11551440 / ABCD123    SS AC1074 Y 22DEC ORDCDG GK1 / 11551440 / ABCD464    SS AC1074 Y 26DEC CDGFRA GK1 / 11551440 / DEFG123
     ...    SS AC1074 Y 30DEC FRAYYZ GK1 / 11551440 / YYYD123    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    Enter GDS Command    RMP/CITIZENSHIP-CA    RM*CF/-RBM000000N    APE12345    TKOK
+    Enter GDS Command    RMP/CITIZENSHIP-CA    RM*CF/-RBM000000N    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -29,7 +29,7 @@ Verify Visa And Passport Remarks Are Written In The PNR
     Close Cryptic Display Window
 
 Verify Visa And Passport Remarks Are Updated In The PNR
-    [Tags]    us8912
+    [Tags]    us8912    sanity
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Remarks

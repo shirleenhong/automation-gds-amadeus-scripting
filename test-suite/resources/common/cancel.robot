@@ -55,6 +55,7 @@ Enter UA Passenger Number
 Select Reason For Cancel
     [Arguments]    ${ac_reason}
     Select From List By Label    css=#reasonACCancel    ${ac_reason}
+    [Teardown]    Take Screenshot
 
 Enter AC Ticket Number
     [Arguments]    ${ac_ticket_number}

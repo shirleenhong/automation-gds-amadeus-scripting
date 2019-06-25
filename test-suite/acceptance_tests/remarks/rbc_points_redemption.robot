@@ -5,7 +5,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify that RBC redemption RMK remarks are written in the PNR for AIR
     [Tags]    us9199
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBP000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234
     ...    tkok
     Open CA Migration Window
     Click Wrap PNR
@@ -37,7 +37,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for AIR
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER NAME - LAST NAME/FIRST NAME
-    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VIXXXXXXXXXXXX4444 USED TO REDEEM POINTS    True
+    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VI111222XXXXXX4444 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 1 1.5 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 1 POINTS REDEEMED 12345 VALUE 100223.00
     Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - AIR
@@ -87,7 +87,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for CAR
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER NAME - LEISURE TEST/AMADEUS TEST
-    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VIXXXXXXXXXXXX1234 USED TO REDEEM POINTS    True
+    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VI123456XXXXXX1234 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 1 1 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 1 POINTS REDEEMED 1000 VALUE 250750.00
     Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - CAR
@@ -132,7 +132,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for HOTEL
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER NAME - LEISURE TEST/AMADEUS TEST
-    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VIXXXXXXXXXXXX5555 USED TO REDEEM POINTS    True
+    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VI123456XXXXXX5555 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 1 2 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 1 POINTS REDEEMED 1000 VALUE 250750.00
     Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - HOTEL
@@ -150,7 +150,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for HOTEL
 Verify that RBC redemption RMK remarks are written in the PNR for CRUISE
     [Tags]    us9199
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    RM*CF/-RBP000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234
     ...    tkok
     Open CA Migration Window
     Click Wrap PNR
@@ -182,7 +182,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for CRUISE
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER NAME - LONG LEISURE LAST NAME/LONG LEISURE FIRSTNAME    True
-    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VIXXXXXXXXXXXX4321 USED TO REDEEM POINTS    True
+    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VI321234XXXXXX4321 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 1 1 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 1 POINTS REDEEMED 1234567 VALUE 123456.00
     Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - CRUISE
@@ -256,7 +256,7 @@ Verify that RBC redemption RMK remarks are written in the PNR for VACATION And O
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER NAME - LEISURE LASTNAME/LEISURE FIRSTNAME
-    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VIXXXXXXXXXXXX4321 USED TO REDEEM POINTS    True
+    Verify Specific Remark Is Written In The PNR    RMK 1 CARDHOLDER VISA VI321234XXXXXX4321 USED TO REDEEM POINTS    True
     Verify Specific Remark Is Written In The PNR    RMK 1 1 PERCENT POINTS REDEMPTION
     Verify Specific Remark Is Written In The PNR    RMK 1 POINTS REDEEMED 1234567 VALUE 123456.00
     Verify Specific Remark Is Written In The PNR    RMK 1 PRODUCT TYPE - VACATION PACKAGE

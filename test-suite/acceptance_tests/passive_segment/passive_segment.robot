@@ -5,7 +5,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify Tour Passive Segment Is Added In the PNR
     [Tags]    us8892    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBP000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -26,10 +26,6 @@ Verify Tour Passive Segment Is Added In the PNR
     Select Meal Plan    All Inclusive
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Comment    Click Back To Main Menu
-    Comment    Click Wrap PNR
-    Comment    Populate Reporting Required Fields
-    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -41,7 +37,7 @@ Verify Tour Passive Segment Is Added In the PNR
 Verify Cruise Passive Segment Is Added In the PNR
     [Tags]    us8892
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBP000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBP000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -62,15 +58,11 @@ Verify Cruise Passive Segment Is Added In the PNR
     Select Dining    Early Dining
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Comment    Click Back To Main Menu
-    Comment    Click Wrap PNR
-    Comment    Populate Reporting Required Fields
-    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 ${departure_city} 12JAN-/TYP-SEA/SUN-${vendor_name} ${segment_name} ${dining.upper()} 8NTS/SUC-${vendor_code}/SC-${departure_city}/SD-12JAN/ST-0300${destination_city}/ED-20JAN/ET-1000/CF-${confirmation_number}    True
-    Verify Specific Remark Is Written In The PNR    RIR INTERIOR 1112233/S3
+    Verify Specific Remark Is Written In The PNR    RIR INTERIOR 1112233/S4
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -78,7 +70,7 @@ Verify Cruise Passive Segment Is Added In the PNR
 Verify Insurance Passive Segment Is Added In the PNR
     [Tags]    us8892
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -89,10 +81,6 @@ Verify Insurance Passive Segment Is Added In the PNR
     Enter Policy Number    123456789
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Comment    Click Back To Main Menu
-    Comment    Click Wrap PNR
-    Comment    Populate Reporting Required Fields
-    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -104,7 +92,7 @@ Verify Insurance Passive Segment Is Added In the PNR
 Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
     [Tags]    us8720    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -121,10 +109,6 @@ Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
     Enter Airline Record Locator    ARL1234
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Comment    Click Back To Main Menu
-    Comment    Click Wrap PNR
-    Comment    Populate Reporting Required Fields
-    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -136,7 +120,7 @@ Verify Passive Air Segment Is Added In the PNR For Non-ZZ Details
 Verify Passive Air Segment Is Added In the PNR For ZZ Details
     [Tags]    us8720    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-AAA000000N    APE-Test@email.com    RU1AHK1SIN21JAN-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -156,10 +140,6 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
     Enter Airline Record Locator    ARL7656
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Comment    Click Back To Main Menu
-    Comment    Click Wrap PNR
-    Comment    Populate Reporting Required Fields
-    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -174,8 +154,7 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
 Verify Passive Limo Segment Is Added In the PNR For EN Language
     [Tags]    us8720
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21FEB-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -249,8 +228,7 @@ Verify Passive Limo Segment Is Added In the PNR For EN Language
 Verify Passive Limo Segment Is Added In the PNR For FR Language
     [Tags]    us8720
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    RMZ/LANGUAGE-FR-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21FEB-CWT RETENTION SEGMENT    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -290,10 +268,6 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
     Enter Limo Meet Drive At    Lux Nightclub
     Click Add Passive Save Button
     Click Add Segments To PNR
-    Comment    Click Back To Main Menu
-    Comment    Click Wrap PNR
-    Comment    Populate Reporting Required Fields
-    Comment    Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
@@ -322,7 +296,7 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
 Verify Passive Rail Segments Are Added In The PNR
     [Tags]    us8723
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -377,8 +351,7 @@ Verify Passive Rail Segments Are Added In The PNR
 Verify Passive Rail Segments Are Added In The PNR For FR
     [Tags]    us8723
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    RMZ/LANGUAGE-FR-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -394,7 +367,6 @@ Verify Passive Rail Segments Are Added In The PNR For FR
     Enter Arrival Date    01112020
     Enter Departure Time    0200AM
     Enter Arrival Time    0500AM
-    Enter Vendor Name    amk Supplier Name
     Enter Vendor Code    amk
     Enter Confirmation Number    CN12345678
     Click Add Passive Save Button
@@ -418,7 +390,7 @@ Verify Passive Rail Segments Are Added In The PNR For FR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMK SUPPLIER NAME/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK (NP)/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S4
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S4
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
@@ -433,8 +405,7 @@ Verify Passive Rail Segments Are Added In The PNR For FR
 Verify Car Passive Segment With Optional Values Are Written In The PNR
     [Tags]    us8718
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -480,7 +451,7 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
 Verify Car Passive Segment Without Optional Values Are Written In The PNR
     [Tags]    us8718    us11172
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1YYJ21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK3YYJ21NOV-CWT RETENTION SEGMENT
     ...    RMZ/LANGUAGE-EN-CA
     Enter GDS Command    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 11551440 / 1234567    SS AC1074 Y 30DEC YYTMSP GK1 / 11551440 / YYYD123
     Open CA Migration Window
@@ -522,8 +493,7 @@ Verify Car Passive Segment Without Optional Values Are Written In The PNR
 Verify Hotel Passive Segment Is Written In The PNR
     [Tags]    us8881
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -561,8 +531,7 @@ Verify Hotel Passive Segment Is Written In The PNR
 Verify Hotel Passive Segment Without Optional Values Written In The PNR
     [Tags]    us8881
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button

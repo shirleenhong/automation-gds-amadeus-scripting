@@ -4,7 +4,6 @@ Resource          common_library.robot
 *** Keywords ***
 Select Routing Code
     [Arguments]    ${routecode}
-    #Select BSP Routing Code    Select BSP Routing Code
     Wait Until Element Is Visible    css=#bspRouteCode
     Select From List By Label    css=#bspRouteCode    ${routecode}
     Take Screenshot

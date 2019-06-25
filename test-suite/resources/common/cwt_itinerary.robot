@@ -2,9 +2,6 @@
 Resource          common_library.robot
 
 *** Keywords ***
-Tick On Send Itinerary
-    Select Checkbox    css=#sendItinerary
-
 Enter Email Address
     [Arguments]    ${email_address_order}    ${email_address}
     Input Text    //div[@ng-reflect-name='emailAddresses'][${email_address_order}]//input[@id='emailAddress']    ${email_address}

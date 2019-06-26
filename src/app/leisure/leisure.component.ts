@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
 import { RemarkService } from '../service/remark.service';
-import { LeisureViewModel } from '../models/leisure-view.model';
 import { PaymentRemarkService } from '../service/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
@@ -35,7 +34,6 @@ import { CancelComponent } from '../cancel/cancel.component';
 export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked {
   isPnrLoaded: boolean;
   message: string;
-  leisure: LeisureViewModel;
   cfLine: CfRemarkModel;
   workflow = 'start';
   cancelEnabled = true;
@@ -120,9 +118,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  ngOnInit() {
-    this.leisure = new LeisureViewModel();
-  }
+  ngOnInit() {}
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -168,7 +164,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
     remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
-    remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.leisure.reportingView));
+    remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {
       remarkCollection.push(this.segmentService.getRetentionLine());
     }

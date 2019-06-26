@@ -9,6 +9,7 @@ import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { FormArray, FormGroup } from '@angular/forms';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { TranslationService } from './translation.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -26,7 +27,7 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -264,7 +265,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        segRemark: any, amk: number, vib: number, itinLanguage: string) {
+                     segRemark: any, amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -287,23 +288,40 @@ export class SegmentService {
         }
 
         if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
-            if (itinLanguage === 'FR') {
-                segRemark.getVibFrenchRemark().forEach(c => {
-                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
-                });
-            } else {
-                segRemark.getVibEnglishRemark().forEach(c => {
-                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
-                });
-            }
+             const segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
+             segRemarks.forEach(c => {
+                rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+            });
         }
         if (amk === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
-            segRemark.getAmkRemark().forEach(c => {
+            this.getAmkRemark().forEach(c => {
                 rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
             });
         }
     }
-
+    getAmkRemark() {
+       const amkRemark = [
+          'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER.',
+          'ALL AMTRAK TRAINS EXCEPT AUTO TRAIN ARE NON-SMOKING.',
+          'TRAIN CHANGES ARE PERMITTED ANYTIME SUBJECT TO AVAILABILITY',
+          'IF YOU NEED TO CHANGE OR CANCEL YOUR RESERVATION-',
+          'REFUND/CHANGE FEES MAY APPLY',
+          'RECOMMENDED ARRIVAL TIME AT THE STATION AT LEAST 30 MINUTES',
+          'PRIOR TO YOUR SCHEDULES DEPARTURE.',
+          'ALLOW ADDITIONAL TIME IF YOU NEED HELP WITH BAGGAGE OR TICKETS.',
+          'IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN',
+          'AT LEAST 2 HOURS BEFORE SCHEDULED DEPARTURE.',
+          'THIS CONFIRMATION NOTICE IS NOT A TICKET',
+          'YOU MUST OBTAIN YOUR TICKET BEFORE BOARDING ANY TRAIN.',
+          'THIS CONFIRMATION WILL NOT BE ACCEPTED ONBOARD.',
+          'YOUR ENTIRE RESERVATION -ALL SEGMENTS- WILL BE CANCELLED',
+          'IF YOU DO NOT PICK UP YOUR TICKET BEFORE YOUR FIRST DEPARTURE OR',
+          'IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION.',
+          'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW',
+          'RESERVATIONS WHICH MAY BE AT A HIGHER FARE.'
+        ];
+       return amkRemark;
+      }
     private rirLimo(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, itinLanguage: string) {
         let taxRemarks = '';
         let nottaxRemarks = '';
@@ -398,7 +416,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         switch (segment.segmentType) {
             case 'TOR':

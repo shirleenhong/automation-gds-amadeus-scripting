@@ -147,7 +147,7 @@ export class SegmentService {
                         if (segmentrem.vendorCode === 'VIB') {
                             vib = vib + 1;
                         }
-                        this.rirTrain(pnrSegment, segmentrem, rmGroup, segRemark, amk, vib, itinLanguage);
+                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vib, itinLanguage);
                     }
                     if (segmentrem.segmentType === 'LIM') {
                         this.rirLimo(pnrSegment, segmentrem, rmGroup, itinLanguage);
@@ -265,7 +265,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                     segRemark: any, amk: number, vib: number, itinLanguage: string) {
+                    amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel

@@ -179,7 +179,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
-    this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
+    this.accountingRemark.supplierCodeName = '';
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
     }
@@ -205,6 +205,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       case 'ACPR':
       case 'ACPP':
+        debugger;
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
         if (accRemark === 'ACPP') {

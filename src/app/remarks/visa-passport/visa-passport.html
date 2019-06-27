@@ -3,35 +3,11 @@
 </div>
 <div *ngIf="isInternational">
   <form [formGroup]="visaPassportFormGroup" class="col">
-    <!-- <div class="row form-group">
-      <div class="col-4">
-        <b>Select One</b>
-      </div>
-    </div>
-  
-    <div class="row form-group">
-      <div class="col-10">
-        <input type="radio" name="originDestination" formControlName="originDestination" value="true"
-          (change)="changedOriginDestination()" />
-        Departure City(s) and Destination City(s) are located in different countries
-      </div>
-    </div>
-  
-    <div class="row form-group">
-      <div class="col-10">
-        <input type="radio" name="originDestination" formControlName="originDestination" value="false"
-          (change)="changedOriginDestination()" />
-        Departure City and Destination City(s) are located within the same country
-      </div>
-    </div><br> -->
     <br>
     <div class="row form-group">
       <div class="col-5">
         <b>International Travel Advisory Request</b>
       </div>
-      <!-- <div class="col-4" *ngIf="hasAdvisoryLine()">
-        <span class="p2"><b> (Advisory already sent!) </b></span>
-      </div> -->
       <div class="col-4">
         <input name="btnAdvisory" type="button" (click)="showTravelAdvisory()" value="Go to e-Traveladvisories" />
       </div>

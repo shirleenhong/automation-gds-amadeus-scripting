@@ -904,7 +904,8 @@ export class UpdateSegmentComponent implements OnInit {
 
   loadDropOffAddr(val) {
     if (val === 'OFF AIRPORT') {
-      // this.clearTravelDateTime();
+      this.passiveSegments.arrivalDate = '';
+      this.passiveSegments.arrivalTime = '';
       const city = this.passiveSegments.destinationCity;
       if (city.length < 3) {
         return;

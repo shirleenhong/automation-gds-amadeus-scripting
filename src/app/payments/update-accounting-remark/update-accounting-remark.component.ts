@@ -8,6 +8,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
+
 @Component({
   selector: 'app-update-accounting-remark',
   templateUrl: './update-accounting-remark.component.html',
@@ -178,6 +179,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
+    this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
     }
@@ -243,10 +245,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         if (this.isAddNew) {
           this.accountingRemark.supplierCodeName = 'ACY';
         }
+        this.checkSupplierCode();
         break;
       default:
         if (this.isAddNew && accRemark === '1') {
           this.accountingRemark.supplierCodeName = 'ACY';
+        }
+        if (accRemark === '1') {
+          this.checkSupplierCode();
         }
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
@@ -382,8 +388,54 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setInsuranceValue() {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       this.accountingRemark.segmentNo = this.matrixAccountingForm.controls.segmentNo.value;
+      if (this.matrixAccountingForm.controls.accountingTypeRemark.value === 'NAE' ||
+        this.matrixAccountingForm.controls.accountingTypeRemark.value === '1') {
+        this.checkSupplierCode();
+      }
       // const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
+    } else {
+      this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
     }
+
+  }
+
+  checkSupplierCode() {
+    let supplierCode = '';
+    let segmentNos = [];
+    const airlineSupplierList: Array<any> = [
+      { airline: 'AC', supplierCode: 'ACY' },
+      { airline: 'WS', supplierCode: 'WJ3' },
+      { airline: 'PD', supplierCode: 'PTA' },
+      { airline: '9M', supplierCode: 'CMA' },
+      { airline: 'MO', supplierCode: 'C5A' },
+      { airline: 'YP', supplierCode: 'K9P' },
+      { airline: '4N', supplierCode: 'A5N' },
+      { airline: '8P', supplierCode: 'PF3' },
+      { airline: 'WJ', supplierCode: 'ALO' },
+      { airline: 'WN', supplierCode: 'SOA' }
+    ];
+
+    if (this.matrixAccountingForm.controls.segmentNo.value) {
+      segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
+      const segmentDetails = this.pnrService.getSegmentTatooNumber();
+      segmentDetails.forEach(segments => {
+        segmentNos.forEach(segment => {
+          if (segment === segments.lineNo) {
+            const look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            if (look && (supplierCode === '' || supplierCode === look.supplierCode) && segments.segmentType === 'AIR') {
+              supplierCode = look.supplierCode;
+            } else {
+              supplierCode = 'OTH';
+            }
+          }
+        });
+      });
+    }
+
+    if (supplierCode === 'OTH') {
+      supplierCode = '';
+    }
+    this.matrixAccountingForm.controls.supplierCodeName.patchValue(supplierCode);
   }
 
   loadData() {

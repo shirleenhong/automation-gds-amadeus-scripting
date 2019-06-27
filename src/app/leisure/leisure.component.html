@@ -1,16 +1,5 @@
-<!-- <div *ngIf="isPnrLoaded"> -->
-
 <div *ngIf="workflow === 'load'">
   <accordion [closeOthers]="false">
-    <!-- <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
-        <i class='fas fa-plane'></i> Passive Segment <i [ngClass]="validModel.segmentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
-      </app-passive-segments>
-    </accordion-group> -->
-
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas fa-hand-holding-usd"></i> Payment
@@ -63,8 +52,6 @@
         <i class="fas fa-plane"></i> Passive Segment
         <span class="cwt-logo"></span>
       </div>
-      <!-- <app-passive-segments [passiveSegmentView]="leisure.passiveSegmentView">
-      </app-passive-segments> -->
       <app-passive-segments></app-passive-segments>
     </accordion-group>
   </accordion>
@@ -86,7 +73,6 @@
         <i class="fas fa-plane"></i> Cancel Segment
         <span class="cwt-logo"></span>
       </div>
-      <!-- <app-cancel-segment> </app-cancel-segment> -->
       <app-cancel> </app-cancel>
     </accordion-group>
   </accordion>

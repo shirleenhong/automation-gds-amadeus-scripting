@@ -117,7 +117,6 @@ export class PnrService {
   }
 
   getCFLine(): CfRemarkModel {
-    debugger;
     if (!this.cfLine) {
       const cfLine = new CfRemarkModel();
       if (this.isPNRLoaded) {

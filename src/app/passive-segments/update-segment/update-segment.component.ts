@@ -892,14 +892,16 @@ export class UpdateSegmentComponent implements OnInit {
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
       this.defaultTravelDateTime();
+      if (this.passiveSegments.dropOffLoc === 'OFF AIRPORT') {
+        this.passiveSegments.arrivalDate = '';
+        this.passiveSegments.arrivalTime = '';
+      }
     }
   }
 
   clearTravelDateTime() {
     this.passiveSegments.departureDate = '';
     this.passiveSegments.departureTime = '';
-    this.passiveSegments.arrivalDate = '';
-    this.passiveSegments.arrivalTime = '';
   }
 
   loadDropOffAddr(val) {
@@ -922,6 +924,10 @@ export class UpdateSegmentComponent implements OnInit {
     } else {
       this.segmentForm.get('dropOffAddress').disable();
       this.defaultTravelDateTime();
+      if (this.passiveSegments.pickupLoc === 'OFF AIRPORT') {
+        this.passiveSegments.departureDate = '';
+        this.passiveSegments.departureTime = '';
+      }
     }
   }
 

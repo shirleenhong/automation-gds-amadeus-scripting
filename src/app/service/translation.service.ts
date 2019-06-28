@@ -8,10 +8,7 @@ export class TranslationService {
   remarkLines = [
     ['DELUXE PACKAGE INSURANCE', 'FORFAIT SUPERIEUR D ASSURANCE'],
     ['CANCELLATION/INTERUPTION', 'ANNULATION/INTERRUPTION'],
-    [
-      'EMERGENCY MEDICAL/TRANSPORTATION',
-      'FRAIS MEDICAUX D URGENCES/DE TRANSPORT'
-    ],
+    ['EMERGENCY MEDICAL/TRANSPORTATION', 'FRAIS MEDICAUX D URGENCES/DE TRANSPORT'],
     ['FLIGHT AND TRAVEL ACCIDENT', 'ACCIDENTS DE VOL ET DE VOYAGES'],
     ['', ''],
     ['', '']
@@ -84,10 +81,7 @@ export class TranslationService {
     {
       groupName: 'InsuranceDeclinedNo',
       remarks: [
-        [
-          'I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE',
-          'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'
-        ],
+        ['I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE', 'OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME'],
         [
           'J AI REFUSE D ACHETER LES OPTIONS D ASSURANCES VOYAGES',
           'CI-DESSOUS M AYANT ETE OFFERTES ET EXPLIQUEES PAR MON',
@@ -98,13 +92,33 @@ export class TranslationService {
     {
       groupName: 'InsuranceDeclinedYes',
       remarks: [
+        ['ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN', 'PURCHASED FOR THE FULL VALUE OF THE TRIP.'],
+        ['LE FORFAIT D ASSURANCE SUPERIEUR A ETE ACHETE.', 'RIR POUR LE MONTANT TOTAL DU VOYAGE.']
+      ]
+    },
+    {
+      groupName: 'VibRemarksSegment',
+      remarks: [
         [
-          'ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN',
-          'PURCHASED FOR THE FULL VALUE OF THE TRIP.'
+          'FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION',
+          'AT LEAST 45 MINUTES PRIOR TO DEPARTURE.',
+          'VIA RAIL POLICY-NONSMOKING ENVIRONMENT ON ALL TRAINS.',
+          'VIA COUPONS ARE NOT VALID FOR AIR TRAVEL.',
+          'IF CHANGES ARE MADE ENROUTE PLEASE ENSURE YOUR',
+          'TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE.',
+          'PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR',
+          'TRAIN DEPARTURE/ARRIVAL TIMES.'
         ],
         [
-          'LE FORFAIT D ASSURANCE SUPERIEUR A ETE ACHETE.',
-          'RIR POUR LE MONTANT TOTAL DU VOYAGE.'
+          'POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS',
+          'PRESENTER A LA GARE AU MOINS 45 MINUTES AVANT L HEURE PREVUE DE',
+          'VOTRE DEPART SUIVANT LA POLITIQUE DE VIA RAIL-TOUS LES',
+          'TRAINS SONT NON FUMEUR. LES COUPONS VIA RAIL NE PEUVENT ETRE',
+          'UTILISES POUR DES DEPLACEMENTS AERIENS. SI VOUS DEVEZ MODIFIER',
+          'VOTRE ITINERAIRE EN COURS DE ROUTE ASSUREZ-VOUS QUE VOTRE',
+          'BILLET EST ENDOSSE PAR LA BILLETTERIE VIA 1.',
+          'VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR',
+          'RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
         ]
       ]
     }
@@ -112,7 +126,7 @@ export class TranslationService {
 
   translate(remark, lang) {
     const langIndx = this.getLangIndex(lang);
-    const rem = this.remarkLines.find(r => r[0] === remark);
+    const rem = this.remarkLines.find((r) => r[0] === remark);
     return rem ? rem[langIndx] : remark;
   }
 
@@ -123,7 +137,7 @@ export class TranslationService {
   }
 
   getRemarkGroup(groupName, lang) {
-    const group = this.groupRemarks.find(x => x.groupName === groupName);
+    const group = this.groupRemarks.find((x) => x.groupName === groupName);
     if (group) {
       return group.remarks[this.getLangIndex(lang)];
     } else {

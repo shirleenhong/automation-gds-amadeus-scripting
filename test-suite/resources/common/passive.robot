@@ -13,7 +13,7 @@ Add Passive Segment
     Wait Until Page Contains Element    xpath=//td[contains(text(), '${supplier_name}')]    30
 
 Click Add Segment Button
-    Click Element    xpath=//tab[@heading='Passive Segments']//button[contains(text(), 'Add Segment')]
+    Click Element    xpath=//div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
     wait until Page Contains Element    //button[contains(text(),'Save')]    30
 
 Select Segment Type
@@ -260,55 +260,45 @@ Enter Limo Rate
 
 Select Limo Rate Type
     [Arguments]    ${limo_rate_type}
-    #Select Limo Rate Type
     Wait Until Element Is Visible    css=#rateType    10
     Select From List By Label    css=#rateType    ${limo_rate_type}
 
 Tick Limo Include Toll On Rate
-    #Tick Limo Include Toll On Rate
     Click Element    css=#includeToll
 
 Enter Limo Toll
     [Arguments]    ${limo_toll}
-    #Enter Limo Toll
     Wait Until Element Is Visible    css=#toll    10
     Input Text    css=#toll    ${limo_toll}
 
 Tick Limo Include Gradtuities On Rate
-    #Tick Limo Gradtuities On Rate
     Click Element    css=#includeGratuities
 
 Enter Limo Gradtuities
     [Arguments]    ${limo_gradtuities}
-    #Enter Limo Gradtuities
     Wait Until Element Is Visible    css=#gratuities    10
     Input Text    css=#gratuities    ${limo_gradtuities}
 
 Tick Limo Include Parking On Rate
-    #Tick Limo Include Parking On Rate
     Click Element    css=#includeParking
 
 Enter Limo Parking
     [Arguments]    ${limo_parking}
-    #Enter Limo Parking
     Wait Until Element Is Visible    css=#parking    10
     Input Text    css=#parking    ${limo_parking}
 
 Enter Limo Meet Drive At
     [Arguments]    ${meet_driver_at}
-    #Enter Limo Meet Drive At
     Wait Until Element Is Visible    css=#meetDriveAt    10
     Input Text    css=#meetDriveAt    ${meet_driver_at}
 
 Enter Additional Info
     [Arguments]    ${limo_add_info}
-    #Enter Additional Info
     Wait Until Element Is Visible    css=#additionalInfo    10
     Input Text    css=#additionalInfo    ${limo_add_info}
 
 Enter Cancellation Info
     [Arguments]    ${cancellation_info}
-    #Enter Cancellation Info
     Wait Until Element Is Visible    css=#cancellationInfo    10
     Input Text    css=#cancellationInfo    ${cancellation_info}
 

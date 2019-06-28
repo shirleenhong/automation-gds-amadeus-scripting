@@ -80,6 +80,7 @@
               name="amount"
               class="form-control"
               formControlName="amount"
+              maxlength="10"
               [(ngModel)]="leisureFee.amount"
               AmountMask
             />
@@ -182,7 +183,6 @@
           <div class="col-4">Tax Exemption:</div>
           <div class="col-8">
             <div *ngFor="let option of exemption">
-              <!-- <div *ngIf="!(option.fln !== '' && (option.fln) !== (leisureFee.fln))"> -->
               <div>
                 <label>
                   <input
@@ -195,9 +195,6 @@
                   {{ option.label }}
                 </label>
               </div>
-              <!-- <div *ngIf="option.fln !== '' && option.fln !== leisureFee.fln">
-                <label> {{ option.label }} is already applied </label>
-              </div> -->
             </div>
           </div>
         </div>

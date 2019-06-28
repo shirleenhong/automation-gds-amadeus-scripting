@@ -9,7 +9,6 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { TourPackageViewModel } from 'src/app/models/tour-package-view.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { DDBService } from 'src/app/service/ddb.service';
@@ -25,7 +24,6 @@ import { PackageRemarkHelper } from 'src/app/helper/packageRemark-helper';
 export class TourPackageComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
   decPipe = new DecimalPipe('en-US');
   bspCurrencyList: SelectItem[];
-  tourPackage: TourPackageViewModel;
   remarks: Array<any>;
   riiRemarks: Array<any>;
   group: FormGroup;

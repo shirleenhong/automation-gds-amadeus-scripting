@@ -5,8 +5,8 @@ Resource          ../../resources/common/global_resources.robot
 Verify That Tour Package And UDID Remarks Are Written For Single Passenger
     [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    ape1234
-    ...    tkok    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-Test@email.com
+    ...    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -39,10 +39,10 @@ Verify That Tour Package And UDID Remarks Are Written For Single Passenger
     [Teardown]    Close Browser
 
 Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers
-    [Tags]    us7994    us7762
+    [Tags]    us7994    us7762    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Maridel    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
-    ...    RM*CF/-RBM000000N    ape1234    tkok
+    ...    RM*CF/-RBM000000N    APE-12455
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -106,7 +106,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Dhel (CHD)    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
-    ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape1234    tkok
+    ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-TEst@emai.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -172,7 +172,7 @@ Verify That Tour Package And UDID Remarks Are Written For Multiple Passengers Wi
     [Tags]    us7994    us7762
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Dhel (CHD)    NM1Leisure/Infant (INF/ANN/10DEC18)    SS AC1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RU1AHK3SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
-    ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    ape13134    tkok
+    ...    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12414
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

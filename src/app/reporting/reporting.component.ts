@@ -18,7 +18,7 @@ export class ReportingComponent implements OnInit, OnChanges {
   conciergeComponent: ConciergeUdidsComponent;
 
   @Input()
-  reportingView: ReportingViewModel;
+  reportingView = new ReportingViewModel();
   bspRouteCodeList: SelectItem[];
   destinationList: Array<any>;
   remarkList: Array<RemarkModel>;
@@ -34,12 +34,12 @@ export class ReportingComponent implements OnInit, OnChanges {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private translation: TranslationService
-  ) { }
+  ) {}
   get f() {
     return this.reportingForm.controls;
   }
 
-  ngOnChanges(_changes: SimpleChanges) { }
+  ngOnChanges(_changes: SimpleChanges) {}
 
   ngOnInit() {
     this.reportingForm = new FormGroup({

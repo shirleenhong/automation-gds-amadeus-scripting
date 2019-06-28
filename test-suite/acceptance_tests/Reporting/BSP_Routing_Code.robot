@@ -1,11 +1,11 @@
 *** Settings ***
-Force Tags        US7540
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
 Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBM, and Trip Type is Leisure
+    [Tags]    us7540
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -21,8 +21,9 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBM, and T
     [Teardown]    Close Browser
 
 Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBP, and Trip Type is Corporate
+    [Tags]    us7540
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBP0000000C    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBP0000000C    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -38,8 +39,9 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBP, and T
     [Teardown]    Close Browser
 
 Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is Not RBM and RBP, and Trip Type is Leisure
+    [Tags]    us7540    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-HIJ0000000N    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-HIJ0000000N    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -58,8 +60,9 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is Not RBM an
     [Teardown]    Close Browser
 
 Verify That "Reason for Travel" In FS Remark Is "1" If the CF Line Is Not RBM and RBP, and Trip Type is Corporate
+    [Tags]    us7540
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-AAA0000000C    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-AAA0000000C    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting

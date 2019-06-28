@@ -14,18 +14,10 @@ export class SegmentsComponent implements OnInit {
   private modalRef: BsModalRef;
   isAddNew = false;
   passengers = [];
-  vibEnglishRemark = [];
-  vibFrenchRemark = [];
-  amkRemark = [];
-
   @Input()
   segmentRemarks: PassiveSegmentsModel[] = [];
 
-  constructor(
-    private modalService: BsModalService,
-    private utilHelper: UtilHelper,
-    private pnrService: PnrService
-  ) {
+  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private pnrService: PnrService) {
     //
   }
 
@@ -53,13 +45,8 @@ export class SegmentsComponent implements OnInit {
     this.modalService.onHide.subscribe(() => {
       if (this.modalRef !== undefined && this.modalRef.content.isSubmitted) {
         if (!this.isAddNew) {
-          const segmentNo = this.segmentRemarks.find(
-            x => x.segmentNo === this.modalRef.content.passiveSegments.segmentNo
-          );
-          this.utilHelper.modelCopy(
-            this.modalRef.content.passiveSegments,
-            segmentNo
-          );
+          const segmentNo = this.segmentRemarks.find((x) => x.segmentNo === this.modalRef.content.passiveSegments.segmentNo);
+          this.utilHelper.modelCopy(this.modalRef.content.passiveSegments, segmentNo);
         } else {
           this.segmentRemarks.push(this.modalRef.content.passiveSegments);
         }
@@ -86,7 +73,7 @@ export class SegmentsComponent implements OnInit {
     if (confirm('Are you sure you want to delete this Segment?')) {
       this.segmentRemarks.splice(this.segmentRemarks.indexOf(r), 1);
       let i = 1;
-      this.segmentRemarks.forEach(x => {
+      this.segmentRemarks.forEach((x) => {
         x.segmentNo = i;
         i++;
       });
@@ -96,59 +83,5 @@ export class SegmentsComponent implements OnInit {
   getNoPassengers() {
     this.passengers = this.pnrService.getPassengers();
     return this.passengers.length.toString();
-  }
-
-  getVibEnglishRemark() {
-    this.vibEnglishRemark = [
-      'FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION',
-      'AT LEAST 45 MINUTES PRIOR TO DEPARTURE.',
-      'VIA RAIL POLICY-NONSMOKING ENVIRONMENT ON ALL TRAINS.',
-      'VIA COUPONS ARE NOT VALID FOR AIR TRAVEL.',
-      'IF CHANGES ARE MADE ENROUTE PLEASE ENSURE YOUR',
-      'TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE.',
-      'PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR',
-      'TRAIN DEPARTURE/ARRIVAL TIMES.'
-    ];
-    return this.vibEnglishRemark;
-  }
-
-  getVibFrenchRemark() {
-    this.vibFrenchRemark = [
-      'POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS',
-      'PRESENTER A LA GARE AU MOINS 45 MINUTES AVANT L HEURE PREVUE DE',
-      'VOTRE DEPART SUIVANT LA POLITIQUE DE VIA RAIL-TOUS LES',
-      'TRAINS SONT NON FUMEUR. LES COUPONS VIA RAIL NE PEUVENT ETRE',
-      'UTILISES POUR DES DEPLACEMENTS AERIENS. SI VOUS DEVEZ MODIFIER',
-      'VOTRE ITINERAIRE EN COURS DE ROUTE ASSUREZ-VOUS QUE VOTRE',
-      'BILLET EST ENDOSSE PAR LA BILLETTERIE VIA 1.',
-      'VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR',
-      'RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
-    ];
-    return this.vibFrenchRemark;
-  }
-
-  getAmkRemark() {
-    this.amkRemark = [
-      'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER.',
-      'ALL AMTRAK TRAINS EXCEPT AUTO TRAIN ARE NON-SMOKING.',
-      'TRAIN CHANGES ARE PERMITTED ANYTIME SUBJECT TO AVAILABILITY',
-      'IF YOU NEED TO CHANGE OR CANCEL YOUR RESERVATION-',
-      'REFUND/CHANGE FEES MAY APPLY',
-      'RECOMMENDED ARRIVAL TIME AT THE STATION AT LEAST 30 MINUTES',
-      'PRIOR TO YOUR SCHEDULES DEPARTURE.',
-      'ALLOW ADDITIONAL TIME IF YOU NEED HELP WITH BAGGAGE OR TICKETS.',
-      'IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN',
-      'AT LEAST 2 HOURS BEFORE SCHEDULED DEPARTURE.',
-      'THIS CONFIRMATION NOTICE IS NOT A TICKET',
-      'YOU MUST OBTAIN YOUR TICKET BEFORE BOARDING ANY TRAIN.',
-      'THIS CONFIRMATION WILL NOT BE ACCEPTED ONBOARD.',
-      'YOUR ENTIRE RESERVATION -ALL SEGMENTS- WILL BE CANCELLED',
-      'IF YOU DO NOT PICK UP YOUR TICKET BEFORE YOUR FIRST DEPARTURE OR',
-      'IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION.',
-      'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW',
-      'RESERVATIONS WHICH MAY BE AT A HIGHER FARE.'
-    ];
-
-    return this.amkRemark;
   }
 }

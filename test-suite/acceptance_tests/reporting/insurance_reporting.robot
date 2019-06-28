@@ -1,12 +1,11 @@
 *** Settings ***
-Force Tags
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
-Verify RIR remarks is written in the PNR when 'All Inclusive or Premium Protection insurance…' is selected for EN
+Verify RIR remarks Is Written In The PNR When 'All Inclusive or Premium Protection insurance…' Is Selected For EN
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -32,10 +31,10 @@ Verify RIR remarks is written in the PNR when 'All Inclusive or Premium Protecti
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when 'All Inclusive or Premium Protection insurance…' is selected for FR
+Verify RIR Remarks Is Written In The PNR When 'All Inclusive or Premium Protection insurance…' Is Selected For FR
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -59,10 +58,10 @@ Verify RIR remarks is written in the PNR when 'All Inclusive or Premium Protecti
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With All Inclusive Type for EN
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With All Inclusive Type for EN
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-test@email.com
     ...    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -90,10 +89,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With All Inc
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With All Inclusive Type for FR
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With All Inclusive Type for FR
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -123,10 +122,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With All Inc
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Cancellation Type for EN
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Cancellation Type for EN
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -154,10 +153,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Cancell
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Cancellation Type for FR
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Cancellation Type for FR
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -189,10 +188,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Cancell
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Emergency Medical Type for EN
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Emergency Medical Type for EN
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -220,10 +219,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Emergen
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Emergency Medical Type for FR
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Emergency Medical Type for FR
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-test@email.com
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -255,10 +254,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Emergen
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Flight and Travel Accident Type for EN
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Flight and Travel Accident Type for EN
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -286,10 +285,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Flight 
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Flight and Travel Accident Type for FR
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Flight and Travel Accident Type for FR
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-test@email.com
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -318,10 +317,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Flight 
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Rental Car Physical Damage Type
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Rental Car Physical Damage Type
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -350,10 +349,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Rental 
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Coverage for the Full Dollar Type
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Coverage for the Full Dollar Type
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-test@email.com
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR
@@ -382,10 +381,10 @@ Verify RIR remarks is written in the PNR when Insurance Is Declined With Coverag
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
 
-Verify RIR remarks is written in the PNR when Insurance Is Declined With Multiple Insurance Type
+Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Multiple Insurance Type
     [Tags]    us9029
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-test@email.com
     ...    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Wrap PNR

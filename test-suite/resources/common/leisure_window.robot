@@ -10,14 +10,12 @@ Click Panel
 
 Click Submit To PNR
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
-    #placeholder
     Sleep    5
     Click Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     Sleep    10
 
 Enter Company Name
     [Arguments]    ${company_name}
-    #add company name
     Wait Until Element Is Visible    css=#companyName    30
     Input Text    css=#companyName    ${company_name}
 
@@ -34,6 +32,7 @@ Confirm Delete
     Click Button    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
     Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
+    Sleep    3
     Take Screenshot
 
 Click Add Segment Main Menu

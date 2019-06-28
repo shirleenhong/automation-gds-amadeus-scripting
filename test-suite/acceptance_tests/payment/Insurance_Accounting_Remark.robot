@@ -5,12 +5,13 @@ Resource          ../../resources/common/global_resources.robot
 Verify That Insurance Accounting Remark Is Correct
     [Tags]    us8870    US9253
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1SIN27DEC-/TYP-INS/SUN-ABC INSURANCE/SUC-ZZ/SC-YVR/SD-27DEC/ST-1800/EC-YVR/ED-28DEC/ET-0800/CF-12345    RM*CF/-RBM0000000N    APE12345
-    ...    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1SIN27DEC-/TYP-INS/SUN-ABC INSURANCE/SUC-ZZ/SC-YVR/SD-27DEC/ST-1800/EC-YVR/ED-28DEC/ET-0800/CF-12345    RM*CF/-S1A0000000N    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
     Click Panel    Payment
+    Click Payment Tab    Leisure Fee
+    Enter Reason for No Association Fees    Not applicable
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Accounting Remark Type    Insurance Remark
@@ -35,14 +36,14 @@ Verify That Insurance Accounting Remark Is Correct
     Enter QST Tax Amount    1.10
     Enter Ticket Number    123456789
     Enter Other Tax Amount    4.50
-    Enter Commission With Tax Amount    10.50
+    Enter Commission Without Tax Amount    10.50
     Click Save Button
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC1/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S4    True
     Close Cryptic Display Window
     Open CA Migration Window
     Click Wrap PNR
@@ -51,7 +52,6 @@ Verify That Insurance Accounting Remark Is Correct
     Click Update Button    1
     Select Accounting Remark Type    Apay Accounting Remark
     Enter Matrix Accounting Description    SEAT COSTS
-    Comment    Select Segment    4
     Enter Supplier Confirmation Number    14433
     Select Matrix Form Of Payment    RBC Points
     Enter Base Amount    150.23
@@ -73,7 +73,7 @@ Verify That Insurance Accounting Remark Is Correct For Multiple Passengers
     [Tags]    us8870    US9253    us9850    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    NM1Leisure/Dhel    RU1AHK3YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*    RU1AHK3SIN27DEC-/TYP-INS/SUN-ABC INSURANCE/SUC-ZZ/SC-YVR/SD-27DEC/ST-1800/EC-YVR/ED-28DEC/ET-0800/CF-12345
-    ...    RM*CF/-RBM0000000N    APE12345    TKOK
+    ...    RM*CF/-RBM0000000N    APE-test@emai.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -111,7 +111,7 @@ Verify That Insurance Accounting Remark Is Correct For Multiple Passengers
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC1/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00/P1    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S4/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S4/P1    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC2/-AMT-250.00/-PT-3.00RC/-PT-1.00XG/-PT-4.00XQ/-CP-12.00/P3    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CA/-MP-ALL/-BKN-CWTABC123/S6/P3    True
     Close Cryptic Display Window

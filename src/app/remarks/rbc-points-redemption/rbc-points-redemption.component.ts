@@ -53,7 +53,7 @@ export class RbcPointsRedemptionComponent implements OnInit {
         this.modalRef.content.isSubmitted = false;
       }
 
-      if (this.modalRef.content.callerName === 'RBC-Redemption' && this.modalRef.content.response === 'YES') {
+      if (this.modalRef.content && this.modalRef.content.callerName === 'RBC-Redemption' && this.modalRef.content.response === 'YES') {
         const r = this.modalRef.content.paramValue;
         this.rbcRedemption.splice(this.rbcRedemption.indexOf(r), 1);
         let i = 1;

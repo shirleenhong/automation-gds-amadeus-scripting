@@ -35,7 +35,7 @@ export class SegmentSelectComponent
   segmentGroup: FormGroup;
   segmentList = [];
   segmentSelected = [];
-
+  
   propagateChange: any = () => {};
   validateFn: any = () => {};
   onTouched: any = () => {};

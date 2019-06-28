@@ -5,7 +5,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify Accounting Remarks Are Written For FOP Cash For Single Passenger
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE TEST@EMAIL.COM    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -49,7 +49,7 @@ Verify Accounting Remarks Are Updated For Single Passenger
 Verify Accounting Remarks Are Written For FOP Cash For Multiple Passengers
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE TEST@EMAIL.COM    TKOK
+    Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -87,8 +87,7 @@ Verify Accounting Remarks Are Deleted
 Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE12313
-    ...    TKOK
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-12313
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -107,10 +106,10 @@ Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
     [Teardown]    Close Browser
 
 Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passengers
-    [Tags]    us7538
+    [Tags]    us7538    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    APE123123    TKOK
+    ...    APE-123123
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -123,7 +122,7 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-LK-T/-BA-115000/-GL-124000    True
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CCVI4444333322221111/-EXP-0323/-LK-T/-BA-115000/-GL-124000    True
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
@@ -132,8 +131,7 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
 Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
     [Tags]    us7537
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE Test@email.com
-    ...    TKOK
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-Test@email.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -173,5 +171,3 @@ Verify Accounting Remarks Are Updated For RBC Redemption
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
-
-*** Keywords ***

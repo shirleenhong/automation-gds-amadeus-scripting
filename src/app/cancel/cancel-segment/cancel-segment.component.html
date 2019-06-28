@@ -59,16 +59,6 @@
         Cancel All Segments
       </div>
     </div>
-    <!-- <div *ngIf="f.cancelNonRefAC.value === true">
-        <div class="row form-group">
-        <div class="col-4"> </div>
-        <div class="col-8">
-          <input type="checkbox" name="cancelNonRefAC" formControlName="cancelNonRefAC" id="cancelNonRefAC"
-            (change)="changeNonRefAC()" />
-          Are you cancelling non refundable AC flight(s) due to IROP or schedule change?
-        </div>
-      </div> -->
-    <!-- <div *ngIf="f.cancelNonRefAC.value === true"> -->
     <div>
       <div *ngIf="isAC || isOthers && !isUA" class="row form-group">
         <div class="col-4">Reason For Cancel: </div>

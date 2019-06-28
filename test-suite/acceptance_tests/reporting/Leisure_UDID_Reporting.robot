@@ -5,7 +5,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Remark is RBM or RBP
     [Tags]    us7751    us9429
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RM*CF/-RBM0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12DEC-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12dec/ST-0900/EC-YQB/ED-25dec/ET-1800/PS-X    RM*CF/-RBM0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -23,8 +23,6 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Verify Specific Remark Is Not Written In The PNR    RM *U30/-NEWLEI
     Verify Specific Remark Is Written In The PNR    RM *U86/-OVERRIDE LEI
     Close Cryptic Display Window
-    #update UDID
-    Switch To Command Page
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -32,7 +30,6 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Enter Destination Code    MNL
     Click Submit To PNR
     Close CA Migration Window
-    Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Not Written In The PNR    RM *U10/-
     Verify Specific Remark Is Not Written In The PNR    RM *U12/-
@@ -46,7 +43,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
 Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Remark is CVC
     [Tags]    us7751    us9429
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-CVC0000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -66,7 +63,6 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Verify Specific Remark Is Written In The PNR    RM *U86/-OVERRIDE LEI
     Verify Specific Remark Is Not Written In The PNR    RM *U12/-
     Close Cryptic Display Window
-    #update UDID
     Switch To Command Page
     Open CA Migration Window
     Click Wrap PNR
@@ -93,7 +89,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
 Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Remark is not RMB/ RBP/ CVC
     [Tags]    us7751    us9429
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 24DEC YYZYYT GK1 / 11551440 / ABCDEFG    RM*CF/-S1A0000000N    APE12345    TKOK
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS AC1074 Y 24DEC YYZYYT GK1 / 11551440 / ABCDEFG    RM*CF/-S1A0000000N    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -117,8 +113,6 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Verify Specific Remark Is Written In The PNR    RM *U30/-NEWLEI
     Verify Specific Remark Is Written In The PNR    RM *U86/-OVERRIDE LEI
     Close Cryptic Display Window
-    #update UDID
-    Switch To Command Page
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Reporting
@@ -131,7 +125,6 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Enter Reason for No Association Fees    Not applicable
     Click Submit To PNR
     Close CA Migration Window
-    Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *U11/-NOT APPLICABLE
     Verify Specific Remark Is Written In The PNR    RM *U30/-NEWLEI

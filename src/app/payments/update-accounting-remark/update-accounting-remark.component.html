@@ -118,13 +118,13 @@
       <div class="col-sm-4"></div>
       <div class="col">
         <div class="">Base Amount:</div>
-        <input type="text" class="form-control" id="baseAmount" [(ngModel)]="accountingRemark.baseAmount"
+        <input type="text" class="form-control" id="baseAmount" [(ngModel)]="accountingRemark.baseAmount" maxlength="10"
           formControlName="baseAmount" name="baseAmount" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
         <div class="">GST:</div>
-        <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemark.gst"
+        <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemark.gst" maxlength="8"
           formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
       </div>
     </div>
@@ -133,13 +133,13 @@
       <div class="col-sm-4"></div>
       <div class="col">
         <div class="">HST:</div>
-        <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemark.hst"
+        <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemark.hst" maxlength="8"
           formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
         <div class="">QST:</div>
-        <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemark.qst"
+        <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemark.qst" maxlength="8"
           formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
       </div>
     </div>
@@ -148,7 +148,7 @@
       <div class="col">
         <div class="">Commission %:</div>
         <input type="text" class="form-control" id="commisionPercentage" formControlName="commisionPercentage"
-          [(ngModel)]="accountingRemark.commisionPercentage" name="commisionPercentage" required placeholder="00.00"
+          [(ngModel)]="accountingRemark.commisionPercentage" name="commisionPercentage" required placeholder="00.00" maxlength="8"
           AmountMask />
       </div>
 
@@ -162,14 +162,14 @@
           <div class="col">
             <div class="">Other Tax:</div>
             <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
-              [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required
+              [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
               placeholder="00.00" AmountMask />
           </div>
 
           <div class="col">
             <div class="">Commision w/o Tax:</div>
             <input type="text" class="form-control" id="commisionWithoutTax"
-              [(ngModel)]="accountingRemark.commisionWithoutTax" formControlName="commisionWithoutTax"
+              [(ngModel)]="accountingRemark.commisionWithoutTax" formControlName="commisionWithoutTax" maxlength="8"
               name="commisionWithoutTax" required placeholder="00.00" AmountMask />
           </div>
         </div>
@@ -184,13 +184,13 @@
           <div class="col">
             <div class="">Penalty Amount:</div>
             <input type="text" class="form-control" id="penaltyBaseAmount"
-              [(ngModel)]="accountingRemark.penaltyBaseAmount" formControlName="penaltyBaseAmount"
+              [(ngModel)]="accountingRemark.penaltyBaseAmount" formControlName="penaltyBaseAmount" maxlength="10"
               name="penaltyBaseAmount" required placeholder="00.00" AmountMask />
           </div>
 
           <div class="col">
             <div class="">GST on Penalty:</div>
-            <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst"
+            <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst" maxlength="8"
               formControlName="penaltyGst" name="penaltyGst" required placeholder="00.00" AmountMask />
           </div>
         </div>
@@ -199,13 +199,13 @@
           <div class="col-sm-4"></div>
           <div class="col">
             <div class="">HST on Penalty:</div>
-            <input type="text" class="form-control" id="penaltyHst" formControlName="penaltyHst"
+            <input type="text" class="form-control" id="penaltyHst" formControlName="penaltyHst" maxlength="8"
               [(ngModel)]="accountingRemark.penaltyHst" name="penaltyHst" required placeholder="00.00" AmountMask />
           </div>
 
           <div class="col">
             <div class="">QST on Penalty:</div>
-            <input type="text" class="form-control" id="penaltyQst" formControlName="penaltyQst"
+            <input type="text" class="form-control" id="penaltyQst" formControlName="penaltyQst" maxlength="8"
               [(ngModel)]="accountingRemark.penaltyQst" formControlName="penaltyQst" name="penaltyQst" required
               placeholder="00.00" AmountMask />
           </div>

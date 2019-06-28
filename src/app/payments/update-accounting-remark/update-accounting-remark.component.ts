@@ -179,9 +179,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
-    this.accountingRemark.supplierCodeName = '';
+    debugger;
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
+      this.accountingRemark.supplierCodeName = '';
     }
     // initial state
     this.enableFormControls(['fop'], false);
@@ -205,7 +206,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       case 'ACPR':
       case 'ACPP':
-        debugger;
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
         if (accRemark === 'ACPP') {
@@ -245,16 +245,16 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         if (this.isAddNew) {
           this.accountingRemark.supplierCodeName = 'ACY';
+          this.checkSupplierCode();
         }
-        this.checkSupplierCode();
+
         break;
       default:
         if (this.isAddNew && accRemark === '1') {
           this.accountingRemark.supplierCodeName = 'ACY';
-        }
-        if (accRemark === '1') {
           this.checkSupplierCode();
         }
+
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';

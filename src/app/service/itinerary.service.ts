@@ -107,10 +107,11 @@ export class ItineraryService {
         }
       }
     });
+    debugger;
 
     const listRemark = ['SERVICE', 'TICKET', 'OFFER'];
     listRemark.forEach(element => {
-      const rirService = '/*' + element + '/*/*(?<service>(.*))/*';
+      const rirService = '\\*' + element + '\\*\\*(?<service>(.*))\\*';
       regx = new RegExp(rirService);
       rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
       if (rems.length > 0) {

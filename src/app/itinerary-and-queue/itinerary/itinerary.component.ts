@@ -103,7 +103,7 @@ export class ItineraryComponent implements OnInit {
 
   readServiceFromPnr() {
     this.listRemark.forEach(element => {
-      const rirService = '/*' + element + '/*/*(?<service>(.*))/*';
+      const rirService = '\\*' + element + '\\*\\*(?<service>(.*))\\*';
       const regx = new RegExp(rirService);
       const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RIR');
       const items = this.itineraryForm.get(element.toLowerCase() + 's') as FormArray;
@@ -115,7 +115,7 @@ export class ItineraryComponent implements OnInit {
         const match = regx.exec(r.remarkText);
         let retText = '';
         if (match !== null) {
-          retText = match.groups.service.substr(2, match.groups.service.length - 3);
+          retText = match.groups.service;
         }
         if (element === 'SERVICE') {
           items.push(this.createServiceFormGroup(element, { service: retText }));

@@ -79,7 +79,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -118,7 +118,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -215,7 +215,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.remarkService.SubmitRemarks().then(
       () => {
         if (acpp && acpp.length > 0) {
-          this.processPassPurchase();
+          this.processPassPurchase(queueCollection);
         } else {
           this.resetReloadUI(queueCollection);
         }
@@ -227,7 +227,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     );
   }
 
-  processPassPurchase() {
+  processPassPurchase(queueCollection) {
     // this will associate the dummy segment to pass purchase
     this.getPnrService().then(async () => {
       const accounts = this.pnrService.getAccountingRemarks();
@@ -245,10 +245,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
         this.remarkService.BuildRemarks(accRemarks);
         await this.remarkService.SubmitRemarks().then(() => {
-          this.resetReloadUI();
+          this.resetReloadUI(queueCollection);
         });
       } else {
-        this.resetReloadUI();
+        this.resetReloadUI(queueCollection);
       }
     });
   }
@@ -309,7 +309,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

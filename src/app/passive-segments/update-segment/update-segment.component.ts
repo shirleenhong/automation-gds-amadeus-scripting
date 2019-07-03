@@ -820,11 +820,8 @@ export class UpdateSegmentComponent implements OnInit {
     }
     const sup = this.filterSupplierCodeList.find((x) => x.supplierCode === value);
     if (sup) {
-      let suplierName = sup.supplierName;
-      if (sup.supplierName.indexOf('(') > -1) {
-        suplierName = sup.supplierName.substr(0, sup.supplierName.indexOf('(')).trim();
-      }
-      this.passiveSegments.vendorName = suplierName;
+      const suplierName = sup.supplierName.replace(/ *\([^)]*\) */g, ' ');
+      this.passiveSegments.vendorName = suplierName.trim();
     }
   }
 

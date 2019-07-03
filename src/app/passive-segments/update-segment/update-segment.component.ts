@@ -587,7 +587,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() {}
+  pickUpLocChange() { }
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;
@@ -820,7 +820,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
     const sup = this.filterSupplierCodeList.find((x) => x.supplierCode === value);
     if (sup) {
-      this.passiveSegments.vendorName = sup.supplierName;
+      this.passiveSegments.vendorName = sup.supplierName.substr(0, sup.supplierName.indexOf('(')).trim();
     }
   }
 

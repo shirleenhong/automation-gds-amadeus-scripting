@@ -107,7 +107,6 @@ export class ItineraryService {
         }
       }
     });
-    debugger;
 
     const listRemark = ['SERVICE', 'TICKET', 'OFFER'];
     listRemark.forEach(element => {

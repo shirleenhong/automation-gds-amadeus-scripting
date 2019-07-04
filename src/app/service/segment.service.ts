@@ -418,7 +418,11 @@ export class SegmentService {
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
         startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
-        const suplierName = segment.vendorName.replace(/ *\([^)]*\) */g, ' ').trim();
+        let suplierName = '';
+        if (segment.vendorName) {
+            suplierName = segment.vendorName.replace(/ *\([^)]*\) */g, ' ').trim();
+        }
+
         switch (segment.segmentType) {
             case 'TOR':
                 let tourName = suplierName + ' ' + segment.tourName;

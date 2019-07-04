@@ -179,12 +179,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
-    debugger;
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
       this.accountingRemark.supplierCodeName = '';
     }
+
     // initial state
+    this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.enableFormControls(['fop'], false);
     this.enableFormControls(['departureCity'], true);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
@@ -211,6 +212,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         if (accRemark === 'ACPP') {
           this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
             'commisionPercentage', 'departureCity', 'segmentNo'], true);
+          this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
+          this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(7)]);
+          this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         } else {
           this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
             'commisionPercentage', 'departureCity'], true);

@@ -265,7 +265,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                    amk: number, vib: number, itinLanguage: string) {
+        amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -288,8 +288,8 @@ export class SegmentService {
         }
 
         if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
-             const segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
-             segRemarks.forEach(c => {
+            const segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
+            segRemarks.forEach(c => {
                 rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
             });
         }
@@ -300,28 +300,28 @@ export class SegmentService {
         }
     }
     getAmkRemark() {
-       const amkRemark = [
-          'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER.',
-          'ALL AMTRAK TRAINS EXCEPT AUTO TRAIN ARE NON-SMOKING.',
-          'TRAIN CHANGES ARE PERMITTED ANYTIME SUBJECT TO AVAILABILITY',
-          'IF YOU NEED TO CHANGE OR CANCEL YOUR RESERVATION-',
-          'REFUND/CHANGE FEES MAY APPLY',
-          'RECOMMENDED ARRIVAL TIME AT THE STATION AT LEAST 30 MINUTES',
-          'PRIOR TO YOUR SCHEDULES DEPARTURE.',
-          'ALLOW ADDITIONAL TIME IF YOU NEED HELP WITH BAGGAGE OR TICKETS.',
-          'IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN',
-          'AT LEAST 2 HOURS BEFORE SCHEDULED DEPARTURE.',
-          'THIS CONFIRMATION NOTICE IS NOT A TICKET',
-          'YOU MUST OBTAIN YOUR TICKET BEFORE BOARDING ANY TRAIN.',
-          'THIS CONFIRMATION WILL NOT BE ACCEPTED ONBOARD.',
-          'YOUR ENTIRE RESERVATION -ALL SEGMENTS- WILL BE CANCELLED',
-          'IF YOU DO NOT PICK UP YOUR TICKET BEFORE YOUR FIRST DEPARTURE OR',
-          'IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION.',
-          'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW',
-          'RESERVATIONS WHICH MAY BE AT A HIGHER FARE.'
+        const amkRemark = [
+            'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER.',
+            'ALL AMTRAK TRAINS EXCEPT AUTO TRAIN ARE NON-SMOKING.',
+            'TRAIN CHANGES ARE PERMITTED ANYTIME SUBJECT TO AVAILABILITY',
+            'IF YOU NEED TO CHANGE OR CANCEL YOUR RESERVATION-',
+            'REFUND/CHANGE FEES MAY APPLY',
+            'RECOMMENDED ARRIVAL TIME AT THE STATION AT LEAST 30 MINUTES',
+            'PRIOR TO YOUR SCHEDULES DEPARTURE.',
+            'ALLOW ADDITIONAL TIME IF YOU NEED HELP WITH BAGGAGE OR TICKETS.',
+            'IF YOU ARE TRAVELLING ON THE AUTO TRAIN YOU MUST CHECK IN',
+            'AT LEAST 2 HOURS BEFORE SCHEDULED DEPARTURE.',
+            'THIS CONFIRMATION NOTICE IS NOT A TICKET',
+            'YOU MUST OBTAIN YOUR TICKET BEFORE BOARDING ANY TRAIN.',
+            'THIS CONFIRMATION WILL NOT BE ACCEPTED ONBOARD.',
+            'YOUR ENTIRE RESERVATION -ALL SEGMENTS- WILL BE CANCELLED',
+            'IF YOU DO NOT PICK UP YOUR TICKET BEFORE YOUR FIRST DEPARTURE OR',
+            'IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION.',
+            'IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW',
+            'RESERVATIONS WHICH MAY BE AT A HIGHER FARE.'
         ];
-       return amkRemark;
-      }
+        return amkRemark;
+    }
     private rirLimo(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, itinLanguage: string) {
         let taxRemarks = '';
         let nottaxRemarks = '';
@@ -416,11 +416,16 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-                            startTime: string, enddatevalue: string, endTime: string) {
+        startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
+        let suplierName = '';
+        if (segment.vendorName) {
+            suplierName = segment.vendorName.replace(/ *\([^)]*\) */g, ' ').trim();
+        }
+
         switch (segment.segmentType) {
             case 'TOR':
-                let tourName = segment.vendorName + ' ' + segment.tourName;
+                let tourName = suplierName + ' ' + segment.tourName;
                 if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
                 if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
                 freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
@@ -429,7 +434,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + ' ' + segment.dining +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + ' ' + segment.tourName + ' ' + segment.dining +
                     ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
@@ -441,17 +446,17 @@ export class SegmentService {
                 break;
             case 'TRN':
 
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/SC-' +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + '/SUC-' + segment.vendorCode + '/SC-' +
                     segment.fromStation + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.arrivalStation +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'LIM':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/STP-' +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + '/SUC-' + segment.vendorCode + '/STP-' +
                     segment.transferTo + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.departureCity +
                     '/ED-' + startdatevalue + '/ET-' + startTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'CAR':
-                freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +
+                freetext = 'SUC-' + segment.vendorCode + '/SUN-' + suplierName + '/SD-' + startdatevalue + '/ST-' + startTime +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
                     '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + (segment.mileage === 'UNL' ? '' : ' FREE') +
                     '/URA-' + segment.rateBooked + segment.currency + '/CF-' + segment.confirmationNo;
@@ -666,7 +671,7 @@ export class SegmentService {
                 case '6':
                     if (cancel.value.acFlightNo) {
                         remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                            + cancel.value.acdepDate + ' - ' + + cancel.value.accityPair + '/P' + pass;
+                            + cancel.value.acdepDate + ' - ' + cancel.value.accityPair + '/P' + pass;
                     } else {
                         remText = '';
                     }

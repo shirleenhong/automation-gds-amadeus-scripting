@@ -331,7 +331,7 @@
       <div class="col-sm-4"><label id="lblName"> {{lblvendorName}}: </label></div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="vendorName" name="vendorName" formControlName="vendorName"
-          [(ngModel)]="passiveSegments.vendorName" maxlength="25" AlphaNumericMask />
+          [(ngModel)]="passiveSegments.vendorName" maxlength="45" />
       </div>
     </div>
 
@@ -665,23 +665,23 @@
           [(ngModel)]="passiveSegments.rentalCost" maxlength="10" AmountMask />
       </div>
       <div class="col">
-        <label id="lblName"><br/>Rate Booked: </label>
+        <label id="lblName"><br />Rate Booked: </label>
         <input type="text" class="form-control" id="rateBooked" name="rateBooked" formControlName="rateBooked"
           [(ngModel)]="passiveSegments.rateBooked" maxlength="10" AmountMask />
       </div>
     </div>
     <div class="form-group  row">
-        <div class="col-sm-4"></div>
-    <div class="col">
-      <label id="lblName"> Rental Cost Currency: </label>
-      <input type="text" class="form-control" formControlName="currency" id="tourCurrencyType" list="dynamicCurrency"
-        [(ngModel)]="passiveSegments.currency" />
-      <datalist id="dynamicCurrency">
-        <option *ngFor="let item of currencyList" [value]="item.itemValue">{{item.itemText}}</option>
-      </datalist>
+      <div class="col-sm-4"></div>
+      <div class="col">
+        <label id="lblName"> Rental Cost Currency: </label>
+        <input type="text" class="form-control" formControlName="currency" id="tourCurrencyType" list="dynamicCurrency"
+          [(ngModel)]="passiveSegments.currency" />
+        <datalist id="dynamicCurrency">
+          <option *ngFor="let item of currencyList" [value]="item.itemValue">{{item.itemText}}</option>
+        </datalist>
 
-    </div>
-    <div class="col-sm-4">
+      </div>
+      <div class="col-sm-4">
         <label id="lblName"> Duration: </label>
         <select class="form-control" id="duration" name="duration" formControlName="duration"
           [(ngModel)]="passiveSegments.duration">
@@ -691,10 +691,10 @@
           <option>MONTHLY</option>
         </select>
       </div>
-  </div>
+    </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4"></div>     
+      <div class="col-sm-4"></div>
 
       <div class="col">
         <label id="lblName"> Mileage: </label>
@@ -702,18 +702,18 @@
           [(ngModel)]="passiveSegments.mileage" maxlength="5" AlphaNumericMask />
       </div>
       <div class="col-sm-4">
-          <label id="lblName"> Mileage Per: </label>
-          <select class="form-control" id="mileagePer" name="mileagePer" formControlName="mileagePer"
-            [(ngModel)]="passiveSegments.mileagePer">
-            <option>KM</option>
-            <option>MI</option>
-          </select>
-        </div>
+        <label id="lblName"> Mileage Per: </label>
+        <select class="form-control" id="mileagePer" name="mileagePer" formControlName="mileagePer"
+          [(ngModel)]="passiveSegments.mileagePer">
+          <option>KM</option>
+          <option>MI</option>
+        </select>
+      </div>
 
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4"></div>    
+      <div class="col-sm-4"></div>
 
       <div class="col-sm-4">
         <label id="lblName"> Drop Off Fee: </label>

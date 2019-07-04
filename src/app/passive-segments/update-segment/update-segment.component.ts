@@ -587,7 +587,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() {}
+  pickUpLocChange() { }
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;

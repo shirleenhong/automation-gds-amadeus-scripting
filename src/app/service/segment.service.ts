@@ -418,9 +418,10 @@ export class SegmentService {
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
         startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
+        const suplierName = segment.vendorName.replace(/ *\([^)]*\) */g, ' ').trim();
         switch (segment.segmentType) {
             case 'TOR':
-                let tourName = segment.vendorName + ' ' + segment.tourName;
+                let tourName = suplierName + ' ' + segment.tourName;
                 if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
                 if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
                 freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
@@ -429,7 +430,7 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + ' ' + segment.tourName + ' ' + segment.dining +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + ' ' + segment.tourName + ' ' + segment.dining +
                     ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
                     segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
@@ -441,17 +442,17 @@ export class SegmentService {
                 break;
             case 'TRN':
 
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/SC-' +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + '/SUC-' + segment.vendorCode + '/SC-' +
                     segment.fromStation + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.arrivalStation +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'LIM':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + segment.vendorName + '/SUC-' + segment.vendorCode + '/STP-' +
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + '/SUC-' + segment.vendorCode + '/STP-' +
                     segment.transferTo + '/SD-' + startdatevalue + '/ST-' + startTime + '/EC-' + segment.departureCity +
                     '/ED-' + startdatevalue + '/ET-' + startTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'CAR':
-                freetext = 'SUC-' + segment.vendorCode + '/SUN-' + segment.vendorName + '/SD-' + startdatevalue + '/ST-' + startTime +
+                freetext = 'SUC-' + segment.vendorCode + '/SUN-' + suplierName + '/SD-' + startdatevalue + '/ST-' + startTime +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
                     '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + (segment.mileage === 'UNL' ? '' : ' FREE') +
                     '/URA-' + segment.rateBooked + segment.currency + '/CF-' + segment.confirmationNo;

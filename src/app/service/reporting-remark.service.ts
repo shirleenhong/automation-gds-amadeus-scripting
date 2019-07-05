@@ -5,7 +5,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
 import { DatePipe } from '@angular/common';
 import { TranslationService } from './translation.service';
-import { ConciergeUdidsComponent } from '../reporting/concierge-udids/concierge-udids.component';
+import { ConciergeUdidsComponent } from '../leisure/reporting/concierge-udids/concierge-udids.component';
 
 @Injectable({
   providedIn: 'root'

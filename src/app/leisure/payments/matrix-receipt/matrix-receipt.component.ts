@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatrixReceiptModel } from '../../models/pnr/matrix-receipt.model';
+import { MatrixReceiptModel } from '../../../models/pnr/matrix-receipt.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateMatrixReceiptComponent } from '../update-matrix-receipt/update-matrix-receipt.component';
 import { PnrService } from 'src/app/service/pnr.service';

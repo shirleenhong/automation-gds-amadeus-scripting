@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RefundComponent } from './refund/refund.component';
 import { CancelSegmentComponent } from './cancel-segment/cancel-segment.component';
-import { UtilHelper } from '../helper/util.helper';
+import { UtilHelper } from '../../helper/util.helper';
 
 
 

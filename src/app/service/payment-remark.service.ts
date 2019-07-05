@@ -8,8 +8,8 @@ import { PnrService } from './pnr.service';
 import { RemarkHelper } from '../helper/remark-helper';
 import { DDBService } from './ddb.service';
 import { AmountPipe } from '../pipes/amount.pipe';
-import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
-import { LeisureFeeComponent } from '../payments/leisure-fee/leisure-fee.component';
+import { AccountingRemarkComponent } from '../leisure/payments/accounting-remark/accounting-remark.component';
+import { LeisureFeeComponent } from '../leisure/payments/leisure-fee/leisure-fee.component';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 

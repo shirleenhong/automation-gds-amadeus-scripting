@@ -1,1 +1,6 @@
-<app-leisure></app-leisure>
+<div *ngIf="!isCorporate">
+  <app-leisure></app-leisure>
+</div>
+<div *ngIf="isCorporate">
+  <app-corporate></app-corporate>
+</div>

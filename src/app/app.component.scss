@@ -1,53 +1,159 @@
 ::ng-deep .customClass {
-    &.card {
-        background-color: #333f48;
-        color: #fff;
-        border-radius: 0;
-        cursor: pointer;
+  &.card {
+    background-color: #333f48;
+    color: #fff;
+    border-radius: 0;
+    cursor: pointer;
 
-
-        >.card-header:first-child {
-            border-radius: 0;
-            border-bottom: 1px solid gray;
-        }
-
-
+    > .card-header:first-child {
+      border-radius: 0;
+      border-bottom: 1px solid gray;
     }
+  }
 
-    &.card .panel-title {
-        cursor: pointer;
+  &.card .panel-title {
+    cursor: pointer;
+  }
+
+  &.card .panel-title:hover {
+    color: #f1ef5c;
+  }
+
+  &.panel {
+    background-color: #333f48;
+    color: #fff;
+
+    .panel-body {
+      background-color: #f1f3f5;
+      color: #000;
+      min-height: 200px;
     }
+  }
 
-    &.card .panel-title:hover {
-        color: #f1ef5c;
-
-
+  &.card-header:first-child {
+    > .accordion-toggle .accordion-toggle {
+      color: #fc6640;
     }
-
-    &.panel {
-        background-color: #333f48;
-        color: #fff;
-
-        .panel-body {
-            background-color: #f1f3f5;
-            color: #000;
-            min-height: 200px;
-        }
-    }
-
-    &.card-header:first-child {
-        >.accordion-toggle .accordion-toggle {
-            color: #fc6640;
-        }
-    }
-
+  }
 }
 
 ::ng-deep .panel-open {
+  .panel-title {
+    color: #fc6640;
+    font-weight: bold;
+  }
+}
 
-    .panel-title {
-        color: #fc6640;
-        font-weight: bold;
-    }
+.cwt-logo {
+  float: right !important;
+  width: 50px;
+  height: 20px;
+  position: absolute;
+  top: 15px;
+  right: 16px;
+  background-image: url('../assets/images/logo-reverse.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
 
+.leisureButton {
+  -moz-box-shadow: inset 0px 1px 0px 0px #fad7c0;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #fad7c0;
+  box-shadow: inset 0px 1px 0px 0px #fad7c0;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f5a689), color-stop(1, #fa6719));
+  background: -moz-linear-gradient(top, #f5a689 5%, #fa6719 100%);
+  background: -webkit-linear-gradient(top, #f5a689 5%, #fa6719 100%);
+  background: -o-linear-gradient(top, #f5a689 5%, #fa6719 100%);
+  background: -ms-linear-gradient(top, #f5a689 5%, #fa6719 100%);
+  background: linear-gradient(to bottom, #f5a689 5%, #fa6719 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5a689', endColorstr='#fa6719', GradientType=0);
+  background-color: #f5a689;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  border: 1px solid #ed8f51;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 15px;
+  padding: 9px 24px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #cc9f52;
+  margin-top: 2px;
+}
+
+// .leisureBtnSubmit {
+
+// 	font-weight: bold;
+// }
+
+.btnMenu {
+  width: 100%;
+}
+
+.leisureButton:hover {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fa6719), color-stop(1, #f5a689));
+  background: -moz-linear-gradient(top, #fa6719 5%, #f5a689 100%);
+  background: -webkit-linear-gradient(top, #fa6719 5%, #f5a689 100%);
+  background: -o-linear-gradient(top, #fa6719 5%, #f5a689 100%);
+  background: -ms-linear-gradient(top, #fa6719 5%, #f5a689 100%);
+  background: linear-gradient(to bottom, #fa6719 5%, #f5a689 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fa6719', endColorstr='#f5a689', GradientType=0);
+  background-color: #fa6719;
+}
+
+.submitPnr:active {
+  position: relative;
+  top: 1px;
+}
+
+.cancelsegment:disabled {
+  position: relative;
+  top: 1px;
+  color: gray;
+}
+
+.loaderBody {
+  width: 100%;
+  height: 100%;
+  background-color: #f1f3f5;
+}
+
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 15px;
+  background-color: #6f787e;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.loaderlogo {
+  display: block;
+  width: 100px;
+  height: 60px;
+  position: absolute;
+  background-image: url('../assets/images/logo-reverse.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.cancelPnr,
+.loadPnr {
+  width: 300px;
+}
+
+.checkValid {
+  color: rgba(64, 233, 64, 0.856);
+  margin-left: 10px;
+}
+
+.crossInvalid {
+  color: red;
+  margin-left: 10px;
 }

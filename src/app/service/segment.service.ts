@@ -36,7 +36,6 @@ export class SegmentService {
         let startTime = '';
         let endTime = '';
         let segdest = '';
-        const noOfPassenger = this.pnrService.getPassengers().length;
 
         segmentRemarks.forEach(segment => {
             if (!segment.isNew) {
@@ -79,18 +78,16 @@ export class SegmentService {
                     passive.segmentName = 'CU';
                     passive.function = '9';
                     passive.carType = segment.carType;
-                    passive.quantity = noOfPassenger;
-                    for (let i = 1; i <= noOfPassenger; i++) {
-                        relatePass.push(i.toString());
-                    }
+                    passive.quantity = 1;
+                    relatePass.push('1');
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
 
                 if (segment.segmentType === 'HTL') {
                     passive.segmentName = 'HU';
                     passive.function = '8';
-                    passive.quantity = noOfPassenger;
-                    for (let i = 1; i <= noOfPassenger; i++) {
+                    passive.quantity = Number(segment.numberOfRooms);
+                    for (let i = 1; i <= segment.numberOfRooms; i++) {
                         relatePass.push(i.toString());
                     }
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);

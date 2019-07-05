@@ -4,10 +4,10 @@ import { RemarkService } from '../service/remark.service';
 import { PaymentRemarkService } from '../service/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/reporting-remark.service';
-import { PaymentComponent } from '../payments/payment.component';
+import { PaymentComponent } from './payments/payment.component';
 import { SegmentService } from '../service/segment.service';
-import { ReportingComponent } from '../reporting/reporting.component';
-import { RemarkComponent } from '../remarks/remark.component';
+import { ReportingComponent } from './reporting/reporting.component';
+import { RemarkComponent } from './remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
@@ -17,14 +17,14 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
 import { VisaPassportService } from '../service/visa-passport.service';
 import { InvoiceService } from '../service/invoice-remark.service';
-import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
+import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { ItineraryService } from '../service/itinerary.service';
-import { ItineraryAndQueueComponent } from '../itinerary-and-queue/itinerary-and-queue.component';
+import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { QueueService } from '../service/queue.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
-import { CancelComponent } from '../cancel/cancel.component';
+import { CancelComponent } from './cancel/cancel.component';
 
 @Component({
   selector: 'app-leisure',
@@ -79,7 +79,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -118,7 +118,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -309,7 +309,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => { },
+      () => {},
       (error) => {
         console.log(JSON.stringify(error));
       }

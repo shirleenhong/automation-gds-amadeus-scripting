@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DDBService } from 'src/app/service/ddb.service';
-import { VisaPassportModel } from '../../models/visa-passport-view.model';
+import { VisaPassportModel } from '../../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { VisaPassportService } from 'src/app/service/visa-passport.service';
@@ -31,7 +31,7 @@ export class VisaPassportComponent implements OnInit {
     private ddbService: DDBService,
     private pnrService: PnrService,
     private visaService: VisaPassportService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.visaPassportView = new VisaPassportModel();
@@ -76,11 +76,11 @@ export class VisaPassportComponent implements OnInit {
       })
       .then(
         // tslint:disable-next-line: only-arrow-functions
-        function (data) {
+        function(data) {
           console.log(data);
         },
         // tslint:disable-next-line: only-arrow-functions
-        function (error) {
+        function(error) {
           console.log(error);
         }
       );
@@ -274,10 +274,10 @@ export class VisaPassportComponent implements OnInit {
       for (let i = 1; i < originDestination.length; i++) {
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
-          '/' +
-          originDestination[i].departuredate.substr(0, 2) +
-          '/' +
-          originDestination[i].departuredate.substr(4, 2)
+            '/' +
+            originDestination[i].departuredate.substr(0, 2) +
+            '/' +
+            originDestination[i].departuredate.substr(4, 2)
         );
         if (convertedDate.toDateString() === firstDepDate.toDateString()) {
           mainOrigin = originDestination[i].origin;

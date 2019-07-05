@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { SelectItem } from '../models/select-item.model';
-import { PnrService } from '../service/pnr.service';
-import { RemarkModel } from '../models/pnr/remark.model';
-import { ReportingViewModel } from '../models/reporting-view.model';
+import { SelectItem } from '../../models/select-item.model';
+import { PnrService } from '../../service/pnr.service';
+import { RemarkModel } from '../../models/pnr/remark.model';
+import { ReportingViewModel } from '../../models/reporting-view.model';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { DDBService } from '../service/ddb.service';
+import { DDBService } from '../../service/ddb.service';
 import { ConciergeUdidsComponent } from './concierge-udids/concierge-udids.component';
-import { UtilHelper } from '../helper/util.helper';
-import { TranslationService } from '../service/translation.service';
+import { UtilHelper } from '../../helper/util.helper';
+import { TranslationService } from '../../service/translation.service';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',

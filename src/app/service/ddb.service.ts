@@ -97,6 +97,34 @@ export class DDBService implements OnInit {
     }
   }
 
+  async getCdrItem(cdrItemId: string) {
+    return await this.getRequest(common.cdrItemService + cdrItemId);
+  }
+
+  async getCdrItemByClientAccountNumber(clientAccount: string) {
+    return await this.getRequest(common.cdrItemsByClientAccountNumberService + clientAccount);
+  }
+
+  async getCdrItemBySubUnit(clientSubUnitId: string) {
+    return await this.getRequest(common.cdrItemsByClientSubUnitService + clientSubUnitId);
+  }
+
+  async getCdrItemCreditCardList(clientSubUnitId: string) {
+    return await this.getRequest(common.cdrItemsCreditCardListService + clientSubUnitId);
+  }
+
+  async getCdrItemList(clientSubUnitId: string) {
+    return await this.getRequest(common.cdrItemListService + clientSubUnitId);
+  }
+
+  async getCdrItemValues(clientDefinedRefId: string) {
+    return await this.getRequest(common.cdrItemValuesService + clientDefinedRefId);
+  }
+
+  async getCdrItemsBySharedValuesGroup(sharedValuesGroupId: string) {
+    return await this.getRequest(common.cdrItemValuesBySharedValuesGroupIdService + sharedValuesGroupId);
+  }
+
   async getTravelPort(travelportCode: string) {
     return await this.getRequest(common.travelportService + travelportCode);
   }

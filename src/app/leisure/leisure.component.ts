@@ -118,7 +118,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  ngOnInit() {}
+  async ngOnInit() {}
 
   checkValid() {
     this.validModel.isSubmitted = true;

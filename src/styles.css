@@ -188,9 +188,6 @@ select.form-control option {
   background-color: #c9cdcf;
 }
 
-.tab-container {
-}
-
 .table th {
   color: #333f48;
   padding: 2px;
@@ -308,9 +305,6 @@ input[type='checkbox']:checked:after {
   background: #cccccc;
 }
 
-.control input:checked ~ .control_indicator {
-  /* background: #14c4ff; */
-}
 .control:hover input:not([disabled]):checked ~ .control_indicator,
 .control input:checked:focus ~ .control_indicator {
   background: #fff;

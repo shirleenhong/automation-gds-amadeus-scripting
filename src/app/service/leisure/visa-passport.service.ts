@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { PnrService } from './pnr.service';
+import { PnrService } from '../pnr.service';
 import { FormGroup } from '@angular/forms';
-import { RemarkModel } from '../models/pnr/remark.model';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { RemarkHelper } from '../helper/remark-helper';
+import { RemarkModel } from '../../models/pnr/remark.model';
+import { RemarkGroup } from '../../models/pnr/remark.group.model';
+import { RemarkHelper } from '../../helper/remark-helper';
 import { DatePipe } from '@angular/common';
 
 @Injectable({

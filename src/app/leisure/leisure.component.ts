@@ -79,7 +79,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -88,7 +88,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (queueCollection) {
       this.queueService.queuePNR(queueCollection);
     }
-    // this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
+
+    // await this.getServicingOptions();
     await this.getCountryTravelInformation();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
@@ -118,7 +119,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
+
+  // async getServicingOptions() {
+  //   await this.ddbService.getServicingOption('A:642D', '1');
+  // }
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -309,7 +314,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

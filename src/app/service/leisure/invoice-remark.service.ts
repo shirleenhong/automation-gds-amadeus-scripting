@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { RemarkModel } from '../models/pnr/remark.model';
-import { PnrService } from './pnr.service';
+import { RemarkGroup } from '../../models/pnr/remark.group.model';
+import { RemarkModel } from '../../models/pnr/remark.model';
+import { PnrService } from '../pnr.service';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({

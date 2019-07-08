@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ReportingViewModel } from '../models/reporting-view.model';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { RemarkModel } from '../models/pnr/remark.model';
-import { PnrService } from './pnr.service';
+import { ReportingViewModel } from '../../models/reporting-view.model';
+import { RemarkGroup } from '../../models/pnr/remark.group.model';
+import { RemarkModel } from '../../models/pnr/remark.model';
+import { PnrService } from '../pnr.service';
 import { DatePipe } from '@angular/common';
-import { TranslationService } from './translation.service';
-import { ConciergeUdidsComponent } from '../leisure/reporting/concierge-udids/concierge-udids.component';
+import { TranslationService } from '../translation.service';
+import { ConciergeUdidsComponent } from '../../leisure/reporting/concierge-udids/concierge-udids.component';
 
 @Injectable({
   providedIn: 'root'

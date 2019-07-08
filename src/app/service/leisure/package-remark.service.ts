@@ -1,13 +1,13 @@
-import { RemarkModel } from '../models/pnr/remark.model';
-import { PnrService } from './pnr.service';
+import { RemarkModel } from '../../models/pnr/remark.model';
+import { PnrService } from '../pnr.service';
 import { Injectable } from '@angular/core';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormArray } from '@angular/forms';
-import { RemarkHelper } from '../helper/remark-helper';
-import { PackageRemarkHelper } from '../helper/packageRemark-helper';
-import { RBCRedemptionModel } from '../models/pnr/rbc-redemption.model';
+import { RemarkHelper } from '../../helper/remark-helper';
+import { PackageRemarkHelper } from '../../helper/packageRemark-helper';
+import { RBCRedemptionModel } from '../../models/pnr/rbc-redemption.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class PackageRemarkService {
   decPipe = new DecimalPipe('en-US');
   rbcForDeletion = [];
 
-  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
+  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) {}
 
   public GetITCPackageRemarks(group: any) {
     const rmGroup = new RemarkGroup();
@@ -155,9 +155,9 @@ export class PackageRemarkService {
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'LESS DEPOSIT PAID ' +
-        (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
-        ' - ' +
-        formatDate(Date.now(), 'dMMM', 'en'),
+          (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
+          ' - ' +
+          formatDate(Date.now(), 'dMMM', 'en'),
         'RI',
         'R'
       )
@@ -167,10 +167,10 @@ export class PackageRemarkService {
       rmGroup.remarks.push(
         this.remarkHelper.createRemark(
           '---- BALANCE OF ' +
-          (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
-          ' IS DUE ' +
-          datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
-          ' ----',
+            (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
+            ' IS DUE ' +
+            datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
+            ' ----',
           'RI',
           'R'
         )

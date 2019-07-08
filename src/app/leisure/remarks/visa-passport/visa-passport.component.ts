@@ -3,7 +3,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { VisaPassportModel } from '../../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VisaPassportService } from 'src/app/service/visa-passport.service';
+import { VisaPassportService } from 'src/app/service/leisure/visa-passport.service';
 declare var smartScriptSession: any;
 
 @Component({

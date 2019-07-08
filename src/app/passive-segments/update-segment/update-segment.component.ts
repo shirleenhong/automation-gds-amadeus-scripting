@@ -556,7 +556,6 @@ export class UpdateSegmentComponent implements OnInit {
           'roomType',
           'additionalInfo'
         ];
-        debugger;
         this.loadRoomTypeHotel();
         this.stateProvinceList = this.ddbService.getStateProvinces();
         this.getHotels();

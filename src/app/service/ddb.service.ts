@@ -15,10 +15,11 @@ export class DDBService implements OnInit {
   countryList = [];
   currencyList = [];
   supplierCodes = [];
+  servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -74,6 +75,20 @@ export class DDBService implements OnInit {
         console.log(JSON.stringify(err));
       }
     );
+  }
+
+  async getServicingOption(clientSubUnit, contextId) {
+    if (this.servicingOption.length === 0) {
+      await this.getRequest(common.servicingOptionService + clientSubUnit + '&ContextID=' + contextId + 'GDSCode=1A').then(
+        (x) => {
+          this.servicingOption = [];
+          this.servicingOption = x.ServiceOptionDetails;
+        },
+        (err) => {
+          console.log(JSON.stringify(err));
+        }
+      );
+    }
   }
 
   async getCountryAndCurrencyList() {
@@ -189,6 +204,10 @@ export class DDBService implements OnInit {
     if (this.airTravelPortInformation.findIndex((x) => x.travelPortCode === port.TravelPorts[0].TravelPortCode) === -1) {
       this.airTravelPortInformation.push(ref);
     }
+  }
+
+  getServicingOptionValue(SoId) {
+    return this.servicingOption.find((x) => x.ServiceOptionItemId === SoId);
   }
 
   getCityCountry(search: string) {

@@ -11,5 +11,6 @@ export const common = {
   cdrItemsCreditCardListService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsCreditCardList/',
   cdrItemListService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsList/',
   cdrItemValuesService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValues/',
-  cdrItemValuesBySharedValuesGroupIdService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValuesBySharedValuesGroupId/'
+  cdrItemValuesBySharedValuesGroupIdService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValuesBySharedValuesGroupId/',
+  servicingOptionService: '/service/repo/powerbaseaws/ServiceOptions?ClientSubUnitGuid='
 };

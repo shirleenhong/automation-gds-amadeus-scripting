@@ -17,9 +17,9 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -144,6 +144,10 @@ export class DDBService implements OnInit {
     return await this.getRequest(common.travelportService + travelportCode);
   }
 
+  async getFees(clientSubUnitId: string) {
+    return await this.getRequest(common.feesService.replace('{ClientSubUnitGuid}', clientSubUnitId));
+  }
+
   async getAllTravelPort() {
     return await this.getRequest(common.airTravelportsService);
   }
@@ -206,8 +210,8 @@ export class DDBService implements OnInit {
     }
   }
 
-  getServicingOptionValue(SoId) {
-    return this.servicingOption.find((x) => x.ServiceOptionItemId === SoId);
+  getServicingOptionValue(soId) {
+    return this.servicingOption.find((x) => x.ServiceOptionItemId === soId);
   }
 
   getCityCountry(search: string) {

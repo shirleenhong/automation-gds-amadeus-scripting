@@ -12,5 +12,6 @@ export const common = {
   cdrItemListService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsList/',
   cdrItemValuesService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValues/',
   cdrItemValuesBySharedValuesGroupIdService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValuesBySharedValuesGroupId/',
-  servicingOptionService: '/service/repo/powerbaseaws/ServiceOptions?ClientSubUnitGuid='
+  servicingOptionService: '/service/repo/powerbaseaws/ServiceOptions?ClientSubUnitGuid=',
+  feesService: '/ClientSubUnits/{ClientSubUnitGuid}/ClientFees'
 };

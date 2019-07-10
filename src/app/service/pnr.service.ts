@@ -15,6 +15,7 @@ declare var smartScriptSession: any;
 })
 export class PnrService {
   pnrObj: any;
+  tstObj = [];
   isPNRLoaded = false;
   errorMessage = '';
   destinationCity = [{ endpoint: '', startpoint: '' }];
@@ -27,6 +28,7 @@ export class PnrService {
   constructor() { }
 
   async getPNR(): Promise<void> {
+
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj
@@ -35,6 +37,7 @@ export class PnrService {
         () => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
+          this.getTST();
         },
         (error: string) => {
           this.isPNRLoaded = false;
@@ -48,6 +51,37 @@ export class PnrService {
     // this.getRecordLocator();
     console.log(JSON.stringify(this.pnrObj));
   }
+
+
+  async getTST(): Promise<void> {
+    this.tstObj = new Array<any>();
+    const attributeDetails = {
+      attributeType: 'ALL'
+    };
+
+    const displayMode = {
+      attributeDetails
+    };
+
+    const displayElement = {
+      displayMode
+    };
+
+    await smartScriptSession.requestService('ws.displayTST_v14.1', displayElement).then(
+      (tst) => {
+        this.tstObj = tst.response.model.output.response.fareList;
+        this.errorMessage = 'TST Loaded Successfully';
+      },
+      (error: string) => {
+        this.errorMessage = 'Error: ' + error;
+      }
+    )
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log(JSON.stringify(this.tstObj));
+  }
+
 
   isRbpRbm() {
     if (!this.cfLine) {
@@ -765,7 +799,7 @@ export class PnrService {
           model.passPurchase = vals[0].trim();
           model.fareType = vals[1].replace('FARE', '').trim();
           model.accountingTypeRemark = 'ACPP';
-          const air = this.getSegmentTatooNumber().find((x) => x.segmentType === 'AIR' && x.controlNumber === model.supplierConfirmatioNo);
+          const air = this.getSegmentTatooNumber().find((z) => z.segmentType === 'AIR' && z.controlNumber === model.supplierConfirmatioNo);
           if (air) {
             model.departureCity = air.cityCode;
           }
@@ -941,14 +975,17 @@ export class PnrService {
       let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
       let match = regex.exec(freetext);
       if (match === null) {
+        // tslint:disable-next-line: max-line-length
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(([0-9]{4})))(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
       if (match === null) {
+        // tslint:disable-next-line: max-line-length
         regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/STP-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }
       if (match === null) {
+        // tslint:disable-next-line: max-line-length
         regex = /SUC-(?<vendorCode>(.*))\/SUN-(?<vendorName>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/TTL-(?<carCost>(.*))\/CF-(?<conf>(.*))/g;
         match = regex.exec(freetext);
       }

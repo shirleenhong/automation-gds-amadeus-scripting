@@ -1,30 +1,30 @@
 import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
 import { RemarkService } from '../service/remark.service';
-import { PaymentRemarkService } from '../service/payment-remark.service';
+import { PaymentRemarkService } from '../service/leisure/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { ReportingRemarkService } from '../service/reporting-remark.service';
-import { PaymentComponent } from '../payments/payment.component';
-import { SegmentService } from '../service/segment.service';
-import { ReportingComponent } from '../reporting/reporting.component';
-import { RemarkComponent } from '../remarks/remark.component';
+import { ReportingRemarkService } from '../service/leisure/reporting-remark.service';
+import { PaymentComponent } from './payments/payment.component';
+import { SegmentService } from '../service/leisure/segment.service';
+import { ReportingComponent } from './reporting/reporting.component';
+import { RemarkComponent } from './remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
-import { PackageRemarkService } from '../service/package-remark.service';
+import { PackageRemarkService } from '../service/leisure/package-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
-import { VisaPassportService } from '../service/visa-passport.service';
-import { InvoiceService } from '../service/invoice-remark.service';
-import { MatrixInvoiceComponent } from '../invoice/matrix-invoice.component';
-import { ItineraryService } from '../service/itinerary.service';
-import { ItineraryAndQueueComponent } from '../itinerary-and-queue/itinerary-and-queue.component';
-import { QueueService } from '../service/queue.service';
+import { VisaPassportService } from '../service/leisure/visa-passport.service';
+import { InvoiceService } from '../service/leisure/invoice-remark.service';
+import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
+import { ItineraryService } from '../service/leisure/itinerary.service';
+import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
+import { QueueService } from '../service/leisure/queue.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
-import { CancelComponent } from '../cancel/cancel.component';
+import { CancelComponent } from './cancel/cancel.component';
 
 @Component({
   selector: 'app-leisure',
@@ -79,7 +79,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -88,7 +88,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (queueCollection) {
       this.queueService.queuePNR(queueCollection);
     }
-    // this.itineraryService.getCountry(this.pnrService.pnrObj.airSegments);
+
+    // await this.getServicingOptions();
     await this.getCountryTravelInformation();
     if (this.pnrService.errorMessage.indexOf('Error') === 0) {
       this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
@@ -118,7 +119,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  ngOnInit() { }
+  async ngOnInit() {}
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -309,7 +310,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => { },
+      () => {},
       (error) => {
         console.log(JSON.stringify(error));
       }

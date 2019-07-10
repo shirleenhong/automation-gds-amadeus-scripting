@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QueueComponent } from './queue/queue.component';
 import { ItineraryComponent } from './itinerary/itinerary.component';
-import { UtilHelper } from '../helper/util.helper';
+import { UtilHelper } from '../../helper/util.helper';
 
 @Component({
   selector: 'app-itinerary-and-queue',

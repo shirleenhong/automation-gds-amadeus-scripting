@@ -1,19 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { SelectItem } from '../models/select-item.model';
+import { SelectItem } from '../../models/select-item.model';
 import { TourPackageComponent } from './tour-package/tour-package.component';
 import { ItcPackageComponent } from './itc-package/itc-package.component';
 import { PnrService } from 'src/app/service/pnr.service';
-import { UtilHelper } from '../helper/util.helper';
+import { UtilHelper } from '../../helper/util.helper';
 import { CodeshareComponent } from './codeshare/codeshare.component';
 
 import { VisaPassportComponent } from './visa-passport/visa-passport.component';
 import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.component';
 import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
-import { PackageRemarkHelper } from '../helper/packageRemark-helper';
+import { PackageRemarkHelper } from '../../helper/packageRemark-helper';
 import { AssociatedRemarksComponent } from './associated-remarks/associated-remarks.component';
-
-// import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
 
 @Component({
   selector: 'app-remarks',

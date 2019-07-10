@@ -561,6 +561,11 @@ export class UpdateSegmentComponent implements OnInit {
         this.getHotels();
         this.setForm(forms);
         this.selectedTmpl = this.hotelTmpl;
+        this.passengers = this.pnrService.getPassengers();
+        const passengerCount = this.passengers.length;
+        this.segmentForm.controls.numberOfRooms.clearValidators();
+        this.segmentForm.get('numberOfRooms').setValidators(Validators.max(passengerCount));
+        this.segmentForm.get('numberOfRooms').updateValueAndValidity();
         break;
       default:
         break;
@@ -1005,7 +1010,7 @@ export class UpdateSegmentComponent implements OnInit {
     //       this.stateProvinceList = this.ddbService.getStateProvinces('US');
     //       break;
     //     case 'CA':
-    //     case 'CANADA':
+    //     case 'CANADA's:
     //       this.stateProvinceList = this.ddbService.getStateProvinces('CA');
     //       break;
     //     default:

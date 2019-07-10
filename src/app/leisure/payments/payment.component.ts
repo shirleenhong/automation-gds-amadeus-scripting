@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { LeisureFeeComponent } from './leisure-fee/leisure-fee.component';
 import { MatrixReceiptComponent } from './matrix-receipt/matrix-receipt.component';
 import { AccountingRemarkComponent } from './accounting-remark/accounting-remark.component';
-import { UtilHelper } from '../helper/util.helper';
+import { UtilHelper } from '../../helper/util.helper';
 
 @Component({
   selector: 'app-payment',

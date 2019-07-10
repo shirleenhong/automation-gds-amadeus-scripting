@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
-import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
-import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { RemarkModel } from '../models/pnr/remark.model';
+import { MatrixReceiptModel } from '../../models/pnr/matrix-receipt.model';
+import { MatrixAccountingModel } from '../../models/pnr/matrix-accounting.model';
+import { RemarkGroup } from '../../models/pnr/remark.group.model';
+import { RemarkModel } from '../../models/pnr/remark.model';
 import { DecimalPipe, DatePipe } from '@angular/common';
-import { PnrService } from './pnr.service';
-import { RemarkHelper } from '../helper/remark-helper';
-import { DDBService } from './ddb.service';
-import { AmountPipe } from '../pipes/amount.pipe';
-import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
-import { LeisureFeeComponent } from '../payments/leisure-fee/leisure-fee.component';
-import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
-import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
+import { PnrService } from '../pnr.service';
+import { RemarkHelper } from '../../helper/remark-helper';
+import { DDBService } from '../ddb.service';
+import { AmountPipe } from '../../pipes/amount.pipe';
+import { AccountingRemarkComponent } from '../../leisure/payments/accounting-remark/accounting-remark.component';
+import { LeisureFeeComponent } from '../../leisure/payments/leisure-fee/leisure-fee.component';
+import { LeisureFeeModel } from '../../models/pnr/leisure-fee.model';
+import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 

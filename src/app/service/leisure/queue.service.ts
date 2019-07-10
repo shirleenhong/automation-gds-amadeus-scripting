@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PnrService } from './pnr.service';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { PnrService } from '../pnr.service';
+import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
 
 declare var smartScriptSession: any;
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatrixAccountingModel } from '../../models/pnr/matrix-accounting.model';
+import { MatrixAccountingModel } from '../../../models/pnr/matrix-accounting.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/update-accounting-remark.component';
 import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder } from '@angular/forms';
@@ -154,7 +154,7 @@ export class AccountingRemarkComponent implements OnInit {
     const code = r.supplierCodeName;
     this.modalRef.content.isAddNew = false;
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
-    //prevent using the default
+    // prevent using the default
     r.supplierCodeName = code;
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();

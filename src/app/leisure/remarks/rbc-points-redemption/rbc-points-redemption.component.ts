@@ -3,7 +3,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { RBCRedemptionModel } from 'src/app/models/pnr/rbc-redemption.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { UpdateRbcPointsRedemptionComponent } from '../update-rbc-points-redemption/update-rbc-points-redemption.component';
-import { PackageRemarkService } from 'src/app/service/package-remark.service';
+import { PackageRemarkService } from 'src/app/service/leisure/package-remark.service';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 

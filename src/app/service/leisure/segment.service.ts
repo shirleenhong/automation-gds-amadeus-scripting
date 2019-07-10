@@ -1,15 +1,15 @@
-import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
+import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
 import { DatePipe, formatDate } from '@angular/common';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { Injectable } from '@angular/core';
-import { PnrService } from './pnr.service';
-import { RemarkHelper } from '../helper/remark-helper';
-import { RemarkModel } from '../models/pnr/remark.model';
-import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
+import { PnrService } from '../pnr.service';
+import { RemarkHelper } from '../../helper/remark-helper';
+import { RemarkModel } from '../../models/pnr/remark.model';
+import { PassiveSegmentsModel } from '../../models/pnr/passive-segments.model';
 import { FormArray, FormGroup } from '@angular/forms';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
-import { CfRemarkModel } from '../models/pnr/cf-remark.model';
-import { TranslationService } from './translation.service';
+import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
+import { CfRemarkModel } from '../../models/pnr/cf-remark.model';
+import { TranslationService } from '../translation.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -36,7 +36,6 @@ export class SegmentService {
         let startTime = '';
         let endTime = '';
         let segdest = '';
-        const noOfPassenger = this.pnrService.getPassengers().length;
 
         segmentRemarks.forEach(segment => {
             if (!segment.isNew) {
@@ -79,18 +78,16 @@ export class SegmentService {
                     passive.segmentName = 'CU';
                     passive.function = '9';
                     passive.carType = segment.carType;
-                    passive.quantity = noOfPassenger;
-                    for (let i = 1; i <= noOfPassenger; i++) {
-                        relatePass.push(i.toString());
-                    }
+                    passive.quantity = 1;
+                    relatePass.push('1');
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
 
                 if (segment.segmentType === 'HTL') {
                     passive.segmentName = 'HU';
                     passive.function = '8';
-                    passive.quantity = noOfPassenger;
-                    for (let i = 1; i <= noOfPassenger; i++) {
+                    passive.quantity = Number(segment.numberOfRooms);
+                    for (let i = 1; i <= segment.numberOfRooms; i++) {
                         relatePass.push(i.toString());
                     }
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
@@ -265,7 +262,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string) {
+                     amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -416,7 +413,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -458,7 +455,8 @@ export class SegmentService {
             case 'CAR':
                 freetext = 'SUC-' + segment.vendorCode + '/SUN-' + suplierName + '/SD-' + startdatevalue + '/ST-' + startTime +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/TTL-' + segment.rentalCost + segment.currency +
-                    '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer + (segment.mileage === 'UNL' ? '' : ' FREE') +
+                    '/DUR-' + segment.duration + '/MI-' + segment.mileage + segment.mileagePer +
+                    (segment.mileage === 'UNL' ? '' : ' FREE') +
                     '/URA-' + segment.rateBooked + segment.currency + '/CF-' + segment.confirmationNo;
                 break;
             case 'HTL':
@@ -549,26 +547,26 @@ export class SegmentService {
         itinLanguage = itinLanguage.substr(0, 2);
         switch (true) {
             case (itinLanguage === 'EN'): {
-                const LLBMandatoryRemarkEN = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
-                if (LLBMandatoryRemarkEN === '') {
+                const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
+                if (llbMandatoryRemarkEn === '') {
                     const commandEN = 'PBN/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
-                const MexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
-                if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
+                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+                if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
                     const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
                     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
                 }
                 break;
             }
             case (itinLanguage === 'FR'): {
-                const LLBMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
-                if (LLBMandatoryRemarkFR === '') {
+                const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
+                if (llbMandatoryRemarkFR === '') {
                     const commandFR = 'PBN/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
-                const MexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
-                if (this.checkCityInSegments(this.mexicoCities) && MexicoMandatoryRemark === '') {
+                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
+                if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
                     let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
                     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
                     command = 'POUR ENTRER AU MEXIQUE';

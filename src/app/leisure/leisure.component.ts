@@ -119,7 +119,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    // this.message = '';
+    // this.message += JSON.stringify(await this.ddbService.getCdrItemBySubUnit('A:148D4'));
+    // this.message += JSON.stringify(await this.ddbService.getConfigurationParameter('ApacCDRRemark_NonAirSegment'));
+  }
 
   checkValid() {
     this.validModel.isSubmitted = true;

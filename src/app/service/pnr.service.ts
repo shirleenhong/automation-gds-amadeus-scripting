@@ -389,8 +389,10 @@ export class PnrService {
     let classservice = '';
     let flongtext = '';
     let controlNumber = '';
+    let airType = '';
 
     if (type === 'AIR') {
+      airType = 'ACTIVE';
       elemText =
         elem.airlineCode +
         elem.flightNumber +
@@ -423,6 +425,10 @@ export class PnrService {
       arrivalDate = elem.arrivalDate;
       classservice = elem.class;
       controlNumber = elem.airlineReference;
+      if (elem.fullNode.itineraryReservationInfo) {
+        airType = 'PASSIVE';
+      }
+
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
       elemText =
@@ -461,7 +467,8 @@ export class PnrService {
       arrivalTime,
       arrivalDate,
       classservice,
-      controlNumber
+      controlNumber,
+      airType
     };
     this.segments.push(segment);
   }

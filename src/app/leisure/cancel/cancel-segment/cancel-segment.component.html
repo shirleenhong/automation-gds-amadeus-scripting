@@ -30,6 +30,17 @@
       </div>
     </div>
 
+    <div class="row form-group">
+      <div class="col-4">Select Cancel Follow Up Option: </div>
+      <div class="col-8">
+        <select id="followUpOption" class="form-control" formControlName="followUpOption" name="followUpOption"
+          (change)="changefollowUpOption($event.target.value)">
+          <option *ngFor="let item of followUpOptionList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
 
     <div class="row form-group">
       <div class="col-4"></div>
@@ -59,21 +70,35 @@
         Cancel All Segments
       </div>
     </div>
-    <div>
-      <div *ngIf="isAC || isOthers && !isUA" class="row form-group">
-        <div class="col-4">Reason For Cancel: </div>
-        <div class="col-8">
-          <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
-            (change)="acChange($event.target.value)">
-            <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
-              {{item.itemText}}
-            </option>
-          </select>
-        </div>
+
+    <div class="row form-group">
+      <div class="col-4">Cancel Process: </div>
+      <div class="col-8">
+        <select id="cancelProcess" class="form-control" formControlName="cancelProcess" name="cancelProcess">
+          <option *ngFor="let item of cancelProcessList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
       </div>
-      <div *ngIf="isAC">
+    </div>
+
+    <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund'">
+      <div *ngIf="f.cancelProcess.value === 'PRIOR' ">
+        <div *ngIf="!isUA " class="row form-group">
+          <div class="col-4">Reason For Cancel: </div>
+          <div class="col-8">
+            <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
+              (change)="acChange($event.target.value)">
+              <option *ngFor="let item of reasonAcList" [value]="item.itemValue">
+                {{item.itemText}}
+              </option>
+            </select>
+          </div>
+        </div>
+
         <div *ngIf="f.reasonACCancel.value !== ''">
-          <div class="row form-group">
+          <div *ngIf="f.reasonACCancel.value === '1' || f.reasonACCancel.value === '2'|| f.reasonACCancel.value === '3'"
+            class="row form-group">
             <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">AC Ticket Number:</div>
@@ -88,33 +113,46 @@
             </div>
           </div>
 
-          <div class="row form-group">
+          <div
+            *ngIf="f.reasonACCancel.value === '6' || f.reasonACCancel.value === '9'|| f.reasonACCancel.value === '10'"
+            class="row form-group">
             <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">AC Flight Number:</div>
               <input type="text" class="form-control" id="acFlightNo" formControlName="acFlightNo" name="acFlightNo" />
             </div>
-
-            <div class="col-4">
-              <div class="">City Pair:</div>
-              <input type="text" class="form-control" id="accityPair" formControlName="accityPair" name="accityPair" />
-            </div>
           </div>
 
-          <div class="form-group  row">
+          <div *ngIf="f.reasonACCancel.value === '5'" class="row form-group">
             <div class="col-sm-4"></div>
             <div class="col-4">
-              <div class="">AC Departure Date:</div>
-              <input type="date" class="form-control" id="acdepDate" name="acdepDate" formControlName="acdepDate" />
-            </div>
-            <div class="col-4">
-              <div class="">Relationship:</div>
-              <input type="text" class="form-control" id="relationship" formControlName="relationship"
-                name="relationship" />
+              <div class="">Relationship: </div>
+              <select id="relationship" class="form-control" formControlName="relationship" name="relationship">
+                <option *ngFor="let item of relationshipList" [value]="item.itemValue">
+                  {{item.itemText}}
+                </option>
+              </select>
             </div>
           </div>
+
+          <div *ngIf="f.reasonACCancel.value === '11'" class="row form-group">
+            <div class="col-sm-4"></div>
+            <div class="col-4">
+              <div class="">Cancel Month:</div>
+              <input type="text" class="form-control" id="acCancelMonth" formControlName="acCancelMonth"
+                name="acCancelMonth" maxlength="2" NumberOnlyMask />
+            </div>
+
+            <div class="col-4">
+              <div class="">Cancel Year:</div>
+              <input type="text" class="form-control" id="acCancelYear" formControlName="acCancelYear"
+                name="acCancelYear" maxlength="2" NumberOnlyMask />
+            </div>
+          </div>
+
         </div>
       </div>
+
       <div *ngIf="isAC || isOthers && !isUA" class="row form-group">
         <div class="col-4"></div>
         <div class="col-8">
@@ -124,58 +162,59 @@
           <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
         </div>
       </div>
-    </div>
 
 
-    <div *ngIf="isUA">
+
+      <div *ngIf="isUA">
+        <div class="row form-group">
+          <div class="col-4">UA Reason For Cancel: </div>
+          <div class="col-8">
+            <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel"
+              (change)="uaChange($event.target.value)">
+              <option *ngFor="let item of reasonUaList" [value]="item.itemValue">
+                {{item.itemText}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div *ngIf="f.reasonUACancel.value === '1'" class="row form-group">
+          <div class="col-sm-4"></div>
+          <div class="col-4">
+            <div class="">UA Itinerary Segment Number:</div>
+            <input type="text" class="form-control" id="uasegNo" formControlName="uasegNo" name="uasegNo" />
+          </div>
+
+          <div class="col-4">
+            <div class="">Passenger Name Number:</div>
+            <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
+              name="uaPassengerNo" />
+          </div>
+        </div>
+      </div>
+
       <div class="row form-group">
-        <div class="col-4">UA Reason For Cancel: </div>
-        <div class="col-8">
-          <select id="reasonUACancel" class="form-control" formControlName="reasonUACancel" name="reasonUACancel"
-            (change)="uaChange($event.target.value)">
-            <option *ngFor="let item of reasonUaList" [value]="item.itemValue">
-              {{item.itemText}}
-            </option>
-          </select>
-        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-3">Ticket Number:</div>
+        <div class="col-3">Coupon Number:</div>
       </div>
 
-      <div *ngIf="f.reasonUACancel.value === '1'" class="row form-group">
-        <div class="col-sm-4"></div>
-        <div class="col-4">
-          <div class="">UA Itinerary Segment Number:</div>
-          <input type="text" class="form-control" id="uasegNo" formControlName="uasegNo" name="uasegNo" />
-        </div>
-
-        <div class="col-4">
-          <div class="">Passenger Name Number:</div>
-          <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
-            name="uaPassengerNo" />
-        </div>
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-sm-4"></div>
-      <div class="col-3">Ticket Number:</div>
-      <div class="col-3">Coupon Number:</div>
-    </div>
-
-    <div formArrayName="tickets" *ngFor="let item of this.cancelForm.get('tickets')['controls']; let i = index">
-      <div [formGroupName]="i" class="form-group row">
-        <div class="col-sm-4"></div>
-        <div class="col-3">
-          <input type="text" formControlName="ticket" class="form-control" maxlength="25">
-        </div>
-        <div class="col-3">
-          <input type="text" formControlName="coupon" class="form-control" maxlength="25">
-        </div>
-        <div *ngIf="remove" class="col-1">
-          <i class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
-        </div>
-        <div *ngIf="add" class="col-1">
-          &nbsp;
-          <i class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
+      <div formArrayName="tickets" *ngFor="let item of this.cancelForm.get('tickets')['controls']; let i = index">
+        <div [formGroupName]="i" class="form-group row">
+          <div class="col-sm-4"></div>
+          <div class="col-3">
+            <input type="text" formControlName="ticket" class="form-control" maxlength="25">
+          </div>
+          <div class="col-3">
+            <input type="text" formControlName="coupon" class="form-control" maxlength="25">
+          </div>
+          <div *ngIf="remove" class="col-1">
+            <i class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
+          </div>
+          <div *ngIf="add" class="col-1">
+            &nbsp;
+            <i class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
+          </div>
         </div>
       </div>
     </div>

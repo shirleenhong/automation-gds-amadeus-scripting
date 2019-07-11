@@ -262,7 +262,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                     amk: number, vib: number, itinLanguage: string) {
+        amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -413,7 +413,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-                            startTime: string, enddatevalue: string, endTime: string) {
+        startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -658,22 +658,22 @@ export class SegmentService {
                 case '3':
                     remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo;
                     break;
-                case '4':
-                    remText = 'OS AC 24 HOUR RULE';
-                    break;
-                case '5':
-                    remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                        + cancel.value.accityPair + ' ' + cancel.value.acdepDate
-                        + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
-                    break;
-                case '6':
-                    if (cancel.value.acFlightNo) {
-                        remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                            + cancel.value.acdepDate + ' - ' + cancel.value.accityPair + '/P' + pass;
-                    } else {
-                        remText = '';
-                    }
-                    break;
+                // case '4':
+                //     remText = 'OS AC 24 HOUR RULE';
+                //     break;
+                // case '5':
+                //     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
+                //         + cancel.value.accityPair + ' ' + cancel.value.acdepDate
+                //         + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
+                //     break;
+                // case '6':
+                //     if (cancel.value.acFlightNo) {
+                //         remText = 'OS AC ' + cancel.value.acFlightNo + ' '
+                //             + cancel.value.acdepDate + ' - ' + cancel.value.accityPair + '/P' + pass;
+                //     } else {
+                //         remText = '';
+                //     }
+                //     break;
                 default:
                     break;
             }
@@ -774,6 +774,40 @@ export class SegmentService {
             }
         }
 
+        if (cancel.value.reasonACCancel) {
+            switch (cancel.value.reasonACCancel) {
+                case '4':
+                    remText = 'AC Refund Waiver Code - AC24HRRULE';
+                    rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+                    break;
+                case '5':
+                    remText = 'AC Refund Waiver Code - ACDUEDEATH' + cancel.value.relationship;
+                    rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+                    break;
+                case '6':
+                    remText = 'AC Refund Waiver Code – ACFLTIRROP' + cancel.value.acFlightNo;
+                    rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+                    break;
+                case '9':
+                    remText = 'AC Refund Waiver Code – ACUSKEDCHG' + cancel.value.acFlightNo;
+                    rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+                    break;
+                case '10':
+                    remText = 'AC Refund Waiver Code – ACUDELAY02' + cancel.value.acFlightNo;
+                    rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+                    break;
+                case '11':
+                    remText = 'AC Refund Waiver Code – ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
+                    rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+                    break;
+                default:
+                    break;
+            }
+
+            rmGroup.cryptics.push(remText);
+        }
+
+
         segmentselected.forEach(element => {
             rmGroup.deleteSegmentByIds.push(element.lineNo);
         });
@@ -785,6 +819,9 @@ export class SegmentService {
                 rmGroup.deleteRemarkByIds.push(r.lineNo);
             });
         }
+
+
+
 
 
 
@@ -920,30 +957,53 @@ export class SegmentService {
         return remGroup;
     }
 
-    queueRefund(frmrefund: FormGroup, cfa: CfRemarkModel) {
+
+    queueCancel(frmCancel: FormGroup, cfa: CfRemarkModel) {
         const queueGroup = Array<QueuePlaceModel>();
 
-        if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-            this.getQueueMinder(queueGroup, 'rbpRbm');
-            if (frmrefund.controls.isBsp.value === 'YES') {
-                this.getQueueMinder(queueGroup, 'bspAllCfa');
+        if (frmCancel.controls.followUpOption.value === 'BSP Queue') {
+            this.getQueueMinder(queueGroup, 'bspAllCfa');
+            if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
+                this.getQueueMinder(queueGroup, 'rbpRbm');
             }
-        } else {
-            if (frmrefund.controls.isBsp.value === 'YES') {
-                this.getQueueMinder(queueGroup, 'bspAllCfa');
+        }
+
+        if (frmCancel.controls.followUpOption.value === 'Non BSP Refund') {
+            if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
+                this.getQueueMinder(queueGroup, 'rbpRbm');
             } else {
                 this.getQueueMinder(queueGroup, 'nonBspAllCfa');
             }
         }
+
         return queueGroup;
     }
+
+
+    // queueRefund(frmrefund: FormGroup, cfa: CfRemarkModel) {
+    //     const queueGroup = Array<QueuePlaceModel>();
+    //     if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
+    //         this.getQueueMinder(queueGroup, 'rbpRbm');
+    //         if (frmrefund.controls.isBsp.value === 'YES') {
+    //             this.getQueueMinder(queueGroup, 'bspAllCfa');
+    //         }
+    //     } else {
+    //         if (frmrefund.controls.isBsp.value === 'YES') {
+    //             this.getQueueMinder(queueGroup, 'bspAllCfa');
+    //         } else {
+    //             this.getQueueMinder(queueGroup, 'nonBspAllCfa');
+    //         }
+    //     }
+
+    //     return queueGroup;
+    // }
 
     private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
         const queue = new QueuePlaceModel();
 
         const queuePlaceDescription = [
             { control: 'rbpRbm', queueNo: '41', pcc: 'YTOWL2104', text: 'RBP RBM', category: '98' },
-            { control: 'bspAllCfa', queueNo: '41', pcc: 'YTOWL2107', text: 'BSP ALL CFA', category: '94' },
+            { control: 'bspAllCfa', queueNo: '41', pcc: 'YTOWL210O', text: 'BSP ALL CFA', category: '94' },
             { control: 'nonBspAllCfa', queueNo: '41', pcc: 'YTOWL2108', text: 'NON BSP', category: '98' }
         ];
         const look = queuePlaceDescription.find((x) => x.control === controlname);

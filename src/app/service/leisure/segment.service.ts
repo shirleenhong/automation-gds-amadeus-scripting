@@ -696,6 +696,7 @@ export class SegmentService {
         if (remText !== '') {
             rmGroup.cryptics.push('RF' + cancel.value.requestor);
             rmGroup.cryptics.push('ER');
+            rmGroup.cryptics.push('ER');
         }
 
         const nuRemarks = this.pnrService.hasNUCRemarks();
@@ -803,8 +804,6 @@ export class SegmentService {
                 default:
                     break;
             }
-
-            rmGroup.cryptics.push(remText);
         }
 
 
@@ -819,11 +818,6 @@ export class SegmentService {
                 rmGroup.deleteRemarkByIds.push(r.lineNo);
             });
         }
-
-
-
-
-
 
         return rmGroup;
     }
@@ -938,29 +932,27 @@ export class SegmentService {
             { include: refund.controls.comments.value, description: 'COMMENTS ', include2: 'ok' }
         ];
 
-        if (refund.controls.isBsp.value === 'NO') {
-            rmxRemarks.forEach((c) => {
-                if (c.include && c.include2 === 'ok') {
-                    remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'X'));
-                } else if ((c.include && c.include2 !== 'ok') || (c.include2 && c.include2 !== 'ok')) {
-                    let remarkText = '';
-                    if (c.include) {
-                        remarkText = c.description + c.include + ' ';
-                    }
-                    if (c.include2) {
-                        remarkText = remarkText + c.description2 + c.include2;
-                    }
-                    remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'X'));
+        rmxRemarks.forEach((c) => {
+            if (c.include && c.include2 === 'ok') {
+                remGroup.remarks.push(this.remarkHelper.createRemark(c.description + c.include, 'RM', 'X'));
+            } else if ((c.include && c.include2 !== 'ok') || (c.include2 && c.include2 !== 'ok')) {
+                let remarkText = '';
+                if (c.include) {
+                    remarkText = c.description + c.include + ' ';
                 }
-            });
-        }
+                if (c.include2) {
+                    remarkText = remarkText + c.description2 + c.include2;
+                }
+                remGroup.remarks.push(this.remarkHelper.createRemark(remarkText, 'RM', 'X'));
+            }
+        });
+
         return remGroup;
     }
 
 
     queueCancel(frmCancel: FormGroup, cfa: CfRemarkModel) {
         const queueGroup = Array<QueuePlaceModel>();
-
         if (frmCancel.controls.followUpOption.value === 'BSP Queue') {
             this.getQueueMinder(queueGroup, 'bspAllCfa');
             if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {

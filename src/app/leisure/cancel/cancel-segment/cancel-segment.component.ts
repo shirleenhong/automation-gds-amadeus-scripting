@@ -192,6 +192,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   checkSegmentAirline() {
+    debugger;
     this.isAC = false;
     this.isUA = false;
     // this.cancelForm.controls['cancelNonRefAC'].setValue(false);
@@ -204,8 +205,7 @@ export class CancelSegmentComponent implements OnInit {
         'acTicketNo',
         'acpassengerNo',
         'acFlightNo',
-        'relationship',
-        'airlineNo'
+        'relationship'
       ],
       true
     );
@@ -232,8 +232,6 @@ export class CancelSegmentComponent implements OnInit {
             this.cancelForm.controls.acTicketNo.setValue('');
             this.cancelForm.controls.acpassengerNo.setValue('');
             this.cancelForm.controls.acFlightNo.setValue('');
-            // this.cancelForm.controls.accityPair.setValue('');
-            // this.cancelForm.controls.acdepDate.setValue('');
             this.cancelForm.controls.relationship.setValue('');
             this.cancelForm.controls.airlineNo.setValue('');
           } else {
@@ -310,18 +308,18 @@ export class CancelSegmentComponent implements OnInit {
       case '2':
       case '3':
         this.enableFormControls(['acTicketNo', 'acpassengerNo'], false);
-        this.enableFormControls(['acFlightNo', 'relationship', 'airlineNo', 'acCancelMonth', 'acCancelYear'], true);
+        this.enableFormControls(['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'], true);
         break;
       case '4':
         this.enableFormControls(
-          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'airlineNo', 'acCancelMonth', 'acCancelYear'],
+          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'],
           true
         );
         break;
       case '5':
         this.enableFormControls(['relationship'], false);
         this.enableFormControls(
-          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'airlineNo', 'acCancelMonth', 'acCancelYear'],
+          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'acCancelMonth', 'acCancelYear'],
           true
         );
         break;
@@ -330,20 +328,20 @@ export class CancelSegmentComponent implements OnInit {
       case '10':
         this.enableFormControls(['acFlightNo'], false);
         this.enableFormControls(
-          ['acTicketNo', 'acpassengerNo', 'relationship', 'airlineNo', 'acCancelMonth', 'acCancelYear'],
+          ['acTicketNo', 'acpassengerNo', 'relationship', 'acCancelMonth', 'acCancelYear'],
           true
         );
         break;
       case '11':
         this.enableFormControls(['acCancelMonth', 'acCancelYear'], false);
         this.enableFormControls(
-          ['acTicketNo', 'acpassengerNo', 'relationship', 'airlineNo', 'acFlightNo'],
+          ['acTicketNo', 'acpassengerNo', 'relationship', 'acFlightNo'],
           true
         );
         break;
       default:
         this.enableFormControls(
-          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'airlineNo', 'acCancelMonth', 'acCancelYear'],
+          ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'],
           true
         );
         break;
@@ -352,6 +350,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   defaultControls(acControl) {
+    debugger;
     let acCount = 0;
     let controlsArr = [];
     const pass = this.getPassengerNo();
@@ -364,15 +363,6 @@ export class CancelSegmentComponent implements OnInit {
       if (look) {
         if (look.airlineCode === 'AC') {
           acCount = acCount + 1;
-          // const yr = new Date().getFullYear();
-          // const year = Math.floor(yr / 100);
-          // const acdate =
-          //   year.toString() +
-          //   look.departureDate.substr(4, 2) +
-          //   '-' +
-          //   look.departureDate.substr(2, 2) +
-          //   '-' +
-          //   look.departureDate.substr(0, 2);
           controlsArr = [
             { control: 'acFlightNo', controlvalue: look.flightNumber },
             { control: 'acpassengerNo', controlvalue: pass }
@@ -390,6 +380,8 @@ export class CancelSegmentComponent implements OnInit {
           break;
         case '5':
         case '6':
+        case '9':
+        case '10':
           break;
         default:
           controlsArr = [];
@@ -563,5 +555,19 @@ export class CancelSegmentComponent implements OnInit {
       );
     }
     this.headerRefund = 'Non BSP Refund Commission Recall';
+  }
+
+  changeCancelCheck(option) {
+    if (option === 'NEVER') {
+      this.enableFormControls(
+        ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear', 'reasonACCancel'],
+        true
+      );
+    } else if (!this.isAC) {
+      this.enableFormControls(
+        ['reasonACCancel'],
+        false
+      );
+    }
   }
 }

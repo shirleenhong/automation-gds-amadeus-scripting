@@ -71,20 +71,22 @@
       </div>
     </div>
 
-    <div class="row form-group">
-      <div class="col-4">Cancel Process: </div>
-      <div class="col-8">
-        <select id="cancelProcess" class="form-control" formControlName="cancelProcess" name="cancelProcess">
-          <option *ngFor="let item of cancelProcessList" [value]="item.itemValue">
-            {{item.itemText}}
-          </option>
-        </select>
-      </div>
-    </div>
-
     <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund'">
-      <div *ngIf="f.cancelProcess.value === 'PRIOR' ">
-        <div *ngIf="!isUA " class="row form-group">
+      <div *ngIf="!isAC" class="row form-group">
+        <div class="col-4">AC Cancel Check: </div>
+        <div class="col-8">
+          <select id="cancelProcess" class="form-control" formControlName="cancelProcess" name="cancelProcess"
+            (change)="changeCancelCheck($event.target.value)">
+            <option *ngFor="let item of cancelProcessList" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="f.cancelProcess.value === 'PRIOR' || isAC">
+        <!-- <div> -->
+        <div class="row form-group">
           <div class="col-4">Reason For Cancel: </div>
           <div class="col-8">
             <select id="reasonACCancel" class="form-control" formControlName="reasonACCancel" name="reasonACCancel"
@@ -99,11 +101,12 @@
         <div *ngIf="f.reasonACCancel.value !== ''">
           <div *ngIf="f.reasonACCancel.value === '1' || f.reasonACCancel.value === '2'|| f.reasonACCancel.value === '3'"
             class="row form-group">
+            <!-- <div class="row form-group"> -->
             <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">AC Ticket Number:</div>
               <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo"
-                (change)="acTicketChange($event.target.value)" />
+                (change)="acTicketChange($event.target.value)" NumberOnlyMask />
             </div>
 
             <div class="col-4">
@@ -116,6 +119,7 @@
           <div
             *ngIf="f.reasonACCancel.value === '6' || f.reasonACCancel.value === '9'|| f.reasonACCancel.value === '10'"
             class="row form-group">
+            <!-- <div class="row form-group"> -->
             <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">AC Flight Number:</div>
@@ -124,6 +128,7 @@
           </div>
 
           <div *ngIf="f.reasonACCancel.value === '5'" class="row form-group">
+            <!-- <div class="row form-group"> -->
             <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">Relationship: </div>
@@ -136,34 +141,22 @@
           </div>
 
           <div *ngIf="f.reasonACCancel.value === '11'" class="row form-group">
+            <!-- <div class="row form-group"> -->
             <div class="col-sm-4"></div>
             <div class="col-4">
-              <div class="">Cancel Month:</div>
+              <div class="">Duty Begin Date Month:</div>
               <input type="text" class="form-control" id="acCancelMonth" formControlName="acCancelMonth"
                 name="acCancelMonth" maxlength="2" NumberOnlyMask />
             </div>
 
             <div class="col-4">
-              <div class="">Cancel Year:</div>
+              <div class="">Duty Begin Date Year:</div>
               <input type="text" class="form-control" id="acCancelYear" formControlName="acCancelYear"
                 name="acCancelYear" maxlength="2" NumberOnlyMask />
             </div>
           </div>
-
         </div>
       </div>
-
-      <div *ngIf="isAC || isOthers && !isUA" class="row form-group">
-        <div class="col-4"></div>
-        <div class="col-8">
-          <div class="">Type the affected airline flight number(s)</div>
-          <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
-            maxlength="35" />
-          <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
-        </div>
-      </div>
-
-
 
       <div *ngIf="isUA">
         <div class="row form-group">
@@ -190,6 +183,17 @@
             <input type="text" class="form-control" id="uaPassengerNo" formControlName="uaPassengerNo"
               name="uaPassengerNo" />
           </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="isAC || isOthers && !isUA" class="row form-group"> -->
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <div class="">Type the affected airline flight number(s)</div>
+          <input type="text" class="form-control" id="airlineNo" name="airlineNo" formControlName="airlineNo"
+            maxlength="35" />
+          <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
         </div>
       </div>
 

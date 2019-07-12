@@ -60,7 +60,7 @@ export function validateCreditCard(vendorControlName): ValidatorFn {
         pat = '^4[0-9]{15}$';
         break;
       }
-      case 'MC': {
+      case 'CA': {
         pat = '^5[0-9]{15}$';
         break;
       }

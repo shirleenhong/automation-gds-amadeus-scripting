@@ -6,18 +6,17 @@ import java.time.Instant
 pipeline {
   agent any
   environment {
-    NODE_VERSION = "v8.12.0"
+    NODE_VERSION = "v11.11.0"
     CLUSTER_NAME = "bpg-gds-scripting-amadeus"
     REGION_NAME = "us-west-2"
     APPLICATION_NAME = "bpg-gds-scripting-amadeus"
     DOCKER_COMPOSE_FILE = "bpg-gds-scripting-amadeus.yml"
 
     ECR_URL = "379831576876.dkr.ecr.us-west-2.amazonaws.com/bpg-gds-scripting-amadeus"
-    // TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/dev-gds-scripting-amadeus/fdd76e1dc1f3f5d4'
     DEV_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/dev-gds-scripting-amadeus-tg/4960397b08f766e7'
-    TST_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/tst-gds-scripting-amadeus-tg/a7f198ff0a3e11fc'
-    STG_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/stg-gds-scripting-amadeus-tg/2acfe96b7c098224'
-    // PROD_TARGET_GROUP_ARN ='arn:aws:elasticloadbalancing:us-west-2:704608996963:targetgroup/bpg-gds-scripting-amadeus-tg/59e5073548e3d7f6'    
+    TST_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/tst-gds-scripting-amadeus-tg/96e7c9cc7c232266'
+    STG_TARGET_GROUP_ARN = 'arn:aws:elasticloadbalancing:us-west-2:379831576876:targetgroup/stg-gds-scripting-amadeus-tg/94c3ad6cc12221f0'
+    PROD_TARGET_GROUP_ARN ='arn:aws:elasticloadbalancing:us-west-2:704608996963:targetgroup/bpg-gds-scripting-amadeus-tg/c649a7e86383e9fb'                            
   }
   // General Options
   options {
@@ -26,65 +25,18 @@ pipeline {
 
   parameters {
     string(name: 'TAG_VERSION', defaultValue: '1.0.0-SNAPSHOT', description: 'Docker tag version')
-
-    // booleanParam(name: 'RUN_STATIC_SCAN', defaultValue: false, description: 'Execute Static security Scan?')
     // booleanParam(name: 'RUN_PERF_TEST', defaultValue: false, description: 'Execute Perf Test?')
     booleanParam(name: 'DEPLOY_TO_DEV', defaultValue: false, description: 'Deploy to Dev Environment?')
-    // booleanParam(name: 'RUN_REGRESSION_DEV', defaultValue: false, description: 'Run Regression against Dev Environment?')
+    booleanParam(name: 'RUN_SANITY_DEV', defaultValue: false, description: 'Run Sanity on Dev Environment?')
     booleanParam(name: 'DEPLOY_TO_TEST', defaultValue: false, description: 'Deploy to Test Environment?')
-    // booleanParam(name: 'DEPLOY_TO_STAGING', defaultValue: false, description: 'Deploy to Staging Environment?')
-    // booleanParam(name: 'DEPLOY_TO_PROD', defaultValue: false, description: 'Deploy to Production Environment?')
-    text(name: 'EMAIL_RECIPIENT_LIST', defaultValue: 'JCuenca@carlsonwagonlit.com;', description: 'Regression Test result sent to email recipient list (separated by semi-colon)')
+    booleanParam(name: 'RUN_SANITY_TEST', defaultValue: false, description: 'Run Sanity on Test Environment?')
+    booleanParam(name: 'DEPLOY_TO_STAGING', defaultValue: false, description: 'Deploy to Staging Environment?')
+    booleanParam(name: 'RUN_SANITY_STAGING', defaultValue: false, description: 'Run Sanity on Staging Environment?')
+    booleanParam(name: 'DEPLOY_TO_PROD', defaultValue: false, description: 'Deploy to Production Environment?')
     choice(name: 'DESIRED_NO_OF_TASKS', choices: '1\n2\n3', description: 'Desired number of running tasks to scale with')
   }
 
   stages {
-    stage('Build/Prepare') {
-      when {
-        expression { 
-          return params.DEPLOY_TO_DEV
-        }
-      }
-      steps{
-        dir("."){
-          echo 'Preparing docker container'
-          sh 'docker build -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
-          sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
-
-          echo 'Pushing docker container to ECR'
-          sh 'eval $(aws ecr get-login --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
-          sh 'docker push ${ECR_URL}:${TAG_VERSION}'
-        }
-      }
-    }
-    stage('SecurityScan'){
-      when {
-        expression {
-          return params.RUN_STATIC_SCAN
-        }
-      }
-      steps{
-        dir('.') {
-          script {
-            echo "APPLICATION_NAME : ${APPLICATION_NAME}"
-            echo "WORKSPACE : ${WORKSPACE}"
-            def date = new Date().format('yyyy-MM-dd')
-            def buildId = params.APPLICATION_NAME
-            def report = buildId + "-fortify-report"
-            echo 'Security Scanning using HP Fortify (Code Review)...'
-            sh "${FORTIFY_BIN}/sourceanalyzer -b ${APPLICATION_NAME} -clean -verbose"
-            sh "${FORTIFY_BIN}/sourceanalyzer -b ${APPLICATION_NAME} ${WORKSPACE}"
-            sh "${FORTIFY_BIN}/sourceanalyzer -b ${APPLICATION_NAME} -scan -f '${WORKSPACE}/${APPLICATION_NAME}-${BUILD_NUMBER}.fpr'"
-            sh "${FORTIFY_BIN}/ReportGenerator -format \"pdf\" -template ${FORTIFY_TEMPLATE_FILE} -f ${APPLICATION_NAME}-${BUILD_NUMBER}.pdf -source ${APPLICATION_NAME}-${BUILD_NUMBER}.fpr -verbose"
-            //sh "'BIRTReportGenerator -template 'Developer Workbook' -source ''${WORKSPACE}/Assessment.fpr' -format 'PDF' -output '${WORKSPACE}/Security_Findings.pdf'"
-            sh "ls -lrt '${WORKSPACE}' "
-            //sh "fortifyclient -url ${fortifyUrl} -authtoken ${fortifyAuthToken} uploadFPR -file ${WORKSPACE}/Assessment.fpr -application ${JOB_NAME} -applicationVersion '1'"
-            //archiveArtifacts artifacts: '**/Security_Findings.pdf'
-            emailext attachmentsPattern: "**/${APPLICATION_NAME}-${BUILD_NUMBER}.pdf", body: "Attached is the HP Fortity report for ${APPLICATION_NAME}-${BUILD_NUMBER}", subject: "[Jenkins] HP Fortify Report ${APPLICATION_NAME}-${BUILD_NUMBER}", to: 'JCuenca@carlsonwagonlit.com'
-          }
-        }
-      }
-    }      
     stage('DEV:Deploy') {
       when {
           expression {
@@ -96,6 +48,7 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.DEV_TARGET_GROUP_ARN : " + env.DEV_TARGET_GROUP_ARN
             deployDockerContainer(env.DEV_TARGET_GROUP_ARN)
         }
@@ -104,7 +57,7 @@ pipeline {
     stage('TEST:Deploy') {
       when {
         expression {
-            return params.DEPLOY_TO_TEST
+          return params.DEPLOY_TO_TEST
         }
       }
       environment {
@@ -112,16 +65,12 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.TST_TARGET_GROUP_ARN : " + env.TST_TARGET_GROUP_ARN
             deployDockerContainer(env.TST_TARGET_GROUP_ARN)
         }
       }
-    }    
-    stage('TEST:Sanity') {
-      steps {
-        echo 'Running Sanity Test'
-      }
-    }    
+    } 
     stage('TEST:Run Perf Test') {
       when {
         expression {
@@ -131,7 +80,7 @@ pipeline {
       steps {
         echo 'Running Performance Test'
       }
-    }    
+    }
     stage('STAGING:Deploy') {
       when {
         expression {
@@ -143,6 +92,7 @@ pipeline {
       }
       steps {
         script {
+            buildAndPrepare()
             echo "env.STG_TARGET_GROUP_ARN : " + env.STG_TARGET_GROUP_ARN
             deployDockerContainer(env.STG_TARGET_GROUP_ARN)
         }
@@ -157,14 +107,14 @@ pipeline {
       environment {
           ACCOUNT = 'prod'
           AWS_PROD_ROLE = credentials('aws-prod-role')
-          ECR_URL = '704608996963.dkr.ecr.us-west-2.amazonaws.com/bpg-csp/bpg-gds-scripting-amadeus'
+          ECR_URL = '704608996963.dkr.ecr.us-west-2.amazonaws.com/bpg-gds-scripting-amadeus'
       }
       steps {
           script {
               echo '=====================Deploying to Prod =============='
               echo "AWS_PROD_ROLE: ${AWS_PROD_ROLE}"
 
-              def prodEcrUrl = '704608996963.dkr.ecr.us-west-2.amazonaws.com/bpg-csp/bpg-gds-scripting-amadeus'
+              def prodEcrUrl = '704608996963.dkr.ecr.us-west-2.amazonaws.com/bpg-gds-scripting-amadeus'
               deployDockerContainerToECR(prodEcrUrl, TAG_VERSION, REGION_NAME)
           }
       }
@@ -186,16 +136,6 @@ pipeline {
         }
       }
     }
-    stage('STAGING:Sanity') {
-      steps {
-        echo 'Running Sanity Test'
-      }
-    }
-    stage('PROD:Sanity') {
-      steps {
-        echo 'Running Sanity Test'
-      }
-    }
   }
 
 // Post Pipeline Job Actions
@@ -205,12 +145,40 @@ post {
           cleanWs()
       }
       success {
-          echo "success!"
+          echo "Build success!"
+          script {
+            runRobotTests()
+          }
       }
       failure {
-          echo "failure!"
+          echo "Build failure!"
       }
   }
+}
+
+def runRobotTests() {
+    if (params.RUN_SANITY_DEV) {
+      echo 'Running Sanity Test in Dev Environment'
+      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "Dev")]
+    }            
+    if (params.RUN_SANITY_TEST) {
+      echo 'Running Sanity Test in Test Environment'
+      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "Test")]
+    }
+    if (params.RUN_SANITY_STAGING) {
+      echo 'Running Sanity Test in Staging Environment'
+      build job: 'Amadeus GDS Scripting - Sanity', parameters: [string(name: 'ENV', value: "UAT"), string(name: 'BRANCH', value: "staging")]
+    }
+}
+
+def buildAndPrepare() {
+    echo 'Preparing docker container'
+    sh 'docker build --build-arg ENV=${ENVIRONMENT} -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
+    sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
+
+    echo 'Pushing docker container to ECR'
+    sh 'eval $(aws ecr get-login --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
+    sh 'docker push ${ECR_URL}:${TAG_VERSION}'
 }
 
 def deployDockerContainer(targetGroupARN) {
@@ -222,7 +190,7 @@ def deployDockerContainer(targetGroupARN) {
     env.CLUSTER_NAME = env.ENVIRONMENT + "-" + env.APPLICATION_NAME
     echo "After Setting Cluster Name :" + env.CLUSTER_NAME
 
-    if( env.ENVIRONMENT == 'prod') {
+    if(env.ENVIRONMENT == 'prod') {
         script {
             echo "Configuring Production user"
             def PROD_ROLE = sh(returnStdout: true, script: "aws sts assume-role --role-arn $AWS_PROD_ROLE --role-session-name $ENVIRONMENT-webapp-template-pipeline").trim()
@@ -268,9 +236,15 @@ def deployDockerContainer(targetGroupARN) {
     
   echo ' >>>>>>>>>>>>>>>>>> ECS Compose <<<<<<<<<<<<<<<< '
   echo "Cluster Name: ${CLUSTER_NAME}"
-  
-  sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster dev-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10'
-  sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster dev-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0'
+
+  if(env.ENVIRONMENT == 'prod') {
+    sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10'
+    sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0'
+  }
+  else {
+    sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${ENVIRONMENT}-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service up --container-name ${APPLICATION_NAME} --container-port 8080 --target-group-arn ${targetGroupARN} --health-check-grace-period 120 --deployment-max-percent 100 --deployment-min-healthy-percent 0 --force-deployment --create-log-groups --timeout 10'
+    sh '/usr/local/bin/ecs-cli compose --file ${TEMP_FILE} --region ${REGION_NAME} --cluster ${ENVIRONMENT}-bpg-gds-scripting-amadeus --project-name ${APPLICATION_NAME} service scale ${DESIRED_NO_OF_TASKS} --deployment-max-percent 100 --deployment-min-healthy-percent 0'
+  }
 
   echo ' ============== ECS Deployment End ============== '
 }
@@ -296,15 +270,14 @@ def deployDockerContainerToECR(String ecrUrl, String tagVersion, String region) 
     env.REGISTERY_ID = registryId
 
     echo ' ============== docker build ============== '
-    sh 'docker build -t bpg-csp/bpg-gds-scripting-amadeus:${TAG_VERSION} .'
+    sh 'docker build --build-arg ENV=prod -t bpg-gds-scripting-amadeus:${TAG_VERSION} .'
     echo ' ============== docker tag ============== '
-    sh 'docker tag bpg-csp/bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
+    sh 'docker tag bpg-gds-scripting-amadeus:${TAG_VERSION} ${ECR_URL}:${TAG_VERSION}'
     echo 'Pushing docker container to ECR triggered by ' + getBuildUserName()
     echo ' ==============  Username is ' + getBuildUserName() + ' ============== '
     echo ' ============== Docker Push ============== '   
     sh 'eval $(aws ecr get-login --registry-ids ${REGISTERY_ID} --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
     sh 'docker push ${ECR_URL}:${TAG_VERSION}'
-
     echo ' ============== ECR Push Complete ============== '
 }
 

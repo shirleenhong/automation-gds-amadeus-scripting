@@ -1,0 +1,53 @@
+::ng-deep .customClass {
+    &.card {
+        background-color: #333f48;
+        color: #fff;
+        border-radius: 0;
+        cursor: pointer;
+
+
+        >.card-header:first-child {
+            border-radius: 0;
+            border-bottom: 1px solid gray;
+        }
+
+
+    }
+
+    &.card .panel-title {
+        cursor: pointer;
+    }
+
+    &.card .panel-title:hover {
+        color: #f1ef5c;
+
+
+    }
+
+    &.panel {
+        background-color: #333f48;
+        color: #fff;
+
+        .panel-body {
+            background-color: #f1f3f5;
+            color: #000;
+            min-height: 200px;
+        }
+    }
+
+    &.card-header:first-child {
+        >.accordion-toggle .accordion-toggle {
+            color: #fc6640;
+        }
+    }
+
+}
+
+::ng-deep .panel-open {
+
+    .panel-title {
+        color: #fc6640;
+        font-weight: bold;
+    }
+
+}

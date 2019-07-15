@@ -1,0 +1,216 @@
+<div class="modal-header">
+  <div class="modal-title">{{title}}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="rbcPointsForm">
+    <div class="form-group  row">
+      <div class="col-sm-4">RBC Redemption Number: </div>
+      <div class="col-sm-8">
+
+        <input type="text" maxlength="4" class="form-control" id="rbcNo" [(ngModel)]="rbcPoints.rbcNo" name="rbcNo"
+          [ngModelOptions]="{standalone: true}" disabled />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Product Type:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" formControlName="productType" id="productType" list="dynamicProductType"
+          [(ngModel)]="rbcPoints.productType" (change)="onChangeProductType($event.target.value)" />
+        <datalist id="dynamicProductType">
+          <option *ngFor="let item of productTypeList" [value]="item.itemValue">{{item.itemText}}</option>
+        </datalist>
+      </div>
+    </div>
+
+    <div *ngIf="rbcPoints.productType === 'OTHER'" class="form-group  row">
+      <div class="col-sm-4">Other Product Type Description:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="othValue" name="othValue" formControlName="othValue"
+          [(ngModel)]="rbcPoints.othValue" maxlength="25" />
+      </div>
+    </div>
+
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Cardholder First Name:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="firstname" name="firstname" formControlName="firstname"
+          [(ngModel)]="rbcPoints.firstname" maxlength="22" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Cardholder Last Name:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="lastname" name="lastname" formControlName="lastname"
+          [(ngModel)]="rbcPoints.lastname" maxlength="22" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">First 6 Numbers of Cardholder Visa:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="firstvisanumber" name="firstvisanumber"
+          formControlName="firstvisanumber" [(ngModel)]="rbcPoints.firstvisanumber" maxlength="6" NumberOnlyMask />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Last 4 Numbers of Cardholder Visa:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="lastvisanumber" name="lastvisanumber"
+          formControlName="lastvisanumber" [(ngModel)]="rbcPoints.lastvisanumber" maxlength="4" NumberOnlyMask />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Points Redeemed:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="pointsRedeemed" name="pointsRedeemed"
+          formControlName="pointsRedeemed" [(ngModel)]="rbcPoints.pointsRedeemed" maxlength="7" NumberOnlyMask />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Value of Points:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="valuepoints" name="valuepoints" formControlName="valuepoints"
+          maxlength="9" [(ngModel)]="rbcPoints.valuepoints" AmountMask />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Supplier Name:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="suppliername" name="suppliername" formControlName="suppliername"
+          [(ngModel)]="rbcPoints.suppliername" maxlength="30" />
+      </div>
+    </div>
+
+    <div *ngIf="rbcPoints.productType === 'CAR' || rbcPoints.productType === 'HOTEL'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Number Of Bookings:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="numberbookings" name="numberbookings"
+            formControlName="numberbookings" [(ngModel)]="rbcPoints.numberbookings" maxlength="2" NumberOnlyMask />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Total Base Cost Per Booking:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="totalbasecost" name="totalbasecost" maxlength="8"
+            formControlName="totalbasecost" [(ngModel)]="rbcPoints.totalbasecost" AmountMask />
+        </div>
+      </div>
+    </div>
+    <div *ngIf="rbcPoints.productType !== 'CAR' && rbcPoints.productType !== 'HOTEL'">
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div></div>
+          <div class="">
+            Number Of <br>
+            Adults:
+          </div>
+          <input type="text" class="form-control" id="noofadult" name="noofadult" formControlName="noofadult"
+            [(ngModel)]="rbcPoints.noofadult" maxlength="2" NumberOnlyMask />
+        </div>
+        <div class="col">
+          <div class="">Total Base Cost Per Adult:</div>
+          <input type="text" class="form-control" id="totalbasecostadult" name="totalbasecostadult" maxlength="8"
+            formControlName="totalbasecostadult" [(ngModel)]="rbcPoints.totalbasecostadult" AmountMask />
+        </div>
+      </div>
+    </div>
+    <div class="form-group  row">
+      <div class="col-sm-4"></div>
+      <div class="col">
+        <div class="">GST :</div>
+        <input type="text" class="form-control" id="gst" name="gst" formControlName="gst" [(ngModel)]="rbcPoints.gst"
+          AmountMask maxlength="8" />
+      </div>
+      <div class="col">
+        <div class="">HST :</div>
+        <input type="text" class="form-control" id="hst" name="hst" formControlName="hst" [(ngModel)]="rbcPoints.hst"
+          AmountMask maxlength="8" />
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4"></div>
+      <div class="col">
+        <div class="">QST :</div>
+        <input type="text" class="form-control" id="qst" name="qst" formControlName="qst" [(ngModel)]="rbcPoints.qst"
+          AmountMask maxlength="8" />
+      </div>
+      <div class="col">
+        <div class="">All Other Taxes:</div>
+        <input type="text" class="form-control" id="otherTaxes" name="otherTaxes" formControlName="otherTaxes"
+          [(ngModel)]="rbcPoints.otherTaxes" AmountMask maxlength="8" />
+      </div>
+    </div>
+    <div *ngIf="rbcPoints.productType !== 'CAR' && rbcPoints.productType !== 'HOTEL'">
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">Number Of <br> Children:</div>
+          <input type="text" class="form-control" id="noofchildren" name="noofchildren" formControlName="noofchildren"
+            [(ngModel)]="rbcPoints.noofchildren" maxlength="2" NumberOnlyMask />
+        </div>
+        <div class="col">
+          <div class="">Total Base Cost Per Child:</div>
+          <input type="text" class="form-control" id="totalbasecostchild" name="totalbasecostchild"
+            formControlName="totalbasecostchild" [(ngModel)]="rbcPoints.totalbasecostchild" AmountMask maxlength="8" />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">GST per Child:</div>
+          <input type="text" class="form-control" id="cgst" name="cgst" formControlName="cgst"
+            [(ngModel)]="rbcPoints.cgst" AmountMask maxlength="8" />
+        </div>
+        <div class="col">
+          <div class="">HST per Child:</div>
+          <input type="text" class="form-control" id="chst" name="chst" formControlName="chst"
+            [(ngModel)]="rbcPoints.chst" AmountMask maxlength="8" />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">QST per Child:</div>
+          <input type="text" class="form-control" id="cqst" name="cqst" formControlName="cqst"
+            [(ngModel)]="rbcPoints.cqst" AmountMask maxlength="8" />
+        </div>
+        <div class="col">
+          <div class="">All Other Taxes:</div>
+          <input type="text" class="form-control" id="cotherTaxes" name="cotherTaxes" formControlName="cotherTaxes"
+            [(ngModel)]="rbcPoints.cotherTaxes" AmountMask maxlength="8" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">PCT:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="pct" name="pct" formControlName="pct" [(ngModel)]="rbcPoints.pct" />
+      </div>
+    </div>
+
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="saveRbcPoints()"
+    [disabled]="rbcPointsForm.invalid">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+
+</div>

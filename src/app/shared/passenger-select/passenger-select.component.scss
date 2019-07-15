@@ -1,0 +1,27 @@
+.passengerbox button {
+    float: right;
+    margin: 0px;
+}
+
+.passengerbox {
+    width: 140px;
+    border: 1px gray;
+}
+
+button.passengerButton {
+    padding: 0px;
+    padding-right: 3px;
+    width: 100%;
+
+}
+
+
+.passengerButton input {
+    width: unset;
+    display: unset;
+    width: 120px;
+}
+
+.passengerButton .form-control[readonly] {
+    background-color: white;
+}

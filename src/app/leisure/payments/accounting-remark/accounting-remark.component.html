@@ -1,0 +1,131 @@
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Passenger</th>
+      <th scope="col">Supplier Code</th>
+      <th scope="col">FOP</th>
+      <th scope="col">Base Amount</th>
+      <th scope="col">GST</th>
+      <th scope="col">HST</th>
+      <th scope="col">QST</th>
+      <th scope="col">Comm. w/o Tax</th>
+      <th scope="col">Other Tax</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of accountingRemarks">
+      <td>{{ r.tkMacLine }}</td>
+      <td>{{ r.passengerNo }}</td>
+      <td>{{ r.supplierCodeName }}</td>
+      <td>{{ r.fop }}</td>
+      <td>{{ r.baseAmount }}</td>
+      <td>{{ r.gst }}</td>
+      <td>{{ r.hst }}</td>
+      <td>{{ r.qst }}</td>
+      <td>{{ r.commisionWithoutTax }}</td>
+      <td>{{ r.otherTax }}</td>
+      <td>
+        <i class="fas fa-edit" (click)="updateItem(r)" *ngIf="r.supplierCodeName !== 'A22'"></i>
+        &nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt" (click)="deleteItem(r)"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col">
+    <button (click)="addAccountingRemarks()">Add Accounting Line</button>
+  </div>
+</div>
+
+<div class="col-8" *ngIf="isAd1SwgSupplier">
+  <form [formGroup]="accountingForm">
+    <div class="row form-group" *ngIf="showU76">
+      <div class="col-4">
+        Is this Air Only?
+      </div>
+      <div class="col">
+        <select class="form-control" formControlName="airOnly" name="airOnly" id="airOnly">
+          <option value="YES">YES</option>
+          <option value="NO">NO</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showU71">
+      <div class="col-4">
+        Exclusive Property ?
+      </div>
+      <div class="col">
+        <select class="form-control" formControlName="exclusiveProperty" name="exclusiveProperty" id="exclusiveProperty">
+          <option>YES</option>
+          <option>NO</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showU75">
+      <div class="col-4">
+        Hotel/Property Name :
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" id="propertyName" name="propertyName" formControlName="propertyName" maxlength="35" />
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showU72">
+      <div class="col-4">
+        Flights :
+      </div>
+      <div class="col">
+        <select class="form-control" formControlName="flightType" name="flightType" id="flightType">
+          <option value="DIRECT FLIGHTS">DIRECT FLIGHTS</option>
+          <option value="BETTER FLIGHT TIME">BETTER FLIGHT TIME</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showU73">
+      <div class="col-4">
+        Price vs Other Supplier :
+      </div>
+      <div class="col">
+        <input
+          class="form-control"
+          type="text"
+          id="priceVsSupplier"
+          name="priceVsSupplier"
+          formControlName="priceVsSupplier"
+          maxlength="35"
+        />
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showU74">
+      <div class="col-4">
+        Group :
+      </div>
+      <div class="col">
+        <select class="form-control" formControlName="group" name="group" id="group">
+          <option></option>
+          <option>WEDDING GROUP</option>
+          <option>FAMILY GROUP</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showU77">
+      <div class="col-4">
+        Preferred Vendor :
+      </div>
+      <div class="col">
+        <select class="form-control" formControlName="preferredVendor" name="preferredVendor" id="preferredVendor">
+          <option>PREFERRED OPTION DECLINED</option>
+          <option>PREFERRED OPTION NOT AVAILABLE</option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>

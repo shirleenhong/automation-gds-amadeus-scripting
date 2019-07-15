@@ -1,0 +1,53 @@
+<form [formGroup]="queueForm">
+  <div class="queueContainer">
+
+    <div class="row form-group">
+      <div class="col-3"></div>
+      <div class="col-8">
+        Queue Place a PNR for follow up
+      </div>
+    </div>
+    <div *ngIf="cfLine.cfa ==='RBM' || cfLine.cfa ==='RBP'">
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <input type="checkbox" name="nonBsp" formControlName="nonBsp" id="nonBsp" />
+          Non BSP Redemption Required
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <input type="checkbox" name="ticketExchange" formControlName="ticketExchange" id="ticketExchange" />
+          Ticket Exchange with AdCol Redemption Required
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <input type="checkbox" name="bspTicket" formControlName="bspTicket" id="bspTicket" />
+          BSP Ticket Issue-Redemption Required
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-4"></div>
+      <div class="col-8">
+        <input type="checkbox" name="personalQueue" formControlName="personalQueue" id="personalQueue"
+          (change)="showQueueNumber($event.target.checked)" />
+        Personal Queue
+      </div>
+    </div>
+
+    <div *ngIf="f.personalQueue.value" class="row form-group">
+      <div class="col-4">Queue Number</div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="queueNo" name="queueNo" formControlName="queueNo" maxlength="35" />
+      </div>
+    </div>
+
+  </div>
+</form>

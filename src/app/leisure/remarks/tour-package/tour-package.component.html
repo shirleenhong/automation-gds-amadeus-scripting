@@ -1,0 +1,219 @@
+<form [formGroup]="group">
+  <div class="">
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="userIdFirstWay">Currency Type</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" placeholder="select a currency" formControlName="tourCurrencyType"
+          id="tourCurrencyType" list="dynamicCurrency" />
+        <datalist id="dynamicCurrency">
+          <option *ngFor="let item of bspCurrencyList" [value]="item.itemValue">{{item.itemText}}</option>
+        </datalist>
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="adultNum">Number of Adults</label>
+      </div>
+      <div class="col-4">
+        <input type="number" class="form-control" placeholder="any number from 1-9" id="adultNum" maxlength="1"
+          NumberOnlyMask formControlName="adultNum" />
+        <div *ngIf="group.controls['adultNum'].errors" class="error-msg">
+          <div [hidden]="!group.controls['adultNum'].errors.required">This field is required.</div>
+          <div [hidden]="!group.controls['adultNum'].errors?.max">Number of adults must not exceed 9.</div>
+          <div [hidden]="!group.controls['adultNum'].errors?.min">Number of adults must not be less than 1.</div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="baseCost">Base Cost per adult</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="baseCost" maxlength="8" formControlName="baseCost" AmountMask />
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="taxesPerAdult">Taxes per adult</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" maxlength="7" id="taxesPerAdult" formControlName="taxesPerAdult"
+          AmountMask />
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="insurancePerAdult">Insurance per adult</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" maxlength="7" id="insurancePerAdult" AmountMask
+          formControlName="insurancePerAdult" />
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="childrenNumber">Number of Children</label>
+      </div>
+      <div class="col-4">
+        <input type="number" placeholder="any number from 1-9" class="form-control" maxlength="1" id="childrenNumber"
+          NumberOnlyMask formControlName="childrenNumber" />
+        <div *ngIf="group.controls['childrenNumber'].errors" class="error-msg">
+          <div [hidden]="!group.controls['childrenNumber'].errors.required">This field is required.</div>
+          <div [hidden]="!group.controls['childrenNumber'].errors?.max">Number of children must not exceed 9.</div>
+          <div [hidden]="!group.controls['childrenNumber'].errors?.min">Number of children must not be less than 1.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="childBaseCost">Base Cost per child</label>
+      </div>
+      <div class="col-4">
+
+        <input type="text" class="form-control" maxlength="8" id="childBaseCost" formControlName="childBaseCost"
+          AmountMask />
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="taxesPerChild">Taxes/Service per child</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" maxlength="7" id="taxesPerChild" formControlName="taxesPerChild"
+          AmountMask />
+
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="insurancePerChild">Insurance per child</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" maxlength="7" id="insurancePerChild" AmountMask
+          formControlName="insurancePerChild" />
+        <div *ngIf="group.controls['insurancePerChild'].errors" class="error-msg">
+          <div [hidden]="!group.controls['insurancePerChild'].errors.required">This field is required.</div>
+          <div [hidden]="!group.controls['insurancePerChild'].errors?.maxlength">maxlength should not exceed 7.</div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="infantNumber">Number of Infants</label>
+      </div>
+      <div class="col-4">
+        <input type="number" placeholder="any number from 1-9" class="form-control" maxlength="1" id="infantNumber"
+          NumberOnlyMask formControlName="infantNumber" />
+        <div *ngIf="group.controls['infantNumber'].errors" class="error-msg">
+          <div [hidden]="!group.controls['infantNumber'].errors.required">This field is required.</div>
+          <div [hidden]="!group.controls['infantNumber'].errors?.max">Number of infant must not exceed 9.</div>
+          <div [hidden]="!group.controls['infantNumber'].errors?.min">Number of infant must not be less than 1.</div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="totalCostPerInfant">Total cost per infant</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" maxlength="7" id="totalCostPerInfant" AmountMask
+          formControlName="totalCostPerInfant" />
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="depositPaid"> Deposit Paid</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" maxlength="9" id="depositPaid" formControlName="depositPaid"
+          AmountMask />
+
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="totalCostHoliday">The total cost of Holiday</label>
+      </div>
+      <div class="col-4">
+        <input type="text" disabled class="form-control" id="totalCostHoliday" formControlName="totalCostHoliday"
+          AmountMask />
+      </div>
+    </div>
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="balanceToBePaid">Balance to be Paid</label>
+      </div>
+      <div class="col-4">
+        <input type="text" disabled class="form-control" id="balanceToBePaid" formControlName="balanceToBePaid"
+          AmountMask />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="balanceDueDate">Balance Due Date</label>
+      </div>
+      <div class="col-4">
+        <input type="date" id="balanceDueDate" name="balanceDueDate" class="form-control"
+          formControlName="balanceDueDate" />
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col-3">
+        <label for="commission">Commision Amount</label>
+      </div>
+      <div class="col-4">
+
+        <input type="text" class="form-control" maxlength="8" id="commission" formControlName="commission" AmountMask />
+      </div>
+    </div>
+
+
+  </div>
+</form>

@@ -1,0 +1,27 @@
+<div [formGroup]="codeShareGroup">
+  <br>
+  <div class="col ">
+    <span> Note: Please leave the boxes empty if no Codeshare is found in the PNR. <br /><br /></span>
+
+  </div>
+  <div formArrayName="segments" *ngFor="let item of this.codeShareGroup.get('segments')['controls']; let i = index;"
+    class="col">
+    <div [formGroupName]="i" class="codeShareRow form-group row">
+      <div> <span> Segment(s) </span> </div>
+      <div width="50px">
+        <app-segment-select formControlName="segment" #segmentApp></app-segment-select>
+      </div>
+      <div> <span> Check-in at </span> </div>
+      <input formControlName="airline" type="text" class="form-control" maxlength="25" />
+      <div *ngIf="i==(total-1)">
+        &nbsp;
+        <i class="fas fa-plus-circle" id="add" (click)="addCodeShare()"></i>
+      </div>
+      <div *ngIf="i>0">
+        &nbsp;
+        <i class="fas fa-minus-circle" id="remove" (click)="removeCodeShare(i)"> </i>
+      </div>
+    </div>
+  </div>
+
+</div>

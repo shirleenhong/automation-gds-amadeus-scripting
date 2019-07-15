@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <div class="modal-title">{{ title }}</div>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-2">
+      <div class="iconHolder"><i [ngClass]="iconClass"></i></div>
+    </div>
+    <div class="col message">{{ message }}</div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div *ngIf="messageType != 1">
+    <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+  </div>
+
+  <div *ngIf="messageType == 1">
+    <button type="button" class="btn btn-outline-dark" (click)="close('YES')">Yes</button>
+    <button type="button" class="btn btn-outline-dark" (click)="close('NO')">No</button>
+  </div>
+</div>

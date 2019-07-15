@@ -1,0 +1,39 @@
+<tabset>
+  <tab heading="Packages" id="tab1">
+    <form [formGroup]="remarkForm">
+      <div style="padding:5px;">
+        <div class="row">
+          <div class="col-3">Select Package :</div>
+          <div class="col-6">
+            <select id="packageList" class="form-control" name="packageList" formControlName="packageList" required>
+              <option *ngFor="let item of packageList" [value]="item.itemValue">
+                {{ item.itemText }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="f.packageList.value === 'ITC'">
+          <app-itc-package></app-itc-package>
+        </div>
+        <div *ngIf="f.packageList.value === 'TP'">
+          <app-tour-package></app-tour-package>
+        </div>
+      </div>
+    </form>
+  </tab>
+  <tab heading="Visa and Passport" id="tab3">
+    <app-visa-passport></app-visa-passport>
+  </tab>
+  <tab heading="Codeshare" id="tab2">
+    <app-codeshare></app-codeshare>
+  </tab>
+  <tab heading="Fare Rule">
+    <app-fare-rule-segment></app-fare-rule-segment>
+  </tab>
+  <tab heading="RBC Points Redemption" *ngIf="isRbmRbp">
+    <app-rbc-points-redemption></app-rbc-points-redemption>
+  </tab>
+  <tab heading="Associated Remarks">
+    <app-associated-remarks></app-associated-remarks>
+  </tab>
+</tabset>

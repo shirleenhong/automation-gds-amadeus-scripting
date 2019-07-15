@@ -1,0 +1,41 @@
+.segmentbox button {
+  float: right;
+  margin: 0px;
+}
+
+.segmentbox {
+  width: 140px;
+  border: 1px gray;
+}
+
+button.segmentButton {
+  padding: 0px;
+  padding-right: 3px;
+  width: 100%;
+}
+
+.segmentButton input {
+  width: unset;
+  display: unset;
+  width: 120px;
+}
+
+.segmentButton input {
+  background-color: white;
+}
+.segmentButton input.ng-invalid {
+  border-color: #ff4c6a;
+  background-color: #f7f9bc;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding-left: 6px;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  font-size: 0.8rem;
+}

@@ -656,7 +656,7 @@ export class SegmentService {
                     remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + pass;
                     break;
                 case '3':
-                    remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo;
+                    remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo + ' TO BE USED';
                     break;
                 // case '4':
                 //     remText = 'OS AC 24 HOUR RULE';
@@ -695,7 +695,6 @@ export class SegmentService {
 
         if (remText !== '') {
             rmGroup.cryptics.push('RF' + cancel.value.requestor);
-            rmGroup.cryptics.push('ER');
             rmGroup.cryptics.push('ER');
         }
 
@@ -786,19 +785,19 @@ export class SegmentService {
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                     break;
                 case '6':
-                    remText = 'AC Refund Waiver Code – ACFLTIRROP' + cancel.value.acFlightNo;
+                    remText = 'AC Refund Waiver Code - ACFLTIRROP' + cancel.value.acFlightNo;
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                     break;
                 case '9':
-                    remText = 'AC Refund Waiver Code – ACUSKEDCHG' + cancel.value.acFlightNo;
+                    remText = 'AC Refund Waiver Code - ACUSKEDCHG' + cancel.value.acFlightNo;
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                     break;
                 case '10':
-                    remText = 'AC Refund Waiver Code – ACUDELAY02' + cancel.value.acFlightNo;
+                    remText = 'AC Refund Waiver Code - ACUDELAY02' + cancel.value.acFlightNo;
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                     break;
                 case '11':
-                    remText = 'AC Refund Waiver Code – ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
+                    remText = 'AC Refund Waiver Code - ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                     break;
                 default:

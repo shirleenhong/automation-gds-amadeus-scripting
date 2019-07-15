@@ -93,7 +93,7 @@ export class CancelSegmentComponent implements OnInit {
     this.reasonAcList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '4' },
-      { itemText: 'DEATH/IMMINENT DEATH', itemValue: '5' },
+      { itemText: 'DEATH OF PAX OR TRAVELLING COMPANION', itemValue: '5' },
       { itemText: 'IRROP: WILL REFUND PROCESS DUE IRROP', itemValue: '6' },
       { itemText: 'UNACCEPTABLE SCHEDULE CHANGE', itemValue: '9' },
       { itemText: 'UNACCEPTABLE DELAY GREATER THAN 2 HRS', itemValue: '10' },
@@ -192,7 +192,6 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   checkSegmentAirline() {
-    debugger;
     this.isAC = false;
     this.isUA = false;
     // this.cancelForm.controls['cancelNonRefAC'].setValue(false);
@@ -268,7 +267,7 @@ export class CancelSegmentComponent implements OnInit {
       this.reasonAcList.splice(9, 3);
     }
 
-    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'accityPair', 'relationship'], true);
+    this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship'], true);
     this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
     if (this.segments.length > 0 && this.segments[0].segmentType) {
       if (this.segments[0].airlineCode === 'AC') {
@@ -350,7 +349,6 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   defaultControls(acControl) {
-    debugger;
     let acCount = 0;
     let controlsArr = [];
     const pass = this.getPassengerNo();
@@ -549,8 +547,8 @@ export class CancelSegmentComponent implements OnInit {
       );
     } else {
       this.enableFormControls(
-        ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel',
-          'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        ['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'],
+        // 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
         false
       );
     }

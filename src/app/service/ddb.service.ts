@@ -17,9 +17,9 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -179,6 +179,7 @@ export class DDBService implements OnInit {
   }
 
   async loadSupplierCodesFromPowerBase() {
+
     await this.getRequest(common.supplierCodes).then(
       (x) => {
         this.supplierCodes = [];

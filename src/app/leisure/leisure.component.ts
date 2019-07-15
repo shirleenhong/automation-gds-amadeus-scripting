@@ -326,7 +326,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
-    debugger;
     queueCollection = this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
     if (this.cancelComponent.refundComponent) {
       remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));

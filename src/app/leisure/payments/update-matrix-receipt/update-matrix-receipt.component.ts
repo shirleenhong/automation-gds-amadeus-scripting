@@ -87,7 +87,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
     this.passengerList = this.pnrService.getPassengers();
   }
 
-  hideModel() {}
+  hideModel() { }
 
   get PaymentType() {
     return PaymentType;
@@ -201,8 +201,8 @@ export class UpdateMatrixReceiptComponent implements OnInit {
           control instanceof FormGroup || control instanceof FormArray
             ? this.getAllErrors()
             : control.touched
-            ? control.errors
-            : '';
+              ? control.errors
+              : '';
         if (errors) {
           acc[key] = errors;
           hasError = true;
@@ -230,7 +230,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
         break;
       }
       case '116000': {
-        modeOfPayment = 'MC';
+        modeOfPayment = 'CA';
         break;
       }
       case '117000': {

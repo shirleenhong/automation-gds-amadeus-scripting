@@ -18,6 +18,7 @@ export class CancelSegmentComponent implements OnInit {
   reasonUaList: Array<SelectItem>;
   cancelProcessList: Array<SelectItem>;
   relationshipList: Array<SelectItem>;
+  reasonNonACCancelList: Array<SelectItem>;
   segments = [];
   isAC = false;
   isUA = false;
@@ -55,7 +56,8 @@ export class CancelSegmentComponent implements OnInit {
       followUpOption: new FormControl('', []),
       acCancelMonth: new FormControl('', []),
       acCancelYear: new FormControl('', []),
-      cancelProcess: new FormControl('', [])
+      cancelProcess: new FormControl('', []),
+      reasonNonACCancel: new FormControl('', [])
     });
   }
 
@@ -113,7 +115,9 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '1' },
       { itemText: 'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET', itemValue: '2' },
-      { itemText: 'UA FLIGHT NOT TICKETED YET', itemValue: '3' }
+      { itemText: 'UA FLIGHT NOT TICKETED YET', itemValue: '3' },
+      { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO IROP', itemValue: '4' },
+      { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: '5' }
     ];
 
     this.followUpOptionList = [
@@ -140,6 +144,12 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'CHILD', itemValue: 'CHLD' },
       { itemText: 'GRANDCHILD', itemValue: 'GCHL' },
       { itemText: 'COMPANION', itemValue: 'COMP' },
+    ];
+
+    this.reasonNonACCancelList = [
+      { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO IROP', itemValue: 'IROP' },
+      { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: 'CHANGE' },
+      { itemText: 'NONE OF THE ABOVE', itemValue: 'NONE' },
     ];
   }
 
@@ -220,6 +230,7 @@ export class CancelSegmentComponent implements OnInit {
       if (look) {
         if (look.airlineCode === 'AC') {
           this.isAC = true;
+          this.enableFormControls(['airlineNo'], true);
           this.reasonAcList.push(
             { itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
             { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
@@ -263,20 +274,21 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   checkFirstSegment() {
+    // debugger;
     if (this.reasonAcList.length > 9) {
       this.reasonAcList.splice(9, 3);
     }
 
     this.enableFormControls(['acTicketNo', 'acpassengerNo', 'acFlightNo', 'relationship'], true);
     this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
-    if (this.segments.length > 0 && this.segments[0].segmentType) {
+    if (this.segments.length === 1 && this.segments[0].segmentType) {
       if (this.segments[0].airlineCode === 'AC') {
         this.isAC = true;
         this.reasonAcList.push({ itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
           { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
           { itemText: 'DUPLICATE TICKETS', itemValue: '3' });
       }
-      if (this.segments[0].airlineCode === 'UA') {
+      if (this.segments.length === 1 && this.segments[0].airlineCode === 'UA') {
         this.isUA = true;
         this.enableFormControls(['reasonUACancel'], false);
       }
@@ -428,12 +440,16 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   uaChange(newValue) {
+    this.enableFormControls(['airlineNo'], true);
     switch (newValue) {
       case '1':
         this.enableFormControls(['uasegNo', 'uaPassengerNo'], false);
         this.defaultSegment();
         this.cancelForm.controls.uaPassengerNo.setValue(this.getPassengerNo());
         break;
+      case '4':
+      case '5':
+        this.enableFormControls(['airlineNo'], false);
       default:
         this.enableFormControls(['uasegNo', 'uaPassengerNo'], true);
         break;
@@ -566,6 +582,14 @@ export class CancelSegmentComponent implements OnInit {
         ['reasonACCancel'],
         false
       );
+    }
+  }
+
+  onchangeNonAcReasonCancel(nonAcValue) {
+    // debugger;
+    this.enableFormControls(['airlineNo'], false);
+    if (nonAcValue === 'NONE') {
+      this.enableFormControls(['airlineNo'], true);
     }
   }
 }

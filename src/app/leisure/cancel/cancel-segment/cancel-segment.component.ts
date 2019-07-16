@@ -204,6 +204,7 @@ export class CancelSegmentComponent implements OnInit {
   checkSegmentAirline() {
     this.isAC = false;
     this.isUA = false;
+    this.isOthers = false;
     // this.cancelForm.controls['cancelNonRefAC'].setValue(false);
     if (this.reasonAcList.length > 9) {
       this.reasonAcList.splice(9, 3);
@@ -225,6 +226,11 @@ export class CancelSegmentComponent implements OnInit {
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
       .filter((value) => value !== null);
+
+    if (selectedPreferences.length === 0) {
+      this.isOthers = true;
+    }
+
     selectedPreferences.forEach((element) => {
       const look = this.segments.find((x) => x.id === element);
       if (look) {
@@ -440,7 +446,10 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   uaChange(newValue) {
-    this.enableFormControls(['airlineNo'], true);
+    if (this.cancelForm.controls.reasonNonACCancel.value !== 'IROP' && this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE') {
+      this.enableFormControls(['airlineNo'], true);
+    }
+
     switch (newValue) {
       case '1':
         this.enableFormControls(['uasegNo', 'uaPassengerNo'], false);
@@ -587,9 +596,12 @@ export class CancelSegmentComponent implements OnInit {
 
   onchangeNonAcReasonCancel(nonAcValue) {
     // debugger;
-    this.enableFormControls(['airlineNo'], false);
-    if (nonAcValue === 'NONE') {
+    if (this.cancelForm.controls.reasonUACancel.value !== '4' || this.cancelForm.controls.reasonUACancel.value !== '5') {
       this.enableFormControls(['airlineNo'], true);
+    }
+
+    if (nonAcValue !== 'NONE') {
+      this.enableFormControls(['airlineNo'], false);
     }
   }
 }

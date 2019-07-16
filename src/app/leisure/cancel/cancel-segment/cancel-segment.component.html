@@ -152,7 +152,7 @@
         </div>
       </div>
 
-      <div *ngIf="!isAC && !isUA">
+      <div *ngIf="isOthers">
         <div class="row form-group">
           <div class="col-4">Other Reason For Cancel: </div>
           <div class="col-8">
@@ -194,7 +194,7 @@
         </div>
       </div>
 
-      <div *ngIf="(!isAC && f.reasonNonACCancel.value === 'IROP' || f.reasonNonACCancel.value === 'CHANGE') || 
+      <div *ngIf="(isOthers && f.reasonNonACCancel.value === 'IROP' || f.reasonNonACCancel.value === 'CHANGE') || 
                 (isUA && f.reasonUACancel.value ==='4' || f.reasonUACancel.value ==='5')" class="row form-group">
         <div class="col-4"></div>
         <div class="col-8">

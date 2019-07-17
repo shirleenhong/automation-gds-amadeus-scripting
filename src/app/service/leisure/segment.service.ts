@@ -696,6 +696,7 @@ export class SegmentService {
         if (remText !== '') {
             rmGroup.cryptics.push('RF' + cancel.value.requestor);
             rmGroup.cryptics.push('ER');
+            rmGroup.cryptics.push('ER');
         }
 
         const nuRemarks = this.pnrService.hasNUCRemarks();

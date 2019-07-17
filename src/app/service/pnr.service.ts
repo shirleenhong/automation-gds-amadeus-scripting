@@ -28,7 +28,6 @@ export class PnrService {
   constructor() { }
 
   async getPNR(): Promise<void> {
-
     this.cfLine = null;
     this.pnrObj = new PNR();
     await this.pnrObj
@@ -355,6 +354,10 @@ export class PnrService {
       this.getSegmentDetails(hotel, 'HTL');
     }
 
+    for (const hotel of this.pnrObj.hotelSegments) {
+      this.getSegmentDetails(hotel, 'HHL');
+    }
+
     for (const misc of this.pnrObj.miscSegments) {
       if (
         misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
@@ -375,6 +378,7 @@ export class PnrService {
   }
 
   private getSegmentDetails(elem: any, type: string) {
+
     let elemText = '';
     let elemStatus = '';
     let elemairlineCode = '';
@@ -390,8 +394,12 @@ export class PnrService {
     let flongtext = '';
     let controlNumber = '';
     let airType = '';
+    let segType = type;
+    if (type === 'HHL') {
+      segType = 'HTL';
+    }
 
-    if (type === 'AIR') {
+    if (segType === 'AIR') {
       airType = 'ACTIVE';
       elemText =
         elem.airlineCode +
@@ -428,7 +436,6 @@ export class PnrService {
       if (elem.fullNode.itineraryReservationInfo) {
         airType = 'PASSIVE';
       }
-
     } else {
       const fullnodetemp = elem.fullNode.travelProduct;
       elemText =
@@ -446,14 +453,18 @@ export class PnrService {
       elemdepdate = fullnodetemp.product.depDate;
       arrivalDate = fullnodetemp.product.arrDate;
       elemcitycode = fullnodetemp.boardpointDetail.cityCode;
-      flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+      if (type !== 'HHL') {
+        flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+      } else {
+        flongtext = elem.hotelName;
+      }
     }
 
     const segment = {
       lineNo: elem.elementNumber,
       tatooNo: elem.tatooNumber,
       status: elemStatus,
-      segmentType: type,
+      segmentType: segType,
       longFreeText: elemText,
       airlineCode: elemairlineCode,
       freetext: flongtext,

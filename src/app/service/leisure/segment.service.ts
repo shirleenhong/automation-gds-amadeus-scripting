@@ -755,11 +755,19 @@ export class SegmentService {
             }
         }
 
-        if (cancel.value.airlineNo) {
+        if (cancel.value.airlineNo || (cancel.value.acFlightNo && cancel.value.reasonACCancel === '6')) {
+            let affectedairline = '';
+            if (cancel.value.airlineNo) {
+                affectedairline = cancel.value.airlineNo;
+            }
+            if (cancel.value.acFlightNo) {
+                affectedairline = affectedairline + ',' + cancel.value.acFlightNo;
+            }
+
+            affectedairline = affectedairline.replace(/^,+/, '');
             remText = dateToday + '/CANCEL NR DUE TO IROP OR SKD CHG';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-
-            remText = dateToday + '/' + cancel.value.airlineNo;
+            remText = dateToday + '/' + affectedairline;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 

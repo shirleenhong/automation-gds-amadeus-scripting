@@ -2,188 +2,6 @@
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
-Verify That Matrix Receipt, Matrix Accounting, Leisure, And ITC Remarks Are Written In The PNR
-    [Documentation]    Includes the following:
-    ...    - BSP Routing code
-    ...    - Destination
-    ...    - Royal Bank Conceirge
-    ...    - Matrix Receipt
-    ...    - Leisure fee
-    ...    - ITC package Cost
-    [Tags]    not_ready
-    Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1SIN12DEC-/TYP-TOR/SUC-ZZ/SC-mla/SD-12dec/ST-0900/EC-sin/ED-24dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG
-    Open CA Migration Window
-    Click Wrap PNR
-    Click Panel    Reporting
-    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
-    Enter Destination Code    SIN
-    Click Reporting Tab    Royal Bank - Concierge
-    Select Redemption Added    OUTSIDE 48 Hours of Original Booking
-    Select Reservation Request    Reservation was generated via Phone Request
-    Select Booking Type    Air Only Booking
-    Enter Delegate Caller Name    LEISURE DELAGATENAME
-    Select Reservation For Business Travel    NO
-    Select Hotel Reservation Booked    NO
-    Select Reason Hotel Booked    Personal Accommodations
-    Click Panel    Payment
-    Click Add Matrix Receipt Button
-    Create Matrix Receipt    Cash    CAD Funds    LEISURE-AMADEUS    THIS IS A MAX OF 30 CHARACTERS    500.50
-    Click Payment Tab    Matrix Accounting Remark
-    Click Add Accounting Line Button
-    Create Matrix Accounting Remark    YES    OTHER COSTS    2    CGO    76543    Credit Card
-    ...    MC    5555555555554444    0122
-    Enter Base Amount    1250.05
-    Enter GST Tax Amount    12.00
-    Enter HST Tax Amount    10.00
-    Enter QST Tax Amount    5.40
-    Enter Remark Description    COSTS REMARK
-    Click Element    css=#qst
-    Click Save Button
-    Sleep    5
-    Click Payment Tab    Leisure Fee
-    Select Segment Association    Tour/Cruise Segment
-    Enter Amount    100.00
-    Select Leisure Fee Form of Payment    Cheque
-    Select Traveler Province    Quebec
-    Sleep    5
-    Click Panel    Remarks
-    Select Package    Itemize Package Cost Remarks
-    Enter Currency for ITC    CAD
-    Enter Number of Pax for Adult    1
-    Enter Base Price for Adult    1222.00
-    Enter Base Price Tax for Adult    212.00
-    Enter Base Cruise for Adult    552.00
-    Enter Base Cruise Tax for Adult    34.54
-    Enter Rail Cost for Adult    124.00
-    Enter Insurance for Adult    111.00
-    Enter ITC Hotel Cost    235.67
-    Enter ITC Car Cost    123.00
-    Enter ITC Deposit    400.00
-    Enter ITC Balance Due Date    09292019
-    Enter ITC Commission Amount    533.00
-    Click Submit To PNR
-    Close CA Migration Window
-    Switch To Graphic Mode
-    Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *DE/-SIN
-    Verify Specific Remark Is Written In The PNR    FS 42
-    Verify Royal Bank Concierge UDID Remarks Are Written    True
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CA/-LK-T/-BA-101000/-GL-124000
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-FOP-CCMCXXXXXXXXXXXX4444/-EXP-0122/-MP-PER/-BKN-${supplier_confirmation_number}/S2    True
-    Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 27.40 TAX ON MC/S2    True
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK    True
-    Verify Specific Remark Is Written In The PNR    RMY TAX-QC
-    Verify Specific Remark Is Written In The PNR    RM *U43/-SEP19
-    Verify Specific Remark Is Written In The PNR    RM *U41/-2214.21
-    Verify Specific Remark Is Written In The PNR    RM *U42/-533.00
-    Verify Specific Remark Is Only Written Once    RIR THE FOLLOWING COSTS ARE SHOWN IN CAD
-    Verify Specific Remark Is Only Written Once    RIR ADULT PRICE------------1222.00X1------1,222.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT TAXES-------------212.00X1--------212.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT CRUISE------------552.00X1--------552.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT TAX/PORT CHARGES---34.54X1---------34.54
-    Verify Specific Remark Is Only Written Once    RIR ADULT RAIL--------------124.00X1--------124.00
-    Verify Specific Remark Is Only Written Once    RIR ADULT INSURANCE---------111.00X1--------111.00
-    Verify Specific Remark Is Only Written Once    RIR HOTEL/ACCOMMODATION-----235.67
-    Verify Specific Remark Is Only Written Once    RIR CAR RENTAL--------------123.00
-    Verify Specific Remark Is Only Written Once    RIR LESS DEPOSIT PAID-------400.00
-    Verify Specific Remark Is Only Written Once    RIR TOTAL HOLIDAY COST-----2614.21
-    Verify Specific Remark Is Only Written Once    RIR BALANCE DUE------------2214.21
-    Verify Specific Remark Is Only Written Once    RIR ---- BALANCE OF 2214.21 IS DUE 29SEP19 ----
-    Close Cryptic Display Window
-    Switch To Command Page
-    [Teardown]    Close Browser
-
-Verify That Matrix Receipt, Matrix Accounting, Leisure, Package Cost, And Reporting Remarks Are Written In The PNR
-    [Documentation]    Includes the following:
-    ...    - BSP Routing code
-    ...    - Destination
-    ...    - Leisure UDID
-    ...    - Matrix Accounting
-    ...    - Leisure fee
-    ...    - Package Cost
-    [Tags]    not_ready
-    Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM0000000N    RU1AHK1SIN12DEC-/TYP-TOR/SUC-ZZ/SC-mla/SD-12dec/ST-0900/EC-sin/ED-24dec/ET-1800/PS-X    SS AC1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG
-    Open CA Migration Window
-    Click Wrap PNR
-    Click Panel    Payment
-    Click Payment Tab    Leisure Fee
-    Select Segment Association    Ticket Segment
-    Enter Amount    100.00
-    Select Leisure Fee Form of Payment    Credit Card
-    Select Credit Card Vendor Code    VI- Visa
-    Enter Credit Card Number    4444333322221111
-    Enter Credit Card Expiration Date    0921
-    Select Traveler Province    Address outside of Canada
-    Click Payment Tab    Matrix Accounting Remark
-    Click Add Accounting Line Button
-    Create Matrix Accounting Remark    NO    Tour Accounting Remark    4    PER Passenger    AD1    ABC4567891EFG4567890
-    ...    Credit Card    VI    4444333322221111    0323
-    Enter Base Amount    100.75
-    Enter GST Tax Amount    2.00
-    Enter HST Tax Amount    1.00
-    Enter QST Tax Amount    3.00
-    Enter Other Tax Amount    4.00
-    Enter Commission Without Tax Amount    12.00
-    Click Element    css=#qst
-    Click Save Button
-    Select Is This Air Only?    NO
-    Select Exclusive Property    YES
-    Enter Hotel/ Property Name    Cozy Arms Hotel
-    Select Flights    BETTER FLIGHT TIME
-    Enter Price Vs Other Supplier    300pp
-    Enter Group    FAMILY GROUP
-    Select Preferred Vendor    PREFERRED OPTION NOT AVAILABLE
-    Click Panel    Remarks
-    Select Package    Tour Package
-    Select Tour Package Currency Type    CAD
-    Enter Tour Package Number Of Adults    1
-    Enter Tour Package Base Cost Per Adult    500.00
-    Enter Tour Package Taxes Per Adult    52.00
-    Enter Tour Package Number Of Children    1
-    Enter Tour Package Insurance Per Adult    100.75
-    Enter Tour Package Base Cost Per Child    100.75
-    Enter Tour Package Taxes Per Child    55.60
-    Enter Tour Package Insurance Per Child    65.75
-    Enter Tour Package Number Of Infant    1
-    Enter Tour Package Total Cost Per Infant    129.00
-    Enter Tour Package Deposit Paid    333.00
-    Enter Tour Package Balance Due Date    10222024
-    Enter Tour Package Commission Amount    251.00
-    Click Submit To PNR
-    Close CA Migration Window
-    Switch To Graphic Mode
-    Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0921    True
-    Verify Specific Remark Is Written In The PNR    RMY TAX-ZZ
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-PER/-BKN-${supplier_confirmation_number}/S4    True
-    Verify Specific Remark Is Written In The PNR    RM *U76/-NO
-    Verify Specific Remark Is Written In The PNR    RM *U71/-YES
-    Verify Specific Remark Is Written In The PNR    RM *U75/-COZY ARMS HOTEL
-    Verify Specific Remark Is Written In The PNR    RM *U72/-BETTER FLIGHT TIME
-    Verify Specific Remark Is Written In The PNR    RM *U73/-300PP
-    Verify Specific Remark Is Written In The PNR    RM *U74/-FAMILY GROUP
-    Verify Specific Remark Is Written In The PNR    RM *U77/-PREFERRED OPTION NOT AVAILABLE
-    Verify Package Costs UDID Remarks Are Written In the PNR    OCT24    670.85
-    Verify Specific Remark Is Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN ${tour_currency_type}
-    Verify Specific Remark Is Written In The PNR    RIR ADULT PACKAGE-----------500.00X1--------500.00
-    Verify Specific Remark Is Written In The PNR    RIR ADULT TAXES--------------52.00X1---------52.00
-    Verify Specific Remark Is Written In The PNR    RIR ADULT INSURANCE---------100.75X1--------100.75
-    Verify Specific Remark Is Written In The PNR    RIR CHILD PACKAGE-----------100.75X1--------100.75
-    Verify Specific Remark Is Written In The PNR    RIR CHILD TAXES--------------55.60X1---------55.60
-    Verify Specific Remark Is Written In The PNR    RIR CHILD INSURANCE----------65.75X1---------65.75
-    Verify Specific Remark Is Written In The PNR    RIR INFANT PACKAGE----------129.00X1--------129.00
-    Verify Specific Remark Is Written In The PNR    RIR TOTAL PACKAGE PRICE 1003.85
-    Verify Specific Remark Is Written In The PNR    RIR LESS DEPOSIT PAID 333.00 -
-    Verify Specific Remark Is Written In The PNR    RIR BALANCE DUE 670.85
-    Verify Specific Remark Is Written In The PNR    RIR ---- BALANCE OF 670.85 IS DUE 22OCT24 ----
-    Verify Specific Remark Is Written In The PNR    RIR SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE
-
 Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Written In The PNR
     [Documentation]    Multiple Air, Tour, Hotel
     ...    Matrix Accounting
@@ -193,9 +11,9 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     ...    ITC
     ...    Visa and Passport
     ...    Codeshare
-    [Tags]    not_ready
+    [Tags]    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APETest@email.com    TKOK    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Add Segment Main Menu
     Add Passive Air Segment
@@ -215,34 +33,173 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Add Matrix Accounting
     Click Payment Tab    Leisure Fee
     Add Leisure Fee Collection
+    Sleep    3
     Populate Reporting Required Fields
     Click Panel    Remarks
     Add ITC Package Costs
     Click Remarks Tab    Codeshare
     Select Segment From The List    1    3
-    Enter Check-in At Details    1    Codeshare Testing    
+    Enter Check-in At Details    1    Codeshare Testing
     Click Submit To PNR
+    Sleep    3
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CC${cc_vendor_code}XXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0323/-MP-ALL/-BKN-${supplier_confirmation_number}/S3    True
     Verify Leisure Fee Remarks Are Written
     Verify ITC Package Costs Remarks Are Written
     Verify Specific Remark Is Written In The PNR    RIR CHECK-IN AT ${checkin_at.upper()} TICKET COUNTER/S2
-
+    Verify Specific Remark Is Written In The PNR    RM *DE/-CDG
+    Verify Specific Remark Is Written In The PNR    FS 42
+    Close Cryptic Display Window
 
 Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
-    [Documentation]    Update Matrix Accounting
+    [Documentation]    Insurance
     ...    Update Leisure Fee
     ...    Codeshare
     ...    Fare Rule
     ...    RBC Points Redemption
-    [Tags]    not_ready
+    ...    RBC Conceirge
+    ...    CWT Itinerary
+    [Tags]    sanity
+    Open CA Migration Window
+    Click Wrap PNR
+    Click Panel    Payment
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt    Cash    CAD Funds    LEISURE-AMADEUS    THIS IS A MAX OF 30 CHARACTERS    500.50
+    Sleep    3
+    Click Payment Tab    Matrix Accounting Remark
+    Click Add Accounting Line Button
+    Select Accounting Remark Type    Insurance Remark
+    Select Segment    3
+    Enter Supplier Confirmation Number    112233
+    Select Matrix Form Of Payment    Credit Card
+    Select Credit Card Vendor Code    Visa
+    Enter Credit Card Number    4444333322221111
+    Enter Credit Card Expiration Date    0921
+    Enter Base Amount    123.00
+    Enter GST Tax Amount    5.00
+    Enter HST Tax Amount    4.00
+    Enter QST Tax Amount    3.00
+    Enter Commission Percentage    10.00
+    Click Save Button
+    Sleep    3
+    Click Panel    Reporting
+    Click Reporting Tab    Royal Bank - Concierge
+    Select Redemption Added    WITHIN 48 Hours of Original Booking
+    Select Reservation Request    Reservation was generated via EMAIL
+    Select Booking Type    Cruise/Tour/FIT
+    Enter Caller Name    Leisure Callername
+    Enter Delegate Caller Name    Leisure Delegatename
+    Enter Hotel Name    Hotel Name for Leisure
+    Select Reservation For Business Travel    YES
+    Select Hotel Reservation Booked    YES
+    Click Submit To PNR
+    Sleep    5
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CA/-LK-T/-BA-101000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}
+    Verify Royal Bank Concierge UDID Remarks Are Written    Within    Email    Cruise    \    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-AN7/-LK-MAC1/-AMT-100.75/-PT-1.00RC/-PT-2.00XG/-PT-3.00XQ/-PT-4.00XT/-CD-12.00    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-ABC4567891EFG4567890/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC2/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S3    True
+    Verify Leisure Fee Remarks Are Written
+    Verify ITC Package Costs Remarks Are Written
+    Verify Specific Remark Is Written In The PNR    RIR CHECK-IN AT CODESHARE TESTING TICKET COUNTER/S2
+    Verify Specific Remark Is Written In The PNR    RM *DE/-CDG
+    Verify Specific Remark Is Written In The PNR    FS 42
+    Close Cryptic Display Window
 
 Verify That Passive Segments Can Be Cancelled
     [Documentation]    Cancel All segments
-    [Tags]    not_ready
-    
+    [Tags]    sanity
+    Open CA Migration Window
+    Click Cancel Segment
+    Enter Requestor Name    FirstName LastName
+    Enter Cancel Notes    1    Cancel Segment
+    Select Cancel All Segments
+    Select Reason For Cancel    IRROP: WILL REFUND PROCESS DUE IRROP
+    Enter AC Flight Number    12345
+    Enter Ticket Number For Refund    1    532523
+    Enter Coupon Number For Refund    1    7654321
+    Click Cancel Segments Button
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY FIRSTNAME LASTNAME
+    Verify Specific Remark Is Written In The PNR    /CANCEL SEGMENT
+    Verify Specific Remark Is Written In The PNR    /HTL SEGMENT INCLUDED IN CANCEL
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
+    Verify Specific Remark Is Written In The PNR    /TKT NBR-532523 CPNS-7654321
+    Verify Specific Remark Is Written In The PNR    RMX AC REFUND WAIVER CODE - ACFLTIRROP12345
+    Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
+Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, And RIR Remarks Are Written In The PNR
+    [Documentation]    Multiple Air, Insurance, Car
+    ...    Matrix Accounting: Insurance, Air Canada Pass Redemption
+    ...    Leisure Fee
+    ...    Reporting BSP
+    ...    Insurance reporting remark
+    ...    Tour Package
+    ...    Visa and Passport
+    ...    CWT Itinerary
+    [Tags]    sanity
+    Login To Amadeus Sell Connect
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US
+    Open CA Migration Window
+    Click Add Segment Main Menu
+    Add Passive Air Segment
+    Add Passive Insurance Segment
+    Add Passive Car Segment
+    Click Add Segments To PNR
+    Close CA Migration Window
+    Switch To Graphic Mode
+    Open Cryptic Display Window
+    Verify Air, Insurance, And Car Passive Segments Are Added In the PNR
+    Close Cryptic Display Window
+    Open CA Migration Window
+    Click Wrap PNR
+    Click Panel    Payment
+    Click Payment Tab    Matrix Accounting Remark
+    Add Insurance Accounting Remark
+    Add Air Canada Pass Redemption Remarks
+    Add Insurance Reporting Remarks
+    Click Panel    Remarks
+    Add Tour Package Costs
+    Click Panel    Itinerary and Queue
+    Enter Email Address    1    testingemail@cwt.com
+    Select Itinerary Language    French
+    Select Itinerary Type Of Transaction    Invoice
+    Enter Service Remark    1    Testing Service Remark
+    Enter Tickets Remark    1    Testing Tickets Remark
+    Click Submit To PNR
+    Sleep    3
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Insurance Reporting Remarks Are Added In The PNR
+    Verify Tour Package Remarks Are Added In The PNR
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC1/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *U11/-NOT APPLICABLE
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-ACJ/-LK-MAC2/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-CD-0.00    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0921/-TK-${ticket_number}/-MP-ALL/-BKN-${supplier_confirmation_number}/S2    True
+    Verify Specific Remark Is Written In The PNR    RIR WESTERN COMMUTER PASS REDEMPTION-LATITUDE FARE/S2
+    Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL
+    Verify Specific Remark Is Only Written Once    RMQ EMAIL ADD-NO
+    Verify Specific Remark Is Only Written Once    RMZ CONF*LANG:FR
+    Verify Specific Remark Is Written In The PNR    RMZ CONF*SEND TO MAIL TESTINGEMAIL@CWT.COM
+    Verify Specific Remark Is Written In The PNR    RIR *SERVICE**TESTING SERVICE REMARK*
+    Verify Specific Remark Is Written In The PNR    RIR *TICKET**TESTING TICKETS REMARK*
+    Verify Specific Remark Is Written In The PNR    RMT TKT-INTL
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
+
 *** Keywords ***
 Add Passive Air Segment
     Click Add Segment Button
@@ -297,6 +254,87 @@ Add Passive Hotel Segment
     Get Hotel Details Values
     Click Add Passive Save Button
     Sleep    2
+
+Add Passive Insurance Segment
+    Click Add Segment Main Menu
+    Select Segment Type    Insurance
+    Enter Departure Date    01032020
+    Enter Arrival Date    01132020
+    Enter Departure City    YYZ
+    Enter Policy Number    123456789
+    Click Add Passive Save Button
+    Sleep    2
+
+Add Passive Car Segment
+    Click Add Segment Button
+    Select Segment Type    Car
+    Enter Departure City    yyz
+    Enter Destination City    ytz
+    Enter Vendor Code    AL
+    Enter Confirmation Number    conf1234
+    Select Car Type    CFAR - CHEVROLET TRAX OR SIMILAR
+    Select Pickup Location    AIRPORT
+    Select Drop Off Location    OFF AIRPORT
+    Select Drop Off Address    YTOC74 - 161 BAY ST UNITE C80 M5J2S1 TORONTO
+    Enter Departure Date    01132020
+    Enter Departure Time    0100AM
+    Enter Arrival Time    0200PM
+    Enter Rental Cost    123.50
+    Enter Rate Booked    210.75
+    Enter Mileage    200F
+    Enter Drop off Fee    212
+    Enter Car CD Number    CD123456
+    Enter Car ID Number    ID789123
+    Enter Frequent Flyer Airline Code    AC
+    Enter Frequent Flyer Number    987654321
+    Select Special Equipment    HCL-Hand Controls on left
+    Enter Special Request    Special Request Testing
+    Click Add Passive Save Button
+
+Add Insurance Accounting Remark
+    Click Add Accounting Line Button
+    Select Accounting Remark Type    Insurance Remark
+    Select Segment    4
+    Enter Supplier Confirmation Number    112233
+    Select Matrix Form Of Payment    Credit Card
+    Select Credit Card Vendor Code    Visa
+    Enter Credit Card Number    4444333322221111
+    Enter Credit Card Expiration Date    0921
+    Enter Base Amount    123.00
+    Enter GST Tax Amount    5.00
+    Enter HST Tax Amount    4.00
+    Enter QST Tax Amount    3.00
+    Enter Commission Percentage    10.00
+    Click Save Button
+
+Add Insurance Reporting Remarks
+    Click Payment Tab    Leisure Fee
+    Enter Reason for No Association Fees    Not applicable
+    Click Panel    Reporting
+    Select Routing Code    Asia incl. India
+    Enter Destination Code    YUL
+    Enter Company Name    Umbrella Corp
+    Select Did Client Accept Insurance    No
+    Select Insurance Declined Reason    All Inclusive or Premium
+    Enter Insurance Declined Reason    Testing Insurance Decline reason
+
+Add Air Canada Pass Redemption Remarks
+    Click Add Accounting Line Button
+    Select Accounting Remark Type    Air Canada Pass Redemption
+    Select Segment    3
+    Enter Supplier Confirmation Number    112233
+    Select Credit Card Vendor Code    Visa
+    Enter Credit Card Number    4444333322221111
+    Enter Credit Card Expiration Date    0921
+    Enter Base Amount    100.75
+    Enter GST Tax Amount    2.00
+    Enter HST Tax Amount    1.00
+    Enter QST Tax Amount    3.00
+    Enter Ticket Number    12343212
+    Select Type Of Pass Purchase    WESTERN COMMUTER
+    Select Fare Type    LATITUDE
+    Click Save Button
+    Sleep    3
 
 Verify Air, Tour, And Hotel Passive Segments Are Added In the PNR
     Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ${airline_recloc}
@@ -355,6 +393,17 @@ Add ITC Package Costs
     Enter ITC Balance Due Date    09292019
     Enter ITC Commission Amount    533.00
 
+Add Tour Package Costs
+    Select Package    Tour Package
+    Select Tour Package Currency Type    CAD
+    Enter Tour Package Number Of Adults    1
+    Enter Tour Package Base Cost Per Adult    100.00
+    Enter Tour Package Taxes Per Adult    15.75
+    Enter Tour Package Insurance Per Adult    80.00
+    Enter Tour Package Deposit Paid    55.00
+    Enter Tour Package Balance Due Date    12122025
+    Enter Tour Package Commission Amount    25.00
+
 Verify ITC Package Costs Remarks Are Written
     Verify Specific Remark Is Written In The PNR    RM *U43/-SEP19
     Verify Specific Remark Is Written In The PNR    RM *U41/-2214.21
@@ -374,3 +423,64 @@ Verify ITC Package Costs Remarks Are Written
     Verify Specific Remark Is Only Written Once    RIR ---- BALANCE OF 2214.21 IS DUE 29SEP19 ----
     Verify Specific Remark Is Not Written In The PNR    CHILD
     Verify Specific Remark Is Not Written In The PNR    INFANT
+
+Verify Air, Insurance, And Car Passive Segments Are Added In the PNR
+    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ${airline_recloc}
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 03JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03JAN/ST-0900/EC-YYZ/ED-13JAN/ET-0900/CF-CWT${policy_number}    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYZ 13JAN-13JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13JAN/ST-0100/ED-13JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
+    Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S5
+    Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S5
+    Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S5
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE FF-AC987654321/S5
+    Verify Specific Remark Is Written In The PNR    RIR DROP OFF-161 BAY ST UNITE C80 M5J2S1 TORONTO/S5
+    Verify Specific Remark Is Written In The PNR    RIR DROP FEE-212.00/S5
+
+Verify Insurance Reporting Remarks Are Added In The PNR
+    Verify Specific Remark Is Written In The PNR    RM *U11/-NOT APPLICABLE
+    Verify Specific Remark Is Written In The PNR    RM *U12/-TESTING INSURANCE DECLINE REASON
+    Verify Specific Remark Is Written In The PNR    RIR I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE
+    Verify Specific Remark Is Written In The PNR    RIR OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME    True
+    Verify Specific Remark Is Written In The PNR    RIR ...DELUXE PACKAGE INSURANCE
+    Verify Specific Remark Is Written In The PNR    RIR ...NONE OF CARLSON WAGONLIT CANADA OR YOUR CWT TRAVEL
+    Verify Specific Remark Is Written In The PNR    RIR ...AGENT ADVISOR OR YOUR CWT TRAVEL AGENCY WILL BE
+    Verify Specific Remark Is Written In The PNR    RIR ...RESPONSIBLE FOR ANY EXPENSES LOSSES CLAIMS
+    Verify Specific Remark Is Written In The PNR    RIR ...LIABILITIES COSTS ACCOUNTS CHARGES TAXES ACTIONS
+    Verify Specific Remark Is Written In The PNR    RIR ...DEMANDS OR DAMAGES OF ANY NATURE WHATSOEVER ARISING
+    Verify Specific Remark Is Written In The PNR    RIR ...AS A RESULT OF YOU DECLINING TO PURCHASE TRAVEL
+    Verify Specific Remark Is Written In The PNR    RIR ...INSURANCE FOR THE FULL VALUE AND DURATION OF THE
+    Verify Specific Remark Is Written In The PNR    RIR ...TRIP INCLUDING WITHOUT LIMITATION
+    Verify Specific Remark Is Written In The PNR    RIR ...A. EXPENSES INCURRED DUE TO THE DELAY OR
+    Verify Specific Remark Is Written In The PNR    RIR ...CANCELLATION OF YOUR TRIP
+    Verify Specific Remark Is Written In The PNR    RIR ...B. ANY ACCIDENT SICKNESS OR DEATH THAT OCCURS ON
+    Verify Specific Remark Is Written In The PNR    RIR ...YOUR TRIP
+    Verify Specific Remark Is Written In The PNR    RIR ...C. ANY BAGGAGE OR PROPERTY STOLEN OR DAMAGED ON
+    Verify Specific Remark Is Written In The PNR    RIR ...YOUR TRIP
+    Verify Specific Remark Is Written In The PNR    RIR ...D. YOUR BENEFITS UNDER THE FOLLOWING BEING
+    Verify Specific Remark Is Written In The PNR    RIR ...RESTRICTED AND/OR EXCLUDED
+    Verify Specific Remark Is Written In The PNR    RIR ...1. CREDIT CARD ISURANCE--INSUFFICIENT PROTECTION
+    Verify Specific Remark Is Written In The PNR    RIR ...OFFERED BY OR NON-EXISTING COVERAGE OF YOUR
+    Verify Specific Remark Is Written In The PNR    RIR ...CREDIT CARD
+    Verify Specific Remark Is Written In The PNR    RIR ...2. INSURANCE PRIVATE OR PUBLIC HEALTH CARE COVERAGE
+    Verify Specific Remark Is Written In The PNR    RIR ...3. ADDITIONAL SINGLE SUPPLEMENT COST IF YOUR
+    Verify Specific Remark Is Written In The PNR    RIR ...TRAVELLING COMPANION IS UNABLE TO TRAVEL AND YOU
+    Verify Specific Remark Is Written In The PNR    RIR ...STILL CHOOSE TO TRAVEL.
+    Verify Specific Remark Is Written In The PNR    RIR ...4. THE UNFORSEEN FINANCIAL DEFAULT OR BANKRUPTCY OF
+    Verify Specific Remark Is Written In The PNR    RIR ...THE TOUR OPERATOR CRUISE LINE OR AIRLINE CARRIER
+    Verify Specific Remark Is Written In The PNR    RIR ...FROM WHICH YOU HAVE PURCHASED YOUR TRAVEL
+    Verify Specific Remark Is Written In The PNR    RIR ...ARRANGEMENTS.
+    Verify Specific Remark Is Written In The PNR    RIR ...5. OTHER ADDITIONAL COSTS IF INSURANCE IS NOT
+    Verify Specific Remark Is Written In The PNR    RIR ...PURCHASED AT THE TIME OF INITIAL DEPOSIT. SUCH AS A
+    Verify Specific Remark Is Written In The PNR    RIR ...CHANGE IN MEDICAL CONDITION OR INCREASED
+    Verify Specific Remark Is Written In The PNR    RIR ...SUPPLIER PENALTIES.
+
+Verify Tour Package Remarks Are Added In The PNR
+    Verify Package Costs UDID Remarks Are Written In the PNR    DEC25    140.75
+    Verify Specific Remark Is Written In The PNR    RIR THE FOLLOWING COSTS ARE SHOWN IN ${tour_currency_type}
+    Verify Specific Remark Is Written In The PNR    RIR ADULT PACKAGE-----------100.00X1--------100.00
+    Verify Specific Remark Is Written In The PNR    RIR ADULT TAXES--------------15.75X1---------15.75
+    Verify Specific Remark Is Written In The PNR    RIR ADULT INSURANCE----------80.00X1---------80.00
+    Verify Specific Remark Is Written In The PNR    RIR TOTAL PACKAGE PRICE 195.75
+    Verify Specific Remark Is Written In The PNR    RIR LESS DEPOSIT PAID 55.00 -
+    Verify Specific Remark Is Written In The PNR    RIR BALANCE DUE 140.75
+    Verify Specific Remark Is Written In The PNR    RIR ---- BALANCE OF 140.75 IS DUE 12DEC25 ----
+    Verify Specific Remark Is Written In The PNR    RIR SOME TAXES ARE PAYABLE LOCALLY AND NOT INCLUDED ABOVE

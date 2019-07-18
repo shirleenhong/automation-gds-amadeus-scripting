@@ -489,6 +489,7 @@ export class RemarkService {
     }
     smartScriptSession.send('RF' + requestor);
     smartScriptSession.send('ER');
+    smartScriptSession.send('ER');
     smartScriptSession.send('RT');
   }
 }

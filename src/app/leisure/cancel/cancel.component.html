@@ -2,7 +2,8 @@
   <tab heading="Cancel Segments" id="tab1">
     <app-cancel-segment></app-cancel-segment>
   </tab>
-  <tab heading="Refund Commission Recall" id="tab2">
+  <tab *ngIf="this.cancelSegmentComponent.cancelForm.controls.followUpOption.value === 'Non BSP Refund'"
+    heading={{this.cancelSegmentComponent.headerRefund}} id="tab2">
     <app-refund></app-refund>
   </tab>
 </tabset>

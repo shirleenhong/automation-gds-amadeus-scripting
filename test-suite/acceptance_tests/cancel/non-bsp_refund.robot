@@ -13,8 +13,8 @@ Verify That RMX Remarks Are Written in the PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure
     Enter Cancel Notes    1    Test cancel notes1
-    Click Tab    Refund Commission Recall
-    Select Is BSP    NO 
+    Select Cancel Follow-Up Option     Non BSP Refund Recall Commission Request 
+    Click Tab    Non BSP Refund Commission Recall
     Enter Branch Number      123456
     Enter Person Requesting    Refund Request
     Enter Passenger Name    Leisure Name   
@@ -57,8 +57,8 @@ Verify That RMX Remarks Are Written in the PNR When Optional Fields Are Blank
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure
     Enter Cancel Notes    1    Test cancel notes1
-    Click Tab    Refund Commission Recall
-    Select Is BSP    NO 
+    Select Cancel Follow-Up Option     Non BSP Refund Recall Commission Request 
+    Click Tab    Non BSP Refund Commission Recall
     Enter Branch Number      212311
     Enter Person Requesting    Refund Request
     Enter Passenger Name    Leisure Name   

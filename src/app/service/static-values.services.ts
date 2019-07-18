@@ -45,7 +45,7 @@ export class StaticValuesService {
     return [
       { itemText: '', itemValue: '' },
       { itemText: 'VI- Visa', itemValue: 'VI' },
-      { itemText: 'MC - Mastercard', itemValue: 'MC' },
+      { itemText: 'CA - Mastercard', itemValue: 'CA' },
       { itemText: 'AX - American Express', itemValue: 'AX' },
       { itemText: 'DC -Diners', itemValue: 'DC' }
     ];

@@ -17,9 +17,9 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -117,7 +117,7 @@ export class DDBService implements OnInit {
   }
 
   async getCdrItemByClientAccountNumber(clientAccount: string) {
-    return await this.getRequest(common.cdrItemsByClientAccountNumberService + clientAccount);
+    return await this.getRequest(common.cdrItemsByClientAccountService + clientAccount);
   }
 
   async getCdrItemBySubUnit(clientSubUnitId: string) {
@@ -148,11 +148,38 @@ export class DDBService implements OnInit {
     return await this.getRequest(common.feesService.replace('{ClientSubUnitGuid}', clientSubUnitId));
   }
 
+  async getConfigurationParameter(configName: string) {
+    return await this.getRequest(common.configurationParameterService + '?ConfigurationParameterName=' + configName);
+  }
+
+  async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
+    return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
+  }
+
+  // async getReasonCodeByClientSubUnit(clientSubUnitId: string) {
+  //   return await this.getRequest(common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId));
+  // }
+
+  // async getReasonCodeByProductIdAndTypeId(productId: string, reasonCodeTypeId: string) {
+  //   return await this.getRequest(
+  //     common.reasonCodesByProductIdAndTypeIdService.replace('{ProductId}', productId).replace('{ReasonCodeTypeId}', reasonCodeTypeId)
+  //   );
+  // }
+
+  // async getReasonCodeByTypeId(reasonCodeTypeId: string) {
+  //   return await this.getRequest(common.reasonCodesByTypeIdService + reasonCodeTypeId);
+  // }
+
+  // async getReasonCodeByProductId(productId: string) {
+  //   return await this.getRequest(common.reasonCodesByProductIdService + productId);
+  // }
+
   async getAllTravelPort() {
     return await this.getRequest(common.airTravelportsService);
   }
 
   async loadSupplierCodesFromPowerBase() {
+
     await this.getRequest(common.supplierCodes).then(
       (x) => {
         this.supplierCodes = [];
@@ -172,11 +199,13 @@ export class DDBService implements OnInit {
   }
 
   getSupplierCodes(type?: string) {
+    debugger;
     if (this.supplierCodes.length === 0) {
       this.loadSupplierCodesFromPowerBase();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
-      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase());
+      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase()
+        || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase());
     }
     return this.supplierCodes;
   }

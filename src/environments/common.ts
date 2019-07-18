@@ -6,12 +6,18 @@ export const common = {
   supplierCodes: '/service/repo/powerbaseaws/Suppliers?CountryCode=CA',
   airTravelportsService: '/service/repo/powerbaseaws/TravelPorts/Airport',
   cdrItemService: '/service/repo/powerbaseaws/ClientDefinedReferenceItem/',
-  cdrItemsByClientAccountNumberService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsByClientAccountNumber/ClientAccountNumber/',
+  cdrItemsByClientAccountService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsByClientAccountNumber/ClientAccountNumber/',
   cdrItemsByClientSubUnitService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsByClientSubUnitClientAccount/',
   cdrItemsCreditCardListService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsCreditCardList/',
   cdrItemListService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemsList/',
   cdrItemValuesService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValues/',
   cdrItemValuesBySharedValuesGroupIdService: '/service/repo/powerbaseaws/ClientDefinedReferenceItemValuesBySharedValuesGroupId/',
   servicingOptionService: '/service/repo/powerbaseaws/ServiceOptions?ClientSubUnitGuid=',
-  feesService: '/ClientSubUnits/{ClientSubUnitGuid}/ClientFees'
+  feesService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/ClientFees',
+  reasonCodesByClientSubUnitService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/ReasonCodes',
+  reasonCodesService: '/service/repo/powerbaseaws/ReasonCodes',
+  reasonCodesByProductIdService: '/service/repo/powerbaseaws/ReasonCodesByProductId/',
+  reasonCodesByTypeIdService: '/service/repo/powerbaseaws/ReasonCodesByReasonCodeTypeId/',
+  reasonCodesByProductIdAndTypeIdService: '/service/repo/powerbaseaws/ReasonCodes/{ProductId}/{ReasonCodeTypeId}/',
+  configurationParameterService: '/service/repo/powerbaseaws/ConfigurationParameter'
 };

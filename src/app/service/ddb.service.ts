@@ -199,11 +199,13 @@ export class DDBService implements OnInit {
   }
 
   getSupplierCodes(type?: string) {
+    debugger;
     if (this.supplierCodes.length === 0) {
       this.loadSupplierCodesFromPowerBase();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
-      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase());
+      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase()
+        || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase());
     }
     return this.supplierCodes;
   }

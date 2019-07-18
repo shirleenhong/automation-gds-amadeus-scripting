@@ -644,6 +644,7 @@ export class UpdateSegmentComponent implements OnInit {
           this.passiveSegments.phone = r
             .trim()
             .split(':')[1]
+            .replace('-TLX', '')
             .trim();
         } else if (r.trim().indexOf('-FAX') === 0) {
           this.passiveSegments.fax = r

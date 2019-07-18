@@ -677,9 +677,9 @@ export class SegmentService {
                 default:
                     break;
             }
-
-            rmGroup.cryptics.push(remText);
-
+            if (remText) {
+                rmGroup.cryptics.push(remText);
+            }
         }
 
         if (cancel.value.reasonUACancel) {

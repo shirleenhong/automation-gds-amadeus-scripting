@@ -66,9 +66,9 @@ Unselect Passive Segment
     Unselect Checkbox    //div[@class='cancelContainer']//input[@ng-reflect-name='${passive_segment_order}']
     [Teardown]    Take Screenshot
 
-Enter Relationship
+Select Relationship
     [Arguments]    ${relationship}
-    Input Text    css=#relationship    ${relationship}
+    Select From List By Label    css=#relationship    ${relationship}
     [Teardown]    Take Screenshot
 
 Select Cancel All Segments
@@ -79,9 +79,9 @@ Click Tab
     [Arguments]    ${cancel_tab}
     Click Element    xpath=//span[contains(text(), '${cancel_tab}')]
 
-Select Is BSP
-    [Arguments]    ${is_bsp}
-    Select From List By Label    css=#isBsp    ${is_bsp}
+Select Cancel Follow-Up Option
+    [Arguments]    ${followup_option}
+    Select From List By Label    css=#followUpOption    ${followup_option}
 
 Enter Branch Number
     [Arguments]    ${branch_number}
@@ -141,3 +141,25 @@ Enter Comments
     Input Text    css=#comments    ${refund_comment}
     [Teardown]    Take Screenshot
 
+Select AC Cancel Check 
+    [Arguments]    ${ac_cancel_check}
+    Select From List By Label    css=#cancelProcess    ${ac_cancel_check}
+    [Teardown]    Take Screenshot
+
+Enter AC Flight Number
+    [Arguments]    ${ac_flight}
+    Input Text    css=#acFlightNo    ${ac_flight}
+    [Teardown]    Take Screenshot
+
+Select Other Reason For Cancel
+    [Arguments]    ${other_reason_cancel}
+    Select From List By Label    css=#reasonNonACCancel    ${other_reason_cancel}
+    [Teardown]    Take Screenshot
+
+Enter Jury Date Month
+    [Arguments]    ${jury_month}  
+    Input Text    css=#acCancelMonth    ${jury_month}
+
+Enter Jury Date Year
+    [Arguments]    ${jury_year}  
+    Input Text    css=#acCancelYear    ${jury_year}

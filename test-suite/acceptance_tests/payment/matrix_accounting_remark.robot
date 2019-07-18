@@ -451,7 +451,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Other Costs Accounting 
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Segment    3
-    Create Matrix Accounting Remark    YES    Apay Accounting Remark    CGO    76543    Credit Card    MC
+    Create Matrix Accounting Remark    YES    Apay Accounting Remark    CGO    76543    Credit Card    CA
     ...    5555555555554444    0122    COSTS REMARK
     Enter Base Amount    1250.05
     Enter GST Tax Amount    12.00
@@ -464,8 +464,8 @@ Verify That APAY Matrix Accounting Remark Is Written For Other Costs Accounting 
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/P2    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCMC5555555555554444/-EXP-0122/-MP-ALL/-BKN-${supplier_confirmation_number}/S3/P2    True
-    Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 27.40 TAX ON MC/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCCA5555555555554444/-EXP-0122/-MP-ALL/-BKN-${supplier_confirmation_number}/S3/P2    True
+    Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 27.40 TAX ON CA/S3    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

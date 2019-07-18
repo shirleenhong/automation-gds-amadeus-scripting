@@ -110,7 +110,7 @@ Verify That Multiple Air Canada Pass Redemption RIR And Accounting Remarks Are W
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-ACJ/-LK-MAC1/-AMT-100.75/-PT-1.00RC/-PT-2.00XG/-PT-3.00XQ/-CD-0.00/P2    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0921/-TK-12343212/-MP-ALL/-BKN-112233/S4/P2    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-ACJ/-LK-MAC2/-AMT-${base_amount}/-PT-0.00RC/-PT-0.00XG/-PT-0.00XQ/-CD-0.00/P3    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCMC5555555555554444/-EXP-1022/-TK-${ticket_number}/-MP-ALL/-BKN-${supplier_confirmation_number}/S5/P3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCCA5555555555554444/-EXP-1022/-TK-${ticket_number}/-MP-ALL/-BKN-${supplier_confirmation_number}/S5/P3    True
     Verify Specific Remark Is Only Written Once    RIR PRAIRIES REGIONAL PASS REDEMPTION-EXECUTIVE FARE/S4
     Verify Specific Remark Is Only Written Once    RIR QUEBEC-ONTARIO CONNECTOR PASS REDEMPTION-FLEX FARE/S5
     Verify Specific Remark Is Only Written Once    RM *U14/-ACPASS-INDIVIDUAL

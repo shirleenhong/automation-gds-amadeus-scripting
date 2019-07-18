@@ -390,7 +390,7 @@ Verify Passive Rail Segments Are Added In The PNR For FR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK (NP)/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S4
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S4
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
@@ -436,7 +436,7 @@ Verify Car Passive Segment With Optional Values Are Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK2 YYZ 10JAN-10JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-10JAN/ST-0100/ED-10JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234/P1-2    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYZ 10JAN-10JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-10JAN/ST-0100/ED-10JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234/P1    True
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S4
     Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S4
     Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S4
@@ -453,7 +453,7 @@ Verify Car Passive Segment Without Optional Values Are Written In The PNR
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK3YYJ21NOV-CWT RETENTION SEGMENT
     ...    RMZ/LANGUAGE-EN-CA
-    Enter GDS Command    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK1 / 11551440 / 1234567    SS AC1074 Y 30DEC YYTMSP GK1 / 11551440 / YYYD123
+    Enter GDS Command    SS AF1074 Y 10DEC YYZORD GK3 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK3 / 11551440 / 1234567    SS AC1074 Y 30DEC YYTMSP GK3 / 11551440 / YYYD123
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -480,7 +480,7 @@ Verify Car Passive Segment Without Optional Values Are Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK3 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555/P1-3    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555/P1    True
     Verify Specific Remark Is Only Written Once    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S8
     Verify Specific Remark Is Not Written In The PNR    RIR CD-
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF
@@ -505,6 +505,7 @@ Verify Hotel Passive Segment Is Written In The PNR
     Enter Policy Number    12hrs
     Enter Hotel Nightly Rate    100.55
     Enter Hotel Rate Type    Test Rate type
+    Enter Number Of Rooms    2
     Select Room Type    Twin Room
     Enter Confirmation Number    cf12312414
     Enter Additional Info    hotel additional info
@@ -543,7 +544,7 @@ Verify Hotel Passive Segment Without Optional Values Written In The PNR
     Enter Policy Number    6P
     Enter Hotel Nightly Rate    555.75
     Enter Hotel Rate Type    Test Rate type
-    Enter Number Of Rooms    2
+    Enter Number Of Rooms    1
     Select Gauranteed For Late Arrival    YES
     Enter Confirmation Number    cf222222
     Select Hotel    0
@@ -553,7 +554,7 @@ Verify Hotel Passive Segment Without Optional Values Written In The PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    HTL 1A HK2 YYT 12JAN-18JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF222222,RATE:TEST RATE TYPE CAD555.75/NIGHT/P1-2    True
+    Verify Specific Remark Is Written In The PNR    HTL 1A HK1 YYT 12JAN-18JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF222222,RATE:TEST RATE TYPE CAD555.75/NIGHT/P1    True
     Verify Specific Remark Is Written In The PNR    RIR ADDRESS-${hotel_address}/S4
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_city} NL/S4
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_country} ${hotel_zip_code}/S4

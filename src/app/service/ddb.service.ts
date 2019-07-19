@@ -199,7 +199,6 @@ export class DDBService implements OnInit {
   }
 
   getSupplierCodes(type?: string) {
-    debugger;
     if (this.supplierCodes.length === 0) {
       this.loadSupplierCodesFromPowerBase();
     }

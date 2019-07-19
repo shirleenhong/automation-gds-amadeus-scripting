@@ -25,6 +25,7 @@ import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
+import { common } from '../../environments/common';
 
 @Component({
   selector: 'app-leisure',
@@ -41,6 +42,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   invoiceEnabled = false;
   submitProcess = false;
   modalRef: BsModalRef;
+  version = common.LeisureVersionNumber;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;

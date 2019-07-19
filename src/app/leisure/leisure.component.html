@@ -142,6 +142,9 @@
       </button>
     </div>
   </div>
+  <div class="version" *ngIf="errorPnrMsg == ''">
+    version {{version}}
+  </div>
   <div class="loader" *ngIf="errorPnrMsg != ''">
     {{ errorPnrMsg }}
   </div>

@@ -18,7 +18,7 @@ import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -358,7 +358,7 @@ export class PaymentRemarkService {
   processOtherPaymentRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
     enum CardType {
       VI = '115000',
-      MC = '116000',
+      AC = '116000',
       AMEX = '117000',
       Diners = '118000'
     }

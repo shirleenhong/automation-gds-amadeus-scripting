@@ -25,6 +25,7 @@ import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
+import { common } from '../../environments/common';
 
 @Component({
   selector: 'app-leisure',
@@ -41,6 +42,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   invoiceEnabled = false;
   submitProcess = false;
   modalRef: BsModalRef;
+  version = common.LeisureVersionNumber;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -79,7 +81,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -119,7 +121,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  async ngOnInit() {}
+
+  async ngOnInit() {
+    // this.message = '';
+    // this.message += JSON.stringify(await this.ddbService.getCdrItemBySubUnit('A:148D4'));
+    // this.message += JSON.stringify(await this.ddbService.getConfigurationParameter('ApacCDRRemark_NonAirSegment'));
+  }
+
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -310,7 +318,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -320,8 +328,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
-    queueCollection = this.segmentService.queueRefund(this.cancelComponent.refundComponent.refundForm, this.cfLine);
-    remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
+    queueCollection = this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
+    if (this.cancelComponent.refundComponent) {
+      remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
+    }
+
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
 
     this.remarkService.BuildRemarks(remarkCollection);

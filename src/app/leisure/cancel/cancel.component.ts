@@ -20,11 +20,13 @@ export class CancelComponent implements OnInit {
   }
 
   checkValid() {
-    this.utilHelper.validateAllFields(this.refundComponent.refundForm);
-    if (
-      !this.refundComponent.refundForm.valid
-    ) {
-      return false;
+    if (this.refundComponent) {
+      this.utilHelper.validateAllFields(this.refundComponent.refundForm);
+      if (
+        !this.refundComponent.refundForm.valid
+      ) {
+        return false;
+      }
     }
 
     this.utilHelper.validateAllFields(this.cancelSegmentComponent.cancelForm);
@@ -33,4 +35,6 @@ export class CancelComponent implements OnInit {
     }
     return true;
   }
+
+  // this.refundComponent.cancelForm.followUpOption.value !== ''
 }

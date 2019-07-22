@@ -143,7 +143,7 @@ Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-PR${last_four_vi}/-BA-224000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-PR-${last_four_vi}/-BA-224000/-GL-124000
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-POINTS ${rbc_points} REF-${cwt_reference}
     Close Cryptic Display Window
     Switch To Command Page
@@ -166,7 +166,7 @@ Verify Accounting Remarks Are Updated For RBC Redemption
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-PR${last_four_vi}/-BA-224000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-PR-${last_four_vi}/-BA-224000/-GL-124000
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-POINTS ${rbc_points} REF-${cwt_reference}
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect

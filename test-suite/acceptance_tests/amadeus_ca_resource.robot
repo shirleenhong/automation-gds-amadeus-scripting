@@ -93,9 +93,9 @@ Create Matrix Accounting Remark
     Set Suite Variable    ${supplier_code}
     Enter Supplier Confirmation Number    ${supplier_confirmation_number}
     Select Matrix Form Of Payment    ${form_of_payment}
-    Run Keyword If    "${form_of_payment}" == "Credit Card" or "${form_of_payment}" == "Agency Plastic"   Select Credit Card Vendor Code    ${cc_vendor_code}
-    Run Keyword If    "${form_of_payment}" == "Credit Card" or "${form_of_payment}" == "Agency Plastic"   Enter Credit Card Number    ${credit_card_number}
-    Run Keyword If    "${form_of_payment}" == "Credit Card" or "${form_of_payment}" == "Agency Plastic"   Enter Credit Card Expiration Date    ${exp_date}
+    Run Keyword If    "${form_of_payment}" == "Credit Card" or "${form_of_payment}" == "Agency Plastic"    Select Credit Card Vendor Code    ${cc_vendor_code}
+    Run Keyword If    "${form_of_payment}" == "Credit Card" or "${form_of_payment}" == "Agency Plastic"    Enter Credit Card Number    ${credit_card_number}
+    Run Keyword If    "${form_of_payment}" == "Credit Card" or "${form_of_payment}" == "Agency Plastic"    Enter Credit Card Expiration Date    ${exp_date}
     [Teardown]    Take Screenshot
 
 Verify Royal Bank Concierge UDID Remarks Are Written

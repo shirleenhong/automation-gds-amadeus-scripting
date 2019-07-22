@@ -474,3 +474,13 @@ input[type='date']::-webkit-inner-spin-button {
   color: red;
   margin-left: 10px;
 }
+
+.version 
+{
+  position: fixed;
+  top: 97%;
+  left: 88%;
+  color: #6f787e;
+  padding-right: 5px;
+  font-size: 13px;
+}

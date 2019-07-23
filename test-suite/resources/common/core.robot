@@ -10,7 +10,7 @@ Add New Command Page
 Close CA Migration Window
     #Close CA Migration Window
     Unselect Frame
-    Sleep    3
+    Sleep    5
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
     Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]/following-sibling::span//span[@class='xWidget xICNstd']
     #Close CA Migration Window in prod

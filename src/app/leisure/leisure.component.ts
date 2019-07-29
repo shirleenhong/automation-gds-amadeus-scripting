@@ -134,12 +134,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
-    if (this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
-      this.validModel.isItineraryValid = true;
-    } else {
-      this.validModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
-    }
-
     return this.validModel.isAllValid();
   }
 
@@ -163,10 +157,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.showLoading('Updating PNR remarks...');
 
     const remarkCollection = new Array<RemarkGroup>();
-    let queueCollection = Array<QueuePlaceModel>();
-    let itineraryQueueCollection = Array<QueuePlaceModel>();
-
-    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
 
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
@@ -199,44 +189,35 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     } else {
       remarkCollection.push(this.packageRemarkService.GetPackageRemarksForDeletion());
     }
-
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
     if (this.remarkComponent.rbcPointsRedemptionComponent) {
       remarkCollection.push(
         this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
       );
     }
-    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
-      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
-      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
-    }
-    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-    queueCollection = queueCollection.concat(itineraryQueueCollection);
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
-
     remarkCollection.push(
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
-
+    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
+    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
     this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
-      () => {
-        if (acpp && acpp.length > 0) {
-          this.processPassPurchase(queueCollection);
-        } else {
-          this.resetReloadUI(queueCollection);
-        }
-      },
-      (error) => {
-        this.showMessage('An Error occured upon updating PNR', MessageType.Error);
-        console.log(JSON.stringify(error));
+    this.remarkService.SubmitRemarks().then(() => {
+      if (acpp && acpp.length > 0) {
+        this.processPassPurchase();
+      } else {
+        this.resetReloadUI();
       }
-    );
+    }, (error) => {
+      this.showMessage('An Error occured upon updating PNR', MessageType.Error);
+      console.log(JSON.stringify(error));
+    });
+
   }
 
-  processPassPurchase(queueCollection) {
+  processPassPurchase() {
     // this will associate the dummy segment to pass purchase
     this.getPnrService().then(async () => {
       const accounts = this.pnrService.getAccountingRemarks();
@@ -254,10 +235,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
         this.remarkService.BuildRemarks(accRemarks);
         await this.remarkService.SubmitRemarks().then(() => {
-          this.resetReloadUI(queueCollection);
+          this.resetReloadUI();
         });
       } else {
-        this.resetReloadUI(queueCollection);
+        this.resetReloadUI();
       }
     });
   }
@@ -332,7 +313,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.cancelComponent.refundComponent) {
       remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     }
-
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
 
     this.remarkService.BuildRemarks(remarkCollection);
@@ -388,6 +368,46 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     );
   }
 
+  public SendItineraryAndQueue() {
+
+    if (!this.itineraryqueueComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+
+    if (this.submitProcess) {
+      return;
+    }
+    this.showLoading('Sending Itinerary and Queueing...');
+    const remarkCollection = new Array<RemarkGroup>();
+    let queueCollection = Array<QueuePlaceModel>();
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
+    }
+    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    this.remarkService.BuildRemarks(remarkCollection);
+    this.remarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr(queueCollection);
+        this.workflow = '';
+      },
+      (error) => {
+        this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error);
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
   displayInvoice() {
     if (this.isPnrLoaded) {
       if (this.pnrService.recordLocator()) {
@@ -396,29 +416,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.invoiceEnabled = false;
       }
     }
-  }
-
-  public SendInvoiceItinerary() {
-    if (this.submitProcess) {
-      return;
-    }
-    this.showLoading('Sending Invoice Itinerary...');
-    this.submitProcess = true;
-    const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-    this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
-    this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
-      () => {
-        this.isPnrLoaded = false;
-        this.getPnr();
-        this.workflow = '';
-      },
-      (error) => {
-        this.showMessage('Error while sending Invoice Itinerary', MessageType.Error);
-        console.log(JSON.stringify(error));
-      }
-    );
   }
 
   public async loadPnr() {
@@ -448,6 +445,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.isPnrLoaded) {
       await this.getPnrService();
       this.workflow = 'invoice';
+    }
+  }
+
+  public async sendItineraryAndQueue() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      this.workflow = 'sendItinerary';
     }
   }
 

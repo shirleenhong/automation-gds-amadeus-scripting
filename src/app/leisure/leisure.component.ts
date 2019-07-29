@@ -214,7 +214,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.showMessage('An Error occured upon updating PNR', MessageType.Error);
       console.log(JSON.stringify(error));
     });
-
+    this.SendInvoiceItinerary();
   }
 
   processPassPurchase() {
@@ -326,6 +326,29 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.showMessage('An error occured during cancellation', MessageType.Error);
         console.log(JSON.stringify(error));
         this.workflow = '';
+      }
+    );
+  }
+
+  public SendInvoiceItinerary() {
+    if (this.submitProcess) {
+      return;
+    }
+    this.showLoading('Sending Invoice Itinerary...');
+    this.submitProcess = true;
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
+    // this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
+    this.remarkService.BuildRemarks(remarkCollection); this.remarkService.BuildRemarks(remarkCollection);
+    this.remarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+        this.workflow = '';
+      },
+      (error) => {
+        this.showMessage('Error while sending Invoice Itinerary', MessageType.Error);
+        console.log(JSON.stringify(error));
       }
     );
   }

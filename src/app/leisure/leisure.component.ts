@@ -214,7 +214,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       console.log(JSON.stringify(error));
     });
 
-    this.SendInvoiceItinerary();
+    if (this.invoiceComponent.matrixInvoiceGroup.controls.selection.value) {
+      this.SendInvoiceItinerary();
+    }
 
   }
 
@@ -332,6 +334,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   public async SendInvoiceItinerary() {
+    if (this.submitProcess) {
+      return;
+    }
+    this.showLoading('Sending Invoice Itinerary...');
+    this.submitProcess = true;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
     // this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice

@@ -137,7 +137,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     return this.validModel.isAllValid();
   }
 
-  public SubmitToPNR() {
+  public async SubmitToPNR() {
     if (this.submitProcess) {
       return;
     }
@@ -201,20 +201,21 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
-    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
     this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(() => {
+    await this.remarkService.SubmitRemarks().then(async () => {
       if (acpp && acpp.length > 0) {
-        this.processPassPurchase();
+        await this.processPassPurchase();
       } else {
-        this.resetReloadUI();
+        await this.resetReloadUI();
       }
     }, (error) => {
       this.showMessage('An Error occured upon updating PNR', MessageType.Error);
       console.log(JSON.stringify(error));
     });
+
     this.SendInvoiceItinerary();
+
   }
 
   processPassPurchase() {
@@ -234,19 +235,19 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         const accRemarks = new Array<RemarkGroup>();
         accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
         this.remarkService.BuildRemarks(accRemarks);
-        await this.remarkService.SubmitRemarks().then(() => {
-          this.resetReloadUI();
+        await this.remarkService.SubmitRemarks().then(async () => {
+          await this.resetReloadUI();
         });
       } else {
-        this.resetReloadUI();
+        await this.resetReloadUI();
       }
     });
   }
 
-  resetReloadUI(queueCollection?) {
+  async resetReloadUI(queueCollection?) {
     this.submitProcess = false;
     this.isPnrLoaded = false;
-    this.getPnr(queueCollection);
+    await this.getPnr(queueCollection);
     this.workflow = '';
   }
 
@@ -330,17 +331,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     );
   }
 
-  public SendInvoiceItinerary() {
-    if (this.submitProcess) {
-      return;
-    }
-    this.showLoading('Sending Invoice Itinerary...');
-    this.submitProcess = true;
+  public async SendInvoiceItinerary() {
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
     // this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
-    this.remarkService.BuildRemarks(remarkCollection); this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
+    this.remarkService.BuildRemarks(remarkCollection);
+    await this.remarkService.SubmitRemarks().then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

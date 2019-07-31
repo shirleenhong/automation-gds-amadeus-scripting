@@ -227,9 +227,9 @@ Verify RMX Cancel Remarks Are Written In The PNR
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF-AC987654321/S5
     Verify Specific Remark Is Not Written In The PNR    RIR DROP OFF-161 BAY ST UNITE C80 M5J2S1 TORONTO/S5
     Verify Specific Remark Is Not Written In The PNR    RIR DROP FEE-212.00/S5
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 *** Keywords ***
 Add Passive Air Segment

@@ -100,7 +100,7 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'UNACCEPTABLE SCHEDULE CHANGE', itemValue: '9' },
       { itemText: 'UNACCEPTABLE DELAY GREATER THAN 2 HRS', itemValue: '10' },
       { itemText: 'JURY/MILITARY DUTY', itemValue: '11' },
-      { itemText: 'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET', itemValue: '7' },
+      { itemText: 'VOLUNTARY CANCEL', itemValue: '7' },
       { itemText: 'AC FLIGHT NOT TICKETED YET', itemValue: '8' }
     ];
 
@@ -114,7 +114,7 @@ export class CancelSegmentComponent implements OnInit {
     this.reasonUaList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '1' },
-      { itemText: 'VOLUNTARY CANCEL. WILL KEEP AS CREDIT OR WILL VOID THE TICKET', itemValue: '2' },
+      { itemText: 'VOLUNTARY CANCEL', itemValue: '2' },
       { itemText: 'UA FLIGHT NOT TICKETED YET', itemValue: '3' },
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO IROP', itemValue: '4' },
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: '5' }

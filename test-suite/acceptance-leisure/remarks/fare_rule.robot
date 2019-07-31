@@ -124,11 +124,6 @@ Verify That Multiple Fare Rule Can Be Added In the PNR
     Click Panel    Remarks
     Click Remarks Tab    Fare Rule
     Click Add Fare Rule Button
-    Select Airline    5 AC1074 Y18DEC YYTMSP GK2 1255 1140 18DEC ABCD123
-    Enter Departure/Arrival    Canada to United States Of America
-    Select Fare Rule
-    Click Save Button
-    Click Add Fare Rule Button
     Select Airline    4 AF1075 Y15DEC ORDYYT GK2 0130 1240 15DEC 1234567
     Enter Currency    USD
     Enter Minimum Change Fee    300
@@ -141,7 +136,6 @@ Verify That Multiple Fare Rule Can Be Added In the PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RIR CANADA TO UNITED STATES OF AMERICA
     Verify Specific Remark Is Written In The PNR    RIR TESTING FARE RULE/S5
     Verify Specific Remark Is Written In The PNR    RIR THE MINIMUM CHANGE FEE IS 300.00 USD
     Close Cryptic Display Window

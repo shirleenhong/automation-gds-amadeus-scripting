@@ -42,3 +42,11 @@ Click Add Segment Main Menu
 Click Back To Main Menu
     Click Element    xpath=//button[contains(text(),'Back To Main Menu')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    30
+
+Click Itinerary And Queue
+    Click Element    xpath=//button[contains(text(), 'Itinerary and Queue')]
+    Wait Until Element Is Visible    xpath=//button[contains(text(), ' Send Itinerary and Queue')]    30
+
+Click Send Itinerary And Queue
+    Click Element    xpath=//button[contains(text(), ' Send Itinerary and Queue')]
+    Sleep    10

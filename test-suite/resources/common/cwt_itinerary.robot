@@ -4,7 +4,7 @@ Resource          common_library.robot
 *** Keywords ***
 Enter Email Address
     [Arguments]    ${email_address_order}    ${email_address}
-    Input Text    xpath=//div[@class='itineraryContainer'][${email_address_order}]//input[@id='emailAddress']    ${email_address}
+    Input Text    xpath=//div[@formarrayname='emailAddresses'][${email_address_order}]//input[@id='emailAddress']    ${email_address}
 
 Click Add Email Address Button
     Click Element    xpath=//div[@ng-reflect-name='emailAddresses']//i[@id='add']

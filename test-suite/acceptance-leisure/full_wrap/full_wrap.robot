@@ -96,6 +96,13 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     Select Hotel Reservation Booked    YES
     Click Submit To PNR
     Sleep    5
+    Click Itinerary And Queue
+    Enter Email Address    1    testingemail@cwt.com
+    Select Itinerary Language    English
+    Select Itinerary Type Of Transaction    Invoice
+    Enter Service Remark    1    Testing Service Remark
+    Enter Tickets Remark    1    Testing Tickets Remark
+    Click Send Itinerary And Queue
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
@@ -171,13 +178,14 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Add Insurance Reporting Remarks
     Click Panel    Remarks
     Add Tour Package Costs
-    Click Panel    Itinerary and Queue
+    Click Submit To PNR
+    Click Itinerary And Queue
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    French
     Select Itinerary Type Of Transaction    Invoice
     Enter Service Remark    1    Testing Service Remark
     Enter Tickets Remark    1    Testing Tickets Remark
-    Click Submit To PNR
+    Click Send Itinerary And Queue
     Sleep    3
     Close CA Migration Window
     Open Cryptic Display Window

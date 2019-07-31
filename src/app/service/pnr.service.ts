@@ -23,7 +23,7 @@ export class PnrService {
   segments = [];
   amountPipe = new AmountPipe();
   PCC = '';
-  // recordLocator = '';
+  // pnr = '';
 
   constructor() { }
 
@@ -98,11 +98,11 @@ export class PnrService {
     });
   }
 
-  getRecordLocator(): void {
-    smartScriptSession.getRecordLocator().then((x) => {
-      this.recordLocator = x;
-    });
-  }
+  // getRecordLocator(): void {
+  //   smartScriptSession.getRecordLocator().then((x) => {
+  //     this.pnr = x;
+  //   });
+  // }
 
   getRemarkLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
@@ -1259,5 +1259,30 @@ export class PnrService {
     });
 
     return relatedPassenger;
+  }
+
+  getTSTTicketed() {
+    const segments = [];
+    for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
+      const segmentName = tst.elementManagementData.segmentName;
+      if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
+        tst.referenceForDataElement.reference.forEach(ref => {
+          if (ref.qualifier === 'ST') {
+            segments.push(ref.number);
+          }
+        });
+      }
+    }
+
+    for (const fp of this.pnrObj.fpElements) {
+      if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
+        fp.fullNode.referenceForDataElement.reference.array.forEach(ref => {
+          if (segments.indexOf(ref.number) === -1) {
+            return true;
+          }
+        });
+      }
+    }
+    return false;
   }
 }

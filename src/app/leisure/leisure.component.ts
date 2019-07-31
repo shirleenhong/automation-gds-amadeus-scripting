@@ -202,6 +202,15 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+
+    debugger;
+    remarkCollection.push(this.paymentRemarkService.removeRmFop());
+    if (this.pnrService.getTSTTicketed()) {
+      if (confirm('Are you issuing a BSP ticket on a CWT Agency Plastic Credit Card?')) {
+        // Save it!
+      }
+    }
+
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(async () => {
       if (acpp && acpp.length > 0) {

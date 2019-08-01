@@ -1,40 +1,5 @@
 <form [formGroup]="associatedRemarksForm">
   <div class="associatedContainer">
-    <!-- <div class="form-group row">
-      <div class="col-sm-4">Segment: </div>
-      <div class="col-sm-6">
-        <select id="segmentNo" name="segmentNo" class="form-control" formControlName="segmentNo">
-          <option *ngFor="let item of  segments" [value]="item. tatooNo">
-            {{item.lineNo + ' ' + item.longFreeText + item.freetext}}
-          </option>
-        </select>
-      </div>
-    </div> -->
-
-    <!-- <div class="form-group  row">
-      <div class="col-sm-4">Associated Remarks :</div>
-      <div class="col-sm-8">
-        <div style="padding-bottom:10px" formArrayName="items"
-          *ngFor="let item of this.associatedRemarksForm.get('items')['controls']; let i = index;">
-          <div [formGroupName]="i">
-            <table style="width:100%">
-              <tr>
-                <td style="width:63%">
-                  <input formControlName="remarkText" class="form-control" maxlength="60">
-                </td>
-                <td style="width:22%">
-                  &nbsp;
-                  <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
-                  &nbsp;
-                  <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <div formArrayName="items" *ngFor="let item of this.associatedRemarksForm.get('items')['controls']; let i = index;"
       class="col">
       <div [formGroupName]="i">
@@ -43,13 +8,8 @@
             <td style="width:8%">
               Segment
             </td>
-            <td style="width:30%">
-              <select id="segmentNo" name="segmentNo" class="form-control" formControlName="segmentNo"
-                style="width:90%">
-                <option *ngFor="let item of  segments" [value]="item. tatooNo">
-                  {{item.lineNo + ' ' + item.longFreeText + item.freetext}}
-                </option>
-              </select>
+            <td style="width:15%">
+              <app-segment-select formControlName="segmentNo" #segmentApp></app-segment-select>
             </td>
             <td style="width:8%">
               Remark
@@ -65,26 +25,6 @@
             </td>
           </tr>
         </table>
-
-        <!-- <div> <span> Segment </span> </div>
-        <div width="50px">
-          <select id="segmentNo" name="segmentNo" class="form-control" formControlName="segmentNo">
-            <option *ngFor="let item of  segments" [value]="item. tatooNo">
-              {{item.lineNo + ' ' + item.longFreeText + item.freetext}}
-            </option>
-          </select>
-        </div>
-        <div> <span> Associated Remarks</span> </div>
-        <div width="50px">
-          <input formControlName="remarkText" type="text" class="form-control" maxlength="25" />
-        </div>
-        <div>
-          <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
-        </div>
-        <div>
-          &nbsp;
-          <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>
-        </div> -->
       </div>
     </div>
 

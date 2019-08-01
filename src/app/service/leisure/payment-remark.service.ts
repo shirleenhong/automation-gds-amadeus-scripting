@@ -12,6 +12,7 @@ import { AccountingRemarkComponent } from '../../leisure/payments/accounting-rem
 import { LeisureFeeComponent } from '../../leisure/payments/leisure-fee/leisure-fee.component';
 import { LeisureFeeModel } from '../../models/pnr/leisure-fee.model';
 import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
+import { MatrixReceiptComponent } from 'src/app/leisure/payments/matrix-receipt/matrix-receipt.component';
 
 @Injectable({
   providedIn: 'root'
@@ -22,32 +23,53 @@ export class PaymentRemarkService {
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
-  public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
+  public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[], fordelete: MatrixReceiptModel[]) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Matrix Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.deleteRemarkByIds = this.pnrService.getMatrixReceiptLineNumbers();
+    remGroup.deleteRemarkByIds = [];
+
+
+    let matrixReceiptsToUpdate = Array<MatrixReceiptModel>();
+    if (matrixRemarks) {
+      matrixReceiptsToUpdate = matrixRemarks.filter(x => x.status === 'UPDATED');
+    }
+    if (matrixReceiptsToUpdate.length > 0 || fordelete.length > 0) {
+      remGroup.deleteRemarkByIds = this.pnrService.getMatrixReceiptLineNumbers();
+    }
+
     if (matrixRemarks !== undefined) {
       matrixRemarks.forEach((matrix) => {
-        if (matrix.bankAccount === '224000') {
-          this.processRBCredemptionRemarks(matrix, remGroup.remarks);
-        } else {
-          this.processOtherPaymentRemarks(matrix, remGroup.remarks);
+        if (matrixReceiptsToUpdate.length > 0 || fordelete.length > 0 || matrix.status === 'ADDED') {
+          if (matrix.bankAccount === '224000') {
+            this.processRBCredemptionRemarks(matrix, remGroup.remarks);
+          } else {
+            this.processOtherPaymentRemarks(matrix, remGroup.remarks);
+          }
         }
       });
     }
     return remGroup;
   }
 
-  public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
+  public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[], fordelete?: MatrixAccountingModel[]) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    // - delete existing lines
-    const existingLines = this.pnrService.getMatrixAccountingLineNumbers();
-    if (existingLines.length > 0) {
-      remGroup.deleteRemarkByIds = existingLines;
+
+    let matrixAccountingReceiptsToUdpate = Array<MatrixAccountingModel>();
+    if (accountingRemarks) {
+      matrixAccountingReceiptsToUdpate = accountingRemarks.filter(x => x.status === 'UPDATED');
     }
+
+    // - delete existing lines
+    if (matrixAccountingReceiptsToUdpate.length > 0 || fordelete.length > 0) {
+      const existingLines = this.pnrService.getMatrixAccountingLineNumbers();
+      if (existingLines.length > 0) {
+        remGroup.deleteRemarkByIds = this.pnrService.getMatrixAccountingLineNumbers();
+      }
+    }
+
     const apays = this.pnrService.getApayRirRemarkLines();
     if (apays !== null && apays.length > 0) {
       if (remGroup.deleteRemarkByIds === undefined) {
@@ -98,7 +120,9 @@ export class PaymentRemarkService {
           }
         }
 
-        this.processAccountingRemarks(account, remGroup);
+        if (matrixAccountingReceiptsToUdpate.length > 0 || fordelete.length > 0 || account.status === 'ADDED') {
+          this.processAccountingRemarks(account, remGroup);
+        }
 
         if (!found && account.supplierCodeName === 'ACJ') {
           remGroup.remarks.push(this.getRemarksModel('U14/-ACPASS-INDIVIDUAL', '*', 'RM'));
@@ -392,13 +416,20 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
-    const remarksForDelete = ['SFC/-', 'FEE/-', 'TAX-', 'TEX/'];
-    remarksForDelete.forEach((rem) => {
-      const lineNums = this.pnrService.getRemarkLineNumbers(rem);
-      if (lineNums.length > 0) {
-        remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
-      }
-    });
+    let leisureFeesToUpdate = Array<LeisureFeeModel>();
+    if (feeList) {
+      leisureFeesToUpdate = feeList.filter(x => x.status === 'UPDATED');
+    }
+
+    if (leisureFeesToUpdate.length > 0 || comp.leisureFeesToDelete.length > 0) {
+      const remarksForDelete = ['SFC/-', 'FEE/-', 'TAX-', 'TEX/'];
+      remarksForDelete.forEach((rem) => {
+        const lineNums = this.pnrService.getRemarkLineNumbers(rem);
+        if (lineNums.length > 0) {
+          remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+        }
+      });
+    }
 
     let remark = '';
 
@@ -406,20 +437,22 @@ export class PaymentRemarkService {
       remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
       feeList.forEach((f) => {
-        remark = this.generateSFCRemark(f);
-        const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
-        remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
-        // RM FEE
-        const remarkFee = [];
-        remark.split('/').forEach((x) => {
-          if (x.indexOf('SFC') < 0 && x.indexOf('-PT') < 0 && x.indexOf('-FP-TRF') < 0) {
-            remarkFee.push(x);
-            if (x.indexOf('-AMT') >= 0) {
-              remarkFee.push('-FP-FEE');
+        if (leisureFeesToUpdate.length > 0 || comp.leisureFeesToDelete.length > 0 || f.status === 'ADDED') {
+          remark = this.generateSFCRemark(f);
+          const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
+          remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
+          // RM FEE
+          const remarkFee = [];
+          remark.split('/').forEach((x) => {
+            if (x.indexOf('SFC') < 0 && x.indexOf('-PT') < 0 && x.indexOf('-FP-TRF') < 0) {
+              remarkFee.push(x);
+              if (x.indexOf('-AMT') >= 0) {
+                remarkFee.push('-FP-FEE');
+              }
             }
-          }
-        });
-        remGroup.remarks.push(this.getRemarksModel('FEE/' + remarkFee.join('/'), '*', '', '', pass));
+          });
+          remGroup.remarks.push(this.getRemarksModel('FEE/' + remarkFee.join('/'), '*', '', '', pass));
+        }
       });
       const ex = [];
       comp.exemption.forEach((x) => {
@@ -552,5 +585,81 @@ export class PaymentRemarkService {
     remGroup.deleteRemarkByIds = [];
     remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
     return remGroup;
+  }
+
+  encryptedMatrixExist(matrixRemarks: MatrixReceiptComponent): string {
+    const receipt = matrixRemarks.matrixReceipts;
+    let status = false;
+    const encrypt = [];
+    receipt.forEach((rem) => {
+      if (rem.status === 'UPDATED' && !status) {
+        status = true;
+      }
+      if (this.checkCreditCardNo(rem.ccNo)) {
+        encrypt.push(rem.rln);
+      }
+    });
+
+    if (matrixRemarks.matrixReceiptsToDelete.length > 0) {
+      status = true;
+    }
+    if (status && encrypt.length) {
+      return 'Matrix Receipt: ' + encrypt.join(',') + '\n';
+    }
+    return '';
+  }
+
+  encryptedAccountingExist(accounting: AccountingRemarkComponent): string {
+    const receipt = accounting.accountingRemarks;
+    let status = false;
+    const encrypt = [];
+    receipt.forEach((rem) => {
+      if (rem.status === 'UPDATED' && !status) {
+        status = true;
+      }
+      if (this.checkCreditCardNo(rem.cardNumber)) {
+        encrypt.push(rem.tkMacLine);
+      }
+    });
+
+    if (accounting.accountingRemarksToDelete.length > 0) {
+      status = true;
+    }
+    if (status && encrypt.length) {
+      return 'Accounting Receipt: ' + encrypt.join(',') + '\n';
+    }
+    return '';
+  }
+
+  encryptedLeisureExist(leisure: LeisureFeeComponent): string {
+    const feeList = leisure.leisureFeeList;
+    let status = false;
+    const encrypt = [];
+    feeList.forEach((rem) => {
+      if (rem.status === 'UPDATED' && !status) {
+        status = true;
+      }
+      if (this.checkCreditCardNo(rem.ccNo)) {
+        encrypt.push(rem.fln);
+      }
+    });
+
+    if (leisure.leisureFeesToDelete.length > 0) {
+      status = true;
+    }
+
+    if (status && encrypt.length) {
+      return 'Leisure Receipt: ' + encrypt.join(',') + '\n';
+    }
+    return '';
+  }
+
+  checkCreditCardNo(ccNo) {
+    if (ccNo !== undefined) {
+      if (ccNo.toString().includes('X') || ccNo.toString().length < 16) {
+        return true;
+      }
+    }
+    return false;
   }
 }

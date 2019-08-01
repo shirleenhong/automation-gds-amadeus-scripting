@@ -45,6 +45,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   version = common.LeisureVersionNumber;
   issuingBsp = false;
   bspReply = false;
+  errorAccounting: String;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -145,6 +146,15 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
+    const encryptMatrix = this.paymentRemarkService.encryptedMatrixExist(this.paymentComponent.matrixReceipt);
+    const encryptAccounting = this.paymentRemarkService.encryptedAccountingExist(this.paymentComponent.accountingRemark);
+    const encryptLeisure = this.paymentRemarkService.encryptedLeisureExist(this.paymentComponent.leisureFee);
+
+    if (encryptMatrix || encryptAccounting || encryptLeisure) {
+      this.accountingModal(encryptMatrix + encryptAccounting + encryptLeisure);
+      return;
+    }
+
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -168,13 +178,17 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     remarkCollection.push(this.paymentRemarkService.removeRmFop());
 
+
     if (this.issuingBsp) {
       remarkCollection.push(this.paymentRemarkService.addRmFop());
       this.issuingBsp = false;
     }
     this.bspReply = false;
-    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
-    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
+    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts,
+      this.paymentComponent.matrixReceipt.matrixReceiptsToDelete));
+    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks,
+      this.paymentComponent.accountingRemark.accountingRemarksToDelete));
+
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
     remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
@@ -495,6 +509,16 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       await this.getPnrService();
       this.workflow = 'sendItinerary';
     }
+  }
+
+  accountingModal(errorLines) {
+    const modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static',
+    });
+    modalRef.content.modalRef = modalRef;
+    modalRef.content.title = 'Warning';
+    modalRef.content.message = 'Please re-enter Credit Card numbers on the following: \n' + errorLines;
+
   }
 
   back(): void {

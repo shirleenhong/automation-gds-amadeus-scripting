@@ -14,6 +14,7 @@ export class MatrixReceiptModel {
   gcNumber: string;
   modePayment: string;
   paymentType: PaymentType;
+  status: string // ADDED, UPDATED
 }
 
 export enum PaymentType {

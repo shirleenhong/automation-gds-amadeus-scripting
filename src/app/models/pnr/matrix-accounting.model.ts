@@ -32,4 +32,5 @@ export class MatrixAccountingModel {
   penaltyHst = '0.00';
   penaltyQst = '0.00';
   penaltyOtherTax = '0.00';
+  status: string // ADDED, UPDATED
 }

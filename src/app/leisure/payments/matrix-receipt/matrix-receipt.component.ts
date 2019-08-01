@@ -15,6 +15,7 @@ import { MessageType } from 'src/app/shared/message/MessageType';
 export class MatrixReceiptComponent implements OnInit {
   @Input()
   matrixReceipts: MatrixReceiptModel[] = [];
+  matrixReceiptsToDelete: MatrixReceiptModel[] = [];
   modalRef: BsModalRef;
   isAddNew = false;
 
@@ -22,7 +23,7 @@ export class MatrixReceiptComponent implements OnInit {
     private modalService: BsModalService,
     private pnrService: PnrService,
     private utilHelper: UtilHelper
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadMatrixReceipt();
@@ -41,6 +42,7 @@ export class MatrixReceiptComponent implements OnInit {
             const cur = this.matrixReceipts.find(
               x => x.rln === this.modalRef.content.matrixReceipt.rln
             );
+            this.modalRef.content.matrixReceipt.status = 'UPDATED';
             this.utilHelper.modelCopy(this.modalRef.content.matrixReceipt, cur);
           } else {
             this.matrixReceipts.push(this.modalRef.content.matrixReceipt);
@@ -52,6 +54,7 @@ export class MatrixReceiptComponent implements OnInit {
           this.modalRef.content.response === 'YES'
         ) {
           const r = this.modalRef.content.paramValue;
+          this.matrixReceiptsToDelete.push(r);
           this.matrixReceipts.splice(this.matrixReceipts.indexOf(r), 1);
           let i = 1;
           this.matrixReceipts.forEach(x => {
@@ -78,6 +81,7 @@ export class MatrixReceiptComponent implements OnInit {
   }
 
   updateItem(r: MatrixReceiptModel) {
+    // r.status = 'UPDATED';
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, {
       backdrop: 'static'
@@ -91,6 +95,7 @@ export class MatrixReceiptComponent implements OnInit {
   addMatrixReceipt() {
     this.isAddNew = true;
     const matrixReceipt = new MatrixReceiptModel();
+    matrixReceipt.status = 'ADDED';
     this.modalRef = this.modalService.show(UpdateMatrixReceiptComponent, {
       backdrop: 'static'
     });

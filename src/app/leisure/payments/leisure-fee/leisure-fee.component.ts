@@ -15,6 +15,7 @@ import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms'
 })
 export class LeisureFeeComponent implements OnInit {
   leisureFeeList = new Array<LeisureFeeModel>();
+  leisureFeesToDelete: LeisureFeeModel[] = [];
   modalRef: BsModalRef;
   isAddNew = false;
   showReasonFee = false;
@@ -31,7 +32,7 @@ export class LeisureFeeComponent implements OnInit {
     private pnrService: PnrService,
     private fb: FormBuilder,
     private utilHelper: UtilHelper
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.modalSubscribeOnClose();
@@ -65,6 +66,7 @@ export class LeisureFeeComponent implements OnInit {
         if (this.modalRef.content.isSubmitted) {
           if (!this.isAddNew) {
             const cur = this.leisureFeeList.find((x) => x.fln === this.modalRef.content.leisureFee.fln);
+            this.modalRef.content.leisureFee.status = 'UPDATED';
             this.utilHelper.modelCopy(this.modalRef.content.leisureFee, cur);
           } else {
             this.leisureFeeList.push(this.modalRef.content.leisureFee);
@@ -73,6 +75,7 @@ export class LeisureFeeComponent implements OnInit {
         }
         if (this.modalRef.content.callerName === 'leisureFee' && this.modalRef.content.response === 'YES') {
           const r = this.modalRef.content.paramValue;
+          this.leisureFeesToDelete.push(r);
           this.leisureFeeList.splice(this.leisureFeeList.indexOf(r), 1);
           let i = 1;
           this.leisureFeeList.forEach((x) => {
@@ -99,6 +102,7 @@ export class LeisureFeeComponent implements OnInit {
   }
 
   updateItem(r: LeisureFeeModel) {
+    // r.status = 'UPDATED';
     this.isAddNew = false;
 
     this.modalRef = this.modalService.show(UpdateLeisureFeeComponent, {
@@ -106,6 +110,7 @@ export class LeisureFeeComponent implements OnInit {
     });
     this.modalRef.content.title = 'Update Leisure Fee Collection';
     this.modalRef.content.leisureFee = new LeisureFeeModel();
+    this.modalRef.content.leisureFee.status = 'UPDATED';
     this.modalRef.content.exemption = this.exemption;
     this.utilHelper.modelCopy(r, this.modalRef.content.leisureFee);
   }
@@ -113,6 +118,7 @@ export class LeisureFeeComponent implements OnInit {
   addLeisureFee() {
     this.isAddNew = true;
     const leisureFee = new LeisureFeeModel();
+    leisureFee.status = 'ADDED';
 
     if (this.leisureFeeList.length > 0) {
       this.utilHelper.modelCopy(this.leisureFeeList[0], leisureFee);

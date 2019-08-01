@@ -510,11 +510,19 @@ export class PackageRemarkService {
     rmGroup.deleteRemarkByIds = new Array<string>();
 
     const arr = group.get('items') as FormArray;
+    const segmentList = this.pnrService.getSegmentTatooNumber();
+    let tattoosegment = '';
     for (const c of arr.controls) {
       remText = c.get('remarkText').value;
       segment = c.get('segmentNo').value;
+      const s = segment.split(',');
+      segmentList.forEach((x) => {
+        if (s.indexOf(x.lineNo) >= 0) {
+          tattoosegment = tattoosegment + x.tatooNo + ',';
+        }
+      });
       if (segment && remText) {
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', segment));
+        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', tattoosegment.replace(/,\s*$/, '').trim()));
       }
 
     }

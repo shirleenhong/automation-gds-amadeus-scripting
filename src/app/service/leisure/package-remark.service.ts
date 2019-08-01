@@ -16,7 +16,7 @@ export class PackageRemarkService {
   decPipe = new DecimalPipe('en-US');
   rbcForDeletion = [];
 
-  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
+  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) {}
 
   public GetITCPackageRemarks(group: any) {
     const rmGroup = new RemarkGroup();
@@ -155,9 +155,9 @@ export class PackageRemarkService {
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'LESS DEPOSIT PAID ' +
-        (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
-        ' - ' +
-        formatDate(Date.now(), 'dMMM', 'en'),
+          (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
+          ' - ' +
+          formatDate(Date.now(), 'dMMM', 'en'),
         'RI',
         'R'
       )
@@ -167,10 +167,10 @@ export class PackageRemarkService {
       rmGroup.remarks.push(
         this.remarkHelper.createRemark(
           '---- BALANCE OF ' +
-          (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
-          ' IS DUE ' +
-          datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
-          ' ----',
+            (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
+            ' IS DUE ' +
+            datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
+            ' ----',
           'RI',
           'R'
         )
@@ -511,20 +511,20 @@ export class PackageRemarkService {
 
     const arr = group.get('items') as FormArray;
     const segmentList = this.pnrService.getSegmentTatooNumber();
-    let tattoosegment = '';
+
     for (const c of arr.controls) {
+      const tattoosegments = [];
       remText = c.get('remarkText').value;
       segment = c.get('segmentNo').value;
       const s = segment.split(',');
       segmentList.forEach((x) => {
         if (s.indexOf(x.lineNo) >= 0) {
-          tattoosegment = tattoosegment + x.tatooNo + ',';
+          tattoosegments.push(x.tatooNo);
         }
       });
       if (segment && remText) {
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', tattoosegment.replace(/,\s*$/, '').trim()));
+        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', tattoosegments.join(',')));
       }
-
     }
     return rmGroup;
   }

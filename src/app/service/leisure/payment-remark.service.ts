@@ -539,7 +539,9 @@ export class PaymentRemarkService {
     remGroup.deleteRemarkByIds = [];
 
     const line = this.pnrService.getRemarkLineNumber('FOP/-AP');
-    remGroup.deleteRemarkByIds.push(line);
+    if (line) {
+      remGroup.deleteRemarkByIds.push(line);
+    }
     return remGroup;
   }
 

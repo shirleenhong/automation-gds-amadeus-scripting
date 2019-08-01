@@ -16,7 +16,7 @@ export class PackageRemarkService {
   decPipe = new DecimalPipe('en-US');
   rbcForDeletion = [];
 
-  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) {}
+  constructor(private remarkHelper: RemarkHelper, private packageRemarkHelper: PackageRemarkHelper, private pnrService: PnrService) { }
 
   public GetITCPackageRemarks(group: any) {
     const rmGroup = new RemarkGroup();
@@ -155,9 +155,9 @@ export class PackageRemarkService {
     rmGroup.remarks.push(
       this.remarkHelper.createRemark(
         'LESS DEPOSIT PAID ' +
-          (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
-          ' - ' +
-          formatDate(Date.now(), 'dMMM', 'en'),
+        (group.controls.depositPaid.value === '' ? '0.00' : group.controls.depositPaid.value) +
+        ' - ' +
+        formatDate(Date.now(), 'dMMM', 'en'),
         'RI',
         'R'
       )
@@ -167,10 +167,10 @@ export class PackageRemarkService {
       rmGroup.remarks.push(
         this.remarkHelper.createRemark(
           '---- BALANCE OF ' +
-            (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
-            ' IS DUE ' +
-            datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
-            ' ----',
+          (group.controls.balanceToBePaid.value === '' ? '0.00' : group.controls.balanceToBePaid.value) +
+          ' IS DUE ' +
+          datePipe.transform(group.controls.balanceDueDate.value, 'dMMMyy') +
+          ' ----',
           'RI',
           'R'
         )
@@ -503,18 +503,22 @@ export class PackageRemarkService {
 
   public buildAssociatedRemarks(group: FormGroup) {
     let remText = '';
+    let segment = '';
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Associated Remarks';
     rmGroup.remarks = new Array<RemarkModel>();
     rmGroup.deleteRemarkByIds = new Array<string>();
 
     const arr = group.get('items') as FormArray;
-
     for (const c of arr.controls) {
-      if (arr.controls.length >= 1) {
-        remText = c.get('remarkText').value;
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', group.get('segmentNo').value));
+      // if (arr.controls.length >= 1) {
+      remText = c.get('remarkText').value;
+      segment = c.get('segmentNo').value;
+      if (segment && remText) {
+        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', segment));
       }
+
+      // }
     }
     return rmGroup;
   }

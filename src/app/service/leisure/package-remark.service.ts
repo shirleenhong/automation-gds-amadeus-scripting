@@ -511,14 +511,12 @@ export class PackageRemarkService {
 
     const arr = group.get('items') as FormArray;
     for (const c of arr.controls) {
-      // if (arr.controls.length >= 1) {
       remText = c.get('remarkText').value;
       segment = c.get('segmentNo').value;
       if (segment && remText) {
         rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', segment));
       }
 
-      // }
     }
     return rmGroup;
   }

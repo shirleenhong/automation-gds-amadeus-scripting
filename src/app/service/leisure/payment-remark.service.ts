@@ -531,4 +531,24 @@ export class PaymentRemarkService {
     }
     return remGroup;
   }
+
+  public removeRmFop() {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'FOP';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.deleteRemarkByIds = [];
+
+    const line = this.pnrService.getRemarkLineNumber('FOP/-AP');
+    remGroup.deleteRemarkByIds.push(line);
+    return remGroup;
+  }
+
+  public addRmFop() {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'FOP';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.deleteRemarkByIds = [];
+    remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
+    return remGroup;
+  }
 }

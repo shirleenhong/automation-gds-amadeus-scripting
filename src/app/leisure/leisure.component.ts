@@ -43,6 +43,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitProcess = false;
   modalRef: BsModalRef;
   version = common.LeisureVersionNumber;
+  issuingBsp = false;
+  bspReply = false;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -123,6 +125,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
 
   async ngOnInit() {
+    this.modalSubscribeOnClose();
     // this.message = '';
     // this.message += JSON.stringify(await this.ddbService.getCdrItemBySubUnit('A:148D4'));
     // this.message += JSON.stringify(await this.ddbService.getConfigurationParameter('ApacCDRRemark_NonAirSegment'));
@@ -153,11 +156,22 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
+    if (!this.bspReply && this.pnrService.getTSTTicketed()) {
+      this.issueBsp();
+      return;
+    }
+
     this.submitProcess = true;
     this.showLoading('Updating PNR remarks...');
 
     const remarkCollection = new Array<RemarkGroup>();
 
+    remarkCollection.push(this.paymentRemarkService.removeRmFop());
+    if (this.issuingBsp) {
+      remarkCollection.push(this.paymentRemarkService.addRmFop());
+      this.issuingBsp = false;
+      this.bspReply = false;
+    }
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
@@ -202,6 +216,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(async () => {
       if (acpp && acpp.length > 0) {
@@ -493,5 +508,32 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.cancelEnabled = false;
       }
     }
+  }
+
+  issueBsp() {
+    this.issuingBsp = false;
+    this.modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
+    this.modalRef.content.modalRef = this.modalRef;
+    this.modalRef.content.title = 'Issuing a BSP ticket';
+    this.modalRef.content.message = 'Are you issuing a BSP ticket on a CWT Agency Plastic Credit Card?';
+    this.modalRef.content.callerName = 'issuingBSP';
+    this.modalRef.content.setMessageType(MessageType.YesNo);
+  }
+
+  modalSubscribeOnClose() {
+    this.modalService.onHide.subscribe(() => {
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'issuingBSP') {
+        if (this.modalRef.content.response === 'YES') {
+          this.issuingBsp = true;
+        } else {
+          this.issuingBsp = false;
+        }
+        this.modalRef.content.response = '';
+        this.bspReply = true;
+        this.SubmitToPNR();
+      }
+    });
   }
 }

@@ -44,7 +44,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   modalRef: BsModalRef;
   version = common.LeisureVersionNumber;
   issuingBsp = false;
-
+  bspReply = false;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -156,7 +156,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
-    if (!this.issuingBsp && this.pnrService.getTSTTicketed()) {
+    if (!this.bspReply && this.pnrService.getTSTTicketed()) {
       this.issueBsp();
       return;
     }
@@ -170,6 +170,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.issuingBsp) {
       remarkCollection.push(this.paymentRemarkService.addRmFop());
       this.issuingBsp = false;
+      this.bspReply = false;
     }
     remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
     remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
@@ -529,8 +530,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         } else {
           this.issuingBsp = false;
         }
-        this.SubmitToPNR();
         this.modalRef.content.response = '';
+        this.bspReply = true;
+        this.SubmitToPNR();
       }
     });
   }

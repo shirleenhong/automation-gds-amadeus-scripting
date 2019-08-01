@@ -1276,11 +1276,11 @@ export class PnrService {
 
     for (const fp of this.pnrObj.fpElements) {
       if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
-        fp.fullNode.referenceForDataElement.reference.array.forEach(ref => {
+        for (const ref of fp.fullNode.referenceForDataElement.reference) {
           if (segments.indexOf(ref.number) === -1) {
             return true;
           }
-        });
+        }
       }
     }
     return false;

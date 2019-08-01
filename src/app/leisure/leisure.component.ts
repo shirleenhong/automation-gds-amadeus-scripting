@@ -523,15 +523,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(() => {
-      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
-        if (
-          this.modalRef.content.callerName === 'issuingBSP' &&
-          this.modalRef.content.response === 'YES'
-        ) {
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'issuingBSP') {
+        if (this.modalRef.content.response === 'YES') {
           this.issuingBsp = true;
-          this.modalRef.content.response = '';
-          this.SubmitToPNR();
+        } else {
+          this.issuingBsp = false;
         }
+        this.SubmitToPNR();
+        this.modalRef.content.response = '';
       }
     });
   }

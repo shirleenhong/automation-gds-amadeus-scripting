@@ -55,7 +55,7 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
 
-    if (accountingRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === accountingRemarks.length) {
+    if (accountingRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0) {
       // if no change was done
       return remGroup;
     }

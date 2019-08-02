@@ -36,17 +36,16 @@ export class PaymentComponent {
 
   checkEncryptedCreditCard() {
     const encruyptedList = [];
-    encruyptedList.push('');
     const accs = this.checkEnryptedAccounting();
-    if (accs !== undefined) {
+    if (accs !== null) {
       encruyptedList.push(accs);
     }
     const matrix = this.checkEncryptedMatrixReceipt();
-    if (matrix !== undefined) {
+    if (matrix !== null) {
       encruyptedList.push(matrix);
     }
     const fees = this.checkEncryptedLeisureFeeReceipt();
-    if (fees !== undefined) {
+    if (fees !== null) {
       encruyptedList.push(fees);
     }
     return encruyptedList;
@@ -75,6 +74,7 @@ export class PaymentComponent {
     if (updated && receipts.length > 0) {
       return 'Matrix Receipt #: ' + receipts.join(',');
     }
+    return null;
   }
 
   checkEncryptedLeisureFeeReceipt() {
@@ -87,5 +87,6 @@ export class PaymentComponent {
     if (updated && fees.length > 0) {
       return 'Leisure Fee #: ' + fees.join(',');
     }
+    return null;
   }
 }

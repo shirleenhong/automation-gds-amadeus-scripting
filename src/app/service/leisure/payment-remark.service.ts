@@ -55,7 +55,7 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
 
-    if (accountingRemarks.filter((x) => !x.status).length === accountingRemarks.length) {
+    if (accountingRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === accountingRemarks.length) {
       // if no change was done
       return remGroup;
     }
@@ -411,6 +411,19 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
   }
 
+  getNoFeeReason(remGroup, feeList, fg, cfa) {
+    const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
+    if (lineNum !== '') {
+      remGroup.deleteRemarkByIds.push(lineNum);
+    }
+    if (feeList.length === 0 && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
+      // *U11
+      const noFeeReason = fg.get('noFeeReason').value;
+      const remark = 'U11/-' + noFeeReason;
+      remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+    }
+  }
+
   public GetLeisureFeeRemarks(comp: LeisureFeeComponent, cfa: string) {
     const fg = comp.leisureFeeForm;
     const feeList = comp.leisureFeeList;
@@ -419,7 +432,9 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
-    if (feeList.filter((x) => !x.status).length === feeList.length) {
+    this.getNoFeeReason(remGroup, feeList, fg, cfa);
+
+    if (feeList.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0) {
       // return if no Change
       return remGroup;
     }
@@ -471,18 +486,6 @@ export class PaymentRemarkService {
       if (ex.length > 0) {
         remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
       }
-    }
-
-    const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
-    }
-
-    if (feeList.length === 0 && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
-      // *U11
-      const noFeeReason = fg.get('noFeeReason').value;
-      remark = 'U11/-' + noFeeReason;
-      remGroup.remarks.push(this.getRemarksModel(remark, '*'));
     }
 
     return remGroup;

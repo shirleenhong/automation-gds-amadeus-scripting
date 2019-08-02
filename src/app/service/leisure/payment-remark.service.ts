@@ -12,14 +12,13 @@ import { AccountingRemarkComponent } from '../../leisure/payments/accounting-rem
 import { LeisureFeeComponent } from '../../leisure/payments/leisure-fee/leisure-fee.component';
 import { LeisureFeeModel } from '../../models/pnr/leisure-fee.model';
 import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
-import { MatrixReceiptComponent } from 'src/app/leisure/payments/matrix-receipt/matrix-receipt.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -29,10 +28,9 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
-
     let matrixReceiptsToUpdate = Array<MatrixReceiptModel>();
     if (matrixRemarks) {
-      matrixReceiptsToUpdate = matrixRemarks.filter(x => x.status === 'UPDATED');
+      matrixReceiptsToUpdate = matrixRemarks.filter((x) => x.status === 'UPDATED');
     }
     if (matrixReceiptsToUpdate.length > 0 || fordelete.length > 0) {
       remGroup.deleteRemarkByIds = this.pnrService.getMatrixReceiptLineNumbers();
@@ -57,9 +55,14 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
 
+    if (accountingRemarks.filter((x) => !x.status).length === accountingRemarks.length) {
+      // if no change was done
+      return remGroup;
+    }
+
     let matrixAccountingReceiptsToUdpate = Array<MatrixAccountingModel>();
     if (accountingRemarks) {
-      matrixAccountingReceiptsToUdpate = accountingRemarks.filter(x => x.status === 'UPDATED');
+      matrixAccountingReceiptsToUdpate = accountingRemarks.filter((x) => x.status === 'UPDATED');
     }
 
     // - delete existing lines
@@ -416,9 +419,14 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
+    if (feeList.filter((x) => !x.status).length === feeList.length) {
+      // return if no Change
+      return remGroup;
+    }
+
     let leisureFeesToUpdate = Array<LeisureFeeModel>();
     if (feeList) {
-      leisureFeesToUpdate = feeList.filter(x => x.status === 'UPDATED');
+      leisureFeesToUpdate = feeList.filter((x) => x.status === 'UPDATED');
     }
 
     if (leisureFeesToUpdate.length > 0 || comp.leisureFeesToDelete.length > 0) {
@@ -585,81 +593,5 @@ export class PaymentRemarkService {
     remGroup.deleteRemarkByIds = [];
     remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
     return remGroup;
-  }
-
-  encryptedMatrixExist(matrixRemarks: MatrixReceiptComponent): string {
-    const receipt = matrixRemarks.matrixReceipts;
-    let status = false;
-    const encrypt = [];
-    receipt.forEach((rem) => {
-      if (rem.status === 'UPDATED' && !status) {
-        status = true;
-      }
-      if (this.checkCreditCardNo(rem.ccNo)) {
-        encrypt.push(rem.rln);
-      }
-    });
-
-    if (matrixRemarks.matrixReceiptsToDelete.length > 0) {
-      status = true;
-    }
-    if (status && encrypt.length) {
-      return 'Matrix Receipt: ' + encrypt.join(',') + '\n';
-    }
-    return '';
-  }
-
-  encryptedAccountingExist(accounting: AccountingRemarkComponent): string {
-    const receipt = accounting.accountingRemarks;
-    let status = false;
-    const encrypt = [];
-    receipt.forEach((rem) => {
-      if (rem.status === 'UPDATED' && !status) {
-        status = true;
-      }
-      if (this.checkCreditCardNo(rem.cardNumber)) {
-        encrypt.push(rem.tkMacLine);
-      }
-    });
-
-    if (accounting.accountingRemarksToDelete.length > 0) {
-      status = true;
-    }
-    if (status && encrypt.length) {
-      return 'Accounting Receipt: ' + encrypt.join(',') + '\n';
-    }
-    return '';
-  }
-
-  encryptedLeisureExist(leisure: LeisureFeeComponent): string {
-    const feeList = leisure.leisureFeeList;
-    let status = false;
-    const encrypt = [];
-    feeList.forEach((rem) => {
-      if (rem.status === 'UPDATED' && !status) {
-        status = true;
-      }
-      if (this.checkCreditCardNo(rem.ccNo)) {
-        encrypt.push(rem.fln);
-      }
-    });
-
-    if (leisure.leisureFeesToDelete.length > 0) {
-      status = true;
-    }
-
-    if (status && encrypt.length) {
-      return 'Leisure Receipt: ' + encrypt.join(',') + '\n';
-    }
-    return '';
-  }
-
-  checkCreditCardNo(ccNo) {
-    if (ccNo !== undefined) {
-      if (ccNo.toString().includes('X') || ccNo.toString().length < 16) {
-        return true;
-      }
-    }
-    return false;
   }
 }

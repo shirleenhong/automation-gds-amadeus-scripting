@@ -25,7 +25,7 @@ export class PnrService {
   PCC = '';
   // pnr = '';
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -51,7 +51,6 @@ export class PnrService {
     console.log(JSON.stringify(this.pnrObj));
   }
 
-
   async getTST(): Promise<void> {
     this.tstObj = new Array<any>();
     const attributeDetails = {
@@ -66,21 +65,22 @@ export class PnrService {
       displayMode
     };
 
-    await smartScriptSession.requestService('ws.displayTST_v14.1', displayElement).then(
-      (tst) => {
-        this.tstObj = tst.response.model.output.response.fareList;
-        this.errorMessage = 'TST Loaded Successfully';
-      },
-      (error: string) => {
-        this.errorMessage = 'Error: ' + error;
-      }
-    )
+    await smartScriptSession
+      .requestService('ws.displayTST_v14.1', displayElement)
+      .then(
+        (tst) => {
+          this.tstObj = tst.response.model.output.response.fareList;
+          this.errorMessage = 'TST Loaded Successfully';
+        },
+        (error: string) => {
+          this.errorMessage = 'Error: ' + error;
+        }
+      )
       .catch((err) => {
         console.log(err);
       });
     console.log(JSON.stringify(this.tstObj));
   }
-
 
   isRbpRbm() {
     if (!this.cfLine) {
@@ -378,7 +378,6 @@ export class PnrService {
   }
 
   private getSegmentDetails(elem: any, type: string) {
-
     let elemText = '';
     let elemStatus = '';
     let elemairlineCode = '';
@@ -1138,11 +1137,11 @@ export class PnrService {
       const typ = fop.substr(0, 2);
       model.modePayment = typ;
       if (typ === 'CC') {
-        regex = /([A-Z]{2})(?<vendor>[A-Z]{2})(?<cardNo>[0-9]*)\/-EXP-(?<exp>([0-9]{4}))/g;
+        regex = /([A-Z]{2})(?<vendor>[A-Z]{2})(?<cardNo>(.*))\/-EXP-(?<exp>([0-9]{4}))/g;
         match = regex.exec(fop);
         if (match !== null) {
           model.vendorCode = match.groups.vendor;
-          model.ccNo = Number(match.groups.cardNo);
+          model.ccNo = match.groups.cardNo;
           model.expDate = match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
         }
 
@@ -1266,7 +1265,7 @@ export class PnrService {
     for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
       if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-        tst.referenceForDataElement.reference.forEach(ref => {
+        tst.referenceForDataElement.reference.forEach((ref) => {
           if (ref.qualifier === 'ST') {
             segments.push(ref.number);
           }

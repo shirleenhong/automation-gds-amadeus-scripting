@@ -45,7 +45,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   version = common.LeisureVersionNumber;
   issuingBsp = false;
   bspReply = false;
-  errorAccounting: String;
+  errorAccounting: string;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -84,7 +84,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -124,14 +124,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-
   async ngOnInit() {
     this.modalSubscribeOnClose();
     // this.message = '';
     // this.message += JSON.stringify(await this.ddbService.getCdrItemBySubUnit('A:148D4'));
     // this.message += JSON.stringify(await this.ddbService.getConfigurationParameter('ApacCDRRemark_NonAirSegment'));
   }
-
 
   checkValid() {
     this.validModel.isSubmitted = true;
@@ -146,12 +144,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
-    const encryptMatrix = this.paymentRemarkService.encryptedMatrixExist(this.paymentComponent.matrixReceipt);
-    const encryptAccounting = this.paymentRemarkService.encryptedAccountingExist(this.paymentComponent.accountingRemark);
-    const encryptLeisure = this.paymentRemarkService.encryptedLeisureExist(this.paymentComponent.leisureFee);
-
-    if (encryptMatrix || encryptAccounting || encryptLeisure) {
-      this.accountingModal(encryptMatrix + encryptAccounting + encryptLeisure);
+    const encryptedCC = this.paymentComponent.checkEncryptedCreditCard();
+    if (encryptedCC.length > 0) {
+      this.accountingModal(encryptedCC);
       return;
     }
 
@@ -178,16 +173,23 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     remarkCollection.push(this.paymentRemarkService.removeRmFop());
 
-
     if (this.issuingBsp) {
       remarkCollection.push(this.paymentRemarkService.addRmFop());
       this.issuingBsp = false;
     }
     this.bspReply = false;
-    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts,
-      this.paymentComponent.matrixReceipt.matrixReceiptsToDelete));
-    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks,
-      this.paymentComponent.accountingRemark.accountingRemarksToDelete));
+    remarkCollection.push(
+      this.paymentRemarkService.GetMatrixRemarks(
+        this.paymentComponent.matrixReceipt.matrixReceipts,
+        this.paymentComponent.matrixReceipt.matrixReceiptsToDelete
+      )
+    );
+    remarkCollection.push(
+      this.paymentRemarkService.GetAccountingRemarks(
+        this.paymentComponent.accountingRemark.accountingRemarks,
+        this.paymentComponent.accountingRemark.accountingRemarksToDelete
+      )
+    );
 
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
@@ -233,21 +235,23 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
 
     this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks().then(async () => {
-      if (acpp && acpp.length > 0) {
-        await this.processPassPurchase();
-      } else {
-        await this.resetReloadUI();
+    await this.remarkService.SubmitRemarks().then(
+      async () => {
+        if (acpp && acpp.length > 0) {
+          await this.processPassPurchase();
+        } else {
+          await this.resetReloadUI();
+        }
+      },
+      (error) => {
+        this.showMessage('An Error occured upon updating PNR', MessageType.Error);
+        console.log(JSON.stringify(error));
       }
-    }, (error) => {
-      this.showMessage('An Error occured upon updating PNR', MessageType.Error);
-      console.log(JSON.stringify(error));
-    });
+    );
 
     if (this.invoiceComponent.matrixInvoiceGroup.controls.selection.value) {
       this.SendInvoiceItinerary();
     }
-
   }
 
   processPassPurchase() {
@@ -332,7 +336,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => { },
+      () => {},
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -425,7 +429,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   public SendItineraryAndQueue() {
-
     if (!this.itineraryqueueComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -513,12 +516,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   accountingModal(errorLines) {
     const modalRef = this.modalService.show(MessageComponent, {
-      backdrop: 'static',
+      backdrop: 'static'
     });
     modalRef.content.modalRef = modalRef;
     modalRef.content.title = 'Warning';
-    modalRef.content.message = 'Please re-enter Credit Card numbers on the following: \n' + errorLines;
-
+    modalRef.content.message = 'Please re-enter Credit Card numbers on the following: <br>' + errorLines.join('<br>');
   }
 
   back(): void {
@@ -544,7 +546,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.modalRef.content.title = 'Issuing a BSP ticket';
     this.modalRef.content.message = 'Are you issuing a BSP ticket on a CWT Agency Plastic Credit Card?';
     // tslint:disable-next-line:max-line-length
-    this.modalRef.content.note = 'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the RM*FOP/-AP format is in the PNR. \r\n' +
+    this.modalRef.content.note =
+      'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the RM*FOP/-AP format is in the PNR. \r\n' +
       'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark.';
     this.modalRef.content.callerName = 'issuingBSP';
     this.modalRef.content.setMessageType(MessageType.YesNo);

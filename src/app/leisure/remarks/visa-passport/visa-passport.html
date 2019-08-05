@@ -16,8 +16,11 @@
       <div class="col-5">
       </div>
       <div class="col-6"> <input type="checkbox" name="senttraveladvicory" formControlName="senttraveladvicory"
-          id="senttraveladvicory" (change)="showsenttraveladvicory($event.target.checked)" />
-        International Travel Advisory Already Sent</div>
+          id="senttraveladvicory" (change)="showsenttraveladvicory($event.target.checked)" [(ngModel)]="isInternationalTravelAdvisorySent" />
+        <span [ngClass]="{ 'text-danger': isInternational && !isInternationalTravelAdvisorySent }">
+            International Travel Advisory Already Sent
+        </span>
+      </div>
     </div>
 
     <div class="row form-group">

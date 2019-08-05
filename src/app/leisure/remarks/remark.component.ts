@@ -104,6 +104,22 @@ export class RemarkComponent implements OnInit {
         return false;
       }
     }
+
+    // Check Visa and Passport
+    if (this.viewPassportComponent.isInternational
+        && (!this.viewPassportComponent.visaPassportView.citizenship.length
+            || !this.viewPassportComponent.visaPassportView.passportName.length
+            || !this.viewPassportComponent.isInternationalTravelAdvisorySent
+            || !this.viewPassportComponent.advisoryClicked)
+    ) {
+      // Indicate invalidities of the required Visa and Passport Advisory fields...
+      this.viewPassportComponent.visaPassportFormGroup.controls['isInternationalTravelAdvisorySent'].markAsTouched();
+      this.viewPassportComponent.visaPassportFormGroup.controls['citizenship'].markAsTouched();
+      this.viewPassportComponent.visaPassportFormGroup.controls['passportName'].markAsTouched();
+
+      return false;
+    }
+
     return true;
   }
 

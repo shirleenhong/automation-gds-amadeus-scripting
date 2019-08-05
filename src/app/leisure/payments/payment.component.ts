@@ -58,7 +58,7 @@ export class PaymentComponent {
         return x.tkMacLine;
       });
     const updated = this.accountingRemark.accountingRemarks.filter((x) => x.status === 'UPDATED').length > 0;
-    if (updated && accs.length > 0) {
+    if ((updated || this.accountingRemark.accountingRemarksToDelete.length > 0) && accs.length > 0) {
       return 'Accounting Remarks #: ' + accs.join(',');
     }
     return null;
@@ -71,7 +71,7 @@ export class PaymentComponent {
         return x.rln;
       });
     const updated = this.matrixReceipt.matrixReceipts.filter((x) => x.status === 'UPDATED').length > 0;
-    if (updated && receipts.length > 0) {
+    if ((updated || this.matrixReceipt.matrixReceiptsToDelete.length > 0) && receipts.length > 0) {
       return 'Matrix Receipt #: ' + receipts.join(',');
     }
     return null;
@@ -84,7 +84,7 @@ export class PaymentComponent {
         return x.fln;
       });
     const updated = this.leisureFee.leisureFeeList.filter((x) => x.status === 'UPDATED').length > 0;
-    if (updated && fees.length > 0) {
+    if ((updated || this.leisureFee.leisureFeesToDelete.length > 0) && fees.length > 0) {
       return 'Leisure Fee #: ' + fees.join(',');
     }
     return null;

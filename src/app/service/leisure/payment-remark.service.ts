@@ -28,6 +28,11 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
+    if (matrixRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0 && fordelete.length === 0) {
+      // if no change was done
+      return remGroup;
+    }
+
     let matrixReceiptsToUpdate = Array<MatrixReceiptModel>();
     if (matrixRemarks) {
       matrixReceiptsToUpdate = matrixRemarks.filter((x) => x.status === 'UPDATED');
@@ -55,7 +60,7 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
 
-    if (accountingRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0) {
+    if (accountingRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0 && fordelete.length === 0) {
       // if no change was done
       return remGroup;
     }
@@ -434,7 +439,7 @@ export class PaymentRemarkService {
 
     this.getNoFeeReason(remGroup, feeList, fg, cfa);
 
-    if (feeList.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0) {
+    if (feeList.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0 && comp.leisureFeesToDelete.length === 0) {
       // return if no Change
       return remGroup;
     }

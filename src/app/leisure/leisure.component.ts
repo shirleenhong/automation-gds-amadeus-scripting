@@ -26,6 +26,7 @@ import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
 import { common } from '../../environments/common';
+import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 
 @Component({
   selector: 'app-leisure',
@@ -84,7 +85,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -232,13 +233,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
-    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
 
+    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP');
     this.remarkService.BuildRemarks(remarkCollection);
     await this.remarkService.SubmitRemarks().then(
       async () => {
         if (acpp && acpp.length > 0) {
-          await this.processPassPurchase();
+          await this.processPassPurchase(this.paymentComponent.accountingRemark.accountingRemarks);
         } else {
           await this.resetReloadUI();
         }
@@ -254,11 +255,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
-  processPassPurchase() {
-    // this will associate the dummy segment to pass purchase
+  processPassPurchase(accountingRemarks: MatrixAccountingModel[]) {
+
     this.getPnrService().then(async () => {
-      const accounts = this.pnrService.getAccountingRemarks();
-      const acpp = accounts.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+      const accounts = accountingRemarks;
+      const acpp = accounts.filter((x) => (x.status === 'UPDATED' || x.status === 'ADDED'));
       let found = false;
       acpp.forEach((a) => {
         const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);
@@ -269,7 +270,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       });
       if (found) {
         const accRemarks = new Array<RemarkGroup>();
-        accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
+        accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(acpp));
         this.remarkService.BuildRemarks(accRemarks);
         await this.remarkService.SubmitRemarks().then(async () => {
           await this.resetReloadUI();
@@ -336,7 +337,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.remarkService.BuildRemarks(osiCollection);
     await this.remarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

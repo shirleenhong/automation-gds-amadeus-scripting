@@ -89,11 +89,11 @@ export class PaymentRemarkService {
 
       this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
       this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
+    }
 
-      const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
-      if (lineNums.length > 0) {
-        remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
-      }
+    const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
+    if (lineNums.length > 0) {
+      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
     }
 
     // write new Lines

@@ -256,10 +256,17 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   processPassPurchase(accountingRemarks: MatrixAccountingModel[]) {
-
     this.getPnrService().then(async () => {
       const accounts = accountingRemarks;
-      const acpp = accounts.filter((x) => (x.status === 'UPDATED' || x.status === 'ADDED'));
+      let acpp = Array<MatrixAccountingModel>();
+
+      const matrixAccountingReceiptsToUdpate = accountingRemarks.filter((x) => x.status === 'UPDATED');
+      if (matrixAccountingReceiptsToUdpate.length > 0) {
+        acpp = accounts;
+      } else {
+        acpp = accounts.filter((x) => (x.accountingTypeRemark === 'ACPP' && (x.status === 'UPDATED' || x.status === 'ADDED')));
+      }
+
       let found = false;
       acpp.forEach((a) => {
         const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);

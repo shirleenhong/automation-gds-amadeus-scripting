@@ -10,7 +10,12 @@
     <div class="col-2">
       <div class="iconHolder"><i [ngClass]="iconClass"></i></div>
     </div>
-    <div class="col message">{{ message }}</div>
+    <div class="col message" [innerHTML]="message"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col note">{{ note }}</div>
   </div>
 </div>
 

@@ -23,10 +23,7 @@ export class PaymentComponent {
 
   checkValid() {
     this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);
-    if (
-      !this.leisureFee.leisureFeeForm.valid &&
-      !this.leisureFee.leisureFeeForm.disabled
-    ) {
+    if (!this.leisureFee.leisureFeeForm.valid && !this.leisureFee.leisureFeeForm.disabled) {
       return false;
     }
 
@@ -35,5 +32,61 @@ export class PaymentComponent {
       return false;
     }
     return true;
+  }
+
+  checkEncryptedCreditCard() {
+    const encruyptedList = [];
+    const accs = this.checkEnryptedAccounting();
+    if (accs !== null) {
+      encruyptedList.push(accs);
+    }
+    const matrix = this.checkEncryptedMatrixReceipt();
+    if (matrix !== null) {
+      encruyptedList.push(matrix);
+    }
+    const fees = this.checkEncryptedLeisureFeeReceipt();
+    if (fees !== null) {
+      encruyptedList.push(fees);
+    }
+    return encruyptedList;
+  }
+
+  checkEnryptedAccounting() {
+    const accs = this.accountingRemark.accountingRemarks
+      .filter((x) => x.cardNumber && x.cardNumber.startsWith('XXX') && ['CC', 'AP'].indexOf(x.fop) >= 0)
+      .map((x) => {
+        return x.tkMacLine;
+      });
+    const updated = this.accountingRemark.accountingRemarks.filter((x) => x.status === 'UPDATED').length > 0;
+    if ((updated || this.accountingRemark.accountingRemarksToDelete.length > 0) && accs.length > 0) {
+      return 'Accounting Remarks #: ' + accs.join(',');
+    }
+    return null;
+  }
+
+  checkEncryptedMatrixReceipt() {
+    const receipts = this.matrixReceipt.matrixReceipts
+      .filter((x) => x.ccNo && x.ccNo.startsWith('XXX'))
+      .map((x) => {
+        return x.rln;
+      });
+    const updated = this.matrixReceipt.matrixReceipts.filter((x) => x.status === 'UPDATED').length > 0;
+    if ((updated || this.matrixReceipt.matrixReceiptsToDelete.length > 0) && receipts.length > 0) {
+      return 'Matrix Receipt #: ' + receipts.join(',');
+    }
+    return null;
+  }
+
+  checkEncryptedLeisureFeeReceipt() {
+    const fees = this.leisureFee.leisureFeeList
+      .filter((x) => x.ccNo && x.ccNo.startsWith('XXX') && x.paymentType === 'C')
+      .map((x) => {
+        return x.fln;
+      });
+    const updated = this.leisureFee.leisureFeeList.filter((x) => x.status === 'UPDATED').length > 0;
+    if ((updated || this.leisureFee.leisureFeesToDelete.length > 0) && fees.length > 0) {
+      return 'Leisure Fee #: ' + fees.join(',');
+    }
+    return null;
   }
 }

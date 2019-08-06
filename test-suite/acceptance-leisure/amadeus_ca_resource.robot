@@ -4,6 +4,7 @@ Resource          ../resources/common/global_resources.robot
 *** Keywords ***
 Login To Amadeus Sell Connect
     Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
+    Comment    Open Browser    https://1a.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=LOGINURL&LANGUAGE=GB    gc
     Maximize Browser Window
     Wait Until Element Is Visible    css=#username > span:first-child input    60
     Enter Username    ${username}

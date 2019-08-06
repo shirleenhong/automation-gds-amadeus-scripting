@@ -22,7 +22,7 @@ export class MatrixInvoiceComponent implements OnInit {
   passengers = [];
   selection: string;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.matrixInvoiceGroup = this.fb.group({
@@ -38,7 +38,7 @@ export class MatrixInvoiceComponent implements OnInit {
       ]),
       selection: new FormControl('', [])
     });
-    this.select('itinerary');
+    //  this.select('itinerary');
   }
 
   get f() {

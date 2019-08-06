@@ -8,12 +8,13 @@ export class MatrixReceiptModel {
   amount;
   cwtRef = '';
   lastFourVi;
-  ccNo: number;
+  ccNo: string;
   expDate: string;
   vendorCode: string;
   gcNumber: string;
   modePayment: string;
   paymentType: PaymentType;
+  status: string; // ADDED, UPDATED
 }
 
 export enum PaymentType {

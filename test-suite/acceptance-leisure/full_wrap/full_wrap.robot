@@ -96,6 +96,13 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     Select Hotel Reservation Booked    YES
     Click Submit To PNR
     Sleep    5
+    Click Itinerary And Queue
+    Enter Email Address    1    testingemail@cwt.com
+    Select Itinerary Language    English
+    Select Itinerary Type Of Transaction    Invoice
+    Enter Service Remark    1    Testing Service Remark
+    Enter Tickets Remark    1    Testing Tickets Remark
+    Click Send Itinerary And Queue
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
@@ -148,7 +155,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     ...    Tour Package
     ...    Visa and Passport
     ...    CWT Itinerary
-    [Tags]    sanity
+    [Tags]    sanity    prod
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US
     Open CA Migration Window
@@ -171,13 +178,14 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Add Insurance Reporting Remarks
     Click Panel    Remarks
     Add Tour Package Costs
-    Click Panel    Itinerary and Queue
+    Click Submit To PNR
+    Click Itinerary And Queue
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    French
     Select Itinerary Type Of Transaction    Invoice
     Enter Service Remark    1    Testing Service Remark
     Enter Tickets Remark    1    Testing Tickets Remark
-    Click Submit To PNR
+    Click Send Itinerary And Queue
     Sleep    3
     Close CA Migration Window
     Open Cryptic Display Window
@@ -196,6 +204,37 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Verify Specific Remark Is Written In The PNR    RIR *SERVICE**TESTING SERVICE REMARK*
     Verify Specific Remark Is Written In The PNR    RIR *TICKET**TESTING TICKETS REMARK*
     Verify Specific Remark Is Written In The PNR    RMT TKT-INTL
+    Close Cryptic Display Window
+
+Verify RMX Cancel Remarks Are Written In The PNR
+    [Documentation]    Cancel All segments
+    [Tags]    sanity    prod
+    Open CA Migration Window
+    Click Cancel Segment
+    Enter Requestor Name    FirstName LastName
+    Enter Cancel Notes    1    Cancel Segment
+    Select Cancel All Segments
+    Select Reason For Cancel    NAME CORRECTION NCC WITH OAL
+    Enter AC Ticket Number    1234512
+    Enter Coupon Number For Refund    1    9825252
+    Click Cancel Segments Button
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY FIRSTNAME LASTNAME
+    Verify Specific Remark Is Written In The PNR    /CANCEL SEGMENT
+    Verify Specific Remark Is Written In The PNR    /NO HTL SEGMENT INCLUDED IN CANCEL
+    Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
+    Verify Specific Remark Is Written In The PNR    /TKT NBR-1234512 CPNS-9825252
+    Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
+    Verify Specific Remark Is Not Written In The PNR    AC1234 Y 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ARL1234
+    Verify Specific Remark Is Not Written In The PNR    MIS 1A HK1 YYZ 03JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03JAN/ST-0900/EC-YYZ/ED-13JAN/ET-0900/CF-CWT123456789    True
+    Verify Specific Remark Is Not Written In The PNR    CAR 1A HK1 YYZ 13JAN-13JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13JAN/ST-0100/ED-13JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
+    Verify Specific Remark Is Not Written In The PNR    RIR SPECIAL REQUEST TESTING/S5
+    Verify Specific Remark Is Not Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S5
+    Verify Specific Remark Is Not Written In The PNR    RIR CD-CD123456 ID-ID789123/S5
+    Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF-AC987654321/S5
+    Verify Specific Remark Is Not Written In The PNR    RIR DROP OFF-161 BAY ST UNITE C80 M5J2S1 TORONTO/S5
+    Verify Specific Remark Is Not Written In The PNR    RIR DROP FEE-212.00/S5
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -251,6 +290,7 @@ Add Passive Hotel Segment
     Enter Additional Info    hotel additional info
     Enter Room Confirmed With    Hotel Testing
     Select Hotel    1
+    Press Key    css=#hotelCityName    \\09
     Get Hotel Details Values
     Click Add Passive Save Button
     Sleep    2

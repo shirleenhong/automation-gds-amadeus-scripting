@@ -19,20 +19,21 @@ export class AssociatedRemarksComponent implements OnInit {
 
   ngOnInit() {
     this.associatedRemarksForm = new FormGroup({
-      segmentNo: new FormControl(''),
-      items: this.fb.array([this.createItem('')])
+      items: this.fb.array([this.createItem()])
     });
   }
 
-  createItem(value: string): FormGroup {
-    return this.fb.group({
-      remarkText: value
+  createItem(): FormGroup {
+    const group = this.fb.group({
+      segmentNo: new FormControl('', []),
+      remarkText: new FormControl('', [])
     });
+    return group;
   }
 
   addItem(): void {
     this.items = this.associatedRemarksForm.get('items') as FormArray;
-    this.items.push(this.createItem(''));
+    this.items.push(this.createItem());
   }
 
   removeInputField(i: number): void {

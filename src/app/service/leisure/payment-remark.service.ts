@@ -22,46 +22,74 @@ export class PaymentRemarkService {
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
-  public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[]) {
+  public GetMatrixRemarks(matrixRemarks: MatrixReceiptModel[], fordelete: MatrixReceiptModel[]) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Matrix Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.deleteRemarkByIds = this.pnrService.getMatrixReceiptLineNumbers();
+    remGroup.deleteRemarkByIds = [];
+
+    if (matrixRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0 && fordelete.length === 0) {
+      // if no change was done
+      return remGroup;
+    }
+
+    let matrixReceiptsToUpdate = Array<MatrixReceiptModel>();
+    if (matrixRemarks) {
+      matrixReceiptsToUpdate = matrixRemarks.filter((x) => x.status === 'UPDATED');
+    }
+    if (matrixReceiptsToUpdate.length > 0 || fordelete.length > 0) {
+      remGroup.deleteRemarkByIds = this.pnrService.getMatrixReceiptLineNumbers();
+    }
+
     if (matrixRemarks !== undefined) {
       matrixRemarks.forEach((matrix) => {
-        if (matrix.bankAccount === '224000') {
-          this.processRBCredemptionRemarks(matrix, remGroup.remarks);
-        } else {
-          this.processOtherPaymentRemarks(matrix, remGroup.remarks);
+        if (matrixReceiptsToUpdate.length > 0 || fordelete.length > 0 || matrix.status === 'ADDED') {
+          if (matrix.bankAccount === '224000') {
+            this.processRBCredemptionRemarks(matrix, remGroup.remarks);
+          } else {
+            this.processOtherPaymentRemarks(matrix, remGroup.remarks);
+          }
         }
       });
     }
     return remGroup;
   }
 
-  public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[]) {
+  public GetAccountingRemarks(accountingRemarks: MatrixAccountingModel[], fordelete: MatrixAccountingModel[] = []) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    // - delete existing lines
-    const existingLines = this.pnrService.getMatrixAccountingLineNumbers();
-    if (existingLines.length > 0) {
-      remGroup.deleteRemarkByIds = existingLines;
+
+    if (accountingRemarks.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0 && fordelete.length === 0) {
+      // if no change was done
+      return remGroup;
     }
-    const apays = this.pnrService.getApayRirRemarkLines();
-    if (apays !== null && apays.length > 0) {
-      if (remGroup.deleteRemarkByIds === undefined) {
-        remGroup.deleteRemarkByIds = [];
+
+    let matrixAccountingReceiptsToUdpate = Array<MatrixAccountingModel>();
+    if (accountingRemarks) {
+      matrixAccountingReceiptsToUdpate = accountingRemarks.filter((x) => x.status === 'UPDATED');
+    }
+
+    // - delete existing lines
+    if (matrixAccountingReceiptsToUdpate.length > 0 || fordelete.length > 0) {
+      const existingLines = this.pnrService.getMatrixAccountingLineNumbers();
+      if (existingLines.length > 0) {
+        remGroup.deleteRemarkByIds = this.pnrService.getMatrixAccountingLineNumbers();
       }
 
-      apays.forEach((x) => {
-        remGroup.deleteRemarkByIds.push(x.lineNum);
-      });
-    }
+      const apays = this.pnrService.getApayRirRemarkLines();
+      if (apays !== null && apays.length > 0) {
+        if (remGroup.deleteRemarkByIds === undefined) {
+          remGroup.deleteRemarkByIds = [];
+        }
+        apays.forEach((x) => {
+          remGroup.deleteRemarkByIds.push(x.lineNum);
+        });
+      }
 
-    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
-    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
-    // this.deleteRemarksByRegex(/\*NE\/-EX-Y\/-OTK-(.*)/g, remGroup);
+      this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
+      this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
+    }
 
     const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
     if (lineNums.length > 0) {
@@ -98,7 +126,9 @@ export class PaymentRemarkService {
           }
         }
 
-        this.processAccountingRemarks(account, remGroup);
+        if (matrixAccountingReceiptsToUdpate.length > 0 || fordelete.length > 0 || account.status === 'ADDED') {
+          this.processAccountingRemarks(account, remGroup);
+        }
 
         if (!found && account.supplierCodeName === 'ACJ') {
           remGroup.remarks.push(this.getRemarksModel('U14/-ACPASS-INDIVIDUAL', '*', 'RM'));
@@ -199,6 +229,15 @@ export class PaymentRemarkService {
     return tline;
   }
 
+  processPastPurchaseSegment(accounting: MatrixAccountingModel, remGroup: RemarkGroup) {
+    const remarkList = remGroup.remarks;
+    const fopObj = this.getFOP(accounting.fop, accounting.cardNumber, accounting.vendorCode, accounting.expDate);
+    this.processAirCanadaPass(accounting, remGroup);
+    if (accounting.bsp === '2') {
+      this.extractApayRemark(accounting, remarkList, fopObj);
+    }
+  }
+
   processAccountingRemarks(accounting: MatrixAccountingModel, remGroup: RemarkGroup) {
     const remarkList = remGroup.remarks;
 
@@ -252,14 +291,15 @@ export class PaymentRemarkService {
       '/-MP-ALL' +
       bknLine +
       accounting.supplierConfirmatioNo.toString().trim();
-    // + '/S' + accounting.segmentNo.toString().trim();
 
     const pass = accounting.passengerNo !== undefined ? accounting.passengerNo : '1';
     const segmentrelate = accounting.segmentNo !== undefined ? accounting.segmentNo.toString() : '';
 
-    remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
+    if ((accounting.accountingTypeRemark !== 'ACPP') || (accounting.accountingTypeRemark === 'ACPP' && segmentrelate)) {
+      remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
+      remarkList.push(this.getRemarksModel(acc2, '*', 'RM', segmentrelate, pass.toString()));
+    }
 
-    remarkList.push(this.getRemarksModel(acc2, '*', 'RM', segmentrelate, pass.toString()));
     this.processAirCanadaPass(accounting, remGroup);
     if (accounting.bsp === '2') {
       this.extractApayRemark(accounting, remarkList, fopObj);
@@ -273,9 +313,12 @@ export class PaymentRemarkService {
         this.getRemarksModel(accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
-      remarkList.push(
-        this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
-      );
+
+      if (accounting.segmentNo) {
+        remarkList.push(
+          this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
+        );
+      }
 
       const air = this.pnrService
         .getSegmentTatooNumber()
@@ -384,6 +427,19 @@ export class PaymentRemarkService {
     remarkList.push(this.getRemarksModel(rem3, '*', 'RM'));
   }
 
+  getNoFeeReason(remGroup, feeList, fg, cfa) {
+    const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
+    if (lineNum !== '') {
+      remGroup.deleteRemarkByIds.push(lineNum);
+    }
+    if (feeList.length === 0 && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
+      // *U11
+      const noFeeReason = fg.get('noFeeReason').value;
+      const remark = 'U11/-' + noFeeReason;
+      remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+    }
+  }
+
   public GetLeisureFeeRemarks(comp: LeisureFeeComponent, cfa: string) {
     const fg = comp.leisureFeeForm;
     const feeList = comp.leisureFeeList;
@@ -392,13 +448,27 @@ export class PaymentRemarkService {
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
 
-    const remarksForDelete = ['SFC/-', 'FEE/-', 'TAX-', 'TEX/'];
-    remarksForDelete.forEach((rem) => {
-      const lineNums = this.pnrService.getRemarkLineNumbers(rem);
-      if (lineNums.length > 0) {
-        remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
-      }
-    });
+    this.getNoFeeReason(remGroup, feeList, fg, cfa);
+
+    if (feeList.filter((x) => x.status === 'UPDATED' || x.status === 'ADDED').length === 0 && comp.leisureFeesToDelete.length === 0) {
+      // return if no Change
+      return remGroup;
+    }
+
+    let leisureFeesToUpdate = Array<LeisureFeeModel>();
+    if (feeList) {
+      leisureFeesToUpdate = feeList.filter((x) => x.status === 'UPDATED');
+    }
+
+    if (leisureFeesToUpdate.length > 0 || comp.leisureFeesToDelete.length > 0) {
+      const remarksForDelete = ['SFC/-', 'FEE/-', 'TAX-', 'TEX/'];
+      remarksForDelete.forEach((rem) => {
+        const lineNums = this.pnrService.getRemarkLineNumbers(rem);
+        if (lineNums.length > 0) {
+          remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+        }
+      });
+    }
 
     let remark = '';
 
@@ -406,20 +476,22 @@ export class PaymentRemarkService {
       remark = 'TAX-' + feeList[0].address;
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
       feeList.forEach((f) => {
-        remark = this.generateSFCRemark(f);
-        const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
-        remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
-        // RM FEE
-        const remarkFee = [];
-        remark.split('/').forEach((x) => {
-          if (x.indexOf('SFC') < 0 && x.indexOf('-PT') < 0 && x.indexOf('-FP-TRF') < 0) {
-            remarkFee.push(x);
-            if (x.indexOf('-AMT') >= 0) {
-              remarkFee.push('-FP-FEE');
+        if (leisureFeesToUpdate.length > 0 || comp.leisureFeesToDelete.length > 0 || f.status === 'ADDED') {
+          remark = this.generateSFCRemark(f);
+          const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
+          remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
+          // RM FEE
+          const remarkFee = [];
+          remark.split('/').forEach((x) => {
+            if (x.indexOf('SFC') < 0 && x.indexOf('-PT') < 0 && x.indexOf('-FP-TRF') < 0) {
+              remarkFee.push(x);
+              if (x.indexOf('-AMT') >= 0) {
+                remarkFee.push('-FP-FEE');
+              }
             }
-          }
-        });
-        remGroup.remarks.push(this.getRemarksModel('FEE/' + remarkFee.join('/'), '*', '', '', pass));
+          });
+          remGroup.remarks.push(this.getRemarksModel('FEE/' + remarkFee.join('/'), '*', '', '', pass));
+        }
       });
       const ex = [];
       comp.exemption.forEach((x) => {
@@ -430,18 +502,6 @@ export class PaymentRemarkService {
       if (ex.length > 0) {
         remGroup.remarks.push(this.getRemarksModel('TEX/' + ex.join('/'), '*'));
       }
-    }
-
-    const lineNum = this.pnrService.getRemarkLineNumber('U11/-');
-    if (lineNum !== '') {
-      remGroup.deleteRemarkByIds.push(lineNum);
-    }
-
-    if (feeList.length === 0 && (cfa !== 'RBM' && cfa !== 'RBP') && fg.get('noFeeReason').value !== '') {
-      // *U11
-      const noFeeReason = fg.get('noFeeReason').value;
-      remark = 'U11/-' + noFeeReason;
-      remGroup.remarks.push(this.getRemarksModel(remark, '*'));
     }
 
     return remGroup;
@@ -529,6 +589,28 @@ export class PaymentRemarkService {
         }
       });
     }
+    return remGroup;
+  }
+
+  public removeRmFop() {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'FOP';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.deleteRemarkByIds = [];
+
+    const line = this.pnrService.getRemarkLineNumber('FOP/-AP');
+    if (line) {
+      remGroup.deleteRemarkByIds.push(line);
+    }
+    return remGroup;
+  }
+
+  public addRmFop() {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'FOP';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.deleteRemarkByIds = [];
+    remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
     return remGroup;
   }
 }

@@ -447,13 +447,13 @@ export class RemarkService {
     };
     console.log(JSON.stringify(remarkElements));
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
-      () => {
+      async () => {
         this.responseMessage = 'Remarks Updated';
         if (!requestor) {
           requestor = 'CWTSCRIPT';
         }
 
-        this.endPNR(requestor);
+        await this.endPNR(requestor);
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
@@ -493,3 +493,4 @@ export class RemarkService {
     smartScriptSession.send('RT');
   }
 }
+

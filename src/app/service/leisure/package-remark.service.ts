@@ -503,17 +503,27 @@ export class PackageRemarkService {
 
   public buildAssociatedRemarks(group: FormGroup) {
     let remText = '';
+    let segment = '';
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Associated Remarks';
     rmGroup.remarks = new Array<RemarkModel>();
     rmGroup.deleteRemarkByIds = new Array<string>();
 
     const arr = group.get('items') as FormArray;
+    const segmentList = this.pnrService.getSegmentTatooNumber();
 
     for (const c of arr.controls) {
-      if (arr.controls.length >= 1) {
-        remText = c.get('remarkText').value;
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', group.get('segmentNo').value));
+      const tattoosegments = [];
+      remText = c.get('remarkText').value;
+      segment = c.get('segmentNo').value;
+      const s = segment.split(',');
+      segmentList.forEach((x) => {
+        if (s.indexOf(x.lineNo) >= 0) {
+          tattoosegments.push(x.tatooNo);
+        }
+      });
+      if (segment && remText) {
+        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RI', 'R', tattoosegments.join(',')));
       }
     }
     return rmGroup;

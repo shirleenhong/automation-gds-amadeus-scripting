@@ -4,7 +4,7 @@ export class ValidateModel {
   isRemarkValid = false;
   isSegmentValid = false;
   isSubmitted = false;
-  isItineraryValid = false;
+  // isItineraryValid = false;
   paymentValidCss = '';
   reportingValidCss = '';
   remarkValidCss = '';
@@ -16,7 +16,7 @@ export class ValidateModel {
     this.reportingValidCss = this.getCss(this.isReportingValid);
     this.remarkValidCss = this.getCss(this.isRemarkValid);
     this.segmentValidCss = this.getCss(this.isSegmentValid);
-    this.itineraryValidCss = this.getCss(this.isItineraryValid);
+    // this.itineraryValidCss = this.getCss(this.isItineraryValid);
   }
 
   getCss(val: boolean) {
@@ -29,6 +29,6 @@ export class ValidateModel {
 
   isAllValid() {
     this.setCssClass();
-    return this.isPaymentValid && this.isReportingValid && this.isRemarkValid && this.isItineraryValid;
+    return this.isPaymentValid && this.isReportingValid && this.isRemarkValid;
   }
 }

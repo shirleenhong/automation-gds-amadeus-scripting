@@ -76,26 +76,24 @@ export class PaymentRemarkService {
       if (existingLines.length > 0) {
         remGroup.deleteRemarkByIds = this.pnrService.getMatrixAccountingLineNumbers();
       }
-    }
 
-    const apays = this.pnrService.getApayRirRemarkLines();
-    if (apays !== null && apays.length > 0) {
-      if (remGroup.deleteRemarkByIds === undefined) {
-        remGroup.deleteRemarkByIds = [];
+      const apays = this.pnrService.getApayRirRemarkLines();
+      if (apays !== null && apays.length > 0) {
+        if (remGroup.deleteRemarkByIds === undefined) {
+          remGroup.deleteRemarkByIds = [];
+        }
+        apays.forEach((x) => {
+          remGroup.deleteRemarkByIds.push(x.lineNum);
+        });
       }
 
-      apays.forEach((x) => {
-        remGroup.deleteRemarkByIds.push(x.lineNum);
-      });
-    }
+      this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
+      this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
 
-    this.deleteRemarksByRegex(/(.*) PASS REDEMPTION-(.*) FARE/g, remGroup, 'RIR');
-    this.deleteRemarksByRegex(/(.*) PASS-(.*) FARE/g, remGroup, 'RIR');
-    // this.deleteRemarksByRegex(/\*NE\/-EX-Y\/-OTK-(.*)/g, remGroup);
-
-    const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
-    if (lineNums.length > 0) {
-      remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+      const lineNums = this.pnrService.getRemarkLineNumbers('U14/-');
+      if (lineNums.length > 0) {
+        remGroup.deleteRemarkByIds = remGroup.deleteRemarkByIds.concat(lineNums);
+      }
     }
 
     // write new Lines

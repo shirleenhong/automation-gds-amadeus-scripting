@@ -26,6 +26,8 @@ export class VisaPassportComponent implements OnInit {
   passportName: string;
   isInternational = false;
 
+  isInternationalTravelAdvisorySent = false;
+
   constructor(
     private fb: FormBuilder,
     private ddbService: DDBService,
@@ -42,7 +44,8 @@ export class VisaPassportComponent implements OnInit {
       btnAdvisory: new FormControl('', []),
       passportName: new FormControl('', [Validators.required]),
       segments: new FormArray([]),
-      senttraveladvicory: new FormControl('', [])
+      senttraveladvicory: new FormControl('', []),
+      isInternationalTravelAdvisorySent: new FormControl(false, []),
     });
     this.segmentGroup = this.fb.group({
       passport: new FormControl('', [Validators.required]),
@@ -87,10 +90,13 @@ export class VisaPassportComponent implements OnInit {
   }
 
   showsenttraveladvicory(checkValue): void {
+    console.log("showsenttraveladvicory(checkValue): " + checkValue);
     if (checkValue) {
       this.visaService.isEnabled = true;
+      this.isInternationalTravelAdvisorySent = true;
     } else if (!this.advisoryClicked) {
       this.visaService.isEnabled = false;
+      this.isInternationalTravelAdvisorySent = false;
     }
   }
 

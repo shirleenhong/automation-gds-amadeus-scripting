@@ -109,8 +109,7 @@ export class RemarkComponent implements OnInit {
     if (this.viewPassportComponent.isInternational
         && (!this.viewPassportComponent.visaPassportView.citizenship.length
             || !this.viewPassportComponent.visaPassportView.passportName.length
-            || !this.viewPassportComponent.isInternationalTravelAdvisorySent
-            || !this.viewPassportComponent.advisoryClicked)
+            && (!this.viewPassportComponent.advisoryClicked|| !this.viewPassportComponent.isInternationalTravelAdvisorySent))
     ) {
       // Indicate invalidities of the required Visa and Passport Advisory fields...
       this.viewPassportComponent.visaPassportFormGroup.controls['isInternationalTravelAdvisorySent'].markAsTouched();

@@ -17,8 +17,8 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Ticket Min/Max Stay
     Select Fare Rule Remarks    Ticket MIN/MAX Stay
     Click Save Button
     Click Remarks Tab    Associated Remarks
-    Select Segment For Associated Remark    3 AF1074 Y10Dec YYZORD GK1 1155 1440 10Dec ABCDEFG
-    Add Associated Remarks    Testing Fare Rule
+    Select Segment For Associated Remark    1    3
+    Add Associated Remarks    1     Testing Fare Rule
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -45,8 +45,8 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Ticket Non-Refundabl
     Select Fare Rule Remarks    Non-Ref/Tkt Value
     Click Save Button
     Click Remarks Tab    Associated Remarks
-    Select Segment For Associated Remark    3 AF1074 Y10Dec YYZORD GK1 1155 1440 10Dec ABCDEFG
-    Add Associated Remarks    Testing Fare Rule 2
+    Select Segment For Associated Remark    1    3
+    Add Associated Remarks    1     Testing Fare Rule 2
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -130,8 +130,8 @@ Verify That Multiple Fare Rule Can Be Added In the PNR
     Click Save Button
     Sleep    3
     Click Remarks Tab    Associated Remarks
-    Select Segment For Associated Remark    5 AC1074 Y18Dec YYTMSP GK2 1255 1140 18Dec ABCD123
-    Add Associated Remarks    Testing Fare Rule
+    Select Segment For Associated Remark    1    5
+    Add Associated Remarks    1     Testing Fare Rule
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

@@ -60,7 +60,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Segment, FOP is Credit Card, and Province is Outside of Canada
     [Tags]    us7648    us9429    us10878    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS AC1074 Y 20NOV YYZYUL GK2 / 11551440 / ABCDEFG    CU1AHK2YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24NOV/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    RM*CF/-RBM000000N    RU1AHK2SIN25NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS UA1074 Y 20NOV YYZYUL GK2 / 11551440 / ABCDEFG    CU1AHK2YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24NOV/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    RM*CF/-RBM000000N    RU1AHK2SIN25NOV-CWT RETENTION SEGMENT
     ...    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR

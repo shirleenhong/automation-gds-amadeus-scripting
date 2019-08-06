@@ -20,5 +20,5 @@ export const common = {
   reasonCodesByTypeIdService: '/service/repo/powerbaseaws/ReasonCodesByReasonCodeTypeId/',
   reasonCodesByProductIdAndTypeIdService: '/service/repo/powerbaseaws/ReasonCodes/{ProductId}/{ReasonCodeTypeId}/',
   configurationParameterService: '/service/repo/powerbaseaws/ConfigurationParameter',
-  LeisureVersionNumber: '19.7.1'
+  LeisureVersionNumber: '19.8.1'
 };

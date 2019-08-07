@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 @Injectable({
   providedIn: 'root'
 })
-export class VisaPassportService {
+export class VisaPassportRemarkService {
   formGroup: FormGroup;
   remarkGroup: RemarkGroup;
   datePipe = new DatePipe('en-US');

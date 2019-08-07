@@ -7,10 +7,10 @@ import { FormGroup } from '@angular/forms';
 @Injectable({
   providedIn: 'root'
 })
-export class InvoiceService {
+export class InvoiceRemarkService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
-  constructor(private pnrService: PnrService) { }
+  constructor(private pnrService: PnrService) {}
 
   public GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();

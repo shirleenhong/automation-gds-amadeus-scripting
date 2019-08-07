@@ -3,7 +3,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { VisaPassportModel } from '../../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VisaPassportService } from 'src/app/service/leisure/visa-passport.service';
+import { VisaPassportRemarkService } from 'src/app/service/leisure/visa-passport-remark.service';
 declare var smartScriptSession: any;
 
 @Component({
@@ -32,7 +32,7 @@ export class VisaPassportComponent implements OnInit {
     private fb: FormBuilder,
     private ddbService: DDBService,
     private pnrService: PnrService,
-    private visaService: VisaPassportService
+    private visaService: VisaPassportRemarkService
   ) {}
 
   ngOnInit() {
@@ -45,7 +45,7 @@ export class VisaPassportComponent implements OnInit {
       passportName: new FormControl('', [Validators.required]),
       segments: new FormArray([]),
       senttraveladvicory: new FormControl('', []),
-      isInternationalTravelAdvisorySent: new FormControl(false, []),
+      isInternationalTravelAdvisorySent: new FormControl(false, [])
     });
     this.segmentGroup = this.fb.group({
       passport: new FormControl('', [Validators.required]),
@@ -90,7 +90,7 @@ export class VisaPassportComponent implements OnInit {
   }
 
   showsenttraveladvicory(checkValue): void {
-    console.log("showsenttraveladvicory(checkValue): " + checkValue);
+    console.log('showsenttraveladvicory(checkValue): ' + checkValue);
     if (checkValue) {
       this.visaService.isEnabled = true;
       this.isInternationalTravelAdvisorySent = true;

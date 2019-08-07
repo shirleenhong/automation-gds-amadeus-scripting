@@ -7,12 +7,11 @@ declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
-export class QueueService {
-
+export class QueueRemarkService {
   responseMessage: string;
   queueElement: Array<any>;
 
-  constructor(private pnrService: PnrService) { }
+  constructor(private pnrService: PnrService) {}
 
   async queuePNR(queueGroup: QueuePlaceModel[]) {
     this.queueElement = new Array<any>();
@@ -34,7 +33,7 @@ export class QueueService {
     };
 
     if (queueGroup != null && queueGroup.length > 0) {
-      queueGroup.forEach(element => {
+      queueGroup.forEach((element) => {
         this.queueElement.push(this.buildQueueDetails(element));
       });
     }
@@ -44,7 +43,6 @@ export class QueueService {
       targetDetails: this.queueElement,
       recordLocator
     };
-
 
     console.log(JSON.stringify(queueElements));
     await smartScriptSession.requestService('ws.queuePlacePnr_v03.1', queueElements).then(
@@ -77,7 +75,7 @@ export class QueueService {
     };
 
     const queueDetails = {
-      number: queue.queueNo,
+      number: queue.queueNo
     };
 
     const queueNumber = {
@@ -93,7 +91,7 @@ export class QueueService {
       sourceQualifier1: type
     };
 
-    let originatorDetails: { inHouseIdentification1: any; };
+    let originatorDetails: { inHouseIdentification1: any };
 
     if (type === '4') {
       originatorDetails = {

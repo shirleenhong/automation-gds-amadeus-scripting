@@ -273,7 +273,6 @@ export class CancelSegmentComponent implements OnInit {
           if (this.cancelForm.value.reasonUACancel) {
             this.cancelForm.controls.airlineNo.setValue('');
           } else {
-            this.cancelForm.value.reasonACCancel = '';
             this.acChange(this.cancelForm.value.reasonACCancel);
           }
         }
@@ -359,8 +358,10 @@ export class CancelSegmentComponent implements OnInit {
   checkAcTicketPassenger(newValue) {
     const arr = this.cancelForm.get('actickets') as FormArray;
 
-    if (newValue === '1' || newValue === '2' || newValue === '3') {
+    if ((newValue === '1' || newValue === '2' || newValue === '3') && (this.isAC)) {
       for (const c of arr.controls) {
+        c.get('acTicketNo').enable();
+        c.get('acpassengerNo').enable();
         c.get('acTicketNo').setValidators([Validators.required]);
         c.get('acpassengerNo').setValidators([Validators.required]);
         c.get('acTicketNo').updateValueAndValidity();
@@ -370,10 +371,12 @@ export class CancelSegmentComponent implements OnInit {
       for (const c of arr.controls) {
         c.get('acTicketNo').clearValidators();
         c.get('acpassengerNo').clearValidators();
+        c.get('acTicketNo').disable();
+        c.get('acpassengerNo').disable();
         c.get('acTicketNo').updateValueAndValidity();
         c.get('acpassengerNo').updateValueAndValidity();
+
       }
-      this.cancelForm.controls.reasonACCancel.setValue('');
     }
   }
 
@@ -516,7 +519,6 @@ export class CancelSegmentComponent implements OnInit {
     if (items.length > 1) {
       this.acremove = true;
     }
-
     this.checkAcTicketPassenger('1');
   }
 

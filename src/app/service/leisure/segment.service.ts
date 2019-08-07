@@ -647,27 +647,29 @@ export class SegmentService {
 
         if (cancel.value.reasonACCancel) {
             const arr = cancel.get('actickets') as FormArray;
-            for (const c of arr.controls) {
-                const acTicketNo = c.get('acTicketNo').value;
-                let acpassengerNo = 1;
-                if (c.get('acpassengerNo').value) {
-                    acpassengerNo = c.get('acpassengerNo').value.toString();
-                }
-                switch (cancel.value.reasonACCancel) {
-                    case '1':
-                        remText = 'OS AC NCC 014' + acTicketNo + '/P' + acpassengerNo;
-                        break;
-                    case '2':
-                        remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + acpassengerNo;
-                        break;
-                    case '3':
-                        remText = 'OS AC DUPE REFUND 014' + acTicketNo + ' TO BE USED';
-                        break;
-                    default:
-                        break;
-                }
-                if (remText) {
-                    rmGroup.cryptics.push(remText);
+            if (arr.status !== 'DISABLED') {
+                for (const c of arr.controls) {
+                    const acTicketNo = c.get('acTicketNo').value;
+                    let acpassengerNo = 1;
+                    if (c.get('acpassengerNo').value) {
+                        acpassengerNo = c.get('acpassengerNo').value.toString();
+                    }
+                    switch (cancel.value.reasonACCancel) {
+                        case '1':
+                            remText = 'OS AC NCC 014' + acTicketNo + '/P' + acpassengerNo;
+                            break;
+                        case '2':
+                            remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + acpassengerNo;
+                            break;
+                        case '3':
+                            remText = 'OS AC DUPE REFUND 014' + acTicketNo + ' TO BE USED';
+                            break;
+                        default:
+                            break;
+                    }
+                    if (remText) {
+                        rmGroup.cryptics.push(remText);
+                    }
                 }
             }
         }

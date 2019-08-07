@@ -108,7 +108,7 @@ Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
 Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passengers
     [Tags]    us7538    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     ...    APE-123123
     Open CA Migration Window
     Click Wrap PNR
@@ -117,13 +117,36 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Credit Card    CWT (Visa)    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
     ...    4444333322221111    0323
+    Click Add Matrix Receipt Button
+    Create Matrix Receipt    Cash    USD Funds    POLO-LISA    SAMPLE DESCRIPTION    1250.00    123456
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-LEISURE-AMADEUS/-AMT-200.75
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CCVI4444333322221111/-EXP-0323/-LK-T/-BA-115000/-GL-124000    True
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}    True
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-SAMPLE DESCRIPTION/-GC-1234567890123456789    True
+    Close Cryptic Display Window
+    Open CA Migration Window
+    Click Wrap PNR
+    Click Panel    Payment
+    Click Update Button    2
+    Enter Description    DESCRIPTION-UPDATE
+    Click Save Button
+    Click Submit To PNR
+    Verify Pop-Up Warning Is Displayed
+    Click Update Button    1
+    Enter Credit Card Number    4444333322221111
+    Click Save Button
+    Click Submit To PNR
+    Close CA Migration Window
+    Open Cryptic Display Window
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-LEISURE-AMADEUS/-AMT-200.75
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CCVI4444333322221111/-EXP-0323/-LK-T/-BA-115000/-GL-124000    True
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-SAMPLE DESCRIPTION/-GC-1234567890123456789    True
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-2/-RF-POLO-LISA/-AMT-1250.00
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-2/-FOP-CA/-LK-T/-BA-102000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-2/-RM-DESCRIPTION-UPDATE/-GC-123456
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

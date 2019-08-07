@@ -110,7 +110,7 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}
     Verify Royal Bank Concierge UDID Remarks Are Written    Within    Email    Cruise    \    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-AN7/-LK-MAC1/-AMT-100.75/-PT-1.00RC/-PT-2.00XG/-PT-3.00XQ/-PT-4.00XT/-CD-12.00    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-ABC4567891EFG4567890/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0323/-MP-ALL/-BKN-ABC4567891EFG4567890/S3    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC2/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S3    True
     Verify Leisure Fee Remarks Are Written
@@ -179,6 +179,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Click Panel    Remarks
     Add Tour Package Costs
     Click Submit To PNR
+    Sleep    2
     Click Itinerary And Queue
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    French

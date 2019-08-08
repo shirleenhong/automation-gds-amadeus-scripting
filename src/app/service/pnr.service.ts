@@ -98,12 +98,6 @@ export class PnrService {
     });
   }
 
-  // getRecordLocator(): void {
-  //   smartScriptSession.getRecordLocator().then((x) => {
-  //     this.pnr = x;
-  //   });
-  // }
-
   getRemarkLineNumber(searchText: string) {
     if (this.isPNRLoaded) {
       for (const rm of this.pnrObj.rmElements) {

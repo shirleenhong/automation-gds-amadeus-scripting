@@ -475,8 +475,7 @@ input[type='date']::-webkit-inner-spin-button {
   margin-left: 10px;
 }
 
-.version 
-{
+.version {
   position: fixed;
   top: 97%;
   left: 88%;

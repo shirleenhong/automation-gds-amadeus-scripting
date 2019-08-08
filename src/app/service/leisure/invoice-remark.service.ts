@@ -38,10 +38,10 @@ export class InvoiceRemarkService {
       .filter(segment => {
         return segment.segmentType === 'AIR';
       });
-      const nonAirSegments = this.pnrService.getSegmentTatooNumber()
-      .filter(segment => {
-        return segment.segmentType != 'AIR';
-      });
+    const nonAirSegments = this.pnrService.getSegmentTatooNumber()
+    .filter(segment => {
+      return segment.segmentType != 'AIR';
+    });
 
     if (segments === '') {
       if (pax === 1 && nonAirSegments.length && !airSegments.length) {

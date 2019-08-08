@@ -34,30 +34,39 @@ export class InvoiceRemarkService {
     const passengers = this.formGroup.controls.passengerNo.value;
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
-    if (this.pnrService.checkTST()) {
-      if (pax === 1) {
+    const airSegments = this.pnrService.getSegmentTatooNumber()
+      .filter(segment => {
+        return segment.segmentType === 'AIR';
+      });
+    const nonAirSegments = this.pnrService.getSegmentTatooNumber()
+    .filter(segment => {
+      return segment.segmentType != 'AIR';
+    });
+
+    if (segments === '') {
+      if (pax === 1 && nonAirSegments.length && !airSegments.length) {
+        this.remGroup.cryptics.push('inv');
+      }
+      if (pax === 1 && airSegments.length) {
         this.remGroup.cryptics.push('inv/nofare');
       }
-      if (pax > 1) {
+      if (pax > 1 && nonAirSegments.length && !airSegments.length) {
+        this.remGroup.cryptics.push('invj');
+      }
+      if (pax > 1 && airSegments.length) {
         this.remGroup.cryptics.push('invj/nofare');
       }
     } else {
-      if (passengers === '' && segments === '' && pax === 1) {
-        this.remGroup.cryptics.push('inv');
-      }
-      if (passengers === '' && segments === '' && pax > 1) {
-        this.remGroup.cryptics.push('invj');
-      }
-      if (passengers === '' && segments !== '' && pax === 1) {
+      if (passengers === '' && pax === 1) {
         this.remGroup.cryptics.push('inv/s' + segments);
       }
-      if (passengers === '' && segments !== '' && pax > 1) {
+      if (passengers === '' && pax > 1) {
         this.remGroup.cryptics.push('invj/s' + segments);
       }
-      if (passengers !== '' && segments === '' && pax > 1) {
+      if (passengers !== '' && pax > 1) {
         this.remGroup.cryptics.push('invj/p' + passengers);
       }
-      if (passengers !== '' && segments !== '' && pax > 1) {
+      if (passengers !== '' && pax > 1) {
         this.remGroup.cryptics.push('invj/p' + passengers + '/s' + segments);
       }
     }

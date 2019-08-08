@@ -165,6 +165,25 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.loadData();
   }
 
+  copyItem(r: MatrixAccountingModel) {
+    this.isAddNew = true;
+    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
+      backdrop: 'static'
+    });
+    this.modalRef.content.title = 'Copy Accounting Remarks';
+    this.modalRef.content.accountingRemark = new MatrixAccountingModel();
+    this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemark);
+    const code = r.supplierCodeName;
+    this.modalRef.content.isAddNew = false;
+    this.modalRef.content.isCopy = true;
+    this.modalRef.content.accountingRemark.supplierCodeName = code;
+    this.modalRef.content.accountingRemark.tkMacLine = this.accountingRemarks.length + 1;
+    this.modalRef.content.accountingRemark.status = 'ADDED';
+    this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
+    this.modalRef.content.FormOfPaymentChange(r.fop);
+    this.modalRef.content.loadData();
+  }
+
   get f() {
     return this.accountingForm.controls;
   }

@@ -91,7 +91,7 @@ export class AccountingRemarkComponent implements OnInit {
               Number(acc.penaltyBaseAmount) > 0
             ) {
               this.accountingRemarks.push(this.getA22Account(acc));
-            } else if (acc.supplierCodeName === 'ACY' && cur.supplierCodeName === 'ACY') {
+            } else if (acc.supplierCodeName === 'ACY' && cur.supplierCodeName === 'ACY' && acc.accountingTypeRemark === 'NAE') {
               const a22 = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine + 1);
               if (Number(acc.penaltyBaseAmount) > 0) {
                 this.getA22Account(acc, a22);

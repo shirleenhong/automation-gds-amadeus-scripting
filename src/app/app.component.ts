@@ -11,13 +11,13 @@ export class AppComponent implements OnInit {
   title = 'bpg-gds-scripting-amadeus';
   isCorporate = false;
   isMinimize = false;
-  header = 'LEISURE';
+  header = 'Leisure';
   constructor(private location: Location) {}
   url = '';
   ngOnInit(): void {
     this.isCorporate = this.location.path().indexOf('corporate') > 0;
     if (this.isCorporate) {
-      this.header = 'CORPORATE';
+      this.header = 'Corporate';
     }
   }
 

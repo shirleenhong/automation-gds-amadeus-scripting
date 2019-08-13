@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { PlatformLocation } from '@angular/common';
+
 declare var smartScriptSession: any;
 
 @Component({
@@ -12,10 +13,10 @@ export class AppComponent implements OnInit {
   isCorporate = false;
   isMinimize = false;
   header = 'Leisure';
-  constructor(private location: Location) {}
+  constructor(private location: PlatformLocation) {}
   url = '';
   ngOnInit(): void {
-    this.isCorporate = this.location.path().indexOf('corporate') > 0;
+    this.isCorporate = this.location.getBaseHrefFromDOM().indexOf('corporate') > 0;
     if (this.isCorporate) {
       this.header = 'Corporate';
     }

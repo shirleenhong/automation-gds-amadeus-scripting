@@ -23,7 +23,8 @@ export class PnrService {
   segments = [];
   amountPipe = new AmountPipe();
   PCC = '';
-  // pnr = '';
+  pnrResponse: any;
+
 
   constructor() {}
 
@@ -33,9 +34,10 @@ export class PnrService {
     await this.pnrObj
       .retrievePNR()
       .then(
-        () => {
+        (res) => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
+          this.pnrResponse = res.response.model.output.response;
           this.getTST();
         },
         (error: string) => {

@@ -1,5 +1,11 @@
 <br>
 
+<div class="col" *ngIf="!pnrRecordId">
+    <p class="text-info">
+        *This fieldset requires a PNR record. To proceed, submit the first.
+    </p>
+</div>
+
 <div class="col" [formGroup]="matrixInvoiceGroup">
     <div class="row form-group">
         <div class="col-10">
@@ -11,7 +17,7 @@
             <label class="control control-radio">
                 Send Itinerary Only into Matrix
                 <input type="radio" name="selection" formcontrolname="selection" id="selection" value="itinerary"
-                    (click)="select('itinerary')" />
+                    (click)="select('itinerary')" [disabled]="!pnrRecordId"/>
                 <div class="control_indicator"></div>
             </label>
         </div>
@@ -19,7 +25,7 @@
             <label class="control control-radio">
                 Invoice PNR into Matrix
                 <input type="radio" name="selection" formcontrolname="selection" id="selection" value="invoice"
-                    (click)="select('invoice')" />
+                    (click)="select('invoice')" [disabled]="!pnrRecordId"/>
                 <div class="control_indicator"></div>
             </label>
         </div>

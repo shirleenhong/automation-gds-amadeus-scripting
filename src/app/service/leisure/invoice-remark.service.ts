@@ -51,10 +51,10 @@ export class InvoiceRemarkService {
         this.remGroup.cryptics.push('inv/nofare');
       }
       if (pax > 1 && nonAirSegments.length && !airSegments.length) {
-        this.remGroup.cryptics.push('invj');
+        this.remGroup.cryptics.push('invj' + (passengers) ? "/P" + passengers : "" + (segments) ? "/S" + segments : "");
       }
       if (pax > 1 && airSegments.length) {
-        this.remGroup.cryptics.push('invj/nofare');
+        this.remGroup.cryptics.push('invj/nofare' + (passengers) ? "/P" + passengers : "" + (segments) ? "/S" + segments : "");
       }
     } else {
       if (passengers === '' && pax === 1) {
@@ -67,7 +67,7 @@ export class InvoiceRemarkService {
         this.remGroup.cryptics.push('invj/p' + passengers);
       }
       if (passengers !== '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/p' + passengers + '/s' + segments);
+        this.remGroup.cryptics.push('invj/p');
       }
     }
   }

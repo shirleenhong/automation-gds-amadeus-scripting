@@ -20,5 +20,9 @@ export const common = {
   reasonCodesByTypeIdService: '/service/repo/powerbaseaws/ReasonCodesByReasonCodeTypeId/',
   reasonCodesByProductIdAndTypeIdService: '/service/repo/powerbaseaws/ReasonCodes/{ProductId}/{ReasonCodeTypeId}/',
   configurationParameterService: '/service/repo/powerbaseaws/ConfigurationParameter',
+  approversService: '/service/repo/powerbaseaws/Approvers?ClientSubUnitGuid=',
+  queueMinderItemService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/QueueMinderItems?QueueMinderTypeIds=',
+  queueMinderTypeService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/QueueMinderTypes?GDSCode=1A',
+  ticketQueueService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/TicketQueues?GDSCode=1A',
   LeisureVersionNumber: '19.8.1'
 };

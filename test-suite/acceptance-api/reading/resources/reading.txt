@@ -1,0 +1,31 @@
+*** Setting ***
+Resource          ../../../resources/common/api-imports.txt
+Resource          ../../../resources/common/api-utilities.txt
+
+
+*** Keywords ***
+Get Data: ${test_data}
+    Set Test Variable    ${test_data}
+    ${request_data}    ${response_data}    Create Test Data    file_name=${CURDIR}${/}test_data/reading-values    test_data=${test_data}    get_request_body=true    get_response_body=true    convert_to_dict=false
+    Set Test Variable    ${expected_response_data}    ${response_data}
+    Set Test Variable    ${request_body}    ${request_data}
+    ${params_list}    Create List
+    Set Test Variable    ${params_list}
+    Log    ${expected_response_data}
+    Log    ${request_body}
+    
+Verify PNR is read with correct remark placeholders
+    Verify Response Status Code Is Correct    200
+    Log    ${response.json()}
+    Log    ${expected_response_data} 
+    ${expected_response_data_length}    Get Json Array Length    ${expected_response_data}    split_item=matchedPlaceholders
+    :FOR    ${index}    IN RANGE    ${expected_response_data_length}
+    \    ${json_value}    Get Json Value From File    ${expected_response_data}    $[${index}]
+    \    ${expected_value}    Convert To String    ${json_value}
+    \    ${expected_value}    To Json    ${expected_value}
+    \    Log    ${expected_value}
+    \    Log    ${response.json()[${index}]}
+    \    Dictionaries Should Be Equal    ${expected_value}    ${response.json()[${index}]}    
+    
+Verify Response Status Code 404 is Returned  
+    Verify Response Status Code Is Correct    404

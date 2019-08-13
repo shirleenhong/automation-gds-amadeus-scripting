@@ -1,0 +1,1574 @@
+{
+	"Sample": {
+		"request": {
+			"pnr": {
+				"sbrUpdatorPosDetails": {
+					"sbrUserIdentificationOwn": {
+						"originatorTypeCode": "A",
+						"originIdentification": {
+							"inHouseIdentification1": "NCE1A0955",
+							"originatorId": "12345675"
+						}
+					},
+					"sbrSystemDetails": {
+						"deliveringSystem": {
+							"locationId": "NCE",
+							"companyId": "1A"
+						}
+					},
+					"sbrPreferences": {
+						"userPreferences": {
+							"codedCountry": "FR"
+						}
+					}
+				},
+				"-xmlns": "http://xml.amadeus.com/PNRACC_14_1_1A",
+				"originDestinationDetails": {
+					"itineraryInfo": {
+						"flightDetail": {
+							"mileageTimeDetails": {
+								"flightLegMileage": "1320",
+								"unitQualifier": "M"
+							},
+							"productDetails": {
+								"duration": "0351",
+								"weekDay": "7",
+								"equipment": "320",
+								"numOfStops": "0"
+							},
+							"arrivalStationInfo": {
+								"terminal": "1"
+							},
+							"facilities": {
+								"entertainement": "M",
+								"entertainementDescription": "F"
+							}
+						},
+						"markerRailTour": "",
+						"travelProduct": {
+							"product": {
+								"arrDate": "101119",
+								"depTime": "0500",
+								"depDate": "101119",
+								"arrTime": "0721"
+							},
+							"typeDetail": {
+								"detail": "ET"
+							},
+							"offpointDetail": {
+								"cityCode": "YYZ"
+							},
+							"productDetails": {
+								"identification": "689",
+								"classOfService": "Y"
+							},
+							"boardpointDetail": {
+								"cityCode": "YYT"
+							},
+							"companyDetail": {
+								"identification": "AC"
+							}
+						},
+						"itineraryMessageAction": {
+							"business": {
+								"function": "1"
+							}
+						},
+						"cabinDetails": {
+							"cabinDetails": {
+								"classDesignator": "M"
+							}
+						},
+						"relatedProduct": {
+							"status": "HK",
+							"quantity": "1"
+						},
+						"elementManagementItinerary": {
+							"segmentName": "AIR",
+							"lineNumber": "2",
+							"reference": {
+								"number": "1",
+								"qualifier": "ST"
+							}
+						},
+						"legInfo": {
+							"interactiveFreeText": {
+								"freeTextQualification": {
+									"textSubjectQualifier": "ACO"
+								},
+								"freeText": "AIRCRAFT OWNER AIR CANADA"
+							},
+							"legTravelProduct": {
+								"flightDate": {
+									"arrivalTime": "0721",
+									"departureDate": "101119",
+									"departureTime": "0500",
+									"arrivalDate": "101119"
+								},
+								"offpointDetails": {
+									"trueLocationId": "YYZ"
+								},
+								"boardPointDetails": {
+									"trueLocationId": "YYT"
+								}
+							},
+							"markerLegInfo": ""
+						},
+						"selectionDetails": {
+							"selection": {
+								"option": "P2"
+							}
+						},
+						"itineraryReservationInfo": {
+							"reservation": {
+								"controlNumber": "Q8MCVP",
+								"companyId": "AC"
+							}
+						}
+					},
+					"originDestination": ""
+				},
+				"sbrPOSDetails": {
+					"sbrUserIdentificationOwn": {
+						"originatorTypeCode": "T",
+						"originIdentification": {
+							"inHouseIdentification1": "YTOWL2106",
+							"originatorId": "67843263"
+						}
+					},
+					"sbrSystemDetails": {
+						"deliveringSystem": {
+							"locationId": "YTO",
+							"companyId": "1A"
+						}
+					},
+					"sbrPreferences": {
+						"userPreferences": {
+							"codedCountry": "CA"
+						}
+					}
+				},
+				"dataElementsMaster": {
+					"marker2": "",
+					"dataElementsIndiv": [
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "3",
+								"reference": {
+									"number": "1",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "905-740-3763 OPT 2-A",
+								"freetextDetail": {
+									"type": "5",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "4",
+								"reference": {
+									"number": "2",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "006324590000-B",
+								"freetextDetail": {
+									"type": "5",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "5",
+								"reference": {
+									"number": "30",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "CTC*AARRIESGADO@CARLSONWAGONLIT.COM",
+								"freetextDetail": {
+									"type": "P02",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "6",
+								"reference": {
+									"number": "31",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "CTC*FRANCES MICHELLE SAGUN-1-22255555",
+								"freetextDetail": {
+									"type": "7",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "TK",
+								"lineNumber": "7",
+								"reference": {
+									"number": "53",
+									"qualifier": "OT"
+								}
+							},
+							"ticketElement": {
+								"ticket": {
+									"officeId": "YTOWL2106",
+									"indicator": "TL",
+									"queueCategory": "1",
+									"queueNumber": "8",
+									"freetext": "-ONHOLD        ",
+									"date": "170719"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "OP",
+								"lineNumber": "8",
+								"reference": {
+									"number": "33",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "FRAWL2378/16JUL/70C4/AQUA QUEUING",
+								"freetextDetail": {
+									"type": "P21",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"optionElement": {
+								"optionElementInfo": {
+									"queue": "1",
+									"time": "0155",
+									"category": "8",
+									"mainOffice": "YTOWL2106",
+									"freetext": "AC CANCELLATION DUE TO NO TICKET YTO TIME ZONE",
+									"date": "170719"
+								}
+							},
+							"elementManagementData": {
+								"segmentName": "OPC",
+								"lineNumber": "9",
+								"reference": {
+									"number": "57",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "10",
+								"reference": {
+									"number": "5",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "MANILA AUTOMATION TEAM TEST COMPANY PROFILE",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "MANILA AUTOMATION TEAM TEST COMPANY PROFILE",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "11",
+								"reference": {
+									"number": "6",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "PLEASE DO NOT DELETE",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "PLEASE DO NOT DELETE",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "12",
+								"reference": {
+									"number": "14",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "A",
+									"freetext": "SYEXGVS:A:175EC A:E5D24 A:13038 A:407AE161 T-U1SOE EN-US EN-US",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "A",
+									"freetext": "SYEXGVS:A:175EC A:E5D24 A:13038 A:407AE161 T-U1SOE EN-US EN-US",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "13",
+								"reference": {
+									"number": "15",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "G",
+									"freetext": "TRAVEL TYPE-BUSINESS",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "G",
+									"freetext": "TRAVEL TYPE-BUSINESS",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "14",
+								"reference": {
+									"number": "36",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "G",
+									"freetext": "PCC3X5F",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "G",
+									"freetext": "PCC3X5F",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "14",
+								"reference": {
+									"number": "36",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "G",
+									"freetext": "PCC777",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "G",
+									"freetext": "PCC77",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "15",
+								"reference": {
+									"number": "9",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "M",
+									"freetext": "PAX*E AARRIESGADO@CARLSONWAGONLIT.COM",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "M",
+									"freetext": "PAX*E AARRIESGADO@CARLSONWAGONLIT.COM",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "16",
+								"reference": {
+									"number": "42",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "M",
+									"freetext": "LASTUSER-U002MCC-MCASTROUK",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "M",
+									"freetext": "LASTUSER-U002MCC-MCASTROUK",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "17",
+								"reference": {
+									"number": "35",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "GENDER-F",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "GENDER-F",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "18",
+								"reference": {
+									"number": "37",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "NAME-FRANCES MICHELLE/ESCUDERO/SAGUN",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "NAME-FRANCES MICHELLE/ESCUDERO/SAGUN",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "19",
+								"reference": {
+									"number": "38",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "DOB-19NOV90/GENDER-F",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "DOB-19NOV90/GENDER-F",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "20",
+								"reference": {
+									"number": "40",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "FULL NAME-SAGUN/FRANCES MICHELLE/ESCUDERO",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "FULL NAME-SAGUN/FRANCES MICHELLE/ESCUDERO",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "21",
+								"reference": {
+									"number": "44",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "TICKETING DATE NOT SET CONFIRM BY 17/07/2019",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "TICKETING DATE NOT SET CONFIRM BY 17/07/2019",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "22",
+								"reference": {
+									"number": "41",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Q",
+									"freetext": "AUTOMAIL-YES",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Q",
+									"freetext": "AUTOMAIL-YES",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "23",
+								"reference": {
+									"number": "19",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "U",
+									"freetext": "SYMPHONIE EXPRESS PILOT",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "U",
+									"freetext": "SYMPHONIE EXPRESS PILOT",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "24",
+								"reference": {
+									"number": "34",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "U",
+									"freetext": "SYMPHONIE EXPRESS PILOT",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "U",
+									"freetext": "SYMPHONIE EXPRESS PILOT",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "25",
+								"reference": {
+									"number": "13",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "V",
+									"freetext": "PAX*MOB 1-22255555",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "V",
+									"freetext": "PAX*MOB 1-22255555",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "26",
+								"reference": {
+									"number": "39",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Z",
+									"freetext": "CONF*SEND TO MAIL TEST??CARLSONWAGONLIT.COM",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Z",
+									"freetext": "CONF*SEND TO MAIL TEST??CARLSONWAGONLIT.COM",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "27",
+								"reference": {
+									"number": "43",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Z",
+									"freetext": "CONF*LANG:EN",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Z",
+									"freetext": "CONF*LANG:EN",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "28",
+								"reference": {
+									"number": "10",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "CF/-SOE0000000C",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*CF/-SOE0000000C",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "29",
+								"reference": {
+									"number": "11",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "CN/-MCC",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*CN/-MCC",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "30",
+								"reference": {
+									"number": "12",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U59/-MUSUUUUUUUUA",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U59/-MUSUUUUUUUUA",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "31",
+								"reference": {
+									"number": "20",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U57/-A2A",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U57/-A2A",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "32",
+								"reference": {
+									"number": "21",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U60/-TEST",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U60/-TEST",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "33",
+								"reference": {
+									"number": "22",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U55/-12 12 19",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U55/-12 12 19",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "34",
+								"reference": {
+									"number": "23",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "DP/-123",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*DP/-123",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "35",
+								"reference": {
+									"number": "24",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U56/-ABC",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U56/-ABC",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "36",
+								"reference": {
+									"number": "45",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U57/-A2A",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U57/-A2A",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "37",
+								"reference": {
+									"number": "46",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U58/-143ABC",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U58/-143ABC",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "38",
+								"reference": {
+									"number": "47",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U60/-TEST",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U60/-TEST",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "39",
+								"reference": {
+									"number": "48",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U55/-12 12 19",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U55/-12 12 19",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "40",
+								"reference": {
+									"number": "49",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "DP/-123",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*DP/-123",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "41",
+								"reference": {
+									"number": "50",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U56/-ABC",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U56/-ABC",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "42",
+								"reference": {
+									"number": "25",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "*FULLCXL**FULLCXL*",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "*FULLCXL**FULLCXL*",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "43",
+								"reference": {
+									"number": "51",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "LANGUAGE-EN-US",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "LANGUAGE-EN-US",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "44",
+								"reference": {
+									"number": "52",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "*FULLCXL**FULLCXL*",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "*FULLCXL**FULLCXL*",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FE",
+								"lineNumber": "45",
+								"reference": {
+									"number": "27",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							},
+							"otherDataFreetext": {
+								"longFreetext": "PAX AC ONLY -BG:AC",
+								"freetextDetail": {
+									"type": "10",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FP",
+								"lineNumber": "46",
+								"reference": {
+									"number": "29",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "CASH",
+								"freetextDetail": {
+									"type": "16",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FS",
+								"lineNumber": "47",
+								"reference": {
+									"number": "32",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "31",
+								"freetextDetail": {
+									"type": "17",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FV",
+								"lineNumber": "48",
+								"reference": {
+									"number": "28",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							},
+							"otherDataFreetext": {
+								"longFreetext": "PAX AC",
+								"freetextDetail": {
+									"type": "P18",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"structuredAddress": {
+								"address": [
+									{
+										"optionText": "CARLSON WAGONLIT",
+										"option": "A1"
+									},
+									{
+										"optionText": "MAKATI AVENUE",
+										"option": "A2"
+									},
+									{
+										"optionText": "MANILA",
+										"option": "CI"
+									},
+									{
+										"optionText": "PHILLIPINES",
+										"option": "CO"
+									}
+								],
+								"informationType": "2"
+							},
+							"elementManagementData": {
+								"segmentName": "AB/",
+								"lineNumber": "49",
+								"reference": {
+									"number": "3",
+									"qualifier": "OT"
+								}
+							}
+						}
+					]
+				},
+				"sbrCreationPosDetails": {
+					"sbrUserIdentificationOwn": {
+						"originatorTypeCode": "T",
+						"originIdentification": {
+							"inHouseIdentification1": "YTOWL2106",
+							"originatorId": "67843263"
+						}
+					},
+					"sbrSystemDetails": {
+						"deliveringSystem": {
+							"locationId": "YTO",
+							"companyId": "1A"
+						}
+					},
+					"sbrPreferences": {
+						"userPreferences": {
+							"codedCountry": "CA"
+						}
+					}
+				},
+				"technicalData": {
+					"purgeDateData": {
+						"dateTime": {
+							"month": "11",
+							"year": "2019",
+							"day": "14"
+						}
+					},
+					"enveloppeNumberData": {
+						"sequenceDetails": {
+							"number": "2"
+						}
+					},
+					"lastTransmittedEnvelopeNumber": {
+						"currentRecord": "1"
+					}
+				},
+				"freetextData": {
+					"longFreetext": "--- TST RLR TC-BIZ RLP ---",
+					"freetextDetail": {
+						"type": "P12",
+						"subjectQualifier": "3"
+					}
+				},
+				"travellerInfo": {
+					"enhancedPassengerData": {
+						"enhancedTravellerInformation": {
+							"travellerNameInfo": {
+								"quantity": "1"
+							},
+							"otherPaxNamesDetails": {
+								"surname": "SAGUN",
+								"givenName": "FRANCES MICHELLE ESCUDERO MS",
+								"displayedName": "Y",
+								"referenceName": "Y",
+								"nameType": "UN"
+							}
+						}
+					},
+					"elementManagementPassenger": {
+						"segmentName": "NM",
+						"lineNumber": "1",
+						"reference": {
+							"number": "1",
+							"qualifier": "PT"
+						}
+					},
+					"passengerData": {
+						"travellerInformation": {
+							"passenger": {
+								"firstName": "FRANCES MICHELLE ESCUDERO MS"
+							},
+							"traveller": {
+								"surname": "SAGUN",
+								"quantity": "1"
+							}
+						}
+					}
+				},
+				"pnrHeader": [
+					{
+						"reservationInfo": {
+							"reservation": {
+								"time": "0558",
+								"controlNumber": "Q8MCVP",
+								"companyId": "1A",
+								"date": "160719"
+							}
+						}
+					},
+					{
+						"reservationInfo": {
+							"reservation": {
+								"controlType": "C",
+								"controlNumber": "LMR1SC",
+								"companyId": "1A"
+							}
+						}
+					}
+				],
+				"pnrHeaderTag": {
+					"statusInformation": [
+						{
+							"indicator": "TST"
+						},
+						{
+							"indicator": "RLR"
+						},
+						{
+							"indicator": "TCB"
+						},
+						{
+							"indicator": "RLP"
+						}
+					]
+				},
+				"securityInformation": {
+					"secondRpInformation": {
+						"creationDate": "160719",
+						"creationOfficeId": "YTOWL2106",
+						"creatorIataCode": "67843263",
+						"creationTime": "0558",
+						"agentSignature": "7013MC"
+					},
+					"cityCode": "BRU",
+					"responsibilityInformation": {
+						"officeId": "YTOWL2106",
+						"iataCode": "67843263",
+						"agentId": "AASU",
+						"typeOfPnrElement": "RP"
+					},
+					"queueingInformation": {
+						"queueingOfficeId": "YTOWL2106"
+					}
+				}
+			},
+			"hierarchyParams": {
+				"clientSubUnitGuid": "A:E5D24",
+				"gdsCode": "1A",
+				"latestVersionOnly": false,
+				"tripTypeId": 0
+			},
+			"isBeginPnr": false
+		},
+		"response": [
+			{
+				"id": 43,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": null
+			},
+			{
+				"id": 43,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": null
+			},
+			{
+				"id": 43,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": null
+			},
+			{
+				"id": 43,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": null
+			},
+			{
+				"id": 517,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"PAXGender": "F"
+				}
+			},
+			{
+				"id": 1792,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"AquaPCC": "3X5F"
+				}
+			},
+			{
+				"id": 1792,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"AquaPCC": "77"
+				}
+			},
+			{
+				"id": 1792,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"AquaPCC": "3X5F"
+				}
+			},
+			{
+				"id": 1792,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"AquaPCC": "77"
+				}
+			},
+			{
+				"id": 4370,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": {
+					"*keyword*ALLOW_EMPTY_FIELD": "True"
+				},
+				"matchedPlaceholders": {
+					"PAXMiddleName": "ESCUDERO",
+					"PAXFirstName": "FRANCES MICHELLE",
+					"PAXLastName": "SAGUN"
+				}
+			},
+			{
+				"id": 4371,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"PAXBirthDate": "19NOV90",
+					"PAXGender": "F"
+				}
+			},
+			{
+				"id": 520,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": {
+					"*keyword*ALLOW_EMPTY_FIELD": "true"
+				},
+				"matchedPlaceholders": {
+					"PAXMiddleName": "ESCUDERO",
+					"PAXFirstName": "FRANCES MICHELLE",
+					"PAXLastName": "SAGUN"
+				}
+			},
+			{
+				"id": 564,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"PAXMiddleName": "ESCUDERO",
+					"PAXFirstName": "FRANCES MICHELLE",
+					"PAXLastName": "SAGUN"
+				}
+			},
+			{
+				"id": 567,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"SendItinerary": "YES"
+				}
+			},
+			{
+				"id": 74,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"ProfileID": "MCASTROUK",
+					"NetworkID": "U002MCC"
+				}
+			},
+			{
+				"id": 2300,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"ItineraryLanguage": "EN"
+				}
+			},
+			{
+				"id": 4399,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": {
+					"FullCancel": "ExistsFalse"
+				},
+				"matchedPlaceholders": {
+					"AirTicketingDateNotFinalised": "17/07/2019"
+				}
+			},
+			{
+				"id": 250,
+				"segmentNumberReferences": [],
+				"passengerNumberReferences": [],
+				"conditions": null,
+				"matchedPlaceholders": {
+					"GlobalVariableString": "A:175EC A:E5D24 A:13038 A:407AE161 T-U1SOE EN-US EN-US"
+				}
+			}
+		]
+	}
+}

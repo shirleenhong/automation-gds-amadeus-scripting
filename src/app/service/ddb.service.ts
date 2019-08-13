@@ -91,6 +91,22 @@ export class DDBService implements OnInit {
     }
   }
 
+  async approvers(clientSubUnit) {
+    return await this.getRequest(common.approversService + clientSubUnit);
+  }
+
+  async queueMinderItems(clientSubUnit, typeid) {
+    return await this.getRequest(common.queueMinderItemService.replace('{ClientSubUnitGuid}', clientSubUnit) + typeid);
+  }
+
+  async queueMinderTypes(clientSubUnit) {
+    return await this.getRequest(common.queueMinderTypeService.replace('{ClientSubUnitGuid}', clientSubUnit));
+  }
+
+  async TicketQueues(clientSubUnit) {
+    return await this.getRequest(common.ticketQueueService.replace('{ClientSubUnitGuid}', clientSubUnit));
+  }
+
   async getCountryAndCurrencyList() {
     if (this.countryList.length === 0 || this.currencyList.length === 0) {
       this.getRequest(common.locationService).then(

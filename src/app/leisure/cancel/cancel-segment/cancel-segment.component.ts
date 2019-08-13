@@ -353,6 +353,7 @@ export class CancelSegmentComponent implements OnInit {
     }
     this.checkAcTicketPassenger(newValue);
     this.defaultControls();
+    this.resetAcTicket(newValue);
   }
 
   checkAcTicketPassenger(newValue) {
@@ -490,6 +491,23 @@ export class CancelSegmentComponent implements OnInit {
     return group;
   }
 
+  resetAcTicket(acReasonCode) {
+    if ((acReasonCode === '1' || acReasonCode === '2' || acReasonCode === '3') && (this.isAC)) {
+      const items = this.cancelForm.controls.tickets as FormArray;
+      const acitems = this.cancelForm.controls.actickets as FormArray;
+
+      while (items.length) {
+        items.removeAt(0);
+      }
+      while (acitems.length) {
+        acitems.removeAt(0);
+      }
+
+      items.push(this.createFormGroup());
+      acitems.push(this.createAcFormGroup());
+    }
+  }
+
   addTicketCoupon() {
     const items = this.cancelForm.controls.tickets as FormArray;
     items.push(this.createFormGroup());
@@ -520,6 +538,7 @@ export class CancelSegmentComponent implements OnInit {
       this.acremove = true;
     }
     this.checkAcTicketPassenger('1');
+    this.addTicketCoupon();
   }
 
   removeAcTicket(i) {
@@ -531,11 +550,12 @@ export class CancelSegmentComponent implements OnInit {
       this.acremove = false;
     }
     this.checkAcTicketPassenger('1');
+    this.removeTicketCoupon(i);
   }
 
-  acTicketChange(ticketValue) {
+  acTicketChange(ticketValue, i) {
     const items = this.cancelForm.controls.tickets as FormArray;
-    const fgTicket = items.controls[0] as FormGroup;
+    const fgTicket = items.controls[i] as FormGroup;
     fgTicket.controls.ticket.setValue(ticketValue);
   }
 

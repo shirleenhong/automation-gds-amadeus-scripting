@@ -645,43 +645,32 @@ export class SegmentService {
         rmGroup.remarks = new Array<RemarkModel>();
         rmGroup.deleteRemarkByIds = new Array<string>();
 
-
         if (cancel.value.reasonACCancel) {
-            let pass = '1';
-            if (cancel.value.acpassengerNo !== undefined) {
-                pass = cancel.value.acpassengerNo;
-            }
-            switch (cancel.value.reasonACCancel) {
-                case '1':
-                    remText = 'OS AC NCC 014' + cancel.value.acTicketNo + '/P' + pass;
-                    break;
-                case '2':
-                    remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + pass;
-                    break;
-                case '3':
-                    remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo + ' TO BE USED';
-                    break;
-                // case '4':
-                //     remText = 'OS AC 24 HOUR RULE';
-                //     break;
-                // case '5':
-                //     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                //         + cancel.value.accityPair + ' ' + cancel.value.acdepDate
-                //         + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
-                //     break;
-                // case '6':
-                //     if (cancel.value.acFlightNo) {
-                //         remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                //             + cancel.value.acdepDate + ' - ' + cancel.value.accityPair + '/P' + pass;
-                //     } else {
-                //         remText = '';
-                //     }
-                //     break;
-                default:
-                    break;
-            }
-            if (remText) {
-                rmGroup.cryptics.push(remText);
+            const arr = cancel.get('actickets') as FormArray;
+            if (arr.status !== 'DISABLED') {
+                for (const c of arr.controls) {
+                    const acTicketNo = c.get('acTicketNo').value;
+                    let acpassengerNo = 1;
+                    if (c.get('acpassengerNo').value) {
+                        acpassengerNo = c.get('acpassengerNo').value.toString();
+                    }
+                    switch (cancel.value.reasonACCancel) {
+                        case '1':
+                            remText = 'OS AC NCC 014' + acTicketNo + '/P' + acpassengerNo;
+                            break;
+                        case '2':
+                            remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + acpassengerNo;
+                            break;
+                        case '3':
+                            remText = 'OS AC DUPE REFUND 014' + acTicketNo + ' TO BE USED';
+                            break;
+                        default:
+                            break;
+                    }
+                    if (remText) {
+                        rmGroup.cryptics.push(remText);
+                    }
+                }
             }
         }
 

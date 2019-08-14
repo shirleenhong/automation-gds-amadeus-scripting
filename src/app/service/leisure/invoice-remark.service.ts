@@ -43,32 +43,18 @@ export class InvoiceRemarkService {
       return segment.segmentType != 'AIR';
     });
 
-    if (segments === '') {
-      if (pax === 1 && nonAirSegments.length && !airSegments.length) {
-        this.remGroup.cryptics.push('inv');
-      }
-      if (pax === 1 && airSegments.length) {
-        this.remGroup.cryptics.push('inv/nofare');
-      }
-      if (pax > 1 && nonAirSegments.length && !airSegments.length) {
-        this.remGroup.cryptics.push('invj' + (passengers) ? "/P" + passengers : "" + (segments) ? "/S" + segments : "");
-      }
-      if (pax > 1 && airSegments.length) {
-        this.remGroup.cryptics.push('invj/nofare' + (passengers) ? "/P" + passengers : "" + (segments) ? "/S" + segments : "");
-      }
-    } else {
-      if (passengers === '' && pax === 1) {
-        this.remGroup.cryptics.push('inv/s' + segments);
-      }
-      if (passengers === '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/s' + segments);
-      }
-      if (passengers !== '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/p' + passengers);
-      }
-      if (passengers !== '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/p');
-      }
+    // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
+    if (pax === 1 && nonAirSegments.length && !airSegments.length) {
+      this.remGroup.cryptics.push("inv");
+    }
+    if (pax === 1 && airSegments.length) {
+      this.remGroup.cryptics.push("inv/nofare");
+    }
+    if (pax > 1 && nonAirSegments.length && !airSegments.length) {
+      this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
+    }
+    if (pax > 1 && airSegments.length) {
+      this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
   }
 }

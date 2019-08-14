@@ -26,7 +26,7 @@ export class PnrService {
   pnrResponse: any;
 
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -1257,6 +1257,7 @@ export class PnrService {
   }
 
   getTSTTicketed() {
+    const segmentinPNR = this.getSegmentTatooNumber();
     const segments = [];
     for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
@@ -1271,6 +1272,9 @@ export class PnrService {
 
     for (const fp of this.pnrObj.fpElements) {
       if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
+        if (fp.fullNode.referenceForDataElement === undefined && segments.length < segmentinPNR.length) {
+          return true;
+        }
         for (const ref of fp.fullNode.referenceForDataElement.reference) {
           if (segments.indexOf(ref.number) === -1) {
             return true;

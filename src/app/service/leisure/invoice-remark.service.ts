@@ -47,14 +47,38 @@ export class InvoiceRemarkService {
     if (pax === 1 && nonAirSegments.length && !airSegments.length) {
       this.remGroup.cryptics.push("inv");
     }
-    if (pax === 1 && airSegments.length) {
-      this.remGroup.cryptics.push("inv/nofare");
-    }
     if (pax > 1 && nonAirSegments.length && !airSegments.length) {
       this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
-    if (pax > 1 && airSegments.length) {
+    if (pax === 1 && this.hasAirSegmentSelected()) {
+      this.remGroup.cryptics.push("inv/nofare");
+    }
+    if (pax > 1 && this.hasAirSegmentSelected()) {
       this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
+  }
+
+  /**
+   * Check whether the user selected an Air-type segment.
+   * 
+   * Return boolan
+   */
+  public hasAirSegmentSelected() : boolean
+  {
+    const segmentsSelected = this.formGroup.controls.segmentNo.value.split(",");
+    const airSegments = this.pnrService.getSegmentTatooNumber()
+      .filter(segment => {
+        return segment.segmentType === 'AIR';
+      });
+    
+    for (let i = 0; i < airSegments.length; i++) {
+      for (let j = 0; j < segmentsSelected.length; j++) {
+        if (segmentsSelected[j] == airSegments[i].lineNo) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }

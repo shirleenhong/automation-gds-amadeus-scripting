@@ -553,9 +553,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Issuing a BSP ticket';
     this.modalRef.content.message = 'Are you issuing a BSP ticket on a CWT Agency Plastic Credit Card?';
-    // tslint:disable-next-line:max-line-length
     this.modalRef.content.note =
-      'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the RM*FOP/-AP format is in the PNR. \r\n' +
+      'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
+      'RM*FOP/-AP format is in the PNR. \r\n' +
       'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark.';
     this.modalRef.content.callerName = 'issuingBSP';
     this.modalRef.content.setMessageType(MessageType.YesNo);

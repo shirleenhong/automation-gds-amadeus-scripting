@@ -1,61 +1,25 @@
 import { Injectable } from '@angular/core';
-
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { PnrService } from '../pnr.service';
-import { common } from 'src/environments/common';
-import { environment } from 'src/environments/environment';
+import { RemarksManagerApiService } from './remarks-manager-api.service';
 
 declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
 export class RemarksManagerService {
-  constructor(private httpClient: HttpClient, private pnrService: PnrService) {}
+  matchedPlaceHolderValues = [];
+  constructor(private serviceApi: RemarksManagerApiService) {}
 
-  public TestSendToPnr() {
-    this.getPnrMatchedPlaceHolderValues().then((placeHolders) => {
-      this.getPnrAmadeusAddmultiElementRequest(placeHolders).then((pnr) => {
-        this.sendPnrToAmadeus(pnr);
-      });
-    });
+  public async getMatchcedPlaceholderValues() {
+    await this.serviceApi.getPnrMatchedPlaceHolderValues().then((matchedValues) => (this.matchedPlaceHolderValues = matchedValues));
   }
 
-  async getPnrMatchedPlaceHolderValues() {
-    const param = await this.getPnrRequestParam();
-    return this.postRequest(common.matchedPlacholderValueService, param);
-  }
-
-  async getPnrAmadeusAddmultiElementRequest(placeholders: any) {
-    const param = await this.getPnrRequestParam(placeholders);
-    return this.postRequest(common.pnrAmadeusRequestService, param);
-  }
-
-  async postRequest(serviceName: string, body: any) {
-    const hds = new HttpHeaders().append('Content', 'application/json');
-    if (!environment.proxy) {
-      serviceName = environment.remarksManagerUrlService + serviceName;
-    }
-    return this.httpClient
-      .post<any>(serviceName, body, {
-        headers: hds
-      })
-      .toPromise();
-  }
-
-  async getPnrRequestParam(placeholders?) {
-    const syexgvs = this.pnrService.getRemarkText('SYEXGVS:');
-
-    return {
-      pnr: this.pnrService.pnrResponse,
-      hierarchyParams: {
-        clientSubUnitGuid: syexgvs.split(' ')[1],
-        gdsCode: '1A',
-        latestVersionOnly: true
-      },
-      placeholders,
-      isBeginPnr: false
-    };
-  }
+  // public TestSendToPnr() {
+  //   this.getPnrMatchedPlaceHolderValues().then((placeHolders) => {
+  //     this.getPnrAmadeusAddmultiElementRequest(placeHolders).then((pnr) => {
+  //       this.sendPnrToAmadeus(pnr);
+  //     });
+  //   });
+  // }
 
   async sendPnrToAmadeus(pnrResponse: any) {
     await smartScriptSession.send(pnrResponse.deleteCommand);

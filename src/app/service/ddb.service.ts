@@ -17,9 +17,9 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -77,9 +77,9 @@ export class DDBService implements OnInit {
     );
   }
 
-  async getServicingOption(clientSubUnit, contextId) {
+  async getAllServicingOptions(clientSubUnit) {
     if (this.servicingOption.length === 0) {
-      await this.getRequest(common.servicingOptionService + clientSubUnit + '&ContextID=' + contextId + 'GDSCode=1A').then(
+      await this.getRequest(common.servicingOptionService + clientSubUnit + '&GDSCode=1A').then(
         (x) => {
           this.servicingOption = [];
           this.servicingOption = x.ServiceOptionDetails;
@@ -195,7 +195,6 @@ export class DDBService implements OnInit {
   }
 
   async loadSupplierCodesFromPowerBase() {
-
     await this.getRequest(common.supplierCodes).then(
       (x) => {
         this.supplierCodes = [];
@@ -219,8 +218,9 @@ export class DDBService implements OnInit {
       this.loadSupplierCodesFromPowerBase();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
-      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase()
-        || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase());
+      return this.supplierCodes.filter(
+        (x) => x.type.toUpperCase() === type.toUpperCase() || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase()
+      );
     }
     return this.supplierCodes;
   }

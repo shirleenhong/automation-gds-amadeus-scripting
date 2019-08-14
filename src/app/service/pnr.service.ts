@@ -24,7 +24,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
   pnrResponse: any;
-
+  clientSubUnitGuid: string;
 
   constructor() { }
 
@@ -1088,14 +1088,6 @@ export class PnrService {
     return pSegment;
   }
 
-  // getRirSeaSegments() {
-  //   const pSegment = [];
-  //   let segment = this.getSegmentTatooNumber();
-  //   segment.forEach(element => {
-  //     pSegment.push();
-  //   });
-  //   return pSegment;
-  // }
 
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
@@ -1284,4 +1276,15 @@ export class PnrService {
     }
     return false;
   }
+
+getClientSubUnit() {
+  const syexgvs = this.getRemarkText('SYEXGVS:');
+  if (syexgvs &&  !this.clientSubUnitGuid) {
+      this.clientSubUnitGuid = syexgvs.split(' ')[1];
+    } else {
+      this.clientSubUnitGuid = '';
+    }
+  return this.clientSubUnitGuid;
+  }
+
 }

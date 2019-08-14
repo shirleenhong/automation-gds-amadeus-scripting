@@ -211,7 +211,7 @@ Verify That Air Canada Pass Purchase Accounting, RIR Remarks, And Passive Segmen
     Verify Specific Remark Is Only Written Once    YYZYYZ GK3 \ 0700 0800
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC2/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S4    True
-    Open Cryptic Display Window
+    Close Cryptic Display Window
 
 Verify That Air Canada Pass Purchase Accounting And RIR Remarks Are Deleted
     [Tags]    us7873

@@ -5,10 +5,11 @@ Resource          ../../resources/common/global_resources.robot
 Verify Accounting Remarks Are Written For FOP Cash For Single Passenger
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Leisure/Amadeus Mr    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    CAD Funds    LEISURE-AMADEUS    THIS IS A MAX OF 30 CHARACTERS    500.50
@@ -49,10 +50,11 @@ Verify Accounting Remarks Are Updated For Single Passenger
 Verify Accounting Remarks Are Written For FOP Cash For Multiple Passengers
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM3POLO/LISA Mrs/Marco Mr/Riza Ms    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    USD Funds    POLO-MARCO    SAMPLE DESCRIPTION    1250.00    123456
@@ -87,10 +89,11 @@ Verify Accounting Remarks Are Deleted
 Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-12313
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cheque    CAD Funds    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
@@ -109,10 +112,11 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
     [Tags]    us7538    sanity
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
-    ...    APE-123123
+    ...    APE-123123    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Credit Card    CWT (Visa)    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
@@ -154,10 +158,11 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
 Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
     [Tags]    us7537
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-Test@email.com
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-Test@email.com    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt For RBC Redemption    RBC Point Redemption    LEISURE-AMADEUS    200.75    12345    123456789    9999

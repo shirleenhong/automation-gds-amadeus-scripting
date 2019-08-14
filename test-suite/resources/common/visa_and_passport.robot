@@ -19,3 +19,6 @@ Select Visa Checkbox
     : FOR    ${visa_checkbox}    IN    @{visa_checkbox}
     \    Select Checkbox    xpath=//div[@ng-reflect-name='segments'][${visa_checkbox}]//input[@ng-reflect-name='visa']
     [Teardown]    Take Screenshot
+
+Select International Travel
+    Select Checkbox    css=#senttraveladvicory

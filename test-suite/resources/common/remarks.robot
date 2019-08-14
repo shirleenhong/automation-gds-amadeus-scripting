@@ -291,6 +291,8 @@ Enter Tour Package Commission Amount
 
 Click Remarks Tab
     [Arguments]    ${remarks_tab}
+    Wait Until Element Is Visible     xpath=//span[contains(text(), '${remarks_tab}')]    30   
+    Set Focus To Element     xpath=//span[contains(text(), '${remarks_tab}')]
     Click Element    xpath=//span[contains(text(), '${remarks_tab}')]
 
 Select Segment From The List

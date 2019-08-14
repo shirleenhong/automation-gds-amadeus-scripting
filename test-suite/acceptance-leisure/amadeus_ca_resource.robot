@@ -3,7 +3,8 @@ Resource          ../resources/common/global_resources.robot
 
 *** Keywords ***
 Login To Amadeus Sell Connect
-    Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
+    Comment    Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
+    Open Browser    https://acceptance.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=LOGINURL&LANGUAGE=GB    gc
     Comment    Open Browser    https://1a.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=LOGINURL&LANGUAGE=GB    gc
     Maximize Browser Window
     Wait Until Element Is Visible    css=#username > span:first-child input    60
@@ -163,6 +164,12 @@ Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR
     Verify Specific Remark Is Written In The PNR    RIR IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION./S${segment_number}
     Verify Specific Remark Is Written In The PNR    RIR IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW/S${segment_number}    True
     Verify Specific Remark Is Written In The PNR    RIR RESERVATIONS WHICH MAY BE AT A HIGHER FARE./S${segment_number}
+
+Populate Visa And Passport Required Fields
+    Click Panel    Remarks
+    Click Remarks Tab    Visa and Passport
+    Select International Travel
+    Enter Passport Name    Passport Name
 
 Populate Reporting Required Fields
     Click Panel    Reporting

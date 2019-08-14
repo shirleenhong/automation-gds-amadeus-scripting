@@ -134,10 +134,11 @@ Verify That CWT Invoice Remarks Are Written When Air Passive Segment Is Internat
     [Tags]    us8216     us13166
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    SS WS1074 Y 20DEC SINMNL GK1 / 01401400 / ABCDEFG    RM*CF/-RBM0000000N
-    Enter GDS Command    APE-test@email.com    APE-leisure@email.com    APE-Canada@email.com
+    Enter GDS Command    APE-test@email.com    APE-leisure@email.com    APE-Canada@email.com    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Click Itinerary And Queue
     Enter Email Address    1    testing@cwt.com

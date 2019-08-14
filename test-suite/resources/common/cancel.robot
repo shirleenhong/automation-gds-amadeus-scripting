@@ -59,7 +59,7 @@ Select Reason For Cancel
 
 Enter AC Ticket Number
     [Arguments]    ${ac_ticket_number}
-    Input Text    css=#acTicketNo    ${ac_ticket_number}
+    Input Text    //input[@formcontrolname='acTicketNo']    ${ac_ticket_number}
 
 Unselect Passive Segment
     [Arguments]    ${passive_segment_order}
@@ -82,6 +82,12 @@ Click Tab
 Select Cancel Follow-Up Option
     [Arguments]    ${followup_option}
     Select From List By Label    css=#followUpOption    ${followup_option}
+
+Select Passenger Name For Cancel
+    [Arguments]    ${passenger_name}
+    Click Element    css=#acpassengerNo
+    Click Element    xpath=//option[contains(text(), '${passenger_name}')]
+    Press Key    css=#acpassengerNo    \\09
 
 Enter Branch Number
     [Arguments]    ${branch_number}

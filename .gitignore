@@ -26,3 +26,7 @@ reports/
 log.html
 output.xml
 report.html
+*.libspec
+*.jpg
+red.xml
+*.png

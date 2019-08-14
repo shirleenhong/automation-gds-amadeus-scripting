@@ -5,7 +5,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify That Royal Bank Of Canada Concierge UDIDs Are Written In The PNR When CFA Code is RBP
     [Tags]    us7999
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBP0000000N    SS AC1074 Y 10DEC YYZCDG GK1 / 11551440 / ABCDEFG    APE-12345
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBP0000000N    SS AC1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    APE-12345
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

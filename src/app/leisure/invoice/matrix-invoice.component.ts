@@ -9,7 +9,6 @@ import {
   validateSegmentNumbers,
   validatePassengerNumbers
 } from 'src/app/shared/validators/leisure.validators';
-import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-matrix-invoice',
@@ -22,13 +21,10 @@ export class MatrixInvoiceComponent implements OnInit {
   segments = [];
   passengers = [];
   selection: string;
-  pnrRecordId: string; // The PNR Record Locator/Id
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService) { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.pnrRecordId = this.pnrService.recordLocator();
-
     this.matrixInvoiceGroup = this.fb.group({
       segmentNo: new FormControl('', [
         Validators.required,

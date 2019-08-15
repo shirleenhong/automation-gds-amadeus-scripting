@@ -34,41 +34,43 @@ export class InvoiceRemarkService {
     const passengers = this.formGroup.controls.passengerNo.value;
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
+
+    // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
+    if (pax === 1 && !this.hasAirSegmentSelected()) {
+      this.remGroup.cryptics.push("inv");
+    }
+    if (pax > 1 && !this.hasAirSegmentSelected()) {
+      this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
+    }
+    if (pax === 1 && this.hasAirSegmentSelected()) {
+      this.remGroup.cryptics.push("inv/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
+    }
+    if (pax > 1 && this.hasAirSegmentSelected()) {
+      this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
+    }
+  }
+
+  /**
+   * Check whether the user selected an Air-type segment.
+   * 
+   * Return boolan
+   */
+  public hasAirSegmentSelected() : boolean
+  {
+    const segmentsSelected = this.formGroup.controls.segmentNo.value.split(",");
     const airSegments = this.pnrService.getSegmentTatooNumber()
       .filter(segment => {
         return segment.segmentType === 'AIR';
       });
-    const nonAirSegments = this.pnrService.getSegmentTatooNumber()
-    .filter(segment => {
-      return segment.segmentType != 'AIR';
-    });
-
-    if (segments === '') {
-      if (pax === 1 && nonAirSegments.length && !airSegments.length) {
-        this.remGroup.cryptics.push('inv');
-      }
-      if (pax === 1 && airSegments.length) {
-        this.remGroup.cryptics.push('inv/nofare');
-      }
-      if (pax > 1 && nonAirSegments.length && !airSegments.length) {
-        this.remGroup.cryptics.push('invj' + (passengers) ? "/P" + passengers : "" + (segments) ? "/S" + segments : "");
-      }
-      if (pax > 1 && airSegments.length) {
-        this.remGroup.cryptics.push('invj/nofare' + (passengers) ? "/P" + passengers : "" + (segments) ? "/S" + segments : "");
-      }
-    } else {
-      if (passengers === '' && pax === 1) {
-        this.remGroup.cryptics.push('inv/s' + segments);
-      }
-      if (passengers === '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/s' + segments);
-      }
-      if (passengers !== '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/p' + passengers);
-      }
-      if (passengers !== '' && pax > 1) {
-        this.remGroup.cryptics.push('invj/p');
+    
+    for (let i = 0; i < airSegments.length; i++) {
+      for (let j = 0; j < segmentsSelected.length; j++) {
+        if (segmentsSelected[j] == airSegments[i].lineNo) {
+          return true;
+        }
       }
     }
+
+    return false;
   }
 }

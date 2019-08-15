@@ -34,14 +34,6 @@ export class InvoiceRemarkService {
     const passengers = this.formGroup.controls.passengerNo.value;
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
-    const airSegments = this.pnrService.getSegmentTatooNumber()
-      .filter(segment => {
-        return segment.segmentType === 'AIR';
-      });
-    const nonAirSegments = this.pnrService.getSegmentTatooNumber()
-    .filter(segment => {
-      return segment.segmentType != 'AIR';
-    });
 
     // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
     if (pax === 1 && !this.hasAirSegmentSelected()) {

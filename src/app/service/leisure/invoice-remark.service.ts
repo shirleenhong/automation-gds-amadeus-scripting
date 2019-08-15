@@ -43,7 +43,7 @@ export class InvoiceRemarkService {
       this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
     if (pax === 1 && this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv/nofare");
+      this.remGroup.cryptics.push("inv/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
     if (pax > 1 && this.hasAirSegmentSelected()) {
       this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));

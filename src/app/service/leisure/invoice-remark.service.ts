@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
 export class InvoiceRemarkService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService) { }
 
   public GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
@@ -34,16 +34,20 @@ export class InvoiceRemarkService {
     const passengers = this.formGroup.controls.passengerNo.value;
     const segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
+    const segmentsinpnr = this.pnrService.getSegmentTatooNumber();
+    const segmentsSelected = (this.formGroup.controls.segmentNo.value ? this.formGroup.controls.segmentNo.value.split(",") : '');
+
+    segments = (segmentsinpnr.length === segmentsSelected.length ? '' : segments);
 
     // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
     if (pax === 1 && !this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv" + (segments) ? "/S" + segments : "");
+      this.remGroup.cryptics.push("inv" + ((segments) ? "/S" + segments : ""));
     }
     if (pax > 1 && !this.hasAirSegmentSelected()) {
       this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
     if (pax === 1 && this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv/nofare" + (segments) ? "/S" + segments : "");
+      this.remGroup.cryptics.push("inv/nofare" + ((segments) ? "/S" + segments : ""));
     }
     if (pax > 1 && this.hasAirSegmentSelected()) {
       this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
@@ -55,20 +59,24 @@ export class InvoiceRemarkService {
    * 
    * Return boolan
    */
-  public hasAirSegmentSelected() : boolean
-  {
-    const segmentsSelected = this.formGroup.controls.segmentNo.value.split(",");
-    const airSegments = this.pnrService.getSegmentTatooNumber()
-      .filter(segment => {
-        return segment.segmentType === 'AIR';
-      });
-    
+  public hasAirSegmentSelected(): boolean {
+    const segmentsSelected = (this.formGroup.controls.segmentNo.value ? this.formGroup.controls.segmentNo.value.split(",") : '');
+    const segments = this.pnrService.getSegmentTatooNumber();
+    const airSegments = segments.filter(segment => {
+      return segment.segmentType === 'AIR';
+    });
+
     for (let i = 0; i < airSegments.length; i++) {
       for (let j = 0; j < segmentsSelected.length; j++) {
         if (segmentsSelected[j] == airSegments[i].lineNo) {
           return true;
         }
       }
+
+    }
+
+    if (segments.length === segmentsSelected.length) {
+      return true;
     }
 
     return false;

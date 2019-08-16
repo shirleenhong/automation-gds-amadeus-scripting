@@ -32,7 +32,7 @@ export class InvoiceRemarkService {
 
   public setInvoicePNRRemarks() {
     const passengers = this.formGroup.controls.passengerNo.value;
-    const segments = this.formGroup.controls.segmentNo.value;
+    let segments = this.formGroup.controls.segmentNo.value;
     const pax = this.pnrService.getPassengers().length;
     const segmentsinpnr = this.pnrService.getSegmentTatooNumber();
     const segmentsSelected = (this.formGroup.controls.segmentNo.value ? this.formGroup.controls.segmentNo.value.split(",") : '');

@@ -299,6 +299,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
+
+      // Trim supplier codes. Refer to DE2253.
+      this.filterSupplierCodeList.forEach(filterSupplierCode => {
+        filterSupplierCode.supplierCode = filterSupplierCode.supplierCode.trim();
+      });
     }
   }
 

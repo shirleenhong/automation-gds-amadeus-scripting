@@ -7,8 +7,6 @@ Click E-Traveladvisories Button
     Sleep    5
     Select Window    title=YTOWL2107 - Amadeus Selling Platform Connect
     Select Frame    xpath=//iframe[contains(@src,'bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
-    #for test ELB
-    Comment    Select Frame    xpath=//iframe[contains(@src,'amazonaws.com/bpg-gds-scripting-amadeus')]
 
 Enter Passport Name
     [Arguments]    ${passport_name}

@@ -26,5 +26,5 @@ export const common = {
   ticketQueueService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/TicketQueues?GDSCode=1A',
   matchedPlacholderValueService: '/remarks-manager-rest/api/matched-placeholder-values',
   pnrAmadeusRequestService: '/remarks-manager-rest/api/pnr-amadeus-request',
-  LeisureVersionNumber: '19.8.1'
+  LeisureVersionNumber: '19.8.2'
 };

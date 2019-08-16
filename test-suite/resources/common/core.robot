@@ -11,10 +11,8 @@ Close CA Migration Window
     #Close CA Migration Window
     Unselect Frame
     Sleep    5
-    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
-    Comment    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]/following-sibling::span//span[@class='xWidget xICNstd']
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
-    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
+    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]/following-sibling::span//span[@class='xWidget xICNstd']
     #Close CA Migration Window in prod
     Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
     Comment    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
@@ -58,9 +56,7 @@ Open CA Migration Window
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
     #Open and verify CA Migration window
-    Comment    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration ${env}"]
-    Comment    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]    60
-    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
+    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration ${env}"]
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]

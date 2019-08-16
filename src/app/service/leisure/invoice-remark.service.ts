@@ -37,13 +37,13 @@ export class InvoiceRemarkService {
 
     // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
     if (pax === 1 && !this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv");
+      this.remGroup.cryptics.push("inv" + (segments) ? "/S" + segments : "");
     }
     if (pax > 1 && !this.hasAirSegmentSelected()) {
       this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
     }
     if (pax === 1 && this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
+      this.remGroup.cryptics.push("inv/nofare" + (segments) ? "/S" + segments : "");
     }
     if (pax > 1 && this.hasAirSegmentSelected()) {
       this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));

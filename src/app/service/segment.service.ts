@@ -961,34 +961,12 @@ export class SegmentService {
         }
 
         if (frmCancel.controls.followUpOption.value === 'Non BSP Refund') {
-            if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-                this.getQueueMinder(queueGroup, 'rbpRbm');
-            } else {
-                this.getQueueMinder(queueGroup, 'nonBspAllCfa');
-            }
+            this.getQueueMinder(queueGroup, 'nonBspAllCfa');
         }
 
         return queueGroup;
     }
 
-
-    // queueRefund(frmrefund: FormGroup, cfa: CfRemarkModel) {
-    //     const queueGroup = Array<QueuePlaceModel>();
-    //     if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-    //         this.getQueueMinder(queueGroup, 'rbpRbm');
-    //         if (frmrefund.controls.isBsp.value === 'YES') {
-    //             this.getQueueMinder(queueGroup, 'bspAllCfa');
-    //         }
-    //     } else {
-    //         if (frmrefund.controls.isBsp.value === 'YES') {
-    //             this.getQueueMinder(queueGroup, 'bspAllCfa');
-    //         } else {
-    //             this.getQueueMinder(queueGroup, 'nonBspAllCfa');
-    //         }
-    //     }
-
-    //     return queueGroup;
-    // }
 
     private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
         const queue = new QueuePlaceModel();

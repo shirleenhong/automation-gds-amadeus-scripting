@@ -13,7 +13,7 @@ export class RemarksManagerApiService {
 
   async getPnrMatchedPlaceHolderValues() {
     const param = await this.getPnrRequestParam();
-    return this.postRequest(common.matchedPlacholderValueService, param);
+    return await this.postRequest(common.matchedPlacholderValueService, param);
   }
 
   async getPnrAmadeusAddmultiElementRequest(placeholders: any) {

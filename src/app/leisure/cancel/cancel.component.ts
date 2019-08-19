@@ -35,6 +35,4 @@ export class CancelComponent implements OnInit {
     }
     return true;
   }
-
-  // this.refundComponent.cancelForm.followUpOption.value !== ''
 }

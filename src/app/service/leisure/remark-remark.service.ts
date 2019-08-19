@@ -12,7 +12,7 @@ import { RBCRedemptionModel } from '../../models/pnr/rbc-redemption.model';
 @Injectable({
   providedIn: 'root'
 })
-export class PackageRemarkService {
+export class RemarkService {
   decPipe = new DecimalPipe('en-US');
   rbcForDeletion = [];
 

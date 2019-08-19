@@ -5,10 +5,11 @@ Resource          ../../resources/common/global_resources.robot
 Verify That RMX Remarks Are Written in the PNR
     [Tags]    us8492   sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure
@@ -49,10 +50,11 @@ Verify That RMX Remarks Are Written in the PNR
 Verify That RMX Remarks Are Written in the PNR When Optional Fields Are Blank
     [Tags]    us8492
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10NOV YYZCDG GK1 / 11551440 / ABCDEFG    SS U21075 Y 15NOV CDGMAD GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Click Cancel Segment
     Enter Requestor Name    Amadeus Leisure

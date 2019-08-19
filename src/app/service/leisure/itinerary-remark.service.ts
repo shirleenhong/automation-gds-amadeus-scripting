@@ -11,7 +11,7 @@ import { formatDate } from '@angular/common';
 @Injectable({
   providedIn: 'root'
 })
-export class ItineraryService {
+export class ItineraryRemarkService {
   destination = [];
   constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ddbService: DDBService) {}
 

@@ -291,6 +291,8 @@ Enter Tour Package Commission Amount
 
 Click Remarks Tab
     [Arguments]    ${remarks_tab}
+    Wait Until Element Is Visible     xpath=//span[contains(text(), '${remarks_tab}')]    30   
+    Set Focus To Element     xpath=//span[contains(text(), '${remarks_tab}')]
     Click Element    xpath=//span[contains(text(), '${remarks_tab}')]
 
 Select Segment From The List
@@ -325,9 +327,10 @@ Select Fare Rule Remarks
     Run keyword if    '${fare_rule_remark}' == 'Non-Ref/Tkt Value'    Select Checkbox    css=#isTicketNonRef
 
 Add Associated Remarks
-    [Arguments]    ${associated_remark}
-    Input Text    xpath=//input[@formcontrolname='remarkText']    ${associated_remark}
-    Press Key    xpath=//input[@formcontrolname='remarkText']    \\09
+    [Arguments]    ${remark_order}    ${associated_remark}
+    # Double Click Element    xpath=//div[@formarrayname='items'][${remark_order}]//input[@formcontrolname='remarkText']
+    # Press Key    xpath=//div[@formarrayname='items'][${remark_order}]//input[@formcontrolname='remarkText']    \\08
+    Input Text    xpath=//div[@formarrayname='items'][${remark_order}]//input[@formcontrolname='remarkText']    ${associated_remark}
     [Teardown]    Take Screenshot
 
 Enter Currency
@@ -464,7 +467,9 @@ Enter Other Product Type Description
     [Teardown]    Take Screenshot
 
 Select Segment For Associated Remark
-    [Arguments]    ${segment}
-    Wait Until Element Is Visible    css=#segmentNo
-    Select From List By Label    css=#segmentNo    ${segment}
+    [Arguments]    ${button_order}    @{segment_number}
+    Click Element    xpath=//div[@formarrayname='items'][${button_order}]//button[@id='button-basic']
+    Set Focus To Element    xpath=//div[@formarrayname='items'][${button_order}]//ul[@id='dropdown-basic']
+    : FOR    ${segment_number}    IN    @{segment_number}
+    \    Select Checkbox    xpath=//div[@formarrayname='items'][${button_order}]//input[@value='${segment_number}']
     [Teardown]    Take Screenshot

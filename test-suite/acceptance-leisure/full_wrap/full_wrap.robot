@@ -13,7 +13,7 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     ...    Codeshare
     [Tags]    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Add Passive Air Segment
@@ -36,10 +36,14 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Sleep    3
     Populate Reporting Required Fields
     Click Panel    Remarks
-    Add ITC Package Costs
+    Click Remarks Tab    Visa and Passport
+    Select International Travel
+    Enter Passport Name    Passport Name
     Click Remarks Tab    Codeshare
     Select Segment From The List    1    3
     Enter Check-in At Details    1    Codeshare Testing
+    Click Remarks Tab    Packages
+    Add ITC Package Costs
     Click Submit To PNR
     Sleep    3
     Close CA Migration Window
@@ -51,6 +55,9 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Verify Specific Remark Is Written In The PNR    RIR CHECK-IN AT ${checkin_at.upper()} TICKET COUNTER/S2
     Verify Specific Remark Is Written In The PNR    RM *DE/-CDG
     Verify Specific Remark Is Written In The PNR    FS 42
+    Verify Specific Remark Is Written In The PNR    RM INTERNATIONAL TRAVEL ADVISORY SENT
+    Verify Specific Remark Is Written In The PNR    RM ADVISED PASSPORT NAME VALID PASSPORT IS REQUIRED
+    Verify Specific Remark Is Written In The PNR    RIR FRANCE - A VALID PASSPORT IS REQUIRED/S2
     Close Cryptic Display Window
 
 Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
@@ -110,7 +117,7 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}
     Verify Royal Bank Concierge UDID Remarks Are Written    Within    Email    Cruise    \    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-AN7/-LK-MAC1/-AMT-100.75/-PT-1.00RC/-PT-2.00XG/-PT-3.00XQ/-PT-4.00XT/-CD-12.00    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-ABC4567891EFG4567890/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0323/-MP-ALL/-BKN-ABC4567891EFG4567890/S3    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC2/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0921/-MP-ALL/-BKN-CWT112233/S3    True
     Verify Leisure Fee Remarks Are Written
@@ -157,7 +164,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     ...    CWT Itinerary
     [Tags]    sanity    prod
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Add Passive Air Segment
@@ -178,7 +185,11 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Add Insurance Reporting Remarks
     Click Panel    Remarks
     Add Tour Package Costs
+    Click Remarks Tab    Visa and Passport
+    Select International Travel
+    Enter Passport Name    Passport Name
     Click Submit To PNR
+    Sleep    2
     Click Itinerary And Queue
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    French
@@ -216,6 +227,7 @@ Verify RMX Cancel Remarks Are Written In The PNR
     Select Cancel All Segments
     Select Reason For Cancel    NAME CORRECTION NCC WITH OAL
     Enter AC Ticket Number    1234512
+    Select Passenger Name For Cancel    LASTNAME-FIRSTNAME MR
     Enter Coupon Number For Refund    1    9825252
     Click Cancel Segments Button
     Close CA Migration Window

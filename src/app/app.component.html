@@ -1,6 +1,13 @@
-<div *ngIf="!isCorporate">
-  <app-leisure></app-leisure>
+<div class="fixed-top head">
+  <div class="float-left logo"></div>
+  <div class="float-left title">{{ header }}</div>
+  <div class="float-right resize"><i [className]="(isMinimize ? 'far' : 'fas') + ' fa-window-maximize'" (click)="resize()"></i></div>
 </div>
-<div *ngIf="isCorporate">
-  <app-corporate></app-corporate>
+<div class="body">
+  <div *ngIf="!isCorporate">
+    <app-leisure></app-leisure>
+  </div>
+  <div *ngIf="isCorporate">
+    <app-corporate></app-corporate>
+  </div>
 </div>

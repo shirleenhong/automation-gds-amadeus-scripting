@@ -3,7 +3,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { RBCRedemptionModel } from 'src/app/models/pnr/rbc-redemption.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { UpdateRbcPointsRedemptionComponent } from '../update-rbc-points-redemption/update-rbc-points-redemption.component';
-import { PackageRemarkService } from 'src/app/service/leisure/package-remark.service';
+import { RemarkService } from 'src/app/service/leisure/remark-remark.service';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 
@@ -22,12 +22,12 @@ export class RbcPointsRedemptionComponent implements OnInit {
   // @Input()
   rbcRedemption: RBCRedemptionModel[] = [];
 
-  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private packageRemarkService: PackageRemarkService) {}
+  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private remarkService: RemarkService) {}
 
   ngOnInit() {
     // this.rbcRedemption = this.pnrService.getAccountingRemarks();
     this.modalSubscribeOnClose();
-    this.rbcRedemption = this.packageRemarkService.getRbcPointsRemarksFromPnr();
+    this.rbcRedemption = this.remarkService.getRbcPointsRemarksFromPnr();
   }
 
   addRBCRedemptionPoints() {

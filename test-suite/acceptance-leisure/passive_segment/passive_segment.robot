@@ -525,6 +525,7 @@ Verify Hotel Passive Segment Is Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR CANCELLATION POLICY - 12HRS/S4
     Verify Specific Remark Is Written In The PNR    RIR ROOM CONFIRMED WITH - HOTEL TESTING/S4
     Verify Specific Remark Is Written In The PNR    RIR ADDITONAL INFORMATION - HOTEL ADDITIONAL INFO/S4
+    Verify Specific Remark Is Written In The PNR    RM *HS10JAN/-CHN-HI
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -560,6 +561,7 @@ Verify Hotel Passive Segment Without Optional Values Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR ${hotel_country} ${hotel_zip_code}/S4
     Verify Specific Remark Is Written In The PNR    RIR GUARANTEED FOR LATE ARRIVAL - YES/S4
     Verify Specific Remark Is Written In The PNR    RIR CANCELLATION POLICY - 6P/S4
+    Verify Specific Remark Is Written In The PNR    RM *HS12JAN/-CHN-HI
     Verify Specific Remark Is Not Written In The PNR    RIR ROOM CONFIRMED WITH
     Verify Specific Remark Is Not Written In The PNR    RIR ADDITONAL INFORMATION
     Close Cryptic Display Window

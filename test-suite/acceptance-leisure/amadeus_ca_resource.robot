@@ -164,6 +164,12 @@ Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR
     Verify Specific Remark Is Written In The PNR    RIR IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW/S${segment_number}    True
     Verify Specific Remark Is Written In The PNR    RIR RESERVATIONS WHICH MAY BE AT A HIGHER FARE./S${segment_number}
 
+Populate Visa And Passport Required Fields
+    Click Panel    Remarks
+    Click Remarks Tab    Visa and Passport
+    Select International Travel
+    Enter Passport Name    Passport Name
+
 Populate Reporting Required Fields
     Click Panel    Reporting
     Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
@@ -186,3 +192,12 @@ Get Hotel Details Values
     Set Test Variable    ${hotel_country}
     Set Test Variable    ${hotel_zip_code}
     [Teardown]    Take Screenshot
+
+Verify Pop-Up Warning Is Displayed
+    Page Should Contain Element    xpath=//div[contains(text(),'Warning')]
+    Take Screenshot
+    Set Focus To Element    xpath=//div[@class='modal-footer']//button[contains(text(),'Close')]
+    Click Button    xpath=//div[@class='modal-footer']//button[contains(text(),'Close')]
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
+    Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
+    Sleep    2

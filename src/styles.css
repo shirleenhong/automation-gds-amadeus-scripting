@@ -373,7 +373,7 @@ input[type='date']::-webkit-inner-spin-button {
   position: absolute;
   top: 15px;
   right: 16px;
-  background-image: url('/assets/images/logo-reverse.png');
+  background-image: url('assets/images/logo-reverse.png');
   background-repeat: no-repeat;
   background-size: 100%;
 }
@@ -475,8 +475,7 @@ input[type='date']::-webkit-inner-spin-button {
   margin-left: 10px;
 }
 
-.version 
-{
+.version {
   position: fixed;
   top: 97%;
   left: 88%;

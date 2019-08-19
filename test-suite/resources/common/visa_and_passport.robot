@@ -7,8 +7,6 @@ Click E-Traveladvisories Button
     Sleep    5
     Select Window    title=YTOWL2107 - Amadeus Selling Platform Connect
     Select Frame    xpath=//iframe[contains(@src,'bpg-aws-cwt.com/portal/gds-scripting-amadeus')]
-    #for test ELB
-    Comment    Select Frame    xpath=//iframe[contains(@src,'amazonaws.com/bpg-gds-scripting-amadeus')]
 
 Enter Passport Name
     [Arguments]    ${passport_name}
@@ -19,3 +17,6 @@ Select Visa Checkbox
     : FOR    ${visa_checkbox}    IN    @{visa_checkbox}
     \    Select Checkbox    xpath=//div[@ng-reflect-name='segments'][${visa_checkbox}]//input[@ng-reflect-name='visa']
     [Teardown]    Take Screenshot
+
+Select International Travel
+    Select Checkbox    css=#senttraveladvicory

@@ -96,10 +96,16 @@
           </div>
         </div>
 
+
         <div *ngIf="f.reasonACCancel.value !== ''">
-          <div *ngIf="f.reasonACCancel.value === '1' || f.reasonACCancel.value === '2'|| f.reasonACCancel.value === '3'"
-            class="row form-group">
-            <div class="col-sm-4"></div>
+          <div
+            *ngIf="f.reasonACCancel.value === '1' || f.reasonACCancel.value === '2'|| f.reasonACCancel.value === '3'">
+            <div class="row form-group">
+              <div class="col-sm-4"></div>
+              <div class="col-3">AC Ticket Number:</div>
+              <div class="col-3">Passenger Name Number:</div>
+            </div>
+            <!-- <div class="col-sm-4"></div>
             <div class="col-4">
               <div class="">AC Ticket Number:</div>
               <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo"
@@ -110,6 +116,30 @@
               <div class="">Passenger Name Number:</div>
               <input type="text" class="form-control" id="acpassengerNo" formControlName="acpassengerNo"
                 name="acpassengerNo" />
+            </div> -->
+            <div formArrayName="actickets"
+              *ngFor="let item of this.cancelForm.get('actickets')['controls']; let i = index">
+              <div [formGroupName]="i" class="form-group row">
+                <div class="col-sm-4"></div>
+                <div class="col-3">
+                  <input type="text" formControlName="acTicketNo" class="form-control" maxlength="25"
+                    (change)="acTicketChange($event.target.value, i)">
+                </div>
+                <div class="col-3">
+                  <select class="form-control " id="acpassengerNo" formControlName="acpassengerNo" name="acpassengerNo">
+                    <option *ngFor="let pass of passengers" [value]="pass.id">
+                      {{ pass.surname }}-{{ pass.firstname }}
+                    </option>
+                  </select>
+                </div>
+                <div *ngIf="acremove" class="col-1">
+                  <i class="fas fa-minus-circle" id="remove" (click)="removeAcTicket(i)"> </i>
+                </div>
+                <div *ngIf="acadd" class="col-1">
+                  &nbsp;
+                  <i class="fas fa-plus-circle" id="add" (click)="addAcTicket()"></i>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -220,12 +250,12 @@
           <div class="col-3">
             <input type="text" formControlName="coupon" class="form-control" maxlength="25">
           </div>
-          <div *ngIf="remove" class="col-1">
-            <i class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
-          </div>
-          <div *ngIf="add" class="col-1">
+          <div class="col-2"
+            *ngIf="f.reasonACCancel.value !== '1' && f.reasonACCancel.value !== '2' && f.reasonACCancel.value !== '3'">
+            <i *ngIf="remove" class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
             &nbsp;
-            <i class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
+            &nbsp;
+            <i *ngIf="add" class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
           </div>
         </div>
       </div>

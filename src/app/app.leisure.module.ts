@@ -130,4 +130,4 @@ import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks
     UpdateLeisureFeeComponent
   ]
 })
-export class AppLeisureModule {}
+export class AppLeisureModule { }

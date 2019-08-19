@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
-import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
+// import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
 import { DDBService } from '../service/ddb.service';
 import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
@@ -18,10 +18,11 @@ export class CorporateComponent implements OnInit {
   errorPnrMsg = '';
   isPnrLoaded = false;
   modalRef: BsModalRef;
+  workflow = '';
 
   constructor(
     private pnrService: PnrService,
-    private rms: RemarksManagerService,
+    // private rms: RemarksManagerService,
     private ddbService: DDBService,
     private modalService: BsModalService
   ) {
@@ -58,8 +59,8 @@ export class CorporateComponent implements OnInit {
     await this.ddbService.loadSupplierCodesFromPowerBase();
     this.showLoading('Loading PNR', 'initData');
     await this.getPnrService();
-    this.showLoading('Matching Remarks', 'initData');
-    await this.rms.getMatchcedPlaceholderValues();
+    // this.showLoading('Matching Remarks', 'initData');
+    // await this.rms.getMatchcedPlaceholderValues();
     this.closeLoading();
   }
 
@@ -92,4 +93,12 @@ export class CorporateComponent implements OnInit {
     this.modalRef.content.response = '';
     this.modalRef.content.setMessageType(type);
   }
+
+  public async wrapPnr() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      this.workflow = 'wrap';
+    }
+  }
+
 }

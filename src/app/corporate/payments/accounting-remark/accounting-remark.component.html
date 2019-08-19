@@ -1,0 +1,42 @@
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Passenger</th>
+      <th scope="col">Supplier Code</th>
+      <th scope="col">FOP</th>
+      <th scope="col">Base Amount</th>
+      <th scope="col">GST</th>
+      <th scope="col">HST</th>
+      <th scope="col">QST</th>
+      <th scope="col">Comm. w/o Tax</th>
+      <th scope="col">Other Tax</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of accountingRemarks">
+      <td>{{ r.tkMacLine }}</td>
+      <td>{{ r.passengerNo }}</td>
+      <td>{{ r.supplierCodeName }}</td>
+      <td>{{ r.fop }}</td>
+      <td>{{ r.baseAmount }}</td>
+      <td>{{ r.gst }}</td>
+      <td>{{ r.hst }}</td>
+      <td>{{ r.qst }}</td>
+      <td>{{ r.commisionWithoutTax }}</td>
+      <td>{{ r.otherTax }}</td>
+      <td>
+        <i class="fas fa-edit" (click)="updateItem(r)" *ngIf="r.supplierCodeName !== 'A22'"></i>
+        &nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt" (click)="deleteItem(r)"></i>
+        &nbsp;&nbsp;&nbsp;<i class="far fa-copy" (click)="copyItem(r)" *ngIf="r.accountingTypeRemark === '1'"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col">
+    <button (click)="addAccountingRemarks()">Add Accounting Line</button>
+  </div>
+</div>

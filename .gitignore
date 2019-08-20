@@ -30,3 +30,4 @@ report.html
 *.jpg
 red.xml
 *.png
+test-suite/resources/common/global_resources.robot 

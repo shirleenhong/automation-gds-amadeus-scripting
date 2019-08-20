@@ -9,10 +9,10 @@ Verify Accounting Remarks Are Written For FOP Cash For Single Passenger
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
-    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    CAD Funds    LEISURE-AMADEUS    THIS IS A MAX OF 30 CHARACTERS    500.50
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -54,10 +54,10 @@ Verify Accounting Remarks Are Written For FOP Cash For Multiple Passengers
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
-    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    USD Funds    POLO-MARCO    SAMPLE DESCRIPTION    1250.00    123456
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -93,10 +93,10 @@ Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
-    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cheque    CAD Funds    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -116,13 +116,13 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
-    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Credit Card    CWT (Visa)    LEISURE-AMADEUS    SAMPLE DESCRIPTION    200.75    1234567890123456789
     ...    4444333322221111    0323
     Click Add Matrix Receipt Button
     Create Matrix Receipt    Cash    USD Funds    POLO-LISA    SAMPLE DESCRIPTION    1250.00    123456
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -162,10 +162,10 @@ Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
-    Populate Visa And Passport Required Fields
     Click Panel    Payment
     Click Add Matrix Receipt Button
     Create Matrix Receipt For RBC Redemption    RBC Point Redemption    LEISURE-AMADEUS    200.75    12345    123456789    9999
+    Populate Visa And Passport Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

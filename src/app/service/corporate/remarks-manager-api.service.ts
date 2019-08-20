@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PnrService } from '../pnr.service';
 import { common } from 'src/environments/common';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +22,7 @@ export class RemarksManagerApiService {
 
   async postRequest(serviceName: string, body: any) {
     const hds = new HttpHeaders().append('Content', 'application/json');
-    if (!environment.proxy) {
-      serviceName = environment.remarksManagerUrlService + serviceName;
-    }
+
     return this.httpClient
       .post<any>(serviceName, body, {
         headers: hds

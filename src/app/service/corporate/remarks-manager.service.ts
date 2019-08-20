@@ -44,6 +44,12 @@ export class RemarksManagerService {
     );
   }
 
+  // sample() {
+  //   const values = new Map<string, string>();
+  //   values.set('CAAirHighFare', '213123');
+  //   this.createPlaceholderValues(values, [], []);
+  // }
+
   public createPlaceholderValues(values: Map<string, string>, segmentRelate?: [], passengerRelate?: [], staticText?) {
     const placeHolder = new PlaceholderValues({
       id: this.getOutputItemId(values, staticText),

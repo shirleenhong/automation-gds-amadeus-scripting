@@ -6,7 +6,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+import { validateSegmentNumbers } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -18,7 +18,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   @Input()
   accountingRemark: MatrixAccountingModel;
-
   accountingRemarkList: Array<SelectItem>;
   descriptionList: Array<SelectItem>;
   formOfPaymentList: Array<SelectItem>;
@@ -37,6 +36,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   isAddNew = false;
   isCopy = false;
   tempAccounting: MatrixAccountingModel;
+  typeOfPassesList: Array<SelectItem>;
 
   // PaymentModeList: Array<SelectItem>;
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
@@ -77,10 +77,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
       otherTax: new FormControl('', [Validators.required]),
-      fop: new FormControl('', [Validators.required]),
-      vendorCode: new FormControl('', [Validators.required]),
-      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
-      expDate: new FormControl('', [Validators.required, validateExpDate()]),
+      // fop: new FormControl('', [Validators.required]),
+      // vendorCode: new FormControl('', [Validators.required]),
+      // cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      // expDate: new FormControl('', [Validators.required, validateExpDate()]),
       tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
       descriptionapay: new FormControl('', [Validators.required]),
       // bsp: new FormControl('', [Validators.required]),
@@ -94,7 +94,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       penaltyQst: new FormControl(''),
       penaltyBaseAmount: new FormControl(''),
       originalTktLine: new FormControl(''),
-      duplicateFare: new FormControl('')
+      duplicateFare: new FormControl(''),
+      typeOfPass: new FormControl('')
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -163,7 +164,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Insurance Remark', itemValue: 'INS' },
       { itemText: 'Apay Accounting Remark', itemValue: '0' },
       { itemText: 'Air Canada Pass Redemption', itemValue: 'ACPR' },
-      { itemText: 'Air Canada Pass Purchase', itemValue: 'ACPP' },
+      { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
+      { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
+      { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
       { itemText: 'NonBSP Air Exchange', itemValue: 'NAE' }
     ];
   }
@@ -181,6 +184,25 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     ];
   }
 
+  loadPassType(accountingType) {
+    switch (accountingType) {
+      case 'ACPP':
+        this.passPurchaseList = this.ddbService.getACPassPurchaseList();
+        break;
+      case 'WCPP':
+        this.passPurchaseList = [
+          { itemText: '', itemValue: '' },
+          { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }];
+        break;
+      case 'PCPP':
+        this.passPurchaseList = [
+          { itemText: '', itemValue: '' },
+          { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }];
+        break;
+      default: break;
+    }
+  }
+
   onChangeAccountingType(accRemark) {
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
@@ -189,7 +211,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     // initial state
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
-    this.enableFormControls(['fop'], false);
     this.enableFormControls(['departureCity'], true);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     switch (accRemark) {
@@ -210,16 +231,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       case 'ACPR':
       case 'ACPP':
-        this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
         if (accRemark === 'ACPP') {
-          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
+          this.enableFormControls(['otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
             'commisionPercentage', 'departureCity', 'segmentNo'], true);
           this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
           this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(7)]);
           this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         } else {
-          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
+          this.enableFormControls(['otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
             'commisionPercentage', 'departureCity'], true);
           this.enableFormControls(['segmentNo'], false);
         }
@@ -246,6 +266,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
         }
         break;
+      case 'WCPP':
+        this.accountingRemark.supplierCodeName = 'WJP';
+        break;
+      case 'PCPP':
+        this.accountingRemark.supplierCodeName = 'PTP';
+        break;
       case 'NAE':
         this.accountingRemark.bsp = '1';
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName'], false);
@@ -269,7 +295,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.name = 'Supplier Confirmation Number:';
         break;
     }
-
+    this.loadPassType(accRemark);
     this.filterSupplierCodeList = [];
     this.filterSupplierCode(accRemark);
     this.loadFormOfPaymentList(accRemark);
@@ -318,18 +344,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
   }
 
-  FormOfPaymentChange(newValue) {
-    switch (newValue) {
-      case 'CC':
-      case 'AP':
-        this.enableFormControls(['cardNumber', 'expDate', 'vendorCode'], false);
-        break;
-      default:
-        this.enableFormControls(['cardNumber', 'expDate', 'vendorCode'], true);
-        break;
-    }
-  }
-
   enableFormControls(controls: string[], disabled: boolean) {
     controls.forEach((c) => {
       if (disabled) {
@@ -372,13 +386,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       {} as { [key: string]: any }
     );
     return hasError ? result : null;
-  }
-
-  creditcardMaxValidator() {
-    this.f.cardNumber.setValue('');
-    // let pattern = '';
-    // pattern = this.paymentHelper.creditcardMaxValidator(newValue);
-    // this.matrixAccountingForm.controls.cardNumber.setValidators(Validators.pattern(pattern));
   }
 
   setTktNumber(code) {
@@ -489,35 +496,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     return res;
   }
 
-  select(copyFields) {
-    // let tempAccounting: MatrixAccountingModel;
-    this.initializeCopy();
+  select() {
     this.matrixAccountingForm.controls.passengerNo.patchValue('');
     this.matrixAccountingForm.controls.tktLine.patchValue('');
-    if (copyFields === 'fare') {
-      this.matrixAccountingForm.controls.vendorCode.patchValue('');
-      this.matrixAccountingForm.controls.fop.patchValue('');
-      this.matrixAccountingForm.controls.ccNo.patchValue('');
-      this.matrixAccountingForm.controls.expDate.patchValue('');
-    } else {
-      this.matrixAccountingForm.controls.fop.patchValue(this.tempAccounting.fop);
-      if (this.tempAccounting.vendorCode) {
-        this.matrixAccountingForm.controls.vendorCode.patchValue(this.tempAccounting.vendorCode);
-        this.matrixAccountingForm.controls.ccNo.patchValue(this.tempAccounting.cardNumber);
-        this.matrixAccountingForm.controls.expDate.patchValue(this.tempAccounting.expDate);
-      }
-
-    }
-  }
-
-  initializeCopy() {
-    if (!this.tempAccounting.fop) {
-      this.tempAccounting.fop = this.matrixAccountingForm.controls.fop.value;
-      if (this.matrixAccountingForm.controls.vendorCode.value) {
-        this.tempAccounting.vendorCode = this.matrixAccountingForm.controls.vendorCode.value;
-        this.tempAccounting.cardNumber = this.matrixAccountingForm.controls.cardNumber.value;
-        this.tempAccounting.expDate = this.matrixAccountingForm.controls.expDate.value;
-      }
-    }
   }
 }

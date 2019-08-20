@@ -7,6 +7,7 @@ import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { LoadingComponent } from '../shared/loading/loading.component';
+import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -24,7 +25,8 @@ export class CorporateComponent implements OnInit {
     private pnrService: PnrService,
     // private rms: RemarksManagerService,
     private ddbService: DDBService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private paymentRemarkService: PaymentRemarkService
   ) {
     this.initData();
   }
@@ -99,6 +101,13 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
       this.workflow = 'wrap';
     }
+  }
+
+  public async SubmitToPNR() {
+
+    // this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark
+
+
   }
 
 }

@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
+
+import { CounselorDetail } from './globals/counselor-identity';
+import { StaticValuesService } from './service/static-values.services';
+import { SelectItem } from 'src/app/models/select-item.model';
 
 declare var smartScriptSession: any;
 
@@ -13,12 +17,20 @@ export class AppComponent implements OnInit {
   isCorporate = false;
   isMinimize = false;
   header = 'Leisure';
-  constructor(private location: PlatformLocation) {}
+
+  @Input()
+  counselorIdentity: string;
+
+  identityList: Array<SelectItem> = null;
+
+  constructor(private location: PlatformLocation, private counselorDetail: CounselorDetail, private staticValues: StaticValuesService) {}
   url = '';
+
   ngOnInit(): void {
     this.isCorporate = this.location.getBaseHrefFromDOM().indexOf('corporate') > 0;
     if (this.isCorporate) {
       this.header = 'Corporate';
+      this.loadCounselorIdentityList();
     }
   }
 
@@ -33,5 +45,13 @@ export class AppComponent implements OnInit {
     smartScriptSession.resizeSmartTool({ id: smartScriptSession.getPopupId(), width, height }).then((x) => {
       console.log(JSON.stringify(x));
     });
+  }
+
+  loadCounselorIdentityList() {
+    this.identityList = this.staticValues.getCounselorIdentityList();
+  }
+
+  onChangeIdentity() {
+    this.counselorDetail.identity = this.counselorIdentity;
   }
 }

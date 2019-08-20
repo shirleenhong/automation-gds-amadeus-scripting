@@ -52,6 +52,6 @@ export class AppComponent implements OnInit {
   }
 
   onChangeIdentity() {
-    this.counselorDetail.identity = this.counselorIdentity;
+    this.counselorDetail.updateIdentity(this.counselorIdentity);
   }
 }

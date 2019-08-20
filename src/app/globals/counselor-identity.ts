@@ -4,5 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CounselorDetail {
-  identity: string = null;
+  private identity: string = null;
+
+  getIdentity(): string {
+    return this.identity;
+  }
+
+  updateIdentity(newIdentity: string): void {
+    this.identity = newIdentity;
+  }
 }

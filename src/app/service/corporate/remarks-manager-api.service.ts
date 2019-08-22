@@ -12,6 +12,7 @@ export class RemarksManagerApiService {
   constructor(private httpClient: HttpClient, private pnrService: PnrService) { }
 
   async getPnrMatchedPlaceHolderValues() {
+    debugger;
     const param = await this.getPnrRequestParam();
     return await this.postRequest(common.matchedPlacholderValueService, param);
   }

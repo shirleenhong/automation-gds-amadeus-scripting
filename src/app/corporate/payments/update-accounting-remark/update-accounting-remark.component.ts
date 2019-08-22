@@ -57,10 +57,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       gst: new FormControl('', [Validators.required]),
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
-      otherTax: new FormControl('', [Validators.required]),
+      otherTax: new FormControl('', []),
       tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
-      descriptionapay: new FormControl('', [Validators.required]),
-      commisionPercentage: new FormControl('', [Validators.required]),
+      descriptionapay: new FormControl('', []),
+      commisionPercentage: new FormControl('', []),
       passRelate: new FormControl('', []),
       passPurchase: new FormControl('', []),
       fareType: new FormControl('', []),
@@ -126,6 +126,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
+    debugger;
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
       this.accountingRemark.supplierCodeName = '';
@@ -142,7 +143,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           accRemark === 'WCPP' ? this.accountingRemark.supplierCodeName = 'WJP' :
             this.accountingRemark.supplierCodeName = 'PTP');
 
-        this.enableFormControls(['otherTax', 'supplierCodeName', 'descriptionapay', 'segmentNo'], true);
+        this.enableFormControls(['supplierCodeName'], true);
         this.enableFormControls(['departureCity'], false);
 
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();

@@ -1277,14 +1277,15 @@ export class PnrService {
     return false;
   }
 
-getClientSubUnit() {
-  const syexgvs = this.getRemarkText('SYEXGVS:');
-  if (syexgvs &&  !this.clientSubUnitGuid) {
+  getClientSubUnit() {
+    debugger;
+    const syexgvs = this.getRemarkText('SYEXGVS:');
+    if (syexgvs && !this.clientSubUnitGuid) {
       this.clientSubUnitGuid = syexgvs.split(' ')[1];
     } else {
       this.clientSubUnitGuid = '';
     }
-  return this.clientSubUnitGuid;
+    return this.clientSubUnitGuid;
   }
 
 }

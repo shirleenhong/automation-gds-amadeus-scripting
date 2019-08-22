@@ -16,6 +16,7 @@ export class RemarksManagerService {
 
   public async getMatchcedPlaceholderValues() {
     await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
+      debugger;
       if (res !== undefined) {
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
@@ -82,6 +83,7 @@ export class RemarksManagerService {
   }
 
   async submitToPnr() {
+    debugger;
     await this.sendPnrToAmadeus(this.serviceApi.getPnrRequestParam(this.newPlaceHolderValues));
   }
 

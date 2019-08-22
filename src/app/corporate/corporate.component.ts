@@ -65,9 +65,8 @@ export class CorporateComponent implements OnInit {
     await this.ddbService.loadSupplierCodesFromPowerBase();
     this.showLoading('Loading PNR', 'initData');
     await this.getPnrService();
-    // debugger;
-    // this.showLoading('Matching Remarks', 'initData');
-    // await this.rms.getMatchcedPlaceholderValues();
+    this.showLoading('Matching Remarks', 'initData');
+    await this.rms.getMatchcedPlaceholderValues();
     this.closeLoading();
   }
 
@@ -109,7 +108,6 @@ export class CorporateComponent implements OnInit {
   }
 
   public async SubmitToPNR() {
-    debugger;
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
     await this.rms.submitToPnr().then(
       () => {

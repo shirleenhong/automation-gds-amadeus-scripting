@@ -7,57 +7,63 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PaymentRemarkService {
-  pnrService: any;
+    pnrService: any;
 
-  constructor(private remarksManager: RemarksManagerService) { }
+    constructor(private remarksManager: RemarksManagerService) { }
 
-  writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
-    const accList = accountingComponents.accountingRemarks;
-    // tslint:disable-next-line:max-line-length
-    this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
-  }
-
-  writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
-    accountingRemarks.forEach((account) => {
-      const paymentRemark = new Map<string, string>();
-      paymentRemark.set('%PassName%', account.passPurchase);
-      paymentRemark.set('%FareType%', account.fareType);
-      this.remarksManager.createPlaceholderValues(paymentRemark);
-    });
-  }
-
-  addSegmentForPassPurchase(accounting, remGroup) {
-    const air = this.pnrService
-      .getSegmentTatooNumber()
-      .find((x) => x.segmentType === 'AIR' && x.controlNumber === accounting.supplierConfirmatioNo);
-
-    if (!air) {
-      const noOfPassenger = this.pnrService.getPassengers().length;
-      const datePipe = new DatePipe('en-US');
-      // add dummy segment
-      const passive = new PassiveSegmentModel();
-      passive.startPoint = accounting.departureCity;
-      passive.endPoint = accounting.departureCity;
-      passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
-      passive.vendor = 'AC';
-      passive.startTime = '0700';
-      passive.endTime = '0800';
-      passive.segmentName = 'AIR';
-      passive.passiveSegmentType = 'AIR';
-      passive.function = '1';
-      passive.quantity = noOfPassenger;
-      passive.status = 'GK';
-      passive.classOfService = 'Q';
-      passive.controlNo = accounting.supplierConfirmatioNo;
-      passive.flightNo = '123';
-      //  passive.confirmationNo = accounting.supplierConfirmatioNo;
-      remGroup.passiveSegments = [];
-      remGroup.passiveSegments.push(passive);
+    writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
+        const accList = accountingComponents.accountingRemarks;
+        // tslint:disable-next-line:max-line-length
+        this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
     }
-  }
+
+    writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
+        accountingRemarks.forEach((account) => {
+            const paymentRemark = new Map<string, string>();
+            paymentRemark.set('%PassName%', account.passPurchase);
+            paymentRemark.set('%FareType%', account.fareType);
+            this.remarksManager.createPlaceholderValues(paymentRemark);
+
+            const totalCostRemark = new Map<string, string>();
+            const totalCost = account.baseAmount + account.gst + account.hst + account.qst;
+            totalCostRemark.set('%CAAirHighFare%', totalCost);
+            totalCostRemark.set('%CAAirLowFare%', totalCost);
+            this.remarksManager.createPlaceholderValues(totalCostRemark);
+        });
+    }
+
+    addSegmentForPassPurchase(accounting, remGroup) {
+        const air = this.pnrService
+            .getSegmentTatooNumber()
+            .find((x) => x.segmentType === 'AIR' && x.controlNumber === accounting.supplierConfirmatioNo);
+
+        if (!air) {
+            const noOfPassenger = this.pnrService.getPassengers().length;
+            const datePipe = new DatePipe('en-US');
+            // add dummy segment
+            const passive = new PassiveSegmentModel();
+            passive.startPoint = accounting.departureCity;
+            passive.endPoint = accounting.departureCity;
+            passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
+            passive.vendor = 'AC';
+            passive.startTime = '0700';
+            passive.endTime = '0800';
+            passive.segmentName = 'AIR';
+            passive.passiveSegmentType = 'AIR';
+            passive.function = '1';
+            passive.quantity = noOfPassenger;
+            passive.status = 'GK';
+            passive.classOfService = 'Q';
+            passive.controlNo = accounting.supplierConfirmatioNo;
+            passive.flightNo = '123';
+            //  passive.confirmationNo = accounting.supplierConfirmatioNo;
+            remGroup.passiveSegments = [];
+            remGroup.passiveSegments.push(passive);
+        }
+    }
 }
 
 

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AccountingRemarkComponent } from './accounting-remark/accounting-remark.component';
 
 @Component({
   selector: 'app-payments',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./payments.component.scss']
 })
 export class PaymentsComponent implements OnInit {
+
+  @ViewChild(AccountingRemarkComponent) accountingRemark: AccountingRemarkComponent;
 
   constructor() { }
 

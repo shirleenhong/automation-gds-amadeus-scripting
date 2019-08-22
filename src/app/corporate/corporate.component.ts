@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
 // import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
@@ -8,6 +8,8 @@ import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
+import { PaymentsComponent } from './payments/payments.component';
+import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
 
 @Component({
   selector: 'app-corporate',
@@ -21,9 +23,11 @@ export class CorporateComponent implements OnInit {
   modalRef: BsModalRef;
   workflow = '';
 
+  @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
+
   constructor(
     private pnrService: PnrService,
-    // private rms: RemarksManagerService,
+    private rms: RemarksManagerService,
     private ddbService: DDBService,
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService
@@ -61,6 +65,7 @@ export class CorporateComponent implements OnInit {
     await this.ddbService.loadSupplierCodesFromPowerBase();
     this.showLoading('Loading PNR', 'initData');
     await this.getPnrService();
+    // debugger;
     // this.showLoading('Matching Remarks', 'initData');
     // await this.rms.getMatchcedPlaceholderValues();
     this.closeLoading();
@@ -104,10 +109,18 @@ export class CorporateComponent implements OnInit {
   }
 
   public async SubmitToPNR() {
-
-    // this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark
-
-
+    debugger;
+    this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    await this.rms.submitToPnr().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
   }
 
 }

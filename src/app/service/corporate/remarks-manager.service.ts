@@ -81,8 +81,8 @@ export class RemarksManagerService {
     }
   }
 
-  submitToPnr() {
-    this.sendPnrToAmadeus(this.serviceApi.getPnrRequestParam(this.newPlaceHolderValues));
+  async submitToPnr() {
+    await this.sendPnrToAmadeus(this.serviceApi.getPnrRequestParam(this.newPlaceHolderValues));
   }
 
   async sendPnrToAmadeus(pnrResponse: any) {

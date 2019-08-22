@@ -31,7 +31,7 @@
     <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'NBEX'">
       <div class="col-sm-4">Airline Record Locator:</div>
       <div class="col-sm-8">
-        <input type="text" class="form-control" formControlName="airlineRecordLocator"
+        <input type="text" class="form-control" formControlName="airlineRecordLocator" maxlength="10"
           id="airlineRecordLocator" list="dynamicSupplierCode" [(ngModel)]="accountingRemark.airlineRecordLocator"
           formControlName="airlineRecordLocator"/>
       </div>

@@ -54,6 +54,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
       baseAmount: new FormControl('', [Validators.required]),
       commisionWithoutTax: new FormControl('', [Validators.required]),
+      airlineRecordLocator: new FormControl('', [Validators.required]),
+      gdsFare: new FormControl('', [Validators.required]),
       gst: new FormControl('', [Validators.required]),
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
@@ -102,7 +104,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
       { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
-      { itemText: 'P Individual Pass Purchase', itemValue: 'PCPP' }
+      { itemText: 'P Individual Pass Purchase', itemValue: 'PCPP' },
+      { itemText: 'NonBSP Exchange', itemValue: 'NBEX' }
     ];
   }
 

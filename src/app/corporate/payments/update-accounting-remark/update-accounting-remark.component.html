@@ -32,7 +32,7 @@
       <div class="col-sm-4">Airline Record Locator:</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" formControlName="airlineRecordLocator" maxlength="10"
-          id="airlineRecordLocator" list="dynamicSupplierCode" [(ngModel)]="accountingRemark.airlineRecordLocator"
+          id="airlineRecordLocator" [(ngModel)]="accountingRemark.airlineRecordLocator"
           formControlName="airlineRecordLocator"/>
       </div>
     </div>
@@ -103,23 +103,109 @@
 
       <div class="col"></div>
     </div>
+    
+    <!-- For NonBSP Exchange -->
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NBEX'">
 
-    <div class="form-group row">
-      <div class="col-sm-4">Departure City:</div>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" id="departureCity" formControlName="departureCity"
-          [(ngModel)]="accountingRemark.departureCity" formControlName="departureCity" name="departureCity"
-          NumberOnlyMask maxlength="3" AlphaMask />
+      <div class="form-group row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">Commission %:</div>
+          <input type="text" class="form-control" id="commisionPercentage" formControlName="commisionPercentage"
+            [(ngModel)]="accountingRemark.commisionPercentage" name="commisionPercentage" required placeholder="00.00"
+            maxlength="8" AmountMask />
+        </div>
+
+        <div class="col"></div>
       </div>
-    </div>
 
-    <!-- GDS Fare for NonBSP Exchange -->
-    <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'NBEX'">
-      <div class="col-sm-4">GDS Fare:</div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" formControlName="airlineRecordLocator" id="airlineRecordLocator"
-          list="dynamicSupplierCode" [(ngModel)]="accountingRemark.airlineRecordLocator"
-          formControlName="airlineRecordLocator" />
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">Other Tax:</div>
+          <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
+            [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
+            placeholder="00.00" AmountMask />
+        </div>
+
+        <div class="col">
+          <div class="">Commision w/o Tax:</div>
+          <input type="text" class="form-control" id="commisionWithoutTax"
+            [(ngModel)]="accountingRemark.commisionWithoutTax" formControlName="commisionWithoutTax" maxlength="8"
+            name="commisionWithoutTax" required placeholder="00.00" AmountMask />
+        </div>
+      </div>
+      
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        Penalty:
+      </div>
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">Penalty Amount:</div>
+          <input type="text" class="form-control" id="penaltyBaseAmount"
+            [(ngModel)]="accountingRemark.penaltyBaseAmount" formControlName="penaltyBaseAmount" maxlength="10"
+            name="penaltyBaseAmount" required placeholder="00.00" AmountMask />
+        </div>
+
+        <div class="col">
+          <div class="">GST on Penalty:</div>
+          <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst"
+            maxlength="8" formControlName="penaltyGst" name="penaltyGst" required placeholder="00.00" AmountMask />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">HST on Penalty:</div>
+          <input type="text" class="form-control" id="penaltyHst" formControlName="penaltyHst" maxlength="8"
+            [(ngModel)]="accountingRemark.penaltyHst" name="penaltyHst" required placeholder="00.00" AmountMask />
+        </div>
+
+        <div class="col">
+          <div class="">QST on Penalty:</div>
+          <input type="text" class="form-control" id="penaltyQst" formControlName="penaltyQst" maxlength="8"
+            [(ngModel)]="accountingRemark.penaltyQst" formControlName="penaltyQst" name="penaltyQst" required
+            placeholder="00.00" AmountMask />
+        </div>
+      </div>
+      <div class="form-group  row">
+        <div class="col-sm-4">Ticket Number:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="tktLine" formControlName="tktLine"
+            [(ngModel)]="accountingRemark.tktLine" formControlName="tktLine" name="tktLine" NumberOnlyMask
+            maxlength="10" />
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="accountingRemark.accountingTypeRemark === 'NAE'">
+        <div class="col-sm-4">Original Ticket Number:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="originalTktLine" formControlName="originalTktLine"
+            [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine"
+            NumberOnlyMask />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-4">Departure City:</div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="departureCity" formControlName="departureCity"
+            [(ngModel)]="accountingRemark.departureCity" formControlName="departureCity" name="departureCity"
+            NumberOnlyMask maxlength="3" AlphaMask />
+        </div>
+      </div>
+
+      <!-- GDS Fare for NonBSP Exchange -->
+      <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'NBEX'">
+        <div class="col-sm-4">GDS Fare:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
+            [(ngModel)]="accountingRemark.gdsFare"
+            formControlName="gdsFare"
+            placeholder="0.00" />
+        </div>
       </div>
     </div>
 

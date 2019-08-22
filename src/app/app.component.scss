@@ -80,16 +80,14 @@ div.logo {
 .identity-container {
   display: inline-block;
   margin-right: 15px;
-  border: 1px solid orangered;
-  padding: 3px;
 
   .logo-container {
     display: inline-block;
-    padding-right: 3px;
-    vertical-align: top;
+    padding-right: 2px;
+    vertical-align: sub;
 
     .fa-id-badge {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -98,14 +96,13 @@ div.logo {
     vertical-align: top;
 
     select#selCounselorIdentity {
-      font-size: 0.5rem;
-      line-height: 0.5rem;
+      font-size: 0.7rem;
+      line-height: 0.7rem;
     }
   }
 }
 
 .identity-container:hover {
-  background-color: #f5a689;
   color: orangered;
 }
 

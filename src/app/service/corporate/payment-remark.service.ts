@@ -23,9 +23,13 @@ export class PaymentRemarkService {
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
-      paymentRemark.set('%PassName%', account.passPurchase);
-      paymentRemark.set('%FareType%', account.fareType);
-      this.remarksManager.createPlaceholderValues(paymentRemark);
+      paymentRemark.set('PassName', account.passPurchase);
+      paymentRemark.set('FareType', account.fareType);
+
+      const airlineCodeRemark = new Map<string, string>();
+      airlineCodeRemark.set('AirlineCode', 'AC');
+      airlineCodeRemark.set('TotalCost', account.baseAmount);
+      this.remarksManager.createPlaceholderValues(airlineCodeRemark);
     });
   }
 

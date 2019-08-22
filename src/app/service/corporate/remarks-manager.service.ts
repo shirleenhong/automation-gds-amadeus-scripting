@@ -16,7 +16,6 @@ export class RemarksManagerService {
 
   public async getMatchcedPlaceholderValues() {
     await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
-      debugger;
       if (res !== undefined) {
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
@@ -50,9 +49,9 @@ export class RemarksManagerService {
       id: this.getOutputItemId(values, staticText),
       segmentReferences: segmentRelate,
       passengerReferences: passengerRelate,
-      matchedPlaceholders: values
+      matchedPlaceholders: null
     });
-
+    placeHolder.matchedPlaceholders = values;
     this.newPlaceHolderValues.push(placeHolder);
   }
 
@@ -64,7 +63,7 @@ export class RemarksManagerService {
   getOutputItemId(values: Map<string, string>, staticText?) {
     const ids = this.outputItems
       .filter(
-        (out) => this.hasCompleteKeys(values, out.placeholderKeys) && (staticText !== null ? out.format.indexOf(staticText) >= 0 : true)
+        (out) => this.hasCompleteKeys(values, out.placeholderKeys) && (staticText !== null && staticText !== undefined ? out.format.indexOf(staticText) >= 0 : true)
       )
       .map((out) => out.id);
     return ids[0];
@@ -83,14 +82,13 @@ export class RemarksManagerService {
   }
 
   async submitToPnr() {
-    debugger;
-    await this.sendPnrToAmadeus(this.serviceApi.getPnrRequestParam(this.newPlaceHolderValues));
+    await this.sendPnrToAmadeus(
+      await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues));
   }
 
   async sendPnrToAmadeus(pnrResponse: any) {
     await smartScriptSession.send(pnrResponse.deleteCommand);
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
-      // debugger
       console.log(JSON.stringify(res));
     });
   }

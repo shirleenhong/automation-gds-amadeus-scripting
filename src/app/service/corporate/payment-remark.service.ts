@@ -31,6 +31,7 @@ export class PaymentRemarkService {
             const totalCost = account.baseAmount + account.gst + account.hst + account.qst;
             totalCostRemark.set('%CAAirHighFare%', totalCost);
             totalCostRemark.set('%CAAirLowFare%', totalCost);
+            totalCostRemark.set('%CAAirRealisedSavingCode%', 'L');
             this.remarksManager.createPlaceholderValues(totalCostRemark);
         });
     }

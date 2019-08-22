@@ -215,8 +215,7 @@ export class DDBService implements OnInit {
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
-      this.loadSupplierCodesFromPowerBase();
-      // this.getAllMatrixSupplierCodes();
+      this.getAllMatrixSupplierCodes();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
       return this.supplierCodes.filter(

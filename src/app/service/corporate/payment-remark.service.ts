@@ -10,6 +10,7 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
     providedIn: 'root'
 })
 export class PaymentRemarkService {
+<<<<<<< HEAD
     pnrService: any;
 
     constructor(private remarksManager: RemarksManagerService) { }
@@ -27,12 +28,23 @@ export class PaymentRemarkService {
             paymentRemark.set('%FareType%', account.fareType);
             this.remarksManager.createPlaceholderValues(paymentRemark);
 
-            const totalCostRemark = new Map<string, string>();
+            const airlineCodeRemark = new Map<string, string>();
+            airlineCodeRemark.set('AirlineCode', 'AC');
+            airlineCodeRemark.set('TotalCost', account.baseAmount);
+            this.remarksManager.createPlaceholderValues(airlineCodeRemark);
+
             const totalCost = account.baseAmount + account.gst + account.hst + account.qst;
-            totalCostRemark.set('%CAAirHighFare%', totalCost);
-            totalCostRemark.set('%CAAirLowFare%', totalCost);
-            totalCostRemark.set('%CAAirRealisedSavingCode%', 'L');
-            this.remarksManager.createPlaceholderValues(totalCostRemark);
+            const highFareRemark = new Map<string, string>();
+            highFareRemark.set('CAAirHighFare', totalCost.toString());
+            this.remarksManager.createPlaceholderValues(highFareRemark);
+
+            const lowFareRemark = new Map<string, string>();
+            lowFareRemark.set('CAAirLowFare', totalCost.toString());
+            this.remarksManager.createPlaceholderValues(lowFareRemark);
+
+            const airReasonCodeRemark = new Map<string, string>();
+            airReasonCodeRemark.set('CAAirRealisedSavingCode', 'L');
+            this.remarksManager.createPlaceholderValues(airReasonCodeRemark);
         });
     }
 

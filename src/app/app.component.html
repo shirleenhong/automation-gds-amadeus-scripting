@@ -1,7 +1,28 @@
 <div class="fixed-top head">
   <div class="float-left logo"></div>
   <div class="float-left title">{{ header }}</div>
+
   <div class="float-right resize"><i [className]="(isMinimize ? 'far' : 'fas') + ' fa-window-maximize'" (click)="resize()"></i></div>
+
+  <div *ngIf="isCorporate" class="float-right identity-container">
+    <div class="logo-container">
+      <i class="far fa-id-badge"></i>
+    </div>
+    <div class="dropdown-container">
+      <select
+        autofocus
+        id="selCounselorIdentity"
+        class="form-control"
+        name="counselorIdentity"
+        [(ngModel)]="counselorIdentity"
+        (change)="onChangeIdentity()"
+      >
+        <option *ngFor="let item of identityList" [value]="item.itemValue">
+          {{ item.itemText }}
+        </option>
+      </select>
+    </div>
+  </div>
 </div>
 <div class="body">
   <div *ngIf="!isCorporate">

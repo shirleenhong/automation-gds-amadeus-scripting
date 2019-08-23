@@ -6,4 +6,5 @@ Library           Screenshot
 
 *** Variables ***
 
+
 *** Keywords ***

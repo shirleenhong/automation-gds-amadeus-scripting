@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { PlatformLocation } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { CounselorDetail } from './globals/counselor-identity';
+import { StaticValuesService } from './service/static-values.services';
+import { SelectItem } from 'src/app/models/select-item.model';
+import { HttpParams } from '@angular/common/http';
 
 declare var smartScriptSession: any;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,12 +15,19 @@ export class AppComponent implements OnInit {
   isCorporate = false;
   isMinimize = false;
   header = 'Leisure';
-  constructor(private location: PlatformLocation) {}
-  url = '';
+
+  @Input()
+  counselorIdentity: string;
+
+  identityList: Array<SelectItem> = null;
+
+  constructor(private counselorDetail: CounselorDetail, private staticValues: StaticValuesService) {}
+
   ngOnInit(): void {
-    this.isCorporate = this.location.getBaseHrefFromDOM().indexOf('corporate') > 0;
+    this.isCorporate = this.getParamValueQueryString('corporate') === 'true';
     if (this.isCorporate) {
       this.header = 'Corporate';
+      this.loadCounselorIdentityList();
     }
   }
 
@@ -33,5 +42,23 @@ export class AppComponent implements OnInit {
     smartScriptSession.resizeSmartTool({ id: smartScriptSession.getPopupId(), width, height }).then((x) => {
       console.log(JSON.stringify(x));
     });
+  }
+
+  loadCounselorIdentityList() {
+    this.identityList = this.staticValues.getCounselorIdentityList();
+  }
+
+  onChangeIdentity() {
+    this.counselorDetail.updateIdentity(this.counselorIdentity);
+  }
+
+  getParamValueQueryString(paramName) {
+    const url = window.location.href;
+    let paramValue;
+    if (url.includes('?')) {
+      const httpParams = new HttpParams({ fromString: url.split('?')[1] });
+      paramValue = httpParams.get(paramName);
+    }
+    return paramValue;
   }
 }

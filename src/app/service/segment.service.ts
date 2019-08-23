@@ -202,9 +202,10 @@ export class SegmentService {
         mandatoryHotelRemarks.forEach(c => {
             rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
         });
-
-        // Add new remark line for each hotel. Refer to US13461;
-        rmGroup.remarks.push(this.getRemarksModel("HS" + formatDate(Date.parse(segmentrem.departureDate), 'ddMMM', 'en-us') + '/-CHN-' + segmentrem.chainCode, 'RM', '*'));
+       
+        const  datePipe =  new DatePipe('en-US');
+        rmGroup.remarks.push(this.getRemarksModel('HS' +  datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
+             segmentrem.chainCode, 'RM', '*'));
 
         optionalHotelRemarks.forEach(c => {
             if (c.include) {

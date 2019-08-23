@@ -32,7 +32,7 @@ export class PaymentRemarkService {
             airlineCodeRemark.set('TotalCost', account.baseAmount);
             this.remarksManager.createPlaceholderValues(airlineCodeRemark);
 
-            const totalCost = account.baseAmount + account.gst + account.hst + account.qst;
+            const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
             const highFareRemark = new Map<string, string>();
             highFareRemark.set('CAAirHighFare', totalCost.toString());
             this.remarksManager.createPlaceholderValues(highFareRemark);

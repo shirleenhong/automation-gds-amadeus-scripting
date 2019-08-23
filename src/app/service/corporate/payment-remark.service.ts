@@ -10,7 +10,6 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
     providedIn: 'root'
 })
 export class PaymentRemarkService {
-<<<<<<< HEAD
     pnrService: any;
 
     constructor(private remarksManager: RemarksManagerService) { }

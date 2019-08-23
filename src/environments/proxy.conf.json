@@ -12,7 +12,7 @@
     }
   },
   "/remarks-manager-rest/*": {
-    "target": "http://10.181.170.220:8080",
+    "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

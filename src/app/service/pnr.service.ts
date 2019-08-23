@@ -1278,13 +1278,11 @@ export class PnrService {
   }
 
   getClientSubUnit() {
-    debugger;
     const syexgvs = this.getRemarkText('SYEXGVS:');
     if (syexgvs && !this.clientSubUnitGuid) {
       this.clientSubUnitGuid = syexgvs.split(' ')[1];
-    } else {
-      this.clientSubUnitGuid = '';
     }
+
     return this.clientSubUnitGuid;
   }
 

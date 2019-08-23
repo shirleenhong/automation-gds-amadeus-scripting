@@ -1,7 +1,7 @@
 export class PlaceholderValues {
   id: number;
-  segmentNumberReferences: Array<string>;
-  passengerNumberReferences: Array<string>;
+  segmentNumberReferences = new Array<string>();
+  passengerNumberReferences = new Array<string>();
   conditions = new Map<string, string>();
   matchedPlaceholders = new Map<string, string>();
 
@@ -25,7 +25,26 @@ export class PlaceholderValues {
     if (jsonObj) {
       Object.keys(jsonObj).forEach((key) => {
         this.matchedPlaceholders.set(key, jsonObj[key]);
+        return;
       });
     }
+  }
+
+  toJsonObject() {
+    return {
+      id: this.id,
+      segmentNumberReferences: this.segmentNumberReferences,
+      passengerNumberReferences: this.passengerNumberReferences,
+      conditions: (this.convertMapToObj(this.conditions) ? null : this.convertMapToObj(this.conditions)),
+      matchedPlaceholders: this.convertMapToObj(this.matchedPlaceholders)
+    };
+  }
+
+  convertMapToObj(map: Map<string, string>) {
+    const obj = [];
+    map.forEach((value: string, key: string) => {
+      obj.push('"' + key + '": "' + value + '"');
+    });
+    return JSON.parse('{' + obj.join(',') + '}');
   }
 }

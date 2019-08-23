@@ -136,7 +136,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
-    debugger;
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
       this.accountingRemark.supplierCodeName = '';

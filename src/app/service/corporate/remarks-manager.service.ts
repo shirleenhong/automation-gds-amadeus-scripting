@@ -16,6 +16,7 @@ export class RemarksManagerService {
 
   public async getMatchcedPlaceholderValues() {
     await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
+      debugger;
       if (res !== undefined) {
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
@@ -45,6 +46,7 @@ export class RemarksManagerService {
   }
 
   public createPlaceholderValues(values: Map<string, string>, segmentRelate?: [], passengerRelate?: [], staticText?) {
+    debugger;
     const placeHolder = new PlaceholderValues({
       id: this.getOutputItemId(values, staticText),
       segmentReferences: segmentRelate,
@@ -70,6 +72,10 @@ export class RemarksManagerService {
   }
 
   hasCompleteKeys(map: Map<string, string>, keys: string[]) {
+    if (keys[0] === 'AirlineCode') {
+      debugger;
+      console.log('test');
+    }
     if (map.size !== keys.length) {
       return false;
     } else {
@@ -87,6 +93,7 @@ export class RemarksManagerService {
   }
 
   async sendPnrToAmadeus(pnrResponse: any) {
+    debugger;
     await smartScriptSession.send(pnrResponse.deleteCommand);
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
       console.log(JSON.stringify(res));

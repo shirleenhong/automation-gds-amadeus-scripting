@@ -13,5 +13,5 @@ Resource          ../../acceptance-leisure/amadeus_ca_resource.robot
 
 *** Variables ***
 ${env}            Test
-${username}       U002MCC
-${password}       Amasel04@
+${username}       UXXXXX
+${password}       Password

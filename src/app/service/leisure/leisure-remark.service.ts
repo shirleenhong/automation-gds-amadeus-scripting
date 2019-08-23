@@ -351,25 +351,15 @@ export class LeisureRemarkService {
   }
 
   deleteSegments() {
-    let deleteIds = '';
-    this.deleteSegmentByIds.forEach((ids) => {
-      deleteIds += ids + ',';
-    });
-    if (deleteIds !== '') {
-      deleteIds = deleteIds.slice(0, -1);
-      smartScriptSession.send('XE' + deleteIds);
+    if (this.deleteSegmentByIds.length > 1) {
+      smartScriptSession.send('XE' + this.deleteSegmentByIds.join(','));
     }
   }
 
   deleteRemarks() {
-    let deleteIds = '';
     const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
-    filteredIds.forEach((ids) => {
-      deleteIds += ids + ',';
-    });
-    if (deleteIds !== '') {
-      deleteIds = deleteIds.slice(0, -1);
-      smartScriptSession.send('XE' + deleteIds);
+    if (filteredIds.length > 0) {
+      smartScriptSession.send('XE' + filteredIds.join(','));
     }
   }
 

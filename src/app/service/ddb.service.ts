@@ -215,7 +215,7 @@ export class DDBService implements OnInit {
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
-      this.loadSupplierCodesFromPowerBase();
+      this.getAllMatrixSupplierCodes();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
       return this.supplierCodes.filter(
@@ -240,6 +240,20 @@ export class DDBService implements OnInit {
 
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async getAllMatrixSupplierCodes() {
+    this.supplierCodes = [];
+    await this.getRequest(common.matrixSupplierService + '?MatrixCompanyId=01').then((x) => {
+      x.MatrixSupplierList.forEach((s) => {
+        const supplier = {
+          type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
+          supplierCode: s.SupplierCode,
+          supplierName: s.SupplierName
+        };
+        this.supplierCodes.push(supplier);
+      });
+    });
   }
 
   async extractDataPort(port: any) {

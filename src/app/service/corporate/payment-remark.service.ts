@@ -25,6 +25,7 @@ export class PaymentRemarkService {
       const paymentRemark = new Map<string, string>();
       paymentRemark.set('PassName', account.passPurchase);
       paymentRemark.set('FareType', account.fareType);
+      this.remarksManager.createPlaceholderValues(paymentRemark);
 
       const airlineCodeRemark = new Map<string, string>();
       airlineCodeRemark.set('AirlineCode', 'AC');

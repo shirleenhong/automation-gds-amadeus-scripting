@@ -11,7 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
       idToken = localStorage.getItem('token_rms');
     }
 
-    if (req.url.indexOf('powerbaseaws') && localStorage.getItem('token')) {
+    if (req.url.indexOf('powerbaseaws') > -1 && localStorage.getItem('token')) {
       idToken = localStorage.getItem('token');
     }
 

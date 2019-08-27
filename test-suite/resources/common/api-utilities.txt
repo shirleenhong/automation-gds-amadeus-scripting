@@ -3,7 +3,7 @@ Resource    api-imports.txt
 
 *** Variables ***
 ${dev_lb_base_url}    http://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com
-${test_lb_base_url}    http://internal-test-int-cwt-bpg-lb-1345055561.us-west-2.elb.amazonaws.com
+${test_lb_base_url}         http://internal-test-int-cwt-bpg-lb-1345055561.us-west-2.elb.amazonaws.com
 ${dev_base_url}    https://dev.int.us-west-2.bpg-aws-cwt.com/service/ap
 ${test_base_url}    https://internal-test-int-cwt-bpg-lb-1345055561.us-west-2.elb.amazonaws.com
 ${portrait_mock_base_url}    https://dev.nextgen.us-west-2.cbt-aws-cwt.com

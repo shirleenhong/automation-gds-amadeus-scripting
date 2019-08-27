@@ -27,9 +27,11 @@ export class RemarksManagerApiService {
         client_secret: environment.clientSecret_rms,
         grant_type: 'client_credentials'
       };
+
       const hds = new HttpHeaders({
         'Content-Type': 'application/json'
       });
+      console.log(JSON.stringify(bodyInfo));
       const res = await this.httpClient
         .post<any>(common.tokenService_rms, JSON.stringify(bodyInfo), {
           headers: hds
@@ -37,6 +39,7 @@ export class RemarksManagerApiService {
         .toPromise();
       debugger;
       this.token = res.access_token;
+      console.log(this.token);
       localStorage.setItem('token_rms', this.token);
       this.isTokenExpired = false;
       // expire token 30 seconds earlier

@@ -7,10 +7,12 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req, next): Observable<HttpEvent<any>> {
     let idToken = null;
     debugger;
-    if (req.url.indexOf('remarks-manager') > -1) {
+    if (req.url.indexOf('remarks-manager') > -1 && localStorage.getItem('token_rms')) {
       idToken = localStorage.getItem('token_rms');
     } else {
-      idToken = localStorage.getItem('token');
+      if (localStorage.getItem('token')) {
+        idToken = localStorage.getItem('token');
+      }
     }
 
     if (idToken) {

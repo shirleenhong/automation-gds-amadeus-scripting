@@ -1,0 +1,37 @@
+<div [formGroup]="bspGroup">
+  <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
+    <div [formGroupName]="i">
+      <table style="width:100%">
+        <tr>
+          <td style="width:7%">
+            Segment
+          </td>
+          <td style="width:6%">
+            <input formControlName="segment" type="text" class="form-control" maxlength="2" style="width:90%" />
+          </td>
+          <td style="width:8%">
+            High Fare
+          </td>
+          <td style="width:12%">
+            <input formControlName="highFareText" type="text" class="form-control" maxlength="55" style="width:90%" />
+          </td>
+          <td style="width:8%">
+            Low Fare
+          </td>
+          <td style="width:12%">
+            <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" style="width:90%" />
+          </td>
+          <td style="width:10%">
+            Reason Code
+          </td>
+          <td style="width:15%">
+            <input formControlName="reasonCodeText" type="text" class="form-control" style="width:90%" list="dynamicReasonCodes" />
+            <datalist id="dynamicReasonCodes">
+              <option *ngFor="let item of reasonCodes" [value]="item.reasonCode">{{ item.reasonCode }}</option>
+            </datalist>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

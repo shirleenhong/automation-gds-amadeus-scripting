@@ -11,6 +11,18 @@
   </accordion>
   <br />
 
+  <accordion [closeOthers]="false">
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="fas fa-hand-holding-usd"></i> Reporting
+        <!-- <i [ngClass]="validModel.paymentValidCss"></i> -->
+        <span class="cwt-logo"></span>
+      </div>
+      <app-reporting></app-reporting>
+    </accordion-group>
+  </accordion>
+  <br />
+
   <div class="form-group  row">
     <div class="col">
       <button class="leisureBtnSubmit" (click)="SubmitToPNR()">
@@ -20,7 +32,6 @@
     </div>
   </div>
 </div>
-
 
 <div *ngIf="workflow === ''" class="loaderBody">
   <div class="loader">

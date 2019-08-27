@@ -1,17 +1,19 @@
-import { RemarkGroup } from '../../models/pnr/remark.group.model';
-import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
-import { RemarkModel } from '../../models/pnr/remark.model';
+import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { PnrService } from '../pnr.service';
-import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
+import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
+
 
 declare var smartScriptSession: any;
 
 @Injectable({
   providedIn: 'root'
 })
-export class LeisureRemarkService {
+export class CorporateRemarksService {
+
   remarksElement: Array<any>;
   crypticCommands = Array<string>();
   deleteRemarksByIds = Array<string>();
@@ -51,14 +53,6 @@ export class LeisureRemarkService {
           });
         }
 
-        if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
-          group.deleteRemarkByIds.forEach((c) => {
-            if (!this.deleteRemarksByIds.find((z) => z === c)) {
-              this.deleteRemarksByIds.push(c);
-            }
-          });
-        }
-
         if (group.cryptics != null && group.cryptics.length > 0) {
           group.cryptics.forEach((c) => {
             this.crypticCommands.push(c);
@@ -68,19 +62,6 @@ export class LeisureRemarkService {
         if (group.passiveSegments != null && group.passiveSegments.length > 0) {
           group.passiveSegments.forEach((pas) => {
             this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
-          });
-        }
-
-        if (group.remarks != null && group.remarks.length > 0) {
-          group.remarks.forEach((rem) => {
-            if (rem) {
-              if (rem.remarkType === 'FS') {
-                this.remarksElement.push(this.getFSRemarksElement(rem));
-              } else {
-                // let test = this.getRemarkElement(rem);
-                this.remarksElement.push(this.getRemarkElement(rem));
-              }
-            }
           });
         }
 
@@ -351,15 +332,25 @@ export class LeisureRemarkService {
   }
 
   deleteSegments() {
-    if (this.deleteSegmentByIds.length > 1) {
-      smartScriptSession.send('XE' + this.deleteSegmentByIds.join(','));
+    let deleteIds = '';
+    this.deleteSegmentByIds.forEach((ids) => {
+      deleteIds += ids + ',';
+    });
+    if (deleteIds !== '') {
+      deleteIds = deleteIds.slice(0, -1);
+      smartScriptSession.send('XE' + deleteIds);
     }
   }
 
   deleteRemarks() {
-    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds).join(',');
-    if (filteredIds !== '') {
-      smartScriptSession.send('XE' + filteredIds);
+    let deleteIds = '';
+    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
+    filteredIds.forEach((ids) => {
+      deleteIds += ids + ',';
+    });
+    if (deleteIds !== '') {
+      deleteIds = deleteIds.slice(0, -1);
+      smartScriptSession.send('XE' + deleteIds);
     }
   }
 
@@ -443,7 +434,6 @@ export class LeisureRemarkService {
           requestor = 'CWTSCRIPT';
         }
 
-        await this.endPNR(requestor);
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
@@ -473,6 +463,7 @@ export class LeisureRemarkService {
     this.clear();
   }
 
+
   async endPNR(requestor, ticket?: boolean) {
     if (this.pnrService.pnrObj.tkElements.length < 1 && ticket) {
       smartScriptSession.send('TKOK');
@@ -483,3 +474,4 @@ export class LeisureRemarkService {
     smartScriptSession.send('RT');
   }
 }
+

@@ -112,7 +112,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
       { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
       { itemText: 'P Individual Pass Purchase', itemValue: 'PCPP' },
-      { itemText: 'NonBSP Exchange', itemValue: 'NBEX' }
+      { itemText: 'NonBSP Exchange', itemValue: 'NBEX' },
+      { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' }
     ];
   }
 

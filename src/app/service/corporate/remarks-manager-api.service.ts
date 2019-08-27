@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PnrService } from '../pnr.service';
 import { common } from 'src/environments/common';
+import { PlaceholderValues } from 'src/app/models/placeholder-values';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,9 @@ export class RemarksManagerApiService {
 
   async postRequest(serviceName: string, body: any) {
     const hds = new HttpHeaders().append('Content', 'application/json');
+    // if (!environment.proxy) {
+    //   serviceName = environment.remarksManagerUrlService + serviceName;
+    // }
     return this.httpClient
       .post<any>(serviceName, body, {
         headers: hds
@@ -30,7 +34,6 @@ export class RemarksManagerApiService {
   }
 
   getPnrRequestParam(placeholders?: Array<PlaceholderValues>) {
-    debugger;
     const phvalues = (placeholders ? placeholders.map((x) => x.toJsonObject()) : null);
     return {
       pnr: this.pnrService.pnrResponse,

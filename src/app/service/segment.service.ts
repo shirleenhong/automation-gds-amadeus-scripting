@@ -202,7 +202,7 @@ export class SegmentService {
         mandatoryHotelRemarks.forEach(c => {
             rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
         });
-       
+
         const  datePipe =  new DatePipe('en-US');
         rmGroup.remarks.push(this.getRemarksModel('HS' +  datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
              segmentrem.chainCode, 'RM', '*'));
@@ -266,7 +266,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string) {
+                     amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -417,7 +417,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {

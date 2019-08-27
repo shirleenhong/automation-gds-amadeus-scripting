@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PaymentsComponent } from './corporate/payments/payments.component';
 import { ReportingBSPComponent } from './corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingComponent } from './corporate/reporting/reporting.component';
+import { TicketingComponent } from './corporate/ticketing/ticketing.component';
 import { AccountingRemarkComponent } from './corporate/payments/accounting-remark/accounting-remark.component';
 import { UpdateAccountingRemarkComponent } from './corporate/payments/update-accounting-remark/update-accounting-remark.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,7 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
     AccountingRemarkComponent,
     UpdateAccountingRemarkComponent,
     ReportingComponent,
-    ReportingBSPComponent
+    ReportingBSPComponent,
+    TicketingComponent
   ],
   imports: [
     BrowserModule,

@@ -8,17 +8,23 @@
       </div>
       <app-payments></app-payments>
     </accordion-group>
-  </accordion>
-  <br />
 
-  <accordion [closeOthers]="false">
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Reporting
+        <i class="fas fa-file-export"></i> Reporting
         <!-- <i [ngClass]="validModel.paymentValidCss"></i> -->
         <span class="cwt-logo"></span>
       </div>
       <app-reporting></app-reporting>
+    </accordion-group>
+
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="fas fa-ticket-alt"></i> Ticketing
+        <!-- <i [ngClass]="validModel.paymentValidCss"></i> -->
+        <span class="cwt-logo"></span>
+      </div>
+      <app-ticketing></app-ticketing>
     </accordion-group>
   </accordion>
   <br />

@@ -35,12 +35,15 @@ export class PlaceholderValues {
       id: this.id,
       segmentNumberReferences: this.segmentNumberReferences,
       passengerNumberReferences: this.passengerNumberReferences,
-      conditions: (this.convertMapToObj(this.conditions) ? null : this.convertMapToObj(this.conditions)),
+      conditions: this.convertMapToObj(this.conditions),
       matchedPlaceholders: this.convertMapToObj(this.matchedPlaceholders)
     };
   }
 
   convertMapToObj(map: Map<string, string>) {
+    if (!map) {
+      return null;
+    }
     const obj = [];
     map.forEach((value: string, key: string) => {
       obj.push('"' + key + '": "' + value + '"');

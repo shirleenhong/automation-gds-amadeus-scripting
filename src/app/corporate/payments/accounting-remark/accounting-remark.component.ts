@@ -7,6 +7,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
+import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 
 
 @Component({
@@ -25,10 +26,12 @@ export class AccountingRemarkComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private pnrService: PnrService,
-    private utilHelper: UtilHelper
+    private utilHelper: UtilHelper,
+    private paymentService: PaymentRemarkService
   ) { }
 
   ngOnInit() {
+    this.accountingRemarks = this.paymentService.extractAccountingModelFromPnr();
     this.accountingRemarks = this.pnrService.getAccountingRemarks();
     this.modalSubscribeOnClose();
   }

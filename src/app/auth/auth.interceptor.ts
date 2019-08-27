@@ -9,11 +9,12 @@ export class AuthInterceptor implements HttpInterceptor {
     debugger;
     if (req.url.indexOf('remarks-manager') > -1 && localStorage.getItem('token_rms')) {
       idToken = localStorage.getItem('token_rms');
-    } else {
-      if (localStorage.getItem('token')) {
-        idToken = localStorage.getItem('token');
-      }
     }
+
+    if (req.url.indexOf('powerbaseaws') && localStorage.getItem('token')) {
+      idToken = localStorage.getItem('token');
+    }
+
 
     if (idToken) {
       const cloned = req.clone({

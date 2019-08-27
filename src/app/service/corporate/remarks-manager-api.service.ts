@@ -5,7 +5,6 @@ import { PnrService } from '../pnr.service';
 import { common } from 'src/environments/common';
 import { PlaceholderValues } from 'src/app/models/placeholder-values';
 
-
 @Injectable({
   providedIn: 'root'
 })

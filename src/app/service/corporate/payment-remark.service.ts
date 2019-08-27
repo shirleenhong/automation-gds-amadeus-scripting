@@ -11,7 +11,7 @@ import { PnrService } from '../pnr.service';
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class PaymentRemarkService {
 
@@ -19,15 +19,12 @@ export class PaymentRemarkService {
     private rms: RemarksManagerService) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
-    debugger;
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
     this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
-
-    this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NBEX'));
   }
 
-    writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
+  writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
       const airlineCodeRemark = new Map<string, string>();
@@ -65,22 +62,22 @@ export class PaymentRemarkService {
       ticketAmountRemarks.set('Comm', account.commisionWithoutTax);
       staticRemarksCondition.set('PassPurchase', 'true');
 
-      let segmentrelate: string[] = [];
+      const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
-      
+
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
       const highFareRemark = new Map<string, string>();
       highFareRemark.set('CAAirHighFare', totalCost.toString());
 
       const lowFareRemark = new Map<string, string>();
       lowFareRemark.set('CAAirLowFare', totalCost.toString());
-      
+
       const airReasonCodeRemark = new Map<string, string>();
       airReasonCodeRemark.set('CAAirRealisedSavingCode', 'L');
-      
-      this.remarksManager.createPlaceholderValues(highFareRemark);
-      this.remarksManager.createPlaceholderValues(lowFareRemark);
-      this.remarksManager.createPlaceholderValues(airReasonCodeRemark);
+
+      this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
+      this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
+      this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(paymentRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);

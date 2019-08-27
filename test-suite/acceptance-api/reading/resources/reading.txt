@@ -15,17 +15,22 @@ Get Data: ${test_data}
     Log    ${request_body}
     
 Verify PNR is read with correct remark placeholders
-    Verify Response Status Code Is Correct    200
-    Log    ${response.json()}
-    Log    ${expected_response_data} 
-    ${expected_response_data_length}    Get Json Array Length    ${expected_response_data}    split_item=matchedPlaceholders
+    Verify Response Status Code Is Correct    200 
+    ${expected_value}    Convert To String    ${expected_response_data}
+    ${expected_value_placeholder}     Get Json Value From File     ${expected_value}     placeHolderValues
+    ${actual_value_placeholder}    Get Json Value From File     ${response.content}     placeHolderValues
+    ${actual_value_placeholder}    To Json    ${actual_value_placeholder}
+    Log    ${expected_value_placeholder}
+    Log    ${actual_value_placeholder}
+    ${expected_response_data_length}    Get Json Array Length    ${expected_value_placeholder}    split_item=matchedPlaceholders
     :FOR    ${index}    IN RANGE    ${expected_response_data_length}
-    \    ${json_value}    Get Json Value From File    ${expected_response_data}    $[${index}]
+    \    ${json_value}    Get Json Value From File    ${expected_value_placeholder}    $[${index}]
     \    ${expected_value}    Convert To String    ${json_value}
     \    ${expected_value}    To Json    ${expected_value}
     \    Log    ${expected_value}
-    \    Log    ${response.json()[${index}]}
-    \    Dictionaries Should Be Equal    ${expected_value}    ${response.json()[${index}]}    
+    \    Log    ${actual_value_placeholder[${index}]}
+    \    Dictionaries Should Be Equal    ${expected_value}    ${actual_value_placeholder[${index}]}   
+    
     
 Verify Response Status Code 404 is Returned  
     Verify Response Status Code Is Correct    404

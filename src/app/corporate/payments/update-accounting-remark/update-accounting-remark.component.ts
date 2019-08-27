@@ -56,18 +56,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       commisionWithoutTax: new FormControl('', [Validators.required]),
       
       // NonBSP Exchange fields
-      airlineRecordLocator: new FormControl('', [
-        Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(10)
-      ]),
-      gdsFare: new FormControl('', [Validators.required]),
+      airlineRecordLocator: new FormControl('', []),
+      gdsFare: new FormControl('', []),
       
       gst: new FormControl('', [Validators.required]),
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
       otherTax: new FormControl('', []),
-      tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]*')]),
+      tktLine: new FormControl('', []),
       descriptionapay: new FormControl('', []),
       commisionPercentage: new FormControl('', []),
       passRelate: new FormControl('', []),
@@ -85,6 +81,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     this.name = 'Supplier Confirmation Number:';
     this.utilHelper.validateAllFields(this.matrixAccountingForm);
+
+    this.onChanges();
   }
 
   loadPassengerList() {
@@ -144,7 +142,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     // initial state
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
-    this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
+    this.setRequired(['departureCity', 'originalTktLine'], false);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -153,14 +151,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           accRemark === 'WCPP' ? this.accountingRemark.supplierCodeName = 'WJP' :
             this.accountingRemark.supplierCodeName = 'PTP');
 
-        this.enableFormControls(['supplierCodeName'], true);
+        // this.enableFormControls(['supplierCodeName'], true);
         this.enableFormControls(['departureCity'], false);
 
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(7)]);
         this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
-        this.matrixAccountingForm.controls.tktLine.clearValidators();
-        this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+        // this.matrixAccountingForm.controls.tktLine.clearValidators();
+        // this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
         this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
 
         if (this.isAddNew) {
@@ -170,8 +168,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.gst = '';
         }
         break;
+      case 'NBEX':
+        this.matrixAccountingForm.get('airlineRecordLocator')
+          .setValidators([
+            Validators.required,
+            Validators.minLength(10),
+            Validators.maxLength(10)
+          ]);
+        this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
+        break;
       default:
-        this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
+        this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
         this.name = 'Supplier Confirmation Number:';
@@ -279,6 +286,33 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   select() {
     this.matrixAccountingForm.controls.passengerNo.patchValue('');
-    this.matrixAccountingForm.controls.tktLine.patchValue('');
+    // this.matrixAccountingForm.controls.tktLine.patchValue('');
+  }
+
+  /**
+   * Subscribe to observable FormControls and FormGroups
+   */
+  onChanges(): void {
+    
+    // this.matrixAccountingForm.valueChanges.subscribe(val => {
+    //   console.log(val);
+    // });
+
+    this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(val => {
+
+      console.log('supplierCodeName: ' + val);
+      
+      // Require Ticket Number on certain supplier codes.
+      if (['ACY', 'SOA', 'WJ3', 'ACJ', 'WJP'].includes(val)) {
+        console.log(val + " REQUIRING Ticket Number...");
+        this.matrixAccountingForm.get('tktLine').setValidators([
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(10),
+          Validators.pattern('[0-9]*')
+        ]);
+      }
+    });
+
   }
 }

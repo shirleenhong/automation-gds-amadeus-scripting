@@ -18,11 +18,14 @@ export class PaymentRemarkService {
   constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService,
     private rms: RemarksManagerService) { }
 
-    writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
-        const accList = accountingComponents.accountingRemarks;
-        // tslint:disable-next-line:max-line-length
-        this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
-    }
+  writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
+    debugger;
+    const accList = accountingComponents.accountingRemarks;
+    // tslint:disable-next-line:max-line-length
+    this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
+
+    this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NBEX'));
+  }
 
     writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
     accountingRemarks.forEach((account) => {
@@ -89,6 +92,28 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
 
+    });
+  }
+
+  /**
+   * DOING
+   * Write NonBSPExchange remarks to PNR.
+   * Refer to US11134
+   * 
+   * @param accountingRemarks collection of NonBSP Exchange remarks
+   */
+  writeNonBSPExchange(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
+    accountingRemarks.forEach((account) => {
+      const paymentRemark = new Map<string, string>();
+      paymentRemark.set('PassName', account.passPurchase);
+      paymentRemark.set('FareType', account.fareType);
+      this.remarksManager.createPlaceholderValues(paymentRemark);
+
+      const airlineCodeRemark = new Map<string, string>();
+      airlineCodeRemark.set('AirlineCode', 'AC');
+      airlineCodeRemark.set('TotalCost', account.baseAmount);
+      this.remarksManager.createPlaceholderValues(airlineCodeRemark);
     });
   }
 

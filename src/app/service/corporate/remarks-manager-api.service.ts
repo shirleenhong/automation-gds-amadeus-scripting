@@ -20,6 +20,7 @@ export class RemarksManagerApiService {
 
 
   async getToken() {
+    debugger;
     if (this.isTokenExpired) {
       const bodyInfo = {
         client_id: common.clientId_rms,
@@ -34,6 +35,7 @@ export class RemarksManagerApiService {
           headers: hds
         })
         .toPromise();
+      debugger;
       this.token = res.access_token;
       localStorage.setItem('token_rms', this.token);
       this.isTokenExpired = false;

@@ -68,8 +68,8 @@ export class CorporateComponent implements OnInit {
     // await this.ddbService.loadSupplierCodesFromPowerBase();
     this.showLoading('Loading PNR', 'initData');
     await this.getPnrService();
-    this.showLoading('Matching Remarks', 'initData');
-    await this.rms.getMatchcedPlaceholderValues();
+    // this.showLoading('Matching Remarks', 'initData');
+    // await this.rms.getMatchcedPlaceholderValues();
     this.closeLoading();
   }
 

@@ -20,9 +20,18 @@ ${input_commandText}    css=.cmdPromptDiv > textArea
 ${label_command_page}    //span[contains(@class, 'title cryptic')]
 ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
 ${menu_corp_test}    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
-# ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]
-# ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
+${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
+${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
 ${button_wrapPnr}    //button[contains(text(), 'Wrap PNR')]
+${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
+${popUp_sign_out}   //div[contains(text(),'Sign out')]
+${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
+${icon_air}    css=.bookingTool.FS
+${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
+${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
+${button_cryptic}    css=.showInCommandPage
+${button_graphical}    css=.showInGraphicMode
+${close_cryptic_display}    css=#elgen-19
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -65,9 +74,50 @@ Open CA Corporate Test
     Select Frame    ${window_corp_test}
     Wait Until Page Contains Element    ${button_wrapPnr}    180
 
+Add Single BSP Segment And Store Fare
+    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
+    Wait Until Element Is Visible    ${label_command_page}    180
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13
+
 Delete Fare and Itinerary
     @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER    ER
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+
+Logout To Amadeus Sell Connect
+    Click Element    ${link_sign_out}     
+    Wait Until Element Is Visible    ${popUp_sign_out}    30
+    Click Element   ${button_sign_out}  
+    Wait Until Element Is Visible    ${input_username}    30
+
+Get PNR Details
+    Wait Until Element Is Enabled   ${icon_air}      30
+    Wait Until Element Is Visible    ${tab_cryptic_display}    30
+    Sleep    5
+    Press Key    ${tab_cryptic_display}     \\32
+    Wait Until Page Contains Element    ${popUp_pnr_display}    30
+    Sleep    10
+    ${pnr_details}    Get Text    ${popUp_pnr_display}
+    Log    ${pnr_details}
+    [Teardown]    Take Screenshot
+
+Switch To Command Page
+    Click Element    ${close_cryptic_display} 
+    Wait Until Page Contains Element    ${button_cryptic}    60
+    Click Element    ${button_cryptic}
+    Wait Until Element Is Visible    ${input_commandText}    60
+    [Teardown]    Take Screenshot
+
+Switch To Graphic Mode
+    Wait Until Element Is Visible    ${button_graphical}    30
+    Click Element    ${button_graphical}
+    Wait Until Page Contains Element    ${tab_cryptic_display}     60
+    [Teardown]    Take Screenshot
+
+    
+
+   

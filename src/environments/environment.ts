@@ -3,9 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  proxy: true,
+  proxy: false,
   production: false,
-  clientSecret: 'GYRgkW1JaJvKOXbQ5eQaaqcPT7O6aG2W'
+  clientSecret: 'GYRgkW1JaJvKOXbQ5eQaaqcPT7O6aG2W',
+  clientSecret_rms: 'gp74h4K5R5ObcFsTONWcKK4r9RMGmORy'
 };
 
 /*

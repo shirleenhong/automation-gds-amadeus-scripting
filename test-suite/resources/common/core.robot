@@ -64,14 +64,6 @@ Open Cryptic Display Window
     Sleep    10
     [Teardown]    Take Screenshot
 
-Retrieve PNR In Command Page
-    [Arguments]    ${current_pnr}
-    Input Text    css=.cmdPromptDiv > textArea    IG
-    Press Key    css=.cmdPromptDiv > textArea    \\13
-    Input Text    css=.cmdPromptDiv > textArea    RT${current_pnr}
-    Press Key    css=.cmdPromptDiv > textArea    \\13
-    Wait Until Element Contains    css=#cryptics1_cmd_shellbridge_shellWindow_top_left_modeString_currentCommand    TST    30
-
 Switch To Command Page
     Wait Until Page Contains Element    css=.showInCommandPage    60
     Click Element    css=.showInCommandPage

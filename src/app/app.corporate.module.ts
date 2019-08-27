@@ -3,6 +3,8 @@ import { CorporateComponent } from './corporate/corporate.component';
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { CommonModule } from '@angular/common';
 import { PaymentsComponent } from './corporate/payments/payments.component';
+import { ReportingBSPComponent } from './corporate/reporting/reporting-bsp/reporting-bsp.component';
+import { ReportingComponent } from './corporate/reporting/reporting.component';
 import { AccountingRemarkComponent } from './corporate/payments/accounting-remark/accounting-remark.component';
 import { UpdateAccountingRemarkComponent } from './corporate/payments/update-accounting-remark/update-accounting-remark.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,9 +12,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-
 @NgModule({
-  declarations: [CorporateComponent, PaymentsComponent, AccountingRemarkComponent, UpdateAccountingRemarkComponent],
+  declarations: [
+    CorporateComponent,
+    PaymentsComponent,
+    AccountingRemarkComponent,
+    UpdateAccountingRemarkComponent,
+    ReportingComponent,
+    ReportingBSPComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -31,5 +39,4 @@ import { HttpClientModule } from '@angular/common/http';
   exports: [CorporateComponent],
   entryComponents: [UpdateAccountingRemarkComponent]
 })
-
-export class AppCorporateModule { }
+export class AppCorporateModule {}

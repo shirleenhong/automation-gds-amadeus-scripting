@@ -14,4 +14,4 @@ import { AppCorporateModule } from './app.corporate.module';
   exports: [],
   entryComponents: []
 })
-export class AppModule {}
+export class AppModule { }

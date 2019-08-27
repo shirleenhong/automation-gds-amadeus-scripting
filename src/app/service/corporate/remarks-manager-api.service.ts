@@ -39,6 +39,8 @@ export class RemarksManagerApiService {
         .toPromise();
       debugger;
       this.token = res.access_token;
+      console.log(res);
+      console.log(JSON.stringify(res));
       console.log(this.token);
       localStorage.setItem('token_rms', this.token);
       this.isTokenExpired = false;

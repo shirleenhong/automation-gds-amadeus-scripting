@@ -1,0 +1,89 @@
+*** Setting ***
+Resource          ../../../resources/common/api-imports.txt
+Resource          ../../../resources/common/api-utilities.txt
+
+
+*** Keywords ***
+Get Data: ${test_data}
+    Set Test Variable    ${test_data}
+    ${request_data}    ${response_data}    Create Test Data    file_name=${CURDIR}${/}test_data/writing-values    test_data=${test_data}    get_request_body=true    get_response_body=true    convert_to_dict=false
+    Set Test Variable    ${expected_response_data}    ${response_data}
+    Set Test Variable    ${request_body}    ${request_data}
+    ${params_list}    Create List
+    Set Test Variable    ${params_list}
+    Log    ${expected_response_data}
+    Log    ${request_body}
+    
+
+Retrieve Data Individual Elements Values
+    [Arguments]     ${json_object}    ${convert_to_json}=no
+    ${return_value}    Get Json Value From File      ${json_object}     pnrAddMultiElements
+    ${return_value}    Get Json Value From File      ${return_value}     dataElementsMaster
+    ${return_value}    Get Json Value From File      ${return_value}     dataElementsIndiv
+    ${return_value}    Run Keyword If    "${convert_to_json}" == "yes"   To Json    ${return_value}     ELSE    Set Variable    ${return_value}    
+    Log     ${return_value}
+    [Return]    ${return_value}
+    
+    
+Verify Updated Placeholder values are retrived correctly
+    Verify Response Status Code Is Correct    200
+    Verify Correct Remarks Are Deleted in Response    ${expected_response_data}    ${response.content}
+    ${expected_value_placeholder}     Retrieve Data Individual Elements Values     ${expected_response_data}
+    ${actual_value_placeholder}     Retrieve Data Individual Elements Values     ${response.content}    convert_to_json=yes
+    #${actual_value_placeholder}    To Json    ${actual_value_placeholder}
+    ${expected_response_data_length}    Get Json Array Length    ${expected_value_placeholder}    split_item=type
+    :FOR    ${index}    IN RANGE    ${expected_response_data_length}
+    \    ${json_value}    Get Json Value From File    ${expected_value_placeholder}    $[${index}]
+    \    ${expected_value}    Convert To String    ${json_value}
+    \    Log    ${expected_value}
+    \    Log    ${actual_value_placeholder[${index}]}
+    \    Verify Remarks Are Updated Correctly In Response    ${expected_value}    ${actual_value_placeholder[${index}]}
+    \    Verify Segment Binding is Correct for Remarks in Response    ${expected_value}    ${actual_value_placeholder[${index}]}
+    
+Verify Correct Remarks Are Deleted in Response
+    [Arguments]    ${expected}     ${actual}
+    ${expected}    To Json    ${expected}
+    ${actual}    To Json    ${actual}
+    ${expected_delete_command}    Get Value From Json    ${expected}    deleteCommand
+    ${actual_delete_command}     Get Value From Json    ${actual}    deleteCommand
+    Should Be Equal As Strings    ${expected_delete_command}    ${actual_delete_command}
+
+Verify Remarks Are Updated Correctly in Response
+    [Arguments]    ${expected}     ${actual}
+    ${expected_remarks_value}    Get Remarks Value    ${expected}
+    ${actual_remarks_value}    Convert Json To String    ${actual}
+    ${actual_remarks_value}    Get Remarks Value    ${actual_remarks_value}
+    Run Keyword And Continue on Failure    Dictionaries Should Be Equal     ${expected_remarks_value}    ${actual_remarks_value}
+    
+Verify Segment Binding is Correct for Remarks in Response
+    [Arguments]    ${expected}     ${actual}
+    ${expected_reference_value}    Get Reference Value    ${expected}
+    ${actual_reference_value}    Convert Json To String    ${actual}
+    ${actual_reference_value}    Get Reference Value     ${actual_reference_value}
+    Run Keyword And Continue on Failure    Dictionaries Should Be Equal     ${expected_reference_value}    ${actual_reference_value}
+
+Convert Json To String
+    [Arguments]    ${json_object}
+    ${new_string}    Convert To String    ${json_object}
+    ${new_string}    Replace String     ${new_string}    '    "
+    ${new_string}    Replace String     ${new_string}    None    null
+    Log    ${new_string}
+    [Return]    ${new_string}
+
+Get Remarks Value
+      [Arguments]     ${json_object}
+      ${remarks_value}     Get Json Value From File    ${json_object}    miscellaneousRemark
+      ${remarks_value}     Get Json Value From File    ${remarks_value}    remarks
+      ${remarks_value}    To Json      ${remarks_value}
+      Log    ${remarks_value}
+      [Return]     ${remarks_value}
+      
+Get Reference Value
+      [Arguments]     ${json_object}
+      ${reference_value}    Get Json Value From File    ${json_object}    referenceForDataElement
+      ${reference_value}    To Json    ${reference_value}
+      Log    ${reference_value}
+      [Return]    ${reference_value}
+      
+      
+    

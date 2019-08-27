@@ -357,9 +357,9 @@ export class LeisureRemarkService {
   }
 
   deleteRemarks() {
-    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
-    if (filteredIds.length > 0) {
-      smartScriptSession.send('XE' + filteredIds.join(','));
+    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds).join(',');
+    if (filteredIds !== '') {
+      smartScriptSession.send('XE' + filteredIds);
     }
   }
 

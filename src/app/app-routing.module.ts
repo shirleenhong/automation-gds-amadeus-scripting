@@ -4,10 +4,6 @@ import { AppComponent } from './app.component';
 
 const routes: Routes = [
   {
-    path: '*/corporate',
-    component: AppComponent
-  },
-  {
     path: '**',
     component: AppComponent
   }

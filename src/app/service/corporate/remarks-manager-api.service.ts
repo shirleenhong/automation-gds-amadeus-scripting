@@ -4,12 +4,45 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PnrService } from '../pnr.service';
 import { common } from 'src/environments/common';
 import { PlaceholderValues } from 'src/app/models/placeholder-values';
+// import { DDBService } from '../ddb.service';
+// import { environment } from '../../../environments/environment';
+// import { interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RemarksManagerApiService {
+  // retry = 0;
+  // isTokenExpired = true;
+  // token: string;
+
   constructor(private httpClient: HttpClient, private pnrService: PnrService) { }
+
+
+  // async getToken() {
+  //   if (this.isTokenExpired) {
+  //     const bodyInfo = {
+  //       client_id: common.clientId,
+  //       client_secret: environment.clientSecret,
+  //       grant_type: 'client_credentials'
+  //     };
+  //     const hds = new HttpHeaders({
+  //       'Content-Type': 'application/json'
+  //     });
+  //     const res = await this.httpClient
+  //       .post<any>(common.tokenService, JSON.stringify(bodyInfo), {
+  //         headers: hds
+  //       })
+  //       .toPromise();
+  //     this.token = res.access_token;
+  //     localStorage.setItem('token', this.token);
+  //     this.isTokenExpired = false;
+  //     // expire token 30 seconds earlier
+  //     interval((res.expires_in - 30) * 1000).subscribe(() => {
+  //       this.isTokenExpired = true;
+  //     });
+  //   }
+  // }
 
   async getPnrMatchedPlaceHolderValues() {
     const param = this.getPnrRequestParam();
@@ -22,6 +55,9 @@ export class RemarksManagerApiService {
   }
 
   async postRequest(serviceName: string, body: any) {
+    // if (!environment.proxy) {
+    //   await this.ddbService.getToken();
+    // }
     const hds = new HttpHeaders().append('Content', 'application/json');
     // if (!environment.proxy) {
     //   serviceName = environment.remarksManagerUrlService + serviceName;
@@ -31,6 +67,14 @@ export class RemarksManagerApiService {
         headers: hds
       })
       .toPromise();
+    // .catch((e) => {
+    //   // retry if unauthorized to get new token
+    //   if (e.status === 401 && this.retry < 3) {
+    //     this.retry += 1;
+    //     this.isTokenExpired = true;
+    //     this.getRequest(serviceName);
+    //   }
+    // });;
   }
 
   getPnrRequestParam(placeholders?: Array<PlaceholderValues>) {

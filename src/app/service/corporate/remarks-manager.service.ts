@@ -16,6 +16,7 @@ export class RemarksManagerService {
 
   public async getMatchcedPlaceholderValues() {
     await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
+
       if (res !== undefined) {
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
@@ -26,6 +27,7 @@ export class RemarksManagerService {
         });
         console.log(this.matchedPlaceHolderValues);
       }
+      console.log(JSON.stringify(res));
     });
   }
 
@@ -44,26 +46,30 @@ export class RemarksManagerService {
     );
   }
 
-  public createPlaceholderValues(values: Map<string, string>, segmentRelate?: [], passengerRelate?: [], staticText?) {
+  public createPlaceholderValues(values?: Map<string, string>, conditions?: Map<string, string>,
+    segmentRelate?: string[], passengerRelate?: string[], staticText?) {
     const placeHolder = new PlaceholderValues({
-      id: this.getOutputItemId(values, staticText),
-      segmentReferences: segmentRelate,
-      passengerReferences: passengerRelate,
+      id: this.getOutputItemId(values, staticText, conditions),
+      segmentNumberReferences: segmentRelate,
+      passengerNumberReferences: passengerRelate,
       matchedPlaceholders: null
     });
     placeHolder.matchedPlaceholders = values;
+    placeHolder.conditions = conditions;
     this.newPlaceHolderValues.push(placeHolder);
   }
 
-  public createPlaceholderValue(values: PlaceholderValues, staticText?) {
+  public createPlaceholderValue(values?: PlaceholderValues, staticText?) {
     values.id = this.getOutputItemId(values.matchedPlaceholders, staticText);
     this.newPlaceHolderValues.push(values);
   }
 
-  getOutputItemId(values: Map<string, string>, staticText?) {
+  getOutputItemId(values?: Map<string, string>, staticText?, conditions?: Map<string, string>) {
     const ids = this.outputItems
       .filter(
-        (out) => this.hasCompleteKeys(values, out.placeholderKeys) && (staticText !== null && staticText !== undefined ? out.format.indexOf(staticText) >= 0 : true)
+        (out) => (values && this.hasCompleteKeys(values, out.placeholderKeys) && (staticText ? out.format.indexOf(staticText) >= 0 : true))
+          || (!values && conditions && this.hasMatchedConditions(conditions, out.conditions)
+            && (staticText ? out.format.indexOf(staticText) >= 0 : false))
       )
       .map((out) => out.id);
     return ids[0];
@@ -79,6 +85,17 @@ export class RemarksManagerService {
           .join('-') === keys.sort().join('-')
       );
     }
+  }
+
+  hasMatchedConditions(map: Map<string, string>, conditions: any) {
+    let result = true;
+    if (conditions) {
+      conditions.forEach(condition => {
+        result = ((map.get(condition.name) && result) ? true : false);
+      });
+
+    }
+    return result;
   }
 
   async submitToPnr() {

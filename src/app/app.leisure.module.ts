@@ -48,6 +48,7 @@ import { RefundComponent } from './leisure/cancel/refund/refund.component';
 import { CancelSegmentComponent } from './leisure/cancel/cancel-segment/cancel-segment.component';
 import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 
+
 @NgModule({
   declarations: [
     LeisureComponent,

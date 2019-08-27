@@ -35,7 +35,6 @@ export class RemarksManagerApiService {
   }
 
   getPnrRequestParam(placeholders?: Array<PlaceholderValues>) {
-    debugger;
     const phvalues = (placeholders ? placeholders.map((x) => x.toJsonObject()) : null);
     return {
       pnr: this.pnrService.pnrResponse,

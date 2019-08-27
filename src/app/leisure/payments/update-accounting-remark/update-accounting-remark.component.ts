@@ -299,6 +299,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
+
+      // Trim supplier codes. Refer to DE2253.
+      this.filterSupplierCodeList.forEach(filterSupplierCode => {
+        filterSupplierCode.supplierCode = filterSupplierCode.supplierCode.trim();
+      });
     }
   }
 
@@ -418,7 +423,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { airline: 'PD', supplierCode: 'PTA' },
       { airline: '9M', supplierCode: 'CMA' },
       { airline: 'MO', supplierCode: 'C5A' },
-      { airline: 'YP', supplierCode: 'K9P' },
+      { airline: 'YP', supplierCode: 'KP9' },
       { airline: '4N', supplierCode: 'A5N' },
       { airline: '8P', supplierCode: 'PF3' },
       { airline: 'WJ', supplierCode: 'ALO' },

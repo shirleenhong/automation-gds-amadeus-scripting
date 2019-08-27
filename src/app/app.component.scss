@@ -77,6 +77,35 @@ div.logo {
   width: 100%;
 }
 
+.identity-container {
+  display: inline-block;
+  margin-right: 15px;
+
+  .logo-container {
+    display: inline-block;
+    padding-right: 2px;
+    vertical-align: sub;
+
+    .fa-id-badge {
+      font-size: 1.5rem;
+    }
+  }
+
+  .dropdown-container {
+    display: inline-block;
+    vertical-align: top;
+
+    select#selCounselorIdentity {
+      font-size: 0.7rem;
+      line-height: 0.7rem;
+    }
+  }
+}
+
+.identity-container:hover {
+  color: orangered;
+}
+
 .resize i {
   color: white;
   padding-right: 10px;

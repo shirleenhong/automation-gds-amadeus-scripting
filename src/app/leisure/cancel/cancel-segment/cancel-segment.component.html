@@ -122,7 +122,8 @@
               <div [formGroupName]="i" class="form-group row">
                 <div class="col-sm-4"></div>
                 <div class="col-3">
-                  <input type="text" formControlName="acTicketNo" class="form-control" maxlength="25">
+                  <input type="text" formControlName="acTicketNo" class="form-control" maxlength="25"
+                    (change)="acTicketChange($event.target.value, i)">
                 </div>
                 <div class="col-3">
                   <select class="form-control " id="acpassengerNo" formControlName="acpassengerNo" name="acpassengerNo">
@@ -249,12 +250,12 @@
           <div class="col-3">
             <input type="text" formControlName="coupon" class="form-control" maxlength="25">
           </div>
-          <div *ngIf="remove" class="col-1">
-            <i class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
-          </div>
-          <div *ngIf="add" class="col-1">
+          <div class="col-2"
+            *ngIf="f.reasonACCancel.value !== '1' && f.reasonACCancel.value !== '2' && f.reasonACCancel.value !== '3'">
+            <i *ngIf="remove" class="fas fa-minus-circle" id="remove" (click)="removeTicketCoupon(i)"> </i>
             &nbsp;
-            <i class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
+            &nbsp;
+            <i *ngIf="add" class="fas fa-plus-circle" id="add" (click)="addTicketCoupon()"></i>
           </div>
         </div>
       </div>

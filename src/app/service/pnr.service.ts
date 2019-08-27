@@ -23,9 +23,10 @@ export class PnrService {
   segments = [];
   amountPipe = new AmountPipe();
   PCC = '';
-  // pnr = '';
+  pnrResponse: any;
+  clientSubUnitGuid: string;
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -33,9 +34,10 @@ export class PnrService {
     await this.pnrObj
       .retrievePNR()
       .then(
-        () => {
+        (res) => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
+          this.pnrResponse = res.response.model.output.response;
           this.getTST();
         },
         (error: string) => {
@@ -1086,14 +1088,6 @@ export class PnrService {
     return pSegment;
   }
 
-  // getRirSeaSegments() {
-  //   const pSegment = [];
-  //   let segment = this.getSegmentTatooNumber();
-  //   segment.forEach(element => {
-  //     pSegment.push();
-  //   });
-  //   return pSegment;
-  // }
 
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
@@ -1255,6 +1249,7 @@ export class PnrService {
   }
 
   getTSTTicketed() {
+    const segmentinPNR = this.getSegmentTatooNumber();
     const segments = [];
     for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
@@ -1269,6 +1264,9 @@ export class PnrService {
 
     for (const fp of this.pnrObj.fpElements) {
       if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
+        if (fp.fullNode.referenceForDataElement === undefined && segments.length < segmentinPNR.length) {
+          return true;
+        }
         for (const ref of fp.fullNode.referenceForDataElement.reference) {
           if (segments.indexOf(ref.number) === -1) {
             return true;
@@ -1278,4 +1276,14 @@ export class PnrService {
     }
     return false;
   }
+
+  getClientSubUnit() {
+    const syexgvs = this.getRemarkText('SYEXGVS:');
+    if (syexgvs && !this.clientSubUnitGuid) {
+      this.clientSubUnitGuid = syexgvs.split(' ')[1];
+    }
+
+    return this.clientSubUnitGuid;
+  }
+
 }

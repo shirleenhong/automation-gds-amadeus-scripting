@@ -10,5 +10,11 @@
     "pathRewrite": {
       "^/service/repo/powerbaseaws": "/powerbase-api"
     }
+  },
+  "/remarks-manager-rest/*": {
+    "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
   }
 }

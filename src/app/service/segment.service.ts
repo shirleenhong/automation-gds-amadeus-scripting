@@ -203,8 +203,9 @@ export class SegmentService {
             rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
         });
 
-        // Add new remark line for each hotel. Refer to US13461;
-        rmGroup.remarks.push(this.getRemarksModel("HS" + formatDate(Date.parse(segmentrem.departureDate), 'ddMMM', 'en-us') + '/-CHN-' + segmentrem.chainCode, 'RM', '*'));
+        const  datePipe =  new DatePipe('en-US');
+        rmGroup.remarks.push(this.getRemarksModel('HS' +  datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
+             segmentrem.chainCode, 'RM', '*'));
 
         optionalHotelRemarks.forEach(c => {
             if (c.include) {
@@ -265,7 +266,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string) {
+                     amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -416,7 +417,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -645,43 +646,32 @@ export class SegmentService {
         rmGroup.remarks = new Array<RemarkModel>();
         rmGroup.deleteRemarkByIds = new Array<string>();
 
-
         if (cancel.value.reasonACCancel) {
-            let pass = '1';
-            if (cancel.value.acpassengerNo !== undefined) {
-                pass = cancel.value.acpassengerNo;
-            }
-            switch (cancel.value.reasonACCancel) {
-                case '1':
-                    remText = 'OS AC NCC 014' + cancel.value.acTicketNo + '/P' + pass;
-                    break;
-                case '2':
-                    remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + pass;
-                    break;
-                case '3':
-                    remText = 'OS AC DUPE REFUND 014' + cancel.value.acTicketNo + ' TO BE USED';
-                    break;
-                // case '4':
-                //     remText = 'OS AC 24 HOUR RULE';
-                //     break;
-                // case '5':
-                //     remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                //         + cancel.value.accityPair + ' ' + cancel.value.acdepDate
-                //         + ' RELATIONSHIP ' + cancel.value.relationship + '/P' + pass;
-                //     break;
-                // case '6':
-                //     if (cancel.value.acFlightNo) {
-                //         remText = 'OS AC ' + cancel.value.acFlightNo + ' '
-                //             + cancel.value.acdepDate + ' - ' + cancel.value.accityPair + '/P' + pass;
-                //     } else {
-                //         remText = '';
-                //     }
-                //     break;
-                default:
-                    break;
-            }
-            if (remText) {
-                rmGroup.cryptics.push(remText);
+            const arr = cancel.get('actickets') as FormArray;
+            if (arr.status !== 'DISABLED') {
+                for (const c of arr.controls) {
+                    const acTicketNo = c.get('acTicketNo').value;
+                    let acpassengerNo = 1;
+                    if (c.get('acpassengerNo').value) {
+                        acpassengerNo = c.get('acpassengerNo').value.toString();
+                    }
+                    switch (cancel.value.reasonACCancel) {
+                        case '1':
+                            remText = 'OS AC NCC 014' + acTicketNo + '/P' + acpassengerNo;
+                            break;
+                        case '2':
+                            remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + acpassengerNo;
+                            break;
+                        case '3':
+                            remText = 'OS AC DUPE REFUND 014' + acTicketNo + ' TO BE USED';
+                            break;
+                        default:
+                            break;
+                    }
+                    if (remText) {
+                        rmGroup.cryptics.push(remText);
+                    }
+                }
             }
         }
 
@@ -973,7 +963,7 @@ export class SegmentService {
 
         if (frmCancel.controls.followUpOption.value === 'Non BSP Refund') {
             if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-                this.getQueueMinder(queueGroup, 'rbpRbm');
+                this.getQueueMinder(queueGroup, 'nonBspRbmRbp');
             } else {
                 this.getQueueMinder(queueGroup, 'nonBspAllCfa');
             }
@@ -983,31 +973,14 @@ export class SegmentService {
     }
 
 
-    // queueRefund(frmrefund: FormGroup, cfa: CfRemarkModel) {
-    //     const queueGroup = Array<QueuePlaceModel>();
-    //     if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-    //         this.getQueueMinder(queueGroup, 'rbpRbm');
-    //         if (frmrefund.controls.isBsp.value === 'YES') {
-    //             this.getQueueMinder(queueGroup, 'bspAllCfa');
-    //         }
-    //     } else {
-    //         if (frmrefund.controls.isBsp.value === 'YES') {
-    //             this.getQueueMinder(queueGroup, 'bspAllCfa');
-    //         } else {
-    //             this.getQueueMinder(queueGroup, 'nonBspAllCfa');
-    //         }
-    //     }
-
-    //     return queueGroup;
-    // }
-
     private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
         const queue = new QueuePlaceModel();
 
         const queuePlaceDescription = [
             { control: 'rbpRbm', queueNo: '41', pcc: 'YTOWL2104', text: 'RBP RBM', category: '98' },
             { control: 'bspAllCfa', queueNo: '41', pcc: 'YTOWL210O', text: 'BSP ALL CFA', category: '94' },
-            { control: 'nonBspAllCfa', queueNo: '41', pcc: 'YTOWL2108', text: 'NON BSP', category: '98' }
+            { control: 'nonBspAllCfa', queueNo: '41', pcc: 'YTOWL2108', text: 'NON BSP', category: '97' },
+            { control: 'nonBspRbmRbp', queueNo: '41', pcc: 'YTOWL2104', text: 'NON BSP', category: '97' }
         ];
         const look = queuePlaceDescription.find((x) => x.control === controlname);
         if (look) {

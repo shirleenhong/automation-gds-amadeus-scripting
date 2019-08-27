@@ -17,9 +17,9 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -77,9 +77,9 @@ export class DDBService implements OnInit {
     );
   }
 
-  async getServicingOption(clientSubUnit, contextId) {
+  async getAllServicingOptions(clientSubUnit) {
     if (this.servicingOption.length === 0) {
-      await this.getRequest(common.servicingOptionService + clientSubUnit + '&ContextID=' + contextId + 'GDSCode=1A').then(
+      await this.getRequest(common.servicingOptionService + clientSubUnit + '&GDSCode=1A').then(
         (x) => {
           this.servicingOption = [];
           this.servicingOption = x.ServiceOptionDetails;
@@ -89,6 +89,22 @@ export class DDBService implements OnInit {
         }
       );
     }
+  }
+
+  async approvers(clientSubUnit) {
+    return await this.getRequest(common.approversService + clientSubUnit);
+  }
+
+  async queueMinderItems(clientSubUnit, typeid) {
+    return await this.getRequest(common.queueMinderItemService.replace('{ClientSubUnitGuid}', clientSubUnit) + typeid);
+  }
+
+  async queueMinderTypes(clientSubUnit) {
+    return await this.getRequest(common.queueMinderTypeService.replace('{ClientSubUnitGuid}', clientSubUnit));
+  }
+
+  async TicketQueues(clientSubUnit) {
+    return await this.getRequest(common.ticketQueueService.replace('{ClientSubUnitGuid}', clientSubUnit));
   }
 
   async getCountryAndCurrencyList() {
@@ -179,7 +195,6 @@ export class DDBService implements OnInit {
   }
 
   async loadSupplierCodesFromPowerBase() {
-
     await this.getRequest(common.supplierCodes).then(
       (x) => {
         this.supplierCodes = [];
@@ -200,11 +215,12 @@ export class DDBService implements OnInit {
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
-      this.loadSupplierCodesFromPowerBase();
+      this.getAllMatrixSupplierCodes();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
-      return this.supplierCodes.filter((x) => x.type.toUpperCase() === type.toUpperCase()
-        || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase());
+      return this.supplierCodes.filter(
+        (x) => x.type.toUpperCase() === type.toUpperCase() || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase()
+      );
     }
     return this.supplierCodes;
   }
@@ -224,6 +240,20 @@ export class DDBService implements OnInit {
 
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async getAllMatrixSupplierCodes() {
+    this.supplierCodes = [];
+    await this.getRequest(common.matrixSupplierService + '?MatrixCompanyId=01').then((x) => {
+      x.MatrixSupplierList.forEach((s) => {
+        const supplier = {
+          type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
+          supplierCode: s.SupplierCode,
+          supplierName: s.SupplierName
+        };
+        this.supplierCodes.push(supplier);
+      });
+    });
   }
 
   async extractDataPort(port: any) {

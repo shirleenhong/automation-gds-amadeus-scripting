@@ -2,22 +2,6 @@
 Resource          ../resources/common/global_resources.robot
 
 *** Keywords ***
-Login To Amadeus Sell Connect
-    Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc
-    Comment    Open Browser    https://1a.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=LOGINURL&LANGUAGE=GB    gc
-    Maximize Browser Window
-    Wait Until Element Is Visible    css=#username > span:first-child input    60
-    Enter Username    ${username}
-    Enter Dutycode    GS
-    Enter Office ID    YTOWL2107
-    Enter Password    ${password}
-    Wait Until Element Is Not Visible    css=#logi_confirmButton .xButtonDisabled    30
-    Click Element    css=#logi_confirmButton .xButton
-    Handle Force Login Window
-    Wait Until Element Is Visible    css=.uicTaskbarText    30
-    Handle Accept Cookie Panel
-    Add New Command Page
-
 Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
     Wait Until Page Contains Element    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]    30
@@ -51,13 +35,6 @@ Verify Specific Remark Is Only Written Once
     ${pnr_details}    Get Text    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Should Contain X Times    ${pnr_details}    ${expected_remark}    1    ${expected_remark} is found multiple times
-
-Logout To Amadeus Sell Connect
-    Comment    User Sign Out
-    Click Element    css=#eusermanagement_logout_logo_logout_id
-    Wait Until Element Is Visible    xpath=//div[contains(text(),'Sign out')]    30
-    Click Element    css=#uicAlertBox_ok > span.uicButtonBd
-    Wait Until Element Is Visible    css=#username > span:first-child input    30
 
 Create Matrix Receipt
     [Arguments]    ${mode_of_payment}    ${bank_account}    ${passenger_name}    ${description}    ${amount}    ${gc_number}=${EMPTY}
@@ -163,6 +140,12 @@ Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR
     Verify Specific Remark Is Written In The PNR    RIR IF YOU NO-SHOW FOR ANY SEGMENT IN YOUR RESERVATION./S${segment_number}
     Verify Specific Remark Is Written In The PNR    RIR IF YOUR RESERVATION CANCELS YOU WILL NEED TO MAKE NEW/S${segment_number}    True
     Verify Specific Remark Is Written In The PNR    RIR RESERVATIONS WHICH MAY BE AT A HIGHER FARE./S${segment_number}
+
+Populate Visa And Passport Required Fields
+    Click Panel    Remarks
+    Click Remarks Tab    Visa and Passport
+    Select International Travel
+    Enter Passport Name    Passport Name
 
 Populate Reporting Required Fields
     Click Panel    Reporting

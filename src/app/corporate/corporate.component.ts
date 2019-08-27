@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
-// import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
-// import { DDBService } from '../service/ddb.service';
+import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
+import { DDBService } from '../service/ddb.service';
 import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
 import { PaymentsComponent } from './payments/payments.component';
-import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
 
@@ -30,10 +29,10 @@ export class CorporateComponent implements OnInit {
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    // private ddbService: DDBService,
+    private ddbService: DDBService,
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
-    private corpRemarkService: CorporateRemarksService,
+    private corpRemarkService: CorporateRemarksService
   ) {
     this.initData();
   }
@@ -70,6 +69,10 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.showLoading('Matching Remarks', 'initData');
     await this.rms.getMatchcedPlaceholderValues();
+    this.showLoading('Servicing Options', 'initData');
+    await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid); //'A:FA177'
+    this.showLoading('ReasonCodes', 'initData');
+    await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
     this.closeLoading();
   }
 

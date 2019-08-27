@@ -4,7 +4,7 @@ import { common } from '../../environments/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { interval } from 'rxjs';
 import { StaticValuesService } from './static-values.services';
-
+import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,6 +17,7 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
+  reasonCodeList = Array<ReasonCode>();
   ngOnInit(): void {}
 
   constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
@@ -169,8 +170,20 @@ export class DDBService implements OnInit {
   }
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
-    return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
+    this.reasonCodeList = [];
+    await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then((response) => {
+      response.ReasonCodeItems.forEach((reasonJson) => {
+        this.reasonCodeList.push(new ReasonCode(reasonJson));
+      });
+    });
   }
+
+  getReasonCodeByTypeId(ids: any) {
+    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId));
+  }
+  // getReasonCodeByTypeId(integer[]) {
+  //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
+  // }
 
   // async getReasonCodeByClientSubUnit(clientSubUnitId: string) {
   //   return await this.getRequest(common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId));
@@ -269,7 +282,7 @@ export class DDBService implements OnInit {
   }
 
   getServicingOptionValue(soId) {
-    return this.servicingOption.find((x) => x.ServiceOptionItemId === soId);
+    return this.servicingOption.find((x) => x.ServiceItemId === soId);
   }
 
   getCityCountry(search: string) {

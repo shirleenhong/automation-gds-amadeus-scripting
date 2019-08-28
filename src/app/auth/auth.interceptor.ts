@@ -5,14 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   intercept(req, next): Observable<HttpEvent<any>> {
-    let idToken = null;
-    if (req.url.indexOf('remarks-manager') > -1 && localStorage.getItem('token_rms')) {
-      idToken = localStorage.getItem('token_rms');
-    }
-
-    if (req.url.indexOf('powerbaseaws') > -1 && localStorage.getItem('token')) {
-      idToken = localStorage.getItem('token');
-    }
+    const idToken = localStorage.getItem('token');
 
     console.log(idToken);
     if (idToken) {

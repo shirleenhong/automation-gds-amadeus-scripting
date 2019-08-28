@@ -351,7 +351,7 @@ export class LeisureRemarkService {
   }
 
   deleteSegments() {
-    if (this.deleteSegmentByIds.length > 1) {
+    if (this.deleteSegmentByIds.length >= 1) {
       smartScriptSession.send('XE' + this.deleteSegmentByIds.join(','));
     }
   }

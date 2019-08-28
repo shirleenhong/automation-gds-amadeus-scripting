@@ -18,9 +18,9 @@ export class DDBService implements OnInit {
   servicingOption = [];
   airTravelPortInformation = [];
   reasonCodeList = Array<ReasonCode>();
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {

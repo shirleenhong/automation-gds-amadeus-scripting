@@ -2,7 +2,7 @@ export const common = {
   clientId: 'int.powerbaseaws.amadeus',
   clientId_rms: 'int.agentplatform',
   tokenService: '/service/repo/powerbaseaws/oauth2/token/',
-  tokenService_rms: '/service/ap/remarks-manager/oauth2/token/',
+  tokenService_rms: '/service/ap/remarks-manager/oauth2/token',
   locationService: '/service/repo/powerbaseaws/Location/Country?LanguageCode=en-GB',
   travelportService: '/service/repo/powerbaseaws/TravelPorts/Airport?TravelPortCode=',
   supplierCodes: '/service/repo/powerbaseaws/Suppliers?CountryCode=CA',
@@ -26,8 +26,8 @@ export const common = {
   queueMinderItemService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/QueueMinderItems?QueueMinderTypeIds=',
   queueMinderTypeService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/QueueMinderTypes?GDSCode=1A',
   ticketQueueService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/TicketQueues?GDSCode=1A',
-  matchedPlacholderValueService: '/service/ap/remarks-manager/matched-placeholder-values',
-  pnrAmadeusRequestService: '/service/ap/remarks-manager/pnr-amadeus-request',
+  matchedPlacholderValueService: '/service/ap/remarks-manager/api/matched-placeholder-values',
+  pnrAmadeusRequestService: '/service/ap/remarks-manager/api/pnr-amadeus-request',
   matrixSupplierService: '/service/repo/powerbaseaws/Matrix/Supplier',
   LeisureVersionNumber: '19.8.2'
 };

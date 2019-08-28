@@ -16,33 +16,33 @@ export class RemarksManagerApiService {
   isTokenExpired = true;
   token: string;
 
-  constructor(private httpClient: HttpClient, private pnrService: PnrService) { }
-
+  constructor(private httpClient: HttpClient, private pnrService: PnrService) {}
 
   async getToken() {
-    debugger;
     if (this.isTokenExpired) {
       const bodyInfo = {
         client_id: common.clientId_rms,
         client_secret: environment.clientSecret_rms,
         grant_type: 'client_credentials'
       };
+      localStorage.removeItem('token_rms');
       const hds = new HttpHeaders({
         'Content-Type': 'application/json'
       });
-      const res = await this.httpClient
+      console.log(JSON.stringify(bodyInfo));
+      await this.httpClient
         .post<any>(common.tokenService_rms, JSON.stringify(bodyInfo), {
           headers: hds
         })
-        .toPromise();
-      debugger;
-      this.token = res.access_token;
-      localStorage.setItem('token_rms', this.token);
-      this.isTokenExpired = false;
-      // expire token 30 seconds earlier
-      interval((res.expires_in - 30) * 1000).subscribe(() => {
-        this.isTokenExpired = true;
-      });
+        .toPromise()
+        .then((res) => {
+          this.isTokenExpired = false;
+          this.token = res.access_token;
+          localStorage.setItem('token_rms', this.token);
+          interval((res.expires_in - 30) * 1000).subscribe(() => {
+            this.isTokenExpired = true;
+          });
+        });
     }
   }
 
@@ -53,18 +53,13 @@ export class RemarksManagerApiService {
 
   async getPnrAmadeusAddmultiElementRequest(placeholders: Array<PlaceholderValues>) {
     const param = this.getPnrRequestParam(placeholders);
-    debugger;
     return await this.postRequest(common.pnrAmadeusRequestService, param);
   }
 
   async postRequest(serviceName: string, body: any) {
-    if (!environment.proxy) {
-      await this.getToken();
-    }
+    await this.getToken();
+
     const hds = new HttpHeaders().append('Content', 'application/json');
-    // if (!environment.proxy) {
-    //   serviceName = environment.remarksManagerUrlService + serviceName;
-    // }
     return this.httpClient
       .post<any>(serviceName, body, {
         headers: hds
@@ -81,7 +76,7 @@ export class RemarksManagerApiService {
   }
 
   getPnrRequestParam(placeholders?: Array<PlaceholderValues>) {
-    const phvalues = (placeholders ? placeholders.map((x) => x.toJsonObject()) : null);
+    const phvalues = placeholders ? placeholders.map((x) => x.toJsonObject()) : null;
     return {
       pnr: this.pnrService.pnrResponse,
       hierarchyParams: {

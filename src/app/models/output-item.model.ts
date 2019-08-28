@@ -20,7 +20,6 @@ export class OutputItem {
     }
 
     if (json && json.conditions) {
-      // debugger;
       json.conditions.forEach((p) => {
         this.conditions.push(p);
       });

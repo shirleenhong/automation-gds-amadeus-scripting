@@ -48,8 +48,9 @@ export class ReportingRemarkService {
           }
         });
         this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
-        this.remarksManager.createPlaceholderValues(lowFareRemark);
-        this.remarksManager.createPlaceholderValues(airReasonCodeRemark);
+        this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
+
       }
     }
   }

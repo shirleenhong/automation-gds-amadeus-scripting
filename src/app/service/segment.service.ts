@@ -203,9 +203,9 @@ export class SegmentService {
             rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
         });
 
-        const  datePipe =  new DatePipe('en-US');
-        rmGroup.remarks.push(this.getRemarksModel('HS' +  datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
-             segmentrem.chainCode, 'RM', '*'));
+        const datePipe = new DatePipe('en-US');
+        rmGroup.remarks.push(this.getRemarksModel('HS' + datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
+            segmentrem.chainCode, 'RM', '*'));
 
         optionalHotelRemarks.forEach(c => {
             if (c.include) {
@@ -266,7 +266,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                     amk: number, vib: number, itinLanguage: string) {
+        amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -417,7 +417,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-                            startTime: string, enddatevalue: string, endTime: string) {
+        startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -660,10 +660,10 @@ export class SegmentService {
                             remText = 'OS AC NCC 014' + acTicketNo + '/P' + acpassengerNo;
                             break;
                         case '2':
-                            remText = 'OS AC FREE NCC LEGAL CHNG 014' + cancel.value.acTicketNo + '/P' + acpassengerNo;
+                            remText = 'OS AC FREE NCC LEGAL CHNG 014' + c.get('acTicketNo').value + '/P' + acpassengerNo;
                             break;
                         case '3':
-                            remText = 'OS AC DUPE REFUND 014' + acTicketNo + ' TO BE USED';
+                            remText = 'OS AC DUPE REFUND 014' + c.get('acTicketNo').value + ' TO BE USED';
                             break;
                         default:
                             break;

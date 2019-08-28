@@ -1,35 +1,41 @@
 <div class="ticketing-container">
 
-    <div class="row form-group">
-        <div class="col-4">
-            <div>Office ID:</div>
-            <input type="text" class="form-control" id="txtOfficeId" name="officeId" formControlName="officeId" maxlength="35" />
-        </div>
+    <form [formGroup]="ticketForm">
 
-        <div class="col-4">
-            <div>Ticket Date:</div>
 
-        </div>
-    </div>
+        <div class="row form-group">
+            <div class="col-4">
+                <div>Office ID:</div>
+                <input type="text" class="form-control" id="txtOfficeId" name="officeId" formControlName="officeId" maxlength="35" />
+            </div>
 
-    <div class="row form-group">
-        <div class="col-12">
-            <div>
-                <label>
-                    <input type="checkbox" name="pnrOnHold" /> PNR ON HOLD
-                </label>
+            <div class="col-4">
+                <div>Ticket Date:</div>
+                <!-- [(ngModel)]="passiveSegments.departureDate" -->
+                <!-- (change)="checkDate($event.target.value, $event.target.name)" -->
+                <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" />
             </div>
         </div>
-    </div>
 
-    <div class="row form-group">
-        <div class="col-12">
-            <div>TK Line:</div>
-            <!-- [(ngModel)]="leisureFee.passengerNo" -->
-            <select class="form-control " id="selTK" formControlName="tk" name="tk">
-                <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
-            </select>
-
+        <div class="row form-group">
+            <div class="col-12">
+                <div>
+                    <label>
+                        <input type="checkbox" name="pnrOnHold" formControlName="pnrOnHold" /> PNR ON HOLD
+                    </label>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div class="row form-group">
+            <div class="col-12">
+                <div>TK Line:</div>
+                <!-- [(ngModel)]="leisureFee.passengerNo" -->
+                <select class="form-control " id="selTK" formControlName="tk" name="tk">
+                    <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
+                </select>
+
+            </div>
+        </div>
+    </form>
 </div>

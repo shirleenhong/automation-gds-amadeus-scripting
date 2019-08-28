@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
-import { DDBService } from '../service/ddb.service';
+// import { DDBService } from '../service/ddb.service'; // Comment-out due to errors not needed on US11134
 import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -29,7 +29,7 @@ export class CorporateComponent implements OnInit {
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    private ddbService: DDBService,
+    // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: CorporateRemarksService
@@ -69,10 +69,12 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.showLoading('Matching Remarks', 'initData');
     await this.rms.getMatchcedPlaceholderValues();
-    this.showLoading('Servicing Options', 'initData');
-    await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid); //'A:FA177'
-    this.showLoading('ReasonCodes', 'initData');
-    await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+
+    // TEMP: Comment-out due to errors not needed on US11134
+    // this.showLoading('Servicing Options', 'initData');
+    // await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid); //'A:FA177'
+    // this.showLoading('ReasonCodes', 'initData');
+    // await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
     this.closeLoading();
   }
 

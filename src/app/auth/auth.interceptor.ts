@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 export class AuthInterceptor implements HttpInterceptor {
   intercept(req, next): Observable<HttpEvent<any>> {
     let idToken = null;
-    debugger;
     if (req.url.indexOf('remarks-manager') > -1 && localStorage.getItem('token_rms')) {
       idToken = localStorage.getItem('token_rms');
     }

@@ -20,7 +20,6 @@ export class RemarksManagerApiService {
 
 
   async getToken() {
-    debugger;
     if (this.isTokenExpired) {
       const bodyInfo = {
         client_id: common.clientId_rms,
@@ -37,7 +36,6 @@ export class RemarksManagerApiService {
           headers: hds
         })
         .toPromise();
-      debugger;
       this.token = res.access_token;
       console.log(res);
       console.log(JSON.stringify(res));
@@ -58,7 +56,6 @@ export class RemarksManagerApiService {
 
   async getPnrAmadeusAddmultiElementRequest(placeholders: Array<PlaceholderValues>) {
     const param = this.getPnrRequestParam(placeholders);
-    debugger;
     return await this.postRequest(common.pnrAmadeusRequestService, param);
   }
 

@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        corp
 Library           String
 Library           SeleniumLibrary
 Library           Collections
@@ -8,13 +9,19 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/base.robot
 
 *** Test Cases ***
-Verify That Reporting Remark Is Written For Single TST
+Verify That Reporting Remarks Are Written For Single TST
+    [Tags]    us10551
     Login To Amadeus Sell Connect Acceptance
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177
-    Add Single BSP Segment And Store Fare
+    Move Single Passenger And Add Single BSP Segment With TST
     Open CA Corporate Test
-    # Add Client Reporting Values For Single BSP Segment
-    Close CA Corporate Test
-    Switch To Graphic Mode
-    Get PNR Details
-    Switch To Command Page
+    Add Client Reporting Values For Single BSP Segment
+    Verify That Client Reporting Remarks Are Written In The PNR For Single TST
+    
+Verify That Reporting Remark Are Written For Multiple TSTs
+    [Tags]    us10551
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger And Add Multiple BSP Segment With TSTs
+    Open CA Corporate Test
+    Add Client Reporting Values For Multiple BSP Segment
+    Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
+    

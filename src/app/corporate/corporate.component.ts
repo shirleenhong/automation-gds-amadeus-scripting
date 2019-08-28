@@ -11,6 +11,8 @@ import { PaymentRemarkService } from '../service/corporate/payment-remark.servic
 import { PaymentsComponent } from './payments/payments.component';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
+import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
+import { ReportingComponent } from '../corporate/reporting/reporting.component';
 
 @Component({
   selector: 'app-corporate',
@@ -25,6 +27,7 @@ export class CorporateComponent implements OnInit {
   workflow = '';
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
+  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -32,7 +35,8 @@ export class CorporateComponent implements OnInit {
     private ddbService: DDBService,
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
-    private corpRemarkService: CorporateRemarksService
+    private corpRemarkService: CorporateRemarksService,
+    private reportingRemarkService: ReportingRemarkService
   ) {
     this.initData();
   }
@@ -64,7 +68,7 @@ export class CorporateComponent implements OnInit {
 
   async initData() {
     this.showLoading('Loading Suppliers', 'initData');
-    // await this.ddbService.loadSupplierCodesFromPowerBase();
+    await this.ddbService.getAllMatrixSupplierCodes();
     this.showLoading('Loading PNR', 'initData');
     await this.getPnrService();
     this.showLoading('Matching Remarks', 'initData');
@@ -122,6 +126,7 @@ export class CorporateComponent implements OnInit {
     });
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;

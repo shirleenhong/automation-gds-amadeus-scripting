@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 
 @Component({
   selector: 'app-reporting',
@@ -6,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit {
+  @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

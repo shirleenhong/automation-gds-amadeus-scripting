@@ -22,6 +22,9 @@ export class PaymentRemarkService {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
     this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
+
+    // NonBSP Exhange Remarks
+    this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NBEX'));
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
@@ -94,23 +97,48 @@ export class PaymentRemarkService {
 
   /**
    * DOING
-   * Write NonBSPExchange remarks to PNR.
-   * Refer to US11134
+   * US11134: Write NonBSPExchange remarks to PNR.
    * 
    * @param accountingRemarks collection of NonBSP Exchange remarks
    */
   writeNonBSPExchange(accountingRemarks: MatrixAccountingModel[]) {
     debugger;
     accountingRemarks.forEach((account) => {
-      const paymentRemark = new Map<string, string>();
-      paymentRemark.set('PassName', account.passPurchase);
-      paymentRemark.set('FareType', account.fareType);
-      this.remarksManager.createPlaceholderValues(paymentRemark);
-
-      const airlineCodeRemark = new Map<string, string>();
-      airlineCodeRemark.set('AirlineCode', 'AC');
+      const paymentRemark          = new Map<string, string>();
+      const airlineCodeRemark      = new Map<string, string>();
+      const ticketRemarks          = new Map<string, string>();
+      const ticketAmountRemarks    = new Map<string, string>();
+      const airlineCodeInvoice     = new Map<string, string>();
+      // const staticRemarksCondition = new Map<string, string>();
+      
+      paymentRemark.set('PassNameNonAc', account.passPurchase);
+      ticketRemarks.set('AirlineRecordLocator', account.airlineRecordLocator);
       airlineCodeRemark.set('TotalCost', account.baseAmount);
+
+      ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
+      ticketRemarks.set('TktNbr', account.tktLine);
+      ticketRemarks.set('SupplierCode', account.supplierCodeName);
+
+      ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
+      ticketAmountRemarks.set('BaseAmt', account.baseAmount);
+      ticketAmountRemarks.set('Gst', account.gst);
+      ticketAmountRemarks.set('Hst', account.hst);
+      ticketAmountRemarks.set('Qst', account.qst);
+      ticketAmountRemarks.set('Comm', account.commisionWithoutTax);
+
+      const segmentrelate: string[] = [];
+      this.getRemarkSegmentAssociation(account, segmentrelate);
+
+      this.remarksManager.createPlaceholderValues(paymentRemark, null, segmentrelate);
+      this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);
+      this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
+      this.remarksManager.createPlaceholderValues(airlineCodeInvoice);
+
+      // this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ALL DETAILS DISCUSSED AND');
+      // this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
+      // this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
+      // this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
     });
   }
 

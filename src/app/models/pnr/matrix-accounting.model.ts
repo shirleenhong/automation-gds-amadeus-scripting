@@ -1,4 +1,5 @@
 export class MatrixAccountingModel {
+  airlineRecordLocator: string; // 10-characters
   bsp: string;
   type: string;
   tkMacLine: number;

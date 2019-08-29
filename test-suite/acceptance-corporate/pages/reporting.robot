@@ -27,6 +27,10 @@ Move Single Passenger And Add Passive Segment
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177
     Add Passive Air Segment In The GDS
     
+Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177
+    Add Passive Air Segment In The GDS With Airline Code PD
+    
 Move Single Passenger And Add Multiple Air Passive Segments 
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177
     Add Multiple Passive Air Segments In The GDS

@@ -6,7 +6,7 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${input_high_fare}    //input[@formcontrolname='highFareText']
+${input_full_fare}    //input[@formcontrolname='highFareText']
 ${input_low_fare}    //input[@formcontrolname='lowFareText']
 ${input_reason_code}    //input[@formcontrolname='reasonCodeText']
 ${input_high_fare_2}
@@ -34,7 +34,7 @@ Move Single Passenger And Add Multiple Air Passive Segments
 Add Client Reporting Values For Single BSP Segment
     Click Full Wrap
     Click Reporting Panel
-    Enter Value    ${input_high_fare}    1123.50
+    Enter Value    ${input_full_fare}    1123.50
     Enter Value    ${input_low_fare}    300.00
     Enter Value    ${input_reason_code}    L
     Click Submit To PNR
@@ -42,7 +42,7 @@ Add Client Reporting Values For Single BSP Segment
 Add Client Reporting Values For Multiple BSP Segment
     Click Full Wrap
     Click Reporting Panel
-    Enter Value    ${input_high_fare}    1123.50
+    Enter Value    ${input_full_fare}    1123.50
     Enter Value    ${input_low_fare}    300.00
     Enter Value    ${input_high_fare_2}    999.50
     Enter Value    ${input_low_fare_2}    123.00
@@ -76,7 +76,7 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
 
 Add Client Reporting Values For Non-BSP Segments
     Click Reporting Panel
-    Enter Value    ${input_high_fare}    2101.00
+    Enter Value    ${input_full_fare}    2101.00
     Enter Value    ${input_low_fare}    912.99
     Enter Value    ${input_reason_code}    L
     Click Submit To PNR

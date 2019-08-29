@@ -6,9 +6,8 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${list_segment}
+${list_segment}    
 ${list_accounting_type}    css=#accountingTypeRemark
-${input_supplier_code}
 ${button_addaccountingline}    //button[contains(text(), 'Add Accounting Line')]
 ${tab_matrix_accounting}    //span[contains(text(), 'Matrix Accounting Remark')]
 ${tab_matrix_receipt}    //span[contains(text(), 'Matrix Receipt')]
@@ -42,28 +41,39 @@ Move Multiple Passenger
     
 Add Non-BSP Ticketing Details For Single Segment
     Click Payment Panel
-    Click Element    ${tab_accounting}    
-    Click Element    ${button_add_accounting}
-    Select From List By Value    ${list_segment}   text 
-    Select From List By Value    ${list_accounting_type}    text
-    Enter Value    ${input_confirmation_nbr}    54321
-    Add Ticketing Amount Details
-    Enter Value    ${input_ticket_number}    1234567890
+    Click Element    ${tab_matrix_accounting}   
+    Click Element    ${button_addaccountingline}
+    Select From List By Value    ${list_segment}   2 
+    Select From List By Value    ${list_accounting_type}    Non BSP Airline
+    Enter Value    ${input_confirmationNo}    54321
+    Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
+
+Add Non-BSP Ticketing Details For Multiple Segments
+    Click Payment Panel
+    Click Element    ${tab_matrix_accounting}    
+    Click Element    ${button_addaccountingline}
+    Select Multiple Segments    2    3
+    Select From List By Value    ${list_accounting_type}    Non BSP Airline
+    Enter Value    ${button_addaccountingline}    54321
+    Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
 
 Add Ticketing Amount Details
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
-    Enter Value    ${input_base_amt}    ${base_amt}
-    Enter Value    ${input_gst_tax}    ${gst_tax}
-    Enter Value    ${input_hst_tax}    ${hst_tax}
-    Enter Value    ${input_qst_tax}    ${qst_tax}
-    Enter Value    ${input_other_tax}   ${oth_tax}
+    Enter Value    ${input_baseamount}    ${base_amt}
+    Enter Value    ${input_gsttax}    ${gst_tax}
+    Enter Value    ${input_hsttax}    ${hst_tax}
+    Enter Value    ${input_qsttax}    ${qst_tax}
+    Enter Value    ${input_othtax}   ${oth_tax}
 
-Verify Supplier Code Default Value Is Correct For ${supplier_code}
-    Set Test Variable    ${supplier_code}    
+Verify Supplier Code Default Value Is Correct For ${airline_code}
+    Set Test Variable    ${airline_code}    
     ${actual_supplier_code}    Get Text    ${input_supplier_code}
-    Run Keyword If    "${supplier_code}" == "AC"    Should contain    ${actual_supplier_code}     ACY
-    Run keyword if    "${supplier_code}" == "WS"    Should contain    ${actual_supplier_code}     WJ3
-    
+    Run Keyword If    "${airline_code}" == "AC"    Should contain    ${actual_supplier_code}     ACY
+    Run keyword if    "${airline_code}" == "WS"    Should contain    ${actual_supplier_code}     WJ3
+
+# --will be updated once UI is available--    
 Select Multiple Segments
     [Arguments]    @{segment_number}
     Wait Until Element Is Visible    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']    30
@@ -73,32 +83,23 @@ Select Multiple Segments
     \    Click Element    xpath=//ul[@id='dropdown-basic']//input[@value='${segment_number}']
     Click Element    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
     [Teardown]    Take Screenshot
-
-Add Non-BSP Ticketing Details For Multiple Segments
-    Click Payment Panel
-    Click Element    ${tab_accounting}    
-    Click Element    ${button_add_accounting}
-    Select Multiple Segments    2    3
-    Select From List By Value    ${list_accounting_type}    text
-    Enter Value    ${input_confirmation_nbr}    54321
-    Add Ticketing Amount Details
-    Enter Value    ${input_ticket_number}    text
+# --will be updated once UI is available-- 
     
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details    
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RIR AIRLINE LOCATOR NUMBER – 54321/S2
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER – 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details  
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RIR AIRLINE LOCATOR NUMBER – 54321/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER – 54321/S2-3
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 

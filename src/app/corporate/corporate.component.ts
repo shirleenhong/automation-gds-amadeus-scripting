@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
-import { DDBService } from '../service/ddb.service';
 import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -11,8 +10,10 @@ import { PaymentRemarkService } from '../service/corporate/payment-remark.servic
 import { PaymentsComponent } from './payments/payments.component';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
+import { DDBService } from '../service/ddb.service';
 import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
 import { ReportingComponent } from '../corporate/reporting/reporting.component';
+
 
 @Component({
   selector: 'app-corporate',
@@ -32,10 +33,10 @@ export class CorporateComponent implements OnInit {
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    private ddbService: DDBService,
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: CorporateRemarksService,
+    private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService
   ) {
     this.initData();

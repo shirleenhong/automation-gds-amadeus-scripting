@@ -26,6 +26,20 @@ Verify placeholder values with condition "ExistsFalse" will only be written in P
     Create Post Request    request_url=remarks-manager-rest/api/pnr-amadeus-request    content_type=application/json    api_flag=profiles
     Verify Updated Placeholder values are retrived correctly
     
-Verify placeholder values with incorrect values in Post Amadeus Request will not be reflected in Response
+Verify placeholder values with condition "Not Equal to" will only be written if condition is met
     [TAGS]    api
-    Log     Test
+    Get Data: Request with Placeholder Condition Not Equal To
+    Create Post Request    request_url=remarks-manager-rest/api/pnr-amadeus-request    content_type=application/json    api_flag=profiles
+    Verify Updated Placeholder values are retrived correctly
+    
+Verify placeholder values with condition "OR" will only be written if condition is met
+    [TAGS]    api
+    Get Data: Request with Placeholder Condition OR
+    Create Post Request    request_url=remarks-manager-rest/api/pnr-amadeus-request    content_type=application/json    api_flag=profiles
+    Verify Updated Placeholder values are retrived correctly
+    
+Verify Output Items with Grouping Is Written In The Correct Arrangement
+        [TAGS]    api
+    Get Data: Request with Grouped OutputItems
+    Create Post Request    request_url=remarks-manager-rest/api/pnr-amadeus-request    content_type=application/json    api_flag=profiles
+    Verify Updated Placeholder values are retrived correctly

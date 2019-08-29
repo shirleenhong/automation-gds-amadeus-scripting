@@ -26,7 +26,7 @@ export class PnrService {
   pnrResponse: any;
   clientSubUnitGuid: string;
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -1283,5 +1283,15 @@ export class PnrService {
     }
 
     return this.clientSubUnitGuid;
+  }
+
+  getLanguage() {
+    const rirService = 'LANGUAGE-(EN-US|FR-CA)';
+    const regx = new RegExp(rirService);
+    const rems = this.getRemarksFromGDSByRegex(regx, 'RM');
+    if (rems.length > 0 && rems[0].remarkText.substr(-5) === 'FR-CA') {
+      return rems[0].remarkText.substr(-5);
+    }
+    return 'EN-GB';
   }
 }

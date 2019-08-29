@@ -182,9 +182,15 @@ Select Fare Type ${fare_type}
     Select From List By Value    ${list_faretype}    ${fare_type}
     [Teardown]    Take Screenshot
 
-Verify Supplier Code Default Value Is Correct ${acct_remark_type}
+Verify Supplier Code Default Value Is Correct For Pass Purchase ${acct_remark_type}
     Set Test Variable    ${acct_remark_type}
     ${actual_supplier_code}    Get Text    ${input_suppliercode}    
     Run Keyword If    "${acct_remark_type}" == "Air Canada Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    ACJ
     Run Keyword If    "${acct_remark_type}" == "Westjet Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    WJP
     Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP
+    
+Verify That Supplier Code Default Value Is Correct For ${airline_code}
+    Set Test Variable    ${airline_code}
+    ${actual_supplier_code}    Get Text    ${input_suppliercode}    
+    Run Keyword If    "${airline_code}" == "AC"   Should Contain    ${actual_supplier_code}    ACY
+    Run Keyword If    "${airline_code}" == "WS"   Should Contain    ${actual_supplier_code}    WJ3

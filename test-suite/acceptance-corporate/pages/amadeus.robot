@@ -124,8 +124,8 @@ Switch To Graphic Mode
     Wait Until Page Contains Element    ${tab_cryptic_display}     60
     [Teardown]    Take Screenshot
 
-Add Passive Air Segment In The GDS
-    Input Text    ${input_commandText}    SS AC1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
+Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
     
 Add Multiple Passive Air Segments In The GDS
@@ -152,5 +152,3 @@ Remove Line Break And Spaces
     ${expected_remark}    Replace String    ${expected_remark}    ${SPACE}    ${EMPTY}
     ${expected_remark_flattened}    Replace String    ${expected_remark}    \n    ${EMPTY}
     Set Test Variable    ${expected_remark}    ${expected_remark_flattened}
-    
-   

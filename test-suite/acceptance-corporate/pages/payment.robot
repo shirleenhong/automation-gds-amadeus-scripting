@@ -91,7 +91,7 @@ Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
     Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER – 54321/S2
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER ï¿½ 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
@@ -99,7 +99,7 @@ Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In 
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
     Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER – 54321/S2-3
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER ï¿½ 54321/S2-3
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 

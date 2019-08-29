@@ -60,7 +60,7 @@ Handle Accept Cookie Panel
 Move Profile to GDS
     [Arguments]    @{gds_commands}
     Wait Until Element Is Visible    ${label_command_page}    180
-    : FOR    ${gds_command}    IN    @{gds_commands}
+    :FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
@@ -82,7 +82,7 @@ Add Single BSP Segment And Store Fare
 Add Multiple BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC   SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP   AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5 
     Wait Until Element Is Visible    ${label_command_page}    180
-    : FOR    ${gds_command}    IN    @{gds_commands}
+    :FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 

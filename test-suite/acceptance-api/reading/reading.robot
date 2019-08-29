@@ -12,7 +12,7 @@ Verify Placeholder matches in PNR are retrieved correctly
 Verify Error Message is Retrived When Invalid URL is used to POST
     [TAGS]    api
 
-    Get Data: Sample
+    Get Data: PNR with GUID A:F9F84
     Create Post Request    request_url=remarks-manager-rest/ap/matched-placeholder-values    content_type=application/json    api_flag=profiles
     Verify Response Status Code 404 is Returned
     

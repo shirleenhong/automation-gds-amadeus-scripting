@@ -6,17 +6,8 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${tab_accounting}
-${button_add_accounting}
 ${list_segment}
-${list_accounting_type}
-${input_confirmation_nbr}
-${input_ticket_number}
-${input_base_amt}
-${input_gst_tax}
-${input_hst_tax}
-${input_qst_tax}
-${input_other_tax}
+${list_accounting_type}    css=#accountingTypeRemark
 ${input_supplier_code}
 ${button_addaccountingline}    //button[contains(text(), 'Add Accounting Line')]
 ${tab_matrix_accounting}    //span[contains(text(), 'Matrix Accounting Remark')]
@@ -27,21 +18,28 @@ ${fop_visacard}    xpath=//option[contains(text(),'Visa')]
 ${fop_mastercard}    xpath=//option[contains(text(),'Mastercard')]
 ${fop_amexcard}    xpath=//option[contains(text(),'American Express')]
 ${fop_dinerscard}    xpath=//option[contains(text(),'Diners')]
-${text_confirmationNo}    css=#supplierConfirmatioNo
-${text_ccNo}    css=#ccNo
-${text_expirydate}    css=#expDate
-${text_baseamount}    css=#baseAmount
-${text_commission}    css=#commisionWithoutTax
-${text_gsttax}    css=#gst
-${text_hsttax}    css=#hst
-${text_qsttax}    css=#qst
-${text_othtax}    css=#othertax
-${text_tktnumber}    css=#tktLine
-${text_departurecity}    css=#departureCity
+${input_confirmationNo}    css=#supplierConfirmatioNo
+${input_ccNo}    css=#ccNo
+${input_expirydate}    css=#expDate
+${input_baseamount}    css=#baseAmount
+${input_commission}    css=#commisionWithoutTax
+${input_gsttax}    css=#gst
+${input_hsttax}    css=#hst
+${input_qsttax}    css=#qst
+${input_othtax}    css=#othertax
+${input_tktnumber}    css=#tktLine
+${input_departurecity}    css=#departureCity
 ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
+${input_suppliercode}    css=#supplierCodeName
 
 *** Keywords ***
+Move Single Passenger
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    
+Move Multiple Passenger
+    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    
 Add Non-BSP Ticketing Details For Single Segment
     Click Payment Panel
     Click Element    ${tab_accounting}    
@@ -53,11 +51,12 @@ Add Non-BSP Ticketing Details For Single Segment
     Enter Value    ${input_ticket_number}    1234567890
 
 Add Ticketing Amount Details
-    Enter Value    ${input_base_amt}    750.00
-    Enter Value    ${input_gst_tax}    1.00
-    Enter Value    ${input_hst_tax}    2.00
-    Enter Value    ${input_qst_tax}    3.00
-    Enter Value    ${input_other_tax}   4.00
+    [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
+    Enter Value    ${input_base_amt}    ${base_amt}
+    Enter Value    ${input_gst_tax}    ${gst_tax}
+    Enter Value    ${input_hst_tax}    ${hst_tax}
+    Enter Value    ${input_qst_tax}    ${qst_tax}
+    Enter Value    ${input_other_tax}   ${oth_tax}
 
 Verify Supplier Code Default Value Is Correct For ${supplier_code}
     Set Test Variable    ${supplier_code}    
@@ -100,23 +99,19 @@ Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In 
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF/LCC-AC*GRAND TOTAL CAD 750
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RIR AIRLINE LOCATOR NUMBER – 54321/S2-3
-    
-Add Matrix Accounting Remark For Air Canada Pass Purchase
-    [Arguments]    ${remark_type}    ${supplier_confirmation_number}    ${base_amount}    ${gst_tax}    ${hst_tax}    ${qst_tax}    ${commission_with_tax}    ${pass_purchase_type}    ${fare_type}    ${ticket_number}=${EMPTY}    ${departure_city}=${EMPTY}
+
+#-----For Payment Keywords-------#  
+Add Matrix Accounting Remark For Air Canada Pass Purchase 
     Click Payment Panel
     Click Matrix Accounting Remark Tab
     Click Add Accounting Line Button
-    Select Accounting Remark Type    ${remark_type}
-    Enter Supplier Confirmation Number ${supplier_confirmation_number}
-    Enter Base Amount ${base_amount}
-    Enter GST Tax Amount ${gst_tax}
-    Enter HST Tax Amount ${hst_tax}
-    Enter QST Tax Amount ${qst_tax}
-    Enter Commission Without Tax Amount ${commission_with_tax}
-    Enter Ticket Number ${ticket_number}
-    Enter Departure City ${departure_city}
-    Select Type Of Pass Purchase ${pass_purchase_type}
-    Select Fare Type ${fare_type}
+    Select From List By Value    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    879111
+    Add Ticketing Amount Details    100.00    15.05    2.20    10.00    3.00
+    Enter Value    ${input_tktnumber}    0002167899
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Value    ${list_faretype}       FLEX
     [Teardown]    Take Screenshot    
 
 Click Matrix Accounting Remark Tab
@@ -141,8 +136,8 @@ Select Accounting Remark Type
     
 Enter Supplier Confirmation Number ${supplier_confirmation_number}
     Set Suite Variable    ${supplier_confirmation_number}
-    Click Element    ${text_confirmationNo}
-    Input Text    ${text_confirmationNo}    ${supplier_confirmation_number}
+    Click Element    ${input_confirmationNo}
+    Input Text    ${input_confirmationNo}    ${supplier_confirmation_number}
     
 Select Visa As FOP
     Wait Until Page Contains Element    ${field_vendorcode}    30
@@ -166,75 +161,16 @@ Select Diners Card As FOP
     
 Enter Credit Card Number ${credit_card_number}
     Set Suite Variable    ${credit_card_number}
-    Double Click Element    ${text_ccNo}
-    Press Key    ${text_ccNo}    \\08
-    Input Text    ${text_ccNo}    ${credit_card_number}
+    Double Click Element    ${input_ccNo}
+    Press Key    ${input_ccNo}    \\08
+    Input Text    ${input_ccNo}    ${credit_card_number}
     
 Enter Credit Card Expiration Date ${exp_date}
     Set Test Variable    ${exp_date}      
-    Double Click Element    ${text_expirydate}
-    Press Key    ${text_expirydate}    \\08
-    Input Text    ${text_expirydate}    ${exp_date}
-    
-Enter Base Amount ${base_amount}
-    Set Suite Variable    ${base_amount}
-    Double Click Element    ${text_baseamount}
-    Press Key    ${text_baseamount}    \\08
-    Input Text    ${text_baseamount}    ${base_amount}
-    [Teardown]    Take Screenshot
-
-Enter Commission Without Tax Amount ${commission_with_tax}
-    Set Suite Variable    ${commission_with_tax}
-    # Press Key    css=#baseAmount    \\09
-    Double Click Element    ${text_commission}
-    Press Key    ${text_commission}   \\08
-    Input Text    ${text_commission}    ${commission_with_tax}
-    Press Key    ${text_commission}    \\09
-    [Teardown]    Take Screenshot
-
-Enter GST Tax Amount ${gst_tax}
-    Set Suite Variable    ${gst_tax}
-    Double Click Element    ${text_gsttax}
-    Press Key    ${text_gsttax}    \\08
-    Input Text    ${text_gsttax}    ${gst_tax}
-    [Teardown]    Take Screenshot
-
-Enter HST Tax Amount ${hst_tax}
-    Set Suite Variable    ${hst_tax}
-    Double Click Element    ${text_hsttax}
-    Press Key    ${text_hsttax}    \\08
-    Input Text    ${text_hsttax}    ${hst_tax}
-    [Teardown]    Take Screenshot
-
-Enter QST Tax Amount ${qst_tax}
-    Set Suite Variable    ${qst_tax}
-    Double Click Element    ${text_qsttax}
-    Press Key    ${text_qsttax}    \\08
-    Input Text    ${text_qsttax}    ${qst_tax}
-    Press Key    ${text_qsttax}    \\09
-    [Teardown]    Take Screenshot
-
-Enter Other Tax Amount ${other_tax}
-    Set Suite Variable    ${other_tax}
-    Double Click Element    ${text_othtax}
-    Press Key    ${text_othtax}    \\08
-    Input Text    ${text_othtax}    ${other_tax}
-    [Teardown]    Take Screenshot
-    
-Enter Ticket Number ${ticket_number}
-    Set Suite Variable    ${ticket_number}
-    Double Click Element    ${text_tktnumber}
-    Press Key    ${text_tktnumber}    \\08
-    Input Text    ${text_tktnumber}    ${ticket_number}
-    Press Key    ${text_tktnumber}    \\09
-    
-Enter Departure City ${departure_city}
-    Set Suite Variable   ${departure_city}
-    Double CLick Element    ${text_departurecity}
-    Press key    ${text_departurecity}    \\08
-    Input Text    ${text_departurecity}    ${departure_city}
-    Press Key    ${text_departurecity}    \\09
-     
+    Double Click Element    ${input_expirydate}
+    Press Key    ${input_expirydate}    \\08
+    Input Text    ${input_expirydate}    ${exp_date}
+         
 Select Type Of Pass Purchase ${pass_purchase_type}
     Set Test Variable    ${pass_purchase_type}    
     Select From List By Value    ${list_purchasetype}    ${pass_purchase_type}
@@ -244,3 +180,10 @@ Select Fare Type ${fare_type}
     Set Test Variable    ${fare_type}    
     Select From List By Value    ${list_faretype}    ${fare_type}
     [Teardown]    Take Screenshot
+
+Verify Supplier Code Default Value Is Correct ${acct_remark_type}
+    Set Test Variable    ${acct_remark_type}
+    ${actual_supplier_code}    Get Text    ${input_suppliercode}    
+    Run Keyword If    "${acct_remark_type}" == "Air Canada Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    ACJ
+    Run Keyword If    "${acct_remark_type}" == "Westjet Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    WJP
+    Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP

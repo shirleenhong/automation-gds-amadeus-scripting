@@ -61,7 +61,7 @@ Handle Accept Cookie Panel
 Move Profile to GDS
     [Arguments]    @{gds_commands}
     Wait Until Element Is Visible    ${label_command_page}    180
-    : FOR    ${gds_command}    IN    @{gds_commands}
+    :FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
@@ -77,14 +77,14 @@ Open CA Corporate Test
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
-    : FOR    ${gds_command}    IN    @{gds_commands}
+    :FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Delete Fare and Itinerary
     @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER    ER
     Wait Until Element Is Visible    ${label_command_page}    180
-    : FOR    ${gds_command}    IN    @{gds_commands}
+    :FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 

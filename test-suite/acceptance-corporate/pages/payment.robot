@@ -29,6 +29,15 @@ Add Non-BSP Ticketing Details For Single Segment
     Enter Value    ${input_confirmation_nbr}    54321
     Add Ticketing Amount Details
     Enter Value    ${input_ticket_number}    1234567890
+    
+Add Non-BSP Exchange Ticketing Details For Single Segment
+    Click Payment Panel
+    Click Element    ${tab_accounting}    
+    Click Element    ${button_add_accounting}
+    Select From List By Value    ${list_segment}    text
+    Select From List By Value    ${list_acounting_type}    NonBSP Air Exchange
+    Enter Value    ${input_confirmation_nbr}    54321
+    Add Ticketing Amount Details        
 
 Add Ticketing Amount Details
     Enter Value    ${input_base_amt}    750.00
@@ -42,6 +51,16 @@ Verify Supplier Code Default Value Is Correct For ${supplier_code}
     ${actual_supplier_code}    Get Text    ${input_supplier_code}
     Run Keyword If    "${supplier_code}" == "AC"    Should contain    ${actual_supplier_code}     ACY
     Run keyword if    "${supplier_code}" == "WS"    Should contain    ${actual_supplier_code}     WJ3
+    Run keyword if    "${supplier_code}" == "PD"    Should contain    ${actual_supplier_code}     PTA
+    Run keyword if    "${supplier_code}" == "9M"    Should contain    ${actual_supplier_code}     CMA
+    Run keyword if    "${supplier_code}" == "MO"    Should contain    ${actual_supplier_code}     C5A
+    Run keyword if    "${supplier_code}" == "YP"    Should contain    ${actual_supplier_code}     K9P
+    Run keyword if    "${supplier_code}" == "4N"    Should contain    ${actual_supplier_code}     A5N
+    Run keyword if    "${supplier_code}" == "8P"    Should contain    ${actual_supplier_code}     PF3
+    Run keyword if    "${supplier_code}" == "WJ"    Should contain    ${actual_supplier_code}     ALO
+    Run keyword if    "${supplier_code}" == "WN"    Should contain    ${actual_supplier_code}     SOA
+               
+
     
 Select Multiple Segments
     [Arguments]    @{segment_number}

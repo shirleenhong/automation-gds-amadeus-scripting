@@ -22,7 +22,6 @@ ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
 ${menu_corp_test}    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
 ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
-${button_wrapPnr}    //button[contains(text(), 'Wrap PNR')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
 ${popUp_sign_out}   //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -72,10 +71,16 @@ Open CA Corporate Test
     Wait Until Element Is Visible    ${header_corp_test}    60
     Wait Until Element Is Visible    ${window_corp_test}    60
     Select Frame    ${window_corp_test}
-    Wait Until Page Contains Element    ${button_wrapPnr}    180
 
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
+    Wait Until Element Is Visible    ${label_command_page}    180
+    :FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13
+
+Add Multiple BSP Segment And Store Fare
+    @{gds_commands}    Create List    AN10JANYYZORD/AAC   SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP   AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5 
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
@@ -84,7 +89,7 @@ Add Single BSP Segment And Store Fare
 Delete Fare and Itinerary
     @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER    ER
     Wait Until Element Is Visible    ${label_command_page}    180
-    : FOR    ${gds_command}    IN    @{gds_commands}
+    :FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
@@ -103,6 +108,7 @@ Get PNR Details
     Sleep    10
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
+    Set Suite Variable    ${pnr_details}
     [Teardown]    Take Screenshot
 
 Switch To Command Page
@@ -118,6 +124,15 @@ Switch To Graphic Mode
     Wait Until Page Contains Element    ${tab_cryptic_display}     60
     [Teardown]    Take Screenshot
 
+Add Passive Air Segment In The GDS
+    Input Text    ${input_commandText}    SS AC1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
+    Press Key    ${input_commandText}    \\13
     
+Add Multiple Passive Air Segments In The GDS
+    @{gds_commands}    Create List    SS WS1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS WS1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13
+
 
    

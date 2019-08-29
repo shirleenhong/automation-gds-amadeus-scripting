@@ -85,7 +85,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -344,7 +344,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

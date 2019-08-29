@@ -41,6 +41,10 @@ export class StaticValuesService {
     ];
   }
 
+  getCounselorIdentityList() {
+    return [{ itemText: '', itemValue: '' }, { itemText: 'ESC', itemValue: 'ESC' }, { itemText: 'OFC', itemValue: 'OFC' }];
+  }
+
   getCcVendorCodeList() {
     return [
       { itemText: '', itemValue: '' },

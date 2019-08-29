@@ -4,7 +4,7 @@ import { common } from '../../environments/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { interval } from 'rxjs';
 import { StaticValuesService } from './static-values.services';
-
+import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,9 +17,10 @@ export class DDBService implements OnInit {
   supplierCodes = [];
   servicingOption = [];
   airTravelPortInformation = [];
-  ngOnInit(): void {}
+  reasonCodeList = Array<ReasonCode>();
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -169,8 +170,20 @@ export class DDBService implements OnInit {
   }
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
-    return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
+    this.reasonCodeList = [];
+    await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then((response) => {
+      response.ReasonCodeItems.forEach((reasonJson) => {
+        this.reasonCodeList.push(new ReasonCode(reasonJson));
+      });
+    });
   }
+
+  getReasonCodeByTypeId(ids: any) {
+    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId));
+  }
+  // getReasonCodeByTypeId(integer[]) {
+  //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
+  // }
 
   // async getReasonCodeByClientSubUnit(clientSubUnitId: string) {
   //   return await this.getRequest(common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId));
@@ -215,7 +228,7 @@ export class DDBService implements OnInit {
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
-      this.loadSupplierCodesFromPowerBase();
+      this.getAllMatrixSupplierCodes();
     }
     if (this.supplierCodes.length > 0 && type !== undefined) {
       return this.supplierCodes.filter(
@@ -242,6 +255,20 @@ export class DDBService implements OnInit {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  async getAllMatrixSupplierCodes() {
+    this.supplierCodes = [];
+    await this.getRequest(common.matrixSupplierService + '?MatrixCompanyId=01').then((x) => {
+      x.MatrixSupplierList.forEach((s) => {
+        const supplier = {
+          type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
+          supplierCode: s.SupplierCode,
+          supplierName: s.SupplierName
+        };
+        this.supplierCodes.push(supplier);
+      });
+    });
+  }
+
   async extractDataPort(port: any) {
     const ref = {
       travelPortCode: port.TravelPorts[0].TravelPortCode,
@@ -255,7 +282,7 @@ export class DDBService implements OnInit {
   }
 
   getServicingOptionValue(soId) {
-    return this.servicingOption.find((x) => x.ServiceOptionItemId === soId);
+    return this.servicingOption.find((x) => x.ServiceItemId === soId);
   }
 
   getCityCountry(search: string) {

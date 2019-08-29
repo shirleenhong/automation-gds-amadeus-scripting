@@ -163,20 +163,20 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     ...    Visa and Passport
     ...    CWT Itinerary
     [Tags]    sanity    prod
-    Login To Amadeus Sell Connect
+    Login to Amadeus Production
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
-    Open CA Migration Window
+    Open CA Migration Prod
     Click Add Segment Main Menu
     Add Passive Air Segment
     Add Passive Insurance Segment
     Add Passive Car Segment
     Click Add Segments To PNR
-    Close CA Migration Window
+    Close CA Migration Prod
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Air, Insurance, And Car Passive Segments Are Added In the PNR
     Close Cryptic Display Window
-    Open CA Migration Window
+    Open CA Migration Prod
     Click Wrap PNR
     Click Panel    Payment
     Click Payment Tab    Matrix Accounting Remark
@@ -184,10 +184,11 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Add Air Canada Pass Redemption Remarks
     Add Insurance Reporting Remarks
     Click Panel    Remarks
-    Add Tour Package Costs
     Click Remarks Tab    Visa and Passport
     Select International Travel
     Enter Passport Name    Passport Name
+    Click Remarks Tab    Packages
+    Add Tour Package Costs
     Click Submit To PNR
     Sleep    2
     Click Itinerary And Queue
@@ -198,7 +199,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Enter Tickets Remark    1    Testing Tickets Remark
     Click Send Itinerary And Queue
     Sleep    3
-    Close CA Migration Window
+    Close CA Migration Prod
     Open Cryptic Display Window
     Verify Insurance Reporting Remarks Are Added In The PNR
     Verify Tour Package Remarks Are Added In The PNR
@@ -220,17 +221,17 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
 Verify RMX Cancel Remarks Are Written In The PNR
     [Documentation]    Cancel All segments
     [Tags]    sanity    prod
-    Open CA Migration Window
+    Open CA Migration Prod
     Click Cancel Segment
     Enter Requestor Name    FirstName LastName
     Enter Cancel Notes    1    Cancel Segment
     Select Cancel All Segments
     Select Reason For Cancel    NAME CORRECTION NCC WITH OAL
     Enter AC Ticket Number    1234512
-    Select Passenger Name For Cancel    LASTNAME-FIRSTNAME MR
+    Select Passenger Name For Cancel    LEISURE-AMADEUS MR
     Enter Coupon Number For Refund    1    9825252
     Click Cancel Segments Button
-    Close CA Migration Window
+    Close CA Migration Prod
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    /CANCEL REQUESTED BY FIRSTNAME LASTNAME
     Verify Specific Remark Is Written In The PNR    /CANCEL SEGMENT

@@ -26,7 +26,7 @@ export class PnrService {
   pnrResponse: any;
   clientSubUnitGuid: string;
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -34,11 +34,11 @@ export class PnrService {
     await this.pnrObj
       .retrievePNR()
       .then(
-        (res) => {
+        async (res) => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
           this.pnrResponse = res.response.model.output.response;
-          this.getTST();
+          await this.getTST();
         },
         (error: string) => {
           this.isPNRLoaded = false;
@@ -1088,7 +1088,6 @@ export class PnrService {
     return pSegment;
   }
 
-
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
     let match = regex.exec(remark);
@@ -1277,14 +1276,12 @@ export class PnrService {
     return false;
   }
 
-getClientSubUnit() {
-  const syexgvs = this.getRemarkText('SYEXGVS:');
-  if (syexgvs &&  !this.clientSubUnitGuid) {
+  getClientSubUnit() {
+    const syexgvs = this.getRemarkText('SYEXGVS:');
+    if (syexgvs && !this.clientSubUnitGuid) {
       this.clientSubUnitGuid = syexgvs.split(' ')[1];
-    } else {
-      this.clientSubUnitGuid = '';
     }
-  return this.clientSubUnitGuid;
-  }
 
+    return this.clientSubUnitGuid;
+  }
 }

@@ -9,7 +9,7 @@ import { AmountPipe } from '../pipes/amount.pipe';
 export class AmountMaskDirective {
   amountPipe = new AmountPipe();
 
-  constructor(public ngControl: NgControl, private el: ElementRef) {}
+  constructor(public ngControl: NgControl, private el: ElementRef) { }
 
   @HostListener('ngModelChange', ['$event'])
   onModelChange() {

@@ -11,6 +11,10 @@ import { PaymentRemarkService } from '../service/corporate/payment-remark.servic
 import { PaymentsComponent } from './payments/payments.component';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
+import { DDBService } from '../service/ddb.service';
+import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
+import { ReportingComponent } from '../corporate/reporting/reporting.component';
+
 
 @Component({
   selector: 'app-corporate',
@@ -25,6 +29,7 @@ export class CorporateComponent implements OnInit {
   workflow = '';
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
+  @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -32,7 +37,9 @@ export class CorporateComponent implements OnInit {
     // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
-    private corpRemarkService: CorporateRemarksService
+    private corpRemarkService: CorporateRemarksService,
+    private ddbService: DDBService,
+    private reportingRemarkService: ReportingRemarkService
   ) {
     this.initData();
   }
@@ -63,18 +70,17 @@ export class CorporateComponent implements OnInit {
   }
 
   async initData() {
-    this.showLoading('Loading Suppliers', 'initData');
-    // await this.ddbService.loadSupplierCodesFromPowerBase();
-    this.showLoading('Loading PNR', 'initData');
-    await this.getPnrService();
-    this.showLoading('Matching Remarks', 'initData');
-    await this.rms.getMatchcedPlaceholderValues();
 
-    // TEMP: Comment-out due to errors not needed on US11134
+    this.showLoading('Loading Suppliers', 'initData');
+    await this.ddbService.getAllMatrixSupplierCodes();
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    // this.showLoading('Matching Remarks', 'initData');
+    this.rms.getMatchcedPlaceholderValues();
     // this.showLoading('Servicing Options', 'initData');
-    // await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid); //'A:FA177'
+    await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
     // this.showLoading('ReasonCodes', 'initData');
-    // await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+    await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
     this.closeLoading();
   }
 
@@ -124,6 +130,7 @@ export class CorporateComponent implements OnInit {
     });
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;

@@ -1,3 +1,0 @@
-*** Settings ***
-
-*** Test Cases ***

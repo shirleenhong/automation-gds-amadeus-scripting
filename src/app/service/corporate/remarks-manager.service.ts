@@ -17,9 +17,11 @@ export class RemarksManagerService {
   public async getMatchcedPlaceholderValues() {
     await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
       if (res !== undefined) {
+
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
         });
+
         this.outputItems = new Array<OutputItem>();
         res.outputItems.items.forEach((output) => {
           this.outputItems.push(new OutputItem(output));
@@ -40,6 +42,12 @@ export class RemarksManagerService {
   }
 
   getMatchedPlaceHoldersWithExactKeys(keys: string[]) {
+    return this.matchedPlaceHolderValues.filter(
+      (pl: PlaceholderValues) => pl.matchedPlaceholders && this.hasCompleteKeys(pl.matchedPlaceholders, keys)
+    );
+  }
+
+  getSegmentAssoc(keys: string[]) {
     return this.matchedPlaceHolderValues.filter(
       (pl: PlaceholderValues) => pl.matchedPlaceholders && this.hasCompleteKeys(pl.matchedPlaceholders, keys)
     );

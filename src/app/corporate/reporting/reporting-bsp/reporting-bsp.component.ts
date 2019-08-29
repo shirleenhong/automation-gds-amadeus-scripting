@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 import { PnrService } from '../../../service/pnr.service';
@@ -16,6 +16,7 @@ declare var smartScriptSession: any;
   encapsulation: ViewEncapsulation.None
 })
 export class ReportingBSPComponent implements OnInit {
+  @Input()
   reasonCodes: ReasonCode[];
   bspGroup: FormGroup;
   total = 1;
@@ -104,7 +105,7 @@ export class ReportingBSPComponent implements OnInit {
         if (segments === '') {
           segments = s.segmentReference.refDetails.refNumber;
         } else {
-          segments = segments + '/' + s.segmentReference.refDetails.refNumber;
+          segments = segments + ',' + s.segmentReference.refDetails.refNumber;
         }
       });
     }

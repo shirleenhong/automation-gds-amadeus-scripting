@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { StaticValuesService } from '../../service/static-values.services';
 import { PnrService } from '../../service/pnr.service';
 import { SelectItem } from 'src/app/models/select-item.model';
+import { TicketModel } from 'src/app/models/pnr/ticket.model';
 
 @Component({
     selector: 'app-ticketing',
@@ -27,7 +28,6 @@ export class TicketingComponent implements OnInit {
     ngOnInit() {
         this.loadOid();
         this.loadTKList();
-
     }
 
     loadOid() {
@@ -57,5 +57,14 @@ export class TicketingComponent implements OnInit {
 
     loadTKList() {
         this.tkList = this.staticValues.getTKList();
+    }
+
+    getTicketingDetails(): TicketModel {
+        const ticketRemark = new TicketModel();
+        ticketRemark.oid = this.ticketForm.get('officeId').value;
+        ticketRemark.tktDate = this.ticketForm.get('ticketDate').value;
+        ticketRemark.tkLine = this.ticketForm.get('tk').value;
+
+        return ticketRemark;
     }
 }

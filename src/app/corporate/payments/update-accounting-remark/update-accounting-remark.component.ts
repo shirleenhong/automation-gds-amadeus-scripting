@@ -29,6 +29,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   name: string;
   isAddNew = false;
   isCopy = false;
+  filterSupplierCodeList: Array<any>;
 
   constructor(
     public activeModal: BsModalService,
@@ -42,6 +43,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.loadAccountingRemarkList();
     this.loadFareType();
     this.passPurchaseList = this.ddbService.getACPassPurchaseList();
+    this.filterSupplierCodeList = this.ddbService.supplierCodes;
     // this.initializeCopy();
   }
 
@@ -71,7 +73,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       penaltyBaseAmount: new FormControl(''),
       originalTktLine: new FormControl(''),
       duplicateFare: new FormControl(''),
-      typeOfPass: new FormControl('')
+      typeOfPass: new FormControl(''),
+      segmentNo: new FormControl('')
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -102,7 +105,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
       { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
-      { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' }
+      { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
+      { itemText: 'Non BSP Airline', itemValue: 'NONBSP' },
+      { itemText: 'APAY', itemValue: 'APAY' }
     ];
   }
 
@@ -159,6 +164,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.gst = '';
         }
         break;
+      case 'APAY':
+      case 'NONBSP':
+        this.name = 'Airline Record Locator:';
+        this.checkSupplierCode();
+        this.setMandatoryTicket();
+        break;
       default:
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
@@ -167,6 +178,31 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
     }
     this.loadPassType(accRemark);
+  }
+
+
+
+  setMandatoryTicket() {
+    const supCode = ['ACY', 'SOA', 'WJ3'];
+    if (supCode.indexOf(this.accountingRemark.supplierCodeName) >= 0) {
+      this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+    } else {
+      this.matrixAccountingForm.controls.tktLine.clearValidators();
+      this.matrixAccountingForm.controls.originalTktLine.clearValidators();
+    }
+    this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
+  }
+
+  getAirlineCode(segmentno) {
+    const segments = segmentno.split(',');
+    const air = this.pnrService
+      .getSegmentTatooNumber()
+      .filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
+
+    if (air && segments.length === 1) {
+      return air[0].airlineCode;
+    }
+    return null;
   }
 
   setRequired(controls: string[], isRequired: boolean) {

@@ -6,6 +6,12 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
 import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
+import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AmountMaskDirective,
@@ -13,15 +19,27 @@ import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
     NumberOnlyMaskDirective,
     AlphaNumericMaskDirective,
     AllCapsMaskDirective,
-    AlphaMaskDirective],
+    AlphaMaskDirective,
+    SegmentSelectComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    AccordionModule.forRoot(),
+    ModalModule.forRoot(),
+    TabsModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   exports: [AmountMaskDirective,
     CCDateExpMaskDirective,
     NumberOnlyMaskDirective,
     AlphaNumericMaskDirective,
     AllCapsMaskDirective,
-    AlphaMaskDirective],
+    AlphaMaskDirective,
+    SegmentSelectComponent],
 })
 export class MyCommonModule { }

@@ -78,9 +78,12 @@ export class CorporateComponent implements OnInit {
       this.workflow = 'error';
     } else {
       // this.showLoading('Matching Remarks', 'initData');
-      this.rms.getMatchcedPlaceholderValues();
+      this.rms.getMatchcedPlaceholderValues().catch((x) => {
+        debugger;
+        this.showMessage('Error on Matching Data in the PNR: ' + x.toString(), MessageType.Error, 'Not Found', 'Loading');
+      });
       // this.showLoading('Servicing Options', 'initData');
-      await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
+      // await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
       // this.showLoading('ReasonCodes', 'initData');
       await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
       this.closePopup();

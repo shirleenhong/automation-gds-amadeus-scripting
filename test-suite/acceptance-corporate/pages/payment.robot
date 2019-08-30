@@ -173,11 +173,11 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Click Payment Panel
     Click Matrix Accounting Remark Tab
     Click Add Accounting Line Button
-    Select From List By Value    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Select From List By Value    ${list_accounting_type}    Air Canada Individual Pass Purchase    
     Enter Value    ${input_confirmationNo}    879111
     Add Ticketing Amount Details    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
-    Enter Value    ${input_departurecity}    YVR        
+    Enter Value    ${input_departurecity}    YVR
     Select From List By Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Value    ${list_faretype}       FLEX
     Take Screenshot
@@ -297,3 +297,11 @@ Click Save Button
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
     [Teardown]    Take Screenshot
+    
+Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RM *FF/-127.25/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-127.25/S2
+    Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
+    Switch To Command Page

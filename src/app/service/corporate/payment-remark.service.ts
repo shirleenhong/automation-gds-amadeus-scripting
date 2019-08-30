@@ -8,21 +8,20 @@ import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService,
-    private rms: RemarksManagerService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
-    this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
+    this.writePassPurchase(
+      accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
+    );
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
@@ -54,7 +53,9 @@ export class PaymentRemarkService {
       }
 
       ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
-      ticketRemarks.set('TktNbr', account.tktLine);
+      if (account.tktLine) {
+        ticketRemarks.set('TktNbr', account.tktLine);
+      }
       ticketRemarks.set('SupplierCode', account.supplierCodeName);
 
       ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
@@ -79,7 +80,6 @@ export class PaymentRemarkService {
       const airReasonCodeRemark = new Map<string, string>();
       airReasonCodeRemark.set('CAAirRealisedSavingCode', 'L');
 
-
       this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
@@ -93,7 +93,6 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
-
     });
   }
 
@@ -157,10 +156,15 @@ export class PaymentRemarkService {
   getRemarkSegmentAssociation(account: MatrixAccountingModel, segmentrelate: string[]) {
     const air = this.pnrService
       .getSegmentTatooNumber()
-      .filter((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo
-        && x.cityCode === account.departureCity && x.arrivalAirport === account.departureCity);
+      .filter(
+        (x) =>
+          x.segmentType === 'AIR' &&
+          x.controlNumber === account.supplierConfirmatioNo &&
+          x.cityCode === account.departureCity &&
+          x.arrivalAirport === account.departureCity
+      );
 
-    air.forEach(airElement => {
+    air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
   }
@@ -214,5 +218,3 @@ export class PaymentRemarkService {
     return accountingRemarks;
   }
 }
-
-

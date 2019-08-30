@@ -3,7 +3,7 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Resource          ../../acceptance-corporate/pages/amadeus.robot
+Resource          amadeus.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd

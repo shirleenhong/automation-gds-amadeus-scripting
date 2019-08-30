@@ -6,11 +6,12 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${list_segment}    css=#segment    
+${input_segment}   //input[@formcontrolname='segment']
+${list_segment}    //ul[@id='dropdown-basic']
 ${list_accounting_type}    css=#accountingTypeRemark
 ${input_suppliercode}    css=#supplierCodeName
 ${button_addaccountingline}    //button[contains(text(), 'Add Accounting Line')]
-${tab_matrix_accounting}    //span[contains(text(), 'Matrix Accounting Remark')]
+${tab_nonBsp_processing}    //span[contains(text(), 'Non-BSP Processing')]
 ${tab_matrix_receipt}    //span[contains(text(), 'Matrix Receipt')]
 ${tab_leisure_fee}    //span[contains(text(), 'Leisure Fee')]
 ${field_vendorcode}    css=#vendorCode
@@ -35,6 +36,8 @@ ${input_tktnumber}    css=#tktLine
 ${input_departurecity}    css=#departureCity
 ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
+${button_save}    //button[contains(text(), 'Save')]
+${button_update}    //i[@class='fas fa-edit']
 
 *** Keywords ***
 Move Single Passenger
@@ -49,7 +52,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Click Element    ${tab_matrix_accounting}    
     Click Element    ${button_addaccountingline}
     Select From List By Value    ${list_accounting_type}    NonBSP Air Exchange
-    Select From List By Value    ${list_segment}    2
+    Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Commission    1000.00    100.00    10.00    1.00    0.10    0.10
     
@@ -59,7 +62,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Click Element    ${tab_matrix_accounting}    
     Click Element    ${button_addaccountingline}
     Select From List By Value    ${list_accounting_type}    NonBSP Air Exchange
-    Select From List By Value    ${list_segment}    2
+    Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
@@ -71,7 +74,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Click Element    ${tab_matrix_accounting}    
     Click Element    ${button_addaccountingline}
     Select From List By Value    ${list_accounting_type}    NonBSP Air Exchange
-    Select From List By Value    ${list_segment}    2
+    Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Add Penalty Amount Details    10.00    1.00    1.00    1.00
@@ -79,11 +82,12 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Set Test Variable    ${tkt_number}    1234567890
 
 Add Non-BSP Ticketing Details For Single Segment
+    Click Full Wrap
     Click Payment Panel
-    Click Element    ${tab_matrix_accounting}   
+    Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Value    ${list_segment}   2 
-    Select From List By Value    ${list_accounting_type}    Non BSP Airline
+    Select From List By Label    ${list_accounting_type}    Non BSP Airline
+    Select Itinerary Segments   2 
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
@@ -92,16 +96,17 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Click Payment Panel
     Click Element    ${tab_matrix_accounting}  
     Click Element    ${button_addaccountingline}
-    Select From List By Value    ${list_segment}    text
+    Select Itinerary Segments    text
     Select From List By Value    ${list_acounting_type}    NonBSP Air Exchange
     Enter Value    ${input_confirmation_nbr}    54321
     Add Ticketing Amount Details            
 
 Add Non-BSP Ticketing Details For Multiple Segments
+    Click Full Wrap
     Click Payment Panel
-    Click Element    ${tab_matrix_accounting}    
+    Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
-    Select Multiple Segments    2    3
+    Select Itinerary Segments    2    3
     Select From List By Value    ${list_accounting_type}    Non BSP Airline
     Enter Value    ${button_addaccountingline}    54321
     Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
@@ -137,17 +142,15 @@ Verify Supplier Code Default Value Is Correct For ${airline_code}
     Run Keyword If    "${airline_code}" == "AC"    Should contain    ${actual_supplier_code}     ACY
     Run keyword if    "${airline_code}" == "WS"    Should contain    ${actual_supplier_code}     WJ3
 
-# --will be updated once UI is available--    
-Select Multiple Segments
+Select Itinerary Segments
     [Arguments]    @{segment_number}
-    Wait Until Element Is Visible    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']    30
-    Click Button    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
-    Wait Until Element Is Visible    xpath=//ul[@id='dropdown-basic']    30
+    Wait Until Element Is Visible    ${input_segment}    30
+    Click Button    ${input_segment}
+    Wait Until Element Is Visible    ${list_segment}    30
     :FOR    ${segment_number}    IN    @{segment_number}
-    \    Click Element    xpath=//ul[@id='dropdown-basic']//input[@value='${segment_number}']
-    Click Element    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
+    \    Click Element    ${list_segment}//input[@value='${segment_number}']
+    Click Element    ${input_segment}
     [Teardown]    Take Screenshot
-# --will be updated once UI is available-- 
     
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     Switch To Graphic Mode
@@ -155,7 +158,7 @@ Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
     Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER � 54321/S2
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
@@ -163,7 +166,7 @@ Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In 
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
     Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER � 54321/S2-3
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 
@@ -177,12 +180,13 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Enter Value    ${input_departurecity}    YVR        
     Select From List By Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Value    ${list_faretype}       FLEX
-    [Teardown]    Take Screenshot    
+    Take Screenshot
+    Click Save Button
 
 Click Matrix Accounting Remark Tab
-    Wait Until Element Is Visible   ${tab_matrix_accounting}   60
-    Set Focus To Element    ${tab_matrix_accounting}
-    Click Element    ${tab_matrix_accounting}
+    Wait Until Element Is Visible   ${tab_nonBsp_processing}    60
+    Set Focus To Element    ${tab_nonBsp_processing} 
+    Click Element    ${tab_nonBsp_processing} 
     
 Click Matrix Receipt Tab
     Wait Until Element Is Visible   ${tab_matrix_receipt}   60
@@ -288,3 +292,8 @@ Verify Penalty Remarks Are Not Written In The PNR
 Verify Penalty Remarks Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
 
+Click Save Button
+    Click Element    ${button_save}
+    Wait Until Page Contains Element    ${button_update}     30
+    Set Focus To Element    ${button_submit_pnr}
+    [Teardown]    Take Screenshot

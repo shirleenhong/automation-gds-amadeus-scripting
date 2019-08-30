@@ -124,8 +124,8 @@ Switch To Graphic Mode
     Wait Until Page Contains Element    ${tab_cryptic_display}     60
     [Teardown]    Take Screenshot
 
-Add Passive Air Segment In The GDS
-    Input Text    ${input_commandText}    SS AC1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
+Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
     
 Add Multiple Passive Air Segments In The GDS
@@ -134,10 +134,6 @@ Add Multiple Passive Air Segments In The GDS
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
-Add Passive Air Segment In The GDS With Airline Code ${airline_code}
-    Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
-    Press Key    ${input_commandText}    \\13
-    
 Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
     Wait Until Page Contains Element    ${popUp_pnr_display}    30

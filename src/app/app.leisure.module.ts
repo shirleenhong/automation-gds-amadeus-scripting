@@ -24,7 +24,6 @@ import { SegmentsComponent } from './passive-segments/segments/segments.componen
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { MessageComponent } from './shared/message/message.component';
 import { CodeshareComponent } from './leisure/remarks/codeshare/codeshare.component';
-import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
 import { VisaPassportComponent } from './leisure/remarks/visa-passport/visa-passport.component';
 import { MatrixInvoiceComponent } from './leisure/invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
@@ -68,7 +67,6 @@ import { MyCommonModule } from './my-common.module';
     LoadingComponent,
     VisaPassportComponent,
     CodeshareComponent,
-    SegmentSelectComponent,
     FareRuleSegmentComponent,
     UpdateFareRuleSegmentComponent,
     MatrixInvoiceComponent,

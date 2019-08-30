@@ -13,10 +13,10 @@ Resource          ../../pages/payment.robot
 Verify That Non-BSP Ticketing Remarks Are Written For Single Segment
     [Tags]    us13617
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Passive Segment
+    Move Single Passenger And Add Passive Segment With Airline Code AC
     Open CA Corporate Test
     Add Non-BSP Ticketing Details For Single Segment
-    Verify Supplier Code Default Value Is Correct For AC
+    Verify That Supplier Code Default Value Is Correct For AC
     Click Submit To PNR
     Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     
@@ -26,6 +26,6 @@ Verify That Non-BSP Ticketing Remarks Are Written For Multiple Segments
     Move Single Passenger And Add Multiple Air Passive Segments 
     Open CA Corporate Test
     Add Non-BSP Ticketing Details For Multiple Segments
-    Verify Supplier Code Default Value Is Correct For WS
+    Verify That Supplier Code Default Value Is Correct For WS
     Click Submit To PNR
     Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR

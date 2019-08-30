@@ -80,13 +80,13 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
 
 Add Non-BSP Ticketing Details For Single Segment
     Click Payment Panel
-    Click Element    ${tab_matrix_accounting}
+    Click Element    ${tab_matrix_accounting}   
     Click Element    ${button_addaccountingline}
-    Select From List By Value    ${list_segment}   text 
-    Select From List By Value    ${list_accounting_type}    text
-    Enter Value    ${input_confirmation_nbr}    54321
-    Add Ticketing Amount Details
-    Enter Value    ${input_ticket_number}    1234567890
+    Select From List By Value    ${list_segment}   2 
+    Select From List By Value    ${list_accounting_type}    Non BSP Airline
+    Enter Value    ${input_confirmationNo}    54321
+    Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
     
 Add Non-BSP Exchange Ticketing Details For Single Segment
     Click Payment Panel
@@ -95,7 +95,17 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Select From List By Value    ${list_segment}    text
     Select From List By Value    ${list_acounting_type}    NonBSP Air Exchange
     Enter Value    ${input_confirmation_nbr}    54321
-    Add Ticketing Amount Details        
+    Add Ticketing Amount Details            
+
+Add Non-BSP Ticketing Details For Multiple Segments
+    Click Payment Panel
+    Click Element    ${tab_matrix_accounting}    
+    Click Element    ${button_addaccountingline}
+    Select Multiple Segments    2    3
+    Select From List By Value    ${list_accounting_type}    Non BSP Airline
+    Enter Value    ${button_addaccountingline}    54321
+    Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
 
 Add Ticketing Amount Details
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
@@ -120,7 +130,14 @@ Add Penalty Amount Details
     Enter Value    ${input_penaltyGst}    ${penalty_gst_tax}
     Enter Value    ${input_penaltyHst}    ${penalty_hst_tax}
     Enter Value    ${input_penaltyQst}    ${penalty_qst_tax}
-    
+
+Verify Supplier Code Default Value Is Correct For ${airline_code}
+    Set Test Variable    ${airline_code}    
+    ${actual_supplier_code}    Get Text    ${input_supplier_code}
+    Run Keyword If    "${airline_code}" == "AC"    Should contain    ${actual_supplier_code}     ACY
+    Run keyword if    "${airline_code}" == "WS"    Should contain    ${actual_supplier_code}     WJ3
+
+# --will be updated once UI is available--    
 Select Multiple Segments
     [Arguments]    @{segment_number}
     Wait Until Element Is Visible    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']    30
@@ -130,32 +147,23 @@ Select Multiple Segments
     \    Click Element    xpath=//ul[@id='dropdown-basic']//input[@value='${segment_number}']
     Click Element    xpath=//app-segment-select[@id='segmentNo']//button[@id='button-basic']
     [Teardown]    Take Screenshot
-
-Add Non-BSP Ticketing Details For Multiple Segments
-    Click Payment Panel
-    Click Element    ${tab_matrix_accounting}    
-    Click Element    ${button_addaccountingline}
-    Select Multiple Segments    2    3
-    Select From List By Value    ${list_accounting_type}    text
-    Enter Value    ${input_confirmation_nbr}    54321
-    Add Ticketing Amount Details
-    Enter Value    ${input_ticket_number}    text
+# --will be updated once UI is available-- 
     
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details    
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RIR AIRLINE LOCATOR NUMBER – 54321/S2
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER ï¿½ 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details  
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF/LCC-AC*GRAND TOTAL CAD 750
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RIR AIRLINE LOCATOR NUMBER – 54321/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER ï¿½ 54321/S2-3
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 
@@ -238,12 +246,11 @@ Select Fare Type ${fare_type}
     Select From List By Value    ${list_faretype}    ${fare_type}
     [Teardown]    Take Screenshot
 
-Verify Supplier Code Default Value Is Correct ${acct_remark_type}
+Verify Supplier Code Default Value Is Correct For Pass Purchase ${acct_remark_type}
     Set Test Variable    ${acct_remark_type}
     ${actual_supplier_code}    Get Text    ${input_suppliercode}    
     Run Keyword If    "${acct_remark_type}" == "Air Canada Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    ACJ
     Run Keyword If    "${acct_remark_type}" == "Westjet Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    WJP
-    Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP
     Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP
     
 Verify That Supplier Code Default Value Is Correct For ${airline_code}
@@ -280,3 +287,4 @@ Verify Penalty Remarks Are Not Written In The PNR
     
 Verify Penalty Remarks Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
+

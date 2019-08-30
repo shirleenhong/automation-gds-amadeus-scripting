@@ -159,9 +159,9 @@ export class PaymentRemarkService {
       .filter(
         (x) =>
           x.segmentType === 'AIR' &&
-          x.controlNumber === account.supplierConfirmatioNo &&
-          x.cityCode === account.departureCity &&
-          x.arrivalAirport === account.departureCity
+          x.controlNumber === account.supplierConfirmatioNo.toUpperCase() &&
+          x.cityCode === account.departureCity.toUpperCase() &&
+          x.arrivalAirport === account.departureCity.toUpperCase()
       );
 
     air.forEach((airElement) => {

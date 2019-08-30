@@ -23,9 +23,9 @@ ${menu_corp_test}    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
 ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
-${popUp_sign_out}   //div[contains(text(),'Sign out')]
+${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
-${icon_air}    css=.bookingTool.FS
+${icon_air}       css=.bookingTool.FS
 ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
 ${button_cryptic}    css=.showInCommandPage
@@ -40,7 +40,7 @@ Login To Amadeus Sell Connect Acceptance
     Input Text    ${input_username}    ${username}
     Input Text    ${input_dutyCode}    GS
     Input Text    ${input_officeId}    YTOWL2107
-    Input Text    ${input_password}    ${password}
+    Input Password    ${input_password}    ${password}
     Wait Until Element Is Not Visible    ${button_disabled_login}    30
     Click Element    ${button_enabled_login}
     Handle Force Login Window
@@ -60,7 +60,7 @@ Handle Accept Cookie Panel
 Move Profile to GDS
     [Arguments]    @{gds_commands}
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
@@ -75,35 +75,37 @@ Open CA Corporate Test
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Add Multiple BSP Segment And Store Fare
-    @{gds_commands}    Create List    AN10JANYYZORD/AAC   SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP   AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5 
+    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
+    ...    AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Delete Fare and Itinerary
-    @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER    ER
+    @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER
+    ...    ER
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Logout To Amadeus Sell Connect
-    Click Element    ${link_sign_out}     
+    Click Element    ${link_sign_out}
     Wait Until Element Is Visible    ${popUp_sign_out}    30
-    Click Element   ${button_sign_out}  
+    Click Element    ${button_sign_out}
     Wait Until Element Is Visible    ${input_username}    30
 
 Get PNR Details
-    Wait Until Element Is Enabled   ${icon_air}      30
+    Wait Until Element Is Enabled    ${icon_air}    30
     Wait Until Element Is Visible    ${tab_cryptic_display}    30
     Sleep    5
-    Press Key    ${tab_cryptic_display}     \\32
+    Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    30
     Sleep    10
     ${pnr_details}    Get Text    ${popUp_pnr_display}
@@ -112,7 +114,7 @@ Get PNR Details
     [Teardown]    Take Screenshot
 
 Switch To Command Page
-    Click Element    ${close_cryptic_display} 
+    Click Element    ${close_cryptic_display}
     Wait Until Page Contains Element    ${button_cryptic}    60
     Click Element    ${button_cryptic}
     Wait Until Element Is Visible    ${input_commandText}    60
@@ -121,13 +123,13 @@ Switch To Command Page
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
-    Wait Until Page Contains Element    ${tab_cryptic_display}     60
+    Wait Until Page Contains Element    ${tab_cryptic_display}    60
     [Teardown]    Take Screenshot
 
 Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
-    
+
 Add Multiple Passive Air Segments In The GDS
     @{gds_commands}    Create List    SS WS1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS WS1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
     : FOR    ${gds_command}    IN    @{gds_commands}

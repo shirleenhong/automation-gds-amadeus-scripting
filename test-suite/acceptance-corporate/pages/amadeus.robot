@@ -100,6 +100,7 @@ Logout To Amadeus Sell Connect
     Wait Until Element Is Visible    ${popUp_sign_out}    30
     Click Element    ${button_sign_out}
     Wait Until Element Is Visible    ${input_username}    30
+    Close Browser
 
 Get PNR Details
     Wait Until Element Is Enabled    ${icon_air}    30
@@ -145,6 +146,16 @@ Verify Specific Remark Is Written In The PNR
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ${expected_remark}
     Log    Expected: ${expected_remark}
     Log    Actual: ${pnr_details}
+    
+Verify Specific Remark Is Not Written In The PNR
+    [Arguments]    ${expected_remark}    ${multi_line_remark}=False
+    Wait Until Page Contains Element    ${popUp_pnr_display}    30
+    ${pnr_details}    Get Text    ${popUp_pnr_display}
+    Log    ${pnr_details}
+    Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
+    Run Keyword And Continue On Failure    Should Not Contain    ${pnr_details}    ${expected_remark}
+    Log    Expected: ${expected_remark}
+    Log    Actual: ${pnr_details}
 
 Remove Line Break And Spaces
     [Arguments]    ${pnr_details}    ${expected_remark}
@@ -154,3 +165,9 @@ Remove Line Break And Spaces
     ${expected_remark}    Replace String    ${expected_remark}    ${SPACE}    ${EMPTY}
     ${expected_remark_flattened}    Replace String    ${expected_remark}    \n    ${EMPTY}
     Set Test Variable    ${expected_remark}    ${expected_remark_flattened}
+
+Create Exchange PNR In The GDS
+    @{gds_commands}    Create List    RT    RFCWTPTEST    ER    TTK/EXCH/S2    TTK/T1/RCAD200/XCAD20YR/TCAD120    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13

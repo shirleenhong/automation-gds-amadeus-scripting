@@ -39,32 +39,26 @@ ${list_faretype}    css=#fareType
 ${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
 
-*** Keywords ***
-Move Single Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
-    
-Move Multiple Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
-    
+*** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Click Full Wrap
     Click Payment Panel
     Click Element    ${tab_matrix_accounting}    
     Click Element    ${button_addaccountingline}
-    Select From List By Value    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details With Commission    1000.00    100.00    10.00    1.00    0.10    0.10
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Click Full Wrap
     Click Payment Panel
     Click Element    ${tab_matrix_accounting}    
     Click Element    ${button_addaccountingline}
-    Select From List By Value    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details With Commission    1000.00    100.00    10.00    1.00    0.10    0.1
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
     Set Test Variable    ${tkt_number}    1234567890
     
@@ -73,24 +67,13 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Click Payment Panel
     Click Element    ${tab_matrix_accounting}    
     Click Element    ${button_addaccountingline}
-    Select From List By Value    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details With Commission    1000.00    100.00    10.00    1.00    0.10    0.1
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Add Penalty Amount Details    10.00    1.00    1.00    1.00
     Enter Value    ${input_tktnumber}    1234567890
     Set Test Variable    ${tkt_number}    1234567890
-
-Add Non-BSP Ticketing Details For Single Segment
-    Click Full Wrap
-    Click Payment Panel
-    Click Element    ${tab_nonBsp_processing}    
-    Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    Non BSP Airline
-    Select Itinerary Segments   2 
-    Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
-    Enter Value    ${input_tktnumber}    1234567890
     
 Add Non-BSP Exchange Ticketing Details For Single Segment
     Click Payment Panel
@@ -99,28 +82,45 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Select Itinerary Segments    text
     Select From List By Value    ${list_acounting_type}    NonBSP Air Exchange
     Enter Value    ${input_confirmation_nbr}    54321
-    Add Ticketing Amount Details            
-
+    Add Ticketing Amount Details With Other Tax And Commission
+    
+Add Non-BSP Ticketing Details For Single Segment
+    Click Payment Panel
+    Click Element    ${tab_nonBsp_processing}    
+    Click Element    ${button_addaccountingline}
+    Select From List By Label    ${list_accounting_type}    Non BSP Airline
+    Select Itinerary Segments   2 
+    Enter Value    ${input_confirmationNo}    54321
+    Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
+    
 Add Non-BSP Ticketing Details For Multiple Segments
-    Click Full Wrap
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
+    Select From List By Label    ${list_accounting_type}    Non BSP Airline
     Select Itinerary Segments    2    3
-    Select From List By Value    ${list_accounting_type}    Non BSP Airline
-    Enter Value    ${button_addaccountingline}    54321
-    Add Ticketing Amount Details    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_confirmation_nbr}    54321
+    Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
 
-Add Ticketing Amount Details
+Add Ticketing Amount Details With Other Tax
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
     Enter Value    ${input_baseamount}    ${base_amt}
     Enter Value    ${input_gst_tax}    ${gst_tax}
     Enter Value    ${input_hst_tax}    ${hst_tax}
-    Enter Value    ${input_qst_tax}    ${qst_tax}
+    Enter Value    ${input_qst_tax}    ${qst_tax}    
     Enter Value    ${input_othtax}   ${oth_tax}
     
 Add Ticketing Amount Details With Commission
+    [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${comm_amt}=${EMPTY}
+    Enter Value    ${input_baseamount}    ${base_amt}
+    Enter Value    ${input_gsttax}    ${gst_tax}
+    Enter Value    ${input_hsttax}    ${hst_tax}
+    Enter Value    ${input_qsttax}    ${qst_tax}
+    Enter Value    ${input_commission}    ${comm_amt}
+    
+Add Ticketing Amount Details With Other Tax And Commission
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}    ${comm_amt}=${EMPTY}
     Enter Value    ${input_baseamount}    ${base_amt}
     Enter Value    ${input_gsttax}    ${gst_tax}
@@ -135,12 +135,6 @@ Add Penalty Amount Details
     Enter Value    ${input_penaltyGst}    ${penalty_gst_tax}
     Enter Value    ${input_penaltyHst}    ${penalty_hst_tax}
     Enter Value    ${input_penaltyQst}    ${penalty_qst_tax}
-
-Verify Supplier Code Default Value Is Correct For ${airline_code}
-    Set Test Variable    ${airline_code}    
-    ${actual_supplier_code}    Get Text    ${input_supplier_code}
-    Run Keyword If    "${airline_code}" == "AC"    Should contain    ${actual_supplier_code}     ACY
-    Run keyword if    "${airline_code}" == "WS"    Should contain    ${actual_supplier_code}     WJ3
 
 Select Itinerary Segments
     [Arguments]    @{segment_number}
@@ -173,13 +167,13 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Click Payment Panel
     Click Matrix Accounting Remark Tab
     Click Add Accounting Line Button
-    Select From List By Value    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
     Enter Value    ${input_confirmationNo}    879111
-    Add Ticketing Amount Details    100.00    15.05    2.20    10.00    3.00
+    Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
     Enter Value    ${input_departurecity}    YVR        
-    Select From List By Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
-    Select From List By Value    ${list_faretype}       FLEX
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       FLEX
     Take Screenshot
     Click Save Button
 

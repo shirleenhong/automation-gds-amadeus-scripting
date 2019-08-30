@@ -11,7 +11,7 @@ Resource          ../../pages/payment.robot
 
 *** Test Cases ***
 Verify That Non-BSP Ticketing Remarks Are Written For Single Segment
-    [Tags]    us13617
+    [Tags]    us10552
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Passive Segment With Airline Code AC
     Open CA Corporate Test
@@ -21,7 +21,7 @@ Verify That Non-BSP Ticketing Remarks Are Written For Single Segment
     Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     
 Verify That Non-BSP Ticketing Remarks Are Written For Multiple Segments
-    [Tags]    us13617
+    [Tags]    us10552
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments 
     Open CA Corporate Test

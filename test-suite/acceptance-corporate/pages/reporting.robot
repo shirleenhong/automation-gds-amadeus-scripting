@@ -100,6 +100,12 @@ Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple
     Verify Specific Remark Is Written In The PNR    RM *LP/-912.99/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
     Switch To Command Page
-    
 
+Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RM *FF/-120.00/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-120.00/S2
+    Verify Specific Remark Is Written In The PNR    RM *FS/-E/S2
+    Switch To Command Page
 

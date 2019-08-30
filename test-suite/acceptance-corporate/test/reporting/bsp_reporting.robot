@@ -24,4 +24,11 @@ Verify That Reporting Remark Are Written For Multiple TSTs
     Open CA Corporate Test
     Add Client Reporting Values For Multiple BSP Segment
     Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
-    
+
+Verify That Client Reporting Are Correct For Exchange PNR
+    [Tags]    us10551
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger And Add Single BSP Segment With TST
+    Create Exchange PNR In The GDS
+    # Open CA Corporate Test
+    Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST

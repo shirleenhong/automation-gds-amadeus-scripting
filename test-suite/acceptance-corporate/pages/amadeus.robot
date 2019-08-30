@@ -40,7 +40,7 @@ Login To Amadeus Sell Connect Acceptance
     Input Text    ${input_username}    ${username}
     Input Text    ${input_dutyCode}    GS
     Input Text    ${input_officeId}    YTOWL2107
-    Input Text    ${input_password}    ${password}
+    Input Password    ${input_password}    ${password}
     Wait Until Element Is Not Visible    ${button_disabled_login}    30
     Click Element    ${button_enabled_login}
     Handle Force Login Window
@@ -141,6 +141,16 @@ Verify Specific Remark Is Written In The PNR
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ${expected_remark}
+    Log    Expected: ${expected_remark}
+    Log    Actual: ${pnr_details}
+    
+Verify Specific Remark Is Not Written In The PNR
+    [Arguments]    ${expected_remark}    ${multi_line_remark}=False
+    Wait Until Page Contains Element    ${popUp_pnr_display}    30
+    ${pnr_details}    Get Text    ${popUp_pnr_display}
+    Log    ${pnr_details}
+    Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
+    Run Keyword And Continue On Failure    Should Not Contain    ${pnr_details}    ${expected_remark}
     Log    Expected: ${expected_remark}
     Log    Actual: ${pnr_details}
 

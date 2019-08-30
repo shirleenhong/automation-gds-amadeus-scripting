@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        corp
 Library           String
 Library           SeleniumLibrary
 Library           Collections

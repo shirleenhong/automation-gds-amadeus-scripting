@@ -171,3 +171,25 @@ Create Exchange PNR In The GDS
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+
+Move Single Passenger
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    
+Move Multiple Passenger
+    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+
+Move Single Passenger And Add Single BSP Segment With TST
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    TKOK
+    Add Single BSP Segment And Store Fare
+    
+Move Single Passenger And Add Multiple BSP Segment With TSTs
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Add Multiple BSP Segment And Store Fare
+    
+Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    
+Move Single Passenger And Add Multiple Air Passive Segments 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Add Multiple Passive Air Segments In The GDS

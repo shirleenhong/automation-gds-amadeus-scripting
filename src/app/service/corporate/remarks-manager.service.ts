@@ -12,12 +12,11 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService) { }
+  constructor(private serviceApi: RemarksManagerApiService) {}
 
   public async getMatchcedPlaceholderValues() {
-    await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
+    return await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
       if (res !== undefined) {
-
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
         });
@@ -53,8 +52,14 @@ export class RemarksManagerService {
     );
   }
 
-  public createPlaceholderValues(values?: Map<string, string>, conditions?: Map<string, string>,
-    segmentRelate?: string[], passengerRelate?: string[], staticText?) {
+  // Create placeholder value for writing remarks
+  public createPlaceholderValues(
+    values?: Map<string, string>,
+    conditions?: Map<string, string>,
+    segmentRelate?: string[],
+    passengerRelate?: string[],
+    staticText?
+  ) {
     const placeHolder = new PlaceholderValues({
       id: this.getOutputItemId(values, staticText, conditions),
       segmentNumberReferences: segmentRelate,
@@ -71,12 +76,31 @@ export class RemarksManagerService {
     this.newPlaceHolderValues.push(values);
   }
 
+  // use this if you wan to forcely delete the remark
+  public createEmptyPlaceHolderValue(keys: string[], condition?, staticText?) {
+    const map = new Map<string, string>();
+    keys.forEach((key) => {
+      map.set(key, '');
+    });
+    const placeHolder = new PlaceholderValues({
+      id: this.getOutputItemId(map, staticText, condition),
+      segmentNumberReferences: [],
+      passengerNumberReferences: [],
+      matchedPlaceholders: null
+    });
+    this.newPlaceHolderValues.push(placeHolder);
+  }
+
+  // search OutputItemId with the given placeholdervalues
   getOutputItemId(values?: Map<string, string>, staticText?, conditions?: Map<string, string>) {
     const ids = this.outputItems
       .filter(
-        (out) => (values && this.hasCompleteKeys(values, out.placeholderKeys) && (staticText ? out.format.indexOf(staticText) >= 0 : true))
-          || (!values && conditions && this.hasMatchedConditions(conditions, out.conditions)
-            && (staticText ? out.format.indexOf(staticText) >= 0 : false))
+        (out) =>
+          (values && this.hasCompleteKeys(values, out.placeholderKeys) && (staticText ? out.format.indexOf(staticText) >= 0 : true)) ||
+          (!values &&
+            conditions &&
+            this.hasMatchedConditions(conditions, out.conditions) &&
+            (staticText ? out.format.indexOf(staticText) >= 0 : false))
       )
       .map((out) => out.id);
     return ids[0];
@@ -97,21 +121,21 @@ export class RemarksManagerService {
   hasMatchedConditions(map: Map<string, string>, conditions: any) {
     let result = true;
     if (conditions) {
-      conditions.forEach(condition => {
-        result = ((map.get(condition.name) && result) ? true : false);
+      conditions.forEach((condition) => {
+        result = map.get(condition.name) && result ? true : false;
       });
-
     }
     return result;
   }
 
   async submitToPnr() {
-    await this.sendPnrToAmadeus(
-      await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues));
+    await this.sendPnrToAmadeus(await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues));
   }
 
   async sendPnrToAmadeus(pnrResponse: any) {
-    await smartScriptSession.send(pnrResponse.deleteCommand);
+    if (pnrResponse.deleteCommand.trim() !== 'XE') {
+      await smartScriptSession.send(pnrResponse.deleteCommand);
+    }
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
       console.log(JSON.stringify(res));
     });

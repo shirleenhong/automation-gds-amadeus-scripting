@@ -67,26 +67,9 @@ export class CorporateComponent implements OnInit {
   }
 
   async initData() {
-    this.showLoading('Loading Suppliers', 'initData');
+    // this.showLoading('Loading Suppliers', 'initData');
     await this.ddbService.getAllMatrixSupplierCodes();
-    this.showLoading('Loading PNR and Data', 'initData');
-    await this.getPnrService();
-
-    if (!this.pnrService.getClientSubUnit()) {
-      this.closePopup();
-      this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
-      this.workflow = 'error';
-    } else {
-      // this.showLoading('Matching Remarks', 'initData');
-      this.rms.getMatchcedPlaceholderValues().catch((x) => {
-        this.showMessage('Error on Matching Data in the PNR: ' + x.message, MessageType.Error, 'Not Found', 'Loading');
-      });
-      //this.showLoading('Servicing Options', 'initData');
-      await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
-      // this.showLoading('ReasonCodes', 'initData');
-      await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-      this.closePopup();
-    }
+    // this.closePopup();
   }
 
   showLoading(msg, caller?) {
@@ -120,10 +103,32 @@ export class CorporateComponent implements OnInit {
   }
 
   public async wrapPnr() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+
+    if (!this.pnrService.getClientSubUnit()) {
+      this.closePopup();
+      this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
+      this.workflow = 'error';
+    } else {
+      // this.showLoading('Matching Remarks', 'initData');
+      this.rms.getMatchcedPlaceholderValues().catch((x) => {
+        this.showMessage('Error on Matching Data in the PNR: ' + x.message, MessageType.Error, 'Not Found', 'Loading');
+        this.closePopup();
+        this.isPnrLoaded = false;
+        return;
+      });
+      // this.showLoading('Servicing Options', 'initData');
+      await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
+      // this.showLoading('ReasonCodes', 'initData');
+      await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+    }
+
     if (this.isPnrLoaded) {
-      await this.getPnrService();
       this.workflow = 'wrap';
     }
+
+    this.closePopup();
   }
 
   public async SubmitToPNR() {

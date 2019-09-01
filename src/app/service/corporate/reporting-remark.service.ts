@@ -23,7 +23,7 @@ export class ReportingRemarkService {
         const highFareRemark = new Map<string, string>();
         const lowFareRemark = new Map<string, string>();
         const airReasonCodeRemark = new Map<string, string>();
-        let segments: string[] = [];
+        const segments: string[] = [];
         let segmentrelate: string[] = [];
 
         Object.keys(fg.controls).forEach((key) => {
@@ -50,13 +50,12 @@ export class ReportingRemarkService {
         this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
-
       }
     }
   }
 
   getRemarkSegmentAssociation(segments: string[]): string[] {
-    let segmentrelate: string[] = [];
+    const segmentrelate: string[] = [];
     const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo));
 
     air.forEach((airElement) => {

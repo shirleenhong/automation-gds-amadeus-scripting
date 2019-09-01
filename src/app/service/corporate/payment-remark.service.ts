@@ -18,7 +18,6 @@ export class PaymentRemarkService {
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
-    // tslint:disable-next-line:max-line-length
     this.writePassPurchase(
       accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
     );
@@ -55,6 +54,10 @@ export class PaymentRemarkService {
       ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
       if (account.tktLine) {
         ticketRemarks.set('TktNbr', account.tktLine);
+        //delete exsting remark that has no tktnbr
+        this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'SupplierCode']);
+      } else {
+        this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'TktNbr', 'SupplierCode']);
       }
       ticketRemarks.set('SupplierCode', account.supplierCodeName);
 
@@ -171,9 +174,9 @@ export class PaymentRemarkService {
 
   extractAccountingModelFromPnr() {
     const accountingRemarks = new Array<MatrixAccountingModel>();
-    let model = new MatrixAccountingModel();
+    const model = new MatrixAccountingModel();
 
-    model.tkMacLine = parseInt(this.rms.getValue('TktRemarkNbr')[0]);
+    model.tkMacLine = Number.parseInt(this.rms.getValue('TktRemarkNbr')[0]);
 
     if (model.tkMacLine) {
       const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');

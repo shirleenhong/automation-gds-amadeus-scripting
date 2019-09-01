@@ -135,6 +135,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
+    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], false);
     this.enableFormControls(['otherTax'], true);
     switch (accRemark) {
       case 'ACPP':
@@ -162,6 +163,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.hst = '';
           this.accountingRemark.gst = '';
         }
+
+        this.enableFormControls(['fareType'], accRemark !== 'ACPP');
+
         if (accRemark === 'PCPP') {
           this.setMandatoryTicket([], false);
         } else {
@@ -175,7 +179,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.accountingRemark.commisionWithoutTax = '0.00';
         this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax'], false);
+        this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
+
         break;
       default:
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);

@@ -54,7 +54,7 @@ export class PaymentRemarkService {
       ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
       if (account.tktLine) {
         ticketRemarks.set('TktNbr', account.tktLine);
-        //delete exsting remark that has no tktnbr
+        // delete exsting remark that has no tktnbr
         this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'SupplierCode']);
       } else {
         this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'TktNbr', 'SupplierCode']);
@@ -183,9 +183,10 @@ export class PaymentRemarkService {
       const slineNo = pholder[0].segmentNumberReferences[0];
       const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
 
-      model.departureCity = segment[0].cityCode;
-      model.supplierConfirmatioNo = segment[0].controlNumber;
-
+      if (segment.length > 0) {
+        model.departureCity = segment[0].cityCode;
+        model.supplierConfirmatioNo = segment[0].controlNumber;
+      }
       model.fareType = this.rms.getValue('FareType')[0];
       model.tktLine = this.rms.getValue('TktNbr')[0];
       model.supplierCodeName = this.rms.getValue('SupplierCode')[0];

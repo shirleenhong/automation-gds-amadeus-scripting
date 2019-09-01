@@ -138,6 +138,7 @@ export class RemarksManagerService {
     }
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
       console.log(JSON.stringify(res));
+      this.newPlaceHolderValues = [];
     });
   }
 }

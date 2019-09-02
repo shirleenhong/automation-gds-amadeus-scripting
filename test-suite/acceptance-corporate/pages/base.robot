@@ -46,5 +46,7 @@ Click Payment Panel
 Click Submit To PNR
      [Arguments]    ${close_corporate_test}=yes
     Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
     Click Element    ${button_submit_pnr}
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test

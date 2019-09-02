@@ -185,9 +185,21 @@ Move Single Passenger And Add Multiple BSP Segment With TSTs
     Add Multiple BSP Segment And Store Fare
     
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${consultant_number}    CN1
+    
+Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
+    Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${consultant_number}    CN1
     
 Move Single Passenger And Add Multiple Air Passive Segments 
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
     Add Multiple Passive Air Segments In The GDS
+    
+Enter RIR Remarks In English
+    Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2     RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2     RIR ON YOUR CREDIT CARD STATEMENT./S2
+    
+Enter RIR Remarks In French
+    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2     RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2     RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2 

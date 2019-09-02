@@ -164,7 +164,6 @@ Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In 
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 
-    Click Payment Panel
     Click Matrix Accounting Remark Tab
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
@@ -175,7 +174,6 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
     Take Screenshot
-    Click Save Button
 
 Click Matrix Accounting Remark Tab
     Wait Until Element Is Visible   ${tab_nonBsp_processing}    60
@@ -291,11 +289,3 @@ Click Save Button
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
     [Teardown]    Take Screenshot
-    
-Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM *FF/-127.25/S2
-    Verify Specific Remark Is Written In The PNR    RM *LP/-127.25/S2
-    Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
-    Switch To Command Page

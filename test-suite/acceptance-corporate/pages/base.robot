@@ -12,6 +12,7 @@ ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[contains(text(), 'SUBMIT TO PNR')]
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    xpath=//div[@class='panel-title']//div[contains(text(), 'Payment')]
+${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 
 *** Keywords ***
 Enter Value 
@@ -46,5 +47,6 @@ Click Payment Panel
 Click Submit To PNR
     Wait Until Page Contains Element    ${button_submit_pnr}    30
     Click Element    ${button_submit_pnr}
+    Wait Until Element Is Not Visible    ${message_updatingPnr}    180
+    # Wait Until Element Is Visible    ${button_full_wrap}     180   
     Close CA Corporate Test
-

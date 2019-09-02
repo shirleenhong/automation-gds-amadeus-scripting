@@ -122,6 +122,8 @@ Switch To Command Page
     [Teardown]    Take Screenshot
 
 Switch To Graphic Mode
+    Wait Until Element Is Visible    ${input_commandText}
+    Input Text    ${input_commandText}    rt
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
     Wait Until Page Contains Element    ${tab_cryptic_display}    60

@@ -7,6 +7,7 @@ Library           Screenshot
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/payment.robot
+Resource          ../../pages/reporting.robot
 
 *** Test Cases ***
 Verify That Matrix Accounting Remark Is Written For Air Canada Individual Pass Purchase PNR
@@ -24,11 +25,13 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purc
     Move Single Passenger
     Open CA Corporate Test
     Click Full Wrap
+    Click Payment Panel
     Add Matrix Accounting Remark For Air Canada Pass Purchase
-    # Click Submit To PNR
-    # Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
-    # Close CA Corporate Test
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Click Save Button
+    Click Submit To PNR
+    Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
+    Close CA Corporate Test
+    Logout To Amadeus Sell Connect
+    #[Teardown]    Close Browser
 
 *** Keywords ***

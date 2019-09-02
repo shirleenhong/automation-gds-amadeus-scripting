@@ -131,7 +131,7 @@ Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Press Key    ${input_commandText}    \\13
     
 Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}   
-    @{gds_commands}    Create List    SS ${airline_code}S1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
+    @{gds_commands}    Create List    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13

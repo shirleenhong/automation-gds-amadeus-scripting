@@ -16,4 +16,5 @@ Verify That Matrix Accounting Remark Is Written For Air Canada Individual Pass P
     Click Full Wrap
     Click Payment Panel
     Add Matrix Accounting Remark For Air Canada Pass Purchase
-    Verify Supplier Code Default Value Is Correct    Air Canada Individual Pass Purchase
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Click Save Button

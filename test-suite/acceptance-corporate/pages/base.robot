@@ -11,7 +11,9 @@ ${button_close}    //span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[contains(text(), 'SUBMIT TO PNR')]
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
-${panel_payment}    xpath=//div[@class='panel-title']//div[contains(text(), 'Payment')]
+${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
+${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
+${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
 
 *** Keywords ***
 Enter Value 
@@ -28,9 +30,10 @@ Close CA Corporate Test
     Wait Until Element Is Visible    ${input_commandText}    30
 
 Click Full Wrap 
-    Wait Until Page Contains Element    ${button_full_wrap}    180
-    Sleep    5
+    Wait Until Page Contains Element   ${button_full_wrap}    180 
     Click Element    ${button_full_wrap}
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
 
 Click Reporting Panel
@@ -46,5 +49,7 @@ Click Payment Panel
 Click Submit To PNR
     Wait Until Page Contains Element    ${button_submit_pnr}    30
     Click Element    ${button_submit_pnr}
+    Wait Until Element Is Not Visible    ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}     180   
     Close CA Corporate Test
 

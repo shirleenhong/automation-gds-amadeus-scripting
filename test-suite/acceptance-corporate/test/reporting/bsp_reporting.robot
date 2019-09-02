@@ -38,3 +38,4 @@ Verify That Client Reporting Are Correct For Exchange PNR
     Click Full Wrap
     Click Submit To PNR
     Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
+    Delete Fare and Itinerary

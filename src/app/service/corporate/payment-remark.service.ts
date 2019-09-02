@@ -18,7 +18,6 @@ export class PaymentRemarkService {
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
-    // tslint:disable-next-line:max-line-length
     this.writePassPurchase(
       accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
     );
@@ -55,6 +54,10 @@ export class PaymentRemarkService {
       ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
       if (account.tktLine) {
         ticketRemarks.set('TktNbr', account.tktLine);
+        // delete exsting remark that has no tktnbr
+        this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'SupplierCode']);
+      } else {
+        this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'TktNbr', 'SupplierCode']);
       }
       ticketRemarks.set('SupplierCode', account.supplierCodeName);
 
@@ -159,9 +162,9 @@ export class PaymentRemarkService {
       .filter(
         (x) =>
           x.segmentType === 'AIR' &&
-          x.controlNumber === account.supplierConfirmatioNo &&
-          x.cityCode === account.departureCity &&
-          x.arrivalAirport === account.departureCity
+          x.controlNumber === account.supplierConfirmatioNo.toUpperCase() &&
+          x.cityCode === account.departureCity.toUpperCase() &&
+          x.arrivalAirport === account.departureCity.toUpperCase()
       );
 
     air.forEach((airElement) => {
@@ -171,18 +174,19 @@ export class PaymentRemarkService {
 
   extractAccountingModelFromPnr() {
     const accountingRemarks = new Array<MatrixAccountingModel>();
-    let model = new MatrixAccountingModel();
+    const model = new MatrixAccountingModel();
 
-    model.tkMacLine = parseInt(this.rms.getValue('TktRemarkNbr')[0]);
+    model.tkMacLine = Number.parseInt(this.rms.getValue('TktRemarkNbr')[0]);
 
     if (model.tkMacLine) {
       const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
       const slineNo = pholder[0].segmentNumberReferences[0];
       const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
 
-      model.departureCity = segment[0].cityCode;
-      model.supplierConfirmatioNo = segment[0].controlNumber;
-
+      if (segment.length > 0) {
+        model.departureCity = segment[0].cityCode;
+        model.supplierConfirmatioNo = segment[0].controlNumber;
+      }
       model.fareType = this.rms.getValue('FareType')[0];
       model.tktLine = this.rms.getValue('TktNbr')[0];
       model.supplierCodeName = this.rms.getValue('SupplierCode')[0];

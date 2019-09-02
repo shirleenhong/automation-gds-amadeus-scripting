@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CorporateComponent } from './corporate/corporate.component';
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule, AlertModule } from 'ngx-bootstrap';
 import { CommonModule } from '@angular/common';
 import { PaymentsComponent } from './corporate/payments/payments.component';
 import { ReportingBSPComponent } from './corporate/reporting/reporting-bsp/reporting-bsp.component';
@@ -34,11 +34,12 @@ import { MyCommonModule } from './my-common.module';
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
-    MyCommonModule
+    MyCommonModule,
+    AlertModule.forRoot()
   ],
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
   entryComponents: [UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

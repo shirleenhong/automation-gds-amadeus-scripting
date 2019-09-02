@@ -120,6 +120,7 @@ Switch To Command Page
     [Teardown]    Take Screenshot
 
 Switch To Graphic Mode
+    Input Text    ${input_commandText}    RT
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
     Wait Until Page Contains Element    ${tab_cryptic_display}     60
@@ -129,8 +130,14 @@ Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
     
-Add Multiple Passive Air Segments In The GDS
-    @{gds_commands}    Create List    SS WS1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS WS1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
+Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}   
+    @{gds_commands}    Create List    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13
+
+Add Multiple Passive Air Segments In The GDS With Different Airline Codes   
+    @{gds_commands}    Create List    SS ACS1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
@@ -165,7 +172,7 @@ Remove Line Break And Spaces
     Set Test Variable    ${expected_remark}    ${expected_remark_flattened}
 
 Create Exchange PNR In The GDS
-    @{gds_commands}    Create List    RT    RFCWTPTEST    ER    TTK/EXCH/S2    TTK/T1/RCAD200/XCAD20YR/TCAD120    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
+    @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2    TTK/T1/RCAD200/XCAD20YR/TCAD120    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
@@ -188,9 +195,31 @@ Move Single Passenger And Add Multiple BSP Segment With TSTs
     Add Multiple BSP Segment And Store Fare
     
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${consultant_number}    CN1
     
-Move Single Passenger And Add Multiple Air Passive Segments 
+Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
+    Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${consultant_number}    CN1
+    
+Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
+    Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${consultant_number}    CN1
+    
+Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
-    Add Multiple Passive Air Segments In The GDS
+    Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
+    
+Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Add Multiple Passive Air Segments In The GDS With Different Airline Codes 
+ 
+Enter RIR Remarks In English
+    Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2     RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2     RIR ON YOUR CREDIT CARD STATEMENT./S2
+    
+Enter RIR Remarks In French
+    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2     RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2     RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
+

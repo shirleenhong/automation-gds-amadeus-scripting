@@ -72,5 +72,6 @@ Verify That Non BSP Processing Remark Is Written And Updated In The PNR
     Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
     Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
-    
-    
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Click Save Button
+

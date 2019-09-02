@@ -23,7 +23,7 @@ Verify That Reporting Remarks Are Written For Single Non-BSP Segment
 Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     [Tags]    us13617
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Multiple Air Passive Segments
+    Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WS 
     Open CA Corporate Test
     Click Full Wrap
     Add Non-BSP Ticketing Details For Multiple Segments

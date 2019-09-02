@@ -8,14 +8,12 @@ import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 
-
 @Component({
   selector: 'app-accounting-remark',
   templateUrl: './accounting-remark.component.html',
   styleUrls: ['./accounting-remark.component.scss']
 })
 export class AccountingRemarkComponent implements OnInit {
-
   @Input()
   accountingRemarks = new Array<MatrixAccountingModel>();
   modalRef: BsModalRef;
@@ -23,11 +21,7 @@ export class AccountingRemarkComponent implements OnInit {
   isAddNew = false;
   isPassPurchase = false;
 
-  constructor(
-    private modalService: BsModalService,
-    private utilHelper: UtilHelper,
-    private paymentService: PaymentRemarkService
-  ) { }
+  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private paymentService: PaymentRemarkService) {}
 
   ngOnInit() {
     this.accountingRemarks = this.paymentService.extractAccountingModelFromPnr();
@@ -77,7 +71,6 @@ export class AccountingRemarkComponent implements OnInit {
       this.isPassPurchaseTransaction();
     });
   }
-
 
   updateItem(r: MatrixAccountingModel) {
     // r.status = 'UPDATED';
@@ -142,10 +135,11 @@ export class AccountingRemarkComponent implements OnInit {
   }
 
   isPassPurchaseTransaction() {
-    this.accountingRemarks.forEach(account => {
-      if (account.accountingTypeRemark === 'ACPP' ||
-        account.accountingTypeRemark === 'WCPP' ||
-        account.accountingTypeRemark === 'PCPP') {
+    if (this.accountingRemarks.length === 0) {
+      this.isPassPurchase = false;
+    }
+    this.accountingRemarks.forEach((account) => {
+      if (account.accountingTypeRemark === 'ACPP' || account.accountingTypeRemark === 'WCPP' || account.accountingTypeRemark === 'PCPP') {
         this.isPassPurchase = true;
       }
     });

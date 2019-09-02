@@ -7,7 +7,6 @@ import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 
-
 @Component({
   selector: 'app-update-accounting-remark',
   templateUrl: './update-accounting-remark.component.html',
@@ -117,16 +116,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.passPurchaseList = this.ddbService.getACPassPurchaseList();
         break;
       case 'WCPP':
-        this.passPurchaseList = [
-          { itemText: '', itemValue: '' },
-          { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }];
+        this.passPurchaseList = [{ itemText: '', itemValue: '' }, { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }];
         break;
       case 'PCPP':
-        this.passPurchaseList = [
-          { itemText: '', itemValue: '' },
-          { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }];
+        this.passPurchaseList = [{ itemText: '', itemValue: '' }, { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }];
         break;
-      default: break;
+      default:
+        break;
     }
   }
 
@@ -139,13 +135,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
+    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], false);
+    this.enableFormControls(['otherTax'], true);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
       case 'PCPP':
-        (accRemark === 'ACPP' ? this.accountingRemark.supplierCodeName = 'ACJ' :
-          accRemark === 'WCPP' ? this.accountingRemark.supplierCodeName = 'WJP' :
-            this.accountingRemark.supplierCodeName = 'PTP');
+        accRemark === 'ACPP'
+          ? (this.accountingRemark.supplierCodeName = 'ACJ')
+          : accRemark === 'WCPP'
+          ? (this.accountingRemark.supplierCodeName = 'WJP')
+          : (this.accountingRemark.supplierCodeName = 'PTP');
 
         this.enableFormControls(['supplierCodeName'], true);
         this.enableFormControls(['departureCity'], false);
@@ -163,28 +163,39 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.hst = '';
           this.accountingRemark.gst = '';
         }
+
+        this.enableFormControls(['fareType'], accRemark !== 'ACPP');
+
+        if (accRemark === 'PCPP') {
+          this.setMandatoryTicket([], false);
+        } else {
+          this.setMandatoryTicket(['ACJ', 'WJP'], false);
+        }
         break;
       case 'APAY':
       case 'NONBSP':
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
-        this.setMandatoryTicket();
+        this.accountingRemark.commisionWithoutTax = '0.00';
+        this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
+        this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax'], false);
+        this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
+        this.setRequired(['commisionWithoutTax'], false);
+
         break;
       default:
         this.enableFormControls(['tktLine', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
         this.name = 'Supplier Confirmation Number:';
+        this.setMandatoryTicket([], false);
         break;
     }
     this.loadPassType(accRemark);
   }
 
-
-
-  setMandatoryTicket() {
-    const supCode = ['ACY', 'SOA', 'WJ3'];
-    if (supCode.indexOf(this.accountingRemark.supplierCodeName) >= 0) {
+  setMandatoryTicket(supCode: string[], isRequired: boolean) {
+    if (supCode.indexOf(this.accountingRemark.supplierCodeName) >= 0 || isRequired) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
     } else {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
@@ -195,10 +206,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   getAirlineCode(segmentno) {
     const segments = segmentno.split(',');
-    const air = this.pnrService
-      .getSegmentTatooNumber()
-      .filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
-
+    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
     if (air && segments.length === 1) {
       return air[0].airlineCode;
     }
@@ -282,8 +290,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
       const segmentDetails = this.pnrService.getSegmentTatooNumber();
-      segmentDetails.forEach(segments => {
-        segmentNos.forEach(segment => {
+      segmentDetails.forEach((segments) => {
+        segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {
             const look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
             if (look && (supplierCode === '' || supplierCode === look.supplierCode) && segments.segmentType === 'AIR') {
@@ -305,5 +313,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   select() {
     this.matrixAccountingForm.controls.passengerNo.patchValue('');
     this.matrixAccountingForm.controls.tktLine.patchValue('');
+  }
+
+  setTktNumber() {
+    if (this.accountingRemark.accountingTypeRemark === 'NONBSP') {
+      this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
+    }
   }
 }

@@ -76,7 +76,6 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Set Test Variable    ${tkt_number}    1234567890
     
 Add Non-BSP Exchange Ticketing Details For Single Segment
-    Click Payment Panel
     Click Element    ${tab_nonBsp_processing}  
     Click Element    ${button_addaccountingline}
     Select Itinerary Segments    text
@@ -85,7 +84,6 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Add Ticketing Amount Details With Other Tax And Commission
     
 Add Non-BSP Ticketing Details For Single Segment
-    Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
@@ -95,7 +93,6 @@ Add Non-BSP Ticketing Details For Single Segment
     Enter Value    ${input_tktnumber}    1234567890
     
 Add Non-BSP Ticketing Details For Multiple Segments
-    Click Payment Panel
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
@@ -105,7 +102,6 @@ Add Non-BSP Ticketing Details For Multiple Segments
     Enter Value    ${input_tktnumber}    1234567890
 
 Add APAY Ticketing Details For Single Segment
-    Click Payment Panel
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    APAY
@@ -115,7 +111,6 @@ Add APAY Ticketing Details For Single Segment
     Enter Value    ${input_tktnumber}    1234567890
     
 Add APAY Ticketing Details For Multiple Segments
-    Click Payment Panel
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    APAY
@@ -123,6 +118,16 @@ Add APAY Ticketing Details For Multiple Segments
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
+   
+Add Non-BSP and APAY Ticketing Detals For Multiple Segments
+    Add Non-BSP Ticketing Details For Single Segment
+    Click Element    ${tab_nonBsp_processing}     
+    Click Element    ${button_addaccountingline}
+    Select From List By Label    ${list_accounting_type}    APAY
+    Select Itinerary Segments    3    4
+    Enter Value    ${input_confirmationNo}    89123
+    Add Ticketing Amount Details With Other Tax    1230.00    11.00    12.00    13.00    14.00
+    Enter Value    ${input_tktnumber}    9876543210
 
 Add Ticketing Amount Details With Other Tax
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
@@ -170,31 +175,39 @@ Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The
     Switch To Graphic Mode
     Get PNR Details    
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750.00
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-0/S2
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details  
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/COMM-0/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750.00
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-0/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
     
 Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details    
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750.00
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details    
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-0XT/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 750.00
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
+    
+Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR
+    Switch To Graphic Mode
+    Get PNR Details    
+    Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
+    Verify Specific Remark Is Written In The PNR    RMT/TKT2-VN-PFS/BA-1230.00/TX1-11.00XG/TX2-12.00RC/TX3-13.00XQ/TX4-14.00XT/S3-4
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 1280.00
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 89123/S3-4
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 

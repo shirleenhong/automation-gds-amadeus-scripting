@@ -47,5 +47,4 @@ Click Submit To PNR
      [Arguments]    ${close_corporate_test}=yes
     Wait Until Page Contains Element    ${button_submit_pnr}    30
     Click Element    ${button_submit_pnr}
-    Run Keyword If     "${close_corporate_test}" == "yes"    Close CA Corporate Test
-
+    Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test

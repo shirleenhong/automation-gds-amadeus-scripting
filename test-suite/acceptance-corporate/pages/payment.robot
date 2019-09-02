@@ -96,11 +96,11 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission
     
-Add Non-BSP Ticketing Details For Single Segment
+Add Non-BSP Ticketing Details For Segment ${segment_no} 
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
-    Select Itinerary Segments   2 
+    Select Itinerary Segments   ${segment_no} 
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
@@ -109,10 +109,14 @@ Add Non-BSP Ticketing Details For Multiple Segments
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
-    Select Itinerary Segments    2    3
+    Select Itinerary Segments    2    3    
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
+    
+Add Multiple Non-BSP Ticketing Details
+    Add Non-BSP Ticketing Details For Segment 2
+    Add Non-BSP Ticketing Details For Segment 3
 
 Add APAY Ticketing Details For Single Segment
     Click Element    ${tab_nonBsp_processing}     

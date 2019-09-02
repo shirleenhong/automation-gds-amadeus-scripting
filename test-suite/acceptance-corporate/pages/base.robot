@@ -47,7 +47,7 @@ Click Payment Panel
     [Teardown]    Take Screenshot
 
 Click Submit To PNR
-     [Arguments]    ${close_corporate_test}=yes
+    [Arguments]    ${close_corporate_test}=yes
     Wait Until Page Contains Element    ${button_submit_pnr}    30
     Click Element    ${button_submit_pnr}    
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180

@@ -124,6 +124,7 @@ Switch To Command Page
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${input_commandText}
     Input Text    ${input_commandText}    rt
+    Press Key    ${input_commandText}    \\13
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
     Wait Until Page Contains Element    ${tab_cryptic_display}    60

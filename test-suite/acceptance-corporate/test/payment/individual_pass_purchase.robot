@@ -22,7 +22,7 @@ Verify That Matrix Accounting Remark Is Written For Air Canada Individual Pass P
 Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase with Ticket Number
     [Tags]    us13615
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger
+    Move Single Passenger And Add Multiple Air Passive Segments 
     Open CA Corporate Test
     Click Full Wrap
     Click Payment Panel
@@ -30,8 +30,7 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purc
     Click Save Button
     Click Submit To PNR
     Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
-    Close CA Corporate Test
     Logout To Amadeus Sell Connect
-    #[Teardown]    Close Browser
+    # [Teardown]    Close Browser
 
 *** Keywords ***

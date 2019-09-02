@@ -99,20 +99,24 @@ export class PaymentRemarkService {
   /**
    * DOING
    * US11134: Write Non-BSP Exchange remarks to PNR.
-   * 
+   *
    * @param accountingRemarks collection of Non-BSP Exchange remarks
    */
   writeNonBSPExchange(accountingRemarks: MatrixAccountingModel[]) {
     debugger;
     accountingRemarks.forEach((account) => {
-      const paymentRemark          = new Map<string, string>();
-      const airlineCodeRemark      = new Map<string, string>();
-      const ticketRemarks          = new Map<string, string>();
-      const ticketAmountRemarks    = new Map<string, string>();
-      const airlineCodeInvoice     = new Map<string, string>();
-      const separatePenaltyRemark  = new Map<string, string>();
+      const airlineCodeRemark        = new Map<string, string>();
+      const paymentRemark            = new Map<string, string>();
+      const ticketRemarks            = new Map<string, string>();
+      const ticketAmountRemarks      = new Map<string, string>();
+      const airlineCodeInvoice       = new Map<string, string>();
       const staticRemarksCondition = new Map<string, string>();
-      
+
+      // Remarks specific to Non BSP Exchange
+      const consultantNoRemark       = new Map<string, string>();
+      const consultantNoRemarkStatic = new Map<string, string>();
+      const separatePenaltyRemark    = new Map<string, string>();
+
       paymentRemark.set('PassNameNonAc', account.passPurchase);
       ticketRemarks.set('AirlineRecordLocator', account.airlineRecordLocator);
       airlineCodeRemark.set('TotalCost', account.baseAmount);
@@ -126,7 +130,8 @@ export class PaymentRemarkService {
 
       // US11134 - Section 8.
       debugger;
-      if (parseFloat(account.penaltyBaseAmount) == 0 && account.supplierCodeName != 'ACY') {
+      if (parseFloat(account.penaltyBaseAmount) === 0 && account.supplierCodeName !== 'ACY') {
+        // DONE
         ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
         ticketAmountRemarks.set('BaseAmt', account.baseAmount);
         ticketAmountRemarks.set('Gst', account.gst);
@@ -135,7 +140,8 @@ export class PaymentRemarkService {
         ticketAmountRemarks.set('Comm', account.commisionWithoutTax);
         this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
       }
-      if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName != 'ACY') {
+      if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName !== 'ACY') {
+        // DONE
         ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
         ticketAmountRemarks.set('BaseAmt', (parseFloat(account.baseAmount) + parseFloat(account.penaltyBaseAmount)).toString());
         ticketAmountRemarks.set('Gst', (parseFloat(account.gst) + parseFloat(account.penaltyGst)).toString());
@@ -145,9 +151,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
       }
       if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName === 'ACY') {
-
         // DOING
-
         debugger;
         ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
         ticketAmountRemarks.set('BaseAmt', account.baseAmount);
@@ -168,15 +172,26 @@ export class PaymentRemarkService {
 
         // doing: not working
         separatePenaltyRemark.set('TktRemarkNbr', account.tkMacLine.toString());
-        separatePenaltyRemark.set('penaltyAmt', account.penaltyBaseAmount);
-        separatePenaltyRemark.set('penaltyGst', account.penaltyGst);
-        separatePenaltyRemark.set('penaltyHst', account.penaltyHst);
-        separatePenaltyRemark.set('penaltyQst', account.penaltyQst);
+        separatePenaltyRemark.set('PenaltyAmt', account.penaltyBaseAmount);
+        separatePenaltyRemark.set('PenaltyGst', account.penaltyGst);
+        separatePenaltyRemark.set('PenaltyHst', account.penaltyHst);
+        separatePenaltyRemark.set('PenaltyQst', account.penaltyQst);
+        ticketAmountRemarks.set('Comm', account.commisionWithoutTax);
         this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentrelate);
       }
 
       // TODO: write GDS Fare
-      
+
+      // DOING: Optional Consultant No. See US11134 - Section 10
+      // TODO: Check DB script
+      if (consultantNoRemark) {
+        consultantNoRemark.set('ConsultantNo', account.penaltyBaseAmount);
+        consultantNoRemarkStatic.set('ConsultantNoStatic', 'true');
+        this.remarksManager.createPlaceholderValues(consultantNoRemark, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'RM*NUC');
+      }
+
+      // TODO: Build other remarks in US11134
 
       this.remarksManager.createPlaceholderValues(paymentRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);

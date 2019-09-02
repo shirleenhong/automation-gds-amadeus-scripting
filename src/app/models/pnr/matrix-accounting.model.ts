@@ -1,6 +1,7 @@
 export class MatrixAccountingModel {
   airlineRecordLocator: string; // 10-characters
   bsp: string;
+  consultantNo: string; // 3 alpha-numeric, optional
   type: string;
   tkMacLine: number;
   accountingTypeRemark: string;

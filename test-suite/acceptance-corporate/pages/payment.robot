@@ -38,6 +38,7 @@ ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
 ${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
+${input_lowestGdsFare}    css=#lowestGdsFare
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -57,6 +58,18 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
     Select Itinerary Segments    2
+    Enter Value    ${input_confirmationNo}    54321
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
+    Enter Value    ${input_tktnumber}    1234567890
+    Set Test Variable    ${tkt_number}    1234567890
+    
+Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
+    Click Full Wrap
+    Click Payment Panel
+    Click Element    ${tab_nonBsp_processing}    
+    Click Element    ${button_addaccountingline}
+    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select Itinerary Segments    2    3
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
@@ -318,6 +331,14 @@ Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticke
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
     Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
     
+Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Multiple Segments And Ticket Number Are Written In The PNR
+    Switch To Graphic Mode
+    Get PNR Details  
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/VN-WJ3/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
+    
 Verify Penalty Amount Fields Are Displayed
     Wait Until Page Contains Element    ${input_penaltyBaseAmount}    30
     Page Should Contain Element    ${input_penaltyBaseAmount}
@@ -336,3 +357,39 @@ Click Save Button
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
     [Teardown]    Take Screenshot
+    
+Update Consultant Number to ${consultant_number}
+    Enter Value    ${input_consultantNo}    ${consultant_number}    
+    Set Test Variable     ${consultant_number}     ${consultant_number}
+    
+Verify Consultant Number Remark Is Written With The Correct Value
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Specific Remark Is Written In The PNR    RM*CN/-${consultant_number}
+    
+Verify RMG Remark Is Written With Supplier Code ${supplier_code}
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Specific Remark Is Written In The PNR    RMG/${supplier_code}PASSCHG
+    
+Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
+    Enter Value    ${input_lowestGdsFare}    ${lowest_gds_fare_value}
+    Set Test Variable    ${lowest_gds_fare_value}
+    
+Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For ${airline_code}
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Specific Remark Is Written In The PNR    RM*U14/-${airline_code}PASS-1234567890.LAT/${lowest_gds_fare_value}
+    
+Verify Specific RIR Remarks In English Are Removed From PNR
+    Verify Specific Remark Is Not Written In The PNR    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2
+    Verify Specific Remark Is Not Written In The PNR    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2
+    Verify Specific Remark Is Not Written In The PNR    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2
+    Verify Specific Remark Is Not Written In The PNR    RIR ON YOUR CREDIT CARD STATEMENT./S2
+    
+Verify Specific RIR Remarks In French Are Removed From PNR
+    Verify Specific Remark Is Not Written In The PNR    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2
+    Verify Specific Remark Is Not Written In The PNR    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2
+    Verify Specific Remark Is Not Written In The PNR    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2
+    Verify Specific Remark Is Not Written In The PNR    RIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
+    

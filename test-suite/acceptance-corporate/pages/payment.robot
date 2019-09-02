@@ -164,7 +164,6 @@ Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In 
 
 #-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 
-    Click Payment Panel
     Click Matrix Accounting Remark Tab
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
@@ -174,9 +173,50 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Enter Value    ${input_departurecity}    YVR        
     Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
+    #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot
     Click Save Button
-
+    
+Modify Matrix Accounting Remark For Air Canada Pass Purchase 
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    879222
+    Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
+    Enter Value    ${input_tktnumber}    0987654321
+    Enter Value    ${input_departurecity}    YCC        
+    Select From List By Label    ${list_purchasetype}     REGIONAL-QUEBEC
+    Select From List By Label    ${list_faretype}       LATITUDE
+    #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    
+Add Matrix Accounting Remark For WestJet Pass Purchase 
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    WestJet Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    888888
+    Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
+    Enter Value    ${input_tktnumber}    0987612345
+    Enter Value    ${input_departurecity}    MNL        
+    Select From List By Label    ${list_purchasetype}     Westjet Travel Pass
+    #Verify Supplier Code Default Value Is Correct For Pass Purchase Westjet Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    
+Add Matrix Accounting Remark For Porter Pass Purchase 
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    WestJet Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    123456
+    Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_departurecity}    YCC        
+    Select From List By Label    ${list_purchasetype}     Porter Travel Pass
+    #Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    
 Click Matrix Accounting Remark Tab
     Wait Until Element Is Visible   ${tab_nonBsp_processing}    60
     Set Focus To Element    ${tab_nonBsp_processing} 
@@ -244,9 +284,9 @@ Select Fare Type ${fare_type}
     Select From List By Value    ${list_faretype}    ${fare_type}
     [Teardown]    Take Screenshot
 
-Verify Supplier Code Default Value Is Correct For Pass Purchase ${acct_remark_type}
+Verify Supplier Code Default Value Is Correct For ${acct_remark_type}
     Set Test Variable    ${acct_remark_type}
-    ${actual_supplier_code}    Get Text    ${input_suppliercode}    
+    ${actual_supplier_code}    Get Text     ${input_suppliercode}
     Run Keyword If    "${acct_remark_type}" == "Air Canada Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    ACJ
     Run Keyword If    "${acct_remark_type}" == "Westjet Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    WJP
     Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP
@@ -291,3 +331,104 @@ Click Save Button
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
     [Teardown]    Take Screenshot
+    
+#-----Verification For PassPurchase-----#
+Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    AC 123 Q 02SEP 4 YVRYVR GK1  0700 0800  02SEP  879111
+    Switch To Command Page
+
+Verify Passive Segment Are Written For Westjet Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    AC 123 Q 02SEP 4 MNLMNL GK1  0700 0800  02SEP  888888
+    Switch To Command Page
+    
+Verify Passive Segment Are Written For Porter Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    AC 123 Q 02SEP 4 YCCYCC GK1  0700 0800  02SEP  123456
+    Switch To Command Page
+    
+Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    AC 123 Q 02SEP 1 YCCYCC GK1  0700 0800  02SEP  879222
+    Switch To Command Page
+
+Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RIR U.S COMMUTER PASS-FLEX/S2
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ALL DETAILS DISCUSSED AND
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    APPROVED BY CLIENT
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    CHARGE TO CLIENTS CREDIT CARD
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    AUTHORIZED BY CLIENT
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    TKT1-VEN/TK-0002167899/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-100.00/TX1-15.05XG/TX2-2.20RC/TX3-10.00XQ/TX4-0.00XT/COMM-3.00/S2    True
+    Take Screenshot
+    
+Verify PE Remark Are Written For Air Canada Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF LCC-AC*GRAND TOTAL CAD 127.25
+    Take Screenshot
+    
+Verify UDID Remark Are Written For Air Canada Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RM *U14/-ACPASS-INDIVIDUAL
+    
+Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    TOUS LES DETAILS ONT ETE PRESENTES AU CLIENT ET
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    APPROUVES PAR CE DERNIER
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    CLIENTS ONT ETE APPROUVES PAR LE CLIENT
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    TKT1-VEN/TK-0987612345/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-210.00/TX1-10.00XG/TX2-2.20RC/TX3-10.00XQ/TX4-0.00XT/COMM-3.00/S2    True
+    Take Screenshot
+    
+Verify PE Remark Are Written For Westjet Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF LCC-AC*GRAND TOTAL CAD 232.20
+    Take Screenshot
+    
+Verify UDID Remark Are Written For Westjet Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RM *U14/-WSPASS-INDIVIDUAL
+    
+Verify Itinerary Remarks Are Written For Porter Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ALL DETAILS DISCUSSED AND
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    APPROVED BY CLIENT
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    CHARGE TO CLIENTS CREDIT CARD
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    AUTHORIZED BY CLIENT
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    TKT1-VEN/TK-1234567890/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-105.00/TX1-15.05XG/TX2-3.00RC/TX3-12.00XQ/TX4-0.00XT/COMM-1.00/S2    True
+    Take Screenshot
+    
+Verify PE Remark Are Written For Porter Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RMF LCC-AC*GRAND TOTAL CAD 135.05
+    Take Screenshot
+    
+Verify UDID Remark Are Written For Porter Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RM *U14/-PDPASS-INDIVIDUAL
+    
+Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    TKT1-VEN/TK-0987654321/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-200.00/TX1-5.05XG/TX2-3.20RC/TX3-2.00XQ/TX4-0.00XT/COMM-3.00/S2    True
+    Take Screenshot
+    
+Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    LCC-AC*GRAND TOTAL CAD 210.25
+    Take Screenshot
+    
+Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
+    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    RM *U14/-ACPASS-INDIVIDUAL

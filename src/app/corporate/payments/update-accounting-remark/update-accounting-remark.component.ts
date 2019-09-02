@@ -56,11 +56,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
       baseAmount: new FormControl('', [Validators.required]),
       commisionWithoutTax: new FormControl('', [Validators.required]),
-      
-      // NonBSP Exchange fields
+      // Non BSP Exchange fields
       airlineRecordLocator: new FormControl('', []),
-      gdsFare: new FormControl('', []),
-      
+      gdsFare: new FormControl(0, []),
       gst: new FormControl('', [Validators.required]),
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
@@ -174,6 +172,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
         break;
       case 'NONBSPEXCHANGE':
+        this.name = 'Airline Record Locator:';
         this.matrixAccountingForm.get('airlineRecordLocator')
           .setValidators([
             Validators.required,
@@ -181,6 +180,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
             Validators.maxLength(10)
           ]);
         this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
+        break;
       case 'APAY':
       case 'NONBSP':
         this.name = 'Airline Record Locator:';
@@ -328,7 +328,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
-    
     // this.matrixAccountingForm.valueChanges.subscribe(val => {
     //   console.log(val);
     // });
@@ -336,16 +335,40 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(val => {
 
       console.log('supplierCodeName: ' + val);
-      
       // Require Ticket Number on certain supplier codes.
       if (['ACY', 'SOA', 'WJ3', 'ACJ', 'WJP'].includes(val)) {
-        console.log(val + " REQUIRING Ticket Number...");
+        console.log(val + ' REQUIRING Ticket Number...');
         this.matrixAccountingForm.get('tktLine').setValidators([
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(10),
           Validators.pattern('[0-9]*')
         ]);
+      }
+    });
+
+    // Require penalty fields when penalty is > 0
+    this.matrixAccountingForm.get('penaltyBaseAmount').valueChanges.subscribe(penaltyBaseAmount => {
+      console.log('penaltyBaseAmount: ' + penaltyBaseAmount);
+      const regexDecimal = '[0-9]*(\.[0-9]+)'; // Regex pattern for decimals
+
+      if (parseFloat(penaltyBaseAmount) > 0) {
+        this.matrixAccountingForm.get('penaltyGst').setValidators([
+          Validators.required,
+          Validators.pattern(regexDecimal)
+        ]);
+        this.matrixAccountingForm.get('penaltyHst').setValidators([
+          Validators.required,
+          Validators.pattern(regexDecimal)
+        ]);
+        this.matrixAccountingForm.get('penaltyQst').setValidators([
+          Validators.required,
+          Validators.pattern(regexDecimal)
+        ]);
+      } else {
+        this.matrixAccountingForm.get('penaltyGst').clearValidators();
+        this.matrixAccountingForm.get('penaltyHst').clearValidators();
+        this.matrixAccountingForm.get('penaltyQst').clearValidators();
       }
     });
 

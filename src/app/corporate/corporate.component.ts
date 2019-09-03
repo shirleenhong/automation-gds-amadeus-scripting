@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
+// import { DDBService } from '../service/ddb.service'; // Comment-out due to errors not needed on US11134
 import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -25,6 +26,7 @@ export class CorporateComponent implements OnInit {
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
+  dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false,  hasError: false };
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -32,6 +34,7 @@ export class CorporateComponent implements OnInit {
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
+    // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: CorporateRemarksService,
@@ -103,6 +106,13 @@ export class CorporateComponent implements OnInit {
   }
 
   public async wrapPnr() {
+    await this.loadPnrData();   
+    this.workflow = 'wrap';
+   
+
+  }
+
+  async loadPnrData() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
 
@@ -123,12 +133,17 @@ export class CorporateComponent implements OnInit {
       // this.showLoading('ReasonCodes', 'initData');
       await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
     }
-
-    if (this.isPnrLoaded) {
-      this.workflow = 'wrap';
-    }
-
     this.closePopup();
+     this.checkHasDataLoadError();
+  }
+
+  checkHasDataLoadError() {
+    this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
+    this.dataError.pnr = !(this.isPnrLoaded);
+    this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
+    this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
+    this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
+    this.dataError.hasError = (this.dataError.matching || this.dataError.pnr ||  this.dataError.reasonCode || this.dataError.servicingOption || this.dataError.supplier);    
   }
 
   public async SubmitToPNR() {

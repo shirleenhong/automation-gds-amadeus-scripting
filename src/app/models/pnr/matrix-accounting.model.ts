@@ -1,5 +1,7 @@
 export class MatrixAccountingModel {
+  airlineRecordLocator: string; // 10-characters
   bsp: string;
+  consultantNo: string; // 3 alpha-numeric, optional
   type: string;
   tkMacLine: number;
   accountingTypeRemark: string;
@@ -17,7 +19,7 @@ export class MatrixAccountingModel {
   qst: string;
   otherTax: string;
   supplierCodeName: string;
-  supplierConfirmatioNo = '';
+  supplierConfirmatioNo = ''; // Alias for airlineRecordLocator
   airAccountingRemark: string;
   tktLine: string;
   descriptionapay: string;
@@ -33,4 +35,7 @@ export class MatrixAccountingModel {
   penaltyQst = '0.00';
   penaltyOtherTax = '0.00';
   status: string // ADDED, UPDATED
+
+  // Non BSP Exchange properties
+  gdsFare: number;
 }

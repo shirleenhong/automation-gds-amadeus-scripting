@@ -217,11 +217,20 @@
         />
       </div>
       <div class="col">
-        <div class="">Commission w/o Tax:</div>
-        <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
-          [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
-          maxlength="8" AmountMask />
-      </div>
+          <div class="">Commission:</div>
+          <input
+            type="text"
+            class="form-control"
+            id="commisionWithoutTax"
+            formControlName="commisionWithoutTax"
+            [(ngModel)]="accountingRemark.commisionWithoutTax"
+            name="commisionWithoutTax"
+            required
+            placeholder="00.00"
+            maxlength="8"
+            AmountMask
+          />
+        </div>
     </div>
           
       <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
@@ -276,21 +285,6 @@
           <input type="text" class="form-control" id="originalTktLine" formControlName="originalTktLine"
             [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine"
             NumberOnlyMask maxlength="10" />
-        </div>
-        <div class="col">
-          <div class="">Commission:</div>
-          <input
-            type="text"
-            class="form-control"
-            id="commisionWithoutTax"
-            formControlName="commisionWithoutTax"
-            [(ngModel)]="accountingRemark.commisionWithoutTax"
-            name="commisionWithoutTax"
-            required
-            placeholder="00.00"
-            maxlength="8"
-            AmountMask
-          />
         </div>
       </div>
 

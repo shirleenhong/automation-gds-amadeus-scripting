@@ -69,11 +69,11 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   drawControls() {
-    let segmentsInFare: string = '';
-    let highFare: string = '';
-    let lowFare: string = '';
-    let segmentNo: string = '';
-    let reasonCode: string = '';
+    let segmentsInFare = '';
+    const highFare = '';
+    const lowFare = '';
+    let segmentNo = '';
+    const reasonCode = '';
 
     if (this.pnrService.tstObj.length === undefined) {
       segmentsInFare = this.getSegment(this.pnrService.tstObj);
@@ -128,11 +128,7 @@ export class ReportingBSPComponent implements OnInit {
     return code;
   }
 
-  // getClientSubUnitGuid() {
-  //   this.clientSubunitGuid = this.pnrService.getUDIDText('*U25/');
-  // }
-
   getReasonCodes() {
-    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]); //this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]);
   }
 }

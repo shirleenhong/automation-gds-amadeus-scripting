@@ -9,8 +9,6 @@
       <app-payments></app-payments>
     </accordion-group>
   </accordion>
-  <br />
-
   <accordion [closeOthers]="false">
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
@@ -54,6 +52,16 @@
     <div>
       <button class="leisureButton btnMenu">
         Cancel Segments
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="workflow === 'error'" class="loaderBody">
+  <div class="loader">
+    <div>
+      <button class="leisureButton btnMenu" (click)="initData()">
+        Reload
       </button>
     </div>
   </div>

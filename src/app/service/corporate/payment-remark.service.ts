@@ -8,23 +8,22 @@ import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService,
-    private rms: RemarksManagerService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
-    this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
+    this.writePassPurchase(
+      accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
+    );
 
-    // Non BSP Exhange Remarks
+    // Write Non BSP Exhange Remarks
     this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NONBSPEXCHANGE'));
   }
 
@@ -55,7 +54,13 @@ export class PaymentRemarkService {
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
       ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
-      ticketRemarks.set('TktNbr', account.tktLine);
+      if (account.tktLine) {
+        ticketRemarks.set('TktNbr', account.tktLine);
+        // delete exsting remark that has no tktnbr
+        this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'SupplierCode']);
+      } else {
+        this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'TktNbr', 'SupplierCode']);
+      }
       ticketRemarks.set('SupplierCode', account.supplierCodeName);
 
       ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
@@ -92,7 +97,6 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
-
     });
   }
 
@@ -116,7 +120,7 @@ export class PaymentRemarkService {
       const consultantNoRemark       = new Map<string, string>();
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark    = new Map<string, string>();
-      const powerExpressCostRemark   = new Map<string, string>();
+      // const powerExpressCostRemark   = new Map<string, string>();
 
       paymentRemark.set('PassNameNonAc', account.passPurchase);
       ticketRemarks.set('AirlineRecordLocator', account.airlineRecordLocator);
@@ -304,28 +308,34 @@ export class PaymentRemarkService {
   getRemarkSegmentAssociation(account: MatrixAccountingModel, segmentrelate: string[]) {
     const air = this.pnrService
       .getSegmentTatooNumber()
-      .filter((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo
-        && x.cityCode === account.departureCity && x.arrivalAirport === account.departureCity);
+      .filter(
+        (x) =>
+          x.segmentType === 'AIR' &&
+          x.controlNumber === account.supplierConfirmatioNo.toUpperCase() &&
+          x.cityCode === account.departureCity.toUpperCase() &&
+          x.arrivalAirport === account.departureCity.toUpperCase()
+      );
 
-    air.forEach(airElement => {
+    air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
   }
 
   extractAccountingModelFromPnr() {
     const accountingRemarks = new Array<MatrixAccountingModel>();
-    let model = new MatrixAccountingModel();
+    const model = new MatrixAccountingModel();
 
-    model.tkMacLine = parseInt(this.rms.getValue('TktRemarkNbr')[0]);
+    model.tkMacLine = Number.parseInt(this.rms.getValue('TktRemarkNbr')[0]);
 
     if (model.tkMacLine) {
       const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
       const slineNo = pholder[0].segmentNumberReferences[0];
       const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
 
-      model.departureCity = segment[0].cityCode;
-      model.supplierConfirmatioNo = segment[0].controlNumber;
-
+      if (segment.length > 0) {
+        model.departureCity = segment[0].cityCode;
+        model.supplierConfirmatioNo = segment[0].controlNumber;
+      }
       model.fareType = this.rms.getValue('FareType')[0];
       model.tktLine = this.rms.getValue('TktNbr')[0];
       model.supplierCodeName = this.rms.getValue('SupplierCode')[0];

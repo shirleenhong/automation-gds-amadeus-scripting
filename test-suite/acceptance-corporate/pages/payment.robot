@@ -42,6 +42,16 @@ ${input_lowestGdsFare}    css=#lowestGdsFare
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
 
 *** Keywords ***    
+Add Air Canada Pass Redemption Ticketing Details For Single Segment
+    Click Full Wrap
+    Click Payment Panel
+    Click Element    ${tab_nonBsp_processing}    
+    Click Element    ${button_addaccountingline}
+    Select From List By Label    ${list_accounting_type}    Air Canada Pass Redemption
+    Select Itinerary Segments    2
+    Enter Value    ${input_confirmationNo}    54321
+    Add Ticketing Amount Details    1000.00    100.00    10.00    1.00
+
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Click Full Wrap
     Click Payment Panel
@@ -143,6 +153,13 @@ Add Non-BSP and APAY Ticketing Detals For Multiple Segments
     Enter Value    ${input_confirmationNo}    89123
     Add Ticketing Amount Details With Other Tax    1230.00    11.00    12.00    13.00    14.00
     Enter Value    ${input_tktnumber}    9876543210
+
+Add Ticketing Amount Details
+    [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}
+    Enter Value    ${input_baseamount}    ${base_amt}
+    Enter Value    ${input_gst_tax}    ${gst_tax}
+    Enter Value    ${input_hst_tax}    ${hst_tax}
+    Enter Value    ${input_qst_tax}    ${qst_tax} 
 
 Add Ticketing Amount Details With Other Tax
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
@@ -380,13 +397,13 @@ Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticke
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
     Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
     
-Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Multiple Segments And Ticket Number Are Written In The PNR
+Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Switch To Graphic Mode
-    Get PNR Details
+    Get PNR Details  
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/VN-WJ3/S2-3
     Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
+    Verify Specific Remark Is Written In The PNR    RMF/LCC-WS*GRAND TOTAL CAD 1000
     
 Verify Penalty Amount Fields Are Displayed
     Wait Until Page Contains Element    ${input_penaltyBaseAmount}    30

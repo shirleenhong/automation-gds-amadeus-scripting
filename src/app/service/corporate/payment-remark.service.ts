@@ -132,6 +132,7 @@ export class PaymentRemarkService {
       const gdsFare = new Map<string, string>();
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark = new Map<string, string>();
+      const powerExpressCostRemark = new Map<string, string>();
 
       if (account.originalTktLine) {
         originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);
@@ -142,7 +143,7 @@ export class PaymentRemarkService {
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
 
-      if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName !== 'ACY') {
+      if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName === 'ACY') {
         separatePenaltyRemark.set('TktRemarkNbr', account.tkMacLine.toString());
         separatePenaltyRemark.set('VnCode', 'A22');
         separatePenaltyRemark.set('PenaltyAmt', account.penaltyBaseAmount);
@@ -151,10 +152,22 @@ export class PaymentRemarkService {
         separatePenaltyRemark.set('PenaltyQst', account.penaltyQst);
         separatePenaltyRemark.set('OtherTax', '0.00');
       }
-
-      this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst,
-        account.hst, account.qst, account.commisionWithoutTax, segmentrelate, account.supplierCodeName, account.tktLine);
-
+      if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName !== 'ACY') {
+        this.writeTicketingLine(
+          account.tkMacLine.toString(),
+          (parseFloat(account.baseAmount) + parseFloat(account.penaltyBaseAmount)).toString(),
+          (parseFloat(account.gst) + parseFloat(account.penaltyGst)).toString(),
+          (parseFloat(account.hst) + parseFloat(account.penaltyHst)).toString(),
+          (parseFloat(account.qst) + parseFloat(account.penaltyQst)).toString(),
+          account.commisionWithoutTax,
+          segmentrelate,
+          account.supplierCodeName,
+          account.tktLine
+        );
+      } else {
+        this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst,
+          account.hst, account.qst, account.commisionWithoutTax, segmentrelate, account.supplierCodeName, account.tktLine);
+      }
 
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst)
         + parseFloat(account.qst) + parseFloat(account.commisionWithoutTax);

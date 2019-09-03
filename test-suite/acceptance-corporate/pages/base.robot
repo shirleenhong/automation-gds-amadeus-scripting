@@ -14,6 +14,7 @@ ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporti
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
+${button_main_menu}    xpath=//button[contains(text(), 'Back To Main Menu')]
 
 *** Keywords ***
 Enter Value 
@@ -53,3 +54,9 @@ Click Submit To PNR
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+    
+Click Back To Main Menu
+    Wait Until Element Is Visible    ${button_main_menu}
+    Click Element    ${button_main_menu}
+    [Teardown]    Take Screenshot
+   

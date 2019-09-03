@@ -130,6 +130,7 @@ export class PaymentRemarkService {
       const cnNumberRemarks = new Map<string, string>();
       const passchange = new Map<string, string>();
       const gdsFare = new Map<string, string>();
+      const consultantNoRemark = new Map<string, string>();
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark = new Map<string, string>();
       const powerExpressCostRemark = new Map<string, string>();
@@ -172,6 +173,15 @@ export class PaymentRemarkService {
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst)
         + parseFloat(account.qst) + parseFloat(account.commisionWithoutTax);
 
+      // DOING: Optional Consultant No. See US11134 - Section 10
+      // TODO: Check DB script
+      if (consultantNoRemark) {
+        consultantNoRemark.set('ConsultantNo', account.penaltyBaseAmount);
+        consultantNoRemarkStatic.set('ConsultantNoStatic', 'true');
+        this.remarksManager.createPlaceholderValues(consultantNoRemark, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'RM*NUC');
+      }
+
       airlineCodeRemark.set('AirlineCode', 'AC');
       airlineCodeRemark.set('TotalCost', totalCost.toString());
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
@@ -183,7 +193,7 @@ export class PaymentRemarkService {
         passchange.set('ExchangeAirlineCode', 'AC');
         this.remarksManager.createPlaceholderValues(passchange);
       }
-
+      
       if (gdsFare) {
         gdsFare.set('AirlineCode', 'AC');
         gdsFare.set('PassNumber', account.passPurchase);

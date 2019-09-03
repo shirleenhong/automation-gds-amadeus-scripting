@@ -154,8 +154,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         accRemark === 'ACPP'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
-          ? (this.accountingRemark.supplierCodeName = 'WJP')
-          : (this.accountingRemark.supplierCodeName = 'PTP');
+            ? (this.accountingRemark.supplierCodeName = 'WJP')
+            : (this.accountingRemark.supplierCodeName = 'PTP');
 
         // this.enableFormControls(['supplierCodeName'], true);
         this.enableFormControls(['departureCity'], false);
@@ -184,6 +184,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       case 'NONBSPEXCHANGE':
         this.configureNonBSPExchangeControls();
+        this.checkSupplierCode();
         break;
       case 'APAY':
       case 'NONBSP':
@@ -221,7 +222,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       Validators.maxLength(3),
     ]);
   }
-  
+
   setMandatoryTicket(supCode: string[], isRequired: boolean) {
     if (supCode.indexOf(this.accountingRemark.supplierCodeName) >= 0 || isRequired) {
       this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);

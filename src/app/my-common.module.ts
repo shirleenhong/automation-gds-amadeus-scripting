@@ -14,7 +14,8 @@ import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdow
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AmountMaskDirective,
+  declarations: [
+    AmountMaskDirective,
     CCDateExpMaskDirective,
     NumberOnlyMaskDirective,
     AlphaNumericMaskDirective,
@@ -34,7 +35,8 @@ import { HttpClientModule } from '@angular/common/http';
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot()
   ],
-  exports: [AmountMaskDirective,
+  exports: [
+    AmountMaskDirective,
     CCDateExpMaskDirective,
     NumberOnlyMaskDirective,
     AlphaNumericMaskDirective,

@@ -42,6 +42,7 @@ import { CancelSegmentComponent } from './leisure/cancel/cancel-segment/cancel-s
 import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 import { MyCommonModule } from './my-common.module';
 
+
 @NgModule({
   declarations: [
     LeisureComponent,
@@ -98,7 +99,9 @@ import { MyCommonModule } from './my-common.module';
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [],
-  exports: [LeisureComponent],
+  exports: [
+    LeisureComponent
+  ],
   entryComponents: [
     UpdateMatrixReceiptComponent,
     UpdateAccountingRemarkComponent,
@@ -110,4 +113,4 @@ import { MyCommonModule } from './my-common.module';
     UpdateLeisureFeeComponent
   ]
 })
-export class AppLeisureModule {}
+export class AppLeisureModule { }

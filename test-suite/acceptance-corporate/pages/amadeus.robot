@@ -23,9 +23,9 @@ ${menu_corp_test}    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
 ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
-${popUp_sign_out}   //div[contains(text(),'Sign out')]
+${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
-${icon_air}    css=.bookingTool.FS
+${icon_air}       css=.bookingTool.FS
 ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
 ${button_cryptic}    css=.showInCommandPage
@@ -60,7 +60,7 @@ Handle Accept Cookie Panel
 Move Profile to GDS
     [Arguments]    @{gds_commands}
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
@@ -75,36 +75,38 @@ Open CA Corporate Test
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Add Multiple BSP Segment And Store Fare
-    @{gds_commands}    Create List    AN10JANYYZORD/AAC   SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP   AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5 
+    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
+    ...    AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Delete Fare and Itinerary
-    @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER    ER
+    @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER
+    ...    ER
     Wait Until Element Is Visible    ${label_command_page}    180
-    :FOR    ${gds_command}    IN    @{gds_commands}
+    : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Logout To Amadeus Sell Connect
-    Click Element    ${link_sign_out}     
+    Click Element    ${link_sign_out}
     Wait Until Element Is Visible    ${popUp_sign_out}    30
-    Click Element   ${button_sign_out}  
+    Click Element    ${button_sign_out}
     Wait Until Element Is Visible    ${input_username}    30
     Close Browser
 
 Get PNR Details
-    Wait Until Element Is Enabled   ${icon_air}      30
+    Wait Until Element Is Enabled    ${icon_air}    30
     Wait Until Element Is Visible    ${tab_cryptic_display}    30
     Sleep    5
-    Press Key    ${tab_cryptic_display}     \\32
+    Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    30
     Sleep    10
     ${pnr_details}    Get Text    ${popUp_pnr_display}
@@ -113,30 +115,29 @@ Get PNR Details
     [Teardown]    Take Screenshot
 
 Switch To Command Page
-    Click Element    ${close_cryptic_display} 
+    Click Element    ${close_cryptic_display}
     Wait Until Page Contains Element    ${button_cryptic}    60
     Click Element    ${button_cryptic}
     Wait Until Element Is Visible    ${input_commandText}    60
     [Teardown]    Take Screenshot
 
 Switch To Graphic Mode
-    #Input Text    ${input_commandText}    RT
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
-    Wait Until Page Contains Element    ${tab_cryptic_display}     60
+    Wait Until Page Contains Element    ${tab_cryptic_display}    60
     [Teardown]    Take Screenshot
 
 Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
-    
-Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}   
+
+Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     @{gds_commands}    Create List    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
-Add Multiple Passive Air Segments In The GDS With Different Airline Codes   
+Add Multiple Passive Air Segments In The GDS With Different Airline Codes
     @{gds_commands}    Create List    SS ACS1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
@@ -151,7 +152,7 @@ Verify Specific Remark Is Written In The PNR
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ${expected_remark}
     Log    Expected: ${expected_remark}
     Log    Actual: ${pnr_details}
-    
+
 Verify Specific Remark Is Not Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
     Wait Until Page Contains Element    ${popUp_pnr_display}    30
@@ -172,7 +173,8 @@ Remove Line Break And Spaces
     Set Test Variable    ${expected_remark}    ${expected_remark_flattened}
 
 Create Exchange PNR In The GDS
-    @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2    TTK/T1/RCAD200/XCAD20YR/TCAD120    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
+    @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
+    ...    TTK/T1/RCAD200/XCAD20YR/TCAD120    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
@@ -189,37 +191,31 @@ Move Multiple Passenger
 Move Single Passenger And Add Single BSP Segment With TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    TKOK
     Add Single BSP Segment And Store Fare
-    
+
 Move Single Passenger And Add Multiple BSP Segment With TSTs
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
     Add Multiple BSP Segment And Store Fare
-    
+
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
-    
+
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
-    
-Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
-    Add Passive Air Segment In The GDS With Airline Code ${airline_code}
-    Set Test Variable    ${consultant_number}    CN1
-    
+
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
-    
+
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
-    Add Multiple Passive Air Segments In The GDS With Different Airline Codes 
- 
-Enter RIR Remarks In English
-    Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2     RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2     RIR ON YOUR CREDIT CARD STATEMENT./S2
-    
-Enter RIR Remarks In French
-    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2     RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2     RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
+    Add Multiple Passive Air Segments In The GDS With Different Airline Codes
 
+Enter RIR Remarks In English
+    Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2    RIR ON YOUR CREDIT CARD STATEMENT./S2
+
+Enter RIR Remarks In French
+    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2    RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2

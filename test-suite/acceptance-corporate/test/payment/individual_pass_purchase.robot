@@ -7,6 +7,7 @@ Library           Screenshot
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/payment.robot
+Resource          ../../pages/reporting.robot
 
 *** Test Cases ***
 Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass Purchase PNR
@@ -60,7 +61,7 @@ Verify ThatNon BSP Processing Remark Is Written For Porter Individual Pass Purch
 Verify That Non BSP Processing Remark Is Written And Updated In The PNR
     [Tags]    us10869    us14121    ca
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger For EN
+    Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
     Open CA Corporate Test
     Click Full Wrap
     Click Payment Panel
@@ -86,4 +87,6 @@ Verify That Non BSP Processing Remark Is Written And Updated In The PNR
     Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     [Teardown]    Close Browser
+
+*** Keywords ***
 

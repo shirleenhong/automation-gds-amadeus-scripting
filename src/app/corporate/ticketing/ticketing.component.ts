@@ -12,6 +12,8 @@ import { TicketModel } from 'src/app/models/pnr/ticket.model';
 })
 export class TicketingComponent implements OnInit {
 
+    oidDisplay: string;
+    isOnHoldChecked: boolean = false;
     ticketForm: FormGroup;
     tkList: Array<SelectItem> = null;
 
@@ -30,12 +32,13 @@ export class TicketingComponent implements OnInit {
         this.loadTKList();
     }
 
-    loadOid() {
+    private loadOid(): void {
         const extractedOid = this.extractOidFromBookRemark();
         this.ticketForm.get('officeId').setValue(extractedOid);
+        this.oidDisplay = extractedOid;
     }
 
-    extractOidFromBookRemark() {
+    private extractOidFromBookRemark(): string {
         // const remarks = this.pnrService.getRemarksFromGDSByRegex(/BOOK-/g);
         const BOOK_REMARK_PREFIX = 'BOOK-';
         const TKT_PREFIX = 'TKT-';
@@ -55,16 +58,26 @@ export class TicketingComponent implements OnInit {
         return oid;
     }
 
-    loadTKList() {
+    private loadTKList(): void {
         this.tkList = this.staticValues.getTKList();
     }
 
-    getTicketingDetails(): TicketModel {
+    public getTicketingDetails(): TicketModel {
         const ticketRemark = new TicketModel();
         ticketRemark.oid = this.ticketForm.get('officeId').value;
         ticketRemark.tktDate = this.ticketForm.get('ticketDate').value;
+        ticketRemark.pnrOnHold = this.ticketForm.get('pnrOnHold').value;
         ticketRemark.tkLine = this.ticketForm.get('tk').value;
 
         return ticketRemark;
+    }
+
+    public onChangePnrOnHold(): void {
+        this.isOnHoldChecked = this.ticketForm.get('pnrOnHold').value;
+        console.info('isOnHoldChecked: ', this.isOnHoldChecked);
+
+        if (this.isOnHoldChecked) {
+            this.ticketForm.get('tk').setValue('');
+        }
     }
 }

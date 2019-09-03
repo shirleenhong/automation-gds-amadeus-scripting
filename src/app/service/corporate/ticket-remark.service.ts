@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
+import { RemarksManagerService } from './remarks-manager.service';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
-import { RemarkModel } from '../../models/pnr/remark.model';
 import { TicketModel } from '../../models/pnr/ticket.model';
 
 
@@ -9,30 +11,56 @@ import { TicketModel } from '../../models/pnr/ticket.model';
 })
 export class TicketRemarkService {
 
-    constructor() { }
+    DATE_PIPE = new DatePipe('en-US');
 
-    writeTicketRemark(ticketRemark: TicketModel) {
+    constructor(private remarksManagerSvc: RemarksManagerService) { }
+
+    public writeTicketRemark(ticketRemark: TicketModel) {
 
         const remGroup = new RemarkGroup();
-        remGroup.group = 'Ticketing Remark';
-        remGroup.remarks = new Array<RemarkModel>();
+        const remark = 'TKTL' + this.transformTicketDate(ticketRemark.tktDate) + '/' +
+            ticketRemark.oid + '/Q8C1' + this.appendTkLine(ticketRemark.pnrOnHold, ticketRemark.tkLine);
 
-        // FIXME: Use DatePipe for ticketRemark.tktDate to make it DDMMM format
-        // FIXME: The ticketRemark.tkLine should have logic depending on the selected on the dropdown
-        const remark = 'TKTL' + ticketRemark.tktDate + '/' + ticketRemark.oid + '/Q8C1-' + ticketRemark.tkLine;
-        remGroup.remarks.push(this.getRemarksModel(remark, '*'));
+        remGroup.cryptics.push(remark);
+
+        this.writeOnHoldRemark(ticketRemark.pnrOnHold);
 
         return remGroup;
-
     }
 
-    public getRemarksModel(remText, cat) {
+    private transformTicketDate(tktDate: string): string {
+        let transformedDate: string;
 
-        const rem = new RemarkModel();
-        rem.category = cat;
-        rem.remarkText = remText;
+        if (tktDate) {
+            transformedDate = this.DATE_PIPE.transform(new Date(tktDate), 'ddMMM').toUpperCase();
+        } else {
+            transformedDate = '';
+        }
 
-        return rem;
+        return transformedDate;
+    }
+
+    private appendTkLine(pnrOnHold: boolean, tkLine: string): string {
+        let tkSuffix = '';
+
+        if (pnrOnHold) {
+            tkSuffix = '-ONHOLD';
+        } else if (tkLine) {
+            if ('ISS' !== tkLine && 'INV' !== tkLine) {
+                tkSuffix = '-' + tkLine;
+            }
+        }
+
+        return tkSuffix;
+    }
+
+    private writeOnHoldRemark(pnrOnHold: boolean): void {
+        if (pnrOnHold) {
+            const staticRemarksCondition = new Map<string, string>();
+            staticRemarksCondition.set('isOnHold', 'true');
+
+            this.remarksManagerSvc.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ONHOLD:AWAITING APPROVAL');
+        }
     }
 
 }

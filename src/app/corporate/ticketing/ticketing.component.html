@@ -6,13 +6,12 @@
         <div class="row form-group">
             <div class="col-4">
                 <div>Office ID:</div>
-                <input type="text" class="form-control" id="txtOfficeId" name="officeId" formControlName="officeId" maxlength="35" />
+                <div class="emphasize italicize">{{ oidDisplay }}</div>
+                <input type="hidden" class="form-control" id="txtOfficeId" name="officeId" formControlName="officeId" maxlength="35" />
             </div>
 
             <div class="col-4">
                 <div>Ticketing Date for the PNR:</div>
-                <!-- [(ngModel)]="passiveSegments.departureDate" -->
-                <!-- (change)="checkDate($event.target.value, $event.target.name)" -->
                 <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" />
             </div>
         </div>
@@ -22,12 +21,12 @@
         <div class="row form-group">
             <div class="col-12">
                 <div>
-                    <label>
-                        <input type="checkbox" name="pnrOnHold" formControlName="pnrOnHold" /> PNR ON HOLD
+                    <label class="emphasize">
+                        <input id="chkOnHold" type="checkbox" name="pnrOnHold" formControlName="pnrOnHold" (change)="onChangePnrOnHold()" /> PNR ON HOLD
                     </label>
                 </div>
                 <div>
-                    <span>PNR will be sent to Aqua QC</span>
+                    <span class="italicize">PNR will be sent to Aqua QC</span>
                 </div>
             </div>
         </div>
@@ -35,9 +34,8 @@
         <br />
 
         <div class="row form-group">
-            <div class="col-12">
+            <div class="col-12" *ngIf="!isOnHoldChecked">
                 <div>TK Line:</div>
-                <!-- [(ngModel)]="leisureFee.passengerNo" -->
                 <select class="form-control " id="selTK" formControlName="tk" name="tk">
                     <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
                 </select>

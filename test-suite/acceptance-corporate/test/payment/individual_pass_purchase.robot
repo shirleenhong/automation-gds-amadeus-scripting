@@ -29,7 +29,6 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purc
     Add Matrix Accounting Remark For Air Canada Pass Purchase
     Click Save Button
     Click Submit To PNR
-    Close CA Corporate Test
     Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

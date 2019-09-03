@@ -277,22 +277,22 @@
             [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine"
             NumberOnlyMask maxlength="10" />
         </div>
-      <div class="col">
-        <div class="">Commission:</div>
-        <input
-          type="text"
-          class="form-control"
-          id="commisionWithoutTax"
-          formControlName="commisionWithoutTax"
-          [(ngModel)]="accountingRemark.commisionWithoutTax"
-          name="commisionWithoutTax"
-          required
-          placeholder="00.00"
-          maxlength="8"
-          AmountMask
-        />
+        <div class="col">
+          <div class="">Commission:</div>
+          <input
+            type="text"
+            class="form-control"
+            id="commisionWithoutTax"
+            formControlName="commisionWithoutTax"
+            [(ngModel)]="accountingRemark.commisionWithoutTax"
+            name="commisionWithoutTax"
+            required
+            placeholder="00.00"
+            maxlength="8"
+            AmountMask
+          />
+        </div>
       </div>
-    </div>
 
     <div class="form-group  row">
       <div class="col-sm-4">Ticket Number:</div>
@@ -309,6 +309,7 @@
           maxlength="10"
         />
       </div>
+    </div>
 
     <div
       *ngIf="

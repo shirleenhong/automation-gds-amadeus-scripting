@@ -72,15 +72,6 @@ export class CorporateComponent implements OnInit {
   async initData() {
     // this.showLoading('Loading Suppliers', 'initData');
     await this.ddbService.getAllMatrixSupplierCodes();
-    this.showLoading('Loading PNR and Data', 'initData');
-    await this.getPnrService();
-    this.showLoading('Matching Remarks', 'initData');
-    this.rms.getMatchcedPlaceholderValues();
-    this.showLoading('Servicing Options', 'initData');
-    await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
-    this.showLoading('ReasonCodes', 'initData');
-    await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-    // this.closeLoading();
     // this.closePopup();
   }
 

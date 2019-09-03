@@ -110,12 +110,13 @@ export class PaymentRemarkService {
       const ticketRemarks            = new Map<string, string>();
       const ticketAmountRemarks      = new Map<string, string>();
       const airlineCodeInvoice       = new Map<string, string>();
-      const staticRemarksCondition = new Map<string, string>();
+      const staticRemarksCondition   = new Map<string, string>();
 
       // Remarks specific to Non BSP Exchange
       const consultantNoRemark       = new Map<string, string>();
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark    = new Map<string, string>();
+      const powerExpressCostRemark   = new Map<string, string>();
 
       paymentRemark.set('PassNameNonAc', account.passPurchase);
       ticketRemarks.set('AirlineRecordLocator', account.airlineRecordLocator);
@@ -180,7 +181,8 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentrelate);
       }
 
-      // TODO: write GDS Fare
+      // TODO: Write Power Express Cost Remark in US11134, Section 9.
+      // powerExpressCostRemark.set('', '');
 
       // DOING: Optional Consultant No. See US11134 - Section 10
       // TODO: Check DB script
@@ -192,6 +194,9 @@ export class PaymentRemarkService {
       }
 
       // TODO: Build other remarks in US11134
+
+      // TODO: Search for existing RM*U14-[airline_Code]PASS in US11134, Section 11.
+      // TODO: Write GDS Fare
 
       this.remarksManager.createPlaceholderValues(paymentRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);

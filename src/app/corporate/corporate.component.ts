@@ -67,10 +67,8 @@ export class CorporateComponent implements OnInit {
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
-  async initData() {
-    // this.showLoading('Loading Suppliers', 'initData');
-    await this.ddbService.getAllMatrixSupplierCodes();
-    // this.closePopup();
+  initData() {    
+        this.ddbService.getAllMatrixSupplierCodes();   
   }
 
   showLoading(msg, caller?) {

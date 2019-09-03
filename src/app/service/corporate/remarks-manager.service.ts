@@ -12,11 +12,12 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService) {}
+  constructor(private serviceApi: RemarksManagerApiService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
       if (res !== undefined) {
+        debugger;
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
         });
@@ -27,6 +28,7 @@ export class RemarksManagerService {
         });
         console.log(this.matchedPlaceHolderValues);
       }
+      console.log('test');
       console.log(JSON.stringify(res));
     });
   }

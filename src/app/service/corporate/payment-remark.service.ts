@@ -14,7 +14,7 @@ import { PnrService } from '../pnr.service';
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -52,6 +52,7 @@ export class PaymentRemarkService {
       }
 
       ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
+
       if (account.tktLine) {
         ticketRemarks.set('TktNbr', account.tktLine);
         // delete exsting remark that has no tktnbr
@@ -73,19 +74,12 @@ export class PaymentRemarkService {
       this.getRemarkSegmentAssociation(account, segmentrelate);
 
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
-      const highFareRemark = new Map<string, string>();
-      highFareRemark.set('CAAirHighFare', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
-
-      const lowFareRemark = new Map<string, string>();
-      lowFareRemark.set('CAAirLowFare', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
       airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
 
+      this.writeHighLowFareSavingCode(totalCost, totalCost, 'L', segmentrelate);
       const airReasonCodeRemark = new Map<string, string>();
       airReasonCodeRemark.set('CAAirRealisedSavingCode', 'L');
 
-      this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
-      this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
-      this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(paymentRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
@@ -97,6 +91,21 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
     });
+  }
+
+  writeHighLowFareSavingCode(highFare, lowFare, savingsCode, segmentAssoc) {
+    const highFareRemark = new Map<string, string>();
+    const lowFareRemark = new Map<string, string>();
+    const airReasonCodeRemark = new Map<string, string>();
+
+    highFareRemark.set('CAAirHighFare', this.decPipe.transform(highFare, '1.2-2').replace(',', ''));
+    lowFareRemark.set('CAAirHighFare', this.decPipe.transform(lowFare, '1.2-2').replace(',', ''));
+    airReasonCodeRemark.set('CAAirRealisedSavingCode', savingsCode);
+
+    this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentAssoc);
+    this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentAssoc);
+    this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentAssoc);
+
   }
 
   addSegmentForPassPurchase(accounting: MatrixAccountingModel[]) {
@@ -187,8 +196,24 @@ export class PaymentRemarkService {
         model.departureCity = segment[0].cityCode;
         model.supplierConfirmatioNo = segment[0].controlNumber;
       }
+
+      let keys: string[];
+      keys = ['TktRemarkNbr', 'TktNbr', 'SupplierCode'];
+
+      let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+      if (matchKeys) {
+        model.tktLine = matchKeys[0].matchedPlaceholders.get('TktNbr');
+      } else {
+        keys = ['TktRemarkNbr', 'SupplierCode'];
+        matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+        model.tktLine = matchKeys[0].matchedPlaceholders.get('TktNbr');
+      }
+
+      // keys = ['AirlineCode', 'TotalCost'];
+      // let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+      // model.tktLine = matchKeys[0].matchedPlaceholders[0];
+
       model.fareType = this.rms.getValue('FareType')[0];
-      model.tktLine = this.rms.getValue('TktNbr')[0];
       model.supplierCodeName = this.rms.getValue('SupplierCode')[0];
       model.baseAmount = this.rms.getValue('BaseAmt')[0];
       model.gst = this.rms.getValue('Gst')[0];

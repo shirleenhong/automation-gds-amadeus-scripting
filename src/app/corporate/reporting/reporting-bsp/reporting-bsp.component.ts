@@ -6,6 +6,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { ServicingOptionEnums } from 'src/app/enums/servicing-options';
 import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
+//import { async } from '@angular/core/testing';
 
 declare var smartScriptSession: any;
 
@@ -52,7 +53,8 @@ export class ReportingBSPComponent implements OnInit {
       segment: new FormControl(segmentNo),
       highFareText: new FormControl(highFare),
       lowFareText: new FormControl(lowFare),
-      reasonCodeText: new FormControl(reasonCode)
+      reasonCodeText: new FormControl(reasonCode),
+      chkIncluded: new FormControl('')
     });
 
     if (defaultValue !== undefined && defaultValue !== null) {
@@ -63,36 +65,91 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   getServicingOptionValuesFares() {
+    debugger;
     this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
     this.lowFareDom = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Domestic_Calculation);
     this.lowFareInt = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_Calculation);
   }
 
-  drawControls() {
+  async drawControls() {
+    // let segmentsInFare: string = '';
+    // let highFare: any;
+    // let lowFare: string = '';
+    // let segmentNo: string = '';
+    // let reasonCode: string = '';
+    // let segmentLineNo: string = '';
+
+    if (this.pnrService.tstObj.length === undefined) {
+      this.populateData(this.pnrService.tstObj);
+      // segmentsInFare = this.getSegment(this.pnrService.tstObj);
+      // segmentNo = segmentsInFare;
+      // segmentLineNo = this.getSegmentLineNo(segmentNo);
+      // highFare = await this.getHighFare('FXA/S' + segmentLineNo);
+      // lowFare = await this.getLowFare('FXD/S' + segmentLineNo);
+      // this.addFares(segmentLineNo, highFare, lowFare, reasonCode);
+    } else {
+      const tsts = this.pnrService.tstObj;
+      for await (const p of tsts) {
+        this.populateData(p);
+        // segmentsInFare = this.getSegment(p);
+        // segmentNo = segmentsInFare;
+        // segmentLineNo = this.getSegmentLineNo(segmentNo);
+        // highFare = await this.getHighFare('FXA/S' + segmentLineNo);
+        // lowFare = await this.getLowFare('FXD/S' + segmentLineNo);
+        // this.addFares(segmentLineNo, highFare, lowFare, reasonCode);
+      }
+    }
+  }
+
+  async populateData(tst) {
     let segmentsInFare: string = '';
-    let highFare: string = '';
+    let highFare: any;
     let lowFare: string = '';
     let segmentNo: string = '';
     let reasonCode: string = '';
+    let segmentLineNo: string = '';
 
-    if (this.pnrService.tstObj.length === undefined) {
-      segmentsInFare = this.getSegment(this.pnrService.tstObj);
-      segmentNo = segmentsInFare;
-      this.addFares(segmentNo, highFare, lowFare, reasonCode);
-    } else {
-      this.pnrService.tstObj.forEach((p) => {
-        segmentsInFare = this.getSegment(p);
-        if (segmentsInFare.indexOf('/') === -1) {
-          segmentNo = segmentsInFare;
-          this.addFares(segmentNo, highFare, lowFare, reasonCode);
-        } else {
-          segmentsInFare.split('/').forEach((element) => {
-            segmentNo = element;
-            this.addFares(segmentNo, highFare, lowFare, reasonCode);
-          });
-        }
-      });
-    }
+    segmentsInFare = this.getSegment(tst);
+    segmentNo = segmentsInFare;
+    segmentLineNo = this.getSegmentLineNo(segmentNo);
+    highFare = await this.getHighFare('FXA/S' + segmentLineNo);
+    lowFare = await this.getLowFare('FXD/S' + segmentLineNo);
+    this.addFares(segmentLineNo, highFare, lowFare, reasonCode);
+  }
+
+  setReasonCode(highFare, lowFare): string {
+    let reasonCode: string = '';
+    console.log(highFare);
+    console.log(lowFare);
+    console.log(reasonCode);
+    return reasonCode;
+  }
+
+  getSegmentLineNo(tatooNumber: string): string {
+    // tslint:disable-next-line: max-line-length
+    // const seg = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && x.tatooNo === tatooNumber);
+    debugger;
+    let tatoos: string[] = [];
+    tatooNumber.split(',').forEach((e) => {
+      tatoos.push(e);
+    });
+
+    let segments = '';
+    const seg = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
+    seg.forEach((s) => {
+      if (segments === '') {
+        segments = s.lineNo;
+      } else {
+        // tslint:disable-next-line: no-debugger
+        segments = segments + ',' + s.lineNo;
+      }
+    });
+    return segments;
+    // if (seg !== undefined) {
+    //   return seg[0].lineNo;
+    // } else {
+    //   return '';
+    // }
   }
 
   getSegment(tst: any): string {
@@ -105,6 +162,7 @@ export class ReportingBSPComponent implements OnInit {
         if (segments === '') {
           segments = s.segmentReference.refDetails.refNumber;
         } else {
+          // tslint:disable-next-line: no-debugger
           segments = segments + ',' + s.segmentReference.refDetails.refNumber;
         }
       });
@@ -112,19 +170,46 @@ export class ReportingBSPComponent implements OnInit {
     return segments;
   }
 
-  getHighFare(fare: string, command: string): string {
-    smartScriptSession.send(command).then((res) => {
-      if (res.Response !== undefined) {
+  async getHighFare(command: string) {
+    let value = '';
+    await smartScriptSession.send(command).then((res) => {
+      const regex = /TOTALS (.*)/g;
+      const match = regex.exec(res.Response);
+
+      debugger;
+      //regex.lastIndex = 0;
+      if (match !== null) {
+        let temp = match[0].split('    ');
+        debugger;
+        if (temp[3] !== undefined) {
+          value = temp[3].trim();
+          return value.trim();
+        }
       }
     });
-    return fare;
+    return value;
   }
 
-  getLowFare(fare: string): string {
-    return fare;
+  // fxd
+  async getLowFare(command: string) {
+    let value = '';
+    await smartScriptSession.send(command).then((res) => {
+      debugger;
+      const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
+      const match = regex.exec(res.Response);
+      regex.lastIndex = 0;
+      if (match !== null) {
+        if (match.groups !== undefined && match.groups.from !== undefined) {
+          value = match.groups.from;
+          return value;
+        }
+      }
+    });
+    return value;
   }
 
   getReasonCode(code: string): string {
+    code = '';
     return code;
   }
 
@@ -133,6 +218,6 @@ export class ReportingBSPComponent implements OnInit {
   // }
 
   getReasonCodes() {
-    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]); //this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]);
   }
 }

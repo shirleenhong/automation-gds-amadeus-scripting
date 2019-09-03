@@ -25,6 +25,7 @@ export class ReportingRemarkService {
         const airReasonCodeRemark = new Map<string, string>();
         let segments: string[] = [];
         let segmentrelate: string[] = [];
+        let shouldWrite: boolean = false;
 
         Object.keys(fg.controls).forEach((key) => {
           if (key === 'segment') {
@@ -37,6 +38,10 @@ export class ReportingRemarkService {
             segmentrelate = this.getRemarkSegmentAssociation(segments);
           }
 
+          if (key === 'chkIncluded') {
+            shouldWrite = true;
+          }
+
           if (key === 'highFareText') {
             highFareRemark.set('CAAirHighFare', fg.get(key).value);
           }
@@ -47,15 +52,17 @@ export class ReportingRemarkService {
             airReasonCodeRemark.set('CAAirRealisedSavingCode', fg.get(key).value);
           }
         });
-        this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
-        this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
-        this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
-
+        if (shouldWrite) {
+          this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
+          this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
+          this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
+        }
       }
     }
   }
 
   getRemarkSegmentAssociation(segments: string[]): string[] {
+    debugger;
     let segmentrelate: string[] = [];
     const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo));
 

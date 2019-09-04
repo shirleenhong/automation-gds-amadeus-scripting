@@ -52,7 +52,6 @@ export class RemarksManagerApiService {
   }
 
   async getPnrAmadeusAddmultiElementRequest(placeholders: Array<PlaceholderValues>) {
-    debugger;
     const param = this.getPnrRequestParam(placeholders);
     console.log(JSON.stringify(param));
     return await this.postRequest(common.pnrAmadeusRequestService, param);

@@ -22,6 +22,7 @@ export class ReportingBSPComponent implements OnInit {
   highFareSO: any;
   lowFareDom: any;
   lowFareInt: any;
+  isDomesticFlight = false;
 
   constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService) {}
 
@@ -42,6 +43,11 @@ export class ReportingBSPComponent implements OnInit {
 
   addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
     const items = this.bspGroup.get('fares') as FormArray;
+    if (isExchange) {
+      reasonCode = 'E : Exchange';
+      highFare = chargeFare;
+      lowFare = chargeFare;
+    }
     items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
     this.total = items.length;
   }
@@ -65,10 +71,19 @@ export class ReportingBSPComponent implements OnInit {
       isExchange: new FormControl(isExchange)
     });
 
+    if (isExchange) {
+      group.get('reasonCodeText').disable();
+      group.get('highFareText').disable();
+      group.get('lowFareText').disable();
+    }
+
     if (defaultValue !== undefined && defaultValue !== null) {
       group.setValue(defaultValue);
     }
-    this.changeReasonCodes(group, this.reasonCodes.length - 1);
+    if (!isExchange) {
+      this.changeReasonCodes(group, this.reasonCodes.length - 1);
+    }
+
     return group;
   }
 
@@ -102,17 +117,27 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   async populateData(tst) {
-    console.log(tst);
     const fareInfo = tst.fareDataInformation.fareDataSupInformation;
     const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
-    const highFare = await this.getHighFare('FXA/S' + segmentLineNo);
-    const lowFare = (await this.getLowFare('FXD/S' + segmentLineNo)) + this.getThresHold();
-    const isExchange = false; /// get is Exchange
+
+    const highFare = await this.getHighFare(this.highFareSO.ServiceOptionItemValue + '/S' + segmentLineNo); // FXA/S
+    let lowFare = '';
+    if (this.isDomesticFlight) {
+      lowFare = (await this.getLowFare(this.lowFareDom.ServiceOptionItemValue + '/S' + segmentLineNo)) + this.getThresHold(); // FXD/S
+    } else {
+      lowFare = (await this.getLowFare(this.lowFareInt.ServiceOptionItemValue + '/S' + segmentLineNo)) + this.getThresHold(); // FXD/S
+    }
+
+    const isExchange = this.IsSegmentExchange(segmentsInFare); /// get is Exchange
     this.reasonCodes.push([]);
     this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
+  }
+
+  IsSegmentExchange(tatooNumber): boolean {
+    return this.pnrService.exchangeTatooNumbers.filter((e) => tatooNumber.includes(e)).length > 0;
   }
 
   getThresHold(): number {

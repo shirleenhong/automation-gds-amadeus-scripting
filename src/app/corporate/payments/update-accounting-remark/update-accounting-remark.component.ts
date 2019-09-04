@@ -158,7 +158,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], false);
-    this.enableFormControls(['otherTax', 'gdsFare'], true);
+    this.enableFormControls(['otherTax', 'gdsFare', 'lowFare', 'fullFare', 'reasonCode'], true);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -201,6 +201,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
+        if (accRemark === 'NONBSP') {
+          this.enableFormControls(['lowFare', 'fullFare', 'reasonCode'], false);
+        }
         break;
       default:
         this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);

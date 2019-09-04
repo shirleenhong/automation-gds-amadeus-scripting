@@ -358,8 +358,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     //   console.log(val);
     // });
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(() => {
-
-      this.matrixAccountingForm.controls.originalTktLine.clearValidators();
+      this.matrixAccountingForm.controls.tktLine.clearValidators();
       switch (this.accountingRemark.accountingTypeRemark) {
         case 'ACPP':
         case 'WCPP':
@@ -371,12 +370,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           }
           break;
         case 'NONBSPEXCHANGE':
+          this.matrixAccountingForm.controls.originalTktLine.clearValidators();
           const supCode = ['ACY', 'SOA', 'WJ3', 'ACJ', 'WJP'];
           this.setMandatoryTicket(supCode, false);
           if (supCode.indexOf(this.accountingRemark.supplierCodeName) >= 0) {
             this.matrixAccountingForm.controls.originalTktLine.setValidators(Validators.required);
-            this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
           }
+          this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
           break;
         case 'APAY':
         case 'NONBSP':

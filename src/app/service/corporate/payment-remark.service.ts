@@ -377,11 +377,6 @@ export class PaymentRemarkService {
 
       model.tkMacLine = Number.parseInt(ticketRemarkNumbers[i]);
 
-      console.log('ticketRemarkNumber');
-      console.log(ticketRemarkNumbers[i]);
-      console.log('this.rms.getValue("TktRemarkNbr"):');
-      console.log(this.rms.getValue('TktRemarkNbr'));
-
       if (model.tkMacLine) {
         const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
         const slineNo = pholder[i].segmentNumberReferences[i];

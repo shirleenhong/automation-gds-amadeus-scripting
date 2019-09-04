@@ -313,59 +313,59 @@ export class PaymentRemarkService {
     const accountingRemarks = new Array<MatrixAccountingModel>();
     const ticketRemarkNumbers = this.rms.getValue('TktRemarkNbr');
 
-    ticketRemarkNumbers.forEach((ticketRemarkNumber, index) => {
-
+    for (let i = 0; i < ticketRemarkNumbers.length; i++) {
       const model = new MatrixAccountingModel();
 
       debugger;
-      model.tkMacLine = Number.parseInt(ticketRemarkNumber);
+      model.tkMacLine = Number.parseInt(ticketRemarkNumbers[i]);
 
       console.log('ticketRemarkNumber');
-      console.log(ticketRemarkNumber);
+      console.log(ticketRemarkNumbers[i]);
       console.log('this.rms.getValue("TktRemarkNbr"):');
       console.log(this.rms.getValue('TktRemarkNbr'));
 
       if (model.tkMacLine) {
         const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
-        const slineNo = pholder[index].segmentNumberReferences[index];
+        const slineNo = pholder[i].segmentNumberReferences[i];
         const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
 
         if (segment.length > 0) {
-          model.departureCity = segment[index].cityCode;
-          model.supplierConfirmatioNo = segment[index].controlNumber;
+          model.departureCity = segment[i].cityCode;
+          model.supplierConfirmatioNo = segment[i].controlNumber;
         }
-        model.fareType = this.rms.getValue('FareType')[index];
-        model.tktLine = this.rms.getValue('TktNbr')[index];
-        model.supplierCodeName = this.rms.getValue('SupplierCode')[index];
-        model.baseAmount = this.rms.getValue('BaseAmt')[index];
-        model.gst = this.rms.getValue('Gst')[index];
-        model.hst = this.rms.getValue('Hst')[index];
-        model.qst = this.rms.getValue('Qst')[index];
-        model.commisionWithoutTax = this.rms.getValue('Comm')[index];
+        model.fareType = this.rms.getValue('FareType')[i];
+        model.tktLine = this.rms.getValue('TktNbr')[i];
+        debugger;
+        model.supplierCodeName = this.rms.getValue('SupplierCode')[i];
+        model.baseAmount = this.rms.getValue('BaseAmt')[i];
+        model.gst = this.rms.getValue('Gst')[i];
+        model.hst = this.rms.getValue('Hst')[i];
+        model.qst = this.rms.getValue('Qst')[i];
+        model.commisionWithoutTax = this.rms.getValue('Comm')[i];
 
-        const airlinecode = this.rms.getValue('AirlineCode')[index];
-        const totalcost = this.rms.getValue('TotalCost')[index];
+        const airlinecode = this.rms.getValue('AirlineCode')[i];
+        const totalcost = this.rms.getValue('TotalCost')[i];
 
         if (totalcost) {
           switch (airlinecode) {
             case 'AC':
               model.accountingTypeRemark = 'ACPP';
-              model.passPurchase = this.rms.getValue('PassName')[index];
+              model.passPurchase = this.rms.getValue('PassName')[i];
               break;
             case 'WS':
               model.accountingTypeRemark = 'WCPP';
-              model.passPurchase = this.rms.getValue('PassNameNonAc')[index];
+              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
               break;
             case 'PD':
               model.accountingTypeRemark = 'PCPP';
-              model.passPurchase = this.rms.getValue('PassNameNonAc')[index];
+              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
               break;
           }
         }
 
         accountingRemarks.push(model);
       }
-    });
+    }
 
     console.log('accountingRemarks');
     console.log(accountingRemarks);

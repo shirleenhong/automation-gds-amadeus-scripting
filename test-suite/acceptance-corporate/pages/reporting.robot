@@ -71,7 +71,7 @@ Add Client Reporting Values For Non-BSP Segments
     Enter Value    ${input_full_fare}    2101.00
     Enter Value    ${input_low_fare}    912.99
     Enter Value    ${input_reason_code}    L
-    
+
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Switch To Graphic Mode
     Get PNR Details

@@ -1,12 +1,43 @@
-<div [formGroup]="bspGroup">
+<div [formGroup]="bspGroup" width>
+  <br />
   <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
-    <div [formGroupName]="i">
+    <div [formGroupName]="i" class="row">
+      <div class="">
+        <br />
+        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
+      </div>
+
+      <div class="col-2">
+        Segment
+        <input formControlName="segment" type="text" class="form-control" readonly />
+      </div>
+
+      <div class="col-2">
+        Charge Fare
+        <input formControlName="chargeFare" type="text" class="form-control" readonly />
+      </div>
+
+      <div class="col-2">
+        Full Fare
+        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" />
+      </div>
+      <div class="col-2">
+        Low Fare
+        <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
+      </div>
+      <div class="col-3">
+        Reason Code
+        <input formControlName="reasonCodeText" type="text" class="form-control" list="dynamicReasonCodes" />
+        <datalist id="dynamicReasonCodes">
+          <option *ngFor="let reason of reasonCodes[i]">{{
+            reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
+          }}</option>
+        </datalist>
+      </div>
+
+      <!-- 
       <table style="width:100%">
-        <!-- <tr>
-          <td style="width:5%">
-            <input type="checkbox" name="chkSelectAll" formControlName="chkSelectAll" id="chkSelectAll" />
-          </td>
-        </tr> -->
+    
         <tr>
           <td style="width:5%">
             <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
@@ -35,13 +66,13 @@
           <td style="width:15%">
             <input formControlName="reasonCodeText" type="text" class="form-control" style="width:90%" list="dynamicReasonCodes" />
             <datalist id="dynamicReasonCodes">
-              <option *ngFor="let item of reasonCodes" [value]="item.reasonCode">{{
+              <option *ngFor="let item of reasonCodes" [value]="item">{{
                 item.reasonCode + '-' + item.reasonCodeProductTypeDescriptions.get('en-GB')
               }}</option>
             </datalist>
           </td>
         </tr>
-      </table>
+      </table> -->
     </div>
   </div>
 </div>

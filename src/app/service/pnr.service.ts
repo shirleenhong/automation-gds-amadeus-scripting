@@ -26,7 +26,7 @@ export class PnrService {
   pnrResponse: any;
   clientSubUnitGuid: string;
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -39,7 +39,7 @@ export class PnrService {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
           this.pnrResponse = res.response.model.output.response;
-          await this.getTST();
+          await this.getTST();         
         },
         (error: string) => {
           this.isPNRLoaded = false;

@@ -150,26 +150,6 @@ export class VisaPassportComponent implements OnInit {
           console.log(cityCountry);
           destinations.push(cityCountry);
         }
-
-        //   const airdate = x.departureDate;
-        //   if (firstLoop) {
-        //     firstDepDate = new Date(x.departureDate.substr(2, 2)
-        // + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-        //     firstLoop = false;
-        //   } else {
-        //     firstDepDate = this.getFirstDate(airdate, firstDepDate);
-        //   }
-        // });
-
-        // let countryOrigin: string;
-        // this.pnrService.pnrObj.airSegments.forEach(x => {
-        //   let depDate = new Date();
-        //   depDate = new Date(x.departureDate.substr(2, 2) + '/' + x.departureDate.substr(0, 2) + '/' + x.departureDate.substr(4, 2));
-        //   if (depDate.toDateString() === firstDepDate.toDateString()) {
-        //     if (this.ddbService.getCityCountry(x.departureAirport) !== '') {
-        //  countryOrigin = this.ddbService.getCityCountry(x.departureAirport).country;
-        // }
-        //   }
       });
 
       let hasInternationalFlight: boolean;
@@ -225,19 +205,6 @@ export class VisaPassportComponent implements OnInit {
         }
       ];
       for (const air of this.pnrService.pnrObj.airSegments) {
-        // debugger;
-        // await this.ddbService.getTravelPort(air.departureAirport).then(x => {
-        //   const c = JSON.stringify(x);
-        //   let obj: any;
-        //   obj = JSON.parse(c);
-        //   this.departureCountry = obj[0].countryName;
-        // });
-        // await this.ddbService.getTravelPort(air.arrivalAirport).then(x => {
-        //   const c = JSON.stringify(x);
-        //   let obj: any;
-        //   obj = JSON.parse(c);
-        //   this.arrivalCountry = obj[0].countryName;
-        // test
         if (this.ddbService.getCityCountry(air.departureAirport) === '') {
           this.departureCountry = '';
         } else {

@@ -22,6 +22,8 @@ export class ReportingBSPComponent implements OnInit {
   highFareSO: any;
   lowFareDom: any;
   lowFareInt: any;
+  isDomesticFlight = true;
+  thresholdAmount = 0;
 
   constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService) {}
 
@@ -29,6 +31,8 @@ export class ReportingBSPComponent implements OnInit {
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
     });
+    this.isDomesticFlight = this.ddbService.isPnrDomestic();
+    this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
     this.drawControls();
@@ -68,6 +72,7 @@ export class ReportingBSPComponent implements OnInit {
     if (defaultValue !== undefined && defaultValue !== null) {
       group.setValue(defaultValue);
     }
+
     this.changeReasonCodes(group, this.reasonCodes.length - 1);
     return group;
   }
@@ -109,15 +114,17 @@ export class ReportingBSPComponent implements OnInit {
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
     const highFare = await this.getHighFare('FXA/S' + segmentLineNo);
-    const lowFare = (await this.getLowFare('FXD/S' + segmentLineNo)) + this.getThresHold();
+    const lowFare = (await this.getLowFare('FXD/S' + segmentLineNo)) + this.thresholdAmount;
     const isExchange = false; /// get is Exchange
     this.reasonCodes.push([]);
     this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
   }
 
-  getThresHold(): number {
-    // todo
-    return 0;
+  getThresHoldAmount() {
+    const amt = this.ddbService.airMissedSavingPolicyThresholds
+      .filter((air) => air.routingDescription === (this.isDomesticFlight ? 'Domestic' : 'International'))
+      .map((air) => air.amount);
+    return amt.length > 0 ? amt[0] : 0;
   }
 
   getSegmentLineNo(tatooNumber: string): string {
@@ -160,11 +167,9 @@ export class ReportingBSPComponent implements OnInit {
     await smartScriptSession.send(command).then((res) => {
       const regex = /TOTALS (.*)/g;
       const match = regex.exec(res.Response);
-
       // regex.lastIndex = 0;
       if (match !== null) {
         const temp = match[0].split('    ');
-        // debugger;
         if (temp[3] !== undefined) {
           value = temp[3].trim();
           return value.trim();
@@ -178,7 +183,6 @@ export class ReportingBSPComponent implements OnInit {
   async getLowFare(command: string) {
     let value = '';
     await smartScriptSession.send(command).then((res) => {
-      // debugger;
       const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
       const match = regex.exec(res.Response);
       regex.lastIndex = 0;

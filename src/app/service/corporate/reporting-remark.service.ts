@@ -25,7 +25,7 @@ export class ReportingRemarkService {
         const airReasonCodeRemark = new Map<string, string>();
         const segments: string[] = [];
         let segmentrelate: string[] = [];
-        let shouldWrite: boolean = false;
+        let shouldWrite = false;
 
         Object.keys(fg.controls).forEach((key) => {
           if (key === 'segment') {
@@ -58,7 +58,6 @@ export class ReportingRemarkService {
           this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
           this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
         }
-
       }
     }
   }

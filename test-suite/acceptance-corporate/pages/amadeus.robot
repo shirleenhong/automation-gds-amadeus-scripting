@@ -31,6 +31,7 @@ ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves
 ${button_cryptic}    css=.showInCommandPage
 ${button_graphical}    css=.showInGraphicMode
 ${close_cryptic_display}    css=#elgen-19
+${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -124,7 +125,7 @@ Switch To Command Page
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${input_commandText}
     Input Text    ${input_commandText}    RT
-    Press Keys    ${input_commandText}    \\13
+    Press Key    ${input_commandText}    \\13
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
     Wait Until Page Contains Element    ${tab_cryptic_display}    60
@@ -218,4 +219,4 @@ Enter RIR Remarks In English
     Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2    RIR ON YOUR CREDIT CARD STATEMENT./S2
 
 Enter RIR Remarks In French
-    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2    RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
+    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2    RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2 

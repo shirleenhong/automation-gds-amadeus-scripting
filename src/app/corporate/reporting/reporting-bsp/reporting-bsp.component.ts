@@ -127,12 +127,12 @@ export class ReportingBSPComponent implements OnInit {
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
 
-    const highFare = await this.getHighFare(this.highFareSO.ServiceOptionItemValue + '/S' + segmentLineNo); // FXA/S
+    const highFare = await this.getHighFare(this.highFareSO.ServiceOptionItemValue.replace('//', '/S' + segmentLineNo + '/')); // FXA/S
     let lowFare = '';
     if (this.isDomesticFlight) {
-      lowFare = (await this.getLowFare(this.lowFareDom.ServiceOptionItemValue + '/S' + segmentLineNo)) + this.thresholdAmount; // FXD/S
+      lowFare = await this.getLowFare(this.lowFareDom.ServiceOptionItemValue.replace('//', '/S' + segmentLineNo + '/')); // FXD/S
     } else {
-      lowFare = (await this.getLowFare(this.lowFareInt.ServiceOptionItemValue + '/S' + segmentLineNo)) + this.thresholdAmount; // FXD/S
+      lowFare = await this.getLowFare(this.lowFareInt.ServiceOptionItemValue.replace('//', '/S' + segmentLineNo + '/')); // FXD/S
     }
     const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
 

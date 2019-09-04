@@ -3,7 +3,7 @@ import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.mode
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import { FormGroup, Validators, ValidationErrors, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 
@@ -352,10 +352,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
-    this.matrixAccountingForm.valueChanges.subscribe(val => {
-      // Log form group errors
-      this.logFormValidationErrors();
-    });
+    // this.matrixAccountingForm.valueChanges.subscribe(val => {
+    //   // Log form group errors
+    //   // this.logFormValidationErrors();
+    // });
 
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(val => {
 
@@ -407,17 +407,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
   }
 
-  logFormValidationErrors() {
-    console.log('================ ERRORS: this.matrixAccountingForm: ================');
+  /**
+   * Console logger for debugging errors on this.matrixAccountingForm
+   * To use, uncomment and import ValidationErrors
+   *
+   * @return void
+   */
+  // logFormValidationErrors() {
+  //   console.log('================ ERRORS: this.matrixAccountingForm: ================');
 
-    Object.keys(this.matrixAccountingForm.controls).forEach(key => {
+  //   Object.keys(this.matrixAccountingForm.controls).forEach(key => {
 
-      const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
-      if (controlErrors != null) {
-        Object.keys(controlErrors).forEach(keyError => {
-          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-        });
-      }
-    });
-  }
+  //     const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
+  //     if (controlErrors != null) {
+  //       Object.keys(controlErrors).forEach(keyError => {
+  //         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+  //       });
+  //     }
+  //   });
+  // }
 }

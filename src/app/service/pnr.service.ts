@@ -25,6 +25,7 @@ export class PnrService {
   PCC = '';
   pnrResponse: any;
   clientSubUnitGuid: string;
+  exchangeTatooNumbers = [];
 
   constructor() {}
 
@@ -39,7 +40,8 @@ export class PnrService {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
           this.pnrResponse = res.response.model.output.response;
-          await this.getTST();         
+          this.getExchangeTatooNumbers();
+          await this.getTST();
         },
         (error: string) => {
           this.isPNRLoaded = false;
@@ -1306,5 +1308,16 @@ export class PnrService {
       return true;
     }
     return false;
+  }
+
+  getExchangeTatooNumbers() {
+    for (const fo of this.pnrObj.foElements) {
+      for (const assoc of fo.associations) {
+        if (assoc.segmentType === 'ST') {
+          this.exchangeTatooNumbers.push(assoc.tatooNumber);
+        }
+      }
+    }
+    return this.exchangeTatooNumbers;
   }
 }

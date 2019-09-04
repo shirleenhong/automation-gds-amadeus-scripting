@@ -223,64 +223,58 @@ export class PaymentRemarkService {
     return newAirlineCode;
   }
 
+  writeTicketingPenalty(tkline, vnCode, baseAmount, gst, hst, qst, otherTax, segmentAssoc) {
+    const separatePenaltyRemark = new Map<string, string>();
+    separatePenaltyRemark.set('TktRemarkNbr', tkline);
+    separatePenaltyRemark.set('VnCode', vnCode);
+    separatePenaltyRemark.set('PenaltyAmt', baseAmount);
+    separatePenaltyRemark.set('PenaltyGst', gst);
+    separatePenaltyRemark.set('PenaltyHst', hst);
+    separatePenaltyRemark.set('PenaltyQst', qst);
+    separatePenaltyRemark.set('OtherTax', otherTax);
+    this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentAssoc);
+  }
+
   writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
     debugger;
+    const totalcostlist = [];
     accountingRemarks.forEach((account) => {
-      const airlineCodeRemark = new Map<string, string>();
-      const ticketRemarks = new Map<string, string>();
-      const ticketAmountRemarks = new Map<string, string>();
       const itiRemarks = new Map<string, string>();
-      const apayRemarks = new Map<string, string>();
-
-
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-      airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
 
-      const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst)
-        + parseFloat(account.hst) + parseFloat(account.qst) + parseFloat(account.otherTax);
-      const highFareRemark = new Map<string, string>();
-      highFareRemark.set('CAAirHighFare', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
+      this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst,
+        account.hst, account.qst, account.otherTax, account.commisionWithoutTax, segmentAssoc, account.supplierCodeName, account.tktLine);
 
-      const lowFareRemark = new Map<string, string>();
-      lowFareRemark.set('CAAirLowFare', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
-      airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
-
-      const airReasonCodeRemark = new Map<string, string>();
-      airReasonCodeRemark.set('CAAirRealisedSavingCode', 'L');
-
-      ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
-      ticketRemarks.set('TktNbr', account.tktLine);
-      ticketRemarks.set('SupplierCode', account.supplierCodeName);
-
-      ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
-      ticketAmountRemarks.set('BaseAmt', account.baseAmount);
-      ticketAmountRemarks.set('Gst', account.gst);
-      ticketAmountRemarks.set('Hst', account.hst);
-      ticketAmountRemarks.set('Qst', account.qst);
-      ticketAmountRemarks.set('Comm', account.commisionWithoutTax);
-      ticketAmountRemarks.set('OthTax', account.otherTax);
-      itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
-
-      if (account.accountingTypeRemark === 'APAY' && parseFloat(account.baseAmount) > 0) {
-        apayRemarks.set('TktRemarkNbr', account.baseAmount);
-        apayRemarks.set('PenaltyAmt', account.baseAmount);
-        apayRemarks.set('PenaltyGst', account.gst);
-        apayRemarks.set('PenaltyHst', account.hst);
-        apayRemarks.set('PenaltyQst', account.qst);
-        apayRemarks.set('OtherTax', account.otherTax);
-        apayRemarks.set('VnCode', 'PFS');
+      if (account.accountingTypeRemark === 'NONBSP') {
+        const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst)
+          + parseFloat(account.hst) + parseFloat(account.qst) + parseFloat(account.otherTax);
+        const lookindex = totalcostlist.findIndex(((x) => x.AirlineCode === uniqueairlineCode));
+        if (lookindex > -1) {
+          totalcostlist[lookindex].totalAmount = totalcostlist[lookindex].totalAmount + totalCost;
+        } else {
+          totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
+        }
+        this.writeHighLowFareSavingCode(account.fullFare, account.lowFare, account.reasonCode, segmentAssoc);
       }
 
-      this.writeHighLowFareSavingCode(account.fullFare, account.lowFare, account.reasonCode, segmentAssoc);
+      if (account.accountingTypeRemark === 'APAY' && parseFloat(account.baseAmount) > 0) {
+        this.writeTicketingPenalty(account.tkMacLine.toString(), 'PFS',
+          account.baseAmount, account.gst, account.hst, account.qst, account.otherTax, segmentAssoc);
+      }
 
-      this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentAssoc);
-      this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentAssoc);
-      this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentAssoc);
-      this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentAssoc);
-      this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentAssoc);
-      this.remarksManager.createPlaceholderValues(apayRemarks, null, segmentAssoc);
-      this.remarksManager.createPlaceholderValues(airlineCodeRemark);
+      itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
+
+    });
+
+    totalcostlist.forEach(element => {
+      if (element.AirlineCode) {
+        const airlineCodeRemark = new Map<string, string>();
+        airlineCodeRemark.set('AirlineCode', element.AirlineCode);
+        airlineCodeRemark.set('TotalCost', this.decPipe.transform(element.totalAmount, '1.2-2').replace(',', ''));
+        this.remarksManager.createPlaceholderValues(airlineCodeRemark);
+      }
+
     });
   }
 

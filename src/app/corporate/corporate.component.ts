@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { PnrService } from '../service/pnr.service';
-import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
-import { MessageComponent } from '../shared/message/message.component';
-import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+
 import { LoadingComponent } from '../shared/loading/loading.component';
-import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
-import { TicketRemarkService } from '../service/corporate/ticket-remark.service';
+import { MessageComponent } from '../shared/message/message.component';
 import { PaymentsComponent } from './payments/payments.component';
-import { TicketingComponent } from './ticketing/ticketing.component';
-import { RemarkGroup } from '../models/pnr/remark.group.model';
-import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
-import { DDBService } from '../service/ddb.service';
-import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
 import { ReportingComponent } from '../corporate/reporting/reporting.component';
+import { TicketingComponent } from './ticketing/ticketing.component';
+import { PnrService } from '../service/pnr.service';
+import { DDBService } from '../service/ddb.service';
+import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
+import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
+import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
+import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
+import { TicketRemarkService } from '../service/corporate/ticket-remark.service';
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { MessageType } from '../shared/message/MessageType';
 
 @Component({
     selector: 'app-corporate',
@@ -149,7 +149,6 @@ export class CorporateComponent implements OnInit {
     public async SubmitToPNR() {
         this.showLoading('Updating PNR...', 'SubmitToPnr');
         const accRemarks = new Array<RemarkGroup>();
-
         accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
         accRemarks.push(this.ticketRemarkService.writeTicketRemark(this.ticketingComponent.getTicketingDetails()));
 

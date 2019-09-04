@@ -149,7 +149,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], false);
-    this.enableFormControls(['otherTax', 'gdsFare'], true);
+    // this.enableFormControls(['otherTax', 'gdsFare'], true);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -218,6 +218,16 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(10)
       ]);
+    this.matrixAccountingForm.get('tktLine').setValidators([
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10)
+    ]);
+    this.matrixAccountingForm.get('originalTktLine').setValidators([
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10)
+    ]);
     this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
     this.matrixAccountingForm.get('consultantNo').setValidators([
       Validators.minLength(3),

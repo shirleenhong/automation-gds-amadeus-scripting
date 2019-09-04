@@ -40,9 +40,9 @@ export class ReportingBSPComponent implements OnInit {
     this.total = items.length;
   }
 
-  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string) {
+  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
     const items = this.bspGroup.get('fares') as FormArray;
-    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare));
+    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
     this.total = items.length;
   }
 
@@ -61,7 +61,8 @@ export class ReportingBSPComponent implements OnInit {
       lowFareText: new FormControl(lowFare),
       reasonCodeText: new FormControl(reasonCode),
       chargeFare: new FormControl(chargeFare),
-      chkIncluded: new FormControl('')
+      chkIncluded: new FormControl(''),
+      isExchange: new FormControl(isExchange)
     });
 
     if (defaultValue !== undefined && defaultValue !== null) {

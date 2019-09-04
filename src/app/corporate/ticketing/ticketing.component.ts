@@ -74,7 +74,6 @@ export class TicketingComponent implements OnInit {
 
     public onChangePnrOnHold(): void {
         this.isOnHoldChecked = this.ticketForm.get('pnrOnHold').value;
-        console.info('isOnHoldChecked: ', this.isOnHoldChecked);
 
         if (this.isOnHoldChecked) {
             this.ticketForm.get('tk').setValue('');

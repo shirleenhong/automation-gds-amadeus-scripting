@@ -18,9 +18,9 @@ export class DDBService implements OnInit {
   servicingOption = [];
   airTravelPortInformation = [];
   reasonCodeList = Array<ReasonCode>();
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -67,23 +67,14 @@ export class DDBService implements OnInit {
       });
   }
 
-  async sample() {
-    this.getRequest(common.travelportService + 'MNL').then(
-      (x) => {
-        alert(JSON.stringify(x));
-      },
-      (err) => {
-        console.log(JSON.stringify(err));
-      }
-    );
-  }
-
   async getAllServicingOptions(clientSubUnit) {
     if (this.servicingOption.length === 0) {
       await this.getRequest(common.servicingOptionService + clientSubUnit + '&GDSCode=1A').then(
-        (x) => {
+        (response) => {
           this.servicingOption = [];
-          this.servicingOption = x.ServiceOptionDetails;
+          if (response) {
+            this.servicingOption = response.ServiceOptionDetails;
+          }
         },
         (err) => {
           console.log(JSON.stringify(err));
@@ -171,15 +162,17 @@ export class DDBService implements OnInit {
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
     this.reasonCodeList = [];
-    await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then((response) => {
-      response.ReasonCodeItems.forEach((reasonJson) => {
-        this.reasonCodeList.push(new ReasonCode(reasonJson));
-      });
-    });
+    await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
+      (response) => {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          this.reasonCodeList.push(new ReasonCode(reasonJson));
+        });
+      }
+    );
   }
 
-  getReasonCodeByTypeId(ids: any) {
-    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId));
+  getReasonCodeByTypeId(ids: number[], language: string): Array<ReasonCode> {
+    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language));
   }
   // getReasonCodeByTypeId(integer[]) {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
@@ -282,7 +275,7 @@ export class DDBService implements OnInit {
   }
 
   getServicingOptionValue(soId) {
-    return this.servicingOption.find((x) => x.ServiceItemId === soId);
+    return this.servicingOption.find((x) => x.ServiceOptionId === soId);
   }
 
   getCityCountry(search: string) {

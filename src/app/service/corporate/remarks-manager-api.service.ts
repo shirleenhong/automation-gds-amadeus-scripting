@@ -48,6 +48,7 @@ export class RemarksManagerApiService {
 
   async getPnrMatchedPlaceHolderValues() {
     const param = this.getPnrRequestParam();
+    console.log(JSON.stringify(param));
     return await this.postRequest(common.matchedPlacholderValueService, param);
   }
 

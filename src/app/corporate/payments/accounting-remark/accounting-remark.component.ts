@@ -24,7 +24,7 @@ export class AccountingRemarkComponent implements OnInit {
   constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private paymentService: PaymentRemarkService) { }
 
   ngOnInit() {
-    this.accountingRemarks = this.paymentService.extractAccountingModelFromPnr();
+    this.accountingRemarks = this.paymentService.extractAccountingModelsFromPnr();
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
   }

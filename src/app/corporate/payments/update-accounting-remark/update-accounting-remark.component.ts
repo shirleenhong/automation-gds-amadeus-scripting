@@ -221,6 +221,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(10)
       ]);
+
     this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
     this.matrixAccountingForm.get('consultantNo').setValidators([
       Validators.minLength(3),
@@ -391,7 +392,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     // Require penalty fields when penalty is > 0
     this.matrixAccountingForm.get('penaltyBaseAmount').valueChanges.subscribe(penaltyBaseAmount => {
-      console.log('penaltyBaseAmount: ' + penaltyBaseAmount);
       const regexDecimal = '[0-9]*(\.[0-9]+)'; // Regex pattern for decimals
 
       if (parseFloat(penaltyBaseAmount) > 0) {

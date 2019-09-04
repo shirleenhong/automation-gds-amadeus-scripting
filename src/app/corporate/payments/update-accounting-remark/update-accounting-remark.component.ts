@@ -358,11 +358,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // });
 
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(val => {
-
-      console.log('supplierCodeName: ' + val);
       // Require Ticket Numbers on certain supplier codes.
       if (['ACY', 'SOA', 'WJ3', 'ACJ', 'WJP'].includes(val)) {
-        console.log(val + ' REQUIRING Ticket Number...');
         this.matrixAccountingForm.get('tktLine').setValidators([
           Validators.required,
           Validators.pattern('[0-9]{10}')
@@ -376,7 +373,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     // Require penalty fields when penalty is > 0
     this.matrixAccountingForm.get('penaltyBaseAmount').valueChanges.subscribe(penaltyBaseAmount => {
-      console.log('penaltyBaseAmount: ' + penaltyBaseAmount);
       const regexDecimal = '[0-9]*(\.[0-9]+)'; // Regex pattern for decimals
 
       if (parseFloat(penaltyBaseAmount) > 0) {
@@ -406,24 +402,4 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
     }
   }
-
-  /**
-   * Console logger for debugging errors on this.matrixAccountingForm
-   * To use, uncomment and import ValidationErrors
-   *
-   * @return void
-   */
-  // logFormValidationErrors() {
-  //   console.log('================ ERRORS: this.matrixAccountingForm: ================');
-
-  //   Object.keys(this.matrixAccountingForm.controls).forEach(key => {
-
-  //     const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
-  //     if (controlErrors != null) {
-  //       Object.keys(controlErrors).forEach(keyError => {
-  //         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-  //       });
-  //     }
-  //   });
-  // }
 }

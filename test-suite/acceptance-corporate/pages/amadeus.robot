@@ -82,14 +82,14 @@ Add Single BSP Segment And Store Fare
 
 Add Multiple BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
-    ...    AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN30JANCDGLHR/AAF    SS1Y1    FXP/S5
+    ...    AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN10FEBCDGLHR/AAF    SS1Y1    FXP/S5
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Delete Fare and Itinerary
-    @{gds_commands}    Create List    RT    TTE/ALL    XI    RFCWTPTEST    ER
+    @{gds_commands}    Create List   IR    RT    TTE/ALL    XI    RFCWTPTEST    ER
     ...    ER
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
@@ -222,4 +222,9 @@ Enter RIR Remarks In English
     Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2    RIR ON YOUR CREDIT CARD STATEMENT./S2
 
 Enter RIR Remarks In French
-    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2    RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2 
+    Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2    RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
+    
+Handle Simultaneous Changes To PNR 
+    Sleep   3
+    ${status}    Run Keyword And Return Status    Page Should Contain Element     //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
+    Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary

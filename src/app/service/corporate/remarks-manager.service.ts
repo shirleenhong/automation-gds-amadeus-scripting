@@ -17,7 +17,6 @@ export class RemarksManagerService {
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
       if (res !== undefined) {
-        // debugger;
         res.placeHolderValues.forEach((ph) => {
           this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
         });

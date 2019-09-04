@@ -30,5 +30,25 @@ Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     Click Payment Panel
     Add Multiple Non-BSP Ticketing Details
     Add Client Reporting Values For Multiple Non-BSP Segments
- 
     
+Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
+    [Tags]    us13616
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger And Add Passive Segment With Airline Code PD
+    Open CA Corporate Test
+    Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
+    Verify That Supplier Code Default Value Is Correct For PD
+    Click Save Button
+    Click Submit To PNR
+    Verify Accounting Remark Is Written Correctly For Non BSP Exchange
+    
+Verify That Accounting Remark Is Written Correctly For Airline Pass Redemption
+    [Tags]    us13616
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger And Add Passive Segment With Airline Code AC
+    Open CA Corporate Test
+    Add Air Canada Pass Redemption Ticketing Details For Single Segment
+    Verify That Supplier Code Default Value Is Correct For AC
+    Click Save Button
+    Click Submit To PNR
+    Verify Accounting Remark Is Written Correctly For Airline Pass Redemption

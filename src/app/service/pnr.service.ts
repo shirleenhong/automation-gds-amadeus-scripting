@@ -26,7 +26,7 @@ export class PnrService {
   pnrResponse: any;
   clientSubUnitGuid: string;
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -1298,5 +1298,13 @@ export class PnrService {
       return rems[0].remarkText.substr(-5);
     }
     return 'EN-GB';
+  }
+
+  hasPassRemark(): boolean {
+    const u14 = this.getRemarkText('U14-');
+    if (u14 && u14.indexOf('PASS') > -1) {
+      return true;
+    }
+    return false;
   }
 }

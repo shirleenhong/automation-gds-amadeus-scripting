@@ -131,10 +131,10 @@ Verify That Specific RIR Remarks In French Are Removed From PNR
 Verify That Ticketing Instruction Remarks Can Be Written For Multiple Segments
     [Tags]    us11134
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Multiple Air Passive Segments
+    Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WS
     Open CA Corporate Test
     Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Verify That Supplier Code Default Value Is Correct For WS
     Click Save Button
     Click Submit To PNR
-    Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Multiple Segments And Ticket Number Are Written In The PNR 
+    Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR 

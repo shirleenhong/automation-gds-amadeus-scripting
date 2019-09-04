@@ -16,7 +16,8 @@ Verify That Reporting Remarks Are Written For Single Non-BSP Segment
     Move Single Passenger And Add Passive Segment With Airline Code AC
     Open CA Corporate Test
     Click Full Wrap
-    Add Non-BSP Ticketing Details For Single Segment
+    Click Payment Panel
+    Add Non-BSP Ticketing Details For Segment 2
     Add Client Reporting Values For Non-BSP Segments
     Click Submit To PNR
    
@@ -26,9 +27,9 @@ Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WS 
     Open CA Corporate Test
     Click Full Wrap
-    Add Non-BSP Ticketing Details For Multiple Segments
-    Add Client Reporting Values For Non-BSP Segments
-    Click Submit To PNR
+    Click Payment Panel
+    Add Multiple Non-BSP Ticketing Details
+    Add Client Reporting Values For Multiple Non-BSP Segments
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
     [Tags]    us13616

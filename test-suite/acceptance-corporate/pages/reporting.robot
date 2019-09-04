@@ -72,6 +72,14 @@ Add Client Reporting Values For Non-BSP Segments
     Enter Value    ${input_low_fare}    912.99
     Enter Value    ${input_reason_code}    L
 
+Add Client Reporting Values For Multiple Non-BSP Segments
+    Click Reporting Panel
+    Enter Full Fare    1123.50
+    Enter Low Fare    300.00
+    Enter Reason Code    L
+    Enter Full Fare    999.50    2
+    Enter Low Fare    123.00    2
+    
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Switch To Graphic Mode
     Get PNR Details

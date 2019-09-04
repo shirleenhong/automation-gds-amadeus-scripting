@@ -18,9 +18,9 @@ export class DDBService implements OnInit {
   servicingOption = [];
   airTravelPortInformation = [];
   reasonCodeList = Array<ReasonCode>();
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -179,6 +179,7 @@ export class DDBService implements OnInit {
   }
 
   getReasonCodeByTypeId(ids: any) {
+    debugger;
     return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId));
   }
   // getReasonCodeByTypeId(integer[]) {
@@ -282,7 +283,7 @@ export class DDBService implements OnInit {
   }
 
   getServicingOptionValue(soId) {
-    return this.servicingOption.find((x) => x.ServiceItemId === soId);
+    return this.servicingOption.find((x) => x.ServiceOptionId === soId);
   }
 
   getCityCountry(search: string) {

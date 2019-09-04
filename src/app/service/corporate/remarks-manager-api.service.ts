@@ -48,11 +48,13 @@ export class RemarksManagerApiService {
 
   async getPnrMatchedPlaceHolderValues() {
     const param = this.getPnrRequestParam();
+    console.log(JSON.stringify(param));
     return await this.postRequest(common.matchedPlacholderValueService, param);
   }
 
   async getPnrAmadeusAddmultiElementRequest(placeholders: Array<PlaceholderValues>) {
     const param = this.getPnrRequestParam(placeholders);
+    console.log(JSON.stringify(param));
     return await this.postRequest(common.pnrAmadeusRequestService, param);
   }
 

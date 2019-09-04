@@ -2,7 +2,15 @@
   <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
     <div [formGroupName]="i">
       <table style="width:100%">
+        <!-- <tr>
+          <td style="width:5%">
+            <input type="checkbox" name="chkSelectAll" formControlName="chkSelectAll" id="chkSelectAll" />
+          </td>
+        </tr> -->
         <tr>
+          <td style="width:5%">
+            <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
+          </td>
           <td style="width:7%">
             Segment
           </td>
@@ -10,7 +18,7 @@
             <input formControlName="segment" type="text" class="form-control" maxlength="2" style="width:90%" />
           </td>
           <td style="width:8%">
-            High Fare
+            Full Fare
           </td>
           <td style="width:12%">
             <input formControlName="highFareText" type="text" class="form-control" maxlength="55" style="width:90%" />
@@ -27,7 +35,9 @@
           <td style="width:15%">
             <input formControlName="reasonCodeText" type="text" class="form-control" style="width:90%" list="dynamicReasonCodes" />
             <datalist id="dynamicReasonCodes">
-              <option *ngFor="let item of reasonCodes" [value]="item.reasonCode">{{ item.reasonCode }}</option>
+              <option *ngFor="let item of reasonCodes" [value]="item.reasonCode">{{
+                item.reasonCode + '-' + item.reasonCodeProductTypeDescriptions.get('en-GB')
+              }}</option>
             </datalist>
           </td>
         </tr>

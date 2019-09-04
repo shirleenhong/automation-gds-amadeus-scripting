@@ -352,11 +352,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
-    // this.matrixAccountingForm.valueChanges.subscribe(val => {
-    //   // Log form group errors
-    //   // this.logFormValidationErrors();
-    // });
-
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(val => {
       // Require Ticket Numbers on certain supplier codes.
       if (['ACY', 'SOA', 'WJ3', 'ACJ', 'WJP'].includes(val)) {

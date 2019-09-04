@@ -228,8 +228,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
         this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
         this.matrixAccountingForm.get('gdsFare').enable();
-        console.log('===== cfLine =====');
-        console.log(cfaLine);
       } else {
         this.matrixAccountingForm.get('gdsFare').disable();
         this.matrixAccountingForm.get('gdsFare').clearValidators();

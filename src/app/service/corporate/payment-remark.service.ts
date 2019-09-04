@@ -85,7 +85,7 @@ export class PaymentRemarkService {
     const airReasonCodeRemark = new Map<string, string>();
 
     highFareRemark.set('CAAirHighFare', this.decPipe.transform(highFare, '1.2-2').replace(',', ''));
-    lowFareRemark.set('CAAirHighFare', this.decPipe.transform(lowFare, '1.2-2').replace(',', ''));
+    lowFareRemark.set('CAAirLowFare', this.decPipe.transform(lowFare, '1.2-2').replace(',', ''));
     airReasonCodeRemark.set('CAAirRealisedSavingCode', savingsCode);
 
     this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentAssoc);
@@ -124,6 +124,7 @@ export class PaymentRemarkService {
    * @param accountingRemarks collection of Non-BSP Exchange remarks
    */
   writeNonBSPExchange(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     accountingRemarks.forEach((account) => {
       const originalTicketRemarks = new Map<string, string>();
       const originalTicketCondition = new Map<string, string>();
@@ -134,14 +135,13 @@ export class PaymentRemarkService {
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark = new Map<string, string>();
 
-      if (account.originalTktLine) {
+      if (account.originalTktLine != undefined) {
         originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);
       } else {
         originalTicketCondition.set('NoOriginalTicket', 'true');
       }
 
-      const segmentrelate: string[] = [];
-      this.getRemarkSegmentAssociation(account, segmentrelate);
+      const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
 
       if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName === 'ACY') {
         separatePenaltyRemark.set('TktRemarkNbr', account.tkMacLine.toString());
@@ -154,13 +154,12 @@ export class PaymentRemarkService {
       }
 
       this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst,
-        account.hst, account.qst, account.otherTax, account.commisionWithoutTax, segmentrelate, account.supplierCodeName, account.tktLine);
-
+        account.hst, account.qst, account.otherTax, account.commisionWithoutTax, segmentAssoc, account.supplierCodeName, account.tktLine);
 
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst)
-        + parseFloat(account.qst) + parseFloat(account.commisionWithoutTax);
+        + parseFloat(account.qst) + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
 
-      airlineCodeRemark.set('AirlineCode', 'AC');
+      airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
       airlineCodeRemark.set('TotalCost', totalCost.toString());
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
 
@@ -171,25 +170,25 @@ export class PaymentRemarkService {
       }
 
 
-      if (this.pnrService.hasPassRemark) {
-        passchange.set('ExchangeAirlineCode', 'AC');
+      if (this.pnrService.hasPassRemark()) {
+        passchange.set('ExchangeAirlineCode', uniqueairlineCode);
         this.remarksManager.createPlaceholderValues(passchange);
       }
 
-      if (gdsFare) {
-        gdsFare.set('AirlineCode', 'AC');
+      if (account.gdsFare != undefined) {
+        gdsFare.set('AirlineCode', uniqueairlineCode);
         gdsFare.set('PassNumber', account.passPurchase);
         gdsFare.set('FareType', account.fareType);
         gdsFare.set('GdsFare', account.gdsFare.toString());
-        this.remarksManager.createPlaceholderValues(passchange);
+        this.remarksManager.createPlaceholderValues(gdsFare);
       }
 
-      this.writeHighLowFareSavingCode(account.fullFare, account.lowFare, account.reasonCode, segmentrelate);
+      this.writeHighLowFareSavingCode(totalCost, totalCost, 'E', segmentAssoc);
 
-
+      debugger;
       this.remarksManager.createPlaceholderValues(null, originalTicketCondition, null, null, 'NE/-EX-Y', true);
       this.remarksManager.createPlaceholderValues(originalTicketRemarks);
-      this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentrelate);
+      this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentAssoc);
       this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
     });
   }
@@ -225,6 +224,7 @@ export class PaymentRemarkService {
   }
 
   writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     accountingRemarks.forEach((account) => {
       const airlineCodeRemark = new Map<string, string>();
       const ticketRemarks = new Map<string, string>();
@@ -233,18 +233,7 @@ export class PaymentRemarkService {
       const apayRemarks = new Map<string, string>();
 
 
-      const segmentNos = account.segmentNo.split(',');
-      const segmentDetails = this.pnrService.getSegmentTatooNumber();
-      const segmentAssoc = new Array<string>();
-      let uniqueairlineCode = '';
-
-      segmentNos.forEach(segs => {
-        const look = segmentDetails.find((x) => segs === x.lineNo);
-        if (look) {
-          uniqueairlineCode = look.airlineCode;
-          segmentAssoc.push(look.tatooNo);
-        }
-      });
+      const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
       airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
 
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst)
@@ -293,6 +282,21 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
     });
+  }
+
+  private GetSegmentAssociation(account: MatrixAccountingModel) {
+    const segmentNos = account.segmentNo.split(',');
+    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentAssoc = new Array<string>();
+    let uniqueairlineCode = '';
+    segmentNos.forEach(segs => {
+      const look = segmentDetails.find((x) => segs === x.lineNo);
+      if (look) {
+        uniqueairlineCode = look.airlineCode;
+        segmentAssoc.push(look.tatooNo);
+      }
+    });
+    return { uniqueairlineCode, segmentAssoc };
   }
 
   addSegmentForPassPurchase(accounting: MatrixAccountingModel[]) {
@@ -368,67 +372,70 @@ export class PaymentRemarkService {
     });
   }
 
-  extractAccountingModelFromPnr() {
+  extractAccountingModelsFromPnr() {
     const accountingRemarks = new Array<MatrixAccountingModel>();
-    const model = new MatrixAccountingModel();
+    const ticketRemarkNumbers = this.rms.getValue('TktRemarkNbr');
 
-    model.tkMacLine = Number.parseInt(this.rms.getValue('TktRemarkNbr')[0]);
+    for (let i = 0; i < ticketRemarkNumbers.length; i++) {
+      const model = new MatrixAccountingModel();
 
-    if (model.tkMacLine) {
-      const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
-      const slineNo = pholder[0].segmentNumberReferences[0];
-      const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
+      model.tkMacLine = Number.parseInt(ticketRemarkNumbers[i]);
 
-      if (segment.length > 0) {
-        model.departureCity = segment[0].cityCode;
-        model.supplierConfirmatioNo = segment[0].controlNumber;
-      }
+      if (model.tkMacLine) {
+        const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
+        const slineNo = pholder[i].segmentNumberReferences[i];
+        const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
 
-      let keys: string[];
-      keys = ['TktRemarkNbr', 'TktNbr', 'SupplierCode'];
-
-      let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-      if (matchKeys) {
-        model.tktLine = matchKeys[0].matchedPlaceholders.get('TktNbr');
-      } else {
-        keys = ['TktRemarkNbr', 'SupplierCode'];
-        matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-        model.tktLine = matchKeys[0].matchedPlaceholders.get('TktNbr');
-      }
-
-      // keys = ['AirlineCode', 'TotalCost'];
-      // let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-      // model.tktLine = matchKeys[0].matchedPlaceholders[0];
-
-      model.fareType = this.rms.getValue('FareType')[0];
-      model.supplierCodeName = this.rms.getValue('SupplierCode')[0];
-      model.baseAmount = this.rms.getValue('BaseAmt')[0];
-      model.gst = this.rms.getValue('Gst')[0];
-      model.hst = this.rms.getValue('Hst')[0];
-      model.qst = this.rms.getValue('Qst')[0];
-      model.commisionWithoutTax = this.rms.getValue('Comm')[0];
-
-      const airlinecode = this.rms.getValue('AirlineCode')[0];
-      const totalcost = this.rms.getValue('TotalCost')[0];
-
-      if (totalcost) {
-        switch (airlinecode) {
-          case 'AC':
-            model.accountingTypeRemark = 'ACPP';
-            model.passPurchase = this.rms.getValue('PassName')[0];
-            break;
-          case 'WS':
-            model.accountingTypeRemark = 'WCPP';
-            model.passPurchase = this.rms.getValue('PassNameNonAc')[0];
-            break;
-          case 'PD':
-            model.accountingTypeRemark = 'PCPP';
-            model.passPurchase = this.rms.getValue('PassNameNonAc')[0];
-            break;
+        if (segment.length > 0) {
+          model.departureCity = segment[i].cityCode;
+          model.supplierConfirmatioNo = segment[i].controlNumber;
         }
-      }
 
-      accountingRemarks.push(model);
+        let keys: string[];
+        keys = ['TktRemarkNbr', 'TktNbr', 'SupplierCode'];
+
+        let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+        if (matchKeys) {
+          model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
+        } else {
+          keys = ['TktRemarkNbr', 'SupplierCode'];
+          matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+          model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
+        }
+
+        // keys = ['AirlineCode', 'TotalCost'];
+        // let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+        // model.tktLine = matchKeys[i].matchedPlaceholders[i];
+
+        model.fareType = this.rms.getValue('FareType')[i];
+        model.supplierCodeName = this.rms.getValue('SupplierCode')[i];
+        model.baseAmount = this.rms.getValue('BaseAmt')[i];
+        model.gst = this.rms.getValue('Gst')[i];
+        model.hst = this.rms.getValue('Hst')[i];
+        model.qst = this.rms.getValue('Qst')[i];
+        model.commisionWithoutTax = this.rms.getValue('Comm')[i];
+
+        const airlinecode = this.rms.getValue('AirlineCode')[i];
+        const totalcost = this.rms.getValue('TotalCost')[i];
+
+        if (totalcost) {
+          switch (airlinecode) {
+            case 'AC':
+              model.accountingTypeRemark = 'ACPP';
+              model.passPurchase = this.rms.getValue('PassName')[i];
+              break;
+            case 'WS':
+              model.accountingTypeRemark = 'WCPP';
+              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
+              break;
+            case 'PD':
+              model.accountingTypeRemark = 'PCPP';
+              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
+              break;
+          }
+        }
+        accountingRemarks.push(model);
+      }
     }
 
     return accountingRemarks;

@@ -234,7 +234,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       }
     }
 
-
     this.matrixAccountingForm.get('consultantNo').setValidators([
       Validators.minLength(3),
       Validators.maxLength(3),

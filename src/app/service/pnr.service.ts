@@ -26,10 +26,11 @@ export class PnrService {
   pnrResponse: any;
   clientSubUnitGuid: string;
 
-  constructor() {}
+  constructor() { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
+    this.clientSubUnitGuid = null;
     this.pnrObj = new PNR();
     await this.pnrObj
       .retrievePNR()
@@ -1277,11 +1278,33 @@ export class PnrService {
   }
 
   getClientSubUnit() {
-    const syexgvs = this.getRemarkText('SYEXGVS:');
-    if (syexgvs && !this.clientSubUnitGuid) {
-      this.clientSubUnitGuid = syexgvs.split(' ')[1];
+    const u25 = this.getRemarkText('U25/-');
+    if (u25 && !this.clientSubUnitGuid) {
+      this.clientSubUnitGuid = u25.replace('U25/-', '');
+    } else {
+      const syexgvs = this.getRemarkText('SYEXGVS:');
+      if (syexgvs && !this.clientSubUnitGuid) {
+        this.clientSubUnitGuid = syexgvs.split(' ')[1];
+      }
     }
-
     return this.clientSubUnitGuid;
+  }
+
+  getLanguage() {
+    const rirService = 'LANGUAGE-(EN-US|FR-CA)';
+    const regx = new RegExp(rirService);
+    const rems = this.getRemarksFromGDSByRegex(regx, 'RM');
+    if (rems.length > 0 && rems[0].remarkText.substr(-5) === 'FR-CA') {
+      return rems[0].remarkText.substr(-5);
+    }
+    return 'EN-GB';
+  }
+
+  hasPassRemark(): boolean {
+    const u14 = this.getRemarkText('U14-');
+    if (u14 && u14.indexOf('PASS') > -1) {
+      return true;
+    }
+    return false;
   }
 }

@@ -27,12 +27,44 @@
       </div>
     </div>
 
+    <!-- NO-LONGER USED as already aliased by Supplier Confirmation Number (supplierConfirmationNo) -->
+    <!-- Airline Record Locator for Non BSP Exchange -->
+    <!-- <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+      <div class="col-sm-4">Airline Record Locator:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" formControlName="airlineRecordLocator" maxlength="10"
+          id="airlineRecordLocator" [(ngModel)]="accountingRemark.airlineRecordLocator"
+          formControlName="airlineRecordLocator"/>
+      </div>
+    </div> -->
+
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' 
+      || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSP'">
+
+      <div class="row form-group">
+        <div class="col-4"></div>
+        <div class="col-8">
+          <input type="checkbox" name="exchange" formControlName="exchange" id="exchange"
+            (click)=" changetoExchange($event.target.checked)" />
+          Using Non Refundable ticket from Document Bank
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Itinerary Segment:</div>
+        <div class="col-sm-8">
+          <app-segment-select formControlName="segmentNo" [(ngModel)]="accountingRemark.segmentNo" name="segmentNo"
+            id="segmentNo" #segmentApp (change)="checkSupplierCode()"></app-segment-select>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group row">
       <div class="col-sm-4">Supplier Code:</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="select a supplier Code" formControlName="supplierCodeName"
           id="supplierCodeName" list="dynamicSupplierCode" [(ngModel)]="accountingRemark.supplierCodeName" AllCapsMask
-          formControlName="supplierCodeName" (blur)="setTktNumber($event.target.value)" />
+          formControlName="supplierCodeName" (blur)="setTktNumber()" />
         <datalist id="dynamicSupplierCode">
           <option *ngFor="let item of filterSupplierCodeList" [value]="item.supplierCode">{{ item.supplierCode }} -
             {{ item.supplierName }}</option>
@@ -47,10 +79,9 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" id="supplierConfirmatioNo" formControlName="supplierConfirmatioNo"
           [(ngModel)]="accountingRemark.supplierConfirmatioNo" formControlName="supplierConfirmatioNo"
-          name="supplierConfirmatioNo" required />
+          name="supplierConfirmatioNo" required AlphaNumericMask />
       </div>
     </div>
-
 
     <div class="form-group  row">
       <div class="col-sm-4"></div>
@@ -85,14 +116,57 @@
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
+        <div class="">Other Tax:</div>
+        <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
+          [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
+          placeholder="00.00" AmountMask />
+      </div>
+      <div class="col">
         <div class="">Commission:</div>
         <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
           [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
           maxlength="8" AmountMask />
       </div>
-
-      <div class="col"></div>
     </div>
+
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        Penalty:
+      </div>
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">Penalty Amount:</div>
+          <input type="text" class="form-control" id="penaltyBaseAmount"
+            [(ngModel)]="accountingRemark.penaltyBaseAmount" formControlName="penaltyBaseAmount" maxlength="10"
+            name="penaltyBaseAmount" required placeholder="00.00" AmountMask />
+        </div>
+
+        <div class="col">
+          <div class="">GST on Penalty:</div>
+          <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst"
+            maxlength="8" formControlName="penaltyGst" name="penaltyGst" required placeholder="00.00" AmountMask />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4"></div>
+        <div class="col">
+          <div class="">HST on Penalty:</div>
+          <input type="text" class="form-control" id="penaltyHst" formControlName="penaltyHst" maxlength="8"
+            [(ngModel)]="accountingRemark.penaltyHst" name="penaltyHst" required placeholder="00.00" AmountMask />
+        </div>
+        <div class="col">
+          <div class="">QST on Penalty:</div>
+          <input type="text" class="form-control" id="penaltyQst" formControlName="penaltyQst" maxlength="8"
+            [(ngModel)]="accountingRemark.penaltyQst" formControlName="penaltyQst" name="penaltyQst" required
+            placeholder="00.00" AmountMask />
+        </div>
+      </div>
+    </div>
+
+
     <div class="form-group  row">
       <div class="col-sm-4">Ticket Number:</div>
       <div class="col-sm-8">
@@ -103,25 +177,39 @@
     </div>
 
     <div class="form-group row">
-      <div class="col-sm-4">Departure City:</div>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" id="departureCity" formControlName="departureCity"
-          [(ngModel)]="accountingRemark.departureCity" formControlName="departureCity" name="departureCity"
-          NumberOnlyMask maxlength="3" AlphaMask />
+      <div class="col-sm-4">Original Ticket Number:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="originalTktLine" formControlName="originalTktLine"
+          [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine"
+          NumberOnlyMask maxlength="10" />
       </div>
     </div>
 
-    <div>
-      <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || accountingRemark.accountingTypeRemark === 'WCPP' 
-      || accountingRemark.accountingTypeRemark === 'PCPP'" class="form-group  row">
-        <div class="col-sm-4">Pass Purchase Type:</div>
-        <div class="col-sm-8">
-          <select autofocus id="passPurchase" class="form-control" name="passPurchase"
-            [(ngModel)]="accountingRemark.passPurchase" formControlName="passPurchase" required>
-            <option *ngFor="let item of passPurchaseList" [value]="item.itemValue">
-              {{ item.itemText }}
-            </option>
-          </select>
+    <div *ngIf="
+        accountingRemark.accountingTypeRemark === 'ACPP' ||
+        accountingRemark.accountingTypeRemark === 'WCPP' ||
+        accountingRemark.accountingTypeRemark === 'PCPP'
+      ">
+      <div class="form-group row">
+        <div class="col-sm-4">Departure City:</div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="departureCity" formControlName="departureCity"
+            [(ngModel)]="accountingRemark.departureCity" formControlName="departureCity" name="departureCity"
+            NumberOnlyMask maxlength="3" AlphaMask />
+        </div>
+      </div>
+
+      <div>
+        <div class="form-group  row">
+          <div class="col-sm-4">Pass Purchase Type:</div>
+          <div class="col-sm-8">
+            <select autofocus id="passPurchase" class="form-control" name="passPurchase"
+              [(ngModel)]="accountingRemark.passPurchase" formControlName="passPurchase" required>
+              <option *ngFor="let item of passPurchaseList" [value]="item.itemValue">
+                {{ item.itemText }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -136,6 +224,55 @@
           </select>
         </div>
       </div>
+    </div>
+
+    <!-- GDS Fare for Non BSP Exchange -->
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+      <!-- GDS Fare -->
+      <div class="form-group row">
+        <div class="col-sm-4">GDS Fare:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
+            [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0.00" />
+        </div>
+      </div>
+      <!-- Consulatant Number -->
+      <div class="form-group row">
+        <div class="col-sm-4">Consultant No:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="consultantNo" id="consultantNo"
+            [(ngModel)]="accountingRemark.consultantNo" formControlName="consultantNo" placeholder="Optional" />
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' 
+      || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSP'">
+      <!-- GDS Fare -->
+      <div class="form-group row">
+        <div class="col-sm-4">Full Fare:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fullFare" id="fullFare"
+            [(ngModel)]="accountingRemark.fullFare" formControlName="fullFare" placeholder="0.00" />
+        </div>
+      </div>
+      <!-- Consulatant Number -->
+      <div class="form-group row">
+        <div class="col-sm-4">Full Fare:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="lowFare" id="lowFare"
+            [(ngModel)]="accountingRemark.lowFare" formControlName="lowFare" placeholder="0.00" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-4">Reason Code:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="reasonCode" id="reasonCode"
+            [(ngModel)]="accountingRemark.reasonCode" formControlName="reasonCode" />
+        </div>
+      </div>
+
     </div>
 
   </form>

@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PnrService } from '../service/pnr.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
-import { DDBService } from '../service/ddb.service';
 import { MessageComponent } from '../shared/message/message.component';
 import { MessageType } from '../shared/message/MessageType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -13,6 +12,9 @@ import { PaymentsComponent } from './payments/payments.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
+import { DDBService } from '../service/ddb.service';
+import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
+import { ReportingComponent } from '../corporate/reporting/reporting.component';
 
 @Component({
     selector: 'app-corporate',
@@ -25,18 +27,21 @@ export class CorporateComponent implements OnInit {
     isPnrLoaded = false;
     modalRef: BsModalRef;
     workflow = '';
+    dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
 
     @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
+    @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
     @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
 
     constructor(
         private pnrService: PnrService,
         private rms: RemarksManagerService,
-        private ddbService: DDBService,
         private modalService: BsModalService,
         private paymentRemarkService: PaymentRemarkService,
-        private ticketRemarkService: TicketRemarkService,
-        private corpRemarkService: CorporateRemarksService
+        private corpRemarkService: CorporateRemarksService,
+        private ddbService: DDBService,
+        private reportingRemarkService: ReportingRemarkService,
+        private ticketRemarkService: TicketRemarkService
     ) {
         this.initData();
     }
@@ -66,18 +71,8 @@ export class CorporateComponent implements OnInit {
         this.isPnrLoaded = this.pnrService.isPNRLoaded;
     }
 
-    async initData() {
-        this.showLoading('Loading Suppliers', 'initData');
-        // await this.ddbService.loadSupplierCodesFromPowerBase();
-        this.showLoading('Loading PNR', 'initData');
-        await this.getPnrService();
-        this.showLoading('Matching Remarks', 'initData');
-        await this.rms.getMatchcedPlaceholderValues();
-        this.showLoading('Servicing Options', 'initData');
-        await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid); //'A:FA177'
-        this.showLoading('ReasonCodes', 'initData');
-        await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-        this.closeLoading();
+    initData() {
+        this.ddbService.getAllMatrixSupplierCodes();
     }
 
     showLoading(msg, caller?) {
@@ -93,7 +88,7 @@ export class CorporateComponent implements OnInit {
         this.modalRef.content.callerName = caller;
     }
 
-    closeLoading() {
+    closePopup() {
         this.modalRef.hide();
     }
 
@@ -111,16 +106,51 @@ export class CorporateComponent implements OnInit {
     }
 
     public async wrapPnr() {
-        if (this.isPnrLoaded) {
-            await this.getPnrService();
-            this.workflow = 'wrap';
+        await this.loadPnrData();
+        this.workflow = 'wrap';
+
+
+    }
+
+    async loadPnrData() {
+        this.showLoading('Loading PNR and Data', 'initData');
+        await this.getPnrService();
+
+        if (!this.pnrService.getClientSubUnit()) {
+            this.closePopup();
+            this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
+            this.workflow = 'error';
+        } else {
+            // this.showLoading('Matching Remarks', 'initData');
+            this.rms.getMatchcedPlaceholderValues().catch((x) => {
+                this.showMessage('Error on Matching Data in the PNR: ' + x.message, MessageType.Error, 'Not Found', 'Loading');
+                this.closePopup();
+                this.isPnrLoaded = false;
+                return;
+            });
+            // this.showLoading('Servicing Options', 'initData');
+            await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
+            // this.showLoading('ReasonCodes', 'initData');
+            await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
         }
+        this.closePopup();
+        this.checkHasDataLoadError();
+    }
+
+    checkHasDataLoadError() {
+        this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
+        this.dataError.pnr = !(this.isPnrLoaded);
+        this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
+        this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
+        this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
+        this.dataError.hasError = (this.dataError.matching || this.dataError.pnr || this.dataError.reasonCode || this.dataError.servicingOption || this.dataError.supplier);
     }
 
     public async SubmitToPNR() {
+        this.showLoading('Updating PNR...', 'SubmitToPnr');
         const accRemarks = new Array<RemarkGroup>();
-        accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
 
+        accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
         accRemarks.push(this.ticketRemarkService.writeTicketRemark(this.ticketingComponent.getTicketingDetails()));
 
         this.corpRemarkService.BuildRemarks(accRemarks);
@@ -129,15 +159,21 @@ export class CorporateComponent implements OnInit {
         });
 
         this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+        this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
         await this.rms.submitToPnr().then(
             () => {
                 this.isPnrLoaded = false;
                 this.workflow = '';
+                this.closePopup();
             },
             (error) => {
                 console.log(JSON.stringify(error));
                 this.workflow = '';
             }
         );
+    }
+
+    back() {
+        this.workflow = '';
     }
 }

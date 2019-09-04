@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
-import { PnrService } from 'src/app/service/pnr.service';
-import { DDBService } from 'src/app/service/ddb.service';
-import { ServicingOptionEnums } from 'src/app/enums/servicing-options';
-import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
-import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
+import { PnrService } from '../../../service/pnr.service';
+import { DDBService } from '../../../service/ddb.service';
+import { ServicingOptionEnums } from '../../../enums/servicing-options';
+import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
+import { ReasonCode } from '../../../models/ddb/reason-code.model';
 
 declare var smartScriptSession: any;
 
@@ -16,6 +16,7 @@ declare var smartScriptSession: any;
   encapsulation: ViewEncapsulation.None
 })
 export class ReportingBSPComponent implements OnInit {
+  @Input()
   reasonCodes: ReasonCode[];
   bspGroup: FormGroup;
   total = 1;
@@ -68,11 +69,11 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   drawControls() {
-    let segmentsInFare: string = '';
-    let highFare: string = '';
-    let lowFare: string = '';
-    let segmentNo: string = '';
-    let reasonCode: string = '';
+    let segmentsInFare = '';
+    const highFare = '';
+    const lowFare = '';
+    let segmentNo = '';
+    const reasonCode = '';
 
     if (this.pnrService.tstObj.length === undefined) {
       segmentsInFare = this.getSegment(this.pnrService.tstObj);
@@ -104,7 +105,7 @@ export class ReportingBSPComponent implements OnInit {
         if (segments === '') {
           segments = s.segmentReference.refDetails.refNumber;
         } else {
-          segments = segments + '/' + s.segmentReference.refDetails.refNumber;
+          segments = segments + ',' + s.segmentReference.refDetails.refNumber;
         }
       });
     }
@@ -127,11 +128,7 @@ export class ReportingBSPComponent implements OnInit {
     return code;
   }
 
-  // getClientSubUnitGuid() {
-  //   this.clientSubunitGuid = this.pnrService.getUDIDText('*U25/');
-  // }
-
   getReasonCodes() {
-    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]); //this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]);
   }
 }

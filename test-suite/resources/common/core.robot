@@ -9,8 +9,8 @@ Add New Command Page
 Close CA Migration Window
     Unselect Frame
     Sleep    5
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]    50
-    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration')]/following-sibling::span//span[@class='xWidget xICNstd']
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
+    Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
 
 Close Cryptic Display Window
     Click Element    css=#elgen-19
@@ -49,8 +49,8 @@ Handle Force Login Window
 Open CA Migration Window
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
-    Click Element    xpath=//li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CA Migration ${env}"]
-    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CA Migration ${env}')]    60
+    Click Element    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
+    Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
@@ -63,14 +63,6 @@ Open Cryptic Display Window
     Wait Until Page Contains Element    xpath=//div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]    30
     Sleep    10
     [Teardown]    Take Screenshot
-
-Retrieve PNR In Command Page
-    [Arguments]    ${current_pnr}
-    Input Text    css=.cmdPromptDiv > textArea    IG
-    Press Key    css=.cmdPromptDiv > textArea    \\13
-    Input Text    css=.cmdPromptDiv > textArea    RT${current_pnr}
-    Press Key    css=.cmdPromptDiv > textArea    \\13
-    Wait Until Element Contains    css=#cryptics1_cmd_shellbridge_shellWindow_top_left_modeString_currentCommand    TST    30
 
 Switch To Command Page
     Wait Until Page Contains Element    css=.showInCommandPage    60
@@ -85,7 +77,7 @@ Switch To Graphic Mode
     [Teardown]    Take Screenshot
 
 Login To Amadeus Sell Connect
-    Open Browser    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login    gc 
+    Open Browser    https://acceptance.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=LOGINURL&LANGUAGE=GB    gc
     Maximize Browser Window
     Wait Until Element Is Visible    css=#username > span:first-child input    60
     Enter Username    ${username}

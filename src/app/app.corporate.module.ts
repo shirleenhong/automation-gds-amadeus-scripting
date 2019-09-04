@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CorporateComponent } from './corporate/corporate.component';
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule, AlertModule } from 'ngx-bootstrap';
 import { CommonModule } from '@angular/common';
 import { PaymentsComponent } from './corporate/payments/payments.component';
 import { ReportingBSPComponent } from './corporate/reporting/reporting-bsp/reporting-bsp.component';
@@ -12,6 +12,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MyCommonModule } from './my-common.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,9 @@ import { HttpClientModule } from '@angular/common/http';
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    MyCommonModule,
+    AlertModule.forRoot()
   ],
   providers: [],
   bootstrap: [],

@@ -60,10 +60,11 @@ export class RemarksManagerService {
     conditions?: Map<string, string>,
     segmentRelate?: string[],
     passengerRelate?: string[],
-    staticText?
+    staticText?,
+    exactSearch?: boolean
   ) {
     const placeHolder = new PlaceholderValues({
-      id: this.getOutputItemId(values, staticText, conditions),
+      id: (exactSearch === true ? this.getOutputItemIdExactRemarks(values, staticText, conditions) : this.getOutputItemId(values, staticText, conditions)),
       segmentNumberReferences: segmentRelate,
       passengerNumberReferences: passengerRelate,
       matchedPlaceholders: null
@@ -99,6 +100,20 @@ export class RemarksManagerService {
       .filter(
         (out) =>
           (values && this.hasCompleteKeys(values, out.placeholderKeys) && (staticText ? out.format.indexOf(staticText) >= 0 : true)) ||
+          (!values &&
+            conditions &&
+            this.hasMatchedConditions(conditions, out.conditions) &&
+            (staticText ? out.format.indexOf(staticText) >= 0 : false))
+      )
+      .map((out) => out.id);
+    return ids[0];
+  }
+
+  getOutputItemIdExactRemarks(values?: Map<string, string>, staticText?, conditions?: Map<string, string>) {
+    const ids = this.outputItems
+      .filter(
+        (out) =>
+          (values && this.hasCompleteKeys(values, out.placeholderKeys) && (staticText ? out.format === staticText : true)) ||
           (!values &&
             conditions &&
             this.hasMatchedConditions(conditions, out.conditions) &&

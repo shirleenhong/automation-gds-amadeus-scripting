@@ -26,7 +26,7 @@ export class CorporateComponent implements OnInit {
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
-  dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false,  hasError: false };
+  dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -69,10 +69,8 @@ export class CorporateComponent implements OnInit {
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
-  async initData() {
-    // this.showLoading('Loading Suppliers', 'initData');
-    await this.ddbService.getAllMatrixSupplierCodes();
-    // this.closePopup();
+  initData() {    
+        this.ddbService.getAllMatrixSupplierCodes();   
   }
 
   showLoading(msg, caller?) {
@@ -106,9 +104,9 @@ export class CorporateComponent implements OnInit {
   }
 
   public async wrapPnr() {
-    await this.loadPnrData();   
+    await this.loadPnrData();
     this.workflow = 'wrap';
-   
+
 
   }
 
@@ -134,7 +132,7 @@ export class CorporateComponent implements OnInit {
       await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
     }
     this.closePopup();
-     this.checkHasDataLoadError();
+    this.checkHasDataLoadError();
   }
 
   checkHasDataLoadError() {
@@ -143,7 +141,7 @@ export class CorporateComponent implements OnInit {
     this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
     this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
     this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-    this.dataError.hasError = (this.dataError.matching || this.dataError.pnr ||  this.dataError.reasonCode || this.dataError.servicingOption || this.dataError.supplier);    
+    this.dataError.hasError = (this.dataError.matching || this.dataError.pnr || this.dataError.reasonCode || this.dataError.servicingOption || this.dataError.supplier);
   }
 
   public async SubmitToPNR() {

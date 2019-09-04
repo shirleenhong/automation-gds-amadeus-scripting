@@ -3,7 +3,7 @@ import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.mode
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, Validators, ValidationErrors, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 
@@ -50,6 +50,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
       confirmationLabel: new FormControl(''),
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
       supplierCodeName: new FormControl('', [Validators.required, Validators.maxLength(3)]),
       passengerNo: new FormControl('', []),
       supplierConfirmatioNo: new FormControl('', [Validators.required, Validators.maxLength(20)]),
@@ -79,7 +80,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       originalTktLine: new FormControl('', [Validators.maxLength(10)]),
       duplicateFare: new FormControl(''),
       typeOfPass: new FormControl(''),
-      segmentNo: new FormControl('')
+      fullFare: new FormControl(''),
+      lowFare: new FormControl(''),
+      reasonCode: new FormControl('')
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -146,7 +149,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], false);
-    this.enableFormControls(['otherTax'], true);
+    this.enableFormControls(['otherTax', 'gdsFare'], true);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -159,7 +162,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
         // this.enableFormControls(['supplierCodeName'], true);
         this.enableFormControls(['departureCity'], false);
-
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(7)]);
         this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
@@ -183,6 +185,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
         break;
       case 'NONBSPEXCHANGE':
+        this.enableFormControls(['gdsFare'], false);
         this.configureNonBSPExchangeControls();
         this.checkSupplierCode();
         break;
@@ -195,7 +198,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
-
         break;
       default:
         this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
@@ -350,9 +352,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
-    // this.matrixAccountingForm.valueChanges.subscribe(val => {
-    //   console.log(val);
-    // });
+    this.matrixAccountingForm.valueChanges.subscribe(val => {
+      // Log form group errors
+      this.logFormValidationErrors();
+    });
 
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(val => {
 
@@ -402,5 +405,19 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (this.accountingRemark.accountingTypeRemark === 'NONBSP') {
       this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
     }
+  }
+
+  logFormValidationErrors() {
+    console.log('================ ERRORS: this.matrixAccountingForm: ================');
+
+    Object.keys(this.matrixAccountingForm.controls).forEach(key => {
+
+      const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+        });
+      }
+    });
   }
 }

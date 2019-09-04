@@ -8195,7 +8195,7 @@
 							"miscellaneousRemark": {
 								"remarks": {
 									"type": "RM",
-									"category": null,
+									"category": "",
 									"freetext": "CAR ECAR-YYZ-12DEC-100.00 CC-YES/CV-AMT-123.00",
 									"providerType": null,
 									"currency": null,
@@ -13380,7 +13380,7 @@
 							"miscellaneousRemark": {
 								"remarks": {
 									"type": "RM",
-									"category": null,
+									"category": "",
 									"freetext": "CAR ECAR-YYZ-12DEC-100.00 CC-YES/CV-AMT-123.00",
 									"providerType": null,
 									"currency": null,
@@ -24203,7 +24203,7 @@
 								"remarks": {
 									"type": "RM",
 									"category": "P",
-									"freetext": "DOB-13MAY98/GENDER-F",
+									"freetext": "DOB-13MAY99/GENDER-M",
 									"providerType": null,
 									"currency": null,
 									"amount": null,
@@ -29454,7 +29454,7 @@
 								"remarks": {
 									"type": "RM",
 									"category": "P",
-									"freetext": "DOB-13MAY98/GENDER-F",
+									"freetext": "DOB-13MAY99/GENDER-M",
 									"providerType": null,
 									"currency": null,
 									"amount": null,
@@ -30404,6 +30404,54 @@
 							"elementManagementData": {
 								"reference": {
 									"qualifier": "OT",
+									"number": "436"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "F",
+									"freetext": "LCC-AC*BASE FARE CAD 123.00",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
 									"number": "434"
 								},
 								"segmentName": "RIR"
@@ -30412,8 +30460,8 @@
 							"accounting": null,
 							"miscellaneousRemark": {
 								"remarks": {
-									"type": "RI",
-									"category": "R",
+									"type": "RM",
+									"category": "*",
 									"freetext": "*1003**CT*E2",
 									"providerType": null,
 									"currency": null,
@@ -30460,57 +30508,9 @@
 							"accounting": null,
 							"miscellaneousRemark": {
 								"remarks": {
-									"type": "RI",
-									"category": "R",
-									"freetext": "*1005**CT*Y2",
-									"providerType": null,
-									"currency": null,
-									"amount": null,
-									"officeId": []
-								}
-							},
-							"extendedRemark": null,
-							"serviceRequest": null,
-							"dateAndTimeInformation": null,
-							"tourCode": null,
-							"ticketElement": null,
-							"freetextData": null,
-							"structuredAddress": null,
-							"optionElement": null,
-							"printer": null,
-							"seatGroup": null,
-							"fareElement": null,
-							"fareDiscount": null,
-							"manualFareDocument": null,
-							"commission": null,
-							"originalIssue": null,
-							"formOfPayment": null,
-							"fopExtension": [],
-							"serviceDetails": [],
-							"frequentTravellerVerification": null,
-							"ticketingCarrier": null,
-							"farePrintOverride": null,
-							"frequentTravellerData": null,
-							"accessLevel": null,
-							"referenceForDataElement": {
-								"reference": []
-							}
-						},
-						{
-							"elementManagementData": {
-								"reference": {
-									"qualifier": "OT",
-									"number": "436"
-								},
-								"segmentName": "RM"
-							},
-							"pnrSecurity": null,
-							"accounting": null,
-							"miscellaneousRemark": {
-								"remarks": {
 									"type": "RM",
-									"category": "F",
-									"freetext": "LCC-AC*BASE FARE CAD 123.00",
+									"category": "*",
+									"freetext": "*1005**CT*Y2",
 									"providerType": null,
 									"currency": null,
 									"amount": null,
@@ -34313,7 +34313,7 @@
 			"isBeginPnr": false,
 			"placeholders": [
 				{
-					"id": 9475,
+					"id": 9486,
 					"segmentNumberReferences": [],
 					"passengerNumberReferences": [],
 					"conditions": null,
@@ -34324,7 +34324,7 @@
 					}
 				},
 				{
-					"id": 9475,
+					"id": 9486,
 					"segmentNumberReferences": [],
 					"passengerNumberReferences": [],
 					"conditions": null,
@@ -34335,7 +34335,7 @@
 					}
 				},
 				{
-					"id": 9476,
+					"id": 9488,
 					"segmentNumberReferences": [],
 					"passengerNumberReferences": [],
 					"conditions": null,
@@ -34349,7 +34349,7 @@
 					}
 				},
 				{
-					"id": 9476,
+					"id": 9488,
 					"segmentNumberReferences": [],
 					"passengerNumberReferences": [],
 					"conditions": null,
@@ -34391,7 +34391,7 @@
 							"miscellaneousRemark": {
 								"remarks": {
 									"type": "RM",
-									"category": null,
+									"category": "",
 									"freetext": "CAR ECAR-YYZ-12DEC-100.00 CC-YES/CV-AMT-123.00",
 									"providerType": null,
 									"currency": null,
@@ -35726,7 +35726,7 @@
 							"elementManagementData": {
 								"reference": {
 									"qualifier": "OT",
-									"number": "436"
+									"number": "800"
 								},
 								"segmentName": "RM"
 							},
@@ -37293,54 +37293,6 @@
 									"type": "RI",
 									"category": "R",
 									"freetext": "*TICKET**TEST TICKETS*",
-									"providerType": null,
-									"currency": null,
-									"amount": null,
-									"officeId": []
-								}
-							},
-							"extendedRemark": null,
-							"serviceRequest": null,
-							"dateAndTimeInformation": null,
-							"tourCode": null,
-							"ticketElement": null,
-							"freetextData": null,
-							"structuredAddress": null,
-							"optionElement": null,
-							"printer": null,
-							"seatGroup": null,
-							"fareElement": null,
-							"fareDiscount": null,
-							"manualFareDocument": null,
-							"commission": null,
-							"originalIssue": null,
-							"formOfPayment": null,
-							"fopExtension": [],
-							"serviceDetails": [],
-							"frequentTravellerVerification": null,
-							"ticketingCarrier": null,
-							"farePrintOverride": null,
-							"frequentTravellerData": null,
-							"accessLevel": null,
-							"referenceForDataElement": {
-								"reference": []
-							}
-						},
-						{
-							"elementManagementData": {
-								"reference": {
-									"qualifier": "OT",
-									"number": "470"
-								},
-								"segmentName": "RIR"
-							},
-							"pnrSecurity": null,
-							"accounting": null,
-							"miscellaneousRemark": {
-								"remarks": {
-									"type": "RI",
-									"category": "R",
-									"freetext": "Canada WWW.CAESTAURL.COM",
 									"providerType": null,
 									"currency": null,
 									"amount": null,

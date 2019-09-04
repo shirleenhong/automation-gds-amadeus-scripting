@@ -80,6 +80,7 @@ export class PaymentRemarkService {
   }
 
   writeHighLowFareSavingCode(highFare, lowFare, savingsCode, segmentAssoc) {
+    debugger;
     const highFareRemark = new Map<string, string>();
     const lowFareRemark = new Map<string, string>();
     const airReasonCodeRemark = new Map<string, string>();
@@ -124,6 +125,7 @@ export class PaymentRemarkService {
    * @param accountingRemarks collection of Non-BSP Exchange remarks
    */
   writeNonBSPExchange(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     accountingRemarks.forEach((account) => {
       const originalTicketRemarks = new Map<string, string>();
       const originalTicketCondition = new Map<string, string>();
@@ -156,9 +158,9 @@ export class PaymentRemarkService {
       this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst,
         account.hst, account.qst, account.otherTax, account.commisionWithoutTax, segmentrelate, account.supplierCodeName, account.tktLine);
 
-
+      debugger;
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst)
-        + parseFloat(account.qst) + parseFloat(account.commisionWithoutTax);
+        + parseFloat(account.qst) + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
 
       airlineCodeRemark.set('AirlineCode', 'AC');
       airlineCodeRemark.set('TotalCost', totalCost.toString());
@@ -184,7 +186,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(passchange);
       }
 
-      this.writeHighLowFareSavingCode(account.fullFare, account.lowFare, account.reasonCode, segmentrelate);
+      this.writeHighLowFareSavingCode(totalCost, totalCost, 'E', segmentrelate);
 
 
       this.remarksManager.createPlaceholderValues(null, originalTicketCondition, null, null, 'NE/-EX-Y', true);
@@ -225,6 +227,7 @@ export class PaymentRemarkService {
   }
 
   writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     accountingRemarks.forEach((account) => {
       const airlineCodeRemark = new Map<string, string>();
       const ticketRemarks = new Map<string, string>();

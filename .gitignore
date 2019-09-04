@@ -32,11 +32,3 @@ red.xml
 *.png
 test-suite/resources/common/global_resources.robot 
 /libspecs/
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot
-*.robot
-test-suite/acceptance-corporate/test/payment/individual_pass_purchase.robot

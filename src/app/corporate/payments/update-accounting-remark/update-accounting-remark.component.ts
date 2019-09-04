@@ -188,7 +188,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['fareType'], accRemark !== 'ACPP');
         break;
       case 'NONBSPEXCHANGE':
-        this.enableFormControls(['gdsFare', 'otherTax'], false);
+        this.enableFormControls(['otherTax'], false);
         this.configureNonBSPExchangeControls();
         this.checkSupplierCode();
         break;
@@ -222,7 +222,18 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         Validators.maxLength(10)
       ]);
 
-    this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
+    // Require GDS Fare if CFA remark is in [ZZB, 92Z, YVQ, YFV].
+    const cfaLine = this.pnrService.getCFLine();
+    if (cfaLine !== undefined) {
+      if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
+        this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
+        this.matrixAccountingForm.get('gdsFare').enable();
+      } else {
+        this.matrixAccountingForm.get('gdsFare').disable();
+        this.matrixAccountingForm.get('gdsFare').clearValidators();
+      }
+    }
+
     this.matrixAccountingForm.get('consultantNo').setValidators([
       Validators.minLength(3),
       Validators.maxLength(3),

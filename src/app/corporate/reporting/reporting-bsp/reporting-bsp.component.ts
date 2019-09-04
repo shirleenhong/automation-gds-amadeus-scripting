@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
-
-import { PnrService } from 'src/app/service/pnr.service';
-import { DDBService } from 'src/app/service/ddb.service';
-import { ServicingOptionEnums } from 'src/app/enums/servicing-options';
-import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
-import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
-// import { async } from '@angular/core/testing';
+import { PnrService } from '../../../service/pnr.service';
+import { DDBService } from '../../../service/ddb.service';
+import { ServicingOptionEnums } from '../../../enums/servicing-options';
+import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
+import { ReasonCode } from '../../../models/ddb/reason-code.model';
 
 declare var smartScriptSession: any;
 

@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <div class="form-group  row">
+    <div *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'" class="form-group  row">
       <div class="col-sm-4">
         <label id="confirmationLabel">{{ name }} </label>
       </div>
@@ -117,7 +117,7 @@
         <div class="">Commission:</div>
         <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
           [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
-          maxlength="8" AmountMask />
+          maxlength="8" AmountMask required />
       </div>
     </div>
 

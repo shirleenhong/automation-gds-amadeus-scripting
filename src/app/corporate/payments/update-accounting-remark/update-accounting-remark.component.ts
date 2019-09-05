@@ -157,7 +157,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
-    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], false);
+    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], false);
     this.enableFormControls(['otherTax', 'gdsFare', 'lowFare', 'fullFare', 'reasonCode'], true);
     switch (accRemark) {
       case 'ACPP':
@@ -169,13 +169,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
             ? (this.accountingRemark.supplierCodeName = 'WJP')
             : (this.accountingRemark.supplierCodeName = 'PTP');
 
-        // this.enableFormControls(['supplierCodeName'], true);
+        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([
+          Validators.required,
+          Validators.maxLength(15)
+        ]);
         this.enableFormControls(['departureCity'], false);
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
-        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(7)]);
         this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
-        // this.matrixAccountingForm.controls.tktLine.clearValidators();
-        // this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
         this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
 
         if (this.isAddNew) {
@@ -193,17 +193,28 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.checkSupplierCode();
         break;
       case 'APAY':
+        this.enableFormControls(['supplierCodeName', 'otherTax'], false);
+        this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase',
+          'fareType', 'supplierConfirmatioNo', 'commisionWithoutTax'], true);
+        this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
+        break;
       case 'NONBSP':
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
-        this.accountingRemark.commisionWithoutTax = '0.00';
+        // this.accountingRemark.commisionWithoutTax = '0.00';
         // this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
         if (accRemark === 'NONBSP') {
           this.enableFormControls(['lowFare', 'fullFare', 'reasonCode'], false);
+          this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([
+            Validators.required,
+            Validators.maxLength(10)
+          ]);
+          this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         }
+
         break;
       default:
         this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
@@ -219,6 +230,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   configureNonBSPExchangeControls(): void {
     this.name = 'Airline Record Locator:';
     this.matrixAccountingForm.get('airlineRecordLocator')
+      .setValidators([
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]);
+
+    this.matrixAccountingForm.get('supplierConfirmatioNo')
       .setValidators([
         Validators.required,
         Validators.minLength(10),
@@ -322,6 +340,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   checkSupplierCode() {
+    if (this.accountingRemark.accountingTypeRemark === 'APAY') {
+      return;
+    }
+
     let supplierCode = '';
     let segmentNos = [];
     const airlineSupplierList: Array<any> = [
@@ -433,6 +455,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setTktNumber() {
     if (this.accountingRemark.accountingTypeRemark === 'NONBSP') {
       this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
+    }
+  }
+
+  changetoExchange(valueCheck) {
+    if (valueCheck) {
+      this.matrixAccountingForm.controls.accountingTypeRemark.patchValue('NONBSPEXCHANGE');
     }
   }
 }

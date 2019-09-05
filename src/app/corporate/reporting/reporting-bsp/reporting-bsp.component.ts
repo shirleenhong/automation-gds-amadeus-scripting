@@ -1,10 +1,15 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { DDBService } from '../../../service/ddb.service';
 import { ServicingOptionEnums } from '../../../enums/servicing-options';
 import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
 import { ReasonCode } from '../../../models/ddb/reason-code.model';
+import { PaymentsComponent } from '../../payments/payments.component';
+import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
+import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
+import { SelectItem } from 'src/app/models/select-item.model';
+
 
 declare var smartScriptSession: any;
 
@@ -15,9 +20,14 @@ declare var smartScriptSession: any;
   encapsulation: ViewEncapsulation.None
 })
 export class ReportingBSPComponent implements OnInit {
+
+  @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
+
   @Input()
   reasonCodes: Array<ReasonCode[]> = [];
+  nonBspReasonList: Array<SelectItem>;
   bspGroup: FormGroup;
+  nonBspGroup: FormGroup;
   total = 1;
   highFareSO: any;
   lowFareDom: any;
@@ -25,18 +35,29 @@ export class ReportingBSPComponent implements OnInit {
 
   isDomesticFlight = true;
   thresholdAmount = 0;
+  nonBspInformation: MatrixAccountingModel[];
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService) {}
+  // tslint:disable-next-line:max-line-length
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private paymentService: PaymentRemarkService) { }
 
   ngOnInit() {
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
+    });
+
+    this.nonBspGroup = this.fb.group({
+      nonbsp: this.fb.array([])
     });
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
     this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
     this.drawControls();
+
+    this.paymentService.currentMessage.subscribe((message) => {
+      this.nonBspInformation = message;
+      this.drawControlsForNonBsp();
+    });
   }
 
   removeFares(i) {
@@ -118,6 +139,29 @@ export class ReportingBSPComponent implements OnInit {
         this.populateData(p);
       }
     }
+  }
+
+  drawControlsForNonBsp() {
+    this.nonBspReasonList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'L- Lower Fare', itemValue: 'L' }
+    ];
+
+    const items = this.nonBspGroup.get('nonbsp') as FormArray;
+    while (items.length !== 0) {
+      items.removeAt(0);
+    }
+    this.nonBspInformation.forEach(element => {
+      const totalCost =
+        parseFloat(element.baseAmount) +
+        parseFloat(element.gst) +
+        parseFloat(element.hst) +
+        parseFloat(element.qst) +
+        parseFloat(element.otherTax);
+
+      items.push(this.createFormGroup(element.segmentNo, totalCost.toString(), totalCost.toString(), 'L', ''));
+
+    });
   }
 
   async populateData(tst) {

@@ -1,18 +1,17 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { DDBService } from '../../../service/ddb.service';
 import { ServicingOptionEnums } from '../../../enums/servicing-options';
 import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
 import { ReasonCode } from '../../../models/ddb/reason-code.model';
-import { PaymentsComponent } from '../../payments/payments.component';
 import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 import { SelectItem } from 'src/app/models/select-item.model';
-
+// import { PaymentsComponent } from '../../payments/payments.component';
 
 declare var smartScriptSession: any;
-
+// @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
 @Component({
   selector: 'app-reporting-bsp',
   templateUrl: './reporting-bsp.component.html',
@@ -20,9 +19,6 @@ declare var smartScriptSession: any;
   encapsulation: ViewEncapsulation.None
 })
 export class ReportingBSPComponent implements OnInit {
-
-  @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
-
   @Input()
   reasonCodes: Array<ReasonCode[]> = [];
   nonBspReasonList: Array<SelectItem>;
@@ -38,7 +34,12 @@ export class ReportingBSPComponent implements OnInit {
   nonBspInformation: MatrixAccountingModel[];
 
   // tslint:disable-next-line:max-line-length
-  constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private paymentService: PaymentRemarkService) { }
+  constructor(
+    private fb: FormBuilder,
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private paymentService: PaymentRemarkService
+  ) {}
 
   ngOnInit() {
     this.bspGroup = this.fb.group({
@@ -53,7 +54,9 @@ export class ReportingBSPComponent implements OnInit {
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
     this.drawControls();
+  }
 
+  ngAfterViewInit() {
     this.paymentService.currentMessage.subscribe((message) => {
       this.nonBspInformation = message;
       this.drawControlsForNonBsp();
@@ -68,13 +71,21 @@ export class ReportingBSPComponent implements OnInit {
 
   addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
     const items = this.bspGroup.get('fares') as FormArray;
-    if (isExchange) {
-      reasonCode = 'E : Exchange';
-      highFare = chargeFare;
-      lowFare = chargeFare;
-    }
+
     items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
     this.total = items.length;
+  }
+
+  getReasonCodeValue(code, index): string {
+    const reasonText = this.reasonCodes[index]
+      .filter((x) => x.reasonCode === code)
+      .map((x) => x.reasonCode + ' : ' + x.reasonCodeProductTypeDescriptions.get('en-GB'));
+
+    if (reasonText.length >= 0) {
+      return reasonText[0];
+    }
+
+    return '';
   }
 
   createFormGroup(
@@ -88,40 +99,52 @@ export class ReportingBSPComponent implements OnInit {
   ): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
-      highFareText: new FormControl(highFare),
-      lowFareText: new FormControl(lowFare),
-      reasonCodeText: new FormControl(reasonCode),
+      highFareText: new FormControl(highFare, [Validators.required]),
+      lowFareText: new FormControl(lowFare, [Validators.required]),
+      reasonCodeText: new FormControl(reasonCode, [Validators.required]),
       chargeFare: new FormControl(chargeFare),
       chkIncluded: new FormControl(''),
       isExchange: new FormControl(isExchange)
     });
 
+    const currentIndex = this.reasonCodes.length - 1;
+    if (this.thresholdAmount > 0) {
+      if (chargeFare < lowFare + this.thresholdAmount) {
+        if (this.reasonCodes.length > 0) {
+          reasonCode = this.getReasonCodeValue('7', currentIndex);
+          group.get('reasonCodeText').setValue(reasonCode);
+        }
+      }
+    }
+
     if (isExchange) {
+      if (this.reasonCodes.length > 0) {
+        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
+        reasonCode = this.getReasonCodeValue('E', currentIndex);
+        group.get('reasonCodeText').setValue(reasonCode);
+      }
+
+      group.get('highFareText').setValue(chargeFare);
+      group.get('lowFareText').setValue(chargeFare);
       group.get('reasonCodeText').disable();
       group.get('highFareText').disable();
       group.get('lowFareText').disable();
+    } else {
+      this.changeReasonCodes(group, currentIndex);
+      if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
+        reasonCode =
+          this.reasonCodes[currentIndex][0].reasonCode +
+          ' : ' +
+          this.reasonCodes[currentIndex][0].reasonCodeProductTypeDescriptions.get('en-GB');
+        group.get('reasonCodeText').setValue(reasonCode);
+      }
     }
 
     if (defaultValue !== undefined && defaultValue !== null) {
       group.setValue(defaultValue);
     }
 
-    if (!isExchange) {
-      this.changeReasonCodes(group, this.reasonCodes.length - 1);
-    }
     return group;
-  }
-
-  changeReasonCodes(group: FormGroup, indx: number) {
-    if (indx >= 0) {
-      const lowFare = group.get('lowFareText').value;
-      const chargeFare = group.get('chargeFare').value;
-      if (parseFloat(lowFare) === parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB');
-      } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
-      }
-    }
   }
 
   getServicingOptionValuesFares() {
@@ -142,16 +165,13 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   drawControlsForNonBsp() {
-    this.nonBspReasonList = [
-      { itemText: '', itemValue: '' },
-      { itemText: 'L- Lower Fare', itemValue: 'L' }
-    ];
+    this.nonBspReasonList = [{ itemText: '', itemValue: '' }, { itemText: 'L- Lower Fare', itemValue: 'L' }];
 
     const items = this.nonBspGroup.get('nonbsp') as FormArray;
     while (items.length !== 0) {
       items.removeAt(0);
     }
-    this.nonBspInformation.forEach(element => {
+    this.nonBspInformation.forEach((element) => {
       const totalCost =
         parseFloat(element.baseAmount) +
         parseFloat(element.gst) +
@@ -160,7 +180,6 @@ export class ReportingBSPComponent implements OnInit {
         parseFloat(element.otherTax);
 
       items.push(this.createFormGroup(element.segmentNo, totalCost.toString(), totalCost.toString(), 'L', ''));
-
     });
   }
 
@@ -171,17 +190,37 @@ export class ReportingBSPComponent implements OnInit {
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
 
-    const highFare = await this.getHighFare(this.highFareSO.ServiceOptionItemValue.replace('//', '/S' + segmentLineNo + '/')); // FXA/S
+    const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
     let lowFare = '';
     if (this.isDomesticFlight) {
-      lowFare = await this.getLowFare(this.lowFareDom.ServiceOptionItemValue.replace('//', '/S' + segmentLineNo + '/')); // FXD/S
+      lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, segmentLineNo)); // FXD/S
     } else {
-      lowFare = await this.getLowFare(this.lowFareInt.ServiceOptionItemValue.replace('//', '/S' + segmentLineNo + '/')); // FXD/S
+      lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, segmentLineNo)); // FXD/S
     }
     const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
 
     this.reasonCodes.push([]);
     this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
+  }
+
+  insertSegment(command, segmentLineNo): string {
+    if (command.indexOf('//') >= 0) {
+      return command.replace('//', '/S' + segmentLineNo + '/');
+    } else {
+      return command + '/S' + segmentLineNo;
+    }
+  }
+
+  changeReasonCodes(group: FormGroup, indx: number) {
+    if (indx >= 0) {
+      const lowFare = group.get('lowFareText').value;
+      const chargeFare = group.get('chargeFare').value;
+      if (parseFloat(lowFare) === parseFloat(chargeFare)) {
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB');
+      } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
+      }
+    }
   }
 
   getThresHoldAmount() {
@@ -233,14 +272,24 @@ export class ReportingBSPComponent implements OnInit {
   async getHighFare(command: string) {
     let value = '';
     await smartScriptSession.send(command).then((res) => {
-      const regex = /TOTALS (.*)/g;
-      const match = regex.exec(res.Response);
+      let regex = /TOTALS (.*)/g;
+      let match = regex.exec(res.Response);
+
       // regex.lastIndex = 0;
       if (match !== null) {
         const temp = match[0].split('    ');
         if (temp[3] !== undefined) {
           value = temp[3].trim();
           return value.trim();
+        }
+      } else {
+        const regex2 = /[^][A-Z]{3}(\s+)(?<amount>(\d+(\.\d{2})))[\n\r]/g;
+        const match2 = regex2.exec(res.Response);
+        if (match2 !== null) {
+          if (match2.groups !== undefined && match2.groups.amount !== undefined) {
+            value = match2.groups.amount;
+            return value.trim();
+          }
         }
       }
     });

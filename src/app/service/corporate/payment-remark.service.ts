@@ -18,7 +18,7 @@ export class PaymentRemarkService {
   nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
   currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -155,8 +155,16 @@ export class PaymentRemarkService {
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
 
       if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName === 'ACY') {
-        this.writeTicketingPenalty(account.tkMacLine.toString(), 'A22', account.penaltyBaseAmount,
-          account.penaltyGst, account.penaltyHst, account.penaltyQst, '0.00', segmentAssoc);
+        this.writeTicketingPenalty(
+          account.tkMacLine.toString(),
+          'A22',
+          account.penaltyBaseAmount,
+          account.penaltyGst,
+          account.penaltyHst,
+          account.penaltyQst,
+          '0.00',
+          segmentAssoc
+        );
       }
 
       this.writeTicketingLine(
@@ -211,7 +219,6 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
     });
   }
-
 
   writeTicketingPenalty(tkline, vnCode, baseAmount, gst, hst, qst, otherTax, segmentAssoc) {
     const separatePenaltyRemark = new Map<string, string>();
@@ -443,6 +450,6 @@ export class PaymentRemarkService {
   }
 
   setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
-    this.nonbspInformation.next(accountingRemarks.filter(x => x.accountingTypeRemark === 'NONBSP'));
+    this.nonbspInformation.next(accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP'));
   }
 }

@@ -7,14 +7,18 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
+  // nonbspInformation: MatrixAccountingModel[];
+  nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
+  currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -151,8 +155,16 @@ export class PaymentRemarkService {
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
 
       if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName === 'ACY') {
-        this.writeTicketingPenalty(account.tkMacLine.toString(), 'A22', account.penaltyBaseAmount,
-          account.penaltyGst, account.penaltyHst, account.penaltyQst, '0.00', segmentAssoc);
+        this.writeTicketingPenalty(
+          account.tkMacLine.toString(),
+          'A22',
+          account.penaltyBaseAmount,
+          account.penaltyGst,
+          account.penaltyHst,
+          account.penaltyQst,
+          '0.00',
+          segmentAssoc
+        );
       }
 
       this.writeTicketingLine(
@@ -208,7 +220,6 @@ export class PaymentRemarkService {
     });
   }
 
-
   writeTicketingPenalty(tkline, vnCode, baseAmount, gst, hst, qst, otherTax, segmentAssoc) {
     const separatePenaltyRemark = new Map<string, string>();
     separatePenaltyRemark.set('TktRemarkNbr', tkline);
@@ -252,7 +263,6 @@ export class PaymentRemarkService {
         } else {
           totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
         }
-        this.writeHighLowFareSavingCode(account.fullFare, account.lowFare, account.reasonCode, segmentAssoc);
 
         itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
         this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
@@ -437,5 +447,9 @@ export class PaymentRemarkService {
     }
 
     return accountingRemarks;
+  }
+
+  setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
+    this.nonbspInformation.next(accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP'));
   }
 }

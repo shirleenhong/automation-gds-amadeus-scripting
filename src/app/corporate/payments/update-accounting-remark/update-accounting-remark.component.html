@@ -201,36 +201,6 @@
         </div>
       </div>
     </div>
-
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP'">
-      <!-- GDS Fare -->
-      <div class="form-group  row">
-        <div class="col-sm-4"></div>
-        <div class="col">
-          <div class="">Full Fare:</div>
-          <input type="text" class="form-control" formControlName="fullFare" id="fullFare"
-            [(ngModel)]="accountingRemark.fullFare" formControlName="fullFare" placeholder="0.00" required AmountMask />
-        </div>
-        <div class="col">
-          <div class="">Low Fare:</div>
-          <input type="text" class="form-control" formControlName="lowFare" id="lowFare"
-            [(ngModel)]="accountingRemark.lowFare" formControlName="lowFare" placeholder="0.00" required AmountMask />
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <div class="col-sm-4">Reason Code:</div>
-        <div class="col-sm-8">
-          <select id="reasonCode" class="form-control" [(ngModel)]="accountingRemark.reasonCode"
-            formControlName="reasonCode" name="reasonCode" required>
-            <option *ngFor="let item of reasonCodeList" [value]="item.itemValue">
-              {{ item.itemText }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-    </div>
   </form>
 </div>
 <div class="modal-footer">

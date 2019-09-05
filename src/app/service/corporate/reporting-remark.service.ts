@@ -12,11 +12,20 @@ export class ReportingRemarkService {
 
   WriteBspRemarks(rbc: ReportingBSPComponent) {
     this.WriteFareRemarks(rbc.bspGroup);
+    this.writeNonBspFareReamrks(rbc.nonBspGroup);
   }
 
   WriteFareRemarks(bspGroup: FormGroup) {
     const items = bspGroup.get('fares') as FormArray;
+    this.writeHighLowFare(items, false);
+  }
 
+  writeNonBspFareReamrks(nonBspGroup: FormGroup) {
+    const nonBspItems = nonBspGroup.get('nonbsp') as FormArray;
+    this.writeHighLowFare(nonBspItems, true);
+  }
+
+  private writeHighLowFare(items: any, write: boolean) {
     for (const group of items.controls) {
       const highFareRemark = new Map<string, string>();
       const lowFareRemark = new Map<string, string>();
@@ -29,7 +38,7 @@ export class ReportingRemarkService {
       const output = group.get('reasonCodeText').value.split(':');
       airReasonCodeRemark.set('CAAirRealisedSavingCode', output[0].trim());
 
-      if (group.get('chkIncluded').value === true) {
+      if (group.get('chkIncluded').value === true || write) {
         this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);

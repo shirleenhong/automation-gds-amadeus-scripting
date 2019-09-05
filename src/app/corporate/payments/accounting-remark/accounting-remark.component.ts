@@ -27,6 +27,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.accountingRemarks = this.paymentService.extractAccountingModelsFromPnr();
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
+    this.paymentService.setNonBspInformation(this.accountingRemarks);
   }
 
   deleteItem(r: MatrixAccountingModel) {
@@ -69,6 +70,7 @@ export class AccountingRemarkComponent implements OnInit {
         }
       }
       this.isPassPurchaseTransaction();
+      this.paymentService.setNonBspInformation(this.accountingRemarks);
     });
   }
 

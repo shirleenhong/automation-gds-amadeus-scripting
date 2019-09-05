@@ -69,23 +69,28 @@ export class TicketingComponent implements OnInit {
     }
 
     private presetSegmentFee() {
-        this.checkAndPresetSegment('TYP-CWT/FEE ONLY', 'FEE');
+        const segmentDetails = this.pnrService.getSegmentTatooNumber();
+        segmentDetails.forEach((segments) => {
+            let segmentText = segments.freetext;
+            let hasSegmentMatch = segmentText.includes('TYP-CWT/FEE ONLY');
+
+            if (hasSegmentMatch) {
+                this.updateTkDropdown('FEE');
+            }
+        });
     }
 
     private presetSegmentCancelled() {
-        this.checkAndPresetSegment('PNR CANCELLED', 'CXL');
+        const misIndex = this.pnrService.getmisCancel();
+        const hasSegmentMatch = misIndex > 0;
+
+        if (hasSegmentMatch) {
+            this.updateTkDropdown('CXL');
+        }
     }
 
-    private checkAndPresetSegment(matchKey: string, dropdownDefaultValue: string): void {
-        const segmentDetails = this.pnrService.getSegmentTatooNumber();
-        segmentDetails.forEach((segments) => {
-            var segmentText = segments.freetext;
-            let hasSegmentMatch = segmentText.includes(matchKey);
-
-            if (hasSegmentMatch) {
-                this.ticketForm.get('tk').setValue(dropdownDefaultValue);
-            }
-        });
+    private updateTkDropdown(newValue: string) {
+        this.ticketForm.get('tk').setValue(newValue);
     }
 
     public getTicketingDetails(): TicketModel {
@@ -102,7 +107,7 @@ export class TicketingComponent implements OnInit {
         this.isOnHoldChecked = this.ticketForm.get('pnrOnHold').value;
 
         if (this.isOnHoldChecked) {
-            this.ticketForm.get('tk').setValue('');
+            this.updateTkDropdown('');
         }
     }
 }

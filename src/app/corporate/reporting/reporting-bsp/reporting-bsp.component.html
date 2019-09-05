@@ -1,32 +1,47 @@
-<div [formGroup]="bspGroup" width>
+<div [formGroup]="bspGroup" class="form-group">
   <br />
+  <div class="row">
+    <div class="" style="width:3%"></div>
+
+    <div class="col-2" style="width:12%;text-align:left;padding-left:30px">
+      Segment
+    </div>
+
+    <div class="col-2" style="width:12%;text-align:left;padding-left:25px">
+      Charge Fare
+    </div>
+
+    <div class="col-2" style="width:12%;text-align:left;padding-left:20px">
+      Full Fare
+    </div>
+    <div class="col-2" style="width:12%;text-align:left;padding-left:15px">
+      Low Fare
+    </div>
+    <div class="col-3" style="width:12%;text-align:left;padding-left:10px">
+      Reason Code
+    </div>
+  </div>
   <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
     <div [formGroupName]="i" class="row">
-      <div class="">
-        <br />
+      <div class="" style="width:3%;padding-left:10px">
         <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
       </div>
 
-      <div class="col-2">
-        Segment
+      <div class="col-2" style="width:12%;text-align:left">
         <input formControlName="segment" type="text" class="form-control" readonly />
       </div>
 
-      <div class="col-2">
-        Charge Fare
+      <div class="col-2" style="width:12%;text-align:left">
         <input formControlName="chargeFare" type="text" class="form-control" readonly />
       </div>
 
-      <div class="col-2">
-        Full Fare
+      <div class="col-2" style="width:12%;text-align:left">
         <input formControlName="highFareText" type="text" class="form-control" maxlength="55" />
       </div>
-      <div class="col-2">
-        Low Fare
+      <div class="col-2" style="width:12%;text-align:left">
         <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
       </div>
-      <div class="col-3">
-        Reason Code
+      <div class="col-3" style="width:12%;text-align:left">
         <input formControlName="reasonCodeText" type="text" class="form-control" list="dynamicReasonCodes" />
         <datalist id="dynamicReasonCodes">
           <option *ngFor="let reason of reasonCodes[i]">{{
@@ -34,45 +49,6 @@
           }}</option>
         </datalist>
       </div>
-
-      <!-- 
-      <table style="width:100%">
-    
-        <tr>
-          <td style="width:5%">
-            <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
-          </td>
-          <td style="width:7%">
-            Segment
-          </td>
-          <td style="width:6%">
-            <input formControlName="segment" type="text" class="form-control" maxlength="2" style="width:90%" />
-          </td>
-          <td style="width:8%">
-            Full Fare
-          </td>
-          <td style="width:12%">
-            <input formControlName="highFareText" type="text" class="form-control" maxlength="55" style="width:90%" />
-          </td>
-          <td style="width:8%">
-            Low Fare
-          </td>
-          <td style="width:12%">
-            <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" style="width:90%" />
-          </td>
-          <td style="width:10%">
-            Reason Code
-          </td>
-          <td style="width:15%">
-            <input formControlName="reasonCodeText" type="text" class="form-control" style="width:90%" list="dynamicReasonCodes" />
-            <datalist id="dynamicReasonCodes">
-              <option *ngFor="let item of reasonCodes" [value]="item">{{
-                item.reasonCode + '-' + item.reasonCodeProductTypeDescriptions.get('en-GB')
-              }}</option>
-            </datalist>
-          </td>
-        </tr>
-      </table> -->
     </div>
   </div>
 </div>

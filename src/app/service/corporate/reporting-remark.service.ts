@@ -74,7 +74,6 @@ export class ReportingRemarkService {
   }
 
   getRemarkSegmentAssociation(segments: string[]): string[] {
-    debugger;
     let segmentrelate: string[] = [];
     const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) > -1);
 

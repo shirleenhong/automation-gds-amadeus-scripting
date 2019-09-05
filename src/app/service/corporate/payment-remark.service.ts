@@ -7,12 +7,16 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
+  // nonbspInformation: MatrixAccountingModel[];
+  nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
+  currentMessage = this.nonbspInformation.asObservable();
 
   constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) { }
 
@@ -252,7 +256,6 @@ export class PaymentRemarkService {
         } else {
           totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
         }
-        this.writeHighLowFareSavingCode(account.fullFare, account.lowFare, account.reasonCode, segmentAssoc);
 
         itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
         this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
@@ -437,5 +440,9 @@ export class PaymentRemarkService {
     }
 
     return accountingRemarks;
+  }
+
+  setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
+    this.nonbspInformation.next(accountingRemarks.filter(x => x.accountingTypeRemark === 'NONBSP'));
   }
 }

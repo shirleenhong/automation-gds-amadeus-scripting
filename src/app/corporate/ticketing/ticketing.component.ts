@@ -30,6 +30,7 @@ export class TicketingComponent implements OnInit {
     ngOnInit() {
         this.loadOid();
         this.loadTKList();
+        this.checkSegments();
     }
 
     private loadOid(): void {
@@ -60,6 +61,31 @@ export class TicketingComponent implements OnInit {
 
     private loadTKList(): void {
         this.tkList = this.staticValues.getTKList();
+    }
+
+    private checkSegments(): void {
+        this.presetSegmentFee();
+        this.presetSegmentCancelled();
+    }
+
+    private presetSegmentFee() {
+        this.checkAndPresetSegment('TYP-CWT/FEE ONLY', 'FEE');
+    }
+
+    private presetSegmentCancelled() {
+        this.checkAndPresetSegment('PNR CANCELLED', 'CXL');
+    }
+
+    private checkAndPresetSegment(matchKey: string, dropdownDefaultValue: string): void {
+        const segmentDetails = this.pnrService.getSegmentTatooNumber();
+        segmentDetails.forEach((segments) => {
+            var segmentText = segments.freetext;
+            let hasSegmentMatch = segmentText.includes(matchKey);
+
+            if (hasSegmentMatch) {
+                this.ticketForm.get('tk').setValue(dropdownDefaultValue);
+            }
+        });
     }
 
     public getTicketingDetails(): TicketModel {

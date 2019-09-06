@@ -40,35 +40,27 @@ ${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
 ${input_lowestGdsFare}    css=#lowestGdsFare
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
+${input_payment_fullFare}     css=#fullFare
+${input_payment_lowFare}    css=#lowFare
+${input_payment_reasonCode}    css=#reasonCode
 
 *** Keywords ***    
-Add Air Canada Pass Redemption Ticketing Details For Single Segment
-    Click Full Wrap
-    Click Payment Panel
-    Click Element    ${tab_nonBsp_processing}    
-    Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    Air Canada Pass Redemption
-    Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details    1000.00    100.00    10.00    1.00
-
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Click Full Wrap
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
-    
-    
+
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Click Full Wrap
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
@@ -80,7 +72,7 @@ Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2    3
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
@@ -92,7 +84,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
@@ -104,66 +96,83 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Click Element    ${tab_nonBsp_processing}  
     Click Element    ${button_addaccountingline}
     Select Itinerary Segments    text
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission
     
+# For Non-BSP Airline and APAY #  
 Add Non-BSP Ticketing Details For Segment ${segment_no} 
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
-    Select Itinerary Segments   ${segment_no} 
+    Select Itinerary Segments   2 
     Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
+    Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
+    Add Client Reporting Values For Non-BSP
+    Take Screenshot
     
 Add Non-BSP Ticketing Details For Multiple Segments
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
-    Select Itinerary Segments    2    3    
+    Select Itinerary Segments    2    3
     Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
+    Add Ticketing Amount Details With Other Tax And Commission     750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
+    Add Client Reporting Values For Non-BSP
+    Take Screenshot
+
+Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
+    Click Element    ${tab_nonBsp_processing}    
+    Click Element    ${button_addaccountingline}
+    Select From List By Label    ${list_accounting_type}    Non BSP Airline
+    Select Itinerary Segments   ${segment_no} 
+    Enter Value    ${input_confirmationNo}    54321
+    Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
+    Add Client Reporting Values For Non-BSP
+    Take Screenshot
     
-Add Multiple Non-BSP Ticketing Details
-    Add Non-BSP Ticketing Details For Segment 2
-    Add Non-BSP Ticketing Details For Segment 3
+#removed after UI change#
+Add Client Reporting Values For Non-BSP
+    Enter Value    ${input_payment_fullFare}    2101.00
+    Enter Value    ${input_payment_lowFare}    912.99
+    Select From List By Value    ${input_payment_reasonCode}    L    
+#removed after UI change#
 
 Add APAY Ticketing Details For Single Segment
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    54321
+    # Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
+    Take Screenshot
     
 Add APAY Ticketing Details For Multiple Segments
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2    3
-    Enter Value    ${input_confirmationNo}    54321
+    # Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
+    Take Screenshot
    
 Add Non-BSP and APAY Ticketing Detals For Multiple Segments
-    Add Non-BSP Ticketing Details For Single Segment
+    Add Non-BSP Ticketing Details For Segment 2 
+    Enter Value    ${input_suppliercode}    AEO
+    Click Save Button
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    3    4
-    Enter Value    ${input_confirmationNo}    89123
+    # Enter Value    ${input_confirmationNo}    89123
     Add Ticketing Amount Details With Other Tax    1230.00    11.00    12.00    13.00    14.00
     Enter Value    ${input_tktnumber}    9876543210
-
-Add Ticketing Amount Details
-    [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}
-    Enter Value    ${input_baseamount}    ${base_amt}
-    Enter Value    ${input_gst_tax}    ${gst_tax}
-    Enter Value    ${input_hst_tax}    ${hst_tax}
-    Enter Value    ${input_qst_tax}    ${qst_tax} 
+    Take Screenshot
+# For Non-BSP Airline and APAY # 
 
 Add Ticketing Amount Details With Other Tax
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
@@ -206,52 +215,74 @@ Select Itinerary Segments
     \    Click Element    ${list_segment}//input[@value='${segment_number}']
     Click Element    ${input_segment}
     [Teardown]    Take Screenshot
-    
+ 
 Click Update Button
     Wait Until Element Is Visible    ${edit_order}    30
     Click Element    ${edit_order}
     [Teardown]    Take Screenshot
-    
+
+# Verification For Non-BSP Airline and APAY #     
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-0/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2-3 
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-0/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2-3 
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2-3    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
+   
+Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-C5A/S2 
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
+    
+Verify That Ticketing Remarks For Mutliple Non-BSP Are Written In The PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2 
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-VEN/TK-1234567890/VN-WJ3/S3 
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S3    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1520.00
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S3
     
 Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2    True
+    Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
+    Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00    
     
 Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3    True
+    Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
+    Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     
 Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT/TKT2-VN-PFS/BA-1230.00/TX1-11.00XG/TX2-12.00RC/TX3-13.00XQ/TX4-14.00XT/S3-4
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 1280.00
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 89123/S3-4
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-AEO/S2 
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-UA*GRAND TOTAL CAD 760.00
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-VN-PFS/BA-1230.00/TX1-11.00XG/TX2-12.00RC/TX3-13.00XQ/TX4-14.00XT/S3-4    True
+    Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 89123/S3-4
+# Verification For Non-BSP Airline and APAY # 
 
-    #-----For Payment Keywords-------#
-Add Matrix Accounting Remark For Air Canada Pass Purchase
+#-----For Payment Keywords-------#  
+Add Matrix Accounting Remark For Air Canada Pass Purchase 
     Click Matrix Accounting Remark Tab
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
@@ -261,49 +292,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Enter Value    ${input_departurecity}    YVR        
     Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
-    #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot
-    Click Save Button
-    
-Modify Matrix Accounting Remark For Air Canada Pass Purchase
-    Click Matrix Accounting Remark Tab
-    Click Update Button
-    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    879222
-    Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
-    Enter Value    ${input_tktnumber}    0987654321
-    Enter Value    ${input_departurecity}    YCC        
-    Select From List By Label    ${list_purchasetype}     REGIONAL-QUEBEC
-    Select From List By Label    ${list_faretype}       LATITUDE
-    #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
-    Take Screenshot
-    Click Save Button
-    
-Add Matrix Accounting Remark For WestJet Pass Purchase
-    Click Matrix Accounting Remark Tab
-    Click Add Accounting Line Button
-    Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    888888
-    Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
-    Enter Value    ${input_tktnumber}    0987612345
-    Enter Value    ${input_departurecity}    MNL        
-    Select From List By Label    ${list_purchasetype}     Westjet Travel Pass
-    #Verify Supplier Code Default Value Is Correct For Pass Purchase Westjet Individual Pass Purchase
-    Take Screenshot
-    Click Save Button
-    
-Add Matrix Accounting Remark For Porter Pass Purchase
-    Click Matrix Accounting Remark Tab
-    Click Add Accounting Line Button
-    Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    123456
-    Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
-    Enter Value    ${input_tktnumber}    1234567890
-    Enter Value    ${input_departurecity}    YCC        
-    Select From List By Label    ${list_purchasetype}     Porter Travel Pass
-    #Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
-    Take Screenshot
-    Click Save Button
 
 Click Matrix Accounting Remark Tab
     Wait Until Element Is Visible   ${tab_nonBsp_processing}    60
@@ -321,7 +310,7 @@ Click Add Accounting Line Button
 Select Accounting Remark Type
     [Arguments]    ${accounting_remark_type}
     Set Suite Variable    ${accounting_remark_type}
-    Click Element    css=#accountingTypeRemark
+    Click Element    ${list_accounting_type}
     Click Element    xpath=//option[contains(text(),'${accounting_remark_type}')]
     ${remark_description}    Set Variable    ${accounting_remark_type}
     
@@ -381,7 +370,7 @@ Verify Supplier Code Default Value Is Correct For ${acct_remark_type}
     
 Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Set Test Variable    ${airline_code}
-    ${actual_supplier_code}    Get Text    ${input_suppliercode}
+    ${actual_supplier_code}    Get Element Attribute    ${input_suppliercode}    ng-reflect-model
     Run Keyword If    "${airline_code}" == "AC"   Should Contain    ${actual_supplier_code}    ACY
     Run Keyword If    "${airline_code}" == "WS"   Should Contain    ${actual_supplier_code}    WJ3
     Run Keyword If    "${airline_code}" == "PD"   Should Contain    ${actual_supplier_code}    PTA
@@ -392,22 +381,23 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Run Keyword If    "${airline_code}" == "8P"   Should Contain    ${actual_supplier_code}    PF3
     Run Keyword If    "${airline_code}" == "WJ"   Should Contain    ${actual_supplier_code}    ALO
     Run Keyword If    "${airline_code}" == "WN"   Should Contain    ${actual_supplier_code}    SOA
+    Run Keyword If    "${airline_code}" == "APAY"   Should Contain    ${actual_supplier_code}    PFS
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Switch To Graphic Mode
-    Get PNR Details
+    Get PNR Details  
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/VN-PTA/S2
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-PTA/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 1111.2
     
-Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
+Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details  
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/VN-WJ3/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-WS*GRAND TOTAL CAD 1000
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-WJ3/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 1111.2
     
 Verify Penalty Amount Fields Are Displayed
     Wait Until Page Contains Element    ${input_penaltyBaseAmount}    30
@@ -417,16 +407,52 @@ Verify Penalty Amount Fields Are Displayed
     Page Should Contain Element    ${input_penaltyQst}
     
 Verify Penalty Remarks Are Not Written In The PNR
-    Verify Specific Remark Is Not Written In The PNR    RMT/TKT1-VN-ACY/BA-
+    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-VN-ACY/BA-
     
 Verify Penalty Remarks Are Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
 
 Click Save Button
     Click Element    ${button_save}
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
+    Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
+    
+Update Consultant Number to ${consultant_number}
+    Enter Value    ${input_consultantNo}    ${consultant_number}    
+    Set Test Variable     ${consultant_number}     ${consultant_number}
+    
+Verify Consultant Number Remark Is Written With The Correct Value
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Specific Remark Is Written In The PNR    RM*CN/-${consultant_number}
+    
+Verify RMG Remark Is Written With Supplier Code ${supplier_code}
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Specific Remark Is Written In The PNR    RMG/${supplier_code}PASSCHG
+    
+Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
+    Enter Value    ${input_lowestGdsFare}    ${lowest_gds_fare_value}
+    Set Test Variable    ${lowest_gds_fare_value}
+    
+Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For ${airline_code}
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Specific Remark Is Written In The PNR    RM*U14/-${airline_code}PASS-1234567890.LAT/${lowest_gds_fare_value}
+    
+Verify Specific RIR Remarks In English Are Removed From PNR
+    Verify Specific Remark Is Not Written In The PNR    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2
+    Verify Specific Remark Is Not Written In The PNR    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2
+    Verify Specific Remark Is Not Written In The PNR    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2
+    Verify Specific Remark Is Not Written In The PNR    RIR ON YOUR CREDIT CARD STATEMENT./S2
+    
+Verify Specific RIR Remarks In French Are Removed From PNR
+    Verify Specific Remark Is Not Written In The PNR    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2
+    Verify Specific Remark Is Not Written In The PNR    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2
+    Verify Specific Remark Is Not Written In The PNR    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2
+    Verify Specific Remark Is Not Written In The PNR    RIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
     
 #-----Verification For PassPurchase-----#
 Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
@@ -550,40 +576,48 @@ Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
 Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
     Get PNR Details
     Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL    True
+    
+Add Matrix Accounting Remark For WestJet Pass Purchase
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    888888
+    Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
+    Enter Value    ${input_tktnumber}    0987612345
+    Enter Value    ${input_departurecity}    MNL        
+    Select From List By Label    ${list_purchasetype}     Westjet Travel Pass
+    #Verify Supplier Code Default Value Is Correct For Pass Purchase Westjet Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    
+Add Matrix Accounting Remark For Porter Pass Purchase
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    123456
+    Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_departurecity}    YCC        
+    Select From List By Label    ${list_purchasetype}     Porter Travel Pass
+    #Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
 
-Update Consultant Number to ${consultant_number}
-    Enter Value    ${input_consultantNo}    ${consultant_number}    
-    Set Test Variable     ${consultant_number}     ${consultant_number}
-    
-Verify Consultant Number Remark Is Written With The Correct Value
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM*CN/-${consultant_number}
-    
-Verify RMG Remark Is Written With Supplier Code ${supplier_code}
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RMG/${supplier_code}PASSCHG
-    
-Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
-    Enter Value    ${input_lowestGdsFare}    ${lowest_gds_fare_value}
-    Set Test Variable    ${lowest_gds_fare_value}
-    
-Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For ${airline_code}
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM*U14/-${airline_code}PASS-1234567890.LAT/${lowest_gds_fare_value}
-    
-Verify Specific RIR Remarks In English Are Removed From PNR
-    Verify Specific Remark Is Not Written In The PNR    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2
-    Verify Specific Remark Is Not Written In The PNR    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2
-    Verify Specific Remark Is Not Written In The PNR    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2
-    Verify Specific Remark Is Not Written In The PNR    RIR ON YOUR CREDIT CARD STATEMENT./S2
-    
-Verify Specific RIR Remarks In French Are Removed From PNR
-    Verify Specific Remark Is Not Written In The PNR    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2
-    Verify Specific Remark Is Not Written In The PNR    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2
-    Verify Specific Remark Is Not Written In The PNR    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2
-    Verify Specific Remark Is Not Written In The PNR    RIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
-    
+Modify Matrix Accounting Remark For Air Canada Pass Purchase
+    Click Matrix Accounting Remark Tab
+    Click Update Button
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    879222
+    Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
+    Enter Value    ${input_tktnumber}    0987654321
+    Enter Value    ${input_departurecity}    YCC        
+    Select From List By Label    ${list_purchasetype}     REGIONAL-QUEBEC
+    Select From List By Label    ${list_faretype}       LATITUDE
+    #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
 
+Navigate To Add Accounting Line
+    Click Element    ${tab_nonBsp_processing}    
+    Click Element    ${button_addaccountingline} 
+    Set Test Variable    ${current_page}    Add Accounting Line

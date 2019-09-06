@@ -4780,6 +4780,54 @@
 							"elementManagementData": {
 								"reference": {
 									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
 									"number": "446"
 								},
 								"segmentName": "RM"
@@ -9982,6 +10030,54 @@
 							"elementManagementData": {
 								"reference": {
 									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
 									"number": "446"
 								},
 								"segmentName": "RM"
@@ -15130,6 +15226,54 @@
 									"type": "RM",
 									"category": "*",
 									"freetext": "U59/-MUSSUUUUUUUA",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
 									"providerType": null,
 									"currency": null,
 									"amount": null,
@@ -20401,6 +20545,54 @@
 							"elementManagementData": {
 								"reference": {
 									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
 									"number": "446"
 								},
 								"segmentName": "RM"
@@ -25616,6 +25808,54 @@
 									"type": "RM",
 									"category": "*",
 									"freetext": "U59/-MUSSUUUUUUUA",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
 									"providerType": null,
 									"currency": null,
 									"amount": null,
@@ -30952,6 +31192,54 @@
 							"elementManagementData": {
 								"reference": {
 									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
 									"number": "446"
 								},
 								"segmentName": "RM"
@@ -34345,6 +34633,7 @@
 						"Gst": "100",
 						"Hst": "10",
 						"Qst": "1",
+						"OthTax": "0.1",
 						"Comm": "0.1"
 					}
 				},
@@ -34359,6 +34648,7 @@
 						"Gst": "200",
 						"Hst": "20",
 						"Qst": "2",
+						"OthTax": "0.1",
 						"Comm": "0.2"
 					}
 				}
@@ -36141,6 +36431,54 @@
 									"type": "RM",
 									"category": "*",
 									"freetext": "U59/-MUSSUUUUUUUA",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
 									"providerType": null,
 									"currency": null,
 									"amount": null,
@@ -41696,6 +42034,54 @@
 									"type": "RM",
 									"category": "*",
 									"freetext": "U59/-MUSSUUUUUUUA",
+									"providerType": null,
+									"currency": null,
+									"amount": null,
+									"officeId": []
+								}
+							},
+							"extendedRemark": null,
+							"serviceRequest": null,
+							"dateAndTimeInformation": null,
+							"tourCode": null,
+							"ticketElement": null,
+							"freetextData": null,
+							"structuredAddress": null,
+							"optionElement": null,
+							"printer": null,
+							"seatGroup": null,
+							"fareElement": null,
+							"fareDiscount": null,
+							"manualFareDocument": null,
+							"commission": null,
+							"originalIssue": null,
+							"formOfPayment": null,
+							"fopExtension": [],
+							"serviceDetails": [],
+							"frequentTravellerVerification": null,
+							"ticketingCarrier": null,
+							"farePrintOverride": null,
+							"frequentTravellerData": null,
+							"accessLevel": null,
+							"referenceForDataElement": {
+								"reference": []
+							}
+						},
+						{
+							"elementManagementData": {
+								"reference": {
+									"qualifier": "OT",
+									"number": "441"
+								},
+								"segmentName": "RM"
+							},
+							"pnrSecurity": null,
+							"accounting": null,
+							"miscellaneousRemark": {
+								"remarks": {
+									"type": "RM",
+									"category": "*",
+									"freetext": "CN/-MCC",
 									"providerType": null,
 									"currency": null,
 									"amount": null,

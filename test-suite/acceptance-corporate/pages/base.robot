@@ -3,8 +3,8 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Library           DateTime
 Resource          amadeus.robot
+Resource          payment.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -15,10 +15,9 @@ ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporti
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
-${button_main_menu}    xpath=//button[contains(text(), 'Back To Main Menu')]
 
 *** Keywords ***
-Enter Value 
+Enter Value
     [Arguments]    ${element}    ${value}
     Double Click Element    ${element}
     Press Key    ${element}    \\08
@@ -31,21 +30,22 @@ Close CA Corporate Test
     Click Element    ${button_close}
     Wait Until Element Is Visible    ${input_commandText}    30
 
-Click Full Wrap 
+Click Full Wrap
     Wait Until Page Contains Element   ${button_full_wrap}    180 
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Full Wrap PNR
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
     Click Element    ${panel_reporting}
-    [Teardown]    Take Screenshot
     
 Click Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
     Click Element    ${panel_payment}
+    Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
 
 Click Submit To PNR
@@ -55,11 +55,12 @@ Click Submit To PNR
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
-    
+    Set Test Variable    ${pnr_submitted}    yes
+
 Click Back To Main Menu
     Wait Until Element Is Visible    ${button_main_menu}
     Click Element    ${button_main_menu}
-    [Teardown]    Take Screenshot
+    Set Test Variable    ${current_page}    CWT Corporate
    
 Assign Current Date
     ${current_date}    Get Current Date
@@ -79,3 +80,40 @@ Convert Month To MMM
     ...    ELSE IF    "${month}" == "11"    Set Variable    NOV     ELSE IF    "${month}" == "12"    Set Variable    DEC
     Log    ${month}
     [Return]     ${month}
+
+Navigate to Page ${destination_page}
+     Set Test Variable    ${i}     1
+     : FOR     ${i}    IN    10
+     \    ${i}    Evaluate    ${i} + 1
+     \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
+     \    Run Keyword If    "${current_page}" == "CWT Corporate"     Navigate From Corp    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Payment"    Navigate From Payment    ${destination_page}
+     \    Exit For Loop If    "${current_page}" == "${destination_page}" 
+     Log    ${current_page}
+     Log    ${destination_page}   
+
+Navigate From Corp
+     [Arguments]    ${destination_page}
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting"
+     ...    Click Full Wrap
+     ...    ELSE    Close CA Corporate Test
+    
+Navigate From Full Wrap
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
+    ...    ELSE IF    "${destination_page}" == "Reporting"     Click Reporting Panel
+    ...    ELSE   Click Back To Main Menu
+
+Navigate From Payment
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
+    
+Finish PNR
+    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
+    Run Keyword If    "${pnr_details}" == "${EMPTY}"    Get PNR Details
+    
+Submit To PNR
+    [Arguments]    ${close_corporate_test}=yes    
+    Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}

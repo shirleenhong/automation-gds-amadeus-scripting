@@ -38,7 +38,4 @@ export class MatrixAccountingModel {
 
   // Non BSP Exchange properties
   gdsFare: number;
-  fullFare: string;
-  lowFare: string;
-  reasonCode: string;
 }

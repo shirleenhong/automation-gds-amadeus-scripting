@@ -112,11 +112,10 @@ export class RemarksManagerService {
     const ids = this.outputItems
       .filter(
         (out) =>
-          (values && this.hasCompleteKeys(values, out.placeholderKeys) && (staticText ? out.format === staticText : true)) ||
           (!values &&
             conditions &&
             this.hasMatchedConditions(conditions, out.conditions) &&
-            (staticText ? out.format.indexOf(staticText) >= 0 : false))
+            (staticText ? out.format === staticText : false))
       )
       .map((out) => out.id);
     return ids[0];

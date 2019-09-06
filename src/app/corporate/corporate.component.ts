@@ -14,6 +14,7 @@ import { PaymentRemarkService } from '../service/corporate/payment-remark.servic
 import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
 import { TicketRemarkService } from '../service/corporate/ticket-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
 
 @Component({
@@ -27,6 +28,7 @@ export class CorporateComponent implements OnInit {
     isPnrLoaded = false;
     modalRef: BsModalRef;
     workflow = '';
+    validModel = new ValidateModel();
     dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
 
     @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -36,6 +38,7 @@ export class CorporateComponent implements OnInit {
     constructor(
         private pnrService: PnrService,
         private rms: RemarksManagerService,
+        // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
         private modalService: BsModalService,
         private paymentRemarkService: PaymentRemarkService,
         private corpRemarkService: CorporateRemarksService,
@@ -76,7 +79,7 @@ export class CorporateComponent implements OnInit {
     }
 
     showLoading(msg, caller?) {
-        const skip = this.modalRef && this.modalRef.content.callerName === caller;
+        const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
         if (!skip) {
             this.modalRef = this.modalService.show(LoadingComponent, {
                 backdrop: 'static'
@@ -89,6 +92,7 @@ export class CorporateComponent implements OnInit {
     }
 
     closePopup() {
+        this.modalRef.content = null;
         this.modalRef.hide();
     }
 
@@ -105,11 +109,18 @@ export class CorporateComponent implements OnInit {
         this.modalRef.content.setMessageType(type);
     }
 
+    checkValid() {
+        this.validModel.isSubmitted = true;
+        this.validModel.isPaymentValid = this.paymentsComponent.checkValid();
+        this.validModel.isReportingValid = this.reportingComponent.checkValid();
+        // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+        return this.validModel.isCorporateAllValid();
+    }
+
+
     public async wrapPnr() {
         await this.loadPnrData();
         this.workflow = 'wrap';
-
-
     }
 
     async loadPnrData() {
@@ -132,6 +143,8 @@ export class CorporateComponent implements OnInit {
             await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
             // this.showLoading('ReasonCodes', 'initData');
             await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+            await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
+            await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         }
         this.closePopup();
         this.checkHasDataLoadError();
@@ -139,14 +152,29 @@ export class CorporateComponent implements OnInit {
 
     checkHasDataLoadError() {
         this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
-        this.dataError.pnr = !(this.isPnrLoaded);
+        this.dataError.pnr = !this.isPnrLoaded;
         this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
         this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
         this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-        this.dataError.hasError = (this.dataError.matching || this.dataError.pnr || this.dataError.reasonCode || this.dataError.servicingOption || this.dataError.supplier);
+        this.dataError.hasError =
+            this.dataError.matching ||
+            this.dataError.pnr ||
+            this.dataError.reasonCode ||
+            this.dataError.servicingOption ||
+            this.dataError.supplier;
     }
 
     public async SubmitToPNR() {
+        if (!this.checkValid()) {
+            const modalRef = this.modalService.show(MessageComponent, {
+                backdrop: 'static'
+            });
+            modalRef.content.modalRef = modalRef;
+            modalRef.content.title = 'Invalid Inputs';
+            modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+            return;
+        }
+
         this.showLoading('Updating PNR...', 'SubmitToPnr');
         const accRemarks = new Array<RemarkGroup>();
         accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));

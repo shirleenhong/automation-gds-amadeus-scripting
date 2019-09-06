@@ -39,7 +39,14 @@ Verify placeholder values with condition "OR" will only be written if condition 
     Verify Updated Placeholder values are retrived correctly
     
 Verify Output Items with Grouping Is Written In The Correct Arrangement
-        [TAGS]    api
+    [TAGS]    api
     Get Data: Request with Grouped OutputItems
     Create Post Request    request_url=remarks-manager-rest/api/pnr-amadeus-request    content_type=application/json    api_flag=profiles
     Verify Updated Placeholder values are retrived correctly
+    
+Verify That Remarks Language Is Changed From EN TO FR WHEN RMZ LANGUAGE IS FR
+    [TAGS]    api
+    Get Data: Request With Language Change To FR
+    Create Post Request    request_url=remarks-manager-rest/api/pnr-amadeus-request    content_type=application/json    api_flag=profiles
+    Verify Updated Placeholder values are retrived correctly
+    

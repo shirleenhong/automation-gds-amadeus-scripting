@@ -8,6 +8,7 @@ import { ReasonCode } from '../../../models/ddb/reason-code.model';
 import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 import { SelectItem } from 'src/app/models/select-item.model';
+import { UtilHelper } from 'src/app/helper/util.helper';
 // import { PaymentsComponent } from '../../payments/payments.component';
 
 declare var smartScriptSession: any;
@@ -38,7 +39,8 @@ export class ReportingBSPComponent implements OnInit {
     private fb: FormBuilder,
     private pnrService: PnrService,
     private ddbService: DDBService,
-    private paymentService: PaymentRemarkService
+    private paymentService: PaymentRemarkService,
+    private utilHelper: UtilHelper
   ) {}
 
   ngOnInit() {
@@ -119,7 +121,7 @@ export class ReportingBSPComponent implements OnInit {
 
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
-        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
+        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
         reasonCode = this.getReasonCodeValue('E', currentIndex);
         group.get('reasonCodeText').setValue(reasonCode);
       }
@@ -144,6 +146,9 @@ export class ReportingBSPComponent implements OnInit {
       group.setValue(defaultValue);
     }
 
+    this.utilHelper.validateAllFields(group);
+    // group.get('reasonCodeText').updateValueAndValidity();
+    // group.get('highFareText').updateValueAndValidity();
     return group;
   }
 
@@ -216,9 +221,9 @@ export class ReportingBSPComponent implements OnInit {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB');
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB', 1);
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
       }
     }
   }

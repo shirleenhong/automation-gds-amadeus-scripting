@@ -116,4 +116,4 @@ Finish PNR
 Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button    
-    ...    ELSE IF    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}

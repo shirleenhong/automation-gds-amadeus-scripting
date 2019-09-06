@@ -17,12 +17,12 @@ Verify That Non-BSP Ticketing Remarks Are Written For Single Segment
     Open CA Corporate Test
     Click Full Wrap
     Click Payment Panel
-    Add Non-BSP Ticketing Details For Single Segment
+    Add Non-BSP Ticketing Details For Segment 2
     Verify That Supplier Code Default Value Is Correct For AC
     Click Save Button
     Click Submit To PNR
     Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
-    [Teardown]    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
     
 Verify That Non-BSP Ticketing Remarks Are Written For Multiple Segments
     [Tags]    us10552
@@ -36,8 +36,7 @@ Verify That Non-BSP Ticketing Remarks Are Written For Multiple Segments
     Click Save Button
     Click Submit To PNR
     Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
-    Switch To Command Page
-    [Teardown]    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 Verify That Non-BSP Ticketing Remarks Without Ticket Number Are Written
     [Tags]    us10552
@@ -50,8 +49,7 @@ Verify That Non-BSP Ticketing Remarks Without Ticket Number Are Written
     Click Save Button
     Click Submit To PNR
     Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR 
-    Switch To Command Page
-    [Teardown]    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
    
 Verify That Multiple Non-BSP Ticketing Remarks Are Written
     [Tags]    us10552
@@ -65,7 +63,8 @@ Verify That Multiple Non-BSP Ticketing Remarks Are Written
     Add Non-BSP Ticketing Details For Segment 3
     Click Save Button
     Click Submit To PNR
-    Verify That Ticketing Remarks For Mutliple Non-BSP Are Written In The PNR
+    Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
+    [Teardown]    Close Browser
    
 Verify That APAY Ticketing Remarks Are Written For Single Segment
     [Tags]    us10552
@@ -79,6 +78,7 @@ Verify That APAY Ticketing Remarks Are Written For Single Segment
     Click Save Button
     Click Submit To PNR
     Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
+    [Teardown]    Close Browser
     
 Verify That APAY Ticketing Remarks Are Written For Multiple Segments
     [Tags]    us10552
@@ -92,6 +92,7 @@ Verify That APAY Ticketing Remarks Are Written For Multiple Segments
     Click Save Button
     Click Submit To PNR
     Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
+    [Teardown]    Close Browser
 
 Verify That Non-BSP With APAY Ticketing Remarks Are Written 
     [Tags]    us10552

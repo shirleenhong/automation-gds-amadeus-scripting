@@ -40,9 +40,6 @@ ${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
 ${input_lowestGdsFare}    css=#lowestGdsFare
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
-${input_payment_fullFare}     css=#fullFare
-${input_payment_lowFare}    css=#lowFare
-${input_payment_reasonCode}    css=#reasonCode
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -104,12 +101,12 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
 Add Non-BSP Ticketing Details For Segment ${segment_no} 
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
+    Wait Until Element Is Visible    ${list_accounting_type}    30
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
     Select Itinerary Segments   2 
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
-    Add Client Reporting Values For Non-BSP
     Take Screenshot
     
 Add Non-BSP Ticketing Details For Multiple Segments
@@ -120,7 +117,6 @@ Add Non-BSP Ticketing Details For Multiple Segments
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission     750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
-    Add Client Reporting Values For Non-BSP
     Take Screenshot
 
 Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
@@ -130,22 +126,13 @@ Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
     Select Itinerary Segments   ${segment_no} 
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
-    Add Client Reporting Values For Non-BSP
     Take Screenshot
-    
-#removed after UI change#
-Add Client Reporting Values For Non-BSP
-    Enter Value    ${input_payment_fullFare}    2101.00
-    Enter Value    ${input_payment_lowFare}    912.99
-    Select From List By Value    ${input_payment_reasonCode}    L    
-#removed after UI change#
 
 Add APAY Ticketing Details For Single Segment
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2
-    # Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
@@ -166,9 +153,9 @@ Add Non-BSP and APAY Ticketing Detals For Multiple Segments
     Click Save Button
     Click Element    ${tab_nonBsp_processing}     
     Click Element    ${button_addaccountingline}
+    Wait Until Element Is Visible    ${list_accounting_type}    30
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    3    4
-    # Enter Value    ${input_confirmationNo}    89123
     Add Ticketing Amount Details With Other Tax    1230.00    11.00    12.00    13.00    14.00
     Enter Value    ${input_tktnumber}    9876543210
     Take Screenshot
@@ -228,13 +215,6 @@ Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
-
-Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details    
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-0/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
@@ -253,7 +233,7 @@ Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In T
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
-Verify That Ticketing Remarks For Mutliple Non-BSP Are Written In The PNR
+Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2 

@@ -108,6 +108,7 @@ Get PNR Details
     Wait Until Page Does Not Contain    ${overlay_loader}    
     Wait Until Element Is Enabled    ${icon_air}    30
     Wait Until Element Is Visible    ${tab_cryptic_display}    60
+    Sleep    2
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
     ${pnr_details}    Get Text    ${popUp_pnr_display}
@@ -175,7 +176,7 @@ Remove Line Break And Spaces
 
 Create Exchange PNR In The GDS
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
-    ...    TTK/T1/RCAD200/XCAD20YR/TCAD120    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
+    ...    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13

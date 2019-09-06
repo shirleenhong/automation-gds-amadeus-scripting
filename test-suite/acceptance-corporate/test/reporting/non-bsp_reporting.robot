@@ -32,9 +32,9 @@ Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     Click Payment Panel
     Add Non-BSP Ticketing Details For Multiple Segments
     Click Save Button
-    Add Client Reporting Values For Multiple Non-BSP Segments
+    Add Client Reporting Values For Non-BSP Segments
     Click Submit To PNR
-    Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
+    Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
     [Tags]    us13616

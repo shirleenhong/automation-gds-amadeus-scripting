@@ -36,8 +36,9 @@ Verify That Client Reporting Are Correct For Exchange PNR
     Create Exchange PNR In The GDS
     Open CA Corporate Test
     Click Full Wrap
+    Select Client Reporting Fields To Be Written
     Click Submit To PNR
     Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Delete Fare and Itinerary
     Handle Simultaneous Changes To PNR
-    # [Teardown]    Logout To Amadeus Sell Connect
+    # [Teardown]    Close Browser

@@ -187,8 +187,10 @@ export class DDBService implements OnInit {
     );
   }
 
-  getReasonCodeByTypeId(ids: number[], language: string): Array<ReasonCode> {
-    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language));
+  getReasonCodeByTypeId(ids: number[], language: string, productID: number): Array<ReasonCode> {
+    return this.reasonCodeList.filter(
+      (e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language) && e.productId === productID
+    );
   }
   // getReasonCodeByTypeId(integer[]) {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);

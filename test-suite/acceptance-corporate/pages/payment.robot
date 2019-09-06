@@ -50,7 +50,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
@@ -60,7 +60,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
@@ -72,7 +72,7 @@ Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2    3
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
@@ -84,7 +84,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Click Payment Panel
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline}
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
@@ -96,7 +96,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment
     Click Element    ${tab_nonBsp_processing}  
     Click Element    ${button_addaccountingline}
     Select Itinerary Segments    text
-    Select From List By Label    ${list_accounting_type}    NonBSP Air Exchange
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission
     
@@ -228,14 +228,6 @@ Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
-
-Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details    
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-1234567890/VN-ACY/S2 
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-0/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-AC*GRAND TOTAL CAD 760.00
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     Switch To Graphic Mode
@@ -395,17 +387,17 @@ Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticke
     Switch To Graphic Mode
     Get PNR Details  
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/VN-PTA/S2
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-PTA/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 1111.2
     
-Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Multiple Segments And Ticket Number Are Written In The PNR
+Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details  
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/VN-WJ3/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF/LCC-PD*GRAND TOTAL CAD 1000
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-WJ3/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
+    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 1111.2
     
 Verify Penalty Amount Fields Are Displayed
     Wait Until Page Contains Element    ${input_penaltyBaseAmount}    30
@@ -415,15 +407,16 @@ Verify Penalty Amount Fields Are Displayed
     Page Should Contain Element    ${input_penaltyQst}
     
 Verify Penalty Remarks Are Not Written In The PNR
-    Verify Specific Remark Is Not Written In The PNR    RMT/TKT1-VN-ACY/BA-
+    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-VN-ACY/BA-
     
 Verify Penalty Remarks Are Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
 
 Click Save Button
     Click Element    ${button_save}
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
+    Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
 Update Consultant Number to ${consultant_number}
@@ -609,7 +602,7 @@ Add Matrix Accounting Remark For Porter Pass Purchase
     #Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    
+
 Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Click Matrix Accounting Remark Tab
     Click Update Button
@@ -623,3 +616,8 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
     #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot
     Click Save Button
+
+Navigate To Add Accounting Line
+    Click Element    ${tab_nonBsp_processing}    
+    Click Element    ${button_addaccountingline} 
+    Set Test Variable    ${current_page}    Add Accounting Line

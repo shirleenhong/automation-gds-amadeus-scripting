@@ -50,6 +50,7 @@ Login To Amadeus Sell Connect Acceptance
     Handle Accept Cookie Panel
     Click Element    ${button_command_page}
     Wait Until Page Contains Element    ${input_commandText}    180
+    Set Test Variable    ${current_page}    Amadeus
 
 Handle Force Login Window
     ${is_force_sigin}    Run Keyword And Return Status    Wait Until Element Is Visible    ${button_force_sign_in}    15
@@ -73,6 +74,9 @@ Open CA Corporate Test
     Wait Until Element Is Visible    ${header_corp_test}    60
     Wait Until Element Is Visible    ${window_corp_test}    60
     Select Frame    ${window_corp_test}
+    Set Test Variable    ${current_page}    CWT Corporate
+    Set Test Variable    ${pnr_submitted}    no
+    Set Test Variable    ${pnr_details}     ${EMPTY}
 
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP

@@ -51,6 +51,7 @@ export class ReportingBSPComponent implements OnInit {
     this.nonBspGroup = this.fb.group({
       nonbsp: this.fb.array([])
     });
+
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
     this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
@@ -111,7 +112,7 @@ export class ReportingBSPComponent implements OnInit {
 
     const currentIndex = this.reasonCodes.length - 1;
     if (this.thresholdAmount > 0) {
-      if (chargeFare < lowFare + this.thresholdAmount) {
+      if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
         if (this.reasonCodes.length > 0) {
           reasonCode = this.getReasonCodeValue('7', currentIndex);
           group.get('reasonCodeText').setValue(reasonCode);
@@ -197,6 +198,7 @@ export class ReportingBSPComponent implements OnInit {
 
     const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
     let lowFare = '';
+
     if (this.isDomesticFlight) {
       lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, segmentLineNo)); // FXD/S
     } else {
@@ -220,10 +222,20 @@ export class ReportingBSPComponent implements OnInit {
     if (indx >= 0) {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
+      group.get('reasonCodeText').setValue('');
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
         this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB', 1);
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
         this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
+      }
+
+      if (this.thresholdAmount > 0) {
+        if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
+          if (this.reasonCodes.length > 0) {
+            const reasonCode = this.getReasonCodeValue('7', indx);
+            group.get('reasonCodeText').setValue(reasonCode);
+          }
+        }
       }
     }
   }

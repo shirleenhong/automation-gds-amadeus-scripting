@@ -33,12 +33,18 @@ export class TicketingComponent implements OnInit {
         this.checkSegments();
     }
 
+    /**
+     * Presets the extracted office ID to the OID field.
+     */
     private loadOid(): void {
         const extractedOid = this.extractOidFromBookRemark();
         this.ticketForm.get('officeId').setValue(extractedOid);
         this.oidDisplay = extractedOid;
     }
 
+    /**
+     * Extracts office ID from remarks.
+     */
     private extractOidFromBookRemark(): string {
         // const remarks = this.pnrService.getRemarksFromGDSByRegex(/BOOK-/g);
         const BOOK_REMARK_PREFIX = 'BOOK-';
@@ -59,16 +65,26 @@ export class TicketingComponent implements OnInit {
         return oid;
     }
 
+    /**
+     * Gets the static list of options to display for TK dropdown.
+     */
     private loadTKList(): void {
         this.tkList = this.staticValues.getTKList();
     }
 
+    /**
+     * Checks the segments in order to set a default value for TK dropdown.
+     */
     private checkSegments(): void {
         this.presetSegmentFee();
         this.presetSegmentCancelled();
+        this.presetSegmentByChargeFee();
     }
 
-    private presetSegmentFee() {
+    /**
+     * Presets the TK dropdown to "FEE ONLY".
+     */
+    private presetSegmentFee(): void {
         const segmentDetails = this.pnrService.getSegmentTatooNumber();
         segmentDetails.forEach((segments) => {
             let segmentText = segments.freetext;
@@ -80,7 +96,10 @@ export class TicketingComponent implements OnInit {
         });
     }
 
-    private presetSegmentCancelled() {
+    /**
+     * Presets the TK dropdown to "PNR CANCELLED".
+     */
+    private presetSegmentCancelled(): void {
         const misIndex = this.pnrService.getmisCancel();
         const hasSegmentMatch = misIndex > 0;
 
@@ -89,7 +108,34 @@ export class TicketingComponent implements OnInit {
         }
     }
 
-    private updateTkDropdown(newValue: string) {
+    /**
+     * Presets the TK dropdown to "INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY" if there is a matched
+     * CFA Charging fee, else presets to "CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE".
+     */
+    private presetSegmentByChargeFee(): void {
+        const cfLine = this.pnrService.getCFLine();
+        const cfaChargingFees = this.staticValues.getCfaChargingFees();
+        let hasChargingMatch = false;
+
+        for (let i = 0; i < cfaChargingFees.length; i++) {
+            if (cfaChargingFees[i].cfa === cfLine.cfa) {
+                hasChargingMatch = true;
+                break;
+            }
+        }
+
+        if (hasChargingMatch) {
+            this.updateTkDropdown('INV');
+        } else {
+            this.updateTkDropdown('CHG');
+        }
+    }
+
+    /**
+     * Updates the TK dropdown to a new value.
+     * @param newValue The new value to set.
+     */
+    private updateTkDropdown(newValue: string): void {
         this.ticketForm.get('tk').setValue(newValue);
     }
 
@@ -103,11 +149,18 @@ export class TicketingComponent implements OnInit {
         return ticketRemark;
     }
 
+    /**
+     * When ON HOLD checkbox is ticked, the TK dropdown is set to empty and disabled.
+     */
     public onChangePnrOnHold(): void {
         this.isOnHoldChecked = this.ticketForm.get('pnrOnHold').value;
+        const tkDropdown = this.ticketForm.get('tk');
 
         if (this.isOnHoldChecked) {
             this.updateTkDropdown('');
+            tkDropdown.disable();
+        } else {
+            tkDropdown.enable();
         }
     }
 }

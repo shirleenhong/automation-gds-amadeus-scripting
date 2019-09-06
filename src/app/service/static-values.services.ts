@@ -56,6 +56,36 @@ export class StaticValuesService {
         ];
     }
 
+    getCfaChargingFees() {
+        return [
+            { cfa: 'VB7', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'X7P', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'YIJ', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'XJ6', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: '1JV', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'W1D', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'EMI', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'YXQ', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'RH6', allPnrs: '.', obtPnrsOnly: 'Y' },
+            { cfa: 'M2J', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'J60', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'X5D', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: '5YN', allPnrs: '.', obtPnrsOnly: 'Y' },
+            { cfa: 'KZ6', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'UZQ', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'V1P', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'F3E', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'GBO', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'H9W', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'K6L', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'PHK', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'W3Y', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'M9S', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'D9F', allPnrs: 'Y', obtPnrsOnly: '.' },
+            { cfa: 'R8H', allPnrs: 'Y', obtPnrsOnly: '.' }
+        ];
+    }
+
     getCcVendorCodeList() {
         return [
             { itemText: '', itemValue: '' },

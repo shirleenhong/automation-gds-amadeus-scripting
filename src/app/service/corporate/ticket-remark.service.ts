@@ -15,6 +15,10 @@ export class TicketRemarkService {
 
     constructor(private remarksManagerSvc: RemarksManagerService) { }
 
+    /**
+     * Writes the ticketing remark, as well as onhold remark (if on hold).
+     * @param ticketRemark The ticket data from screen.
+     */
     public writeTicketRemark(ticketRemark: TicketModel) {
 
         const remGroup = new RemarkGroup();
@@ -28,6 +32,10 @@ export class TicketRemarkService {
         return remGroup;
     }
 
+    /**
+     * Reformats the given date on screen to ddMMM.
+     * @param tktDate The date from screen.
+     */
     private transformTicketDate(tktDate: string): string {
         let transformedDate: string;
 
@@ -40,6 +48,9 @@ export class TicketRemarkService {
         return transformedDate;
     }
 
+    /**
+     * Appends the respective suffix for TK line.
+     */
     private appendTkLine(pnrOnHold: boolean, tkLine: string): string {
         let tkSuffix = '';
 
@@ -54,6 +65,10 @@ export class TicketRemarkService {
         return tkSuffix;
     }
 
+    /**
+     * Creates a placeholder value in remarks manager service (if on hold).
+     * @param pnrOnHold 
+     */
     private writeOnHoldRemark(pnrOnHold: boolean): void {
         if (pnrOnHold) {
             const staticRemarksCondition = new Map<string, string>();

@@ -14,6 +14,7 @@ import { CorporateRemarksService } from '../service/corporate/corporate-remarks.
 import { DDBService } from '../service/ddb.service';
 import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
 import { ReportingComponent } from '../corporate/reporting/reporting.component';
+import { ValidateModel } from '../models/validate-model';
 
 @Component({
   selector: 'app-corporate',
@@ -26,6 +27,7 @@ export class CorporateComponent implements OnInit {
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
+  validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -104,6 +106,15 @@ export class CorporateComponent implements OnInit {
     this.modalRef.content.setMessageType(type);
   }
 
+  checkValid() {
+    this.validModel.isSubmitted = true;
+    this.validModel.isPaymentValid = this.paymentsComponent.checkValid();
+    this.validModel.isReportingValid = this.reportingComponent.checkValid();
+    // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+    return this.validModel.isCorporateAllValid();
+  }
+
+
   public async wrapPnr() {
     await this.loadPnrData();
     this.workflow = 'wrap';
@@ -151,6 +162,16 @@ export class CorporateComponent implements OnInit {
   }
 
   public async SubmitToPNR() {
+    if (!this.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));

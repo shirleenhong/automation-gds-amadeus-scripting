@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { StaticValuesService } from '../../service/static-values.services';
 import { PnrService } from '../../service/pnr.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 
@@ -17,7 +18,9 @@ export class TicketingComponent implements OnInit {
     ticketForm: FormGroup;
     tkList: Array<SelectItem> = null;
 
-    constructor(private staticValues: StaticValuesService, private pnrService: PnrService) {
+    constructor(private staticValues: StaticValuesService,
+        private pnrService: PnrService,
+        private utilHelper: UtilHelper) {
         this.ticketForm = new FormGroup({
             officeId: new FormControl('', [Validators.required]),
             ticketDate: new FormControl('', [Validators.required]),
@@ -176,5 +179,17 @@ export class TicketingComponent implements OnInit {
         } else {
             tkDropdown.enable();
         }
+    }
+
+    /**
+     * Method to check ticketing form validation.
+     */
+    public checkValid() {
+        this.utilHelper.validateAllFields(this.ticketForm);
+        if (!this.ticketForm.valid) {
+            return false;
+        }
+
+        return true;
     }
 }

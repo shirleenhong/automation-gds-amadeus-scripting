@@ -26,6 +26,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
   name: string;
+  ticketNumber: string;
   isAddNew = false;
   isCopy = false;
   filterSupplierCodeList: Array<any>;
@@ -150,12 +151,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.accountingRemark.vendorCode = '';
       this.accountingRemark.supplierCodeName = '';
     }
-
     // initial state
+    this.ticketNumber = 'Ticket Number: ';
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
-    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], false);
-    this.enableFormControls(['otherTax', 'gdsFare'], true);
+    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase',
+      'fareType', 'supplierConfirmatioNo', 'originalTktLine'], false);
+    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo'], true);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -185,22 +187,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['fareType'], accRemark !== 'ACPP');
         break;
       case 'NONBSPEXCHANGE':
-        this.enableFormControls(['otherTax'], false);
+        this.enableFormControls(['otherTax', 'segmentNo', 'originalTktLine'], false);
         this.configureNonBSPExchangeControls();
         this.checkSupplierCode();
         break;
       case 'APAY':
-        this.enableFormControls(['supplierCodeName', 'otherTax'], false);
+        this.enableFormControls(['supplierCodeName', 'otherTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase',
           'fareType', 'supplierConfirmatioNo', 'commisionWithoutTax'], true);
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
         break;
       case 'NONBSP':
+        this.ticketNumber = 'Ticket Number/Confirmation Number:  ';
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
         // this.accountingRemark.commisionWithoutTax = '0.00';
         // this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
-        this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax'], false);
+        this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
         if (accRemark === 'NONBSP') {

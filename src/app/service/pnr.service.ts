@@ -1315,7 +1315,7 @@ export class PnrService {
     }
 
     hasPassRemark(): boolean {
-        const u14 = this.getRemarkText('U14-');
+        const u14 = this.getRemarkText('U14/-');
         if (u14 && u14.indexOf('PASS') > -1) {
             return true;
         }

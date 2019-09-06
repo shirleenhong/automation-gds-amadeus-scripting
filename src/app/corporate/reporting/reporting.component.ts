@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
 
 @Component({
   selector: 'app-reporting',
@@ -9,6 +10,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 })
 export class ReportingComponent implements OnInit {
   @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
+  @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
 
   constructor(private utilHelper: UtilHelper) { }
 
@@ -20,8 +22,8 @@ export class ReportingComponent implements OnInit {
       return false;
     }
 
-    this.utilHelper.validateAllFields(this.reportingBSPComponent.nonBspGroup);
-    if (!this.reportingBSPComponent.nonBspGroup.valid) {
+    this.utilHelper.validateAllFields(this.reportingNonbspComponent.nonBspGroup);
+    if (!this.reportingNonbspComponent.nonBspGroup.valid) {
       return false;
     }
 

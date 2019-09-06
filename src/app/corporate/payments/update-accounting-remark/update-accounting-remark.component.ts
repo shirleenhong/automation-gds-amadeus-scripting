@@ -31,6 +31,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   isCopy = false;
   filterSupplierCodeList: Array<any>;
   reasonCodeList: Array<SelectItem>;
+  needFaretype = false;
 
   constructor(
     public activeModal: BsModalService,
@@ -87,8 +88,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     this.name = 'Supplier Confirmation Number:';
     this.utilHelper.validateAllFields(this.matrixAccountingForm);
-
     this.onChanges();
+    this.showFareType();
+
+  }
+
+  showFareType() {
+    if (this.pnrService.hasPassRemark()) {
+      this.needFaretype = true;
+    }
   }
 
   loadPassengerList() {
@@ -189,15 +197,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['otherTax', 'segmentNo', 'originalTktLine'], false);
         this.configureNonBSPExchangeControls();
         this.checkSupplierCode();
+        this.enableFormControls(['fareType'], !this.needFaretype);
+
         break;
       case 'APAY':
         this.enableFormControls(['supplierCodeName', 'otherTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase',
           'fareType', 'supplierConfirmatioNo', 'commisionWithoutTax'], true);
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
+        this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         break;
       case 'NONBSP':
-        this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
         // this.accountingRemark.commisionWithoutTax = '0.00';

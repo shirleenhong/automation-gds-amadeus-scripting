@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MyCommonModule } from './my-common.module';
+import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MyCommonModule } from './my-common.module';
     UpdateAccountingRemarkComponent,
     ReportingComponent,
     ReportingBSPComponent,
+    ReportingNonbspComponent,
     TicketingComponent
   ],
   imports: [
@@ -44,4 +46,4 @@ import { MyCommonModule } from './my-common.module';
   exports: [CorporateComponent],
   entryComponents: [UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule {}
+export class AppCorporateModule { }

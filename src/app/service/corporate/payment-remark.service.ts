@@ -18,7 +18,7 @@ export class PaymentRemarkService {
   nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
   currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -189,11 +189,11 @@ export class PaymentRemarkService {
         parseFloat(account.commisionWithoutTax);
 
       airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
-      airlineCodeRemark.set('TotalCost', totalCost.toString());
+      airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
 
       if (account.consultantNo) {
-        cnNumberRemarks.set('CnNumber', account.consultantNo);
+        cnNumberRemarks.set('BackOfficeAgentIdentifier', account.consultantNo);
         this.remarksManager.createPlaceholderValues(cnNumberRemarks);
         consultantNoRemarkStatic.set('IsNuc', 'true');
       }

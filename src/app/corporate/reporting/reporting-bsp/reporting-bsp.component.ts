@@ -9,6 +9,7 @@ import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.s
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { DecimalPipe } from '@angular/common';
 // import { PaymentsComponent } from '../../payments/payments.component';
 
 declare var smartScriptSession: any;
@@ -29,10 +30,10 @@ export class ReportingBSPComponent implements OnInit {
   highFareSO: any;
   lowFareDom: any;
   lowFareInt: any;
-
   isDomesticFlight = true;
   thresholdAmount = 0;
   nonBspInformation: MatrixAccountingModel[];
+  decPipe = new DecimalPipe('en-US');
 
   // tslint:disable-next-line:max-line-length
   constructor(
@@ -41,7 +42,7 @@ export class ReportingBSPComponent implements OnInit {
     private ddbService: DDBService,
     private paymentService: PaymentRemarkService,
     private utilHelper: UtilHelper
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.bspGroup = this.fb.group({
@@ -184,7 +185,8 @@ export class ReportingBSPComponent implements OnInit {
         parseFloat(element.qst) +
         parseFloat(element.otherTax);
 
-      items.push(this.createFormGroup(element.segmentNo, totalCost.toString(), totalCost.toString(), 'L', ''));
+      const formatCost = this.decPipe.transform(totalCost, '1.2-2').replace(',', '');
+      items.push(this.createFormGroup(element.segmentNo, formatCost.toString(), formatCost.toString(), 'L', ''));
     });
   }
 

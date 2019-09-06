@@ -38,7 +38,7 @@ ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
 ${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
-${input_lowestGdsFare}    css=#lowestGdsFare
+${input_lowestGdsFare}    css=#gdsFare
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
 ${input_payment_fullFare}     css=#fullFare
 ${input_payment_lowFare}    css=#lowFare
@@ -46,59 +46,47 @@ ${input_payment_reasonCode}    css=#reasonCode
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
-    Click Full Wrap
-    Click Payment Panel
-    Click Element    ${tab_nonBsp_processing}    
-    Click Element    ${button_addaccountingline}
+    Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
+    
+Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
+    Select Itinerary Segments    2
+    Enter Value    ${input_confirmationNo}    0000054321
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
+    Enter 1000 In Lowest GDS Fare Field
 
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
-    Click Full Wrap
-    Click Payment Panel
-    Click Element    ${tab_nonBsp_processing}    
-    Click Element    ${button_addaccountingline}
+    Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
     Set Test Variable    ${tkt_number}    1234567890
     
 Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
-    Click Full Wrap
-    Click Payment Panel
-    Click Element    ${tab_nonBsp_processing}    
-    Click Element    ${button_addaccountingline}
+    Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2    3
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
     Set Test Variable    ${tkt_number}    1234567890
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And Penalty
-    Click Full Wrap
-    Click Payment Panel
-    Click Element    ${tab_nonBsp_processing}    
-    Click Element    ${button_addaccountingline}
+    Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Add Penalty Amount Details    10.00    1.00    1.00    1.00
     Enter Value    ${input_tktnumber}    1234567890
     Set Test Variable    ${tkt_number}    1234567890
-    
-Add Non-BSP Exchange Ticketing Details For Single Segment
-    Click Element    ${tab_nonBsp_processing}  
-    Click Element    ${button_addaccountingline}
-    Select Itinerary Segments    text
-    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
-    Enter Value    ${input_confirmationNo}    54321
-    Add Ticketing Amount Details With Other Tax And Commission
     
 # For Non-BSP Airline and APAY #  
 Add Non-BSP Ticketing Details For Segment ${segment_no} 
@@ -384,20 +372,18 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Run Keyword If    "${airline_code}" == "APAY"   Should Contain    ${actual_supplier_code}    PFS
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details  
-    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
+    Finish PNR 
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-PTA/S2
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2
-    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 1111.2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 1111.20
     
 Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details  
-    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/EX-Y
+    Finish PNR 
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-WJ3/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000/TX1-100XG/TX2-10RC/TX3-100XQ/TX4-0.1XT/COMM-0.1/S2-3
-    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 1111.2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 1111.20
     
 Verify Penalty Amount Fields Are Displayed
     Wait Until Page Contains Element    ${input_penaltyBaseAmount}    30
@@ -410,13 +396,13 @@ Verify Penalty Remarks Are Not Written In The PNR
     Verify Specific Remark Is Not Written In The PNR    RMT TKT1-VN-ACY/BA-
     
 Verify Penalty Remarks Are Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-ACY/BA-10/TX1-1XG/TX2-1RC/TX3-1XQ/TX4-1XT/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-ACY/BA-10.00/TX1-1.00XG/TX2-1.00RC/TX3-1.00XQ/TX4-1.00XT/S2
 
 Click Save Button
     Click Element    ${button_save}
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
-    Set Test Variable    ${current_page}    Payment
+    Set Test Variable    ${current_page}    Full Wrap PNR
     [Teardown]    Take Screenshot
     
 Update Consultant Number to ${consultant_number}
@@ -424,13 +410,11 @@ Update Consultant Number to ${consultant_number}
     Set Test Variable     ${consultant_number}     ${consultant_number}
     
 Verify Consultant Number Remark Is Written With The Correct Value
-    Switch To Graphic Mode
-    Get PNR Details  
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RM*CN/-${consultant_number}
     
 Verify RMG Remark Is Written With Supplier Code ${supplier_code}
-    Switch To Graphic Mode
-    Get PNR Details  
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMG/${supplier_code}PASSCHG
     
 Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
@@ -438,17 +422,18 @@ Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
     Set Test Variable    ${lowest_gds_fare_value}
     
 Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For ${airline_code}
-    Switch To Graphic Mode
-    Get PNR Details  
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RM*U14/-${airline_code}PASS-1234567890.LAT/${lowest_gds_fare_value}
     
 Verify Specific RIR Remarks In English Are Removed From PNR
+    Finish PNR
     Verify Specific Remark Is Not Written In The PNR    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2
     Verify Specific Remark Is Not Written In The PNR    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2
     Verify Specific Remark Is Not Written In The PNR    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2
     Verify Specific Remark Is Not Written In The PNR    RIR ON YOUR CREDIT CARD STATEMENT./S2
     
 Verify Specific RIR Remarks In French Are Removed From PNR
+    Finish PNR
     Verify Specific Remark Is Not Written In The PNR    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2
     Verify Specific Remark Is Not Written In The PNR    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2
     Verify Specific Remark Is Not Written In The PNR    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2

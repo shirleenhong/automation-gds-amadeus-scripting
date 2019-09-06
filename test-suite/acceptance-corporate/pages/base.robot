@@ -111,9 +111,9 @@ Navigate From Payment
     
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
-    Run Keyword If    "${pnr_details}" == "${EMPTY}"    Get PNR Details
+    Run Keyword If    "${pnr_details}" == "${EMPTY}"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     
 Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
-    Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}
+    Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button    
+    ...    ELSE IF    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}

@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MyCommonModule } from './my-common.module';
+import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { MyCommonModule } from './my-common.module';
     AccountingRemarkComponent,
     UpdateAccountingRemarkComponent,
     ReportingComponent,
-    ReportingBSPComponent
+    ReportingBSPComponent,
+    ReportingNonbspComponent
   ],
   imports: [
     BrowserModule,

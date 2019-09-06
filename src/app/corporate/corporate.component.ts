@@ -182,6 +182,7 @@ export class CorporateComponent implements OnInit {
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
     this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;

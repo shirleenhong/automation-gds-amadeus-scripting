@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PaymentsComponent } from './corporate/payments/payments.component';
 import { ReportingBSPComponent } from './corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingComponent } from './corporate/reporting/reporting.component';
+import { TicketingComponent } from './corporate/ticketing/ticketing.component';
 import { AccountingRemarkComponent } from './corporate/payments/accounting-remark/accounting-remark.component';
 import { UpdateAccountingRemarkComponent } from './corporate/payments/update-accounting-remark/update-accounting-remark.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -22,7 +23,8 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
     UpdateAccountingRemarkComponent,
     ReportingComponent,
     ReportingBSPComponent,
-    ReportingNonbspComponent
+    ReportingNonbspComponent,
+    TicketingComponent
   ],
   imports: [
     BrowserModule,
@@ -44,4 +46,4 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
   exports: [CorporateComponent],
   entryComponents: [UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule {}
+export class AppCorporateModule { }

@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { RemarksManagerService } from './remarks-manager.service';
+import { PnrService } from '../pnr.service'
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { TicketModel } from '../../models/pnr/ticket.model';
 
+declare var smartScriptSession: any;
 
 @Injectable({
     providedIn: 'root'
@@ -12,14 +14,49 @@ import { TicketModel } from '../../models/pnr/ticket.model';
 export class TicketRemarkService {
 
     DATE_PIPE = new DatePipe('en-US');
+    ONHOLD_KEYWORD = 'ONHOLD:AWAITING APPROVAL';
 
-    constructor(private remarksManagerSvc: RemarksManagerService) { }
+    constructor(private remarksManagerSvc: RemarksManagerService,
+        private pnrService: PnrService) { }
+
+    /**
+     * Method that cleansup existing TK remark, then invokes another method to write new.
+     * @returns RemarkGroup - the remark group for the new TKTL remark
+     */
+    public submitTicketRemark(ticketRemark: TicketModel): RemarkGroup {
+        this.cleanupTicketRemark();
+
+        return this.writeTicketRemark(ticketRemark);
+    }
+
+    /**
+     * Cleans up existing TK remark (as well as RIR if on hold).
+     */
+    private cleanupTicketRemark(): void {
+        const linesToDelete: Array<number> = new Array();
+
+        const existingTkLineNum = this.pnrService.getTkLineNumber();
+
+        if (existingTkLineNum >= 0) {
+            linesToDelete.push(existingTkLineNum);
+
+            const existingRirLineNum = this.pnrService.getRIRLineNumber(this.ONHOLD_KEYWORD);
+            if (existingRirLineNum && existingRirLineNum >= 0) {
+                linesToDelete.push(existingRirLineNum);
+            }
+        }
+
+        if (linesToDelete.length > 0) {
+            smartScriptSession.send('XE' + linesToDelete.join(','));
+        }
+    }
 
     /**
      * Writes the ticketing remark, as well as onhold remark (if on hold).
      * @param ticketRemark The ticket data from screen.
+     * @returns RemarkGroup - the remark group for the new TKTL remark
      */
-    public writeTicketRemark(ticketRemark: TicketModel) {
+    private writeTicketRemark(ticketRemark: TicketModel): RemarkGroup {
 
         const remGroup = new RemarkGroup();
         const remark = 'TKTL' + this.transformTicketDate(ticketRemark.tktDate) + '/' +

@@ -76,36 +76,50 @@ export class TicketingComponent implements OnInit {
      * Checks the segments in order to set a default value for TK dropdown.
      */
     private checkSegments(): void {
-        this.presetSegmentFee();
-        this.presetSegmentCancelled();
-        this.presetSegmentByChargeFee();
+        let presetDone = this.presetSegmentFee();
+
+        if (!presetDone) {
+            presetDone = this.presetSegmentCancelled();
+        }
+
+        if (!presetDone) {
+            this.presetSegmentByChargeFee();
+        }
     }
 
     /**
      * Presets the TK dropdown to "FEE ONLY".
+     * @returns A flag indicator if a match was found, therefore presetting a value.
      */
-    private presetSegmentFee(): void {
+    private presetSegmentFee(): boolean {
         const segmentDetails = this.pnrService.getSegmentTatooNumber();
+        let hasSegmentMatch = false;
+
         segmentDetails.forEach((segments) => {
             let segmentText = segments.freetext;
-            let hasSegmentMatch = segmentText.includes('TYP-CWT/FEE ONLY');
+            hasSegmentMatch = segmentText.includes('TYP-CWT/FEE ONLY');
 
             if (hasSegmentMatch) {
                 this.updateTkDropdown('FEE');
             }
         });
+
+        return hasSegmentMatch;
     }
 
     /**
      * Presets the TK dropdown to "PNR CANCELLED".
+     * @returns A flag indicator if a match was found, therefore presetting a value.
      */
-    private presetSegmentCancelled(): void {
+    private presetSegmentCancelled(): boolean {
         const misIndex = this.pnrService.getmisCancel();
         const hasSegmentMatch = misIndex > 0;
 
         if (hasSegmentMatch) {
             this.updateTkDropdown('CXL');
         }
+
+        return hasSegmentMatch;
     }
 
     /**

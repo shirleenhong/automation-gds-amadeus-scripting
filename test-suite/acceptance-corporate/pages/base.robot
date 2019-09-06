@@ -41,7 +41,6 @@ Click Full Wrap
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
     Click Element    ${panel_reporting}
-    [Teardown]    Take Screenshot
     
 Click Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60

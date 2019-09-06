@@ -32,6 +32,7 @@ ${button_cryptic}    css=.showInCommandPage
 ${button_graphical}    css=.showInGraphicMode
 ${close_cryptic_display}    css=#elgen-19
 ${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
+${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading'] 
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -104,12 +105,11 @@ Logout To Amadeus Sell Connect
     Close Browser
 
 Get PNR Details
+    Wait Until Page Does Not Contain    ${overlay_loader}    
     Wait Until Element Is Enabled    ${icon_air}    30
-    Wait Until Element Is Visible    ${tab_cryptic_display}    30
-    Sleep    5
+    Wait Until Element Is Visible    ${tab_cryptic_display}    60
     Press Key    ${tab_cryptic_display}    \\32
-    Wait Until Page Contains Element    ${popUp_pnr_display}    30
-    Sleep    10
+    Wait Until Page Contains Element    ${popUp_pnr_display}    60
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Suite Variable    ${pnr_details}
@@ -142,7 +142,7 @@ Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     \    Press Key    ${input_commandText}    \\13
 
 Add Multiple Passive Air Segments In The GDS With Different Airline Codes
-    @{gds_commands}    Create List    SS ACS1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
+    @{gds_commands}    Create List    SS UA1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
@@ -193,29 +193,32 @@ Move Multiple Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
 
 Move Single Passenger And Add Single BSP Segment With TST
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    TKOK
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com
     Add Single BSP Segment And Store Fare
 
 Move Single Passenger And Add Multiple BSP Segment With TSTs
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com
     Add Multiple BSP Segment And Store Fare
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
+    Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
+    Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM SYEXGVS: A:FA177    APE-test@email.com
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com
     Add Multiple Passive Air Segments In The GDS With Different Airline Codes
 
 Enter RIR Remarks In English
@@ -226,5 +229,5 @@ Enter RIR Remarks In French
     
 Handle Simultaneous Changes To PNR 
     Sleep   3
-    ${status}    Run Keyword And Return Status    Page Should Contain Element     //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
+    ${status}    Run Keyword And Return Status    Page Should Contain Element     ${response_simultaneous}
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary

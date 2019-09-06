@@ -52,3 +52,7 @@ Click Submit To PNR
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+
+Click Back To Main Menu
+    Wait Until Element Is Visible    ${button_main_menu}
+    Click Element    ${button_main_menu}

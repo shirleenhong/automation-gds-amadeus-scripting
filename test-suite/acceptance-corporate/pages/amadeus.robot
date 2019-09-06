@@ -225,3 +225,9 @@ Handle Simultaneous Changes To PNR
     Sleep   3
     ${status}    Run Keyword And Return Status    Page Should Contain Element     ${response_simultaneous}
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
+
+Move Single Passenger For EN
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    
+Move Single Passenger For FR
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA

@@ -461,3 +461,165 @@ Verify Specific RIR Remarks In French Are Removed From PNR
     Verify Specific Remark Is Not Written In The PNR    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2
     Verify Specific Remark Is Not Written In The PNR    RIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
     
+#-----Verification For PassPurchase-----#
+Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    AC 123 Q 03SEP 2 YVRYVR GK1 0700 0800 03SEP 879111    True
+    Switch To Command Page
+
+Verify Passive Segment Are Written For Westjet Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    WS 123 Q 03SEP 2 MNLMNL GK1 0700 0800 03SEP 888888    True
+    Switch To Command Page
+    
+Verify Passive Segment Are Written For Porter Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    PD 123 Q 03SEP 2 YCCYCC GK1 0700 0800 03SEP 123456    True
+    Switch To Command Page
+    
+Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    AC 123 Q 03SEP 2 YCCYCC GK1 0700 0800 03SEP 879222    True
+    Switch To Command Page
+
+Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RIR U.S COMMUTER PASS-FLEX/S2    True
+    Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    True
+    Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    True
+    Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    True
+    Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    True
+    Take Screenshot
+    
+Verify Updated Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    QUEBEC PASS-LATITUDE/S2    True
+    Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    True
+    Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    True
+    Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    True
+    Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    True
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0002167899/VN-ACJ/S2    True
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-100.00/TX1-15.05XG/TX2-2.20RC/TX3-10.00XQ/TX4-0.00XT/COMM-3.00/S2    True
+    Take Screenshot
+    
+Verify PE Remark Are Written For Air Canada Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RMF LCC-AC*GRAND TOTAL CAD 127.25    True
+    Take Screenshot
+        
+Verify UDID Remark Are Written For Air Canada Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL    True
+    
+Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    TOUS LES DETAILS ONT ETE PRESENTES AU CLIENT ET    True
+    Verify Specific Remark Is Written In The PNR    APPROUVES PAR CE DERNIER    True
+    Verify Specific Remark Is Written In The PNR    LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES    True
+    Verify Specific Remark Is Written In The PNR    CLIENTS ONT ETE APPROUVES PAR LE CLIENT    True
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0987612345/VN-WJP/S2    True
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-210.00/TX1-10.00XG/TX2-2.20RC/TX3-10.00XQ/TX4-0.00XT/COMM-3.00/S2    True
+    Take Screenshot
+    
+Verify PE Remark Are Written For Westjet Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 232.20    True
+    Take Screenshot
+    
+Verify UDID Remark Are Written For Westjet Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RM *U14/-WSPASS-INDIVIDUAL    True
+    
+Verify Itinerary Remarks Are Written For Porter Pass Purchase PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    True
+    Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    True
+    Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    True
+    Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    True
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-1234567890/VN-PTP/S2    True
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-105.00/TX1-15.05XG/TX2-3.00RC/TX3-12.00XQ/TX4-0.00XT/COMM-1.00/S2    True
+    Take Screenshot
+    
+Verify PE Remark Are Written For Porter Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 135.05    True
+    Take Screenshot
+    
+Verify UDID Remark Are Written For Porter Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RM *U14/-PDPASS-INDIVIDUAL    True
+    
+Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0987654321/VN-ACJ/S2    True
+    Verify Specific Remark Is Written In The PNR    TKT1-BA-200.10/TX1-5.05XG/TX2-3.20RC/TX3-2.00XQ/TX4-0.00XT/COMM-3.00/S2    True
+    Take Screenshot
+    
+Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    LCC-AC*GRAND TOTAL CAD 210.25    True
+    Take Screenshot
+    
+Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL    True
+    
+Add Matrix Accounting Remark For WestJet Pass Purchase
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    888888
+    Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
+    Enter Value    ${input_tktnumber}    0987612345
+    Enter Value    ${input_departurecity}    MNL        
+    Select From List By Label    ${list_purchasetype}     Westjet Travel Pass
+    #Verify Supplier Code Default Value Is Correct For Pass Purchase Westjet Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    
+Add Matrix Accounting Remark For Porter Pass Purchase
+    Click Matrix Accounting Remark Tab
+    Click Add Accounting Line Button
+    Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    123456
+    Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_departurecity}    YCC        
+    Select From List By Label    ${list_purchasetype}     Porter Travel Pass
+    #Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    
+Modify Matrix Accounting Remark For Air Canada Pass Purchase
+    Click Matrix Accounting Remark Tab
+    Click Update Button
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    879222
+    Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
+    Enter Value    ${input_tktnumber}    0987654321
+    Enter Value    ${input_departurecity}    YCC        
+    Select From List By Label    ${list_purchasetype}     REGIONAL-QUEBEC
+    Select From List By Label    ${list_faretype}       LATITUDE
+    #Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Take Screenshot
+    Click Save Button

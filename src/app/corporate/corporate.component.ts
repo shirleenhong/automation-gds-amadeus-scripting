@@ -69,12 +69,12 @@ export class CorporateComponent implements OnInit {
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
-  initData() {    
-        this.ddbService.getAllMatrixSupplierCodes();   
+  initData() {
+    this.ddbService.getAllMatrixSupplierCodes();
   }
 
   showLoading(msg, caller?) {
-    const skip = this.modalRef && this.modalRef.content.callerName === caller;
+    const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
     if (!skip) {
       this.modalRef = this.modalService.show(LoadingComponent, {
         backdrop: 'static'
@@ -87,6 +87,7 @@ export class CorporateComponent implements OnInit {
   }
 
   closePopup() {
+    this.modalRef.content = null;
     this.modalRef.hide();
   }
 
@@ -106,8 +107,6 @@ export class CorporateComponent implements OnInit {
   public async wrapPnr() {
     await this.loadPnrData();
     this.workflow = 'wrap';
-
-
   }
 
   async loadPnrData() {
@@ -130,6 +129,8 @@ export class CorporateComponent implements OnInit {
       await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
       // this.showLoading('ReasonCodes', 'initData');
       await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+      await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
+      await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
     }
     this.closePopup();
     this.checkHasDataLoadError();
@@ -137,11 +138,16 @@ export class CorporateComponent implements OnInit {
 
   checkHasDataLoadError() {
     this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
-    this.dataError.pnr = !(this.isPnrLoaded);
+    this.dataError.pnr = !this.isPnrLoaded;
     this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
     this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
     this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-    this.dataError.hasError = (this.dataError.matching || this.dataError.pnr || this.dataError.reasonCode || this.dataError.servicingOption || this.dataError.supplier);
+    this.dataError.hasError =
+      this.dataError.matching ||
+      this.dataError.pnr ||
+      this.dataError.reasonCode ||
+      this.dataError.servicingOption ||
+      this.dataError.supplier;
   }
 
   public async SubmitToPNR() {

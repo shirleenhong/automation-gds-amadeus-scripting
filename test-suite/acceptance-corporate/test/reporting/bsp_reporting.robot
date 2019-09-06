@@ -18,7 +18,6 @@ Verify That Reporting Remarks Are Written For Single TST
     Add Client Reporting Values For Single BSP Segment
     Click Submit To PNR
     Verify That Client Reporting Remarks Are Written In The PNR For Single TST
-    # [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Reporting Remark Are Written For Multiple TSTs
     [Tags]    us10551
@@ -29,7 +28,6 @@ Verify That Reporting Remark Are Written For Multiple TSTs
     Add Client Reporting Values For Multiple BSP Segment
     Click Submit To PNR
     Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
-    # [Teardown]    Logout To Amadeus Sell Connect
 
 Verify That Client Reporting Are Correct For Exchange PNR
     [Tags]    us10551

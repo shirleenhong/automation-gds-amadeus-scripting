@@ -17,7 +17,7 @@ Verify That Non-BSP Ticketing Remarks Are Written For Single Segment
     Open CA Corporate Test
     Click Full Wrap
     Click Payment Panel
-    Add Non-BSP Ticketing Details For Segment 2
+    Add Non-BSP Ticketing Details For Single Segment
     Verify That Supplier Code Default Value Is Correct For AC
     Click Save Button
     Click Submit To PNR

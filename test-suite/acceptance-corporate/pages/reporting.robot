@@ -77,14 +77,6 @@ Add Client Reporting Values For Non-BSP Segments
     Enter Value    ${input_low_fare}    912.99
     Enter Value    ${input_reason_code}    L
 
-Add Client Reporting Values For Multiple Non-BSP Segments
-    Click Reporting Panel
-    Enter Full Fare    1123.50
-    Enter Low Fare    300.00
-    Enter Reason Code    L
-    Enter Full Fare    999.50    2
-    Enter Low Fare    123.00    2
-    
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Switch To Graphic Mode
     Get PNR Details
@@ -116,17 +108,3 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purc
     Verify Specific Remark Is Written In The PNR    RM *LP/-127.25/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
     Switch To Command Page
-    
-Verify Accounting Remark Is Written Correctly For Non BSP Exchange
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM*FF/-1111.20/S2
-    Verify Specific Remark Is Written In The PNR    RM*LP/-1111.20/S2
-    Verify Specific Remark Is Written In The PNR    RM*FS/-E/S2
-    
-Verify Accounting Remark Is Written Correctly For Airline Pass Redemption
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM*FF/-1111.00/S2
-    Verify Specific Remark Is Written In The PNR    RM*LP/-1111.00/S2
-    Verify Specific Remark Is Written In The PNR    RM*FS/-E/S2

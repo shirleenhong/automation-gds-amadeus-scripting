@@ -21,12 +21,13 @@ export class AccountingRemarkComponent implements OnInit {
   isAddNew = false;
   isPassPurchase = false;
 
-  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private paymentService: PaymentRemarkService) { }
+  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private paymentService: PaymentRemarkService) {}
 
   ngOnInit() {
-    this.accountingRemarks = this.paymentService.extractAccountingModelFromPnr();
+    this.accountingRemarks = this.paymentService.extractAccountingModelsFromPnr();
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
+    this.paymentService.setNonBspInformation(this.accountingRemarks);
   }
 
   deleteItem(r: MatrixAccountingModel) {
@@ -69,6 +70,7 @@ export class AccountingRemarkComponent implements OnInit {
         }
       }
       this.isPassPurchaseTransaction();
+      this.paymentService.setNonBspInformation(this.accountingRemarks);
     });
   }
 

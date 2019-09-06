@@ -1,14 +1,17 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
-
+import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { DDBService } from '../../../service/ddb.service';
 import { ServicingOptionEnums } from '../../../enums/servicing-options';
 import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
 import { ReasonCode } from '../../../models/ddb/reason-code.model';
+import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
+import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
+import { SelectItem } from 'src/app/models/select-item.model';
+// import { PaymentsComponent } from '../../payments/payments.component';
 
 declare var smartScriptSession: any;
-
+// @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
 @Component({
   selector: 'app-reporting-bsp',
   templateUrl: './reporting-bsp.component.html',
@@ -17,22 +20,47 @@ declare var smartScriptSession: any;
 })
 export class ReportingBSPComponent implements OnInit {
   @Input()
-  reasonCodes: ReasonCode[];
+  reasonCodes: Array<ReasonCode[]> = [];
+  nonBspReasonList: Array<SelectItem>;
   bspGroup: FormGroup;
+  nonBspGroup: FormGroup;
   total = 1;
   highFareSO: any;
   lowFareDom: any;
   lowFareInt: any;
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService) {}
+  isDomesticFlight = true;
+  thresholdAmount = 0;
+  nonBspInformation: MatrixAccountingModel[];
+
+  // tslint:disable-next-line:max-line-length
+  constructor(
+    private fb: FormBuilder,
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private paymentService: PaymentRemarkService
+  ) {}
 
   ngOnInit() {
     this.bspGroup = this.fb.group({
-      fares: this.fb.array([this.createFormGroup('', '', '', '')])
+      fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
     });
+
+    this.nonBspGroup = this.fb.group({
+      nonbsp: this.fb.array([])
+    });
+    this.isDomesticFlight = this.ddbService.isPnrDomestic();
+    this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
     this.drawControls();
+  }
+
+  ngAfterViewInit() {
+    this.paymentService.currentMessage.subscribe((message) => {
+      this.nonBspInformation = message;
+      this.drawControlsForNonBsp();
+    });
   }
 
   removeFares(i) {
@@ -41,24 +69,81 @@ export class ReportingBSPComponent implements OnInit {
     this.total = items.length;
   }
 
-  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string) {
+  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
     const items = this.bspGroup.get('fares') as FormArray;
-    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode));
+
+    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
     this.total = items.length;
   }
 
-  createFormGroup(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, defaultValue?: any): FormGroup {
+  getReasonCodeValue(code, index): string {
+    const reasonText = this.reasonCodes[index]
+      .filter((x) => x.reasonCode === code)
+      .map((x) => x.reasonCode + ' : ' + x.reasonCodeProductTypeDescriptions.get('en-GB'));
+
+    if (reasonText.length >= 0) {
+      return reasonText[0];
+    }
+
+    return '';
+  }
+
+  createFormGroup(
+    segmentNo: string,
+    highFare: string,
+    lowFare: string,
+    reasonCode: string,
+    chargeFare: string,
+    isExchange?: boolean,
+    defaultValue?: any
+  ): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
-      highFareText: new FormControl(highFare),
-      lowFareText: new FormControl(lowFare),
-      reasonCodeText: new FormControl(reasonCode)
+      highFareText: new FormControl(highFare, [Validators.required]),
+      lowFareText: new FormControl(lowFare, [Validators.required]),
+      reasonCodeText: new FormControl(reasonCode, [Validators.required]),
+      chargeFare: new FormControl(chargeFare),
+      chkIncluded: new FormControl(''),
+      isExchange: new FormControl(isExchange)
     });
+
+    const currentIndex = this.reasonCodes.length - 1;
+    if (this.thresholdAmount > 0) {
+      if (chargeFare < lowFare + this.thresholdAmount) {
+        if (this.reasonCodes.length > 0) {
+          reasonCode = this.getReasonCodeValue('7', currentIndex);
+          group.get('reasonCodeText').setValue(reasonCode);
+        }
+      }
+    }
+
+    if (isExchange) {
+      if (this.reasonCodes.length > 0) {
+        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
+        reasonCode = this.getReasonCodeValue('E', currentIndex);
+        group.get('reasonCodeText').setValue(reasonCode);
+      }
+
+      group.get('highFareText').setValue(chargeFare);
+      group.get('lowFareText').setValue(chargeFare);
+      group.get('reasonCodeText').disable();
+      group.get('highFareText').disable();
+      group.get('lowFareText').disable();
+    } else {
+      this.changeReasonCodes(group, currentIndex);
+      if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
+        reasonCode =
+          this.reasonCodes[currentIndex][0].reasonCode +
+          ' : ' +
+          this.reasonCodes[currentIndex][0].reasonCodeProductTypeDescriptions.get('en-GB');
+        group.get('reasonCodeText').setValue(reasonCode);
+      }
+    }
 
     if (defaultValue !== undefined && defaultValue !== null) {
       group.setValue(defaultValue);
     }
-    this.getReasonCodes();
+
     return group;
   }
 
@@ -68,31 +153,103 @@ export class ReportingBSPComponent implements OnInit {
     this.lowFareInt = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_Calculation);
   }
 
-  drawControls() {
-    let segmentsInFare = '';
-    const highFare = '';
-    const lowFare = '';
-    let segmentNo = '';
-    const reasonCode = '';
-
+  async drawControls() {
     if (this.pnrService.tstObj.length === undefined) {
-      segmentsInFare = this.getSegment(this.pnrService.tstObj);
-      segmentNo = segmentsInFare;
-      this.addFares(segmentNo, highFare, lowFare, reasonCode);
+      this.populateData(this.pnrService.tstObj);
     } else {
-      this.pnrService.tstObj.forEach((p) => {
-        segmentsInFare = this.getSegment(p);
-        if (segmentsInFare.indexOf('/') === -1) {
-          segmentNo = segmentsInFare;
-          this.addFares(segmentNo, highFare, lowFare, reasonCode);
-        } else {
-          segmentsInFare.split('/').forEach((element) => {
-            segmentNo = element;
-            this.addFares(segmentNo, highFare, lowFare, reasonCode);
-          });
-        }
-      });
+      const tsts = this.pnrService.tstObj;
+      for await (const p of tsts) {
+        this.populateData(p);
+      }
     }
+  }
+
+  drawControlsForNonBsp() {
+    this.nonBspReasonList = [{ itemText: '', itemValue: '' }, { itemText: 'L- Lower Fare', itemValue: 'L' }];
+
+    const items = this.nonBspGroup.get('nonbsp') as FormArray;
+    while (items.length !== 0) {
+      items.removeAt(0);
+    }
+    this.nonBspInformation.forEach((element) => {
+      const totalCost =
+        parseFloat(element.baseAmount) +
+        parseFloat(element.gst) +
+        parseFloat(element.hst) +
+        parseFloat(element.qst) +
+        parseFloat(element.otherTax);
+
+      items.push(this.createFormGroup(element.segmentNo, totalCost.toString(), totalCost.toString(), 'L', ''));
+    });
+  }
+
+  async populateData(tst) {
+    const fareInfo = tst.fareDataInformation.fareDataSupInformation;
+    const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
+    const segmentsInFare = this.getSegment(tst);
+    const segmentNo = segmentsInFare;
+    const segmentLineNo = this.getSegmentLineNo(segmentNo);
+
+    const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
+    let lowFare = '';
+    if (this.isDomesticFlight) {
+      lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, segmentLineNo)); // FXD/S
+    } else {
+      lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, segmentLineNo)); // FXD/S
+    }
+    const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
+
+    this.reasonCodes.push([]);
+    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
+  }
+
+  insertSegment(command, segmentLineNo): string {
+    if (command.indexOf('//') >= 0) {
+      return command.replace('//', '/S' + segmentLineNo + '/');
+    } else {
+      return command + '/S' + segmentLineNo;
+    }
+  }
+
+  changeReasonCodes(group: FormGroup, indx: number) {
+    if (indx >= 0) {
+      const lowFare = group.get('lowFareText').value;
+      const chargeFare = group.get('chargeFare').value;
+      if (parseFloat(lowFare) === parseFloat(chargeFare)) {
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB');
+      } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB');
+      }
+    }
+  }
+
+  getThresHoldAmount() {
+    const amt = this.ddbService.airMissedSavingPolicyThresholds
+      .filter((air) => air.routingDescription === (this.isDomesticFlight ? 'Domestic' : 'International'))
+      .map((air) => air.amount);
+    return amt.length > 0 ? amt[0] : 0;
+  }
+
+  isSegmentExchange(tatooNumber): boolean {
+    return this.pnrService.exchangeTatooNumbers.filter((e) => tatooNumber.includes(e)).length > 0;
+  }
+
+  getSegmentLineNo(tatooNumber: string): string {
+    const tatoos: string[] = [];
+    tatooNumber.split(',').forEach((e) => {
+      tatoos.push(e);
+    });
+
+    let segments = '';
+    const seg = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
+    seg.forEach((s) => {
+      if (segments === '') {
+        segments = s.lineNo;
+      } else {
+        segments = segments + ',' + s.lineNo;
+      }
+    });
+    return segments;
   }
 
   getSegment(tst: any): string {
@@ -112,23 +269,47 @@ export class ReportingBSPComponent implements OnInit {
     return segments;
   }
 
-  getHighFare(fare: string, command: string): string {
-    smartScriptSession.send(command).then((res) => {
-      if (res.Response !== undefined) {
+  async getHighFare(command: string) {
+    let value = '';
+    await smartScriptSession.send(command).then((res) => {
+      let regex = /TOTALS (.*)/g;
+      let match = regex.exec(res.Response);
+
+      // regex.lastIndex = 0;
+      if (match !== null) {
+        const temp = match[0].split('    ');
+        if (temp[3] !== undefined) {
+          value = temp[3].trim();
+          return value.trim();
+        }
+      } else {
+        const regex2 = /[^][A-Z]{3}(\s+)(?<amount>(\d+(\.\d{2})))[\n\r]/g;
+        const match2 = regex2.exec(res.Response);
+        if (match2 !== null) {
+          if (match2.groups !== undefined && match2.groups.amount !== undefined) {
+            value = match2.groups.amount;
+            return value.trim();
+          }
+        }
       }
     });
-    return fare;
+    return value;
   }
 
-  getLowFare(fare: string): string {
-    return fare;
-  }
-
-  getReasonCode(code: string): string {
-    return code;
-  }
-
-  getReasonCodes() {
-    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized, ReasonCodeTypeEnum.Missed]);
+  // fxd
+  async getLowFare(command: string) {
+    let value = '';
+    await smartScriptSession.send(command).then((res) => {
+      const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
+      const match = regex.exec(res.Response);
+      regex.lastIndex = 0;
+      if (match !== null) {
+        if (match.groups !== undefined && match.groups.from !== undefined) {
+          value = match.groups.from;
+          return value;
+        }
+      }
+    });
+    return value;
   }
 }

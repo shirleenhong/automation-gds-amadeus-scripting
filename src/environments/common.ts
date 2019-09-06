@@ -21,6 +21,7 @@ export const common = {
   reasonCodesByProductIdService: '/service/repo/powerbaseaws/ReasonCodesByProductId/',
   reasonCodesByTypeIdService: '/service/repo/powerbaseaws/ReasonCodesByReasonCodeTypeId/',
   reasonCodesByProductIdAndTypeIdService: '/service/repo/powerbaseaws/ReasonCodes/{ProductId}/{ReasonCodeTypeId}/',
+  airMissedSavingThresholdService: '/service/repo/powerbaseaws/Policies/Air/Missed-Savings',
   configurationParameterService: '/service/repo/powerbaseaws/ConfigurationParameter',
   approversService: '/service/repo/powerbaseaws/Approvers?ClientSubUnitGuid=',
   queueMinderItemService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/QueueMinderItems?QueueMinderTypeIds=',

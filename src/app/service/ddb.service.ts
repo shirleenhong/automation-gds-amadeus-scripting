@@ -296,10 +296,12 @@ export class DDBService implements OnInit {
     const countries = [];
     this.airTravelPortInformation.forEach((port) => {
       if (countries.indexOf(port.countryCode) === -1) {
-        countries.push(port.countryCode);
+        if (port.countryCode !== 'CA' && port.countryCode !== 'US') {
+          countries.push(port.countryCode);
+        }
       }
     });
-    if (countries.length > 0 && (countries.indexOf('CA') === -1 && countries.indexOf('US') === -1)) {
+    if (countries.length > 0) {
       return false;
     }
     return true;

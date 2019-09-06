@@ -155,9 +155,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.ticketNumber = 'Ticket Number: ';
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
-    this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase',
-      'fareType', 'supplierConfirmatioNo', 'originalTktLine'], false);
-    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo'], true);
+    this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine'], false);
+    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -172,7 +171,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           Validators.required,
           Validators.maxLength(15)
         ]);
-        this.enableFormControls(['departureCity'], false);
+        this.enableFormControls(['departureCity', 'passPurchase'], false);
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
         this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
@@ -198,7 +197,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
         break;
       case 'NONBSP':
-        this.ticketNumber = 'Ticket Number/Confirmation Number:  ';
+        this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
         // this.accountingRemark.commisionWithoutTax = '0.00';

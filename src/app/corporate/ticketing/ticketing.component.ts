@@ -135,7 +135,7 @@ export class TicketingComponent implements OnInit {
         let hasChargingMatch = false;
 
         for (let i = 0; i < cfaChargingFees.length; i++) {
-            if (cfaChargingFees[i].cfa === cfLine.cfa) {
+            if (cfLine && cfaChargingFees[i].cfa === cfLine.cfa) {
                 hasChargingMatch = true;
                 break;
             }

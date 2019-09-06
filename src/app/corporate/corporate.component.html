@@ -10,23 +10,20 @@
         </accordion-group>
         <accordion-group [panelClass]="'customClass'">
             <div accordion-heading>
-                <i class="fas fa-hand-holding-usd"></i> Reporting
+                <i class="fas fa-file-export"></i> Reporting
                 <i [ngClass]="validModel.reportingValidCss"></i>
                 <span class="cwt-logo"></span>
             </div>
             <app-reporting></app-reporting>
         </accordion-group>
-    </accordion>
-    <br />
-
-    <accordion-group [panelClass]="'customClass'">
-        <div accordion-heading>
-            <i class="fas fa-ticket-alt"></i> Ticketing
-            <i [ngClass]="validModel.ticketingValidCss"></i>
-            <span class="cwt-logo"></span>
-        </div>
-        <app-ticketing></app-ticketing>
-    </accordion-group>
+        <accordion-group [panelClass]="'customClass'">
+            <div accordion-heading>
+                <i class="fas fa-ticket-alt"></i> Ticketing
+                <i [ngClass]="validModel.ticketingValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-ticketing></app-ticketing>
+        </accordion-group>
     </accordion>
     <br />
 
@@ -78,20 +75,11 @@
     </div>
 </div>
 <div *ngIf="dataError.hasError">
-    <<<<<<< HEAD <alert type="warning" dismissible="true">
+    <alert type="warning" dismissible="true">
         <div *ngIf="dataError.matching">Unable to Match PNR from PNR Layout</div>
         <div *ngIf="dataError.supplier">Unable to get Supplier Codes from DDB</div>
         <div *ngIf="dataError.servicingOption">Unable to Get Servicing Options</div>
         <div *ngIf="dataError.pnr">Unable to Load PNR</div>
         <div *ngIf="dataError.reasoncode">Unable to Reason Codes</div>
-        </alert>
-        =======
-        <alert type="warning" dismissible="true">
-            <div *ngIf="dataError.matching">Unable to Match PNR from PNR Layout</div>
-            <div *ngIf="dataError.supplier">Unable to get Supplier Codes from DDB</div>
-            <div *ngIf="dataError.servicingOption">Unable to Get Servicing Options</div>
-            <div *ngIf="dataError.pnr">Unable to Load PNR</div>
-            <div *ngIf="dataError.reasoncode">Unable to Reason Codes</div>
-        </alert>
-        >>>>>>> develop
+    </alert>
 </div>

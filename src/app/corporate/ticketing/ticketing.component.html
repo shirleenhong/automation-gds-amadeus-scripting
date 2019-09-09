@@ -14,7 +14,7 @@
         <div class="row form-group">
             <div class="col-6">
                 <div>Ticketing Date for the PNR:</div>
-                <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" />
+                <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" required />
             </div>
             <div class="col-6">
                 <div>
@@ -33,7 +33,7 @@
         <div class="row form-group">
             <div class="col-7" *ngIf="!isOnHoldChecked">
                 <div>TK Line:</div>
-                <select class="form-control " id="selTK" formControlName="tk" name="tk">
+                <select class="form-control " id="selTK" formControlName="tk" name="tk" required>
                     <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
                 </select>
             </div>

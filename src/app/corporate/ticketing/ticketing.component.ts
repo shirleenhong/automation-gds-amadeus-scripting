@@ -34,6 +34,8 @@ export class TicketingComponent implements OnInit {
         this.loadOid();
         this.loadTKList();
         this.checkSegments();
+
+        this.checkValid();
     }
 
     /**

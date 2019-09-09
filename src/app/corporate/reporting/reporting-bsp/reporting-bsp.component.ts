@@ -195,8 +195,8 @@ export class ReportingBSPComponent implements OnInit {
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
-
     const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
+
     let lowFare = '';
 
     if (this.isDomesticFlight) {
@@ -204,6 +204,7 @@ export class ReportingBSPComponent implements OnInit {
     } else {
       lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, segmentLineNo)); // FXD/S
     }
+
     const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
 
     this.reasonCodes.push([]);
@@ -222,18 +223,19 @@ export class ReportingBSPComponent implements OnInit {
     if (indx >= 0) {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
-      group.get('reasonCodeText').setValue('');
+
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
         this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB', 1);
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
         this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
       }
 
+      group.get('reasonCodeText').setValue(null);
       if (this.thresholdAmount > 0) {
         if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
           if (this.reasonCodes.length > 0) {
             const reasonCode = this.getReasonCodeValue('7', indx);
-            group.get('reasonCodeText').setValue(reasonCode);
+            group.get('reasonCodeText').patchValue(reasonCode);
           }
         }
       }
@@ -279,7 +281,9 @@ export class ReportingBSPComponent implements OnInit {
         if (segments === '') {
           segments = s.segmentReference.refDetails.refNumber;
         } else {
-          segments = segments + ',' + s.segmentReference.refDetails.refNumber;
+          if (s.segmentReference !== undefined) {
+            segments = segments + ',' + s.segmentReference.refDetails.refNumber;
+          }
         }
       });
     }

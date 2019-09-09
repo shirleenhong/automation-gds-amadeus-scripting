@@ -49,12 +49,12 @@
         />
       </div>
       <div class="col-3" style="width:12%;text-align:left">
-        <input formControlName="reasonCodeText" type="text" class="form-control" list="dynamicReasonCodes" required />
-        <datalist id="dynamicReasonCodes">
+        <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText" required>
+          <option [ngValue]="null"></option>
           <option *ngFor="let reason of reasonCodes[i]">{{
             reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
           }}</option>
-        </datalist>
+        </select>
       </div>
     </div>
   </div>

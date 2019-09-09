@@ -188,6 +188,10 @@ export class DDBService implements OnInit {
   }
 
   getReasonCodeByTypeId(ids: number[], language: string, productID: number): Array<ReasonCode> {
+    // const reasonCode = new  ReasonCode(any);
+    // reasonCode.productId = 1;
+    // reasonCode.reasonCode = '';
+    // this.reasonCodeList.push(reasonCode);
     return this.reasonCodeList.filter(
       (e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language) && e.productId === productID
     );

@@ -43,42 +43,12 @@
           (change)="changeReasonCodes(item, i)" required />
       </div>
       <div class="col-3" style="width:12%;text-align:left">
-        <input formControlName="reasonCodeText" type="text" class="form-control" list="dynamicReasonCodes" required />
-        <datalist id="dynamicReasonCodes">
+        <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText" required>
+          <option [ngValue]="null"></option>
           <option *ngFor="let reason of reasonCodes[i]">{{
             reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
           }}</option>
-        </datalist>
-      </div>
-    </div>
-  </div>
-  <div [formGroup]="nonBspGroup" width>
-    NON BSP
-    <div formArrayName="nonbsp" *ngFor="let item of this.nonBspGroup.get('nonbsp')['controls']; let i = index"
-      class="col">
-      <div [formGroupName]="i" class="row">
-        <div class="col-2">
-          Segment
-          <input formControlName="segment" type="text" class="form-control" readonly />
-        </div>
-
-        <div class="col-2">
-          Full Fare
-          <input formControlName="highFareText" type="text" class="form-control" maxlength="55" required AmountMask />
-        </div>
-        <div class="col-2">
-          Low Fare
-          <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" required AmountMask />
-        </div>
-        <div class="col-3">
-          Reason Code
-          <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText"
-            name="reasonCodeText" required>
-            <option *ngFor="let item of nonBspReasonList" [value]="item.itemValue">
-              {{ item.itemText }}
-            </option>
-          </select>
-        </div>
+        </select>
       </div>
     </div>
   </div>

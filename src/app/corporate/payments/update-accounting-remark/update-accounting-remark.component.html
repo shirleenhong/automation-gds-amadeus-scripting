@@ -27,18 +27,17 @@
       </div>
     </div>
 
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP'" class=" row form-group">
+      <div class="col-4"></div>
+      <div class="col-8">
+        <input type="checkbox" name="nonbspexchange" formControlName="nonbspexchange" id="nonbspexchange"
+          (click)=" changetoExchange($event.target.checked)" />
+        Using Non Refundable ticket from Document Bank
+      </div>
+    </div>
+
     <div
       *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
-      <div class=" row form-group">
-        <div class="col-4"></div>
-        <div class="col-8">
-          <input type="checkbox" name="exchange" formControlName="exchange" id="exchange"
-            (click)=" changetoExchange($event.target.checked)" />
-          Using Non Refundable ticket from Document Bank
-        </div>
-      </div>
-
-
       <div class="form-group  row">
         <div class="col-sm-4">Itinerary Segments:</div>
         <div class="col-sm-8">
@@ -204,17 +203,19 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPP'" class="form-group row">
-        <div class="col-sm-4">Fare Type:</div>
-        <div class="col-sm-8">
-          <select autofocus id="fareType" class="form-control" name="fareType" [(ngModel)]="accountingRemark.fareType"
-            formControlName="fareType" required>
-            <option *ngFor="let item of fareTypeList" [value]="item.itemValue">
-              {{ item.itemText }}
-            </option>
-          </select>
-        </div>
+    <div
+      *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || (needFaretype && accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE')"
+      class="form-group row">
+      <div class="col-sm-4">Fare Type:</div>
+      <div class="col-sm-8">
+        <select autofocus id="fareType" class="form-control" name="fareType" [(ngModel)]="accountingRemark.fareType"
+          formControlName="fareType" required>
+          <option *ngFor="let item of fareTypeList" [value]="item.itemValue">
+            {{ item.itemText }}
+          </option>
+        </select>
       </div>
     </div>
 

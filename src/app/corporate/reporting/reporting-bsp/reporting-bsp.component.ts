@@ -5,15 +5,10 @@ import { DDBService } from '../../../service/ddb.service';
 import { ServicingOptionEnums } from '../../../enums/servicing-options';
 import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
 import { ReasonCode } from '../../../models/ddb/reason-code.model';
-import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
-import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
-import { SelectItem } from 'src/app/models/select-item.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { DecimalPipe } from '@angular/common';
-// import { PaymentsComponent } from '../../payments/payments.component';
 
 declare var smartScriptSession: any;
-// @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
+
 @Component({
   selector: 'app-reporting-bsp',
   templateUrl: './reporting-bsp.component.html',
@@ -23,24 +18,19 @@ declare var smartScriptSession: any;
 export class ReportingBSPComponent implements OnInit {
   @Input()
   reasonCodes: Array<ReasonCode[]> = [];
-  nonBspReasonList: Array<SelectItem>;
   bspGroup: FormGroup;
-  nonBspGroup: FormGroup;
   total = 1;
   highFareSO: any;
   lowFareDom: any;
   lowFareInt: any;
   isDomesticFlight = true;
   thresholdAmount = 0;
-  nonBspInformation: MatrixAccountingModel[];
-  decPipe = new DecimalPipe('en-US');
 
   // tslint:disable-next-line:max-line-length
   constructor(
     private fb: FormBuilder,
     private pnrService: PnrService,
     private ddbService: DDBService,
-    private paymentService: PaymentRemarkService,
     private utilHelper: UtilHelper
   ) { }
 
@@ -48,23 +38,11 @@ export class ReportingBSPComponent implements OnInit {
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
     });
-
-    this.nonBspGroup = this.fb.group({
-      nonbsp: this.fb.array([])
-    });
-
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
     this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
     this.drawControls();
-  }
-
-  ngAfterViewInit() {
-    this.paymentService.currentMessage.subscribe((message) => {
-      this.nonBspInformation = message;
-      this.drawControlsForNonBsp();
-    });
   }
 
   removeFares(i) {
@@ -171,34 +149,14 @@ export class ReportingBSPComponent implements OnInit {
     }
   }
 
-  drawControlsForNonBsp() {
-    this.nonBspReasonList = [{ itemText: '', itemValue: '' }, { itemText: 'L- Lower Fare', itemValue: 'L' }];
-
-    const items = this.nonBspGroup.get('nonbsp') as FormArray;
-    while (items.length !== 0) {
-      items.removeAt(0);
-    }
-    this.nonBspInformation.forEach((element) => {
-      const totalCost =
-        parseFloat(element.baseAmount) +
-        parseFloat(element.gst) +
-        parseFloat(element.hst) +
-        parseFloat(element.qst) +
-        parseFloat(element.otherTax);
-
-      const formatCost = this.decPipe.transform(totalCost, '1.2-2').replace(',', '');
-      items.push(this.createFormGroup(element.segmentNo, formatCost.toString(), formatCost.toString(), 'L', ''));
-    });
-  }
-
   async populateData(tst) {
     const fareInfo = tst.fareDataInformation.fareDataSupInformation;
     const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
-
     const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
+
     let lowFare = '';
 
     if (this.isDomesticFlight) {
@@ -206,6 +164,7 @@ export class ReportingBSPComponent implements OnInit {
     } else {
       lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, segmentLineNo)); // FXD/S
     }
+
     const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
 
     this.reasonCodes.push([]);
@@ -224,18 +183,19 @@ export class ReportingBSPComponent implements OnInit {
     if (indx >= 0) {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
-      group.get('reasonCodeText').setValue('');
+
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
         this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB', 1);
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
         this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
       }
 
+      group.get('reasonCodeText').setValue(null);
       if (this.thresholdAmount > 0) {
         if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
           if (this.reasonCodes.length > 0) {
             const reasonCode = this.getReasonCodeValue('7', indx);
-            group.get('reasonCodeText').setValue(reasonCode);
+            group.get('reasonCodeText').patchValue(reasonCode);
           }
         }
       }
@@ -281,7 +241,9 @@ export class ReportingBSPComponent implements OnInit {
         if (segments === '') {
           segments = s.segmentReference.refDetails.refNumber;
         } else {
-          segments = segments + ',' + s.segmentReference.refDetails.refNumber;
+          if (s.segmentReference !== undefined) {
+            segments = segments + ',' + s.segmentReference.refDetails.refNumber;
+          }
         }
       });
     }

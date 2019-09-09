@@ -12,11 +12,12 @@ ${input_low_fare}    //input[@formcontrolname='lowFareText']
 ${input_reason_code}    //input[@formcontrolname='reasonCodeText']
 ${tab_clientReporting}    //div[@formarrayname='fares']
 ${checkbox_clientReporting}    //input[@id='chkIncluded'] 
+${tab_nonBsp}    //span[contains(text(), 'NON BSP')]
 
 *** Keywords *** 
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
-    Enter Value    ${fare_row_number}[${tst_number}]${input_full_fare}    ${full_fare_value}   
+    Enter Value    ${fare_row_number}[${tst_number}]${input_full_fare}    ${full_fare_value}     
 
 Enter Low Fare
     [Arguments]    ${low_fare_value}    ${tst_number}=1
@@ -24,7 +25,8 @@ Enter Low Fare
 
 Enter Reason Code
     [Arguments]    ${reason_code_value}    ${tst_number}=1
-    Enter Value    ${fare_row_number}[${tst_number}]${input_reason_code}    ${reason_code_value}  
+    # Enter Value    ${fare_row_number}[${tst_number}]${input_reason_code}    ${reason_code_value}  
+    Select From List By Value    ${fare_row_number}[${tst_number}]${input_reason_code}    ${reason_code_value}    
 
 Add Client Reporting Values For Single BSP Segment
     Click Reporting Panel
@@ -70,10 +72,13 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Verify Specific Remark Is Written In The PNR    RM *LP/-678.00/S5
     Verify Specific Remark Is Written In The PNR    RM *FS/-5/S5
 
-Add Client Reporting Values For Non-BSP Segments
+Verify Client Reporting Values For Non-BSP Segments
     Click Reporting Panel
-    Enter Value    //input[@formcontrolname='highFareText']    2101.00
-    Enter Value   //input[@formcontrolname='lowFareText']    912.99
+    Click Element    ${tab_nonBsp}
+    Wait Until Element Is Visible    ${input_full_fare}
+    # ${high_fare_value}    Get Text   ${input_full_fare}
+    # ${low_fare_value}    Get Text   ${input_low_fare}     
+    # ${reason_code_value}   Get Text    ${input_reason_code}  
     
 Select Client Reporting Fields To Be Written
     Click Reporting Panel   
@@ -81,17 +86,15 @@ Select Client Reporting Fields To Be Written
     Select Checkbox    ${tab_clientReporting}[1]${checkbox_clientReporting}
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
-    # Switch To Graphic Mode
-    # Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM *FF/-2101.00/S2
-    Verify Specific Remark Is Written In The PNR    RM *LP/-912.99/S2
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-760.00/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-760.00/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
    
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
-    # Switch To Graphic Mode
-    # Get PNR Details
-    Verify Specific Remark Is Written In The PNR    RM *FF/-2101.00/S2-3
-    Verify Specific Remark Is Written In The PNR    RM *LP/-912.99/S2-3
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-760.00/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *LP/-760.00/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
 
 Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST

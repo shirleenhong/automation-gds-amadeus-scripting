@@ -46,6 +46,7 @@ Click Full Wrap
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
     Click Element    ${panel_reporting}
+    Set Test Variable    ${current_page}    Reporting
     
 Click Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
@@ -130,12 +131,6 @@ Submit To PNR
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}
-
-Populate Ticketing Panel
-    Click Ticketing Panel  
-    Wait Until Element Is Visible    ${input_ticketingDate}      
-    Input Text    ${input_ticketingDate}     01012020
-    Select Checkbox    ${checkbox_onHold}
     
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing

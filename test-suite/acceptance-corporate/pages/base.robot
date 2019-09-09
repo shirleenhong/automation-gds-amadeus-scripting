@@ -52,6 +52,13 @@ Click Payment Panel
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
+    
+Collapse Payment Panel
+        Wait Until Element Is Visible    ${panel_payment}    60
+    Click Element    ${panel_payment}
+    Set Test Variable    ${current_page}    Full Wrap PNR
+    [Teardown]    Take Screenshot
+    
 
 Click Submit To PNR
     [Arguments]    ${close_corporate_test}=yes
@@ -94,7 +101,7 @@ Convert Month To MMM
 
 Navigate To Page ${destination_page}
      Set Test Variable    ${i}     1
-     : FOR     ${i}    IN    10
+     : FOR     ${i}    IN RANGE   1    10
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
      \    Run Keyword If    "${current_page}" == "CWT Corporate"     Navigate From Corp    ${destination_page}
@@ -120,6 +127,7 @@ Navigate From Full Wrap
 Navigate From Payment
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
+    ...   ELSE     Collapse Payment Panel
     
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
@@ -129,7 +137,7 @@ Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing"    Click Submit To PNR    ${close_corporate_test}
 
 Populate Ticketing Panel
     Click Ticketing Panel  
@@ -142,7 +150,9 @@ Fill Up Ticketing Panel With Default Values
     Assign Current Date
     Enter Value    ${input_ticketingDate}     ${current_day}${current_month}${current_year}
     Select Checkbox    ${checkbox_onHold}
+    Set Test Variable    ${ticketing_complete}    yes
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
     Click Element    ${panel_ticketing}
+    Set Test Variable    ${current_page}    Ticketing

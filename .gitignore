@@ -32,3 +32,4 @@ red.xml
 *.png
 test-suite/resources/common/global_resources.robot 
 /libspecs/
+src/app/corporate/corporate.component.ts

@@ -205,7 +205,7 @@ export class PaymentRemarkService {
 
       if (account.gdsFare != undefined) {
         gdsFare.set('AirlineCode', uniqueairlineCode);
-        gdsFare.set('PassNumber', account.passPurchase);
+        gdsFare.set('PassNumber', account.tktLine);
         gdsFare.set('FareType', account.fareType);
         gdsFare.set('GdsFare', account.gdsFare.toString());
         this.remarksManager.createPlaceholderValues(gdsFare);

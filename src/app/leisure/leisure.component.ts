@@ -27,6 +27,7 @@ import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
 import { common } from '../../environments/common';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
+import { OtherRemarksService } from '../service/leisure/other-remarks.service';
 
 @Component({
   selector: 'app-leisure',
@@ -75,7 +76,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private modalService: BsModalService,
     private invoiceService: InvoiceRemarkService,
     private itineraryService: ItineraryRemarkService,
-    private queueService: QueueRemarkService
+    private queueService: QueueRemarkService,
+    private otherService: OtherRemarksService
   ) {
     this.getPnr();
     this.initData();
@@ -85,7 +87,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -195,6 +197,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
     remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
+    remarkCollection.push(this.otherService.writeConceirgeRemarks());
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {
       remarkCollection.push(this.segmentService.getRetentionLine());
@@ -344,7 +347,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

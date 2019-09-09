@@ -7037,15 +7037,6 @@
 					}
 				},
 				{
-					"id": 9496,
-					"segmentNumberReferences": [],
-					"passengerNumberReferences": [],
-					"conditions": null,
-					"matchedPlaceholders": {
-						"CnNumber": "MCC"
-					}
-				},
-				{
 					"id": 250,
 					"segmentNumberReferences": [],
 					"passengerNumberReferences": [],

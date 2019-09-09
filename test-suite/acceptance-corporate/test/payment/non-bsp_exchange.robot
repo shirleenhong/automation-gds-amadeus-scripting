@@ -34,7 +34,6 @@ Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Sup
     Move Single Passenger And Add Passive Segment With Airline Code AC
     Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Verify That Supplier Code Default Value Is Correct For AC
-    Verify Penalty Amount Fields Are Displayed
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
     Verify Penalty Remarks Are Not Written In The PNR
     [Teardown]    Close Browser
@@ -45,7 +44,6 @@ Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Sup
     Move Single Passenger And Add Passive Segment With Airline Code AC
     Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And Penalty
     Verify That Supplier Code Default Value Is Correct For AC
-    Verify Penalty Amount Fields Are Displayed
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
     Verify Penalty Remarks Are Written In The PNR
     [Teardown]    Close Browser

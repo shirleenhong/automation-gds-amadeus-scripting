@@ -187,8 +187,10 @@ export class DDBService implements OnInit {
     );
   }
 
-  getReasonCodeByTypeId(ids: number[], language: string): Array<ReasonCode> {
-    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language));
+  getReasonCodeByTypeId(ids: number[], language: string, productID: number): Array<ReasonCode> {
+    return this.reasonCodeList.filter(
+      (e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language) && e.productId === productID
+    );
   }
   // getReasonCodeByTypeId(integer[]) {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
@@ -294,10 +296,12 @@ export class DDBService implements OnInit {
     const countries = [];
     this.airTravelPortInformation.forEach((port) => {
       if (countries.indexOf(port.countryCode) === -1) {
-        countries.push(port.countryCode);
+        if (port.countryCode !== 'CA' && port.countryCode !== 'US') {
+          countries.push(port.countryCode);
+        }
       }
     });
-    if (countries.length > 0 && (countries.indexOf('CA') === -1 && countries.indexOf('US') === -1)) {
+    if (countries.length > 0) {
       return false;
     }
     return true;

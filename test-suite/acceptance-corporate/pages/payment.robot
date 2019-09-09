@@ -33,12 +33,14 @@ ${input_penaltyGst}    css=#penaltyGst
 ${input_penaltyHst}    css=#penaltyHst
 ${input_penaltyQst}    css=#penaltyQst
 ${input_tktnumber}    css=#tktLine
+${input_origTicketLine}    css=#originalTktLine
 ${input_departurecity}    css=#departureCity
 ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
 ${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
 ${input_lowestGdsFare}    css=#gdsFare
+${input_consultantNo}    css=#consultantNo
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
 
 *** Keywords ***    
@@ -48,6 +50,10 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
+    Select From List By Label    ${list_faretype}       FLEX
+    Set Test Variable    ${tkt_number}    ${EMPTY}
+    Set Test Variable    ${orig_tkt_number}    ${EMPTY}
+    Set Test Variable    ${fare_type}    FLEX
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Navigate To Page Add Accounting Line
@@ -55,7 +61,13 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
+    Select From List By Label    ${list_faretype}       FLEX
     Enter 1000 In Lowest GDS Fare Field
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_origTicketLine}    0987654321
+    Set Test Variable    ${tkt_number}    1234567890
+    Set Test Variable    ${orig_tkt_number}    0987654321
+    Set Test Variable    ${fare_type}    FLEX
 
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Navigate To Page Add Accounting Line
@@ -63,8 +75,12 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Select Itinerary Segments    2
     Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
+    Select From List By Label    ${list_faretype}       FLEX
     Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
+    Set Test Variable    ${orig_tkt_number}    0987654321
+    Set Test Variable    ${fare_type}    FLEX
     
 Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Navigate To Page Add Accounting Line
@@ -73,7 +89,9 @@ Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
+    Set Test Variable    ${orig_tkt_number}    0987654321
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And Penalty
     Navigate To Page Add Accounting Line
@@ -82,8 +100,11 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Enter Value    ${input_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Add Penalty Amount Details    10.00    1.00    1.00    1.00
+    Select From List By Label    ${list_faretype}       FLEX
     Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
+    Set Test Variable    ${fare_type}    FLEX
     
 # For Non-BSP Airline and APAY #  
 Add Non-BSP Ticketing Details For Segment ${segment_no} 
@@ -192,24 +213,28 @@ Click Update Button
 
 # Verification For Non-BSP Airline and APAY #     
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2-3 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2-3    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
    
 Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-C5A/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMT TKT2-VEN/TK-1234567890/VN-WJ3/S3 
@@ -219,16 +244,19 @@ Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S3
     
 Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2    True
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00    
     
 Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3    True
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     
 Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-AEO/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-UA*GRAND TOTAL CAD 760.00
@@ -327,6 +355,7 @@ Verify Supplier Code Default Value Is Correct For ${acct_remark_type}
 Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Set Test Variable    ${airline_code}
     ${actual_supplier_code}    Get Element Attribute    ${input_suppliercode}    ng-reflect-model
+    Set Test Variable    ${actual_supplier_code}    ${actual_supplier_code}
     Run Keyword If    "${airline_code}" == "AC"   Should Contain    ${actual_supplier_code}    ACY
     Run Keyword If    "${airline_code}" == "WS"   Should Contain    ${actual_supplier_code}    WJ3
     Run Keyword If    "${airline_code}" == "PD"   Should Contain    ${actual_supplier_code}    PTA
@@ -341,30 +370,23 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR 
-    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-PTA/S2
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2
-    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 1111.20
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1111.20
     
-Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
+Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR 
-    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y/-OTK-${tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM*NE/-EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-WJ3/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2
-    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 1111.20
-    
-Verify Penalty Amount Fields Are Displayed
-    Wait Until Page Contains Element    ${input_penaltyBaseAmount}    30
-    Page Should Contain Element    ${input_penaltyBaseAmount}
-    Page Should Contain Element    ${input_penaltyGst}
-    Page Should Contain Element    ${input_penaltyHst}
-    Page Should Contain Element    ${input_penaltyQst}
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1111.20
     
 Verify Penalty Remarks Are Not Written In The PNR
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-VN-ACY/BA-
+    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-VN-${actual_supplier_code}/BA-
     
 Verify Penalty Remarks Are Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-ACY/BA-10.00/TX1-1.00XG/TX2-1.00RC/TX3-1.00XQ/TX4-1.00XT/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-A22/BA-10.00/TX1-1.00XG/TX2-1.00RC/TX3-1.00XQ/TX4-0.00XT/S2    True
 
 Click Save Button
     Click Element    ${button_save}
@@ -379,11 +401,11 @@ Update Consultant Number to ${consultant_number}
     
 Verify Consultant Number Remark Is Written With The Correct Value
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM*CN/-${consultant_number}
+    Verify Specific Remark Is Written In The PNR    RM *CN/-${consultant_number}
     
 Verify RMG Remark Is Written With Supplier Code ${supplier_code}
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMG/${supplier_code}PASSCHG
+    Verify Specific Remark Is Written In The PNR    RMG ${supplier_code}PASSCHG
     
 Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
     Enter Value    ${input_lowestGdsFare}    ${lowest_gds_fare_value}
@@ -391,7 +413,7 @@ Enter ${lowest_gds_fare_value} In Lowest GDS Fare Field
     
 Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For ${airline_code}
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM*U14/-${airline_code}PASS-1234567890.LAT/${lowest_gds_fare_value}
+    Verify Specific Remark Is Written In The PNR    RM *U14/-${airline_code}PASS-${tkt_number}.${fare_type}/${lowest_gds_fare_value}
     
 Verify Specific RIR Remarks In English Are Removed From PNR
     Finish PNR

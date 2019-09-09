@@ -3,6 +3,7 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
+Library           DateTime
 Resource          amadeus.robot
 Resource          payment.robot
 
@@ -40,6 +41,7 @@ Click Full Wrap
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    Full Wrap PNR
+    Set Test Variable    ${ticketing_complete}    no
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
@@ -67,10 +69,16 @@ Click Back To Main Menu
    
 Assign Current Date
     ${current_date}    Get Current Date
-    ${day}     Convert Date     ${current_date}    %d
+    ${current_day}     Convert Date     ${current_date}    %d
+    ${current_month}     Convert Date     ${current_date}    %m
+    ${current_year}     Convert Date     ${current_date}    %y
     ${month}     Convert Month To MMM    ${current_date}
-    Set Test Variable    ${current_date}   ${day}${month}
+    Set Test Variable    ${current_date}   ${current_day}${month}
+    Set Test Variable    ${current_day}
+    Set Test Variable    ${current_month}
+    Set Test Variable    ${current_year}     20${current_year}
     Log    ${current_date} 
+    Log    ${current_day}/${current_month}/${current_year}
 
 Convert Month To MMM
     [Arguments]     ${date}
@@ -98,7 +106,7 @@ Navigate To Page ${destination_page}
 
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting" or "${destination_page}" == "Ticketing"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
@@ -106,6 +114,7 @@ Navigate From Full Wrap
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
     ...    ELSE IF    "${destination_page}" == "Reporting"     Click Reporting Panel
+    ...    ELSE IF    "${destination_page}" == "Ticketing"     Click Ticketing Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -118,12 +127,22 @@ Finish PNR
     
 Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
-    Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button    
+    Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
+    Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}
-    
+
 Populate Ticketing Panel
-    Click Element    ${panel_ticketing}   
+    Click Ticketing Panel  
     Wait Until Element Is Visible    ${input_ticketingDate}      
     Input Text    ${input_ticketingDate}     01012020
-    Select Checkbox    ${checkbox_onHold} 
+    Select Checkbox    ${checkbox_onHold}
     
+Fill Up Ticketing Panel With Default Values
+    Navigate To Page Ticketing
+    Assign Current Date
+    Enter Value    ${input_ticketingDate}     ${current_day}${current_month}${current_year}
+    Select Checkbox    ${checkbox_onHold}
+    
+Click Ticketing Panel
+    Wait Until Element Is Visible    ${panel_ticketing}    60
+    Click Element    ${panel_ticketing}

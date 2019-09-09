@@ -34,6 +34,8 @@ export class TicketingComponent implements OnInit {
         this.loadOid();
         this.loadTKList();
         this.checkSegments();
+
+        this.checkValid();
     }
 
     /**
@@ -79,14 +81,18 @@ export class TicketingComponent implements OnInit {
      * Checks the segments in order to set a default value for TK dropdown.
      */
     private checkSegments(): void {
-        let presetDone = this.presetSegmentFee();
+        let presetDone: Boolean = this.presetSegmentFee();
 
         if (!presetDone) {
             presetDone = this.presetSegmentCancelled();
         }
 
         if (!presetDone) {
-            this.presetSegmentByChargeFee();
+            presetDone = this.presetSegmentByChargeFee();
+        }
+
+        if (null === presetDone) {
+            this.presetSegmentByIssueTix();
         }
     }
 
@@ -94,7 +100,7 @@ export class TicketingComponent implements OnInit {
      * Presets the TK dropdown to "FEE ONLY".
      * @returns A flag indicator if a match was found, therefore presetting a value.
      */
-    private presetSegmentFee(): boolean {
+    private presetSegmentFee(): Boolean {
         const segmentDetails = this.pnrService.getSegmentTatooNumber();
         let hasSegmentMatch = false;
 
@@ -114,7 +120,7 @@ export class TicketingComponent implements OnInit {
      * Presets the TK dropdown to "PNR CANCELLED".
      * @returns A flag indicator if a match was found, therefore presetting a value.
      */
-    private presetSegmentCancelled(): boolean {
+    private presetSegmentCancelled(): Boolean {
         const misIndex = this.pnrService.getmisCancel();
         const hasSegmentMatch = misIndex > 0;
 
@@ -129,23 +135,37 @@ export class TicketingComponent implements OnInit {
      * Presets the TK dropdown to "INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY" if there is a matched
      * CFA Charging fee, else presets to "CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE".
      */
-    private presetSegmentByChargeFee(): void {
+    private presetSegmentByChargeFee(): Boolean {
+        let hasChargingMatch: Boolean = null;
         const cfLine = this.pnrService.getCFLine();
-        const cfaChargingFees = this.staticValues.getCfaChargingFees();
-        let hasChargingMatch = false;
 
-        for (let i = 0; i < cfaChargingFees.length; i++) {
-            if (cfLine && cfaChargingFees[i].cfa === cfLine.cfa) {
-                hasChargingMatch = true;
-                break;
+        if (cfLine) {
+            const cfaChargingFees = this.staticValues.getCfaChargingFees();
+
+            for (let i = 0; i < cfaChargingFees.length; i++) {
+                if (cfaChargingFees[i].cfa === cfLine.cfa) {
+                    hasChargingMatch = true;
+                    break;
+                }
+            }
+
+            if (hasChargingMatch) {
+                this.updateTkDropdown('INV');
+            } else {
+                hasChargingMatch = false;
+                this.updateTkDropdown('CHG');
             }
         }
 
-        if (hasChargingMatch) {
-            this.updateTkDropdown('INV');
-        } else {
-            this.updateTkDropdown('CHG');
-        }
+        return hasChargingMatch;
+    }
+
+    /**
+     * Presets the TK dropdown to "ISSUE E-TICKET OR NON BSP TICKET" if all conditions/checkings
+     * before this did not satisfy.
+     */
+    private presetSegmentByIssueTix(): void {
+        this.updateTkDropdown('ISS');
     }
 
     /**

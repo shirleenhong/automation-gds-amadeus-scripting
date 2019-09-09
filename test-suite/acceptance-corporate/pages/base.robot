@@ -13,8 +13,11 @@ ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[contains(text(), 'SUBMIT TO PNR')]
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
+${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
+${input_ticketingDate}    css=#dtxtTicketDate
+${checkbox_onHold}    css=#chkOnHold
 
 *** Keywords ***
 Enter Value
@@ -117,3 +120,10 @@ Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button    
     Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR"    Click Submit To PNR    ${close_corporate_test}
+    
+Populate Ticketing Panel
+    Click Element    ${panel_ticketing}   
+    Wait Until Element Is Visible    ${input_ticketingDate}      
+    Input Text    ${input_ticketingDate}     01012020
+    Select Checkbox    ${checkbox_onHold} 
+    

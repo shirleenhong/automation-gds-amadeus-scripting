@@ -81,15 +81,15 @@ Select Client Reporting Fields To Be Written
     Select Checkbox    ${tab_clientReporting}[1]${checkbox_clientReporting}
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
-    Switch To Graphic Mode
-    Get PNR Details
+    # Switch To Graphic Mode
+    # Get PNR Details
     Verify Specific Remark Is Written In The PNR    RM *FF/-2101.00/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-912.99/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
    
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
-    Switch To Graphic Mode
-    Get PNR Details
+    # Switch To Graphic Mode
+    # Get PNR Details
     Verify Specific Remark Is Written In The PNR    RM *FF/-2101.00/S2-3
     Verify Specific Remark Is Written In The PNR    RM *LP/-912.99/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3

@@ -6,7 +6,7 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${input_segment}   //input[@formcontrolname='segment']
+${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment']
 ${list_segment}    //ul[@id='dropdown-basic']
 ${list_accounting_type}    css=#accountingTypeRemark
 ${input_suppliercode}    css=#supplierCodeName
@@ -90,7 +90,7 @@ Add Non-BSP Ticketing Details For Segment ${segment_no}
     Navigate To Page Add Accounting Line
     Wait Until Element Is Visible    ${list_accounting_type}    30
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
-    Select Itinerary Segments   2 
+    Select Itinerary Segments   ${segment_no} 
     Enter Value    ${input_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
@@ -192,32 +192,24 @@ Click Update Button
 
 # Verification For Non-BSP Airline and APAY #     
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2-3 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2-3    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
    
 Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-C5A/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMT TKT2-VEN/TK-1234567890/VN-WJ3/S3 
@@ -227,22 +219,16 @@ Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S3
     
 Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2    True
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00    
     
 Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3    True
     Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     
 Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-AEO/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-UA*GRAND TOTAL CAD 760.00
@@ -384,7 +370,7 @@ Click Save Button
     Click Element    ${button_save}
     Wait Until Page Contains Element    ${button_update}     30
     Set Focus To Element    ${button_submit_pnr}
-    Set Test Variable    ${current_page}    Full Wrap PNR
+    Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
 Update Consultant Number to ${consultant_number}

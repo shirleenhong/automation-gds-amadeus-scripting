@@ -1,25 +1,22 @@
 <div class="ticketing-container">
 
     <form [formGroup]="ticketForm">
-
-
         <div class="row form-group">
             <div class="col-4">
                 <div>Office ID:</div>
                 <div class="emphasize italicize">{{ oidDisplay }}</div>
                 <input type="hidden" class="form-control" id="txtOfficeId" name="officeId" formControlName="officeId" maxlength="35" />
             </div>
-
-            <div class="col-4">
-                <div>Ticketing Date for the PNR:</div>
-                <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" />
-            </div>
         </div>
 
         <br />
 
         <div class="row form-group">
-            <div class="col-12">
+            <div class="col-6">
+                <div>Ticketing Date for the PNR:</div>
+                <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" />
+            </div>
+            <div class="col-6">
                 <div>
                     <label class="emphasize">
                         <input id="chkOnHold" type="checkbox" name="pnrOnHold" formControlName="pnrOnHold" (change)="onChangePnrOnHold()" /> PNR ON HOLD
@@ -34,12 +31,11 @@
         <br />
 
         <div class="row form-group">
-            <div class="col-12" *ngIf="!isOnHoldChecked">
+            <div class="col-7" *ngIf="!isOnHoldChecked">
                 <div>TK Line:</div>
                 <select class="form-control " id="selTK" formControlName="tk" name="tk">
                     <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
                 </select>
-
             </div>
         </div>
     </form>

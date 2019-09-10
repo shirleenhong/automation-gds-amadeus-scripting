@@ -92,6 +92,14 @@ Add Multiple BSP Segment And Store Fare
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+    
+Add Multiple BSP Segment And Store Multiple Fares
+    @{gds_commands}    Create List    AN10JANYYZCDG/AAF    SS1Y1    AN20JANCDGLHR/AAF    SS1Y1    AN20JANLHRCDG/AAF
+    ...    SS1Y1    AN10FEBCDGYUL/AAC    SS1Y1    AN10FEBYULCDG/AAC    SS1Y1    FXP/S3,5-6    FXP/S2,4
+    Wait Until Element Is Visible    ${label_command_page}    180
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13
 
 Delete Fare and Itinerary
     @{gds_commands}    Create List   IR    RT    TTE/ALL    XI    RFCWTPTEST    ER
@@ -200,6 +208,10 @@ Move Single Passenger And Add Single BSP Segment With TST
 Move Single Passenger And Add Multiple BSP Segment With TSTs
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
     Add Multiple BSP Segment And Store Fare
+    
+Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Add Multiple BSP Segment And Store Multiple Fares
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 

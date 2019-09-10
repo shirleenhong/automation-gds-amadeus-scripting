@@ -54,7 +54,7 @@ Verify That Consultant Number Remark Is Updated When Consultant Number Field Is 
     Move Single Passenger And Add Passive Segment With Airline Code PD
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For PD
-    Update Consultant Number to CN2
+    Update Consultant Number To CN2
     Verify Consultant Number Remark Is Written With The Correct Value
     [Teardown]    Close Browser
     

@@ -24,6 +24,14 @@ Verify That Reporting Remark Are Written For Multiple TSTs
     Add Client Reporting Values For Multiple BSP Segment
     Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     [Teardown]    Close Browser
+  
+Verify That Reporting Remark Are Written For Multiple Segments And TSTs 
+    [Tags]    us10551
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
+    Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
+    Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segments And Multiple TSTs
+    # [Teardown]    Close Browser
     
 Verify That Client Reporting Are Correct For Exchange PNR
     [Tags]    us10551

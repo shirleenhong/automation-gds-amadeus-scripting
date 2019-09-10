@@ -409,7 +409,7 @@ export class PaymentRemarkService {
     if (Object.values(CardType).includes(matrix.bankAccount)) {
       fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
     } else {
-      fop = matrix.modePayment;
+      fop = (matrix.bankAccount === '109000' ? 'DB' : matrix.bankAccount === '227000' ? 'GC' : matrix.modePayment);
     }
 
     let gcNo = '';

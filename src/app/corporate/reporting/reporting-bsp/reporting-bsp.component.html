@@ -36,20 +36,13 @@
       </div>
 
       <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" required (change)="validateFares(item)" />
+        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" (change)="validateFares(item)" />
       </div>
       <div class="col-2" style="width:12%;text-align:left">
-        <input
-          formControlName="lowFareText"
-          type="text"
-          class="form-control"
-          maxlength="55"
-          (change)="changeReasonCodes(item, i)"
-          required
-        />
+        <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
       </div>
       <div class="col-3" style="width:12%;text-align:left">
-        <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText" required>
+        <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText">
           <option [ngValue]="null"></option>
           <option *ngFor="let reason of reasonCodes[i]">{{
             reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')

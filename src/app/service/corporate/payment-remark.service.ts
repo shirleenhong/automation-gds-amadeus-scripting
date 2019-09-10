@@ -109,12 +109,12 @@ export class PaymentRemarkService {
   writeTicketingLine(tktNo, baseAmount, gst, hst, qst, otherTax, comm, segmentrelate, supplierCodeName, tktline?) {
     const ticketAmountRemarks = new Map<string, string>();
     ticketAmountRemarks.set('TktRemarkNbr', tktNo.toString());
-    ticketAmountRemarks.set('BaseAmt', baseAmount);
-    ticketAmountRemarks.set('Gst', gst);
-    ticketAmountRemarks.set('Hst', hst);
-    ticketAmountRemarks.set('Qst', qst);
-    ticketAmountRemarks.set('Comm', comm);
-    ticketAmountRemarks.set('OthTax', otherTax);
+    ticketAmountRemarks.set('BaseAmt', this.decPipe.transform(baseAmount, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Gst', this.decPipe.transform(gst, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Hst', this.decPipe.transform(hst, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Qst', this.decPipe.transform(qst, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Comm', this.decPipe.transform(comm, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('OthTax', this.decPipe.transform(otherTax, '1.2-2').replace(',', ''));
     this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
 
     const ticketRemarks = new Map<string, string>();
@@ -145,6 +145,10 @@ export class PaymentRemarkService {
       const gdsFare = new Map<string, string>();
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark = new Map<string, string>();
+      let totalBaseAmount = parseFloat(account.baseAmount);
+      let totalGst = parseFloat(account.gst);
+      let totalHst = parseFloat(account.hst);
+      let totalQst = parseFloat(account.qst);
 
       if (account.originalTktLine != undefined) {
         originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);
@@ -167,12 +171,19 @@ export class PaymentRemarkService {
         );
       }
 
+      if (account.supplierCodeName !== 'ACY') {
+        totalBaseAmount += parseFloat(account.penaltyBaseAmount);
+        totalGst += parseFloat(account.penaltyGst);
+        totalHst += parseFloat(account.penaltyHst);
+        totalQst += parseFloat(account.penaltyQst);
+      }
+
       this.writeTicketingLine(
         account.tkMacLine.toString(),
-        account.baseAmount,
-        account.gst,
-        account.hst,
-        account.qst,
+        totalBaseAmount,
+        totalGst,
+        totalHst,
+        totalQst,
         account.otherTax,
         account.commisionWithoutTax,
         segmentAssoc,
@@ -265,7 +276,6 @@ export class PaymentRemarkService {
         }
 
         itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
-        this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
       }
 
       if (account.accountingTypeRemark === 'APAY' && parseFloat(account.baseAmount) > 0) {
@@ -279,7 +289,9 @@ export class PaymentRemarkService {
           account.otherTax,
           segmentAssoc
         );
+        itiRemarks.set('ConfNbr', account.tktLine);
       }
+      this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
     });
 
     totalcostlist.forEach((element) => {
@@ -290,6 +302,8 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       }
     });
+
+
   }
 
   private GetSegmentAssociation(account: MatrixAccountingModel) {

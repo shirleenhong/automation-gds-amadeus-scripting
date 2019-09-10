@@ -13,31 +13,24 @@ Verify That Reporting Remarks Are Written For Single TST
     [Tags]    us10551
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
-    Open CA Corporate Test
-    Click Full Wrap
     Add Client Reporting Values For Single BSP Segment
-    Click Submit To PNR
     Verify That Client Reporting Remarks Are Written In The PNR For Single TST
+    [Teardown]    Close Browser
     
 Verify That Reporting Remark Are Written For Multiple TSTs
     [Tags]    us10551
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple BSP Segment With TSTs
-    Open CA Corporate Test
-    Click Full Wrap
     Add Client Reporting Values For Multiple BSP Segment
-    Click Submit To PNR
     Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
-
+    [Teardown]    Close Browser
+    
 Verify That Client Reporting Are Correct For Exchange PNR
     [Tags]    us10551
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
     Create Exchange PNR In The GDS
-    Open CA Corporate Test
-    Click Full Wrap
     Select Client Reporting Fields To Be Written
-    Click Submit To PNR
     Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Delete Fare and Itinerary
     Handle Simultaneous Changes To PNR

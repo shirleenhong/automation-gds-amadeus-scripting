@@ -55,12 +55,11 @@ Click Payment Panel
     [Teardown]    Take Screenshot
     
 Collapse Payment Panel
-        Wait Until Element Is Visible    ${panel_payment}    60
+    Wait Until Element Is Visible    ${panel_payment}    60
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Full Wrap PNR
     [Teardown]    Take Screenshot
     
-
 Click Submit To PNR
     [Arguments]    ${close_corporate_test}=yes
     Wait Until Page Contains Element    ${button_submit_pnr}    30
@@ -108,6 +107,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment"    Navigate From Payment    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Reporting"   Navigate From Reporting    ${destination_page}
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
@@ -129,6 +129,10 @@ Navigate From Payment
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
     ...   ELSE     Collapse Payment Panel
+
+Navigate From Reporting
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Ticketing"    Click Ticketing Panel
     
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR

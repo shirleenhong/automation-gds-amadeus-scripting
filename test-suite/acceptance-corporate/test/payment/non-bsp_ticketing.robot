@@ -17,8 +17,6 @@ Verify That Non-BSP Ticketing Remarks Are Written For Single Segment
     Add Non-BSP Ticketing Details For Segment 2
     Verify That Supplier Code Default Value Is Correct For AC
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     [Teardown]    Close Browser
     
@@ -29,8 +27,6 @@ Verify That Non-BSP Ticketing Remarks Are Written For Multiple Segments
     Add Non-BSP Ticketing Details For Multiple Segments
     Verify That Supplier Code Default Value Is Correct For WS
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
     [Teardown]    Close Browser
 
@@ -40,8 +36,6 @@ Verify That Non-BSP Ticketing Remarks Without Ticket Number Are Written
     Move Single Passenger And Add Passive Segment With Airline Code MO
     Add Non-BSP Ticketing Details Without Ticket Number For Segment 2
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR 
     [Teardown]    Close Browser
    
@@ -53,8 +47,6 @@ Verify That Multiple Non-BSP Ticketing Remarks Are Written
     Click Save Button
     Add Non-BSP Ticketing Details For Segment 3
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
     [Teardown]    Close Browser
    
@@ -65,8 +57,6 @@ Verify That APAY Ticketing Remarks Are Written For Single Segment
     Add APAY Ticketing Details For Single Segment
     Verify That Supplier Code Default Value Is Correct For APAY
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
     [Teardown]    Close Browser
     
@@ -77,8 +67,6 @@ Verify That APAY Ticketing Remarks Are Written For Multiple Segments
     Add APAY Ticketing Details For Multiple Segments
     Verify That Supplier Code Default Value Is Correct For APAY
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
     [Teardown]    Close Browser
 
@@ -88,7 +76,5 @@ Verify That Non-BSP With APAY Ticketing Remarks Are Written
     Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
     Add Non-BSP and APAY Ticketing Detals For Multiple Segments
     Click Save Button
-    Populate Ticketing Panel
-    Finish PNR
     Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR
     [Teardown]    Close Browser

@@ -14,27 +14,21 @@ Verify That Reporting Remarks Are Written For Single Non-BSP Segment
     [Tags]    us13617
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Passive Segment With Airline Code AC
-    # Open CA Corporate Test
-    # Click Full Wrap
-    # Click Payment Panel
     Add Non-BSP Ticketing Details For Segment 2
     Click Save Button
-    Add Client Reporting Values For Non-BSP Segments
-    Finish PNR
+    Verify Client Reporting Fields For Non-BSP Segments
     Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
+    [Teardown]    Close Browser
    
 Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     [Tags]    us13617
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WS
-    # Open CA Corporate Test
-    # Click Full Wrap
-    # Click Payment Panel
     Add Non-BSP Ticketing Details For Multiple Segments
     Click Save Button
-    Add Client Reporting Values For Non-BSP Segments
-    Finish PNR
+    Verify Client Reporting Fields For Non-BSP Segments
     Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
+    [Teardown]    Close Browser
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
     [Tags]    us13616

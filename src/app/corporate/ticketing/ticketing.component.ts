@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { StaticValuesService } from '../../service/static-values.services';
 import { PnrService } from '../../service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
@@ -13,6 +14,7 @@ import { TicketModel } from 'src/app/models/pnr/ticket.model';
 })
 export class TicketingComponent implements OnInit {
 
+    DATE_PIPE = new DatePipe('en-US');
     oidDisplay: string;
     isOnHoldChecked: boolean = false;
     ticketForm: FormGroup;
@@ -25,13 +27,15 @@ export class TicketingComponent implements OnInit {
             officeId: new FormControl('', [Validators.required]),
             ticketDate: new FormControl('', [Validators.required]),
             pnrOnHold: new FormControl('', []),
-            tk: new FormControl('', [Validators.required])
+            tk: new FormControl('', [Validators.required]),
+            verifyAck: new FormControl('', [Validators.required]),
         });
 
     }
 
     ngOnInit() {
         this.loadOid();
+        this.loadDefaultDate();
         this.loadTKList();
         this.checkSegments();
 
@@ -68,6 +72,12 @@ export class TicketingComponent implements OnInit {
         }
 
         return oid;
+    }
+
+    private loadDefaultDate() {
+        const dateToday = this.DATE_PIPE.transform(new Date(), 'yyyy-MM-dd');
+        console.info('dateToday:', dateToday);
+        this.ticketForm.get('ticketDate').setValue(dateToday);
     }
 
     /**

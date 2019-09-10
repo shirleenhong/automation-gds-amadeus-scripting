@@ -28,14 +28,28 @@
             </div>
         </div>
 
+        <div *ngIf="!isOnHoldChecked">
+            <br />
+
+            <div class="row form-group">
+                <div class="col-7">
+                    <div>TK Line:</div>
+                    <select class="form-control " id="selTK" formControlName="tk" name="tk" required>
+                        <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <br />
 
         <div class="row form-group">
-            <div class="col-7" *ngIf="!isOnHoldChecked">
-                <div>TK Line:</div>
-                <select class="form-control " id="selTK" formControlName="tk" name="tk" required>
-                    <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
-                </select>
+            <div class="col-6">
+                <div>
+                    <label>
+                        <input id="chkVerifyAck" type="checkbox" name="verifyAck" formControlName="verifyAck" required /> I verify and acknowledge that all ticketing data are correct.
+                    </label>
+                </div>
             </div>
         </div>
     </form>

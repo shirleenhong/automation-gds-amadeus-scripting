@@ -24,7 +24,7 @@
   <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
     <div [formGroupName]="i" class="row">
       <div class="" style="width:3%;padding-left:10px">
-        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
+        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)" />
       </div>
 
       <div class="col-2" style="width:12%;text-align:left">
@@ -36,11 +36,17 @@
       </div>
 
       <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" required />
+        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" required (change)="validateFares(item)" />
       </div>
       <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="lowFareText" type="text" class="form-control" maxlength="55"
-          (change)="changeReasonCodes(item, i)" required />
+        <input
+          formControlName="lowFareText"
+          type="text"
+          class="form-control"
+          maxlength="55"
+          (change)="changeReasonCodes(item, i)"
+          required
+        />
       </div>
       <div class="col-3" style="width:12%;text-align:left">
         <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText" required>

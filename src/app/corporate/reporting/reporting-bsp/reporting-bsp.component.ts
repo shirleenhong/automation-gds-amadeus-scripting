@@ -80,9 +80,9 @@ export class ReportingBSPComponent implements OnInit {
   ): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
-      highFareText: new FormControl(highFare, [Validators.required]),
-      lowFareText: new FormControl(lowFare, [Validators.required]),
-      reasonCodeText: new FormControl(reasonCode, [Validators.required]),
+      highFareText: new FormControl(highFare),
+      lowFareText: new FormControl(lowFare),
+      reasonCodeText: new FormControl(reasonCode),
       chargeFare: new FormControl(chargeFare),
       chkIncluded: new FormControl(''),
       isExchange: new FormControl(isExchange)

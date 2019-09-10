@@ -27,12 +27,7 @@ export class ReportingBSPComponent implements OnInit {
   thresholdAmount = 0;
 
   // tslint:disable-next-line:max-line-length
-  constructor(
-    private fb: FormBuilder,
-    private pnrService: PnrService,
-    private ddbService: DDBService,
-    private utilHelper: UtilHelper
-  ) { }
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
     this.bspGroup = this.fb.group({
@@ -53,6 +48,10 @@ export class ReportingBSPComponent implements OnInit {
 
   addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
     const items = this.bspGroup.get('fares') as FormArray;
+
+    if (Number(highFare) < Number(chargeFare)) {
+      highFare = chargeFare;
+    }
 
     items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
     this.total = items.length;
@@ -103,7 +102,11 @@ export class ReportingBSPComponent implements OnInit {
       if (this.reasonCodes.length > 0) {
         this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
         reasonCode = this.getReasonCodeValue('E', currentIndex);
-        group.get('reasonCodeText').setValue(reasonCode);
+        if (reasonCode === '') {
+          group.get('reasonCodeText').setValue('E : Exchange');
+        } else {
+          group.get('reasonCodeText').setValue(reasonCode);
+        }
       }
 
       group.get('highFareText').setValue(chargeFare);
@@ -126,9 +129,7 @@ export class ReportingBSPComponent implements OnInit {
       group.setValue(defaultValue);
     }
 
-    this.utilHelper.validateAllFields(group);
-    // group.get('reasonCodeText').updateValueAndValidity();
-    // group.get('highFareText').updateValueAndValidity();
+    //this.utilHelper.validateAllFields(group);
     return group;
   }
 
@@ -199,6 +200,8 @@ export class ReportingBSPComponent implements OnInit {
           }
         }
       }
+
+      this.validateFares(group);
     }
   }
 
@@ -292,5 +295,39 @@ export class ReportingBSPComponent implements OnInit {
       }
     });
     return value;
+  }
+
+  checkChange(group) {
+    if (group.get('chkIncluded').value === true) {
+      this.addValidation(group, 'highFareText');
+      this.addValidation(group, 'lowFareText');
+      this.addValidation(group, 'reasonCodeText');
+      this.utilHelper.validateAllFields(group);
+    } else {
+      this.removeValidation(group, 'highFareText');
+      this.removeValidation(group, 'lowFareText');
+      this.removeValidation(group, 'reasonCodeText');
+    }
+  }
+
+  removeValidation(group: any, controlName: string) {
+    const control = group.get(controlName);
+    control.setValidators(null);
+    control.updateValueAndValidity();
+  }
+
+  addValidation(group: any, controlName: string) {
+    const control = group.get(controlName);
+    control.setValidators([Validators.required]);
+    control.updateValueAndValidity();
+  }
+
+  validateFares(group) {
+    const highFare = group.get('highFareText');
+    const lowFare = group.get('lowFareText');
+
+    if (Number(lowFare.value) > Number(highFare.value)) {
+      lowFare.setErrors({ incorrect: true });
+    }
   }
 }

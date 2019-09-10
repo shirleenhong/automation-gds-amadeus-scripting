@@ -76,7 +76,6 @@ export class TicketingComponent implements OnInit {
 
     private loadDefaultDate() {
         const dateToday = this.DATE_PIPE.transform(new Date(), 'yyyy-MM-dd');
-        console.info('dateToday:', dateToday);
         this.ticketForm.get('ticketDate').setValue(dateToday);
     }
 

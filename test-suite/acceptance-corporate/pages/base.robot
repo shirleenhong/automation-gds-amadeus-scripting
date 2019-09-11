@@ -18,6 +18,8 @@ ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
+${list_counselor_identity}    css=#selCounselorIdentity
+
 
 *** Keywords ***
 Enter Value
@@ -147,3 +149,16 @@ Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Ticketing
+
+Select Counselor Identity: ${identity}
+    Navigate To Page CWT Corporate
+    Select From List By Label    ${list_counselor_identity}     ${identity}
+    Set Test Variable    ${actual_counselor_identity}    ${identity}
+    
+Verify UDID 86 Remark Is Not Written In The PNR
+    Finish PNR
+    Verify Specific Remark Is Not Written In The PNR    RM *U86
+    
+Verify UDID 86 Remark Is Written Correctly In The PNR
+    Finish PNR
+    Verify Specific Remark Is Not Written In The PNR    RM *U86/-OVERRIDE ${actual_counselor_identity}

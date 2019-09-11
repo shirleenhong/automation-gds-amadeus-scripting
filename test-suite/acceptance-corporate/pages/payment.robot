@@ -108,6 +108,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
+    Set Test Variable    ${orig_tkt_number}    0987654321
     Set Test Variable    ${fare_type}    FLEX
     [TEARDOWN]    Take Screenshot
     

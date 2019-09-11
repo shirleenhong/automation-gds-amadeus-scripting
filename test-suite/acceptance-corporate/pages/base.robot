@@ -19,6 +19,9 @@ ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketi
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
 ${list_counselor_identity}    css=#selCounselorIdentity
+${input_ticketingDate}    css=#dtxtTicketDate
+${checkbox_onHold}    css=#chkOnHold
+${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
 
 *** Keywords ***
 Enter Value
@@ -108,6 +111,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment"    Navigate From Payment    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Reporting"   Navigate From Reporting    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Fees"    Navigate From Fees    ${destination_page}
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
@@ -134,6 +138,7 @@ Navigate From Reporting
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing"    Click Ticketing Panel
     
+ 
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
     Run Keyword If    "${pnr_details}" == "${EMPTY}"    Run Keywords        Switch To Graphic Mode    Get PNR Details
@@ -161,3 +166,13 @@ Verify UDID 86 Remark Is Not Written In The PNR
 Verify UDID 86 Remark Is Written Correctly In The PNR
     Finish PNR
     Verify Specific Remark Is Not Written In The PNR    RM *U86/-OVERRIDE ${actual_counselor_identity}
+    
+Click Fees Panel
+    Wait Until Element Is Visible    ${panel_fees}    60
+    Click Element    ${panel_fees}
+    Set Test Variable    ${current_page}    Fees
+    
+Navigate From Fees
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Fees"    Click Fees Panel
+    

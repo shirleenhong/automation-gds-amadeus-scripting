@@ -6,6 +6,7 @@ Library           Screenshot
 Library           DateTime
 Resource          amadeus.robot
 Resource          payment.robot
+Resource          ticketing.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -17,8 +18,8 @@ ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
-${input_ticketingDate}    css=#dtxtTicketDate
-${checkbox_onHold}    css=#chkOnHold
+# ${input_ticketingDate}    css=#dtxtTicketDate
+# ${checkbox_onHold}    css=#chkOnHold
 
 *** Keywords ***
 Enter Value
@@ -142,14 +143,7 @@ Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing"    Click Submit To PNR    ${close_corporate_test}
-    
-Fill Up Ticketing Panel With Default Values
-    Navigate To Page Ticketing
-    Assign Current Date
-    Enter Value    ${input_ticketingDate}     ${current_day}${current_month}${current_year}
-    Select Checkbox    ${checkbox_onHold}
-    Set Test Variable    ${ticketing_complete}    yes
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing"    Click Submit To PNR    ${close_corporate_test}    
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60

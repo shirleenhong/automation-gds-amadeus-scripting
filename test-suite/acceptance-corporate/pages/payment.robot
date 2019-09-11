@@ -54,6 +54,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Set Test Variable    ${tkt_number}    ${EMPTY}
     Set Test Variable    ${orig_tkt_number}    ${EMPTY}
     Set Test Variable    ${fare_type}    FLEX
+    [TEARDOWN]    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Navigate To Page Add Accounting Line
@@ -68,6 +69,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Set Test Variable    ${tkt_number}    1234567890
     Set Test Variable    ${orig_tkt_number}    0987654321
     Set Test Variable    ${fare_type}    FLEX
+    [TEARDOWN]    Take Screenshot
 
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Navigate To Page Add Accounting Line
@@ -81,6 +83,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Set Test Variable    ${tkt_number}    1234567890
     Set Test Variable    ${orig_tkt_number}    0987654321
     Set Test Variable    ${fare_type}    FLEX
+    [TEARDOWN]    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Navigate To Page Add Accounting Line
@@ -92,6 +95,7 @@ Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
     Set Test Variable    ${orig_tkt_number}    0987654321
+    [TEARDOWN]    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And Penalty
     Navigate To Page Add Accounting Line
@@ -105,6 +109,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
     Set Test Variable    ${fare_type}    FLEX
+    [TEARDOWN]    Take Screenshot
     
 # For Non-BSP Airline and APAY #  
 Add Non-BSP Ticketing Details For Segment ${segment_no} 
@@ -370,15 +375,19 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR 
-    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-${actual_supplier_code}/S2
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1111.20
     
 Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR 
-    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2-3
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2-3
+    ...     ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-${actual_supplier_code}/S2-3
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1111.20
     
@@ -395,7 +404,7 @@ Click Save Button
     Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
-Update Consultant Number to ${consultant_number}
+Update Consultant Number To ${consultant_number}
     Enter Value    ${input_consultantNo}    ${consultant_number}    
     Set Test Variable     ${consultant_number}     ${consultant_number}
     

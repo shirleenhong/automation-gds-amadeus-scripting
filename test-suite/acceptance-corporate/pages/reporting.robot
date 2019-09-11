@@ -51,6 +51,19 @@ Add Client Reporting Values For Multiple BSP Segment
     Enter Low Fare    678.00    3
     Select Reason Code    5 : Fare not in compliance    3
     
+Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
+    Navigate To Page Reporting
+    Wait Until Page Contains Element    ${tab_clientReporting}[2]${checkbox_clientReporting}    60
+    Select Checkbox    ${tab_clientReporting}[1]${checkbox_clientReporting}
+    Select Checkbox    ${tab_clientReporting}[2]${checkbox_clientReporting}
+    Enter Full Fare    1123.50
+    Enter Low Fare    300.00
+    Select Reason Code    C : Low Cost Supplier Fare Declined
+    Enter Full Fare    999.50    2
+    Enter Low Fare    123.00    2
+    Select Reason Code    K : Client Negotiated Fare Declined    2
+    Take Screenshot
+    
 Verify That Client Reporting Remarks Are Written In The PNR For Single TST
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RM *FF/-1123.50/S2
@@ -68,6 +81,15 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Verify Specific Remark Is Written In The PNR    RM *FF/-790.00/S5
     Verify Specific Remark Is Written In The PNR    RM *LP/-678.00/S5
     Verify Specific Remark Is Written In The PNR    RM *FS/-5/S5
+
+Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segments And Multiple TSTs
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-1123.50/S3,5-6
+    Verify Specific Remark Is Written In The PNR    RM *LP/-300.00/S3,5-6
+    Verify Specific Remark Is Written In The PNR    RM *FS/-C/S3,5-6
+    Verify Specific Remark Is Written In The PNR    RM *FF/-999.50/S2,4
+    Verify Specific Remark Is Written In The PNR    RM *LP/-123.00/S2,4
+    Verify Specific Remark Is Written In The PNR    RM *FS/-K/S2,4
 
 Verify Client Reporting Fields For Non-BSP Segments
     Click Reporting Panel
@@ -109,3 +131,9 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purc
     Verify Specific Remark Is Written In The PNR    RM *LP/-127.25/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
     Switch To Command Page
+    
+Verify Accounting Remark Is Written Correctly For Non BSP Exchange
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-1111.20/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-1111.20/S2
+    Verify Specific Remark Is Written In The PNR    RM *FS/-E/S2

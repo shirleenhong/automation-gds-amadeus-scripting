@@ -38,8 +38,10 @@ Verify That Client Reporting Are Correct For Exchange PNR
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
     Create Exchange PNR In The GDS
+    Verify Client Reporting Fields For Exchange PNR
     Select Client Reporting Fields To Be Written
     Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Delete Fare and Itinerary
     Handle Simultaneous Changes To PNR
     # [Teardown]    Close Browser
+    

@@ -16,7 +16,7 @@ Verify That Reporting Remarks Are Written For Single Non-BSP Segment
     Move Single Passenger And Add Passive Segment With Airline Code AC
     Add Non-BSP Ticketing Details For Segment 2
     Click Save Button
-    Verify Client Reporting Fields For Non-BSP Segments
+    Verify Client Reporting Fields For Non-BSP
     Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     [Teardown]    Close Browser
    
@@ -26,7 +26,7 @@ Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WS
     Add Non-BSP Ticketing Details For Multiple Segments
     Click Save Button
-    Verify Client Reporting Fields For Non-BSP Segments
+    Verify Client Reporting Fields For Non-BSP
     Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
     [Teardown]    Close Browser
     

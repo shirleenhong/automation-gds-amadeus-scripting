@@ -93,17 +93,30 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segment
     Verify Specific Remark Is Written In The PNR    RM *LP/-123.00/S2,4
     Verify Specific Remark Is Written In The PNR    RM *FS/-K/S2,4
 
-Verify Client Reporting Fields For Non-BSP Segments
-    Click Reporting Panel
-    Click Element    ${tab_nonBsp}
+Verify Client Reporting Fields For Exchange PNR
+    Navigate To Page Reporting 
     Wait Until Element Is Visible    ${input_full_fare}
-    Element Should Be Visible    ${input_full_fare}   
-    Element Should Be Visible    ${input_low_fare}
-    Element Should Be Visible    ${list_reason_code}
+    ${actual_full_fare}    Get Value    ${input_full_fare}   
+    ${actual_low_fare}    Get Value   ${input_low_fare}
+    ${actual_reason_code}    Get Value    ${list_reason_code}
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_full_fare}    120.00    
+    Run Keyword And Continue On Failure    Should Be Equal   ${actual_low_fare}   120.00 
+    Run Keyword And Continue On Failure    Should Be Equal   ${actual_reason_code}    E : Exchange
     Take Screenshot    
     
-Select Client Reporting Fields To Be Written
-    Navigate To Page Reporting   
+Verify Client Reporting Fields For Non-BSP
+    Navigate To Page Reporting 
+    Click Element    ${tab_nonBsp}
+    Wait Until Element Is Visible    ${input_full_fare}
+    ${actual_full_fare}    Get Value    ${input_full_fare}   
+    ${actual_low_fare}    Get Value   ${input_low_fare}
+    ${actual_reason_code}    Get Value    ${list_reason_code}
+    Run Keyword And Continue On Failure    Should Be Equal   ${actual_full_fare}    760.00    
+    Run Keyword And Continue On Failure    Should Be Equal   ${actual_low_fare}   760.00 
+    Run Keyword And Continue On Failure    Should Be Equal   ${actual_reason_code}    L- Lower Fare 
+    Take Screenshot   
+    
+Select Client Reporting Fields To Be Written  
     Wait Until Page Contains Element    ${checkbox_clientReporting}
     Select Checkbox    ${tab_clientReporting}[1]${checkbox_clientReporting}
     Take Screenshot

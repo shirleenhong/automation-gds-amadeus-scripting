@@ -125,14 +125,16 @@ Get PNR Details
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
-    Set Suite Variable    ${pnr_details}
-    [Teardown]    Take Screenshot
+    Set Test Variable    ${pnr_details}    ${pnr_details}
+    [Teardown]    Run Keywords    Take Screenshot    Switch To Command Page
 
 Switch To Command Page
     Click Element    ${close_cryptic_display}
     Wait Until Page Contains Element    ${button_cryptic}    60
     Click Element    ${button_cryptic}
     Wait Until Element Is Visible    ${input_commandText}    60
+    Log    ${pnr_details}
+    Set Test Variable    ${current_page}    Amadeus
     [Teardown]    Take Screenshot
 
 Switch To Graphic Mode
@@ -161,8 +163,6 @@ Add Multiple Passive Air Segments In The GDS With Different Airline Codes
 
 Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
-    Wait Until Page Contains Element    ${popUp_pnr_display}    30
-    ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
     Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ${expected_remark}

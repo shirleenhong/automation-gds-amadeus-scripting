@@ -127,7 +127,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
         break;
       case '109000':
       case '227000':
-        this.enableFormControls(['modePayment'], false);
+        this.enableFormControls(['modePayment'], true);
         this.enablePayment = false;
         break;
       default:

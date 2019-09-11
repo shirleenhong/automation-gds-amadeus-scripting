@@ -16,6 +16,7 @@ export class MessageComponent implements OnInit {
   response = '';
   iconClass = '';
   paramValue: any;
+  note = '';
   constructor() {}
   ngOnInit() {
     this.setMessageType(MessageType.Default);

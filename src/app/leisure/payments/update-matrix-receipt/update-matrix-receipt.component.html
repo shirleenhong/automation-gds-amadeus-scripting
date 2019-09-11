@@ -37,7 +37,7 @@
           list="dynamicPassengerName" [(ngModel)]="matrixReceipt.passengerName" required
           [ngClass]="{ 'is-invalid': f.passengerName.touched && f.passengerName.invalid }" />
         <datalist id="dynamicPassengerName">
-          <option *ngFor="let pass of passengerList" [value]="pass.fullname">{{pass.surname}}-{{pass.firstname}}
+          <option *ngFor="let pass of passengerList" [value]="pass.fullname">{{pass.fullname}}
           </option>
         </datalist>
       </div>

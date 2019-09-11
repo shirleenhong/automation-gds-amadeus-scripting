@@ -9,7 +9,7 @@ import { ReportingNonbspComponent } from 'src/app/corporate/reporting/reporting-
   providedIn: 'root'
 })
 export class ReportingRemarkService {
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
   WriteBspRemarks(rbc: ReportingBSPComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;
@@ -25,18 +25,18 @@ export class ReportingRemarkService {
 
   private writeHighLowFare(items: any, write: boolean) {
     for (const group of items.controls) {
-      const highFareRemark = new Map<string, string>();
-      const lowFareRemark = new Map<string, string>();
-      const airReasonCodeRemark = new Map<string, string>();
-      const segments: string[] = group.get('segment').value.split(',');
-      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
-
-      highFareRemark.set('CAAirHighFare', group.get('highFareText').value);
-      lowFareRemark.set('CAAirLowFare', group.get('lowFareText').value);
-      const output = group.get('reasonCodeText').value.split(':');
-      airReasonCodeRemark.set('CAAirRealisedSavingCode', output[0].trim());
-
       if (group.get('chkIncluded').value === true || write) {
+        const highFareRemark = new Map<string, string>();
+        const lowFareRemark = new Map<string, string>();
+        const airReasonCodeRemark = new Map<string, string>();
+        const segments: string[] = group.get('segment').value.split(',');
+        const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+
+        highFareRemark.set('CAAirHighFare', group.get('highFareText').value);
+        lowFareRemark.set('CAAirLowFare', group.get('lowFareText').value);
+        const output = group.get('reasonCodeText').value.split(':');
+        airReasonCodeRemark.set('CAAirRealisedSavingCode', output[0].trim());
+
         this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
@@ -52,5 +52,12 @@ export class ReportingRemarkService {
     });
 
     return segmentrelate;
+  }
+
+  WriteEscOFCRemark(value: string) {
+    debugger;
+    const escOfc = new Map<string, string>();
+    escOfc.set('CAOverrideValue', 'OVERRIDE ' + value);
+    this.remarksManager.createPlaceholderValues(escOfc);
   }
 }

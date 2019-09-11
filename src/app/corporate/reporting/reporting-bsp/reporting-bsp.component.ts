@@ -16,6 +16,7 @@ declare var smartScriptSession: any;
   encapsulation: ViewEncapsulation.None
 })
 export class ReportingBSPComponent implements OnInit {
+  isDoneLoading = false;
   @Input()
   reasonCodes: Array<ReasonCode[]> = [];
   bspGroup: FormGroup;
@@ -30,6 +31,8 @@ export class ReportingBSPComponent implements OnInit {
   constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
+    debugger;
+    this.isDoneLoading = false;
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
     });
@@ -37,7 +40,7 @@ export class ReportingBSPComponent implements OnInit {
     this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
-    this.drawControls();
+    this.getTstDetails();
   }
 
   removeFares(i) {
@@ -75,8 +78,8 @@ export class ReportingBSPComponent implements OnInit {
     lowFare: string,
     reasonCode: string,
     chargeFare: string,
-    isExchange?: boolean,
-    defaultValue?: any
+    isExchange?: boolean
+    //defaultValue?: any
   ): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
@@ -92,8 +95,8 @@ export class ReportingBSPComponent implements OnInit {
     if (this.thresholdAmount > 0) {
       if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
         if (this.reasonCodes.length > 0) {
-          reasonCode = this.getReasonCodeValue('7', currentIndex);
-          group.get('reasonCodeText').setValue(reasonCode);
+          //reasonCode = this.getReasonCodeValue('7', currentIndex);
+          group.get('reasonCodeText').setValue('7');
         }
       }
     }
@@ -101,12 +104,12 @@ export class ReportingBSPComponent implements OnInit {
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
         this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
-        reasonCode = this.getReasonCodeValue('E', currentIndex);
-        if (reasonCode === '') {
-          group.get('reasonCodeText').setValue('E : Exchange');
-        } else {
-          group.get('reasonCodeText').setValue(reasonCode);
-        }
+        //reasonCode = this.getReasonCodeValue('7', currentIndex);
+        // if (reasonCode === '') {
+        //   group.get('reasonCodeText').setValue('E : Exchange');
+        // } else {
+        group.get('reasonCodeText').setValue('E');
+        // }
       }
 
       group.get('highFareText').setValue(chargeFare);
@@ -125,11 +128,10 @@ export class ReportingBSPComponent implements OnInit {
       }
     }
 
-    if (defaultValue !== undefined && defaultValue !== null) {
-      group.setValue(defaultValue);
-    }
+    // if (defaultValue !== undefined && defaultValue !== null) {
+    //   group.setValue(defaultValue);
+    // }
 
-    //this.utilHelper.validateAllFields(group);
     return group;
   }
 
@@ -139,18 +141,26 @@ export class ReportingBSPComponent implements OnInit {
     this.lowFareInt = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_Calculation);
   }
 
-  async drawControls() {
+  async getTstDetails() {
     if (this.pnrService.tstObj.length === undefined) {
-      this.populateData(this.pnrService.tstObj);
+      this.populateData(this.pnrService.tstObj, 1, 1);
+      this.isDoneLoading = true;
     } else {
       const tsts = this.pnrService.tstObj;
+      let index = 1;
       for await (const p of tsts) {
-        this.populateData(p);
+        this.populateData(p, index, tsts.length);
+        index = index + 1;
       }
     }
+
+    // this.tstModels.forEach((e) => {
+    //   this.addFares(e.segmentLineNo, e.highFare, e.lowFare, '', e.chargeFare, e.isExchange);
+    // });
+    //this.isDoneLoading = true;
   }
 
-  async populateData(tst) {
+  async populateData(tst, index, tstCount: number) {
     const fareInfo = tst.fareDataInformation.fareDataSupInformation;
     const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
     const segmentsInFare = this.getSegment(tst);
@@ -169,7 +179,12 @@ export class ReportingBSPComponent implements OnInit {
     const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
 
     this.reasonCodes.push([]);
+
     this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
+
+    if (index === tstCount) {
+      this.isDoneLoading = true;
+    }
   }
 
   insertSegment(command, segmentLineNo): string {
@@ -181,6 +196,7 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   changeReasonCodes(group: FormGroup, indx: number) {
+    debugger;
     if (indx >= 0) {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
@@ -195,8 +211,9 @@ export class ReportingBSPComponent implements OnInit {
       if (this.thresholdAmount > 0) {
         if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
           if (this.reasonCodes.length > 0) {
-            const reasonCode = this.getReasonCodeValue('7', indx);
-            group.get('reasonCodeText').patchValue(reasonCode);
+            //const reasonCode = this.getReasonCodeValue('7', indx);
+            //group.get('reasonCodeText').patchValue(reasonCode);
+            group.get('reasonCodeText').patchValue('7');
           }
         }
       }
@@ -311,23 +328,31 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   removeValidation(group: any, controlName: string) {
+    debugger;
     const control = group.get(controlName);
     control.setValidators(null);
     control.updateValueAndValidity();
   }
 
   addValidation(group: any, controlName: string) {
+    debugger;
     const control = group.get(controlName);
     control.setValidators([Validators.required]);
     control.updateValueAndValidity();
   }
 
   validateFares(group) {
+    debugger;
     const highFare = group.get('highFareText');
     const lowFare = group.get('lowFareText');
+    const chargeFare = group.get('chargeFare');
 
     if (Number(lowFare.value) > Number(highFare.value)) {
       lowFare.setErrors({ incorrect: true });
+    }
+
+    if (Number(highFare.value) > Number(chargeFare.value)) {
+      highFare.setErrors({ incorrect: true });
     }
   }
 }

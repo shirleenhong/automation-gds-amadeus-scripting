@@ -35,11 +35,11 @@ export class SegmentSelectComponent
   segmentGroup: FormGroup;
   segmentList = [];
   segmentSelected = [];
-  
-  propagateChange: any = () => {};
-  validateFn: any = () => {};
-  onTouched: any = () => {};
-  onChange: any = () => {};
+
+  propagateChange: any = () => { };
+  validateFn: any = () => { };
+  onTouched: any = () => { };
+  onChange: any = () => { };
 
   writeValue(obj: any): void {
     this.segmentGroup.get('segment').setValue(obj);
@@ -100,5 +100,9 @@ export class SegmentSelectComponent
 
     this.value = this.segmentSelected.join(',');
     this.segmentGroup.get('segment').setValue(this.val);
+  }
+
+  segmentChecked(item) {
+    return (this.val ? this.val.split(',').indexOf(item.lineNo) >= 0 : false);
   }
 }

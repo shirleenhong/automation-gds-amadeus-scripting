@@ -16,7 +16,7 @@ export class RemarksManagerApiService {
   isTokenExpired = true;
   token: string;
 
-  constructor(private httpClient: HttpClient, private pnrService: PnrService) {}
+  constructor(private httpClient: HttpClient, private pnrService: PnrService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -48,11 +48,13 @@ export class RemarksManagerApiService {
 
   async getPnrMatchedPlaceHolderValues() {
     const param = this.getPnrRequestParam();
+    console.log(JSON.stringify(param));
     return await this.postRequest(common.matchedPlacholderValueService, param);
   }
 
   async getPnrAmadeusAddmultiElementRequest(placeholders: Array<PlaceholderValues>) {
     const param = this.getPnrRequestParam(placeholders);
+    console.log(JSON.stringify(param));
     return await this.postRequest(common.pnrAmadeusRequestService, param);
   }
 
@@ -76,13 +78,20 @@ export class RemarksManagerApiService {
   }
 
   getPnrRequestParam(placeholders?: Array<PlaceholderValues>) {
-    const phvalues = placeholders ? placeholders.map((x) => x.toJsonObject()) : null;
+    let phvalues = null;
+    let language = 'en-GB';
+    if (placeholders) {
+      phvalues = placeholders ? placeholders.map((x) => x.toJsonObject()) : null;
+      language = this.pnrService.getLanguage();
+    }
+
     return {
       pnr: this.pnrService.pnrResponse,
       hierarchyParams: {
         clientSubUnitGuid: this.pnrService.getClientSubUnit(),
         gdsCode: '1A',
-        latestVersionOnly: true
+        latestVersionOnly: true,
+        languageCode: language
       },
       placeholders: phvalues,
       isBeginPnr: false

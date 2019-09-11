@@ -4,7 +4,6 @@
       <th scope="col">#</th>
       <th scope="col">Passenger</th>
       <th scope="col">Supplier Code</th>
-      <th scope="col">FOP</th>
       <th scope="col">Base Amount</th>
       <th scope="col">GST</th>
       <th scope="col">HST</th>
@@ -19,13 +18,13 @@
       <td>{{ r.tkMacLine }}</td>
       <td>{{ r.passengerNo }}</td>
       <td>{{ r.supplierCodeName }}</td>
-      <td>{{ r.fop }}</td>
       <td>{{ r.baseAmount }}</td>
       <td>{{ r.gst }}</td>
       <td>{{ r.hst }}</td>
       <td>{{ r.qst }}</td>
       <td>{{ r.commisionWithoutTax }}</td>
       <td>{{ r.otherTax }}</td>
+
       <td>
         <i class="fas fa-edit" (click)="updateItem(r)" *ngIf="r.supplierCodeName !== 'A22'"></i>
         &nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt" (click)="deleteItem(r)"></i>
@@ -36,7 +35,7 @@
 </table>
 
 <div class="row">
-  <div class="col">
+  <div class="col" *ngIf="!isPassPurchase">
     <button (click)="addAccountingRemarks()">Add Accounting Line</button>
   </div>
 </div>

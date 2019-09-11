@@ -5,6 +5,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { interval } from 'rxjs';
 import { StaticValuesService } from './static-values.services';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
+import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-missed-saving-threshold.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,9 +20,11 @@ export class DDBService implements OnInit {
   servicingOption = [];
   airTravelPortInformation = [];
   reasonCodeList = Array<ReasonCode>();
-  ngOnInit(): void { }
+  airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  ngOnInit(): void {}
+
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -67,23 +71,14 @@ export class DDBService implements OnInit {
       });
   }
 
-  async sample() {
-    this.getRequest(common.travelportService + 'MNL').then(
-      (x) => {
-        alert(JSON.stringify(x));
-      },
-      (err) => {
-        console.log(JSON.stringify(err));
-      }
-    );
-  }
-
   async getAllServicingOptions(clientSubUnit) {
     if (this.servicingOption.length === 0) {
       await this.getRequest(common.servicingOptionService + clientSubUnit + '&GDSCode=1A').then(
-        (x) => {
+        (response) => {
           this.servicingOption = [];
-          this.servicingOption = x.ServiceOptionDetails;
+          if (response) {
+            this.servicingOption = response.ServiceOptionDetails;
+          }
         },
         (err) => {
           console.log(JSON.stringify(err));
@@ -169,17 +164,37 @@ export class DDBService implements OnInit {
     return await this.getRequest(common.configurationParameterService + '?ConfigurationParameterName=' + configName);
   }
 
-  async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
-    this.reasonCodeList = [];
-    await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then((response) => {
-      response.ReasonCodeItems.forEach((reasonJson) => {
-        this.reasonCodeList.push(new ReasonCode(reasonJson));
-      });
-    });
+  async getAirPolicyMissedSavingThreshold(subUnitGuid: string) {
+    await this.getRequest(common.airMissedSavingThresholdService + '?TripTypeId=1&ClientSubUnitGuid=' + subUnitGuid).then(
+      (policyThreshold) => {
+        if (policyThreshold) {
+          this.airMissedSavingPolicyThresholds = policyThreshold.PolicyAirMissedSavingsThresholdGroupItems.map(
+            (policy) => new PolicyAirMissedSavingThreshold(policy)
+          );
+        }
+      }
+    );
   }
 
-  getReasonCodeByTypeId(ids: any) {
-    return this.reasonCodeList.filter((e) => ids.indexOf(e.reasonCodeTypeId));
+  async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
+    this.reasonCodeList = [];
+    await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
+      (response) => {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          this.reasonCodeList.push(new ReasonCode(reasonJson));
+        });
+      }
+    );
+  }
+
+  getReasonCodeByTypeId(ids: number[], language: string, productID: number): Array<ReasonCode> {
+    // const reasonCode = new  ReasonCode(any);
+    // reasonCode.productId = 1;
+    // reasonCode.reasonCode = '';
+    // this.reasonCodeList.push(reasonCode);
+    return this.reasonCodeList.filter(
+      (e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language) && e.productId === productID
+    );
   }
   // getReasonCodeByTypeId(integer[]) {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
@@ -281,8 +296,23 @@ export class DDBService implements OnInit {
     }
   }
 
+  isPnrDomestic() {
+    const countries = [];
+    this.airTravelPortInformation.forEach((port) => {
+      if (countries.indexOf(port.countryCode) === -1) {
+        if (port.countryCode !== 'CA' && port.countryCode !== 'US') {
+          countries.push(port.countryCode);
+        }
+      }
+    });
+    if (countries.length > 0) {
+      return false;
+    }
+    return true;
+  }
+
   getServicingOptionValue(soId) {
-    return this.servicingOption.find((x) => x.ServiceItemId === soId);
+    return this.servicingOption.find((x) => x.ServiceOptionId === soId);
   }
 
   getCityCountry(search: string) {

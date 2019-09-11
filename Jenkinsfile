@@ -20,7 +20,7 @@ pipeline {
   }
   // General Options
   options {
-      buildDiscarder(logRotator(daysToKeepStr: '1', numToKeepStr: '5'))
+      buildDiscarder(logRotator(daysToKeepStr: '5', numToKeepStr: '10'))
   }
 
   parameters {

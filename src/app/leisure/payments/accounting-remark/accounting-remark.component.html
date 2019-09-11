@@ -29,6 +29,7 @@
       <td>
         <i class="fas fa-edit" (click)="updateItem(r)" *ngIf="r.supplierCodeName !== 'A22'"></i>
         &nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt" (click)="deleteItem(r)"></i>
+        &nbsp;&nbsp;&nbsp;<i class="far fa-copy" (click)="copyItem(r)" *ngIf="r.accountingTypeRemark === '1'"></i>
       </td>
     </tr>
   </tbody>
@@ -59,7 +60,8 @@
         Exclusive Property ?
       </div>
       <div class="col">
-        <select class="form-control" formControlName="exclusiveProperty" name="exclusiveProperty" id="exclusiveProperty">
+        <select class="form-control" formControlName="exclusiveProperty" name="exclusiveProperty"
+          id="exclusiveProperty">
           <option>YES</option>
           <option>NO</option>
         </select>
@@ -71,7 +73,8 @@
         Hotel/Property Name :
       </div>
       <div class="col">
-        <input class="form-control" type="text" id="propertyName" name="propertyName" formControlName="propertyName" maxlength="35" />
+        <input class="form-control" type="text" id="propertyName" name="propertyName" formControlName="propertyName"
+          maxlength="35" />
       </div>
     </div>
 
@@ -92,14 +95,8 @@
         Price vs Other Supplier :
       </div>
       <div class="col">
-        <input
-          class="form-control"
-          type="text"
-          id="priceVsSupplier"
-          name="priceVsSupplier"
-          formControlName="priceVsSupplier"
-          maxlength="35"
-        />
+        <input class="form-control" type="text" id="priceVsSupplier" name="priceVsSupplier"
+          formControlName="priceVsSupplier" maxlength="35" />
       </div>
     </div>
 

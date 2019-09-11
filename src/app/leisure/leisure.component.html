@@ -26,11 +26,11 @@
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="far fa-envelope-open"></i> Itinerary and Queue
+        <i class="fas fa-download"></i> Send to Matrix
         <i [ngClass]="validModel.itineraryValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
-      <app-itinerary-and-queue></app-itinerary-and-queue>
+      <app-matrix-invoice> </app-matrix-invoice>
     </accordion-group>
   </accordion>
   <br />
@@ -87,21 +87,21 @@
   </div>
 </div>
 
-<div *ngIf="workflow === 'invoice'">
+<div *ngIf="workflow === 'sendItinerary'">
   <accordion>
     <accordion-group [panelClass]="'customClass'" [isOpen]="true">
       <div accordion-heading>
-        <i class="fas fa-list-alt"></i> Send Invoice / Itinerary
+        <i class="far fa-envelope-open"></i> Itinerary and Queue
         <span class="cwt-logo"></span>
       </div>
-      <app-matrix-invoice> </app-matrix-invoice>
+      <app-itinerary-and-queue></app-itinerary-and-queue>
     </accordion-group>
   </accordion>
   <br />
   <div class="form-group  row">
     <div class="col">
-      <button class="leisureBtnSubmit" (click)="SendInvoiceItinerary()">
-        Send Invoice/Itinerary
+      <button class="leisureBtnSubmit" (click)="SendItineraryAndQueue()">
+        Send Itinerary and Queue
       </button>
       <button class="backMain" (click)="back()">Back To Main Menu</button>
     </div>
@@ -132,8 +132,8 @@
       </button>
     </div>
     <div *ngIf="invoiceEnabled">
-      <button class="leisureButton btnMenu" (click)="sendInvoice()">
-        Send Invoice/Itinerary
+      <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
+        Itinerary and Queue
       </button>
     </div>
     <div>
@@ -142,9 +142,7 @@
       </button>
     </div>
   </div>
-  <div class="version" *ngIf="errorPnrMsg == ''">
-    version {{version}}
-  </div>
+  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
   <div class="loader" *ngIf="errorPnrMsg != ''">
     {{ errorPnrMsg }}
   </div>

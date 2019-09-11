@@ -16,6 +16,7 @@ import { MessageType } from 'src/app/shared/message/MessageType';
 export class AccountingRemarkComponent implements OnInit {
   @Input()
   accountingRemarks = new Array<MatrixAccountingModel>();
+  accountingRemarksToDelete: MatrixAccountingModel[] = [];
   modalRef: BsModalRef;
   accountingForm: FormGroup;
   isAd1SwgSupplier = false;
@@ -33,7 +34,7 @@ export class AccountingRemarkComponent implements OnInit {
     private pnrService: PnrService,
     private fb: FormBuilder,
     private utilHelper: UtilHelper
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.accountingRemarks = this.pnrService.getAccountingRemarks();
@@ -82,6 +83,7 @@ export class AccountingRemarkComponent implements OnInit {
           const acc = this.modalRef.content.accountingRemark;
           if (!this.isAddNew) {
             const cur = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine);
+
             if (
               cur.accountingTypeRemark === 'NAE' &&
               cur.supplierCodeName !== 'ACY' &&
@@ -89,18 +91,19 @@ export class AccountingRemarkComponent implements OnInit {
               Number(acc.penaltyBaseAmount) > 0
             ) {
               this.accountingRemarks.push(this.getA22Account(acc));
-            } else if (acc.supplierCodeName === 'ACY' && cur.supplierCodeName === 'ACY') {
+            } else if (acc.supplierCodeName === 'ACY' && cur.supplierCodeName === 'ACY' && acc.accountingTypeRemark === 'NAE') {
               const a22 = this.accountingRemarks.find((x) => x.tkMacLine === acc.tkMacLine + 1);
               if (Number(acc.penaltyBaseAmount) > 0) {
                 this.getA22Account(acc, a22);
               } else {
                 const indx = this.accountingRemarks.indexOf(a22);
                 if (indx >= 0) {
+                  this.accountingRemarksToDelete.push(a22);
                   this.accountingRemarks.splice(indx, 1);
                 }
               }
             }
-
+            acc.status = 'UPDATED';
             this.utilHelper.modelCopy(acc, cur);
           } else {
             this.accountingRemarks.push(acc);
@@ -113,6 +116,7 @@ export class AccountingRemarkComponent implements OnInit {
         }
         if (this.modalRef.content.callerName === 'Accounting' && this.modalRef.content.response === 'YES') {
           const r = this.modalRef.content.paramValue;
+          this.accountingRemarksToDelete.push(r);
           this.accountingRemarks.splice(this.accountingRemarks.indexOf(r), 1);
           let i = 1;
           this.accountingRemarks.forEach((x) => {
@@ -144,6 +148,7 @@ export class AccountingRemarkComponent implements OnInit {
   }
 
   updateItem(r: MatrixAccountingModel) {
+    // r.status = 'UPDATED';
     this.isAddNew = false;
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
       backdrop: 'static'
@@ -160,12 +165,32 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.loadData();
   }
 
+  copyItem(r: MatrixAccountingModel) {
+    this.isAddNew = true;
+    this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
+      backdrop: 'static'
+    });
+    this.modalRef.content.title = 'Copy Accounting Remarks';
+    this.modalRef.content.accountingRemark = new MatrixAccountingModel();
+    this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemark);
+    const code = r.supplierCodeName;
+    this.modalRef.content.isAddNew = false;
+    this.modalRef.content.isCopy = true;
+    this.modalRef.content.accountingRemark.supplierCodeName = code;
+    this.modalRef.content.accountingRemark.tkMacLine = this.accountingRemarks.length + 1;
+    this.modalRef.content.accountingRemark.status = 'ADDED';
+    this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
+    this.modalRef.content.FormOfPaymentChange(r.fop);
+    this.modalRef.content.loadData();
+  }
+
   get f() {
     return this.accountingForm.controls;
   }
 
   addAccountingRemarks() {
     const accountingRemark = new MatrixAccountingModel();
+    accountingRemark.status = 'ADDED';
     this.modalRef = this.modalService.show(UpdateAccountingRemarkComponent, {
       backdrop: 'static'
     });

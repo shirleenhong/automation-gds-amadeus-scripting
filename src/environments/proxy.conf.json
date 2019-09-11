@@ -10,5 +10,11 @@
     "pathRewrite": {
       "^/service/repo/powerbaseaws": "/powerbase-api"
     }
+  },
+  "/service/ap/remarks-manager/*": {
+    "target": "https://test.int.us-west-2.bpg-aws-cwt.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
   }
 }

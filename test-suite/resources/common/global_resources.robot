@@ -9,9 +9,9 @@ Resource          cancel.robot
 Resource          passive.robot
 Resource          visa_and_passport.robot
 Resource          cwt_itinerary.robot
-Resource          ../../acceptance_tests/amadeus_ca_resource.robot
+Resource          ../../acceptance-leisure/amadeus_ca_resource.robot
 
 *** Variables ***
 ${env}            Test
-${username}       U002MCC
-${password}       Amasel03@
+${username}       UXXXXX
+${password}       Password

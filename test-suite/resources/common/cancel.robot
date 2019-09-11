@@ -31,7 +31,7 @@ Enter Ticket Number For Refund
 
 Enter Coupon Number For Refund
     [Arguments]    ${coupon_field_order}    ${coupon_refund}
-    Input Text    xpath=//div[@ng-reflect-name='tickets'][${coupon_field_order}]//input[@formcontrolname='coupon']    ${coupon_refund}
+    Input Text    xpath=//div[@formarrayname='tickets'][${coupon_field_order}]//input[@formcontrolname='coupon']    ${coupon_refund}
     [Teardown]    Take Screenshot
 
 Click Cancel Segments Button
@@ -59,7 +59,7 @@ Select Reason For Cancel
 
 Enter AC Ticket Number
     [Arguments]    ${ac_ticket_number}
-    Input Text    css=#acTicketNo    ${ac_ticket_number}
+    Input Text    //input[@formcontrolname='acTicketNo']    ${ac_ticket_number}
 
 Unselect Passive Segment
     [Arguments]    ${passive_segment_order}
@@ -83,6 +83,12 @@ Select Cancel Follow-Up Option
     [Arguments]    ${followup_option}
     Select From List By Label    css=#followUpOption    ${followup_option}
 
+Select Passenger Name For Cancel
+    [Arguments]    ${passenger_name}
+    Click Element    css=#acpassengerNo
+    Click Element    xpath=//option[contains(text(), '${passenger_name}')]
+    Press Key    css=#acpassengerNo    \\09
+
 Enter Branch Number
     [Arguments]    ${branch_number}
     Input Text    css=#branch    ${branch_number}
@@ -96,7 +102,7 @@ Enter Passenger Name
     [Arguments]    ${passenger_name}
     Input Text    css=#passengerName    ${passenger_name}
 
-Enter CFA 
+Enter CFA
     [Arguments]    ${cfa}
     Input Text    css=#cfa    ${cfa}
 
@@ -141,7 +147,7 @@ Enter Comments
     Input Text    css=#comments    ${refund_comment}
     [Teardown]    Take Screenshot
 
-Select AC Cancel Check 
+Select AC Cancel Check
     [Arguments]    ${ac_cancel_check}
     Select From List By Label    css=#cancelProcess    ${ac_cancel_check}
     [Teardown]    Take Screenshot
@@ -149,6 +155,7 @@ Select AC Cancel Check
 Enter AC Flight Number
     [Arguments]    ${ac_flight}
     Input Text    css=#acFlightNo    ${ac_flight}
+    Click Element    xpath=//div[@ng-reflect-name='tickets'][1]//input[@formcontrolname='ticket']
     [Teardown]    Take Screenshot
 
 Select Other Reason For Cancel
@@ -157,9 +164,9 @@ Select Other Reason For Cancel
     [Teardown]    Take Screenshot
 
 Enter Jury Date Month
-    [Arguments]    ${jury_month}  
+    [Arguments]    ${jury_month}
     Input Text    css=#acCancelMonth    ${jury_month}
 
 Enter Jury Date Year
-    [Arguments]    ${jury_year}  
+    [Arguments]    ${jury_year}
     Input Text    css=#acCancelYear    ${jury_year}

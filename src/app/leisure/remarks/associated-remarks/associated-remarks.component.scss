@@ -1,5 +1,5 @@
 .associatedContainer{
-    padding: 5px;
+    padding: 20px;
 }
 
 .note{
@@ -10,4 +10,9 @@
 .emphasize{
     font-size: 12px;
     font-weight: bold;
+}
+
+.form-control {
+    width: unset;
+    display: unset;
 }

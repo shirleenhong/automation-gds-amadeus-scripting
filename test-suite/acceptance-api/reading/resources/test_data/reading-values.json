@@ -1,0 +1,7288 @@
+{
+	"PNR with GUID A:F9F84": {
+		"request": {
+			"pnr": {
+				"tstData": {
+					"fareData": {
+						"taxFields": [
+							{
+								"taxNatureCode": "AE",
+								"taxAmount": "25.91",
+								"taxIndicator": "X",
+								"taxCurrency": "CAD",
+								"taxCountryCode": "CA"
+							},
+							{
+								"taxNatureCode": "VB",
+								"taxAmount": "265.00",
+								"taxIndicator": "X",
+								"taxCurrency": "CAD",
+								"taxCountryCode": "YR"
+							},
+							{
+								"taxNatureCode": "AB",
+								"taxAmount": "3.25",
+								"taxIndicator": "X",
+								"taxCurrency": "CAD",
+								"taxCountryCode": "RC"
+							},
+							{
+								"taxNatureCode": "AP",
+								"taxAmount": "25.00",
+								"taxIndicator": "X",
+								"taxCurrency": "CAD",
+								"taxCountryCode": "SQ"
+							}
+						],
+						"issueIdentifier": "F",
+						"monetaryInfo": [
+							{
+								"amount": "4337.00",
+								"currencyCode": "CAD",
+								"qualifier": "F"
+							},
+							{
+								"amount": "4656.16",
+								"currencyCode": "CAD",
+								"qualifier": "T"
+							}
+						]
+					},
+					"tstFreetext": [
+						{
+							"longFreetext": "PAX",
+							"freetextDetail": {
+								"type": "41",
+								"subjectQualifier": "3"
+							}
+						},
+						{
+							"longFreetext": "YTO AF PAR4337.00CAD4337.00END",
+							"freetextDetail": {
+								"type": "37",
+								"subjectQualifier": "3"
+							}
+						}
+					],
+					"tstGeneralInformation": {
+						"generalInformation": {
+							"tstCreationDate": "120819",
+							"tstReferenceNumber": "1"
+						}
+					},
+					"fareBasisInfo": {
+						"fareElement": {
+							"fareBasis": "WCA",
+							"baggageAllowance": "1PC",
+							"primaryCode": "YFF"
+						}
+					},
+					"segmentAssociation": {
+						"selection": [
+							{
+								"option": "N"
+							},
+							{
+								"option": "I"
+							}
+						]
+					},
+					"referenceForTstData": {
+						"reference": [
+							{
+								"number": "1",
+								"qualifier": "PT"
+							},
+							{
+								"number": "1",
+								"qualifier": "ST"
+							}
+						]
+					}
+				},
+				"sbrPOSDetails": {
+					"sbrUserIdentificationOwn": {
+						"originatorTypeCode": "T",
+						"originIdentification": {
+							"inHouseIdentification1": "YTOWL2107",
+							"originatorId": "67843263"
+						}
+					},
+					"sbrSystemDetails": {
+						"deliveringSystem": {
+							"locationId": "YTO",
+							"companyId": "1A"
+						}
+					},
+					"sbrPreferences": {
+						"userPreferences": {
+							"codedCountry": "CA"
+						}
+					}
+				},
+				"dataElementsMaster": {
+					"marker2": "",
+					"dataElementsIndiv": [
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "3",
+								"reference": {
+									"number": "1",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "**AUTO AMADEUS STAR2 FR**-B",
+								"freetextDetail": {
+									"type": "5",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "4",
+								"reference": {
+									"number": "2",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "006324590000-B",
+								"freetextDetail": {
+									"type": "5",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "5",
+								"reference": {
+									"number": "35",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "CTC*TEST@CWT.COM",
+								"freetextDetail": {
+									"type": "P02",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "AP",
+								"lineNumber": "6",
+								"reference": {
+									"number": "36",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "CTC*WOLFGANG MOZART-1-11-11-11",
+								"freetextDetail": {
+									"type": "7",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "TK",
+								"lineNumber": "7",
+								"reference": {
+									"number": "97",
+									"qualifier": "OT"
+								}
+							},
+							"ticketElement": {
+								"ticket": {
+									"officeId": "YTOWL2107",
+									"indicator": "TL",
+									"queueCategory": "1",
+									"queueNumber": "8",
+									"freetext": "-ONHOLD        ",
+									"date": "210819"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "SSR",
+								"lineNumber": "8",
+								"reference": {
+									"number": "95",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							},
+							"serviceRequest": {
+								"ssr": {
+									"status": "HK",
+									"freeText": "P/BJ/1233/BJ/13MAY99/M/12DEC22/MOZART/WOLFGANG/AMADEUS",
+									"quantity": "1",
+									"companyId": "AF",
+									"type": "DOCS"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "SSR",
+								"lineNumber": "9",
+								"reference": {
+									"number": "96",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							},
+							"serviceRequest": {
+								"ssr": {
+									"status": "HK",
+									"freeText": "R/BJ/UNKNOWN",
+									"quantity": "1",
+									"companyId": "AF",
+									"type": "DOCA"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "SSR",
+								"lineNumber": "10",
+								"reference": {
+									"number": "105",
+									"qualifier": "OT"
+								}
+							},
+							"serviceRequest": {
+								"ssr": {
+									"status": " ",
+									"freeText": "TO AF BY 26AUG 2300 YTO OTHERWISE WILL BE XLD",
+									"companyId": "YY",
+									"type": "ADTK"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "OP",
+								"lineNumber": "11",
+								"reference": {
+									"number": "38",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "FRAWL2378/13AUG/70C4/AQUA QUEUING",
+								"freetextDetail": {
+									"type": "P21",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "OP",
+								"lineNumber": "12",
+								"reference": {
+									"number": "39",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "PARWL2877/13AUG/62C0/SEND ITINERARY",
+								"freetextDetail": {
+									"type": "P21",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"optionElement": {
+								"optionElementInfo": {
+									"queue": "1",
+									"time": "1900",
+									"category": "7",
+									"mainOffice": "YTOWL2107",
+									"freetext": "AF REQUIRES TICKET ON OR BEFORE 30NOV:1900",
+									"date": "291119"
+								}
+							},
+							"elementManagementData": {
+								"segmentName": "OPW",
+								"lineNumber": "13",
+								"reference": {
+									"number": "99",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							}
+						},
+						{
+							"optionElement": {
+								"optionElementInfo": {
+									"queue": "1",
+									"time": "1900",
+									"category": "8",
+									"mainOffice": "YTOWL2107",
+									"freetext": "AF CANCELLATION DUE TO NO TICKET",
+									"date": "301119"
+								}
+							},
+							"elementManagementData": {
+								"segmentName": "OPC",
+								"lineNumber": "14",
+								"reference": {
+									"number": "98",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RC",
+								"lineNumber": "15",
+								"reference": {
+									"number": "103",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "RESTRICTED",
+									"type": "RC"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "RESTRICTED",
+									"type": "RC"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RC",
+								"lineNumber": "16",
+								"reference": {
+									"number": "104",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "RESTRICTED",
+									"type": "RC"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "RESTRICTED",
+									"type": "RC"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "17",
+								"reference": {
+									"number": "5",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "MANILA AUTOMATION TEST COMPANY PROFILE",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "MANILA AUTOMATION TEST COMPANY PROFILE",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "18",
+								"reference": {
+									"number": "6",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "PLEASE DO NOT DELETE",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "PLEASE DO NOT DELETE",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "19",
+								"reference": {
+									"number": "108",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "CAR ECAR-YYZ-12DEC-100.00 CC-YES/CV-AMT-123.00",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "CAR ECAR-YYZ-12DEC-100.00 CC-YES/CV-AMT-123.00",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "20",
+								"reference": {
+									"number": "69",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "A",
+									"freetext": "SYEXGVS:A:175EC A:F9F84 A:13038 A:4086A182 T-ZZZ EN-US EN-US",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "A",
+									"freetext": "SYEXGVS:A:175EC A:F9F84 A:13038 A:4086A182 T-ZZZ EN-US EN-US",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "21",
+								"reference": {
+									"number": "110",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "F",
+									"freetext": "PRICE-NO",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "F",
+									"freetext": "PRICE-NO",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "22",
+								"reference": {
+									"number": "113",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "F",
+									"freetext": "LCC-AC*BASE FARE CAD 123.00",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "F",
+									"freetext": "LCC-AC*BASE FARE CAD 123.00",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "23",
+								"reference": {
+									"number": "15",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "G",
+									"freetext": "TRAVEL TYPE-BUSINESS",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "G",
+									"freetext": "TRAVEL TYPE-BUSINESS",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "24",
+								"reference": {
+									"number": "41",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "G",
+									"freetext": "TEAM ABCTEAM",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "G",
+									"freetext": "TEAM ABCTEAM",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "25",
+								"reference": {
+									"number": "43",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "G",
+									"freetext": "PCCYTOWL2107",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "G",
+									"freetext": "PCCYTOWL2107",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "26",
+								"reference": {
+									"number": "109",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "J",
+									"freetext": "PCHK:ID123-YES-POLICY TYPE",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "J",
+									"freetext": "PCHK:ID123-YES-POLICY TYPE",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "27",
+								"reference": {
+									"number": "106",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "K",
+									"freetext": "FOP BTA CWT BTA",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "K",
+									"freetext": "FOP BTA CWT BTA",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "28",
+								"reference": {
+									"number": "9",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "M",
+									"freetext": "PAX*E TEST@CWT.COM",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "M",
+									"freetext": "PAX*E TEST@CWT.COM",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "29",
+								"reference": {
+									"number": "52",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "M",
+									"freetext": "LASTUSER-U002MCC-MCASTROUK",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "M",
+									"freetext": "LASTUSER-U002MCC-MCASTROUK",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "30",
+								"reference": {
+									"number": "42",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "GENDER-M",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "GENDER-M",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "31",
+								"reference": {
+									"number": "44",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "NAME-WOLFGANG/AMADEUS/MOZART",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "NAME-WOLFGANG/AMADEUS/MOZART",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "32",
+								"reference": {
+									"number": "45",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "DOB-13MAY99/GENDER-M",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "DOB-13MAY99/GENDER-M",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "33",
+								"reference": {
+									"number": "46",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "CITZ-BJ",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "CITZ-BJ",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "34",
+								"reference": {
+									"number": "50",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "FULL NAME-MOZART/WOLFGANG/AMADEUS",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "FULL NAME-MOZART/WOLFGANG/AMADEUS",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "35",
+								"reference": {
+									"number": "54",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "P",
+									"freetext": "TICKETING DATE NOT SET CONFIRM BY 8/21/2019",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "P",
+									"freetext": "TICKETING DATE NOT SET CONFIRM BY 8/21/2019",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "36",
+								"reference": {
+									"number": "47",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Q",
+									"freetext": "SM-NO",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Q",
+									"freetext": "SM-NO",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "37",
+								"reference": {
+									"number": "51",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Q",
+									"freetext": "AUTOMAIL-YES",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Q",
+									"freetext": "AUTOMAIL-YES",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "38",
+								"reference": {
+									"number": "49",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "S",
+									"freetext": "DT-13:CZ-BJ:DN-1233:EX-12/12/2022:DV-NO:RC-BJ",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "S",
+									"freetext": "DT-13:CZ-BJ:DN-1233:EX-12/12/2022:DV-NO:RC-BJ",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "39",
+								"reference": {
+									"number": "111",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "S",
+									"freetext": "SEAT-NO",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "S",
+									"freetext": "SEAT-NO",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "40",
+								"reference": {
+									"number": "68",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "T",
+									"freetext": "SPLIT1",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "T",
+									"freetext": "SPLIT1",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "41",
+								"reference": {
+									"number": "70",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "T",
+									"freetext": "TKT1-FQ4656.16/LP-724.16/FS-7/FF-4656.16/FS21/DE-PAR",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "T",
+									"freetext": "TKT1-FQ4656.16/LP-724.16/FS-7/FF-4656.16/FS21/DE-PAR",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "42",
+								"reference": {
+									"number": "71",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "T",
+									"freetext": "TKT1-BFCAD4337.00",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "T",
+									"freetext": "TKT1-BFCAD4337.00",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "43",
+								"reference": {
+									"number": "72",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "T",
+									"freetext": "TKT1-INTL",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "T",
+									"freetext": "TKT1-INTL",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "44",
+								"reference": {
+									"number": "73",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "T",
+									"freetext": "TKT1-ETK",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "T",
+									"freetext": "TKT1-ETK",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "45",
+								"reference": {
+									"number": "40",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "U",
+									"freetext": "SYMPHONIE EXPRESS PILOT",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "U",
+									"freetext": "SYMPHONIE EXPRESS PILOT",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "46",
+								"reference": {
+									"number": "13",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "V",
+									"freetext": "PAX*MOB 1-11-11-11",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "V",
+									"freetext": "PAX*MOB 1-11-11-11",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "47",
+								"reference": {
+									"number": "112",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "W",
+									"freetext": "FARE-NO",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "W",
+									"freetext": "FARE-NO",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "48",
+								"reference": {
+									"number": "48",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Z",
+									"freetext": "CONF*SEND TO MAIL TEST@CWT.COM",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Z",
+									"freetext": "CONF*SEND TO MAIL TEST@CWT.COM",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "49",
+								"reference": {
+									"number": "53",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "Z",
+									"freetext": "CONF*LANG:EN",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "Z",
+									"freetext": "CONF*LANG:EN",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "50",
+								"reference": {
+									"number": "55",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U57/-A1A",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U57/-A1A",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "51",
+								"reference": {
+									"number": "56",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U58/-TESTAA",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U58/-TESTAA",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "52",
+								"reference": {
+									"number": "57",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U60/-TESTING",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U60/-TESTING",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "53",
+								"reference": {
+									"number": "58",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U55/-12 12 12",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U55/-12 12 12",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "54",
+								"reference": {
+									"number": "59",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "DP/-TESTING123",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*DP/-TESTING123",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "55",
+								"reference": {
+									"number": "60",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U56/-AAA",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U56/-AAA",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "56",
+								"reference": {
+									"number": "61",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "FF/-4656.16",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*FF/-4656.16",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "57",
+								"reference": {
+									"number": "62",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "LP/-724.16",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*LP/-724.16",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "58",
+								"reference": {
+									"number": "63",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "FS/-7",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*FS/-7",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "59",
+								"reference": {
+									"number": "64",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "CF/-ZZZ0000000C",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*CF/-ZZZ0000000C",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "60",
+								"reference": {
+									"number": "65",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "CN/-MCC",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*CN/-MCC",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "61",
+								"reference": {
+									"number": "66",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": {
+									"number": "1",
+									"qualifier": "ST"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "DE/-PAR",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*DE/-PAR",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RM",
+								"lineNumber": "62",
+								"reference": {
+									"number": "67",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"category": "*",
+									"freetext": "U59/-MUSSUUUUUUUA",
+									"type": "RM"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"freetext": "*U59/-MUSSUUUUUUUA",
+									"type": "RM"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "63",
+								"reference": {
+									"number": "74",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "LANGUAGE-EN-US",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "LANGUAGE-EN-US",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "64",
+								"reference": {
+									"number": "75",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "*FULLCXL**FULLCXL*",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "*FULLCXL**FULLCXL*",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "65",
+								"reference": {
+									"number": "76",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "THE DEPARTMENT OF HOMELAND SECURITY INFORMATION REQUIRED TO BE",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "THE DEPARTMENT OF HOMELAND SECURITY INFORMATION REQUIRED TO BE",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "66",
+								"reference": {
+									"number": "77",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "COLLECTED FROM YOU OR YOUR PROFILE WAS SENT TO THE AIRLINE FOR",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "COLLECTED FROM YOU OR YOUR PROFILE WAS SENT TO THE AIRLINE FOR",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "67",
+								"reference": {
+									"number": "78",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "TRANSMITTAL TO THE TSA. TO VIEW THE TSA PRIVACY POLICIES, THE",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "TRANSMITTAL TO THE TSA. TO VIEW THE TSA PRIVACY POLICIES, THE",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "68",
+								"reference": {
+									"number": "79",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "RECORDS NOTICE OR THE PRIVACY IMPACT ASSESSMENT, GO TO",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "RECORDS NOTICE OR THE PRIVACY IMPACT ASSESSMENT, GO TO",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "69",
+								"reference": {
+									"number": "80",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "WWW.TSA.GOV.",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "WWW.TSA.GOV.",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "70",
+								"reference": {
+									"number": "81",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "PASSPORT AND VISA INFORMATION",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "PASSPORT AND VISA INFORMATION",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "71",
+								"reference": {
+									"number": "82",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "A VALID PASSPORT WITH AMPLE BLANK PAGES AND WITH AT LEAST",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "A VALID PASSPORT WITH AMPLE BLANK PAGES AND WITH AT LEAST",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "72",
+								"reference": {
+									"number": "83",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "SIX MONTHS VALIDITY BEYOND THE RETURN DATE IS REQUIRED",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "SIX MONTHS VALIDITY BEYOND THE RETURN DATE IS REQUIRED",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "73",
+								"reference": {
+									"number": "84",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "TRAVELLERS NATIONALITY - BJ",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "TRAVELLERS NATIONALITY - BJ",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "74",
+								"reference": {
+									"number": "85",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "VALID PASSPORT HELD - NO",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "VALID PASSPORT HELD - NO",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "75",
+								"reference": {
+									"number": "86",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "VALID PASSPORT HELD: NO",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "VALID PASSPORT HELD: NO",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "76",
+								"reference": {
+									"number": "87",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "VISA CHECK - FRANCE REQUIRED",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "VISA CHECK - FRANCE REQUIRED",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "77",
+								"reference": {
+									"number": "88",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "VISA CHECK - CANADA REQUIRED",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "VISA CHECK - CANADA REQUIRED",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "78",
+								"reference": {
+									"number": "89",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "VISA CHECK: FRANCE REQUIRED",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "VISA CHECK: FRANCE REQUIRED",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "79",
+								"reference": {
+									"number": "90",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "VISA CHECK: CANADA REQUIRED",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "VISA CHECK: CANADA REQUIRED",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "80",
+								"reference": {
+									"number": "91",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "ROUTING: TORONTO PARIS",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "ROUTING: TORONTO PARIS",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "81",
+								"reference": {
+									"number": "92",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "****************************************************",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "****************************************************",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "82",
+								"reference": {
+									"number": "93",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "*RITOP**TEST HEADER*",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "*RITOP**TEST HEADER*",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "RIR",
+								"lineNumber": "83",
+								"reference": {
+									"number": "94",
+									"qualifier": "OT"
+								}
+							},
+							"extendedRemark": {
+								"structuredRemark": {
+									"freetext": "*TICKET**TEST TICKETS*",
+									"type": "RIR"
+								}
+							},
+							"miscellaneousRemarks": {
+								"remarks": {
+									"category": "R",
+									"freetext": "*TICKET**TEST TICKETS*",
+									"type": "RI"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FE",
+								"lineNumber": "84",
+								"reference": {
+									"number": "32",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							},
+							"otherDataFreetext": {
+								"longFreetext": "PAX BG:AF",
+								"freetextDetail": {
+									"type": "10",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FP",
+								"lineNumber": "85",
+								"reference": {
+									"number": "34",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "CASH",
+								"freetextDetail": {
+									"type": "16",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FS",
+								"lineNumber": "86",
+								"reference": {
+									"number": "37",
+									"qualifier": "OT"
+								}
+							},
+							"otherDataFreetext": {
+								"longFreetext": "21",
+								"freetextDetail": {
+									"type": "17",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"elementManagementData": {
+								"segmentName": "FV",
+								"lineNumber": "87",
+								"reference": {
+									"number": "33",
+									"qualifier": "OT"
+								}
+							},
+							"referenceForDataElement": {
+								"reference": [
+									{
+										"number": "1",
+										"qualifier": "ST"
+									},
+									{
+										"number": "1",
+										"qualifier": "PT"
+									}
+								]
+							},
+							"otherDataFreetext": {
+								"longFreetext": "PAX AF",
+								"freetextDetail": {
+									"type": "P18",
+									"subjectQualifier": "3"
+								}
+							}
+						},
+						{
+							"structuredAddress": {
+								"address": [
+									{
+										"optionText": "CARLSON WAGONLIT",
+										"option": "A1"
+									},
+									{
+										"optionText": "MAKATI AVENUE",
+										"option": "A2"
+									},
+									{
+										"optionText": "MANILA",
+										"option": "CI"
+									},
+									{
+										"optionText": "PHILLIPINES",
+										"option": "CO"
+									}
+								],
+								"informationType": "2"
+							},
+							"elementManagementData": {
+								"segmentName": "AB/",
+								"lineNumber": "88",
+								"reference": {
+									"number": "3",
+									"qualifier": "OT"
+								}
+							}
+						}
+					]
+				},
+				"pnrHeader": [
+					{
+						"reservationInfo": {
+							"reservation": {
+								"time": "0603",
+								"controlNumber": "UVHQKE",
+								"companyId": "1A",
+								"date": "130819"
+							}
+						}
+					},
+					{
+						"reservationInfo": {
+							"reservation": {
+								"controlType": "C",
+								"controlNumber": "V9F5RD",
+								"companyId": "1A"
+							}
+						}
+					}
+				],
+				"travellerInfo": {
+					"enhancedPassengerData": {
+						"enhancedTravellerInformation": {
+							"travellerNameInfo": {
+								"quantity": "1"
+							},
+							"otherPaxNamesDetails": {
+								"surname": "MOZART",
+								"givenName": "WOLFGANG AMADEUS MR",
+								"displayedName": "Y",
+								"referenceName": "Y",
+								"nameType": "UN"
+							}
+						}
+					},
+					"elementManagementPassenger": {
+						"segmentName": "NM",
+						"lineNumber": "1",
+						"reference": {
+							"number": "1",
+							"qualifier": "PT"
+						}
+					},
+					"passengerData": {
+						"travellerInformation": {
+							"passenger": {
+								"firstName": "WOLFGANG AMADEUS MR"
+							},
+							"traveller": {
+								"surname": "MOZART",
+								"quantity": "1"
+							}
+						}
+					}
+				},
+				"pnrHeaderTag": {
+					"statusInformation": [
+						{
+							"indicator": "TST"
+						},
+						{
+							"indicator": "RLR"
+						},
+						{
+							"indicator": "TCB"
+						},
+						{
+							"indicator": "RLP"
+						},
+						{
+							"indicator": "SFP"
+						}
+					]
+				},
+				"-xmlns": "http://xml.amadeus.com/PNRACC_14_1_1A",
+				"sbrUpdatorPosDetails": {
+					"sbrUserIdentificationOwn": {
+						"originatorTypeCode": "T",
+						"originIdentification": {
+							"inHouseIdentification1": "YTOWL2107",
+							"originatorId": "67843263"
+						}
+					},
+					"sbrSystemDetails": {
+						"deliveringSystem": {
+							"locationId": "YTO",
+							"companyId": "1A"
+						}
+					},
+					"sbrPreferences": {
+						"userPreferences": {
+							"codedCountry": "CA"
+						}
+					}
+				},
+				"originDestinationDetails": {
+					"itineraryInfo": {
+						"flightDetail": {
+							"departureInformation": {
+								"departTerminal": "3"
+							},
+							"timeDetail": {
+								"checkinTime": "1745"
+							},
+							"productDetails": {
+								"weekDay": "2",
+								"equipment": "359",
+								"numOfStops": "0"
+							},
+							"arrivalStationInfo": {
+								"terminal": "2E"
+							}
+						},
+						"markerRailTour": "",
+						"travelProduct": {
+							"product": {
+								"arrDate": "111219",
+								"depTime": "1845",
+								"dayChangeIndicator": "1",
+								"depDate": "101219",
+								"arrTime": "0815"
+							},
+							"typeDetail": {
+								"detail": "ET"
+							},
+							"offpointDetail": {
+								"cityCode": "CDG"
+							},
+							"productDetails": {
+								"identification": "351",
+								"classOfService": "Y"
+							},
+							"boardpointDetail": {
+								"cityCode": "YYZ"
+							},
+							"companyDetail": {
+								"identification": "AF"
+							}
+						},
+						"itineraryMessageAction": {
+							"business": {
+								"function": "1"
+							}
+						},
+						"relatedProduct": {
+							"status": "HK",
+							"quantity": "1"
+						},
+						"elementManagementItinerary": {
+							"segmentName": "AIR",
+							"lineNumber": "2",
+							"reference": {
+								"number": "1",
+								"qualifier": "ST"
+							}
+						},
+						"selectionDetails": {
+							"selection": {
+								"option": "P2"
+							}
+						},
+						"elementsIndicators": {
+							"statusInformation": {
+								"indicator": "TSA"
+							}
+						},
+						"itineraryReservationInfo": {
+							"reservation": {
+								"controlNumber": "UVHQKE",
+								"companyId": "AF"
+							}
+						}
+					},
+					"originDestination": ""
+				},
+				"sbrCreationPosDetails": {
+					"sbrUserIdentificationOwn": {
+						"originatorTypeCode": "T",
+						"originIdentification": {
+							"inHouseIdentification1": "YTOWL2107",
+							"originatorId": "67843263"
+						}
+					},
+					"sbrSystemDetails": {
+						"deliveringSystem": {
+							"locationId": "YTO",
+							"companyId": "1A"
+						}
+					},
+					"sbrPreferences": {
+						"userPreferences": {
+							"codedCountry": "CA"
+						}
+					}
+				},
+				"technicalData": {
+					"purgeDateData": {
+						"dateTime": {
+							"month": "12",
+							"year": "2019",
+							"day": "14"
+						}
+					},
+					"enveloppeNumberData": {
+						"sequenceDetails": {
+							"number": "5"
+						}
+					},
+					"lastTransmittedEnvelopeNumber": {
+						"currentRecord": "4"
+					}
+				},
+				"freetextData": {
+					"longFreetext": "--- TST RLR TC-BIZ RLP SFP ---",
+					"freetextDetail": {
+						"type": "P12",
+						"subjectQualifier": "3"
+					}
+				},
+				"securityInformation": {
+					"secondRpInformation": {
+						"creationDate": "130819",
+						"creationOfficeId": "YTOWL2107",
+						"creatorIataCode": "67843263",
+						"creationTime": "0256",
+						"agentSignature": "7013MC"
+					},
+					"cityCode": "YTO",
+					"responsibilityInformation": {
+						"officeId": "YTOWL2107",
+						"iataCode": "67843263",
+						"agentId": "MCGS",
+						"typeOfPnrElement": "RP"
+					},
+					"queueingInformation": {
+						"queueingOfficeId": "YTOWL2107"
+					}
+				}
+			},
+			"hierarchyParams": {
+				"clientSubUnitGuid": "A:F9F84",
+				"gdsCode": "1A",
+				"latestVersionOnly": false,
+				"tripTypeId": 0
+			},
+			"isBeginPnr": false
+		},
+		"response": {
+			"outputItems": {
+				"items": [
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CarChargeRate%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%CarGDSRate%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%CarHighRate%",
+								"expression": "(((?!\\/H).)*)",
+								"language": ""
+							},
+							{
+								"name": "%CarLowRate%",
+								"expression": "(((?!\\/H).)*)",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpCity%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpDate%",
+								"expression": "(\\d{2}[A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarVendor%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6563,
+						"format": "CAR %CarVendor%-%CarPickUpCity%-%CarPickUpDate%-%CarGDSRate% HR-%CarHighRate%/CR-%CarChargeRate%/LR-%CarLowRate%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 101,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1368,
+						"remarkGroupName": "CarSegmentInfo",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CarCurrency%",
+								"expression": "(-{1}|[A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarGDSRate%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%CarMissedSavingCode%",
+								"expression": "(((?!\\/H).)*)",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpCity%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpDate%",
+								"expression": "(\\d{2}[A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarRateType%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%CarRealisedSavingCode%",
+								"expression": "(((?!\\/H).)*)",
+								"language": ""
+							},
+							{
+								"name": "%CarVendor%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6564,
+						"format": "CAR %CarVendor%-%CarPickUpCity%-%CarPickUpDate%-%CarGDSRate% C-%CarCurrency%/RT-%CarRateType%/RSC-%CarRealisedSavingCode%/MSC-%CarMissedSavingCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 101,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1368,
+						"remarkGroupName": "CarSegmentInfo",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CarGDSRate%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%CarPaymentType%",
+								"expression": "(((?!\\/H).)*)",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpCity%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpDate%",
+								"expression": "(\\d{2}[A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarPreffered%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%CarVat%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%CarVendor%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6565,
+						"format": "CAR %CarVendor%-%CarPickUpCity%-%CarPickUpDate%-%CarGDSRate% PT-%CarPaymentType%/V-%CarVat%/P-%CarPreffered%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 101,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1368,
+						"remarkGroupName": "CarSegmentInfo",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CarCommission%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%CarCommissionCheck%",
+								"expression": "(-{1}|YES|NO)",
+								"language": ""
+							},
+							{
+								"name": "%CarCommissionValue%",
+								"expression": "(-{1}|(PCT|AMT))",
+								"language": ""
+							},
+							{
+								"name": "%CarGDSRate%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpCity%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpDate%",
+								"expression": "(\\d{2}[A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarVendor%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 7051,
+						"format": "CAR %CarVendor%-%CarPickUpCity%-%CarPickUpDate%-%CarGDSRate% CC-%CarCommissionCheck%/CV-%CarCommissionValue%-%CarCommission%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 101,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1368,
+						"remarkGroupName": "CarSegmentInfo",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%FOPCreditCardInfo%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6966,
+						"format": "FOP %FOPCreditCardInfo%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "K",
+						"bindingTypeCode": "0",
+						"groupId": 1409,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PolicyCheckAnswer%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%PolicyCheckItemId%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%PolicyType%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 31,
+						"format": "PCHK:%PolicyCheckItemId%-%PolicyCheckAnswer%-%PolicyType%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 27,
+						"gdsRemarkQualifier": "J",
+						"bindingTypeCode": "0",
+						"groupId": 1409,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%SFPDRedressNumber%",
+								"expression": "([A-Z0-9]*)",
+								"language": ""
+							}
+						],
+						"id": 39,
+						"format": "REDRESS NUMBER-%SFPDRedressNumber%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 43,
+						"format": "SYMPHONIE EXPRESS PILOT",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "U",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AquaTeamName%",
+								"expression": "(\\S+)",
+								"language": ""
+							}
+						],
+						"id": 44,
+						"format": "TEAM %AquaTeamName%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "G",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PAXGender%",
+								"expression": "([MF]{1,1})",
+								"language": ""
+							}
+						],
+						"id": 517,
+						"format": "GENDER-%PAXGender%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AquaPCC%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 1792,
+						"format": "PCC%AquaPCC%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "G",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 2340,
+								"name": "VisaResidenceCountry",
+								"value": "ExistsFalse"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%Nationality%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NO|YES|UNABLE TO CONFIRM)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN IKKE BEKRAEFTES)",
+								"language": "da-DK"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEIN|JA|UNABLE TO CONFIRM)",
+								"language": "de-DE"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NON|OUI|IMPOSSIBLE DE CONFIRMER)",
+								"language": "fr-FR"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN INTE BEKRAEFTAS)",
+								"language": "sv-SE"
+							},
+							{
+								"name": "%VisaTravelDocExpiry%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%VisaTravelDocNumber%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%VisaTravelDocType%",
+								"expression": "([0-9]{1,2})",
+								"language": ""
+							}
+						],
+						"id": 2340,
+						"format": "DT-%VisaTravelDocType%:CZ-%Nationality%:DN-%VisaTravelDocNumber%:EX-%VisaTravelDocExpiry%:DV-%TravelDocumentValid%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "S",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 2788,
+						"format": "A2SI ITINERARY SENT",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Delete",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 4355,
+						"format": "CITIZENSHIP-%Citizenship?ValueSeparator=/%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 4370,
+								"name": "*keyword*ALLOW_EMPTY_FIELD",
+								"value": "True"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%PAXFirstName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							},
+							{
+								"name": "%PAXLastName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							},
+							{
+								"name": "%PAXMiddleName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							}
+						],
+						"id": 4370,
+						"format": "NAME-%PAXFirstName%/%PAXMiddleName%/%PAXLastName%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PAXBirthDate%",
+								"expression": "([0-9]{2}[A-Z]{3}[0-9]{2,4})",
+								"language": ""
+							},
+							{
+								"name": "%PAXGender%",
+								"expression": "([MF]{1,1})",
+								"language": ""
+							}
+						],
+						"id": 4371,
+						"format": "DOB-%PAXBirthDate%/GENDER-%PAXGender%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 4372,
+								"name": "PAXGender",
+								"value": "ExistsFalse"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%PAXBirthDate%",
+								"expression": "([0-9]{2}[A-Z]{3}[0-9]{2,4})",
+								"language": ""
+							}
+						],
+						"id": 4372,
+						"format": "DOB-%PAXBirthDate%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 6348,
+						"format": "------------ ITINERARY QUOTE ------------",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": "ApacAirFareItinerarySabreRemarkGroupForSabre",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%ItineraryLanguageCulture%",
+								"expression": "([A-Z]{2}-[A-Z]{2}|[A-Z]{2})",
+								"language": ""
+							}
+						],
+						"id": 7304,
+						"format": "LANGUAGE-%ItineraryLanguageCulture%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%TravelDocCountry%",
+								"expression": "([A-Z]{2})",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocExpiry%",
+								"expression": "([A-Z0-9]+)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocIssueCountry%",
+								"expression": "([A-Z]{2})",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocIssueDate%",
+								"expression": "([0-9]{2}[A-Z]{3}[0-9]{2})",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocNumber%",
+								"expression": "([A-Z0-9]+)",
+								"language": ""
+							}
+						],
+						"id": 9444,
+						"format": "%TravelDocType?DefaultValue=NAT ID%/CO-%TravelDocCountry%/NR-%TravelDocNumber%/IS-%TravelDocIssueDate%/EX-%TravelDocExpiry%/CI-%TravelDocIssueCountry%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 9447,
+						"format": "SEND ETIX",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Delete",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%MoxieIncidentId%",
+								"expression": "([0-9]{1,10})",
+								"language": ""
+							}
+						],
+						"id": 2789,
+						"format": "MOXIE INCIDENT ID-%MoxieIncidentId%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "J",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%OnHoldNP%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 4479,
+						"format": "ONHOLD-%OnHoldNP%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "M",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%SFPDKnownTravelerNumber%",
+								"expression": "([A-Z0-9]*)",
+								"language": ""
+							}
+						],
+						"id": 4809,
+						"format": "KNOWN TRAVELER NUMBER-%SFPDKnownTravelerNumber%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%TravelDocType%",
+								"expression": "([A-Z\\s]+)",
+								"language": ""
+							}
+						],
+						"id": 5086,
+						"format": "§%TravelDocType%§",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "FlagOnly",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 5626,
+								"name": "TriggerForApprovalPresent",
+								"value": "YES"
+							}
+						],
+						"placeholders": [],
+						"id": 5626,
+						"format": "TRIGGER FOR APPROVAL",
+						"defaultLanguageCode": "en-US",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "G",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 5627,
+								"name": "TriggerForApprovalPresent",
+								"value": "YES"
+							}
+						],
+						"placeholders": [],
+						"id": 5627,
+						"format": "TRIGGER FOR APPROVAL",
+						"defaultLanguageCode": "en-US",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "G",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%IRDQueue%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 5644,
+						"format": "TRIGGER FOR IRD-%IRDQueue%",
+						"defaultLanguageCode": "en-US",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "G",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%APISNationality%",
+								"expression": "([A-Z]{2})",
+								"language": ""
+							}
+						],
+						"id": 492,
+						"format": "CITZ-%APISNationality%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 7,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%APISNationality%",
+								"expression": "([A-Z]{2})",
+								"language": ""
+							}
+						],
+						"id": 537,
+						"format": "CITZ-%APISNationality%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 7,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%APISVisaExpiryMonth%",
+								"expression": "(01|02|03|04|05|06|07|08|09|10|11|12)",
+								"language": ""
+							},
+							{
+								"name": "%APISVisaExpiryYear%",
+								"expression": "([0-9]{2})",
+								"language": ""
+							},
+							{
+								"name": "%APISVisaIssueCountry%",
+								"expression": "([A-Z]{2})",
+								"language": ""
+							},
+							{
+								"name": "%APISVisaNumber%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 539,
+						"format": "VISA-%APISVisaIssueCountry%/%APISVisaNumber%//%APISVisaExpiryMonth%/%APISVisaExpiryYear%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 7,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 505,
+								"name": "AirAutoInvoice",
+								"value": "False"
+							}
+						],
+						"placeholders": [],
+						"id": 505,
+						"format": "AUTOMAIL-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 15,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 550,
+								"name": "AirAutoInvoice",
+								"value": "False"
+							}
+						],
+						"placeholders": [],
+						"id": 550,
+						"format": "AUTOMAIL-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 15,
+						"gdsRemarkQualifier": "Q",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AquaSkip%",
+								"expression": "(CONT|PRICE|SEAT|SM|FARE|WAIT|WM)",
+								"language": ""
+							}
+						],
+						"id": 570,
+						"format": "%AquaSkip%-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 16,
+						"gdsRemarkQualifier": "Q",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AquaSkip%",
+								"expression": "(CONT|PRICE|SEAT|SM|FARE|WAIT|WM)",
+								"language": ""
+							}
+						],
+						"id": 571,
+						"format": "%AquaSkip%-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 16,
+						"gdsRemarkQualifier": "F",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AquaSkip%",
+								"expression": "(CONT|PRICE|SEAT|SM|FARE|WAIT|WM)",
+								"language": ""
+							}
+						],
+						"id": 572,
+						"format": "%AquaSkip%-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 16,
+						"gdsRemarkQualifier": "S",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AquaSkip%",
+								"expression": "(CONT|PRICE|SEAT|SM|FARE|WAIT|WM)",
+								"language": ""
+							}
+						],
+						"id": 573,
+						"format": "%AquaSkip%-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 16,
+						"gdsRemarkQualifier": "W",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 574,
+								"name": "AquaSkip",
+								"value": "PRICE"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%AquaSkip%",
+								"expression": "(CONT|PRICE|SEAT|SM|FARE|WAIT|WM)",
+								"language": ""
+							}
+						],
+						"id": 574,
+						"format": "%AquaSkip%-NO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 16,
+						"gdsRemarkQualifier": "Q",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItineraryEmailRecipient%",
+								"expression": "([a-zA-Z\\*_-][0-9\\*\\w\\.-]*[a-zA-Z0-9\\*_-](?:#|@|//|Ø|Ö|¤|Â¤)[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z])",
+								"language": ""
+							}
+						],
+						"id": 55,
+						"format": "CONF*SEND TO MAIL %CWTItineraryEmailRecipient%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 20,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItineraryEmailRecipient%",
+								"expression": "([a-zA-Z\\*_-][0-9\\*\\w\\.-]*[a-zA-Z0-9\\*_-](?:#|@|//|Ø|Ö|¤|Â¤)[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z])",
+								"language": ""
+							}
+						],
+						"id": 1813,
+						"format": "CONF*SEND TO MAIL %CWTItineraryEmailRecipient%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 20,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItineraryTeamID%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 1814,
+						"format": "CONF*TEAM:%CWTItineraryTeamID%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 21,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%ExistingTicketAction%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%ExistingTicketFee%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%ExistingTicketNumber%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%ExistingTicketTotalRefund%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 57,
+						"format": "TN-%ExistingTicketNumber%:TA-%ExistingTicketAction%:TF-%ExistingTicketFee%:TR:%ExistingTicketTotalRefund%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 22,
+						"gdsRemarkQualifier": "S",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%ExistingTicketQueueToCat%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%ExistingTicketQueueToOffice%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%ExistingTicketQueueToQueue%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 58,
+						"format": "TQO-%ExistingTicketQueueToOffice%:TQQ-%ExistingTicketQueueToQueue%:TQC-%ExistingTicketQueueToCat%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 23,
+						"gdsRemarkQualifier": "S",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%FullCancel%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 1817,
+						"format": "FULL CANCEL:%FullCancel%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "FlagOnly",
+						"sequenceNumber": 24,
+						"gdsRemarkQualifier": "S",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 1658,
+						"format": "*FULLCXL**FULLCXL*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 25,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%Nationality%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NO|YES|UNABLE TO CONFIRM)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN IKKE BEKRAEFTES)",
+								"language": "da-DK"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEIN|JA|UNABLE TO CONFIRM)",
+								"language": "de-DE"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NON|OUI|IMPOSSIBLE DE CONFIRMER)",
+								"language": "fr-FR"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN INTE BEKRAEFTAS)",
+								"language": "sv-SE"
+							},
+							{
+								"name": "%VisaResidenceCountry%",
+								"expression": "([A-Z]{2})",
+								"language": ""
+							},
+							{
+								"name": "%VisaTravelDocExpiry%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%VisaTravelDocNumber%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%VisaTravelDocType%",
+								"expression": "([0-9]{1,2})",
+								"language": ""
+							}
+						],
+						"id": 53,
+						"format": "DT-%VisaTravelDocType%:CZ-%Nationality%:DN-%VisaTravelDocNumber%:EX-%VisaTravelDocExpiry%:DV-%TravelDocumentValid%:RC-%VisaResidenceCountry%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 26,
+						"gdsRemarkQualifier": "S",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PolicyCheckAnswer%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%PolicyCheckItemId%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%PolicyType%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 1819,
+						"format": "PCHK:%PolicyCheckItemId%-%PolicyCheckAnswer%-%PolicyType%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 27,
+						"gdsRemarkQualifier": "J",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 520,
+								"name": "*keyword*ALLOW_EMPTY_FIELD",
+								"value": "true"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%PAXFirstName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							},
+							{
+								"name": "%PAXLastName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							},
+							{
+								"name": "%PAXMiddleName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							}
+						],
+						"id": 520,
+						"format": "FULL NAME-%PAXLastName%/%PAXFirstName%/%PAXMiddleName%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 32,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PAXFirstName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							},
+							{
+								"name": "%PAXLastName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							},
+							{
+								"name": "%PAXMiddleName%",
+								"expression": "([A-Z\\s]*)",
+								"language": ""
+							}
+						],
+						"id": 564,
+						"format": "FULL NAME-%PAXLastName%/%PAXFirstName%/%PAXMiddleName%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 32,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%SendItinerary%",
+								"expression": "(NO|YES)",
+								"language": ""
+							},
+							{
+								"name": "%SendItinerary%",
+								"expression": "(NON|OUI)",
+								"language": "fr-FR"
+							}
+						],
+						"id": 567,
+						"format": "AUTOMAIL-%SendItinerary%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 36,
+						"gdsRemarkQualifier": "Q",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%NetworkID%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%ProfileID%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 74,
+						"format": "LASTUSER-%NetworkID%-%ProfileID%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 38,
+						"gdsRemarkQualifier": "M",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%OnHoldNP%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 1672,
+						"format": "ONHOLD:%OnHoldNP%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 39,
+						"gdsRemarkQualifier": "M",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%ItineraryLanguage%",
+								"expression": "([A-Z]{2}-[A-Z]{2}|[A-Z]{2})",
+								"language": ""
+							}
+						],
+						"id": 2300,
+						"format": "CONF*LANG:%ItineraryLanguage%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 40,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%BMFSkip%",
+								"expression": "([0-9]{2})",
+								"language": ""
+							}
+						],
+						"id": 2785,
+						"format": "PCT*SKIP%BMFSkip%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 41,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 4399,
+								"name": "FullCancel",
+								"value": "ExistsFalse"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%AirTicketingDateNotFinalised%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 4399,
+						"format": "TICKETING DATE NOT SET CONFIRM BY %AirTicketingDateNotFinalised%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 41,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 4400,
+								"name": "FullCancel",
+								"value": "ExistsFalse"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%AirTicketingDateFinalised%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 4400,
+						"format": "YOUR TICKETS WILL BE ISSUED ON %AirTicketingDateFinalised%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 42,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1785,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%LCCAirline%",
+								"expression": "([A-Z0-9]{2})",
+								"language": ""
+							},
+							{
+								"name": "%LCCBaseCurrency%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%LCCBaseFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							}
+						],
+						"id": 9400,
+						"format": "LCC-%LCCAirline%*BASE FARE %LCCBaseCurrency% %LCCBaseFare%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "F",
+						"bindingTypeCode": "0",
+						"groupId": 1802,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%LCCAirline%",
+								"expression": "([A-Z0-9]{2})",
+								"language": ""
+							},
+							{
+								"name": "%LCCChargedFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							}
+						],
+						"id": 9401,
+						"format": "LCC-%LCCAirline%*GRAND TOTAL %LCCFareCurrency% %LCCChargedFare%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 1,
+						"typeName": "Application",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "F",
+						"bindingTypeCode": "0",
+						"groupId": 1802,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%DSVersion%",
+								"expression": "([0-9]+\\.[0-9]+)",
+								"language": ""
+							}
+						],
+						"id": 4360,
+						"format": "*DS Format V%DSVersion%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 765,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "3.0",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CAAirHighFare%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9271,
+						"format": "FF/-%CAAirHighFare%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "S",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CAAirLowFare%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9272,
+						"format": "LP/-%CAAirLowFare%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "S",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CAAirRealisedSavingCode%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9276,
+						"format": "FS/-%CAAirRealisedSavingCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "S",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%HemisphereId%",
+								"expression": "([0-9]{1})",
+								"language": ""
+							},
+							{
+								"name": "%TripTypeId%",
+								"expression": "([0-9]{1,2})",
+								"language": ""
+							}
+						],
+						"id": 9277,
+						"format": "FS%HemisphereId%%TripTypeId%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CarFarePickUpDate%",
+								"expression": "([0-9]{2}[A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%CarFareSavingsCode%",
+								"expression": "([A-Z]+)",
+								"language": ""
+							},
+							{
+								"name": "%CarPickUpCity%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							}
+						],
+						"id": 9285,
+						"format": "CS%CarFarePickUpDate%%CarPickUpCity%/-SV-%CarFareSavingsCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%HotelReasonCodes1%",
+								"expression": "([0-9]{2}[A-Z]{6}H[A-Z]{1}[A-Z0-9]{1}[0-9]{2}$|[0-9]{2}[A-Z]{6}H[A-Z]{1}[A-Z0-9]{1}[0-9]{2}/[0-9]{2}[A-Z]{6}H[A-Z]{1}[A-Z0-9]{1}[0-9]{2}$)",
+								"language": ""
+							}
+						],
+						"id": 515,
+						"format": "U21/-%HotelReasonCodes1%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%HotelReasonCodes2%",
+								"expression": "([0-9]{2}[A-Z]{6}H[A-Z]{1}[A-Z0-9]{1}[0-9]{2}$|[0-9]{2}[A-Z]{6}H[A-Z]{1}[A-Z0-9]{1}[0-9]{2}/[0-9]{2}[A-Z]{6}H[A-Z]{1}[A-Z0-9]{1}[0-9]{2}$)",
+								"language": ""
+							}
+						],
+						"id": 516,
+						"format": "U22/-%HotelReasonCodes2%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTAccountNumber%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%TripTypeCode%",
+								"expression": "([A-Z]{1})",
+								"language": ""
+							}
+						],
+						"id": 9266,
+						"format": "CF/-%CWTAccountNumber%0000000%TripTypeCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%BackOfficeAgentIdentifier%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9267,
+						"format": "CN/-%BackOfficeAgentIdentifier%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PointOfTurnAround%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9279,
+						"format": "DE/-%PointOfTurnAround%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "S",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%OBTVendorCode%",
+								"expression": "(AR|AS|BA|BF|BT|CB|CD|CO|CR|CS|CT|CY|DL|EI|EO|EW|EX|GA|GT|GW|HA|HB|HF|HZ|IT|KD|KP|LU|NA|PS|RX|SA|SB|TD|TE|TG|TL|TP|TT|VA|WF|WG|YP|A|E|I|K|D|X|P|5|MC|8|WC)",
+								"language": ""
+							},
+							{
+								"name": "%TouchLevel%",
+								"expression": "(AM|CT|EB|1|2|3|4|AA)",
+								"language": ""
+							},
+							{
+								"name": "%TouchReason%",
+								"expression": "(IA|IC|ID|IE|IF|IH|II|IL|IM|IP|IR|IS|IT|IU)",
+								"language": ""
+							},
+							{
+								"name": "%TouchType%",
+								"expression": "(N|C|S|W|G)",
+								"language": ""
+							}
+						],
+						"id": 9286,
+						"format": "EB/-%TouchLevel%%OBTVendorCode%/-%TouchType%%TouchReason%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%MatrixLineDP%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9289,
+						"format": "DP/-%MatrixLineDP%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%GTSOTetCode%",
+								"expression": "([A-Z0-9]{12})",
+								"language": ""
+							}
+						],
+						"id": 9300,
+						"format": "U59/-%GTSOTetCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 9287,
+								"name": "TouchLevel",
+								"value": "EB"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%OBTVendorCode%",
+								"expression": "(AR|AS|BA|BF|BT|CB|CD|CO|CR|CS|CT|CY|DL|EI|EO|EW|EX|GA|GT|GW|HA|HB|HF|HZ|IT|KD|KP|LU|NA|PS|RX|SA|SB|TD|TE|TG|TL|TP|TT|VA|WF|WG|YP|A|E|I|K|D|X|P|5|MC|8|WC)",
+								"language": ""
+							},
+							{
+								"name": "%TouchLevel%",
+								"expression": "(AM|CT|EB|1|2|3|4|AA)",
+								"language": ""
+							}
+						],
+						"id": 9287,
+						"format": "EB/-%TouchLevel%%OBTVendorCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 2,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%OBTVendorCode%",
+								"expression": "(AR|AS|BA|BF|BT|CB|CD|CO|CR|CS|CT|CY|DL|EI|EO|EW|EX|GA|GT|GW|HA|HB|HF|HZ|IT|KD|KP|LU|NA|PS|RX|SA|SB|TD|TE|TG|TL|TP|TT|VA|WF|WG|YP|A|E|I|K|D|X|P|5|MC|8|WC)",
+								"language": ""
+							},
+							{
+								"name": "%TouchLevel%",
+								"expression": "(AM|CT|EB|1|2|3|4|AA)",
+								"language": ""
+							}
+						],
+						"id": 9288,
+						"format": "EB/-%TouchLevel%%OBTVendorCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Delete",
+						"sequenceNumber": 2,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%MatrixLineBB%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 9290,
+						"format": "BB/-%MatrixLineBB%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 2,
+						"typeName": "BackOffice",
+						"remarkType": "Invoice",
+						"updateType": "Add",
+						"sequenceNumber": 2,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1786,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CAAirTicketId%",
+								"expression": "([0-9]{1,2})",
+								"language": ""
+							}
+						],
+						"id": 9263,
+						"format": "SPLIT%CAAirTicketId%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%GlobalVariableString%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 250,
+						"format": "SYEXGVS:%GlobalVariableString%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "A",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 4154,
+								"name": "*keyword*ALLOW_EMPTY_FIELD",
+								"value": "true"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%GUIDSubUnit%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%GUIDTopUnit%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%GUIDTraveler%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "GUIDTravelerType",
+								"expression": "([A-Z0-9]+[:-]{1}[A-Z0-9]+)",
+								"language": ""
+							}
+						],
+						"id": 4154,
+						"format": "GUID/CT-%GUIDTopUnit%/SU-%GUIDSubUnit%/TT-%GUIDTravelerType%/T-%GUIDTraveler%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1.0",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 5019,
+								"name": "*keyword*ALLOW_EMPTY_FIELD",
+								"value": "True"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%GUIDSubUnit%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%GUIDTopUnit%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 5019,
+						"format": "GUID/CT-%GUIDTopUnit%/SU-%GUIDSubUnit%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "3.0",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 5020,
+								"name": "*keyword*ALLOW_EMPTY_FIELD",
+								"value": "True"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%GUIDTraveler%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "GUIDTravelerType",
+								"expression": "([A-Z0-9]+[:-]{1}[A-Z0-9]+)",
+								"language": ""
+							}
+						],
+						"id": 5020,
+						"format": "GUID/TT-%GUIDTravelerType%/T-%GUIDTraveler%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "P",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "3.0",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirChargedFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%AirHighFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%AirLowFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%AirSavingCode%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%AirTicketId%",
+								"expression": "([0-9])",
+								"language": ""
+							},
+							{
+								"name": "%CAPointOfTurnAround%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%HemisphereId%",
+								"expression": "([0-9]{1})",
+								"language": ""
+							},
+							{
+								"name": "%TripTypeEquivalent%",
+								"expression": "([0-9]{1,2})",
+								"language": ""
+							}
+						],
+						"id": 9261,
+						"format": "TKT%AirTicketId%-FQ%AirChargedFare%/LP-%AirLowFare%/FS-%AirSavingCode%/FF-%AirHighFare%/FS%HemisphereId%%TripTypeEquivalent%/DE-%CAPointOfTurnAround%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": "CanadaTktRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirBaseCurrency%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							},
+							{
+								"name": "%AirBaseFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%AirTicketId%",
+								"expression": "([0-9])",
+								"language": ""
+							}
+						],
+						"id": 9262,
+						"format": "TKT%AirTicketId%-BF%AirBaseCurrency%%AirBaseFare%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "S",
+						"groupId": 1787,
+						"remarkGroupName": "CanadaTktRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirTicketId%",
+								"expression": "([0-9])",
+								"language": ""
+							},
+							{
+								"name": "%CARouteCode%",
+								"expression": "(DOM|TRANS|INTL)",
+								"language": ""
+							}
+						],
+						"id": 9278,
+						"format": "TKT%AirTicketId%-%CARouteCode%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "0",
+						"groupId": 1787,
+						"remarkGroupName": "CanadaTktRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirTicketId%",
+								"expression": "([0-9])",
+								"language": ""
+							},
+							{
+								"name": "%TktRemark%",
+								"expression": "(!(DOM|TRANS|INTL))",
+								"language": ""
+							}
+						],
+						"id": 9325,
+						"format": "TKT%AirTicketId%-%TktRemark%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "S",
+						"groupId": 1787,
+						"remarkGroupName": "CanadaTktRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirBaseFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							},
+							{
+								"name": "%AirTicketId%",
+								"expression": "([0-9])",
+								"language": ""
+							},
+							{
+								"name": "%LCCFareDetails%",
+								"expression": "([\\s\\S]+)",
+								"language": ""
+							}
+						],
+						"id": 9399,
+						"format": "TKT%AirTicketId%-BA-%AirBaseFare%/%LCCFareDetails%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "S",
+						"groupId": 1787,
+						"remarkGroupName": "CanadaTktRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirTicketId%",
+								"expression": "([0-9])",
+								"language": ""
+							},
+							{
+								"name": "%LCCTicketVendorRemark%",
+								"expression": "([A-Z]{3})",
+								"language": ""
+							}
+						],
+						"id": 9406,
+						"format": "TKT%AirTicketId%-%LCCTicketVendorRemark%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 3,
+						"typeName": "General",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "T",
+						"bindingTypeCode": "S",
+						"groupId": 1787,
+						"remarkGroupName": "CanadaTktRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItineraryTeamID%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 7300,
+						"format": "*CONF*TEAM %CWTItineraryTeamID%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 0,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 751,
+								"name": "WithSFPDRemarks",
+								"value": "True"
+							}
+						],
+						"placeholders": [],
+						"id": 751,
+						"format": "THE DEPARTMENT OF HOMELAND SECURITY INFORMATION REQUIRED TO BE",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 1,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 752,
+								"name": "WithSFPDRemarks",
+								"value": "True"
+							}
+						],
+						"placeholders": [],
+						"id": 752,
+						"format": "COLLECTED FROM YOU OR YOUR PROFILE WAS SENT TO THE AIRLINE FOR",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 2,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 753,
+								"name": "WithSFPDRemarks",
+								"value": "True"
+							}
+						],
+						"placeholders": [],
+						"id": 753,
+						"format": "TRANSMITTAL TO THE TSA. TO VIEW THE TSA PRIVACY POLICIES, THE",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 3,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 754,
+								"name": "WithSFPDRemarks",
+								"value": "True"
+							}
+						],
+						"placeholders": [],
+						"id": 754,
+						"format": "RECORDS NOTICE OR THE PRIVACY IMPACT ASSESSMENT, GO TO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 4,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 755,
+								"name": "WithSFPDRemarks",
+								"value": "True"
+							}
+						],
+						"placeholders": [],
+						"id": 755,
+						"format": "WWW.TSA.GOV.",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 5,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 756,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 756,
+						"format": "DUE TO THE FACT THAT YOU HAVE NOT PROVIDED US WITH THE",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 6,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 757,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 757,
+						"format": "DEPARTMENT OF HOMELAND SECURITY INFORMATION REQUIRED TO BE",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 7,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 758,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 758,
+						"format": "COLLECTED FROM YOU A TICKET CANNOT BE ISSUED. THIS INFORMATION",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 8,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 759,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 759,
+						"format": "IS NEEDED SO PLEASE CONTACT A TRAVEL COUNSELOR IMMEDIATELY TO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 9,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 760,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 760,
+						"format": "ADD YOUR INFORMATION OR YOUR RESERVATION WILL BE CANCELLED. TO",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 10,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 2804,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 2804,
+						"format": "VIEW THE TSA PRIVACY POLICIES, THE RECORDS",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 11,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 2810,
+								"name": "WithSFPDRemarks",
+								"value": "Warn"
+							}
+						],
+						"placeholders": [],
+						"id": 2810,
+						"format": "NOTICE OR THE PRIVACY IMPACT ASSESSMENT, GO TO WWW.TSA.GOV.",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 12,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 708,
+								"name": "CountryVisaRequirement",
+								"value": "ExistsTrue"
+							}
+						],
+						"placeholders": [],
+						"id": 708,
+						"format": "PASSPORT AND VISA INFORMATION",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 13,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 712,
+								"name": "CountryVisaRequirement",
+								"value": "ExistsTrue"
+							}
+						],
+						"placeholders": [],
+						"id": 712,
+						"format": "A VALID PASSPORT WITH AMPLE BLANK PAGES AND WITH AT LEAST",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 14,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 713,
+								"name": "CountryVisaRequirement",
+								"value": "ExistsTrue"
+							}
+						],
+						"placeholders": [],
+						"id": 713,
+						"format": "SIX MONTHS VALIDITY BEYOND THE RETURN DATE IS REQUIRED",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 15,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%Nationality%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 764,
+						"format": "TRAVELLERS NATIONALITY - %Nationality%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 16,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NO|YES|UNABLE TO CONFIRM)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN IKKE BEKRAEFTES)",
+								"language": "da-DK"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEIN|JA|UNABLE TO CONFIRM)",
+								"language": "de-DE"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NON|OUI|IMPOSSIBLE DE CONFIRMER)",
+								"language": "fr-FR"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN INTE BEKRAEFTAS)",
+								"language": "sv-SE"
+							}
+						],
+						"id": 765,
+						"format": "VALID PASSPORT HELD - %TravelDocumentValid%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 17,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NO|YES|UNABLE TO CONFIRM)",
+								"language": ""
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN IKKE BEKRAEFTES)",
+								"language": "da-DK"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEIN|JA|UNABLE TO CONFIRM)",
+								"language": "de-DE"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NON|OUI|IMPOSSIBLE DE CONFIRMER)",
+								"language": "fr-FR"
+							},
+							{
+								"name": "%TravelDocumentValid%",
+								"expression": "(NEJ|JA|KAN INTE BEKRAEFTAS)",
+								"language": "sv-SE"
+							}
+						],
+						"id": 821,
+						"format": "VALID PASSPORT HELD: %TravelDocumentValid%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 17,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(REQUIRED|NOT REQUIRED|ISSUE ON ARRIVAL|SEND TO VISA CENTER|UNABLE TO CONFIRM)",
+								"language": ""
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(PAAKRAEVET|IKKE PAAKRAEVET|UDSTEDES VED ANKOMST|SEND TIL VISUMCENTER|KAN IKKE BEKRAEFTES)",
+								"language": "da-DK"
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(ERFORDERLICH|NICHT ERFORDERLICH|AUSSTELLUNG BEI ANKUNFT|SEND TO VISA CENTRE|UNABLE TO CONFIRM)",
+								"language": "de-DE"
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(OBLIGATOIRE|NON REQUIS|ARRIVEE|ENVOYER|IMPOSSIBLE DE CONFIRMER)",
+								"language": "fr-FR"
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(KRAEVS|KRAEVS EJ|UTSTAELLS VID ANKOMST|SKICKA TILL VISUMCENTER|KAN INTE BEKRAEFTAS)",
+								"language": "sv-SE"
+							},
+							{
+								"name": "%CountryVisited%",
+								"expression": "([\\S]*|[\\S]*\\s[\\S]*|[\\S]*\\s[\\S]*\\s[\\S]*|[\\S]*\\s[\\S]*\\s[\\S]*\\s[\\S]*|[\\S]*\\s[\\S]*\\s[\\S]*\\s[\\S]*\\s[\\S]*[^/,'&-\\.\\(\\)])",
+								"language": ""
+							}
+						],
+						"id": 766,
+						"format": "VISA CHECK - %CountryVisited% %CountryVisaRequirement%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 18,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 822,
+								"name": "FullCancel",
+								"value": "ExistsFalse"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(REQUIRED|NOT REQUIRED|ISSUE ON ARRIVAL|SEND TO VISA CENTER|UNABLE TO CONFIRM)",
+								"language": ""
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(PAAKRAEVET|IKKE PAAKRAEVET|UDSTEDES VED ANKOMST|SEND TIL VISUMCENTER|KAN IKKE BEKRAEFTES)",
+								"language": "da-DK"
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(ERFORDERLICH|NICHT ERFORDERLICH|AUSSTELLUNG BEI ANKUNFT|SEND TO VISA CENTRE|UNABLE TO CONFIRM)",
+								"language": "de-DE"
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(OBLIGATOIRE|NON REQUIS|ARRIVEE|ENVOYER|IMPOSSIBLE DE CONFIRMER)",
+								"language": "fr-FR"
+							},
+							{
+								"name": "%CountryVisaRequirement%",
+								"expression": "(KRAEVS|KRAEVS EJ|UTSTAELLS VID ANKOMST|SKICKA TILL VISUMCENTER|KAN INTE BEKRAEFTAS)",
+								"language": "sv-SE"
+							},
+							{
+								"name": "%CountryVisited%",
+								"expression": "([\\S]*|[\\S]*\\s[\\S]*|[\\S]*\\s[\\S]*\\s[\\S]*|[\\S]*\\s[\\S]*\\s[\\S]*\\s[\\S]*|[\\S]*\\s[\\S]*\\s[\\S]*\\s[\\S]*\\s[\\S]*[^/,'&-\\.\\(\\)])",
+								"language": ""
+							}
+						],
+						"id": 822,
+						"format": "VISA CHECK: %CountryVisited% %CountryVisaRequirement%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 18,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareRoutingDecoded%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 829,
+						"format": "<B>ROUTING: %AirFareRoutingDecoded%</B>",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 19,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 831,
+								"name": "WithCannedConditions",
+								"value": "FALSE"
+							}
+						],
+						"placeholders": [],
+						"id": 831,
+						"format": "MAIN RESTRICTIONS:",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 20,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 772,
+								"name": "WithCannedConditions",
+								"value": "False"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%AirChanges%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 772,
+						"format": "CHANGE OF RESERVATION - %AirChanges%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 21,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirCancellation%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 833,
+						"format": "CANCELLATION: %AirCancellation%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 23,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirValidOn%",
+								"expression": "(.+)",
+								"language": ""
+							}
+						],
+						"id": 834,
+						"format": "VALID ON : %AirValidOn%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 23,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirMinStay%",
+								"expression": "(.+)",
+								"language": ""
+							}
+						],
+						"id": 835,
+						"format": "MINIMUM STAY : %AirMinStay%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 24,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 2341,
+								"name": "WithCannedConditions",
+								"value": "False"
+							}
+						],
+						"placeholders": [
+							{
+								"name": "%AirReRoute%",
+								"expression": "(.+)",
+								"language": ""
+							}
+						],
+						"id": 2341,
+						"format": "REROUTE:%AirReRoute%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 24,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirMaxStay%",
+								"expression": "(.+)",
+								"language": ""
+							}
+						],
+						"id": 836,
+						"format": "MAXIMUM STAY : %AirMaxStay%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 25,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferRoutingDecoded%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 338,
+						"format": "*OFFER**ROUTING: %AirFareOfferRoutingDecoded%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 26,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferAirline%",
+								"expression": "(.*)",
+								"language": ""
+							},
+							{
+								"name": "%AirFareOfferFareBasis%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 339,
+						"format": "*OFFER**AIRLINE: %AirFareOfferAirline% FARE BASIS: %AirFareOfferFareBasis%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 27,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferBaseFare%",
+								"expression": "([0-9]*\\.{0,1}[0-9]{0,2})",
+								"language": ""
+							}
+						],
+						"id": 340,
+						"format": "*OFFER**TOTAL FARE: %AirFareOfferBaseFare%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 28,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferChanges%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 341,
+						"format": "*OFFER**CHANGES: %AirFareOfferChanges%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 29,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PolicyReason%",
+								"expression": "([-/A-Z\\s]+)",
+								"language": ""
+							}
+						],
+						"id": 2840,
+						"format": "REASON %PolicyReason%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 29,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "PolicyCheck",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferCancellation%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 342,
+						"format": "*OFFER**CANCELLATION: %AirFareOfferCancellation%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 30,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferValidOn%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 343,
+						"format": "*OFFER**VALID ON: %AirFareOfferValidOn%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 31,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferReRoute%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 344,
+						"format": "*OFFER**REROUTE: %AirFareOfferReRoute%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 32,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferMinStay%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 345,
+						"format": "*OFFER**MINIMUM STAY: %AirFareOfferMinStay%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 33,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferMaxStay%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 346,
+						"format": "*OFFER**MAXIMUM STAY: %AirFareOfferMaxStay%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 34,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AirFareOfferDetails%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 347,
+						"format": "*OFFER**DETAILS: %AirFareOfferDetails%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 35,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%OnHoldRI%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 791,
+						"format": "ON HOLD-%OnHoldRI%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 36,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 322,
+						"format": "****************************************************",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 37,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "FareItineraryRemarks",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [],
+						"id": 2834,
+						"format": "POLICY WARNING",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 38,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "PolicyCheck",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PolicyAdvice%",
+								"expression": "([-/A-Z0-9\\.\\s]+)",
+								"language": ""
+							}
+						],
+						"id": 2841,
+						"format": "ADVICE %PolicyAdvice%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 40,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "PolicyCheck",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%PolicyStatus%",
+								"expression": "([-/A-Z\\s]+)",
+								"language": ""
+							}
+						],
+						"id": 2842,
+						"format": "STATUS %PolicyStatus%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 41,
+						"gdsRemarkQualifier": null,
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": "PolicyCheck",
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItineraryHeaderRemark%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 336,
+						"format": "*RITOP**%CWTItineraryHeaderRemark%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 42,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItineraryTicketRemark%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 909,
+						"format": "*TICKET**%CWTItineraryTicketRemark%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 43,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 6378,
+								"name": "ESTAFlag",
+								"value": "1"
+							}
+						],
+						"placeholders": [],
+						"id": 6378,
+						"format": "If you are travelling under the visa waiver program",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 44,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 6379,
+								"name": "ESTAFlag",
+								"value": "1"
+							}
+						],
+						"placeholders": [],
+						"id": 6379,
+						"format": "you must submit and receive",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 45,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [
+							{
+								"outputItemId": 6380,
+								"name": "ESTAFlag",
+								"value": "1"
+							}
+						],
+						"placeholders": [],
+						"id": 6380,
+						"format": "an electronic authorization to travel",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 46,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%USESTAURL%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6381,
+						"format": "United States %USESTAURL%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 47,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CAESTAURL%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6382,
+						"format": "Canada %CAESTAURL%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 48,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%AUESTAURL%",
+								"expression": "(.*)",
+								"language": ""
+							}
+						],
+						"id": 6383,
+						"format": "Australia %AUESTAURL%",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "ItinRmk",
+						"updateType": "Add",
+						"sequenceNumber": 49,
+						"gdsRemarkQualifier": "",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					},
+					{
+						"conditions": [],
+						"placeholders": [
+							{
+								"name": "%CWTItinerarySubjectId%",
+								"expression": "([0-9]{1,2})",
+								"language": ""
+							}
+						],
+						"id": 8159,
+						"format": "*CONF*SUBJECT %CWTItinerarySubjectId%*",
+						"defaultLanguageCode": "en-GB",
+						"typeId": 4,
+						"typeName": "Itinerary",
+						"remarkType": "GenRmk",
+						"updateType": "Add",
+						"sequenceNumber": 200,
+						"gdsRemarkQualifier": "Z",
+						"bindingTypeCode": "0",
+						"groupId": 1788,
+						"remarkGroupName": null,
+						"remarkGroupKey": null,
+						"dataVersion": "1",
+						"layoutVersion": "1",
+						"targetLayoutVersion": "1"
+					}
+				]
+			},
+			"placeHolderValues": [
+				{
+					"id": 7051,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CarPickUpDate": "12DEC",
+						"CarPickUpCity": "YYZ",
+						"CarCommissionValue": "AMT",
+						"CarVendor": "ECAR",
+						"CarCommission": "123.00",
+						"CarGDSRate": "100.00",
+						"CarCommissionCheck": "YES"
+					}
+				},
+				{
+					"id": 6966,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"FOPCreditCardInfo": "BTA CWT BTA"
+					}
+				},
+				{
+					"id": 31,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"PolicyType": "POLICY TYPE",
+						"PolicyCheckItemId": "ID123",
+						"PolicyCheckAnswer": "YES"
+					}
+				},
+				{
+					"id": 43,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 44,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AquaTeamName": "ABCTEAM"
+					}
+				},
+				{
+					"id": 517,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"PAXGender": "M"
+					}
+				},
+				{
+					"id": 1792,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AquaPCC": "YTOWL2107"
+					}
+				},
+				{
+					"id": 4370,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"*keyword*ALLOW_EMPTY_FIELD": "True"
+					},
+					"matchedPlaceholders": {
+						"PAXMiddleName": "AMADEUS",
+						"PAXFirstName": "WOLFGANG",
+						"PAXLastName": "MOZART"
+					}
+				},
+				{
+					"id": 4371,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"PAXBirthDate": "13MAY99",
+						"PAXGender": "M"
+					}
+				},
+				{
+					"id": 7304,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"ItineraryLanguageCulture": "EN-US"
+					}
+				},
+				{
+					"id": 492,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"APISNationality": "BJ"
+					}
+				},
+				{
+					"id": 537,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"APISNationality": "BJ"
+					}
+				},
+				{
+					"id": 570,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AquaSkip": "SM"
+					}
+				},
+				{
+					"id": 571,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AquaSkip": "PRICE"
+					}
+				},
+				{
+					"id": 572,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AquaSkip": "SEAT"
+					}
+				},
+				{
+					"id": 573,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AquaSkip": "FARE"
+					}
+				},
+				{
+					"id": 574,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"AquaSkip": "PRICE"
+					},
+					"matchedPlaceholders": {
+						"AquaSkip": "SM"
+					}
+				},
+				{
+					"id": 55,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CWTItineraryEmailRecipient": "TEST@CWT.COM"
+					}
+				},
+				{
+					"id": 1813,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CWTItineraryEmailRecipient": "TEST@CWT.COM"
+					}
+				},
+				{
+					"id": 1658,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 53,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"VisaTravelDocType": "13",
+						"TravelDocumentValid": "NO",
+						"VisaResidenceCountry": "BJ",
+						"VisaTravelDocNumber": "1233",
+						"VisaTravelDocExpiry": "12/12/2022",
+						"Nationality": "BJ"
+					}
+				},
+				{
+					"id": 1819,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"PolicyType": "POLICY TYPE",
+						"PolicyCheckItemId": "ID123",
+						"PolicyCheckAnswer": "YES"
+					}
+				},
+				{
+					"id": 520,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"*keyword*ALLOW_EMPTY_FIELD": "true"
+					},
+					"matchedPlaceholders": {
+						"PAXMiddleName": "AMADEUS",
+						"PAXFirstName": "WOLFGANG",
+						"PAXLastName": "MOZART"
+					}
+				},
+				{
+					"id": 564,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"PAXMiddleName": "AMADEUS",
+						"PAXFirstName": "WOLFGANG",
+						"PAXLastName": "MOZART"
+					}
+				},
+				{
+					"id": 567,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"SendItinerary": "YES"
+					}
+				},
+				{
+					"id": 74,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"ProfileID": "MCASTROUK",
+						"NetworkID": "U002MCC"
+					}
+				},
+				{
+					"id": 2300,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"ItineraryLanguage": "EN"
+					}
+				},
+				{
+					"id": 4399,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"FullCancel": "ExistsFalse"
+					},
+					"matchedPlaceholders": {
+						"AirTicketingDateNotFinalised": "8/21/2019"
+					}
+				},
+				{
+					"id": 9400,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"LCCAirline": "AC",
+						"LCCBaseFare": "123.00",
+						"LCCBaseCurrency": "CAD"
+					}
+				},
+				{
+					"id": 9271,
+					"segmentNumberReferences": [
+						"1"
+					],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CAAirHighFare": "4656.16"
+					}
+				},
+				{
+					"id": 9272,
+					"segmentNumberReferences": [
+						"1"
+					],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CAAirLowFare": "724.16"
+					}
+				},
+				{
+					"id": 9276,
+					"segmentNumberReferences": [
+						"1"
+					],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CAAirRealisedSavingCode": "7"
+					}
+				},
+				{
+					"id": 9266,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"TripTypeCode": "C",
+						"CWTAccountNumber": "ZZZ"
+					}
+				},
+				{
+					"id": 9267,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"BackOfficeAgentIdentifier": "MCC"
+					}
+				},
+				{
+					"id": 9279,
+					"segmentNumberReferences": [
+						"1"
+					],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"PointOfTurnAround": "PAR"
+					}
+				},
+				{
+					"id": 9289,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"MatrixLineDP": "TESTING123"
+					}
+				},
+				{
+					"id": 9300,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"GTSOTetCode": "MUSSUUUUUUUA"
+					}
+				},
+				{
+					"id": 9263,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CAAirTicketId": "1"
+					}
+				},
+				{
+					"id": 250,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"GlobalVariableString": "A:175EC A:F9F84 A:13038 A:4086A182 T-ZZZ EN-US EN-US"
+					}
+				},
+				{
+					"id": 9261,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AirHighFare": "4656.16",
+						"AirSavingCode": "7",
+						"TripTypeEquivalent": "1",
+						"HemisphereId": "2",
+						"AirLowFare": "724.16",
+						"AirChargedFare": "4656.16",
+						"CAPointOfTurnAround": "PAR",
+						"AirTicketId": "1"
+					}
+				},
+				{
+					"id": 9262,
+					"segmentNumberReferences": [
+						"1"
+					],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AirBaseCurrency": "CAD",
+						"AirBaseFare": "4337.00",
+						"AirTicketId": "1"
+					}
+				},
+				{
+					"id": 9278,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CARouteCode": "INTL",
+						"AirTicketId": "1"
+					}
+				},
+				{
+					"id": 9406,
+					"segmentNumberReferences": [
+						"1"
+					],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"LCCTicketVendorRemark": "ETK",
+						"AirTicketId": "1"
+					}
+				},
+				{
+					"id": 751,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"WithSFPDRemarks": "True"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 752,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"WithSFPDRemarks": "True"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 753,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"WithSFPDRemarks": "True"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 754,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"WithSFPDRemarks": "True"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 755,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"WithSFPDRemarks": "True"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 708,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"CountryVisaRequirement": "ExistsTrue"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 712,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"CountryVisaRequirement": "ExistsTrue"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 713,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"CountryVisaRequirement": "ExistsTrue"
+					},
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 764,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"Nationality": "BJ"
+					}
+				},
+				{
+					"id": 765,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"TravelDocumentValid": "NO"
+					}
+				},
+				{
+					"id": 821,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"TravelDocumentValid": "NO"
+					}
+				},
+				{
+					"id": 766,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CountryVisaRequirement": "REQUIRED",
+						"CountryVisited": "FRANCE"
+					}
+				},
+				{
+					"id": 766,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CountryVisaRequirement": "REQUIRED",
+						"CountryVisited": "CANADA"
+					}
+				},
+				{
+					"id": 822,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"FullCancel": "ExistsFalse"
+					},
+					"matchedPlaceholders": {
+						"CountryVisaRequirement": "REQUIRED",
+						"CountryVisited": "FRANCE"
+					}
+				},
+				{
+					"id": 822,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": {
+						"FullCancel": "ExistsFalse"
+					},
+					"matchedPlaceholders": {
+						"CountryVisaRequirement": "REQUIRED",
+						"CountryVisited": "CANADA"
+					}
+				},
+				{
+					"id": 829,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"AirFareRoutingDecoded": "TORONTO PARIS"
+					}
+				},
+				{
+					"id": 322,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": null
+				},
+				{
+					"id": 336,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CWTItineraryHeaderRemark": "TEST HEADER"
+					}
+				},
+				{
+					"id": 909,
+					"segmentNumberReferences": [],
+					"passengerNumberReferences": [],
+					"conditions": null,
+					"matchedPlaceholders": {
+						"CWTItineraryTicketRemark": "TEST TICKETS"
+					}
+				}
+			]
+		}
+	}
+}

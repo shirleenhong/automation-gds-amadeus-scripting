@@ -1,6 +1,6 @@
 *** Settings ***
 Library           String
-Library           Selenium2Library
+Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
 

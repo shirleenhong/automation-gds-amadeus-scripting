@@ -37,6 +37,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   name: string;
   isInsurance = false;
   isAddNew = false;
+  isCopy = false;
+  tempAccounting: MatrixAccountingModel;
+
   // PaymentModeList: Array<SelectItem>;
   // @ViewChild('bankAccount') bankAccEl: ElementRef;
 
@@ -50,13 +53,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.accountingRemarkList = new Array<SelectItem>();
     this.formOfPaymentList = new Array<SelectItem>();
     this.accountingRemark = new MatrixAccountingModel();
+    this.tempAccounting = new MatrixAccountingModel();
     this.loadBSPList();
     this.loadVendorCode();
     this.loadAccountingRemarkList();
     this.loadDescription();
     this.loadFareType();
     this.passPurchaseList = this.ddbService.getACPassPurchaseList();
-    // this.loadPassengerList();
+    // this.initializeCopy();
   }
 
   ngOnInit() {
@@ -91,7 +95,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       penaltyHst: new FormControl(''),
       penaltyQst: new FormControl(''),
       penaltyBaseAmount: new FormControl(''),
-      originalTktLine: new FormControl('')
+      originalTktLine: new FormControl(''),
+      duplicateFare: new FormControl('')
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -294,6 +299,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
+
+      // Trim supplier codes. Refer to DE2253.
+      this.filterSupplierCodeList.forEach(filterSupplierCode => {
+        filterSupplierCode.supplierCode = filterSupplierCode.supplierCode.trim();
+      });
     }
   }
 
@@ -413,7 +423,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { airline: 'PD', supplierCode: 'PTA' },
       { airline: '9M', supplierCode: 'CMA' },
       { airline: 'MO', supplierCode: 'C5A' },
-      { airline: 'YP', supplierCode: 'K9P' },
+      { airline: 'YP', supplierCode: 'KP9' },
       { airline: '4N', supplierCode: 'A5N' },
       { airline: '8P', supplierCode: 'PF3' },
       { airline: 'WJ', supplierCode: 'ALO' },
@@ -479,5 +489,37 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       }
     });
     return res;
+  }
+
+  select(copyFields) {
+    // let tempAccounting: MatrixAccountingModel;
+    this.initializeCopy();
+    this.matrixAccountingForm.controls.passengerNo.patchValue('');
+    this.matrixAccountingForm.controls.tktLine.patchValue('');
+    if (copyFields === 'fare') {
+      this.matrixAccountingForm.controls.vendorCode.patchValue('');
+      this.matrixAccountingForm.controls.fop.patchValue('');
+      this.matrixAccountingForm.controls.ccNo.patchValue('');
+      this.matrixAccountingForm.controls.expDate.patchValue('');
+    } else {
+      this.matrixAccountingForm.controls.fop.patchValue(this.tempAccounting.fop);
+      if (this.tempAccounting.vendorCode) {
+        this.matrixAccountingForm.controls.vendorCode.patchValue(this.tempAccounting.vendorCode);
+        this.matrixAccountingForm.controls.ccNo.patchValue(this.tempAccounting.cardNumber);
+        this.matrixAccountingForm.controls.expDate.patchValue(this.tempAccounting.expDate);
+      }
+
+    }
+  }
+
+  initializeCopy() {
+    if (!this.tempAccounting.fop) {
+      this.tempAccounting.fop = this.matrixAccountingForm.controls.fop.value;
+      if (this.matrixAccountingForm.controls.vendorCode.value) {
+        this.tempAccounting.vendorCode = this.matrixAccountingForm.controls.vendorCode.value;
+        this.tempAccounting.cardNumber = this.matrixAccountingForm.controls.cardNumber.value;
+        this.tempAccounting.expDate = this.matrixAccountingForm.controls.expDate.value;
+      }
+    }
   }
 }

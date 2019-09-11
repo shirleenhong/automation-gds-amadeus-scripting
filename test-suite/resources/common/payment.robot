@@ -80,7 +80,8 @@ Enter Last Four Digit VI
 
 Click Payment Tab
     [Arguments]    ${payment_tab}
-    Wait Until Page Contains Element    xpath=//span[contains(text(), '${payment_tab}')]    60
+    Wait Until Element Is Visible   xpath=//span[contains(text(), '${payment_tab}')]    60
+    Set Focus To Element    xpath=//span[contains(text(), '${payment_tab}')]
     Click Element    xpath=//span[contains(text(), '${payment_tab}')]
 
 Select Traveler Province

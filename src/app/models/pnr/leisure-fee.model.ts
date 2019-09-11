@@ -9,4 +9,5 @@ export class LeisureFeeModel {
   expDate: string;
   address: string;
   passengerNo: string;
+  status: string // ADDED | UPDATED
 }

@@ -6,6 +6,29 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="matrixAccountingForm">
+    <div *ngIf="isCopy == true">
+      <div class="row form-group">
+        <div class="col-12">
+          <label class="control control-radio">
+            Duplicate all Fare and Credit Card Information for next Passenger
+            <input type="radio" name="duplicateFare" formcontrolname="duplicateFare" id="duplicateFare"
+              value="farePayment" (click)="select('farePayment')" />
+            <div class="control_indicator"></div>
+          </label>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-12">
+          <label class="control control-radio">
+            Duplicate all Fare Information only for next Passenger
+            <input type="radio" name="duplicateFare" formcontrolname="duplicateFare" id="duplicateFare" value="fare"
+              (click)="select('fare')" />
+            <div class="control_indicator"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group  row">
       <div class="col-sm-4">MAC Line #:</div>
       <div class="col-sm-8">
@@ -124,8 +147,8 @@
 
       <div class="col">
         <div class="">GST:</div>
-        <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemark.gst" maxlength="8"
-          formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
+        <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemark.gst"
+          maxlength="8" formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
       </div>
     </div>
 
@@ -133,14 +156,14 @@
       <div class="col-sm-4"></div>
       <div class="col">
         <div class="">HST:</div>
-        <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemark.hst" maxlength="8"
-          formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
+        <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemark.hst"
+          maxlength="8" formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
         <div class="">QST:</div>
-        <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemark.qst" maxlength="8"
-          formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
+        <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemark.qst"
+          maxlength="8" formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
       </div>
     </div>
     <div class="form-group  row" *ngIf="accountingRemark.bsp == '3'">
@@ -148,8 +171,8 @@
       <div class="col">
         <div class="">Commission %:</div>
         <input type="text" class="form-control" id="commisionPercentage" formControlName="commisionPercentage"
-          [(ngModel)]="accountingRemark.commisionPercentage" name="commisionPercentage" required placeholder="00.00" maxlength="8"
-          AmountMask />
+          [(ngModel)]="accountingRemark.commisionPercentage" name="commisionPercentage" required placeholder="00.00"
+          maxlength="8" AmountMask />
       </div>
 
       <div class="col"></div>
@@ -190,8 +213,8 @@
 
           <div class="col">
             <div class="">GST on Penalty:</div>
-            <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst" maxlength="8"
-              formControlName="penaltyGst" name="penaltyGst" required placeholder="00.00" AmountMask />
+            <input type="text" class="form-control" id="penaltyGst" [(ngModel)]="accountingRemark.penaltyGst"
+              maxlength="8" formControlName="penaltyGst" name="penaltyGst" required placeholder="00.00" AmountMask />
           </div>
         </div>
 

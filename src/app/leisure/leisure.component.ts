@@ -1,31 +1,32 @@
 import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
-import { RemarkService } from '../service/remark.service';
+import { LeisureRemarkService } from '../service/leisure/leisure-remark.service';
 import { PaymentRemarkService } from '../service/leisure/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/leisure/reporting-remark.service';
 import { PaymentComponent } from './payments/payment.component';
-import { SegmentService } from '../service/leisure/segment.service';
+import { SegmentService } from '../service/segment.service';
 import { ReportingComponent } from './reporting/reporting.component';
 import { RemarkComponent } from './remarks/remark.component';
 import { DDBService } from '../service/ddb.service';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
-import { PackageRemarkService } from '../service/leisure/package-remark.service';
+import { RemarkService } from '../service/leisure/remark-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
-import { VisaPassportService } from '../service/leisure/visa-passport.service';
-import { InvoiceService } from '../service/leisure/invoice-remark.service';
+import { VisaPassportRemarkService } from '../service/leisure/visa-passport-remark.service';
+import { InvoiceRemarkService } from '../service/leisure/invoice-remark.service';
 import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
-import { ItineraryService } from '../service/leisure/itinerary.service';
+import { ItineraryRemarkService } from '../service/leisure/itinerary-remark.service';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
-import { QueueService } from '../service/leisure/queue.service';
+import { QueueRemarkService } from '../service/leisure/queue-remark.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
 import { common } from '../../environments/common';
+import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 
 @Component({
   selector: 'app-leisure',
@@ -43,6 +44,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitProcess = false;
   modalRef: BsModalRef;
   version = common.LeisureVersionNumber;
+  issuingBsp = false;
+  bspReply = false;
+  errorAccounting: string;
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -61,17 +65,17 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   constructor(
     private pnrService: PnrService,
-    private remarkService: RemarkService,
+    private leisureRemarkService: LeisureRemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,
-    private packageRemarkService: PackageRemarkService,
-    private visaPassportService: VisaPassportService,
+    private packageRemarkService: RemarkService,
+    private visaPassportService: VisaPassportRemarkService,
     private ddbService: DDBService,
     private modalService: BsModalService,
-    private invoiceService: InvoiceService,
-    private itineraryService: ItineraryService,
-    private queueService: QueueService
+    private invoiceService: InvoiceRemarkService,
+    private itineraryService: ItineraryRemarkService,
+    private queueService: QueueRemarkService
   ) {
     this.getPnr();
     this.initData();
@@ -121,30 +125,29 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-
   async ngOnInit() {
+    this.modalSubscribeOnClose();
     // this.message = '';
     // this.message += JSON.stringify(await this.ddbService.getCdrItemBySubUnit('A:148D4'));
     // this.message += JSON.stringify(await this.ddbService.getConfigurationParameter('ApacCDRRemark_NonAirSegment'));
   }
-
 
   checkValid() {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.remarkComponent.checkValid();
-    if (this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
-      this.validModel.isItineraryValid = true;
-    } else {
-      this.validModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
-    }
-
     return this.validModel.isAllValid();
   }
 
-  public SubmitToPNR() {
+  public async SubmitToPNR() {
     if (this.submitProcess) {
+      return;
+    }
+
+    const encryptedCC = this.paymentComponent.checkEncryptedCreditCard();
+    if (encryptedCC.length > 0) {
+      this.accountingModal(encryptedCC);
       return;
     }
 
@@ -159,17 +162,36 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
+    if (!this.bspReply && this.pnrService.getTSTTicketed()) {
+      this.issueBsp();
+      return;
+    }
+
     this.submitProcess = true;
     this.showLoading('Updating PNR remarks...');
 
     const remarkCollection = new Array<RemarkGroup>();
-    let queueCollection = Array<QueuePlaceModel>();
-    let itineraryQueueCollection = Array<QueuePlaceModel>();
 
-    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+    remarkCollection.push(this.paymentRemarkService.removeRmFop());
 
-    remarkCollection.push(this.paymentRemarkService.GetMatrixRemarks(this.paymentComponent.matrixReceipt.matrixReceipts));
-    remarkCollection.push(this.paymentRemarkService.GetAccountingRemarks(this.paymentComponent.accountingRemark.accountingRemarks));
+    if (this.issuingBsp) {
+      remarkCollection.push(this.paymentRemarkService.addRmFop());
+      this.issuingBsp = false;
+    }
+    this.bspReply = false;
+    remarkCollection.push(
+      this.paymentRemarkService.GetMatrixRemarks(
+        this.paymentComponent.matrixReceipt.matrixReceipts,
+        this.paymentComponent.matrixReceipt.matrixReceiptsToDelete
+      )
+    );
+    remarkCollection.push(
+      this.paymentRemarkService.GetAccountingRemarks(
+        this.paymentComponent.accountingRemark.accountingRemarks,
+        this.paymentComponent.accountingRemark.accountingRemarksToDelete
+      )
+    );
+
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
     remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
@@ -199,34 +221,27 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     } else {
       remarkCollection.push(this.packageRemarkService.GetPackageRemarksForDeletion());
     }
-
     remarkCollection.push(this.packageRemarkService.GetCodeShare(this.remarkComponent.codeShareComponent.codeShareGroup));
     if (this.remarkComponent.rbcPointsRedemptionComponent) {
       remarkCollection.push(
         this.packageRemarkService.GetRbcRedemptionRemarks(this.remarkComponent.rbcPointsRedemptionComponent.rbcRedemption)
       );
     }
-    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
-      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
-      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
-    }
-    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-    queueCollection = queueCollection.concat(itineraryQueueCollection);
 
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
-
     remarkCollection.push(
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
 
-    this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
-      () => {
+    const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP');
+    this.leisureRemarkService.BuildRemarks(remarkCollection);
+    await this.leisureRemarkService.SubmitRemarks().then(
+      async () => {
         if (acpp && acpp.length > 0) {
-          this.processPassPurchase(queueCollection);
+          await this.processPassPurchase(this.paymentComponent.accountingRemark.accountingRemarks);
         } else {
-          this.resetReloadUI(queueCollection);
+          await this.resetReloadUI();
         }
       },
       (error) => {
@@ -234,13 +249,24 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         console.log(JSON.stringify(error));
       }
     );
+
+    if (this.invoiceComponent.matrixInvoiceGroup.controls.selection.value) {
+      this.SendInvoiceItinerary();
+    }
   }
 
-  processPassPurchase(queueCollection) {
-    // this will associate the dummy segment to pass purchase
+  processPassPurchase(accountingRemarks: MatrixAccountingModel[]) {
     this.getPnrService().then(async () => {
-      const accounts = this.pnrService.getAccountingRemarks();
-      const acpp = accounts.filter((x) => x.accountingTypeRemark === 'ACPP' && !x.segmentNo);
+      const accounts = accountingRemarks;
+      let acpp = Array<MatrixAccountingModel>();
+
+      const matrixAccountingReceiptsToUdpate = accountingRemarks.filter((x) => x.status === 'UPDATED');
+      if (matrixAccountingReceiptsToUdpate.length > 0) {
+        acpp = accounts;
+      } else {
+        acpp = accounts.filter((x) => x.accountingTypeRemark === 'ACPP' && (x.status === 'UPDATED' || x.status === 'ADDED'));
+      }
+
       let found = false;
       acpp.forEach((a) => {
         const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);
@@ -251,21 +277,21 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       });
       if (found) {
         const accRemarks = new Array<RemarkGroup>();
-        accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(accounts));
-        this.remarkService.BuildRemarks(accRemarks);
-        await this.remarkService.SubmitRemarks().then(() => {
-          this.resetReloadUI(queueCollection);
+        accRemarks.push(this.paymentRemarkService.GetAccountingRemarks(acpp));
+        this.leisureRemarkService.BuildRemarks(accRemarks);
+        await this.leisureRemarkService.SubmitRemarks().then(async () => {
+          await this.resetReloadUI();
         });
       } else {
-        this.resetReloadUI(queueCollection);
+        await this.resetReloadUI();
       }
     });
   }
 
-  resetReloadUI(queueCollection?) {
+  async resetReloadUI(queueCollection?) {
     this.submitProcess = false;
     this.isPnrLoaded = false;
-    this.getPnr(queueCollection);
+    await this.getPnr(queueCollection);
     this.workflow = '';
   }
 
@@ -316,8 +342,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     // if (getSelected.length >= 1) {
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-    this.remarkService.BuildRemarks(osiCollection);
-    await this.remarkService.cancelOSIRemarks().then(
+    this.leisureRemarkService.BuildRemarks(osiCollection);
+    await this.leisureRemarkService.cancelOSIRemarks().then(
       () => { },
       (error) => {
         console.log(JSON.stringify(error));
@@ -332,11 +358,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.cancelComponent.refundComponent) {
       remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     }
-
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
 
-    this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
+    this.leisureRemarkService.BuildRemarks(remarkCollection);
+    await this.leisureRemarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr(queueCollection);
@@ -350,6 +375,29 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     );
   }
 
+  public async SendInvoiceItinerary() {
+    if (this.submitProcess) {
+      return;
+    }
+    this.showLoading('Sending Invoice Itinerary...');
+    this.submitProcess = true;
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
+    // this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
+    this.leisureRemarkService.BuildRemarks(remarkCollection);
+    await this.leisureRemarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+        this.workflow = '';
+      },
+      (error) => {
+        this.showMessage('Error while sending Invoice Itinerary', MessageType.Error);
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
   async addSegmentToPNR() {
     if (this.submitProcess) {
       return;
@@ -358,8 +406,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.submitProcess = true;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
-    this.remarkService.BuildRemarks(remarkCollection);
-    await this.remarkService.SubmitRemarks().then(
+    this.leisureRemarkService.BuildRemarks(remarkCollection);
+    await this.leisureRemarkService.SubmitRemarks().then(
       async () => {
         await this.getPnrService();
         await this.addSemgentsRirRemarks();
@@ -376,13 +424,52 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const remarkCollection2 = new Array<RemarkGroup>();
     remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
 
-    await this.remarkService.BuildRemarks(remarkCollection2);
-    this.remarkService.SubmitRemarks().then(
+    await this.leisureRemarkService.BuildRemarks(remarkCollection2);
+    this.leisureRemarkService.SubmitRemarks().then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
       },
       (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
+  public SendItineraryAndQueue() {
+    if (!this.itineraryqueueComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+
+    if (this.submitProcess) {
+      return;
+    }
+    this.showLoading('Sending Itinerary and Queueing...');
+    const remarkCollection = new Array<RemarkGroup>();
+    let queueCollection = Array<QueuePlaceModel>();
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
+    }
+    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    this.leisureRemarkService.BuildRemarks(remarkCollection);
+    this.leisureRemarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr(queueCollection);
+        this.workflow = '';
+      },
+      (error) => {
+        this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error);
         console.log(JSON.stringify(error));
       }
     );
@@ -396,29 +483,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.invoiceEnabled = false;
       }
     }
-  }
-
-  public SendInvoiceItinerary() {
-    if (this.submitProcess) {
-      return;
-    }
-    this.showLoading('Sending Invoice Itinerary...');
-    this.submitProcess = true;
-    const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-    this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
-    this.remarkService.BuildRemarks(remarkCollection);
-    this.remarkService.SubmitRemarks().then(
-      () => {
-        this.isPnrLoaded = false;
-        this.getPnr();
-        this.workflow = '';
-      },
-      (error) => {
-        this.showMessage('Error while sending Invoice Itinerary', MessageType.Error);
-        console.log(JSON.stringify(error));
-      }
-    );
   }
 
   public async loadPnr() {
@@ -451,6 +515,22 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
+  public async sendItineraryAndQueue() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      this.workflow = 'sendItinerary';
+    }
+  }
+
+  accountingModal(errorLines) {
+    const modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
+    modalRef.content.modalRef = modalRef;
+    modalRef.content.title = 'Warning';
+    modalRef.content.message = 'Please re-enter Credit Card numbers on the following: <br>' + errorLines.join('<br>');
+  }
+
   back(): void {
     if (this.isPnrLoaded) {
       this.workflow = '';
@@ -463,5 +543,36 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.cancelEnabled = false;
       }
     }
+  }
+
+  issueBsp() {
+    this.issuingBsp = false;
+    this.modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
+    this.modalRef.content.modalRef = this.modalRef;
+    this.modalRef.content.title = 'Issuing a BSP ticket';
+    this.modalRef.content.message = 'Are you issuing a BSP ticket on a CWT Agency Plastic Credit Card?';
+    this.modalRef.content.note =
+      'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
+      'RM*FOP/-AP format is in the PNR. \r\n' +
+      'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark.';
+    this.modalRef.content.callerName = 'issuingBSP';
+    this.modalRef.content.setMessageType(MessageType.YesNo);
+  }
+
+  modalSubscribeOnClose() {
+    this.modalService.onHide.subscribe(() => {
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'issuingBSP') {
+        if (this.modalRef.content.response === 'YES') {
+          this.issuingBsp = true;
+        } else {
+          this.issuingBsp = false;
+        }
+        this.bspReply = true;
+        this.modalRef.content.response = '';
+        this.SubmitToPNR();
+      }
+    });
   }
 }

@@ -23,9 +23,10 @@ export class PnrService {
   segments = [];
   amountPipe = new AmountPipe();
   PCC = '';
-  // recordLocator = '';
+  pnrResponse: any;
+  clientSubUnitGuid: string;
 
-  constructor() { }
+  constructor() {}
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -33,10 +34,11 @@ export class PnrService {
     await this.pnrObj
       .retrievePNR()
       .then(
-        () => {
+        async (res) => {
           this.isPNRLoaded = true;
           this.errorMessage = 'PNR Loaded Successfully';
-          this.getTST();
+          this.pnrResponse = res.response.model.output.response;
+          await this.getTST();
         },
         (error: string) => {
           this.isPNRLoaded = false;
@@ -50,7 +52,6 @@ export class PnrService {
     // this.getRecordLocator();
     console.log(JSON.stringify(this.pnrObj));
   }
-
 
   async getTST(): Promise<void> {
     this.tstObj = new Array<any>();
@@ -66,21 +67,22 @@ export class PnrService {
       displayMode
     };
 
-    await smartScriptSession.requestService('ws.displayTST_v14.1', displayElement).then(
-      (tst) => {
-        this.tstObj = tst.response.model.output.response.fareList;
-        this.errorMessage = 'TST Loaded Successfully';
-      },
-      (error: string) => {
-        this.errorMessage = 'Error: ' + error;
-      }
-    )
+    await smartScriptSession
+      .requestService('ws.displayTST_v14.1', displayElement)
+      .then(
+        (tst) => {
+          this.tstObj = tst.response.model.output.response.fareList;
+          this.errorMessage = 'TST Loaded Successfully';
+        },
+        (error: string) => {
+          this.errorMessage = 'Error: ' + error;
+        }
+      )
       .catch((err) => {
         console.log(err);
       });
     console.log(JSON.stringify(this.tstObj));
   }
-
 
   isRbpRbm() {
     if (!this.cfLine) {
@@ -95,12 +97,6 @@ export class PnrService {
   getPCC(): void {
     smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.PCC = x.ACTIVE_OFFICE_ID;
-    });
-  }
-
-  getRecordLocator(): void {
-    smartScriptSession.getRecordLocator().then((x) => {
-      this.recordLocator = x;
     });
   }
 
@@ -378,7 +374,6 @@ export class PnrService {
   }
 
   private getSegmentDetails(elem: any, type: string) {
-
     let elemText = '';
     let elemStatus = '';
     let elemairlineCode = '';
@@ -1093,15 +1088,6 @@ export class PnrService {
     return pSegment;
   }
 
-  // getRirSeaSegments() {
-  //   const pSegment = [];
-  //   let segment = this.getSegmentTatooNumber();
-  //   segment.forEach(element => {
-  //     pSegment.push();
-  //   });
-  //   return pSegment;
-  // }
-
   private extractMatrixReceipt(model: MatrixReceiptModel, remark: string): MatrixReceiptModel {
     let regex = /RLN-(?<rln>[0-9]*)\/-RF-(?<fullname>(.*))\/-AMT-(?<amount>(.*))/g;
     let match = regex.exec(remark);
@@ -1138,11 +1124,11 @@ export class PnrService {
       const typ = fop.substr(0, 2);
       model.modePayment = typ;
       if (typ === 'CC') {
-        regex = /([A-Z]{2})(?<vendor>[A-Z]{2})(?<cardNo>[0-9]*)\/-EXP-(?<exp>([0-9]{4}))/g;
+        regex = /([A-Z]{2})(?<vendor>[A-Z]{2})(?<cardNo>(.*))\/-EXP-(?<exp>([0-9]{4}))/g;
         match = regex.exec(fop);
         if (match !== null) {
           model.vendorCode = match.groups.vendor;
-          model.ccNo = Number(match.groups.cardNo);
+          model.ccNo = match.groups.cardNo;
           model.expDate = match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
         }
 
@@ -1259,5 +1245,43 @@ export class PnrService {
     });
 
     return relatedPassenger;
+  }
+
+  getTSTTicketed() {
+    const segmentinPNR = this.getSegmentTatooNumber();
+    const segments = [];
+    for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
+      const segmentName = tst.elementManagementData.segmentName;
+      if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
+        tst.referenceForDataElement.reference.forEach((ref) => {
+          if (ref.qualifier === 'ST') {
+            segments.push(ref.number);
+          }
+        });
+      }
+    }
+
+    for (const fp of this.pnrObj.fpElements) {
+      if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
+        if (fp.fullNode.referenceForDataElement === undefined && segments.length < segmentinPNR.length) {
+          return true;
+        }
+        for (const ref of fp.fullNode.referenceForDataElement.reference) {
+          if (segments.indexOf(ref.number) === -1) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  getClientSubUnit() {
+    const syexgvs = this.getRemarkText('SYEXGVS:');
+    if (syexgvs && !this.clientSubUnitGuid) {
+      this.clientSubUnitGuid = syexgvs.split(' ')[1];
+    }
+
+    return this.clientSubUnitGuid;
   }
 }

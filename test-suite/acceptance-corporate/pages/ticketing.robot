@@ -9,6 +9,7 @@ Resource          base.robot
 ${input_ticketingDate}    css=#dtxtTicketDate
 ${checkbox_onHold}    css=#chkOnHold
 ${dropdown_tkLine}    css=#selTK
+${checkbox_verifyTicket}    css=#chkVerifyAck
 
 *** Keywords ***
 Fill Up Ticketing Panel With Default Values
@@ -16,6 +17,7 @@ Fill Up Ticketing Panel With Default Values
     Assign Current Date
     Enter Value    ${input_ticketingDate}    01312020
     Select Checkbox    ${checkbox_onHold}
+    Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
 
@@ -35,6 +37,7 @@ Fill Up Ticketing Panel For ${selected_aqua_tkLine}
     Run Keyword If    "${selected_aqua_tkLine}" == "CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE"    Select From List By Value    ${dropdown_tkLine}    CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
     Run Keyword If    "${selected_aqua_tkLine}" == "FEE ONLY"    Select From List By Value    ${dropdown_tkLine}    FEE ONLY
     Run Keyword If    "${selected_aqua_tkLine}" == "CANCELLED PNR"    Select From List By Value    ${dropdown_tkLine}    CANCELLED PNR
+    Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
     

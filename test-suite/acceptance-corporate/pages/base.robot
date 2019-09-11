@@ -111,7 +111,6 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment"    Navigate From Payment    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Reporting"   Navigate From Reporting    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Fees"    Navigate From Fees    ${destination_page}
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
@@ -127,6 +126,7 @@ Navigate From Full Wrap
     Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
     ...    ELSE IF    "${destination_page}" == "Reporting"     Click Reporting Panel
     ...    ELSE IF    "${destination_page}" == "Ticketing"     Click Ticketing Panel
+    ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -175,4 +175,3 @@ Click Fees Panel
 Navigate From Fees
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Fees"    Click Fees Panel
-    

@@ -214,24 +214,24 @@ Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Add Multiple BSP Segment And Store Multiple Fares
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-VB70000000C
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-AAA0000000C
     Add Multiple Passive Air Segments In The GDS With Different Airline Codes
 
 Enter RIR Remarks In English

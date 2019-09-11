@@ -18,8 +18,6 @@ ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
-# ${input_ticketingDate}    css=#dtxtTicketDate
-# ${checkbox_onHold}    css=#chkOnHold
 
 *** Keywords ***
 Enter Value

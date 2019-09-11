@@ -34,7 +34,8 @@ Add Client Reporting Values For Single BSP Segment
     Enter Full Fare    1123.50
     Enter Low Fare    300.00
     Select Reason Code    A : Lowest Fare Accepted
-    
+    Take Screenshot    
+        
 Add Client Reporting Values For Multiple BSP Segment
     Navigate To Page Reporting
     Wait Until Page Contains Element    ${tab_clientReporting}[3]${checkbox_clientReporting}    60
@@ -50,6 +51,7 @@ Add Client Reporting Values For Multiple BSP Segment
     Enter Full Fare    790.00    3
     Enter Low Fare    678.00    3
     Select Reason Code    5 : Fare not in compliance    3
+    Take Screenshot    
     
 Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
     Navigate To Page Reporting

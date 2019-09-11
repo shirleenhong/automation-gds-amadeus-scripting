@@ -192,10 +192,10 @@ export class PaymentRemarkService {
       );
 
       const totalCost =
-        parseFloat(account.baseAmount) +
-        parseFloat(account.gst) +
-        parseFloat(account.hst) +
-        parseFloat(account.qst) +
+        totalBaseAmount +
+        totalGst +
+        totalHst +
+        totalQst +
         parseFloat(account.otherTax) +
         parseFloat(account.commisionWithoutTax);
 

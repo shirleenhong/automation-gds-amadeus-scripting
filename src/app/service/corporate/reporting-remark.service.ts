@@ -56,8 +56,11 @@ export class ReportingRemarkService {
 
   WriteEscOFCRemark(value: string) {
     debugger;
-    const escOfc = new Map<string, string>();
-    escOfc.set('CAOverrideValue', 'OVERRIDE ' + value);
-    this.remarksManager.createPlaceholderValues(escOfc);
+    this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
+    if (value !== '') {
+      const escOfc = new Map<string, string>();
+      escOfc.set('CAOverrideValue', value);
+      this.remarksManager.createPlaceholderValues(escOfc);
+    }
   }
 }

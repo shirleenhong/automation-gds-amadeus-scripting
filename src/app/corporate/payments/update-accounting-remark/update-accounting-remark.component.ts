@@ -29,6 +29,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   name: string;
   isAddNew = false;
   isCopy = false;
+  filterSupplierCodeList = [];
 
   constructor(
     public activeModal: BsModalService,

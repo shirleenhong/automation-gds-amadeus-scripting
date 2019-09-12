@@ -109,6 +109,7 @@ Delete Fare and Itinerary
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+    Handle Simultaneous Changes To PNR
 
 Logout To Amadeus Sell Connect
     Click Element    ${link_sign_out}
@@ -128,7 +129,7 @@ Get PNR Details
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
-    [Teardown]    Run Keywords    Take Screenshot
+    [Teardown]    Take Screenshot
 
 Switch To Command Page
     Click Element    ${close_cryptic_display}

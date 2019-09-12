@@ -94,6 +94,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   }
 
   bankAccountChange(newValue) {
+    debugger;
     this.enablePayment = true;
     switch (newValue) {
       case '224000':
@@ -128,6 +129,8 @@ export class UpdateMatrixReceiptComponent implements OnInit {
       case '109000':
       case '227000':
         this.enableFormControls(['modePayment'], true);
+        this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], true);
+        this.enableFormControls(['ccNo', 'expDate', 'vendorCode'], true);
         this.enablePayment = false;
         break;
       default:

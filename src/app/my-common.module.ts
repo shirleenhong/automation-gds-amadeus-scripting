@@ -6,6 +6,7 @@ import { NumberOnlyMaskDirective } from './directives/number-only-mask.directive
 import { AlphaNumericMaskDirective } from './directives/alpha-numeric-mask.directive';
 import { AllCapsMaskDirective } from './directives/all-caps-mask.directive';
 import { AlphaMaskDirective } from './directives/alpha-only-mask.directive';
+import { TabOrderDirective } from './directives/tab-order.directive';
 import { SegmentSelectComponent } from './shared/segment-select/segment-select.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,7 +22,9 @@ import { HttpClientModule } from '@angular/common/http';
     AlphaNumericMaskDirective,
     AllCapsMaskDirective,
     AlphaMaskDirective,
-    SegmentSelectComponent],
+    TabOrderDirective,
+    SegmentSelectComponent
+  ],
   imports: [
     CommonModule,
     BrowserModule,
@@ -42,6 +45,8 @@ import { HttpClientModule } from '@angular/common/http';
     AlphaNumericMaskDirective,
     AllCapsMaskDirective,
     AlphaMaskDirective,
-    SegmentSelectComponent],
+    TabOrderDirective,
+    SegmentSelectComponent
+  ]
 })
-export class MyCommonModule { }
+export class MyCommonModule {}

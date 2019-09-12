@@ -8,7 +8,6 @@ import { ReportingComponent } from '../corporate/reporting/reporting.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
 import { PnrService } from '../service/pnr.service';
 import { DDBService } from '../service/ddb.service';
-import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
 import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
 import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
@@ -16,6 +15,7 @@ import { TicketRemarkService } from '../service/corporate/ticket-remark.service'
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
+import { AmadeusRemarkService } from '../service/remark.service';
 
 @Component({
     selector: 'app-corporate',
@@ -41,7 +41,7 @@ export class CorporateComponent implements OnInit {
         // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
         private modalService: BsModalService,
         private paymentRemarkService: PaymentRemarkService,
-        private corpRemarkService: CorporateRemarksService,
+        private corpRemarkService: AmadeusRemarkService,
         private ddbService: DDBService,
         private reportingRemarkService: ReportingRemarkService,
         private ticketRemarkService: TicketRemarkService
@@ -182,7 +182,7 @@ export class CorporateComponent implements OnInit {
         accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.getTicketingDetails()));
 
         this.corpRemarkService.BuildRemarks(accRemarks);
-        await this.corpRemarkService.SubmitRemarks().then(async () => {
+        await this.corpRemarkService.SubmitRemarks('', false).then(async () => {
             await this.getPnrService();
         });
 

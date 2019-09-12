@@ -340,7 +340,7 @@ export class ReportingBSPComponent implements OnInit {
     const highFare = group.get('highFareText');
     const lowFare = group.get('lowFareText');
     const chargeFare = group.get('chargeFare');
-    debugger;
+
     if (Number(lowFare.value) > Number(highFare.value) || Number(lowFare.value) > Number(chargeFare.value)) {
       lowFare.setErrors({ incorrect: true });
     } else {

@@ -30,6 +30,20 @@ Move Single Passenger With Multiple Segment With TSTs
     Finish PNR
     Create Multiple TKT Exchange PNR In The GDS
     
+Verify Default Multi Ticket Segments 
+    [Arguments]    ${expected_tktSegment}
+    #@{expected_tkt_no}    Create List    2    3
+    Wait Until Page Contains Element    ${tab_supplemental_fees}    10
+    ${tkt_no}    Get Value    ${tab_supplemental_fees}[1]${input_segment}
+    Run Keyword And Continue On Failure    Should Contain    ${tkt_no}    ${expected_tktSegment}
+    Log    Expected:    ${expected_tktSegment}
+    Log    Atual:    ${tkt_no}
+
+   # :FOR    ${tkt_count}    IN    @{expected_tkt_no}
+   #\    ${tkt_no}    Get Value    ${tab_supplemental_fees}[1]${input_segment}
+   # \    Run Keyword And Continue On Failure    Should Contain    ${tkt_no}    ${expected_tktSegment}
+   # \    
+    
 
 
     

@@ -1112,7 +1112,7 @@ export class PnrService {
             model.amount = this.amountPipe.transform(match.groups.amount);
             return model;
         }
-        regex = /RLN-(?<rln>[0-9]*)\/-PR-(?<lastFourDigit>(.*))\/-BA-(?<bankAccount>(.*))\/-GL-(?<gl>(.*))/g;
+        regex = /RLN-(?<rln>[0-9]*)\/-FOP-PR-(?<lastFourDigit>(.*))\/-BA-(?<bankAccount>(.*))\/-GL-(?<gl>(.*))/g;
         match = regex.exec(remark);
         if (match !== null) {
             model.rln = Number(match.groups.rln);

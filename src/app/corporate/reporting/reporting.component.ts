@@ -11,10 +11,17 @@ import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.co
 export class ReportingComponent implements OnInit {
   @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
+  hasTst: boolean;
 
-  constructor(private utilHelper: UtilHelper) { }
+  constructor(private utilHelper: UtilHelper) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.hasTst = true;
+  }
+
+  ngAfterViewInit() {
+    this.hasTst = this.reportingBSPComponent.hasTst;
+  }
 
   checkValid() {
     this.utilHelper.validateAllFields(this.reportingBSPComponent.bspGroup);

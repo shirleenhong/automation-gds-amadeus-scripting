@@ -188,7 +188,10 @@ export class CorporateComponent implements OnInit {
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
-    this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    if (this.reportingComponent.reportingBSPComponent !== undefined) {
+      this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    }
+
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
     await this.rms.submitToPnr().then(
       () => {

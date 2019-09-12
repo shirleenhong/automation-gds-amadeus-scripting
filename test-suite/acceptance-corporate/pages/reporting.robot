@@ -163,8 +163,7 @@ Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Switch To Command Page
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
-    Switch To Graphic Mode
-    Get PNR Details
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RM *FF/-127.25/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-127.25/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2

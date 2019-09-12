@@ -119,12 +119,13 @@ Logout To Amadeus Sell Connect
     Close Browser
 
 Get PNR Details
-    Wait Until Page Does Not Contain    ${overlay_loader}    
+    Wait Until Element Is Not Visible    ${overlay_loader}    10
     Wait Until Element Is Enabled    ${icon_air}    30
     Wait Until Element Is Visible    ${tab_cryptic_display}    60
     Sleep    2
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
+    Wait Until Element Is Not Visible    ${overlay_loader}    10
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
@@ -138,6 +139,10 @@ Switch To Command Page
     Set Test Variable    ${current_page}    Amadeus
     [Teardown]    Take Screenshot
 
+Close Cryptic Display
+    Click Element    ${close_cryptic_display}
+    Set Test Variable    ${current_page}    Amadeus
+    
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
@@ -222,18 +227,18 @@ Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-VB70000000C
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-AAA0000000C
     Add Multiple Passive Air Segments In The GDS With Different Airline Codes
 
 Enter RIR Remarks In English

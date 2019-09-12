@@ -65,4 +65,9 @@ Verify That Aqua TK Line Is Written Correctly For Changed PNR Without Billed Ser
 Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
     Finish PNR
     Verify Specific Remark Is Written In The PNR    TK TL31JAN/YTOWL2106/Q8C1
-    # Run Keyword If    "${reopen_corpWindow}" == "Reopen CWT Corp Window"    Navigate To Page Ticketing
+    
+Verify That Aqua TK Line Is Written Correctly For Updated TK Line
+    Submit To PNR    
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    /YTOWL2106/Q8C1-ONHOLD
+    Verify Specific Remark Is Written In The PNR    RIR ONHOLD:AWAITING APPROVAL

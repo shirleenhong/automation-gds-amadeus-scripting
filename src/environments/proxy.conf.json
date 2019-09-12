@@ -1,6 +1,7 @@
 {
   "/service/repo/powerbaseaws/*": {
-    "target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com",
+    "dev_target": "https://internal-dev-non-pci-int-lb-1435393786.us-west-2.elb.amazonaws.com",
+    "target": "https://internal-test-non-pci-int-lb-654675869.us-west-2.elb.amazonaws.com",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -12,9 +13,13 @@
     }
   },
   "/service/ap/remarks-manager/*": {
-    "target": "https://test.int.us-west-2.bpg-aws-cwt.com",
+    "dev_target": "https://internal-dev-int-cwt-bpg-lb-1412987045.us-west-2.elb.amazonaws.com",
+    "target": "https://internal-test-int-cwt-bpg-lb-1345055561.us-west-2.elb.amazonaws.com",
     "secure": false,
     "logLevel": "debug",
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/service/ap/remarks-manager/api": "/remarks-manager-rest/api"
+    }
   }
 }

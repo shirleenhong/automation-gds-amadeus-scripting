@@ -1,0 +1,70 @@
+<br />
+<div [formGroup]="ticketedForm" class="form-group">
+  <div class="row">
+    <div class="col-2">Ticketed Segment</div>
+    <div class="col-2">Schedule Changed?</div>
+    <div class="col-2">Fee</div>
+    <div class="col-2">Supplemental Fee</div>
+    <div class="col-3">No Fee Code</div>
+  </div>
+
+  <div formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
+    <div [formGroupName]="i" class="row">
+      <div class="col-2">
+        <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
+      </div>
+      <div class="col-2">
+        <div *ngIf="item.get('isExchange').value">
+          <input
+            type="checkbox"
+            name="isChange"
+            formControlName="isChange"
+            id="isChange"
+            (change)="processExchange(item, $event.target.checked)"
+          />
+        </div>
+      </div>
+      <div class="col-2">
+        <input type="text" class="form-control" formControlName="fee" name="fee" id="fee" readonly (change)="feeChange(item)" />
+      </div>
+
+      <div class="col-2">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="supplementalFee"
+          name="supplementalFee"
+          id="supplementalFee"
+          readonly
+          (change)="feeChange(item)"
+        />
+      </div>
+      <div class="">
+        <div class="float-left">
+          <i
+            class="fas fa-plus-circle {{ !supplementalFeeList || supplementalFeeList.length === 0 ? 'disabled' : '' }}"
+            id="add"
+            (click)="addSupplementalFee(item)"
+          ></i>
+        </div>
+      </div>
+      <div class="col-3">
+        <select
+          class="form-control "
+          id="noFeeCode"
+          formControlName="noFeeCode"
+          name="noFeeCode"
+          [disabled]="item.fee !== '' || item.supplementalFee !== ''"
+          required
+        >
+          <option value=""></option>
+          <option *ngFor="let item of noFeeCodes" [value]="item.itemValue">
+            {{ item.itemText }}
+          </option>
+        </select>
+      </div>
+
+      <input type="hidden" class="form-control" formControlName="feeType" name="feeType" id="feeType" />
+    </div>
+  </div>
+</div>

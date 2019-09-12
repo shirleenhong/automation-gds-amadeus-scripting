@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatrixAccountingModel } from '../../../models/pnr/matrix-accounting.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/update-accounting-remark.component';
@@ -7,6 +7,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-accounting-remark',
@@ -14,14 +15,18 @@ import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.s
   styleUrls: ['./accounting-remark.component.scss']
 })
 export class AccountingRemarkComponent implements OnInit {
-  @Input()
   accountingRemarks = new Array<MatrixAccountingModel>();
   modalRef: BsModalRef;
   accountingForm: FormGroup;
   isAddNew = false;
   isPassPurchase = false;
 
-  constructor(private modalService: BsModalService, private utilHelper: UtilHelper, private paymentService: PaymentRemarkService) {}
+  constructor(
+    private modalService: BsModalService,
+    private utilHelper: UtilHelper,
+    private paymentService: PaymentRemarkService,
+    private valueChangeListener: ValueChangeListener
+  ) {}
 
   ngOnInit() {
     this.accountingRemarks = this.paymentService.extractAccountingModelsFromPnr();
@@ -71,6 +76,7 @@ export class AccountingRemarkComponent implements OnInit {
       }
       this.isPassPurchaseTransaction();
       this.paymentService.setNonBspInformation(this.accountingRemarks);
+      this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
     });
   }
 

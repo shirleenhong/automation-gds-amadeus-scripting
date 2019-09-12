@@ -1,8 +1,13 @@
 <div [formGroup]="segmentGroup" class="btn-group segmentbox form-group " dropdown [insideClick]="true">
-  <button id="button-basic" dropdownToggle type="button" class="segmentButton float-right dropdown-toggle" role="menu"
-    aria-controls="dropdown-config">
-    <input type="text" class="form-control" #segment formControlName="segment" (click)="onTouched()" readonly /> <span
-      class="caret"></span>
+  <button
+    id="button-basic"
+    dropdownToggle
+    type="button"
+    class="segmentButton float-right dropdown-toggle"
+    role="menu"
+    aria-controls="dropdown-config"
+  >
+    <input type="text" class="form-control" #segment formControlName="segment" (click)="onTouched()" readonly /> <span class="caret"></span>
   </button>
   <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
     <li role="menuitem" *ngFor="let item of segmentList">

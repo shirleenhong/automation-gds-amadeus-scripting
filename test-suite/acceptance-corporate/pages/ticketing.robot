@@ -14,7 +14,6 @@ ${checkbox_verifyTicket}    css=#chkVerifyAck
 *** Keywords ***
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing
-    Assign Current Date
     Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes

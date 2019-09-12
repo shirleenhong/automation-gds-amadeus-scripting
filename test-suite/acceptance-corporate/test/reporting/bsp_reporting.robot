@@ -31,7 +31,7 @@ Verify That Reporting Remark Are Written For Multiple Segments And TSTs
     Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
     Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segments And Multiple TSTs
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     
 Verify That Client Reporting Are Correct For Exchange PNR
     [Tags]    us10551
@@ -39,9 +39,7 @@ Verify That Client Reporting Are Correct For Exchange PNR
     Move Single Passenger And Add Single BSP Segment With TST
     Create Exchange PNR In The GDS
     Verify Client Reporting Fields For Exchange PNR
-    Select Client Reporting Fields To Be Written
     Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Delete Fare and Itinerary
-    Handle Simultaneous Changes To PNR
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     

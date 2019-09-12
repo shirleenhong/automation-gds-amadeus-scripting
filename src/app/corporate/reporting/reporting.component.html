@@ -1,8 +1,8 @@
-<tabset>
-  <tab heading="BSP Reporting" id="bspReportingTab">
+<tabset id="reportingTab">
+  <tab heading="BSP Reporting" id="bspReportingTab" *ngIf="hasTst" tabindex="0">
     <app-reporting-bsp></app-reporting-bsp>
   </tab>
-  <tab heading="NON BSP Reporting" id="bspReportingTab">
+  <tab heading="NON BSP Reporting" id="bspNonReportingTab" tabindex="1">
     <app-reporting-nonbsp></app-reporting-nonbsp>
   </tab>
 </tabset>

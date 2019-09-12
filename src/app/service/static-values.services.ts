@@ -397,6 +397,25 @@ export class StaticValuesService {
         }
     }
 
+    getNoFeeCodes() {
+        return [
+            { itemText: 'Agent Error', itemValue: 'NFE' },
+            { itemText: 'Associate Business', itemValue: 'NFB' },
+            { itemText: 'Associate Family Member', itemValue: 'NFF' },
+            { itemText: 'Associate Personal', itemValue: 'NFA' },
+            { itemText: 'Bereavement Fare', itemValue: 'NFV' },
+            { itemText: 'Client Service', itemValue: 'NFN' },
+            { itemText: 'Contract', itemValue: 'NFR' },
+            { itemText: 'Leisure', itemValue: 'NFL' },
+            { itemText: 'Maxed Fee', itemValue: 'NFM' },
+            { itemText: 'Previously Charged', itemValue: 'NFP' },
+            { itemText: 'Promotional', itemValue: 'NFT' },
+            { itemText: 'Soft Dollars', itemValue: 'NFD' },
+            { itemText: 'Split', itemValue: 'NFS' },
+        ];
+    }
+
+
     getACPassPurchaseList() {
         return [
             { itemText: '', itemValue: '' },

@@ -16,6 +16,8 @@ import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
 import { AmadeusRemarkService } from '../service/remark.service';
+import { FeesComponent } from './fees/fees.component';
+import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 
 @Component({
   selector: 'app-corporate',
@@ -34,6 +36,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
+  @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @Input() overrideValue: any;
 
   constructor(
@@ -45,7 +48,8 @@ export class CorporateComponent implements OnInit {
     private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
-    private ticketRemarkService: TicketRemarkService
+    private ticketRemarkService: TicketRemarkService,
+    private feesRemarkService: FeesRemarkService
   ) {
     this.initData();
   }
@@ -53,16 +57,7 @@ export class CorporateComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.modalRef) {
       this.modalRef.hide();
-
     }
-
-    // this.rms.TestSendToPnr(); // test
-    // if (this.pnrService.errorMessage.indexOf('Error') === 0) {
-    //   this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
-    // } else if (this.pnrService.cfLine == null || this.pnrService.cfLine === undefined) {
-    //   this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
-    //   this.isPnrLoaded = true;
-    // }
   }
 
   async getPnr() {
@@ -117,6 +112,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
+    this.validModel.isFeesValid = this.feesComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 
@@ -188,72 +184,31 @@ export class CorporateComponent implements OnInit {
     });
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+
+    this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
+
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.closePopup();
         this.checkHasDataLoadError();
-    }
-
-    checkHasDataLoadError() {
-        this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
-        this.dataError.pnr = !this.isPnrLoaded;
-        this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
-        this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
-        this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-        this.dataError.hasError =
-            this.dataError.matching ||
-            this.dataError.pnr ||
-            this.dataError.reasonCode ||
-            this.dataError.servicingOption ||
-            this.dataError.supplier;
-    }
-
-    public async SubmitToPNR() {
-        if (!this.checkValid()) {
-            const modalRef = this.modalService.show(MessageComponent, {
-                backdrop: 'static'
-            });
-            modalRef.content.modalRef = modalRef;
-            modalRef.content.title = 'Invalid Inputs';
-            modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
-            return;
-        }
-
-        this.showLoading('Updating PNR...', 'SubmitToPnr');
-        const accRemarks = new Array<RemarkGroup>();
-        accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-        accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.getTicketingDetails()));
-
-        this.corpRemarkService.BuildRemarks(accRemarks);
-        await this.corpRemarkService.SubmitRemarks('', false).then(async () => {
-            await this.getPnrService();
-        });
-
-        this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
-        this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
-        this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
-        await this.rms.submitToPnr().then(
-            () => {
-                this.isPnrLoaded = false;
-                this.workflow = '';
-                this.closePopup();
-            },
-            (error) => {
-                console.log(JSON.stringify(error));
-                this.workflow = '';
-            }
-        );
-    }
-
-    back() {
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
         this.workflow = '';
-    }
+      }
+    );
+  }
+
+  back() {
+    this.workflow = '';
+  }
 }

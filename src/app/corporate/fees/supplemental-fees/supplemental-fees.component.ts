@@ -1,0 +1,240 @@
+import { Component, OnInit } from '@angular/core';
+import { PnrService } from 'src/app/service/pnr.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DDBService } from 'src/app/service/ddb.service';
+import { SelectItem } from 'src/app/models/select-item.model';
+import { ClientFeeItem } from 'src/app/models/ddb/client-fee-item.model';
+import { AmountPipe } from 'src/app/pipes/amount.pipe';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { AddSupplementalFeesComponent } from '../add-supplemental-fees/add-supplemental-fees.component';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
+import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
+
+@Component({
+  selector: 'app-supplemental-fees',
+  templateUrl: './supplemental-fees.component.html',
+  styleUrls: ['./supplemental-fees.component.scss']
+})
+export class SupplementalFeesComponent implements OnInit {
+  ticketedSegments = [];
+  ticketedForm: FormGroup;
+  noFeeCodes: Array<SelectItem> = [];
+  supplementalFeeList: ClientFeeItem[];
+  clientFees: Array<ClientFeeItem> = [];
+  isObt = false;
+  exchangeFee = 0;
+  flatFee = 0;
+  specialFee = 0;
+  obFee = 0;
+  cfa = '';
+  codeDestination = '';
+  exchangeSegments = [];
+  modalRef: BsModalRef;
+  selectedGroup: FormGroup;
+
+  constructor(
+    private pnrService: PnrService,
+    private fb: FormBuilder,
+    private ddbService: DDBService,
+    private modalService: BsModalService,
+    private valueChangeListener: ValueChangeListener
+  ) {}
+
+  async ngOnInit() {
+    this.handleApay();
+    this.modalSubscribeOnClose();
+    const formArray = [];
+    this.ticketedForm = this.fb.group({
+      segments: this.fb.array([this.createFormGroup('')])
+    });
+
+    await this.loadData();
+
+    this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
+    this.flatFee = this.getFeeValue('Flat Exchange Fee');
+    this.specialFee = this.getFeeValue('Special Fee');
+
+    this.checkObFee();
+    this.ticketedSegments = this.pnrService.getTicketedSegments();
+    this.ticketedSegments.forEach((segment) => {
+      const group = this.createFormGroup(segment);
+
+      if (this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0) {
+        group.get('isExchange').setValue(true);
+      } else {
+        group.get('isExchange').setValue(false);
+      }
+      this.processExchange(group, false);
+      formArray.push(group);
+    });
+
+    this.ticketedForm = this.fb.group({
+      segments: this.fb.array(formArray)
+    });
+  }
+
+  handleApay() {
+    this.valueChangeListener.valueChange$.subscribe((event) => {
+      if (event.name === 'Accounting Remarks') {
+        const frmArray = [];
+        (event.value as MatrixAccountingModel[])
+          .filter((a) => a.accountingTypeRemark === 'APAY')
+          .forEach((acc) => {
+            const group = this.createFormGroup(acc.segmentNo);
+            group.get('fee').setValue(this.isObt ? 'NFR' : 'NFM');
+            frmArray.push(group);
+            this.feeChange(group);
+          });
+        if (frmArray.length > 0) {
+          this.ticketedForm = this.fb.group({
+            segments: this.fb.array(frmArray)
+          });
+          this.supplementalFeeList = [];
+        }
+      }
+    });
+  }
+
+  async loadData(): Promise<void> {
+    this.noFeeCodes = this.ddbService.getNoFeeCodes();
+    this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
+
+    this.cfa = this.pnrService.getCFLine().cfa;
+    try {
+      this.clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.cfa);
+      this.supplementalFeeList = this.clientFees.filter((item) => item.feeTypeDescription === 'Supplemental Fee' && item.valueAmount > 0);
+    } catch (e) {
+      console.log(e);
+    }
+    this.codeDestination = 'ATI';
+    if (this.ddbService.isPnrTransBorder()) {
+      this.codeDestination = 'ATB';
+    } else if (this.ddbService.isPnrDomestic()) {
+      this.codeDestination = 'ATD';
+    }
+    this.isObt = this.pnrService.getRemarkText('*EB/') !== '';
+  }
+
+  feeChange(group) {
+    if (group.get('fee').value !== '' || group.get('supplementalFee').value !== '') {
+      group.get('noFeeCode').disable();
+    } else {
+      group.get('noFeeCode').enable();
+    }
+  }
+
+  createFormGroup(segmentNo) {
+    return this.fb.group({
+      segment: new FormControl(segmentNo),
+      isChange: new FormControl(''),
+      fee: new FormControl(''),
+      noFeeCode: new FormControl('', [Validators.required]),
+      supplementalFee: new FormControl(''),
+      feeType: new FormControl(''),
+      isExchange: new FormControl(false)
+    });
+  }
+
+  setFee(group, feeValue, feeType) {
+    const amountPipe = new AmountPipe();
+    let fee = this.codeDestination + amountPipe.transform(feeValue);
+    if (feeValue === 0 && group.get('isChange').value === true) {
+      fee = 'NFR';
+    }
+
+    group.get('fee').setValue(fee);
+    group.get('noFeeCode').setValue('');
+    group.get('noFeeCode').disable();
+    group.get('feeType').setValue(feeType);
+  }
+
+  modalSubscribeOnClose() {
+    this.modalService.onHide.subscribe(() => {
+      if (this.selectedGroup) {
+        this.feeChange(this.selectedGroup);
+      }
+    });
+  }
+
+  processExchange(group, isChange) {
+    if (isChange && group.get('isExchange').value && !this.isObt) {
+      this.setFee(group, this.exchangeFee, 'exchange');
+    } else {
+      this.processFlatFee(group);
+    }
+  }
+
+  processFlatFee(group) {
+    if (this.flatFee > 0 && group.get('isExchange').value && !this.isObt) {
+      this.setFee(group, this.flatFee, 'flat');
+    } else {
+      this.processSpecialFee(group);
+    }
+    this.feeChange(group);
+  }
+
+  processSpecialFee(group) {
+    if (this.specialFee > 0 && !this.isObt) {
+      this.setFee(group, this.specialFee, 'special');
+    } else {
+      group.get('fee').setValue('');
+    }
+  }
+
+  checkObFee() {
+    this.obFee = this.getFeeValue('OB Fee - Misc');
+    if (this.obFee > 0) {
+      const obfDesc = this.getObfClientDescription().filter((obf) => (obf.cfa = this.cfa));
+      if (obfDesc.length > 0) {
+        const clientFee = new ClientFeeItem(null);
+        clientFee.outputFormat = 'OBF';
+        clientFee.valueAmount = this.obFee;
+        clientFee.clientFeeDescription = obfDesc[0].text;
+        this.supplementalFeeList.push(clientFee);
+      }
+    }
+  }
+
+  addSupplementalFee(group) {
+    if (!this.supplementalFeeList || this.supplementalFeeList.length === 0) {
+      return;
+    }
+    this.modalRef = this.modalService.show(AddSupplementalFeesComponent, {
+      backdrop: 'static'
+    });
+    this.selectedGroup = group;
+    this.modalRef.content.title = 'Add Supplemental Fees';
+    this.modalRef.content.setClientFees(this.supplementalFeeList, group.get('supplementalFee'));
+  }
+
+  getFeeValue(feeType: string): number {
+    const fee = this.getFee(feeType);
+    if (fee) {
+      return fee.valueAmount;
+    }
+    return 0;
+  }
+
+  getFee(feeType: string): ClientFeeItem {
+    const fees = this.clientFees.filter((fee) => fee.clientFeeDescription === feeType);
+    if (fees.length > 0) {
+      return fees[0];
+    }
+    return null;
+  }
+
+  getObfClientDescription() {
+    return [
+      { cfa: 'I8V', text: 'Outbound Call Fee For GK Hotel' },
+      { cfa: 'M2J', text: 'Technical Help Support Desk' },
+      { cfa: 'X5D', text: 'Technical Help Support Desk' },
+      { cfa: 'J6O', text: 'Technical Help Support Desk' },
+      { cfa: '2PX', text: 'CWT Technology Helpdesk Support' },
+      { cfa: 'YPD', text: 'Web Session for OBT Training Only' },
+      { cfa: 'YPF', text: 'Web Session for OBT Training Only' },
+      { cfa: 'D4N', text: 'Web Session for OBT Training Only' },
+      { cfa: 'F6D', text: 'Technical Help Support Desk' },
+      { cfa: 'F3X', text: 'Virtual Card' }
+    ];
+  }
+}

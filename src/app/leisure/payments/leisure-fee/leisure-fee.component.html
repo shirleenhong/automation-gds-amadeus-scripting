@@ -36,19 +36,19 @@
 
 <div class="row">
   <div class="col">
-    <div class="pull-right" *ngIf="!disableAdd">
-      <div class="pull-right">
-        <button (click)="addLeisureFee()">Add Leisure Fee Collection</button>
-      </div>
+    <!-- <div class="pull-right" *ngIf="!disableAdd"> -->
+    <div class="pull-right">
+      <button (click)="addLeisureFee()">Add Leisure Fee Collection</button>
     </div>
   </div>
+</div>
 
-  <form [formGroup]="leisureFeeForm" class="col-8">
-    <div class="form-group row" *ngIf="showReasonFee">
-      <div class="col-4">No Fee Reason:</div>
-      <div class="col-8">
-        <input type="text" class="form-control" maxlength="35" id="noFeeReason" required formControlName="noFeeReason"
-          placeholder="Enter No Fee Reason" [disabled]="!showReasonFee" />
-      </div>
+<form [formGroup]="leisureFeeForm" class="col-8">
+  <div class="form-group row" *ngIf="showReasonFee">
+    <div class="col-4">No Fee Reason:</div>
+    <div class="col-8">
+      <input type="text" class="form-control" maxlength="35" id="noFeeReason" required formControlName="noFeeReason"
+        placeholder="Enter No Fee Reason" [disabled]="!showReasonFee" />
     </div>
-  </form>
+  </div>
+</form>

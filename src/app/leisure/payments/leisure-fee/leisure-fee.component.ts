@@ -143,10 +143,10 @@ export class LeisureFeeComponent implements OnInit {
       });
       this.modalRef.content.setPreviousCCno(ccs);
     }
-
     this.modalRef.content.title = 'Add Leisure Fee Collection';
     this.modalRef.content.exemption = this.exemption;
     this.modalRef.content.leisureFee = leisureFee;
+    this.modalRef.content.withcheque = ((this.leisureFeeList.findIndex((x) => x.paymentType === 'K')) < 0);
   }
 
   public getAssocInfo(assoc) {

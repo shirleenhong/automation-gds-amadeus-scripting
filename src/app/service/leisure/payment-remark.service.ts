@@ -409,7 +409,8 @@ export class PaymentRemarkService {
     if (Object.values(CardType).includes(matrix.bankAccount)) {
       fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
     } else {
-      fop = (matrix.bankAccount === '109000' ? 'DB' : matrix.bankAccount === '227000' ? 'GC' : matrix.modePayment);
+      fop = (matrix.bankAccount === '109000' ? 'DB-' + matrix.gcNumber : matrix.bankAccount === '227000'
+        ? 'GC-' + matrix.gcNumber : matrix.modePayment);
     }
 
     let gcNo = '';
@@ -477,7 +478,7 @@ export class PaymentRemarkService {
       remGroup.remarks.push(this.getRemarksModel(remark, 'Y'));
       feeList.forEach((f) => {
         if (leisureFeesToUpdate.length > 0 || comp.leisureFeesToDelete.length > 0 || f.status === 'ADDED') {
-          remark = this.generateSFCRemark(f);
+          remark = this.generateSFCRemark(f, comp.exemption);
           const pass = f.passengerNo !== undefined ? f.passengerNo : '1';
           remGroup.remarks.push(this.getRemarksModel(remark, '*', '', '', pass));
           // RM FEE
@@ -515,7 +516,7 @@ export class PaymentRemarkService {
     }
   }
 
-  generateSFCRemark(fee: LeisureFeeModel) {
+  generateSFCRemark(fee: LeisureFeeModel, exemp: any) {
     let remark = 'SFC';
     switch (fee.segmentAssoc) {
       case '3':
@@ -526,14 +527,14 @@ export class PaymentRemarkService {
         break;
       case '1':
       case '2':
-        remark += '/-FA-T1';
+        remark += '/-FA-T' + fee.fln;
         break;
     }
 
     remark += '/-FLN-F' + fee.fln + '/-FP-TRF';
     remark += '/-AMT-CAD' + this.amountPipe.transform(fee.amount);
 
-    remark += this.getProvinceTaxRemark(fee);
+    remark += this.getProvinceTaxRemark(fee, exemp);
     if (fee.paymentType === 'C') {
       remark += '/-FOP-CC' + fee.vendorCode + fee.ccNo;
       remark += '/-EXP-' + fee.expDate.replace('/', '');
@@ -543,14 +544,16 @@ export class PaymentRemarkService {
     return remark;
   }
 
-  getProvinceTaxRemark(fee: LeisureFeeModel) {
+  getProvinceTaxRemark(fee: LeisureFeeModel, exempt: Array<any>) {
     const provTax = this.ddbService.getProvinceTax().filter((x) => x.provinceCode === fee.address);
     let tax1 = '0.00';
     let tax2 = '0.00';
     let taxType1 = 'XG';
     if (provTax.length > 0) {
-      tax1 = this.amountPipe.transform(+fee.amount * +provTax[0].tax1);
-      tax2 = this.amountPipe.transform(+fee.amount * +provTax[0].tax2);
+      tax1 = (exempt.find((x) => x.checked === true && x.label === 'GST Exempt')) ?
+        '0.00' : this.amountPipe.transform(+fee.amount * +provTax[0].tax1);
+      tax2 = (exempt.find((x) => x.checked === true && x.label === 'QST Exempt')) ?
+        '0.00' : this.amountPipe.transform(+fee.amount * +provTax[0].tax2);
       taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
     }
     let txt = '/-PT-' + tax1 + taxType1;

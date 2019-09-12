@@ -94,7 +94,6 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   }
 
   bankAccountChange(newValue) {
-    debugger;
     this.enablePayment = true;
     switch (newValue) {
       case '224000':

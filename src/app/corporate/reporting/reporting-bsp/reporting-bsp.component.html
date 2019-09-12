@@ -1,53 +1,63 @@
 <div [formGroup]="bspGroup" class="form-group">
   <br />
-  <div class="row">
-    <div class="" style="width:3%"></div>
-
-    <div class="col-2" style="width:12%;text-align:left;padding-left:30px">
-      Segment
+  <div *ngIf="!isDoneLoading">
+    <div class="row d-flex justify-content-center">
+      Calculating Fares...
     </div>
-
-    <div class="col-2" style="width:12%;text-align:left;padding-left:25px">
-      Charge Fare
-    </div>
-
-    <div class="col-2" style="width:12%;text-align:left;padding-left:20px">
-      Full Fare
-    </div>
-    <div class="col-2" style="width:12%;text-align:left;padding-left:15px">
-      Low Fare
-    </div>
-    <div class="col-3" style="width:12%;text-align:left;padding-left:10px">
-      Reason Code
+    <div class="row d-flex justify-content-center">
+      <div><i class="fas fa-spinner fa-pulse fa-w-16 fa-3x"></i></div>
     </div>
   </div>
-  <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
-    <div [formGroupName]="i" class="row">
-      <div class="" style="width:3%;padding-left:10px">
-        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)" />
+  <div *ngIf="isDoneLoading">
+    <div class="row">
+      <div class="" style="width:3%"></div>
+
+      <div class="col-2" style="width:12%;text-align:left;padding-left:30px">
+        Segment
       </div>
 
-      <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="segment" type="text" class="form-control" readonly />
+      <div class="col-2" style="width:12%;text-align:left;padding-left:25px">
+        Charge Fare
       </div>
 
-      <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="chargeFare" type="text" class="form-control" readonly />
+      <div class="col-2" style="width:12%;text-align:left;padding-left:20px">
+        Full Fare
       </div>
+      <div class="col-2" style="width:12%;text-align:left;padding-left:15px">
+        Low Fare
+      </div>
+      <div class="col-3" style="width:12%;text-align:left;padding-left:10px">
+        Reason Code
+      </div>
+    </div>
+    <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
+      <div [formGroupName]="i" class="row">
+        <div class="" style="width:3%;padding-left:10px">
+          <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)" />
+        </div>
 
-      <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" (change)="validateFares(item)" />
-      </div>
-      <div class="col-2" style="width:12%;text-align:left">
-        <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
-      </div>
-      <div class="col-3" style="width:12%;text-align:left">
-        <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText">
-          <option [ngValue]="null"></option>
-          <option *ngFor="let reason of reasonCodes[i]">{{
-            reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
-          }}</option>
-        </select>
+        <div class="col-2" style="width:12%;text-align:left">
+          <input formControlName="segment" type="text" class="form-control" readonly />
+        </div>
+
+        <div class="col-2" style="width:12%;text-align:left">
+          <input formControlName="chargeFare" type="text" class="form-control" readonly />
+        </div>
+
+        <div class="col-2" style="width:12%;text-align:left">
+          <input formControlName="highFareText" type="text" class="form-control" maxlength="55" (change)="validateFares(item)" />
+        </div>
+        <div class="col-2" style="width:12%;text-align:left">
+          <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
+        </div>
+        <div class="col-3" style="width:12%;text-align:left">
+          <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let reason of reasonCodes[i]" [value]="reason.reasonCode">{{
+              reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
+            }}</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>

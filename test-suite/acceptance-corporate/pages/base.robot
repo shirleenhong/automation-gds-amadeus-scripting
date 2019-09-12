@@ -20,6 +20,7 @@ ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
 ${list_counselor_identity}    css=#selCounselorIdentity
 
+
 *** Keywords ***
 Enter Value
     [Arguments]    ${element}    ${value}
@@ -32,7 +33,7 @@ Close CA Corporate Test
     Unselect Frame
     Wait Until Element Is Visible    ${header_corp_test}    50
     Click Element    ${button_close}
-    Wait Until Element Is Visible    ${input_commandText}    30
+    Set Test Variable    ${current_page}    Amadeus
 
 Click Full Wrap
     Wait Until Page Contains Element   ${button_full_wrap}    180 

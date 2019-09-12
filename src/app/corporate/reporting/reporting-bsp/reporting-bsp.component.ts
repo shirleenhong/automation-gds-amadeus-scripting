@@ -26,12 +26,12 @@ export class ReportingBSPComponent implements OnInit {
   lowFareInt: any;
   isDomesticFlight = true;
   thresholdAmount = 0;
+  hasTst: boolean = true;
 
   // tslint:disable-next-line:max-line-length
   constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
-    debugger;
     this.isDoneLoading = false;
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
@@ -142,22 +142,23 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   async getTstDetails() {
-    if (this.pnrService.tstObj.length === undefined) {
-      this.populateData(this.pnrService.tstObj, 1, 1);
+    if (this.pnrService.tstObj.length === 0) {
+      this.hasTst = false;
       this.isDoneLoading = true;
     } else {
-      const tsts = this.pnrService.tstObj;
-      let index = 1;
-      for await (const p of tsts) {
-        this.populateData(p, index, tsts.length);
-        index = index + 1;
+      this.hasTst = true;
+      if (this.pnrService.tstObj.length === undefined) {
+        this.populateData(this.pnrService.tstObj, 1, 1);
+        this.isDoneLoading = true;
+      } else {
+        const tsts = this.pnrService.tstObj;
+        let index = 1;
+        for await (const p of tsts) {
+          this.populateData(p, index, tsts.length);
+          index = index + 1;
+        }
       }
     }
-
-    // this.tstModels.forEach((e) => {
-    //   this.addFares(e.segmentLineNo, e.highFare, e.lowFare, '', e.chargeFare, e.isExchange);
-    // });
-    //this.isDoneLoading = true;
   }
 
   async populateData(tst, index, tstCount: number) {
@@ -196,7 +197,6 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   changeReasonCodes(group: FormGroup, indx: number) {
-    debugger;
     if (indx >= 0) {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
@@ -211,8 +211,6 @@ export class ReportingBSPComponent implements OnInit {
       if (this.thresholdAmount > 0) {
         if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
           if (this.reasonCodes.length > 0) {
-            //const reasonCode = this.getReasonCodeValue('7', indx);
-            //group.get('reasonCodeText').patchValue(reasonCode);
             group.get('reasonCodeText').patchValue('7');
           }
         }
@@ -328,21 +326,18 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   removeValidation(group: any, controlName: string) {
-    debugger;
     const control = group.get(controlName);
     control.setValidators(null);
     control.updateValueAndValidity();
   }
 
   addValidation(group: any, controlName: string) {
-    debugger;
     const control = group.get(controlName);
     control.setValidators([Validators.required]);
     control.updateValueAndValidity();
   }
 
   validateFares(group) {
-    debugger;
     const highFare = group.get('highFareText');
     const lowFare = group.get('lowFareText');
     const chargeFare = group.get('chargeFare');
@@ -353,6 +348,10 @@ export class ReportingBSPComponent implements OnInit {
 
     if (Number(highFare.value) > Number(chargeFare.value)) {
       highFare.setErrors({ incorrect: true });
+    }
+
+    if (Number(lowFare.value) > Number(chargeFare.value)) {
+      lowFare.setErrors({ incorrect: true });
     }
   }
 }

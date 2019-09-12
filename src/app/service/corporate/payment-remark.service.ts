@@ -65,7 +65,7 @@ export class PaymentRemarkService {
         account.gst,
         account.hst,
         account.qst,
-        account.otherTax,
+        '0.00',
         account.commisionWithoutTax,
         segmentrelate,
         account.supplierCodeName,

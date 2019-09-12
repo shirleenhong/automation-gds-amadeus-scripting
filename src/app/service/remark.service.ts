@@ -1,19 +1,17 @@
+import { RemarkGroup } from '../models/pnr/remark.group.model';
+import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { Injectable } from '@angular/core';
-import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
-import { PnrService } from '../pnr.service';
-import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
-import { RemarkModel } from 'src/app/models/pnr/remark.model';
-import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { RemarkModel } from '../models/pnr/remark.model';
+import { PnrService } from './pnr.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
-
 
 declare var smartScriptSession: any;
 
 @Injectable({
   providedIn: 'root'
 })
-export class CorporateRemarksService {
-
+export class AmadeusRemarkService {
   remarksElement: Array<any>;
   crypticCommands = Array<string>();
   deleteRemarksByIds = Array<string>();
@@ -53,6 +51,14 @@ export class CorporateRemarksService {
           });
         }
 
+        if (group.deleteRemarkByIds != null && group.deleteRemarkByIds.length > 0) {
+          group.deleteRemarkByIds.forEach((c) => {
+            if (!this.deleteRemarksByIds.find((z) => z === c)) {
+              this.deleteRemarksByIds.push(c);
+            }
+          });
+        }
+
         if (group.cryptics != null && group.cryptics.length > 0) {
           group.cryptics.forEach((c) => {
             this.crypticCommands.push(c);
@@ -62,6 +68,19 @@ export class CorporateRemarksService {
         if (group.passiveSegments != null && group.passiveSegments.length > 0) {
           group.passiveSegments.forEach((pas) => {
             this.passiveSegmentElement.push(this.addPassiveSegmentElement(pas));
+          });
+        }
+
+        if (group.remarks != null && group.remarks.length > 0) {
+          group.remarks.forEach((rem) => {
+            if (rem) {
+              if (rem.remarkType === 'FS') {
+                this.remarksElement.push(this.getFSRemarksElement(rem));
+              } else {
+                // let test = this.getRemarkElement(rem);
+                this.remarksElement.push(this.getRemarkElement(rem));
+              }
+            }
           });
         }
 
@@ -332,25 +351,15 @@ export class CorporateRemarksService {
   }
 
   deleteSegments() {
-    let deleteIds = '';
-    this.deleteSegmentByIds.forEach((ids) => {
-      deleteIds += ids + ',';
-    });
-    if (deleteIds !== '') {
-      deleteIds = deleteIds.slice(0, -1);
-      smartScriptSession.send('XE' + deleteIds);
+    if (this.deleteSegmentByIds.length >= 1) {
+      smartScriptSession.send('XE' + this.deleteSegmentByIds.join(','));
     }
   }
 
   deleteRemarks() {
-    let deleteIds = '';
-    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds);
-    filteredIds.forEach((ids) => {
-      deleteIds += ids + ',';
-    });
-    if (deleteIds !== '') {
-      deleteIds = deleteIds.slice(0, -1);
-      smartScriptSession.send('XE' + deleteIds);
+    const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds).join(',');
+    if (filteredIds !== '') {
+      smartScriptSession.send('XE' + filteredIds);
     }
   }
 
@@ -393,7 +402,7 @@ export class CorporateRemarksService {
     return newArr;
   }
 
-  async sendRemarks(requestor?: string) {
+  async sendRemarks(requestor?: string, endPnr?: boolean) {
     const pnrActions = {
       optionCode: '0'
       // optionCode: '11'
@@ -434,6 +443,10 @@ export class CorporateRemarksService {
           requestor = 'CWTSCRIPT';
         }
 
+        if (endPnr) {
+          await this.endPNR(requestor);
+        }
+
         smartScriptSession.getActiveTask().then((x) => {
           if (x.subtype === 'PNR') {
             smartScriptSession.requestService('bookingfile.refresh', null, {
@@ -449,11 +462,11 @@ export class CorporateRemarksService {
     );
   }
 
-  async SubmitRemarks(requestor?: string) {
+  async SubmitRemarks(requestor?: string, endPnr: boolean = true) {
     this.deleteRemarks();
     this.deleteSegments();
     await this.sendCryptics();
-    await this.sendRemarks(requestor);
+    await this.sendRemarks(requestor, endPnr);
     this.clear();
   }
 
@@ -462,7 +475,6 @@ export class CorporateRemarksService {
     await this.sendCryptics();
     this.clear();
   }
-
 
   async endPNR(requestor, ticket?: boolean) {
     if (this.pnrService.pnrObj.tkElements.length < 1 && ticket) {
@@ -474,4 +486,3 @@ export class CorporateRemarksService {
     smartScriptSession.send('RT');
   }
 }
-

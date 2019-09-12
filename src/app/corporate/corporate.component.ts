@@ -8,7 +8,6 @@ import { ReportingComponent } from '../corporate/reporting/reporting.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
 import { PnrService } from '../service/pnr.service';
 import { DDBService } from '../service/ddb.service';
-import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
 import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
 import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
@@ -16,6 +15,7 @@ import { TicketRemarkService } from '../service/corporate/ticket-remark.service'
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
+import { AmadeusRemarkService } from '../service/remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -42,7 +42,7 @@ export class CorporateComponent implements OnInit {
     // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
-    private corpRemarkService: CorporateRemarksService,
+    private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
     private ticketRemarkService: TicketRemarkService
@@ -53,6 +53,7 @@ export class CorporateComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.modalRef) {
       this.modalRef.hide();
+
     }
 
     // this.rms.TestSendToPnr(); // test
@@ -198,15 +199,61 @@ export class CorporateComponent implements OnInit {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.closePopup();
-      },
-      (error) => {
-        console.log(JSON.stringify(error));
-        this.workflow = '';
-      }
-    );
-  }
+        this.checkHasDataLoadError();
+    }
 
-  back() {
-    this.workflow = '';
-  }
+    checkHasDataLoadError() {
+        this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
+        this.dataError.pnr = !this.isPnrLoaded;
+        this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
+        this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
+        this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
+        this.dataError.hasError =
+            this.dataError.matching ||
+            this.dataError.pnr ||
+            this.dataError.reasonCode ||
+            this.dataError.servicingOption ||
+            this.dataError.supplier;
+    }
+
+    public async SubmitToPNR() {
+        if (!this.checkValid()) {
+            const modalRef = this.modalService.show(MessageComponent, {
+                backdrop: 'static'
+            });
+            modalRef.content.modalRef = modalRef;
+            modalRef.content.title = 'Invalid Inputs';
+            modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+            return;
+        }
+
+        this.showLoading('Updating PNR...', 'SubmitToPnr');
+        const accRemarks = new Array<RemarkGroup>();
+        accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
+        accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.getTicketingDetails()));
+
+        this.corpRemarkService.BuildRemarks(accRemarks);
+        await this.corpRemarkService.SubmitRemarks('', false).then(async () => {
+            await this.getPnrService();
+        });
+
+        this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+        this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+        this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+        await this.rms.submitToPnr().then(
+            () => {
+                this.isPnrLoaded = false;
+                this.workflow = '';
+                this.closePopup();
+            },
+            (error) => {
+                console.log(JSON.stringify(error));
+                this.workflow = '';
+            }
+        );
+    }
+
+    back() {
+        this.workflow = '';
+    }
 }

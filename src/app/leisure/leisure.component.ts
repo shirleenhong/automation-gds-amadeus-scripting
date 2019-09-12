@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { PnrService } from '../service/pnr.service';
-import { LeisureRemarkService } from '../service/leisure/leisure-remark.service';
+// import { AmadeusRemarkService } from '../service/remark.service';
 import { PaymentRemarkService } from '../service/leisure/payment-remark.service';
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ReportingRemarkService } from '../service/leisure/reporting-remark.service';
@@ -28,6 +28,7 @@ import { CancelComponent } from './cancel/cancel.component';
 import { common } from '../../environments/common';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { OtherRemarksService } from '../service/leisure/other-remarks.service';
+import { AmadeusRemarkService } from '../service/remark.service';
 
 @Component({
   selector: 'app-leisure',
@@ -66,7 +67,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   constructor(
     private pnrService: PnrService,
-    private leisureRemarkService: LeisureRemarkService,
+    private leisureRemarkService: AmadeusRemarkService,
     private paymentRemarkService: PaymentRemarkService,
     private reportingRemarkService: ReportingRemarkService,
     private segmentService: SegmentService,

@@ -149,7 +149,6 @@ export class ReportingBSPComponent implements OnInit {
       this.hasTst = true;
       if (this.pnrService.tstObj.length === undefined) {
         this.populateData(this.pnrService.tstObj, 1, 1);
-        this.isDoneLoading = true;
       } else {
         const tsts = this.pnrService.tstObj;
         let index = 1;
@@ -341,17 +340,19 @@ export class ReportingBSPComponent implements OnInit {
     const highFare = group.get('highFareText');
     const lowFare = group.get('lowFareText');
     const chargeFare = group.get('chargeFare');
-
-    if (Number(lowFare.value) > Number(highFare.value)) {
+    debugger;
+    if (Number(lowFare.value) > Number(highFare.value) || Number(lowFare.value) > Number(chargeFare.value)) {
       lowFare.setErrors({ incorrect: true });
+    } else {
+      lowFare.setErrors(null);
+      lowFare.updateValueAndValidity();
     }
 
-    if (Number(highFare.value) > Number(chargeFare.value)) {
+    if (Number(highFare.value) < Number(chargeFare.value)) {
       highFare.setErrors({ incorrect: true });
-    }
-
-    if (Number(lowFare.value) > Number(chargeFare.value)) {
-      lowFare.setErrors({ incorrect: true });
+    } else {
+      highFare.setErrors(null);
+      highFare.updateValueAndValidity();
     }
   }
 }

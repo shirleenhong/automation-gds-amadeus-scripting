@@ -15,7 +15,9 @@ Select Bank Account
 Select Passenger Name
     [Arguments]    ${passenger_name}
     Click Element    css=#pasenger
-    Click Element    xpath=//option[contains(text(), '${passenger_name}')]
+    Input Text    css=#pasenger    ${passenger_name}
+    # Wait Until Page Contains Element    xpath=//datalist[@id='dynamicPassengerName']//option[contains(text(), '${passenger_name}')]
+    # Click Element    xpath=//datalist[@id='dynamicPassengerName']//option[contains(text(), '${passenger_name}')]
     Press Key    css=#pasenger    \\09
     Set Suite Variable    ${passenger_name}
 

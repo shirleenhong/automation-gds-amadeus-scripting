@@ -3,6 +3,7 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { FormGroup, FormArray } from '@angular/forms';
 import { ReportingBSPComponent } from 'src/app/corporate/reporting/reporting-bsp/reporting-bsp.component';
+import { ReportingNonbspComponent } from 'src/app/corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,58 +12,54 @@ export class ReportingRemarkService {
   constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
   WriteBspRemarks(rbc: ReportingBSPComponent) {
-    this.WriteFareRemarks(rbc.bspGroup);
+    const bspGroup: FormGroup = rbc.bspGroup;
+    const items = bspGroup.get('fares') as FormArray;
+    this.writeHighLowFare(items, false);
   }
 
-  WriteFareRemarks(bspGroup: FormGroup) {
-    const items = bspGroup.get('fares') as FormArray;
+  WriteNonBspRemarks(nrbc: ReportingNonbspComponent) {
+    const nbspGroup: FormGroup = nrbc.nonBspGroup;
+    const items = nbspGroup.get('nonbsp') as FormArray;
+    this.writeHighLowFare(items, true);
+  }
 
-    for (const control of items.controls) {
-      if (control instanceof FormGroup) {
-        const fg = control as FormGroup;
+  private writeHighLowFare(items: any, write: boolean) {
+    for (const group of items.controls) {
+      if (group.get('chkIncluded').value === true || write) {
         const highFareRemark = new Map<string, string>();
         const lowFareRemark = new Map<string, string>();
         const airReasonCodeRemark = new Map<string, string>();
-        let segments: string[] = [];
-        let segmentrelate: string[] = [];
+        const segments: string[] = group.get('segment').value.split(',');
+        const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-        Object.keys(fg.controls).forEach((key) => {
-          if (key === 'segment') {
-            fg.get(key)
-              .value.split(',')
-              .forEach((val) => {
-                segments.push(val);
-              });
+        highFareRemark.set('CAAirHighFare', group.get('highFareText').value);
+        lowFareRemark.set('CAAirLowFare', group.get('lowFareText').value);
+        const output = group.get('reasonCodeText').value.split(':');
+        airReasonCodeRemark.set('CAAirRealisedSavingCode', output[0].trim());
 
-            segmentrelate = this.getRemarkSegmentAssociation(segments);
-          }
-
-          if (key === 'highFareText') {
-            highFareRemark.set('CAAirHighFare', fg.get(key).value);
-          }
-          if (key === 'lowFareText') {
-            lowFareRemark.set('CAAirLowFare', fg.get(key).value);
-          }
-          if (key === 'reasonCodeText') {
-            airReasonCodeRemark.set('CAAirRealisedSavingCode', fg.get(key).value);
-          }
-        });
         this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
-
       }
     }
   }
 
   getRemarkSegmentAssociation(segments: string[]): string[] {
-    let segmentrelate: string[] = [];
-    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo));
-
+    const segmentrelate: string[] = [];
+    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
     air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
 
     return segmentrelate;
+  }
+
+  WriteEscOFCRemark(value: string) {
+    this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
+    if (value !== '') {
+      const escOfc = new Map<string, string>();
+      escOfc.set('CAOverrideValue', value);
+      this.remarksManager.createPlaceholderValues(escOfc);
+    }
   }
 }

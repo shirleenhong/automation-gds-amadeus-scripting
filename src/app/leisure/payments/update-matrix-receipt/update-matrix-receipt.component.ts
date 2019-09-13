@@ -28,10 +28,10 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   // TODO: Via service
   bankAccountList: Array<BankAccount>;
   passengerList: Array<any>;
-
   matrixForm: FormGroup;
   isSubmitted: boolean;
   PaymentModeList: Array<SelectItem>;
+  enablePayment = true;
 
   @ViewChild('bankAccount') bankAccEl: ElementRef;
 
@@ -94,6 +94,7 @@ export class UpdateMatrixReceiptComponent implements OnInit {
   }
 
   bankAccountChange(newValue) {
+    this.enablePayment = true;
     switch (newValue) {
       case '224000':
         this.matrixReceipt.paymentType = PaymentType.Rbc;
@@ -123,6 +124,13 @@ export class UpdateMatrixReceiptComponent implements OnInit {
           ['gcNumber', 'ccNo', 'expDate', 'vendorCode', 'description'],
           false
         );
+        break;
+      case '109000':
+      case '227000':
+        this.enableFormControls(['modePayment'], true);
+        this.enableFormControls(['cwtRef', 'points', 'lastFourVi'], true);
+        this.enableFormControls(['ccNo', 'expDate', 'vendorCode'], true);
+        this.enablePayment = false;
         break;
       default:
         this.matrixReceipt.paymentType = PaymentType.Undefined;

@@ -7037,72 +7037,12 @@
 					}
 				},
 				{
-					"id": 9263,
-					"segmentNumberReferences": [],
-					"passengerNumberReferences": [],
-					"conditions": null,
-					"matchedPlaceholders": {
-						"CAAirTicketId": "1"
-					}
-				},
-				{
 					"id": 250,
 					"segmentNumberReferences": [],
 					"passengerNumberReferences": [],
 					"conditions": null,
 					"matchedPlaceholders": {
 						"GlobalVariableString": "A:175EC A:F9F84 A:13038 A:4086A182 T-ZZZ EN-US EN-US"
-					}
-				},
-				{
-					"id": 9261,
-					"segmentNumberReferences": [],
-					"passengerNumberReferences": [],
-					"conditions": null,
-					"matchedPlaceholders": {
-						"AirHighFare": "4656.16",
-						"AirSavingCode": "7",
-						"TripTypeEquivalent": "1",
-						"HemisphereId": "2",
-						"AirLowFare": "724.16",
-						"AirChargedFare": "4656.16",
-						"CAPointOfTurnAround": "PAR",
-						"AirTicketId": "1"
-					}
-				},
-				{
-					"id": 9262,
-					"segmentNumberReferences": [
-						"1"
-					],
-					"passengerNumberReferences": [],
-					"conditions": null,
-					"matchedPlaceholders": {
-						"AirBaseCurrency": "CAD",
-						"AirBaseFare": "4337.00",
-						"AirTicketId": "1"
-					}
-				},
-				{
-					"id": 9278,
-					"segmentNumberReferences": [],
-					"passengerNumberReferences": [],
-					"conditions": null,
-					"matchedPlaceholders": {
-						"CARouteCode": "INTL",
-						"AirTicketId": "1"
-					}
-				},
-				{
-					"id": 9406,
-					"segmentNumberReferences": [
-						"1"
-					],
-					"passengerNumberReferences": [],
-					"conditions": null,
-					"matchedPlaceholders": {
-						"LCCTicketVendorRemark": "ETK",
-						"AirTicketId": "1"
 					}
 				},
 				{

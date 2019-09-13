@@ -1,16 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CorporateComponent } from './corporate/corporate.component';
-import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
+import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule, AlertModule } from 'ngx-bootstrap';
 import { CommonModule } from '@angular/common';
 import { PaymentsComponent } from './corporate/payments/payments.component';
 import { ReportingBSPComponent } from './corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingComponent } from './corporate/reporting/reporting.component';
+import { TicketingComponent } from './corporate/ticketing/ticketing.component';
 import { AccountingRemarkComponent } from './corporate/payments/accounting-remark/accounting-remark.component';
 import { UpdateAccountingRemarkComponent } from './corporate/payments/update-accounting-remark/update-accounting-remark.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MyCommonModule } from './my-common.module';
+import { FeesComponent } from './corporate/fees/fees.component';
+import { SupplementalFeesComponent } from './corporate/fees/supplemental-fees/supplemental-fees.component';
+import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-fees/add-supplemental-fees.component';
+import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +25,13 @@ import { HttpClientModule } from '@angular/common/http';
     AccountingRemarkComponent,
     UpdateAccountingRemarkComponent,
     ReportingComponent,
-    ReportingBSPComponent
+    ReportingBSPComponent,
+    ReportingNonbspComponent,
+    TicketingComponent,
+    FeesComponent,
+    SupplementalFeesComponent,
+    AddSupplementalFeesComponent,
+    TicketingComponent
   ],
   imports: [
     BrowserModule,
@@ -32,11 +44,13 @@ import { HttpClientModule } from '@angular/common/http';
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    MyCommonModule,
+    AlertModule.forRoot()
   ],
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent]
+  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
 })
 export class AppCorporateModule {}

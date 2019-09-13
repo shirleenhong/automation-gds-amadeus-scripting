@@ -29,7 +29,7 @@ Verify PNR is read with correct remark placeholders
     \    ${expected_value}    To Json    ${expected_value}
     \    Log    ${expected_value}
     \    Log    ${actual_value_placeholder[${index}]}
-    \    Dictionaries Should Be Equal    ${expected_value}    ${actual_value_placeholder[${index}]}   
+    \    Run Keyword And Continue On Failure    Dictionaries Should Be Equal    ${expected_value}    ${actual_value_placeholder[${index}]}   
     
     
 Verify Response Status Code 404 is Returned  

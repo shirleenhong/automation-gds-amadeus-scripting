@@ -33,14 +33,13 @@
     <div class="form-group row">
       <div class="col-sm-4">Passenger :</div>
       <div class="col-sm-8">
-        <select class="form-control " id="pasenger" [(ngModel)]="matrixReceipt.passengerName"
-          formControlName="passengerName" name="passengerName" required
-          [ngClass]="{ 'is-invalid': f.passengerName.touched && f.passengerName.invalid }">
-
-          <option *ngFor="let pass of  passengerList" [value]="pass.fullname">
-            {{pass.surname}}-{{pass.firstname}}
+        <input type="text" class="form-control" formControlName="passengerName" id="pasenger"
+          list="dynamicPassengerName" [(ngModel)]="matrixReceipt.passengerName" required
+          [ngClass]="{ 'is-invalid': f.passengerName.touched && f.passengerName.invalid }" />
+        <datalist id="dynamicPassengerName">
+          <option *ngFor="let pass of passengerList" [value]="pass.fullname">{{pass.fullname}}
           </option>
-        </select>
+        </datalist>
       </div>
     </div>
 
@@ -145,7 +144,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="matrixReceipt.paymentType == PaymentType.Undefined">
+    <div *ngIf="matrixReceipt.paymentType == PaymentType.Undefined && enablePayment">
       <div class="form-group  row">
         <div class="col-sm-4">Type of Payment: </div>
         <div class="col-sm-8">

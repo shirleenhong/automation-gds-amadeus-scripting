@@ -13,6 +13,7 @@ ${list_reason_code}    //select[@formcontrolname='reasonCodeText']
 ${tab_clientReporting}    //div[@formarrayname='fares']
 ${checkbox_clientReporting}    //input[@id='chkIncluded'] 
 ${tab_nonBsp}    //span[contains(text(), 'NON BSP')]
+${tab_bsp}    css=#bspReportingTab-link
 ${input_nonBsp_fullFare}    //div[@formarrayname='nonbsp']//input[@formcontrolname='highFareText']
 ${input_nonBsp_lowFare}    //div[@formarrayname='nonbsp']//input[@formcontrolname='lowFareText']
 
@@ -31,6 +32,7 @@ Select Reason Code
 
 Add Client Reporting Values For Single BSP Segment
     Navigate To Page Reporting
+    Click Element    ${tab_bsp} 
     Wait Until Page Contains Element    ${checkbox_clientReporting}     
     Select Client Reporting Fields To Be Written    1
     ${actual_full_fare}    Get Value    ${input_full_fare}   
@@ -42,15 +44,13 @@ Add Client Reporting Values For Single BSP Segment
         
 Add Client Reporting Values For Multiple BSP Segment
     Navigate To Page Reporting
+    Click Element    ${tab_bsp} 
     Wait Until Page Contains Element    ${tab_clientReporting}[3]${checkbox_clientReporting}    60
-    # Select Checkbox    ${tab_clientReporting}[1]${checkbox_clientReporting}
-    # Select Checkbox    ${tab_clientReporting}[2]${checkbox_clientReporting}
-    # Select Checkbox    ${tab_clientReporting}[3]${checkbox_clientReporting}
     Select Client Reporting Fields To Be Written    1    2    3
-    Enter Full Fare    1123.50
+    Enter Full Fare    4000.50
     Enter Low Fare    300.00
     Select Reason Code    C : Low Cost Supplier Fare Declined
-    Enter Full Fare    999.50    2
+    Enter Full Fare    5123.50    2
     Enter Low Fare    123.00    2
     Select Reason Code    K : Client Negotiated Fare Declined    2
     Enter Full Fare    790.00    3
@@ -60,13 +60,13 @@ Add Client Reporting Values For Multiple BSP Segment
     
 Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
     Navigate To Page Reporting
+    Click Element    ${tab_bsp} 
     Wait Until Page Contains Element    ${tab_clientReporting}[2]${checkbox_clientReporting}    60
-    Select Checkbox    ${tab_clientReporting}[1]${checkbox_clientReporting}
-    Select Checkbox    ${tab_clientReporting}[2]${checkbox_clientReporting}
-    Enter Full Fare    1123.50
-    Enter Low Fare    300.00
+    Select Client Reporting Fields To Be Written    1    2
+    Enter Full Fare    12000.50
+    Enter Low Fare    1300.00
     Select Reason Code    C : Low Cost Supplier Fare Declined
-    Enter Full Fare    999.50    2
+    Enter Full Fare    15123.50    2
     Enter Low Fare    123.00    2
     Select Reason Code    K : Client Negotiated Fare Declined    2
     Take Screenshot
@@ -79,10 +79,10 @@ Verify That Client Reporting Remarks Are Written In The PNR For Single TST
    
 Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *FF/-1123.50/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *FF/-4000.50/S2-3
     Verify Specific Remark Is Written In The PNR    RM *LP/-300.00/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-C/S2-3
-    Verify Specific Remark Is Written In The PNR    RM *FF/-999.50/S4
+    Verify Specific Remark Is Written In The PNR    RM *FF/-5123.50/S4
     Verify Specific Remark Is Written In The PNR    RM *LP/-123.00/S4
     Verify Specific Remark Is Written In The PNR    RM *FS/-K/S4
     Verify Specific Remark Is Written In The PNR    RM *FF/-790.00/S5
@@ -91,15 +91,16 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
 
 Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segments And Multiple TSTs
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *FF/-1123.50/S3,5-6
-    Verify Specific Remark Is Written In The PNR    RM *LP/-300.00/S3,5-6
+    Verify Specific Remark Is Written In The PNR    RM *FF/-12000.50/S3,5-6
+    Verify Specific Remark Is Written In The PNR    RM *LP/-1300.00/S3,5-6
     Verify Specific Remark Is Written In The PNR    RM *FS/-C/S3,5-6
-    Verify Specific Remark Is Written In The PNR    RM *FF/-999.50/S2,4
+    Verify Specific Remark Is Written In The PNR    RM *FF/-15123.50/S2,4
     Verify Specific Remark Is Written In The PNR    RM *LP/-123.00/S2,4
     Verify Specific Remark Is Written In The PNR    RM *FS/-K/S2,4
 
 Verify Client Reporting Fields For Exchange PNR
     Navigate To Page Reporting 
+    Click Element    ${tab_bsp} 
     Wait Until Element Is Visible    ${input_full_fare}    30
     ${actual_full_fare}    Get Value    ${input_full_fare}   
     ${actual_low_fare}    Get Value   ${input_low_fare}
@@ -163,8 +164,6 @@ Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Switch To Command Page
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
-    Switch To Graphic Mode
-    Get PNR Details
     Verify Specific Remark Is Written In The PNR    RM *FF/-127.25/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-127.25/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2

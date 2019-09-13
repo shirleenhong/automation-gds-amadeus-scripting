@@ -94,7 +94,7 @@ export class CorporateComponent implements OnInit {
   }
 
   showMessage(msg: string, type: MessageType, title: string, caller: string) {
-    const skip = this.modalRef && this.modalRef.content.callerName === caller;
+    const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
     if (!skip) {
       this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
     }
@@ -176,7 +176,7 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-    accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.getTicketingDetails()));
+    accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.ticketlineComponent.getTicketingDetails()));
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -193,6 +193,7 @@ export class CorporateComponent implements OnInit {
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+    this.reportingRemarkService.WriteAquaTicketing(this.reportingComponent.aquaTicketingComponent);
 
     await this.rms.submitToPnr().then(
       () => {

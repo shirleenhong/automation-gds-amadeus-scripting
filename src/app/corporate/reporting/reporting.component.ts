@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, OnInit, ViewChild } from '@angular/core';
 import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
+import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketing.component';
 
 @Component({
   selector: 'app-reporting',
@@ -11,9 +12,10 @@ import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.co
 export class ReportingComponent implements OnInit {
   @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
-  hasTst: boolean;
+  @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;
 
-  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
+  hasTst: boolean;
+  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.hasTst = true;

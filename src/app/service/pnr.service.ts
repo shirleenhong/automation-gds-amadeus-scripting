@@ -408,6 +408,8 @@ export class PnrService {
         let controlNumber = '';
         let airType = '';
         let segType = type;
+        let passiveType = '';
+
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -468,8 +470,10 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+                passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
+                passiveType = 'TYP-HHL';
             }
         }
 
@@ -492,7 +496,8 @@ export class PnrService {
             arrivalDate,
             classservice,
             controlNumber,
-            airType
+            airType,
+            passive: passiveType
         };
         this.segments.push(segment);
     }

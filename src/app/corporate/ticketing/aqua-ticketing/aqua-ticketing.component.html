@@ -1,0 +1,34 @@
+<br />
+<div class="row">
+  <div *ngIf="!hasTst" class="col">
+    &nbsp;No Unticketed TST(s) found in the PNR
+  </div>
+  <div *ngIf="hasTst" class="col">
+    &nbsp;Unticketed TST(s):
+    <div [formGroup]="aquaTicketingFormGroup" class="btn-group segmentbox form-group " dropdown [insideClick]="true">
+      <button
+        id="button-basic"
+        dropdownToggle
+        type="button"
+        class="segmentButton float-right dropdown-toggle"
+        role="menu"
+        aria-controls="dropdown-config"
+      >
+        <input type="text" class="form-control" #tst formControlName="tst" (click)="onTouched()" readonly /> <span class="caret"></span>
+      </button>
+      <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
+        <li role="menuitem" *ngFor="let item of unticketedSegments">
+          <div class="dropdown-item">
+            <input
+              type="checkbox"
+              [value]="item.tstNumber"
+              (change)="updateValue($event)"
+              [checked]="val.split(',').indexOf(item.tstNumber) >= 0"
+            />
+            Tst Reference: {{ item.tstNumber }} | Segment: {{ item.segmentNumber }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

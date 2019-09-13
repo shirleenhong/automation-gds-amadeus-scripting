@@ -106,17 +106,18 @@ export class SupplementalFeesComponent implements OnInit {
     } catch (e) {
       console.log(e);
     }
-    this.codeDestination = 'ATI';
+    this.codeDestination = 'I';
     if (this.ddbService.isPnrTransBorder()) {
-      this.codeDestination = 'ATB';
+      this.codeDestination = 'B';
     } else if (this.ddbService.isPnrDomestic()) {
-      this.codeDestination = 'ATD';
+      this.codeDestination = 'D';
     }
     this.isObt = this.pnrService.getRemarkText('*EB/') !== '';
   }
 
   feeChange(group) {
-    if (group.get('fee').value !== '' || group.get('supplementalFee').value !== '') {
+    if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
+      group.get('noFeeCode').setValue('');
       group.get('noFeeCode').disable();
     } else {
       group.get('noFeeCode').enable();
@@ -127,6 +128,7 @@ export class SupplementalFeesComponent implements OnInit {
     return this.fb.group({
       segment: new FormControl(segmentNo),
       isChange: new FormControl(''),
+      code: new FormControl(''),
       fee: new FormControl(''),
       noFeeCode: new FormControl('', [Validators.required]),
       supplementalFee: new FormControl(''),
@@ -135,13 +137,31 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
+  getCode(segmentNumbers) {
+    const segments = this.pnrService.getSegmentTatooNumber().filter((x) => segmentNumbers.split(',').indexOf(x.lineNo) >= 0);
+    let code = 'A';
+    if (segments.length > 0) {
+      if (segments[0].segmentType === 'TRN') {
+        code = 'R';
+      }
+    }
+    return code + 'T' + this.codeDestination;
+  }
+
   setFee(group, feeValue, feeType) {
     const amountPipe = new AmountPipe();
-    let fee = this.codeDestination + amountPipe.transform(feeValue);
+    let code = this.getCode(group.get('segment').value);
+    let fee = amountPipe.transform(feeValue);
     if (feeValue === 0 && group.get('isChange').value === true) {
-      fee = 'NFR';
+      code = 'NFR';
+      fee = '';
     }
-
+    if (fee === '0.01') {
+      group.get('fee').enable();
+    } else {
+      group.get('fee').disable();
+    }
+    group.get('code').setValue(code);
     group.get('fee').setValue(fee);
     group.get('noFeeCode').setValue('');
     group.get('noFeeCode').disable();

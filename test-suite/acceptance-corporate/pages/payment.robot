@@ -281,6 +281,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Enter Value    ${input_departurecity}    YVR        
     Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
+    Click Save Button
     Take Screenshot
 
 Click Matrix Accounting Remark Tab
@@ -601,5 +602,5 @@ Navigate To Add Accounting Line
  Complete Ticketing Information
     Click Ticketing Panel
     Assign Current Date
-    Select Checkbox    ${checkbox_onHold}    
+    Select Checkbox    ${checkbox_onHold}   
     Take Screenshot    

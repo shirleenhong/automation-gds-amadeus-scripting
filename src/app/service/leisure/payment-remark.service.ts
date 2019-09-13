@@ -545,17 +545,20 @@ export class PaymentRemarkService {
   }
 
   getProvinceTaxRemark(fee: LeisureFeeModel, exempt: Array<any>) {
+    debugger;
     const provTax = this.ddbService.getProvinceTax().filter((x) => x.provinceCode === fee.address);
     let tax1 = '0.00';
     let tax2 = '0.00';
     let taxType1 = 'XG';
     if (provTax.length > 0) {
-      tax1 = (exempt.find((x) => x.checked === true && x.label === 'GST Exempt')) ?
-        '0.00' : this.amountPipe.transform(+fee.amount * +provTax[0].tax1);
-      tax2 = (exempt.find((x) => x.checked === true && x.label === 'QST Exempt')) ?
-        '0.00' : this.amountPipe.transform(+fee.amount * +provTax[0].tax2);
+      tax1 = this.amountPipe.transform(+fee.amount * +provTax[0].tax1);
+      tax2 = this.amountPipe.transform(+fee.amount * +provTax[0].tax2);
       taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
     }
+
+    tax1 = (taxType1 === 'XG' && (exempt.find((x) => x.checked === true && x.label === 'GST Exempt'))) ? '0.00' : tax1;
+    tax1 = (taxType1 === 'RC' && (exempt.find((x) => x.checked === true && x.label === 'HST Exempt'))) ? '0.00' : tax1;
+    tax2 = ((exempt.find((x) => x.checked === true && x.label === 'QST Exempt'))) ? '0.00' : tax2;
     let txt = '/-PT-' + tax1 + taxType1;
     txt += '/-PT-' + tax2 + 'XQ';
     return txt;

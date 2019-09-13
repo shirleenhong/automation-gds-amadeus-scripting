@@ -661,7 +661,6 @@ export class PnrService {
                 const fee = new LeisureFeeModel();
                 const rems = rm.freeFlowText.split('/-');
                 fee.segmentAssoc = '2';
-                fee.address = taxProvince;
                 fee.passengerNo = this.getPassengerAssocNumbers(rm.associations);
                 rems.forEach((r) => {
                     if (r.indexOf('-') >= 0) {
@@ -702,6 +701,7 @@ export class PnrService {
                                 break;
                         }
                     }
+                    fee.address = (fee.fln === '1') ? taxProvince : '';
                 });
                 fees.push(fee);
             }
@@ -1296,7 +1296,7 @@ export class PnrService {
     }
 
     getTicketedSegments(): string[] {
-        const segmentTatooNumbers  = [];        
+        const segmentTatooNumbers = [];
         for (const ticketed of this.pnrObj.faElements) {
             const s = [];
             ticketed.fullNode.referenceForDataElement.reference.forEach(ref => {
@@ -1310,12 +1310,12 @@ export class PnrService {
         segmentTatooNumbers.forEach(tatoos => {
             const s = [];
             tatoos.forEach(tatoo => {
-            const  segment = this.segments.filter(seg => seg.tatooNo === tatoo);
-            if (segment && segment.length > 0) {
-                s.push(segment[0].lineNo);
-            }
-         });
-         segmentLines.push(s.join(','));
+                const segment = this.segments.filter(seg => seg.tatooNo === tatoo);
+                if (segment && segment.length > 0) {
+                    s.push(segment[0].lineNo);
+                }
+            });
+            segmentLines.push(s.join(','));
         });
 
         return segmentLines;
@@ -1369,14 +1369,14 @@ export class PnrService {
     }
 
     getTatooNumberFromSegmentNumber(segments: string[]): string[] {
-     const  lineNos =  this.segments.filter(s => segments.indexOf(s.lineNo) >= 0).map(x => x.tatooNo);
-     return lineNos;
+        const lineNos = this.segments.filter(s => segments.indexOf(s.lineNo) >= 0).map(x => x.tatooNo);
+        return lineNos;
     }
 
     getSegmentNumbers(tatooNumbers: any[]): string[] {
         const segmentLines = [];
         tatooNumbers.forEach(tatooNo => {
-            const  segment = this.segments.filter(s => s.tatooNo === tatooNo);
+            const segment = this.segments.filter(s => s.tatooNo === tatooNo);
             if (segment && segment.length > 0) {
                 segmentLines.push(segment[0].lineNo);
             }

@@ -94,7 +94,7 @@ export class CorporateComponent implements OnInit {
   }
 
   showMessage(msg: string, type: MessageType, title: string, caller: string) {
-    const skip = this.modalRef && this.modalRef.content.callerName === caller;
+    const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
     if (!skip) {
       this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
     }

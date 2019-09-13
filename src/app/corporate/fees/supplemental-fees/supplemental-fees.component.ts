@@ -45,7 +45,7 @@ export class SupplementalFeesComponent implements OnInit {
     this.modalSubscribeOnClose();
     const formArray = [];
     this.ticketedForm = this.fb.group({
-      segments: this.fb.array([this.createFormGroup('')])
+      segments: this.fb.array([])
     });
 
     await this.loadData();

@@ -328,7 +328,7 @@ export class DDBService implements OnInit {
       }
     });
     if (countries.length === 2 && countries.indexOf('US') >= 0 && countries.indexOf('CA') >= 0) {
-      return false;
+      return true;
     }
     return false;
   }

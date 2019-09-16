@@ -7,6 +7,7 @@ Resource          base.robot
 
 *** Variables ***
 ${tab_supplemental_fees}    //div[@formarrayname='segments']
+${input_supplementalFee_chckbox}    //div[@formarrayname='fees']
 ${checkbox_schedule_change}    //input[@id='isExchange']
 ${list_supplementalFee}    //select[@id='supplementalFee']
 ${list_no_feeCode}    //select[@id='noFeeCode']
@@ -103,7 +104,7 @@ Verify Default Ticket Segments
 	    \    Run Keyword And Continue On Failure    Should Be Equal    ${expected_tktNo}    ${tkt_no}    
 	    \    Log    Expected: ${expected_tktNo}
 	    \    Log    Actual: ${tkt_no}
-	Take Screenshot    
+	Take Screenshot
     
 Verify Default Fee In Ticket Segments
     [Arguments]    ${expected_fee_amount}
@@ -144,7 +145,14 @@ Retrieve PNR
 	    : FOR    ${gds_command}    IN    @{gds_commands}
 	    \    Input Text    ${input_commandText}    ${gds_command}
 	    \    Press Key    ${input_commandText}    \\13
-	        
+
+Select Supplemental Fee For First Tkt
+    Wait Until Element Is Visible    ${tab_supplemental_fees}[1]${div_addFee_button}    30
+    Click Button    ${tab_supplemental_fees}[1]${div_addFee_button}
+    Wait Until Element Is Visible    ${input_supplementalFee_chckbox}[1]${input_feeCode}    30
+    Select Checkbox    ${input_supplementalFee_chckbox}[1]${input_feeCode}   
+    Take Screenshot    
+        
 Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Move Single Passenger
     Add Canada Domestic Segment And Store Mulitple Fare
@@ -162,7 +170,7 @@ Move Single Passenger With Multiple Segment For Transborder With TSTs
     Add FS And Commission Line In The PNR    FS02    FM10.00
     Finish PNR
     Create Multiple TKT Exchange PNR In The GDS
-    
+
 Move Single Passenger With Single Segment For International With TSTs
     Move Single Passenger
     Add International Segment And Store Single Fare
@@ -170,6 +178,13 @@ Move Single Passenger With Single Segment For International With TSTs
     Add FS And Commission Line In The PNR    FS02    FM10.00
     Finish PNR
     Create Exchange PNR In The GDS
+    
+Move Single Passenger With Single Segment For International With Non Exch Ticket
+    Move Single Passenger
+    Add International Segment And Store Single Fare
+    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
+    Add FS And Commission Line In The PNR    FS02    FM10.00
+    Finish PNR
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Create And Ticket PNR With Airline Code AF
@@ -183,29 +198,53 @@ Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Click Fees Panel
     Verify Default Ticket Segments    1
     Verify Default Fee In Ticket Segments    NFR
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-NFR   
     
 Verify Non OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Click Fees Panel
     Verify Default Ticket Segments    1
     Verify Default Fee In Ticket Segments    NFM
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-NFM
     
 Verify Selected Schedule Change Fees In The PNR
     Add CFA Remark    RM*CF/-NRD0000000N    RFCWTPTEST    ER    
     Click Fees Panel
     Verify Default Ticket Segments    1
-    Verify Default Ticket Segments    2
     Tick Schedule Change For First Segment
-    Verify Default Fee Code in Ticket Segments    ATB
+    Verify Default Fee Code in Ticket Segments    ATD
     Verify Default Fee In Ticket Segments    30.00
+    Verify Default Ticket Segments    2
     Tick Schedule Change For Second Segment
-    Verify Default Fee Code in Ticket Segments    ATB
+    Verify Default Fee Code in Ticket Segments    ATD
     Verify Default Fee In Ticket Segments    30.00
-    Verify Specific Remark Is Written In The PNR    SUPFEE1-ATB30.00/S2
-    Verify Specific Remark Is Written In The PNR    SUPFEE1-ATB30.00/S3        
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    SUPFEE1-ATD30.00/S2
+    Verify Specific Remark Is Written In The PNR    SUPFEE2-ATD30.00/S3        
     
+Verify Exchange Flat Fee With Supplemental Fee For Exchange Tkt And Write Remarks In The PNR
+    Add CFA Remark    RM*CF/-RH60000000N    RFCWTPTEST    ER
+    Click Fees Panel
+    Verify Default Ticket Segments    1
+    Verify Default Fee Code in Ticket Segments    ATB
+    Verify Default Fee In Ticket Segments    27.00
+    Verify Default Ticket Segments    2
+    Select Supplemental Fee For First Tkt
+    Verify Default Fee Code in Ticket Segments    ATB
+    Verify Default Fee In Ticket Segments    27.00
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    SUPFEE1-ATB27.00/ESD/S2
+    Verify Specific Remark Is Written In The PNR    SUPFEE2-ATB27.00/S3
     
+Verify Special Fee For Air Ticket
+    Add CFA Remark    Add CFA Remark    RFCWTPTEST    ER
+    Click Fees Panel
+    Verify Default Ticket Segments    1
+    Verify Default Fee Code in Ticket Segments    ATI
+    Verify Default Fee In Ticket Segments    60.00
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    SUPFEE1-ATI60.00
     
 
     

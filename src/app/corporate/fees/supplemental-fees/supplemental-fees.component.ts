@@ -115,14 +115,14 @@ export class SupplementalFeesComponent implements OnInit {
     this.isObt = this.pnrService.getRemarkText('EB/') !== '';
   }
 
-  feeChange(group) {
+  feeChange(group: FormGroup) {
+    group.get('noFeeCode').clearValidators();
     if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
       group.get('noFeeCode').setValue('');
       // group.get('noFeeCode').disable();
-    } // else {
-
-    // group.get('noFeeCode').enable();
-    // }
+    } else {
+      group.get('noFeeCode').setValidators([Validators.required]);
+    }
   }
 
   noFeeChange(group, value) {

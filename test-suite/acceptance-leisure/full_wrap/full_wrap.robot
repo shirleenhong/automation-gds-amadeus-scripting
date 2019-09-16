@@ -426,7 +426,7 @@ Add Leisure Fee Collection
     Click Save Button
 
 Verify Leisure Fee Remarks Are Written
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-9.98XQ/-FOP-CK    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XG
 

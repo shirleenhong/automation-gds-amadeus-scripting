@@ -5,6 +5,9 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { TicketModel } from '../../models/pnr/ticket.model';
+import { FormGroup } from '@angular/forms';
+import { DDBService } from '../ddb.service';
+import { AquaTicketingComponent } from 'src/app/corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 
 declare var smartScriptSession: any;
 
@@ -14,8 +17,10 @@ declare var smartScriptSession: any;
 export class TicketRemarkService {
   DATE_PIPE = new DatePipe('en-US');
   ONHOLD_KEYWORD = 'ONHOLD:AWAITING APPROVAL';
+  hasTransborder: boolean;
 
-  constructor(private remarksManagerSvc: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(private remarksManagerSvc: RemarksManagerService, private pnrService: PnrService,
+    private remarksManager: RemarksManagerService, private ddbService: DDBService) { }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -115,5 +120,215 @@ export class TicketRemarkService {
 
       this.remarksManagerSvc.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ONHOLD:AWAITING APPROVAL');
     }
+  }
+
+  WriteAquaTicketing(aqua: AquaTicketingComponent) {
+    // this.WriteAquaTicketingRemarks(aqua.aquaTicketingFormGroup, aqua.unticketedSegments);
+    const fg = aqua.aquaTicketingFormGroup;
+    this.WriteAquaTicketingRemarks(aqua.unticketedSegments, aqua.tstSelected);
+    this.writePassiveHotelSegmentRemark(fg);
+    this.writePassiveCarSegmentRemark(fg);
+    this.writePassiveLimoSegmentRemark(fg);
+  }
+
+  private WriteAquaTicketingRemarks(unticketed: any[], tstSelected: any[]) {
+    // aquaFormGroup: FormGroup,
+    let ticketNumber: number;
+    ticketNumber = 0;
+
+    tstSelected.forEach((x) => {
+      unticketed.forEach((p) => {
+        if (x === p.tatooNumber) {
+          const tstRemark = new Map<string, string>();
+          let segmentrelate: string[] = [];
+          tstRemark.set('TicketSequence', p.tstNumber);
+          segmentrelate = p.tatooNumber;
+          let tripType: string;
+          tripType = this.getTripType(segmentrelate);
+          this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate);
+          this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate, null, tripType);
+          ticketNumber++;
+        }
+      });
+    });
+
+    const limoSegments = this.pnrService.getSegmentTatooNumber().filter((x) => x.passive === 'TYP-LIM');
+    limoSegments.forEach((limo) => {
+      const tstRemark = new Map<string, string>();
+      let segmentrelate: string[] = [];
+      tstRemark.set('TicketSequence', '1');
+      segmentrelate = limo.tatooNo;
+      this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate, null, 'TYP-LIM');
+    });
+
+    // hotel
+    // this.writePassiveHotelSegmentRemark();
+    const htlSegments = this.pnrService.getSegmentTatooNumber().filter((x) => x.passive === 'TYP-HHL');
+    htlSegments.forEach((htl) => {
+      const tstRemark = new Map<string, string>();
+      let segmentrelate: string[] = [];
+      tstRemark.set('TicketSequence', '1');
+      segmentrelate = htl.tatooNo;
+      this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate, null, 'INV-HTL');
+    });
+
+    // car
+    const carSegments = this.pnrService.getSegmentTatooNumber().filter((x) => x.passive === 'TYP-CAR');
+    carSegments.forEach((car) => {
+      const tstRemark = new Map<string, string>();
+      let segmentrelate: string[] = [];
+      tstRemark.set('TicketSequence', '1');
+      segmentrelate = car.tatooNo;
+      this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate, null, 'INV-CAR');
+    });
+
+    const numberOfTicketRemark = new Map<string, string>();
+    numberOfTicketRemark.set('NumberOfTickets', ticketNumber.toString());
+    this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+
+    if (this.hasTransborder) {
+      const staticRemarksCondition = new Map<string, string>();
+      staticRemarksCondition.set('AquaTicketingCondition', 'true');
+      this.remarksManager.createPlaceholderValues(
+        null,
+        staticRemarksCondition,
+        null,
+        null,
+        'ADVISED USTRAVEL A PASSPORT AND VISA ARE REQUIRED'
+      );
+
+      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ADVISED USTRAVEL 6 MONTH FROM DEPARTURE');
+    }
+  }
+
+  getTripType(segmentRefList?: any[]) {
+    const cityList = [];
+    let tripType = 'DOM';
+    if (segmentRefList.length > 1) {
+      segmentRefList.forEach((x) => {
+        this.pnrService.pnrObj.allAirSegments.forEach((p) => {
+          if (p.tatooNumber === x) {
+            this.ddbService.airTravelPortInformation.forEach((element) => {
+              if (element.travelPortCode === p.fullNode.travelProduct.boardpointDetail.cityCode) {
+                cityList.push(element.countryCode);
+              }
+              if (element.travelPortCode === p.fullNode.travelProduct.offpointDetail.cityCode) {
+                cityList.push(element.countryCode);
+              }
+            });
+          }
+        });
+      });
+    } else {
+      if (segmentRefList.length === 1) {
+        this.pnrService.pnrObj.allAirSegments.forEach((x) => {
+          if (segmentRefList === x.tatooNumber) {
+            this.ddbService.airTravelPortInformation.forEach((element) => {
+              if (element.travelPortCode === x.fullNode.travelProduct.boardpointDetail.cityCode) {
+                cityList.push(element.countryCode);
+              }
+              if (element.travelPortCode === x.fullNode.travelProduct.offpointDetail.cityCode) {
+                cityList.push(element.countryCode);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    cityList.forEach((element) => {
+      if (element === 'US') {
+        tripType = 'TRANS';
+        this.hasTransborder = true;
+      }
+    });
+    cityList.forEach((element) => {
+      if (element !== 'CA' && element !== 'US') {
+        tripType = 'INTL';
+        this.hasTransborder = false;
+      }
+    });
+
+    return tripType;
+  }
+
+  /**
+   * Write passive hotel segment remarks to PNR.
+   * @return void
+   */
+  writePassiveHotelSegmentRemark(fg: FormGroup): void {
+    // Check if the PNR is only Hotel
+    if (this.isPnrHotelOnly(fg)) {
+      const segments: string[] = fg.get('hotelSegment').value.split(',');
+      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+
+      const hotelOnlyPnrRemarks = new Map<string, string>();
+      hotelOnlyPnrRemarks.set('TicketSequence', '1');
+      this.remarksManager.createPlaceholderValues(hotelOnlyPnrRemarks, null, segmentrelate, null, 'INV-HTL');
+    }
+  }
+
+  writePassiveCarSegmentRemark(fg: FormGroup): void {
+    // Check if the PNR is only Hotel
+    if (this.isCarSelectedOnly(fg)) {
+      const segments: string[] = fg.get('carSegment').value.split(',');
+      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+
+      const carPnrRemarks = new Map<string, string>();
+      carPnrRemarks.set('TicketSequence', '1');
+      this.remarksManager.createPlaceholderValues(carPnrRemarks, null, segmentrelate, null, 'INV-CAR');
+    }
+  }
+
+  writePassiveLimoSegmentRemark(fg: FormGroup): void {
+    // Check if the PNR is only Hotel
+    if (this.isLimoSelectedOnly(fg)) {
+      const segments: string[] = fg.get('limoSegment').value.split(',');
+      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+
+      const limoPnrRemarks = new Map<string, string>();
+      limoPnrRemarks.set('TicketSequence', '1');
+      this.remarksManager.createPlaceholderValues(limoPnrRemarks, null, segmentrelate, null, 'INV-LIMO');
+    }
+  }
+
+
+  /**
+   * Check if the PNR only has hotel passive segments.
+   * @return boolean
+   */
+  isCarSelectedOnly(fg: FormGroup): boolean {
+    return !(fg.get('tst').value || fg.get('hotelSegment').value ||
+      fg.get('limoSegment').value || fg.get('railSegment').value);
+  }
+
+  isLimoSelectedOnly(fg: FormGroup): boolean {
+    return !(fg.get('tst').value || fg.get('hotelSegment').value ||
+      fg.get('carSegment').value || fg.get('railSegment').value);
+  }
+  /**
+   * Check if the PNR only has hotel passive segments.
+   * @return boolean
+   */
+  isPnrHotelOnly(fg: FormGroup): boolean {
+    // const passiveSegments = this.pnrService.getModelPassiveSegments();
+    // passiveSegments.forEach((passiveSegment) => {
+    //   if (passiveSegment.segmentType === 'AIR') {
+    //     return false;
+    //   }
+    // });
+    return !(fg.get('tst').value || fg.get('carSegment').value ||
+      fg.get('limoSegment').value || fg.get('railSegment').value);
+
+  }
+
+  getRemarkSegmentAssociation(segments: string[]): string[] {
+    const segmentrelate: string[] = [];
+    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
+    air.forEach((airElement) => {
+      segmentrelate.push(airElement.tatooNo);
+    });
+
+    return segmentrelate;
   }
 }

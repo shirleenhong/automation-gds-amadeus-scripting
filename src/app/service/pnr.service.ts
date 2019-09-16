@@ -470,11 +470,17 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
-                passiveType = flongtext.substr(2, 7);
+                // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
-                passiveType = 'TYP-HHL';
+                // passiveType = 'TYP-HHL';
             }
+        }
+
+        if (type === 'MIS') {
+            passiveType = flongtext.substr(2, 7);
+        } else {
+            passiveType = type;
         }
 
         const segment = {

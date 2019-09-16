@@ -15,6 +15,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   tstSelected = [];
   hasTst: boolean;
 
+
   onTouched: any = () => { };
   onChange: any = () => { };
 
@@ -22,7 +23,11 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
     this.aquaTicketingFormGroup = this.fb.group({
-      tst: new FormControl('', [Validators.required])
+      tst: new FormControl('', [Validators.required]),
+      railSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      hotelSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      carSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      limoSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')])
     });
 
     this.getUnticketedAirSegments();

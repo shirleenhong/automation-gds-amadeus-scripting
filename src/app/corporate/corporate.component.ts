@@ -193,7 +193,7 @@ export class CorporateComponent implements OnInit {
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
-    this.reportingRemarkService.WriteAquaTicketing(this.reportingComponent.aquaTicketingComponent);
+    this.ticketRemarkService.WriteAquaTicketing(this.reportingComponent.aquaTicketingComponent);
 
     await this.rms.submitToPnr().then(
       () => {

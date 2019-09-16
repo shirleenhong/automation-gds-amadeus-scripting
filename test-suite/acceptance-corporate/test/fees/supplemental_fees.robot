@@ -11,16 +11,19 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/fees.robot
 
 *** Test Cases ***
-Test
+Verify OBT PNR Added Remarks For Supplemental Fees
     Login To Amadeus Sell Connect Acceptance
-    Sleep    5
-    Retrieve PNR
-    Wait Until Element Is Visible    ${menu_amadeus}    30
-    Click Element    ${menu_amadeus}
-    Click Element    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Dev"]
-    Wait Until Element Is Visible    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp Dev')]    60
-    Wait Until Element Is Visible    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
-    Select Frame    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
-    Click Full Wrap
-    Click Fees Panel
-    Verify Default Single Ticket Segments
+    Move Single Passenger With Transborder Segments And Single Ticket
+    Open CA Corporate Test
+    Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
+    
+Verify Non OBT PNR Added Remarks For Supplemental Fees    
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger With Transborder Segments And Single Ticket
+    Open CA Corporate Test
+    Verify Non OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
+    
+Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger With Multiple Segment For Dom Canada With TSTs
+    Open CA Corporate Test

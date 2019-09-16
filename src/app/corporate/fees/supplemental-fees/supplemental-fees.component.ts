@@ -112,7 +112,7 @@ export class SupplementalFeesComponent implements OnInit {
     } else if (this.ddbService.isPnrDomestic()) {
       this.codeDestination = 'D';
     }
-    this.isObt = this.pnrService.getRemarkText('*EB/') !== '';
+    this.isObt = this.pnrService.getRemarkText('EB/') !== '';
   }
 
   feeChange(group) {

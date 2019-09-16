@@ -479,8 +479,9 @@ Verify Updated Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
     
 Verify Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0002167899/VN-ACJ/S2    
-    Verify Specific Remark Is Written In The PNR    TKT1-BA-100.00/TX1-15.05XG/TX2-2.20RC/TX3-10.00XQ/TX4-0.00XT/COMM-3.00/S2    True
-    Take Screenshot
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    AC 123 Q 03SEP 2 YVRYVR GK1 0700 0800 03SEP 879111    True
+    Switch To Command Page
     
 Verify PE Remark Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    RMF LCC-AC*GRAND TOTAL CAD 127.25
@@ -498,6 +499,13 @@ Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
     
 Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0987612345/VN-WJP/S2    
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMF LCC-AC*GRAND TOTAL CAD 127.25    True
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0987612345/VN-WJP/S2    True
     Verify Specific Remark Is Written In The PNR    TKT1-BA-210.00/TX1-10.00XG/TX2-2.20RC/TX3-10.00XQ/TX4-0.00XT/COMM-3.00/S2    True
     Take Screenshot
     
@@ -517,6 +525,13 @@ Verify Itinerary Remarks Are Written For Porter Pass Purchase PNR
     
 Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-1234567890/VN-PTP/S2
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMF LCC-WS*GRAND TOTAL CAD 232.20    True
+    Take Screenshot
+    
+Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-1234567890/VN-PTP/S2    True
     Verify Specific Remark Is Written In The PNR    TKT1-BA-105.00/TX1-15.05XG/TX2-3.00RC/TX3-12.00XQ/TX4-0.00XT/COMM-1.00/S2    True
     Take Screenshot
     
@@ -529,6 +544,13 @@ Verify UDID Remark Are Written For Porter Pass Purchase PNR
     
 Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0987654321/VN-ACJ/S2
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMF LCC-PD*GRAND TOTAL CAD 135.05    True
+    Take Screenshot
+    
+Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    TKT1-VEN/TK-0987654321/VN-ACJ/S2    True
     Verify Specific Remark Is Written In The PNR    TKT1-BA-200.10/TX1-5.05XG/TX2-3.20RC/TX3-2.00XQ/TX4-0.00XT/COMM-3.00/S2    True
     Take Screenshot
     
@@ -538,6 +560,13 @@ Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
     
 Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    LCC-AC*GRAND TOTAL CAD 210.25    True
+    Take Screenshot
+    
+Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL    True
     
 Add Matrix Accounting Remark For WestJet Pass Purchase
     Navigate To Page Add Accounting Line
@@ -567,6 +596,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Open CA Corporate Test
     Click Full Wrap
     Click Payment Panel
+    Navigate To Page Full Wrap PNR
     Click Update Button
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
     Enter Value    ${input_confirmationNo}    879222
@@ -583,3 +613,9 @@ Navigate To Add Accounting Line
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline} 
     Set Test Variable    ${current_page}    Add Accounting Line
+    
+ Complete Ticketing Information
+    Click Ticketing Panel
+    Assign Current Date
+    Select Checkbox    ${checkbox_onHold}   
+    Take Screenshot    

@@ -47,7 +47,7 @@ Login To Amadeus Sell Connect Acceptance
     Wait Until Element Is Not Visible    ${button_disabled_login}    30
     Click Element    ${button_enabled_login}
     Handle Force Login Window
-    Wait Until Element Is Visible    ${tab_mainPage}    30
+    Wait Until Element Is Visible    ${tab_mainPage}    60
     Handle Accept Cookie Panel
     Click Element    ${button_command_page}
     Wait Until Page Contains Element    ${input_commandText}    180
@@ -172,9 +172,9 @@ Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ${expected_remark}
-    Log    Expected: ${expected_remark}
-    Log    Actual: ${pnr_details}
+    Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Should Contain    ${pnr_details_flattened}    ${expected_remark_flattened}   ELSE    Should Contain    ${pnr_details}    ${expected_remark} 
+    Run Keyword If    "${multi_line_remark}" == "True"    Log    Expected: ${expected_remark_flattened}    ELSE     Log    Expected: ${expected_remark}
+    Run Keyword If    "${multi_line_remark}" == "True"    Log    Expected: ${pnr_details_flattened}     ELSE    Log    Actual: ${pnr_details}
 
 Verify Specific Remark Is Not Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
@@ -190,10 +190,10 @@ Remove Line Break And Spaces
     [Arguments]    ${pnr_details}    ${expected_remark}
     ${pnr_details}    Replace String    ${pnr_details}    ${SPACE}    ${EMPTY}
     ${pnr_details_flattened}    Replace String    ${pnr_details}    \n    ${EMPTY}
-    Set Test Variable    ${pnr_details}    ${pnr_details_flattened}
     ${expected_remark}    Replace String    ${expected_remark}    ${SPACE}    ${EMPTY}
     ${expected_remark_flattened}    Replace String    ${expected_remark}    \n    ${EMPTY}
-    Set Test Variable    ${expected_remark}    ${expected_remark_flattened}
+    Set Test Variable    ${pnr_details_flattened}
+    Set Test Variable    ${expected_remark_flattened}
 
 Create Exchange PNR In The GDS
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
@@ -253,10 +253,10 @@ Handle Simultaneous Changes To PNR
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
 
 Move Single Passenger For EN
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     
 Move Single Passenger For FR
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     
 Create And Ticket PNR With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA

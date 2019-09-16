@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ControlValueAccessor, Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 
 @Component({
@@ -13,24 +13,30 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   aquaTicketingFormGroup: FormGroup;
   unticketedSegments = [];
   tstSelected = [];
-  hasTst: boolean;
+  hasAirTst: boolean;
+  isHotelPNR: boolean;
+  isCarPNR: boolean;
+  isLimoPNR: boolean;
 
+  onTouched: any = () => {};
+  onChange: any = () => {};
 
-  onTouched: any = () => { };
-  onChange: any = () => { };
-
-  constructor(private fb: FormBuilder, private pnrService: PnrService) { }
+  constructor(private fb: FormBuilder, private pnrService: PnrService) {}
 
   ngOnInit() {
     this.aquaTicketingFormGroup = this.fb.group({
-      tst: new FormControl('', [Validators.required]),
-      railSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      hotelSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      carSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      limoSegment: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')])
+      tst: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      hotelSegment: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      carSegment: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      limoSegment: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      // [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
     });
 
     this.getUnticketedAirSegments();
+    this.isHotelPNR = this.isPnrTypeOnly('HTL');
+    this.isCarPNR = this.isPnrTypeOnly('CAR');
+    this.isLimoPNR = this.isPnrTypeOnly('TYP-LIM');
+
     this.aquaTicketingFormGroup.get('tst').markAsDirty();
   }
 
@@ -70,6 +76,16 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  isPnrTypeOnly(passiveType: string): boolean {
+    const passiveSegments = this.pnrService.getSegmentTatooNumber().filter((passiveSegment) => passiveSegment.passive === passiveType);
+
+    if (passiveSegments.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   setDisabledState?(isDisabled: boolean): void {
@@ -138,7 +154,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     });
 
     if (tstObj.length === 0) {
-      this.hasTst = false;
+      this.hasAirTst = false;
     } else if (tstObj.length > 0) {
       tstObj.forEach((x) => {
         if (x.segmentInformation.length > 0) {
@@ -162,8 +178,6 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
               segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
               tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
             });
-            this.hasTst = true;
-            this.unticketedSegments = tstData;
           }
         }
       });
@@ -192,7 +206,9 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
           tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
         });
       }
-      this.hasTst = true;
+    }
+    if (tstData.length > 0) {
+      this.hasAirTst = true;
       this.unticketedSegments = tstData;
     }
   }

@@ -1,11 +1,11 @@
-<form [formGroup]="aquaTicketingFormGroup">
-  <div *ngIf="hasTST">
-    <div class="row">
-      <div class="col-sm-4">
-        Air Segments
+<div class="container">
+  <form [formGroup]="aquaTicketingFormGroup">
+    <div *ngIf="hasAirTst" class="row">
+      <div class="col-sm-2">
+        Air Tst(s):
       </div>
-      <div class="col-sm-8">
-        <div class="btn-group segmentbox form-group" dropdown [insideClick]="true" *ngIf="hasTst">
+      <div class="col-sm-1">
+        <div class="btn-group segmentbox form-group" dropdown [insideClick]="true">
           <button
             id="button-basic"
             dropdownToggle
@@ -32,34 +32,29 @@
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <div class="row">
-      <div class="col-sm-4">Hotel Segments:</div>
-      <div class="col-sm-8">
+
+    <div *ngIf="!hasAirTst && isHotelPNR" class="row">
+      <div class="col-sm-2">Hotel Segment:</div>
+      <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'HTL'" formControlName="hotelSegment" name="hotelSegment" id="hotelSegment" #segmentApp>
         </app-segment-select>
       </div>
     </div>
-  </div>
 
-  <div>
-    <div class="row">
-      <div class="col-sm-4">Limo Segments:</div>
-      <div class="col-sm-8">
+    <div *ngIf="!hasAirTst && !isHotelPNR && isLimoPNR" class="row">
+      <div class="col-sm-2">Limo Segment:</div>
+      <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'TYP-LIM'" formControlName="limoSegment" name="limoSegment" id="limoSegment" #segmentApp>
         </app-segment-select>
       </div>
     </div>
-  </div>
 
-  <div>
-    <div class="row">
-      <div class="col-sm-4">Car Segments:</div>
-      <div class="col-sm-8">
+    <div *ngIf="!hasAirTst && !isHotelPNR && isCarPNR" class="row">
+      <div class="col-sm-2">Car Segment:</div>
+      <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'CAR'" formControlName="carSegment" name="carSegment" id="carSegment" #segmentApp>
         </app-segment-select>
       </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>

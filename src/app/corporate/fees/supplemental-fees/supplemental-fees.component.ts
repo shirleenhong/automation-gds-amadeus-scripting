@@ -118,9 +118,20 @@ export class SupplementalFeesComponent implements OnInit {
   feeChange(group) {
     if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
       group.get('noFeeCode').setValue('');
-      group.get('noFeeCode').disable();
+      // group.get('noFeeCode').disable();
+    } // else {
+
+    // group.get('noFeeCode').enable();
+    // }
+  }
+
+  noFeeChange(group, value) {
+    if (value !== '') {
+      group.get('fee').setValue('');
+      group.get('supplementalFee').setValue('');
+      group.get('code').setValue('');
     } else {
-      group.get('noFeeCode').enable();
+      this.processExchange(group, false);
     }
   }
 

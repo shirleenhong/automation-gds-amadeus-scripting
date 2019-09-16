@@ -81,7 +81,7 @@ export class SupplementalFeesComponent implements OnInit {
           .filter((a) => a.accountingTypeRemark === 'APAY')
           .forEach((acc) => {
             const group = this.createFormGroup(acc.segmentNo);
-            group.get('fee').setValue(this.isObt ? 'NFR' : 'NFM');
+            group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
             frmArray.push(group);
             this.feeChange(group);
           });

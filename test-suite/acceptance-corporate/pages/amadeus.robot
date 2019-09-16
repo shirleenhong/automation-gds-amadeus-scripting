@@ -267,5 +267,5 @@ Move Single Passenger For FR
     
 Create And Ticket PNR With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
-    #Create Test Dates
+    Create Test Dates
     Move Profile to GDS    AN${test_date}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    FXP/S2  TKOK    RFCWTTEST   ER    RT    TTP/T1    RFCWTTEST     ER        

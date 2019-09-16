@@ -97,7 +97,7 @@ Verify Default Ticket Segments
     #${elements_count}    Evaluate    ${elements_count} - 1
 	    : FOR    ${tkt_index}    IN RANGE    0    ${elements_count}
 	    \    Set Test Variable    ${div_index}    ${tkt_index}
-	    \    #Log    "${tab_supplemental_fees}" "${div_ticket_row_start}" "${div_index}" "${div_ticket_row_end}" "${input_ticket_segment}"
+	    \    Log    "${tab_supplemental_fees}" "${div_ticket_row_start}" "${div_index}" "${div_ticket_row_end}" "${input_ticket_segment}"
 	    \    ${tkt_no}    Get Value    ${tab_supplemental_fees}${div_ticket_row_start}${div_index}${div_ticket_row_end}${input_ticket_segment}
 	    \    Log    ${input_segment}
 	    \    ${tkt_index}    Evaluate    ${tkt_index} + 1
@@ -144,7 +144,26 @@ Retrieve PNR
     @{gds_commands}    Create List    RT    RTLFROH8
 	    : FOR    ${gds_command}    IN    @{gds_commands}
 	    \    Input Text    ${input_commandText}    ${gds_command}
+	    \    Press Key    ${input_commandText}    \\13  
+	    
+Create Single Ticket For The PNR
+    @{gds_commands}    Create List    TTP/T1
+	    : FOR    ${gds_command}    IN    @{gds_commands}
+	    \    Input Text    ${input_commandText}    ${gds_command}
+	    \    Press Key    ${input_commandText}    \\13 
+	    
+Create Multiple Ticket For The PNR
+    Create Single Ticket For The PNR
+    @{gds_commands}    Create List    TTP/T1    TTP/T2
+	    : FOR    ${gds_command}    IN    @{gds_commands}
+	    \    Input Text    ${input_commandText}    ${gds_command}
 	    \    Press Key    ${input_commandText}    \\13
+
+Add FOP In The PNR
+        @{gds_commands}    Create List    FPCASH
+	    : FOR    ${gds_command}    IN    @{gds_commands}
+	    \    Input Text    ${input_commandText}    ${gds_command}
+	    \    Press Key    ${input_commandText}    \\13  
 
 Select Supplemental Fee For First Tkt
     Wait Until Element Is Visible    ${tab_supplemental_fees}[1]${div_addFee_button}    30
@@ -162,6 +181,7 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S3
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
+    Create Multiple Ticket For The PNR
     Sleep    30
     Create Multiple TKT Exchange PNR In The GDS
     
@@ -170,7 +190,9 @@ Move Single Passenger With Multiple Segment For Transborder With TSTs
     Add Transborder Segment And Store Multiple Fare
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S3
+    Add FOP In The PNR
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
+    Create Multiple Ticket For The PNR
     Sleep    30
     Create Multiple TKT Exchange PNR In The GDS
 
@@ -178,7 +200,9 @@ Move Single Passenger With Single Segment For International With TSTs
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
+    Add FOP In The PNR
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
+    Create Single Ticket For The PNR
     Sleep    30
     Create Exchange PNR In The GDS
     
@@ -186,10 +210,12 @@ Move Single Passenger With Single Segment For International With Non Exch Ticket
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
+    Add FOP In The PNR
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER    
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
-    Create And Ticket PNR With Airline Code AF
+    Move Single Passenger For Fees
+    Add International Segment And Store Single Fare
     Add OBT Remark In The PNR    RM*EB/-EBA    RFCWTPTEST    ER
     
 Move Single Passenger With Transborder Segments And Single Ticket

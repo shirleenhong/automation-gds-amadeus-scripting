@@ -138,22 +138,27 @@ export class TicketRemarkService {
     let ticketNumber: number;
     ticketNumber = 0;
 
+    debugger;
     tstSelected.forEach((x) => {
       unticketed.forEach((p) => {
         if (x === p.tstNumber) {
-          const tstRemark = new Map<string, string>();
+          const tstSequenceRemark = new Map<string, string>();
+          const tstRouteRemark = new Map<string, string>();
           let segmentrelate: string[] = [];
           ticketNumber++;
-          tstRemark.set('TicketSequence', ticketNumber.toString());
+          tstSequenceRemark.set('TicketSequence', ticketNumber.toString());
+          tstSequenceRemark.set('InvSegment', 'ETK');
+          tstRouteRemark.set('TicketSequence', ticketNumber.toString());
           segmentrelate = p.tatooNumber;
           let tripType: string;
           tripType = this.getTripType(segmentrelate);
-          this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate);
-          this.remarksManager.createPlaceholderValues(tstRemark, null, segmentrelate, null, tripType);
+          tstRouteRemark.set('TktRoute', tripType);
+          this.remarksManager.createPlaceholderValues(tstSequenceRemark, null, segmentrelate);
+          this.remarksManager.createPlaceholderValues(tstRouteRemark, null, segmentrelate);
         }
       });
     });
-    debugger;
+
     if (ticketNumber > 0) {
       const numberOfTicketRemark = new Map<string, string>();
       numberOfTicketRemark.set('NumberOfTickets', ticketNumber.toString());
@@ -247,7 +252,8 @@ export class TicketRemarkService {
 
       const hotelOnlyPnrRemarks = new Map<string, string>();
       hotelOnlyPnrRemarks.set('TicketSequence', '1');
-      this.remarksManager.createPlaceholderValues(hotelOnlyPnrRemarks, null, segmentrelate, null, 'INV-HTL');
+      hotelOnlyPnrRemarks.set('InvSegment', 'INV-HTL');
+      this.remarksManager.createPlaceholderValues(hotelOnlyPnrRemarks, null, segmentrelate);
 
       const numberOfTicketRemark = new Map<string, string>();
       numberOfTicketRemark.set('NumberOfTickets', '1');
@@ -263,7 +269,8 @@ export class TicketRemarkService {
 
       const carPnrRemarks = new Map<string, string>();
       carPnrRemarks.set('TicketSequence', '1');
-      this.remarksManager.createPlaceholderValues(carPnrRemarks, null, segmentrelate, null, 'INV-CAR');
+      carPnrRemarks.set('InvSegment', 'INV-CAR');
+      this.remarksManager.createPlaceholderValues(carPnrRemarks, null, segmentrelate);
 
       const numberOfTicketRemark = new Map<string, string>();
       numberOfTicketRemark.set('NumberOfTickets', '1');
@@ -279,7 +286,8 @@ export class TicketRemarkService {
 
       const limoPnrRemarks = new Map<string, string>();
       limoPnrRemarks.set('TicketSequence', '1');
-      this.remarksManager.createPlaceholderValues(limoPnrRemarks, null, segmentrelate, null, 'INV-LIMO');
+      limoPnrRemarks.set('InvSegment', 'INV-CAR');
+      this.remarksManager.createPlaceholderValues(limoPnrRemarks, null, segmentrelate);
 
       const numberOfTicketRemark = new Map<string, string>();
       numberOfTicketRemark.set('NumberOfTickets', '1');

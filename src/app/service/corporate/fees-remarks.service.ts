@@ -15,7 +15,7 @@ export class FeesRemarkService {
    */
   public writeMigrationOBTFee(): void {
     // Check if CFA Exists in PNR
-    if (this.pnrService.getCFLine) {
+    if (this.pnrService.getCFLine()) {
       // Check if fee date is within configurated dates.
       if (this.isWithinMigrationOBTDates()) {
         // Write static remarks by segment type?

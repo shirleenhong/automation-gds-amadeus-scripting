@@ -138,7 +138,6 @@ export class TicketRemarkService {
     let ticketNumber: number;
     ticketNumber = 0;
 
-    debugger;
     tstSelected.forEach((x) => {
       unticketed.forEach((p) => {
         if (x === p.tstNumber) {
@@ -162,6 +161,17 @@ export class TicketRemarkService {
       if (this.hasTransborder) {
         const staticRemarksCondition = new Map<string, string>();
         staticRemarksCondition.set('AquaTicketingCondition', 'true');
+        this.remarksManager.createPlaceholderValues(
+          null,
+          staticRemarksCondition,
+          null,
+          null,
+          'ADVISED USTRAVEL A PASSPORT AND VISA ARE REQUIRED'
+        );
+        this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ADVISED USTRAVEL 6 MONTH FROM DEPARTURE');
+      } else {
+        const staticRemarksCondition = new Map<string, string>();
+        staticRemarksCondition.set('AquaTicketingCondition', 'False');
         this.remarksManager.createPlaceholderValues(
           null,
           staticRemarksCondition,

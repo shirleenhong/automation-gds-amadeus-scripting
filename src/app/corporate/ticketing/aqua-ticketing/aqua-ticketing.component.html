@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div *ngIf="!hasAirTst && !isHotelPNR && isLimoPNR" class="row">
+    <div *ngIf="!hasAirTst && !isHotelPNR && !isCarPNR && isLimoPNR" class="row">
       <div class="col-sm-2">Limo Segment:</div>
       <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'TYP-LIM'" formControlName="limoSegment" name="limoSegment" id="limoSegment" #segmentApp>
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div *ngIf="!hasAirTst && !isHotelPNR && isCarPNR" class="row">
+    <div *ngIf="!hasAirTst && !isHotelPNR && !isLimoPNR && isCarPNR" class="row">
       <div class="col-sm-2">Car Segment:</div>
       <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'CAR'" formControlName="carSegment" name="carSegment" id="carSegment" #segmentApp>

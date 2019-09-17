@@ -513,7 +513,8 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(tktRemarks);
 
         const tktRoute = new Map<string, string>();
-        tktRemarks.set('TktRoute', route);
+        tktRoute.set('TicketSequence', idx.toString());
+        tktRoute.set('TktRoute', route);
         this.remarksManager.createPlaceholderValues(tktRoute);
         idx++;
       }

@@ -252,7 +252,7 @@ export class TicketRemarkService {
       const segments: string[] = fg.get('hotelSegment').value.split(',');
       const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-      if (segments.length > 0) {
+      if (segmentrelate.length > 0) {
         const hotelOnlyPnrRemarks = new Map<string, string>();
         hotelOnlyPnrRemarks.set('TicketSequence', '1');
         hotelOnlyPnrRemarks.set('InvSegment', 'INV-HTL');
@@ -270,7 +270,7 @@ export class TicketRemarkService {
       const segments: string[] = fg.get('carSegment').value.split(',');
       const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-      if (segments.length > 0) {
+      if (segmentrelate.length > 0) {
         const carPnrRemarks = new Map<string, string>();
         carPnrRemarks.set('TicketSequence', '1');
         carPnrRemarks.set('InvSegment', 'INV-CAR');
@@ -289,7 +289,7 @@ export class TicketRemarkService {
       const segments: string[] = fg.get('limoSegment').value.split(',');
       const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-      if (segments.length > 0) {
+      if (segmentrelate.length > 0) {
         const limoPnrRemarks = new Map<string, string>();
         limoPnrRemarks.set('TicketSequence', '1');
         limoPnrRemarks.set('InvSegment', 'INV-LIMO');

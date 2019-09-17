@@ -30,17 +30,14 @@ BEGIN TRY
 		SET @PNROutputRemarkGroupId = (SELECT MAX(PNROutputRemarkGroupId)  FROM PNROutputRemarkGroup)
 
 		-- Configs
-		Insert into Context (ContextId, ContextName, CreationTimestamp,CreationUserIdentifier, VersionNumber)
-		Values(11, 'Amadeus Corp Scripting',  GETUTCDATE()	, 'Amadeus CA Migration - US9402', 1)
-
-		insert into ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId, CreationTimestamp, CreationUserIdentifier, VersionNumber)
-		values ('MigrationOBTFee ', 'RBP, NRD, ABC', 11, GETUTCDATE()	, 'Amadeus CA Migration - US9402', 1)
-
-		insert into ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId, CreationTimestamp, CreationUserIdentifier, VersionNumber)
-		values ('MigrationOBTFeeDate ', '01/30/2019,11/01/2019', 11, GETUTCDATE()	, 'Amadeus CA Migration - US9402', 1)
-
+		INSERT INTO Context (ContextId, ContextName, CreationTimestamp,CreationUserIdentifier, VersionNumber)
+			Values(11, 'Amadeus Corp Scripting',  GETUTCDATE()	, 'Amadeus CA Migration - US9402', 1)
+		INSERT INTO ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId, CreationTimestamp, CreationUserIdentifier, VersionNumber)
+			VALUES ('MigrationOBTFee ', 'RBP, NRD, ABC', 11, GETUTCDATE()	, 'Amadeus CA Migration - US9402', 1)
+		INSERT INTO ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId, CreationTimestamp, CreationUserIdentifier, VersionNumber)
+			VALUES ('MigrationOBTFeeDate ', '01/30/2019,11/01/2019', 11, GETUTCDATE()	, 'Amadeus CA Migration - US9402', 1),
 		INSERT INTO PNROutputGroupPNROutputItem (PNROutputGroupId, PNROutputItemId, SequenceNumber, CreationTimestamp, CreationUserIdentifier, VersionNumber, DataStandardizationVersion, LayoutVersion)
-		VALUES (@PNROutputGroupID,  @PNROutputItemID + 1, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1)
+			VALUES (@PNROutputGroupID,  @PNROutputItemID + 1, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1)
 
 		-- Remarks
 		-- to do...

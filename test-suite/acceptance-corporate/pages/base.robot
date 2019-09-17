@@ -108,14 +108,17 @@ Navigate To Page ${destination_page}
      : FOR     ${i}    IN RANGE   1    10
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
-     \    Run Keyword If    "${current_page}" == "CWT Corporate"     Navigate From Corp    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Payment"    Navigate From Payment    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Reporting"   Navigate From Reporting    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Reporting" and "${destination_page}" != "Reporting"   Navigate From Reporting    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Ticketing" and "${destination_page}" != "Ticketing"    Navigate From Ticketing    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
+     \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details_complete}" == "yes"     Click Save Button
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
-
+     
 Navigate From Corp
      [Arguments]    ${destination_page}
      Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting" or "${destination_page}" == "Ticketing"
@@ -139,7 +142,10 @@ Navigate From Reporting
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing"    Click Ticketing Panel
     
- 
+Navigate From Ticketing
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
+
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
     Run Keyword If    "${pnr_details}" == "${EMPTY}"    Run Keywords        Switch To Graphic Mode    Get PNR Details
@@ -157,6 +163,7 @@ Click Ticketing Panel
 
 Select Counselor Identity: ${identity}
     Navigate To Page CWT Corporate
+    Wait Until Page Contains Element    ${list_counselor_identity}    30
     Select From List By Label    ${list_counselor_identity}     ${identity}
     Set Test Variable    ${actual_counselor_identity}    ${identity}
     
@@ -166,8 +173,8 @@ Verify UDID 86 Remark Is Not Written In The PNR
     
 Verify UDID 86 Remark Is Written Correctly In The PNR
     Finish PNR
-    Verify Specific Remark Is Not Written In The PNR    RM *U86/-OVERRIDE ${actual_counselor_identity}
-    
+    Verify Specific Remark Is Written In The PNR    RM *U86/-OVERRIDE ${actual_counselor_identity}
+     
 Click Fees Panel
     Wait Until Element Is Visible    ${panel_fees}    60
     Click Element    ${panel_fees}

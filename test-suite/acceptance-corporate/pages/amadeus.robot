@@ -34,6 +34,7 @@ ${button_graphical}    css=.showInGraphicMode
 ${close_cryptic_display}    css=#elgen-19
 ${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
 ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading'] 
+${text_record_locator}     //div[contains(text(), 'Record Locator')]
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -67,6 +68,7 @@ Move Profile to GDS
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+    \    Sleep    1
 
 Open CA Corporate Test
     Wait Until Element Is Visible    ${menu_amadeus}    30
@@ -143,10 +145,18 @@ Close Cryptic Display
     Click Element    ${close_cryptic_display}
     Set Test Variable    ${current_page}    Amadeus
     
+Open Command Page
+    Wait Until Page Contains Element    ${button_cryptic}    60
+    Click Element    ${button_cryptic}
+    Wait Until Element Is Visible    ${input_commandText}    60
+    Set Test Variable    ${current_page}    Amadeus
+    [Teardown]    Take Screenshot
+
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
     Wait Until Page Contains Element    ${tab_cryptic_display}    60
+    Wait Until Element Is Not Visible    ${overlay_loader}    60
     Set Test Variable    ${current_page}    Cryptic Display
     [Teardown]    Take Screenshot
 
@@ -201,6 +211,13 @@ Create Exchange PNR In The GDS
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+    
+Create Multiple TKT Exchange PNR In The GDS
+    @{gds_commands}    Create List    RT    RFCWTPTEST    FPCASH    FS02    ER    ER    TTK/EXCH/S2
+    ...    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2    TTK/EXCH/S3    TTK/T2/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629128    FO057-1346629128E1PAR10MAY19/00002634/057-1346629127E1/S3
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Input Text    ${input_commandText}    ${gds_command}
+    \    Press Key    ${input_commandText}    \\13
 
 Move Single Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
@@ -247,7 +264,7 @@ Enter RIR Remarks In English
 Enter RIR Remarks In French
     Move Profile to GDS    RMZ/LANGUAGE-FR-CA    RIR LES FRAIS DE BILLET D AVION DE CET ITINERAIRE/FACTURE /S2    RIR NE SONT QU AUX FINS DE REATTRIBUTION DES COUTS A L INTERNE./S2    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2    RIR ON YOUR CREDIT CARD STATEMENT./SRIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
     
-Handle Simultaneous Changes To PNR 
+Handle Simultaneous Changes To PNR
     Sleep   3
     ${status}    Run Keyword And Return Status    Page Should Contain Element     ${response_simultaneous}
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
@@ -257,9 +274,111 @@ Move Single Passenger For EN
     
 Move Single Passenger For FR
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+
+Create ${num_of_test_dates} Test Dates
+    ${tdate}    Get Current Date
+    ${tdate}    Add Time To Date    ${tdate}    180 days
+    Set Test Variable    ${add_to_date}    3 days
+    : FOR    ${i}    IN RANGE    0    ${num_of_test_dates}
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${test_date}    Add Time To Date    ${tdate}    ${add_to_date}
+    \    Set Test Variable    ${tdate}    ${test_date}
+    \    ${day}    Convert Date    ${test_date}    %d
+    \    ${month}    Convert Month To MMM    ${test_date}
+    \    Set Test Variable    ${test_date_${i}}    ${day}${month}
+    \    Set Test Variable    ${tdate}    ${test_date}
+    
+Get Record Locator Value
+    Switch To Graphic Mode
+    ${actual_record_locator}    Get Text    ${text_record_locator}
+    ${actual_record_locator}     Fetch From Right    ${actual_record_locator}    :${SPACE}
+    Set Test Variable     ${actual_record_locator}
+    Log    ${actual_record_locator}    
+    Open Command Page
     
 Create And Ticket PNR With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
-    Create Test Dates
-    Move Profile to GDS    AN${test_date}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    FXP/S2  TKOK    RFCWTTEST   ER    RT    TTP/T1    RFCWTTEST     ER        
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH    
+    Create 2 Test Dates
+    Move Profile to GDS    AN${test_date_1}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    FXP/S2    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S2-3    RFCWTTEST   ER    
+    Sleep    4
+    Get Record Locator Value
+    Move Profile to GDS    TTP/T1
+    Sleep    4
+    Move Profile to GDS     RT${actual_record_locator}
+    Set Test Variable    ${airline_code}
     
+Create And Ticket 2nd TST With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Create 2 Test Dates
+    Move Profile to GDS    AN${test_date_1}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    FXP/S3    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S2-3    RFCWTTEST   ER
+    Sleep    4
+    Get Record Locator Value
+    Move Profile to GDS    TTP/T1
+    Sleep    4
+    Move Profile to GDS     RT${actual_record_locator}
+    Set Test Variable    ${airline_code}
+    
+Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Create 4 Test Dates
+    Move Profile to GDS    AN${test_date_1}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    AN${test_date_3}YULORD/A${airline_code}    SS1Y1    AN${test_date_4}ORDYUL/A${airline_code}    SS1Y1    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S2-5
+    Move Profile to GDS    FXP/S2    FXP/S3    FXP/S4    FXP/S5    RFCWTTEST   ER
+    Sleep    4
+    Get Record Locator Value
+    Move Profile to GDS    TTP/T1
+    Sleep    4
+    Retrive Current PNR
+    Set Test Variable    ${airline_code}
+    
+Retrive Current PNR 
+    Wait Until Element Is Visible    ${label_command_page}    180
+    Input Text    ${input_commandText}    RT${actual_record_locator}
+    Press Key    ${input_commandText}    \\13
+    Sleep    1
+    
+Create PNR With ${number_of_segments} Limo Segments
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Add ${number_of_segments} Limo Segments
+    
+Create PNR With ${number_of_segments} Car Segments
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Add ${number_of_segments} Car Segments
+    
+Create PNR With ${number_of_segments} Hotel Segments
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Add ${number_of_segments} Hotel Segments
+
+Create PNR With One TST For Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Create 2 Test Dates
+    Move Profile to GDS    AN${test_date_1}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S2-3
+    Move Profile to GDS    FXP/S2-3    RFCWTTEST   ER
+    Sleep    4
+    Set Test Variable    ${airline_code}    
+
+Create PNR With 4 TSTs For Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Create 4 Test Dates
+    Move Profile to GDS    AN${test_date_1}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDLHR/AAA    SS1Y1    AN${test_date_3}LHRORD/AAA    SS1Y1    AN${test_date_4}ORDYUL/A${airline_code}    SS1Y1    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S2-5
+    Move Profile to GDS    FXP/S2    FXP/S3    FXP/S4    FXP/S5    RFCWTTEST   ER
+    Sleep    4
+    Set Test Variable    ${airline_code}
+    
+Add ${number_of_segments} Hotel Segments
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${next_date}    Add Time To Date    ${test_date_${i}}    1 day    
+    \    Move Profile to GDS    HU1AHK1STR${test_date_${i}}-${next_date}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+    
+Add ${number_of_segments} Limo Segments
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Move Profile to GDS    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-12AUG/ET-1300/CF-12345     
+    
+Add ${number_of_segments} Car Segments
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Move Profile to GDS    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       

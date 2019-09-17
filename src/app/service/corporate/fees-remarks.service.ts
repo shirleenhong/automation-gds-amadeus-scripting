@@ -32,6 +32,7 @@ export class FeesRemarkService {
 
     // ...
   }
+
   writeFeeRemarks(feeGroup: FormGroup) {
     const fees = feeGroup.get('segments') as FormArray;
     this.writeFees(fees);

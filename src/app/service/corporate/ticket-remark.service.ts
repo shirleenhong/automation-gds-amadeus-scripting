@@ -128,7 +128,9 @@ export class TicketRemarkService {
 
   WriteAquaTicketing(aqua: AquaTicketingComponent) {
     const fg = aqua.aquaTicketingFormGroup;
-    this.WriteAquaTicketingRemarks(aqua.unticketedSegments, aqua.tstSelected);
+    if (aqua.unticketedSegments.length > 0 && aqua.tstSelected.length > 0) {
+      this.WriteAquaTicketingRemarks(aqua.unticketedSegments, aqua.tstSelected);
+    }
     this.writePassiveHotelSegmentRemark(fg);
     this.writePassiveCarSegmentRemark(fg);
     this.writePassiveLimoSegmentRemark(fg);

@@ -32,6 +32,7 @@ Verify That Non BSP Processing Remark Is Written For Westjet Individual Pass Pur
     Finish PNR
     Verify Passive Segment Are Written For Westjet Pass Purchase PNR
     Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
+    Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
     Verify PE Remark Are Written For Westjet Pass Purchase PNR
     Verify UDID Remark Are Written For Westjet Pass Purchase PNR
     [Teardown]    Close Browser
@@ -44,6 +45,7 @@ Verify That Non BSP Processing Remark Is Written For Porter Individual Pass Purc
     Finish PNR
     Verify Passive Segment Are Written For Porter Pass Purchase PNR
     Verify Itinerary Remarks Are Written For Porter Pass Purchase PNR
+    Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR
     Verify PE Remark Are Written For Porter Pass Purchase PNR
     Verify UDID Remark Are Written For Porter Pass Purchase PNR
     [Teardown]    Close Browser
@@ -64,7 +66,9 @@ Verify That Non BSP Processing Remark Is Written And Updated In The PNR
     Finish PNR
     Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
     Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
+    Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
+    Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
     [Teardown]    Close Browser
 
 Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase with Ticket Number

@@ -7,6 +7,8 @@ import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 
+
+
 declare var PNR: any;
 declare var smartScriptSession: any;
 
@@ -42,6 +44,7 @@ export class PnrService {
                     this.pnrResponse = res.response.model.output.response;
                     this.getExchangeTatooNumbers();
                     await this.getTST();
+                    this.getCFLine();
                 },
                 (error: string) => {
                     this.isPNRLoaded = false;
@@ -658,7 +661,6 @@ export class PnrService {
                 const fee = new LeisureFeeModel();
                 const rems = rm.freeFlowText.split('/-');
                 fee.segmentAssoc = '2';
-                fee.address = taxProvince;
                 fee.passengerNo = this.getPassengerAssocNumbers(rm.associations);
                 rems.forEach((r) => {
                     if (r.indexOf('-') >= 0) {
@@ -699,6 +701,7 @@ export class PnrService {
                                 break;
                         }
                     }
+                    fee.address = (fee.fln === '1') ? taxProvince : '';
                 });
                 fees.push(fee);
             }
@@ -827,7 +830,8 @@ export class PnrService {
                     model.passPurchase = vals[0].trim();
                     model.fareType = vals[1].replace('FARE', '').trim();
                     model.accountingTypeRemark = 'ACPP';
-                    const air = this.getSegmentTatooNumber().find((z) => z.segmentType === 'AIR' && z.controlNumber === model.supplierConfirmatioNo);
+                    const air = this.getSegmentTatooNumber()
+                        .find((z) => z.segmentType === 'AIR' && z.controlNumber === model.supplierConfirmatioNo);
                     if (air) {
                         model.departureCity = air.cityCode;
                     }
@@ -1291,6 +1295,33 @@ export class PnrService {
         return false;
     }
 
+    getTicketedSegments(): string[] {
+        const segmentTatooNumbers = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            const s = [];
+            ticketed.fullNode.referenceForDataElement.reference.forEach(ref => {
+                if (ref.qualifier === 'ST') {
+                    s.push(ref.number);
+                }
+            });
+            segmentTatooNumbers.push(s);
+        }
+        const segmentLines = [];
+        segmentTatooNumbers.forEach(tatoos => {
+            const s = [];
+            tatoos.forEach(tatoo => {
+                const segment = this.segments.filter(seg => seg.tatooNo === tatoo);
+                if (segment && segment.length > 0) {
+                    s.push(segment[0].lineNo);
+                }
+            });
+            segmentLines.push(s.join(','));
+        });
+
+        return segmentLines;
+    }
+
+
     getClientSubUnit() {
         const u25 = this.getRemarkText('U25/-');
         if (u25 && !this.clientSubUnitGuid) {
@@ -1332,4 +1363,25 @@ export class PnrService {
         }
         return this.exchangeTatooNumbers;
     }
+
+    getExchangeSegmentNumbers(): string[] {
+        return this.getSegmentNumbers(this.exchangeTatooNumbers);
+    }
+
+    getTatooNumberFromSegmentNumber(segments: string[]): string[] {
+        const lineNos = this.segments.filter(s => segments.indexOf(s.lineNo) >= 0).map(x => x.tatooNo);
+        return lineNos;
+    }
+
+    getSegmentNumbers(tatooNumbers: any[]): string[] {
+        const segmentLines = [];
+        tatooNumbers.forEach(tatooNo => {
+            const segment = this.segments.filter(s => s.tatooNo === tatooNo);
+            if (segment && segment.length > 0) {
+                segmentLines.push(segment[0].lineNo);
+            }
+        });
+        return segmentLines;
+    }
+
 }

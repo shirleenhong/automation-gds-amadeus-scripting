@@ -55,7 +55,6 @@ export class ReportingRemarkService {
   }
 
   WriteEscOFCRemark(value: string) {
-    debugger;
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
     if (value !== '') {
       const escOfc = new Map<string, string>();

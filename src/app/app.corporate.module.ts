@@ -13,6 +13,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MyCommonModule } from './my-common.module';
+import { FeesComponent } from './corporate/fees/fees.component';
+import { SupplementalFeesComponent } from './corporate/fees/supplemental-fees/supplemental-fees.component';
+import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-fees/add-supplemental-fees.component';
 import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 
 @NgModule({
@@ -24,6 +27,10 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
     ReportingComponent,
     ReportingBSPComponent,
     ReportingNonbspComponent,
+    TicketingComponent,
+    FeesComponent,
+    SupplementalFeesComponent,
+    AddSupplementalFeesComponent,
     TicketingComponent
   ],
   imports: [
@@ -44,6 +51,6 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent]
+  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild } from '@angular/core';
 import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
@@ -13,7 +13,7 @@ export class ReportingComponent implements OnInit {
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
   hasTst: boolean;
 
-  constructor(private utilHelper: UtilHelper) {}
+  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.hasTst = true;
@@ -21,12 +21,15 @@ export class ReportingComponent implements OnInit {
 
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;
+    this.cdr.detectChanges();
   }
 
   checkValid() {
-    this.utilHelper.validateAllFields(this.reportingBSPComponent.bspGroup);
-    if (!this.reportingBSPComponent.bspGroup.valid) {
-      return false;
+    if (this.reportingBSPComponent !== undefined) {
+      this.utilHelper.validateAllFields(this.reportingBSPComponent.bspGroup);
+      if (!this.reportingBSPComponent.bspGroup.valid) {
+        return false;
+      }
     }
 
     this.utilHelper.validateAllFields(this.reportingNonbspComponent.nonBspGroup);

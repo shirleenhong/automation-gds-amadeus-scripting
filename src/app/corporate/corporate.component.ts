@@ -8,7 +8,6 @@ import { ReportingComponent } from '../corporate/reporting/reporting.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
 import { PnrService } from '../service/pnr.service';
 import { DDBService } from '../service/ddb.service';
-import { CorporateRemarksService } from '../service/corporate/corporate-remarks.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
 import { PaymentRemarkService } from '../service/corporate/payment-remark.service';
 import { ReportingRemarkService } from '../service/corporate/reporting-remark.service';
@@ -16,6 +15,9 @@ import { TicketRemarkService } from '../service/corporate/ticket-remark.service'
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
+import { AmadeusRemarkService } from '../service/remark.service';
+import { FeesComponent } from './fees/fees.component';
+import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 
 @Component({
   selector: 'app-corporate',
@@ -34,6 +36,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
+  @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @Input() overrideValue: any;
 
   constructor(
@@ -42,10 +45,11 @@ export class CorporateComponent implements OnInit {
     // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
-    private corpRemarkService: CorporateRemarksService,
+    private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
-    private ticketRemarkService: TicketRemarkService
+    private ticketRemarkService: TicketRemarkService,
+    private feesRemarkService: FeesRemarkService
   ) {
     this.initData();
   }
@@ -54,14 +58,6 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-
-    // this.rms.TestSendToPnr(); // test
-    // if (this.pnrService.errorMessage.indexOf('Error') === 0) {
-    //   this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
-    // } else if (this.pnrService.cfLine == null || this.pnrService.cfLine === undefined) {
-    //   this.errorPnrMsg = 'PNR doesnt contain CF Remark, Please make sure CF remark is existing in PNR.';
-    //   this.isPnrLoaded = true;
-    // }
   }
 
   async getPnr() {
@@ -98,7 +94,7 @@ export class CorporateComponent implements OnInit {
   }
 
   showMessage(msg: string, type: MessageType, title: string, caller: string) {
-    const skip = this.modalRef && this.modalRef.content.callerName === caller;
+    const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
     if (!skip) {
       this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
     }
@@ -116,6 +112,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
+    this.validModel.isFeesValid = this.feesComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 
@@ -187,14 +184,22 @@ export class CorporateComponent implements OnInit {
     });
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+
+    this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
+
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
-    this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    if (this.reportingComponent.reportingBSPComponent !== undefined) {
+      this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    }
+
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.closePopup();
+        this.checkHasDataLoadError();
       },
       (error) => {
         console.log(JSON.stringify(error));

@@ -16,7 +16,7 @@ export class RemarksManagerApiService {
   isTokenExpired = true;
   token: string;
 
-  constructor(private httpClient: HttpClient, private pnrService: PnrService) { }
+  constructor(private httpClient: HttpClient, private pnrService: PnrService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -59,7 +59,9 @@ export class RemarksManagerApiService {
   }
 
   async postRequest(serviceName: string, body: any) {
-    await this.getToken();
+    if (!environment.proxy) {
+      await this.getToken();
+    }
 
     const hds = new HttpHeaders().append('Content', 'application/json');
     return this.httpClient

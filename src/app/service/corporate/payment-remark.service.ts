@@ -18,7 +18,7 @@ export class PaymentRemarkService {
   nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
   currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -65,7 +65,7 @@ export class PaymentRemarkService {
         account.gst,
         account.hst,
         account.qst,
-        account.otherTax,
+        '0.00',
         account.commisionWithoutTax,
         segmentrelate,
         account.supplierCodeName,

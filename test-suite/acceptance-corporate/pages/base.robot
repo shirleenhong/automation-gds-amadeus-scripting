@@ -19,6 +19,9 @@ ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketi
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
 ${list_counselor_identity}    css=#selCounselorIdentity
+${input_ticketingDate}    css=#dtxtTicketDate
+${checkbox_onHold}    css=#chkOnHold
+${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
 
 
 *** Keywords ***
@@ -127,6 +130,7 @@ Navigate From Full Wrap
     Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
     ...    ELSE IF    "${destination_page}" == "Reporting"     Click Reporting Panel
     ...    ELSE IF    "${destination_page}" == "Ticketing"     Click Ticketing Panel
+    ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -170,3 +174,12 @@ Verify UDID 86 Remark Is Not Written In The PNR
 Verify UDID 86 Remark Is Written Correctly In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RM *U86/-OVERRIDE ${actual_counselor_identity}
+     
+Click Fees Panel
+    Wait Until Element Is Visible    ${panel_fees}    60
+    Click Element    ${panel_fees}
+    Set Test Variable    ${current_page}    Fees
+    
+Navigate From Fees
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Fees"    Click Fees Panel

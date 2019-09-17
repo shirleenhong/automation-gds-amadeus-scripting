@@ -6,6 +6,7 @@ import { interval } from 'rxjs';
 import { StaticValuesService } from './static-values.services';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-missed-saving-threshold.model';
+import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -156,8 +157,16 @@ export class DDBService implements OnInit {
     return await this.getRequest(common.travelportService + travelportCode);
   }
 
-  async getFees(clientSubUnitId: string) {
-    return await this.getRequest(common.feesService.replace('{ClientSubUnitGuid}', clientSubUnitId));
+  async getFees(clientSubUnitId: string, cfa: string) {
+    const url = common.feesService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1&ClientAccountNumber=1' + cfa;
+    let clientFeeItems: ClientFeeItem[] = [];
+    await this.getRequest(url).then((fee) => {
+      if (fee.ClientFeeItems) {
+        clientFeeItems = fee.ClientFeeItems.map((jsonObj) => new ClientFeeItem(jsonObj));
+        console.log(clientFeeItems);
+      }
+    });
+    return clientFeeItems;
   }
 
   async getConfigurationParameter(configName: string) {
@@ -296,7 +305,7 @@ export class DDBService implements OnInit {
     }
   }
 
-  isPnrDomestic() {
+  isPnrDomestic(): boolean {
     const countries = [];
     this.airTravelPortInformation.forEach((port) => {
       if (countries.indexOf(port.countryCode) === -1) {
@@ -309,6 +318,19 @@ export class DDBService implements OnInit {
       return false;
     }
     return true;
+  }
+
+  isPnrTransBorder() {
+    const countries = [];
+    this.airTravelPortInformation.forEach((port) => {
+      if (countries.indexOf(port.countryCode) === -1) {
+        countries.push(port.countryCode);
+      }
+    });
+    if (countries.length === 2 && countries.indexOf('US') >= 0 && countries.indexOf('CA') >= 0) {
+      return true;
+    }
+    return false;
   }
 
   getServicingOptionValue(soId) {
@@ -354,5 +376,9 @@ export class DDBService implements OnInit {
 
   getACPassPurchaseList() {
     return this.staticValues.getACPassPurchaseList();
+  }
+
+  getNoFeeCodes() {
+    return this.staticValues.getNoFeeCodes();
   }
 }

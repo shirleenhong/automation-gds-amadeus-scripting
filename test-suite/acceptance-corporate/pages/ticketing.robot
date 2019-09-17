@@ -4,14 +4,70 @@ Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
 Resource          base.robot
+Resource          amadeus.robot
 
 *** Variables ***
 ${input_ticketingDate}    css=#dtxtTicketDate
 ${checkbox_onHold}    css=#chkOnHold
 ${dropdown_tkLine}    css=#selTK
 ${checkbox_verifyTicket}    css=#chkVerifyAck
+${tab_tktInstructions}    //span[contains(text(), 'Ticketing Instructions')]
+${list_unticketedTst}    css=#unticketedTst    #//ul[@id='dropdown-basic']
+${input_unticketedTst}    css=#unticketedTst    #//button[@id='button-basic']//input[@formcontrolname='unticketedTst']
+${list_carSegments}    css=#carSegments    #//ul[@id='dropdown-basic']
+${input_carSegments}    css=#carSegments    #//button[@id='button-basic']//input[@formcontrolname='carSegments']
+${list_hotelSegments}    css=#hotelSegments    #//ul[@id='dropdown-basic']
+${input_hotelSegments}    css=#hotelSegments    #//button[@id='button-basic']//input[@formcontrolname='hotelSegments']
+${list_limoSegments}    css=#limoSegments    #//ul[@id='dropdown-basic']
+${input_limoSegments}    css=#limoSegments    #//button[@id='button-basic']//input[@formcontrolname='limoSegments']
 
 *** Keywords ***
+Click Ticketing Instructions Tab
+    Wait Until Element Is Visible   ${tab_tktInstructions}    30
+    Click Element    ${tab_tktInstructions}
+    Wait Until Page Contains Element    ${list_unticketedTst}    30
+    Set Test Variable    ${current_page}    Ticketing Instructions    
+    
+Select Unticketed Air Segments
+    [Arguments]    @{segment_number}
+    Wait Until Element Is Visible    ${input_unticketedTst}    30
+    Click Button    ${input_unticketedTst}
+    Wait Until Element Is Visible    ${list_unticketedTst}    30
+    :FOR    ${segment_number}    IN    @{segment_number}
+    \    Click Element    ${list_unticketedTst}//input[@value='${segment_number}']
+    Click Element    ${input_unticketedTst}
+    [Teardown]    Take Screenshot
+    
+Select Car Segments
+    [Arguments]    @{segment_number}
+    Wait Until Element Is Visible    ${input_carSegments}    30
+    Click Button    ${input_carSegments}
+    Wait Until Element Is Visible    ${list_carSegments}    30
+    :FOR    ${segment_number}    IN    @{segment_number}
+    \    Click Element    ${list_carSegments}//input[@value='${segment_number}']
+    Click Element    ${input_carSegments}
+    [Teardown]    Take Screenshot
+    
+Select Hotel Segments
+    [Arguments]    @{segment_number}
+    Wait Until Element Is Visible    ${input_hotelSegments}    30
+    Click Button    ${input_hotelSegments}
+    Wait Until Element Is Visible    ${list_hotelSegments}    30
+    :FOR    ${segment_number}    IN    @{segment_number}
+    \    Click Element    ${list_hotelSegments}//input[@value='${segment_number}']
+    Click Element    ${input_hotelSegments}
+    [Teardown]    Take Screenshot
+    
+Select Limo Segments
+    [Arguments]    @{segment_number}
+    Wait Until Element Is Visible    ${input_limoSegments}    30
+    Click Button    ${input_limoSegments}
+    Wait Until Element Is Visible    ${list_limoSegments}    30
+    :FOR    ${segment_number}    IN    @{segment_number}
+    \    Click Element    ${list_limoSegments}//input[@value='${segment_number}']
+    Click Element    ${inputt_limoSegments}
+    [Teardown]    Take Screenshot
+
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing
     Assign Current Date

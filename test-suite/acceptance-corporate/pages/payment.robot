@@ -381,8 +381,17 @@ Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticke
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-${actual_supplier_code}/S2
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1111.20
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
+    
+Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number And Penalty Amount Are Written In The PNR
+    Finish PNR 
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-${actual_supplier_code}/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1124.20
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1010.00/TX1-101.00XG/TX2-11.00RC/TX3-2.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     
 Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR 
@@ -390,8 +399,8 @@ Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_val
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2-3
     ...     ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-${actual_supplier_code}/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 1111.20
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     
 Verify Penalty Remarks Are Not Written In The PNR
     Verify Specific Remark Is Not Written In The PNR    RMT TKT1-VN-${actual_supplier_code}/BA-
@@ -409,6 +418,7 @@ Click Save Button
 Update Consultant Number To ${consultant_number}
     Enter Value    ${input_consultantNo}    ${consultant_number}    
     Set Test Variable     ${consultant_number}     ${consultant_number}
+    [Teardown]    Take Screenshot
     
 Verify Consultant Number Remark Is Written With The Correct Value
     Finish PNR
@@ -583,3 +593,4 @@ Navigate To Add Accounting Line
     Click Element    ${tab_nonBsp_processing}    
     Click Element    ${button_addaccountingline} 
     Set Test Variable    ${current_page}    Add Accounting Line
+    Set Test Variable    ${ticketing_details_complete}    no

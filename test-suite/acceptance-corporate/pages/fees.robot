@@ -90,7 +90,7 @@ Add CFA Remark
 Verify Default Ticket Segments
     [Arguments]    ${expected_tktNo}
     #@{tkt_no}    Create List    ${expected_tktSegment}
-    Set Test Variable    ${elements_count}    
+    Set Suite Variable    ${elements_count}    
     Wait Until Element Is Visible    ${tab_supplemental_fees}    60
     ${elements_count}    Get Element Count    //input[@id='segment']
     Log    ${elements_count}
@@ -104,7 +104,7 @@ Verify Default Ticket Segments
 	    \    Run Keyword And Continue On Failure    Should Be Equal    ${expected_tktNo}    ${tkt_no}    
 	    \    Log    Expected: ${expected_tktNo}
 	    \    Log    Actual: ${tkt_no}
-	Take Screenshot
+	[Teardown]    Take Screenshot
     
 Verify Default Fee In Ticket Segments
     [Arguments]    ${expected_fee_amount}
@@ -116,7 +116,7 @@ Verify Default Fee In Ticket Segments
 	    \    Run Keyword And Continue On Failure    Should Be Equal    ${expected_fee_amount}    ${fee_value}
 	    \    Log    Expected: ${expected_fee_amount}
 	    \    Log    Actual: ${fee_value}    
-    Take Screenshot
+    [Teardown]    Take Screenshot
     
 Verify Default Fee Code in Ticket Segments
     [Arguments]    ${expected_fee_code}
@@ -128,7 +128,7 @@ Verify Default Fee Code in Ticket Segments
 	    \    Run Keyword And Continue On Failure    Should Be Equal    ${expected_fee_code}    ${fee_code}
 	    \    Log    Expected: ${expected_fee_code}
 	    \    Log    Actual: ${fee_code}    
-    Take Screenshot
+    [Teardown]    Take Screenshot
 	    
 Tick Schedule Change For First Segment   
     Wait Until Element Is Visible    ${tab_supplemental_fees}    60

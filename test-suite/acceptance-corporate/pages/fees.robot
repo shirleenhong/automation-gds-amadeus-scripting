@@ -216,6 +216,7 @@ Move Single Passenger With Single Segment For International With Non Exch Ticket
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
+    Add FOP In The PNR
     Add OBT Remark In The PNR    RM*EB/-EBA    RFCWTPTEST    ER
     
 Move Single Passenger With Transborder Segments And Single Ticket

@@ -47,7 +47,7 @@ Login To Amadeus Sell Connect Acceptance
     Wait Until Element Is Not Visible    ${button_disabled_login}    30
     Click Element    ${button_enabled_login}
     Handle Force Login Window
-    Wait Until Element Is Visible    ${tab_mainPage}    30
+    Wait Until Element Is Visible    ${tab_mainPage}    60
     Handle Accept Cookie Panel
     Click Element    ${button_command_page}
     Wait Until Page Contains Element    ${input_commandText}    180
@@ -67,6 +67,7 @@ Move Profile to GDS
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+    \    Sleep    1
 
 Open CA Corporate Test
     Wait Until Element Is Visible    ${menu_amadeus}    30
@@ -109,6 +110,7 @@ Delete Fare and Itinerary
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
+    Handle Simultaneous Changes To PNR
 
 Logout To Amadeus Sell Connect
     Click Element    ${link_sign_out}
@@ -118,16 +120,17 @@ Logout To Amadeus Sell Connect
     Close Browser
 
 Get PNR Details
-    Wait Until Page Does Not Contain    ${overlay_loader}    
+    Wait Until Element Is Not Visible    ${overlay_loader}    10
     Wait Until Element Is Enabled    ${icon_air}    30
     Wait Until Element Is Visible    ${tab_cryptic_display}    60
     Sleep    2
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
+    Wait Until Element Is Not Visible    ${overlay_loader}    10
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
-    [Teardown]    Run Keywords    Take Screenshot    Switch To Command Page
+    [Teardown]    Take Screenshot
 
 Switch To Command Page
     Click Element    ${close_cryptic_display}
@@ -137,10 +140,22 @@ Switch To Command Page
     Set Test Variable    ${current_page}    Amadeus
     [Teardown]    Take Screenshot
 
+Close Cryptic Display
+    Click Element    ${close_cryptic_display}
+    Set Test Variable    ${current_page}    Amadeus
+    
+Open Command Page
+    Wait Until Page Contains Element    ${button_cryptic}    60
+    Click Element    ${button_cryptic}
+    Wait Until Element Is Visible    ${input_commandText}    60
+    Set Test Variable    ${current_page}    Amadeus
+    [Teardown]    Take Screenshot
+    
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${button_graphical}    30
     Click Element    ${button_graphical}
     Wait Until Page Contains Element    ${tab_cryptic_display}    60
+    Wait Until Element Is Not Visible    ${overlay_loader}    60
     Set Test Variable    ${current_page}    Cryptic Display
     [Teardown]    Take Screenshot
 
@@ -166,9 +181,9 @@ Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
-    Run Keyword And Continue On Failure    Should Contain    ${pnr_details}    ${expected_remark}
-    Log    Expected: ${expected_remark}
-    Log    Actual: ${pnr_details}
+    Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Should Contain    ${pnr_details_flattened}    ${expected_remark_flattened}   ELSE    Should Contain    ${pnr_details}    ${expected_remark} 
+    Run Keyword If    "${multi_line_remark}" == "True"    Log    Expected: ${expected_remark_flattened}    ELSE     Log    Expected: ${expected_remark}
+    Run Keyword If    "${multi_line_remark}" == "True"    Log    Expected: ${pnr_details_flattened}     ELSE    Log    Actual: ${pnr_details}
 
 Verify Specific Remark Is Not Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
@@ -184,10 +199,10 @@ Remove Line Break And Spaces
     [Arguments]    ${pnr_details}    ${expected_remark}
     ${pnr_details}    Replace String    ${pnr_details}    ${SPACE}    ${EMPTY}
     ${pnr_details_flattened}    Replace String    ${pnr_details}    \n    ${EMPTY}
-    Set Test Variable    ${pnr_details}    ${pnr_details_flattened}
     ${expected_remark}    Replace String    ${expected_remark}    ${SPACE}    ${EMPTY}
     ${expected_remark_flattened}    Replace String    ${expected_remark}    \n    ${EMPTY}
-    Set Test Variable    ${expected_remark}    ${expected_remark_flattened}
+    Set Test Variable    ${pnr_details_flattened}
+    Set Test Variable    ${expected_remark_flattened}
 
 Create Exchange PNR In The GDS
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
@@ -221,18 +236,18 @@ Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000N    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-VB70000000C
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
 
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-AAA0000000C
     Add Multiple Passive Air Segments In The GDS With Different Airline Codes
 
 Enter RIR Remarks In English
@@ -247,13 +262,7 @@ Handle Simultaneous Changes To PNR
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
 
 Move Single Passenger For EN
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     
 Move Single Passenger For FR
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA
-    
-Create And Ticket PNR With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
-    Create Test Dates
-    Move Profile to GDS    AN${test_date}YULORD/A${airline_code}    SS1Y1    AN${test_date_2}ORDYUL/A${airline_code}    SS1Y1    FXP/S2  TKOK    RFCWTTEST   ER    RT    TTP/T1    RFCWTTEST     ER        
-    
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA     

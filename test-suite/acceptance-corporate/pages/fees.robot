@@ -178,8 +178,9 @@ Move Single Passenger For Fees
 Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Move Single Passenger For Fees
     Add Canada Domestic Segment And Store Mulitple Fare
-    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
-    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S3
+    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2
+    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S3
+    Add FOP In The PNR
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Create Multiple Ticket For The PNR
     Sleep    30
@@ -188,8 +189,8 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
 Move Single Passenger With Multiple Segment For Transborder With TSTs
     Move Single Passenger For Fees
     Add Transborder Segment And Store Multiple Fare
-    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
-    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S3
+    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2
+    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S3
     Add FOP In The PNR
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Create Multiple Ticket For The PNR
@@ -209,9 +210,10 @@ Move Single Passenger With Single Segment For International With TSTs
 Move Single Passenger With Single Segment For International With Non Exch Ticket
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
-    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/S2
+    Add SSR Document In The PNR    SR DOCS AF HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2
     Add FOP In The PNR
-    Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER    
+    Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
+    Create Single Ticket For The PNR    
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
@@ -273,11 +275,13 @@ Verify Exchange Flat Fee With Supplemental Fee For Exchange Tkt And Write Remark
     Verify Specific Remark Is Written In The PNR    SUPFEE2-ATB27.00/S3
     
 Verify Special Fee For Air Ticket
-    Add CFA Remark    Add CFA Remark    RFCWTPTEST    ER
+    Add CFA Remark    RM*CF/-XXP0000000N    RFCWTPTEST    ER
+    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2
     Sleep    30
     Open CA Corporate Test
     Click Full Wrap
     Click Fees Panel
+    Sleep    30    
     Verify Default Ticket Segments    1
     Verify Default Fee Code in Ticket Segments    ATI
     Verify Default Fee In Ticket Segments    60.00

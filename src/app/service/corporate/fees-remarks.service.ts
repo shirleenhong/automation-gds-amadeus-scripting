@@ -9,6 +9,29 @@ import { PnrService } from '../pnr.service';
 export class FeesRemarkService {
   constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
+  /**
+   * US9402 - ONGOING
+   * Write Migration OBT Fee
+   */
+  public writeMigrationOBTFee(): void {
+    // Check if CFA Exists in PNR
+
+    // Check if fee date is within configurated dates.
+
+    // Write static remarks by segment type?
+    const staticMigrationOBTFee = new Map<string, string>();
+    staticMigrationOBTFee.set('MigrationOBTAir', 'true');
+    staticMigrationOBTFee.set('MigrationOBTRail', 'true');
+    staticMigrationOBTFee.set('MigrationOBTHotel', 'true');
+    staticMigrationOBTFee.set('MigrationOBTCar', 'true');
+
+    this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'ATE');
+    this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'RTE');
+    this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'HBE');
+    this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'CBE');
+
+    // ...
+  }
   writeFeeRemarks(feeGroup: FormGroup) {
     const fees = feeGroup.get('segments') as FormArray;
     this.writeFees(fees);

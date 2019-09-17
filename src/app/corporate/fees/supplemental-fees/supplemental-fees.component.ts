@@ -38,7 +38,7 @@ export class SupplementalFeesComponent implements OnInit {
     private ddbService: DDBService,
     private modalService: BsModalService,
     private valueChangeListener: ValueChangeListener
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.handleApay();
@@ -116,12 +116,15 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   feeChange(group: FormGroup) {
-    group.get('noFeeCode').clearValidators();
+    debugger;
+    const noFeeCodeFg = group.get('noFeeCode');
+    noFeeCodeFg.clearValidators();
+    noFeeCodeFg.updateValueAndValidity();
     if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
-      group.get('noFeeCode').setValue('');
-      // group.get('noFeeCode').disable();
+      noFeeCodeFg.setValue('');
+      // noFee.disable();
     } else {
-      group.get('noFeeCode').setValidators([Validators.required]);
+      noFeeCodeFg.setValidators([Validators.required]);
     }
   }
 
@@ -141,7 +144,7 @@ export class SupplementalFeesComponent implements OnInit {
       isChange: new FormControl(''),
       code: new FormControl(''),
       fee: new FormControl(''),
-      noFeeCode: new FormControl('', [Validators.required]),
+      noFeeCode: new FormControl('', []),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),
       isExchange: new FormControl(false)
@@ -174,6 +177,7 @@ export class SupplementalFeesComponent implements OnInit {
     }
     group.get('code').setValue(code);
     group.get('fee').setValue(fee);
+    debugger;
     group.get('noFeeCode').setValue('');
     group.get('noFeeCode').disable();
     group.get('feeType').setValue(feeType);

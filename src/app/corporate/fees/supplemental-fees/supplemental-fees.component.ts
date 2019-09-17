@@ -38,7 +38,7 @@ export class SupplementalFeesComponent implements OnInit {
     private ddbService: DDBService,
     private modalService: BsModalService,
     private valueChangeListener: ValueChangeListener
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.handleApay();
@@ -81,7 +81,7 @@ export class SupplementalFeesComponent implements OnInit {
           .filter((a) => a.accountingTypeRemark === 'APAY')
           .forEach((acc) => {
             const group = this.createFormGroup(acc.segmentNo);
-            group.get('fee').setValue(this.isObt ? 'NFR' : 'NFM');
+            group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
             frmArray.push(group);
             this.feeChange(group);
           });
@@ -106,20 +106,35 @@ export class SupplementalFeesComponent implements OnInit {
     } catch (e) {
       console.log(e);
     }
-    this.codeDestination = 'ATI';
+    this.codeDestination = 'I';
     if (this.ddbService.isPnrTransBorder()) {
-      this.codeDestination = 'ATB';
+      this.codeDestination = 'B';
     } else if (this.ddbService.isPnrDomestic()) {
-      this.codeDestination = 'ATD';
+      this.codeDestination = 'D';
     }
-    this.isObt = this.pnrService.getRemarkText('*EB/') !== '';
+    this.isObt = this.pnrService.getRemarkText('EB/') !== '';
   }
 
-  feeChange(group) {
-    if (group.get('fee').value !== '' || group.get('supplementalFee').value !== '') {
-      group.get('noFeeCode').disable();
+  feeChange(group: FormGroup) {
+    debugger;
+    const noFeeCodeFg = group.get('noFeeCode');
+    noFeeCodeFg.clearValidators();
+    noFeeCodeFg.updateValueAndValidity();
+    if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
+      noFeeCodeFg.setValue('');
+      // noFee.disable();
     } else {
-      group.get('noFeeCode').enable();
+      noFeeCodeFg.setValidators([Validators.required]);
+    }
+  }
+
+  noFeeChange(group, value) {
+    if (value !== '') {
+      group.get('fee').setValue('');
+      group.get('supplementalFee').setValue('');
+      group.get('code').setValue('');
+    } else {
+      this.processExchange(group, false);
     }
   }
 
@@ -127,22 +142,42 @@ export class SupplementalFeesComponent implements OnInit {
     return this.fb.group({
       segment: new FormControl(segmentNo),
       isChange: new FormControl(''),
+      code: new FormControl(''),
       fee: new FormControl(''),
-      noFeeCode: new FormControl('', [Validators.required]),
+      noFeeCode: new FormControl('', []),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),
       isExchange: new FormControl(false)
     });
   }
 
+  getCode(segmentNumbers) {
+    const segments = this.pnrService.getSegmentTatooNumber().filter((x) => segmentNumbers.split(',').indexOf(x.lineNo) >= 0);
+    let code = 'A';
+    if (segments.length > 0) {
+      if (segments[0].segmentType === 'TRN') {
+        code = 'R';
+      }
+    }
+    return code + 'T' + this.codeDestination;
+  }
+
   setFee(group, feeValue, feeType) {
     const amountPipe = new AmountPipe();
-    let fee = this.codeDestination + amountPipe.transform(feeValue);
+    let code = this.getCode(group.get('segment').value);
+    let fee = amountPipe.transform(feeValue);
     if (feeValue === 0 && group.get('isChange').value === true) {
-      fee = 'NFR';
+      code = 'NFR';
+      fee = '';
     }
-
+    if (fee === '0.01') {
+      group.get('fee').enable();
+    } else {
+      group.get('fee').disable();
+    }
+    group.get('code').setValue(code);
     group.get('fee').setValue(fee);
+    debugger;
     group.get('noFeeCode').setValue('');
     group.get('noFeeCode').disable();
     group.get('feeType').setValue(feeType);

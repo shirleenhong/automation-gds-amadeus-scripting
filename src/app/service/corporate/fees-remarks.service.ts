@@ -20,8 +20,8 @@ export class FeesRemarkService {
       const feeMap = new Map<string, string>();
       const segments = this.pnrService.getTatooNumberFromSegmentNumber(group.get('segment').value.split(','));
       const fees = [];
-      if (group.get('fee').value !== '') {
-        fees.push(group.get('fee').value);
+      if (group.get('code').value !== '') {
+        fees.push(group.get('code').value + group.get('fee').value);
       } else {
         fees.push(group.get('supplementalFee').value);
       }

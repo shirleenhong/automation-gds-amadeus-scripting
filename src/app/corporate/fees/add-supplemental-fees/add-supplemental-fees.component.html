@@ -13,8 +13,11 @@
         </div>
         <div style="width: 40px;">{{ item.get('code').value }} -</div>
         <div>
-          <input type="text" name="valueAmount" formControlName="valueAmount" id="valueAmount" style="width: 50px;" AmountMask  required />
-          - {{ item.get('description').value }}
+          <span *ngIf="!item.get('valueAmount').disabled">
+            <input type="text" name="valueAmount" formControlName="valueAmount" id="valueAmount" style="width: 50px;" AmountMask required />
+            -
+          </span>
+          {{ item.get('description').value }}
         </div>
       </div>
     </div>

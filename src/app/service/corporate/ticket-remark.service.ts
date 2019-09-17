@@ -138,7 +138,6 @@ export class TicketRemarkService {
     let ticketNumber: number;
     ticketNumber = 0;
 
-    debugger;
     tstSelected.forEach((x) => {
       unticketed.forEach((p) => {
         if (x === p.tstNumber) {
@@ -286,7 +285,7 @@ export class TicketRemarkService {
 
       const limoPnrRemarks = new Map<string, string>();
       limoPnrRemarks.set('TicketSequence', '1');
-      limoPnrRemarks.set('InvSegment', 'INV-CAR');
+      limoPnrRemarks.set('InvSegment', 'INV-LIMO');
       this.remarksManager.createPlaceholderValues(limoPnrRemarks, null, segmentrelate);
 
       const numberOfTicketRemark = new Map<string, string>();

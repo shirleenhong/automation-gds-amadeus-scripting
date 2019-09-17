@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
+import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeesRemarkService {
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(
+    private remarksManager: RemarksManagerService,
+    private pnrService: PnrService,
+    private ddbService: DDBService
+  ) {}
 
   /**
    * US9402 - ONGOING
@@ -67,6 +72,25 @@ export class FeesRemarkService {
    * ONGOING
    */
   private isWithinMigrationOBTDates(): boolean {
-    return false;
+    let migrationOBTFeeDateRange = null;
+
+    debugger;
+
+    this.ddbService.getConfigurationParameter('MigrationOBTFeeDate')
+      .then(response => {
+        migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+        const dateNow = Date.now();
+        const migrationOBTFeeDateStart = Date.parse(migrationOBTFeeDateRange[0]);
+        const migrationOBTFeeDateEnd   = Date.parse(migrationOBTFeeDateRange[1]);
+
+        if (dateNow > migrationOBTFeeDateStart && dateNow < migrationOBTFeeDateEnd) {
+          return true;
+        }
+      })
+      .catch(error => {
+        console.error(error);
+
+        return false;
+      });
   }
 }

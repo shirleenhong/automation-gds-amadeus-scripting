@@ -64,7 +64,7 @@ export class FeesRemarkService {
   }
 
   /**
-   * ONGOIND
+   * ONGOING
    */
   private isWithinMigrationOBTDates(): boolean {
     return false;

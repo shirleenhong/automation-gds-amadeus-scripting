@@ -38,7 +38,7 @@ export class SupplementalFeesComponent implements OnInit {
     private ddbService: DDBService,
     private modalService: BsModalService,
     private valueChangeListener: ValueChangeListener
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.handleApay();
@@ -116,7 +116,6 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   feeChange(group: FormGroup) {
-    debugger;
     const noFeeCodeFg = group.get('noFeeCode');
     noFeeCodeFg.clearValidators();
     noFeeCodeFg.updateValueAndValidity();
@@ -177,7 +176,6 @@ export class SupplementalFeesComponent implements OnInit {
     }
     group.get('code').setValue(code);
     group.get('fee').setValue(fee);
-    debugger;
     group.get('noFeeCode').setValue('');
     group.get('noFeeCode').disable();
     group.get('feeType').setValue(feeType);

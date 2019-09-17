@@ -9,12 +9,11 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 })
 export class FeesComponent implements OnInit {
   @ViewChild(SupplementalFeesComponent) supplemeentalFees: SupplementalFeesComponent;
-  constructor(private utilHelper: UtilHelper) { }
+  constructor(private utilHelper: UtilHelper) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   checkValid() {
-    debugger;
     this.utilHelper.validateAllFields(this.supplemeentalFees.ticketedForm);
     if (!this.supplemeentalFees.ticketedForm.valid && !this.supplemeentalFees.ticketedForm.disabled) {
       return false;

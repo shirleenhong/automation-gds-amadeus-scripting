@@ -128,6 +128,7 @@ export class TicketRemarkService {
 
   WriteAquaTicketing(aqua: AquaTicketingComponent) {
     const fg = aqua.aquaTicketingFormGroup;
+    debugger;
     if (aqua.unticketedSegments.length > 0 && aqua.tstSelected.length > 0) {
       this.WriteAquaTicketingRemarks(aqua.unticketedSegments, aqua.tstSelected);
     }
@@ -251,14 +252,15 @@ export class TicketRemarkService {
       const segments: string[] = fg.get('hotelSegment').value.split(',');
       const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-      const hotelOnlyPnrRemarks = new Map<string, string>();
-      hotelOnlyPnrRemarks.set('TicketSequence', '1');
-      hotelOnlyPnrRemarks.set('InvSegment', 'INV-HTL');
-      this.remarksManager.createPlaceholderValues(hotelOnlyPnrRemarks, null, segmentrelate);
-
-      const numberOfTicketRemark = new Map<string, string>();
-      numberOfTicketRemark.set('NumberOfTickets', '1');
-      this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+      if (segments.length > 0) {
+        const hotelOnlyPnrRemarks = new Map<string, string>();
+        hotelOnlyPnrRemarks.set('TicketSequence', '1');
+        hotelOnlyPnrRemarks.set('InvSegment', 'INV-HTL');
+        this.remarksManager.createPlaceholderValues(hotelOnlyPnrRemarks, null, segmentrelate);
+        const numberOfTicketRemark = new Map<string, string>();
+        numberOfTicketRemark.set('NumberOfTickets', '1');
+        this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+      }
     }
   }
 
@@ -268,14 +270,16 @@ export class TicketRemarkService {
       const segments: string[] = fg.get('carSegment').value.split(',');
       const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-      const carPnrRemarks = new Map<string, string>();
-      carPnrRemarks.set('TicketSequence', '1');
-      carPnrRemarks.set('InvSegment', 'INV-CAR');
-      this.remarksManager.createPlaceholderValues(carPnrRemarks, null, segmentrelate);
+      if (segments.length > 0) {
+        const carPnrRemarks = new Map<string, string>();
+        carPnrRemarks.set('TicketSequence', '1');
+        carPnrRemarks.set('InvSegment', 'INV-CAR');
+        this.remarksManager.createPlaceholderValues(carPnrRemarks, null, segmentrelate);
 
-      const numberOfTicketRemark = new Map<string, string>();
-      numberOfTicketRemark.set('NumberOfTickets', '1');
-      this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+        const numberOfTicketRemark = new Map<string, string>();
+        numberOfTicketRemark.set('NumberOfTickets', '1');
+        this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+      }
     }
   }
 
@@ -285,14 +289,16 @@ export class TicketRemarkService {
       const segments: string[] = fg.get('limoSegment').value.split(',');
       const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
 
-      const limoPnrRemarks = new Map<string, string>();
-      limoPnrRemarks.set('TicketSequence', '1');
-      limoPnrRemarks.set('InvSegment', 'INV-LIMO');
-      this.remarksManager.createPlaceholderValues(limoPnrRemarks, null, segmentrelate);
+      if (segments.length > 0) {
+        const limoPnrRemarks = new Map<string, string>();
+        limoPnrRemarks.set('TicketSequence', '1');
+        limoPnrRemarks.set('InvSegment', 'INV-LIMO');
+        this.remarksManager.createPlaceholderValues(limoPnrRemarks, null, segmentrelate);
 
-      const numberOfTicketRemark = new Map<string, string>();
-      numberOfTicketRemark.set('NumberOfTickets', '1');
-      this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+        const numberOfTicketRemark = new Map<string, string>();
+        numberOfTicketRemark.set('NumberOfTickets', '1');
+        this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+      }
     }
   }
 

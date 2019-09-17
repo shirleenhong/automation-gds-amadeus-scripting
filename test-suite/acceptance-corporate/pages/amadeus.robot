@@ -128,8 +128,8 @@ Get PNR Details
     Wait Until Element Is Not Visible    ${overlay_loader}    10
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
-    Set Suite Variable    ${pnr_details}
-    [Teardown]    Run Keywords    Take Screenshot    Switch To Command Page
+    Set Test Variable    ${pnr_details}    ${pnr_details}
+    [Teardown]    Take Screenshot
 
 Switch To Command Page
     Click Element    ${close_cryptic_display}

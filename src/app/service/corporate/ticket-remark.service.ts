@@ -128,7 +128,6 @@ export class TicketRemarkService {
 
   WriteAquaTicketing(aqua: AquaTicketingComponent) {
     const fg = aqua.aquaTicketingFormGroup;
-    debugger;
     if (aqua.unticketedSegments.length > 0 && aqua.tstSelected.length > 0) {
       this.WriteAquaTicketingRemarks(aqua.unticketedSegments, aqua.tstSelected);
     }

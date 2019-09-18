@@ -19,9 +19,10 @@ export class FeesRemarkService {
    * Write Migration OBT Fee
    */
   public writeMigrationOBTFeeRemarks(): void {
+    debugger;
     // Check if CFA Exists in PNR
     if (this.pnrService.getCFLine()) {
-      this.ddbService.getMigrationOBTFeeDates()
+      this.getMigrationOBTFeeDates()
         .then(dates => {
           const now       = Date.now();
           const startDate = Date.parse(dates[0]);
@@ -72,6 +73,21 @@ export class FeesRemarkService {
       this.remarksManager.createPlaceholderValues(feeMap, null, segments);
 
       counter++;
+    }
+  }
+
+  /**
+   * Get the start and end dates of the Migration OBT Fee dates sin configuration.
+   */
+  public async getMigrationOBTFeeDates(): Promise<[string, string]> {
+    try {
+      let migrationOBTFeeDateRange = null;
+      const response = await this.ddbService.getConfigurationParameter('MigrationOBTFeeDate');
+      migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+
+      return [migrationOBTFeeDateRange[0], migrationOBTFeeDateRange[1]];
+    } catch (error) {
+      throw new Error('Failed to get Migration OBT Fee configuration. ' + error);
     }
   }
 }

@@ -132,12 +132,12 @@ export class CorporateComponent implements OnInit {
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
       this.workflow = 'error';
     } else {
+      debugger;
       // this.showLoading('Matching Remarks', 'initData');
       this.rms.getMatchcedPlaceholderValues().catch((x) => {
         this.showMessage('Error on Matching Data in the PNR: ' + x.message, MessageType.Error, 'Not Found', 'Loading');
         this.closePopup();
         this.isPnrLoaded = false;
-        return;
       });
       // this.showLoading('Servicing Options', 'initData');
       await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);

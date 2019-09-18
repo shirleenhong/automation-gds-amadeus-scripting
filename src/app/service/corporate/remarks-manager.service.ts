@@ -27,8 +27,8 @@ export class RemarksManagerService {
           res.outputItems.items.forEach((output) => {
             this.outputItems.push(new OutputItem(output));
           });
+          console.log(res);
         }
-        console.log(JSON.stringify(res));
       })
       .catch((err) => {
         console.log(JSON.stringify(err));

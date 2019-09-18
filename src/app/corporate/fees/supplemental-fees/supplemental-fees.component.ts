@@ -39,17 +39,16 @@ export class SupplementalFeesComponent implements OnInit {
     private ddbService: DDBService,
     private modalService: BsModalService,
     private valueChangeListener: ValueChangeListener
-  ) {}
-
-  async ngOnInit() {
+  ) {
     this.modalSubscribeOnClose();
-    const formArray = [];
     this.ticketedForm = this.fb.group({
       segments: this.fb.array([])
     });
+  }
 
+  async ngOnInit() {
     await this.loadData();
-
+    const formArray = [];
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
     this.flatFee = this.getFeeValue('Flat Exchange Fee');
     this.specialFee = this.getFeeValue('Special Fee');
@@ -58,7 +57,7 @@ export class SupplementalFeesComponent implements OnInit {
     this.handleApay();
 
     if (!this.isObt) {
-      this.ticketedSegments = this.pnrService.getTicketedSegments();
+      this.ticketedSegments = await this.pnrService.getTicketedSegments();
       this.ticketedSegments.forEach((segment) => {
         const group = this.createFormGroup(segment);
 
@@ -105,8 +104,8 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   async loadData(): Promise<void> {
-    this.noFeeCodes = this.ddbService.getNoFeeCodes();
-    this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
+    this.noFeeCodes = await this.ddbService.getNoFeeCodes();
+    this.exchangeSegments = await this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;
     try {
@@ -133,6 +132,7 @@ export class SupplementalFeesComponent implements OnInit {
       noFeeCodeFg.setValidators([]);
       noFeeCodeFg.setValue('');
     }
+    noFeeCodeFg.updateValueAndValidity();
   }
 
   noFeeChange(group, value) {

@@ -49,7 +49,7 @@ export class CorporateComponent implements OnInit {
     private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
-    private invoiceRemarkService:InvoiceRemarkService,
+    private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService
   ) {
@@ -200,13 +200,11 @@ export class CorporateComponent implements OnInit {
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
 
-
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.closePopup();
-        this.checkHasDataLoadError();
       },
       (error) => {
         console.log(JSON.stringify(error));

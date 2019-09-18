@@ -47,6 +47,8 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   async ngOnInit() {
+    debugger;
+    this.isApay = false;
     await this.loadData();
     const formArray = [];
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
@@ -144,6 +146,7 @@ export class SupplementalFeesComponent implements OnInit {
     } else {
       if (this.isApay) {
         group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
+        this.feeChange(group);
       } else {
         this.processExchange(group, false);
       }

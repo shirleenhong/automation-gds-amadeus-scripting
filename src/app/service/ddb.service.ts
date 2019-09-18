@@ -23,9 +23,9 @@ export class DDBService implements OnInit {
   reasonCodeList = Array<ReasonCode>();
   airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {

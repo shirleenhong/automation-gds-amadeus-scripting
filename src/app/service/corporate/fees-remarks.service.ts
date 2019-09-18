@@ -43,19 +43,19 @@ export class FeesRemarkService {
             // WIP: writes 1 remark per segment and per segment type
             segmentsAir.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'ATE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsAir));
             });
             segmentsRail.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'RTE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsRail));
             });
             segmentsHotel.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'HBE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsHotel));
             });
             segmentsCar.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'CBE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsCar));
             });
           }
         });
@@ -105,5 +105,17 @@ export class FeesRemarkService {
     } catch (error) {
       throw new Error('Failed to get Migration OBT Fee configuration. ' + error);
     }
+  }
+
+  public getRemarkSegmentAssociation(segments: string[]): string[] {
+    debugger;
+    const segmentRelate: string[] = [];
+    const segmentsMatched = this.pnrService.getSegmentTatooNumber().filter((x) => segments.indexOf(x.lineNo));
+
+    segmentsMatched.forEach((segmentMatched) => {
+      segmentRelate.push(segmentMatched.tatooNo);
+    });
+
+    return segmentRelate;
   }
 }

@@ -132,14 +132,18 @@ export class CorporateComponent implements OnInit {
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
       this.workflow = 'error';
     } else {
-      // this.showLoading('Matching Remarks', 'initData');
-      await this.rms.getMatchcedPlaceholderValues();
-      // this.showLoading('Servicing Options', 'initData');
-      await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
-      // this.showLoading('ReasonCodes', 'initData');
-      await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-      await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
-      await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+      try {
+        // this.showLoading('Matching Remarks', 'initData');
+        await this.rms.getMatchcedPlaceholderValues();
+        // this.showLoading('Servicing Options', 'initData');
+        await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
+        // this.showLoading('ReasonCodes', 'initData');
+        await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+        await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
+        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+      } catch (e) {
+        console.log(e);
+      }
     }
     this.closePopup();
     this.checkHasDataLoadError();

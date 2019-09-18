@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { ClientFeeItem } from 'src/app/models/ddb/client-fee-item.model';
@@ -49,7 +49,7 @@ export class SupplementalFeesComponent implements OnInit {
   async ngOnInit() {
     this.isApay = false;
     await this.loadData();
-    const formArray = [];
+
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
     this.flatFee = this.getFeeValue('Flat Exchange Fee');
     this.specialFee = this.getFeeValue('Special Fee');
@@ -58,6 +58,10 @@ export class SupplementalFeesComponent implements OnInit {
     this.handleApay();
 
     if (!this.isObt) {
+      this.ticketedForm = this.fb.group({
+        segments: this.fb.array([])
+      });
+
       this.ticketedSegments = await this.pnrService.getTicketedSegments();
       for (const segment of this.ticketedSegments) {
         const group = this.createFormGroup(segment);
@@ -67,13 +71,13 @@ export class SupplementalFeesComponent implements OnInit {
           group.get('isExchange').setValue(false);
         }
         this.processExchange(group, false);
-        formArray.push(group);
+        try {
+          (this.ticketedForm.get('segments') as FormArray).push(group);
+        } catch (e) {
+          e.console.log(e);
+        }
         this.feeChange(group);
       }
-
-      this.ticketedForm = this.fb.group({
-        segments: this.fb.array(formArray)
-      });
     }
   }
 

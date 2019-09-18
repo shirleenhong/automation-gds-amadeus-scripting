@@ -113,10 +113,6 @@ export class TicketRemarkService {
     return tkSuffix;
   }
 
-  /**
-   * Creates a placeholder value in remarks manager service (if on hold).
-   * @param pnrOnHold
-   */
   private writeOnHoldRemark(pnrOnHold: boolean): void {
     if (pnrOnHold) {
       const staticRemarksCondition = new Map<string, string>();

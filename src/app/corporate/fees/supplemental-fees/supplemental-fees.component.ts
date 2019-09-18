@@ -68,6 +68,7 @@ export class SupplementalFeesComponent implements OnInit {
         }
         this.processExchange(group, false);
         formArray.push(group);
+        this.feeChange(group);
       });
 
       this.ticketedForm = this.fb.group({
@@ -120,12 +121,12 @@ export class SupplementalFeesComponent implements OnInit {
 
   feeChange(group: FormGroup) {
     const noFeeCodeFg = group.get('noFeeCode');
-    noFeeCodeFg.clearValidators();
-    noFeeCodeFg.updateValueAndValidity();
-    if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
-      noFeeCodeFg.setValue('');
-    } else {
+
+    if (group.get('code').value === '' && group.get('supplementalFee').value === '') {
       noFeeCodeFg.setValidators([Validators.required]);
+    } else {
+      noFeeCodeFg.setValidators([]);
+      noFeeCodeFg.setValue('');
     }
   }
 
@@ -134,6 +135,7 @@ export class SupplementalFeesComponent implements OnInit {
       group.get('fee').setValue('');
       group.get('supplementalFee').setValue('');
       group.get('code').setValue('');
+      this.feeChange(group);
     } else {
       this.processExchange(group, false);
     }

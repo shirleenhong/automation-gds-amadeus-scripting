@@ -18,6 +18,7 @@ import { MessageType } from '../shared/message/MessageType';
 import { AmadeusRemarkService } from '../service/remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
+import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -48,6 +49,7 @@ export class CorporateComponent implements OnInit {
     private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
+    private invoiceRemarkService:InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService
   ) {
@@ -193,7 +195,11 @@ export class CorporateComponent implements OnInit {
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+
+    this.invoiceRemarkService.sendU70Remarks();
+
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+
 
     await this.rms.submitToPnr().then(
       () => {

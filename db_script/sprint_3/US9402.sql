@@ -40,10 +40,18 @@ BEGIN TRY
 			VALUES (@PNROutputGroupID,  @PNROutputItemID + 1, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1)
 
 		-- Remarks
-		-- to do...
+		-- doing...
+		-- If air is being processed: RMF/SUPFEE1-ATE
+		-- If rail is being processed: RMF/SUPFEE1-RTE
+		-- If hotel is being processed: RMF/SUPFEE1-HBE
+		-- If car is being processed: RMF/SUPFEE1-CBE
+		INSERT INTO [dbo].[PNROutputItem]([PNROutputItemId],[PNROutputRemarkTypeCode],[PNROutputBindingTypeCode],[PNROutputUpdateTypeCode],[GDSRemarkQualifier],[RemarkFormat],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber],[PNROutputItemDefaultLanguageCode],[PNROutputItemXMLFormat])
+			VALUES 	(@PNROutputItemId + 1,3,'0',1,'','RMF/SUPFEE1-ATE', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
+					(@PNROutputItemId + 2,3,'0',1,'','RMF/SUPFEE1-RTE', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
+					(@PNROutputItemId + 3,3,'0',1,'','RMF/SUPFEE1-HBE', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
+					(@PNROutputItemId + 4,3,'0',1,'','RMF/SUPFEE1-CBE', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL)
 
 	PRINT 'END Script'
-
 
 	COMMIT TRAN
 END TRY

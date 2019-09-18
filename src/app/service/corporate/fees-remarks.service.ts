@@ -31,16 +31,32 @@ export class FeesRemarkService {
           // WIP
           if (now >= startDate && now <= endDate) {
             // Write static remarks by segment type?
-            const staticMigrationOBTFee = new Map<string, string>();
-            staticMigrationOBTFee.set('MigrationOBTAir', 'true');
-            staticMigrationOBTFee.set('MigrationOBTRail', 'true');
-            staticMigrationOBTFee.set('MigrationOBTHotel', 'true');
-            staticMigrationOBTFee.set('MigrationOBTCar', 'true');
 
-            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'ATE');
-            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'RTE');
-            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'HBE');
-            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'CBE');
+            // Get air, rail, hotel and car segments
+            const segmentsAir   = this.pnrService.getPassiveSegmentTypes('AIR');
+            const segmentsRail  = this.pnrService.getPassiveSegmentTypes('MIS'); // TO CLARIFY...
+            const segmentsHotel = this.pnrService.getPassiveSegmentTypes('HTL');
+            const segmentsCar   = this.pnrService.getPassiveSegmentTypes('CAR');
+
+            const migrationOBTFeeMap = new Map<string, string>();
+
+            if (segmentsAir.length) {
+              migrationOBTFeeMap.set('SupfeeSegment', 'ATE');
+            }
+            if (segmentsRail.length) {
+              migrationOBTFeeMap.set('SupfeeSegment', 'RTE');
+            }
+            if (segmentsHotel.length) {
+              migrationOBTFeeMap.set('SupfeeSegment', 'HBE');
+            }
+            if (segmentsCar.length) { // TO CLARIFY...
+              migrationOBTFeeMap.set('SupfeeSegment', 'CBE');
+            }
+
+            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
+            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
+            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
+            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
           }
         });
     }

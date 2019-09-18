@@ -59,9 +59,8 @@ export class SupplementalFeesComponent implements OnInit {
 
     if (!this.isObt) {
       this.ticketedSegments = await this.pnrService.getTicketedSegments();
-      this.ticketedSegments.forEach((segment) => {
+      for (const segment of this.ticketedSegments) {
         const group = this.createFormGroup(segment);
-
         if (this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0) {
           group.get('isExchange').setValue(true);
         } else {
@@ -70,7 +69,7 @@ export class SupplementalFeesComponent implements OnInit {
         this.processExchange(group, false);
         formArray.push(group);
         this.feeChange(group);
-      });
+      }
 
       this.ticketedForm = this.fb.group({
         segments: this.fb.array(formArray)

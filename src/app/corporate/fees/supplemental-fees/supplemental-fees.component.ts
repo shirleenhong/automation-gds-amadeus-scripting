@@ -177,7 +177,6 @@ export class SupplementalFeesComponent implements OnInit {
     group.get('code').setValue(code);
     group.get('fee').setValue(fee);
     group.get('noFeeCode').setValue('');
-    group.get('noFeeCode').disable();
     group.get('feeType').setValue(feeType);
   }
 

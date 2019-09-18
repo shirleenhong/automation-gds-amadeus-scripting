@@ -275,6 +275,21 @@ export class DDBService implements OnInit {
     await this.delay(1500);
   }
 
+  /**
+   * Get the start and end dates of the Migration OBT Fee dates in configuration.
+   */
+  public async getMigrationOBTFeeDates(): Promise<[string, string]> {
+    try {
+      let migrationOBTFeeDateRange = null;
+      const response = await this.getConfigurationParameter('MigrationOBTFeeDate');
+      migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+
+      return [migrationOBTFeeDateRange[0], migrationOBTFeeDateRange[1]];
+    } catch (error) {
+      throw new Error('Failed to get Migration OBT Fee configuration. ' + error);
+    }
+  }
+
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

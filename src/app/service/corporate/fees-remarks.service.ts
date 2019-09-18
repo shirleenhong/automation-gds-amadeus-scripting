@@ -18,23 +18,30 @@ export class FeesRemarkService {
    * US9402 - ONGOING
    * Write Migration OBT Fee
    */
-  public writeMigrationOBTFee(): void {
+  public writeMigrationOBTFeeRemarks(): void {
     // Check if CFA Exists in PNR
     if (this.pnrService.getCFLine()) {
-      // Check if fee date is within configurated dates.
-      if (this.isWithinMigrationOBTDates()) {
-        // Write static remarks by segment type?
-        const staticMigrationOBTFee = new Map<string, string>();
-        staticMigrationOBTFee.set('MigrationOBTAir', 'true');
-        staticMigrationOBTFee.set('MigrationOBTRail', 'true');
-        staticMigrationOBTFee.set('MigrationOBTHotel', 'true');
-        staticMigrationOBTFee.set('MigrationOBTCar', 'true');
+      this.ddbService.getMigrationOBTFeeDates()
+        .then(dates => {
+          const now       = Date.now();
+          const startDate = Date.parse(dates[0]);
+          const endDate   = Date.parse(dates[1]);
 
-        this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'ATE');
-        this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'RTE');
-        this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'HBE');
-        this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'CBE');
-      }
+          // WIP
+          if (now >= startDate && now <= endDate) {
+            // Write static remarks by segment type?
+            const staticMigrationOBTFee = new Map<string, string>();
+            staticMigrationOBTFee.set('MigrationOBTAir', 'true');
+            staticMigrationOBTFee.set('MigrationOBTRail', 'true');
+            staticMigrationOBTFee.set('MigrationOBTHotel', 'true');
+            staticMigrationOBTFee.set('MigrationOBTCar', 'true');
+
+            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'ATE');
+            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'RTE');
+            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'HBE');
+            this.remarksManager.createPlaceholderValues(null, staticMigrationOBTFee, null, null, 'CBE');
+          }
+        });
     }
   }
 
@@ -66,31 +73,5 @@ export class FeesRemarkService {
 
       counter++;
     }
-  }
-
-  /**
-   * ONGOING
-   */
-  private isWithinMigrationOBTDates(): boolean {
-    let migrationOBTFeeDateRange = null;
-
-    debugger;
-
-    this.ddbService.getConfigurationParameter('MigrationOBTFeeDate')
-      .then(response => {
-        migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-        const dateNow = Date.now();
-        const migrationOBTFeeDateStart = Date.parse(migrationOBTFeeDateRange[0]);
-        const migrationOBTFeeDateEnd   = Date.parse(migrationOBTFeeDateRange[1]);
-
-        if (dateNow > migrationOBTFeeDateStart && dateNow < migrationOBTFeeDateEnd) {
-          return true;
-        }
-      })
-      .catch(error => {
-        console.error(error);
-
-        return false;
-      });
   }
 }

@@ -187,7 +187,7 @@ export class CorporateComponent implements OnInit {
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
-    this.feesRemarkService.writeMigrationOBTFee();
+    this.feesRemarkService.writeMigrationOBTFeeRemarks();
 
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {

@@ -132,6 +132,7 @@ export class SupplementalFeesComponent implements OnInit {
       noFeeCodeFg.setValidators([]);
       noFeeCodeFg.setValue('');
     }
+    noFeeCodeFg.updateValueAndValidity();
   }
 
   noFeeChange(group, value) {

@@ -1215,7 +1215,8 @@ export class PnrService {
                 }
                 if (supCode === 'amk') {
                     if (
-                        misc.fullNode.itineraryFreetext.longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
+                        misc.fullNode.itineraryFreetext
+                        .longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
                     ) {
                         return true;
                     }

@@ -47,7 +47,6 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   async ngOnInit() {
-    debugger;
     this.isApay = false;
     await this.loadData();
     const formArray = [];

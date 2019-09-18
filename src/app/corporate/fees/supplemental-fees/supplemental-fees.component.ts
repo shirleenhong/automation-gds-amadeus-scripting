@@ -31,6 +31,7 @@ export class SupplementalFeesComponent implements OnInit {
   exchangeSegments = [];
   modalRef: BsModalRef;
   selectedGroup: FormGroup;
+  isApay = false;
 
   constructor(
     private pnrService: PnrService,
@@ -90,11 +91,15 @@ export class SupplementalFeesComponent implements OnInit {
             this.feeChange(group);
           });
         if (frmArray.length > 0) {
-          this.ticketedForm = this.fb.group({
-            segments: this.fb.array(frmArray)
-          });
+          this.isApay = true;
           this.supplementalFeeList = [];
+        } else {
+          this.isApay = false;
         }
+
+        this.ticketedForm = this.fb.group({
+          segments: this.fb.array(frmArray)
+        });
       }
     });
   }
@@ -137,7 +142,11 @@ export class SupplementalFeesComponent implements OnInit {
       group.get('code').setValue('');
       this.feeChange(group);
     } else {
-      this.processExchange(group, false);
+      if (this.isApay) {
+        group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
+      } else {
+        this.processExchange(group, false);
+      }
     }
   }
 

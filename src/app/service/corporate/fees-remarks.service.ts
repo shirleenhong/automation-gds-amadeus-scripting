@@ -40,23 +40,23 @@ export class FeesRemarkService {
 
             const migrationOBTFeeMap = new Map<string, string>();
 
-            if (segmentsAir.length) {
+            // WIP: writes 1 remark per segment and per segment type
+            segmentsAir.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'ATE');
-            }
-            if (segmentsRail.length) {
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+            });
+            segmentsRail.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'RTE');
-            }
-            if (segmentsHotel.length) {
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+            });
+            segmentsHotel.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'HBE');
-            }
-            if (segmentsCar.length) { // TO CLARIFY...
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+            });
+            segmentsCar.forEach(() => {
               migrationOBTFeeMap.set('SupfeeSegment', 'CBE');
-            }
-
-            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
-            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
-            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
-            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap);
+              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+            });
           }
         });
     }

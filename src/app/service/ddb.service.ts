@@ -23,9 +23,9 @@ export class DDBService implements OnInit {
   reasonCodeList = Array<ReasonCode>();
   airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -161,7 +161,7 @@ export class DDBService implements OnInit {
     const url = common.feesService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1&ClientAccountNumber=1' + cfa;
     let clientFeeItems: ClientFeeItem[] = [];
     await this.getRequest(url).then((fee) => {
-      if (fee.ClientFeeItems) {
+      if (fee && fee.ClientFeeItems) {
         clientFeeItems = fee.ClientFeeItems.map((jsonObj) => new ClientFeeItem(jsonObj));
         console.log(clientFeeItems);
       }

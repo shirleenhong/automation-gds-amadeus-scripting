@@ -71,12 +71,14 @@ export class SupplementalFeesComponent implements OnInit {
           group.get('isExchange').setValue(false);
         }
         this.processExchange(group, false);
+
+        (this.ticketedForm.get('segments') as FormArray).push(group);
+
         try {
-          (this.ticketedForm.get('segments') as FormArray).push(group);
+          this.feeChange(group);
         } catch (e) {
           e.console.log(e);
         }
-        this.feeChange(group);
       }
     }
   }
@@ -161,7 +163,7 @@ export class SupplementalFeesComponent implements OnInit {
       isChange: new FormControl(''),
       code: new FormControl(''),
       fee: new FormControl(''),
-      noFeeCode: new FormControl('', []),
+      noFeeCode: new FormControl(''),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),
       isExchange: new FormControl(false)

@@ -17,13 +17,15 @@ export class FeesRemarkService {
     let counter = 1;
     for (const group of items.controls) {
       const feeMap = new Map<string, string>();
-      // const segments = this.pnrService.getTatooNumberFromSegmentNumber(group.get('segment').value.split(','));
       const fees = [];
       if (group.get('code').value !== '') {
-        fees.push(group.get('code').value + group.get('fee').value);
-      } else {
+        fees.push(group.get('code').value + group.get('fee').value.toString());
+      }
+
+      if (group.get('supplementalFee').value !== '') {
         fees.push(group.get('supplementalFee').value);
       }
+
       feeMap.set('SupFeeTicketId', counter.toString());
       let feeValue = fees.join('/');
 

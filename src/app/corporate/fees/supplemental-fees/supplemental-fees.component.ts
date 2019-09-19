@@ -48,6 +48,7 @@ export class SupplementalFeesComponent implements OnInit {
 
   async ngOnInit() {
     this.isApay = false;
+
     await this.loadData();
 
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
@@ -70,14 +71,15 @@ export class SupplementalFeesComponent implements OnInit {
         this.processExchange(group, false);
       }
     }
+
     this.handleApay();
   }
 
   handleApay() {
-    this.valueChangeListener.valueChange$.subscribe((event) => {
-      if (event.name === 'Accounting Remarks') {
+    this.valueChangeListener.accountingRemarkChange.subscribe((list) => {
+      if (list) {
         const frmArray = [];
-        (event.value as MatrixAccountingModel[])
+        (list as MatrixAccountingModel[])
           .filter((a) => a.accountingTypeRemark === 'APAY')
           .forEach((acc) => {
             const group = this.createFormGroup(acc.segmentNo, false);
@@ -88,10 +90,13 @@ export class SupplementalFeesComponent implements OnInit {
         if (frmArray.length > 0) {
           this.isApay = true;
           this.supplementalFeeList = [];
+          this.ticketedForm = this.fb.group({
+            segments: this.fb.array(frmArray)
+          });
         } else {
           if (this.isApay) {
             this.ticketedForm = this.fb.group({
-              segments: this.fb.array(frmArray)
+              segments: this.fb.array([])
             });
           }
           this.isApay = false;

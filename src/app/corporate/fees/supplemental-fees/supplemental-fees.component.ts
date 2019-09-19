@@ -65,15 +65,18 @@ export class SupplementalFeesComponent implements OnInit {
       this.ticketedSegments = await this.pnrService.getTicketedSegments();
       for (const segment of this.ticketedSegments) {
         const group = this.createFormGroup(segment);
-
-        if (this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0) {
+        const ex = this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0);
+        if (ex && ex.length > 0) {
           group.get('isExchange').setValue(true);
         } else {
           group.get('isExchange').setValue(false);
         }
-        this.processExchange(group, false);
-
         (this.ticketedForm.get('segments') as FormArray).push(group);
+        try {
+          this.processExchange(group, false);
+        } catch (ex) {
+          console.log(ex);
+        }
       }
     }
   }

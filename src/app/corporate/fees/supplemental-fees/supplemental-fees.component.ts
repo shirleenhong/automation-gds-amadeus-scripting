@@ -74,8 +74,6 @@ export class SupplementalFeesComponent implements OnInit {
         this.processExchange(group, false);
 
         (this.ticketedForm.get('segments') as FormArray).push(group);
-        group.updateValueAndValidity();
-        this.feeChange(group);
       }
     }
   }
@@ -143,14 +141,15 @@ export class SupplementalFeesComponent implements OnInit {
       group.get('fee').setValue('');
       group.get('supplementalFee').setValue('');
       group.get('code').setValue('');
+      group.get('isChange').setValue(false);
       this.feeChange(group);
     } else {
       if (this.isApay) {
         group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
+        this.feeChange(group);
       } else {
         this.processExchange(group, false);
       }
-      this.feeChange(group);
     }
   }
 
@@ -211,6 +210,7 @@ export class SupplementalFeesComponent implements OnInit {
     } else {
       this.processFlatFee(group);
     }
+    this.feeChange(group);
   }
 
   processFlatFee(group: FormGroup) {

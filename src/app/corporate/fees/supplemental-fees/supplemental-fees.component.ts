@@ -65,6 +65,7 @@ export class SupplementalFeesComponent implements OnInit {
       this.ticketedSegments = await this.pnrService.getTicketedSegments();
       for (const segment of this.ticketedSegments) {
         const group = this.createFormGroup(segment);
+
         if (this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0) {
           group.get('isExchange').setValue(true);
         } else {
@@ -73,12 +74,8 @@ export class SupplementalFeesComponent implements OnInit {
         this.processExchange(group, false);
 
         (this.ticketedForm.get('segments') as FormArray).push(group);
-
-        try {
-          this.feeChange(group);
-        } catch (e) {
-          e.console.log(e);
-        }
+        group.updateValueAndValidity();
+        this.feeChange(group);
       }
     }
   }
@@ -110,8 +107,9 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   async loadData(): Promise<void> {
-    this.noFeeCodes = await this.ddbService.getNoFeeCodes();
-    this.exchangeSegments = await this.pnrService.getExchangeSegmentNumbers();
+    this.noFeeCodes = this.ddbService.getNoFeeCodes();
+
+    this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;
     try {
@@ -131,14 +129,13 @@ export class SupplementalFeesComponent implements OnInit {
 
   feeChange(group: FormGroup) {
     const noFeeCodeFg = group.get('noFeeCode');
-
     if (group.get('code').value === '' && group.get('supplementalFee').value === '') {
       noFeeCodeFg.setValidators([Validators.required]);
     } else {
-      noFeeCodeFg.setValidators([]);
+      noFeeCodeFg.setValidators(null);
       noFeeCodeFg.setValue('');
     }
-    noFeeCodeFg.updateValueAndValidity();
+    // noFeeCodeFg.updateValueAndValidity();
   }
 
   noFeeChange(group, value) {
@@ -150,10 +147,10 @@ export class SupplementalFeesComponent implements OnInit {
     } else {
       if (this.isApay) {
         group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
-        this.feeChange(group);
       } else {
         this.processExchange(group, false);
       }
+      this.feeChange(group);
     }
   }
 
@@ -181,7 +178,7 @@ export class SupplementalFeesComponent implements OnInit {
     return code + 'T' + this.codeDestination;
   }
 
-  setFee(group, feeValue, feeType) {
+  setFee(group: FormGroup, feeValue, feeType) {
     const amountPipe = new AmountPipe();
     let code = this.getCode(group.get('segment').value);
     let fee = amountPipe.transform(feeValue);
@@ -208,7 +205,7 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
-  processExchange(group, isChange) {
+  processExchange(group: FormGroup, isChange: boolean) {
     if (isChange && group.get('isExchange').value && !this.isObt) {
       this.setFee(group, this.exchangeFee, 'exchange');
     } else {
@@ -216,13 +213,12 @@ export class SupplementalFeesComponent implements OnInit {
     }
   }
 
-  processFlatFee(group) {
+  processFlatFee(group: FormGroup) {
     if (this.flatFee > 0 && group.get('isExchange').value && !this.isObt) {
       this.setFee(group, this.flatFee, 'flat');
     } else {
       this.processSpecialFee(group);
     }
-    this.feeChange(group);
   }
 
   processSpecialFee(group) {

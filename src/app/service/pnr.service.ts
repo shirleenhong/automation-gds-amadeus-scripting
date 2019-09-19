@@ -1386,13 +1386,16 @@ export class PnrService {
     }
 
     getSegmentNumbers(tatooNumbers: any[]): string[] {
+        if ( this.segments.length === 0) {
+            this.getSegmentTatooNumber();
+        }
         const segmentLines = [];
-        tatooNumbers.forEach(tatooNo => {
+        for (const tatooNo of tatooNumbers)  {
             const segment = this.segments.filter(s => s.tatooNo === tatooNo);
             if (segment && segment.length > 0) {
                 segmentLines.push(segment[0].lineNo);
             }
-        });
+        }
         return segmentLines;
     }
 

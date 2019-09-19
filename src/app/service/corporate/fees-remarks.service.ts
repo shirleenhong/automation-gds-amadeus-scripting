@@ -38,24 +38,35 @@ export class FeesRemarkService {
             const segmentsHotel = this.pnrService.getPassiveSegmentTypes('HTL');
             const segmentsCar   = this.pnrService.getPassiveSegmentTypes('CAR');
 
-            const migrationOBTFeeMap = new Map<string, string>();
-
-            // WIP: writes 1 remark per segment and per segment type
-            segmentsAir.forEach(() => {
-              migrationOBTFeeMap.set('SupfeeSegment', 'ATE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsAir));
+            // WIP: writes 1 remark per segment and per segment type...
+            // Still not writing...
+            const airOBTFeeMap = new Map<string, string>();
+            segmentsAir.forEach((item, index) => {
+              console.log(item);
+              airOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+              airOBTFeeMap.set('SupFeeInfo', 'ATE');
+              this.remarksManager.createPlaceholderValues(airOBTFeeMap, null, null);
             });
-            segmentsRail.forEach(() => {
-              migrationOBTFeeMap.set('SupfeeSegment', 'RTE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsRail));
+            const railOBTFeeMap = new Map<string, string>();
+            segmentsRail.forEach((item, index) => {
+              console.log(item);
+              railOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+              railOBTFeeMap.set('SupFeeInfo', 'RTE');
+              this.remarksManager.createPlaceholderValues(railOBTFeeMap, null, null);
             });
-            segmentsHotel.forEach(() => {
-              migrationOBTFeeMap.set('SupfeeSegment', 'HBE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsHotel));
+            const hotelOBTFeeMap = new Map<string, string>();
+            segmentsHotel.forEach((item, index) => {
+              console.log(item);
+              hotelOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+              hotelOBTFeeMap.set('SupFeeInfo', 'HBE');
+              this.remarksManager.createPlaceholderValues(hotelOBTFeeMap, null, null);
             });
-            segmentsCar.forEach(() => {
-              migrationOBTFeeMap.set('SupfeeSegment', 'CBE');
-              this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, this.getRemarkSegmentAssociation(segmentsCar));
+            const carOBTFeeMap = new Map<string, string>();
+            segmentsCar.forEach((item, index) => {
+              console.log(item);
+              carOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+              carOBTFeeMap.set('SupFeeInfo', 'CBE');
+              this.remarksManager.createPlaceholderValues(carOBTFeeMap, null, null);
             });
           }
         });
@@ -68,6 +79,7 @@ export class FeesRemarkService {
   }
 
   private writeFees(items: FormArray) {
+    debugger;
     let counter = 1;
     for (const group of items.controls) {
       const feeMap = new Map<string, string>();
@@ -90,6 +102,11 @@ export class FeesRemarkService {
 
       counter++;
     }
+
+    debugger;
+    const migrationOBTFeeMap = new Map<string, string>();
+    migrationOBTFeeMap.set('SupFeeInfo', 'CBE');
+    this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
   }
 
   /**

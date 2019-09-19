@@ -1381,6 +1381,9 @@ export class PnrService {
     }
 
     getTatooNumberFromSegmentNumber(segments: string[]): string[] {
+        if ( this.segments.length === 0) {
+            this.getSegmentTatooNumber();
+        }
         const lineNos = this.segments.filter(s => segments.indexOf(s.lineNo) >= 0).map(x => x.tatooNo);
         return lineNos;
     }

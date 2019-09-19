@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { ClientFeeItem } from 'src/app/models/ddb/client-fee-item.model';
@@ -31,6 +31,7 @@ export class SupplementalFeesComponent implements OnInit {
   exchangeSegments = [];
   modalRef: BsModalRef;
   selectedGroup: FormGroup;
+  isApay = false;
 
   constructor(
     private pnrService: PnrService,
@@ -38,16 +39,15 @@ export class SupplementalFeesComponent implements OnInit {
     private ddbService: DDBService,
     private modalService: BsModalService,
     private valueChangeListener: ValueChangeListener
-  ) {}
-
-  async ngOnInit() {
-    this.handleApay();
+  ) {
     this.modalSubscribeOnClose();
-    const formArray = [];
     this.ticketedForm = this.fb.group({
       segments: this.fb.array([])
     });
+  }
 
+  async ngOnInit() {
+    this.isApay = false;
     await this.loadData();
 
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
@@ -55,22 +55,27 @@ export class SupplementalFeesComponent implements OnInit {
     this.specialFee = this.getFeeValue('Special Fee');
 
     this.checkObFee();
-    this.ticketedSegments = this.pnrService.getTicketedSegments();
-    this.ticketedSegments.forEach((segment) => {
-      const group = this.createFormGroup(segment);
+    this.handleApay();
 
-      if (this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0) {
-        group.get('isExchange').setValue(true);
-      } else {
-        group.get('isExchange').setValue(false);
+    if (!this.isObt) {
+      this.ticketedForm = this.fb.group({
+        segments: this.fb.array([])
+      });
+
+      this.ticketedSegments = await this.pnrService.getTicketedSegments();
+      for (const segment of this.ticketedSegments) {
+        const group = this.createFormGroup(segment);
+
+        if (this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0) {
+          group.get('isExchange').setValue(true);
+        } else {
+          group.get('isExchange').setValue(false);
+        }
+        this.processExchange(group, false);
+
+        (this.ticketedForm.get('segments') as FormArray).push(group);
       }
-      this.processExchange(group, false);
-      formArray.push(group);
-    });
-
-    this.ticketedForm = this.fb.group({
-      segments: this.fb.array(formArray)
-    });
+    }
   }
 
   handleApay() {
@@ -86,17 +91,22 @@ export class SupplementalFeesComponent implements OnInit {
             this.feeChange(group);
           });
         if (frmArray.length > 0) {
-          this.ticketedForm = this.fb.group({
-            segments: this.fb.array(frmArray)
-          });
+          this.isApay = true;
           this.supplementalFeeList = [];
+        } else {
+          this.isApay = false;
         }
+
+        this.ticketedForm = this.fb.group({
+          segments: this.fb.array(frmArray)
+        });
       }
     });
   }
 
   async loadData(): Promise<void> {
     this.noFeeCodes = this.ddbService.getNoFeeCodes();
+
     this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;
@@ -116,13 +126,14 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   feeChange(group: FormGroup) {
-    group.get('noFeeCode').clearValidators();
-    if (group.get('code').value !== '' || group.get('supplementalFee').value !== '') {
-      group.get('noFeeCode').setValue('');
-      // group.get('noFeeCode').disable();
+    const noFeeCodeFg = group.get('noFeeCode');
+    if (group.get('code').value === '' && group.get('supplementalFee').value === '') {
+      noFeeCodeFg.setValidators([Validators.required]);
     } else {
-      group.get('noFeeCode').setValidators([Validators.required]);
+      noFeeCodeFg.setValidators(null);
+      noFeeCodeFg.setValue('');
     }
+    // noFeeCodeFg.updateValueAndValidity();
   }
 
   noFeeChange(group, value) {
@@ -130,8 +141,15 @@ export class SupplementalFeesComponent implements OnInit {
       group.get('fee').setValue('');
       group.get('supplementalFee').setValue('');
       group.get('code').setValue('');
+      group.get('isChange').setValue(false);
+      this.feeChange(group);
     } else {
-      this.processExchange(group, false);
+      if (this.isApay) {
+        group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
+        this.feeChange(group);
+      } else {
+        this.processExchange(group, false);
+      }
     }
   }
 
@@ -141,7 +159,7 @@ export class SupplementalFeesComponent implements OnInit {
       isChange: new FormControl(''),
       code: new FormControl(''),
       fee: new FormControl(''),
-      noFeeCode: new FormControl('', [Validators.required]),
+      noFeeCode: new FormControl(''),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),
       isExchange: new FormControl(false)
@@ -159,7 +177,7 @@ export class SupplementalFeesComponent implements OnInit {
     return code + 'T' + this.codeDestination;
   }
 
-  setFee(group, feeValue, feeType) {
+  setFee(group: FormGroup, feeValue, feeType) {
     const amountPipe = new AmountPipe();
     let code = this.getCode(group.get('segment').value);
     let fee = amountPipe.transform(feeValue);
@@ -175,7 +193,6 @@ export class SupplementalFeesComponent implements OnInit {
     group.get('code').setValue(code);
     group.get('fee').setValue(fee);
     group.get('noFeeCode').setValue('');
-    group.get('noFeeCode').disable();
     group.get('feeType').setValue(feeType);
   }
 
@@ -187,21 +204,21 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
-  processExchange(group, isChange) {
+  processExchange(group: FormGroup, isChange: boolean) {
     if (isChange && group.get('isExchange').value && !this.isObt) {
       this.setFee(group, this.exchangeFee, 'exchange');
     } else {
       this.processFlatFee(group);
     }
+    this.feeChange(group);
   }
 
-  processFlatFee(group) {
+  processFlatFee(group: FormGroup) {
     if (this.flatFee > 0 && group.get('isExchange').value && !this.isObt) {
       this.setFee(group, this.flatFee, 'flat');
     } else {
       this.processSpecialFee(group);
     }
-    this.feeChange(group);
   }
 
   processSpecialFee(group) {

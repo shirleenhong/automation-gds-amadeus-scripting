@@ -12,24 +12,27 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService) { }
+  constructor(private serviceApi: RemarksManagerApiService) {}
 
   public async getMatchcedPlaceholderValues() {
-    return await this.serviceApi.getPnrMatchedPlaceHolderValues().then((res) => {
-      if (res !== undefined) {
-        res.placeHolderValues.forEach((ph) => {
-          this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
-        });
+    return await this.serviceApi
+      .getPnrMatchedPlaceHolderValues()
+      .then((res) => {
+        if (res !== undefined) {
+          res.placeHolderValues.forEach((ph) => {
+            this.matchedPlaceHolderValues.push(new PlaceholderValues(ph));
+          });
 
-        this.outputItems = new Array<OutputItem>();
-        res.outputItems.items.forEach((output) => {
-          this.outputItems.push(new OutputItem(output));
-        });
-        console.log(this.matchedPlaceHolderValues);
-      }
-      console.log('test');
-      console.log(JSON.stringify(res));
-    });
+          this.outputItems = new Array<OutputItem>();
+          res.outputItems.items.forEach((output) => {
+            this.outputItems.push(new OutputItem(output));
+          });
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        console.log(JSON.stringify(err));
+      });
   }
 
   getValue(key: string) {
@@ -63,7 +66,10 @@ export class RemarksManagerService {
     exactSearch?: boolean
   ) {
     const placeHolder = new PlaceholderValues({
-      id: (exactSearch === true ? this.getOutputItemIdExactRemarks(values, staticText, conditions) : this.getOutputItemId(values, staticText, conditions)),
+      id:
+        exactSearch === true
+          ? this.getOutputItemIdExactRemarks(values, staticText, conditions)
+          : this.getOutputItemId(values, staticText, conditions),
       segmentNumberReferences: segmentRelate,
       passengerNumberReferences: passengerRelate,
       matchedPlaceholders: null
@@ -112,10 +118,7 @@ export class RemarksManagerService {
     const ids = this.outputItems
       .filter(
         (out) =>
-          (!values &&
-            conditions &&
-            this.hasMatchedConditions(conditions, out.conditions) &&
-            (staticText ? out.format === staticText : false))
+          !values && conditions && this.hasMatchedConditions(conditions, out.conditions) && (staticText ? out.format === staticText : false)
       )
       .map((out) => out.id);
     return ids[0];

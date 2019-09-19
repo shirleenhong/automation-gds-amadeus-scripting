@@ -18,6 +18,7 @@ import { MessageType } from '../shared/message/MessageType';
 import { AmadeusRemarkService } from '../service/remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
+import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -48,6 +49,7 @@ export class CorporateComponent implements OnInit {
     private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
+    private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService
   ) {
@@ -130,19 +132,18 @@ export class CorporateComponent implements OnInit {
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
       this.workflow = 'error';
     } else {
-      // this.showLoading('Matching Remarks', 'initData');
-      this.rms.getMatchcedPlaceholderValues().catch((x) => {
-        this.showMessage('Error on Matching Data in the PNR: ' + x.message, MessageType.Error, 'Not Found', 'Loading');
-        this.closePopup();
-        this.isPnrLoaded = false;
-        return;
-      });
-      // this.showLoading('Servicing Options', 'initData');
-      await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
-      // this.showLoading('ReasonCodes', 'initData');
-      await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-      await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
-      await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+      try {
+        // this.showLoading('Matching Remarks', 'initData');
+        await this.rms.getMatchcedPlaceholderValues();
+        // this.showLoading('Servicing Options', 'initData');
+        await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
+        // this.showLoading('ReasonCodes', 'initData');
+        await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+        await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
+        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+      } catch (e) {
+        console.log(e);
+      }
     }
     this.closePopup();
     this.checkHasDataLoadError();
@@ -176,7 +177,7 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-    accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.getTicketingDetails()));
+    accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.ticketlineComponent.getTicketingDetails()));
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -196,12 +197,15 @@ export class CorporateComponent implements OnInit {
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
 
+    this.invoiceRemarkService.sendU70Remarks();
+
+    this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.closePopup();
-        this.checkHasDataLoadError();
       },
       (error) => {
         console.log(JSON.stringify(error));

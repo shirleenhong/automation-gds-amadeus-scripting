@@ -408,6 +408,8 @@ export class PnrService {
         let controlNumber = '';
         let airType = '';
         let segType = type;
+        let passiveType = '';
+
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -468,9 +470,17 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+                // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
+                // passiveType = 'TYP-HHL';
             }
+        }
+
+        if (type === 'MIS') {
+            passiveType = flongtext.substr(2, 7);
+        } else {
+            passiveType = type;
         }
 
         const segment = {
@@ -492,7 +502,8 @@ export class PnrService {
             arrivalDate,
             classservice,
             controlNumber,
-            airType
+            airType,
+            passive: passiveType
         };
         this.segments.push(segment);
     }
@@ -1204,7 +1215,8 @@ export class PnrService {
                 }
                 if (supCode === 'amk') {
                     if (
-                        misc.fullNode.itineraryFreetext.longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
+                        misc.fullNode.itineraryFreetext
+                        .longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
                     ) {
                         return true;
                     }
@@ -1374,13 +1386,16 @@ export class PnrService {
     }
 
     getSegmentNumbers(tatooNumbers: any[]): string[] {
+        if ( this.segments.length === 0) {
+            this.getSegmentTatooNumber();
+        }
         const segmentLines = [];
-        tatooNumbers.forEach(tatooNo => {
+        for (const tatooNo of tatooNumbers)  {
             const segment = this.segments.filter(s => s.tatooNo === tatooNo);
             if (segment && segment.length > 0) {
                 segmentLines.push(segment[0].lineNo);
             }
-        });
+        }
         return segmentLines;
     }
 

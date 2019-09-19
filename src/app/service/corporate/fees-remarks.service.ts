@@ -71,7 +71,7 @@ export class FeesRemarkService {
     let counter = 1;
     for (const group of items.controls) {
       const feeMap = new Map<string, string>();
-      const segments = this.pnrService.getTatooNumberFromSegmentNumber(group.get('segment').value.split(','));
+      // const segments = this.pnrService.getTatooNumberFromSegmentNumber(group.get('segment').value.split(','));
       const fees = [];
       if (group.get('code').value !== '') {
         fees.push(group.get('code').value + group.get('fee').value);
@@ -86,7 +86,7 @@ export class FeesRemarkService {
       }
       feeMap.set('SupFeeInfo', feeValue);
 
-      this.remarksManager.createPlaceholderValues(feeMap, null, segments);
+      this.remarksManager.createPlaceholderValues(feeMap, null, null);
 
       counter++;
     }

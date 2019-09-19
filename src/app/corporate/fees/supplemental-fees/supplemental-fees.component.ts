@@ -55,7 +55,6 @@ export class SupplementalFeesComponent implements OnInit {
     this.specialFee = this.getFeeValue('Special Fee');
 
     this.checkObFee();
-    this.handleApay();
 
     if (!this.isObt) {
       this.ticketedForm = this.fb.group({
@@ -71,6 +70,7 @@ export class SupplementalFeesComponent implements OnInit {
         this.processExchange(group, false);
       }
     }
+    this.handleApay();
   }
 
   handleApay() {
@@ -89,12 +89,13 @@ export class SupplementalFeesComponent implements OnInit {
           this.isApay = true;
           this.supplementalFeeList = [];
         } else {
+          if (this.isApay) {
+            this.ticketedForm = this.fb.group({
+              segments: this.fb.array(frmArray)
+            });
+          }
           this.isApay = false;
         }
-
-        this.ticketedForm = this.fb.group({
-          segments: this.fb.array(frmArray)
-        });
       }
     });
   }

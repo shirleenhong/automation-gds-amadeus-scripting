@@ -65,7 +65,7 @@ Verify That Non BSP Processing Remark Is Written And Updated In The PNR
     Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Finish PNR
     Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
-    Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
+    Verify Updated Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Updated Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Updated PE Remark Are Written For Air Canada Pass Purchase PNR
     Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR

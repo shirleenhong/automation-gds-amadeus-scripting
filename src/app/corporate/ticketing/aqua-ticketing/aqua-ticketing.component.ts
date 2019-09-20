@@ -17,6 +17,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   isHotelPNR: boolean;
   isCarPNR: boolean;
   isLimoPNR: boolean;
+  hasAirSegment: boolean;
 
   onTouched: any = () => {};
   onChange: any = () => {};
@@ -32,6 +33,9 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       // [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
     });
 
+    debugger;
+    this.hasAirTst = false;
+    this.hasAirSegment = false;
     this.getUnticketedAirSegments();
     this.isHotelPNR = this.isPnrTypeOnly('HTL');
     this.isCarPNR = this.isPnrTypeOnly('CAR');
@@ -132,17 +136,18 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   getUnticketedAirSegments() {
     const allAir = this.pnrService.pnrObj.allAirSegments;
     const tstData = [];
-    const segments = [];
+    const unticketedSegments = [];
     const tstObj = this.pnrService.tstObj;
     const ticketedSegments = [];
 
     for (const tst of this.pnrService.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
       if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-        if (tst.referenceForDataElement) {
+        if (tst.referenceForDataElement !== undefined) {
           tst.referenceForDataElement.reference.forEach((ref) => {
             if (ref.qualifier === 'ST') {
               ticketedSegments.push(ref.number);
+              this.hasAirSegment = true;
             }
           });
         }
@@ -151,11 +156,12 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
 
     allAir.forEach((x) => {
       if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
-        segments.push(x.tatooNumber);
+        unticketedSegments.push(x.tatooNumber);
+        this.hasAirSegment = true;
       }
     });
 
-    if (tstObj.length === 0) {
+    if (tstObj.length === 0 || tstObj.length === undefined) {
       this.hasAirTst = false;
     } else if (tstObj.length > 0) {
       tstObj.forEach((x) => {
@@ -168,18 +174,35 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
               segmentTatoo.push(p.segmentReference.refDetails.refNumber);
             }
           });
-          tstData.push({
-            tstNumber: x.fareReference.uniqueReference,
-            segmentNumber: segmentRef,
-            tatooNumber: segmentTatoo
-          });
-        } else {
-          if (segments.find((p) => x.segmentInformation.segmentReference.refDetails.refNumber === p)) {
-            tstData.push({
-              tstNumber: x.fareReference.uniqueReference,
-              segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
-              tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
+
+          if (segmentTatoo.length > 0) {
+            segmentTatoo.forEach((element) => {
+              if (unticketedSegments.includes(element)) {
+                tstData.push({
+                  tstNumber: x.fareReference.uniqueReference,
+                  segmentNumber: segmentRef,
+                  tatooNumber: segmentTatoo
+                });
+              }
             });
+          } else {
+            if (unticketedSegments.includes(x.segmentReference.refDetails.refNumber)) {
+              tstData.push({
+                tstNumber: x.fareReference.uniqueReference,
+                segmentNumber: segmentRef,
+                tatooNumber: segmentTatoo
+              });
+            }
+          }
+        } else {
+          if (unticketedSegments.find((p) => x.segmentInformation.segmentReference.refDetails.refNumber === p)) {
+            if (!ticketedSegments.includes(x.segmentInformation.segmentReference.refDetails.refNumber)) {
+              tstData.push({
+                tstNumber: x.fareReference.uniqueReference,
+                segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
+              });
+            }
           }
         }
       });

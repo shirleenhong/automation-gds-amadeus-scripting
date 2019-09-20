@@ -17,6 +17,7 @@ import { FeesComponent } from './corporate/fees/fees.component';
 import { SupplementalFeesComponent } from './corporate/fees/supplemental-fees/supplemental-fees.component';
 import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-fees/add-supplemental-fees.component';
 import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
+import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
     FeesComponent,
     SupplementalFeesComponent,
     AddSupplementalFeesComponent,
-    TicketingComponent
+    TicketingComponent,
+    MatrixReportingComponent
   ],
   imports: [
     BrowserModule,

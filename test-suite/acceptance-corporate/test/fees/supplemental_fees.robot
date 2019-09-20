@@ -12,36 +12,61 @@ Resource          ../../pages/fees.robot
 
 *** Test Cases ***
 Verify OBT PNR Added Remarks For Supplemental Fees
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger With Transborder Segments And Single Ticket
-    Create Single Ticket For The PNR
-    Open CA Corporate Test
+    Move Single Passenger With Transborder Segments And Single Ticket For OBT
+    Add APAY Ticketing Details For Single Segment
+    Navigate To Page Fees
     Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     [Teardown]    Close Browser
-    
+   
 Verify Non OBT PNR Added Remarks For Supplemental Fees    
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Transborder Segments And Single Ticket
-    Create Single Ticket For The PNR
-    Open CA Corporate Test
+    Add APAY Ticketing Details For Single Segment
+    Navigate To Page Fees
     Verify Non OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
+    [Teardown]    Close Browser
+
+Verify That Selected No Fee Code Is Written For Non-OBT With APAY
+    [Tags]    us9619
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger With Transborder Segments And Single Ticket
+    Add APAY Ticketing Details For Single Segment
+    Navigate To Page Fees
+    Select No Fee Code Associate Business
+    Verify Selected No Fee Code Is Written
     [Teardown]    Close Browser
     
 Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Dom Canada With TSTs
-    Verify Selected Schedule Change Fees In The PNR
+    Verify Default Values For Schedule Change Fees 
+    Verify Selected Schedule Change Fees Are written In The PNR
     [Teardown]    Close Browser
     
 Verify That Transborder PNR Added Remarks For Flat Fee
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Transborder With TSTs
-    Verify Exchange Flat Fee With Supplemental Fee For Exchange Tkt And Write Remarks In The PNR
+    Verify Default Values Of Exchange Flat Fee With Supplemental Fee For Exchange Ticket
+    Verify That Exchange Flat Fees Are Written In The PNR
     [Teardown]    Close Browser
     
 Verify That International PNR Added Remarks For Special Fee
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger With Single Segment For International With Non Exch Ticket
-    Verify Special Fee For Air Ticket
+    Move Single Passenger With Single Segment For International With Non Exchange Ticket
+    Verify Default Values Of Special Fee For Air Ticket
+    Verify That Special Fee Is Written In The PNR
     [Teardown]    Close Browser
     
+Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
+    [Tags]    us9619
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger With Multiple Segment For Transborder With TSTs
+    Select Supplemental Fees For All TSTs
+    Verify That Multiple Supplemental Fees Are Written In The PNR
+    [Teardown]    Close Browser

@@ -14,10 +14,12 @@ export class FeesRemarkService {
 
   /**
    * US9402
-   * Write Migration OBT Fee remarks
+   * Write Migration OBT Fee remark if the PNR has CF,
+   * is within configurated dates and depends on type of segment.
+   *
+   * @return void
    */
   public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>): void {
-
     // Check if CFA Exists in PNR
     if (this.pnrService.getCFLine()) {
 
@@ -25,39 +27,32 @@ export class FeesRemarkService {
       const startDate = Date.parse(migrationOBTDates[0]);
       const endDate   = Date.parse(migrationOBTDates[1]);
 
+      // Check if booking date is within configurated dates
       if (now >= startDate && now <= endDate) {
-        const segments      = this.pnrService.getSegmentTatooNumber();
-        const segmentMaps: Array<Map<string, string>> = [];
+        const airSegments   = this.pnrService.getPassiveSegmentTypes('AIR');
+        const railSegments  = this.pnrService.getPassiveSegmentTypes('MIS');
+        const hotelSegments = this.pnrService.getPassiveSegmentTypes('HTL');
+        const carSegments   = this.pnrService.getPassiveSegmentTypes('CAR');
+        let remarkValue: string = null;
 
-        for (let i = 1; i < segments.length; i++) {
-
-          let remarkValue: string;
-          switch (segments[i].segmentType) {
-            case 'AIR':
-              remarkValue = 'ATE';
-              break;
-            case 'MISC':
-              remarkValue = 'RTE';
-              break;
-            case 'HTL':
-              remarkValue = 'HBE';
-              break;
-            case 'CAR':
-              remarkValue = 'CBE';
-              break;
-            default:
-              remarkValue = 'RTE'; // If it's MISC, it's probably rail.
-              break;
-          }
-
-          const segmentMap = new Map<string, string>();
-          segmentMap.set('SupFeeTicketId', i.toString());
-          segmentMap.set('SupFeeInfo', remarkValue);
-          segmentMaps.push(segmentMap);
+        if (airSegments.length) {
+          remarkValue = 'ATE';
+        }
+        if (railSegments.length && !airSegments.length) {
+          remarkValue = 'MIS';
+        }
+        if (hotelSegments.length && !airSegments.length) {
+          remarkValue = 'HTL';
+        }
+        if (carSegments.length && !airSegments.length) {
+          remarkValue = 'CAR';
         }
 
-        for (let i = 1; i <= segmentMaps.length; i++) {
-          this.remarksManager.createPlaceholderValues(segmentMaps[i], null, null);
+        if (remarkValue) {
+          const migrationOBTFeeMap = new Map<string, string>();
+          migrationOBTFeeMap.set('SupFeeTicketId', '1');
+          migrationOBTFeeMap.set('SupFeeInfo', remarkValue);
+          this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
         }
       }
     }

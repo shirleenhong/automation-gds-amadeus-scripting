@@ -157,6 +157,16 @@ export class RemarksManagerService {
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
+      smartScriptSession.getActiveTask().then((x) => {
+        if (x.subtype === 'PNR') {
+          smartScriptSession.requestService('bookingfile.refresh', null, {
+            fn: '',
+            scope: this
+          });
+        } else {
+          smartScriptSession.send('RT');
+        }
+      });
     });
   }
 }

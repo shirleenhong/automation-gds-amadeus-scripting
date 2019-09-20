@@ -23,7 +23,7 @@ export class FeesRemarkService {
 
       const now       = Date.now();
       const startDate = Date.parse(migrationOBTDates[0]);
-      const endDate = Date.parse(migrationOBTDates[1]);
+      const endDate   = Date.parse(migrationOBTDates[1]);
 
       if (now >= startDate && now <= endDate) {
         const segments      = this.pnrService.getSegmentTatooNumber();

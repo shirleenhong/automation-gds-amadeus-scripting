@@ -37,15 +37,12 @@ export class FeesRemarkService {
 
         if (airSegments.length) {
           remarkValue = 'ATE';
-        }
-        if (railSegments.length && !airSegments.length) {
-          remarkValue = 'MIS';
-        }
-        if (hotelSegments.length && !airSegments.length) {
-          remarkValue = 'HTL';
-        }
-        if (carSegments.length && !airSegments.length) {
-          remarkValue = 'CAR';
+        } else if (railSegments.length && !airSegments.length) {
+          remarkValue = 'RTE';
+        } else if (hotelSegments.length && !airSegments.length) {
+          remarkValue = 'HBE';
+        } else if (carSegments.length && !airSegments.length) {
+          remarkValue = 'CBE';
         }
 
         if (remarkValue) {

@@ -20,6 +20,7 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
 import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
 import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
+import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.comp
     TicketingComponent,
     AquaTicketingComponent,
     TicketingLineComponent,
-    CorpRemarksComponent
+    CorpRemarksComponent,
+    MatrixReportingComponent
   ],
   imports: [
     BrowserModule,
@@ -59,4 +61,4 @@ import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.comp
   exports: [CorporateComponent],
   entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

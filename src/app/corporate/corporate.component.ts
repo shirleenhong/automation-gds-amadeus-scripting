@@ -33,6 +33,7 @@ export class CorporateComponent implements OnInit {
   workflow = '';
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
+  migrationOBTDates: Array<string>;
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -141,6 +142,9 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+        await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
+          this.migrationOBTDates = dates;
+        });
       } catch (e) {
         console.log(e);
       }
@@ -188,7 +192,7 @@ export class CorporateComponent implements OnInit {
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
-    this.feesRemarkService.writeMigrationOBTFeeRemarks();
+    this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
 
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {

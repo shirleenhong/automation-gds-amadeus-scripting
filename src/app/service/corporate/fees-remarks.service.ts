@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
-import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,66 +9,63 @@ import { DDBService } from '../ddb.service';
 export class FeesRemarkService {
   constructor(
     private remarksManager: RemarksManagerService,
-    private pnrService: PnrService,
-    private ddbService: DDBService
+    private pnrService: PnrService
   ) {}
 
   /**
    * US9402 - ONGOING
    * Write Migration OBT Fee
    */
-  public writeMigrationOBTFeeRemarks(): void {
+  public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>): void {
     debugger;
+
     // Check if CFA Exists in PNR
     if (this.pnrService.getCFLine()) {
-      this.getMigrationOBTFeeDates()
-        .then(dates => {
-          const now       = Date.now();
-          const startDate = Date.parse(dates[0]);
-          const endDate   = Date.parse(dates[1]);
 
-          // WIP
-          if (now >= startDate && now <= endDate) {
-            // Write static remarks by segment type?
+      const now       = Date.now();
+      const startDate = Date.parse(migrationOBTDates[0]);
+      const endDate = Date.parse(migrationOBTDates[1]);
 
-            // Get air, rail, hotel and car segments
-            const segmentsAir   = this.pnrService.getPassiveSegmentTypes('AIR');
-            const segmentsRail  = this.pnrService.getPassiveSegmentTypes('MIS'); // TO CLARIFY...
-            const segmentsHotel = this.pnrService.getPassiveSegmentTypes('HTL');
-            const segmentsCar   = this.pnrService.getPassiveSegmentTypes('CAR');
+      // WIP
+      if (now >= startDate && now <= endDate) {
+        // Write static remarks by segment type?
 
-            // WIP: writes 1 remark per segment and per segment type...
-            // Still not writing...
-            const airOBTFeeMap = new Map<string, string>();
-            segmentsAir.forEach((item, index) => {
-              console.log(item);
-              airOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-              airOBTFeeMap.set('SupFeeInfo', 'ATE');
-              this.remarksManager.createPlaceholderValues(airOBTFeeMap, null, null);
-            });
-            const railOBTFeeMap = new Map<string, string>();
-            segmentsRail.forEach((item, index) => {
-              console.log(item);
-              railOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-              railOBTFeeMap.set('SupFeeInfo', 'RTE');
-              this.remarksManager.createPlaceholderValues(railOBTFeeMap, null, null);
-            });
-            const hotelOBTFeeMap = new Map<string, string>();
-            segmentsHotel.forEach((item, index) => {
-              console.log(item);
-              hotelOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-              hotelOBTFeeMap.set('SupFeeInfo', 'HBE');
-              this.remarksManager.createPlaceholderValues(hotelOBTFeeMap, null, null);
-            });
-            const carOBTFeeMap = new Map<string, string>();
-            segmentsCar.forEach((item, index) => {
-              console.log(item);
-              carOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-              carOBTFeeMap.set('SupFeeInfo', 'CBE');
-              this.remarksManager.createPlaceholderValues(carOBTFeeMap, null, null);
-            });
-          }
+        // Get air, rail, hotel and car segments
+        const segmentsAir   = this.pnrService.getPassiveSegmentTypes('AIR');
+        const segmentsRail  = this.pnrService.getPassiveSegmentTypes('MIS'); // TO CLARIFY...
+        const segmentsHotel = this.pnrService.getPassiveSegmentTypes('HTL');
+        const segmentsCar   = this.pnrService.getPassiveSegmentTypes('CAR');
+
+        const airOBTFeeMap = new Map<string, string>();
+        segmentsAir.forEach((item, index) => {
+          console.log(item);
+          airOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+          airOBTFeeMap.set('SupFeeInfo', 'ATE');
+          this.remarksManager.createPlaceholderValues(airOBTFeeMap, null, null);
         });
+        const railOBTFeeMap = new Map<string, string>();
+        segmentsRail.forEach((item, index) => {
+          console.log(item);
+          railOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+          railOBTFeeMap.set('SupFeeInfo', 'RTE');
+          this.remarksManager.createPlaceholderValues(railOBTFeeMap, null, null);
+        });
+        const hotelOBTFeeMap = new Map<string, string>();
+        segmentsHotel.forEach((item, index) => {
+          console.log(item);
+          hotelOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+          hotelOBTFeeMap.set('SupFeeInfo', 'HBE');
+          this.remarksManager.createPlaceholderValues(hotelOBTFeeMap, null, null);
+        });
+        const carOBTFeeMap = new Map<string, string>();
+        segmentsCar.forEach((item, index) => {
+          const supFeeTicketId = index + 1;
+          console.log(item + supFeeTicketId);
+          carOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
+          carOBTFeeMap.set('SupFeeInfo', 'CBE');
+          this.remarksManager.createPlaceholderValues(carOBTFeeMap, null, null);
+        });
+      }
     }
   }
 
@@ -101,26 +97,6 @@ export class FeesRemarkService {
       this.remarksManager.createPlaceholderValues(feeMap, null, null);
 
       counter++;
-    }
-
-    debugger;
-    const migrationOBTFeeMap = new Map<string, string>();
-    migrationOBTFeeMap.set('SupFeeInfo', 'CBE');
-    this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
-  }
-
-  /**
-   * Get the start and end dates of the Migration OBT Fee dates sin configuration.
-   */
-  public async getMigrationOBTFeeDates(): Promise<[string, string]> {
-    try {
-      let migrationOBTFeeDateRange = null;
-      const response = await this.ddbService.getConfigurationParameter('MigrationOBTFeeDate');
-      migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-
-      return [migrationOBTFeeDateRange[0], migrationOBTFeeDateRange[1]];
-    } catch (error) {
-      throw new Error('Failed to get Migration OBT Fee configuration. ' + error);
     }
   }
 

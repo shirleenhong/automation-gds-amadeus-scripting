@@ -13,11 +13,10 @@ export class FeesRemarkService {
   ) {}
 
   /**
-   * US9402 - ONGOING
-   * Write Migration OBT Fee
+   * US9402
+   * Write Migration OBT Fee remarks
    */
   public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>): void {
-    debugger;
 
     // Check if CFA Exists in PNR
     if (this.pnrService.getCFLine()) {
@@ -26,45 +25,40 @@ export class FeesRemarkService {
       const startDate = Date.parse(migrationOBTDates[0]);
       const endDate = Date.parse(migrationOBTDates[1]);
 
-      // WIP
       if (now >= startDate && now <= endDate) {
-        // Write static remarks by segment type?
+        const segments      = this.pnrService.getSegmentTatooNumber();
+        const segmentMaps: Array<Map<string, string>> = [];
 
-        // Get air, rail, hotel and car segments
-        const segmentsAir   = this.pnrService.getPassiveSegmentTypes('AIR');
-        const segmentsRail  = this.pnrService.getPassiveSegmentTypes('MIS'); // TO CLARIFY...
-        const segmentsHotel = this.pnrService.getPassiveSegmentTypes('HTL');
-        const segmentsCar   = this.pnrService.getPassiveSegmentTypes('CAR');
+        for (let i = 1; i < segments.length; i++) {
 
-        const airOBTFeeMap = new Map<string, string>();
-        segmentsAir.forEach((item, index) => {
-          console.log(item);
-          airOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-          airOBTFeeMap.set('SupFeeInfo', 'ATE');
-          this.remarksManager.createPlaceholderValues(airOBTFeeMap, null, null);
-        });
-        const railOBTFeeMap = new Map<string, string>();
-        segmentsRail.forEach((item, index) => {
-          console.log(item);
-          railOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-          railOBTFeeMap.set('SupFeeInfo', 'RTE');
-          this.remarksManager.createPlaceholderValues(railOBTFeeMap, null, null);
-        });
-        const hotelOBTFeeMap = new Map<string, string>();
-        segmentsHotel.forEach((item, index) => {
-          console.log(item);
-          hotelOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-          hotelOBTFeeMap.set('SupFeeInfo', 'HBE');
-          this.remarksManager.createPlaceholderValues(hotelOBTFeeMap, null, null);
-        });
-        const carOBTFeeMap = new Map<string, string>();
-        segmentsCar.forEach((item, index) => {
-          const supFeeTicketId = index + 1;
-          console.log(item + supFeeTicketId);
-          carOBTFeeMap.set('SupFeeTicketId', (index + 1).toString());
-          carOBTFeeMap.set('SupFeeInfo', 'CBE');
-          this.remarksManager.createPlaceholderValues(carOBTFeeMap, null, null);
-        });
+          let remarkValue: string;
+          switch (segments[i].segmentType) {
+            case 'AIR':
+              remarkValue = 'ATE';
+              break;
+            case 'MISC':
+              remarkValue = 'RTE';
+              break;
+            case 'HTL':
+              remarkValue = 'HBE';
+              break;
+            case 'CAR':
+              remarkValue = 'CBE';
+              break;
+            default:
+              remarkValue = 'RTE'; // If it's MISC, it's probably rail.
+              break;
+          }
+
+          const segmentMap = new Map<string, string>();
+          segmentMap.set('SupFeeTicketId', i.toString());
+          segmentMap.set('SupFeeInfo', remarkValue);
+          segmentMaps.push(segmentMap);
+        }
+
+        for (let i = 1; i <= segmentMaps.length; i++) {
+          this.remarksManager.createPlaceholderValues(segmentMaps[i], null, null);
+        }
       }
     }
   }
@@ -75,7 +69,6 @@ export class FeesRemarkService {
   }
 
   private writeFees(items: FormArray) {
-    debugger;
     let counter = 1;
     for (const group of items.controls) {
       const feeMap = new Map<string, string>();
@@ -101,7 +94,6 @@ export class FeesRemarkService {
   }
 
   public getRemarkSegmentAssociation(segments: string[]): string[] {
-    debugger;
     const segmentRelate: string[] = [];
     const segmentsMatched = this.pnrService.getSegmentTatooNumber().filter((x) => segments.indexOf(x.lineNo));
 

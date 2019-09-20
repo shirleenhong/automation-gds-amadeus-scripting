@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
-import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { ClientFeeItem } from 'src/app/models/ddb/client-fee-item.model';
@@ -48,6 +48,7 @@ export class SupplementalFeesComponent implements OnInit {
 
   async ngOnInit() {
     this.isApay = false;
+
     await this.loadData();
 
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
@@ -70,14 +71,15 @@ export class SupplementalFeesComponent implements OnInit {
         this.processExchange(group, false);
       }
     }
+
     this.handleApay();
   }
 
   handleApay() {
-    this.valueChangeListener.valueChange$.subscribe((event) => {
-      if (event.name === 'Accounting Remarks') {
+    this.valueChangeListener.accountingRemarkChange.subscribe((list) => {
+      if (list) {
         const frmArray = [];
-        (event.value as MatrixAccountingModel[])
+        (list as MatrixAccountingModel[])
           .filter((a) => a.accountingTypeRemark === 'APAY')
           .forEach((acc) => {
             const group = this.createFormGroup(acc.segmentNo, false);
@@ -88,10 +90,13 @@ export class SupplementalFeesComponent implements OnInit {
         if (frmArray.length > 0) {
           this.isApay = true;
           this.supplementalFeeList = [];
+          this.ticketedForm = this.fb.group({
+            segments: this.fb.array(frmArray)
+          });
         } else {
           if (this.isApay) {
             this.ticketedForm = this.fb.group({
-              segments: this.fb.array(frmArray)
+              segments: this.fb.array([])
             });
           }
           this.isApay = false;
@@ -122,16 +127,12 @@ export class SupplementalFeesComponent implements OnInit {
   }
 
   feeChange(group: FormGroup) {
-    try {
-      const noFeeCodeFg = group.get('noFeeCode') as FormControl;
-      if (group.get('code').value === '' && group.get('supplementalFee').value === '') {
-        noFeeCodeFg.setValidators([Validators.required]);
-      } else {
-        noFeeCodeFg.setValidators(null);
-        noFeeCodeFg.setValue('');
-      }
-    } catch (err) {
-      console.log(err);
+    const noFeeCodeFg = group.get('noFeeCode') as FormControl;
+    if (group.get('code').value === '' && group.get('supplementalFee').value === '') {
+      // noFeeCodeFg.setValidators([Validators.required]);
+    } else {
+      // noFeeCodeFg.setValidators(null);
+      noFeeCodeFg.setValue('');
     }
   }
 

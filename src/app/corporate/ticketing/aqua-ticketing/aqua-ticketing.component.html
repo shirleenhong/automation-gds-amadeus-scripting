@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div *ngIf="!hasAirTst && isHotelPNR" class="row">
+    <div *ngIf="!hasAirTst && !hasAirSegment && isHotelPNR" class="row">
       <div class="col-sm-2">Hotel Segment:</div>
       <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'HTL'" formControlName="hotelSegment" name="hotelSegment" id="hotelSegment" #segmentApp>
@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div *ngIf="!hasAirTst && !isHotelPNR && !isCarPNR && isLimoPNR" class="row">
+    <div *ngIf="!hasAirTst && !isHotelPNR && !isCarPNR && !hasAirSegment && isLimoPNR" class="row">
       <div class="col-sm-2">Limo Segment:</div>
       <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'TYP-LIM'" formControlName="limoSegment" name="limoSegment" id="limoSegment" #segmentApp>
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div *ngIf="!hasAirTst && !isHotelPNR && !isLimoPNR && isCarPNR" class="row">
+    <div *ngIf="!hasAirTst && !isHotelPNR && !isLimoPNR && !hasAirSegment && isCarPNR" class="row">
       <div class="col-sm-2">Car Segment:</div>
       <div class="col-sm-1">
         <app-segment-select [segmentFilter]="'CAR'" formControlName="carSegment" name="carSegment" id="carSegment" #segmentApp>
@@ -57,7 +57,14 @@
       </div>
     </div>
 
-    <div *ngIf="(!hasAirTst && !isHotelPNR && isLimoPNR && isCarPNR) || (!hasAirTst && !isHotelPNR && !isLimoPNR && !isCarPNR)" class="row">
+    <div
+      *ngIf="
+        (!hasAirTst && !hasAirSegment && !isHotelPNR && isLimoPNR && isCarPNR) ||
+        (!hasAirTst && !hasAirSegment && !isHotelPNR && !isLimoPNR && !isCarPNR) ||
+        (hasAirSegment && !hasAirTst && (isCarPNR || isHotelPNR || isLimoPNR))
+      "
+      class="row"
+    >
       <br />
       <div class="col-sm-6"><b>*No Segments Available for Ticketing*</b></div>
     </div>

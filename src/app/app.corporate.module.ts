@@ -19,6 +19,7 @@ import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-
 import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
+import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/tic
     AddSupplementalFeesComponent,
     TicketingComponent,
     AquaTicketingComponent,
-    TicketingLineComponent
+    TicketingLineComponent,
+    CorpRemarksComponent
   ],
   imports: [
     BrowserModule,

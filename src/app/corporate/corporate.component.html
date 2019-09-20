@@ -19,6 +19,15 @@
 
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
+        <i class="far fa-list-alt"></i> Remarks
+        <!-- <i [ngClass]="validModel.reportingValidCss"></i> -->
+        <span class="cwt-logo"></span>
+      </div>
+      <app-corp-remarks></app-corp-remarks>
+    </accordion-group>
+
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
         <i class="fas fa-hand-holding-usd"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
         <span class="cwt-logo"></span>
       </div>

@@ -26,15 +26,19 @@ export class FeesRemarkService {
         fees.push(group.get('supplementalFee').value);
       }
 
-      feeMap.set('SupFeeTicketId', counter.toString());
       let feeValue = fees.join('/');
 
       if (feeValue === '') {
         feeValue = group.get('noFeeCode').value;
       }
-      feeMap.set('SupFeeInfo', feeValue);
 
-      this.remarksManager.createPlaceholderValues(feeMap, null, null);
+      if (feeValue !== '') {
+        feeMap.set('SupFeeInfo', feeValue);
+        feeMap.set('SupFeeTicketId', counter.toString());
+        this.remarksManager.createPlaceholderValues(feeMap, null, null);
+      } else {
+        this.remarksManager.createEmptyPlaceHolderValue(['SupFeeInfo', 'SupFeeTicketId'], null, 'SUPFEE');
+      }
 
       counter++;
     }

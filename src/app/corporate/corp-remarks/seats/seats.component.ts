@@ -11,12 +11,29 @@ export class SeatsComponent implements OnInit {
   seats: Array<SeatModel>;
   remarkOptions: Array<string>;
 
-  constructor(private seatModel: SeatModel) { }
+  constructor() { }
 
   ngOnInit() {
     this.remarkOptions = SeatModel.REMARK_OPTIONS;
 
-    console.log(this.seatModel);
+    // Dummy seats
+    this.seats = [
+      {
+        seatNumber: '1',
+        text: 'SAMPLE TEXT 1',
+        type: 'window',
+      },
+      {
+        seatNumber: '1',
+        text: 'SAMPLE TEXT 3',
+        type: 'aisle',
+      },
+      {
+        seatNumber: '3',
+        text: 'SAMPLE TEXT 3',
+        type: 'middle',
+      },
+    ];
   }
 
   /**
@@ -28,11 +45,11 @@ export class SeatsComponent implements OnInit {
   }
 
   /**
-   * Delete the given seat.
-   * @param index The index of the seat to delete.
+   * Delete a seat.
+   * @param seat The instance of SeatModel to delete.
    */
-  public delete(index): boolean {
-    return !!this.seats.splice(index);
+  public delete(seat: SeatModel): void {
+    this.seats = this.seats.filter(s => s !== seat);
   }
 
 }

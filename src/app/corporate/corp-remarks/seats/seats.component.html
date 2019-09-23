@@ -1,20 +1,21 @@
 <table class="table">
   <thead class="thead-light">
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Type</th>
-      <th scope="col">Seat Number</th>
-      <th scope="col">Text</th>
+      <th>#</th>
+      <th>Type</th>
+      <th>Seat Number</th>
+      <th>Text</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let seats of seats">
-      <td>{{ seat.index + 1 }}</td>
-      <td>{{ seat.type }}</td>
+    <tr *ngFor="let seat of seats; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ seat.type | uppercase }}</td>
       <td>{{ seat.seatNumber }}</td>
       <td>{{ seat.text }}</td>
       <td>
-        <i class=" fas fa-trash-alt" (click)="delete(index)"></i>
+        <i class="fa fa-trash-alt" (click)="delete(seat)"></i>
       </td>
     </tr>
   </tbody>

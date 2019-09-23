@@ -1,10 +1,13 @@
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class SeatModel {
 
     /**
      * The remark options format to be selected by
      * the user and written in the PNR.
      */
-    static REMARK_OPTIONS: Array<string> = [
+    static REMARK_OPTIONS?: Array<string> = [
         'SEATING SUBJECT TO AIRPORT OR ONLINE CHECK I',
         'PREFERRED SEAT UNAVAILABLE. [SEAT TYPE] CONFIRMED.',
         'THIS SEGMENT HAS BEEN WAITLIST',
@@ -27,8 +30,4 @@ export class SeatModel {
      * The type of the seat. The types are window, aisle and middle.
      */
     type: string;
-
-    constructor() {
-        //
-    }
 }

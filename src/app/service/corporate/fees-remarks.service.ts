@@ -90,15 +90,4 @@ export class FeesRemarkService {
       counter++;
     }
   }
-
-  public getRemarkSegmentAssociation(segments: string[]): string[] {
-    const segmentRelate: string[] = [];
-    const segmentsMatched = this.pnrService.getSegmentTatooNumber().filter((x) => segments.indexOf(x.lineNo));
-
-    segmentsMatched.forEach((segmentMatched) => {
-      segmentRelate.push(segmentMatched.tatooNo);
-    });
-
-    return segmentRelate;
-  }
 }

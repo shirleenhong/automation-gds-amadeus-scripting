@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SeatModel } from '../../../models/pnr/seat.model';
+import { SeatModel } from 'src/app/models/pnr/seat.model';
+import { SeatsService } from 'src/app/service/corporate/seats.service';
 
 @Component({
   selector: 'app-seats',
@@ -11,10 +12,10 @@ export class SeatsComponent implements OnInit {
   seats: Array<SeatModel>;
   remarkOptions: Array<string>;
 
-  constructor() { }
+  constructor(private seatsService: SeatsService) { }
 
   ngOnInit() {
-    this.remarkOptions = SeatModel.REMARK_OPTIONS;
+    this.remarkOptions = this.seatsService.REMARK_OPTIONS;
 
     // Dummy seats
     this.seats = [
@@ -51,5 +52,4 @@ export class SeatsComponent implements OnInit {
   public delete(seat: SeatModel): void {
     this.seats = this.seats.filter(s => s !== seat);
   }
-
 }

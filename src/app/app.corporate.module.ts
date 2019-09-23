@@ -22,6 +22,7 @@ import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/tic
 import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
 import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
+import { SeatModel } from './models/pnr/seat.model';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,9 @@ import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
     MyCommonModule,
     AlertModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    SeatModel
+  ],
   bootstrap: [],
   exports: [CorporateComponent],
   entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]

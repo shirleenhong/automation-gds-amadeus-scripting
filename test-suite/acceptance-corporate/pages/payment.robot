@@ -146,6 +146,7 @@ Add APAY Ticketing Details For Single Segment
     Select Itinerary Segments    2
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
+    Set Test Variable     ${ticketing_details}    yes
     Take Screenshot
     
 Add APAY Ticketing Details For Multiple Segments

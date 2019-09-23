@@ -113,15 +113,17 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Reporting" and "${destination_page}" != "Reporting"   Navigate From Reporting    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Ticketing" and "${destination_page}" != "Ticketing"    Navigate From Ticketing    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
-     \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details_complete}" == "yes"     Click Save Button
+     \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
+     \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting" or "${destination_page}" == "Ticketing"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting" or "${destination_page}" == "Ticketing" or "${destination_page}" == "Fees"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
@@ -182,4 +184,4 @@ Click Fees Panel
     
 Navigate From Fees
     [Arguments]    ${destination_page}
-    Run Keyword If    "${destination_page}" == "Fees"    Click Fees Panel
+    Run Keyword If    "${destination_page}" == "Ticketing"    Click Ticketing Panel

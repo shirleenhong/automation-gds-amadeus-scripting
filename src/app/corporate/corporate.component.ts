@@ -19,6 +19,7 @@ import { AmadeusRemarkService } from '../service/remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
+import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 
 @Component({
   selector: 'app-corporate',
@@ -39,6 +40,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
+  @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @Input() overrideValue: any;
 
   constructor(
@@ -194,6 +196,7 @@ export class CorporateComponent implements OnInit {
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
 
+    this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);

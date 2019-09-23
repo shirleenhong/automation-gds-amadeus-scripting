@@ -6,26 +6,27 @@ BEGIN TRAN
 	BEGIN TRY
 	
 		---------------------------------------
-        -- BEGIN US6893
+        -- BEGIN US13271
         ---------------------------------------
 		DECLARE @CreationUserIdentifier AS varchar(255)
-        DECLARE @CreationTimestamp	AS DATETIME = GETUTCDATE()	
+        DECLARE @CreationTimestamp	AS DATETIME =GETUTCDATE()	
 		DECLARE @ApprovalGroupId AS INT
 		DECLARE @ApprovalGroupApprovalTypeId AS INT
 		DECLARE @ApprovalGroupApprovalTypeItemId AS INT
         
-		SET @CreationUserIdentifier     = 'Amadeus CA Migration - US13271'
-        SET @ApprovalGroupId	= (SELECT MAX(ApprovalGroupId) FROM ApprovalGroup)
-		SET @ApprovalGroupApprovalTypeId = (SELECT MAX(ApprovalGroupApprovalTypeId) FROM ApprovalGroupApprovalType)
-		SET @ApprovalGroupApprovalTypeItemId = (SELECT MAX(ApprovalGroupApprovalTypeItemId) FROM ApprovalGroupApprovalTypeItem)
+		SET @CreationUserIdentifier     ='Amadeus CA Migration - US13271'
+        SET @ApprovalGroupId	=(SELECT MAX(ApprovalGroupId) FROM ApprovalGroup)
+		SET @ApprovalGroupApprovalTypeId =(SELECT MAX(ApprovalGroupApprovalTypeId) FROM ApprovalGroupApprovalType)
+		SET @ApprovalGroupApprovalTypeItemId =(SELECT MAX(ApprovalGroupApprovalTypeItemId) FROM ApprovalGroupApprovalTypeItem)
               
 		-- Rollback
-		DELETE FROM ApprovalGroupClientAccount WHERE CreationUserIdentifier =   @CreationUserIdentifier  
-		DELETE FROM ApprovalGroupApprovalTypeItem WHERE CreationUserIdentifier =   @CreationUserIdentifier  
-		DELETE FROM ApprovalGroupApprovalType WHERE CreationUserIdentifier =   @CreationUserIdentifier  
-		DELETE FROM ApprovalGroup WHERE CreationUserIdentifier =   @CreationUserIdentifier   
+		-- delete from [ApprovalGroupClientSubUnit] where approvalGroupID = 2145 
+		DELETE FROM ApprovalGroupClientAccount WHERE CreationUserIdentifier =  @CreationUserIdentifier  
+		DELETE FROM ApprovalGroupApprovalTypeItem WHERE CreationUserIdentifier =  @CreationUserIdentifier  
+		DELETE FROM ApprovalGroupApprovalType WHERE CreationUserIdentifier =  @CreationUserIdentifier  
+		DELETE FROM ApprovalGroup WHERE CreationUserIdentifier =  @CreationUserIdentifier   
         ---- End Rollback
-
+		SET IDENTITY_INSERT [dbo].ApprovalGroup ON;  
         -- Approval
         INSERT INTO ApprovalGroup(ApprovalGroupId, ApprovalGroupName, EnabledFlag, InheritFromParentFlag, DeletedFlag, CreationTimestamp, CreationUserIdentifier, VersionNumber)
 		VALUES	(@ApprovalGroupId	+	1	,'Alstom', 1,1,0, @CreationTimestamp, @CreationUserIdentifier,1 ),
@@ -64,72 +65,76 @@ BEGIN TRAN
 				(@ApprovalGroupId	+	34	,'Linedata', 1,1,0, @CreationTimestamp, @CreationUserIdentifier,1 ),
 				(@ApprovalGroupId	+	35	,'Top Aces', 1,1,0, @CreationTimestamp, @CreationUserIdentifier,1 )
 
+		SET IDENTITY_INSERT [dbo].ApprovalGroup OFF;  
+
 		INSERT INTO ApprovalGroupApprovalType(ApprovalGroupApprovalTypeId, ApprovalGroupApprovalTypeDescription, CreationTimestamp, CreationUserIdentifier,VersionNumber)
-		VALUES  (@ApprovalGroupApprovalTypeId +	1	,'SEGMENT - Hotel Segment	Only'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	2	,'SEGMENT - Car Segments	Only'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	3	,'REMARKS EXISTS - RMG/APPROVAL RECEIVED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	4	,'ROUTE - Domestic'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	5	,'ROUTE - Transborder'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	6	,'DEPARTURE - 14 days'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	7	,'REMARKS EXISTS - RM*FS/-L'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	8	,'REMARKS EXISTS - RM*FS/-7'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	9	,'ROUTE - International'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	10	,'DEPARTURE - 21 days advance'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	11	,'REMARKS EXISTS - RM*U13/-'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	12	,'REMARKS EXISTS - RMG/ECM APPROVAL-RECEIVED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	13	,'REMARKS EXISTS - RMG/ECM-APPROVAL NOT REQUIRED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	14	,'REMARKS EXISTS - RM*U20/-'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	15	,'SEGMENT - No Hotel Segments'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	16	,'REMARKS EXISTS - RMG/TRIP APPROVED BY'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	17	,'REMARKS EXISTS - RMG/TRAVEL AUTH BY'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	18	,'REMARKS EXISTS - RMG/MOXIE HIGH RISK APPROVAL EMAIL RCVD'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	19	,'REMARKS EXISTS - RMG/NO APPROVAL REQUIRED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	20	,'FOP Not AX'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	21	,'CC last digit 1010'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	22	,'REMARKS EXISTS - RMG/BTA APPR RECEIVED exists'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	23	,'REMARKS EXISTS - RM*FS/-7 OR RM*FS/-L'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	24	,'U50 - BOARD OF DIRECTORS'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	25	,'U50 - CEO-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	26	,'U50 - CONCIERGE-NORAM-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	27	,'U50 - EXECUTIVE'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	28	,'U50 - EXECUTIVE ASC-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	29	,'U50 - EXECUTIVE-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	30	,'U50 - FAI CEO'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	31	,'U50 - GENERAL'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	32	,'U50 - GENERAL-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	33	,'U50 - GENERAL-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	34	,'U50 - GUEST'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	35	,'U50 - GUEST-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	36	,'U50 - GUEST-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	37	,'U50 - GUEST-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	38	,'U50 - MTMS-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	39	,'U50 - NORAM-ASSOCIATE-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	40	,'U50 - PRESIDENT'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	41	,'U50 - ROAD WARRIOR'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	42	,'U50 - SRVP-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	43	,'U50 - VIP CEO'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	44	,'U50 - VIP EXEC'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	45	,'U50 - VIP EXEMPT-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	46	,'U50 - VIP-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	47	,'U50 - VIP-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	48	,'U50 - VP-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	49	,'U50 - EMPLOYEE'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	50	,'U50 - OPERATION-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	51	,'SEGMENT - AIR'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	52	,'SEGMENT - HOTEL'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	53	,'SEGMENT - CAR'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	54	,'UI Primary - Total Cost of PNR Costs exceeds $5000.00'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	55	,'UI Secondary1 - Traveller has received Approval for this Trip'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	56	,'UI Secondary1 - TObtain Approval Prior to Ticket Issuance'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	57	,'UI Additional1 - text[approver_Name])'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	58	,'UI Additional2- label [THE TICKET WILL BE PUT ON "HOLD" AND SENT TO AQUA QC ONLY])'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+		VALUES  (@ApprovalGroupApprovalTypeId +	1	,'[SEGMENT_TYPE]=Hotel[Only]'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	2	,'[SEGMENT_TYPE]=Car[Only]'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	3	,'[REMARKS_EXISTS]=RMG/APPROVAL RECEIVED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	4	,'[ROUTE]=Domestic'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	5	,'[ROUTE]=Transborder'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	6	,'[DEPARTURE]=14 days'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	7	,'[REMARKS_EXISTS]=RM*FS/-L'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	8	,'[REMARKS_EXISTS]=RM*FS/-7'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	9	,'[ROUTE]=International'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	10	,'[DEPARTURE]=21 days'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	11	,'[REMARKS_EXISTS]=RM*U13/-'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	12	,'[REMARKS_EXISTS]=RMG/ECM APPROVAL-RECEIVED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	13	,'[REMARKS_EXISTS]=RMG/ECM-APPROVAL NOT REQUIRED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	14	,'[REMARKS_EXISTS]=RM*U20/-'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	15	,'[SEGMENT_TYPE]=[NO]Hotel'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	16	,'[REMARKS_EXISTS]=RMG/TRIP APPROVED BY'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	17	,'[REMARKS_EXISTS]=RMG/TRAVEL AUTH BY'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	18	,'[REMARKS_EXISTS]=RMG/MOXIE HIGH RISK APPROVAL EMAIL RCVD'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	19	,'[REMARKS_EXISTS]=RMG/NO APPROVAL REQUIRED'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	20	,'[FOP]=[NOT]AX'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	21	,'[FOP]=[LAST_DIGIT]1010'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	22	,'[REMARKS_EXISTS]=RMG/BTA APPR RECEIVED exists'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	23	,'[REMARKS_EXISTS]=RM*FS/-7[OR]RM*FS/-L'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	24	,'[U]=50/BOARD OF DIRECTORS'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	25	,'[U]=50/CEO-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	26	,'[U]=50/CONCIERGE-NORAM-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	27	,'[U]=50/EXECUTIVE'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	28	,'[U]=50/EXECUTIVE ASC-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	29	,'[U]=50/EXECUTIVE-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	30	,'[U]=50/FAI CEO'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	31	,'[U]=50/GENERAL'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	32	,'[U]=50/GENERAL-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	33	,'[U]=50/GENERAL-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	34	,'[U]=50/GUEST'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	35	,'[U]=50/GUEST-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	36	,'[U]=50/GUEST-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	37	,'[U]=50/GUEST-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	38	,'[U]=50/MTMS-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	39	,'[U]=50/NORAM-ASSOCIATE-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	40	,'[U]=50/PRESIDENT'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	41	,'[U]=50/ROAD WARRIOR'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	42	,'[U]=50/SRVP-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	43	,'[U]=50/VIP CEO'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	44	,'[U]=50/VIP EXEC'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	45	,'[U]=50/VIP EXEMPT-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	46	,'[U]=50/VIP-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	47	,'[U]=50/VIP-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	48	,'[U]=50/VP-NORAM'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	49	,'[U]=50/EMPLOYEE'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	50	,'[U]=50/OPERATION-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	51	,'[SEGMENT_TYPE]=AIR'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	52	,'[SEGMENT_TYPE]=HOTEL'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	53	,'[SEGMENT_TYPE]=CAR'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	54	,'[UI_PRIMARY]=Total Cost of PNR Costs exceeds $5000.00'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	55	,'[UI_SECONDARY_1]=Traveller has received Approval for this Trip'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	56	,'[UI_SECONDARY_1]=Obtain Approval Prior to Ticket Issuance'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	57	,'[UI_ADDITIONAL_1]=[TEXT_BOX]Approver Name'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	58	,'[UI_ADDITIONAL_2]=[LABEL]THE TICKET WILL BE PUT ON "HOLD" AND SENT TO AQUA QC ONLY'	 ,@CreationTimestamp, @CreationUserIdentifier,1 )
+
+	  SET IDENTITY_INSERT [dbo].ApprovalGroupApprovalTypeItem ON;  
 
 		INSERT INTO ApprovalGroupApprovalTypeItem(ApprovalGroupApprovalTypeItemId, ApprovalGroupApprovalTypeId, ApprovalGroupId, ApprovalGroupApprovalTypeItemValue, CreationTimestamp, CreationUserIdentifier, VersionNumber)
 		VALUES	(@ApprovalGroupApprovalTypeItemId + 1,		@ApprovalGroupApprovalTypeId +	22, @ApprovalGroupId+33, 'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId + 2,		@ApprovalGroupApprovalTypeId +	20, @ApprovalGroupId+33, 'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId + 3,		@ApprovalGroupApprovalTypeId +	20, @ApprovalGroupId+33, 'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId + 4,		@ApprovalGroupApprovalTypeId +	21, @ApprovalGroupId+33, 'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId + 5,		@ApprovalGroupApprovalTypeId +	1, @ApprovalGroupId+33, 'EXCLUDE ', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId + 3,		@ApprovalGroupApprovalTypeId +	20, @ApprovalGroupId+33, 'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId + 4,		@ApprovalGroupApprovalTypeId +	21, @ApprovalGroupId+33, 'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId + 5,		@ApprovalGroupApprovalTypeId +	1, @ApprovalGroupId+33, 'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	7	,	@ApprovalGroupApprovalTypeId + 1	,	@ApprovalGroupId+8	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	8	,	@ApprovalGroupApprovalTypeId + 1	,	@ApprovalGroupId+18	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	9	,	@ApprovalGroupApprovalTypeId + 1	,	@ApprovalGroupId+21	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
@@ -144,8 +149,8 @@ BEGIN TRAN
 				(@ApprovalGroupApprovalTypeItemId +	18	,	@ApprovalGroupApprovalTypeId + 2	,	@ApprovalGroupId+35	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	19	,	@ApprovalGroupApprovalTypeId + 7	,	@ApprovalGroupId+28	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	20	,	@ApprovalGroupApprovalTypeId + 8	,	@ApprovalGroupId+28	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	21	,	@ApprovalGroupApprovalTypeId + 7	,	@ApprovalGroupId+17	,	'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	22	,	@ApprovalGroupApprovalTypeId + 15 ,	@ApprovalGroupId+17	,	'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	21	,	@ApprovalGroupApprovalTypeId + 7	,	@ApprovalGroupId+17	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	22	,	@ApprovalGroupApprovalTypeId + 15 ,	@ApprovalGroupId+17	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	23	,	@ApprovalGroupApprovalTypeId + 11 ,	@ApprovalGroupId+12	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	24	,	@ApprovalGroupApprovalTypeId + 14 ,	@ApprovalGroupId+17	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	25	,	@ApprovalGroupApprovalTypeId + 3 ,	@ApprovalGroupId+6	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
@@ -166,13 +171,13 @@ BEGIN TRAN
 				(@ApprovalGroupApprovalTypeItemId +	40	,	@ApprovalGroupApprovalTypeId + 5	,	@ApprovalGroupId+21	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	41	,	@ApprovalGroupApprovalTypeId + 5	,	@ApprovalGroupId+32	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	42	,	@ApprovalGroupApprovalTypeId + 5	,	@ApprovalGroupId+35	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	43	,	@ApprovalGroupApprovalTypeId + 4	,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	44	,	@ApprovalGroupApprovalTypeId + 5	,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	45	,	@ApprovalGroupApprovalTypeId + 6	,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	46	,	@ApprovalGroupApprovalTypeId + 23,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	47	,	@ApprovalGroupApprovalTypeId + 9,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND2', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	48	,	@ApprovalGroupApprovalTypeId + 10,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND2', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	49	,	@ApprovalGroupApprovalTypeId + 23,	@ApprovalGroupId+8	,	'EXCLUDE W/ COND2', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	43	,	@ApprovalGroupApprovalTypeId + 4	,	@ApprovalGroupId+8	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	44	,	@ApprovalGroupApprovalTypeId + 5	,	@ApprovalGroupId+8	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	45	,	@ApprovalGroupApprovalTypeId + 6	,	@ApprovalGroupId+8	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	46	,	@ApprovalGroupApprovalTypeId + 23,	@ApprovalGroupId+8	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	47	,	@ApprovalGroupApprovalTypeId + 9,	@ApprovalGroupId+8	,	'EXCLUDE2', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	48	,	@ApprovalGroupApprovalTypeId + 10,	@ApprovalGroupId+8	,	'EXCLUDE2', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	49	,	@ApprovalGroupApprovalTypeId + 23,	@ApprovalGroupId+8	,	'EXCLUDE2', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	50	,	@ApprovalGroupApprovalTypeId + 24,	@ApprovalGroupId+17	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	51	,	@ApprovalGroupApprovalTypeId + 29,	@ApprovalGroupId+17	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	52	,	@ApprovalGroupApprovalTypeId + 25,	@ApprovalGroupId+25	,	'EXCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
@@ -267,13 +272,14 @@ BEGIN TRAN
 				(@ApprovalGroupApprovalTypeItemId +	141	,	@ApprovalGroupApprovalTypeId + 53	,	@ApprovalGroupId+31	,	'INCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	142	,	@ApprovalGroupApprovalTypeId + 53	,	@ApprovalGroupId+33	,	'INCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	143	,	@ApprovalGroupApprovalTypeId + 53	,	@ApprovalGroupId+34	,	'INCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	144	,	@ApprovalGroupApprovalTypeId + 54	,	@ApprovalGroupId+6	,	'UI Secondary1', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	145	,	@ApprovalGroupApprovalTypeId + 55	,	@ApprovalGroupId+6	,	'UI Additional1', @CreationTimestamp, @CreationUserIdentifier,1),
-				(@ApprovalGroupApprovalTypeItemId +	146	,	@ApprovalGroupApprovalTypeId + 56	,	@ApprovalGroupId+6	,	'UI Additional2', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	144	,	@ApprovalGroupApprovalTypeId + 54	,	@ApprovalGroupId+6	,	'[UI_SECONDARY_1]', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	145	,	@ApprovalGroupApprovalTypeId + 55	,	@ApprovalGroupId+6	,	'[UI_SECONDARY_1', @CreationTimestamp, @CreationUserIdentifier,1),
+				(@ApprovalGroupApprovalTypeItemId +	146	,	@ApprovalGroupApprovalTypeId + 56	,	@ApprovalGroupId+6	,	'[UI_ADDITIONAL_2]', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	147	,	@ApprovalGroupApprovalTypeId + 57	,	@ApprovalGroupId+6	,	'INCLUDE', @CreationTimestamp, @CreationUserIdentifier,1),
 				(@ApprovalGroupApprovalTypeItemId +	148	,	@ApprovalGroupApprovalTypeId + 58	,	@ApprovalGroupId+6	,	'INCLUDE', @CreationTimestamp, @CreationUserIdentifier,1)
 
 
+	  SET IDENTITY_INSERT [dbo].ApprovalGroupApprovalTypeItem OFF;  
 		
 		INSERT INTO ApprovalGroupClientAccount(ApprovalGroupId, SourceSystemCode, ClientAccountNumber, CreationTimestamp, CreationUserIdentifier, VersionNumber)
 		VALUES (	@ApprovalGroupId+1	,	'CA1',	'1BGD',	@CreationTimestamp, @CreationUserIdentifier,1),
@@ -316,9 +322,9 @@ BEGIN TRAN
 
 
 		---------------------------------------
-        -- END US6893
+        -- END US13271
         ---------------------------------------
-		rollback TRAN
+		COMMIT TRAN
 
 	END TRY
 	
@@ -331,7 +337,6 @@ BEGIN CATCH
 	RAISERROR(@ErrorMessage, 10, 1);
 
 END CATCH
-
 
 
 

@@ -169,6 +169,21 @@ export class PnrService {
         }
     }
 
+    /**
+     * Check if PNR has OBT remark.
+     * @return boolean
+     */
+    isOBT(): boolean {
+        if (this.isPNRLoaded) {
+            for (const rm of this.pnrObj.rmElements) {
+                if (rm.freeFlowText.indexOf('EB/-') === 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     getFSRemark() {
         if (this.isPNRLoaded) {
             for (const rm of this.pnrObj.fsElements) {

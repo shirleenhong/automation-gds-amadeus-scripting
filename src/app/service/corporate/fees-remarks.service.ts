@@ -1,12 +1,59 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { RemarksManagerService } from './remarks-manager.service';
+import { PnrService } from '../pnr.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeesRemarkService {
-  constructor(private remarksManager: RemarksManagerService) {}
+  constructor(
+    private remarksManager: RemarksManagerService,
+    private pnrService: PnrService
+  ) {}
+
+  /**
+   * US9402
+   * Write Migration OBT Fee remark if the PNR has CF,
+   * is within configurated dates and depends on type of segment.
+   *
+   * @return void
+   */
+  public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>): void {
+    // Check if CFA Exists in PNR
+    if (this.pnrService.getCFLine()) {
+
+      const now       = Date.now();
+      const startDate = Date.parse(migrationOBTDates[0]);
+      const endDate   = Date.parse(migrationOBTDates[1]);
+
+      // Check if booking date is within configurated dates
+      if (now >= startDate && now <= endDate) {
+        const airSegments   = this.pnrService.getPassiveSegmentTypes('AIR');
+        const railSegments  = this.pnrService.getPassiveSegmentTypes('MIS');
+        const hotelSegments = this.pnrService.getPassiveSegmentTypes('HTL');
+        const carSegments   = this.pnrService.getPassiveSegmentTypes('CAR');
+        let remarkValue: string = null;
+
+        if (airSegments.length) {
+          remarkValue = 'ATE';
+        } else if (railSegments.length && !airSegments.length) {
+          remarkValue = 'RTE';
+        } else if (hotelSegments.length && !airSegments.length) {
+          remarkValue = 'HBE';
+        } else if (carSegments.length && !airSegments.length) {
+          remarkValue = 'CBE';
+        }
+
+        if (remarkValue) {
+          const migrationOBTFeeMap = new Map<string, string>();
+          migrationOBTFeeMap.set('SupFeeTicketId', '1');
+          migrationOBTFeeMap.set('SupFeeInfo', remarkValue);
+          this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+        }
+      }
+    }
+  }
 
   writeFeeRemarks(feeGroup: FormGroup) {
     const fees = feeGroup.get('segments') as FormArray;

@@ -30,10 +30,8 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       hotelSegment: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
       carSegment: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
       limoSegment: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
-      // [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
     });
 
-    debugger;
     this.hasAirTst = false;
     this.hasAirSegment = false;
     this.getUnticketedAirSegments();
@@ -161,7 +159,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       }
     });
 
-    if (tstObj.length === 0 || tstObj.length === undefined) {
+    if (tstObj.length === 0) {
       this.hasAirTst = false;
     } else if (tstObj.length > 0) {
       tstObj.forEach((x) => {
@@ -232,6 +230,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
         });
       }
     }
+
     if (tstData.length > 0) {
       this.hasAirTst = true;
       this.unticketedSegments = tstData;

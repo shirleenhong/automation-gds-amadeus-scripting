@@ -137,6 +137,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     const unticketedSegments = [];
     const tstObj = this.pnrService.tstObj;
     const ticketedSegments = [];
+    this.hasAirTst = false;
 
     for (const tst of this.pnrService.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
@@ -159,10 +160,55 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       }
     });
 
-    if (tstObj.length === 0) {
-      this.hasAirTst = false;
-    } else if (tstObj.length > 0) {
-      tstObj.forEach((x) => {
+    debugger;
+    if (unticketedSegments.length > 0) {
+      if (tstObj.length === 0) {
+        this.hasAirTst = false;
+      } else if (tstObj.length > 0) {
+        tstObj.forEach((x) => {
+          if (x.segmentInformation.length > 0) {
+            const segmentRef = [];
+            const segmentTatoo = [];
+            x.segmentInformation.forEach((p) => {
+              if (p.segmentReference !== undefined) {
+                segmentRef.push(this.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
+                segmentTatoo.push(p.segmentReference.refDetails.refNumber);
+              }
+            });
+            if (segmentTatoo.length > 0) {
+              segmentTatoo.forEach((element) => {
+                if (unticketedSegments.includes(element)) {
+                  tstData.push({
+                    tstNumber: x.fareReference.uniqueReference,
+                    segmentNumber: segmentRef,
+                    tatooNumber: segmentTatoo
+                  });
+                }
+              });
+            } else {
+              if (unticketedSegments.includes(x.segmentReference.refDetails.refNumber)) {
+                tstData.push({
+                  tstNumber: x.fareReference.uniqueReference,
+                  segmentNumber: segmentRef,
+                  tatooNumber: segmentTatoo
+                });
+              }
+            }
+          } else {
+            if (unticketedSegments.find((p) => x.segmentInformation.segmentReference.refDetails.refNumber === p)) {
+              if (!ticketedSegments.includes(x.segmentInformation.segmentReference.refDetails.refNumber)) {
+                tstData.push({
+                  tstNumber: x.fareReference.uniqueReference,
+                  segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                  tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
+                });
+              }
+            }
+          }
+        });
+      } else {
+        let x: any;
+        x = tstObj;
         if (x.segmentInformation.length > 0) {
           const segmentRef = [];
           const segmentTatoo = [];
@@ -172,62 +218,18 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
               segmentTatoo.push(p.segmentReference.refDetails.refNumber);
             }
           });
-
-          if (segmentTatoo.length > 0) {
-            segmentTatoo.forEach((element) => {
-              if (unticketedSegments.includes(element)) {
-                tstData.push({
-                  tstNumber: x.fareReference.uniqueReference,
-                  segmentNumber: segmentRef,
-                  tatooNumber: segmentTatoo
-                });
-              }
-            });
-          } else {
-            if (unticketedSegments.includes(x.segmentReference.refDetails.refNumber)) {
-              tstData.push({
-                tstNumber: x.fareReference.uniqueReference,
-                segmentNumber: segmentRef,
-                tatooNumber: segmentTatoo
-              });
-            }
-          }
+          tstData.push({
+            tstNumber: x.fareReference.uniqueReference,
+            segmentNumber: segmentRef,
+            tatooNumber: segmentTatoo
+          });
         } else {
-          if (unticketedSegments.find((p) => x.segmentInformation.segmentReference.refDetails.refNumber === p)) {
-            if (!ticketedSegments.includes(x.segmentInformation.segmentReference.refDetails.refNumber)) {
-              tstData.push({
-                tstNumber: x.fareReference.uniqueReference,
-                segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
-                tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
-              });
-            }
-          }
+          tstData.push({
+            tstNumber: x.fareReference.uniqueReference,
+            segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+            tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
+          });
         }
-      });
-    } else {
-      let x: any;
-      x = tstObj;
-
-      if (x.segmentInformation.length > 0) {
-        const segmentRef = [];
-        const segmentTatoo = [];
-        x.segmentInformation.forEach((p) => {
-          if (p.segmentReference !== undefined) {
-            segmentRef.push(this.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
-            segmentTatoo.push(p.segmentReference.refDetails.refNumber);
-          }
-        });
-        tstData.push({
-          tstNumber: x.fareReference.uniqueReference,
-          segmentNumber: segmentRef,
-          tatooNumber: segmentTatoo
-        });
-      } else {
-        tstData.push({
-          tstNumber: x.fareReference.uniqueReference,
-          segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
-          tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
-        });
       }
     }
 

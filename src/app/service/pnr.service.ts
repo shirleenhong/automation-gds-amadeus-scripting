@@ -174,14 +174,11 @@ export class PnrService {
      * @return boolean
      */
     isOBT(): boolean {
-        if (this.isPNRLoaded) {
-            for (const rm of this.pnrObj.rmElements) {
-                if (rm.freeFlowText.indexOf('EB/-') === 0) {
-                    return true;
-                }
-            }
+        if (this.getRemarkText('EB/-') !== '') {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     getFSRemark() {

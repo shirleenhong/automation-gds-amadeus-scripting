@@ -20,8 +20,8 @@ export class FeesRemarkService {
    * @return void
    */
   public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>): void {
-    // Check if CFA Exists in PNR
-    if (this.pnrService.getCFLine()) {
+    // Check if CFA and OBT remarks exists in PNR
+    if (this.pnrService.getCFLine() && this.pnrService.isOBT()) {
 
       const now       = Date.now();
       const startDate = Date.parse(migrationOBTDates[0]);

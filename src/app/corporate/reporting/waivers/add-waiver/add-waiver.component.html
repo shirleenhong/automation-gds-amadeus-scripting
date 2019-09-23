@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <div class="modal-title">{{ title }}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="formGroup">
+    <div class="form-group row">
+      <div class="col-sm-4">Waiver / Favor:</div>
+      <div class="col-sm-8">
+        <select id="waiver" name="waiver" class="form-control" formControlName="waiver">
+          <option *ngFor="let item of waiverList" [value]="item.code">
+            {{ item.code + ' ' + item.amount }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="saveWaiverItem()">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
+</div>

@@ -19,6 +19,8 @@ import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-
 import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
+import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
+import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/tic
     AddSupplementalFeesComponent,
     TicketingComponent,
     AquaTicketingComponent,
-    TicketingLineComponent
+    TicketingLineComponent,
+    WaiversComponent,
+    AddWaiverComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +59,6 @@ import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/tic
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
+  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent, AddWaiverComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

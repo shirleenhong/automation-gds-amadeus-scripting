@@ -1,0 +1,26 @@
+<div [formGroup]="ticketedForm" class="form-group" style="margin-top:10px;padding-left: 10px">
+  <table class="feeTable">
+    <tr>
+      <th width="130px"><div class="segmentTable">Ticketed Segment(s)</div></th>
+      <th width="300px"><div class="segmentTable"></div></th>
+    </tr>
+
+    <tbody formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
+      <tr [formGroupName]="i">
+        <td width="130px" class="segmentTable">
+          <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
+        </td>
+
+        <td width="300px" class="segmentTable">
+          <input type="text" class="form-control" formControlName="waiver" name="waiver" id="waiver" readonly />
+        </td>
+        <td width="200px" class="segmentTable">
+          <div (click)="addWaivers(item)">
+            <i class="fas fa-plus-circle {{ !ticketedSegments.length === 0 ? 'disabled' : '' }}" id="add"></i>
+            Add Waivers / Favors
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

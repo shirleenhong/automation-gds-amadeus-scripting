@@ -160,7 +160,6 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       }
     });
 
-    debugger;
     if (unticketedSegments.length > 0) {
       if (tstObj.length === 0) {
         this.hasAirTst = false;

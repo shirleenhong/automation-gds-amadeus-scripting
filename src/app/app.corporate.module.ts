@@ -21,6 +21,7 @@ import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqu
 import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
 import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
 import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting
     AquaTicketingComponent,
     TicketingLineComponent,
     CorpRemarksComponent,
-    MatrixReportingComponent
+    MatrixReportingComponent,
+    SeatsComponent
   ],
   imports: [
     BrowserModule,

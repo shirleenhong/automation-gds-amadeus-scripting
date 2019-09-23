@@ -11,11 +11,11 @@
   <table class="feeTable">
     <tr>
       <th width="50px"><div class="">Schedule Changed?</div></th>
-      <th><div class="">Ticketed Segment</div></th>
-      <th colspan="2"><div style="text-align: center">Fee</div></th>
-      <th><div class="">Supplemental Fee</div></th>
-      <th><div class=""></div></th>
-      <th><div class="cl">No Fee Code</div></th>
+      <th width="50px"><div class="">Ticketed Segment</div></th>
+      <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
+      <th width="150px"><div class="">Supplemental Fee</div></th>
+      <th width="70px"><div class=""></div></th>
+      <th width="150px"><div class="cl">No Fee Code</div></th>
     </tr>
 
     <tbody formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
@@ -76,8 +76,6 @@
             id="noFeeCode"
             formControlName="noFeeCode"
             name="noFeeCode"
-            [disabled]="item.fee !== '' || item.supplementalFee !== ''"
-            required
             (change)="noFeeChange(item, $event.target.value)"
           >
             <option value=""></option>

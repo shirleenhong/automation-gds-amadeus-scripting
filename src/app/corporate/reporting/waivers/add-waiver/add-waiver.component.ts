@@ -18,12 +18,14 @@ export class AddWaiverComponent implements OnInit {
   waiverList = [];
   cnNumber: string;
   amount: string;
+  showWaiverText: boolean;
 
   constructor(private fb: FormBuilder, public modalRef: BsModalRef, public activeModal: BsModalService, public pnrService: PnrService) {}
   ngOnInit() {
     this.waiverList = this.createWaiverCodeList();
     this.cnNumber = this.pnrService.getRemarkText('CN');
     this.amount = '50';
+    this.showWaiverText = false;
 
     if (this.cnNumber !== undefined) {
       this.cnNumber = this.cnNumber.split('CN/-')[1];
@@ -33,6 +35,16 @@ export class AddWaiverComponent implements OnInit {
       cnNumber: new FormControl(''),
       amount: new FormControl('')
     });
+  }
+
+  setWaiverText(value) {
+    if (value !== '') {
+      if (value === 'AFM' || value === 'AMT' || value === 'HNS') {
+        this.showWaiverText = true;
+      } else {
+        this.showWaiverText = false;
+      }
+    }
   }
 
   createWaiverCodeList() {

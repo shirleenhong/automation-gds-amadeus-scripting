@@ -7,13 +7,17 @@
 <div class="modal-body">
   <form [formGroup]="formGroup">
     <div class="form-group row">
-      <div class="col-sm-4">Waiver / Favor:</div>
+      <div class="col-sm-4">Waivers / Favors:</div>
       <div class="col-sm-8">
-        <select id="waiver" name="waiver" class="form-control" formControlName="waiver">
+        <select id="waiver" name="waiver" class="form-control" formControlName="waiver" (change)="setWaiverText($event.target.value)">
           <option *ngFor="let item of waiverList" [value]="item.code">
             {{ item.code + ' ' + item.amount }}
           </option>
         </select>
+      </div>
+
+      <div class="col-sm-8" *ngIf="showWaiverText">
+        <input type="text" class="form-control" name="waiverText" formControlName="waiverText" id="waiverText" />
       </div>
     </div>
   </form>

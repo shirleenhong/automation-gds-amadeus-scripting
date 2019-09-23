@@ -137,22 +137,30 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     const unticketedSegments = [];
     const tstObj = this.pnrService.tstObj;
     const ticketedSegments = [];
-    this.hasAirTst = false;
 
+    debugger;
     for (const tst of this.pnrService.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
       if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
         if (tst.referenceForDataElement !== undefined) {
-          tst.referenceForDataElement.reference.forEach((ref) => {
-            if (ref.qualifier === 'ST') {
-              ticketedSegments.push(ref.number);
+          if (tst.referenceForDataElement.reference.length > 1) {
+            tst.referenceForDataElement.reference.forEach((ref) => {
+              if (ref.qualifier === 'ST') {
+                ticketedSegments.push(ref.number);
+                this.hasAirSegment = true;
+              }
+            });
+          } else {
+            if (tst.referenceForDataElement.reference.qualifier === 'ST') {
+              ticketedSegments.push(tst.referenceForDataElement.reference.number);
               this.hasAirSegment = true;
             }
-          });
+          }
         }
       }
     }
 
+    debugger;
     allAir.forEach((x) => {
       if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
         unticketedSegments.push(x.tatooNumber);

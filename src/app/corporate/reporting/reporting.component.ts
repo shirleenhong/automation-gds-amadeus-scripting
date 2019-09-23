@@ -3,7 +3,7 @@ import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
 import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketing.component';
-
+import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -13,9 +13,9 @@ export class ReportingComponent implements OnInit {
   @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
   @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;
-
+  @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   hasTst: boolean;
-  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) { }
+  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.hasTst = true;

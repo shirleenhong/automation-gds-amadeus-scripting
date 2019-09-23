@@ -138,7 +138,6 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     const tstObj = this.pnrService.tstObj;
     const ticketedSegments = [];
 
-    debugger;
     for (const tst of this.pnrService.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
       if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
@@ -160,7 +159,6 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       }
     }
 
-    debugger;
     allAir.forEach((x) => {
       if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
         unticketedSegments.push(x.tatooNumber);

@@ -19,6 +19,8 @@ export class AddWaiverComponent implements OnInit {
   cnNumber: string;
   amount: string;
   showWaiverText: boolean;
+  lblWaiver: string;
+  waiverText: FormControl;
 
   constructor(private fb: FormBuilder, public modalRef: BsModalRef, public activeModal: BsModalService, public pnrService: PnrService) {}
   ngOnInit() {
@@ -33,7 +35,8 @@ export class AddWaiverComponent implements OnInit {
     this.formGroup = this.fb.group({
       waiver: new FormControl(''),
       cnNumber: new FormControl(''),
-      amount: new FormControl('')
+      amount: new FormControl(''),
+      waiverText: new FormControl('')
     });
   }
 
@@ -41,6 +44,15 @@ export class AddWaiverComponent implements OnInit {
     if (value !== '') {
       if (value === 'AFM' || value === 'AMT' || value === 'HNS') {
         this.showWaiverText = true;
+        if (value === 'AFM') {
+          this.lblWaiver = 'Fare Match:';
+        }
+        if (value === 'AMT') {
+          this.lblWaiver = 'Client Missed Ticketing / Waive Advance Purch / Waive Penalty:';
+        }
+        if (value === 'HNS') {
+          this.lblWaiver = 'Waived No-Show Charge:';
+        }
       } else {
         this.showWaiverText = false;
       }
@@ -66,11 +78,13 @@ export class AddWaiverComponent implements OnInit {
   saveWaiverItem() {
     let currentString: string;
     currentString = this.waiverControl.value;
-
+    debugger;
     if (currentString !== '') {
-      this.waiverControl.setValue(currentString + '/' + this.formGroup.controls.waiver.value + this.cnNumber + this.amount);
+      this.waiverControl.setValue(
+        currentString + '/' + this.formGroup.controls.waiver.value + this.cnNumber + this.formGroup.controls.waiverText.value
+      );
     } else {
-      this.waiverControl.setValue(this.formGroup.controls.waiver.value + this.cnNumber + this.amount);
+      this.waiverControl.setValue(this.formGroup.controls.waiver.value + this.cnNumber + this.formGroup.controls.waiverText.value);
     }
     this.modalRef.hide();
   }

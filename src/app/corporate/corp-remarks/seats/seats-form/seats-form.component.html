@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <div class="modal-title">{{ title }}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <p>
+    Seats Form Component works!
+  </p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="save()">
+    Save
+  </button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">
+    Close
+  </button>
+</div>

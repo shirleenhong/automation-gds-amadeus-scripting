@@ -22,6 +22,7 @@ import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/tic
 import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
 import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
+import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/seats-form.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
     TicketingLineComponent,
     CorpRemarksComponent,
     MatrixReportingComponent,
-    SeatsComponent
+    SeatsComponent,
+    SeatsFormComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +63,10 @@ import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
+  entryComponents: [
+    UpdateAccountingRemarkComponent,
+    AddSupplementalFeesComponent,
+    SeatsFormComponent
+  ]
 })
 export class AppCorporateModule {}

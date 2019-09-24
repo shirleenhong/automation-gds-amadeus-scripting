@@ -1,6 +1,7 @@
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
-import { SeatsService } from 'src/app/service/corporate/seats.service';
+import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
 
 @Component({
   selector: 'app-seats',
@@ -10,15 +11,22 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
 export class SeatsComponent implements OnInit {
 
   seats: Array<SeatModel>;
-  remarkOptions: Array<string>;
 
-  constructor(private seatsService: SeatsService) { }
+  modalRef: BsModalRef;
+
+  constructor(private modalService: BsModalService) { }
 
   ngOnInit() {
-    this.remarkOptions = this.seatsService.REMARK_OPTIONS;
+    this.seats = this.getSeats();
+  }
 
+  /**
+   * Get the seats.
+   * @return Array<SeatModel>
+   */
+  public getSeats(): Array<SeatModel> {
     // Dummy seats
-    this.seats = [
+    return this.seats = [
       {
         seatNumber: '1',
         text: 'SAMPLE TEXT 1',
@@ -42,7 +50,12 @@ export class SeatsComponent implements OnInit {
    * @return void
    */
   public create(): void {
-    //
+    const seat = new SeatModel();
+    // seat.tkMacLine = this.seats.length + 1;
+
+    this.modalRef = this.modalService.show(SeatsFormComponent, { backdrop: 'static' });
+    this.modalRef.content.title = 'Add Seat Remark';
+    this.modalRef.content.seat = seat;
   }
 
   /**

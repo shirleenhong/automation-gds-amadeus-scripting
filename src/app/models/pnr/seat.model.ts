@@ -14,4 +14,9 @@ export class SeatModel {
      * The type of the seat. The types are window, aisle and middle.
      */
     type: string;
+
+    /**
+     * The segment identification associated to the seat.
+     */
+    segmentId: string;
 }

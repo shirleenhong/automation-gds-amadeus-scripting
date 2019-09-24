@@ -16,6 +16,7 @@ export class SeatsFormComponent implements OnInit {
   seat: SeatModel;
   remarkOptions: Array<string>;
   types: Array<string>;
+  segments: Array<any>;
 
   seatsFormGroup: FormGroup;
 
@@ -28,6 +29,7 @@ export class SeatsFormComponent implements OnInit {
     this.seat          = new SeatModel();
     this.remarkOptions = SeatsService.REMARK_OPTIONS;
     this.types         = SeatsService.TYPES;
+    this.segments      = this.getSegments();
 
     this.seatsFormGroup = new FormGroup({
       type: new FormControl(),
@@ -40,4 +42,23 @@ export class SeatsFormComponent implements OnInit {
     this.modalRef.hide();
   }
 
+  /**
+   * Get the segments.
+   */
+  public getSegments(): Array<any> {
+    return [
+      {
+        id: '1',
+        name: 'Segment 1'
+      },
+      {
+        id: '2',
+        name: 'Segment 2'
+      },
+      {
+        id: '3',
+        name: 'Segment 3'
+      }
+    ];
+  }
 }

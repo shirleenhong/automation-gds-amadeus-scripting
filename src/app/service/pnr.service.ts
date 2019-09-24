@@ -140,6 +140,18 @@ export class PnrService {
         return '';
     }
 
+    getFIElementText(searchText: string) {
+        debugger;
+        if (this.isPNRLoaded) {
+            for (const fi of this.pnrObj.fiElements) {
+                if (fi.fullNode.otherDataFreetext.indexOf(searchText) === 0) {
+                    return fi.fullNode.otherDataFreetext;
+                }
+            }
+        }
+        return '';
+    }
+
     getItineraryLanguage(): string {
         if (this.isPNRLoaded) {
             for (const rm of this.pnrObj.rmElements) {

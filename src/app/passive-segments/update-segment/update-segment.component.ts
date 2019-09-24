@@ -392,7 +392,7 @@ export class UpdateSegmentComponent implements OnInit {
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;
-        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('FERRY');
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('SEA');
         break;
 
       case 'INS':
@@ -463,7 +463,7 @@ export class UpdateSegmentComponent implements OnInit {
         }
         this.setForm(forms);
         this.selectedTmpl = this.limoTmpl;
-        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('LIMO');
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('CAR');
         break;
       case 'CAR':
         this.lbldepartureDate = 'Pickup Date';
@@ -592,7 +592,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() { }
+  pickUpLocChange() {}
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;

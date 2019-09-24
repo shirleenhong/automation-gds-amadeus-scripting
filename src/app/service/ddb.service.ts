@@ -231,29 +231,30 @@ export class DDBService implements OnInit {
     return await this.getRequest(common.airTravelportsService);
   }
 
-  async loadSupplierCodesFromPowerBase() {
-    await this.getRequest(common.supplierCodes).then(
-      (x) => {
-        this.supplierCodes = [];
-        x.SupplierList.forEach((s) => {
-          const supplier = {
-            type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
-            supplierCode: s.SupplierCode,
-            supplierName: s.SupplierName
-          };
-          this.supplierCodes.push(supplier);
-        });
-      },
-      (err) => {
-        console.log(JSON.stringify(err));
-      }
-    );
-  }
+  // async loadSupplierCodesFromPowerBase() {
+  //   await this.getRequest(common.supplierCodes).then(
+  //     (x) => {
+  //       this.supplierCodes = [];
+  //       x.SupplierList.forEach((s) => {
+  //         const supplier = {
+  //           type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
+  //           supplierCode: s.SupplierCode,
+  //           supplierName: s.SupplierName
+  //         };
+  //         this.supplierCodes.push(supplier);
+  //       });
+  //     },
+  //     (err) => {
+  //       console.log(JSON.stringify(err));
+  //     }
+  //   );
+  // }
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
       this.getAllMatrixSupplierCodes();
     }
+
     if (this.supplierCodes.length > 0 && type !== undefined) {
       return this.supplierCodes.filter(
         (x) => x.type.toUpperCase() === type.toUpperCase() || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase()

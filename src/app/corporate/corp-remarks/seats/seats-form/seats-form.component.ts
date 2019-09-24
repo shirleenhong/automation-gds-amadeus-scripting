@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { FormGroup, FormControl } from '@angular/forms';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsService } from 'src/app/service/corporate/seats.service';
 
@@ -14,18 +15,26 @@ export class SeatsFormComponent implements OnInit {
 
   seat: SeatModel;
   remarkOptions: Array<string>;
+  types: Array<string>;
+
+  seatsFormGroup: FormGroup;
 
   constructor(
     public activeModal: BsModalService,
-    public modalRef: BsModalRef,
-    private seatsService: SeatsService,
+    public modalRef: BsModalRef
   ) { }
 
   ngOnInit() {
-    this.seat = new SeatModel();
-    this.remarkOptions = this.seatsService.REMARK_OPTIONS;
-  }
+    this.seat          = new SeatModel();
+    this.remarkOptions = SeatsService.REMARK_OPTIONS;
+    this.types         = SeatsService.TYPES;
 
+    this.seatsFormGroup = new FormGroup({
+      type: new FormControl(),
+      number: new FormControl(),
+      text: new FormControl(),
+    });
+  }
 
   save(): void {
     this.modalRef.hide();

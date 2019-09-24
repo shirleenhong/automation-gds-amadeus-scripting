@@ -3,7 +3,7 @@ export class SeatModel {
     /**
      * The alpha-numeric seat number of the seat.
      */
-    seatNumber: string;
+    number: string;
 
     /**
      * The remark option to be written to the PNR.

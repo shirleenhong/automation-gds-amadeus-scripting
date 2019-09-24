@@ -28,17 +28,17 @@ export class SeatsComponent implements OnInit {
     // Dummy seats
     return this.seats = [
       {
-        seatNumber: '1',
+        number: '1',
         text: 'SAMPLE TEXT 1',
         type: 'window',
       },
       {
-        seatNumber: '2',
+        number: '2',
         text: 'SAMPLE TEXT 2',
         type: 'aisle',
       },
       {
-        seatNumber: '3',
+        number: '3',
         text: 'SAMPLE TEXT 3',
         type: 'middle',
       },
@@ -53,7 +53,7 @@ export class SeatsComponent implements OnInit {
     const seat = new SeatModel();
     // seat.tkMacLine = this.seats.length + 1;
 
-    this.modalRef = this.modalService.show(SeatsFormComponent, { backdrop: 'static' });
+    this.modalRef = this.modalService.show(SeatsFormComponent);
     this.modalRef.content.title = 'Add Seat Remark';
     this.modalRef.content.seat = seat;
   }

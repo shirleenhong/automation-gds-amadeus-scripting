@@ -61,7 +61,8 @@
       *ngIf="
         (!hasAirTst && !hasAirSegment && !isHotelPNR && isLimoPNR && isCarPNR) ||
         (!hasAirTst && !hasAirSegment && !isHotelPNR && !isLimoPNR && !isCarPNR) ||
-        (hasAirSegment && !hasAirTst && (isCarPNR || isHotelPNR || isLimoPNR))
+        (hasAirSegment && !hasAirTst && (isCarPNR || isHotelPNR || isLimoPNR)) ||
+        (!hasAirTst && hasAirSegment && !isHotelPNR && !isLimoPNR && !isCarPNR)
       "
       class="row"
     >

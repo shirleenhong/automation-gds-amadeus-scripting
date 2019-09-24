@@ -140,6 +140,17 @@ export class PnrService {
         return '';
     }
 
+    getFIElementText(searchText: string) {        
+        if (this.isPNRLoaded) {
+            for (const fi of this.pnrObj.fiElements) {
+                if (fi.fullNode.otherDataFreetext.indexOf(searchText) === 0) {
+                    return fi.fullNode.otherDataFreetext;
+                }
+            }
+        }
+        return '';
+    }
+
     getItineraryLanguage(): string {
         if (this.isPNRLoaded) {
             for (const rm of this.pnrObj.rmElements) {
@@ -166,6 +177,18 @@ export class PnrService {
             }
         } else {
             return this.cfLine;
+        }
+    }
+
+    /**
+     * Check if PNR has OBT remark.
+     * @return boolean
+     */
+    isOBT(): boolean {
+        if (this.getRemarkText('EB/-') !== '') {
+            return true;
+        } else {
+            return false;
         }
     }
 

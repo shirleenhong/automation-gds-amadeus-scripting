@@ -33,7 +33,7 @@ Select Reason Code
 Add Client Reporting Values For Single BSP Segment
     Navigate To Page Reporting
     Click Element    ${tab_bsp} 
-    Wait Until Page Contains Element    ${checkbox_clientReporting}     
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30     
     Select Client Reporting Fields To Be Written    1
     ${actual_full_fare}    Get Value    ${input_full_fare}   
     ${actual_low_fare}    Get Value   ${input_low_fare}
@@ -76,6 +76,12 @@ Verify That Client Reporting Remarks Are Written In The PNR For Single TST
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-A/S2
+    Switch To Command Page
+    
+Verify Aqua Compliance Tracker Is Written In The PNR
+    Get Record Locator Value
+    Verify Specific Remark Is Written In The PNR    RM *U70/-${actual_record_locator}
+    Switch To Command Page
    
 Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Finish PNR
@@ -88,6 +94,7 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Verify Specific Remark Is Written In The PNR    RM *FF/-790.00/S5
     Verify Specific Remark Is Written In The PNR    RM *LP/-678.00/S5
     Verify Specific Remark Is Written In The PNR    RM *FS/-5/S5
+    Switch To Command Page
 
 Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segments And Multiple TSTs
     Finish PNR
@@ -97,6 +104,7 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segment
     Verify Specific Remark Is Written In The PNR    RM *FF/-15123.50/S2,4
     Verify Specific Remark Is Written In The PNR    RM *LP/-123.00/S2,4
     Verify Specific Remark Is Written In The PNR    RM *FS/-K/S2,4
+    Switch To Command Page
 
 Verify Client Reporting Fields For Exchange PNR
     Navigate To Page Reporting 

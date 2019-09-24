@@ -31,7 +31,7 @@ ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
 ${button_cryptic}    css=.showInCommandPage
 ${button_graphical}    css=.showInGraphicMode
-${close_cryptic_display}    css=#elgen-19
+${close_cryptic_display}    css=#e4retrievePNR_cdPopup_id > .ydlg-close
 ${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
 ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading'] 
 ${text_record_locator}     //div[contains(text(), 'Record Locator')]
@@ -128,14 +128,14 @@ Get PNR Details
     Sleep    2
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
-    Wait Until Element Is Not Visible    ${overlay_loader}    10
+    Wait Until Element Is Not Visible    ${overlay_loader}    20
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
     [Teardown]    Take Screenshot
 
 Switch To Command Page
-    Click Element    ${close_cryptic_display}
+    Close Cryptic Display
     Wait Until Page Contains Element    ${button_cryptic}    60
     Click Element    ${button_cryptic}
     Wait Until Element Is Visible    ${input_commandText}    60
@@ -143,7 +143,7 @@ Switch To Command Page
     [Teardown]    Take Screenshot
 
 Close Cryptic Display
-    Click Element    ${close_cryptic_display}
+    Click Element   ${close_cryptic_display}
     Set Test Variable    ${current_page}    Amadeus
     
 Open Command Page
@@ -221,7 +221,10 @@ Create Multiple TKT Exchange PNR In The GDS
     Sleep   4
 
 Move Single Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    
+Move Single Passenger For OBT
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
 
 Move Multiple Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
@@ -369,8 +372,7 @@ Add ${number_of_segments} Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    ${next_date}    Add Time To Date    ${test_date_${i}}    1 day    
-    \    Move Profile to GDS    HU1AHK1STR${test_date_${i}}-${next_date}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+    \    Move Profile to GDS    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
     
 Add ${number_of_segments} Limo Segments
     Create ${number_of_segments} Test Dates
@@ -382,4 +384,10 @@ Add ${number_of_segments} Car Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       
+    \    Move Profile to GDS    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1          
+    
+Add ${number_of_segments} Rail Segments
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800OSL/ED-${test_date_${i}}/ET-0800/CF-12345

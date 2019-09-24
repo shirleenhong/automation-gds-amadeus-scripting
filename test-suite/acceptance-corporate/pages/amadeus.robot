@@ -31,7 +31,7 @@ ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
 ${button_cryptic}    css=.showInCommandPage
 ${button_graphical}    css=.showInGraphicMode
-${close_cryptic_display}    css=#elgen-19
+${close_cryptic_display}    css=#e4retrievePNR_cdPopup_id > .ydlg-close
 ${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
 ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading'] 
 ${text_record_locator}     //div[contains(text(), 'Record Locator')]
@@ -128,14 +128,14 @@ Get PNR Details
     Sleep    2
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
-    Wait Until Element Is Not Visible    ${overlay_loader}    10
+    Wait Until Element Is Not Visible    ${overlay_loader}    20
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
     [Teardown]    Take Screenshot
 
 Switch To Command Page
-    Click Element    ${close_cryptic_display}
+    Close Cryptic Display
     Wait Until Page Contains Element    ${button_cryptic}    60
     Click Element    ${button_cryptic}
     Wait Until Element Is Visible    ${input_commandText}    60
@@ -143,7 +143,7 @@ Switch To Command Page
     [Teardown]    Take Screenshot
 
 Close Cryptic Display
-    Click Element    ${close_cryptic_display}
+    Click Element   ${close_cryptic_display}
     Set Test Variable    ${current_page}    Amadeus
     
 Open Command Page

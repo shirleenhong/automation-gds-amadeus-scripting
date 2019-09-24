@@ -26,14 +26,14 @@ Add Canada Domestic Segment And Store Multiple Fare
     \    Press Key    ${input_commandText}    \\13
 
 Add Transborder Segment And Store Multiple Fare
-    @{gds_commands}    Create List    AN10JANORDYYC/AAC    SS1Y1    FXP/S2    AN15JANYYCORD/AAC    SS1Y1    FXP/S3
+    @{gds_commands}    Create List    AN20JANORDYYC/AAC    SS1Y1    FXP/S2    AN25JANYYCORD/AAC    SS1Y1    FXP/S3
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
     
 Add International Segment And Store Single Fare
-    @{gds_commands}    Create List    AN10JANCDGLHR/AAF    SS1Y1    AN15JANLHRCDG/AAF    SS1Y1    FXP
+    @{gds_commands}    Create List    AN10JANYULCDG/AAF    SS1Y1    AN15JANCDGYUL/AAF    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
@@ -147,7 +147,8 @@ Select Supplemental Fee For First Ticket
     Select Checkbox    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}  
     Take Screenshot  
     Click Button    ${button_save_fee} 
-    Wait Until Element Is Enabled    ${checkbox_schedule_change}    30        
+    Wait Until Element Is Enabled    ${checkbox_schedule_change}    30 
+    Click Element At Coordinates    ${input_feeCode}    0    0       
 
 Click Add Fee Button ${add_fee_index}
     Wait Until Element Is Visible    ${tab_supplemental_fees}[${add_fee_index}]${div_addFee_button}    30

@@ -17,6 +17,7 @@ ${list_segments}    //ul[@id='dropdown-basic']
 ${input_unticketedTst}    //input[@formcontrolname='tst']
 ${input_nonAirSegments}    //input[@formcontrolname='segment']
 ${tab_tktInstruction}    //tab[@id='ticketingInstruction']
+${text_noSegments}    //b[contains(text(), '*No Segments Available for Ticketing*')]
 
 *** Keywords ***
 Click Ticketing Instructions Tab
@@ -163,7 +164,8 @@ Verify Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segme
 
 Verify Message No Unticketed Air Segment Is Displayed
     Navigate To Page Ticketing Instructions
-    Run Keyword And Continue On Failure    Page Should Contain    *No Segments Available for Ticketing*
+    Run Keyword And Continue On Failure    Page Should Contain Element    ${text_noSegments}
+    #Run Keyword And Continue On Failure    Set Focus To Element    ${tab_tktInstruction}
 
 Verify Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment ${segment_number} Only
     Finish PNR

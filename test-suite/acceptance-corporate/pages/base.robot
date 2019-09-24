@@ -112,7 +112,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Reporting" and "${destination_page}" != "Reporting"   Navigate From Reporting    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Ticketing" and "${destination_page}" != "Ticketing"    Navigate From Ticketing    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
@@ -131,9 +131,9 @@ Navigate From Full Wrap
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
     ...    ELSE IF    "${destination_page}" == "Reporting"     Click Reporting Panel
-    ...    ELSE IF    "${destination_page}" == "Ticketing"     Click Ticketing Panel
+    ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
-    ...    ELSE   Click Back To Main Menu
+    ...    ELSE   Click Back To Main Menu 
 
 Navigate From Payment
     [Arguments]    ${destination_page}
@@ -147,6 +147,7 @@ Navigate From Reporting
 Navigate From Ticketing
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
+    ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab 
 
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
@@ -156,7 +157,8 @@ Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing"    Click Submit To PNR    ${close_corporate_test}    
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    
+    ...    Click Submit To PNR    ${close_corporate_test}
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60

@@ -19,6 +19,7 @@ import { AmadeusRemarkService } from '../service/remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
+import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 
 @Component({
   selector: 'app-corporate',
@@ -33,11 +34,13 @@ export class CorporateComponent implements OnInit {
   workflow = '';
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
+  migrationOBTDates: Array<string>;
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
+  @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @Input() overrideValue: any;
 
   constructor(
@@ -141,6 +144,9 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+        await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
+          this.migrationOBTDates = dates;
+        });
       } catch (e) {
         console.log(e);
       }
@@ -188,6 +194,9 @@ export class CorporateComponent implements OnInit {
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
+    this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
+
+    this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);

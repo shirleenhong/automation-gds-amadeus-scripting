@@ -1307,11 +1307,13 @@ export class PnrService {
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
             if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-                tst.referenceForDataElement.reference.forEach((ref) => {
-                    if (ref.qualifier === 'ST') {
-                        segments.push(ref.number);
-                    }
-                });
+               if (tst.referenceForDataElement) {
+                    tst.referenceForDataElement.reference.forEach((ref) => {
+                        if (ref.qualifier === 'ST') {
+                            segments.push(ref.number);
+                        }
+                    });
+                }
             }
         }
 

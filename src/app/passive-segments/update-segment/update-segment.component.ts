@@ -152,7 +152,8 @@ export class UpdateSegmentComponent implements OnInit {
     address: new FormControl('', [Validators.required]),
     province: new FormControl(''),
     zipCode: new FormControl(''),
-    country: new FormControl('', [Validators.required])
+    country: new FormControl('', [Validators.required]),
+    insuranceType: new FormControl('', [Validators.required])
   });
 
   constructor(
@@ -258,8 +259,7 @@ export class UpdateSegmentComponent implements OnInit {
         itemText: 'Stateroom with Balcony',
         itemValue: 'STATEROOM WITH BALCONY'
       },
-      { itemText: 'Suite', itemValue: 'SUITE' },
-      { itemText: 'Other', itemValue: 'OTHER' }
+      { itemText: 'Suite', itemValue: 'SUITE' }
     ];
   }
 
@@ -399,7 +399,7 @@ export class UpdateSegmentComponent implements OnInit {
         this.lbldepartureCity = 'Departure City';
         this.lblarrivalDate = 'Return Date';
         this.lblnoPeople = 'Number of Passengers';
-        forms = ['segmentType', 'policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople'];
+        forms = ['segmentType', 'policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople', 'insuranceType'];
         this.setForm(forms);
         this.selectedTmpl = this.insuranceTmpl;
         break;

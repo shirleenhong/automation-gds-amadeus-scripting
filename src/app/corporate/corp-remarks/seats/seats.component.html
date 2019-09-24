@@ -2,8 +2,8 @@
   <thead class="thead-light">
     <tr>
       <th>#</th>
-      <th>Type</th>
       <th>Seat Number</th>
+      <th>Type</th>
       <th>Text</th>
       <th></th>
     </tr>
@@ -11,8 +11,8 @@
   <tbody>
     <tr *ngFor="let seat of seats; let i = index">
       <td>{{ i + 1 }}</td>
-      <td>{{ seat.type | uppercase }}</td>
       <td>{{ seat.seatNumber }}</td>
+      <td>{{ seat.type | uppercase }}</td>
       <td>{{ seat.text }}</td>
       <td>
         <i class="fa fa-trash-alt" (click)="delete(seat)"></i>

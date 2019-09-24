@@ -25,8 +25,8 @@ export class SeatsComponent implements OnInit {
         type: 'window',
       },
       {
-        seatNumber: '1',
-        text: 'SAMPLE TEXT 3',
+        seatNumber: '2',
+        text: 'SAMPLE TEXT 2',
         type: 'aisle',
       },
       {

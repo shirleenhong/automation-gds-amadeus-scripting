@@ -28,19 +28,19 @@ export class SeatsComponent implements OnInit {
     // Dummy seats
     return this.seats = [
       {
-        number: '1',
+        number: '100',
         text: 'SAMPLE TEXT 1',
         type: 'window',
         segmentId: '1'
       },
       {
-        number: '2',
+        number: '200',
         text: 'SAMPLE TEXT 2',
         type: 'aisle',
         segmentId: '2'
       },
       {
-        number: '3',
+        number: '300',
         text: 'SAMPLE TEXT 3',
         type: 'middle',
         segmentId: '3'

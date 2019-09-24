@@ -24,8 +24,8 @@ export class ConciergeUdidsComponent implements OnInit {
   constructor(private pnrService: PnrService) {
     this.conciergeForm = new FormGroup({
       redemptionAdded: new FormControl('', []),
-      reservationReq: new FormControl('', []),
-      bookingType: new FormControl('', []),
+      reservationReq: new FormControl('', [Validators.required]),
+      bookingType: new FormControl('', [Validators.required]),
       chCallerName: new FormControl('', []),
       delegateName: new FormControl('', []),
       hotelName: new FormControl('', [Validators.required]),

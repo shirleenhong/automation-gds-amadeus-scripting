@@ -6,6 +6,7 @@ import { MessageComponent } from '../shared/message/message.component';
 import { PaymentsComponent } from './payments/payments.component';
 import { ReportingComponent } from '../corporate/reporting/reporting.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
+
 import { PnrService } from '../service/pnr.service';
 import { DDBService } from '../service/ddb.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
@@ -41,6 +42,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
+
   @Input() overrideValue: any;
 
   constructor(
@@ -203,6 +205,7 @@ export class CorporateComponent implements OnInit {
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+    this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
 
     this.invoiceRemarkService.sendU70Remarks();
 

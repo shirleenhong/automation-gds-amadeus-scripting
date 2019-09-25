@@ -9,10 +9,28 @@
 
   <form [formGroup]="seatsFormGroup" (ngSubmit)="save()">
 
+    <!-- Debugger -->
+    <!-- <p>
+      Status: {{ seatsFormGroup.status }}
+    </p>
+    <p>
+      Value: {{ seatsFormGroup.value | json }}
+    </p>
+    <p>
+      Type: {{ seatsFormGroup.controls.type.value }}
+    </p>
+    <p>
+      remarkOptions: {{ remarkOptions | json }}
+    </p>
+    <p>
+      remarkOption: {{ remarkOptions.indexOf(seatsFormGroup.controls.text.value) + 1 }}
+    </p> -->
+
     <div class="form-group row">
       <div class="col-sm-4">Text</div>
       <div class="col-sm-8">
         <select class="form-control" formControlName="text">
+          <option></option>
           <option *ngFor="let remarkOption of remarkOptions" [value]="remarkOption">
             {{ remarkOption }}
           </option>
@@ -20,10 +38,14 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row"
+      *ngIf="remarkOptions.indexOf(seatsFormGroup.controls.text.value) + 1 == 2 ||
+      remarkOptions.indexOf(seatsFormGroup.controls.text.value) + 1 == 5"
+    >
       <div class="col-sm-4">Type</div>
       <div class="col-sm-8">
         <select class="form-control" formControlName="type">
+          <option></option>
           <option *ngFor="let type of types">
             {{ type | uppercase }}
           </option>
@@ -31,21 +53,18 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row" *ngIf="remarkOptions.indexOf(seatsFormGroup.controls.text.value) + 1 == 5">
       <div class="col-sm-4">Number</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" formControlName="number">
       </div>
     </div>
 
-    <div class="form-group row">
-      <div class="col-sm-4">Segment</div>
+    <div class="form-group  row">
+      <div class="col-sm-4">Itinerary Segments:</div>
       <div class="col-sm-8">
-        <select class="form-control" formControlName="segmentId">
-          <option *ngFor="let segment of segments" [value]="segment.id">
-            {{ segment.id }} - {{ segment.name }}
-          </option>
-        </select>
+        <app-segment-select formControlName="segmentId" [(ngModel)]="seat.segmentId" name="segmentId"
+          id="segmentId" #segmentApp></app-segment-select>
       </div>
     </div>
 
@@ -54,7 +73,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" class="btn btn-outline-dark" [disabled]="seatsFormGroup.invalid">
+  <button type="submit" class="btn btn-outline-dark" [disabled]="!seatsFormGroup.valid">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">

@@ -41,13 +41,16 @@ export class SeatsFormComponent implements OnInit {
       text: new FormControl('', [ Validators.required ]),
       type: new FormControl({ value: '', disabled: true }, [ Validators.required ]),
       number: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(this.REGEX_ALPHANUMERIC) ]),
-      segmentId: new FormControl('', [ Validators.required ]),
+      segmentId: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
     });
 
     this.onChanges();
   }
 
   save(): void {
+    // TODO: Use EventEmitter with form value
+    console.warn(this.seatsFormGroup.value);
+
     this.modalRef.hide();
   }
 

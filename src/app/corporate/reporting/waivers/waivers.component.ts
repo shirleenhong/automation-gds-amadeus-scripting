@@ -28,18 +28,33 @@ export class WaiversComponent implements OnInit {
       segments: this.fb.array([])
     });
 
-    this.ticketedSegments = await this.pnrService.getTicketedSegments();
+    this.ticketedSegments = await this.pnrService.getTstSegments();
     for (const segment of this.ticketedSegments) {
       const group = this.createFormGroup(segment);
       (this.ticketedForm.get('segments') as FormArray).push(group);
     }
   }
 
+  getWaiverValue(segmentNo): string {
+    let val: string;
+
+    for (const element of this.pnrService.pnrObj.rmElements) {
+      if (element.freeFlowText.includes('U63')) {
+        const tatoo = this.pnrService.getTatooNumberFromSegmentNumber(segmentNo);
+        if (tatoo.includes(element.fullNode.referenceForDataElement.reference.number)) {
+          val = element.freeFlowText.split('U63/-')[1];
+          return val;
+        }
+      }
+    }
+  }
+
   async loadData(): Promise<void> {}
   createFormGroup(segmentNo) {
+    const val = this.getWaiverValue(segmentNo);
     return this.fb.group({
       segment: new FormControl(segmentNo),
-      waiver: new FormControl('')
+      waiver: new FormControl(val)
     });
   }
 
@@ -61,12 +76,55 @@ export class WaiversComponent implements OnInit {
     }
   }
 
+  check(item): boolean {
+    const waiver = item.controls.waiver.value;
+    if (waiver !== null) {
+      if (waiver.split('/').length === 3) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  checkRemove(item): boolean {
+    const waiver = item.controls.waiver.value;
+    if (waiver === null || waiver === '') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  removeWaivers(item) {
+    const waiver = item.controls.waiver.value;
+    const arr = waiver.split('/');
+    const len = arr.length;
+
+    if (len === 3) {
+      item.controls.waiver.setValue(arr[0] + '/' + arr[1]);
+    } else if (len === 2) {
+      item.controls.waiver.setValue(arr[0]);
+    } else {
+      item.controls.waiver.setValue('');
+    }
+  }
+
   addWaivers(group) {
     const waiver = group.get('waiver');
     if (waiver !== undefined) {
-      const val = waiver.value.toString();
-      if (val.split('/').length === 3) {
-        alert('Max number of waivers that can be added is 3');
+      const val = waiver.value;
+      if (val !== null) {
+        if (val.split('/').length === 3) {
+        } else {
+          this.modalRef = this.modalService.show(AddWaiverComponent, {
+            backdrop: 'static'
+          });
+          this.modalRef.content.title = 'Add Waiver / Favor';
+          this.modalRef.content.setWaiverItem(group.get('waiver'));
+        }
       } else {
         this.modalRef = this.modalService.show(AddWaiverComponent, {
           backdrop: 'static'

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { AmountPipe } from 'src/app/pipes/amount.pipe';
 import { PnrService } from 'src/app/service/pnr.service';
@@ -36,7 +36,7 @@ export class AddWaiverComponent implements OnInit {
       waiver: new FormControl(''),
       cnNumber: new FormControl(''),
       amount: new FormControl(''),
-      waiverText: new FormControl('')
+      waiverText: new FormControl('', [Validators.maxLength(4), Validators.pattern('[0-9]{4}')])
     });
   }
 
@@ -61,13 +61,13 @@ export class AddWaiverComponent implements OnInit {
 
   createWaiverCodeList() {
     return [
-      { code: 'AFM', cnNumber: this.cnNumber, amount: '50' }, // this.amountText.value },
-      { code: 'AMT', cnNumber: this.cnNumber, amount: '50' }, // this.amountText.value },
-      { code: 'ANC', cnNumber: this.cnNumber, amount: '50' },
-      { code: 'ASC', cnNumber: this.cnNumber, amount: '50' },
-      { code: 'CSR', cnNumber: this.cnNumber, amount: '50' },
-      { code: 'HSR', cnNumber: this.cnNumber, amount: '50' },
-      { code: 'HNS', cnNumber: this.cnNumber, amount: '50' } // this.amountText.value },
+      { display: 'AFM - Fair Match', code: 'AFM', cnNumber: this.cnNumber, amount: '' }, // this.amountText.value },
+      { display: 'AMT - Client Missed Ticketing', code: 'AMT', cnNumber: this.cnNumber, amount: '' }, // this.amountText.value },
+      { display: 'ANC/50 - Name Change', code: 'ANC', cnNumber: this.cnNumber, amount: '50' },
+      { display: 'ASC/50 - Seat / Waitlist Change', code: 'ASC', cnNumber: this.cnNumber, amount: '50' },
+      { display: 'CSR/50 - Car Certificate Usage ', code: 'CSR', cnNumber: this.cnNumber, amount: '50' },
+      { display: 'HSR/50 - Hotel Certificate Usage', code: 'HSR', cnNumber: this.cnNumber, amount: '50' },
+      { display: 'HNS - Waived No Show Charge', code: 'HNS', cnNumber: this.cnNumber, amount: '' } // this.amountText.value },
     ];
   }
 
@@ -78,13 +78,45 @@ export class AddWaiverComponent implements OnInit {
   saveWaiverItem() {
     let currentString: string;
     currentString = this.waiverControl.value;
-    debugger;
-    if (currentString !== '') {
-      this.waiverControl.setValue(
-        currentString + '/' + this.formGroup.controls.waiver.value + this.cnNumber + this.formGroup.controls.waiverText.value
-      );
+    if (currentString !== null && currentString !== '') {
+      switch (this.formGroup.controls.waiver.value) {
+        case 'ANC':
+        case 'ASC':
+        case 'CSR':
+        case 'HSR': {
+          if (!this.formGroup.controls.waiver.value !== null) {
+            this.waiverControl.setValue(currentString + '/' + this.formGroup.controls.waiver.value + this.cnNumber + '50');
+          }
+
+          break;
+        }
+        default: {
+          if (!this.formGroup.controls.waiver.value !== null && this.formGroup.controls.waiverText.value !== '') {
+            this.waiverControl.setValue(
+              currentString + '/' + this.formGroup.controls.waiver.value + this.cnNumber + this.formGroup.controls.waiverText.value
+            );
+          }
+          break;
+        }
+      }
     } else {
-      this.waiverControl.setValue(this.formGroup.controls.waiver.value + this.cnNumber + this.formGroup.controls.waiverText.value);
+      switch (this.formGroup.controls.waiver.value) {
+        case 'ANC':
+        case 'ASC':
+        case 'CSR':
+        case 'HSR': {
+          if (!this.formGroup.controls.waiver.value !== null) {
+            this.waiverControl.setValue(this.formGroup.controls.waiver.value + this.cnNumber + '50');
+          }
+          break;
+        }
+        default: {
+          if (!this.formGroup.controls.waiver.value !== null && this.formGroup.controls.waiverText.value !== '') {
+            this.waiverControl.setValue(this.formGroup.controls.waiver.value + this.cnNumber + this.formGroup.controls.waiverText.value);
+          }
+          break;
+        }
+      }
     }
     this.modalRef.hide();
   }

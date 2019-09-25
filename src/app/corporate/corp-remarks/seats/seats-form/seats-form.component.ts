@@ -11,20 +11,20 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
 })
 export class SeatsFormComponent implements OnInit {
 
-  @Input()
-
   REGEX_ALPHANUMERIC = '\w';
 
+  @Input()
   seat: SeatModel;
-  text: string;
-  number: string = null;
-  segmentId: string;
+  text: string      = null;
+  type: string      = null;
+  number: string    = null;
+  segmentId: string = null;
 
   remarkOptions: Array<string>;
   types: Array<string>;
   segments: Array<any>;
 
-  seatsFormGroup: FormGroup;
+  seatForm: FormGroup;
 
   constructor(
     public activeModal: BsModalService,
@@ -37,7 +37,7 @@ export class SeatsFormComponent implements OnInit {
     this.types         = SeatsService.TYPES;
     this.segments      = this.getSegments();
 
-    this.seatsFormGroup = new FormGroup({
+    this.seatForm = new FormGroup({
       text: new FormControl('', [ Validators.required ]),
       type: new FormControl({ value: '', disabled: true }, [ Validators.required ]),
       number: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(this.REGEX_ALPHANUMERIC) ]),
@@ -49,7 +49,7 @@ export class SeatsFormComponent implements OnInit {
 
   save(): void {
     // TODO: Use EventEmitter with form value
-    console.warn(this.seatsFormGroup.value);
+    console.warn(this.seatForm.value);
 
     this.modalRef.hide();
   }
@@ -79,12 +79,12 @@ export class SeatsFormComponent implements OnInit {
    */
   public onChanges(): void {
 
-    this.seatsFormGroup.valueChanges.subscribe(() => {
-      console.log('CHANGED this.seatsFormGroup. Invalid: ' + this.seatsFormGroup.invalid);
-      console.log(JSON.stringify(this.seatsFormGroup.value));
+    this.seatForm.valueChanges.subscribe(() => {
+      console.log('CHANGED this.seatForm. Invalid: ' + this.seatForm.invalid);
+      console.log(JSON.stringify(this.seatForm.value));
 
-      Object.keys(this.seatsFormGroup.controls).forEach(key => {
-        const controlErrors: ValidationErrors = this.seatsFormGroup.get(key).errors;
+      Object.keys(this.seatForm.controls).forEach(key => {
+        const controlErrors: ValidationErrors = this.seatForm.get(key).errors;
         if (controlErrors != null) {
           Object.keys(controlErrors).forEach(keyError => {
             console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
@@ -94,7 +94,7 @@ export class SeatsFormComponent implements OnInit {
     });
 
     // Disable or enable the type and number form controls based on type.
-    this.seatsFormGroup.get('text').valueChanges.subscribe((value) => {
+    this.seatForm.get('text').valueChanges.subscribe((value) => {
 
       console.log('Value: ' + value);
       console.log('Text: ' + this.remarkOptions.indexOf(value) + 1);
@@ -102,22 +102,27 @@ export class SeatsFormComponent implements OnInit {
       switch (this.remarkOptions.indexOf(value) + 1) {
         case 2:
           console.log('Enabling type...');
-          this.seatsFormGroup.get('type').enable();
-          this.seatsFormGroup.get('type').setValidators([Validators.required]);
+          this.seatForm.get('type').enable();
+          this.seatForm.get('type').setValidators([Validators.required]);
           break;
         case 5:
           console.log('Enabling type and number...');
-          this.seatsFormGroup.get('type').enable();
-          this.seatsFormGroup.get('type').setValidators([Validators.required]);
-          this.seatsFormGroup.get('number').enable();
-          this.seatsFormGroup.get('number').setValidators([Validators.required]);
+          this.seatForm.get('type').enable();
+          this.seatForm.get('type').setValidators([Validators.required]);
+          this.seatForm.get('number').enable();
+          this.seatForm.get('number').setValidators([Validators.required]);
           break;
         default:
           console.log('Disabling type and number...');
-          this.seatsFormGroup.get('type').disable();
-          this.seatsFormGroup.get('number').disable();
+          this.seatForm.get('type').disable();
+          this.seatForm.get('number').disable();
           break;
       }
     });
+  }
+
+  public close(): void {
+    this.seat = null;
+    this.modalRef.hide();
   }
 }

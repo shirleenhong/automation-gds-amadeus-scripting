@@ -53,12 +53,14 @@ export class SeatsComponent implements OnInit {
    * @return void
    */
   public create(): void {
-    const seat = new SeatModel();
+    // const seat = new SeatModel();
     // seat.tkMacLine = this.seats.length + 1;
 
     this.modalRef = this.modalService.show(SeatsFormComponent);
     this.modalRef.content.title = 'Add Seat Remark';
-    this.modalRef.content.seat = seat;
+    // this.modalRef.content.seat = seat;
+
+    this.modalSubscribeOnClose();
   }
 
   /**
@@ -67,5 +69,20 @@ export class SeatsComponent implements OnInit {
    */
   public delete(seat: SeatModel): void {
     this.seats = this.seats.filter(s => s !== seat);
+  }
+
+  private modalSubscribeOnClose() {
+    this.modalService.onHide.subscribe(() => {
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+        const newSeat = this.modalRef.content.seatForm.value;
+
+        console.log('newSeat');
+        console.log(newSeat);
+
+        if (newSeat) {
+          this.seats.push(newSeat);
+        }
+      }
+    });
   }
 }

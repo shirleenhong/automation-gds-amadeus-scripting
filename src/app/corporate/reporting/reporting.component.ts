@@ -4,7 +4,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
 import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketing.component';
 import { MatrixReportingComponent } from './matrix-reporting/matrix-reporting.component';
-
+import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -17,6 +17,7 @@ export class ReportingComponent implements OnInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   hasTst: boolean;
   @Input() overrideValue: any;
+  @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {

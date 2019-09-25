@@ -21,6 +21,8 @@ import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqu
 import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
 import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
 import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
+import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting
     AquaTicketingComponent,
     TicketingLineComponent,
     CorpRemarksComponent,
-    MatrixReportingComponent
+    MatrixReportingComponent,
+    WaiversComponent,
+    AddWaiverComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +63,6 @@ import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
+  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent, AddWaiverComponent]
 })
 export class AppCorporateModule {}

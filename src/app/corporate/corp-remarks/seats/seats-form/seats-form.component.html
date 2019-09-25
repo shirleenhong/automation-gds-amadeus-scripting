@@ -7,7 +7,7 @@
 
 <div class="modal-body">
 
-  <form [formGroup]="seatsFormGroup" (ngSubmit)="save()">
+  <form id="seatsFormGroup" [formGroup]="seatsFormGroup" (ngSubmit)="save()">
 
     <!-- Debugger -->
     <!-- <p>
@@ -73,7 +73,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" class="btn btn-outline-dark" [disabled]="!seatsFormGroup.valid">
+  <button type="submit" form="seatsFormGroup" class="btn btn-outline-dark" [disabled]="!seatsFormGroup.valid">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">

@@ -82,7 +82,7 @@ Fill Up Ticketing Panel With Default Values
 
 #for verifying default dropdown value per CFA line
 Verify Ticketing Panel Dropdown For ${selected_aqua_tkLine}
-    Navigate To Page Ticketing
+    Navigate To Page Ticketing Line
     Wait Until Element Is Visible    ${dropdown_tkLine}    30
     ${actual_aqua_tkLine}    Get Selected List Label    ${dropdown_tkLine}
     ${actual_aqua_tkLine}    Strip String    ${actual_aqua_tkLine}
@@ -92,7 +92,7 @@ Verify Ticketing Panel Dropdown For ${selected_aqua_tkLine}
     [Teardown]    Take Screenshot
 
 Fill Up Ticketing Panel For ${selected_aqua_tkLine}
-    Navigate To Page Ticketing
+    Navigate To Page Ticketing Line
     Assign Current Date
     Enter Value    ${input_ticketingDate}    01312020
     Run Keyword If    "${selected_aqua_tkLine}" == "ISSUE E-TICKET OR NON BSP TICKET"    Select From List By Label    ${dropdown_tkLine}    ISSUE E-TICKET OR NON BSP TICKET

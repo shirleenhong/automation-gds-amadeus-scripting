@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { FormGroup, FormControl, Validators, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsService } from 'src/app/service/corporate/seats.service';
 
@@ -45,9 +45,9 @@ export class SeatsFormComponent implements OnInit {
 
     this.seatForm = new FormGroup({
       text: new FormControl('', [ Validators.required ]),
-      type: new FormControl({ value: '', disabled: true }, [ Validators.required ]),
+      type: new FormControl({ value: '', disabled: true }, []),
       number: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(this.REGEX_ALPHANUMERIC) ]),
-      segmentId: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      segmentId: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
     });
 
     this.onChanges();
@@ -91,13 +91,10 @@ export class SeatsFormComponent implements OnInit {
       switch (this.remarkOptions.indexOf(value) + 1) {
         case 2:
           this.seatForm.get('type').enable();
-          this.seatForm.get('type').setValidators([Validators.required]);
           break;
         case 5:
           this.seatForm.get('type').enable();
-          this.seatForm.get('type').setValidators([Validators.required]);
           this.seatForm.get('number').enable();
-          this.seatForm.get('number').setValidators([Validators.required]);
           break;
         default:
           this.seatForm.get('type').disable();

@@ -79,7 +79,7 @@ Add CFA Remark
 Verify Default Ticket Segments
     [Arguments]    @{expected_tktNo}
     Wait Until Element Is Visible    ${tab_supplemental_fees}    60
-    ${elements_count}    Get Element Count    ${input_ticket_segment}
+    ${elements_count}    Get Length    ${input_ticket_segment}
     Log    ${elements_count}
     Set Test Variable    ${elements_count}  
 	    : FOR    ${tkt_index}    IN RANGE    0    ${elements_count}
@@ -215,13 +215,15 @@ Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Verify Default Ticket Segments    2
     Verify Default Fee Code in Ticket Segments    NFR
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-NFR   
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-NFR
+    Switch To Command Page   
     
 Verify Non OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Verify Default Ticket Segments    2
     Verify Default Fee Code in Ticket Segments    NFM
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-NFM
+    Switch To Command Page
 
 Verify Default Values For Schedule Change Fees 
     Navigate To Page Fees
@@ -233,7 +235,8 @@ Verify Default Values For Schedule Change Fees
 Verify Selected Schedule Change Fees Are written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATD30.00
-    Verify Specific Remark Is Written In The PNR    RMF SUPFEE2-ATD30.00        
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE2-ATD30.00
+    Switch To Command Page        
     
 Verify Default Values Of Exchange Flat Fee With Supplemental Fee For Exchange Ticket
     Navigate To Page Fees
@@ -246,6 +249,7 @@ Verify That Exchange Flat Fees Are Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATB27.00/ESD
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE2-ATB27.00
+    Switch To Command Page 
     
 Verify Default Values Of Special Fee For Air Ticket
     Navigate To Page Fees
@@ -256,10 +260,12 @@ Verify Default Values Of Special Fee For Air Ticket
 Verify That Special Fee Is Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATI60.00
+    Switch To Command Page 
 
 Verify Selected No Fee Code Is Written
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-NFB
+    Switch To Command Page
     
 Verify That Multiple Supplemental Fees Are Written In The PNR
     Finish PNR
@@ -273,12 +279,10 @@ Book Multiple Segments With Air Car Rail And Hotel
     Add 1 Car Segments
     
 Verify Correct OBT Fee Remark Are Written In The PNR For Multiple Segment
-    #Select All Unticketed TSTs
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATE    
 
 Verify Correct OBT Fee Remark Are Written In The PNR For Air Only
-    #Select All Unticketed TSTs
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATE
     
@@ -295,7 +299,7 @@ Verify Correct OBT Fee Remark Are Written In The PNR For Car Only
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-CBE
     
 Verify The No Supfee Remark Are Written In The PNR
-    #Select All Unticketed TSTs
     Finish PNR
     Verify Specific Remark Is Not Written In The PNR    RMF SUPFEE1-ATE    
+
     

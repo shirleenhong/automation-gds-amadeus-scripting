@@ -18,6 +18,7 @@ Verify OBT PNR Added Remarks For Supplemental Fees
     Add APAY Ticketing Details For Single Segment
     Navigate To Page Fees
     Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
+    Delete Fare and Itinerary
     [Teardown]    Close Browser
    
 Verify Non OBT PNR Added Remarks For Supplemental Fees    
@@ -27,6 +28,7 @@ Verify Non OBT PNR Added Remarks For Supplemental Fees
     Add APAY Ticketing Details For Single Segment
     Navigate To Page Fees
     Verify Non OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
+    Delete Fare and Itinerary
     [Teardown]    Close Browser
 
 Verify That Selected No Fee Code Is Written For Non-OBT With APAY
@@ -37,7 +39,8 @@ Verify That Selected No Fee Code Is Written For Non-OBT With APAY
     Navigate To Page Fees
     Select No Fee Code Associate Business
     Verify Selected No Fee Code Is Written
-    [Teardown]    Close Browser
+    Delete Fare and Itinerary
+    # [Teardown]    Close Browser
     
 Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
     [Tags]    us9619
@@ -45,7 +48,8 @@ Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
     Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Verify Default Values For Schedule Change Fees 
     Verify Selected Schedule Change Fees Are written In The PNR
-    [Teardown]    Close Browser
+    Delete Fare and Itinerary
+    # [Teardown]    Close Browser
     
 Verify That Transborder PNR Added Remarks For Flat Fee
     [Tags]    us9619
@@ -53,6 +57,7 @@ Verify That Transborder PNR Added Remarks For Flat Fee
     Move Single Passenger With Multiple Segment For Transborder With TSTs
     Verify Default Values Of Exchange Flat Fee With Supplemental Fee For Exchange Ticket
     Verify That Exchange Flat Fees Are Written In The PNR
+    Delete Fare and Itinerary
     # [Teardown]    Close Browser
     
 Verify That International PNR Added Remarks For Special Fee
@@ -61,7 +66,8 @@ Verify That International PNR Added Remarks For Special Fee
     Move Single Passenger With Single Segment For International With Non Exchange Ticket
     Verify Default Values Of Special Fee For Air Ticket
     Verify That Special Fee Is Written In The PNR
-    [Teardown]    Close Browser
+    Delete Fare and Itinerary
+    # [Teardown]    Close Browser
     
 Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
     [Tags]    us9619
@@ -69,4 +75,5 @@ Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
     Move Single Passenger With Multiple Segment For Transborder With TSTs
     Select Supplemental Fees For All TSTs
     Verify That Multiple Supplemental Fees Are Written In The PNR
+    Delete Fare and Itinerary
     # [Teardown]    Close Browser

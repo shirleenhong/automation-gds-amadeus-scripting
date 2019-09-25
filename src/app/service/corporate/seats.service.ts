@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PnrService } from '../pnr.service';
+// import { PnrService } from '../pnr.service';
 import { RemarksManagerService } from './remarks-manager.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 
@@ -10,7 +10,7 @@ export class SeatsService {
 
   constructor(
     private remarksManager: RemarksManagerService,
-    private pnrService: PnrService
+    // private pnrService: PnrService
   ) { }
 
   /**

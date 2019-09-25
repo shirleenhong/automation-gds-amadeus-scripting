@@ -21,6 +21,8 @@ import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqu
 import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
 import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
 import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
+import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/seats-form.component';
 import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
 import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 
@@ -42,6 +44,8 @@ import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add
     TicketingLineComponent,
     CorpRemarksComponent,
     MatrixReportingComponent,
+    SeatsComponent,
+    SeatsFormComponent,
     WaiversComponent,
     AddWaiverComponent
   ],
@@ -63,6 +67,11 @@ import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent, AddWaiverComponent]
+  entryComponents: [
+    AddSupplementalFeesComponent,
+    AddWaiverComponent,
+    SeatsFormComponent,
+    UpdateAccountingRemarkComponent
+  ]
 })
 export class AppCorporateModule {}

@@ -183,3 +183,43 @@ Verify Accounting Remark Is Written Correctly For Non BSP Exchange
     Verify Specific Remark Is Written In The PNR    RM *FF/-1111.20/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-1111.20/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-E/S2
+    
+Select Waivers Code Option ${waiver_code} #ANC/50 - NAME CHANGE
+    Navigate To Page Reporting
+    Click Element    #waiversTab
+    Wait Until Page Contains Element    #CodeListField    30     
+    Select From List By Value    ${waiver_code}
+
+Select Multiple Waiver Code Options
+    [Arguments]    @{waiver_codes}
+     Wait Until Page Contains Element    #CodeListField    30
+     : FOR      &{waiver_codes}   IN    @{waiver_codes}
+     \    #keyword to selet waiver codes
+     Take Screenshot    
+
+Enter Amount For Waiver Code ${waiver_code}
+    Input Text    locator    text 
+    
+Select Multiple Waiver Code Options For Single Ticket
+    Navigate To Page Reporting
+    Click Element    #waiversTab
+    Wait Until Page Contains Element    #CodeListField    30     
+    Select Multiple Waiver Code Options
+    Enter Amount For Waiver Code ${waiver_code}
+
+Select Multiple Waiver Code Options For Multiple Tickets
+    Navigate To Page Reporting
+    Click Element    #waiversTab
+    Wait Until Page Contains Element    #CodeListField    30     
+    Select Multiple Waiver Code Options
+    Enter Amount For Waiver Code ${waiver_code}
+
+Verify That Waivers Code ${u63_code} Is Written In The PNR
+    Finish PNR
+    Run Keyword If    '${u63_code}' == 'ANC/50'    Verify Specific Remark Is Written In The PNR    RM *U63/-ANCCN150/S2    
+    Run Keyword If    '${u63_code}' == 'ANC/50'
+    Switch To Command Page
+    
+
+
+

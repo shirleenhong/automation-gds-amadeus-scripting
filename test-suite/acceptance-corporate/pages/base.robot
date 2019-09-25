@@ -7,6 +7,7 @@ Library           DateTime
 Resource          amadeus.robot
 Resource          payment.robot
 Resource          ticketing.robot
+Resource          reporting.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -35,6 +36,7 @@ Enter Value
     
 Close CA Corporate Test
     Unselect Frame
+    Wait Until Element Is Not Visible    ${overlay_loader}    20
     Wait Until Element Is Visible    ${header_corp_test}    50
     Click Element    ${button_close}
     Set Test Variable    ${current_page}    Amadeus
@@ -52,6 +54,11 @@ Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
+    
+Collapse Reporting Panel
+    Wait Until Element Is Visible    ${panel_reporting}    60
+    Click Element    ${panel_reporting}
+    Set Test Variable    ${current_page}    Full Wrap PNR
     
 Click Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
@@ -113,7 +120,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Reporting" and "${destination_page}" != "Reporting"   Navigate From Reporting    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting"    Navigate From Reporting    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
@@ -125,14 +132,14 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Reporting" or "${destination_page}" == "Ticketing" or "${destination_page}" == "Fees" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
-    ...    ELSE IF    "${destination_page}" == "Reporting"     Click Reporting Panel
+    ...    ELSE IF    "${destination_page}" == "Reporting" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting"    Click Reporting Panel
     ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
     ...    ELSE   Click Back To Main Menu
@@ -144,7 +151,10 @@ Navigate From Payment
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
-    Run Keyword If    "${destination_page}" == "Ticketing"    Click Ticketing Panel
+    Run Keyword If    "${destination_page}" == "BSP Reporting"    Click BSP Reporting Tab
+    ...    ELSE IF    "${destination_page}" == "Non BSP Reporting"    Click Non BSP Reporting Tab
+    ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
+    ...    ELSE    Collapse Reporting Panel
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}

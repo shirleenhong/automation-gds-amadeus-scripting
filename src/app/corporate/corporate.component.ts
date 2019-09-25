@@ -21,6 +21,8 @@ import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { SeatsComponent } from '../corporate/corp-remarks/seats/seats.component';
+import { SeatsService } from '../service/corporate/seats.service';
 
 @Component({
   selector: 'app-corporate',
@@ -42,6 +44,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
+  @ViewChild(SeatsComponent) seatsComponent: SeatsComponent;
 
   @Input() overrideValue: any;
 
@@ -56,7 +59,8 @@ export class CorporateComponent implements OnInit {
     private reportingRemarkService: ReportingRemarkService,
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
-    private feesRemarkService: FeesRemarkService
+    private feesRemarkService: FeesRemarkService,
+    private seatsService: SeatsService
   ) {
     this.initData();
   }
@@ -197,6 +201,7 @@ export class CorporateComponent implements OnInit {
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
+    this.seatsService.writeSeatRemarks(this.seatsComponent.seats);
 
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);

@@ -25,7 +25,7 @@ export class OtherRemarksService {
     if (travelRemarks) {
       switch (itinLanguage) {
         case ('EN'): {
-          const commandFR = 'PBN/YTOWL210N/CONCIERGE*';
+          const commandFR = 'PBN/YTOWL210N/CONCIERGE ENGLISH*';
           conceirgeRemarkGroup.cryptics.push(commandFR);
           break;
         }

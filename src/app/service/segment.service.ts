@@ -447,8 +447,8 @@ export class SegmentService {
             case 'SEA':
                 freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + ' ' + segment.tourName +
                     '/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' +
-                    startdatevalue + '/ST-' + startTime + '/EC-' + segment.destinationCity +
-                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                    startdatevalue + '/ST-' + startTime + '/ED-' + enddatevalue + '/ET-' +
+                    endTime + '/EC-' + segment.destinationCity + '/CF-' + segment.confirmationNo;
                 break;
             case 'INS':
                 freetext = '/TYP-' + segment.segmentType + '/SUN-MANULIFE INSURANCE/SUC-MLF/SC-' +
@@ -859,7 +859,7 @@ export class SegmentService {
         rmGroup.remarks = new Array<RemarkModel>();
         fareRuleModels.forEach(model => {
             if (model.fareRuleType !== '') {
-                smartScriptSession.send('PBN/' + this.pnrService.PCC + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '*');
                 rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
             } else {
 

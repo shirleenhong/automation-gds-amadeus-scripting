@@ -12,7 +12,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService) {}
+  constructor(private serviceApi: RemarksManagerApiService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -27,7 +27,7 @@ export class RemarksManagerService {
           res.outputItems.items.forEach((output) => {
             this.outputItems.push(new OutputItem(output));
           });
-          console.log(res);
+          console.log(JSON.stringify(res));
         }
       })
       .catch((err) => {

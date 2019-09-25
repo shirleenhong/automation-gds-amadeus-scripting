@@ -39,7 +39,7 @@
           <div>
             <div class="row form-group">
               <div class="col">
-                Did client accept cancellation insurance?
+                Insurance Liability Waiver
               </div>
             </div>
 
@@ -47,6 +47,7 @@
               <div class="col">
                 <select class="form-control" required id="showInsurance" name="showInsurance"
                   formControlName="showInsurance" (change)="checkInsurance($event.target.value)">
+                  <option value="" disabled selected>Select Insurance Liability Waiver</option>
                   <option value="YES">All Inclusive or Premium Protection Insurance Purchased for the Full Value of the
                     Trip</option>
                   <option value="NO">Traveller Declined to Purchase the following Travel Insurance </option>

@@ -16,7 +16,7 @@ export class OtherRemarksService {
     let itinLanguage = this.pnrService.getItineraryLanguage();
     const cfLine = this.pnrService.getCFLine();
     itinLanguage = itinLanguage.substr(0, 2);
-    itinLanguage = (!itinLanguage ? itinLanguage : 'EN');
+    itinLanguage = (itinLanguage ? itinLanguage : 'EN');
 
     if (!(cfLine.cfa === 'RBM' || cfLine.cfa === 'RBP')) {
       return;

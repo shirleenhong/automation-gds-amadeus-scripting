@@ -208,13 +208,16 @@ Remove Line Break And Spaces
     Set Test Variable    ${pnr_details_flattened}
     Set Test Variable    ${expected_remark_flattened}
 
+Create Exchange NE Remark
+    Move Profile to GDS    RM*NE/-EX-Y    TKOK
+
 Create Exchange PNR In The GDS
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
     ...    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
-    
+    \    Press Key    ${input_commandText}    \\13    
+
 Create Multiple TKT Exchange PNR In The GDS
     @{gds_commands}    Create List    RT   TTK/EXCH/S2    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2    TTK/EXCH/S3    TTK/T2/RCAD200.00/XCAD20.00YR/TCAD120.00    FO057-1346629128E1PAR10MAY19/00002634/057-1346629127E1/S3   RFCWTPTEST   ER    RT${actual_record_locator}
     : FOR    ${gds_command}    IN    @{gds_commands}
@@ -234,6 +237,11 @@ Move Multiple Passenger
 Move Single Passenger And Add Single BSP Segment With TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C
     Add Single BSP Segment And Store Fare
+    
+Move Single Passenger And Add Single BSP Segment With IFC CN Number And TST
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-IFC
+    Add Single BSP Segment And Store Fare
+    Move Profile to GDS    RT
 
 Move Single Passenger And Add Multiple BSP Segment With TSTs
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C
@@ -358,7 +366,7 @@ Create PNR With 1 TST And Ticket For Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    DOM
     
-Retrive Current PNR 
+Retrive Current PNR
     Wait Until Element Is Visible    ${label_command_page}    180
     Input Text    ${input_commandText}    RT${actual_record_locator}
     Press Key    ${input_commandText}    \\13
@@ -375,6 +383,16 @@ Create PNR With ${number_of_segments} Car Segments
 Create PNR With ${number_of_segments} Hotel Segments
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
     Add ${number_of_segments} Hotel Segments
+    
+Create PNR With ${number_of_segments} Hotel Segment/s With Invoice
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Add ${number_of_segments} Hotel Segments
+    Move Profile to GDS    RFCWTTEST    ER
+    Sleep    4
+    Get Record Locator Value
+    Move Profile to GDS    INV/MI000143
+    Sleep    4
+    Move Profile to GDS    RT${actual_record_locator}
 
 Create PNR With One TST For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH

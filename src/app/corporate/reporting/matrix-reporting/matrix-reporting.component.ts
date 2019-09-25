@@ -25,8 +25,7 @@ export class MatrixReportingComponent implements OnInit {
       rbFileFinisher: new FormControl(''),
       cicNumber: new FormControl('')
     });
-    this.isMatrixPnr =
-      this.IsSegmentExchange() || this.IsContainsThisRemark('CN/-IFC') || this.IsContainsThisRemark('FI PAX 0000000000 INV');
+    this.isMatrixPnr = this.IsSegmentExchange() || this.IsContainsThisRemark('CN/-IFC') || this.IsContainsFIRemark('PAX 0000000000 INV');
   }
 
   // tslint:disable-next-line: use-life-cycle-interface
@@ -43,8 +42,10 @@ export class MatrixReportingComponent implements OnInit {
     } else {
       this.isOFC = false;
       this.matrixReporting.mode = 'YES';
-      this.invoiceMessageForm.get('cicNumber').setValue('');
-      this.invoiceMessageForm.get('cicNumber').enable();
+      if (this.invoiceMessageForm !== undefined) {
+        this.invoiceMessageForm.get('cicNumber').setValue('');
+        this.invoiceMessageForm.get('cicNumber').enable();
+      }
     }
   }
 
@@ -74,6 +75,11 @@ export class MatrixReportingComponent implements OnInit {
 
   IsContainsThisRemark(value: string) {
     const remark = this.pnrService.getRemarkText(value);
+    return remark.length > 0;
+  }
+
+  IsContainsFIRemark(value: string) {
+    const remark = this.pnrService.getFIElementText(value);
     return remark.length > 0;
   }
 }

@@ -31,6 +31,5 @@ Verify PNR is read with correct remark placeholders
     \    Log    ${actual_value_placeholder[${index}]}
     \    Run Keyword And Continue On Failure    Dictionaries Should Be Equal    ${expected_value}    ${actual_value_placeholder[${index}]}   
     
-    
 Verify Response Status Code 404 is Returned  
     Verify Response Status Code Is Correct    404

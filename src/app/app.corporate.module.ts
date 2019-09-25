@@ -23,6 +23,8 @@ import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.comp
 import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
 import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/seats-form.component';
+import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
+import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/se
     CorpRemarksComponent,
     MatrixReportingComponent,
     SeatsComponent,
-    SeatsFormComponent
+    SeatsFormComponent,
+    WaiversComponent,
+    AddWaiverComponent
   ],
   imports: [
     BrowserModule,
@@ -64,9 +68,10 @@ import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/se
   bootstrap: [],
   exports: [CorporateComponent],
   entryComponents: [
-    UpdateAccountingRemarkComponent,
     AddSupplementalFeesComponent,
-    SeatsFormComponent
+    AddWaiverComponent,
+    SeatsFormComponent,
+    UpdateAccountingRemarkComponent
   ]
 })
 export class AppCorporateModule {}

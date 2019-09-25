@@ -80,6 +80,14 @@
           [(ngModel)]="passiveSegments.policyNo" />
       </div>
     </div>
+
+    <div class="form-group  row">
+      <div class="col-sm-4">Type of Insurance Purchased:</div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="insuranceType" name="insuranceType" maxlength="40"
+          formControlName="insuranceType" [(ngModel)]="passiveSegments.insuranceType" />
+      </div>
+    </div>
   </div>
 </ng-template>
 
@@ -93,15 +101,15 @@
     <ng-container *ngTemplateOutlet="tour"></ng-container>
     <ng-container *ngTemplateOutlet="passengerNum"></ng-container>
 
-    <div class="form-group  row">
+    <div class="form-group row">
       <div class="col-sm-4">State Room:</div>
       <div class="col-sm-8">
-        <select autofocus id="stateRoom" class="form-control" name="stateRoom" formControlName="stateRoom"
-          [(ngModel)]="passiveSegments.stateRoom" (change)="onChangeStateRoom($event.target.value)">
-          <option *ngFor="let item of  stateRoomList" [value]="item.itemValue">
-            {{item.itemText}}
+        <input type="text" class="form-control" formControlName="stateRoom" id="stateRoom" list="dynamicStateRoom"
+          [(ngModel)]="passiveSegments.stateRoom" (change)="onChangeStateRoom($event.target.value)" AllCapsMask />
+        <datalist id="dynamicStateRoom">
+          <option *ngFor="let item of stateRoomList" [value]="item.itemValue">
           </option>
-        </select>
+        </datalist>
       </div>
     </div>
 
@@ -129,12 +137,8 @@
     <div class="form-group  row">
       <div class="col-sm-4">Dining: </div>
       <div class="col-sm-8">
-        <select autofocus id="dining" class="form-control" name="dining" formControlName="dining"
-          [(ngModel)]="passiveSegments.dining">
-          <option *ngFor="let item of  diningList" [value]="item.itemValue">
-            {{item.itemText}}
-          </option>
-        </select>
+        <input type="text" class="form-control" id="dining" name="dining" maxlength="55" formControlName="dining"
+          [(ngModel)]="passiveSegments.dining" />
       </div>
     </div>
 

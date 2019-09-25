@@ -140,6 +140,17 @@ export class PnrService {
         return '';
     }
 
+    getFIElementText(searchText: string) {        
+        if (this.isPNRLoaded) {
+            for (const fi of this.pnrObj.fiElements) {
+                if (fi.fullNode.otherDataFreetext.indexOf(searchText) === 0) {
+                    return fi.fullNode.otherDataFreetext;
+                }
+            }
+        }
+        return '';
+    }
+
     getItineraryLanguage(): string {
         if (this.isPNRLoaded) {
             for (const rm of this.pnrObj.rmElements) {
@@ -1296,11 +1307,13 @@ export class PnrService {
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
             if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-                tst.referenceForDataElement.reference.forEach((ref) => {
-                    if (ref.qualifier === 'ST') {
-                        segments.push(ref.number);
-                    }
-                });
+               if (tst.referenceForDataElement) {
+                    tst.referenceForDataElement.reference.forEach((ref) => {
+                        if (ref.qualifier === 'ST') {
+                            segments.push(ref.number);
+                        }
+                    });
+                }
             }
         }
 
@@ -1411,6 +1424,32 @@ export class PnrService {
                 segmentLines.push(segment[0].lineNo);
             }
         }
+        return segmentLines;
+    }
+
+    getTstSegments(): string[] {
+        const segmentTatooNumbers = [];
+        for (const ticketed of this.pnrObj.fvElements) {
+            const s = [];
+            ticketed.fullNode.referenceForDataElement.reference.forEach(ref => {
+                if (ref.qualifier === 'ST') {
+                    s.push(ref.number);
+                }
+            });
+            segmentTatooNumbers.push(s);
+        }
+        const segmentLines = [];
+        segmentTatooNumbers.forEach(tatoos => {
+            const s = [];
+            tatoos.forEach(tatoo => {
+                const segment = this.segments.filter(seg => seg.tatooNo === tatoo);
+                if (segment && segment.length > 0) {
+                    s.push(segment[0].lineNo);
+                }
+            });
+            segmentLines.push(s.join(','));
+        });
+
         return segmentLines;
     }
 

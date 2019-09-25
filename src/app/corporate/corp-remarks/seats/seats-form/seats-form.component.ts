@@ -85,42 +85,21 @@ export class SeatsFormComponent implements OnInit {
    * Handle changes on the seat form.
    */
   public onChanges(): void {
-
-    // this.seatForm.valueChanges.subscribe(() => {
-    //   console.log('CHANGED this.seatForm. Invalid: ' + this.seatForm.invalid);
-    //   console.log(JSON.stringify(this.seatForm.value));
-
-    //   Object.keys(this.seatForm.controls).forEach(key => {
-    //     const controlErrors: ValidationErrors = this.seatForm.get(key).errors;
-    //     if (controlErrors != null) {
-    //       Object.keys(controlErrors).forEach(keyError => {
-    //         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-    //       });
-    //     }
-    //   });
-    // });
-
     // Disable or enable the type and number form controls based on type.
     this.seatForm.get('text').valueChanges.subscribe((value) => {
 
-      console.log('Value: ' + value);
-      console.log('Text: ' + this.remarkOptions.indexOf(value) + 1);
-
       switch (this.remarkOptions.indexOf(value) + 1) {
         case 2:
-          console.log('Enabling type...');
           this.seatForm.get('type').enable();
           this.seatForm.get('type').setValidators([Validators.required]);
           break;
         case 5:
-          console.log('Enabling type and number...');
           this.seatForm.get('type').enable();
           this.seatForm.get('type').setValidators([Validators.required]);
           this.seatForm.get('number').enable();
           this.seatForm.get('number').setValidators([Validators.required]);
           break;
         default:
-          console.log('Disabling type and number...');
           this.seatForm.get('type').disable();
           this.seatForm.get('number').disable();
           break;

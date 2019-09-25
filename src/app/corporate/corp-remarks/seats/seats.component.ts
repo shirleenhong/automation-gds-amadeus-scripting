@@ -13,6 +13,10 @@ export class SeatsComponent implements OnInit {
   seats: Array<SeatModel>;
 
   modalRef: BsModalRef;
+  modalRefConfig = {
+    backdrop: true,
+    ignoreBackdropClick: false
+  };
 
   constructor(private modalService: BsModalService) { }
 
@@ -56,7 +60,7 @@ export class SeatsComponent implements OnInit {
     // const seat = new SeatModel();
     // seat.tkMacLine = this.seats.length + 1;
 
-    this.modalRef = this.modalService.show(SeatsFormComponent);
+    this.modalRef = this.modalService.show(SeatsFormComponent, this.modalRefConfig);
     this.modalRef.content.title = 'Add Seat Remark';
     // this.modalRef.content.seat = seat;
 
@@ -71,18 +75,23 @@ export class SeatsComponent implements OnInit {
     this.seats = this.seats.filter(s => s !== seat);
   }
 
+  /**
+   * Handle the seat form and act accordingly
+   * based on the modal message.
+   */
   private modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(() => {
-      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+
+      if (this.modalRef.content.message === 'SAVED') {
         const newSeat = this.modalRef.content.seatForm.value;
 
-        console.log('newSeat');
-        console.log(newSeat);
-
+        // Add the new seat to the seats.
         if (newSeat) {
           this.seats.push(newSeat);
         }
       }
+
+      this.modalRef = null; // Fixes duplication of components on dismiss
     });
   }
 }

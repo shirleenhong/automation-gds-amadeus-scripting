@@ -79,7 +79,6 @@ export class MatrixReportingComponent implements OnInit {
   }
 
   IsContainsFIRemark(value: string) {
-    debugger;
     const remark = this.pnrService.getFIElementText(value);
     return remark.length > 0;
   }

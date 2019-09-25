@@ -26,6 +26,12 @@ export class SeatsFormComponent implements OnInit {
 
   seatForm: FormGroup;
 
+  /**
+   * The message of the modal.
+   * Values: SAVED, CLOSED
+   */
+  message: string;
+
   constructor(
     public activeModal: BsModalService,
     public modalRef: BsModalRef
@@ -51,6 +57,7 @@ export class SeatsFormComponent implements OnInit {
     // TODO: Use EventEmitter with form value
     console.warn(this.seatForm.value);
 
+    this.message = 'SAVED';
     this.modalRef.hide();
   }
 
@@ -79,19 +86,19 @@ export class SeatsFormComponent implements OnInit {
    */
   public onChanges(): void {
 
-    this.seatForm.valueChanges.subscribe(() => {
-      console.log('CHANGED this.seatForm. Invalid: ' + this.seatForm.invalid);
-      console.log(JSON.stringify(this.seatForm.value));
+    // this.seatForm.valueChanges.subscribe(() => {
+    //   console.log('CHANGED this.seatForm. Invalid: ' + this.seatForm.invalid);
+    //   console.log(JSON.stringify(this.seatForm.value));
 
-      Object.keys(this.seatForm.controls).forEach(key => {
-        const controlErrors: ValidationErrors = this.seatForm.get(key).errors;
-        if (controlErrors != null) {
-          Object.keys(controlErrors).forEach(keyError => {
-            console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-          });
-        }
-      });
-    });
+    //   Object.keys(this.seatForm.controls).forEach(key => {
+    //     const controlErrors: ValidationErrors = this.seatForm.get(key).errors;
+    //     if (controlErrors != null) {
+    //       Object.keys(controlErrors).forEach(keyError => {
+    //         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+    //       });
+    //     }
+    //   });
+    // });
 
     // Disable or enable the type and number form controls based on type.
     this.seatForm.get('text').valueChanges.subscribe((value) => {
@@ -122,7 +129,7 @@ export class SeatsFormComponent implements OnInit {
   }
 
   public close(): void {
-    this.seat = null;
+    this.message = 'CLOSED';
     this.modalRef.hide();
   }
 }

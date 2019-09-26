@@ -9,23 +9,6 @@
 
   <form id="seatForm" [formGroup]="seatForm" (ngSubmit)="save()">
 
-    <!-- Debugger -->
-    <!-- <p>
-      Status: {{ seatForm.status }}
-    </p>
-    <p>
-      Value: {{ seatForm.value | json }}
-    </p>
-    <p>
-      Type: {{ seatForm.controls.type.value }}
-    </p>
-    <p>
-      remarkOptions: {{ remarkOptions | json }}
-    </p>
-    <p>
-      remarkOption: {{ remarkOptions.indexOf(seatForm.controls.remarkId.value) + 1 }}
-    </p> -->
-
     <div class="form-group row">
       <div class="col-sm-4">Seat Remark Option</div>
       <div class="col-sm-8">

@@ -16,11 +16,13 @@ import { TicketRemarkService } from '../service/corporate/ticket-remark.service'
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
-import { AmadeusRemarkService } from '../service/remark.service';
+import { AmadeusRemarkService } from '../service/amadeus-remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { QueueRemarkService } from '../service/queue-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -56,7 +58,8 @@ export class CorporateComponent implements OnInit {
     private reportingRemarkService: ReportingRemarkService,
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
-    private feesRemarkService: FeesRemarkService
+    private feesRemarkService: FeesRemarkService,
+    private queueService: QueueRemarkService
   ) {
     this.initData();
   }
@@ -67,9 +70,12 @@ export class CorporateComponent implements OnInit {
     }
   }
 
-  async getPnr() {
+  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
     await this.getPnrService();
+    if (queueCollection) {
+      this.queueService.queuePNR(queueCollection);
+    }
   }
 
   async getPnrService() {
@@ -144,6 +150,7 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
         await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+        await this.ddbService.approvers(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
@@ -185,7 +192,9 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-    accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.ticketlineComponent.getTicketingDetails()));
+    accRemarks.push(this.ticketRemarkService.submitTicketRemark
+      (this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
+        this.ticketingComponent.ticketlineComponent.approvalForm));
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -210,11 +219,17 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.sendU70Remarks();
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+    // below additional process not going through remarks manager
+    const additionalRemarks = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
-    await this.rms.submitToPnr().then(
+    let queueCollection = Array<QueuePlaceModel>();
+    queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    await this.rms.submitToPnr(additionalRemarks, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
+        this.getPnr(queueCollection);
         this.closePopup();
       },
       (error) => {

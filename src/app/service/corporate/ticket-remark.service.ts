@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 
 import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
@@ -8,6 +8,10 @@ import { TicketModel } from '../../models/pnr/ticket.model';
 import { FormGroup } from '@angular/forms';
 import { DDBService } from '../ddb.service';
 import { AquaTicketingComponent } from 'src/app/corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
+import { ApprovalRuleService } from './approval-rule.service';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { RemarkHelper } from 'src/app/helper/remark-helper';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 
 declare var smartScriptSession: any;
 
@@ -23,17 +27,19 @@ export class TicketRemarkService {
     private remarksManagerSvc: RemarksManagerService,
     private pnrService: PnrService,
     private remarksManager: RemarksManagerService,
-    private ddbService: DDBService
-  ) {}
+    private ddbService: DDBService,
+    private approvalRuleService: ApprovalRuleService,
+    private remarkHelper: RemarkHelper
+  ) { }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
-  public submitTicketRemark(ticketRemark: TicketModel): RemarkGroup {
+  public submitTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
     this.cleanupTicketRemark();
 
-    return this.writeTicketRemark(ticketRemark);
+    return this.writeTicketRemark(ticketRemark, fg);
   }
 
   /**
@@ -63,15 +69,22 @@ export class TicketRemarkService {
    * @param ticketRemark The ticket data from screen.
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
-  private writeTicketRemark(ticketRemark: TicketModel): RemarkGroup {
+  private writeTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
     const remGroup = new RemarkGroup();
+    let pnrOnhold = ticketRemark.pnrOnHold;
+    if (fg.get('noApproval').value === false) {
+      const index = this.getApprovalIndex(fg);
+      if (this.approvalRuleService.getTicketApproval(index).length > 0) {
+        pnrOnhold = true;
+      }
+    }
     const remark =
       'TKTL' +
       this.transformTicketDate(ticketRemark.tktDate) +
       '/' +
       ticketRemark.oid +
       '/Q8C1' +
-      this.appendTkLine(ticketRemark.pnrOnHold, ticketRemark.tkLine);
+      this.appendTkLine(pnrOnhold, ticketRemark.tkLine);
 
     remGroup.cryptics.push(remark);
 
@@ -241,11 +254,11 @@ export class TicketRemarkService {
    * Write passive hotel segment remarks to PNR.
    * @return void
    */
-  writePassiveHotelSegmentRemark(fg: FormGroup): void {
+  public writePassiveHotelSegmentRemark(fg: FormGroup): void {
     // Check if the PNR is only Hotel
     if (this.isPnrHotelOnly(fg)) {
       const segments: string[] = fg.get('hotelSegment').value.split(',');
-      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+      const segmentrelate: string[] = this.pnrService.getTatooNumberFromSegmentNumber(segments);
 
       if (segmentrelate.length > 0) {
         const hotelOnlyPnrRemarks = new Map<string, string>();
@@ -259,11 +272,11 @@ export class TicketRemarkService {
     }
   }
 
-  writePassiveCarSegmentRemark(fg: FormGroup): void {
+  public writePassiveCarSegmentRemark(fg: FormGroup): void {
     // Check if the PNR is only Car
     if (this.isCarSelectedOnly(fg)) {
       const segments: string[] = fg.get('carSegment').value.split(',');
-      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+      const segmentrelate: string[] = this.pnrService.getTatooNumberFromSegmentNumber(segments);
 
       if (segmentrelate.length > 0) {
         const carPnrRemarks = new Map<string, string>();
@@ -278,11 +291,11 @@ export class TicketRemarkService {
     }
   }
 
-  writePassiveLimoSegmentRemark(fg: FormGroup): void {
+  public writePassiveLimoSegmentRemark(fg: FormGroup): void {
     // Check if the PNR is only Limo
     if (this.isLimoSelectedOnly(fg)) {
       const segments: string[] = fg.get('limoSegment').value.split(',');
-      const segmentrelate: string[] = this.getRemarkSegmentAssociation(segments);
+      const segmentrelate: string[] = this.pnrService.getTatooNumberFromSegmentNumber(segments);
 
       if (segmentrelate.length > 0) {
         const limoPnrRemarks = new Map<string, string>();
@@ -297,25 +310,91 @@ export class TicketRemarkService {
     }
   }
 
-  isCarSelectedOnly(fg: FormGroup): boolean {
+  private isCarSelectedOnly(fg: FormGroup): boolean {
     return !(fg.get('tst').value || fg.get('hotelSegment').value || fg.get('limoSegment').value);
   }
 
-  isLimoSelectedOnly(fg: FormGroup): boolean {
+  private isLimoSelectedOnly(fg: FormGroup): boolean {
     return !(fg.get('tst').value || fg.get('hotelSegment').value || fg.get('carSegment').value);
   }
 
-  isPnrHotelOnly(fg: FormGroup): boolean {
+  private isPnrHotelOnly(fg: FormGroup): boolean {
     return !(fg.get('tst').value || fg.get('carSegment').value || fg.get('limoSegment').value);
   }
 
-  getRemarkSegmentAssociation(segments: string[]): string[] {
-    const segmentrelate: string[] = [];
-    const segment = this.pnrService.getSegmentTatooNumber().filter((x) => segments.indexOf(x.lineNo) >= 0);
-    segment.forEach((element) => {
-      segmentrelate.push(element.tatooNo);
-    });
+  public getApprovalRemarksForDelete(fg: FormGroup): string[] {
+    if (fg.get('noApproval').value === false) {
+      const forDelete = [];
+      const index = this.getApprovalIndex(fg);
+      this.approvalRuleService.getDeleteRemarkApproval(index).forEach((app) => {
+        const rems = app.getRuleText().split('|');
+        if (rems[0].indexOf('RM') === 0) {
+          const line = this.pnrService.getRemarkLineNumber(rems[1]);
+          if (line !== '') {
+            forDelete.push(line);
+          }
+        }
+      });
+      return forDelete;
+    }
+    return [];
+  }
 
-    return segmentrelate;
+  /**
+   * Get Remarks to be added  based on the Approval Process
+   * @param fg Approval Form Group
+   */
+  public getApprovalRemarks(fg: FormGroup): Array<RemarkModel> {
+    const remarkList = new Array<RemarkModel>();
+    if (fg.get('noApproval').value === false) {
+      const index = this.getApprovalIndex(fg);
+      this.approvalRuleService.getWriteApproval(index).forEach((app) => {
+        const rems = app.getRuleText().split('|');
+        const type = rems[0].indexOf('RI') === 0 ? 'RI' : 'RM';
+        if (this.pnrService.getRemarkLineNumber(rems[1], type) === '') {
+          remarkList.push(this.remarkHelper.createRemark(rems[1], type, rems[0].charAt(3)));
+        }
+      });
+    }
+    return remarkList;
+  }
+
+  /**
+   *  Get Approval Selected index, return 1 if Primary and Secondary selection has no value
+   * Gets _2_1 in [UI_SECONDARY_2_1]
+   * @param fg Approval Form
+   */
+  private getApprovalIndex(fg: FormGroup): string {
+    let value = '';
+    if (fg.get('secondaryReason').value !== '') {
+      value = fg.get('secondaryReason').value.toString();
+    } else if (fg.get('primaryReason').value !== '') {
+      value = fg.get('primaryReason').value.toString() + '_0';
+    }
+    return value.match(/_(\d)/g).join('');
+  }
+
+  /**
+   * get queue group approval based on the rules set in DDB
+   * @param fg Approval Form
+   * @returns Array<QueuePlaceModel> queue placement information
+   */
+  getApprovalQueue(fg: FormGroup): Array<QueuePlaceModel> {
+    const queueGroup = Array<QueuePlaceModel>();
+    if (fg.get('noApproval').value === false) {
+      const index = this.getApprovalIndex(fg);
+
+      this.approvalRuleService.getQueueApproval(index).forEach((app) => {
+        const queue = new QueuePlaceModel();
+        const queueInfo = app.getRuleText().split('/');
+        queue.pcc = (queueInfo[0] === '{BOOKING_OID}') ? this.pnrService.PCC : queueInfo[0];
+        queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+        const categoryqueue = queueInfo[1].split('C');
+        queue.queueNo = categoryqueue[0];
+        queue.category = categoryqueue[1];
+        queueGroup.push(queue);
+      });
+    }
+    return queueGroup;
   }
 }

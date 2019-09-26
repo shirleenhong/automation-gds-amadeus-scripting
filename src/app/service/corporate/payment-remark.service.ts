@@ -19,8 +19,12 @@ export class PaymentRemarkService {
   nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
   currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService,
-    private rms: RemarksManagerService, private ddbService: DDBService) { }
+  constructor(
+    private remarksManager: RemarksManagerService,
+    private pnrService: PnrService,
+    private rms: RemarksManagerService,
+    private ddbService: DDBService
+  ) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -32,7 +36,7 @@ export class PaymentRemarkService {
     // Write Non BSP Exhange Remarks
     this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NONBSPEXCHANGE'));
     this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'));
-    this.writeAquaTicketingRemarks(accList.filter((x) => x.accountingTypeRemark === 'NONBSP'))
+    this.writeAquaTicketingRemarks(accList.filter((x) => x.accountingTypeRemark === 'NONBSP'));
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
@@ -153,7 +157,7 @@ export class PaymentRemarkService {
       let totalHst = parseFloat(account.hst);
       let totalQst = parseFloat(account.qst);
 
-      if (account.originalTktLine != undefined) {
+      if (account.originalTktLine !== undefined) {
         originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);
       } else {
         originalTicketCondition.set('NoOriginalTicket', 'true');
@@ -195,12 +199,7 @@ export class PaymentRemarkService {
       );
 
       const totalCost =
-        totalBaseAmount +
-        totalGst +
-        totalHst +
-        totalQst +
-        parseFloat(account.otherTax) +
-        parseFloat(account.commisionWithoutTax);
+        totalBaseAmount + totalGst + totalHst + totalQst + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
 
       airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
       airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
@@ -305,8 +304,6 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       }
     });
-
-
   }
 
   private GetSegmentAssociation(account: MatrixAccountingModel) {
@@ -488,10 +485,9 @@ export class PaymentRemarkService {
       }
     });
 
-    segmentAssoc = (!hasNonTrain) ? segmentAssoc : [];
+    segmentAssoc = !hasNonTrain ? segmentAssoc : [];
     return { segmentAssoc, route };
   }
-
 
   getRoute(element: any, route: string) {
     if (element !== 'Canada' && element !== 'United States') {
@@ -504,7 +500,7 @@ export class PaymentRemarkService {
   }
 
   writeAquaTicketingRemarks(accountingRemarks: MatrixAccountingModel[]): void {
-    accountingRemarks.forEach(element => {
+    accountingRemarks.forEach((element) => {
       let idx = 1;
       const { segmentAssoc, route } = this.allRailSegment(element);
       if (segmentAssoc.length > 0) {

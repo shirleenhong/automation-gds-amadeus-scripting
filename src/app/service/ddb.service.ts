@@ -287,7 +287,7 @@ export class DDBService implements OnInit {
         const supplier = {
           type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
           supplierCode: s.SupplierCode,
-          supplierName: s.SupplierName
+          supplierName: s.SupplierName + ' (' + s.CurrencyCode + ')'
         };
         this.supplierCodes.push(supplier);
       });

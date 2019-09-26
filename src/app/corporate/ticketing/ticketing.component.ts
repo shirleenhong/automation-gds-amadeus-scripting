@@ -28,6 +28,12 @@ export class TicketingComponent implements OnInit {
     if (!this.ticketlineComponent.ticketForm.valid) {
       return false;
     }
+
+    this.utilHelper.validateAllFields(this.ticketlineComponent.approvalForm);
+    if (!this.ticketlineComponent.approvalForm.valid) {
+      return false;
+    }
+
     return true;
   }
 }

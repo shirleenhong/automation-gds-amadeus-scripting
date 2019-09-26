@@ -18,8 +18,40 @@ ${input_unticketedTst}    //input[@formcontrolname='tst']
 ${input_nonAirSegments}    //input[@formcontrolname='segment']
 ${tab_tktInstruction}    //tab[@id='ticketingInstruction']
 ${text_noSegments}    //b[contains(text(), '*No Segments Available for Ticketing*')]
+${select_primaryReason}    //select[@id='primaryReason']
+${select_secondaryReason}    //select[@id='secondaryReason']
+${input_approverName}     //input[@id='textValue']
+${text_Danger}    //div[@class='col text-danger']
+${checkbox_ignoreApproval}    css=#chkIgnoreApproval
 
 *** Keywords ***
+Select Primary Approval Reason: ${primary_reason}
+    Select From List By Value     ${select_primaryReason}    ${primary_reason}
+
+Select Secondary Reason: ${secondary_reason}
+    Select From List By Value     ${select_secondaryReason}    ${secondary_reason}
+    
+Fill Up Approval Fields
+    Navigate To Page Ticketing Line
+    Run Keyword If    "${with_ui}" == "Yes" and "${ignore_approval}" == "Yes"       Select Checkbox    ${checkbox_ignoreApproval}
+    ...    ELSE IF    "${with_ui}" == "Yes" and "${ignore_approval}" != "Yes"    Fill Up Approval Reason Fields
+    ...    ELSE IF    "${with_ui}" == "No"    Verify Approval Fields Are Not Displayed
+    [Teardown]    Take Screenshot
+    
+Verify Approval Fields Are Not Displayed
+    Run Keyword And Continue On Failure    Page Should Not Contain Element     ${select_primaryReason}
+    Run Keyword And Continue On Failure    Page Should Not Contain Element     ${checkbox_ignoreApproval}
+
+Fill Up Approval Reason Fields
+    Select Primary Approval Reason: ${primary_approval_reason}
+    Run Keyword If    "${secondary_approval_reason}" != "None"    Select Secondary Reason: ${secondary_approval_reason}
+    Run Keyword If    "${approver_name}" != "None"    Enter Value    ${input_approverName}    ${approver_name}
+    Run Keyword If    "${addtl_message}" != "None"    Verify Warning Message Is Displayed     ${addtl_message}
+    
+Verify Warning Message Is Displayed
+    [Arguments]    ${warning_message}
+    Run Keyword And Continue On Failure     Element Should Contain    ${text_Danger}    ${warning_message}
+
 Click Ticketing Instructions Tab
     Wait Until Element Is Visible   ${tab_tktInstructions}    30
     Click Element At Coordinates    ${tab_tktInstructions}    0    0
@@ -286,3 +318,12 @@ Verify Multiple Aqua Ticketing Instruction Remarks Are Written Correctly
     Verify Specific Remark Is Written In The PNR     RMT TKT1-INTL/S3
     Verify Specific Remark Is Written In The PNR     RMT TKT1-INTL/S4
     Verify Specific Remark Is Written In The PNR     RMT TKT1-INTL/S5
+    
+Verify PNR Approval Is Processed Correctly
+    Finish PNR
+    Run Keyword If    "${queue_approval}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/50C3
+    ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/50C3
+    Run Keyword If    "${remark_added}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added}   
+    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TKTL${tktl_date}/YTOWL2106/Q8C1-ONHOLD
+    Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
+    ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1

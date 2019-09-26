@@ -11,7 +11,7 @@ import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.co
 export class ReportingRemarkService {
   hasTransborder: boolean;
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) { }
 
   WriteBspRemarks(rbc: ReportingBSPComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;

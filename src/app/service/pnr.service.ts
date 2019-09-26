@@ -106,9 +106,13 @@ export class PnrService {
         });
     }
 
-    getRemarkLineNumber(searchText: string) {
+    getRemarkLineNumber(searchText: string, type?: string) {
         if (this.isPNRLoaded) {
-            for (const rm of this.pnrObj.rmElements) {
+            let remarksList = this.pnrObj.rmElements;
+            if (type === 'RI') {
+                remarksList = this.pnrObj.riElements;
+            }
+            for (const rm of remarksList) {
                 if (rm.freeFlowText.indexOf(searchText) === 0) {
                     return rm.elementNumber;
                 }
@@ -117,10 +121,14 @@ export class PnrService {
         return '';
     }
 
-    getRemarkLineNumbers(searchText: string) {
+    getRemarkLineNumbers(searchText: string, type?: string) {
         const lineNos: Array<string> = [];
         if (this.isPNRLoaded) {
-            for (const rm of this.pnrObj.rmElements) {
+            let remarksList = this.pnrObj.rmElements;
+            if (type === 'RI') {
+                remarksList = this.pnrObj.riElements;
+            }
+            for (const rm of remarksList) {
                 if (rm.freeFlowText.indexOf(searchText) === 0) {
                     lineNos.push(rm.elementNumber);
                 }
@@ -140,7 +148,7 @@ export class PnrService {
         return '';
     }
 
-    getFIElementText(searchText: string) {        
+    getFIElementText(searchText: string) {
         if (this.isPNRLoaded) {
             for (const fi of this.pnrObj.fiElements) {
                 if (fi.fullNode.otherDataFreetext.indexOf(searchText) === 0) {
@@ -1239,7 +1247,7 @@ export class PnrService {
                 if (supCode === 'amk') {
                     if (
                         misc.fullNode.itineraryFreetext
-                        .longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
+                            .longFreetext.indexOf('VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER') > -1
                     ) {
                         return true;
                     }
@@ -1307,7 +1315,7 @@ export class PnrService {
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
             if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-               if (tst.referenceForDataElement) {
+                if (tst.referenceForDataElement) {
                     tst.referenceForDataElement.reference.forEach((ref) => {
                         if (ref.qualifier === 'ST') {
                             segments.push(ref.number);
@@ -1406,7 +1414,7 @@ export class PnrService {
     }
 
     getTatooNumberFromSegmentNumber(segments: string[]): string[] {
-        if ( this.segments.length === 0) {
+        if (this.segments.length === 0) {
             this.getSegmentTatooNumber();
         }
         const lineNos = this.segments.filter(s => segments.indexOf(s.lineNo) >= 0).map(x => x.tatooNo);
@@ -1414,11 +1422,11 @@ export class PnrService {
     }
 
     getSegmentNumbers(tatooNumbers: any[]): string[] {
-        if ( this.segments.length === 0) {
+        if (this.segments.length === 0) {
             this.getSegmentTatooNumber();
         }
         const segmentLines = [];
-        for (const tatooNo of tatooNumbers)  {
+        for (const tatooNo of tatooNumbers) {
             const segment = this.segments.filter(s => s.tatooNo === tatooNo);
             if (segment && segment.length > 0) {
                 segmentLines.push(segment[0].lineNo);
@@ -1453,4 +1461,44 @@ export class PnrService {
         return segmentLines;
     }
 
+    public isExistRemarksWithCategory(remarkText: string, cat: string, type: string): boolean {
+        let search = [];
+        if (this.isPNRLoaded) {
+            switch (type) {
+                case 'RI':
+                    search = this.pnrObj.rmElements;
+                    break;
+                default:
+                    search = this.pnrObj.riElements;
+            }
+
+            for (const rm of search) {
+                if (rm.category === cat && rm.freeFlowText.indexOf(remarkText) > -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public getFopElements(fop?) {
+        for (const fp of this.pnrObj.fpElements) {
+            if (fop) {
+                if (fp.fullNode.otherDataFreetext.longFreetext.indexOf(fop) > -1) {
+                    return fp.fullNode.otherDataFreetext.longFreetext;
+                }
+            } else {
+                return fp.fullNode.otherDataFreetext.longFreetext;
+            }
+        }
+        return '';
+    }
+
+
+    public getTkLineDescription(): string {
+        if (this.pnrObj.tkElements && this.pnrObj.tkElements[0]) {
+            return this.pnrObj.tkElements[0].freeFlowText.trim();
+        }
+        return '';
+    }
 }

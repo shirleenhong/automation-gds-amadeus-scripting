@@ -1,5 +1,6 @@
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
+import { PnrService } from 'src/app/service/pnr.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
 import { SeatsService } from 'src/app/service/corporate/seats.service';
@@ -22,6 +23,7 @@ export class SeatsComponent implements OnInit {
 
   constructor(
     private modalService: BsModalService,
+    private pnrService: PnrService,
     public seatsService: SeatsService
   ) { }
 
@@ -31,11 +33,47 @@ export class SeatsComponent implements OnInit {
   }
 
   /**
-   * Get the seats.
+   * WIP: Get the seats from the PNR
+   * based on RIR remark texts.
+   * TODO: Handle languages
+   *
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    return [];
+    // return [];
+    // debugger;
+    console.log('getSeats() ================================');
+
+    const seats = new Array<SeatModel>();
+
+    const rirRemarks = this.pnrService.getRirRemarksFromGDS();
+    console.log('rirRemarks');
+    console.log(rirRemarks);
+
+    for (const rirRemark of rirRemarks) {
+
+      // Condition 1
+      if (rirRemark.remarkText === 'SEATING SUBJECT TO') {
+        continue;
+      } else if (rirRemark.remarkText === 'AIRPORT OR ONLINE CHECK IN') {
+        // WARNING: Segments doesn't seem to be in PNR service...
+        const rirSegments = rirRemark.remarkText.substr(rirRemark.remarkText.indexOf('/S'));
+
+        seats.push({
+          remarkId: 1,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+      }
+
+      // Condition 2
+
+      // Condition 3
+    }
+
+    return seats;
+
     // Dummy seats
     // return this.seats = [
     //   {
@@ -43,18 +81,6 @@ export class SeatsComponent implements OnInit {
     //     number: '100',
     //     type: 'window',
     //     segmentIds: '1'
-    //   },
-    //   {
-    //     remarkId: 2,
-    //     number: '200',
-    //     type: 'aisle',
-    //     segmentIds: '1,2'
-    //   },
-    //   {
-    //     remarkId: 3,
-    //     number: '300',
-    //     type: 'middle',
-    //     segmentIds: '1,2,3'
     //   },
     // ];
   }

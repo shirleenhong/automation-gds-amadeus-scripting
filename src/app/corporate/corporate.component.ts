@@ -60,7 +60,7 @@ export class CorporateComponent implements OnInit {
     private reportingRemarkService: ReportingRemarkService,
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
-    private feesRemarkService: FeesRemarkService,
+    private feesRemarkService: FeesRemarkService
   ) {
     this.initData();
   }
@@ -201,6 +201,7 @@ export class CorporateComponent implements OnInit {
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
+    debugger;
     this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
 
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);

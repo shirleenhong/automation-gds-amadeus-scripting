@@ -6,8 +6,7 @@ import { SeatModel } from 'src/app/models/pnr/seat.model';
   providedIn: 'root'
 })
 export class CorpRemarksService {
-
-  constructor(private remarksManagerService: RemarksManagerService) { }
+  constructor(private remarksManagerService: RemarksManagerService) {}
 
   /**
    * WIP
@@ -20,17 +19,19 @@ export class CorpRemarksService {
   public writeSeatRemarks(seats: Array<SeatModel>): void {
     debugger;
 
-    seats.forEach(seat => {
-
+    seats.forEach((seat) => {
+      debugger;
       // Condition 1
       if (seat.segmentId) {
+        debugger;
         const segments = seat.segmentId.split(',');
 
         segments.forEach((segment) => {
           const seatMap = new Map<string, string>();
           // WIP
-          seatMap.set('ONLINECHECKIN', 'true');
-          this.remarksManagerService.createPlaceholderValues(seatMap, null, new Array(segment));
+          seatMap.set('CASeatRule', 'ONLINECHECKIN');
+          this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'SEATING SUBJECT TO');
+          this.remarksManagerService.createPlaceholderValues(null, seatMap, new Array(segment), null, 'AIRPORT OR ONLINE CHECK IN');
         });
       }
 

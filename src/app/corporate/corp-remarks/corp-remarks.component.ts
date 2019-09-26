@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { SeatsComponent } from './seats/seats.component';
 
 @Component({
   selector: 'app-corp-remarks',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./corp-remarks.component.scss']
 })
 export class CorpRemarksComponent implements OnInit {
+
+  @ViewChild(SeatsComponent) seatsComponent: SeatsComponent;
 
   constructor() { }
 

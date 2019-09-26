@@ -7,6 +7,7 @@ import { StaticValuesService } from './static-values.services';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-missed-saving-threshold.model';
 import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
+import { ApprovalItem } from '../models/ddb/approval.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,12 @@ export class DDBService implements OnInit {
   servicingOption = [];
   airTravelPortInformation = [];
   reasonCodeList = Array<ReasonCode>();
+  approvalList = Array<ApprovalItem>();
   airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -88,8 +90,15 @@ export class DDBService implements OnInit {
     }
   }
 
-  async approvers(clientSubUnit) {
-    return await this.getRequest(common.approversService + clientSubUnit);
+  async approvers(clientSubUnit, cfa: string) {
+    this.reasonCodeList = [];
+    await this.getRequest(common.approversService + clientSubUnit + '&SourceSystemCode=CA1&ClientAccountNumber=1' + cfa).then(
+      (response) => {
+        response.ApproversResponseItem.forEach((approverJson) => {
+          this.approvalList.push(new ApprovalItem(approverJson));
+        });
+      }
+    );
   }
 
   async queueMinderItems(clientSubUnit, typeid) {

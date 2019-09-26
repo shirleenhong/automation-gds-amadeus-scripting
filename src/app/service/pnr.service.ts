@@ -1427,4 +1427,30 @@ export class PnrService {
         return segmentLines;
     }
 
+    getTstSegments(): string[] {
+        const segmentTatooNumbers = [];
+        for (const ticketed of this.pnrObj.fvElements) {
+            const s = [];
+            ticketed.fullNode.referenceForDataElement.reference.forEach(ref => {
+                if (ref.qualifier === 'ST') {
+                    s.push(ref.number);
+                }
+            });
+            segmentTatooNumbers.push(s);
+        }
+        const segmentLines = [];
+        segmentTatooNumbers.forEach(tatoos => {
+            const s = [];
+            tatoos.forEach(tatoo => {
+                const segment = this.segments.filter(seg => seg.tatooNo === tatoo);
+                if (segment && segment.length > 0) {
+                    s.push(segment[0].lineNo);
+                }
+            });
+            segmentLines.push(s.join(','));
+        });
+
+        return segmentLines;
+    }
+
 }

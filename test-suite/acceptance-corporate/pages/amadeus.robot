@@ -20,7 +20,7 @@ ${button_command_page}    css=#etoolbar_toolbarSection_newcommandpagebtn_id
 ${input_commandText}    css=.cmdPromptDiv > textArea
 ${label_command_page}    //span[contains(@class, 'title cryptic')]
 ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
-${menu_corp_test}    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
+${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
 ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
@@ -67,9 +67,7 @@ Move Profile to GDS
     [Arguments]    @{gds_commands}
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
-    \    Wait Until Element Is Not Visible    ${icon_processing}    10
+    \    Enter Cryptic Command    ${gds_command}
 
 Open CA Corporate Test
     Wait Until Element Is Visible    ${menu_amadeus}    30
@@ -88,32 +86,34 @@ Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
+    \    Enter Cryptic Command    ${gds_command}
 
 Add Multiple BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
     ...    AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN10FEBCDGLHR/AAF    SS1Y1    FXP/S5
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
+    \    Enter Cryptic Command    ${gds_command}
     
 Add Multiple BSP Segment And Store Multiple Fares
     @{gds_commands}    Create List    AN10JANYYZCDG/AAF    SS1Y1    AN20JANCDGLHR/AAF    SS1Y1    AN20JANLHRCDG/AAF
     ...    SS1Y1    AN10FEBCDGYUL/AAC    SS1Y1    AN10FEBYULCDG/AAC    SS1Y1    FXP/S3,5-6    FXP/S2,4
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
+    \    Enter Cryptic Command    ${gds_command}
 
+Add Multiple BSP Segments And Store Single Fare
+    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
+    Wait Until Element Is Visible    ${label_command_page}    180
+    : FOR    ${gds_command}    IN    @{gds_commands}
+    \    Enter Cryptic Command    ${gds_command}
+	
 Delete Fare and Itinerary
     @{gds_commands}    Create List   IR    RT    TTE/ALL    XI    RFCWTPTEST    ER
     ...    ER
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
+    \    Enter Cryptic Command    ${gds_command}
     Handle Simultaneous Changes To PNR
 
 Logout To Amadeus Sell Connect
@@ -171,15 +171,12 @@ Add Passive Air Segment In The GDS With Airline Code ${airline_code}
 Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     @{gds_commands}    Create List    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
-    Sleep    2
+    \    Enter Cryptic Command    ${gds_command}
 
 Add Multiple Passive Air Segments In The GDS With Different Airline Codes
     @{gds_commands}    Create List    SS UA1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
+    \    Enter Cryptic Command    ${gds_command}
 
 Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
@@ -208,19 +205,19 @@ Remove Line Break And Spaces
     Set Test Variable    ${pnr_details_flattened}
     Set Test Variable    ${expected_remark_flattened}
 
+Create Exchange NE Remark   
+   Move Profile to GDS    RM*NE/-EX-Y    TKOK
+
 Create Exchange PNR In The GDS
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
     ...    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
+    \    Enter Cryptic Command    ${gds_command}
     
 Create Multiple TKT Exchange PNR In The GDS
     @{gds_commands}    Create List    RT   TTK/EXCH/S2    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2    TTK/EXCH/S3    TTK/T2/RCAD200.00/XCAD20.00YR/TCAD120.00    FO057-1346629128E1PAR10MAY19/00002634/057-1346629127E1/S3   RFCWTPTEST   ER    RT${actual_record_locator}
     : FOR    ${gds_command}    IN    @{gds_commands}
-    \    Input Text    ${input_commandText}    ${gds_command}
-    \    Press Key    ${input_commandText}    \\13
-    Sleep   4
+    \    Enter Cryptic Command    ${gds_command}
 
 Move Single Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
@@ -232,15 +229,24 @@ Move Multiple Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
 
 Move Single Passenger And Add Single BSP Segment With TST
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-CN1
     Add Single BSP Segment And Store Fare
 
+Move Single Passenger And Add Single BSP Segment With IFC CN Number And TST
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-IFC
+    Add Single BSP Segment And Store Fare
+    Move Profile to GDS    RT
+
 Move Single Passenger And Add Multiple BSP Segment With TSTs
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
     Add Multiple BSP Segment And Store Fare
+	
+Move Single Passenger And Add Multiple BSP Segments With Single TST
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
+    Add Multiple BSP Segments And Store Single Fare
     
 Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
     Add Multiple BSP Segment And Store Multiple Fares
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
@@ -376,6 +382,16 @@ Create PNR With ${number_of_segments} Hotel Segments
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
     Add ${number_of_segments} Hotel Segments
 
+Create PNR With ${number_of_segments} Hotel Segment/s With Invoice
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
+    Add ${number_of_segments} Hotel Segments
+    Move Profile to GDS    RFCWTTEST    ER
+    Sleep    4
+    Get Record Locator Value
+    Move Profile to GDS    INV/MI000143
+    Sleep    4
+    Move Profile to GDS    RT${actual_record_locator}
+
 Create PNR With One TST For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
     Create 2 Test Dates
@@ -423,3 +439,57 @@ Add ${number_of_segments} Rail Segments
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800OSL/ED-${test_date_${i}}/ET-0800/CF-12345
+    
+Create PNR With Passive Air Segments For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}lilly_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    
+Create PNR With Active Air Segments For ${client_data}
+    ${client_name}    Get Client Name    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    
+
+Create PNR For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}lilly_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+
+Enter Cryptic Command
+    [Arguments]    ${gds_command}
+    Input Text    ${input_commandText}     ${gds_command}
+    Press Key    ${input_commandText}    \\13
+    Wait Until Element Is Not Visible    ${icon_processing}    10
+    
+Book ${numberOfAir} Passive Air Segments
+    Create ${numberOfAir} Test Dates
+    : FOR    ${i}    IN RANGE   0   ${numberOfAir}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 11551440 / ABCDEFG
+        
+Book ${numberOfAir} Active Air Segments
+    Create ${numberOfAir} Test Dates
+    : FOR    ${i}    IN RANGE   0   ${numberOfAir}
+    \    ${i}    Evaluate    ${i} + 1   
+    \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
+    \    Enter Cryptic Command    SS1Y1
+    \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
+    
+Add Other Remarks
+    : FOR    ${i}    IN RANGE   0    99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${other_rmk_${i}}
+    \    Run Keyword If    "${exists}" == "True" and "${other_rmk_${i}}" != "None"     Enter Cryptic Command    ${other_rmk_${i}}
+    \    Exit For Loop If    "${exists}" == "False"

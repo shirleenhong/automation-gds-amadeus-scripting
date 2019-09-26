@@ -4,14 +4,14 @@ import { PnrService } from '../pnr.service';
 import { FormGroup, FormArray } from '@angular/forms';
 import { ReportingBSPComponent } from 'src/app/corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingNonbspComponent } from 'src/app/corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
-
+import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
 @Injectable({
   providedIn: 'root'
 })
 export class ReportingRemarkService {
   hasTransborder: boolean;
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
   WriteBspRemarks(rbc: ReportingBSPComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;
@@ -113,4 +113,36 @@ export class ReportingRemarkService {
     }
   }
 
+  WriteU63(wc: WaiversComponent) {
+    const bspGroup: FormGroup = wc.ticketedForm;
+    const items = bspGroup.get('segments') as FormArray;
+
+    for (const control of items.controls) {
+      if (control instanceof FormGroup) {
+        const fg = control as FormGroup;
+        const waiverRemark = new Map<string, string>();
+
+        const segments: string[] = [];
+        let segmentrelate: string[] = [];
+
+        Object.keys(fg.controls).forEach((key) => {
+          if (key === 'segment') {
+            fg.get(key)
+              .value.split(',')
+              .forEach((val) => {
+                segments.push(val);
+              });
+
+            segmentrelate = this.getRemarkSegmentAssociation(segments);
+          }
+
+          if (key === 'waiver') {
+            waiverRemark.set('WaiverLine', fg.get(key).value);
+          }
+        });
+
+        this.remarksManager.createPlaceholderValues(waiverRemark, null, segmentrelate);
+      }
+    }
+  }
 }

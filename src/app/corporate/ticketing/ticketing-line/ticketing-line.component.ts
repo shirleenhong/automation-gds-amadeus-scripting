@@ -20,7 +20,7 @@ export class TicketingLineComponent implements OnInit {
   isOnHoldChecked = false;
   ticketForm: FormGroup;
   tkList: Array<SelectItem> = null;
-  hasApproval = true;
+  hasApproval = false;
   approvalForm: FormGroup;
   primaryReasonList: Array<ApprovalItem> = [];
   secondaryReasonList: Array<ApprovalItem> = [];
@@ -38,13 +38,6 @@ export class TicketingLineComponent implements OnInit {
       tk: new FormControl('', [Validators.required]),
       verifyAck: new FormControl('', [Validators.required])
     });
-
-    this.approvalForm = new FormGroup({
-      noApproval: new FormControl(false, [Validators.required]),
-      primaryReason: new FormControl('', [Validators.required]),
-      secondaryReason: new FormControl('', [Validators.required]),
-      additionalValues: new FormArray([])
-    });
   }
 
   ngOnInit() {
@@ -57,7 +50,13 @@ export class TicketingLineComponent implements OnInit {
     this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList();
     this.additionalReasonList = this.approvalRuleService.getAdditionalList();
     this.hasApproval = this.approvalRuleService.hasApproval();
-    this.approvalForm.get('noApproval').setValue(this.hasApproval);
+    this.approvalForm = new FormGroup({
+      noApproval: new FormControl(!this.hasApproval, [Validators.required]),
+      primaryReason: new FormControl('', [Validators.required]),
+      secondaryReason: new FormControl('', [Validators.required]),
+      additionalValues: new FormArray([])
+    });
+    this.noApprovalChecked(!this.hasApproval);
   }
 
   /**

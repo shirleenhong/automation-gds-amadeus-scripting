@@ -273,12 +273,10 @@ Book Multiple Segments With Air Car Rail And Hotel
     Add 1 Car Segments
     
 Verify Correct OBT Fee Remark Are Written In The PNR For Multiple Segment
-    #Select All Unticketed TSTs
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATE    
 
 Verify Correct OBT Fee Remark Are Written In The PNR For Air Only
-    #Select All Unticketed TSTs
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATE
     
@@ -295,7 +293,6 @@ Verify Correct OBT Fee Remark Are Written In The PNR For Car Only
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-CBE
     
 Verify The No Supfee Remark Are Written In The PNR
-    #Select All Unticketed TSTs
     Finish PNR
     Verify Specific Remark Is Not Written In The PNR    RMF SUPFEE1-ATE    
     

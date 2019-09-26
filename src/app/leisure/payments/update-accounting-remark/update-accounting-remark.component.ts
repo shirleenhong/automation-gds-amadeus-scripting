@@ -307,7 +307,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   filterSupplierCode(typeCode) {
     const val = ['12', '5', '1', '6', '4', 'NAE'];
-    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL', 'AIR'];
+    const type = ['TOUR', 'SEA', 'AIR', 'CAR', 'RAIL', 'AIR'];
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);

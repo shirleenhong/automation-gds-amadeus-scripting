@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { RemarksManagerApiService } from './remarks-manager-api.service';
 import { PlaceholderValues } from 'src/app/models/placeholder-values';
 import { OutputItem } from 'src/app/models/output-item.model';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { AmadeusRemarkService } from '../amadeus-remark.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -12,7 +14,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService) { }
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -146,14 +148,25 @@ export class RemarksManagerService {
     return result;
   }
 
-  async submitToPnr() {
-    await this.sendPnrToAmadeus(await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues));
+  async submitToPnr(additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>) {
+    await this.sendPnrToAmadeus(
+      await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues),
+      additionalRemarks,
+      additionalRemarksToBeDeleted
+    );
   }
 
-  async sendPnrToAmadeus(pnrResponse: any) {
+  private async sendPnrToAmadeus(pnrResponse: any, additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>) {
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
-      await smartScriptSession.send(pnrResponse.deleteCommand);
+      await smartScriptSession.send(this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted));
     }
+
+    if (additionalRemarks) {
+      additionalRemarks.forEach((rem) => {
+        pnrResponse.pnrAddMultiElements.dataElementsMaster.dataElementsIndiv.push(this.amadeusRemarkService.getRemarkElement(rem));
+      });
+    }
+
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
@@ -168,5 +181,24 @@ export class RemarksManagerService {
         }
       });
     });
+  }
+
+  private combineForDeleteItems(deleteResponse: string, additional: string[]): string {
+    if (additional) {
+      additional.forEach((add) => {
+        deleteResponse
+          .replace('XE', '')
+          .split(',')
+          .forEach((xe) => {
+            if (xe.indexOf('-') >= 0) {
+              const x = xe.split('-');
+              if (!(parseInt(x[0], null) >= parseInt(add, null) && parseInt(xe[1], null) <= parseInt(add, null))) {
+                deleteResponse += ',' + add;
+              }
+            }
+          });
+      });
+    }
+    return deleteResponse;
   }
 }

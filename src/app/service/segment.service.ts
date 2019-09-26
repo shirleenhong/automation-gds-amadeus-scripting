@@ -149,6 +149,9 @@ export class SegmentService {
                     if (segmentrem.segmentType === 'LIM') {
                         this.rirLimo(pnrSegment, segmentrem, rmGroup, itinLanguage);
                     }
+                    if (segmentrem.segmentType === 'INS') {
+                        this.rirIns(pnrSegment, segmentrem, rmGroup);
+                    }
                 }
 
                 if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
@@ -253,20 +256,27 @@ export class SegmentService {
         if (type === 'SEA') {
             if (segmentrem.stateRoom) {
                 remText = segmentrem.stateRoom;
-                if (segmentrem.stateRoom === 'OTHER') {
-                    remText = segmentrem.othersText;
-                }
             }
-
             if (segmentrem.cabinNo) {
                 remText = remText + ' ' + segmentrem.cabinNo;
+            }
+
+            if (segmentrem.dining) {
+                remText = remText + ' ' + segmentrem.dining + ' ' + segmentrem.noNights + ' NTS';
             }
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
     }
 
+    private rirIns(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        if (type === 'INS' && segmentrem.insuranceType) {
+            rmGroup.remarks.push(this.getRemarksModel(segmentrem.insuranceType, 'RI', 'R', pnrSegment.tatooNo));
+        }
+    }
+
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                     amk: number, vib: number, itinLanguage: string) {
+        amk: number, vib: number, itinLanguage: string) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             rmGroup.remarks.push(this.getRemarksModel
@@ -417,7 +427,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-                            startTime: string, enddatevalue: string, endTime: string) {
+        startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -435,10 +445,10 @@ export class SegmentService {
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
             case 'SEA':
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + ' ' + segment.tourName + ' ' + segment.dining +
-                    ' ' + segment.noNights + 'NTS/SUC-' + segment.vendorCode + '/SC-' +
-                    segment.departureCity + '/SD-' + startdatevalue + '/ST-' + startTime + segment.destinationCity +
-                    '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + suplierName + ' ' + segment.tourName +
+                    '/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' +
+                    startdatevalue + '/ST-' + startTime + '/ED-' + enddatevalue + '/ET-' +
+                    endTime + '/EC-' + segment.destinationCity + '/CF-' + segment.confirmationNo;
                 break;
             case 'INS':
                 freetext = '/TYP-' + segment.segmentType + '/SUN-MANULIFE INSURANCE/SUC-MLF/SC-' +
@@ -849,7 +859,7 @@ export class SegmentService {
         rmGroup.remarks = new Array<RemarkModel>();
         fareRuleModels.forEach(model => {
             if (model.fareRuleType !== '') {
-                smartScriptSession.send('PBN/' + this.pnrService.PCC + '/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '*');
                 rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
             } else {
 

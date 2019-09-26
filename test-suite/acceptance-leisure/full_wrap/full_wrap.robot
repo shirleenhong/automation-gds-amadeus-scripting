@@ -34,7 +34,18 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Click Payment Tab    Leisure Fee
     Add Leisure Fee Collection
     Sleep    3
-    Populate Reporting Required Fields
+    Click Panel    Reporting
+    Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
+    Enter Destination Code    CDG
+    Click Reporting Tab    Royal Bank - Concierge
+    Select Redemption Added    WITHIN 48 Hours of Original Booking
+    Select Reservation Request    Reservation was generated via EMAIL
+    Select Booking Type    Cruise/Tour/FIT
+    Enter Caller Name    Leisure Callername
+    Enter Delegate Caller Name    Leisure Delegatename
+    Enter Hotel Name    HOLIDAY INN AMSTERDAM
+    Select Reservation For Business Travel    YES
+    Select Hotel Reservation Booked    YES
     Click Panel    Remarks
     Click Remarks Tab    Visa and Passport
     Select International Travel
@@ -58,6 +69,7 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Verify Specific Remark Is Written In The PNR    RM INTERNATIONAL TRAVEL ADVISORY SENT
     Verify Specific Remark Is Written In The PNR    RM ADVISED PASSPORT NAME VALID PASSPORT IS REQUIRED
     Verify Specific Remark Is Written In The PNR    RIR FRANCE - A VALID PASSPORT IS REQUIRED/S2
+    Verify Royal Bank Concierge UDID Remarks Are Written    Within    Email    Cruise    \    True
     Close Cryptic Display Window
 
 Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
@@ -91,16 +103,6 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     Enter Commission Percentage    10.00
     Click Save Button
     Sleep    3
-    Click Panel    Reporting
-    Click Reporting Tab    Royal Bank - Concierge
-    Select Redemption Added    WITHIN 48 Hours of Original Booking
-    Select Reservation Request    Reservation was generated via EMAIL
-    Select Booking Type    Cruise/Tour/FIT
-    Enter Caller Name    Leisure Callername
-    Enter Delegate Caller Name    Leisure Delegatename
-    Enter Hotel Name    Hotel Name for Leisure
-    Select Reservation For Business Travel    YES
-    Select Hotel Reservation Booked    YES
     Click Submit To PNR
     Sleep    5
     Click Itinerary And Queue
@@ -115,7 +117,6 @@ Verify That Accounting Remarks, UDIDs, And ITC Remarks Can Be Updated In the PNR
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CA/-LK-T/-BA-101000/-GL-124000
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}
-    Verify Royal Bank Concierge UDID Remarks Are Written    Within    Email    Cruise    \    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-AN7/-LK-MAC1/-AMT-100.75/-PT-1.00RC/-PT-2.00XG/-PT-3.00XQ/-PT-4.00XT/-CD-12.00    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0323/-MP-ALL/-BKN-ABC4567891EFG4567890/S3    True
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-MLF/-LK-MAC2/-AMT-123.00/-PT-4.00RC/-PT-5.00XG/-PT-3.00XQ/-CP-10.00    True
@@ -426,7 +427,7 @@ Add Leisure Fee Collection
     Click Save Button
 
 Verify Leisure Fee Remarks Are Written
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-9.98XQ/-FOP-CK    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XG
 

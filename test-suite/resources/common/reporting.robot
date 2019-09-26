@@ -47,7 +47,7 @@ Enter Delegate Caller Name
 Enter Hotel Name
     [Arguments]    ${hotel_name}
     Input Text    css=#hotelName    ${hotel_name}
-    Set Suite Variable    ${hotel_name}
+    Set Test Variable    ${hotel_name}
 
 Select Reservation For Business Travel
     [Arguments]    ${is_business_reserved}

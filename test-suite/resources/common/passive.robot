@@ -102,7 +102,8 @@ Click Add Segments To PNR
 
 Select State Room
     [Arguments]    ${state_room}
-    Select From List By Label    css=#stateRoom    ${state_room}
+    Input Text    css=#stateRoom    ${state_room}
+    Press Key    css=#stateRoom    \\09
     Set Test Variable    ${state_room}
 
 Enter State Room Others Description
@@ -115,9 +116,9 @@ Enter Cabin Number
     Input Text    css=#cabinNo    ${cabin_number}
     Set Test Variable    ${cabin_number}
 
-Select Dining
+Enter Dining
     [Arguments]    ${dining}
-    Select From List By Label    css=#dining    ${dining}
+    Input Text    css=#dining    ${dining}
     Press Key    css=#dining    \\09
     Set Test Variable    ${dining.upper()}
     [Teardown]    Take Screenshot
@@ -433,3 +434,10 @@ Enter Rate Booked
     Double Click Element    css=#rateBooked
     Press Key    css=#rateBooked    \\08
     Input text      css=#rateBooked      ${rate_booked}
+
+Enter Type Of Insurance Purchased
+    [Arguments]    ${rate_booked}
+    # Double Click Element    css=#insuranceType
+    # Press Key    css=#insuranceType    \\08
+    Input text      css=#insuranceType      ${rate_booked}
+    Press Key    css=#insuranceType    \\09

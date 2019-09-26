@@ -17,6 +17,14 @@ import { FeesComponent } from './corporate/fees/fees.component';
 import { SupplementalFeesComponent } from './corporate/fees/supplemental-fees/supplemental-fees.component';
 import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-fees/add-supplemental-fees.component';
 import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
+import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
+import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
+import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
+import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
+import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/seats-form.component';
+import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
+import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +39,15 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
     FeesComponent,
     SupplementalFeesComponent,
     AddSupplementalFeesComponent,
-    TicketingComponent
+    TicketingComponent,
+    AquaTicketingComponent,
+    TicketingLineComponent,
+    CorpRemarksComponent,
+    MatrixReportingComponent,
+    SeatsComponent,
+    SeatsFormComponent,
+    WaiversComponent,
+    AddWaiverComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +67,11 @@ import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
+  entryComponents: [
+    AddSupplementalFeesComponent,
+    AddWaiverComponent,
+    SeatsFormComponent,
+    UpdateAccountingRemarkComponent
+  ]
 })
 export class AppCorporateModule {}

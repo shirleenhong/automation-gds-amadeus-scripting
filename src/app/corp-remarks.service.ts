@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RemarksManagerService } from './remarks-manager.service';
+import { RemarksManagerService } from './service/corporate/remarks-manager.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { SeatModel } from 'src/app/models/pnr/seat.model';
 })
 export class CorpRemarksService {
 
-  constructor(remarksManagerService: RemarksManagerService) { }
+  constructor(private remarksManagerService: RemarksManagerService) { }
 
   /**
    * Write or prepare the seats for the PNR
@@ -17,24 +17,21 @@ export class CorpRemarksService {
    * @return void
    */
   public writeSeatRemarks(seats: Array<SeatModel>): void {
-    debugger;
+    for (let seatsCounter = 0; seatsCounter <= seats.length; seatsCounter++) {
+      const seat = seats[seatsCounter];
 
-    for (let i = 0; i <= seats.length; i++) {
-      const seat = seats[i];
-
-      if (seat.segmentId) {
+      if (seat) {
         const segments = seat.segmentId.split(',');
 
-        segments.forEach((segment) => {
+        for (let segmentsCounter = 0; segmentsCounter <= segments.length; segmentsCounter++) {
+          const segment = segments[segmentsCounter];
+
           const seatMap = new Map<string, string>();
           seatMap.set('ONLINECHECKIN', 'true');
-          this.remarksManager.createPlaceholderValues(seatMap, null, new Array(segment));
-        });
+          this.remarksManagerService.createPlaceholderValues(seatMap, null, new Array(segment));
+        }
       }
 
-      // const seatMap = new Map<string, string>();
-      // seatMap.set('SOME_PLACEHOLDER', 'SOME_VALUE');
-      // this.remarksManager.createPlaceholderValues(seatMap, null, null);
     }
   }
 }

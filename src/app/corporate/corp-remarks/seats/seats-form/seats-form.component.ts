@@ -15,12 +15,12 @@ export class SeatsFormComponent implements OnInit {
 
   @Input()
   seat: SeatModel;
-  text: string      = null;
+  remarkId: number  = null;
   type: string      = null;
   number: string    = null;
-  segmentId: string = null;
+  segmentIds: string = null;
 
-  remarkOptions: Array<string>;
+  remarkOptions: Array<{id: number, text: string}>;
   types: Array<string>;
 
   seatForm: FormGroup;
@@ -42,19 +42,16 @@ export class SeatsFormComponent implements OnInit {
     this.types         = SeatsService.TYPES;
 
     this.seatForm = new FormGroup({
-      text: new FormControl('', [ Validators.required ]),
+      remarkId: new FormControl('', [ Validators.required ]),
       type: new FormControl({ value: '', disabled: true }, []),
       number: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(this.REGEX_ALPHANUMERIC) ]),
-      segmentId: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
     });
 
     this.onChanges();
   }
 
   save(): void {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.seatForm.value);
-
     this.message = 'SAVED';
     this.modalRef.hide();
   }
@@ -64,9 +61,8 @@ export class SeatsFormComponent implements OnInit {
    */
   public onChanges(): void {
     // Disable or enable the type and number form controls based on type.
-    this.seatForm.get('text').valueChanges.subscribe((value) => {
-
-      switch (this.remarkOptions.indexOf(value) + 1) {
+    this.seatForm.get('remarkId').valueChanges.subscribe((value) => {
+      switch (value) {
         case 2:
           this.seatForm.get('type').enable();
           break;

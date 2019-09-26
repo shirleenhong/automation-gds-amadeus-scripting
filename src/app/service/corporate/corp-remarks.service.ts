@@ -17,29 +17,26 @@ export class CorpRemarksService {
    * @return void
    */
   public writeSeatRemarks(seats: Array<SeatModel>): void {
-    debugger;
+    for (const seat of seats) {
+      try {
+        const seatSegments = seat.segmentIds.split(',');
 
-    seats.forEach((seat) => {
-      debugger;
-      // Condition 1
-      if (seat.segmentId) {
-        debugger;
-        const segments = seat.segmentId.split(',');
-
-        segments.forEach((segment) => {
+        // Condition 1
+        for (const seatSegment of seatSegments) {
           const seatMap = new Map<string, string>();
-          // WIP
           seatMap.set('CASeatRule', 'ONLINECHECKIN');
           this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'SEATING SUBJECT TO');
-          this.remarksManagerService.createPlaceholderValues(null, seatMap, new Array(segment), null, 'AIRPORT OR ONLINE CHECK IN');
-        });
+          this.remarksManagerService.createPlaceholderValues(
+            null,
+            seatMap,
+            new Array(seatSegment),
+            null,
+            'AIRPORT OR ONLINE CHECK IN'
+          );
+        }
+      } catch (error) {
+        console.error('Could not write seat remark with error: ' + error);
       }
-
-      // Condition 2...
-
-      // Condition 3...
-
-      // Condition 4 and so on...
-    });
+    }
   }
 }

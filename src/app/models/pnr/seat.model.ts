@@ -1,10 +1,10 @@
 export class SeatModel {
 
     /**
-     * The remark Id to be written to the PNR.
-     * See SeatModel.REMARK_OPTIONS
+     * The id of the seat to be written to the PNR.
+     * See SeatModel.REMARK_OPTIONS for values
      */
-    public remarkId: number;
+    public id: number;
 
     /**
      * The type of the seat. The types are window, aisle and middle.

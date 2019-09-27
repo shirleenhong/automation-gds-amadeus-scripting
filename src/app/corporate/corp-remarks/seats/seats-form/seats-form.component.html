@@ -6,12 +6,17 @@
 </div>
 
 <div class="modal-body">
+
   <form id="seatForm" [formGroup]="seatForm" (ngSubmit)="save()">
+
+    <p class="alert alert-danger" *ngIf="exists">
+      The seat remark already exists.
+    </p>
 
     <div class="form-group row">
       <div class="col-sm-4">Seat Remark Option</div>
       <div class="col-sm-8">
-        <select class="form-control" formControlName="remarkId" id="seatForm  ">
+        <select class="form-control" formControlName="id" id="seatFormId">
           <option></option>
           <option *ngFor="let remarkOption of remarkOptions" [value]="remarkOption.id">
             {{ remarkOption.text }}
@@ -21,7 +26,7 @@
     </div>
 
     <div class="form-group row"
-      *ngIf="seatForm.controls.remarkId.value == 2 || seatForm.controls.remarkId.value == 5"
+      *ngIf="seatForm.controls.id.value == 2 || seatForm.controls.id.value == 5"
     >
       <div class="col-sm-4">Seat Type</div>
       <div class="col-sm-8">
@@ -34,7 +39,7 @@
       </div>
     </div>
 
-    <div class="form-group row" *ngIf="seatForm.controls.remarkId.value == 5">
+    <div class="form-group row" *ngIf="seatForm.controls.id.value == 5">
       <div class="col-sm-4">Seat Number</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" formControlName="number" id="seatFormNumber" />
@@ -52,7 +57,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" form="seatForm" class="btn btn-outline-dark" [disabled]="!seatForm.valid">
+  <button type="submit" form="seatForm" class="btn btn-outline-dark" [disabled]="!seatForm.valid || exists">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="close()">

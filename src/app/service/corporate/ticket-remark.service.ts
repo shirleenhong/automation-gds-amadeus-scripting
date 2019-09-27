@@ -30,7 +30,7 @@ export class TicketRemarkService {
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper
-  ) {}
+  ) { }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -378,6 +378,8 @@ export class TicketRemarkService {
       value = fg.get('secondaryReason').value.toString();
     } else if (fg.get('primaryReason').value !== '') {
       value = fg.get('primaryReason').value.toString() + '_0';
+    } else {
+      value = '_0';
     }
     return value.match(/_(\d)/g).join('');
   }

@@ -19,20 +19,24 @@ export class CorpRemarksService {
    */
   public writeSeatRemarks(seats: Array<SeatModel>): void {
     for (const seat of seats) {
+
+      // Work-around: explicitly cast seat.id to number
+      seat.id = parseFloat(seat.id.toString());
+
       const segments = seat.segmentIds.split(',');
 
       for (const segment of segments) {
         const seatMap = new Map<string, string>();
         const tatooNumber = this.pms.getTatooNumberFromSegmentNumber(new Array(segment));
 
-        if (seat.remarkId === 1) {
+        if (seat.id === 1) {
           //
           seatMap.set('CASeatRule', 'ONLINECHECKIN');
           this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'SEATING SUBJECT TO');
           // tslint:disable-next-line: max-line-length
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'AIRPORT OR ONLINE CHECK IN');
           //
-        } else if (seat.remarkId === 2) {
+        } else if (seat.id === 2) {
           //
           seatMap.set('CASeatRule', 'PREFERRED');
           if (seat.type !== '') {
@@ -45,17 +49,17 @@ export class CorpRemarksService {
 
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'PLEASE CHECK AGAIN AT THE GATE');
           //
-        } else if (seat.remarkId === 3) {
+        } else if (seat.id === 3) {
           //
           seatMap.set('CASeatRule', 'WAITLISTED');
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'THIS SEGMENT HAS BEEN WAITLISTED');
           //
-        } else if (seat.remarkId === 4) {
+        } else if (seat.id === 4) {
           //
           seatMap.set('CASeatRule', 'REQUEST');
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'SEAT ASSIGNMENTS ARE ON REQUEST');
           //
-        } else if (seat.remarkId === 5) {
+        } else if (seat.id === 5) {
           //
           seatMap.set('CASeatRule', 'CONFIRMED');
           const seatConfirmed = new Map<string, string>();
@@ -63,7 +67,7 @@ export class CorpRemarksService {
           this.remarksManagerService.createPlaceholderValues(seatConfirmed, null);
           this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'UPGRADE CONFIRMED');
           //
-        } else if (seat.remarkId === 6) {
+        } else if (seat.id === 6) {
           //
           seatMap.set('CASeatRule', 'CLEARANCE');
           this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'UPGRADE REQUESTED');

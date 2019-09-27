@@ -60,7 +60,7 @@ export class SeatsComponent implements OnInit {
         const rirSegments = rirRemark.remarkText.substr(rirRemark.remarkText.indexOf('/S'));
 
         seats.push({
-          remarkId: 1,
+          id: 1,
           type: null,
           number: null,
           segmentIds: rirSegments
@@ -77,7 +77,7 @@ export class SeatsComponent implements OnInit {
     // Dummy seats
     // return this.seats = [
     //   {
-    //     remarkId: 1,
+    //     id: 1,
     //     number: '100',
     //     type: 'window',
     //     segmentIds: '1'

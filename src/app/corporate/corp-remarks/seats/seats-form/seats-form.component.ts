@@ -15,7 +15,7 @@ export class SeatsFormComponent implements OnInit {
 
   @Input()
   seat: SeatModel;
-  remarkId: number  = null;
+  id: number  = null;
   type: string      = null;
   number: string    = null;
   segmentIds: string = null;
@@ -42,7 +42,7 @@ export class SeatsFormComponent implements OnInit {
     this.types         = SeatsService.TYPES;
 
     this.seatForm = new FormGroup({
-      remarkId: new FormControl('', [ Validators.required ]),
+      id: new FormControl('', [ Validators.required ]),
       type: new FormControl({ value: '', disabled: true }, []),
       number: new FormControl({ value: '', disabled: true }, [ Validators.pattern(this.REGEX_ALPHANUMERIC) ]),
       segmentIds: new FormControl('', [ Validators.pattern('[0-9]+(,[0-9]+)*') ]),
@@ -61,7 +61,7 @@ export class SeatsFormComponent implements OnInit {
    */
   public onChanges(): void {
     // Disable or enable the type and number form controls based on type.
-    this.seatForm.get('remarkId').valueChanges.subscribe((value) => {
+    this.seatForm.get('id').valueChanges.subscribe((value) => {
       switch (value) {
         case '2':
           this.seatForm.get('type').enable();

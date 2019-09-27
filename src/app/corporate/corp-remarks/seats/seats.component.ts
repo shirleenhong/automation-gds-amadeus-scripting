@@ -1,7 +1,9 @@
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
+import { PnrService } from 'src/app/service/pnr.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
+import { SeatsService } from 'src/app/service/corporate/seats.service';
 
 @Component({
   selector: 'app-seats',
@@ -11,6 +13,7 @@ import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-f
 export class SeatsComponent implements OnInit {
 
   seats: Array<SeatModel>;
+  seatRemarkOptions: Array<{id: number, text: string}>;
 
   modalRef: BsModalRef;
   modalRefConfig = {
@@ -18,37 +21,66 @@ export class SeatsComponent implements OnInit {
     ignoreBackdropClick: false
   };
 
-  constructor(private modalService: BsModalService) { }
+  constructor(
+    private modalService: BsModalService,
+    private pnrService: PnrService,
+    public seatsService: SeatsService
+  ) { }
 
   ngOnInit() {
     this.seats = this.getSeats();
+    this.seatRemarkOptions = SeatsService.REMARK_OPTIONS;
   }
 
   /**
-   * Get the seats.
+   * WIP: Get the seats from the PNR
+   * based on RIR remark texts.
+   * TODO: Handle languages
+   *
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    return [];
+    // return [];
+    // debugger;
+    console.log('getSeats() ================================');
+
+    const seats = new Array<SeatModel>();
+
+    const rirRemarks = this.pnrService.getRirRemarksFromGDS();
+    console.log('rirRemarks');
+    console.log(rirRemarks);
+
+    for (const rirRemark of rirRemarks) {
+
+      // Condition 1
+      if (rirRemark.remarkText === 'SEATING SUBJECT TO') {
+        continue;
+      } else if (rirRemark.remarkText === 'AIRPORT OR ONLINE CHECK IN') {
+        // WARNING: Segments doesn't seem to be in PNR service...
+        const rirSegments = rirRemark.remarkText.substr(rirRemark.remarkText.indexOf('/S'));
+
+        seats.push({
+          remarkId: 1,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+      }
+
+      // Condition 2
+
+      // Condition 3
+    }
+
+    return seats;
+
     // Dummy seats
     // return this.seats = [
     //   {
+    //     remarkId: 1,
     //     number: '100',
-    //     text: 'SAMPLE TEXT 1',
     //     type: 'window',
-    //     segmentId: '1'
-    //   },
-    //   {
-    //     number: '200',
-    //     text: 'SAMPLE TEXT 2',
-    //     type: 'aisle',
-    //     segmentId: '2'
-    //   },
-    //   {
-    //     number: '300',
-    //     text: 'SAMPLE TEXT 3',
-    //     type: 'middle',
-    //     segmentId: '3'
+    //     segmentIds: '1'
     //   },
     // ];
   }

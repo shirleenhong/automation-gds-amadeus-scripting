@@ -3,7 +3,7 @@
     <tr>
       <th>#</th>
       <th>Seat Remark Option</th>
-      <th>Type</th>
+      <th>Seat Type</th>
       <th>Seat Number</th>
       <th>Segment(s)</th>
       <th></th>
@@ -12,10 +12,10 @@
   <tbody>
     <tr *ngFor="let seat of seats; let i = index">
       <td>{{ i + 1 }}</td>
-      <td>{{ seat.text }}</td>
+      <td>{{ seatRemarkOptions[seat.remarkId - 1].text }}</td>
       <td>{{ seat.type | uppercase }}</td>
       <td>{{ seat.number }}</td>
-      <td>{{ seat.segmentId }}</td>
+      <td>{{ seat.segmentIds }}</td>
       <td>
         <i class="fa fa-trash-alt" (click)="delete(seat)"></i>
       </td>

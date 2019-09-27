@@ -1,22 +1,23 @@
 export class SeatModel {
 
     /**
-     * The alpha-numeric seat number of the seat.
+     * The remark Id to be written to the PNR.
+     * See SeatModel.REMARK_OPTIONS
      */
-    number: string;
-
-    /**
-     * The remark option to be written to the PNR.
-     */
-    text: string;
+    public remarkId: number;
 
     /**
      * The type of the seat. The types are window, aisle and middle.
      */
-    type: string;
+    public type: string;
 
     /**
-     * The segment identification associated to the seat.
+     * The alpha-numeric seat number of the seat.
      */
-    segmentId: string;
+    public number: string;
+
+    /**
+     * The segment identifications associated to the seat.
+     */
+    public segmentIds: string;
 }

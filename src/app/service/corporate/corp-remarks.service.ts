@@ -32,7 +32,7 @@ export class CorpRemarksService {
         if (seat.id === 1) {
           //
           seatMap.set('CASeatRule', 'ONLINECHECKIN');
-          this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'SEATING SUBJECT TO');
+          this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'SEATING SUBJECT TO');
           // tslint:disable-next-line: max-line-length
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'AIRPORT OR ONLINE CHECK IN');
           //
@@ -64,13 +64,13 @@ export class CorpRemarksService {
           seatMap.set('CASeatRule', 'CONFIRMED');
           const seatConfirmed = new Map<string, string>();
           seatConfirmed.set('CaUPFIB', seat.number);
-          this.remarksManagerService.createPlaceholderValues(seatConfirmed, null);
-          this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'UPGRADE CONFIRMED');
+          this.remarksManagerService.createPlaceholderValues(seatConfirmed, null, tatooNumber);
+          this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'UPGRADE CONFIRMED');
           //
         } else if (seat.id === 6) {
           //
           seatMap.set('CASeatRule', 'CLEARANCE');
-          this.remarksManagerService.createPlaceholderValues(null, seatMap, null, null, 'UPGRADE REQUESTED');
+          this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'UPGRADE REQUESTED');
           this.remarksManagerService.createPlaceholderValues(
             null,
             seatMap,

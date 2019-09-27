@@ -112,9 +112,11 @@ export class PnrService {
             if (type === 'RI') {
                 remarksList = this.pnrObj.riElements;
             }
-            for (const rm of remarksList) {
-                if (rm.freeFlowText.indexOf(searchText) === 0) {
-                    return rm.elementNumber;
+            if (remarksList) {
+                for (const rm of remarksList) {
+                    if (rm.freeFlowText.indexOf(searchText) === 0) {
+                        return rm.elementNumber;
+                    }
                 }
             }
         }

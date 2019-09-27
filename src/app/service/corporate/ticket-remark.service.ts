@@ -359,6 +359,19 @@ export class TicketRemarkService {
           }
         }
 
+        if (remark.indexOf('[UI_') > -1) {
+          app.getRuleKeywords().forEach((key) => {
+            this.approvalRuleService.getApprovalItem(key).forEach((a) => {
+              remark = remark.replace(key, a.getRuleText());
+            });
+          });
+        }
+
+        if (remark.indexOf('[DATE_NOW]') >= 0) {
+          const datePipe = new DatePipe('en-Us');
+          remark = remark.replace('[DATE_NOW]', datePipe.transform(Date.now(), 'yyyy-MM-dd'));
+        }
+
         if (this.pnrService.getRemarkLineNumber(remark, type) === '') {
           remarkList.push(this.remarkHelper.createRemark(remark, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
         }

@@ -441,7 +441,8 @@ Add ${number_of_segments} Rail Segments
     \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800OSL/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}lilly_test_data    ${client_data}
+    ${client_name}    Get Client Name    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
@@ -460,7 +461,8 @@ Create PNR With Active Air Segments For ${client_data}
     
 
 Create PNR For ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}lilly_test_data    ${client_data}
+    ${client_name}    Get Client Name    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments

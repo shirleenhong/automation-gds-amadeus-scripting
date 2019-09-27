@@ -62,7 +62,6 @@ export class SeatsFormComponent implements OnInit {
   public onChanges(): void {
     // Disable or enable the type and number form controls based on type.
     this.seatForm.get('remarkId').valueChanges.subscribe((value) => {
-      console.log('CHANGED remarkId: ' + value);
       switch (value) {
         case '2':
           this.seatForm.get('type').enable();

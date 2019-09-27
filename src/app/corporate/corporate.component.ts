@@ -26,7 +26,6 @@ import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueRemarkService } from '../service/queue-remark.service';
 
-
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -155,7 +154,7 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
         await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-        await this.ddbService.approvers(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
+        await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
@@ -197,9 +196,12 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-    accRemarks.push(this.ticketRemarkService.submitTicketRemark
-      (this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
-        this.ticketingComponent.ticketlineComponent.approvalForm));
+    accRemarks.push(
+      this.ticketRemarkService.submitTicketRemark(
+        this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
+        this.ticketingComponent.ticketlineComponent.approvalForm
+      )
+    );
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -211,7 +213,7 @@ export class CorporateComponent implements OnInit {
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
-    debugger;
+
     this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
 
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);

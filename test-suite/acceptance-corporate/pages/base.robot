@@ -97,6 +97,7 @@ Assign Current Date
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
     Set Test Variable    ${current_year}     20${current_year}
+    Set Test Variable    ${date_today}    ${current_year}-${current_day}-${current_month}
     Log    ${current_date} 
     Log    ${current_day}/${current_month}/${current_year}
 
@@ -255,9 +256,13 @@ Get Expected Approval Values From Json
     ${primary_approval_reason}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PrimaryApprovalReason
     ${secondary_approval_reason}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SecondaryApprovalReason
     ${approver_name}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].ApproverName
+    ${total_cost}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].TotalCost
     ${addtl_message}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].AdditionalMessage
     ${queue_approval}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToApproval
     ${remark_added}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded
+    ${remark_added2}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded2
+    ${remark_added3}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded3
+    ${remark_added4}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded4
     ${onhold_rmk}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].OnHoldRmk
     ${queue_tkt}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToTkt
     Set Test Variable    ${with_ui}
@@ -265,9 +270,13 @@ Get Expected Approval Values From Json
     Set Test Variable    ${primary_approval_reason}
     Set Test Variable    ${secondary_approval_reason}
     Set Test Variable    ${approver_name}
+    Set Test Variable    ${total_cost}
     Set Test Variable    ${addtl_message}
     Set Test Variable    ${queue_approval}
     Set Test Variable    ${remark_added}
+    Set Test Variable    ${remark_added2}
+    Set Test Variable    ${remark_added3}
+    Set Test Variable    ${remark_added4}
     Set Test Variable    ${onhold_rmk}
     Set Test Variable    ${queue_tkt}
 

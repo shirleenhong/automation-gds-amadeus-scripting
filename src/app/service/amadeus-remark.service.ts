@@ -115,6 +115,25 @@ export class AmadeusRemarkService {
     return { elementManagementData, fareElement };
   }
 
+  getAPRemarksElement(remarkModel: RemarkModel) {
+    const reference = {
+      qualifier: 'OT',
+      number: '1'
+    };
+    const elementManagementData = {
+      reference,
+      segmentName: 'AP'
+    };
+
+    const otherDataFreetext = {
+      longFreetext: remarkModel.remarkText.replace('E-', ''),
+      freetextDetail: {
+        type: 'E'
+      }
+    };
+    return { elementManagementData, otherDataFreetext };
+  }
+
   getQueueElement(queueModel: QueuePlaceModel) {
     const reference = {
       qualifier: 'OT',
@@ -175,7 +194,7 @@ export class AmadeusRemarkService {
     };
     const elementManagementData = {
       reference,
-      segmentName: 'RM'
+      segmentName: remarkModel.remarkType
     };
 
     const remarks = {

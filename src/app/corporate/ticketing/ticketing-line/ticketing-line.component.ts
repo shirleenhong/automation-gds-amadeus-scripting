@@ -254,6 +254,7 @@ export class TicketingLineComponent implements OnInit {
 
     this.additionalReasonList
       .filter((x) => x.approvalRules.indexOf('[UI_ADDITIONAL' + id) >= 0)
+      .sort((a, b) => (a.getRuleText() > b.getRuleText() ? 1 : -1))
       .forEach((app) => {
         const type = this.getAdditionalUiType(app);
         (this.approvalForm.get('additionalValues') as FormArray).push(

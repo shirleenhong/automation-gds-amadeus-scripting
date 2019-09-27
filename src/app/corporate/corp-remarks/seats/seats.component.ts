@@ -40,23 +40,29 @@ export class SeatsComponent implements OnInit {
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    // return [];
+    // debugger;
+    // console.log('getSeats() ================================');
 
     const seats = new Array<SeatModel>();
 
-    // const pnrObj = this.pnrService.pnrObj;
-    // const rirElements = pnrObj.rirElements;
-    const rirRemarks = this.pnrService.getRirRemarksFromGDS();
+    const pnrObj = this.pnrService.pnrObj;
+    const rirElements = pnrObj.rirElements;
+    // const rirRemarks = this.pnrService.getRirRemarksFromGDS();
 
-    for (const rirRemark of rirRemarks) {
+    // console.log('pnrObj');
+    // console.log(pnrObj);
+
+    // console.log('rirElements');
+    // console.log(rirElements);
+
+    // console.log('rirRemarks');
+    // console.log(rirRemarks);
+    // debugger;
+    for (const rirElement of rirElements) {
 
       // Condition 1
-      if (rirRemark.remarkText === 'SEATING SUBJECT TO') {
-        continue;
-      } else if (rirRemark.remarkText === 'AIRPORT OR ONLINE CHECK IN') {
-        // WARNING: Segments doesn't seem to be in PNR service...
-        const rirSegments = rirRemark.remarkText.substr(rirRemark.remarkText.indexOf('/S'));
-
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'AIRPORT OR ONLINE CHECK IN') {
+        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
         seats.push({
           id: 1,
           type: null,
@@ -66,35 +72,64 @@ export class SeatsComponent implements OnInit {
       }
 
       // Condition 2
-      // Condition 1
-      if (rirRemark.remarkText === 'SEATING SUBJECT TO') {
-        continue;
-      } else if (rirRemark.remarkText === 'AIRPORT OR ONLINE CHECK IN') {
-        // WARNING: Segments doesn't seem to be in PNR service...
-        const rirSegments = rirRemark.remarkText.substr(rirRemark.remarkText.indexOf('/S'));
-
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'PREFERRED SEAT UNAVAILABLE') {
+        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
         seats.push({
-          id: 1,
+          id: 2,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+        continue;
+      }
+
+      // Condition 3
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'THIS SEGMENT HAS BEEN WAITLISTED') {
+        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
+        seats.push({
+          id: 3,
           type: null,
           number: null,
           segmentIds: rirSegments
         });
       }
 
-      // Condition 3
+      // Condition 4
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'SEAT ASSIGNMENTS ARE ON REQUEST') {
+        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
+        seats.push({
+          id: 4,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+        continue;
+      }
+
+      // Condition 5
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'UPGRADE CONFIRMED') {
+        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
+        seats.push({
+          id: 5,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+      }
+
+      // Condition 6
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'UPGRADE REQUESTED') {
+        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
+        seats.push({
+          id: 6,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+      }
     }
 
     return seats;
-
-    // Dummy seats
-    // return this.seats = [
-    //   {
-    //     id: 1,
-    //     number: '100',
-    //     type: 'window',
-    //     segmentIds: '1'
-    //   },
-    // ];
   }
 
   /**

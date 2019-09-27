@@ -6,7 +6,19 @@
 </div>
 
 <div class="modal-body">
+
+  <p>
+    {{ seats | json }}
+  </p>
+  <p>
+    {{ exists }}
+  </p>
+
   <form id="seatForm" [formGroup]="seatForm" (ngSubmit)="save()">
+
+    <p class="alert alert-danger" *ngIf="exists">
+      The seat remark already exists.
+    </p>
 
     <div class="form-group row">
       <div class="col-sm-4">Seat Remark Option</div>
@@ -52,7 +64,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" form="seatForm" class="btn btn-outline-dark" [disabled]="!seatForm.valid">
+  <button type="submit" form="seatForm" class="btn btn-outline-dark" [disabled]="!seatForm.valid || exists">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="close()">

@@ -14,6 +14,7 @@ export class SeatsFormComponent implements OnInit {
   REGEX_ALPHANUMERIC = '^\\w*';
 
   @Input()
+  seats: Array<SeatModel>; // The seats to from the parent component
   seat: SeatModel;
   id: number  = null;
   type: string      = null;
@@ -24,6 +25,7 @@ export class SeatsFormComponent implements OnInit {
   types: Array<string>;
 
   seatForm: FormGroup;
+  exists: boolean;
 
   /**
    * The message of the modal.
@@ -52,6 +54,9 @@ export class SeatsFormComponent implements OnInit {
     });
 
     this.onChanges();
+
+    console.log('seats ==========================');
+    console.log(this.seats);
   }
 
   save(): void {
@@ -63,6 +68,10 @@ export class SeatsFormComponent implements OnInit {
    * Handle changes on the seat form.
    */
   public onChanges(): void {
+    this.seatForm.valueChanges.subscribe(value => {
+      this.seatExists(value);
+    });
+
     // Disable or enable the type and number form controls based on type.
     this.seatForm.get('id').valueChanges.subscribe((value) => {
       switch (value) {
@@ -84,5 +93,45 @@ export class SeatsFormComponent implements OnInit {
   public close(): void {
     this.message = 'CLOSED';
     this.modalRef.hide();
+  }
+
+  /**
+   * Check if a seat exists in the seats
+   * along with its segments.
+   * @param newSeat The seat to match
+   */
+  public seatExists(newSeat: SeatModel): boolean {
+    console.log('================ newSeatExists? ================');
+    console.log(newSeat);
+
+    console.log('this.seats:');
+    console.log(this.seats);
+
+    for (const seat of this.seats) {
+      const newSeatSegments = newSeat.segmentIds.split(',');
+
+      console.log('seat.segmentIds');
+      console.log(seat.segmentIds);
+      console.log('newSeatSegments');
+      console.log(newSeatSegments);
+
+      for (const newSeatSegment of newSeatSegments) {
+        console.log('seat.segmentIds.indexOf(newSeatSegment)');
+        console.log(seat.segmentIds.indexOf(newSeatSegment));
+        console.log('newSeatSegment');
+        console.log(newSeatSegment);
+
+        if (newSeatSegment) {
+          if (seat.id === newSeat.id && seat.segmentIds.toString().indexOf(newSeatSegment) >= 0) {
+            this.exists = true;
+            return true;
+          } else {
+            this.exists = false;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 }

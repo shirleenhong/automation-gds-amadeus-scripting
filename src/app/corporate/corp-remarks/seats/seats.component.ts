@@ -41,15 +41,24 @@ export class SeatsComponent implements OnInit {
    */
   public getSeats(): Array<SeatModel> {
     // return [];
-    // debugger;
+    debugger;
     console.log('getSeats() ================================');
 
     const seats = new Array<SeatModel>();
 
+    const pnrObj = this.pnrService.pnrObj;
+    const rirElements = pnrObj.rirElements;
     const rirRemarks = this.pnrService.getRirRemarksFromGDS();
+
+    console.log('pnrObj');
+    console.log(pnrObj);
+
+    console.log('rirElements');
+    console.log(rirElements);
+
     console.log('rirRemarks');
     console.log(rirRemarks);
-
+    debugger;
     for (const rirRemark of rirRemarks) {
 
       // Condition 1
@@ -68,6 +77,20 @@ export class SeatsComponent implements OnInit {
       }
 
       // Condition 2
+      // Condition 1
+      if (rirRemark.remarkText === 'SEATING SUBJECT TO') {
+        continue;
+      } else if (rirRemark.remarkText === 'AIRPORT OR ONLINE CHECK IN') {
+        // WARNING: Segments doesn't seem to be in PNR service...
+        const rirSegments = rirRemark.remarkText.substr(rirRemark.remarkText.indexOf('/S'));
+
+        seats.push({
+          id: 1,
+          type: null,
+          number: null,
+          segmentIds: rirSegments
+        });
+      }
 
       // Condition 3
     }
@@ -95,7 +118,7 @@ export class SeatsComponent implements OnInit {
 
     this.modalRef = this.modalService.show(SeatsFormComponent, this.modalRefConfig);
     this.modalRef.content.title = 'Add Seat Remark';
-    // this.modalRef.content.seat = seat;
+    this.modalRef.content.seats = this.seats;
 
     this.modalSubscribeOnClose();
   }
@@ -115,12 +138,23 @@ export class SeatsComponent implements OnInit {
   private modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(() => {
 
-      if (this.modalRef.content.message === 'SAVED') {
-        const newSeat = this.modalRef.content.seatForm.value;
+      if (this.modalRef) {
+        if (this.modalRef.content.message === 'SAVED') {
+          const newSeat = this.modalRef.content.seatForm.value;
+          let isContainsSeat = false;
 
-        // Add the new seat to the seats.
-        if (newSeat) {
-          this.seats.push(newSeat);
+          // Add the new seat to the seats.
+          if (newSeat) {
+            this.seats.forEach(seat => {
+              if (seat.id === newSeat.id && seat.segmentIds === newSeat.segmentIds) {
+                isContainsSeat = true;
+              }
+            });
+
+            if (!isContainsSeat) {
+              this.seats.push(newSeat);
+            }
+          }
         }
       }
 

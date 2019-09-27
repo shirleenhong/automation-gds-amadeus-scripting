@@ -11,7 +11,7 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
 })
 export class SeatsFormComponent implements OnInit {
 
-  REGEX_ALPHANUMERIC = '\w';
+  REGEX_ALPHANUMERIC = '^\\w*';
 
   @Input()
   seat: SeatModel;

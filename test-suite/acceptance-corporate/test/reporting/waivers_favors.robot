@@ -10,6 +10,7 @@ Resource          ../../pages/base.robot
 
 *** Test Cases ***
 Verify U63 Is Written For Single Ticket With Single Codes
+    [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
     Select Waivers Code Option For Single Ticket
@@ -18,6 +19,7 @@ Verify U63 Is Written For Single Ticket With Single Codes
     [Teardown]    Close Browser
     
 Verify U63 Is Written For Single Ticket With Multiple Codes
+    [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple BSP Segments With Single TST
     Select Multiple Waiver Code Options For Single Ticket
@@ -26,6 +28,7 @@ Verify U63 Is Written For Single Ticket With Multiple Codes
     [Teardown]    Close Browser
  
 Verify U63 Is Written For Multiple Tickets With Multiple Codes  
+    [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple BSP Segment With TSTs
     Select Multiple Waiver Code Options For Multiple Tickets
@@ -34,6 +37,7 @@ Verify U63 Is Written For Multiple Tickets With Multiple Codes
     [Teardown]    Close Browser
     
 Verify U63 Is Written For Multiple Tickets With Multiple Codes That Has Values
+    [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Select Multiple Waiver Code Options With Values For Multiple Tickets

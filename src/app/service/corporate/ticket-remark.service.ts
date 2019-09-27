@@ -30,7 +30,7 @@ export class TicketRemarkService {
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper
-  ) {}
+  ) { }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -359,6 +359,19 @@ export class TicketRemarkService {
           }
         }
 
+        if (remark.indexOf('[UI_') > -1) {
+          app.getRuleKeywords().forEach((key) => {
+            this.approvalRuleService.getApprovalItem(key).forEach((a) => {
+              remark = remark.replace(key, a.getRuleText());
+            });
+          });
+        }
+
+        if (remark.indexOf('[DATE_NOW]') >= 0) {
+          const datePipe = new DatePipe('en-Us');
+          remark = remark.replace('[DATE_NOW]', datePipe.transform(Date.now(), 'yyyy-MM-dd'));
+        }
+
         if (this.pnrService.getRemarkLineNumber(remark, type) === '') {
           remarkList.push(this.remarkHelper.createRemark(remark, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
         }
@@ -378,6 +391,8 @@ export class TicketRemarkService {
       value = fg.get('secondaryReason').value.toString();
     } else if (fg.get('primaryReason').value !== '') {
       value = fg.get('primaryReason').value.toString() + '_0';
+    } else {
+      value = '_0';
     }
     return value.match(/_(\d)/g).join('');
   }

@@ -41,24 +41,13 @@ export class SeatsComponent implements OnInit {
    */
   public getSeats(): Array<SeatModel> {
     // return [];
-    debugger;
-    console.log('getSeats() ================================');
 
     const seats = new Array<SeatModel>();
 
-    const pnrObj = this.pnrService.pnrObj;
-    const rirElements = pnrObj.rirElements;
+    // const pnrObj = this.pnrService.pnrObj;
+    // const rirElements = pnrObj.rirElements;
     const rirRemarks = this.pnrService.getRirRemarksFromGDS();
 
-    console.log('pnrObj');
-    console.log(pnrObj);
-
-    console.log('rirElements');
-    console.log(rirElements);
-
-    console.log('rirRemarks');
-    console.log(rirRemarks);
-    debugger;
     for (const rirRemark of rirRemarks) {
 
       // Condition 1

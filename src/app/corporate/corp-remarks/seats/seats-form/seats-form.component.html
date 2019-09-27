@@ -7,13 +7,6 @@
 
 <div class="modal-body">
 
-  <p>
-    {{ seats | json }}
-  </p>
-  <p>
-    {{ exists }}
-  </p>
-
   <form id="seatForm" [formGroup]="seatForm" (ngSubmit)="save()">
 
     <p class="alert alert-danger" *ngIf="exists">

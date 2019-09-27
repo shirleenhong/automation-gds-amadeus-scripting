@@ -54,9 +54,6 @@ export class SeatsFormComponent implements OnInit {
     });
 
     this.onChanges();
-
-    console.log('seats ==========================');
-    console.log(this.seats);
   }
 
   save(): void {
@@ -101,26 +98,9 @@ export class SeatsFormComponent implements OnInit {
    * @param newSeat The seat to match
    */
   public seatExists(newSeat: SeatModel): boolean {
-    console.log('================ newSeatExists? ================');
-    console.log(newSeat);
-
-    console.log('this.seats:');
-    console.log(this.seats);
-
     for (const seat of this.seats) {
       const newSeatSegments = newSeat.segmentIds.split(',');
-
-      console.log('seat.segmentIds');
-      console.log(seat.segmentIds);
-      console.log('newSeatSegments');
-      console.log(newSeatSegments);
-
       for (const newSeatSegment of newSeatSegments) {
-        console.log('seat.segmentIds.indexOf(newSeatSegment)');
-        console.log(seat.segmentIds.indexOf(newSeatSegment));
-        console.log('newSeatSegment');
-        console.log(newSeatSegment);
-
         if (newSeatSegment) {
           if (seat.id === newSeat.id && seat.segmentIds.toString().indexOf(newSeatSegment) >= 0) {
             this.exists = true;

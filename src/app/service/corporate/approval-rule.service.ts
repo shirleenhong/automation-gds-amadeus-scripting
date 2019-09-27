@@ -45,6 +45,7 @@ export class ApprovalRuleService {
     const approvalItems = this.ddbService.approvalList.filter(
       (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
     );
+
     if (this.needsApproval()) {
       for (const approval of approvalItems) {
         let valid = false;
@@ -250,5 +251,9 @@ export class ApprovalRuleService {
 
   getTicketApproval(index?: string): ApprovalItem[] {
     return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('TICKET' + (index ? index : '_1')) > -1);
+  }
+
+  getApprovalItem(keyword: string): ApprovalItem[] {
+    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf(keyword) === 0);
   }
 }

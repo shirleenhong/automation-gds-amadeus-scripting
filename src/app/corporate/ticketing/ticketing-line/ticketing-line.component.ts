@@ -57,6 +57,7 @@ export class TicketingLineComponent implements OnInit {
       additionalValues: new FormArray([])
     });
     this.noApprovalChecked(!this.hasApproval);
+    this.disableApprovalControls();
   }
 
   /**
@@ -306,9 +307,24 @@ export class TicketingLineComponent implements OnInit {
       this.approvalForm.get('primaryReason').disable();
       this.approvalForm.get('secondaryReason').setValue('');
       this.approvalForm.get('secondaryReason').disable();
-    } else {
+    } else if (this.primaryReasonList.length > 0) {
       this.approvalForm.get('primaryReason').enable();
       this.primaryReasonChange('');
+    }
+  }
+
+  /**
+   * apply has approval but no UI setup in API
+   * 
+   */
+  disableApprovalControls() {
+    if (this.primaryReasonList.length === 0) {
+      this.approvalForm.get('primaryReason').setValue('');
+      this.approvalForm.get('primaryReason').disable();
+    }
+    if (this.secondaryReasonList.length === 0) {
+      this.approvalForm.get('secondaryReason').setValue('');
+      this.approvalForm.get('secondaryReason').disable();
     }
   }
 }

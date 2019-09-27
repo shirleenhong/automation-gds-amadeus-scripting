@@ -17,13 +17,9 @@ export class CorpRemarksService {
    * @return void
    */
   public writeSeatRemarks(seats: Array<SeatModel>): void {
-    debugger;
-
     seats.forEach((seat) => {
-      debugger;
       // Condition 1
       if (seat.segmentId) {
-        debugger;
         const segments = seat.segmentId.split(',');
 
         segments.forEach((segment) => {

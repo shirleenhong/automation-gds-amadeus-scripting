@@ -249,7 +249,7 @@ export class TicketingLineComponent implements OnInit {
       return;
     }
 
-    const id = selectedRule.match(/_(\d)/g).join('');
+    const id = selectedRule.match(/_(\d)/g).join('') + (selectedRule.indexOf('PRIMARY') >= 0 ? '_0' : '');
     (this.approvalForm.get('additionalValues') as FormArray).controls = [];
 
     this.additionalReasonList
@@ -259,7 +259,7 @@ export class TicketingLineComponent implements OnInit {
         (this.approvalForm.get('additionalValues') as FormArray).push(
           new FormGroup({
             textLabel: new FormControl(app.getRuleValueText()),
-            textValue: new FormControl('', type === '[TEXT_BOX]' ? [Validators.required] : null),
+            textValue: new FormControl('', type === '[TEXTBOX]' ? [Validators.required] : null),
             uiType: new FormControl(type)
           })
         );
@@ -284,7 +284,8 @@ export class TicketingLineComponent implements OnInit {
    * @param selectedRule selected rule keyword from UI sample [UI_SECPONDARY_1]
    */
   primaryReasonChange(selectedRule) {
-    this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(selectedRule.match(/_(\d)/g).join(''));
+    const index = selectedRule.match(/_(\d)/g).join('');
+    this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(index);
     if (this.secondaryReasonList.length > 0) {
       this.approvalForm.get('secondaryReason').enable();
     } else {

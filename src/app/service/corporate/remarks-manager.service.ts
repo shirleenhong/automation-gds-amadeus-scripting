@@ -14,7 +14,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -163,7 +163,11 @@ export class RemarksManagerService {
 
     if (additionalRemarks) {
       additionalRemarks.forEach((rem) => {
-        pnrResponse.pnrAddMultiElements.dataElementsMaster.dataElementsIndiv.push(this.amadeusRemarkService.getRemarkElement(rem));
+        if (rem.remarkType === 'AP') {
+          pnrResponse.pnrAddMultiElements.dataElementsMaster.dataElementsIndiv.push(this.amadeusRemarkService.getAPRemarksElement(rem));
+        } else {
+          pnrResponse.pnrAddMultiElements.dataElementsMaster.dataElementsIndiv.push(this.amadeusRemarkService.getRemarkElement(rem));
+        }
       });
     }
 

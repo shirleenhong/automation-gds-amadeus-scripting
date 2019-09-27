@@ -1496,7 +1496,7 @@ export class PnrService {
 
 
     public getTkLineDescription(): string {
-        if (this.pnrObj.tkElements && this.pnrObj.tkElements[0]) {
+        if (this.pnrObj.tkElements && this.pnrObj.tkElements[0] && this.pnrObj.tkElements[0].freeFlowText) {
             return this.pnrObj.tkElements[0].freeFlowText.trim();
         }
         return '';

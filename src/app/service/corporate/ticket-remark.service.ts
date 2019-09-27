@@ -5,13 +5,13 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { TicketModel } from '../../models/pnr/ticket.model';
-import { FormGroup } from '@angular/forms';
 import { DDBService } from '../ddb.service';
 import { AquaTicketingComponent } from 'src/app/corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 import { ApprovalRuleService } from './approval-rule.service';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { FormGroup, FormArray } from '@angular/forms';
 
 declare var smartScriptSession: any;
 
@@ -30,7 +30,7 @@ export class TicketRemarkService {
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper
-  ) { }
+  ) {}
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -350,9 +350,17 @@ export class TicketRemarkService {
       const index = this.getApprovalIndex(fg);
       this.approvalRuleService.getWriteApproval(index).forEach((app) => {
         const rems = app.getRuleText().split('|');
-        const type = rems[0].indexOf('RI') === 0 ? 'RI' : 'RM';
-        if (this.pnrService.getRemarkLineNumber(rems[1], type) === '') {
-          remarkList.push(this.remarkHelper.createRemark(rems[1], type, rems[0].charAt(3)));
+        let remark = rems[1];
+        const type = rems[0].substring(0, 2);
+
+        for (const control of (fg.get('additionalValues') as FormArray).controls) {
+          if (control.get('uiType').value === '[TEXTBOX]') {
+            remark = remark.replace('[' + control.get('textLabel').value.trim() + ']', control.get('textValue').value);
+          }
+        }
+
+        if (this.pnrService.getRemarkLineNumber(remark, type) === '') {
+          remarkList.push(this.remarkHelper.createRemark(remark, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
         }
       });
     }
@@ -387,7 +395,7 @@ export class TicketRemarkService {
       this.approvalRuleService.getQueueApproval(index).forEach((app) => {
         const queue = new QueuePlaceModel();
         const queueInfo = app.getRuleText().split('/');
-        queue.pcc = (queueInfo[0] === '{BOOKING_OID}') ? this.pnrService.PCC : queueInfo[0];
+        queue.pcc = queueInfo[0] === '{BOOKING_OID}' ? this.pnrService.PCC : queueInfo[0];
         queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
         const categoryqueue = queueInfo[1].split('C');
         queue.queueNo = categoryqueue[0];

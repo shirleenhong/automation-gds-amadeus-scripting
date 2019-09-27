@@ -8,6 +8,7 @@ Resource          amadeus.robot
 Resource          payment.robot
 Resource          ticketing.robot
 Resource          reporting.robot
+Resource          remarks.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -17,6 +18,7 @@ ${button_submit_pnr}    //button[contains(text(), 'SUBMIT TO PNR')]
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
+${panel_remarks}    //div[@class='panel-title']//div[contains(text(), 'Remarks')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
 ${list_counselor_identity}    css=#selCounselorIdentity
@@ -24,6 +26,7 @@ ${input_ticketingDate}    css=#dtxtTicketDate
 ${checkbox_onHold}    css=#chkOnHold
 ${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
 ${button_main_menu}    //button[contains(text(), 'Back To Main Menu')]
+${button_save}    //button[contains(text(), 'Save')]
 
 
 *** Keywords ***
@@ -70,6 +73,18 @@ Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Full Wrap PNR
+    [Teardown]    Take Screenshot
+    
+Click Remarks Panel
+    Wait Until Element Is Visible     ${panel_remarks}    60
+    Click Element    ${panel_remarks}
+    Set Test Variable    ${current_page}    Remarks
+    [Teardown]    Take Screenshot
+    
+Collapse Remarks Panel
+    Wait Until Element Is Visible    ${panel_remarks}    60
+    Click Element    ${panel_remarks}
+    Set Test Variable    ${current_page}    Remarks
     [Teardown]    Take Screenshot
     
 Click Submit To PNR
@@ -121,6 +136,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting"    Navigate From Reporting    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Seats"    Navigate To Remarks    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
@@ -132,7 +148,7 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Seats"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
@@ -142,6 +158,7 @@ Navigate From Full Wrap
     ...    ELSE IF    "${destination_page}" == "Reporting" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting"    Click Reporting Panel
     ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
+    ...    ELSE IF    "${destination_page}" == "Seats"    Click Remarks Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -160,6 +177,11 @@ Navigate From Ticketing
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
+
+Navigate To Remarks
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Seats"    Navigate To Add Seat Remarks
+    ...    ELSE    Collapse Remarks Panel   
 
 Finish PNR
     Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
@@ -281,3 +303,13 @@ Get Air Segment Values From Json
     \    Set Test Variable    ${airline_code_${i}}    ${airline_code}
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
     \    ${i}    Evaluate    ${i} + 1
+    
+Select Itinerary Segments
+    [Arguments]    @{segment_number}
+    Wait Until Element Is Visible    ${input_segment}    30
+    Click Button    ${input_segment}
+    Wait Until Element Is Visible    ${list_segment}    30
+    :FOR    ${segment_number}    IN    @{segment_number}
+    \    Click Element    ${list_segment}//input[@value='${segment_number}']
+    Click Element    ${input_segment}
+    [Teardown]    Take Screenshot

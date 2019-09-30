@@ -10,18 +10,18 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
   styleUrls: ['./seats-form.component.scss']
 })
 export class SeatsFormComponent implements OnInit {
-
   REGEX_ALPHANUMERIC = '^\\w*';
 
   @Input()
   seats: Array<SeatModel>; // The seats to from the parent component
   seat: SeatModel;
-  id: number  = null;
-  type: string      = null;
-  number: string    = null;
+  id: number = null;
+  type: string = null;
+  number: string = null;
   segmentIds: string = null;
+  title = '';
 
-  remarkOptions: Array<{id: number, text: string}>;
+  remarkOptions: Array<{ id: number; text: string }>;
   types: Array<string>;
 
   seatForm: FormGroup;
@@ -33,24 +33,18 @@ export class SeatsFormComponent implements OnInit {
    */
   message: string;
 
-  constructor(
-    public activeModal: BsModalService,
-    public modalRef: BsModalRef
-  ) { }
+  constructor(public activeModal: BsModalService, public modalRef: BsModalRef) {}
 
   ngOnInit() {
-    this.seat          = new SeatModel();
+    this.seat = new SeatModel();
     this.remarkOptions = SeatsService.REMARK_OPTIONS;
-    this.types         = SeatsService.TYPES;
+    this.types = SeatsService.TYPES;
 
     this.seatForm = new FormGroup({
-      id: new FormControl('', [ Validators.required ]),
+      id: new FormControl('', [Validators.required]),
       type: new FormControl({ value: '', disabled: true }, []),
-      number: new FormControl({ value: '', disabled: true }, [ Validators.pattern(this.REGEX_ALPHANUMERIC) ]),
-      segmentIds: new FormControl('', [
-        Validators.required,
-        Validators.pattern('[0-9]+(,[0-9]+)*')
-      ]),
+      number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+      segmentIds: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')])
     });
 
     this.onChanges();
@@ -65,7 +59,7 @@ export class SeatsFormComponent implements OnInit {
    * Handle changes on the seat form.
    */
   public onChanges(): void {
-    this.seatForm.valueChanges.subscribe(value => {
+    this.seatForm.valueChanges.subscribe((value) => {
       this.seatExists(value);
     });
 

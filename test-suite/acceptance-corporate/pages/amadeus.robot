@@ -36,6 +36,7 @@ ${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 
 ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading'] 
 ${text_record_locator}     //div[contains(text(), 'Record Locator')]
 ${icon_processing}    //div[@class='processing']
+${text_area_command}    //div[@class='crypticContainer']
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -134,10 +135,10 @@ Get PNR Details
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
+    Close Cryptic Display
     [Teardown]    Take Screenshot
 
 Switch To Command Page
-    Close Cryptic Display
     Wait Until Page Contains Element    ${button_cryptic}    60
     Click Element    ${button_cryptic}
     Wait Until Element Is Visible    ${input_commandText}    60
@@ -444,7 +445,7 @@ Create PNR With Passive Air Segments For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
@@ -453,18 +454,17 @@ Create PNR With Active Air Segments For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
-
 Create PNR For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks

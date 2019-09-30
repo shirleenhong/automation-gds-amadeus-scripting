@@ -12,58 +12,58 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That Air Only, Intl Route PNRs For Client Purdue Pharma Is Correctly Queued To Approval Queue
+Verify That Air Only PNRs For Client Top Aces Is Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Purdue Pharma, Air Only, Intl Route
+    Create PNR With Active Air Segments For Client Top Aces, Air Only, Intl Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only, Domestic Route PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
+Verify That PNRs For Client Top Aces Can Skip Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Purdue Pharma, Air Only, Dom Route
+    Create PNR With Active Air Segments For Client Top Aces, Mix Segments, Intl Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only, Trans Route PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
+Verify That PNRs For Client Top Aces With Domestic Route Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Purdue Pharma, Air Only, Trans Route
+    Create PNR With Active Air Segments For Client Top Aces, Air Only, Dom Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car Only PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
+Verify That PNRs For Client Top Aces With Trans Route Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Purdue Pharma, Car Only
+    Create PNR With Active Air Segments For Client Top Aces, Air Only, Trans Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Hotel Only PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
+Verify That Car Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Purdue Pharma, Hotel Only
+    Create PNR With Active Air Segments For Client Top Aces, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car And Hotel Only PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
+Verify That Hotel Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Purdue Pharma, Car And Hotel Only
+    Create PNR With Active Air Segments For Client Top Aces, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Purdue Pharma Can Skip Approval Process
+Verify That Car And Hotel Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Purdue Pharma, Air Only, Skip Approval
+    Create PNR With Active Air Segments For Client Top Aces, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

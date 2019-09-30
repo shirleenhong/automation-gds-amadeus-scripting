@@ -12,74 +12,82 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP-CA 
+Verify That PNRs For Client Taylor Made Are Queued Correctly When 1st Primary Reason Is Selected
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 VIP-CA, Air Only, Use First Primary Reason
+    Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select First Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP EXEMPT-CA 
+Verify That PNRs For Client Taylor Made Are Queued Correctly When 2nd Primary Reason Is Selected
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 VIP EXEMPT-CA, Air Only, Use Second Primary Reason
+    Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Second Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP GUEST-CA 
+Verify That PNRs For Client Taylor Made Are Queued Correctly When 3rd Primary Reason Is Selected
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 GUEST-CA, Air Only, Use First Primary Reason
+    Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Third Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP GENERAL-CA 
+Verify That PNRs For Client Taylor Can Skip Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 GENERAL-CA, Air Only, Use Second Primary Reason
+    Create PNR With Active Air Segments For Client Taylor Made Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only PNRs For Client Securitas Electronic Security Can Skip Approval Process 
+Verify That Car Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 OPERATIONS-CA, Air Only, Skip Approval
+    Create PNR For Client Taylor Made, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car Only PNRs For Client Securitas Electronic Security Do Not Go Thru Approval Process 
+Verify That Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Securitas Electronic Security With Udid50 VIP-CA, Car Only
+    Create PNR For Client Taylor Made, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Hotel Only PNRs For Client Securitas Electronic Security Do Not Go Thru Approval Process 
+Verify That Car And Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Securitas Electronic Security With Udid50 VIP-CA, Hotel Only
+    Create PNR For Client Taylor Made, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car & Hotel Only PNRs For Client Securitas Electronic Security Do Not Go Thru Approval Process 
+Verify That PNRs For Client Taylor Made With Udid50 CEO-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Securitas Electronic Security With Udid50 VIP-CA, Car And Hotel Only
+    Create PNR With Active Air Segments For Client Taylor Made With Udid50 CEO-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Air Only PNRs For Client Securitas Electronic Security For EMPLOYEE-CA Do Not Go Thru Approval Process
+Verify That PNRs For Client Taylor Made With Udid50 SRVP-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 EMPLOYEE-CA, Air Only
+    Create PNR With Active Air Segments For Client Taylor Made With Udid50 SRVP-NORAM, Air Only
+    Fill Up Approval Fields
+    Verify PNR Approval Is Processed Correctly
+    [Teardown]     Close Browser
+    
+Verify That PNRs For Client Taylor Made With Udid50 VP-NORAM Do Not Go Thru Approval Process
+    [Tags]    us13271
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Client Taylor Made With Udid50 VP-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

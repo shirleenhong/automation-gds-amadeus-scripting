@@ -299,7 +299,20 @@ Create ${num_of_test_dates} Test Dates
     \    ${month}    Convert Month To MMM    ${test_date}
     \    Set Test Variable    ${test_date_${i}}    ${day}${month}
     \    Set Test Variable    ${tdate}    ${test_date}
-    
+
+Create ${num_of_test_dates} Test Dates For Booking Less Than ${no_of_days} days
+    ${tdate}    Get Current Date  
+    ${tdate}    Run Keyword If    '${no_of_days}' == '14'    Add Time To Date    ${tdate}    10 days   ELSE   Set Variable    ${tdate}    
+    ${tdate}    Run Keyword If    '${no_of_days}' == '21'    Add Time To Date    ${tdate}    19 days   ELSE   Set Variable    ${tdate}
+    Set Test Variable    ${tdate}    
+    Set Test Variable    ${add_to_date}    3 days
+    : FOR    ${i}    IN RANGE    0    ${num_of_test_dates}
+    \    ${i}    Evaluate    ${i} + 1 
+    \    ${day}    Convert Date    ${tdate}    %d
+    \    ${month}    Convert Month To MMM    ${tdate}
+    \    Set Test Variable    ${test_date_${i}}    ${day}${month}
+    \    ${tdate}     Add Time To Date    ${tdate}    ${add_to_date}
+   
 Get Record Locator Value
     Switch To Graphic Mode
     ${actual_record_locator}    Get Text    ${text_record_locator}
@@ -444,7 +457,7 @@ Create PNR With Passive Air Segments For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
@@ -453,18 +466,26 @@ Create PNR With Active Air Segments For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
-
+Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_data}
+    ${client_name}    Get Client Name    ${client_data}   
+    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    
 Create PNR For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FS02    FM10    FPCASH    RM*U50/-${udid50}
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
@@ -483,6 +504,14 @@ Book ${numberOfAir} Passive Air Segments
         
 Book ${numberOfAir} Active Air Segments
     Create ${numberOfAir} Test Dates
+    : FOR    ${i}    IN RANGE   0   ${numberOfAir}
+    \    ${i}    Evaluate    ${i} + 1   
+    \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
+    \    Enter Cryptic Command    SS1Y1
+    \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
+      
+Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
+    Create ${numberOfAir} Test Dates For Booking Less Than ${no_of_days} days
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}

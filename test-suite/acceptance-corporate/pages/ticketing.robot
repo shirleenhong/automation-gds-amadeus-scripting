@@ -23,7 +23,7 @@ ${select_secondaryReason}    //select[@id='secondaryReason']
 ${input_approverName}     //div[@formarrayname='additionalValues'][1]//input[@id='textValue']
 ${input_totalCost}     //div[@formarrayname='additionalValues'][2]//input[@id='textValue']
 ${text_Danger}    //div[@class='col text-danger']
-${checkbox_ignoreApproval}    css=#chkIgnoreApproval
+${checkbox_ignoreApproval}    css=#noApproval
 
 *** Keywords ***
 Select Primary Approval Reason: ${primary_reason}
@@ -44,7 +44,7 @@ Verify Approval Fields Are Not Displayed
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${checkbox_ignoreApproval}
 
 Fill Up Approval Reason Fields
-    Select Primary Approval Reason: ${primary_approval_reason}
+    Run Keyword If    "${primary_approval_reason}" != "None"    Select Primary Approval Reason: ${primary_approval_reason}
     Run Keyword If    "${secondary_approval_reason}" != "None"    Select Secondary Reason: ${secondary_approval_reason}
     Run Keyword If    "${approver_name}" != "None"    Enter Value    ${input_approverName}    ${approver_name}
     Run Keyword If    "${total_cost}" != "None"    Enter Value    ${input_totalCost}    ${total_cost}  
@@ -109,7 +109,6 @@ Select Limo Segments
 
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing Line
-    Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
@@ -330,6 +329,6 @@ Verify PNR Approval Is Processed Correctly
     Run Keyword If    "${remark_added2}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added2}  
     Run Keyword If    "${remark_added3}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added3}  
     Run Keyword If    "${remark_added4}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added4}    
-    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD
+    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1

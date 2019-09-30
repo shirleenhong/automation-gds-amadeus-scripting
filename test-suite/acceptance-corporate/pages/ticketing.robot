@@ -109,7 +109,6 @@ Select Limo Segments
 
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing Line
-    #Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
@@ -330,7 +329,7 @@ Verify PNR Approval Is Processed Correctly
     Run Keyword If    "${remark_added2}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added2}  
     Run Keyword If    "${remark_added3}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added3}  
     Run Keyword If    "${remark_added4}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added4}    
-    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD
+    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1
 

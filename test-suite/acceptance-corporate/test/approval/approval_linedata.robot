@@ -12,42 +12,43 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That Air Only PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That Air Only PNRs For Client Linedata Is Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Mettler Toledo With Udid 50 MTMS-NORAM, Air Only
+    Create PNR With Active Air Segments For Client Linedata, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car Only PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That Car Only PNRs For Client Linedata Is Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Car Only
+    Create PNR For Client Linedata, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Hotel Only PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That Hotel Only PNRs For Client Linedata Is Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Hotel Only
+    Create PNR For Client Linedata, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Mix Segments PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That Mix Segments PNRs For Client Linedata Is Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Mix Segments
+    Create PNR With Active Air Segments For Client Linedata, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Mettler Toledo With U*50 Guest Do Not Go Thru Approval Process
+Verify That Rail Only PNRs For Client Linedata Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 Guest, Air Only
+    Create PNR For Client Linedata, With Rail
+    Add 1 Rail Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

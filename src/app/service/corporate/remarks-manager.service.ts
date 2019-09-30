@@ -163,7 +163,9 @@ export class RemarksManagerService {
 
     if (additionalRemarks) {
       additionalRemarks.forEach((rem) => {
-        if (rem.remarkType !== 'AP') {
+        if (rem.remarkType === 'AP') {
+          pnrResponse.pnrAddMultiElements.dataElementsMaster.dataElementsIndiv.push(this.amadeusRemarkService.getAPRemarksElement(rem));
+        } else {
           pnrResponse.pnrAddMultiElements.dataElementsMaster.dataElementsIndiv.push(this.amadeusRemarkService.getRemarkElement(rem));
         }
       });
@@ -173,14 +175,6 @@ export class RemarksManagerService {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
       smartScriptSession.getActiveTask().then((x) => {
-        if (additionalRemarks) {
-          additionalRemarks
-            .filter((a) => a.remarkType === 'AP')
-            .forEach((a) => {
-              smartScriptSession.send(a.remarkType + a.category + a.remarkText);
-            });
-        }
-
         if (x.subtype === 'PNR') {
           smartScriptSession.requestService('bookingfile.refresh', null, {
             fn: '',

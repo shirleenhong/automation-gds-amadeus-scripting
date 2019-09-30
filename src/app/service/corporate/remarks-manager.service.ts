@@ -177,7 +177,7 @@ export class RemarksManagerService {
           additionalRemarks
             .filter((a) => a.remarkType === 'AP')
             .forEach((a) => {
-              smartScriptSession.send(a.remarkType + a.category + '-' + a.remarkText);
+              smartScriptSession.send(a.remarkType + a.category + a.remarkText);
             });
         }
 

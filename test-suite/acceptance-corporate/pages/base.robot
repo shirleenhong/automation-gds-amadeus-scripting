@@ -99,7 +99,7 @@ Assign Current Date
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
     Set Test Variable    ${current_year}     20${current_year}
-    Set Test Variable    ${date_today}    ${current_year}-${current_day}-${current_month}
+    Set Test Variable    ${date_today}    ${current_year}-${current_month}-${current_day}
     Log    ${current_date} 
     Log    ${current_day}/${current_month}/${current_year}
 

@@ -7,7 +7,7 @@ export class SeatModel {
     public id: number;
 
     /**
-     * The type of the seat. The types are window, aisle and middle.
+     * The type of the seat. The types are WINDOW, AISLE and MIDDLE.
      */
     public type: string;
 

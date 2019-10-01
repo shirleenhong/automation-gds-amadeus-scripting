@@ -32,8 +32,8 @@
       <div class="col-sm-8">
         <select class="form-control" formControlName="type" id="seatFormType">
           <option></option>
-          <option *ngFor="let type of types">
-            {{ type | uppercase }}
+          <option *ngFor="let type of types" [value]="type">
+            {{ type }}
           </option>
         </select>
       </div>

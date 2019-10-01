@@ -11,9 +11,9 @@ export class SeatsService {
    * The types of seat.
    */
   public static TYPES: Array<string> = [
-    'window',
-    'aisle',
-    'middle'
+    'WINDOW',
+    'AISLE',
+    'MIDDLE'
   ];
 
   /**

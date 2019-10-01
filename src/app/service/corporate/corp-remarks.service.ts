@@ -37,11 +37,9 @@ export class CorpRemarksService {
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'AIRPORT OR ONLINE CHECK IN');
           //
         } else if (seat.id === 2) {
-          //
           seatMap.set('CASeatRule', 'PREFERRED');
-          if (seat.type !== '') {
+          if (seat.type) {
             this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'PREFERRED SEAT UNAVAILABLE');
-          } else {
             const seatType = new Map<string, string>();
             seatType.set('CaSeatType', seat.type);
             this.remarksManagerService.createPlaceholderValues(seatType, null);

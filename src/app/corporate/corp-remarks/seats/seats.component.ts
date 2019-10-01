@@ -72,11 +72,21 @@ export class SeatsComponent implements OnInit {
       }
 
       // Condition 2
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'PREFERRED SEAT UNAVAILABLE') {
-        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('PREFERRED SEAT UNAVAILABLE')) {
+        let rirSegments: any = null;
+        let seatType: any = null;
+        if (rirElement.associations) {
+          rirSegments = rirElement.associations.map(association => association.tatooNumber);
+        }
+        const freeText = rirElement.fullNode.extendedRemark.structuredRemark.freetext;
+        if (freeText.split('-')) {
+          if (freeText.split('-')[1]) {
+            seatType = freeText.split('-')[1].split(' ')[0];
+          }
+        }
         seats.push({
           id: 2,
-          type: null,
+          type: seatType,
           number: null,
           segmentIds: rirSegments
         });

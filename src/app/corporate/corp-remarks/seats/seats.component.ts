@@ -165,19 +165,10 @@ export class SeatsComponent implements OnInit {
       if (this.modalRef) {
         if (this.modalRef.content.message === 'SAVED') {
           const newSeat = this.modalRef.content.seatForm.value;
-          let isContainsSeat = false;
 
           // Add the new seat to the seats.
           if (newSeat) {
-            this.seats.forEach(seat => {
-              if (seat.id === newSeat.id && seat.segmentIds === newSeat.segmentIds) {
-                isContainsSeat = true;
-              }
-            });
-
-            if (!isContainsSeat) {
-              this.seats.push(newSeat);
-            }
+            this.seats.push(newSeat);
           }
         }
       }

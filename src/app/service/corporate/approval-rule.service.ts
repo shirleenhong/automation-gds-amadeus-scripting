@@ -65,9 +65,6 @@ export class ApprovalRuleService {
           case '[DEPARTURE]':
             valid = this.isDepartureDateValid(approval);
             break;
-          case '[U]':
-            valid = this.isUdidValid(approval);
-            break;
         }
 
         if (!valid) {

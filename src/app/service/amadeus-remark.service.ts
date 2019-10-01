@@ -116,22 +116,33 @@ export class AmadeusRemarkService {
   }
 
   getAPRemarksElement(remarkModel: RemarkModel) {
-    const reference = {
-      qualifier: 'OT',
-      number: '1'
-    };
     const elementManagementData = {
-      reference,
       segmentName: 'AP'
     };
-
-    const otherDataFreetext = {
-      longFreetext: remarkModel.remarkText.replace('E-', ''),
+    const freetextData = {
       freetextDetail: {
-        type: 'E'
-      }
+        subjectQualifier: '3',
+        type: this.checkcategory(remarkModel.category)
+      },
+      longFreetext: remarkModel.remarkText
     };
-    return { elementManagementData, otherDataFreetext };
+    return { elementManagementData, freetextData };
+  }
+
+  checkcategory(category: string): string {
+    switch (category) {
+      case 'E':
+        return 'P02';
+      case 'M':
+        return '7';
+      case 'F':
+        return 'P01';
+      case 'H':
+        return '4';
+
+      default:
+        return '3';
+    }
   }
 
   getQueueElement(queueModel: QueuePlaceModel) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PnrService } from './pnr.service';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { PnrService } from '../pnr.service';
+import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
 
 declare var smartScriptSession: any;
 
@@ -11,7 +11,7 @@ export class QueueRemarkService {
   responseMessage: string;
   queueElement: Array<any>;
 
-  constructor(private pnrService: PnrService) { }
+  constructor(private pnrService: PnrService) {}
 
   async queuePNR(queueGroup: QueuePlaceModel[]) {
     this.queueElement = new Array<any>();

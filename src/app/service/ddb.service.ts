@@ -7,7 +7,6 @@ import { StaticValuesService } from './static-values.services';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-missed-saving-threshold.model';
 import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
-import { ApprovalItem } from '../models/ddb/approval.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +21,11 @@ export class DDBService implements OnInit {
   servicingOption = [];
   airTravelPortInformation = [];
   reasonCodeList = Array<ReasonCode>();
-  approvalList = Array<ApprovalItem>();
   airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -90,15 +88,8 @@ export class DDBService implements OnInit {
     }
   }
 
-  async approvers(clientSubUnit, cfa: string) {
-    this.reasonCodeList = [];
-    await this.getRequest(common.approversService + clientSubUnit + '&SourceSystemCode=CA1&ClientAccountNumber=1' + cfa).then(
-      (response) => {
-        response.ApproversResponseItem.forEach((approverJson) => {
-          this.approvalList.push(new ApprovalItem(approverJson));
-        });
-      }
-    );
+  async approvers(clientSubUnit) {
+    return await this.getRequest(common.approversService + clientSubUnit);
   }
 
   async queueMinderItems(clientSubUnit, typeid) {
@@ -170,7 +161,7 @@ export class DDBService implements OnInit {
     const url = common.feesService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1&ClientAccountNumber=1' + cfa;
     let clientFeeItems: ClientFeeItem[] = [];
     await this.getRequest(url).then((fee) => {
-      if (fee && fee.ClientFeeItems) {
+      if (fee.ClientFeeItems) {
         clientFeeItems = fee.ClientFeeItems.map((jsonObj) => new ClientFeeItem(jsonObj));
         console.log(clientFeeItems);
       }
@@ -240,30 +231,29 @@ export class DDBService implements OnInit {
     return await this.getRequest(common.airTravelportsService);
   }
 
-  // async loadSupplierCodesFromPowerBase() {
-  //   await this.getRequest(common.supplierCodes).then(
-  //     (x) => {
-  //       this.supplierCodes = [];
-  //       x.SupplierList.forEach((s) => {
-  //         const supplier = {
-  //           type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
-  //           supplierCode: s.SupplierCode,
-  //           supplierName: s.SupplierName
-  //         };
-  //         this.supplierCodes.push(supplier);
-  //       });
-  //     },
-  //     (err) => {
-  //       console.log(JSON.stringify(err));
-  //     }
-  //   );
-  // }
+  async loadSupplierCodesFromPowerBase() {
+    await this.getRequest(common.supplierCodes).then(
+      (x) => {
+        this.supplierCodes = [];
+        x.SupplierList.forEach((s) => {
+          const supplier = {
+            type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
+            supplierCode: s.SupplierCode,
+            supplierName: s.SupplierName
+          };
+          this.supplierCodes.push(supplier);
+        });
+      },
+      (err) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+  }
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
       this.getAllMatrixSupplierCodes();
     }
-
     if (this.supplierCodes.length > 0 && type !== undefined) {
       return this.supplierCodes.filter(
         (x) => x.type.toUpperCase() === type.toUpperCase() || x.type.toUpperCase() === 'CA MATRIX ' + type.toUpperCase()
@@ -296,7 +286,7 @@ export class DDBService implements OnInit {
         const supplier = {
           type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
           supplierCode: s.SupplierCode,
-          supplierName: s.SupplierName + ' (' + s.CurrencyCode + ')'
+          supplierName: s.SupplierName
         };
         this.supplierCodes.push(supplier);
       });
@@ -353,21 +343,6 @@ export class DDBService implements OnInit {
       return this.airTravelPortInformation.find((x) => x.travelPortCode === search);
     } else {
       return '';
-    }
-  }
-
-  /**
-   * Get the start and end dates of the Migration OBT Fee dates sin configuration.
-   */
-  public async getMigrationOBTFeeDates(): Promise<[string, string]> {
-    try {
-      let migrationOBTFeeDateRange = null;
-      const response = await this.getConfigurationParameter('MigrationOBTFeeDate');
-      migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-
-      return [migrationOBTFeeDateRange[0], migrationOBTFeeDateRange[1]];
-    } catch (error) {
-      throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
     }
   }
 

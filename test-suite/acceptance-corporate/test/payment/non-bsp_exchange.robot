@@ -48,16 +48,6 @@ Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Sup
     Verify Penalty Remarks Are Written In The PNR
     [Teardown]    Close Browser
     
-Verify That Ticketing Instruction Remarks Are Written Correctly For Other Supplier Codes And With Penalty Amount
-    [Tags]    us11134
-    Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Passive Segment With Airline Code 4N
-    Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And Penalty
-    Verify That Supplier Code Default Value Is Correct For 4N
-    Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number And Penalty Amount Are Written In The PNR
-    Verify Penalty Remarks Are Not Written In The PNR
-    [Teardown]    Close Browser
-    
 Verify That Consultant Number Remark Is Updated When Consultant Number Field Is Not Empty
     [Tags]    us11134
     Login To Amadeus Sell Connect Acceptance

@@ -87,7 +87,7 @@ Verify Royal Bank Concierge UDID Remarks Are Written
     Run Keyword If    "${is_caller_name_blank}" == "True"    Verify Specific Remark Is Written In The PNR    RM *U11/-${caller_name.upper()}
     Verify Specific Remark Is Written In The PNR    RM *U12/-${delegate_caller_name.upper()}
     Run Keyword If    "${is_hotel_name_blank}" == "True"    Verify Specific Remark Is Written In The PNR    RM *U13/-NO HTL BKD
-    ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *U13/-HOLIDAY INN AMSTERDAM
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *U13/-${hotel_name.upper()}
     Verify Specific Remark Is Written In The PNR    RM *U15/-${is_business_reserved}
     Verify Specific Remark Is Written In The PNR    RM *U17/-${is_hotel_booked}
     Run Keyword If    "${is_hotel_booked}" == "NO"    Verify Specific Remark Is Written In The PNR    RM *U18/-${reason_hotel_booked.upper()}
@@ -148,21 +148,9 @@ Populate Visa And Passport Required Fields
     Enter Passport Name    Passport Name
 
 Populate Reporting Required Fields
-    Populate Routing And Destination Fields
-    Populate RBC Conceirge Required Fields
-
-Populate Routing And Destination Fields
     Click Panel    Reporting
     Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
     Enter Destination Code    CDG
-
-Populate RBC Conceirge Required Fields
-    Click Reporting Tab    Royal Bank - Concierge
-    Select Reservation Request    Reservation was generated via Phone Request
-    Select Booking Type    Air Only Booking
-    Enter Hotel Name    Hotel Name for Leisure
-    Select Reservation For Business Travel    YES
-    Select Hotel Reservation Booked    YES
 
 Get Hotel Details Values
     ${hotel_city}    Get Element Attribute    xpath=//input[@id='hotelCityName']    ng-reflect-model

@@ -8,7 +8,6 @@ import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 import { BehaviorSubject } from 'rxjs';
-import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +18,7 @@ export class PaymentRemarkService {
   nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
   currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(
-    private remarksManager: RemarksManagerService,
-    private pnrService: PnrService,
-    private rms: RemarksManagerService,
-    private ddbService: DDBService
-  ) {}
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -36,7 +30,6 @@ export class PaymentRemarkService {
     // Write Non BSP Exhange Remarks
     this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NONBSPEXCHANGE'));
     this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'));
-    this.writeAquaTicketingRemarks(accList.filter((x) => x.accountingTypeRemark === 'NONBSP'));
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
@@ -157,7 +150,7 @@ export class PaymentRemarkService {
       let totalHst = parseFloat(account.hst);
       let totalQst = parseFloat(account.qst);
 
-      if (account.originalTktLine !== undefined) {
+      if (account.originalTktLine != undefined) {
         originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);
       } else {
         originalTicketCondition.set('NoOriginalTicket', 'true');
@@ -199,7 +192,12 @@ export class PaymentRemarkService {
       );
 
       const totalCost =
-        totalBaseAmount + totalGst + totalHst + totalQst + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
+        totalBaseAmount +
+        totalGst +
+        totalHst +
+        totalQst +
+        parseFloat(account.otherTax) +
+        parseFloat(account.commisionWithoutTax);
 
       airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
       airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
@@ -304,6 +302,8 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       }
     });
+
+
   }
 
   private GetSegmentAssociation(account: MatrixAccountingModel) {
@@ -465,55 +465,5 @@ export class PaymentRemarkService {
 
   setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
     this.nonbspInformation.next(accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP'));
-  }
-
-  allRailSegment(account: MatrixAccountingModel) {
-    const segmentNos = account.segmentNo.split(',');
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
-    let segmentAssoc = new Array<string>();
-    let hasNonTrain = false;
-    let route = '';
-
-    segmentNos.forEach((segs) => {
-      if (segmentDetails.find((x) => segs === x.lineNo && x.passive !== 'TYP-TRN')) {
-        hasNonTrain = true;
-      }
-      const look = segmentDetails.find((x) => segs === x.lineNo && x.passive === 'TYP-TRN');
-      if (look) {
-        route = this.getRoute(this.ddbService.getCityCountry(look.cityCode), route);
-        segmentAssoc.push(look.tatooNo);
-      }
-    });
-
-    segmentAssoc = !hasNonTrain ? segmentAssoc : [];
-    return { segmentAssoc, route };
-  }
-
-  getRoute(element: any, route: string) {
-    if (element !== 'Canada' && element !== 'United States') {
-      route = 'INTL';
-    }
-    if (element === 'United States' && route !== 'INTL') {
-      route = 'TRANS';
-    }
-    return route;
-  }
-
-  writeAquaTicketingRemarks(accountingRemarks: MatrixAccountingModel[]): void {
-    accountingRemarks.forEach((element) => {
-      let idx = 1;
-      const { segmentAssoc, route } = this.allRailSegment(element);
-      if (segmentAssoc.length > 0) {
-        const tktRemarks = new Map<string, string>();
-        tktRemarks.set('NumberOfTickets', idx.toString());
-        this.remarksManager.createPlaceholderValues(tktRemarks);
-
-        const tktRoute = new Map<string, string>();
-        tktRoute.set('TicketSequence', idx.toString());
-        tktRoute.set('TktRoute', route);
-        this.remarksManager.createPlaceholderValues(tktRoute);
-        idx++;
-      }
-    });
   }
 }

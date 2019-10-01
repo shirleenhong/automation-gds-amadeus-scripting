@@ -1,10 +1,8 @@
-import { Component, ChangeDetectorRef, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild } from '@angular/core';
 import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
-import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketing.component';
-import { MatrixReportingComponent } from './matrix-reporting/matrix-reporting.component';
-import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
+
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -13,11 +11,8 @@ import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.co
 export class ReportingComponent implements OnInit {
   @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
-  @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;
-  @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   hasTst: boolean;
-  @Input() overrideValue: any;
-  @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
+
   constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {

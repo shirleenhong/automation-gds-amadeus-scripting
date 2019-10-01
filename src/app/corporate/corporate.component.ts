@@ -6,7 +6,6 @@ import { MessageComponent } from '../shared/message/message.component';
 import { PaymentsComponent } from './payments/payments.component';
 import { ReportingComponent } from '../corporate/reporting/reporting.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
-
 import { PnrService } from '../service/pnr.service';
 import { DDBService } from '../service/ddb.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
@@ -16,13 +15,9 @@ import { TicketRemarkService } from '../service/corporate/ticket-remark.service'
 import { RemarkGroup } from '../models/pnr/remark.group.model';
 import { ValidateModel } from '../models/validate-model';
 import { MessageType } from '../shared/message/MessageType';
-import { AmadeusRemarkService } from '../service/amadeus-remark.service';
+import { AmadeusRemarkService } from '../service/remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
-import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
-import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
-import { QueueRemarkService } from '../service/queue-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -37,14 +32,11 @@ export class CorporateComponent implements OnInit {
   workflow = '';
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
-  migrationOBTDates: Array<string>;
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
-  @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
-
   @Input() overrideValue: any;
 
   constructor(
@@ -56,10 +48,8 @@ export class CorporateComponent implements OnInit {
     private corpRemarkService: AmadeusRemarkService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
-    private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
-    private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService
+    private feesRemarkService: FeesRemarkService
   ) {
     this.initData();
   }
@@ -70,12 +60,9 @@ export class CorporateComponent implements OnInit {
     }
   }
 
-  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
+  async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
-    if (queueCollection) {
-      this.queueService.queuePNR(queueCollection);
-    }
   }
 
   async getPnrService() {
@@ -143,22 +130,19 @@ export class CorporateComponent implements OnInit {
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
       this.workflow = 'error';
     } else {
-      try {
-        // this.showLoading('Matching Remarks', 'initData');
-        await this.rms.getMatchcedPlaceholderValues();
-        // this.showLoading('Servicing Options', 'initData');
-        await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
-        // this.showLoading('ReasonCodes', 'initData');
-        await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-        await this.ddbService.approvers(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
-        await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
-        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
-        await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
-          this.migrationOBTDates = dates;
-        });
-      } catch (e) {
-        console.log(e);
-      }
+      // this.showLoading('Matching Remarks', 'initData');
+      this.rms.getMatchcedPlaceholderValues().catch((x) => {
+        this.showMessage('Error on Matching Data in the PNR: ' + x.message, MessageType.Error, 'Not Found', 'Loading');
+        this.closePopup();
+        this.isPnrLoaded = false;
+        return;
+      });
+      // this.showLoading('Servicing Options', 'initData');
+      await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
+      // this.showLoading('ReasonCodes', 'initData');
+      await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
+      await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
+      await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
     }
     this.closePopup();
     this.checkHasDataLoadError();
@@ -192,9 +176,7 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-    accRemarks.push(this.ticketRemarkService.submitTicketRemark
-      (this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
-        this.ticketingComponent.ticketlineComponent.approvalForm));
+    accRemarks.push(this.ticketRemarkService.submitTicketRemark(this.ticketingComponent.getTicketingDetails()));
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -205,32 +187,19 @@ export class CorporateComponent implements OnInit {
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
-    this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
-
-    this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
-    this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
 
-    this.invoiceRemarkService.sendU70Remarks();
-
-    this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
-    // below additional process not going through remarks manager
-    const additionalRemarks = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
-    const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-
-    let queueCollection = Array<QueuePlaceModel>();
-    queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-    await this.rms.submitToPnr(additionalRemarks, forDeleteRemarks).then(
+    await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
-        this.getPnr(queueCollection);
         this.closePopup();
+        this.checkHasDataLoadError();
       },
       (error) => {
         console.log(JSON.stringify(error));

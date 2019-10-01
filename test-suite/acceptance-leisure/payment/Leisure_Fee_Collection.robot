@@ -24,7 +24,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-9.98XQ/-FOP-CK/P2    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK/P2    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK/P2
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XG
@@ -48,7 +48,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
     Click Submit To PNR
     Close CA Migration Window
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-0.00RC/-PT-0.00XQ/-FOP-CCVI4444333322221111/-EXP-0921/P2    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-130.00RC/-PT-0.00XQ/-FOP-CCVI4444333322221111/-EXP-0921/P2    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-H5/-FLN-F1/-AMT-CAD1000.00/-FP-FEE/-FOP-CCVI4444333322221111/-EXP-0921/P2    True
     Verify Specific Remark Is Only Written Once    RMY TAX-ON
     Verify Specific Remark Is Only Written Once    RM *TEX/-RC
@@ -132,7 +132,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-C4/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00RC/-PT-0.00XQ/-FOP-CK    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-C4/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-15.00RC/-PT-0.00XQ/-FOP-CK    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-C4/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-NB
     Verify Specific Remark Is Written In The PNR    RM *TEX/-RC/-XG/-XQ
@@ -149,7 +149,6 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
     Enter Credit Card Number    4444333322221111
     Enter Credit Card Expiration Date    0921
     Select Traveler Province    Quebec
-    Unselect Tax Exemption    HST Exempt    GST Exempt    QST Exempt
     Click Save Button
     Click Submit To PNR
     Close CA Migration Window
@@ -157,7 +156,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD1000.00/-PT-50.00XG/-PT-99.75XQ/-FOP-CCVI4444333322221111/-EXP-0921    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD1000.00/-FP-FEE/-FOP-CCVI4444333322221111/-EXP-0921    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
-    Verify Specific Remark Is Not Written In The PNR     RM *TEX/-RC/-XG/-XQ
+    Verify Specific Remark Is Only Written Once    RM *TEX/-RC/-XG/-XQ
     Verify Specific Remark Is Not Written In The PNR    RM *FEE/-FA-C4/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
@@ -188,7 +187,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segm
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H3/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CCVI4444333322221111/-EXP-0921    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H3/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-0.00XQ/-FOP-CCVI4444333322221111/-EXP-0921    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-H3/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CCVI4444333322221111/-EXP-0921    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-SK
     Verify Specific Remark Is Written In The PNR    RM *TEX/-XG/-XQ
@@ -233,7 +232,6 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     Enter Amount    100.00
     Select Leisure Fee Form of Payment    Cheque
     Select Traveler Province    Quebec
-    Select Tax Exemption    GST Exempt
     Select Passenger    LEISURE-AMADEUS MR
     Click Save Button
     Click Add Leisure Fee Collection Button
@@ -244,18 +242,19 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     Select Credit Card Vendor Code    VI- Visa
     Enter Credit Card Number    4444333322221111
     Enter Credit Card Expiration Date    0921
+    Select Tax Exemption    QST Exempt    GST Exempt
     Select Passenger    LEISURE-TEST
     Click Save Button
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-0.00XG/-PT-9.98XQ/-FOP-CK/P2    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD100.00/-PT-5.00XG/-PT-9.98XQ/-FOP-CK/P2    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD100.00/-FP-FEE/-FOP-CK/P2
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F2/-FP-TRF/-AMT-CAD541.00/-PT-0.00XG/-PT-53.96XQ/-FOP-CCVI4444333322221111/-EXP-0921/P3    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-H5/-FLN-F2/-FP-TRF/-AMT-CAD541.00/-PT-27.05XG/-PT-53.96XQ/-FOP-CCVI4444333322221111/-EXP-0921/P3    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-H5/-FLN-F2/-AMT-CAD541.00/-FP-FEE/-FOP-CCVI4444333322221111/-EXP-0921/P3    True
     Verify Specific Remark Is Written In The PNR    RMY TAX-QC
-    Verify Specific Remark Is Only Written Once    RM *TEX/-XG
+    Verify Specific Remark Is Only Written Once    RM *TEX/-XG/-XQ
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -290,8 +289,8 @@ Verify Multiple Leisure Fee Remarks Without Tax Exemption Are Written In The PNR
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F1/-FP-TRF/-AMT-CAD5351.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CCVI4444333322221111/-EXP-0921/P1    True
     Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F1/-AMT-CAD5351.00/-FP-FEE/-FOP-CCVI4444333322221111/-EXP-0921/P1    True
-    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T2/-FLN-F2/-FP-TRF/-AMT-CAD1231.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CK/P1    True
-    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T2/-FLN-F2/-AMT-CAD1231.00/-FP-FEE/-FOP-CK/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *SFC/-FA-T1/-FLN-F2/-FP-TRF/-AMT-CAD1231.00/-PT-0.00XG/-PT-0.00XQ/-FOP-CK/P1    True
+    Verify Specific Remark Is Written In The PNR    RM *FEE/-FA-T1/-FLN-F2/-AMT-CAD1231.00/-FP-FEE/-FOP-CK/P1    True
     Verify Specific Remark Is Only Written Once    RMY TAX-ZZ
     Verify Specific Remark Is Not Written In The PNR    RM *TEX/
     Close Cryptic Display Window

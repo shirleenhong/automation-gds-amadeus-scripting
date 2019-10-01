@@ -315,7 +315,6 @@ export class TicketingLineComponent implements OnInit {
 
   /**
    * apply has approval but no UI setup in API
-   * 
    */
   disableApprovalControls() {
     if (this.primaryReasonList.length === 0) {

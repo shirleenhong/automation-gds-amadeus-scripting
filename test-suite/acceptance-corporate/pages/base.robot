@@ -13,7 +13,7 @@ Resource          reporting.robot
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
-${button_submit_pnr}    //button[contains(text(), 'SUBMIT TO PNR')]
+${button_submit_pnr}    //button[@class='leisureBtnSubmit']
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
@@ -73,9 +73,11 @@ Collapse Payment Panel
     [Teardown]    Take Screenshot
     
 Click Submit To PNR
-    [Arguments]    ${close_corporate_test}=yes
+    [Arguments]    ${close_corporate_test}=yes     ${queueing}=no
     Wait Until Page Contains Element    ${button_submit_pnr}    30
-    Click Element    ${button_submit_pnr}    
+    Scroll Element Into View     ${button_submit_pnr}
+    Click Button    ${button_submit_pnr}
+    Run Keyword If   "${queueing}" == "yes"     Sleep    10
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
@@ -97,7 +99,7 @@ Assign Current Date
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
     Set Test Variable    ${current_year}     20${current_year}
-    Set Test Variable    ${date_today}    ${current_year}-${current_day}-${current_month}
+    Set Test Variable    ${date_today}    ${current_year}-${current_month}-${current_day}
     Log    ${current_date} 
     Log    ${current_day}/${current_month}/${current_year}
 
@@ -165,15 +167,17 @@ Navigate From Ticketing
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
 
 Finish PNR
-    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
+    [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
+    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR    ${close_corporate_test}    ${queueing}
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}  
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     
 Submit To PNR
-    [Arguments]    ${close_corporate_test}=yes    
+    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Click Submit To PNR    ${close_corporate_test}        
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"
+    ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60

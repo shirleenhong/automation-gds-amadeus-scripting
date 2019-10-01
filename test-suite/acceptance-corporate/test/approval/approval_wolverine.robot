@@ -12,42 +12,42 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That Air Only PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That PNRs For Client Wolverine Are Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Mettler Toledo With Udid 50 MTMS-NORAM, Air Only
+    Create PNR With Active Air Segments For Client Wolverine, Air Only, Select First Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car Only PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That PNRs For Client Wolverine Can Skip Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Car Only
+    Create PNR With Active Air Segments For Client Wolverine, Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Hotel Only PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That Car Only PNRs For Client Wolverine Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Hotel Only
+    Create PNR With Active Air Segments For Client Wolverine, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Mix Segments PNRs For Client Mettler Toledo Is Correctly Queued To Approval Queue
+Verify That Hotel Only PNRs For Client Wolverine Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Mix Segments
+    Create PNR With Active Air Segments For Client Wolverine, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Mettler Toledo With U*50 Guest Do Not Go Thru Approval Process
+Verify That Car And Hotel Only PNRs For Client Wolverine Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Mettler Toledo With Udid 50 Guest, Air Only
+    Create PNR With Active Air Segments For Client Wolverine, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

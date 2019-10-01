@@ -107,12 +107,13 @@ export class SeatsComponent implements OnInit {
       }
 
       // Condition 5
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'UPGRADE CONFIRMED') {
+      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
         const rirSegments = rirElement.associations.map(association => association.tatooNumber);
+        const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
         seats.push({
           id: 5,
           type: null,
-          number: null,
+          number: seatNumber,
           segmentIds: rirSegments
         });
       }

@@ -21,6 +21,7 @@ export const common = {
   reasonCodesByProductIdService: '/service/repo/powerbaseaws/ReasonCodesByProductId/',
   reasonCodesByTypeIdService: '/service/repo/powerbaseaws/ReasonCodesByReasonCodeTypeId/',
   reasonCodesByProductIdAndTypeIdService: '/service/repo/powerbaseaws/ReasonCodes/{ProductId}/{ReasonCodeTypeId}/',
+  airMissedSavingThresholdService: '/service/repo/powerbaseaws/Policies/Air/Missed-Savings',
   configurationParameterService: '/service/repo/powerbaseaws/ConfigurationParameter',
   approversService: '/service/repo/powerbaseaws/Approvers?ClientSubUnitGuid=',
   queueMinderItemService: '/service/repo/powerbaseaws/ClientSubUnits/{ClientSubUnitGuid}/QueueMinderItems?QueueMinderTypeIds=',
@@ -29,5 +30,5 @@ export const common = {
   matchedPlacholderValueService: '/service/ap/remarks-manager/api/matched-placeholder-values',
   pnrAmadeusRequestService: '/service/ap/remarks-manager/api/pnr-amadeus-request',
   matrixSupplierService: '/service/repo/powerbaseaws/Matrix/Supplier',
-  LeisureVersionNumber: '19.8.3'
+  LeisureVersionNumber: '19.9.1'
 };

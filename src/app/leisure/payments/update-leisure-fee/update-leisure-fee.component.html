@@ -12,30 +12,16 @@
           FLN:
         </div>
         <div class="col-4">
-          <input
-            type="text"
-            id="fln"
-            name="fln"
-            class="form-control"
-            formControlName="fln"
-            NumberOnlyMask
-            disabled
-            [(ngModel)]="leisureFee.fln"
-          />
+          <input type="text" id="fln" name="fln" class="form-control" formControlName="fln" NumberOnlyMask disabled
+            [(ngModel)]="leisureFee.fln" />
         </div>
       </div>
 
       <div class="row form-group">
         <div class="col-4">Segment Association:</div>
         <div class="col-8">
-          <select
-            id=" segmentAssoc"
-            name="segmentAssoc"
-            formControlName="segmentAssoc"
-            class="form-control"
-            [(ngModel)]="leisureFee.segmentAssoc"
-            (change)="changeFeeState()"
-          >
+          <select id=" segmentAssoc" name="segmentAssoc" formControlName="segmentAssoc" class="form-control"
+            [(ngModel)]="leisureFee.segmentAssoc" (change)="changeFeeState()">
             <option value="1">Ticket Segment</option>
             <option value="2">Tour/Cruise Segment</option>
             <option value="3">Hotel Segment</option>
@@ -55,13 +41,8 @@
           <div class="row form-group">
             <div class="col-4"></div>
             <div class="col-4">
-              <select
-                id="segmentNum"
-                name="segmentNum"
-                class="form-control"
-                formControlName="segmentNum"
-                [(ngModel)]="leisureFee.segmentNum"
-              >
+              <select id="segmentNum" name="segmentNum" class="form-control" formControlName="segmentNum"
+                [(ngModel)]="leisureFee.segmentNum">
                 <option *ngFor="let item of segmentList" [value]="item.lineNo">
                   {{ item.lineNo + ' ' + item.longFreeText }}
                 </option>
@@ -74,16 +55,8 @@
             Amount:
           </div>
           <div class="col-4">
-            <input
-              type="text"
-              id="amount"
-              name="amount"
-              class="form-control"
-              formControlName="amount"
-              maxlength="10"
-              [(ngModel)]="leisureFee.amount"
-              AmountMask
-            />
+            <input type="text" id="amount" name="amount" class="form-control" formControlName="amount" maxlength="10"
+              [(ngModel)]="leisureFee.amount" AmountMask />
           </div>
         </div>
 
@@ -92,15 +65,10 @@
             Form of Payment:
           </div>
           <div class="col-8">
-            <select
-              id="paymentType"
-              name="paymentType"
-              class="form-control"
-              formControlName="paymentType"
-              [(ngModel)]="leisureFee.paymentType"
-            >
+            <select id="paymentType" name="paymentType" class="form-control" formControlName="paymentType"
+              [(ngModel)]="leisureFee.paymentType">
               <option value="C">Credit Card</option>
-              <option value="K">Cheque</option>
+              <option *ngIf="withcheque" value="K">Cheque</option>
             </select>
           </div>
         </div>
@@ -110,14 +78,8 @@
           </div>
           <div class="col ccinfo">
             <div style="width:160px;">
-              <select
-                id="vendorCode"
-                class="form-control"
-                name="vendorCode"
-                formControlName="vendorCode"
-                [(ngModel)]="leisureFee.vendorCode"
-                (change)="creditcardMaxValidator($event.target.value)"
-              >
+              <select id="vendorCode" class="form-control" name="vendorCode" formControlName="vendorCode"
+                [(ngModel)]="leisureFee.vendorCode" (change)="creditcardMaxValidator($event.target.value)">
                 <option *ngFor="let item of vendorCodeList" [value]="item.itemValue">
                   {{ item.itemText }}
                 </option>
@@ -125,31 +87,13 @@
             </div>
             <div class="d-flex flex-row ">
               <div style="width:160px;">
-                <input
-                  type="text"
-                  id="ccNo"
-                  name="ccNo"
-                  class="form-control"
-                  formControlName="ccNo"
-                  maxlength="16"
-                  [(ngModel)]="leisureFee.ccNo"
-                  NumberOnlyMask
-                />
+                <input type="text" id="ccNo" name="ccNo" class="form-control" formControlName="ccNo" maxlength="16"
+                  [(ngModel)]="leisureFee.ccNo" NumberOnlyMask />
               </div>
               <div style="width:60px">
-                <input
-                  type="text"
-                  class="form-control"
-                  bsDatePicker
-                  placeHolder="MM/YY"
-                  id="expDate"
-                  required
-                  [(ngModel)]="leisureFee.expDate"
-                  maxlength="5"
-                  name="expDate"
-                  formControlName="expDate"
-                  CCDateExpMask
-                />
+                <input type="text" class="form-control" bsDatePicker placeHolder="MM/YY" id="expDate" required
+                  [(ngModel)]="leisureFee.expDate" maxlength="5" name="expDate" formControlName="expDate"
+                  CCDateExpMask />
               </div>
             </div>
 
@@ -171,7 +115,8 @@
         <div class="row form-group">
           <div class="col-4"></div>
           <div class="col-8">
-            <select id="address" name="address" class="form-control" formControlName="address" [(ngModel)]="leisureFee.address">
+            <select id="address" name="address" class="form-control" formControlName="address"
+              [(ngModel)]="leisureFee.address">
               <option *ngFor="let item of provinceList" [value]="item.itemValue">
                 {{ item.itemText }}
               </option>
@@ -185,13 +130,8 @@
             <div *ngFor="let option of exemption">
               <div>
                 <label>
-                  <input
-                    type="checkbox"
-                    name="exempt"
-                    [(ngModel)]="option.checked"
-                    value="{{ option.value }}"
-                    [ngModelOptions]="{ standalone: true }"
-                  />
+                  <input type="checkbox" name="exempt" [(ngModel)]="option.checked" value="{{ option.value }}"
+                    [ngModelOptions]="{ standalone: true }" [disabled]="f.fln.value !== '1'" />
                   {{ option.label }}
                 </label>
               </div>
@@ -203,14 +143,10 @@
       <div class="form-group row">
         <div class="col-sm-4">Passenger :</div>
         <div class="col-sm-8">
-          <select
-            class="form-control "
-            id="passengerNo"
-            [(ngModel)]="leisureFee.passengerNo"
-            formControlName="passengerNo"
-            name="passengerNo"
-          >
-            <option *ngFor="let pass of passengerList" [value]="pass.id"> {{ pass.surname }}-{{ pass.firstname }} </option>
+          <select class="form-control " id="passengerNo" [(ngModel)]="leisureFee.passengerNo"
+            formControlName="passengerNo" name="passengerNo">
+            <option *ngFor="let pass of passengerList" [value]="pass.id"> {{ pass.surname }}-{{ pass.firstname }}
+            </option>
           </select>
         </div>
       </div>
@@ -218,6 +154,7 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="saveLeisureFee()" [disabled]="leisureFeeForm.invalid">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="saveLeisureFee()"
+    [disabled]="leisureFeeForm.invalid">Save</button>
   <button type="button" class="btn btn-outline-dark" (click)="modalRef.hide()">Close</button>
 </div>

@@ -3,22 +3,35 @@
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas fa-hand-holding-usd"></i> Payment
-        <!-- <i [ngClass]="validModel.paymentValidCss"></i> -->
+        <i [ngClass]="validModel.paymentValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-payments></app-payments>
     </accordion-group>
-  </accordion>
-  <br />
-
-  <accordion [closeOthers]="false">
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Reporting
-        <!-- <i [ngClass]="validModel.paymentValidCss"></i> -->
+        <i class="fas fa-file-export"></i> Reporting
+        <i [ngClass]="validModel.reportingValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-reporting></app-reporting>
+    </accordion-group>
+
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="fas fa-hand-holding-usd"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-fees></app-fees>
+    </accordion-group>
+
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="fas fa-ticket-alt"></i> Ticketing
+        <i [ngClass]="validModel.ticketingValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-ticketing></app-ticketing>
     </accordion-group>
   </accordion>
   <br />
@@ -35,7 +48,10 @@
 
 <div *ngIf="workflow === ''" class="loaderBody">
   <div class="loader">
-    <div>Corporate <span class="cwt-logo"></span></div>
+    <div>
+      Corporate
+      <span class="cwt-logo"></span>
+    </div>
     <div>
       <button class="leisureButton btnMenu">
         Add Segment
@@ -57,4 +73,23 @@
       </button>
     </div>
   </div>
+</div>
+
+<div *ngIf="workflow === 'error'" class="loaderBody">
+  <div class="loader">
+    <div>
+      <button class="leisureButton btnMenu" (click)="initData()">
+        Reload
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="dataError.hasError">
+  <alert type="warning" dismissible="true">
+    <div *ngIf="dataError.matching">Unable to Match PNR from PNR Layout</div>
+    <div *ngIf="dataError.supplier">Unable to get Supplier Codes from DDB</div>
+    <div *ngIf="dataError.servicingOption">Unable to Get Servicing Options</div>
+    <div *ngIf="dataError.pnr">Unable to Load PNR</div>
+    <div *ngIf="dataError.reasoncode">Unable to Reason Codes</div>
+  </alert>
 </div>

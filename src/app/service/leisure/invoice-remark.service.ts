@@ -74,11 +74,6 @@ export class InvoiceRemarkService {
       }
 
     }
-
-    if (segments.length === segmentsSelected.length) {
-      return true;
-    }
-
     return false;
   }
 }

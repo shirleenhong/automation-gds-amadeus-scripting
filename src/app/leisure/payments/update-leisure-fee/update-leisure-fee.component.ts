@@ -31,6 +31,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
   isSubmitted = false;
   exemption = [];
   passengerList: Array<any>;
+  withcheque = true;
 
   constructor(
     public modalRef: BsModalRef,
@@ -123,7 +124,8 @@ export class UpdateLeisureFeeComponent implements OnInit {
       default:
         this.leisureFeeForm.get('segmentNum').disable();
     }
-    this.enableDisbleControls(['address'], this.leisureFee.fln !== '1');
+    // this.enableDisbleControls(['address'], this.leisureFee.fln !== '1');
+
   }
 
   enableDisbleControls(ctrls: string[], isDisabled: boolean) {

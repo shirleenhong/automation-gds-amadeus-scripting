@@ -2,34 +2,40 @@ import { Injectable } from '@angular/core';
 import { RemarksManagerService } from './remarks-manager.service';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 import { AccountingRemarkComponent } from 'src/app/corporate/payments/accounting-remark/accounting-remark.component';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
-
-
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentRemarkService {
+  decPipe = new DecimalPipe('en-US');
+  // nonbspInformation: MatrixAccountingModel[];
+  nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
+  currentMessage = this.nonbspInformation.asObservable();
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService,
-    private rms: RemarksManagerService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private rms: RemarksManagerService) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
-    this.writePassPurchase(accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP'));
+    this.writePassPurchase(
+      accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
+    );
+
+    // Write Non BSP Exhange Remarks
+    this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NONBSPEXCHANGE'));
+    this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'));
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
       const airlineCodeRemark = new Map<string, string>();
-      const ticketRemarks = new Map<string, string>();
-      const ticketAmountRemarks = new Map<string, string>();
       const airlineCodeInvoice = new Map<string, string>();
       const staticRemarksCondition = new Map<string, string>();
 
@@ -50,37 +56,32 @@ export class PaymentRemarkService {
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
-      ticketRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
-      ticketRemarks.set('TktNbr', account.tktLine);
-      ticketRemarks.set('SupplierCode', account.supplierCodeName);
-
-      ticketAmountRemarks.set('TktRemarkNbr', account.tkMacLine.toString());
-      ticketAmountRemarks.set('BaseAmt', account.baseAmount);
-      ticketAmountRemarks.set('Gst', account.gst);
-      ticketAmountRemarks.set('Hst', account.hst);
-      ticketAmountRemarks.set('Qst', account.qst);
-      ticketAmountRemarks.set('Comm', account.commisionWithoutTax);
-      staticRemarksCondition.set('PassPurchase', 'true');
-
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
 
+      this.writeTicketingLine(
+        account.tkMacLine.toString(),
+        account.baseAmount,
+        account.gst,
+        account.hst,
+        account.qst,
+        '0.00',
+        account.commisionWithoutTax,
+        segmentrelate,
+        account.supplierCodeName,
+        account.tktLine
+      );
+
+      staticRemarksCondition.set('PassPurchase', 'true');
+
       const totalCost = parseFloat(account.baseAmount) + parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
-      const highFareRemark = new Map<string, string>();
-      highFareRemark.set('CAAirHighFare', totalCost.toString());
-
-      const lowFareRemark = new Map<string, string>();
-      lowFareRemark.set('CAAirLowFare', totalCost.toString());
-
+      airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
+      this.writeHighLowFareSavingCode(totalCost, totalCost, 'L', segmentrelate);
       const airReasonCodeRemark = new Map<string, string>();
       airReasonCodeRemark.set('CAAirRealisedSavingCode', 'L');
 
-      this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
-      this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
-      this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
       this.remarksManager.createPlaceholderValues(paymentRemark, null, segmentrelate);
-      this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);
-      this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
+
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       this.remarksManager.createPlaceholderValues(airlineCodeInvoice);
 
@@ -88,8 +89,236 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
-
     });
+  }
+
+  writeHighLowFareSavingCode(highFare, lowFare, savingsCode, segmentAssoc) {
+    const highFareRemark = new Map<string, string>();
+    const lowFareRemark = new Map<string, string>();
+    const airReasonCodeRemark = new Map<string, string>();
+
+    highFareRemark.set('CAAirHighFare', this.decPipe.transform(highFare, '1.2-2').replace(',', ''));
+    lowFareRemark.set('CAAirLowFare', this.decPipe.transform(lowFare, '1.2-2').replace(',', ''));
+    airReasonCodeRemark.set('CAAirRealisedSavingCode', savingsCode);
+
+    this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentAssoc);
+    this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentAssoc);
+    this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentAssoc);
+  }
+
+  writeTicketingLine(tktNo, baseAmount, gst, hst, qst, otherTax, comm, segmentrelate, supplierCodeName, tktline?) {
+    const ticketAmountRemarks = new Map<string, string>();
+    ticketAmountRemarks.set('TktRemarkNbr', tktNo.toString());
+    ticketAmountRemarks.set('BaseAmt', this.decPipe.transform(baseAmount, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Gst', this.decPipe.transform(gst, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Hst', this.decPipe.transform(hst, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Qst', this.decPipe.transform(qst, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('Comm', this.decPipe.transform(comm, '1.2-2').replace(',', ''));
+    ticketAmountRemarks.set('OthTax', this.decPipe.transform(otherTax, '1.2-2').replace(',', ''));
+    this.remarksManager.createPlaceholderValues(ticketAmountRemarks, null, segmentrelate);
+
+    const ticketRemarks = new Map<string, string>();
+    if (tktline) {
+      ticketRemarks.set('TktNbr', tktline);
+      this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'SupplierCode']);
+    } else {
+      this.rms.createEmptyPlaceHolderValue(['TktRemarkNbr', 'TktNbr', 'SupplierCode']);
+    }
+    ticketRemarks.set('TktRemarkNbr', tktNo);
+    ticketRemarks.set('SupplierCode', supplierCodeName);
+    this.remarksManager.createPlaceholderValues(ticketRemarks, null, segmentrelate);
+  }
+
+  /**
+   * DOING
+   * US11134: Write Non-BSP Exchange remarks to PNR.
+   *
+   * @param accountingRemarks collection of Non-BSP Exchange remarks
+   */
+  writeNonBSPExchange(accountingRemarks: MatrixAccountingModel[]) {
+    accountingRemarks.forEach((account) => {
+      const originalTicketRemarks = new Map<string, string>();
+      const originalTicketCondition = new Map<string, string>();
+      const airlineCodeRemark = new Map<string, string>();
+      const cnNumberRemarks = new Map<string, string>();
+      const passchange = new Map<string, string>();
+      const gdsFare = new Map<string, string>();
+      const consultantNoRemarkStatic = new Map<string, string>();
+      const separatePenaltyRemark = new Map<string, string>();
+      let totalBaseAmount = parseFloat(account.baseAmount);
+      let totalGst = parseFloat(account.gst);
+      let totalHst = parseFloat(account.hst);
+      let totalQst = parseFloat(account.qst);
+
+      if (account.originalTktLine != undefined) {
+        originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);
+      } else {
+        originalTicketCondition.set('NoOriginalTicket', 'true');
+      }
+
+      const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
+
+      if (parseFloat(account.penaltyBaseAmount) > 0 && account.supplierCodeName === 'ACY') {
+        this.writeTicketingPenalty(
+          account.tkMacLine.toString(),
+          'A22',
+          account.penaltyBaseAmount,
+          account.penaltyGst,
+          account.penaltyHst,
+          account.penaltyQst,
+          '0.00',
+          segmentAssoc
+        );
+      }
+
+      if (account.supplierCodeName !== 'ACY') {
+        totalBaseAmount += parseFloat(account.penaltyBaseAmount);
+        totalGst += parseFloat(account.penaltyGst);
+        totalHst += parseFloat(account.penaltyHst);
+        totalQst += parseFloat(account.penaltyQst);
+      }
+
+      this.writeTicketingLine(
+        account.tkMacLine.toString(),
+        totalBaseAmount,
+        totalGst,
+        totalHst,
+        totalQst,
+        account.otherTax,
+        account.commisionWithoutTax,
+        segmentAssoc,
+        account.supplierCodeName,
+        account.tktLine
+      );
+
+      const totalCost =
+        totalBaseAmount +
+        totalGst +
+        totalHst +
+        totalQst +
+        parseFloat(account.otherTax) +
+        parseFloat(account.commisionWithoutTax);
+
+      airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
+      airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
+      this.remarksManager.createPlaceholderValues(airlineCodeRemark);
+
+      if (account.consultantNo) {
+        cnNumberRemarks.set('BackOfficeAgentIdentifier', account.consultantNo);
+        this.remarksManager.createPlaceholderValues(cnNumberRemarks);
+        consultantNoRemarkStatic.set('IsNuc', 'true');
+      }
+
+      if (this.pnrService.hasPassRemark()) {
+        passchange.set('ExchangeAirlineCode', uniqueairlineCode);
+        this.remarksManager.createPlaceholderValues(passchange);
+      }
+
+      if (account.gdsFare != undefined) {
+        gdsFare.set('AirlineCode', uniqueairlineCode);
+        gdsFare.set('PassNumber', account.tktLine);
+        gdsFare.set('FareType', account.fareType);
+        gdsFare.set('GdsFare', account.gdsFare.toString());
+        this.remarksManager.createPlaceholderValues(gdsFare);
+      }
+
+      this.writeHighLowFareSavingCode(totalCost, totalCost, 'E', segmentAssoc);
+
+      this.remarksManager.createPlaceholderValues(null, originalTicketCondition, null, null, 'NE/-EX-Y', true);
+      this.remarksManager.createPlaceholderValues(originalTicketRemarks);
+      this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentAssoc);
+      this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
+    });
+  }
+
+  writeTicketingPenalty(tkline, vnCode, baseAmount, gst, hst, qst, otherTax, segmentAssoc) {
+    const separatePenaltyRemark = new Map<string, string>();
+    separatePenaltyRemark.set('TktRemarkNbr', tkline);
+    separatePenaltyRemark.set('VnCode', vnCode);
+    separatePenaltyRemark.set('PenaltyAmt', baseAmount);
+    separatePenaltyRemark.set('PenaltyGst', gst);
+    separatePenaltyRemark.set('PenaltyHst', hst);
+    separatePenaltyRemark.set('PenaltyQst', qst);
+    separatePenaltyRemark.set('OtherTax', otherTax);
+    this.remarksManager.createPlaceholderValues(separatePenaltyRemark, null, segmentAssoc);
+  }
+
+  writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
+    const totalcostlist = [];
+    accountingRemarks.forEach((account) => {
+      const itiRemarks = new Map<string, string>();
+      const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
+      if (account.accountingTypeRemark === 'NONBSP') {
+        this.writeTicketingLine(
+          account.tkMacLine.toString(),
+          account.baseAmount,
+          account.gst,
+          account.hst,
+          account.qst,
+          account.otherTax,
+          account.commisionWithoutTax,
+          segmentAssoc,
+          account.supplierCodeName,
+          account.tktLine
+        );
+
+        const totalCost =
+          parseFloat(account.baseAmount) +
+          parseFloat(account.gst) +
+          parseFloat(account.hst) +
+          parseFloat(account.qst) +
+          parseFloat(account.otherTax);
+        const lookindex = totalcostlist.findIndex((x) => x.AirlineCode === uniqueairlineCode);
+        if (lookindex > -1) {
+          totalcostlist[lookindex].totalAmount = totalcostlist[lookindex].totalAmount + totalCost;
+        } else {
+          totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
+        }
+
+        itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
+      }
+
+      if (account.accountingTypeRemark === 'APAY' && parseFloat(account.baseAmount) > 0) {
+        this.writeTicketingPenalty(
+          account.tkMacLine.toString(),
+          'PFS',
+          account.baseAmount,
+          account.gst,
+          account.hst,
+          account.qst,
+          account.otherTax,
+          segmentAssoc
+        );
+        itiRemarks.set('ConfNbr', account.tktLine);
+      }
+      this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
+    });
+
+    totalcostlist.forEach((element) => {
+      if (element.AirlineCode) {
+        const airlineCodeRemark = new Map<string, string>();
+        airlineCodeRemark.set('AirlineCode', element.AirlineCode);
+        airlineCodeRemark.set('TotalCost', this.decPipe.transform(element.totalAmount, '1.2-2').replace(',', ''));
+        this.remarksManager.createPlaceholderValues(airlineCodeRemark);
+      }
+    });
+
+
+  }
+
+  private GetSegmentAssociation(account: MatrixAccountingModel) {
+    const segmentNos = account.segmentNo.split(',');
+    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentAssoc = new Array<string>();
+    let uniqueairlineCode = '';
+    segmentNos.forEach((segs) => {
+      const look = segmentDetails.find((x) => segs === x.lineNo);
+      if (look) {
+        uniqueairlineCode = look.airlineCode;
+        segmentAssoc.push(look.tatooNo);
+      }
+    });
+    return { uniqueairlineCode, segmentAssoc };
   }
 
   addSegmentForPassPurchase(accounting: MatrixAccountingModel[]) {
@@ -99,10 +328,13 @@ export class PaymentRemarkService {
     remGroup.passiveSegments = [];
 
     if (accounting !== null) {
+      let airline = '';
       accounting.forEach((account) => {
         const air = this.pnrService
           .getSegmentTatooNumber()
           .find((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo);
+
+        airline = this.getAirline(account.accountingTypeRemark);
 
         if (!air) {
           const noOfPassenger = this.pnrService.getPassengers().length;
@@ -112,7 +344,7 @@ export class PaymentRemarkService {
           passive.startPoint = account.departureCity;
           passive.endPoint = account.departureCity;
           passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
-          passive.vendor = 'AC';
+          passive.vendor = airline;
           passive.startTime = '0700';
           passive.endTime = '0800';
           passive.segmentName = 'AIR';
@@ -131,31 +363,107 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
+  private getAirline(airline: string) {
+    switch (airline) {
+      case 'ACPP':
+        airline = 'AC';
+        break;
+      case 'WCPP':
+        airline = 'WS';
+        break;
+      case 'PCPP':
+        airline = 'PD';
+        break;
+    }
+    return airline;
+  }
+
   getRemarkSegmentAssociation(account: MatrixAccountingModel, segmentrelate: string[]) {
     const air = this.pnrService
       .getSegmentTatooNumber()
-      .filter((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo
-        && x.cityCode === account.departureCity && x.arrivalAirport === account.departureCity);
+      .filter(
+        (x) =>
+          x.segmentType === 'AIR' &&
+          x.controlNumber === account.supplierConfirmatioNo.toUpperCase() &&
+          x.cityCode === account.departureCity.toUpperCase() &&
+          x.arrivalAirport === account.departureCity.toUpperCase()
+      );
 
-    air.forEach(airElement => {
+    air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
   }
 
-  extractAccountingModelFromPnr() {
-    let accountingRemarks = new Array<MatrixAccountingModel>();
-    // let model: MatrixAccountingModel;
-    let placeholder: string[];
-    placeholder = ['PassName', 'FareType'];
+  extractAccountingModelsFromPnr() {
+    const accountingRemarks = new Array<MatrixAccountingModel>();
+    const ticketRemarkNumbers = this.rms.getValue('TktRemarkNbr');
 
-    let passPurchase = this.rms.getMatchedPlaceHoldersWithExactKeys(placeholder);
-    // model.passPurchase = passPurchase.pl  .get('PassName'); 
-    // let test1 = this.rms.getMatchedPlaceHoldersWithKey('PassName');
-    // let test2 = this.rms.getValue('PassName');
-    console.log(passPurchase);
+    for (let i = 0; i < ticketRemarkNumbers.length; i++) {
+      const model = new MatrixAccountingModel();
+
+      model.tkMacLine = Number.parseInt(ticketRemarkNumbers[i]);
+
+      if (model.tkMacLine) {
+        const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
+        const slineNo = pholder[i].segmentNumberReferences[i];
+        const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
+
+        if (segment.length > 0) {
+          model.departureCity = segment[i].cityCode;
+          model.supplierConfirmatioNo = segment[i].controlNumber;
+        }
+
+        let keys: string[];
+        keys = ['TktRemarkNbr', 'TktNbr', 'SupplierCode'];
+
+        let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+        if (matchKeys) {
+          model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
+        } else {
+          keys = ['TktRemarkNbr', 'SupplierCode'];
+          matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+          model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
+        }
+
+        // keys = ['AirlineCode', 'TotalCost'];
+        // let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
+        // model.tktLine = matchKeys[i].matchedPlaceholders[i];
+
+        model.fareType = this.rms.getValue('FareType')[i];
+        model.supplierCodeName = this.rms.getValue('SupplierCode')[i];
+        model.baseAmount = this.rms.getValue('BaseAmt')[i];
+        model.gst = this.rms.getValue('Gst')[i];
+        model.hst = this.rms.getValue('Hst')[i];
+        model.qst = this.rms.getValue('Qst')[i];
+        model.commisionWithoutTax = this.rms.getValue('Comm')[i];
+
+        const airlinecode = this.rms.getValue('AirlineCode')[i];
+        const totalcost = this.rms.getValue('TotalCost')[i];
+
+        if (totalcost) {
+          switch (airlinecode) {
+            case 'AC':
+              model.accountingTypeRemark = 'ACPP';
+              model.passPurchase = this.rms.getValue('PassName')[i];
+              break;
+            case 'WS':
+              model.accountingTypeRemark = 'WCPP';
+              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
+              break;
+            case 'PD':
+              model.accountingTypeRemark = 'PCPP';
+              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
+              break;
+          }
+        }
+        accountingRemarks.push(model);
+      }
+    }
 
     return accountingRemarks;
   }
+
+  setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
+    this.nonbspInformation.next(accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP'));
+  }
 }
-
-

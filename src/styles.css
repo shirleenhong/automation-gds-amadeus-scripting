@@ -27,10 +27,6 @@ body {
   color: #ccc;
 }
 
-.form-control[read-only] {
-  background-color: aliceblue;
-}
-
 .form-group input.ng-invalid.ng-touched,
 .form-group input.ng-invalid:focus,
 .form-group select.ng-invalid.ng-touched,

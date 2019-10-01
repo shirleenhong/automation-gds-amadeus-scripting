@@ -179,16 +179,16 @@ Get Json Value As String
     [Arguments]    ${json_object}    ${json_path}
     ${res_content}=    To Json    ${json_object}
     ${actual_value}    Get Value From Json    ${res_content}    ${json_path}
-    #${actual_value}    Convert JSON To String    ${actual_value}
-    #Comment    ${actual_value}    Evaluate    json.dumps(${actual_value})    json
-    #${actual_value}    Remove String    ${actual_value}    [    "    ]
-    [Return]    ${actual_value[0]}
+    ${actual_value}    Convert JSON To String    ${actual_value}
+    Comment    ${actual_value}    Evaluate    json.dumps(${actual_value})    json
+    ${actual_value}    Remove String    ${actual_value}    [    "    ]
+    [Return]    ${actual_value}
     
 Get Json Value From File
-    [Arguments]    ${json_object}    ${json_path}    ${dump}=yes
+    [Arguments]    ${json_object}    ${json_path}
     ${res_content}=    To Json    ${json_object}
     ${actual_value}    Get Value From Json    ${res_content}    ${json_path}
-    ${actual_value}    Run Keyword If    "${dump}"=="yes"    Evaluate    json.dumps(${actual_value}[0])    json    ELSE     Set Variable    ${actual_value}
+    ${actual_value}    Evaluate    json.dumps(${actual_value}[0])    json
     [Return]    ${actual_value}
     
 Get Request Body For Test Case

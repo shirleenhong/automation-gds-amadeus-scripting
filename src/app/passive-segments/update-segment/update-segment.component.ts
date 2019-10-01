@@ -152,8 +152,7 @@ export class UpdateSegmentComponent implements OnInit {
     address: new FormControl('', [Validators.required]),
     province: new FormControl(''),
     zipCode: new FormControl(''),
-    country: new FormControl('', [Validators.required]),
-    insuranceType: new FormControl('', [Validators.required])
+    country: new FormControl('', [Validators.required])
   });
 
   constructor(
@@ -259,7 +258,8 @@ export class UpdateSegmentComponent implements OnInit {
         itemText: 'Stateroom with Balcony',
         itemValue: 'STATEROOM WITH BALCONY'
       },
-      { itemText: 'Suite', itemValue: 'SUITE' }
+      { itemText: 'Suite', itemValue: 'SUITE' },
+      { itemText: 'Other', itemValue: 'OTHER' }
     ];
   }
 
@@ -392,14 +392,14 @@ export class UpdateSegmentComponent implements OnInit {
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;
-        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('SEA');
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('FERRY');
         break;
 
       case 'INS':
         this.lbldepartureCity = 'Departure City';
         this.lblarrivalDate = 'Return Date';
         this.lblnoPeople = 'Number of Passengers';
-        forms = ['segmentType', 'policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople', 'insuranceType'];
+        forms = ['segmentType', 'policyNo', 'departureDate', 'departureCity', 'arrivalDate', 'noPeople'];
         this.setForm(forms);
         this.selectedTmpl = this.insuranceTmpl;
         break;
@@ -463,7 +463,7 @@ export class UpdateSegmentComponent implements OnInit {
         }
         this.setForm(forms);
         this.selectedTmpl = this.limoTmpl;
-        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('CAR');
+        this.filterSupplierCodeList = this.ddbService.getSupplierCodes('LIMO');
         break;
       case 'CAR':
         this.lbldepartureDate = 'Pickup Date';
@@ -592,7 +592,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() {}
+  pickUpLocChange() { }
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;

@@ -26,7 +26,7 @@ export class ReportingBSPComponent implements OnInit {
   lowFareInt: any;
   isDomesticFlight = true;
   thresholdAmount = 0;
-  hasTst = true;
+  hasTst: boolean = true;
 
   // tslint:disable-next-line:max-line-length
   constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
@@ -79,7 +79,7 @@ export class ReportingBSPComponent implements OnInit {
     reasonCode: string,
     chargeFare: string,
     isExchange?: boolean
-    // defaultValue?: any
+    //defaultValue?: any
   ): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
@@ -95,7 +95,7 @@ export class ReportingBSPComponent implements OnInit {
     if (this.thresholdAmount > 0) {
       if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
         if (this.reasonCodes.length > 0) {
-          // reasonCode = this.getReasonCodeValue('7', currentIndex);
+          //reasonCode = this.getReasonCodeValue('7', currentIndex);
           group.get('reasonCodeText').setValue('7');
         }
       }
@@ -104,7 +104,7 @@ export class ReportingBSPComponent implements OnInit {
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
         this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
-        // reasonCode = this.getReasonCodeValue('7', currentIndex);
+        //reasonCode = this.getReasonCodeValue('7', currentIndex);
         // if (reasonCode === '') {
         //   group.get('reasonCodeText').setValue('E : Exchange');
         // } else {
@@ -270,8 +270,8 @@ export class ReportingBSPComponent implements OnInit {
   async getHighFare(command: string) {
     let value = '';
     await smartScriptSession.send(command).then((res) => {
-      const regex = /TOTALS (.*)/g;
-      const match = regex.exec(res.Response);
+      let regex = /TOTALS (.*)/g;
+      let match = regex.exec(res.Response);
 
       // regex.lastIndex = 0;
       if (match !== null) {

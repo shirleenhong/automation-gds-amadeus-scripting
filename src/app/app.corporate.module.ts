@@ -17,14 +17,6 @@ import { FeesComponent } from './corporate/fees/fees.component';
 import { SupplementalFeesComponent } from './corporate/fees/supplemental-fees/supplemental-fees.component';
 import { AddSupplementalFeesComponent } from './corporate/fees/add-supplemental-fees/add-supplemental-fees.component';
 import { ReportingNonbspComponent } from './corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
-import { AquaTicketingComponent } from './corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
-import { TicketingLineComponent } from './corporate/ticketing/ticketing-line/ticketing-line.component';
-import { CorpRemarksComponent } from './corporate/corp-remarks/corp-remarks.component';
-import { MatrixReportingComponent } from './corporate/reporting/matrix-reporting/matrix-reporting.component';
-import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
-import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/seats-form.component';
-import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
-import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 
 @NgModule({
   declarations: [
@@ -39,15 +31,7 @@ import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add
     FeesComponent,
     SupplementalFeesComponent,
     AddSupplementalFeesComponent,
-    TicketingComponent,
-    AquaTicketingComponent,
-    TicketingLineComponent,
-    CorpRemarksComponent,
-    MatrixReportingComponent,
-    SeatsComponent,
-    SeatsFormComponent,
-    WaiversComponent,
-    AddWaiverComponent
+    TicketingComponent
   ],
   imports: [
     BrowserModule,
@@ -67,11 +51,6 @@ import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [
-    AddSupplementalFeesComponent,
-    AddWaiverComponent,
-    SeatsFormComponent,
-    UpdateAccountingRemarkComponent
-  ]
+  entryComponents: [UpdateAccountingRemarkComponent, AddSupplementalFeesComponent]
 })
 export class AppCorporateModule {}

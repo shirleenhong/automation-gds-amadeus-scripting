@@ -85,7 +85,4 @@ export class PassiveSegmentsModel {
   province: string;
   zipCode: string;
   country: string;
-
-  //insurance
-  insuranceType: string;
 }

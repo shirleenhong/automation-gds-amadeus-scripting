@@ -34,12 +34,12 @@ export class ReportingComponent implements OnInit, OnChanges {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private translation: TranslationService
-  ) { }
+  ) {}
   get f() {
     return this.reportingForm.controls;
   }
 
-  ngOnChanges(_changes: SimpleChanges) { }
+  ngOnChanges(_changes: SimpleChanges) {}
 
   ngOnInit() {
     this.reportingForm = new FormGroup({
@@ -70,22 +70,16 @@ export class ReportingComponent implements OnInit, OnChanges {
     const company = this.pnrService.getRemarkText('U10/-').replace('U10/-', '');
     const insuranceDeclinedReason = this.pnrService.getRemarkText('U12/-').replace('U12/-', '');
     this.checkInsurance(insuranceDeclinedReason === '' ? 'YES' : 'NO');
+
     const fs = this.pnrService.getFSRemark();
     const dest = this.pnrService.getRemarkText('DE/-').replace('DE/-', '');
+
     // todo remove model and use reactive form
     this.reportingView.companyName = company;
     this.reportingView.insuranceDeclinedReason = insuranceDeclinedReason;
     this.reportingView.destination = dest;
     this.reportingView.showInsurance = insuranceDeclinedReason === '';
-
-    if (insuranceDeclinedReason) {
-      this.f.showInsurance.setValue('NO');
-    } else if (this.pnrService.getRirRemarkText('LE FORFAIT D ASSURANCE')
-      || this.pnrService.getRirRemarkText('ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN')) {
-      this.f.showInsurance.setValue('YES');
-    }
-
-    // this.f.showInsurance.setValue(insuranceDeclinedReason === '' ? 'YES' : 'NO');
+    this.f.showInsurance.setValue(insuranceDeclinedReason === '' ? 'YES' : 'NO');
     if (fs !== undefined && fs !== '') {
       this.reportingView.routeCode = fs.substr(0, 1);
     }
@@ -117,16 +111,6 @@ export class ReportingComponent implements OnInit, OnChanges {
     if (this.reportingView.cfLine === null) {
       return false;
     }
-
-    this.enableDisbleControls(['showInsurance'],
-      (this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP'));
-
-    if (!(this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP')) {
-      this.f.showInsurance.setValidators(Validators.required);
-    } else {
-      this.f.showInsurance.clearValidators();
-    }
-
     return this.reportingView.cfLine.cfa === 'RBM' || this.reportingView.cfLine.cfa === 'RBP';
   }
 

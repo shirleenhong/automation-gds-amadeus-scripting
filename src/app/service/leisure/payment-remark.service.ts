@@ -545,6 +545,7 @@ export class PaymentRemarkService {
   }
 
   getProvinceTaxRemark(fee: LeisureFeeModel, exempt: Array<any>) {
+    debugger;
     const provTax = this.ddbService.getProvinceTax().filter((x) => x.provinceCode === fee.address);
     let tax1 = '0.00';
     let tax2 = '0.00';

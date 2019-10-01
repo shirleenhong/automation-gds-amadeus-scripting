@@ -1,9 +1,56 @@
-<tabset id="ticketingTab">
-    <tab heading="Ticketing Line" id="ticketingLine">
-        <app-ticketing-line></app-ticketing-line>
-    </tab>
-    <tab heading="Ticketing Instruction" id="ticketingInstruction">
-        <app-aqua-ticketing>
-        </app-aqua-ticketing>
-    </tab>
-</tabset>
+<div class="ticketing-container">
+
+    <form [formGroup]="ticketForm">
+        <div class="row form-group">
+            <div class="col-4">
+                <div>Office ID:</div>
+                <div class="emphasize italicize">{{ oidDisplay }}</div>
+                <input type="hidden" class="form-control" id="txtOfficeId" name="officeId" formControlName="officeId" maxlength="35" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row form-group">
+            <div class="col-6">
+                <div>Ticketing Date for the PNR:</div>
+                <input type="date" class="form-control" id="dtxtTicketDate" name="ticketDate" formControlName="ticketDate" required />
+            </div>
+            <div class="col-6">
+                <div>
+                    <label class="emphasize">
+                        <input id="chkOnHold" type="checkbox" name="pnrOnHold" formControlName="pnrOnHold" (change)="onChangePnrOnHold()" /> PNR ON HOLD
+                    </label>
+                </div>
+                <div>
+                    <span class="italicize">PNR will be sent to Aqua QC</span>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isOnHoldChecked">
+            <br />
+
+            <div class="row form-group">
+                <div class="col-7">
+                    <div>TK Line:</div>
+                    <select class="form-control " id="selTK" formControlName="tk" name="tk" required>
+                        <option *ngFor="let tkItem of tkList" [value]="tkItem.itemValue"> {{ tkItem.itemText }} </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row form-group">
+            <div class="col-6">
+                <div>
+                    <label>
+                        <input id="chkVerifyAck" type="checkbox" name="verifyAck" formControlName="verifyAck" required /> I verify and acknowledge that all ticketing data are correct.
+                    </label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

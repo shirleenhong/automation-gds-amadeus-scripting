@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CounselorDetail } from './globals/counselor-identity';
 import { StaticValuesService } from './service/static-values.services';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { HttpParams } from '@angular/common/http';
-import { MatrixReportingComponent } from 'src/app/corporate/reporting/matrix-reporting/matrix-reporting.component';
+
 declare var smartScriptSession: any;
 @Component({
   selector: 'app-root',
@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
   overrideValue: string = '';
   @Input()
   counselorIdentity: string;
-  @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
 
   identityList: Array<SelectItem> = null;
 

@@ -55,14 +55,14 @@ Verify Cruise Passive Segment Is Added In the PNR
     Enter Number Of People    2
     Select State Room    Interior
     Enter Cabin Number    11122333
-    Enter Dining    Early Dining
+    Select Dining    Early Dining
     Click Add Passive Save Button
     Click Add Segments To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 ${departure_city} 12JAN-/TYP-SEA/SUN-${vendor_name} ${segment_name}/SUC-${vendor_code}/SC-${departure_city}/SD-12JAN/ST-0300/ED-20JAN/ET-1000/EC-${destination_city}/CF-${confirmation_number}    True
-    Verify Specific Remark Is Written In The PNR    RIR INTERIOR 1112233 ${dining.upper()} 8 NTS/S4
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 ${departure_city} 12JAN-/TYP-SEA/SUN-${vendor_name} ${segment_name} ${dining.upper()} 8NTS/SUC-${vendor_code}/SC-${departure_city}/SD-12JAN/ST-0300${destination_city}/ED-20JAN/ET-1000/CF-${confirmation_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR INTERIOR 1112233/S4
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -79,14 +79,12 @@ Verify Insurance Passive Segment Is Added In the PNR
     Enter Arrival Date    01132020
     Enter Departure City    YYZ
     Enter Policy Number    123456789
-    Enter Type Of Insurance Purchased    Testing Insurance Purchased
     Click Add Passive Save Button
     Click Add Segments To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 ${departure_city} 02JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-${departure_city}/SD-02JAN/ST-0900/EC-${departure_city}/ED-13JAN/ET-0900/CF-CWT${policy_number}    True
-    Verify Specific Remark Is Written In The PNR    RIR TESTING INSURANCE PURCHASED/S4
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

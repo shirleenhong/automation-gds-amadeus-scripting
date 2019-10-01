@@ -11,11 +11,11 @@
   <table class="feeTable">
     <tr>
       <th width="50px"><div class="">Schedule Changed?</div></th>
-      <th width="50px"><div class="">Ticketed Segment</div></th>
-      <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
-      <th width="150px"><div class="">Supplemental Fee</div></th>
-      <th width="70px"><div class=""></div></th>
-      <th width="150px"><div class="cl">No Fee Code</div></th>
+      <th><div class="">Ticketed Segment</div></th>
+      <th colspan="2"><div style="text-align: center">Fee</div></th>
+      <th><div class="">Supplemental Fee</div></th>
+      <th><div class=""></div></th>
+      <th><div class="cl">No Fee Code</div></th>
     </tr>
 
     <tbody formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
@@ -76,7 +76,8 @@
             id="noFeeCode"
             formControlName="noFeeCode"
             name="noFeeCode"
-            (change)="noFeeChange(item, $event.target.value)"
+            [disabled]="item.fee !== '' || item.supplementalFee !== ''"
+            required
           >
             <option value=""></option>
             <option *ngFor="let item of noFeeCodes" [value]="item.itemValue">
@@ -89,4 +90,68 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- <th formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
+    <th [formGroupName]="i" class="row">
+      <div class="col-2">
+        <div *ngIf="item.get('isExchange').value">
+          <input
+            type="checkbox"
+            name="isChange"
+            formControlName="isChange"
+            id="isChange"
+            (change)="processExchange(item, $event.target.checked)"
+          />
+        </div>
+      </div>
+
+      <div class="col-2" style="width: 50px;">
+        <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
+      </div>
+
+
+      <div class="col-2">
+        <input type="text" class="form-control" formControlName="code" name="code" id="code" readonly (change)="feeChange(item)" />
+        <input type="text" class="form-control" formControlName="fee" name="fee" id="fee" readonly (change)="feeChange(item)" />
+      </div>
+
+      <div class="col-2">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="supplementalFee"
+          name="supplementalFee"
+          id="supplementalFee"
+          readonly
+          (change)="feeChange(item)"
+        />
+      </div>
+      <div class="">
+        <div class="float-left">
+          <i
+            class="fas fa-plus-circle {{ !supplementalFeeList || supplementalFeeList.length === 0 ? 'disabled' : '' }}"
+            id="add"
+            (click)="addSupplementalFee(item)"
+          ></i>
+        </div>
+      </div>
+      <div class="col-3">
+        <select
+          class="form-control "
+          id="noFeeCode"
+          formControlName="noFeeCode"
+          name="noFeeCode"
+          [disabled]="item.fee !== '' || item.supplementalFee !== ''"
+          required
+        >
+          <option value=""></option>
+          <option *ngFor="let item of noFeeCodes" [value]="item.itemValue">
+            {{ item.itemText }}
+          </option>
+        </select>
+      </div>
+
+      <input type="hidden" class="form-control" formControlName="feeType" name="feeType" id="feeType" />
+    </div>
+  </div>-->
 </div>

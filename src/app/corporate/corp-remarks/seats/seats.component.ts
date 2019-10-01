@@ -43,7 +43,7 @@ export class SeatsComponent implements OnInit {
     // debugger;
     // console.log('getSeats() ================================');
 
-    const seats = new Array<SeatModel>();
+    let seats = new Array<SeatModel>();
 
     const pnrObj = this.pnrService.pnrObj;
     const rirElements = pnrObj.rirElements;
@@ -118,6 +118,7 @@ export class SeatsComponent implements OnInit {
 
       // Condition 5
       if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
+        debugger;
         const rirSegments = rirElement.associations.map(association => association.tatooNumber);
         const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
         seats.push({
@@ -140,7 +141,7 @@ export class SeatsComponent implements OnInit {
       }
     }
 
-    return seats;
+    return this.groupSeats(seats);
   }
 
   /**
@@ -187,4 +188,45 @@ export class SeatsComponent implements OnInit {
       this.modalRef = null; // Fixes duplication of components on dismiss
     });
   }
+
+  /**
+   * Group an array of seats by remark id and seat type.
+   * @param seats The grouped seats.
+   */
+  private groupSeats(seats: Array<SeatModel>) {
+    console.log('seats');
+    console.log(seats);
+
+    const uniqueSeats = new Array<SeatModel>();
+
+    for (const seat of seats) {
+      debugger;
+      if (uniqueSeats.filter(item => item.id === seat.id).length === 0 ||
+        uniqueSeats.filter(item => item.type === seat.type).length === 0) {
+          // debugger;
+        uniqueSeats.push(seat);
+      } else {
+        // debugger;
+        const duplicateSeatIndex = uniqueSeats.findIndex(item => item.id === seat.id);
+        try {
+          if (uniqueSeats[duplicateSeatIndex]) {
+            if (uniqueSeats[duplicateSeatIndex].segmentIds && seat.segmentIds) {
+              // debugger;
+              uniqueSeats[duplicateSeatIndex].segmentIds = uniqueSeats[duplicateSeatIndex].segmentIds.concat(seat.segmentIds);
+            }
+            uniqueSeats[duplicateSeatIndex].type = seat.type ? seat.type : null;
+            uniqueSeats[duplicateSeatIndex].number = (seat.number) ? seat.number : null;
+          }
+        } catch (error) {
+          console.error(error);
+          console.log('uniqueSeats["duplicateSeatIndex"]');
+          console.log(uniqueSeats[duplicateSeatIndex]);
+          console.log('duplicateSeatIndex');
+          console.log(duplicateSeatIndex);
+        }
+      }
+    }
+    return uniqueSeats;
+  }
 }
+

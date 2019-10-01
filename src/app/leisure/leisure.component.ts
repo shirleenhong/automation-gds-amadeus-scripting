@@ -88,7 +88,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
     this.errorPnrMsg = '';
@@ -348,7 +348,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -363,7 +363,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     }
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-
     this.leisureRemarkService.BuildRemarks(remarkCollection);
     await this.leisureRemarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
       () => {
@@ -409,6 +408,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.showLoading('Adding Segment(s) to PNR...');
     this.submitProcess = true;
     const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.segmentService.deleteSegments(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
     this.leisureRemarkService.BuildRemarks(remarkCollection);
     await this.leisureRemarkService.SubmitRemarks().then(

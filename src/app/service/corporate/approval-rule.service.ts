@@ -9,7 +9,7 @@ import { ApprovalItem } from 'src/app/models/ddb/approval.model';
   providedIn: 'root'
 })
 export class ApprovalRuleService {
-  constructor(private ddbService: DDBService, private pnrService: PnrService) {}
+  constructor(private ddbService: DDBService, private pnrService: PnrService) { }
 
   /**
    * Check if the PNR needs to be approved based on conditions.

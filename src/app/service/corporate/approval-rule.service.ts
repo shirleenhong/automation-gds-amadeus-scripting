@@ -42,38 +42,63 @@ export class ApprovalRuleService {
    * check if the set rules of approval in the DB is valid in the pnr
    */
   public hasApproval() {
-    const approvalItems = this.ddbService.approvalList.filter(
-      (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
-    );
-
     if (this.needsApproval()) {
-      for (const approval of approvalItems) {
-        let valid = false;
-        switch (approval.getRule()) {
-          case '[REMARKS_EXISTS]':
-            valid = this.isRemarkExistValid(approval);
-            break;
-          case '[SEGMENT_TYPE]':
-            valid = this.isSegmentTypeValid(approval);
-            break;
-          case '[FOP]':
-            valid = this.isFopValid(approval);
-            break;
-          case '[ROUTE]':
-            valid = this.isRouteValid(approval);
-            break;
-          case '[DEPARTURE]':
-            valid = this.isDepartureDateValid(approval);
-            break;
-        }
-
-        if (!valid) {
-          return false;
-        }
+      const approvalItems = this.ddbService.approvalList.filter(
+        (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
+      );
+      const appGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') >= 0);
+      const appNoGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') === -1);
+      if (appGroup.length > 0) {
+        return this.isValidRule(appNoGroup) && this.isValidGroup(appGroup);
+      } else {
+        return this.isValidRule(appNoGroup);
       }
-      return approvalItems.length > 0;
     }
     return false;
+  }
+
+  isValidGroup(approvalItems) {
+    let ctr = 1;
+    let hasGroup = true;
+    while (hasGroup) {
+      const list = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_' + ctr) >= 0);
+      hasGroup = list.length > 0;
+      if (hasGroup) {
+        if (this.isValidRule(list)) {
+          return true;
+        }
+      }
+      ctr += 1;
+    }
+    return false;
+  }
+
+  isValidRule(approvalItems: ApprovalItem[]): boolean {
+    for (const approval of approvalItems) {
+      let valid = false;
+      switch (approval.getRule()) {
+        case '[REMARKS_EXISTS]':
+          valid = this.isRemarkExistValid(approval);
+          break;
+        case '[SEGMENT_TYPE]':
+          valid = this.isSegmentTypeValid(approval);
+          break;
+        case '[FOP]':
+          valid = this.isFopValid(approval);
+          break;
+        case '[ROUTE]':
+          valid = this.isRouteValid(approval);
+          break;
+        case '[DEPARTURE]':
+          valid = this.isDepartureDateValid(approval);
+          break;
+      }
+
+      if (!valid) {
+        return false;
+      }
+    }
+    return approvalItems.length > 0;
   }
 
   isRemarkExistValid(app: ApprovalItem) {

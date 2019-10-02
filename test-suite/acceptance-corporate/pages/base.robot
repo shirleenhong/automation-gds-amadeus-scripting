@@ -77,10 +77,10 @@ Click Submit To PNR
     Wait Until Page Contains Element    ${button_submit_pnr}    30
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
-    Run Keyword If   "${queueing}" == "yes"     Sleep    10
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
+    Run Keyword If   "${queueing}" == "yes"     Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${pnr_submitted}    yes
     

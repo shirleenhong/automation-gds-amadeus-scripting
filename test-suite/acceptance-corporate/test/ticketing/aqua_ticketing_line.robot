@@ -26,7 +26,7 @@ Verify That The Amadeus TK Line is Written When "Fee Only" is Selected
     Fill Up Ticketing Panel For FEE ONLY
     Verify That Aqua TK Line Is Written Correctly For Fee Only
     [Teardown]    Run Keywords    Close Cryptic Display    Logout To Amadeus Sell Connect
-    
+
 Verify That The Amadeus TK Line is Written When "Cancelled PNR" is Selected
     [Tags]    us11386
     Login To Amadeus Sell Connect Acceptance
@@ -34,7 +34,7 @@ Verify That The Amadeus TK Line is Written When "Cancelled PNR" is Selected
     Fill Up Ticketing Panel For CANCELLED PNR
     Verify That Aqua TK Line Is Written Correctly For Cancelled PNR
     [Teardown]    Run Keywords    Close Cryptic Display    Logout To Amadeus Sell Connect
-    
+
 Verify That The Amadeus TK Line is Written For Changed PNR with Billed Service
     [Tags]    us11386
     Login To Amadeus Sell Connect Acceptance
@@ -43,7 +43,7 @@ Verify That The Amadeus TK Line is Written For Changed PNR with Billed Service
     Fill Up Ticketing Panel For CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
     Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
     [Teardown]    Run Keywords    Close Cryptic Display    Logout To Amadeus Sell Connect
-    
+
 Verify That The Amadeus TK Line is Written For Changed PNR without Billed Service
     [Tags]    us11386
     Login To Amadeus Sell Connect Acceptance
@@ -63,4 +63,3 @@ Verify That The Amadeus TK Line is Written and Updated For Other Types of TK Lin
     Fill Up Ticketing Panel With Default Values
     Verify That Aqua TK Line Is Written Correctly For Updated TK Line
     [Teardown]    Run Keywords    Close Cryptic Display    Logout To Amadeus Sell Connect
-    

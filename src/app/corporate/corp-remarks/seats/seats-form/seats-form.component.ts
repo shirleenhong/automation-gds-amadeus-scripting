@@ -96,7 +96,7 @@ export class SeatsFormComponent implements OnInit {
       const newSeatSegments = newSeat.segmentIds.split(',');
       for (const newSeatSegment of newSeatSegments) {
         if (newSeatSegment) {
-          if (seat.id === newSeat.id && seat.segmentIds.toString().indexOf(newSeatSegment) >= 0) {
+          if (seat.id === newSeat.id && seat.type === newSeat.type && seat.segmentIds.toString().indexOf(newSeatSegment) >= 0) {
             this.exists = true;
             return true;
           } else {

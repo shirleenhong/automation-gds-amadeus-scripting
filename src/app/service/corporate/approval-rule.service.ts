@@ -87,13 +87,13 @@ export class ApprovalRuleService {
         } else if (val[0].indexOf('RIR') === 0) {
           found = this.pnrService.getRirRemarkText(val[1]) !== '';
         }
-        found = this.getApprovalValidResult(app, found);
+        found = (found ? this.getApprovalValidResult(app, found) : found);
         if (found) {
-          return true;
+          return false;
         }
       }
     }
-    return false;
+    return true;
   }
 
   /**
@@ -124,20 +124,20 @@ export class ApprovalRuleService {
           valid = vendorCode === noKeywordValue;
         }
 
-        valid = this.getApprovalValidResult(app, valid);
+        valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
         if (valid) {
-          return true;
+          return false;
         }
       }
     }
-    return false;
+    return true;
   }
 
   getApprovalValidResult(app: ApprovalItem, valid: boolean): boolean {
     if (valid) {
-      return app.approvalResult === 'INCLUDE';
-    } else {
       return app.approvalResult === 'EXCLUDE';
+    } else {
+      return app.approvalResult === 'INCLUDE';
     }
   }
 
@@ -158,12 +158,12 @@ export class ApprovalRuleService {
       } else {
         valid = segments.length > 0;
       }
-      valid = this.getApprovalValidResult(app, valid);
+      valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
       if (valid) {
-        return true;
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   /**
@@ -179,12 +179,12 @@ export class ApprovalRuleService {
         .substr(0, 3)
         .toUpperCase();
       valid = rem.indexOf('[NOT]') > -1 ? !(noKeywordValue === route) : noKeywordValue === route;
-      valid = this.getApprovalValidResult(app, valid);
+      valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
       if (valid) {
-        return true;
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   isDepartureDateValid(app: ApprovalItem) {
@@ -197,13 +197,13 @@ export class ApprovalRuleService {
         const depdate = new Date(firstAirSegment[0].departureDate);
         const diffDays = depdate.getDate() - dtNow.getDate();
         valid = diffDays.toString() === rem.replace('days', '');
-        valid = this.getApprovalValidResult(app, valid);
+        valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
         if (valid) {
-          return true;
+          return false;
         }
       }
     }
-    return false;
+    return true;
   }
 
   /**
@@ -215,12 +215,12 @@ export class ApprovalRuleService {
     const multiremarks = this.getMultipleConditions(app.getRuleText());
     for (const rem of multiremarks) {
       valid = this.pnrService.getRemarkText('U' + rem.replace('|', '/-')) !== '';
-      valid = this.getApprovalValidResult(app, valid);
+      valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
       if (valid) {
-        return true;
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   getSecondaryApprovalList(index?: string): ApprovalItem[] {

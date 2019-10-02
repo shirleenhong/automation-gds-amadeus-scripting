@@ -120,7 +120,9 @@ export class SegmentService {
                 remGroup.deleteSegmentByIds.push(segment.lineNo);
             }
         });
-
+        if (remGroup.deleteSegmentByIds) {
+            remGroup.deleteRemarkByIds = this.pnrService.getMatrixAccountingLineNumbers();
+        }
         return remGroup;
     }
 

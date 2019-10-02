@@ -35,14 +35,10 @@ export class SeatsComponent implements OnInit {
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    debugger;
     const seats = new Array<SeatModel>();
     const pnrObj = this.pnrService.pnrObj;
     const rirElements = pnrObj.rirElements;
     const language = this.pnrService.getLanguage();
-
-    console.log('language');
-    console.log(language);
 
     for (const rirElement of rirElements) {
       // For English

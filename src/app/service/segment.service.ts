@@ -110,6 +110,20 @@ export class SegmentService {
         return passGroup;
     }
 
+    deleteSegments(segmentRemarks: PassiveSegmentsModel[]) {
+        const segments = this.pnrService.getSegmentTatooNumber();
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'Remove Segments';
+        segments.forEach(segment => {
+            const look = segmentRemarks.find(x => x.lineNo === segment.lineNo);
+            if (!look) {
+                remGroup.deleteSegmentByIds.push(segment.lineNo);
+            }
+        });
+
+        return remGroup;
+    }
+
     addSegmentRir(segRemark: any) {
 
         let segmentRemarks: PassiveSegmentsModel[];

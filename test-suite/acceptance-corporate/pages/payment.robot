@@ -201,16 +201,6 @@ Add Penalty Amount Details
     Enter Value    ${input_penaltyGst}    ${penalty_gst_tax}
     Enter Value    ${input_penaltyHst}    ${penalty_hst_tax}
     Enter Value    ${input_penaltyQst}    ${penalty_qst_tax}
-
-Select Itinerary Segments
-    [Arguments]    @{segment_number}
-    Wait Until Element Is Visible    ${input_segment}    30
-    Click Button    ${input_segment}
-    Wait Until Element Is Visible    ${list_segment}    30
-    :FOR    ${segment_number}    IN    @{segment_number}
-    \    Click Element    ${list_segment}//input[@value='${segment_number}']
-    Click Element    ${input_segment}
-    [Teardown]    Take Screenshot
  
 Click Update Button
     Wait Until Element Is Visible    ${edit_order}    30

@@ -1,0 +1,73 @@
+<div class="container">
+  <form [formGroup]="aquaTicketingFormGroup">
+    <div *ngIf="hasAirTst" class="row">
+      <div class="col-sm-2">
+        Air Segment(s):
+      </div>
+      <div class="col-sm-1">
+        <div class="btn-group segmentbox form-group" dropdown [insideClick]="true">
+          <button
+            id="button-basic"
+            dropdownToggle
+            type="button"
+            class="segmentButton float-right dropdown-toggle"
+            role="menu"
+            aria-controls="dropdown-config"
+          >
+            <input type="text" class="form-control" #tst formControlName="tst" (click)="onTouched()" readonly /> <span class="caret"></span>
+          </button>
+          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
+            <li role="menuitem" *ngFor="let item of unticketedSegments">
+              <div class="dropdown-item">
+                <input
+                  type="checkbox"
+                  [value]="item.tstNumber"
+                  (change)="updateValue($event)"
+                  [checked]="val.split(',').indexOf(item.tstNumber) >= 0"
+                />
+                Tst Reference: {{ item.tstNumber }} | Segment: {{ item.segmentNumber }}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!hasAirTst && !hasAirSegment && isHotelPNR" class="row">
+      <div class="col-sm-2">Hotel Segment:</div>
+      <div class="col-sm-1">
+        <app-segment-select [segmentFilter]="'HTL'" formControlName="hotelSegment" name="hotelSegment" id="hotelSegment" #segmentApp>
+        </app-segment-select>
+      </div>
+    </div>
+
+    <div *ngIf="!hasAirTst && !isHotelPNR && !isCarPNR && !hasAirSegment && isLimoPNR" class="row">
+      <div class="col-sm-2">Limo Segment:</div>
+      <div class="col-sm-1">
+        <app-segment-select [segmentFilter]="'TYP-LIM'" formControlName="limoSegment" name="limoSegment" id="limoSegment" #segmentApp>
+        </app-segment-select>
+      </div>
+    </div>
+
+    <div *ngIf="!hasAirTst && !isHotelPNR && !isLimoPNR && !hasAirSegment && isCarPNR" class="row">
+      <div class="col-sm-2">Car Segment:</div>
+      <div class="col-sm-1">
+        <app-segment-select [segmentFilter]="'CAR'" formControlName="carSegment" name="carSegment" id="carSegment" #segmentApp>
+        </app-segment-select>
+      </div>
+    </div>
+
+    <div
+      *ngIf="
+        (!hasAirTst && !hasAirSegment && !isHotelPNR && isLimoPNR && isCarPNR) ||
+        (!hasAirTst && !hasAirSegment && !isHotelPNR && !isLimoPNR && !isCarPNR) ||
+        (hasAirSegment && !hasAirTst && (isCarPNR || isHotelPNR || isLimoPNR)) ||
+        (!hasAirTst && hasAirSegment && !isHotelPNR && !isLimoPNR && !isCarPNR)
+      "
+      class="row"
+    >
+      <br />
+      <div class="col-sm-6"><b>*No Segments Available for Ticketing*</b></div>
+    </div>
+  </form>
+</div>

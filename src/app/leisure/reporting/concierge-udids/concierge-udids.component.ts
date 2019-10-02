@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 
@@ -24,13 +24,13 @@ export class ConciergeUdidsComponent implements OnInit {
   constructor(private pnrService: PnrService) {
     this.conciergeForm = new FormGroup({
       redemptionAdded: new FormControl('', []),
-      reservationReq: new FormControl('', []),
-      bookingType: new FormControl('', []),
+      reservationReq: new FormControl('', [Validators.required]),
+      bookingType: new FormControl('', [Validators.required]),
       chCallerName: new FormControl('', []),
       delegateName: new FormControl('', []),
-      hotelName: new FormControl('', []),
-      businessTravel: new FormControl('', []),
-      hotelRes: new FormControl('', []),
+      hotelName: new FormControl('', [Validators.required]),
+      businessTravel: new FormControl('', [Validators.required]),
+      hotelRes: new FormControl('', [Validators.required]),
       reasonHotelBooked: new FormControl('', [])
     });
   }

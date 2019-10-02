@@ -8,7 +8,6 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
-
 @Component({
   selector: 'app-update-accounting-remark',
   templateUrl: './update-accounting-remark.component.html',
@@ -215,14 +214,27 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.accountingRemark.fop = 'CC';
         this.accountingRemark.supplierCodeName = 'ACJ';
         if (accRemark === 'ACPP') {
-          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
-            'commisionPercentage', 'departureCity', 'segmentNo'], true);
+          this.enableFormControls(
+            [
+              'fop',
+              'otherTax',
+              'commisionWithoutTax',
+              'supplierCodeName',
+              'descriptionapay',
+              'commisionPercentage',
+              'departureCity',
+              'segmentNo'
+            ],
+            true
+          );
           this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
           this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(7)]);
           this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         } else {
-          this.enableFormControls(['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay',
-            'commisionPercentage', 'departureCity'], true);
+          this.enableFormControls(
+            ['fop', 'otherTax', 'commisionWithoutTax', 'supplierCodeName', 'descriptionapay', 'commisionPercentage', 'departureCity'],
+            true
+          );
           this.enableFormControls(['segmentNo'], false);
         }
 
@@ -295,13 +307,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   filterSupplierCode(typeCode) {
     const val = ['12', '5', '1', '6', '4', 'NAE'];
-    const type = ['TOUR', 'FERRY', 'AIR', 'LIMO', 'RAIL', 'AIR'];
+    const type = ['TOUR', 'SEA', 'AIR', 'CAR', 'RAIL', 'AIR'];
     const indx = val.indexOf(typeCode);
     if (indx >= 0) {
       this.filterSupplierCodeList = this.ddbService.getSupplierCodes(type[indx]);
 
       // Trim supplier codes. Refer to DE2253.
-      this.filterSupplierCodeList.forEach(filterSupplierCode => {
+      this.filterSupplierCodeList.forEach((filterSupplierCode) => {
         filterSupplierCode.supplierCode = filterSupplierCode.supplierCode.trim();
       });
     }
@@ -398,20 +410,33 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
     this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
+
+    if (this.accountingRemark.bsp === '2') {
+      // remove RBC Points if CGO and PFS
+      if (['CGO', 'PFS'].indexOf(this.accountingRemark.supplierCodeName) > -1) {
+        //
+        this.formOfPaymentList = this.formOfPaymentList.filter((x) => x.itemText !== 'RBC Points');
+      } else {
+        if (this.formOfPaymentList.filter((x) => x.itemText === 'RBC Points').length === 0) {
+          this.formOfPaymentList.push({ itemText: 'RBC Points', itemValue: 'CK' });
+        }
+      }
+    }
   }
 
   setInsuranceValue() {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       this.accountingRemark.segmentNo = this.matrixAccountingForm.controls.segmentNo.value;
-      if (this.matrixAccountingForm.controls.accountingTypeRemark.value === 'NAE' ||
-        this.matrixAccountingForm.controls.accountingTypeRemark.value === '1') {
+      if (
+        this.matrixAccountingForm.controls.accountingTypeRemark.value === 'NAE' ||
+        this.matrixAccountingForm.controls.accountingTypeRemark.value === '1'
+      ) {
         this.checkSupplierCode();
       }
       // const segmentList = this.matrixAccountingForm.controls.segmentNo.value.split(',');
     } else {
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
     }
-
   }
 
   checkSupplierCode() {
@@ -433,8 +458,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
       const segmentDetails = this.pnrService.getSegmentTatooNumber();
-      segmentDetails.forEach(segments => {
-        segmentNos.forEach(segment => {
+      segmentDetails.forEach((segments) => {
+        segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {
             const look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
             if (look && (supplierCode === '' || supplierCode === look.supplierCode) && segments.segmentType === 'AIR') {
@@ -508,7 +533,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.controls.ccNo.patchValue(this.tempAccounting.cardNumber);
         this.matrixAccountingForm.controls.expDate.patchValue(this.tempAccounting.expDate);
       }
-
     }
   }
 

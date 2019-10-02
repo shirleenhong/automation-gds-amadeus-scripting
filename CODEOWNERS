@@ -1,5 +1,5 @@
 # These owners will be the default owners for everything in the repo.
-*       @rizaliemallari @PhilipMon @warrickgo
+*       @rizaliemallari @PhilipMon @warrickgo @MicoPerez @StanBTeh
 
-# For QA
-*test-suite/       @maridelcastro @rizaliemallari @PhilipMon @ChuckieVelasquez
+# test-suite folder ownership for QAs
+/test-suite/       @maridelcastro @ChuckieVelasquez @RoseJuarez @shirleenhong @warrickgo

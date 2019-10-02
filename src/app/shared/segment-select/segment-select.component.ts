@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
+import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
@@ -35,6 +35,7 @@ export class SegmentSelectComponent
   segmentGroup: FormGroup;
   segmentList = [];
   segmentSelected = [];
+  @Input() segmentFilter: string;
 
   propagateChange: any = () => { };
   validateFn: any = () => { };
@@ -73,7 +74,12 @@ export class SegmentSelectComponent
   }
 
   ngOnInit() {
-    this.segmentList = this.pnrService.getSegmentTatooNumber();
+    if (this.segmentFilter) {
+      this.segmentList = this.pnrService.getSegmentTatooNumber().filter(x => x.passive === this.segmentFilter);
+    } else {
+      this.segmentList = this.pnrService.getSegmentTatooNumber();
+    }
+
     this.segmentGroup.get('segment').markAsDirty();
   }
 

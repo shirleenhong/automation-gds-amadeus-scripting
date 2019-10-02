@@ -43,16 +43,25 @@ export class RemarksManagerService {
   }
 
   getMatchedPlaceHoldersWithKey(key: string) {
+    if (!this.matchedPlaceHolderValues) {
+      return [];
+    }
     return this.matchedPlaceHolderValues.filter((pl: PlaceholderValues) => pl.matchedPlaceholders && pl.matchedPlaceholders.has(key));
   }
 
   getMatchedPlaceHoldersWithExactKeys(keys: string[]) {
+    if (!this.matchedPlaceHolderValues) {
+      return [];
+    }
     return this.matchedPlaceHolderValues.filter(
       (pl: PlaceholderValues) => pl.matchedPlaceholders && this.hasCompleteKeys(pl.matchedPlaceholders, keys)
     );
   }
 
   getSegmentAssoc(keys: string[]) {
+    if (!this.matchedPlaceHolderValues) {
+      return [];
+    }
     return this.matchedPlaceHolderValues.filter(
       (pl: PlaceholderValues) => pl.matchedPlaceholders && this.hasCompleteKeys(pl.matchedPlaceholders, keys)
     );

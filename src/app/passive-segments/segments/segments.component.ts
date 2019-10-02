@@ -54,13 +54,15 @@ export class SegmentsComponent implements OnInit {
         }
         this.modalRef.content.isSubmitted = false;
       } else {
-        const r = this.modalRef.content.paramValue;
-        this.segmentRemarks.splice(this.segmentRemarks.indexOf(r), 1);
-        let i = 1;
-        this.segmentRemarks.forEach((x) => {
-          x.segmentNo = i;
-          i++;
-        });
+        if (this.modalRef.content.callerName === 'Segment' && this.modalRef.content.response === 'YES') {
+          const r = this.modalRef.content.paramValue;
+          this.segmentRemarks.splice(this.segmentRemarks.indexOf(r), 1);
+          let i = 1;
+          this.segmentRemarks.forEach((x) => {
+            x.segmentNo = i;
+            i++;
+          });
+        }
       }
     });
   }
@@ -86,7 +88,7 @@ export class SegmentsComponent implements OnInit {
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'Delete?';
     this.modalRef.content.message = 'Are you sure you want to delete this Segment?';
-    this.modalRef.content.callerName = 'Accounting';
+    this.modalRef.content.callerName = 'Segment';
     this.modalRef.content.response = '';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);

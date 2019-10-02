@@ -282,7 +282,7 @@ export class SeatsComponent implements OnInit {
     }
 
     uniqueSeats = uniqueSeats.filter((uniqueSeat, i) => {
-      return i === uniqueSeats.findIndex((item) => item.id === uniqueSeat.id);
+      return i === uniqueSeats.findIndex((item) => item.id === uniqueSeat.id && item.type === uniqueSeat.type);
     });
 
     return uniqueSeats;

@@ -43,7 +43,7 @@ export class SeatsComponent implements OnInit {
     // debugger;
     // console.log('getSeats() ================================');
 
-    let seats = new Array<SeatModel>();
+    const seats = new Array<SeatModel>();
 
     const pnrObj = this.pnrService.pnrObj;
     const rirElements = pnrObj.rirElements;
@@ -118,7 +118,7 @@ export class SeatsComponent implements OnInit {
 
       // Condition 5
       if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
-        debugger;
+        // debugger;
         const rirSegments = rirElement.associations.map(association => association.tatooNumber);
         const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
         seats.push({
@@ -197,10 +197,10 @@ export class SeatsComponent implements OnInit {
     console.log('seats');
     console.log(seats);
 
-    const uniqueSeats = new Array<SeatModel>();
+    let uniqueSeats = new Array<SeatModel>();
 
     for (const seat of seats) {
-      debugger;
+      // debugger;
       if (uniqueSeats.filter(item => item.id === seat.id).length === 0 ||
         uniqueSeats.filter(item => item.type === seat.type).length === 0) {
           // debugger;
@@ -218,6 +218,7 @@ export class SeatsComponent implements OnInit {
             uniqueSeats[duplicateSeatIndex].number = (seat.number) ? seat.number : null;
           }
         } catch (error) {
+          console.log('Error grouping the seats...' + error);
           console.error(error);
           console.log('uniqueSeats["duplicateSeatIndex"]');
           console.log(uniqueSeats[duplicateSeatIndex]);
@@ -226,7 +227,11 @@ export class SeatsComponent implements OnInit {
         }
       }
     }
+
+    uniqueSeats = uniqueSeats.filter((uniqueSeat, i) => {
+      return i === uniqueSeats.findIndex(item => item.id === uniqueSeat.id);
+    });
+
     return uniqueSeats;
   }
 }
-

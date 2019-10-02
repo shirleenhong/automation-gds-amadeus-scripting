@@ -33,31 +33,18 @@ export class SeatsComponent implements OnInit {
   }
 
   /**
-   * WIP: Get the seats from the PNR
+   * Get the seats from the PNR
    * based on RIR remark texts.
    * TODO: Handle languages
    *
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    // debugger;
-    // console.log('getSeats() ================================');
 
     const seats = new Array<SeatModel>();
-
     const pnrObj = this.pnrService.pnrObj;
     const rirElements = pnrObj.rirElements;
-    // const rirRemarks = this.pnrService.getRirRemarksFromGDS();
 
-    // console.log('pnrObj');
-    // console.log(pnrObj);
-
-    // console.log('rirElements');
-    // console.log(rirElements);
-
-    // console.log('rirRemarks');
-    // console.log(rirRemarks);
-    // debugger;
     for (const rirElement of rirElements) {
 
       // Condition 1
@@ -118,7 +105,6 @@ export class SeatsComponent implements OnInit {
 
       // Condition 5
       if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
-        // debugger;
         const rirSegments = rirElement.associations.map(association => association.tatooNumber);
         const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
         seats.push({
@@ -149,9 +135,6 @@ export class SeatsComponent implements OnInit {
    * @return void
    */
   public create(): void {
-    // const seat = new SeatModel();
-    // seat.tkMacLine = this.seats.length + 1;
-
     this.modalRef = this.modalService.show(SeatsFormComponent, this.modalRefConfig);
     this.modalRef.content.title = 'Add Seat Remark';
     this.modalRef.content.seats = this.seats;
@@ -194,24 +177,17 @@ export class SeatsComponent implements OnInit {
    * @param seats The grouped seats.
    */
   private groupSeats(seats: Array<SeatModel>) {
-    console.log('seats');
-    console.log(seats);
-
     let uniqueSeats = new Array<SeatModel>();
 
     for (const seat of seats) {
-      // debugger;
       if (uniqueSeats.filter(item => item.id === seat.id).length === 0 ||
         uniqueSeats.filter(item => item.type === seat.type).length === 0) {
-          // debugger;
         uniqueSeats.push(seat);
       } else {
-        // debugger;
         const duplicateSeatIndex = uniqueSeats.findIndex(item => item.id === seat.id);
         try {
           if (uniqueSeats[duplicateSeatIndex]) {
             if (uniqueSeats[duplicateSeatIndex].segmentIds && seat.segmentIds) {
-              // debugger;
               uniqueSeats[duplicateSeatIndex].segmentIds = uniqueSeats[duplicateSeatIndex].segmentIds.concat(seat.segmentIds);
             }
             uniqueSeats[duplicateSeatIndex].type = seat.type ? seat.type : null;
@@ -219,11 +195,6 @@ export class SeatsComponent implements OnInit {
           }
         } catch (error) {
           console.log('Error grouping the seats...' + error);
-          console.error(error);
-          console.log('uniqueSeats["duplicateSeatIndex"]');
-          console.log(uniqueSeats[duplicateSeatIndex]);
-          console.log('duplicateSeatIndex');
-          console.log(duplicateSeatIndex);
         }
       }
     }

@@ -20,7 +20,7 @@ export class SeatsService {
    * The remark options the user selects
    * from and to be written in the PNR.
    */
-  public static REMARK_OPTIONS: Array<{id: number, text: string}> = [
+  public static REMARK_OPTIONS: Array<{ id: number, text: string }> = [
     { id: 1, text: 'SEATING SUBJECT TO AIRPORT OR ONLINE CHECK IN' },
     { id: 2, text: 'PREFERRED SEAT UNAVAILABLE. SEAT TYPE CONFIRMED' },
     { id: 3, text: 'THIS SEGMENT HAS BEEN WAITLIST' },

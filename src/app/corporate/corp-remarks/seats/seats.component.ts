@@ -11,9 +11,8 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
   styleUrls: ['./seats.component.scss']
 })
 export class SeatsComponent implements OnInit {
-
   seats: Array<SeatModel>;
-  seatRemarkOptions: Array<{id: number, text: string}>;
+  seatRemarkOptions: Array<{ id: number; text: string }>;
 
   modalRef: BsModalRef;
   modalRefConfig = {
@@ -21,11 +20,7 @@ export class SeatsComponent implements OnInit {
     ignoreBackdropClick: false
   };
 
-  constructor(
-    private modalService: BsModalService,
-    private pnrService: PnrService,
-    public seatsService: SeatsService
-  ) { }
+  constructor(private modalService: BsModalService, private pnrService: PnrService, public seatsService: SeatsService) {}
 
   ngOnInit() {
     this.seats = this.getSeats();
@@ -40,90 +35,180 @@ export class SeatsComponent implements OnInit {
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-
+    debugger;
     const seats = new Array<SeatModel>();
     const pnrObj = this.pnrService.pnrObj;
     const rirElements = pnrObj.rirElements;
+    const language = this.pnrService.getLanguage();
+
+    console.log('language');
+    console.log(language);
 
     for (const rirElement of rirElements) {
-
-      // Condition 1
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'AIRPORT OR ONLINE CHECK IN') {
-        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
-        seats.push({
-          id: 1,
-          type: null,
-          number: null,
-          segmentIds: rirSegments
-        });
-      }
-
-      // Condition 2
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('PREFERRED SEAT UNAVAILABLE')) {
-        let rirSegments: any = null;
-        let seatType: any = null;
-        if (rirElement.associations) {
-          rirSegments = rirElement.associations.map(association => association.tatooNumber);
+      // For English
+      if (language === 'EN-GB') {
+        // Condition 1
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'AIRPORT OR ONLINE CHECK IN') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 1,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
         }
-        const freeText = rirElement.fullNode.extendedRemark.structuredRemark.freetext;
-        if (freeText.split('-')) {
-          if (freeText.split('-')[1]) {
-            seatType = freeText.split('-')[1].split(' ')[0];
+
+        // Condition 2
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('PREFERRED SEAT UNAVAILABLE')) {
+          let rirSegments: any = null;
+          let seatType: any = null;
+          if (rirElement.associations) {
+            rirSegments = rirElement.associations.map((association) => association.tatooNumber);
           }
+
+          const freeText = rirElement.fullNode.extendedRemark.structuredRemark.freetext;
+          if (freeText.split('-')) {
+            if (freeText.split('-')[1]) {
+              seatType = freeText.split('-')[1].split(' ')[0];
+            }
+          }
+          seats.push({
+            id: 2,
+            type: seatType,
+            number: null,
+            segmentIds: rirSegments
+          });
+          continue;
         }
-        seats.push({
-          id: 2,
-          type: seatType,
-          number: null,
-          segmentIds: rirSegments
-        });
-        continue;
+
+        // Condition 3
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'THIS SEGMENT HAS BEEN WAITLISTED') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 3,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+        }
+
+        // Condition 4
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'SEAT ASSIGNMENTS ARE ON REQUEST') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 4,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+          continue;
+        }
+
+        // Condition 5
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
+          seats.push({
+            id: 5,
+            type: null,
+            number: seatNumber,
+            segmentIds: rirSegments
+          });
+        }
+
+        // Condition 6
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'UPGRADE REQUESTED') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 6,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+        }
       }
 
-      // Condition 3
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'THIS SEGMENT HAS BEEN WAITLISTED') {
-        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
-        seats.push({
-          id: 3,
-          type: null,
-          number: null,
-          segmentIds: rirSegments
-        });
-      }
+      // For French
+      if (language === 'FR-CA') {
+        // Condition 1
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'LE CHOIX DES SIEGES NE SE FAIT QU A L ENREGISTREMENT') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 1,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+        }
 
-      // Condition 4
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'SEAT ASSIGNMENTS ARE ON REQUEST') {
-        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
-        seats.push({
-          id: 4,
-          type: null,
-          number: null,
-          segmentIds: rirSegments
-        });
-        continue;
-      }
+        // Condition 2
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('CHOIX DE SIEGE NON DISPONIBLE')) {
+          let rirSegments: any = null;
+          let seatType: any = null;
+          if (rirElement.associations) {
+            rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          }
+          const freeText = rirElement.fullNode.extendedRemark.structuredRemark.freetext;
+          if (freeText.split('-')) {
+            if (freeText.split('-')[1]) {
+              seatType = freeText.split('-')[1].split(' ')[0];
+            }
+          }
+          seats.push({
+            id: 2,
+            type: seatType,
+            number: null,
+            segmentIds: rirSegments
+          });
+          continue;
+        }
 
-      // Condition 5
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
-        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
-        const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
-        seats.push({
-          id: 5,
-          type: null,
-          number: seatNumber,
-          segmentIds: rirSegments
-        });
-      }
+        // Condition 3
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'CE SEGMENT A ETE MIS EN LISTE D ATTENTE') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 3,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+        }
 
-      // Condition 6
-      if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'UPGRADE REQUESTED') {
-        const rirSegments = rirElement.associations.map(association => association.tatooNumber);
-        seats.push({
-          id: 6,
-          type: null,
-          number: null,
-          segmentIds: rirSegments
-        });
+        // Condition 4
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'ATTRIBUTION DES SIEGES SUR DEMANDE') {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 4,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+          continue;
+        }
+
+        // Condition 5
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('SURCLASSEMENT CONFIRME')) {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
+          seats.push({
+            id: 5,
+            type: null,
+            number: seatNumber,
+            segmentIds: rirSegments
+          });
+        }
+
+        // Condition 6
+        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('SURCLASSEMENT DEMANDE')) {
+          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
+          seats.push({
+            id: 6,
+            type: null,
+            number: null,
+            segmentIds: rirSegments
+          });
+          continue;
+        }
       }
     }
 
@@ -147,7 +232,7 @@ export class SeatsComponent implements OnInit {
    * @param seat The instance of SeatModel to delete.
    */
   public delete(seat: SeatModel): void {
-    this.seats = this.seats.filter(s => s !== seat);
+    this.seats = this.seats.filter((s) => s !== seat);
   }
 
   /**
@@ -156,7 +241,6 @@ export class SeatsComponent implements OnInit {
    */
   private modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(() => {
-
       if (this.modalRef) {
         if (this.modalRef.content.message === 'SAVED') {
           const newSeat = this.modalRef.content.seatForm.value;
@@ -180,18 +264,20 @@ export class SeatsComponent implements OnInit {
     let uniqueSeats = new Array<SeatModel>();
 
     for (const seat of seats) {
-      if (uniqueSeats.filter(item => item.id === seat.id).length === 0 ||
-        uniqueSeats.filter(item => item.type === seat.type).length === 0) {
+      if (
+        uniqueSeats.filter((item) => item.id === seat.id).length === 0 ||
+        uniqueSeats.filter((item) => item.type === seat.type).length === 0
+      ) {
         uniqueSeats.push(seat);
       } else {
-        const duplicateSeatIndex = uniqueSeats.findIndex(item => item.id === seat.id);
+        const duplicateSeatIndex = uniqueSeats.findIndex((item) => item.id === seat.id);
         try {
           if (uniqueSeats[duplicateSeatIndex]) {
             if (uniqueSeats[duplicateSeatIndex].segmentIds && seat.segmentIds) {
               uniqueSeats[duplicateSeatIndex].segmentIds = uniqueSeats[duplicateSeatIndex].segmentIds.concat(seat.segmentIds);
             }
             uniqueSeats[duplicateSeatIndex].type = seat.type ? seat.type : null;
-            uniqueSeats[duplicateSeatIndex].number = (seat.number) ? seat.number : null;
+            uniqueSeats[duplicateSeatIndex].number = seat.number ? seat.number : null;
           }
         } catch (error) {
           console.log('Error grouping the seats...' + error);
@@ -200,7 +286,7 @@ export class SeatsComponent implements OnInit {
     }
 
     uniqueSeats = uniqueSeats.filter((uniqueSeat, i) => {
-      return i === uniqueSeats.findIndex(item => item.id === uniqueSeat.id);
+      return i === uniqueSeats.findIndex((item) => item.id === uniqueSeat.id);
     });
 
     return uniqueSeats;

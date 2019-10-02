@@ -169,7 +169,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Open CA Migration Prod
     Click Add Segment Main Menu
     Add Passive Air Segment
-    Add Passive Insurance Segment
+    Comment    Add Passive Insurance Segment
     Add Passive Car Segment
     Click Add Segments To PNR
     Close CA Migration Prod
@@ -191,7 +191,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     Click Remarks Tab    Packages
     Add Tour Package Costs
     Click Submit To PNR
-    Sleep    2
+    Sleep    10
     Click Itinerary And Queue
     Enter Email Address    1    testingemail@cwt.com
     Select Itinerary Language    French
@@ -348,6 +348,7 @@ Add Passive Car Segment
 Add Insurance Accounting Remark
     Click Add Accounting Line Button
     Select Accounting Remark Type    Insurance Remark
+    Sleep    20
     Select Segment    4
     Enter Supplier Confirmation Number    112233
     Select Matrix Form Of Payment    Credit Card
@@ -480,7 +481,7 @@ Verify ITC Package Costs Remarks Are Written
 
 Verify Air, Insurance, And Car Passive Segments Are Added In the PNR
     Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ${airline_recloc}
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 03JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03JAN/ST-0900/EC-YYZ/ED-13JAN/ET-0900/CF-CWT${policy_number}    True
+    Comment    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 03JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03JAN/ST-0900/EC-YYZ/ED-13JAN/ET-0900/CF-CWT${policy_number}    True
     Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYZ 13JAN-13JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13JAN/ST-0100/ED-13JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S5
     Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S5

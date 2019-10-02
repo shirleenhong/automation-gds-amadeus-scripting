@@ -21,6 +21,8 @@ import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
+import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
+import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueRemarkService } from '../service/queue-remark.service';
 
@@ -44,6 +46,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
+  @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
 
   @Input() overrideValue: any;
 
@@ -54,6 +57,7 @@ export class CorporateComponent implements OnInit {
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: AmadeusRemarkService,
+    private corpRemarksService: CorpRemarksService,
     private ddbService: DDBService,
     private reportingRemarkService: ReportingRemarkService,
     private invoiceRemarkService: InvoiceRemarkService,
@@ -147,12 +151,12 @@ export class CorporateComponent implements OnInit {
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');
+        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
         await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-        await this.ddbService.approvers(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
+        await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
-        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
@@ -192,9 +196,12 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
-    accRemarks.push(this.ticketRemarkService.submitTicketRemark
-      (this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
-        this.ticketingComponent.ticketlineComponent.approvalForm));
+    accRemarks.push(
+      this.ticketRemarkService.submitTicketRemark(
+        this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
+        this.ticketingComponent.ticketlineComponent.approvalForm
+      )
+    );
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -207,6 +214,8 @@ export class CorporateComponent implements OnInit {
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
 
+    this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
+
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
@@ -214,6 +223,7 @@ export class CorporateComponent implements OnInit {
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+    this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
 
     this.invoiceRemarkService.sendU70Remarks();

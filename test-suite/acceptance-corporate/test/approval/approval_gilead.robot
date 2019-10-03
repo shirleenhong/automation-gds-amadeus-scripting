@@ -12,21 +12,21 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Moxie Approval E-Mail Required
+Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Approval E-Mail Required
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Gilead With Any Udid, Moxie Approval E-Mail Required
+    Create PNR With Active Air Segments For Client Gilead With Any Udid, Approval E-Mail Required
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     
-Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Moxie Approval E-Mail Required For Exchange
+Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Approval E-Mail Required For Exchange
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Gilead With Any Udid, Air Only, Approval E-Mail Required For Exchange
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     
 Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Consultant will Request Email
     [Tags]    us13271
@@ -34,15 +34,15 @@ Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Con
     Create PNR With Active Air Segments For Client Gilead With Any Udid, Air Only, Consultant will Request Email
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     
 Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Air, Hotel, Car
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Gilead With Any Udid, with Air hotel and Car, Moxie Approval E-Mail Required
+    Create PNR With Active Air Segments For Client Gilead With Any Udid, with Air hotel and Car, Approval E-Mail Required
     Fill Up Approval Fields
-    # Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    Verify PNR Approval Is Processed Correctly
+    [Teardown]    Close Browser
     
 Verify That PNRs For Client Gilead Can Skip Approval Process
     [Tags]    us13271
@@ -50,7 +50,7 @@ Verify That PNRs For Client Gilead Can Skip Approval Process
     Create PNR With Active Air Segments For Client Gilead With Any Udid, Air Only, Ignore Approval Process
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     
 Verify That PNRs For Client Gilead Do Not Go Thru Approval For Hotel Only
     [Tags]    us13271
@@ -58,7 +58,7 @@ Verify That PNRs For Client Gilead Do Not Go Thru Approval For Hotel Only
     Create PNR For Client Gilead With Any Udid, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser
     
 Verify That PNRs For Client Gilead Do Not Go Thru Approval For Car Only
     [Tags]    us13271
@@ -66,4 +66,4 @@ Verify That PNRs For Client Gilead Do Not Go Thru Approval For Car Only
     Create PNR For Client Gilead With Any Udid, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    # [Teardown]    Close Browser
+    [Teardown]    Close Browser

@@ -40,6 +40,7 @@ Fill Up Approval Fields
     [Teardown]    Take Screenshot
     
 Verify Approval Fields Are Not Displayed
+    Scroll Element Into View    ${button_submit_pnr}
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${select_primaryReason}
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${checkbox_ignoreApproval}
 

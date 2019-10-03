@@ -195,7 +195,7 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Securitas Electronic Security With Udid50 OPERATIONS-CA, Air Only, Skip Approval": {
+	"Client Securitas Electronic Security With Udid50 OPERATIONS-CA, Mix Segments, Skip Approval": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -217,8 +217,8 @@
 		"PriceCommand2": null,
 		"PriceCommand3": null,
 		"PriceCommand4": null,
-		"NumCarSegments": "0",
-		"NumHotelSegments": "0",
+		"NumCarSegments": "1",
+		"NumHotelSegments": "1",
 		"OtherRemarks1": null,
 		"OtherRemarks2": null,
 		"OtherRemarks3": null,

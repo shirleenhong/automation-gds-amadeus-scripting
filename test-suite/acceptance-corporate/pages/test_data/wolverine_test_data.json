@@ -1,5 +1,5 @@
 {
-	"Client Wolverine, Air Only, Select First Primary Reason": {
+	"Client Wolverine Air Only, Select First Primary Reason": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -48,7 +48,7 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Mix Segments, Skip Approval": {
+	"Client Wolverine Mix Segments, Skip Approval": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -97,7 +97,7 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Car Only": {
+	"Client Wolverine Car Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -146,7 +146,7 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Hotel Only": {
+	"Client Wolverine Hotel Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -195,7 +195,7 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Car And Hotel Only": {
+	"Client Wolverine Car And Hotel Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -238,6 +238,7 @@
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
 		"RemarkAdded": null,
+		"RemarkAdded2": null,
 		"RemarkAdded3": null,
 		"RemarkAdded3": null,
 		"RemarkAdded4": null,

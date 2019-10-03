@@ -22,7 +22,7 @@ export class OtherRemarksService {
       return;
     }
 
-    if (travelRemarks) {
+    if (!travelRemarks) {
       switch (itinLanguage) {
         case ('EN'): {
           const commandFR = 'PBN/YTOWL210N/CONCIERGE ENGLISH*';

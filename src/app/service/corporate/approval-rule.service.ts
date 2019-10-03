@@ -48,7 +48,6 @@ export class ApprovalRuleService {
       );
       const appGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') >= 0);
       const appNoGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') === -1);
-      debugger;
       if (appGroup.length > 0) {
         return this.isValidRule(appNoGroup) && this.isValidGroup(appGroup);
       } else {

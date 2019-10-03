@@ -16,7 +16,7 @@ export class SeatModel {
   public number: string;
 
   /**
-   * The segment identifications associated to the seat.
+   * The comma-delimited segment identifications associated to the seat.
    */
   public segmentIds: string;
 }

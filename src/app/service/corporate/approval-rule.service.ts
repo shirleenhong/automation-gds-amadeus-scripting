@@ -9,7 +9,7 @@ import { ApprovalItem } from 'src/app/models/ddb/approval.model';
   providedIn: 'root'
 })
 export class ApprovalRuleService {
-  constructor(private ddbService: DDBService, private pnrService: PnrService) { }
+  constructor(private ddbService: DDBService, private pnrService: PnrService) {}
 
   /**
    * Check if the PNR needs to be approved based on conditions.
@@ -102,23 +102,22 @@ export class ApprovalRuleService {
   }
 
   isRemarkExistValid(app: ApprovalItem) {
+    let found = false;
     const multiremarks = this.getMultipleConditions(app.getRuleText());
     for (const rem of multiremarks) {
       const val = rem.split('|');
       if (val.length > 1) {
-        let found = false;
-        if (val[0].indexOf('RM') === 0) {
+        if (val[0].indexOf('RM') >= 0) {
           found = this.pnrService.getRemarkText(val[1]) !== '';
-        } else if (val[0].indexOf('RIR') === 0) {
+        } else if (val[0].indexOf('RIR') >= 0) {
           found = this.pnrService.getRirRemarkText(val[1]) !== '';
         }
-        found = (found ? this.getApprovalValidResult(app, found) : found);
         if (found) {
-          return false;
+          break;
         }
       }
     }
-    return true;
+    return this.getApprovalValidResult(app, found);
   }
 
   /**
@@ -149,20 +148,19 @@ export class ApprovalRuleService {
           valid = vendorCode === noKeywordValue;
         }
 
-        valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
         if (valid) {
-          return false;
+          break;
         }
       }
     }
-    return true;
+    return this.getApprovalValidResult(app, valid);
   }
 
   getApprovalValidResult(app: ApprovalItem, valid: boolean): boolean {
     if (valid) {
-      return app.approvalResult === 'EXCLUDE';
-    } else {
       return app.approvalResult === 'INCLUDE';
+    } else {
+      return app.approvalResult === 'EXCLUDE';
     }
   }
 
@@ -170,11 +168,11 @@ export class ApprovalRuleService {
    * check condition for segment type rule
    */
   isSegmentTypeValid(app: ApprovalItem) {
+    let valid = false;
     const multiremarks = this.getMultipleConditions(app.getRuleText());
     const segmentList = this.pnrService.getSegmentTatooNumber();
     for (const rem of multiremarks) {
       const type = SegmentTypeEnum[app.getRuleValueText(rem).toUpperCase()];
-      let valid = false;
       const segments = segmentList.filter((seg) => seg.segmentType === type);
       if (rem.indexOf('[NO]') >= 0) {
         valid = segments.length === 0;
@@ -183,12 +181,12 @@ export class ApprovalRuleService {
       } else {
         valid = segments.length > 0;
       }
-      valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
+
       if (valid) {
-        return false;
+        break;
       }
     }
-    return true;
+    return this.getApprovalValidResult(app, valid);
   }
 
   /**
@@ -204,12 +202,11 @@ export class ApprovalRuleService {
         .substr(0, 3)
         .toUpperCase();
       valid = rem.indexOf('[NOT]') > -1 ? !(noKeywordValue === route) : noKeywordValue === route;
-      valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
       if (valid) {
-        return false;
+        break;
       }
     }
-    return true;
+    return this.getApprovalValidResult(app, valid);
   }
 
   isDepartureDateValid(app: ApprovalItem) {
@@ -222,30 +219,12 @@ export class ApprovalRuleService {
         const depdate = new Date(firstAirSegment[0].departureDate);
         const diffDays = depdate.getDate() - dtNow.getDate();
         valid = diffDays.toString() === rem.replace('days', '');
-        valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
         if (valid) {
-          return false;
+          break;
         }
       }
     }
-    return true;
-  }
-
-  /**
-   * check if the set condition for UDID is in the PNR
-   * @param app ApprovalItem
-   */
-  isUdidValid(app: ApprovalItem) {
-    let valid = false;
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
-    for (const rem of multiremarks) {
-      valid = this.pnrService.getRemarkText('U' + rem.replace('|', '/-')) !== '';
-      valid = (valid ? this.getApprovalValidResult(app, valid) : valid);
-      if (valid) {
-        return false;
-      }
-    }
-    return true;
+    return this.getApprovalValidResult(app, valid);
   }
 
   getSecondaryApprovalList(index?: string): ApprovalItem[] {

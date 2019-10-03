@@ -46,17 +46,17 @@ Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
     Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Verify Default Values For Schedule Change Fees 
     Verify Selected Schedule Change Fees Are written In The PNR
-    Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    # Delete Fare and Itinerary
+    # [Teardown]    Close Browser
     
 Verify That Transborder PNR Added Remarks For Flat Fee
     [Tags]    us9619    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Transborder With TSTs
-    Verify Default Values Of Exchange Flat Fee With Supplemental Fee For Exchange Ticket
+    Verify Default Values Of Exchange Flat Fee With Supplemental Fee
     Verify That Exchange Flat Fees Are Written In The PNR
-    Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    # Delete Fare and Itinerary
+    # [Teardown]    Close Browser
     
 Verify That International PNR Added Remarks For Special Fee
     [Tags]    us9619    not_ready

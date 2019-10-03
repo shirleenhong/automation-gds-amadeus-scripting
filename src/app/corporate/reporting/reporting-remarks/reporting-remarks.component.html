@@ -1,0 +1,14 @@
+<form [formGroup]="reportingForm">
+  <div class="col" *ngIf="isTripTypeCorporate">
+    <br />
+    <div class="row form-group">
+      <div class="col">
+        BSP Routing Code :
+        <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode"
+          [(ngModel)]="routeCode" required>
+          <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
+            {{ item.itemText }}
+          </option>
+        </select>
+      </div>
+    </div>

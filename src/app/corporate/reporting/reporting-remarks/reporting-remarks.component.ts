@@ -1,8 +1,9 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { ReportingViewModel } from 'src/app/models/reporting-view.model';
 
 @Component({
   selector: 'app-reporting-remarks',
@@ -12,8 +13,10 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class ReportingRemarksComponent implements OnInit {
   bspRouteCodeList: SelectItem[];
   isTripTypeCorporate = false;
+  countryDest = '';
   reportingForm: FormGroup;
   routeCode = '';
+  @Input()reportingRemarksView = new ReportingViewModel();
   constructor(private pnrService: PnrService,
               private ddbService: DDBService) { }
 
@@ -27,8 +30,11 @@ export class ReportingRemarksComponent implements OnInit {
     if (this.checkTripType()) {
       this.isTripTypeCorporate = true;
       this.getRouteCodes();
-      this.addFSRemark();
+      this.reportingRemarksView.tripType = 1;
     }
+  }
+  getCountryDest(item) {
+    this.reportingRemarksView.routeCode = item;
   }
   checkTripType(): boolean {
     const rmElements = this.pnrService.pnrObj.rmElements;
@@ -44,8 +50,6 @@ export class ReportingRemarksComponent implements OnInit {
   }
   getRouteCodes() {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
-  }
-  addFSRemark() {
   }
 
 }

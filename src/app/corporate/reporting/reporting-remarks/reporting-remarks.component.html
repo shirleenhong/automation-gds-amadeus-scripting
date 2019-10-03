@@ -5,7 +5,7 @@
       <div class="col">
         BSP Routing Code :
         <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode"
-          [(ngModel)]="routeCode" required>
+          (change) = "getCountryDest($event.target.value)" required>
           <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>

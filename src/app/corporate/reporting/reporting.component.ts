@@ -5,6 +5,7 @@ import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.co
 import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketing.component';
 import { MatrixReportingComponent } from './matrix-reporting/matrix-reporting.component';
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
+import { ReportingRemarksComponent } from './reporting-remarks/reporting-remarks.component';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -15,15 +16,17 @@ export class ReportingComponent implements OnInit {
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
   @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
+  @ViewChild(ReportingRemarksComponent) reportingRemarksComponent: ReportingRemarksComponent;
   hasTst: boolean;
   @Input() overrideValue: any;
+  @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.hasTst = true;
+    this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
   }
-
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;
     this.cdr.detectChanges();

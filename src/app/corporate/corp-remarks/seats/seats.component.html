@@ -13,7 +13,7 @@
     <tr *ngFor="let seat of seats; let i = index">
       <td>{{ i + 1 }}</td>
       <td>{{ seatRemarkOptions[seat.id - 1].text }}</td>
-      <td>{{ seat.type | uppercase }}</td>
+      <td>{{ seat.type }}</td>
       <td>{{ seat.number }}</td>
       <td>{{ seat.segmentIds }}</td>
       <td>

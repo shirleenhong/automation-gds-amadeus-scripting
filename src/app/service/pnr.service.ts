@@ -1042,7 +1042,7 @@ export class PnrService {
         return matrixReceipts;
     }
 
-    getSegmentModel(freetext, index, type) {
+    getSegmentModel(freetext, index, type, lineNo) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
 
@@ -1069,6 +1069,7 @@ export class PnrService {
             if (match !== null) {
                 segmentModel.isNew = false;
                 segmentModel.segmentNo = index;
+                segmentModel.lineNo = lineNo;
                 segmentModel.segmentType = match.groups.type;
                 if (!match.groups.type) {
                     segmentModel.segmentType = type;
@@ -1082,6 +1083,7 @@ export class PnrService {
                 segmentModel.arrivalDate = match.groups.arrdate;
                 segmentModel.arrivalTime = match.groups.arrtime;
                 segmentModel.confirmationNo = match.groups.conf;
+
             } else if (type === 'HTL') {
                 segmentModel.segmentType = type;
             }
@@ -1089,11 +1091,12 @@ export class PnrService {
         }
     }
 
-    getAirSegmentModel(element, index) {
+    getAirSegmentModel(element, index, lineNo) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
+        segmentModel.lineNo = lineNo;
         segmentModel.segmentType = element.segmentType;
         segmentModel.flightNumber = element.flightNumber;
         segmentModel.classService = element.classservice;
@@ -1107,11 +1110,12 @@ export class PnrService {
         return segmentModel;
     }
 
-    getHotelSegmentModel(element, index, freetext) {
+    getHotelSegmentModel(element, index, freetext, lineNo) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
+        segmentModel.lineNo = lineNo;
         segmentModel.segmentType = element.segmentType;
         segmentModel.departureDate = this.formatDate(element.deptdate);
         segmentModel.departureCity = element.cityCode;
@@ -1138,13 +1142,13 @@ export class PnrService {
             switch (element.segmentType) {
                 case 'MIS':
                 case 'CAR':
-                    pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
+                    pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType, element.lineNo));
                     break;
                 case 'AIR':
-                    pSegment.push(this.getAirSegmentModel(element, index));
+                    pSegment.push(this.getAirSegmentModel(element, index, element.lineNo));
                     break;
                 case 'HTL':
-                    pSegment.push(this.getHotelSegmentModel(element, index, element.freetext));
+                    pSegment.push(this.getHotelSegmentModel(element, index, element.freetext, element.lineNo));
                     break;
             }
         });

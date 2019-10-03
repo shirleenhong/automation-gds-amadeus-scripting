@@ -18,11 +18,11 @@ export class OtherRemarksService {
     itinLanguage = itinLanguage.substr(0, 2);
     itinLanguage = (itinLanguage ? itinLanguage : 'EN');
 
-    if (!(cfLine.cfa === 'RBM' || cfLine.cfa === 'RBP')) {
+    if (cfLine.cfa !== 'RBM' && cfLine.cfa !== 'RBP') {
       return;
     }
 
-    if (travelRemarks) {
+    if (!travelRemarks) {
       switch (itinLanguage) {
         case ('EN'): {
           const commandFR = 'PBN/YTOWL210N/CONCIERGE ENGLISH*';

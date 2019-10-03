@@ -26,6 +26,7 @@ import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/se
 import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
 import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 import { ReportingRemarksComponent } from './corporate/reporting/reporting-remarks/reporting-remarks.component';
+import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-remarks.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,9 @@ import { ReportingRemarksComponent } from './corporate/reporting/reporting-remar
     SeatsFormComponent,
     WaiversComponent,
     AddWaiverComponent,
-    ReportingRemarksComponent
+    ReportingRemarksComponent,
+    IrdRemarksComponent,
+    AddWaiverComponent
   ],
   imports: [
     BrowserModule,

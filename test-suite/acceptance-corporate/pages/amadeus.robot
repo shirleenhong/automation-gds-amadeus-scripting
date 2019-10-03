@@ -251,7 +251,7 @@ Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Add Multiple BSP Segment And Store Multiple Fares
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    TKOK     RM*CF/-VB70000000C  
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    RM*CF/-ZZB0000000N  
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}

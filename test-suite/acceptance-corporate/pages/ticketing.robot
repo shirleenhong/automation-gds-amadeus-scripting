@@ -40,6 +40,7 @@ Fill Up Approval Fields
     [Teardown]    Take Screenshot
     
 Verify Approval Fields Are Not Displayed
+    Scroll Element Into View    ${button_submit_pnr}
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${select_primaryReason}
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${checkbox_ignoreApproval}
 
@@ -336,11 +337,11 @@ Verify PNR Approval Is Processed Correctly
 Verify PNR Is Queued For Approval
     Open Command Page
     Enter Cryptic Command    RTQ
-    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    001${SPACE}${SPACE}${SPACE}YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000 
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000 
     [Teardown]    Take Screenshot
     
 Verify PNR Is Not Queued For Approval
     Open Command Page
     Enter Cryptic Command    RTQ
-    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    001${SPACE}${SPACE}${SPACE}YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
+    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
     [Teardown]    Take Screenshot

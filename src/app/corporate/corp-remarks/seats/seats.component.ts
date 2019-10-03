@@ -30,7 +30,6 @@ export class SeatsComponent implements OnInit {
   /**
    * Get the seats from the PNR
    * based on RIR remark texts.
-   * TODO: Handle languages
    *
    * @return Array<SeatModel>
    */
@@ -50,7 +49,7 @@ export class SeatsComponent implements OnInit {
             id: 1,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
 
@@ -72,7 +71,7 @@ export class SeatsComponent implements OnInit {
             id: 2,
             type: seatType,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
           continue;
         }
@@ -84,7 +83,7 @@ export class SeatsComponent implements OnInit {
             id: 3,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
 
@@ -95,7 +94,7 @@ export class SeatsComponent implements OnInit {
             id: 4,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
           continue;
         }
@@ -108,7 +107,7 @@ export class SeatsComponent implements OnInit {
             id: 5,
             type: null,
             number: seatNumber,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
 
@@ -119,7 +118,7 @@ export class SeatsComponent implements OnInit {
             id: 6,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
       }
@@ -133,7 +132,7 @@ export class SeatsComponent implements OnInit {
             id: 1,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
 
@@ -154,7 +153,7 @@ export class SeatsComponent implements OnInit {
             id: 2,
             type: seatType,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
           continue;
         }
@@ -166,7 +165,7 @@ export class SeatsComponent implements OnInit {
             id: 3,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
 
@@ -177,7 +176,7 @@ export class SeatsComponent implements OnInit {
             id: 4,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
           continue;
         }
@@ -190,7 +189,7 @@ export class SeatsComponent implements OnInit {
             id: 5,
             type: null,
             number: seatNumber,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
         }
 
@@ -201,7 +200,7 @@ export class SeatsComponent implements OnInit {
             id: 6,
             type: null,
             number: null,
-            segmentIds: rirSegments
+            segmentIds: rirSegments ? this.pnrService.getSegmentNumbers(rirSegments).toString() : null
           });
           continue;
         }
@@ -284,6 +283,11 @@ export class SeatsComponent implements OnInit {
     uniqueSeats = uniqueSeats.filter((uniqueSeat, i) => {
       return i === uniqueSeats.findIndex((item) => item.id === uniqueSeat.id && item.type === uniqueSeat.type);
     });
+
+    // Add commas to the seats' segmentIds
+    for (const uniqueSeat of uniqueSeats) {
+      uniqueSeat.segmentIds = uniqueSeat.segmentIds ? uniqueSeat.segmentIds.split('').join(',') : null;
+    }
 
     return uniqueSeats;
   }

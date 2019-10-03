@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SeatsComponent } from './seats/seats.component';
 import { IrdRemarksComponent } from './ird-remarks/ird-remarks.component';
+import { OfcDocumentationComponent } from './ofc-documentation/ofc-documentation.component';
 
 @Component({
   selector: 'app-corp-remarks',
@@ -8,12 +9,10 @@ import { IrdRemarksComponent } from './ird-remarks/ird-remarks.component';
   styleUrls: ['./corp-remarks.component.scss']
 })
 export class CorpRemarksComponent implements OnInit {
-
   @ViewChild(SeatsComponent) seatsComponent: SeatsComponent;
   @ViewChild(IrdRemarksComponent) irdRemarks: IrdRemarksComponent;
-  constructor() { }
+  @ViewChild(OfcDocumentationComponent) ofcDocumentation: OfcDocumentationComponent;
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
@@ -10,7 +10,7 @@ import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.co
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
-export class ReportingComponent implements OnInit {
+export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(ReportingBSPComponent) reportingBSPComponent: ReportingBSPComponent;
   @ViewChild(ReportingNonbspComponent) reportingNonbspComponent: ReportingNonbspComponent;
   @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;

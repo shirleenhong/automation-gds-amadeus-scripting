@@ -45,7 +45,7 @@ export class SeatsFormComponent implements OnInit {
       id: new FormControl('', [Validators.required]),
       type: new FormControl({ value: '', disabled: true }, []),
       number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
-      segmentIds: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')])
+      segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
     });
 
     this.onChanges();
@@ -71,7 +71,6 @@ export class SeatsFormComponent implements OnInit {
           this.seatForm.get('type').enable();
           break;
         case '5':
-          this.seatForm.get('type').enable();
           this.seatForm.get('number').enable();
           break;
         default:

@@ -336,8 +336,9 @@ Verify PNR Approval Is Processed Correctly
 
 Verify PNR Is Queued For Approval
     Open Command Page
-    Enter Cryptic Command    RTQ
-    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000 
+    Enter Cryptic Command    RTQ 
+    Run Keyword If    "${cfa}" != "D7V"    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL28AN${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000   
+    Run Keyword If    "${cfa}" == "D7V"    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
     [Teardown]    Take Screenshot
     
 Verify PNR Is Not Queued For Approval

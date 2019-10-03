@@ -94,7 +94,7 @@ export class DDBService implements OnInit {
     this.approvalList = [];
     await this.getRequest(common.approversService + clientSubUnit + '&SourceSystemCode=CA1&ClientAccountNumber=1' + cfa).then(
       (response) => {
-        if (response.ApproversResponseItem) {
+        if (response && response.ApproversResponseItem) {
           response.ApproversResponseItem.forEach((approverJson) => {
             this.approvalList.push(new ApprovalItem(approverJson));
           });

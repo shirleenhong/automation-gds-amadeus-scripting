@@ -54,9 +54,9 @@ Verify That Transborder PNR Added Remarks For Flat Fee
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Transborder With TSTs
     Verify Default Values Of Exchange Flat Fee With Supplemental Fee
-    # Verify That Exchange Flat Fees Are Written In The PNR
-    # Delete Fare and Itinerary
-    # [Teardown]    Close Browser
+    Verify That Exchange Flat Fees Are Written In The PNR
+    Delete Fare and Itinerary
+    [Teardown]    Close Browser
     
 Verify That International PNR Added Remarks For Special Fee
     [Tags]    us9619
@@ -72,15 +72,18 @@ Verify That Special Fee Is Written In the PNR For Rail
     Login To Amadeus Sell Connect Acceptance
     Add Passive Rail Segment For CFA With Special Fee
     Verify Default Values Of Special Fee For Air Ticket
-    Verify That Special Fee Is Written In The PNR
+    Verify That Special Fee Is Written In The PNR For Rail
     Delete Fare and Itinerary
     [Teardown]    Close Browser
     
 Verify That Special Fee Amount Entered Is Written In The PNR
     [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger With Single Segment For International With Non Exchange Ticket
-    
+    Move Single Passenger With Single Segment With Special Fee Required Inputs
+    Verify Default Values Of Special Fee That Has No Value in DB
+    Verify That Entered Special Fee Is Written In The PNR
+    Delete Fare and Itinerary
+    [Teardown]    Close Browser
     
 Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
     [Tags]    us9619

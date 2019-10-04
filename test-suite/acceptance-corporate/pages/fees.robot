@@ -104,6 +104,10 @@ Tick Schedule Change Checkbox
 	    
 Select No Fee Code ${no_fee_code}
     Select From List By Label   ${list_no_feeCode}    ${no_fee_code}  
+    
+Enter Fee Amount
+    [Arguments]   ${fee_amt}
+    Enter Value    ${row_supplemental_fees}[1]${input_fee}    ${fee_amt}
          
 Create Single Ticket For The PNR
     Get Record Locator Value
@@ -160,7 +164,7 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Move Single Passenger For Fees
     Add Canada Domestic Segment And Store Multiple Fare
     Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S3
-    Add CFA Remark    RM*CF/-NRD0000000N
+    Add CFA Remark    RM*CF/-NRD0000000C
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Sleep    4
     Create Multiple TKT Exchange PNR In The GDS
@@ -168,16 +172,22 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
 Move Single Passenger With Multiple Segment For Transborder With TSTs
     Move Single Passenger For Fees
     Add Transborder Segment And Store Multiple Fare
-    Add CFA Remark    RM*CF/-RH60000000N
+    Add CFA Remark    RM*CF/-RH60000000C
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Sleep    4
     Create Multiple TKT Exchange PNR In The GDS
        
 Move Single Passenger With Single Segment For International With Non Exchange Ticket
     Move Single Passenger For Fees
-    Add CFA Remark    RM*CF/-XXP0000000N
+    Add CFA Remark    RM*CF/-XXP0000000C
     Add International Segment And Store Single Fare
     Sleep    4  
+    
+Move Single Passenger With Single Segment With Special Fee Required Inputs
+    Move Single Passenger For Fees
+    Add CFA Remark    RM*CF/-YXU0000000C
+    Add International Segment And Store Single Fare
+    Sleep    4 
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
@@ -234,13 +244,14 @@ Verify That Exchange Flat Fees Are Written In The PNR
     
 Verify Default Values Of Special Fee For Air Ticket
     Navigate To Page Fees
-    Verify Default Fee Code in Ticket Segments    ATI
+    Verify Default Fee Code in Ticket Segments    ATD
     Verify Default Fee In Ticket Segments    60.00
 
-Verify Default Values Of Special Fee For Air Ticket With 0.01 In The DB
+Verify Default Values Of Special Fee That Has No Value in DB
     Navigate To Page Fees
     Verify Default Fee Code in Ticket Segments    ATI
     Verify Default Fee In Ticket Segments    ${EMPTY}
+    Enter Fee Amount    12.50
     
 Verify That Special Fee Is Written In The PNR
     Finish PNR
@@ -249,8 +260,13 @@ Verify That Special Fee Is Written In The PNR
     
 Verify That Special Fee Is Written In The PNR For Rail
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTI60.00
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTD60.00
     Switch To Command Page 
+    
+Verify That Entered Special Fee Is Written In The PNR
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATI12.50
+    Switch To Command Page
 
 Verify Selected No Fee Code Is Written
     Finish PNR

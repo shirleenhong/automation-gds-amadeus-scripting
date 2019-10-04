@@ -51,5 +51,4 @@ export class ReportingRemarksComponent implements OnInit {
   getRouteCodes() {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
-
 }

@@ -39,12 +39,14 @@ export class ReportingComponent implements OnInit {
         return false;
       }
     }
-
     this.utilHelper.validateAllFields(this.reportingNonbspComponent.nonBspGroup);
     if (!this.reportingNonbspComponent.nonBspGroup.valid) {
       return false;
     }
-
+    this.utilHelper.validateAllFields(this.reportingRemarksComponent.reportingForm);
+    if (!this.reportingRemarksComponent.reportingForm.valid) {
+      return false;
+    }
     return true;
   }
 }

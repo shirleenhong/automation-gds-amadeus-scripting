@@ -58,7 +58,7 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     IrdRemarksComponent,
     AddWaiverComponent,
     QueueMinderComponent,
-    QueueComponent
+    QueueComponent,
     DocumentPnrComponent
   ],
   imports: [
@@ -86,4 +86,4 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     UpdateAccountingRemarkComponent
   ]
 })
-export class AppCorporateModule {}
+export class AppCorporateModule { }

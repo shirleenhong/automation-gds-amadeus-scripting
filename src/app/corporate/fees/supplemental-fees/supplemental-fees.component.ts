@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
-import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { ClientFeeItem } from 'src/app/models/ddb/client-fee-item.model';
@@ -108,7 +108,7 @@ export class SupplementalFeesComponent implements OnInit {
   async loadData(): Promise<void> {
     this.noFeeCodes = this.ddbService.getNoFeeCodes();
     this.hasAir = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR').length > 0;
-    this.hasTrain = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'TRN').length > 0;
+    this.hasTrain = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'TRN' || x.passive === 'TYP-TRN').length > 0;
     this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;
@@ -158,7 +158,7 @@ export class SupplementalFeesComponent implements OnInit {
     return this.fb.group({
       isChange: new FormControl(''),
       code: new FormControl(''),
-      fee: new FormControl(''),
+      fee: new FormControl('', [Validators.required]),
       noFeeCode: new FormControl(''),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),
@@ -183,8 +183,10 @@ export class SupplementalFeesComponent implements OnInit {
       code = 'NFR';
       fee = '';
     }
+
     if (fee === '0.01') {
       group.get('fee').enable();
+      fee = '';
     } else {
       group.get('fee').disable();
     }

@@ -17,7 +17,8 @@ export class SeatsComponent implements OnInit {
   modalRef: BsModalRef;
   modalRefConfig = {
     backdrop: true,
-    ignoreBackdropClick: false
+    ignoreBackdropClick: false,
+    class: 'modal-lg'
   };
 
   constructor(private modalService: BsModalService, private pnrService: PnrService, public seatsService: SeatsService) {}

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsService } from 'src/app/service/corporate/seats.service';
 
@@ -10,45 +10,78 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
   styleUrls: ['./seats-form.component.scss']
 })
 export class SeatsFormComponent implements OnInit {
-  REGEX_ALPHANUMERIC = '^\\w*';
+  /**
+   * Modal component properties
+   */
+  title: string;
+  message: string; // Value: null, SAVED or CLOSED
 
   @Input()
   seats: Array<SeatModel>; // The seats to from the parent component
   seat: SeatModel;
-  id: number = null;
-  type: string = null;
-  number: string = null;
-  segmentIds: string = null;
+
+  seatsForm: FormGroup;
+  exists: boolean;
 
   remarkOptions: Array<{ id: number; text: string }>;
   types: Array<string>;
+  REGEX_ALPHANUMERIC = '^\\w*';
 
-  seatForm: FormGroup;
-  exists: boolean;
-
-  /**
-   * The message of the modal.
-   * Values: SAVED, CLOSED
-   */
-  message: string;
-
-  title = '';
-
-  constructor(public activeModal: BsModalService, public modalRef: BsModalRef) {}
+  constructor(public activeModal: BsModalService, public modalRef: BsModalRef, public formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.seat = new SeatModel();
     this.remarkOptions = SeatsService.REMARK_OPTIONS;
     this.types = SeatsService.TYPES;
 
-    this.seatForm = new FormGroup({
-      id: new FormControl('', [Validators.required]),
-      type: new FormControl({ value: '', disabled: true }, []),
-      number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
-      segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+    this.seatsForm = this.formBuilder.group({
+      prop1: new FormControl(),
+      seatRemark1: this.formBuilder.group({
+        id: new FormControl('', [Validators.required]),
+        type: new FormControl({ value: '', disabled: true }, []),
+        number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+        segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      }),
+      seatRemark2: this.formBuilder.group({
+        id: new FormControl('', [Validators.required]),
+        type: new FormControl({ value: '', disabled: true }, []),
+        number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+        segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      }),
+      seatRemark3: this.formBuilder.group({
+        id: new FormControl('', [Validators.required]),
+        type: new FormControl({ value: '', disabled: true }, []),
+        number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+        segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      }),
+      seatRemark4: this.formBuilder.group({
+        id: new FormControl('', [Validators.required]),
+        type: new FormControl({ value: '', disabled: true }, []),
+        number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+        segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      }),
+      seatRemark5: this.formBuilder.group({
+        id: new FormControl('', [Validators.required]),
+        type: new FormControl({ value: '', disabled: true }, []),
+        number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+        segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      }),
+      seatRemark6: this.formBuilder.group({
+        id: new FormControl('', [Validators.required]),
+        type: new FormControl({ value: '', disabled: true }, []),
+        number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+        segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+      })
     });
 
-    this.onChanges();
+    // {
+    //   id: new FormControl('', [Validators.required]),
+    //     type: new FormControl({ value: '', disabled: true }, []),
+    //       number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
+    //         segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+    // }
+
+    // this.onChanges();
   }
 
   save(): void {
@@ -60,22 +93,23 @@ export class SeatsFormComponent implements OnInit {
    * Handle changes on the seat form.
    */
   public onChanges(): void {
-    this.seatForm.valueChanges.subscribe((value) => {
-      this.seatExists(value);
+    this.seatsForm.valueChanges.subscribe((value) => {
+      console.log(value);
+      // this.seatExists(value);
     });
 
     // Disable or enable the type and number form controls based on type.
-    this.seatForm.get('id').valueChanges.subscribe((value) => {
+    this.seatsForm.get('id').valueChanges.subscribe((value) => {
       switch (value) {
-        case '2':
-          this.seatForm.get('type').enable();
-          break;
-        case '5':
-          this.seatForm.get('number').enable();
-          break;
+        // case '2':s
+        //   this.seatRemarksForm.get('type').enable();
+        //   break;
+        // case '5':
+        //   this.seatRemarksForm.get('number').enable();
+        //   break;
         default:
-          this.seatForm.get('type').disable();
-          this.seatForm.get('number').disable();
+          // this.seatRemarksForm.get('type').disable();
+          // this.seatRemarksForm.get('number').disable();
           break;
       }
     });
@@ -84,28 +118,5 @@ export class SeatsFormComponent implements OnInit {
   public close(): void {
     this.message = 'CLOSED';
     this.modalRef.hide();
-  }
-
-  /**
-   * Check if a seat exists in the seats
-   * along with its segments.
-   * @param newSeat The seat to match
-   */
-  public seatExists(newSeat: SeatModel): boolean {
-    for (const seat of this.seats) {
-      const newSeatSegments = newSeat.segmentIds.split(',');
-      for (const newSeatSegment of newSeatSegments) {
-        if (newSeatSegment) {
-          if (seat.id === newSeat.id && seat.type === newSeat.type && seat.segmentIds.toString().indexOf(newSeatSegment) >= 0) {
-            this.exists = true;
-            return true;
-          } else {
-            this.exists = false;
-          }
-        }
-      }
-    }
-
-    return false;
   }
 }

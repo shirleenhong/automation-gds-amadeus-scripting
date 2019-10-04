@@ -69,11 +69,6 @@ import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-re
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [
-    AddSupplementalFeesComponent,
-    AddWaiverComponent,
-    SeatsFormComponent,
-    UpdateAccountingRemarkComponent
-  ]
+  entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
 export class AppCorporateModule {}

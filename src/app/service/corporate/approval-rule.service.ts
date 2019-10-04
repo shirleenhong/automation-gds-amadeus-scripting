@@ -14,7 +14,7 @@ export class ApprovalRuleService {
   /**
    * Check if the PNR needs to be approved based on conditions.
    */
-  public needsApproval(): boolean {
+  private needsApproval(): boolean {
     const remarksValid =
       this.pnrService.getRemarkText('CB/QUE/QUE FOR TICKET') === '' &&
       this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' &&

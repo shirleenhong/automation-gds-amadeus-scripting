@@ -21,6 +21,8 @@ ${input_cic_number}    //input[@formcontrolname='cicNumber']
 ${input_file_finisher_yes}    //input[@id="rbFileFinisher"][@ng-reflect-value='YES']
 ${input_file_finisher_no}    //input[@id="rbFileFinisher"][@ng-reflect-value='NO']
 ${tab_waivers}   //span[contains(text(), 'Waivers')]
+${tab_reportingRemarks}       //span[contains(text(), 'Reporting Remarks')]
+${list_routing_code}    //select[@formcontrolname='reportingRemarks']
 ${button_addWaiver}    //i[@id='add']
 ${list_waivers}    //select[@id='waiver']
 ${button_removeWaiver}    css=#remove
@@ -51,6 +53,12 @@ Click Waivers Reporting Tab
     Click Element    ${tab_waivers}
     Wait Until Element Is Visible    ${button_addWaiver}    30
     Set Test Variable    ${current_page}    Waivers
+
+Click Reporting Remarks Tab
+    Wait Until Element Is Visible    ${tab_reportingRemarks}    30
+    Click Element    ${tab_reportingRemarks}
+    Wait Until Page Contains Element    ${list_routing_code}    30
+    Set Test Variable    ${current_page}    Reporting Remarks
 
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
@@ -319,3 +327,30 @@ Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multipl
     Verify Specific Remark Is Written In The PNR    RM *U63/-AFMCN11234/AMTCN11234/S3,5-6
     Verify Specific Remark Is Written In The PNR    RM *U63/-HNSCN11234/S2,4
     Switch To Command Page
+
+Verify Routing Code Dropdown Is Displayed With Correct Values
+    Navigate To Page Reporting Remarks
+    Click Element    ${list_routing_code}
+    List Selection Should Be    ${list_routing_code}    USA incl. all US Territories and Possessions    Mexico/Central America/Canal Zone/Costa Rica
+    ...    Caribbean and Bermuda    South America    Europe-incl. Morocco/Tunisia/Algeria/Greenland    Africa    Middle East/Western Asia
+    ...    Asia incl. India    Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam    Canada and St. Pierre et Miquelon
+    
+Verify Routing Code Dropdown Is A Required Field
+    Click Submit To PNR
+    Element Should Contain    ${warning_message}     This is a required field
+    
+Fill Up Routing Code With ${selection}
+    Navigate To Page Reporting Remarks
+    Select From List By Label    ${list_routing_code}     ${selection}
+    Set Test Variable    ${routing_code_selected}    yes
+    [Teardown]    Take Screenshot
+    
+Verify Country Of Destination Is Mapped In The FS Remark
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR
+    
+Select Default Value For Routing Code
+    Navigate To Page Reporting Remarks
+    Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
+    Set Test Variable    ${routing_code_selected}    yes
+    [Teardown]    Take Screenshot

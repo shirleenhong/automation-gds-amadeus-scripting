@@ -47,3 +47,4 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For PD
     Verify Accounting Remark Is Written Correctly For Non BSP Exchange
+    [Teardown]    Logout To Amadeus Sell Connect

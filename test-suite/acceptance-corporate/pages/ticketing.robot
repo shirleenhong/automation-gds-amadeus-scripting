@@ -40,6 +40,7 @@ Fill Up Approval Fields
     [Teardown]    Take Screenshot
     
 Verify Approval Fields Are Not Displayed
+    Scroll Element Into View    ${button_submit_pnr}
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${select_primaryReason}
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${checkbox_ignoreApproval}
 
@@ -109,6 +110,13 @@ Select Limo Segments
 
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing Line
+    Select Checkbox    ${checkbox_verifyTicket}
+    Set Test Variable    ${ticketing_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Fill Up Ticketing Panel With PNR ON HOLD
+    Navigate To Page Ticketing Line
+    Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
@@ -325,7 +333,8 @@ Verify PNR Approval Is Processed Correctly
     Assign Current Date
     Run Keyword If    "${queue_approval}" == "Yes"    Verify PNR Is Queued For Approval
     ...    ELSE    Verify PNR Is Not Queued For Approval
-    Run Keyword If    "${remark_added}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added}
+    Run Keyword If    "${remark_added}" != "None" and "${secondary_approval_reason}" == "Awaiting ECM Approval"    Verify Specific Remark Is Written In The PNR   ${remark_added}${date_today}
+    ...    ELSE    Run Keyword If    "${remark_added}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added}
     Run Keyword If    "${remark_added2}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added2}  
     Run Keyword If    "${remark_added3}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added3}  
     Run Keyword If    "${remark_added4}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added4}    

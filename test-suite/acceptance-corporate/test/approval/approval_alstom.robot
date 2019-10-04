@@ -12,51 +12,43 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That Air Only PNRs For Client Linedata Is Queued For Approval
+Verify That PNRs For Client Alstom Is Correctly Queued To Approval Queue
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Linedata Air Only
+    Create PNR With Active Air Segments For Client Alstom With Udid 50 GENERAL-CA-S, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    #[Teardown]     Close Browser
+    [Teardown]    Logout To Amadeus Sell Connect
     
-Verify That Car Only PNRs For Client Linedata Is Queued For Approval
+Verify That PNRs For Client Alstom with Mixed Segments Is Correctly Queued To Approval Queue
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Linedata Car Only
+    Create PNR With Active Air Segments For Client Alstom With Udid 50 GENERAL-CA-S, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    [Teardown]    Logout To Amadeus Sell Connect
     
-Verify That Hotel Only PNRs For Client Linedata Is Queued For Approval
+Verify That Hotel Only PNRs For Client Alstom Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Linedata Hotel Only
+    Create PNR For Client Alstom With Udid 50 GENERAL-CA-S, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    [Teardown]    Logout To Amadeus Sell Connect
     
-Verify That Mix Segments PNRs For Client Linedata Is Queued For Approval
+Verify That Car Only PNRs For Client Alstom Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Linedata Mix Segments
+    Create PNR For Client Alstom With Udid 50 GENERAL-CA-S, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    [Teardown]    Logout To Amadeus Sell Connect
     
-Verify That Rail Only PNRs For Client Linedata Do Not Go Thru Approval Process
+Verify That PNRs For Client Alstom With U*50 As GENERAL-CA Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Linedata With Rail
-    Add 1 Rail Segments
+    Create PNR With Active Air Segments For Client Alstom With Udid 50 GENERAL-CA, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    [Teardown]    Logout To Amadeus Sell Connect
     
-Verify That PNRs For Client Linedata Can Skip Approval
-    [Tags]    us13271
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Linedata Air Only, Skip Approval
-    Fill Up Approval Fields
-    Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser

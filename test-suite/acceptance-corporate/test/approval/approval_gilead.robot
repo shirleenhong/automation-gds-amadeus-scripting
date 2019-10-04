@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    gilead
+
 *** Test Cases ***
 Verify That PNRs For Client Gilead Is Correctly Queued To Approval Queue For Moxie Approval E-Mail Required
     [Tags]    us13271

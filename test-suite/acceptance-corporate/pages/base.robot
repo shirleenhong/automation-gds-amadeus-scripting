@@ -205,7 +205,7 @@ Click Fees Panel
     
 Navigate From Fees
     [Arguments]    ${destination_page}
-    Run Keyword If    "${destination_page}" == "Ticketing"    Click Ticketing Panel
+    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
     
 Get Client Name
     [Arguments]    ${test_data_string}

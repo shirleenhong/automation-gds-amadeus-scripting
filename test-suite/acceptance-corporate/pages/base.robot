@@ -25,6 +25,7 @@ ${checkbox_onHold}    css=#chkOnHold
 ${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
 ${button_main_menu}    //button[contains(text(), 'Back To Main Menu')]
 ${button_save}    //button[contains(text(), 'Save')]
+${text_warning}    //div[@class='col message']
 
 *** Keywords ***
 Enter Value
@@ -167,6 +168,7 @@ Navigate From Ticketing
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
+    ...    ELSE    Collapse Ticketing Panel
 
 Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
@@ -186,6 +188,11 @@ Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Ticketing
+    
+Collapse Ticketing Panel
+    Wait Until Element Is Visible    ${panel_ticketing}    60
+    Click Element    ${panel_ticketing}
+    Set Test Variable    ${current_page}    Full Wrap PNR
 
 Select Counselor Identity: ${identity}
     Navigate To Page CWT Corporate

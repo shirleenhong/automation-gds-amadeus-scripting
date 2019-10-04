@@ -22,7 +22,7 @@ ${input_file_finisher_yes}    //input[@id="rbFileFinisher"][@ng-reflect-value='Y
 ${input_file_finisher_no}    //input[@id="rbFileFinisher"][@ng-reflect-value='NO']
 ${tab_waivers}   //span[contains(text(), 'Waivers')]
 ${tab_reportingRemarks}       //span[contains(text(), 'Reporting Remarks')]
-${list_routing_code}    //select[@formcontrolname='reportingRemarks']
+${list_routing_code}    //select[@formcontrolname='bspRouteCode']
 ${button_addWaiver}    //i[@id='add']
 ${list_waivers}    //select[@id='waiver']
 ${button_removeWaiver}    css=#remove
@@ -330,14 +330,18 @@ Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multipl
 
 Verify Routing Code Dropdown Is Displayed With Correct Values
     Navigate To Page Reporting Remarks
-    Click Element    ${list_routing_code}
-    List Selection Should Be    ${list_routing_code}    USA incl. all US Territories and Possessions    Mexico/Central America/Canal Zone/Costa Rica
+    #Click Element    ${list_routing_code}
+    ${list}     Get Selected List Labels         ${list_routing_code}
+    Log     ${list}
+    Run Keyword And Continue On Failure    List Selection Should Be    ${list_routing_code}    USA incl. all US Territories and Possessions    Mexico/Central America/Canal Zone/Costa Rica
     ...    Caribbean and Bermuda    South America    Europe-incl. Morocco/Tunisia/Algeria/Greenland    Africa    Middle East/Western Asia
     ...    Asia incl. India    Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam    Canada and St. Pierre et Miquelon
     
 Verify Routing Code Dropdown Is A Required Field
+    Fill Up Ticketing Panel With Default Values
+    Scroll Element Into View    ${list_routing_code}
     Click Submit To PNR
-    Element Should Contain    ${warning_message}     This is a required field
+    Element Should Contain    ${text_warning}     Please make sure all the inputs are valid and put required values!
     
 Fill Up Routing Code With ${selection}
     Navigate To Page Reporting Remarks

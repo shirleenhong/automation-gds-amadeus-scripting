@@ -13,7 +13,6 @@ export class CorpRemarksService {
   constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService, private rms: RemarksManagerService) {}
 
   /**
-   * WIP
    * US11820: Write or prepare the seats for the PNR
    * based on specific conditions. See US11820.
    *
@@ -22,7 +21,6 @@ export class CorpRemarksService {
    */
   public writeSeatRemarks(seats: Array<SeatModel>): void {
     for (const seat of seats) {
-
       // Work-around: explicitly cast seat.id to number
       seat.id = parseFloat(seat.id.toString());
 
@@ -88,7 +86,6 @@ export class CorpRemarksService {
     let model = new IrdModel();
     const irdRemarksModel = new Array<IrdModel>();
     for (const rm of this.pms.pnrObj.rmElements) {
-
       let regex = /----------CWT IRD RATE NBR(?<nbrNo>.*)-------(?<irdStatus>.*)/g;
       let match = regex.exec(rm.freeFlowText);
       if (match) {

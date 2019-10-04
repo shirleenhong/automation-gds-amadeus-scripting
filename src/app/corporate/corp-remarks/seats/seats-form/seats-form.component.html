@@ -6,44 +6,65 @@
 </div>
 
 <div class="modal-body">
-  <table class="table table-bordered table-hover">
-    <thead>
-      <th>
-        <div class="checkbox align-vertical">
-          <input type="checkbox" />
-        </div>
-      </th>
-      <th>Seat Remark</th>
-      <th>Seat Type</th>
-      <th>Seat Number</th>
-      <th>Segment(s)</th>
-    </thead>
 
-    <tbody>
-      <tr *ngFor="let remarkOption of remarkOptions; let i = index">
-        <td>
-          <div class="checkbox">
-            <input type="checkbox" />
-          </div>
-        </td>
-        <td>{{ remarkOption.text }}</td>
-        <td>
-          <select name="seatType" id="seatType" class="form-control">
-            <option></option>
-            <option *ngFor="let type of types" [value]="type">
-              {{ type }}
-            </option>
-          </select>
-        </td>
-        <td>
-          <input type="text" class="form-control" />
-        </td>
-        <td>
-          <app-segment-select name="segmentIds" id="seatsFormSegmentId" #segmentApp></app-segment-select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <form [formGroup]="seatsForm">
+    <button (click)="addSeat()">Add Seat</button>
+    <div formArrayName="seatsFormArray">
+
+      <p>
+        Status: {{ seatsForm.status }}
+      </p>
+      <p>
+        Value: {{ seatsForm.value | json }}
+      </p>
+      <p>
+        seatsFormArray.controls.length: {{ seatsFormArray.controls.length }}
+      </p>
+      <p>
+        seatsFormArray.controls.value: {{ seatsFormArray.controls.values }}
+      </p>
+
+      <table class="table table-bordered table-hover">
+
+        <thead>
+          <th>
+            <div class="checkbox align-vertical">
+              <input type="checkbox" />
+            </div>
+          </th>
+          <th>Seat Remark</th>
+          <th>Seat Type</th>
+          <th>Seat Number</th>
+          <th>Segment(s)</th>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let seat of seatsFormArray.controls; let i = index" [formGroupName]="i">
+            <td>
+              <div class="checkbox">
+                <input type="checkbox">
+              </div>
+            </td>
+            <td>
+              <div>
+                <input formControlName="id" />
+              </div>
+            </td>
+            <td>
+              <input formControlName="type" />
+            </td>
+            <td>
+              <input formControlName="number" />
+            </td>
+            <td>
+              <input formControlName="segmentIds" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+
 </div>
 
 <div class="modal-footer">

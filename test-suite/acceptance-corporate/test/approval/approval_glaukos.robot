@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    glaukos
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Glaukos Is Correctly Queued For Approval When Travel is Booked First Class is Selected
     [Tags]    us13271

@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    top
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Top Aces Is Queued For Approval
     [Tags]    us13271

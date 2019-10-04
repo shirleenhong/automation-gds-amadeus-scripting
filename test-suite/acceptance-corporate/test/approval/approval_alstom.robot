@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    alstom
+
 *** Test Cases ***
 Verify That PNRs For Client Alstom Is Correctly Queued To Approval Queue
     [Tags]    us13271

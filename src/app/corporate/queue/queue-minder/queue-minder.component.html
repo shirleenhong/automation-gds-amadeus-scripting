@@ -1,0 +1,45 @@
+<div [formGroup]="queueMinderForm" class="form-group" style="margin-top:10px;padding-left: 10px">
+  <table class="feeTable">
+    <tr>
+      <th width="50px">
+        <div class="">OID</div>
+      </th>
+      <th width="150px">
+        <div class="">Queue Number</div>
+      </th>
+      <th width="150px">
+        <div class="cl">Queue Category</div>
+      </th>
+    </tr>
+
+    <tbody formArrayName="segments"
+      *ngFor="let item of this.queueMinderForm.get('segments')['controls']; let i = index">
+      <tr [formGroupName]="i">
+        <td widhth="50px">
+          <div>
+            <input type="checkbox" name="applyQueue" formControlName="applyQueue" id="applyQueue"
+              (change)="processQueue(item, $event.target.checked)" />
+          </div>
+        </td>
+
+        <td width="50px">
+          <input type="text" class="form-control" formControlName="oid" name="oid" id="oid" />
+        </td>
+        <td width="50px">
+          <input type="text" class="form-control" formControlName="queueNumber" name="queueNumber" id="queueNumber" />
+        </td>
+
+        <td width="150px">
+          <input type="text" class="form-control" formControlName="category" name="category" id="category" />
+        </td>
+        <td style="width:10%">
+          &nbsp;
+          <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
+          &nbsp;
+          <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>
+        </td>
+        <input type="hidden" class="form-control" formControlName="feeType" name="feeType" id="feeType" />
+      </tr>
+    </tbody>
+  </table>
+</div>

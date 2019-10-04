@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DDBService } from 'src/app/service/ddb.service';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
 import { IrdModel } from 'src/app/models/pnr/ird-remark.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DecimalPipe } from '@angular/common';
@@ -18,8 +18,10 @@ export class IrdRemarksComponent implements OnInit {
   irdRemarksDetails = new Array<IrdModel>();
   listIrdStatus: Array<SelectItem>;
   listLowStatus: Array<SelectItem>;
+  listnolfoStatus: Array<SelectItem>;
   decPipe = new DecimalPipe('en-US');
-  showLowStatus = false;
+  isNoLfo = false;
+
   constructor(private fb: FormBuilder,
     private ddbService: DDBService,
     private corpRemarkService: CorpRemarksService) {
@@ -38,61 +40,75 @@ export class IrdRemarksComponent implements OnInit {
     const items = this.irdGroup.get('irdItems') as FormArray;
     this.irdRemarksDetails.forEach(element => {
       const status = this.populateStatus(element);
+      const hasStatus = (element.status !== '');
       const group = this.fb.group({
         irdNumber: new FormControl(element.irdNumber),
-        irdStatus: new FormControl(status),
+        irdStatus: new FormControl(status, [Validators.required]),
         currency: new FormControl(element.currency),
         irdSavings: new FormControl(element.irdSavings),
         lowSavings: new FormControl(element.lowSavings),
-        lowSavingStatus: new FormControl()
+        lowSavingStatus: new FormControl(status, [Validators.required]),
+        noLfoStatus: new FormControl(status)
       });
       items.push(group);
-      this.enableControls(status, group);
-    });
-  }
 
-  private enableControls(status, group: FormGroup): void {
-    switch (status) {
-      case 'NO LFO':
-      case 'ACCEPTEDCP':
-        group.get('irdStatus').disable();
-        group.get('lowSavingStatus').disable();
-        this.listIrdStatus.push({ itemText: 'NO LFO', itemValue: 'NO LFO' });
-        break;
-      case 'ACCEPTEDLFO':
-        group.get('irdStatus').setValue('');
-        group.get('irdStatus').disable();
-        group.get('lowSavingStatus').enable();
-        break;
-      default:
-        group.get('irdStatus').enable();
-        group.get('lowSavingStatus').enable();
-        this.listIrdStatus = this.listIrdStatus.filter(x => x.itemText !== 'NO LFO');
-    }
+      this.enableControl(status, group, hasStatus);
+    });
   }
 
   private populateStatusList(): void {
     this.listIrdStatus = [
       { itemText: 'ACCEPTEDCP', itemValue: 'ACCEPTEDCP' },
-      { itemText: 'DECLINED', itemValue: 'DECLINED' }];
+      { itemText: 'DECLINED', itemValue: 'DECLINEDCP' }];
 
     this.listLowStatus = [
       { itemText: 'ACCEPTEDLFO', itemValue: 'ACCEPTEDLFO' },
-      { itemText: 'DECLINED', itemValue: 'DECLINED' }];
+      { itemText: 'DECLINED', itemValue: 'DECLINEDLFO' }];
+
+    this.listnolfoStatus = [
+      { itemText: 'NO LFO', itemValue: 'NO LFO' }];
+  }
+
+  private enableControl(status: string, group: FormGroup, hasStatus: boolean) {
+    if (hasStatus) {
+      group.get('irdStatus').disable();
+      group.get('lowSavingStatus').disable();
+    } else {
+      switch (status) {
+        case 'NO LFO':
+        case 'ACCEPTEDCP':
+          group.get('irdStatus').disable();
+          group.get('lowSavingStatus').disable();
+          break;
+        case 'DECLINEDLFO':
+          group.get('irdStatus').disable();
+          group.get('lowSavingStatus').enable();
+          group.get('lowSavingStatus').setValue('');
+          break;
+        default:
+          group.get('irdStatus').enable();
+          group.get('lowSavingStatus').disable();
+      }
+    }
   }
 
   private populateStatus(element): string {
     if (element.status) {
+      if (element.status === 'DECLINED') {
+        return 'DECLINEDLFO';
+      }
       return element.status;
     }
+
     if (Number(element.irdSavings) <= 0 && Number(element.lowSavings) <= 0) {
+      this.isNoLfo = true;
       return 'NO LFO';
     }
     if (Number(element.irdSavings) > 0 && Number(element.lowSavings) <= 0) {
       return 'ACCEPTEDCP';
     }
     if (Number(element.irdSavings) <= 0 && Number(element.lowSavings) > 0) {
-      return 'ACCEPTEDLO';
+      return 'DECLINEDLFO';
     }
     return '';
   }
@@ -105,9 +121,13 @@ export class IrdRemarksComponent implements OnInit {
     }
   }
 
-  irdChangeValue(item): void {
-    if (item === 'DECLINED') {
-      this.showLowStatus = true;
+  irdChangeValue(item, i): void {
+    const items = this.irdGroup.get('irdItems') as FormArray;
+    if (item === 'DECLINEDCP') {
+      items.controls[i].get('lowSavingStatus').enable();
+    } else {
+      items.controls[i].get('lowSavingStatus').disable();
+      items.controls[i].get('lowSavingStatus').setValue('');
     }
   }
 

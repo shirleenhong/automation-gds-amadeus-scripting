@@ -10,7 +10,7 @@ import { FormGroup, FormArray } from '@angular/forms';
   providedIn: 'root'
 })
 export class CorpRemarksService {
-  constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService, private rms: RemarksManagerService) {}
+  constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService, private rms: RemarksManagerService) { }
 
   /**
    * WIP
@@ -137,12 +137,15 @@ export class CorpRemarksService {
       const irdSavings = new Map<string, string>();
       const lowFareSavings = new Map<string, string>();
 
+
+
       if (group.get('lowSavingStatus').value) {
         status = group.get('lowSavingStatus').value;
       } else {
         status = group.get('irdStatus').value;
       }
 
+      status = (status.indexOf('DECLINED') > -1) ? 'DECLINED' : status;
       nbrStatus.set('NbrNo', group.get('irdNumber').value);
       nbrStatus.set('IrdStatus', status);
       irdSavings.set('IrdCurrency', group.get('currency').value);

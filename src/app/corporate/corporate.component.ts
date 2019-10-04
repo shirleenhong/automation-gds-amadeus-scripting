@@ -127,7 +127,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentsComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
-    // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+    this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
     return this.validModel.isCorporateAllValid();

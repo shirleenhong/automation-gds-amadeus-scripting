@@ -164,11 +164,6 @@ export class ReportingRemarkService {
     }
     const remText = reporting.routeCode + '' + reporting.tripType;
     rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
-
-    const existNumber = this.pnrService.getFSLineNumber();
-    if (existNumber !== '') {
-      rmGroup.deleteRemarkByIds.push(existNumber);
-    }
   }
   getRemark(remarkText, remarkType, remarkCategory) {
     const rem = new RemarkModel();

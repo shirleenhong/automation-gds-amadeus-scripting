@@ -2,13 +2,14 @@
   <div class="col" *ngIf="isTripTypeCorporate">
     <br />
     <div class="row form-group">
-      <div class="col">
+      <div class="col-md-5 bsp-routing-remark">
         BSP Routing Code :
-        <select id="bspRouteCode" class="form-control" formControlName="bspRouteCode" name="bspRouteCode"
-          (change) = "getCountryDest($event.target.value)" required>
+        <select id="bspRouteCode" class="form-control bsp-select-routing-remark" formControlName="bspRouteCode"
+          name="bspRouteCode" (change)="getCountryDest($event.target.value)" required>
           <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
         </select>
       </div>
     </div>
+  </div>

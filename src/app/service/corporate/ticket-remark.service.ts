@@ -375,7 +375,10 @@ export class TicketRemarkService {
           }
         });
       });
+    } else {
+      remarkList.push(this.remarkHelper.createRemark('NO APPROVAL REQUIRED', 'RM', 'G'));
     }
+
     return remarkList;
   }
   getSplitRemark(remark: string) {

@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    imperial
+
 *** Test Cases ***
 Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Queue For DOM Booked Less than 14 days
     [Tags]    us13271

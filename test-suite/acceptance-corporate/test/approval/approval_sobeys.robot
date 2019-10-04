@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    sobeys
+
 *** Test Cases ***
 Verify That PNRs For Client Sobeys Is Writing Correct Remarks When Traveller Received Approval
     [Tags]    us13271

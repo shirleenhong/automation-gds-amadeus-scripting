@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    securitas
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP-CA 
     [Tags]    us13271

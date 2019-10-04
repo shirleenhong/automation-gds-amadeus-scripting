@@ -236,7 +236,30 @@ export class ApprovalRuleService {
   }
 
   getPrimaryApprovalList(): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    const primaryList = this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    let ctr = 1;
+    let done = false;
+    let sortedList = [];
+    while (!done) {
+      const list = primaryList
+        .filter((x) => x.approvalRules.indexOf('[UI_PRIMARY_' + ctr) === 0)
+        .sort((a, b) => {
+          if (a.getRuleText() < b.getRuleText()) {
+            return -1;
+          } else if (a.getRuleText() > b.getRuleText()) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      if (list && list.length > 0) {
+        sortedList = sortedList.concat(list);
+        ctr += 1;
+      } else {
+        done = true;
+      }
+    }
+    return sortedList;
   }
 
   getWriteApproval(index?: string): ApprovalItem[] {

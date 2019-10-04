@@ -51,6 +51,7 @@ export class IrdRemarksComponent implements OnInit {
         noLfoStatus: new FormControl(status)
       });
       items.push(group);
+
       this.enableControl(status, group, hasStatus);
     });
   }

@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    perkins
+
 *** Test Cases ***
 Verify That PNRs For Client Perkins Elmer With Trip Approved By Remark Do Not Go Thru Approval Process
     [Tags]    us13271

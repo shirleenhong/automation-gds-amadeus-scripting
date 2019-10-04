@@ -5,6 +5,9 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { ReportingBSPComponent } from 'src/app/corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingNonbspComponent } from 'src/app/corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
+import { ReportingViewModel } from 'src/app/models/reporting-view.model';
+import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -146,5 +149,27 @@ export class ReportingRemarkService {
         this.remarksManager.createPlaceholderValues(waiverRemark, null, segmentrelate);
       }
     }
+  }
+  public GetRoutingRemark(reporting: ReportingViewModel) {
+    const rmGroup = new RemarkGroup();
+    rmGroup.group = 'Routing';
+    rmGroup.remarks = new Array<RemarkModel>();
+    rmGroup.deleteRemarkByIds = new Array<string>();
+    this.getFSRemarks(reporting, rmGroup);
+    return rmGroup;
+  }
+  getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
+    if (reporting.routeCode == null) {
+      return;
+    }
+    const remText = reporting.routeCode + '' + reporting.tripType;
+    rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
+  }
+  getRemark(remarkText, remarkType, remarkCategory) {
+    const rem = new RemarkModel();
+    rem.remarkType = remarkType;
+    rem.remarkText = remarkText;
+    rem.category = remarkCategory;
+    return rem;
   }
 }

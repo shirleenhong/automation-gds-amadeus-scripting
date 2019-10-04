@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    agilent
+
 *** Test Cases ***
 Verify That PNRs For Client Agilent Exit Approval Process When Country Iran/Iraq/Afghanistan Is Selected
     [Tags]    us13271

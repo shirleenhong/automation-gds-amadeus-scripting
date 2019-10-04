@@ -1,0 +1,29 @@
+<form [formGroup]="documentForm">
+  <div class="documentContainer">
+    <div formArrayName="items" *ngFor="let item of this.documentForm.get('items')['controls']; let i = index;"
+      class="col">
+      <div [formGroupName]="i">
+        <table style="width:100%">
+          <tr>
+            <td style="width:3%">
+              RMG/
+            </td>
+            <td style="width:50%">
+              <input formControlName="documentation" type="text" class="form-control" maxlength="55"
+                style="width:100%" />
+            </td>
+            <td style="width:10%">
+              &nbsp;
+              <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
+              &nbsp;
+              <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+
+  </div>
+
+</form>

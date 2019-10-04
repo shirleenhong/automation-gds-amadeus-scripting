@@ -49,7 +49,7 @@ export class TicketRemarkService {
     const linesToDelete: Array<number> = new Array();
 
     const existingTkLineNum = this.pnrService.getTkLineNumber();
-
+    const existingFSLineNum = this.pnrService.getFSLineNumber();
     if (existingTkLineNum >= 0) {
       linesToDelete.push(existingTkLineNum);
 
@@ -57,6 +57,9 @@ export class TicketRemarkService {
       if (existingRirLineNum && existingRirLineNum >= 0) {
         linesToDelete.push(existingRirLineNum);
       }
+    }
+    if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
+      linesToDelete.push(existingFSLineNum);
     }
 
     if (linesToDelete.length > 0) {

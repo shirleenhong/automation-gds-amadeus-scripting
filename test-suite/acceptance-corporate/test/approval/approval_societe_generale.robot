@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    societe
+
 *** Test Cases ***
 Verify That PNRs For Client Societe Generale Exit Approval Process When First Primary Reason Is Selected
     [Tags]    us13271
@@ -33,8 +36,8 @@ Verify That PNRs For Client Societe Generale Can Skip Approval
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Societe Generale, Mix Segments, Skip Approval
     Fill Up Approval Fields
-    #Verify PNR Approval Is Processed Correctly
-    #[Teardown]     Close Browser
+    Verify PNR Approval Is Processed Correctly
+    [Teardown]     Close Browser
     
 Verify That PNRs For Client Societe Generale With FOP That Is Not AX Do Not Go Thru Approval Process
     [Tags]    us13271

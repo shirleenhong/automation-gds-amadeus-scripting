@@ -27,6 +27,7 @@ import { WaiversComponent } from './corporate/reporting/waivers/waivers.componen
 import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 import { ReportingRemarksComponent } from './corporate/reporting/reporting-remarks/reporting-remarks.component';
 import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-remarks.component';
+import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-re
     AddWaiverComponent,
     ReportingRemarksComponent,
     IrdRemarksComponent,
-    AddWaiverComponent
+    AddWaiverComponent,
+    DocumentPnrComponent
   ],
   imports: [
     BrowserModule,

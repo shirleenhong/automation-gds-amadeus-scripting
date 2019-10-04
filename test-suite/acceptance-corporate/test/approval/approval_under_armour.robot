@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    under
+
 *** Test Cases ***
 Verify That PNRs For Client Under Armour Are Queued For Approval When 1st Primary Approval Reason Is Selected
     [Tags]    us13271

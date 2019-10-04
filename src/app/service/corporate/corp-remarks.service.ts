@@ -5,12 +5,15 @@ import { PnrService } from '../pnr.service';
 import { IrdModel } from 'src/app/models/pnr/ird-remark.model';
 import { IrdRemarksComponent } from 'src/app/corporate/corp-remarks/ird-remarks/ird-remarks.component';
 import { FormGroup, FormArray } from '@angular/forms';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { RemarkHelper } from 'src/app/helper/remark-helper';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CorpRemarksService {
-  constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService, private rms: RemarksManagerService) {}
+  constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService,
+    private rms: RemarksManagerService, private remarkHelper: RemarkHelper) { }
 
   /**
    * WIP
@@ -153,5 +156,19 @@ export class CorpRemarksService {
       this.rms.createPlaceholderValues(irdSavings);
       this.rms.createPlaceholderValues(lowFareSavings);
     }
+  }
+
+  public buildDocumentRemarks(group: FormGroup): Array<RemarkModel> {
+    let remText = '';
+    const remarkList = new Array<RemarkModel>();
+
+    const arr = group.get('items') as FormArray;
+    for (const c of arr.controls) {
+      remText = c.get('documentation').value;
+      if (remText) {
+        remarkList.push(this.remarkHelper.createRemark(remText, 'RM', 'G'));
+      }
+    }
+    return remarkList;
   }
 }

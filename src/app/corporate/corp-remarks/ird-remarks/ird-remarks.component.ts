@@ -21,8 +21,8 @@ export class IrdRemarksComponent implements OnInit {
   decPipe = new DecimalPipe('en-US');
   showLowStatus = false;
   constructor(private fb: FormBuilder,
-              private ddbService: DDBService,
-              private corpRemarkService: CorpRemarksService) {
+    private ddbService: DDBService,
+    private corpRemarkService: CorpRemarksService) {
   }
 
   async ngOnInit() {
@@ -47,20 +47,32 @@ export class IrdRemarksComponent implements OnInit {
         lowSavingStatus: new FormControl()
       });
       items.push(group);
+      this.enableControls(status, group);
+    });
+  }
 
-      if (status) {
+  private enableControls(status, group: FormGroup): void {
+    switch (status) {
+      case 'NO LFO':
+      case 'ACCEPTEDCP':
         group.get('irdStatus').disable();
         group.get('lowSavingStatus').disable();
-      } else {
+        this.listIrdStatus.push({ itemText: 'NO LFO', itemValue: 'NO LFO' });
+        break;
+      case 'ACCEPTEDLFO':
+        group.get('irdStatus').setValue('');
+        group.get('irdStatus').disable();
+        group.get('lowSavingStatus').enable();
+        break;
+      default:
         group.get('irdStatus').enable();
         group.get('lowSavingStatus').enable();
-      }
-    });
+        this.listIrdStatus = this.listIrdStatus.filter(x => x.itemText !== 'NO LFO');
+    }
   }
 
   private populateStatusList(): void {
     this.listIrdStatus = [
-      { itemText: 'NO LFO', itemValue: 'NO LFO' },
       { itemText: 'ACCEPTEDCP', itemValue: 'ACCEPTEDCP' },
       { itemText: 'DECLINED', itemValue: 'DECLINED' }];
 
@@ -80,7 +92,7 @@ export class IrdRemarksComponent implements OnInit {
       return 'ACCEPTEDCP';
     }
     if (Number(element.irdSavings) <= 0 && Number(element.lowSavings) > 0) {
-      return 'DECLINED';
+      return 'ACCEPTEDLO';
     }
     return '';
   }

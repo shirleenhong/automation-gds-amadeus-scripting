@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { ClientFeeItem } from 'src/app/models/ddb/client-fee-item.model';
@@ -158,7 +158,7 @@ export class SupplementalFeesComponent implements OnInit {
     return this.fb.group({
       isChange: new FormControl(''),
       code: new FormControl(''),
-      fee: new FormControl('', [Validators.required]),
+      fee: new FormControl({ value: '', disabled: true }),
       noFeeCode: new FormControl(''),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),

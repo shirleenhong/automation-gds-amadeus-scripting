@@ -25,6 +25,7 @@ ${checkbox_onHold}    css=#chkOnHold
 ${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
 ${button_main_menu}    //button[contains(text(), 'Back To Main Menu')]
 ${button_save}    //button[contains(text(), 'Save')]
+${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Remarks')]
 
 *** Keywords ***
 Enter Value

@@ -71,7 +71,7 @@ Verify That Special Fee Is Written In the PNR For Rail
     [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Add Passive Rail Segment For CFA With Special Fee
-    Verify Default Values Of Special Fee For Air Ticket
+    Verify Default Values Of Special Fee For Rail Ticket
     Verify That Special Fee Is Written In The PNR For Rail
     Delete Fare and Itinerary
     [Teardown]    Close Browser

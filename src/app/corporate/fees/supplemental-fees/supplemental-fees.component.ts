@@ -158,7 +158,7 @@ export class SupplementalFeesComponent implements OnInit {
     return this.fb.group({
       isChange: new FormControl(''),
       code: new FormControl(''),
-      fee: new FormControl(''),
+      fee: new FormControl({ value: '', disabled: true }),
       noFeeCode: new FormControl(''),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),

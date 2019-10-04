@@ -376,7 +376,10 @@ export class TicketRemarkService {
           remarkList.push(this.remarkHelper.createRemark(remark, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
         }
       });
+    } else {
+      remarkList.push(this.remarkHelper.createRemark('NO APPROVAL REQUIRED', 'RM', 'G'));
     }
+
     return remarkList;
   }
 

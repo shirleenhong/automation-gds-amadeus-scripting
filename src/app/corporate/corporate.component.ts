@@ -25,6 +25,9 @@ import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueRemarkService } from '../service/queue-remark.service';
+import { ItineraryAndQueueComponent } from 'src/app/corporate/itinerary-and-queue/itinerary-and-queue.component';
+import { ItineraryRemarkService } from '../service/corporate/itinerary-remark.service';
+
 
 @Component({
   selector: 'app-corporate',
@@ -40,6 +43,7 @@ export class CorporateComponent implements OnInit {
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
+  @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -49,7 +53,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
 
   @Input() overrideValue: any;
-
+  
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
@@ -63,7 +67,8 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService
+    private queueService: QueueRemarkService,
+    private itineraryService: ItineraryRemarkService,
   ) {
     this.initData();
   }
@@ -75,12 +80,25 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnr(queueCollection?: Array<QueuePlaceModel>) {
-    this.errorPnrMsg = '';
-    await this.getPnrService();
-    if (queueCollection) {
-      this.queueService.queuePNR(queueCollection);
+    try {
+      this.errorPnrMsg = '';
+      await this.getPnrService();
+      if (queueCollection) {
+        await this.queueService.queuePNR(queueCollection);
+      }
+      if (this.pnrService.errorMessage.indexOf('Error') === 0) {
+        this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
+      }
+      if (this.modalRef) {
+        this.modalRef.hide();
+      }
+    }
+    catch (e) {
+      console.log(e);
     }
   }
+
+  
 
   async getPnrService() {
     this.pnrService.isPNRLoaded = false;
@@ -251,5 +269,45 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+  }
+
+ async sendItineraryAndQueue() {
+     await this.getPnrService();
+      this.workflow = "sendQueue";
+    }
+
+  async SendItineraryAndQueue() { 
+    if (!this.itineraryqueueComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Sending Itinerary and Queueing...');
+    let queueCollection = Array<QueuePlaceModel>();
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+    let teamQueueCollection = Array<QueuePlaceModel>();
+
+    if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      teamQueueCollection = this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      
+    }
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    queueCollection = queueCollection.concat(teamQueueCollection);
+   
+    try {
+        this.isPnrLoaded = false;
+        this.getPnr(queueCollection);
+        this.workflow = '';
+      }
+      catch(error) {
+        this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error,'Error','Error');
+        console.log(JSON.stringify(error));
+      }
+    
   }
 }

@@ -58,7 +58,7 @@ export class TicketRemarkService {
         linesToDelete.push(existingRirLineNum);
       }
     }
-    if (existingFSLineNum >= 0) {
+    if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
       linesToDelete.push(existingFSLineNum);
     }
 

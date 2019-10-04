@@ -21,7 +21,7 @@ Verify That PNRs For Client Sobeys Is Writing Correct Remarks When Traveller Rec
     [Teardown]    Close Browser
      
 Verify That PNRs For Client Sobeys Is Writing Correct Remarks When Traveller Obtain Approval
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sobeys With Any Udid, Air with Hotel and Car, Traveller Must Obtain Approval
     Fill Up Approval Fields
@@ -37,7 +37,7 @@ Verify That PNRs For Client Sobeys Is Writing Correct Remarks When PNR Has U47 A
     [Teardown]    Close Browser
     
 Verify That PNRs For Client Sobeys Is Writing Correct Remarks For Hotel Only And Traveller Obtain Approval
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sobeys With Any Udid, Hotel Only, Traveller Must Obtain Approval
     Fill Up Approval Fields

@@ -120,8 +120,7 @@ Create Multiple Ticket For The PNR
 	    \    Press Key    ${input_commandText}    \\13
 
 Select Supplemental Fee For First Ticket
-    Wait Until Element Is Visible    ${row_supplemental_fees}[1]${button_addSupFee}    30
-    Click Element    ${tab_supplemental_fees}[1]${button_addSupFee}
+    Click Add Sup Fee Button 1
     Wait Until Element Is Visible    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}    30
     Select Checkbox    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}  
     Take Screenshot  
@@ -130,8 +129,8 @@ Select Supplemental Fee For First Ticket
     Click Element At Coordinates    ${input_feeCode}    0    0       
 
 Click Add Sup Fee Button ${add_fee_index}
-    Wait Until Element Is Visible    ${tab_supplemental_fees}[${add_fee_index}]${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    30
-    Click Element At Coordinates    ${tab_supplemental_fees}[${add_fee_index}]${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    0    0
+    Wait Until Element Is Visible    ${tab_supplemental_fees}[1]${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    30
+    Click Element At Coordinates    ${tab_supplemental_fees}[1]${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    0    0
     Wait Until Element Is Visible    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}    30
     Sleep    4
     
@@ -150,6 +149,7 @@ Select Supplemental Fees For All TSTs
     Navigate To Page Fees
     Click Add Sup Fee Button 1
     Select Multiple Supplemental Fee   1   2
+    Click Add Fee Button
     Click Add Sup Fee Button 2
     Select Multiple Supplemental Fee   1   2
 
@@ -169,20 +169,15 @@ Move Single Passenger With Multiple Segment For Transborder With TSTs
     Move Single Passenger For Fees
     Add Transborder Segment And Store Multiple Fare
     Add CFA Remark    RM*CF/-RH60000000N
-    # Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S3 
-    # Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
+    Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Sleep    4
-    # Create Multiple Ticket For The PNR
-    # Create Multiple TKT Exchange PNR In The GDS
-   
+    Create Multiple TKT Exchange PNR In The GDS
+       
 Move Single Passenger With Single Segment For International With Non Exchange Ticket
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-XXP0000000N
     Add International Segment And Store Single Fare
-    Add SSR Document In The PNR    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-JUAREZ-ROSE/P1/S2-3
-    Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
-    Sleep    4
-    Create Single Ticket For The PNR    
+    Sleep    4  
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
@@ -191,6 +186,11 @@ Move Single Passenger With Transborder Segments And Single Ticket For OBT
     
 Move Single Passenger With Transborder Segments And Single Ticket
     Create And Ticket PNR With Airline Code AC
+    
+Add Passive Rail Segment For CFA With Special Fee
+    Move Single Passenger For Fees
+    Add CFA Remark    RM*CF/-XXP0000000C
+    Add 1 Rail Segments
     
 Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Navigate To Page Fees
@@ -236,10 +236,20 @@ Verify Default Values Of Special Fee For Air Ticket
     Navigate To Page Fees
     Verify Default Fee Code in Ticket Segments    ATI
     Verify Default Fee In Ticket Segments    60.00
+
+Verify Default Values Of Special Fee For Air Ticket With 0.01 In The DB
+    Navigate To Page Fees
+    Verify Default Fee Code in Ticket Segments    ATI
+    Verify Default Fee In Ticket Segments    ${EMPTY}
     
 Verify That Special Fee Is Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATI60.00
+    Switch To Command Page 
+    
+Verify That Special Fee Is Written In The PNR For Rail
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTI60.00
     Switch To Command Page 
 
 Verify Selected No Fee Code Is Written
@@ -251,6 +261,7 @@ Verify That Multiple Supplemental Fees Are Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-ATB27.00/ESD/ESI
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE2-ATB27.00/ESD/ESI
+    Switch To Command Page
     
 Book Multiple Segments With Air Car Rail And Hotel
     Add Canada Domestic Segment And Store Multiple Fare

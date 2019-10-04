@@ -12,7 +12,7 @@ Resource          ../../pages/fees.robot
 
 *** Test Cases ***
 Verify OBT PNR Added Remarks For Supplemental Fees
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Add APAY Ticketing Details For Single Segment
@@ -21,7 +21,7 @@ Verify OBT PNR Added Remarks For Supplemental Fees
     [Teardown]    Close Browser
    
 Verify Non OBT PNR Added Remarks For Supplemental Fees    
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Transborder Segments And Single Ticket
     Add APAY Ticketing Details For Single Segment
@@ -30,7 +30,7 @@ Verify Non OBT PNR Added Remarks For Supplemental Fees
     [Teardown]    Close Browser
 
 Verify That Selected No Fee Code Is Written For Non-OBT With APAY
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Transborder Segments And Single Ticket
     Add APAY Ticketing Details For Single Segment
@@ -41,25 +41,25 @@ Verify That Selected No Fee Code Is Written For Non-OBT With APAY
     [Teardown]    Close Browser
     
 Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Verify Default Values For Schedule Change Fees 
     Verify Selected Schedule Change Fees Are written In The PNR
-    # Delete Fare and Itinerary
-    # [Teardown]    Close Browser
+    Delete Fare and Itinerary
+    [Teardown]    Close Browser
     
 Verify That Transborder PNR Added Remarks For Flat Fee
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Transborder With TSTs
     Verify Default Values Of Exchange Flat Fee With Supplemental Fee
-    Verify That Exchange Flat Fees Are Written In The PNR
+    # Verify That Exchange Flat Fees Are Written In The PNR
     # Delete Fare and Itinerary
     # [Teardown]    Close Browser
     
 Verify That International PNR Added Remarks For Special Fee
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Single Segment For International With Non Exchange Ticket
     Verify Default Values Of Special Fee For Air Ticket
@@ -67,8 +67,23 @@ Verify That International PNR Added Remarks For Special Fee
     Delete Fare and Itinerary
     [Teardown]    Close Browser
     
+Verify That Special Fee Is Written In the PNR For Rail
+    [Tags]    us9619
+    Login To Amadeus Sell Connect Acceptance
+    Add Passive Rail Segment For CFA With Special Fee
+    Verify Default Values Of Special Fee For Air Ticket
+    Verify That Special Fee Is Written In The PNR
+    Delete Fare and Itinerary
+    [Teardown]    Close Browser
+    
+Verify That Special Fee Amount Entered Is Written In The PNR
+    [Tags]    us9619
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger With Single Segment For International With Non Exchange Ticket
+    
+    
 Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
-    [Tags]    us9619    not_ready
+    [Tags]    us9619
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger With Multiple Segment For Transborder With TSTs
     Select Supplemental Fees For All TSTs

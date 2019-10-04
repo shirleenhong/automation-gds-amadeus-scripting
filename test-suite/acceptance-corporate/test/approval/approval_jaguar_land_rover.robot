@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    jaguar
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Jaguar Land Rover Is Correctly Queued For Approval When Travel to any High Risk Country below must have ECM Approval Is Selected
     [Tags]    us13271

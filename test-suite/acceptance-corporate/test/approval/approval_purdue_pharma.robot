@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    purdue
+
 *** Test Cases ***
 Verify That Air Only, Intl Route PNRs For Client Purdue Pharma Is Correctly Queued To Approval Queue
     [Tags]    us13271

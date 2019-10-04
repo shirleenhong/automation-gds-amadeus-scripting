@@ -12,61 +12,61 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Variables ***
-${test_file_name}    sleeman
+${test_file_name}    viavi
 
 *** Test Cases ***
-Verify That PNRs For Client Sleeman Breweries Are Correctly Queued For Approval
+Verify That Air Only PNRs For Client Viavi Are Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EMPLOYEE, Air Only
+    Create PNR With Active Air Segments For Client VIAVI Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Sleeman Breweries With Udid50 Guest Do Not Go Thru Approval Process
+Verify That PNRs For Client Viavi Can Skip Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 GUEST, Air Only
+    Create PNR With Active Air Segments For Client VIAVI Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Sleeman Breweries With Udid50 Executive Do Not Go Thru Approval Process
+Verify That Car Only PNRs For Client Viavi Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EXECUTIVE, Air Only
+    Create PNR For Client VIAVI Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car Only PNRs For Client Sleeman Breweries Do Not Go Thru Approval Process
+Verify That Hotel Only PNRs For Client Viavi Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Sleeman Breweries With Udid 50 EMPLOYEE, Car Only
+    Create PNR For Client VIAVI Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Hotel Only PNRs For Client Sleeman Breweries Do Not Go Thru Approval Process
+Verify That Car And Hotel Only PNRs For Client Viavi Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Sleeman Breweries With Udid 50 EMPLOYEE, Hotel Only
+    Create PNR For Client VIAVI Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car And Hotel Only PNRs For Client Sleeman Breweries Do Not Go Thru Approval Process
+Verify That Air Only PNRs For Client Viavi With RM*FS/-L Remark Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Sleeman Breweries With Udid 50 EMPLOYEE, Car And Hotel Only
+    Create PNR With Active Air Segments For Client VIAVI Air Only, With RM*FS/-L Remark
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Sleeman Breweries Can Skip Approval
+Verify That Air Only PNRs For Client Viavi With RM*FS/-7 Remark Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EMPLOYEE, Mix Segments
+    Create PNR With Active Air Segments For Client VIAVI Air Only, With RM*FS/-7 Remark
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

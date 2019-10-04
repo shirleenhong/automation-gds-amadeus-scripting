@@ -40,16 +40,7 @@
           <input type="text" class="form-control" formControlName="code" name="code" id="code" readonly (change)="feeChange(item)" />
         </td>
         <td width="50px">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="fee"
-            name="fee"
-            id="fee"
-            readonly
-            (change)="feeChange(item)"
-            AmountMask
-          />
+          <input type="text" class="form-control" formControlName="fee" name="fee" id="fee" (change)="feeChange(item)" AmountMask />
         </td>
 
         <td width="150px">

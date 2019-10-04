@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    gemalto
+
 *** Test Cases ***
 Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Ticket is Not Instant Purchase
     [Tags]    us13271

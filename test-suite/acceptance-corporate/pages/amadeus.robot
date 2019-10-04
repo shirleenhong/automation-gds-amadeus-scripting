@@ -258,7 +258,7 @@ Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-VB70000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
@@ -465,8 +465,7 @@ Create PNR With Passive Air Segments For ${client_data}
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     
 Create PNR With Active Air Segments For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments

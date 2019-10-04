@@ -12,85 +12,77 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Variables ***
-${test_file_name}    taylor
+${test_file_name}    kelly
 
 *** Test Cases ***
-Verify That PNRs For Client Taylor Made Are Queued Correctly When 1st Primary Reason Is Selected
+Verify That PNRs For Client Kelly Services Are Queued For Approval When First Primary Reason Is Selected
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select First Primary Reason
+    Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Taylor Made Are Queued Correctly When 2nd Primary Reason Is Selected
+Verify That PNRs For Client Kelly Services Are Queued For Approval When Second Primary Reason Is Selected
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Second Primary Reason
+    Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Taylor Made Are Queued Correctly When 3rd Primary Reason Is Selected
+Verify That PNRs For Client Kelly Services Can Skip Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Third Primary Reason
+    Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air Only, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Taylor Can Skip Approval
+Verify That Hotel Only PNRs For Client Kelly Services Are Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made Mix Segments, Skip Approval
+    Create PNR For Client Kelly Services With RM*FS/-L Remark, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
+Verify That Air Only PNRs For Client Kelly Services With RM*FS/-L Remark Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Taylor Made, Car Only
+    Create PNR With Active Air Segments For Client Kelly Services With RM*FS/-L Remark, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
+Verify That PNRs For Client Kelly Services With RM*U20 Remark Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Taylor Made, Hotel Only
+    Create PNR With Active Air Segments For Client Kelly Services With RM*U20 Remark, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Car And Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
+Verify That PNRs For Client Kelly Services With Udid50 EMPLOYEE-CA Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Client Taylor Made, Car And Hotel Only
+    Create PNR With Active Air Segments For Client Kelly Services With Udid50 EXECUTIVE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Taylor Made With Udid50 CEO-NORAM Do Not Go Thru Approval Process
+Verify That PNRs For Client Kelly Services With Udid50 BOARD OF DIRECTORS Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made With Udid50 CEO-NORAM, Air Only
+    Create PNR With Active Air Segments For Client Kelly Services With Udid50 BOARD OF DIRECTORS, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That PNRs For Client Taylor Made With Udid50 SRVP-NORAM Do Not Go Thru Approval Process
+Verify That Car Only PNRs For Client Kelly Services Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made With Udid50 SRVP-NORAM, Air Only
-    Fill Up Approval Fields
-    Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
-    
-Verify That PNRs For Client Taylor Made With Udid50 VP-NORAM Do Not Go Thru Approval Process
-    [Tags]    us13271
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Taylor Made With Udid50 VP-NORAM, Air Only
+    Create PNR For Client Kelly Services With Udid50 EMPLOYEE-CA, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

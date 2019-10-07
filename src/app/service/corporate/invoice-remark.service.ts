@@ -32,10 +32,10 @@ export class InvoiceRemarkService {
     if (mrc.isMatrixPnr) {
       const backOfficeIdentifier = new Map<string, string>();
       const staticRemarksCondition = new Map<string, string>();
-
-      backOfficeIdentifier.set('BackOfficeAgentIdentifier', mrc.invoiceMessageForm.get('cicNumber').value);
-      this.rms.createPlaceholderValues(backOfficeIdentifier);
-
+      if (mrc.invoiceMessageForm.get('cicNumber').value !== undefined) {
+        backOfficeIdentifier.set('BackOfficeAgentIdentifier', mrc.invoiceMessageForm.get('cicNumber').value);
+        this.rms.createPlaceholderValues(backOfficeIdentifier);
+      }
       staticRemarksCondition.set('IsNuc', 'true');
       this.rms.createPlaceholderValues(null, staticRemarksCondition, null, null, 'NUC');
     }

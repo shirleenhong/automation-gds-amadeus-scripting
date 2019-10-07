@@ -26,6 +26,7 @@ import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueRemarkService } from '../service/queue-remark.service';
 import { RemarkModel } from '../models/pnr/remark.model';
+import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -64,7 +65,8 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService
+    private queueService: QueueRemarkService,
+    private cleanupRemarkService: CleanUpRemarkService
   ) {
     this.initData();
   }
@@ -142,6 +144,8 @@ export class CorporateComponent implements OnInit {
   async loadPnrData() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
+    this.cleanupRemarkService.cleanUpRemarks();
+    await this.getPnrService();
 
     if (!this.pnrService.getClientSubUnit()) {
       this.closePopup();
@@ -209,7 +213,6 @@ export class CorporateComponent implements OnInit {
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
-
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
@@ -232,8 +235,10 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.sendU70Remarks();
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+    this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
+    this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager
-    remarkList = (this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm));
+    remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
@@ -256,5 +261,6 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+    this.cleanupRemarkService.revertDelete();
   }
 }

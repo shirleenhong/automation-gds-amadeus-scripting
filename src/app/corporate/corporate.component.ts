@@ -238,6 +238,7 @@ export class CorporateComponent implements OnInit {
 
     let queueCollection = Array<QueuePlaceModel>();
     queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;

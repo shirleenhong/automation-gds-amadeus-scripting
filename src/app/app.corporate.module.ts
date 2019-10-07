@@ -27,6 +27,7 @@ import { WaiversComponent } from './corporate/reporting/waivers/waivers.componen
 import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
 import { ReportingRemarksComponent } from './corporate/reporting/reporting-remarks/reporting-remarks.component';
 import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-remarks.component';
+import { OfcDocumentationComponent } from './corporate/corp-remarks/ofc-documentation/ofc-documentation.component';
 import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minder.component';
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
@@ -57,9 +58,11 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     ReportingRemarksComponent,
     IrdRemarksComponent,
     AddWaiverComponent,
+    OfcDocumentationComponent
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent
+
   ],
   imports: [
     BrowserModule,
@@ -79,11 +82,6 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [
-    AddSupplementalFeesComponent,
-    AddWaiverComponent,
-    SeatsFormComponent,
-    UpdateAccountingRemarkComponent
-  ]
+  entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
 export class AppCorporateModule { }

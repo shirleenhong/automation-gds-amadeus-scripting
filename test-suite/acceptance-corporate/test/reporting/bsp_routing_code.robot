@@ -13,14 +13,6 @@ Resource          ../../../resources/common/api-utilities.txt
 ${test_file_name}    bsp_routing_code
 
 *** Test Cases ***
-Verify That Routing Code Dropdown Is Displayed And Is A Required Field
-    [Tags]    us14703
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Corporate, With Flight Destination To USA
-    Verify Routing Code Dropdown Is Displayed With Correct Values
-    Verify Routing Code Dropdown Is A Required Field
-    [Teardown]    Close Browser
-    
 Verify That BSP Routing Code Is Written Correctly When Destination Is In USA
     [Tags]    us14703
     Login To Amadeus Sell Connect Acceptance

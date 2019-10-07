@@ -1,5 +1,6 @@
 <form [formGroup]="reportingForm">
   <div class="col" *ngIf="isTripTypeCorporate">
+    <br />
     <div class="row form-group">
       <div class="col-md-5 bsp-routing-remark">
         BSP Routing Code :
@@ -19,7 +20,7 @@
     </div>
   </div>
 
-  <table *ngIf="destinations.length !== 1" style="margin-top:10px;margin-left: 20px">
+  <table *ngIf="destinations.length !== 1" style="margin-top:10px;margin-left: 20px; mar">
     <tr>
       <th width="130px"><div class="segmentTable">Segment(s)</div></th>
       <th width="300px"><div class="segmentTable">Destination Code</div></th>

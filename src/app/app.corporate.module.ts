@@ -32,7 +32,6 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 
-
 @NgModule({
   declarations: [
     CorporateComponent,
@@ -58,11 +57,10 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     ReportingRemarksComponent,
     IrdRemarksComponent,
     AddWaiverComponent,
-    OfcDocumentationComponent
+    OfcDocumentationComponent,
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent
-
   ],
   imports: [
     BrowserModule,
@@ -84,4 +82,4 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

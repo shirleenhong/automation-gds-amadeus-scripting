@@ -8,6 +8,7 @@ Resource          amadeus.robot
 Resource          payment.robot
 Resource          ticketing.robot
 Resource          reporting.robot
+Resource          remarks.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -132,13 +133,14 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
+     \    Run Keyword If    "${current_page}" == "Remarks" and "${destination_page}" == "Document PNR"   Navigate From Remarks    ${destination_page}
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "Document PNR"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
@@ -148,6 +150,7 @@ Navigate From Full Wrap
     ...    ELSE IF    "${destination_page}" == "Reporting" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
     ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
+    ...    ELSE IF    "${destination_page}" == "Seats" or "${destination_page}" == "IRD Remarks" or "${destination_page}" == "Document PNR"   Click Remarks Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -164,6 +167,11 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
     ...    ELSE    Collapse Reporting Panel
+
+Navigate From Remarks
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Document PNR"    Click Document PNR Tab
+    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel     
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -217,6 +225,11 @@ Click Fees Panel
 Navigate From Fees
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
+    
+Click Remarks Panel
+    Wait Until Element Is Visible    ${panel_remarks}    60
+    Click Element    ${panel_remarks}
+    Set Test Variable    ${current_page}    Remarks
     
 Get Client Name
     [Arguments]    ${test_data_string}

@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    trend
+
 *** Test Cases ***
 Verify That PNRs For Client Trend Mico Exit Approval Process When First Primary Approval Reason Is Selected
     [Tags]    us13271

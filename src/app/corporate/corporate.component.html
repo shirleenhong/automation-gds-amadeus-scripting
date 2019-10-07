@@ -20,7 +20,7 @@
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="far fa-list-alt"></i> Remarks
-        <!-- <i [ngClass]="validModel.reportingValidCss"></i> -->
+        <i [ngClass]="validModel.remarkValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-corp-remarks></app-corp-remarks>
@@ -33,7 +33,14 @@
       </div>
       <app-fees></app-fees>
     </accordion-group>
-
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="fas fa-ticket-alt"></i> Queue
+        <!-- <i [ngClass]="validModel.ticketingValidCss"></i> -->
+        <span class="cwt-logo"></span>
+      </div>
+      <app-queue></app-queue>
+    </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas fa-ticket-alt"></i> Ticketing

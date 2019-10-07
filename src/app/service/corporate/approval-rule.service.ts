@@ -9,22 +9,22 @@ import { ApprovalItem } from 'src/app/models/ddb/approval.model';
   providedIn: 'root'
 })
 export class ApprovalRuleService {
-  constructor(private ddbService: DDBService, private pnrService: PnrService) {}
+  constructor(private ddbService: DDBService, private pnrService: PnrService) { }
 
   /**
    * Check if the PNR needs to be approved based on conditions.
    */
   private needsApproval(): boolean {
     const remarksValid =
-      this.pnrService.getRemarkText('CB/QUE/QUE FOR TICKET') === '' ||
-      this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' ||
+      this.pnrService.getRemarkText('CB/QUE/QUE FOR TICKET') === '' &&
+      this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' &&
       this.pnrService.getRemarkText('EB/') === '';
 
     const segmentValid = this.pnrService.getSegmentTatooNumber().find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
       ? false
       : true;
 
-    const description = ['-ONHOLD', '-CHG', '-FEE-No Approval Required'];
+    const description = ['-ONHOLD', '-CHG', '-FEE-No Approval Required', '-CXL'];
     const ticketingValid = description.indexOf(this.pnrService.getTkLineDescription()) > -1 ? false : true;
 
     return remarksValid && segmentValid && ticketingValid;
@@ -236,7 +236,30 @@ export class ApprovalRuleService {
   }
 
   getPrimaryApprovalList(): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    const primaryList = this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    let ctr = 1;
+    let done = false;
+    let sortedList = [];
+    while (!done) {
+      const list = primaryList
+        .filter((x) => x.approvalRules.indexOf('[UI_PRIMARY_' + ctr) === 0)
+        .sort((a, b) => {
+          if (a.getRuleText() < b.getRuleText()) {
+            return -1;
+          } else if (a.getRuleText() > b.getRuleText()) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      if (list && list.length > 0) {
+        sortedList = sortedList.concat(list);
+        ctr += 1;
+      } else {
+        done = true;
+      }
+    }
+    return sortedList;
   }
 
   getWriteApproval(index?: string): ApprovalItem[] {

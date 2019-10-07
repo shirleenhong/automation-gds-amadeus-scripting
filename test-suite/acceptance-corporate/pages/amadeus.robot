@@ -216,9 +216,10 @@ Create Exchange PNR In The GDS
     \    Enter Cryptic Command    ${gds_command}
     
 Create Multiple TKT Exchange PNR In The GDS
-    @{gds_commands}    Create List    RT   TTK/EXCH/S2    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2    TTK/EXCH/S3    TTK/T2/RCAD200.00/XCAD20.00YR/TCAD120.00    FO057-1346629128E1PAR10MAY19/00002634/057-1346629127E1/S3   RFCWTPTEST   ER    RT${actual_record_locator}
+    @{gds_commands}    Create List    RT   TTK/EXCH/S2    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR10MAY19/00002634/057-1346629127E1/S2    TTK/EXCH/S3    TTK/T2/RCAD200.00/XCAD20.00YR/TCAD120.00    FO057-1346629128E1PAR10MAY19/00002634/057-1346629127E1/S3   RFCWTPTEST   ER
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Sleep    5
 
 Move Single Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
@@ -251,13 +252,13 @@ Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Add Multiple BSP Segment And Store Multiple Fares
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    TKOK     RM*CF/-VB70000000C  
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    TKOK     RM*CF/-VB70000000C
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-VB70000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
@@ -452,7 +453,7 @@ Add ${number_of_segments} Rail Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800OSL/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
     ${client_name}    Get Client Name    ${client_data}
@@ -464,8 +465,7 @@ Create PNR With Passive Air Segments For ${client_data}
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     
 Create PNR With Active Air Segments For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments

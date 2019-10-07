@@ -25,9 +25,15 @@ import { SeatsComponent } from './corporate/corp-remarks/seats/seats.component';
 import { SeatsFormComponent } from './corporate/corp-remarks/seats/seats-form/seats-form.component';
 import { WaiversComponent } from './corporate/reporting/waivers/waivers.component';
 import { AddWaiverComponent } from './corporate/reporting/waivers/add-waiver/add-waiver.component';
+import { ReportingRemarksComponent } from './corporate/reporting/reporting-remarks/reporting-remarks.component';
 import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-remarks.component';
 import { ItineraryAndQueueComponent } from './corporate/itinerary-and-queue/itinerary-and-queue.component';
 import { QueueComponent } from './corporate/itinerary-and-queue/queue/queue.component';
+import { OfcDocumentationComponent } from './corporate/corp-remarks/ofc-documentation/ofc-documentation.component';
+import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minder.component';
+import { QueueComponent } from './corporate/queue/queue.component';
+import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
+
 
 @NgModule({
   declarations: [
@@ -50,10 +56,17 @@ import { QueueComponent } from './corporate/itinerary-and-queue/queue/queue.comp
     SeatsComponent,
     SeatsFormComponent,
     WaiversComponent,
+    AddWaiverComponent,
+    ReportingRemarksComponent,
     IrdRemarksComponent,
     AddWaiverComponent,
     ItineraryAndQueueComponent,
-    QueueComponent 
+    QueueComponent, 
+    OfcDocumentationComponent,
+    QueueMinderComponent,
+    QueueComponent,
+    DocumentPnrComponent
+
   ],
   imports: [
     BrowserModule,
@@ -73,11 +86,6 @@ import { QueueComponent } from './corporate/itinerary-and-queue/queue/queue.comp
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [
-    AddSupplementalFeesComponent,
-    AddWaiverComponent,
-    SeatsFormComponent,
-    UpdateAccountingRemarkComponent
-  ]
+  entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule {}
+export class AppCorporateModule { }

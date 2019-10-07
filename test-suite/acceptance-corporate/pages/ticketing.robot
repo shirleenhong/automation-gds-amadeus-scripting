@@ -34,6 +34,7 @@ Select Secondary Reason: ${secondary_reason}
     
 Fill Up Approval Fields
     Navigate To Page Ticketing Line
+    Scroll Element Into View    ${button_submit_pnr}
     Run Keyword If    "${with_ui}" == "Yes" and "${ignore_approval}" == "Yes"       Select Checkbox    ${checkbox_ignoreApproval}
     ...    ELSE IF    "${with_ui}" == "Yes" and "${ignore_approval}" != "Yes"    Fill Up Approval Reason Fields
     ...    ELSE IF    "${with_ui}" == "No"    Verify Approval Fields Are Not Displayed
@@ -110,6 +111,13 @@ Select Limo Segments
 
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing Line
+    Select Checkbox    ${checkbox_verifyTicket}
+    Set Test Variable    ${ticketing_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Fill Up Ticketing Panel With PNR ON HOLD
+    Navigate To Page Ticketing Line
+    Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
@@ -326,13 +334,18 @@ Verify PNR Approval Is Processed Correctly
     Assign Current Date
     Run Keyword If    "${queue_approval}" == "Yes"    Verify PNR Is Queued For Approval
     ...    ELSE    Verify PNR Is Not Queued For Approval
-    Run Keyword If    "${remark_added}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added}
-    Run Keyword If    "${remark_added2}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added2}  
-    Run Keyword If    "${remark_added3}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added3}  
-    Run Keyword If    "${remark_added4}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added4}    
+    Run Keyword If    "${expected_remark_1}" != "None" and "${secondary_approval_reason}" == "Awaiting ECM Approval"    Verify Specific Remark Is Written In The PNR   ${expected_remark_1}${date_today}
+    ...    ELSE    Run Keyword If    "${expected_remark_1}" != "None"    Verify Expected Remarks Are Written In The PNR    
     Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1
+
+Verify Expected Remarks Are Written In The PNR
+    : FOR    ${i}    IN RANGE   0    99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${expected_remark_${i}}
+    \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}
+    \    Exit For Loop If    "${exists}" == "False"
 
 Verify PNR Is Queued For Approval
     Open Command Page

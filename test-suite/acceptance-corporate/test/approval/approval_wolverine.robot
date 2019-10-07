@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    wolverine
+
 *** Test Cases ***
 Verify That PNRs For Client Wolverine Are Queued For Approval
     [Tags]    us13271

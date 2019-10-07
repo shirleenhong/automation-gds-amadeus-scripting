@@ -6,18 +6,32 @@
         <table style="width:100%">
           <tr>
             <td style="width:3%">
-              RMG/
+              Remark:
             </td>
             <td style="width:50%">
               <input formControlName="documentation" type="text" class="form-control" maxlength="55"
-                style="width:100%" />
+                style="width:98%" />
             </td>
-            <td style="width:10%">
+
+            <td style="width:10%" class="irdTable">
+              <div (click)="addItem()">
+                <i class="fas fa-plus-circle" id="add"></i>
+                Add Remark
+              </div>
+            </td>
+
+            <td style="width:12%" class="irdTable">
+              <div (click)="removeInputField(item)" *ngIf="i > 0">
+                <i class="fas fa-minus-circle" id="remove"></i>
+                Remove Remark
+              </div>
+            </td>
+            <!-- <td style="width:10%">
               &nbsp;
               <i class="fas fa-plus-circle iconPlus" (click)="addItem()"></i>
               &nbsp;
               <i class="fas fa-minus-circle iconRed" *ngIf="i > 0" (click)="removeInputField(i)"></i>
-            </td>
+            </td> -->
           </tr>
         </table>
       </div>

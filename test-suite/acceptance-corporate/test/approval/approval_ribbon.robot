@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    ribbon
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S Is Correctly Queued To Approval Queue
     [Tags]    us13271

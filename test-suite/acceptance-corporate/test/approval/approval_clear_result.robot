@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    clearresult
+
 *** Test Cases ***
 Verify That PNRs For Client ClearResult Is Correctly Queued To Approval Queue With Udid General, Total Ticket Cost
     [Tags]    us13271

@@ -5,6 +5,8 @@ import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.co
 import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketing.component';
 import { MatrixReportingComponent } from './matrix-reporting/matrix-reporting.component';
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
+import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting-remarks/reporting-remarks.component';
+
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -18,6 +20,8 @@ export class ReportingComponent implements OnInit {
   hasTst: boolean;
   @Input() overrideValue: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
+  @ViewChild(ReportingRemarksComponent) reportingRemarksComponent: ReportingRemarksComponent;
+
   constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -39,6 +43,11 @@ export class ReportingComponent implements OnInit {
 
     this.utilHelper.validateAllFields(this.reportingNonbspComponent.nonBspGroup);
     if (!this.reportingNonbspComponent.nonBspGroup.valid) {
+      return false;
+    }
+
+    this.utilHelper.validateAllFields(this.reportingRemarksComponent.reportingForm);
+    if (!this.reportingRemarksComponent.reportingForm.valid) {
       return false;
     }
 

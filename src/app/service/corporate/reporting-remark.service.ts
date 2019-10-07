@@ -5,6 +5,8 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { ReportingBSPComponent } from 'src/app/corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingNonbspComponent } from 'src/app/corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
+import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting-remarks/reporting-remarks.component';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -144,6 +146,41 @@ export class ReportingRemarkService {
         });
 
         this.remarksManager.createPlaceholderValues(waiverRemark, null, segmentrelate);
+      }
+    }
+  }
+
+  WriteDestinationCode(rc: ReportingRemarksComponent) {
+    const reportingRemarksGroup: FormGroup = rc.reportingForm;
+    const items = reportingRemarksGroup.get('segments') as FormArray;
+
+    for (const control of items.controls) {
+      if (control instanceof FormGroup) {
+        const fg = control as FormGroup;
+        const destinationRemark = new Map<string, string>();
+
+        const segments: string[] = [];
+        let segmentrelate: string[] = [];
+
+        Object.keys(fg.controls).forEach((key) => {
+          if (key === 'segment') {
+            fg.get(key)
+              .value.split(',')
+              .forEach((val) => {
+                segments.push(val);
+              });
+
+            segmentrelate = this.getRemarkSegmentAssociation(segments);
+          }
+
+          if (key === 'destinationList') {
+            if (fg.get(key).value !== null && fg.get(key).value !== '') {
+              destinationRemark.set('IataCode', fg.get(key).value);
+            }
+          }
+        });
+
+        this.remarksManager.createPlaceholderValues(destinationRemark, null, segmentrelate);
       }
     }
   }

@@ -453,7 +453,7 @@ Add ${number_of_segments} Rail Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800OSL/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
     ${client_name}    Get Client Name    ${client_data}

@@ -242,9 +242,9 @@ Verify That Exchange Flat Fees Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMF SUPFEE2-ATB27.00
     Switch To Command Page 
     
-Verify Default Values Of Special Fee For Air Ticket
+Verify Default Values Of Special Fee For ${segment_type} Ticket
     Navigate To Page Fees
-    Verify Default Fee Code in Ticket Segments    ATD
+    Run Keyword If    "${segment_type}" == "air"    Verify Default Fee Code in Ticket Segments    ATI    ELSE IF   "${segment_type}" == "rail"    Verify Default Fee Code in Ticket Segments    RTD
     Verify Default Fee In Ticket Segments    60.00
 
 Verify Default Values Of Special Fee That Has No Value in DB

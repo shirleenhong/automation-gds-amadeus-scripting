@@ -11,9 +11,12 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    iqvia
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client IQVIA Is Correctly Queued For Approval
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client IQVIA With Air Only Segments, Select Travel is Booked in Business Class
     Fill Up Approval Fields

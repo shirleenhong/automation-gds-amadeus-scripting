@@ -25,6 +25,7 @@ import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueRemarkService } from '../service/queue-remark.service';
+import { RemarkModel } from '../models/pnr/remark.model';
 
 @Component({
   selector: 'app-corporate',
@@ -127,7 +128,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentsComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
-    // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+    this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
     return this.validModel.isCorporateAllValid();
@@ -195,6 +196,7 @@ export class CorporateComponent implements OnInit {
 
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
+    let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
@@ -202,7 +204,7 @@ export class CorporateComponent implements OnInit {
         this.ticketingComponent.ticketlineComponent.approvalForm
       )
     );
-
+    accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
@@ -230,12 +232,13 @@ export class CorporateComponent implements OnInit {
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
     // below additional process not going through remarks manager
-    const additionalRemarks = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    remarkList = (this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm));
+    remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     let queueCollection = Array<QueuePlaceModel>();
     queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-    await this.rms.submitToPnr(additionalRemarks, forDeleteRemarks).then(
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';

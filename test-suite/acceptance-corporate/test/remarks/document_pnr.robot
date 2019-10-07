@@ -10,9 +10,13 @@ Resource          ../../pages/base.robot
 
 *** Test Cases ***
 Verify Document Remark Can Be Written In The PNR
-    [Tags]    us10551    us9700
+    [Tags]    us10039
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
-    Navigate To Page Document PNR
+    Verify That Single Document PNR Can Be Added
 
 Verify Multiple Document Remark Can Be Written In The PNR
+    [Tags]    us10039
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger And Add Single BSP Segment With TST
+    Verify That Multiple Document PNR Can Be Added

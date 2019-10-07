@@ -36,58 +36,57 @@ export class SeatsFormComponent implements OnInit {
     this.types = SeatsService.TYPES;
 
     this.seatsForm = this.formBuilder.group({
-      seatsFormArray: this.formBuilder.array([this.createSeat()])
+      seatsFormArray: this.formBuilder.array(this.createSeats())
     });
-
-    // remark2: this.formBuilder.group({
-    //   id: ['', Validators.required],
-    //   type: [{ value: '', disabled: true }],
-    //   number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
-    //   segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
-    // }),
-    // seatRemark3: this.formBuilder.group({
-    //   id: ['', Validators.required],
-    //   type: [{ value: '', disabled: true }],
-    //   number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
-    //   segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
-    // }),
-    // seatRemark4: this.formBuilder.group({
-    //   id: ['', Validators.required],
-    //   type: [{ value: '', disabled: true }],
-    //   number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
-    //   segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
-    // }),
-    // seatRemark5: this.formBuilder.group({
-    //   id: ['', Validators.required],
-    //   type: [{ value: '', disabled: true }],
-    //   number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
-    //   segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
-    // }),
-    // seatRemark6: this.formBuilder.group({
-    //   id: ['', Validators.required],
-    //   type: [{ value: '', disabled: true }],
-    //   number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
-    //   segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
-    // })
-    // });
-
-    // {
-    //   id: new FormControl('', [Validators.required]),
-    //     type: new FormControl({ value: '', disabled: true }, []),
-    //       number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
-    //         segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
-    // }
 
     // this.onChanges();
   }
 
-  createSeat(): FormGroup {
-    return this.formBuilder.group({
-      id: [1, Validators.required],
-      type: [{ value: '', disabled: true }],
-      number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
-      segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
-    });
+  createSeats(): Array<FormGroup> {
+    return [
+      this.formBuilder.group({
+        selected: [false],
+        id: [1, Validators.required],
+        type: [{ value: '', disabled: true }],
+        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
+        segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
+      }),
+      this.formBuilder.group({
+        selected: [false],
+        id: [2, Validators.required],
+        type: [{ value: '', disabled: false }],
+        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
+        segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
+      }),
+      this.formBuilder.group({
+        selected: [false],
+        id: [3, Validators.required],
+        type: [{ value: '', disabled: true }],
+        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
+        segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
+      }),
+      this.formBuilder.group({
+        selected: [false],
+        id: [4, Validators.required],
+        type: [{ value: '', disabled: true }],
+        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
+        segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
+      }),
+      this.formBuilder.group({
+        selected: [false],
+        id: [5, Validators.required],
+        type: [{ value: '', disabled: false }],
+        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
+        segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
+      }),
+      this.formBuilder.group({
+        selected: [false],
+        id: [6, Validators.required],
+        type: [{ value: '', disabled: true }],
+        number: [{ value: '', disabled: false }, Validators.pattern(this.REGEX_ALPHANUMERIC)],
+        segmentIds: ['', Validators.pattern('[0-9]+(,[0-9]+)*')]
+      })
+    ];
 
     // return this.formBuilder.group({
     //   id: new FormControl('', Validators.required),
@@ -97,10 +96,10 @@ export class SeatsFormComponent implements OnInit {
     // });
   }
 
-  addSeat(): void {
-    console.log('Adding seat...');
-    this.seatsFormArray.push(this.formBuilder.control(this.createSeat()));
-  }
+  // addSeat(): void {
+  //   console.log('Adding seat...');
+  //   this.seatsFormArray.push(this.formBuilder.control(this.createSeats()));
+  // }
 
   get seatsFormArray() {
     return this.seatsForm.get('seatsFormArray') as FormArray;
@@ -110,32 +109,6 @@ export class SeatsFormComponent implements OnInit {
     this.message = 'SAVED';
     this.modalRef.hide();
   }
-
-  // /**
-  //  * Handle changes on the seat form.
-  //  */
-  // public onChanges(): void {
-  //   this.seatsForm.valueChanges.subscribe((value) => {
-  //     console.log(value);
-  //     // this.seatExists(value);
-  //   });
-
-  //   // Disable or enable the type and number form controls based on type.
-  //   this.seatsForm.get('id').valueChanges.subscribe((value) => {
-  //     switch (value) {
-  //       // case '2':s
-  //       //   this.seatRemarksForm.get('type').enable();
-  //       //   break;
-  //       // case '5':
-  //       //   this.seatRemarksForm.get('number').enable();
-  //       //   break;
-  //       default:
-  //         // this.seatRemarksForm.get('type').disable();
-  //         // this.seatRemarksForm.get('number').disable();
-  //         break;
-  //     }
-  //   });
-  // }
 
   public close(): void {
     this.message = 'CLOSED';

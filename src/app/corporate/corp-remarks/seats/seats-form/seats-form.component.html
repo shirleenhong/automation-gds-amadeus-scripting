@@ -7,61 +7,62 @@
 
 <div class="modal-body">
 
-  <form [formGroup]="seatsForm">
-    <button (click)="addSeat()">Add Seat</button>
-    <div formArrayName="seatsFormArray">
+  <form id="seatsForm" [formGroup]="seatsForm" (ngSubmit)="save()">
+    <!-- <button (click)="addSeat()">Add Seat</button> -->
 
-      <p>
-        Status: {{ seatsForm.status }}
-      </p>
-      <p>
-        Value: {{ seatsForm.value | json }}
-      </p>
-      <p>
-        seatsFormArray.controls.length: {{ seatsFormArray.controls.length }}
-      </p>
-      <p>
-        seatsFormArray.controls.value: {{ seatsFormArray.controls.values }}
-      </p>
+    <p>
+      Status: {{ seatsForm.status }}
+    </p>
+    <p>
+      Value: {{ seatsForm.value | json }}
+    </p>
+    <p>
+      seatsFormArray.controls.length: {{ seatsFormArray.controls.length }}
+    </p>
+    <p>
+      seatsFormArray.controls.value: {{ seatsFormArray.controls.values }}
+    </p>
+    <p>
+      seatsFormArray.controls: {{ seatsFormArray.controls }}
+    </p>
 
-      <table class="table table-bordered table-hover">
-
-        <thead>
-          <th>
-            <div class="checkbox align-vertical">
-              <input type="checkbox" />
-            </div>
-          </th>
-          <th>Seat Remark</th>
-          <th>Seat Type</th>
-          <th>Seat Number</th>
-          <th>Segment(s)</th>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let seat of seatsFormArray.controls; let i = index" [formGroupName]="i">
-            <td>
-              <div class="checkbox">
-                <input type="checkbox">
-              </div>
-            </td>
-            <td>
-              <div>
-                <input formControlName="id" />
-              </div>
-            </td>
-            <td>
-              <input formControlName="type" />
-            </td>
-            <td>
-              <input formControlName="number" />
-            </td>
-            <td>
-              <input formControlName="segmentIds" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div formArrayName="seatsFormArray" *ngFor="let remarkOption of remarkOptions; let i = index;">
+      <div class="row" [formGroupName]="i">
+        <div class="col-lg-1 col-sm-6">
+          <div class="checkbox">
+            <input type="checkbox" formControlName="selected">
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <label for="">
+            <strong>Segments</strong>
+            <app-segment-select formControlName="segmentIds"></app-segment-select>
+          </label>
+        </div>
+        <div class="col-lg-2 col-sm-6">
+          <input type="hidden" formControlName="id" [value]="remarkOption.id">
+          <label for="">
+            <strong>Seat Remark</strong>
+            <p class="form-control-static">{{ remarkOption.text }}</p>
+          </label>
+        </div>
+        <div class="col-lg-2 col-sm-6">
+          <label for="">
+            <strong>Seat Type</strong>
+            <select class="form-control" formControlName="type">
+              <option></option>
+              <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+            </select>
+          </label>
+        </div>
+        <div class="col-lg-2 col-sm-6">
+          <label for="">
+            <strong>Seat Number</strong>
+            <input type="text" class="form-control" formControlName="number">
+          </label>
+        </div>
+      </div>
+      <hr>
     </div>
   </form>
 

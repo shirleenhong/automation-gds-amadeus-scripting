@@ -217,7 +217,7 @@ export class SeatsComponent implements OnInit {
    */
   public create(): void {
     this.modalRef = this.modalService.show(SeatsFormComponent, this.modalRefConfig);
-    this.modalRef.content.title = 'Add Seat Remark';
+    this.modalRef.content.title = 'Manage Seats';
     this.modalRef.content.seats = this.seats;
 
     this.modalSubscribeOnClose();
@@ -237,13 +237,28 @@ export class SeatsComponent implements OnInit {
    */
   private modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(() => {
+      debugger;
       if (this.modalRef) {
         if (this.modalRef.content.message === 'SAVED') {
-          const newSeat = this.modalRef.content.seatForm.value;
+          console.log('this.modalRef.content.seatsForm.value.seatsFormArray');
+          console.log(this.modalRef.content.seatsForm.value.seatsFormArray);
 
+          const newSeats = this.modalRef.content.seatsForm.value.seatsFormArray
+            .filter((newSeat: any) => newSeat.selected === true)
+            .map((newSeat: any) => {
+              return {
+                id: newSeat.id ? newSeat.id : null,
+                type: newSeat.type ? newSeat.type : null,
+                number: newSeat.number ? newSeat.number : null,
+                segmentIds: newSeat.segmentIds ? newSeat.segmentIds : null
+              };
+            });
+
+          console.log('newSeats:');
+          console.log(newSeats);
           // Add the new seat to the seats.
-          if (newSeat) {
-            this.seats.push(newSeat);
+          if (newSeats) {
+            this.seats = newSeats;
           }
         }
       }

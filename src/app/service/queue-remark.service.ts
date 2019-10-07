@@ -10,6 +10,7 @@ declare var smartScriptSession: any;
 export class QueueRemarkService {
   responseMessage: string;
   queueElement: Array<any>;
+  queueCollection: Array<QueuePlaceModel>;
 
   constructor(private pnrService: PnrService) { }
 

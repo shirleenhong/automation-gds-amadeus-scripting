@@ -7,16 +7,25 @@ Library           Screenshot
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/remarks.robot
 Resource          ../../pages/base.robot
+Resource          ../../../resources/common/api-utilities.txt
+
+*** Variables ***
+${test_file_name}    document_pnr
 
 *** Test Cases ***
 Verify Document Remark Can Be Written In The PNR
     [Tags]    us10039
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Single BSP Segment With TST
+    Create PNR With Active Air Segments For Document PNR Remark, With Single BSP Segment
     Verify That Single Document PNR Can Be Added
+    Verify That Document PNR Remarks Are Written In The PNR
+    # [Teardown]    Close Browser
 
 Verify Multiple Document Remark Can Be Written In The PNR
     [Tags]    us10039
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Single BSP Segment With TST
+    Create PNR With Active Air Segments For Multiple Document PNR Remark, With Single BSP Segment    
     Verify That Multiple Document PNR Can Be Added
+    Verify That Single Document PNR Can Be Added
+    Verify That Document PNR Remarks Are Written In The PNR
+    # [Teardown]    Close Browser

@@ -22,7 +22,7 @@ Populate Document PNR
     Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
 
 Click Add Remark Button ${button_no}
-    Click Element   //div[@formarrayname='items'][${button_no}]//i[@class='fas fa-plus-circle iconPlus']
+    Click Element   ${row_documentPNR}[${button_no}]${add_button}
     
 Populate Multiple Document PNR
     [Arguments]    @{document_values}
@@ -32,16 +32,20 @@ Populate Multiple Document PNR
     \    Enter Value    ${row_documentPNR}[${document_index}]${input_document}    ${document_values}  
     \    Click Add Remark Button ${document_index}
     \    Set Test Variable   ${document_index}
-    \    Run Keyword If   "${document_index}" == "4"    Exit For Loop
+    \    Exit For Loop If  "${document_index}" == "4"    
     Take Screenshot
     
 Verify That Multiple Document PNR Can Be Added
     Navigate To Page Document PNR
-    Populate Multiple Document PNR    Document Testing 1    Document Testing 2    Document Testing 3    Document Testing 4
+    Populate Multiple Document PNR    Testing Document PNR Remark 1    Testing Document PNR Remark 2    Testing Document PNR Remark 3    Testing Document PNR Remark 4
 
 Verify That Single Document PNR Can Be Added
     Navigate To Page Document PNR
     Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
+    
+Verify That Document PNR Remarks Are Written In The PNR
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR
     
     
     

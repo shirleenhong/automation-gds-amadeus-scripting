@@ -40,6 +40,6 @@ export class ValidateModel {
 
   isCorporateAllValid() {
     this.setCssClass();
-    return this.isPaymentValid && this.isReportingValid && this.isTicketingValid && this.isFeesValid;
+    return this.isPaymentValid && this.isReportingValid && this.isTicketingValid && this.isFeesValid && this.isRemarkValid;
   }
 }

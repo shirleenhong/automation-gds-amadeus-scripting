@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    lanxess
+
 *** Test Cases ***
 Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When Missed Savings Is Selected In Primary Approval Reason
     [Tags]    us13271

@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    taylor
+
 *** Test Cases ***
 Verify That PNRs For Client Taylor Made Are Queued Correctly When 1st Primary Reason Is Selected
     [Tags]    us13271

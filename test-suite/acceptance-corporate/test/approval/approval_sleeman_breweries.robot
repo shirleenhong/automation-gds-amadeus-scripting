@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    sleeman
+
 *** Test Cases ***
 Verify That PNRs For Client Sleeman Breweries Are Correctly Queued For Approval
     [Tags]    us13271

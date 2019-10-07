@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    fujitsu
+
 *** Test Cases ***
 Verify That PNRs For Client Fujitsu Is Writing Correct Remarks For Client Visit Billable
     [Tags]    us13271

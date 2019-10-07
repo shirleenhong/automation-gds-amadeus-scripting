@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    canon
+
 *** Test Cases ***
 Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue With Air, Hotel, And Car
     [Tags]    us13271

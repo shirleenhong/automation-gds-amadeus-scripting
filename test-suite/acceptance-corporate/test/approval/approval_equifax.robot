@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    equifax
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Equifax Is Correctly Queued For Approval
     [Tags]    us13271

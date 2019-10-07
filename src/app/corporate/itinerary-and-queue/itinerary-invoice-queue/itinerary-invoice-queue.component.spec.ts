@@ -1,20 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QueueComponent } from './queue.component';
+import  { ItineraryInvoiceQueue } from './itinerary-invoice-queue.component';
+
 
 describe('QueueComponent', () => {
-  let component: QueueComponent;
-  let fixture: ComponentFixture<QueueComponent>;
+  let component: ItineraryInvoiceQueue;
+  let fixture: ComponentFixture<ItineraryInvoiceQueue>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QueueComponent ]
+      declarations: [ ItineraryInvoiceQueue ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QueueComponent);
+    fixture = TestBed.createComponent(ItineraryInvoiceQueue);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

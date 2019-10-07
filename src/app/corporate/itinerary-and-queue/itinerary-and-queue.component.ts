@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UtilHelper } from '../../helper/util.helper';
-import { QueueComponent } from 'src/app/corporate/itinerary-and-queue/queue/queue.component';
+import { ItineraryInvoiceQueue } from 'src/app/corporate/itinerary-and-queue/itinerary-invoice-queue/itinerary-invoice-queue.component';
 
 @Component({
   selector: 'app-itinerary-and-queue', 
@@ -9,7 +9,7 @@ import { QueueComponent } from 'src/app/corporate/itinerary-and-queue/queue/queu
 })
 export class ItineraryAndQueueComponent implements OnInit {
 
-  @ViewChild(QueueComponent) queueComponent: QueueComponent;
+  @ViewChild(ItineraryInvoiceQueue) queueComponent: ItineraryInvoiceQueue;
   constructor(private utilHelper: UtilHelper ) { }
 
   ngOnInit() {

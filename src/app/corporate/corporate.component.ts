@@ -179,6 +179,7 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
+        
       } catch (e) {
         console.log(e);
       }
@@ -256,6 +257,16 @@ export class CorporateComponent implements OnInit {
 
     let queueCollection = Array<QueuePlaceModel>();
     queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+    let teamQueueCollection = Array<QueuePlaceModel>();
+
+    if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      teamQueueCollection = this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      
+    }
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    queueCollection = queueCollection.concat(teamQueueCollection);
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
@@ -274,9 +285,9 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
   }
 
- async sendItineraryAndQueue() {
-     await this.getPnrService();
-      this.workflow = "sendQueue";
+ async sendItineraryAndQueue(){
+   await this.getPnrService();
+   this.workflow = "sendQueue";
     }
 
   async SendItineraryAndQueue() { 

@@ -1,18 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ItineraryRemarkService } from '../../../service/corporate/itinerary-remark.service';
+import { DDBService } from '../../../service/ddb.service';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
-  selector: 'app-queue',
-  templateUrl: './queue.component.html',
-  styleUrls: ['./queue.component.scss']
+  selector: 'app-itinerary-invoice-queue',
+  templateUrl: './itinerary-invoice-queue.component.html',
+  styleUrls: ['./itinerary-invoice-queue.component.scss']
 })
-export class QueueComponent implements OnInit {
+export class ItineraryInvoiceQueue implements OnInit {
   queueForm: FormGroup;
   transactionTypeList: { itemText: string; itemValue: string; }[];
   teamQueueList: { itemText: string; itemValue: string; }[];
   isLeisureOnDemadOid = false;
-  constructor(private itineraryRemarkService : ItineraryRemarkService) {
+  pccList: any = "";
+  
+  constructor(private ddb : DDBService,private pnrService: PnrService) {
     this.queueForm = new FormGroup({
       personalQueue: new FormControl('', []),
       queueNo: new FormControl('', []),
@@ -22,11 +25,12 @@ export class QueueComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.isLeisureOnDemadOid = this.itineraryRemarkService.checkForLeisureOnDemandOID();
+  async ngOnInit() {
+    this.pccList = await this.ddb.getLeisureOnDemandPCC();
+    this.isLeisureOnDemadOid = this.checkForLeisureOnDemandOID();
     this.loadTransactionType();
     this.loadTeamQueueList();
-  }
+   }
 
   get f() {
     return this.queueForm.controls; 
@@ -63,5 +67,15 @@ export class QueueComponent implements OnInit {
       { itemText: 'Optional 4', itemValue: 'optional4' },
     ]
   }
+
+  checkForLeisureOnDemandOID() {
+    if (this.pccList.indexOf(this.pnrService.PCC) > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   
 }

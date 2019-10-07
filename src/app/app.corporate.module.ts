@@ -58,7 +58,7 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     ReportingRemarksComponent,
     IrdRemarksComponent,
     AddWaiverComponent,
-    OfcDocumentationComponent
+    OfcDocumentationComponent,
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent

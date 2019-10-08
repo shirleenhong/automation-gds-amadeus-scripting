@@ -95,6 +95,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
     this.queueService.queuePNR();
+    this.queueService.newQueueCollection();
 
     // await this.getServicingOptions();
     await this.getCountryTravelInformation();

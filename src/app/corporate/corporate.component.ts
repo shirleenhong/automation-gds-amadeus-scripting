@@ -56,7 +56,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
 
   @Input() overrideValue: any;
-  
+
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
@@ -83,11 +83,13 @@ export class CorporateComponent implements OnInit {
       this.modalRef.hide();
     }
   }
-  
+
   async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
     this.amadeusQueueService.queuePNR();
+    this.amadeusQueueService.newQueueCollection();
+
   }
 
   async getPnrService() {
@@ -170,12 +172,10 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
-        
       } catch (e) {
         console.log(e);
       }
     }
-    this.amadeusQueueService.newQueueCollection();
     this.closePopup();
     this.checkHasDataLoadError();
   }
@@ -253,16 +253,14 @@ export class CorporateComponent implements OnInit {
     // debugger;
     this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
 
-    let itineraryQueueCollection = Array<QueuePlaceModel>();
-    let teamQueueCollection = Array<QueuePlaceModel>();
+    // let itineraryQueueCollection = Array<QueuePlaceModel>();
+    // let teamQueueCollection = Array<QueuePlaceModel>();
 
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
-      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-      teamQueueCollection = this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-      
+      this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
     }
-    queueCollection = queueCollection.concat(itineraryQueueCollection);
-    queueCollection = queueCollection.concat(teamQueueCollection);
+
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
@@ -282,12 +280,12 @@ export class CorporateComponent implements OnInit {
     this.cleanupRemarkService.revertDelete();
   }
 
- async sendItineraryAndQueue(){
-   await this.getPnrService();
-   this.workflow = "sendQueue";
-    }
+  async sendItineraryAndQueue() {
+    await this.getPnrService();
+    this.workflow = "sendQueue";
+  }
 
-  async SendItineraryAndQueue() { 
+  async SendItineraryAndQueue() {
     if (!this.itineraryqueueComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -298,27 +296,21 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-    let queueCollection = Array<QueuePlaceModel>();
-    let itineraryQueueCollection = Array<QueuePlaceModel>();
-    let teamQueueCollection = Array<QueuePlaceModel>();
 
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
-      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-      teamQueueCollection = this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-      
+      this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+
     }
-    queueCollection = queueCollection.concat(itineraryQueueCollection);
-    queueCollection = queueCollection.concat(teamQueueCollection);
-   
     try {
-        this.isPnrLoaded = false;
-        this.getPnr(queueCollection);
-        this.workflow = '';
-      }
-      catch(error) {
-        this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error,'Error','Error');
-        console.log(JSON.stringify(error));
-      }
-    
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
+    }
+    catch (error) {
+      this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error, 'Error', 'Error');
+      console.log(JSON.stringify(error));
+    }
+
   }
 }

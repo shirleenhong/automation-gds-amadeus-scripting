@@ -349,7 +349,6 @@ export class TicketRemarkService {
    * @param fg Approval Form Group
    */
   public getApprovalRemarks(fg: FormGroup): Array<RemarkModel> {
-    debugger;
     const remarkList = new Array<RemarkModel>();
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);

@@ -3,6 +3,7 @@ import { PnrService } from '../pnr.service';
 import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
 import { FormGroup } from '@angular/forms';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,23 +11,20 @@ import { FormGroup } from '@angular/forms';
 export class ItineraryRemarkService implements OnInit {
   destination = [];
   leisureOnDemandOID: any = "";
-  
-  constructor(private pnrService: PnrService) {
-   }
-  
+
+  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService) {
+  }
+
   async ngOnInit() {
-  
+
   }
   addQueue(frmGroup: FormGroup) {
-    const queueGroup = Array<QueuePlaceModel>();
-
     if (frmGroup.controls.personalQueue.value && frmGroup.controls.queueNo.value) {
-      this.getQueueMinder(queueGroup, 'personalQueue', frmGroup.controls.queueNo.value);
+      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value);
     }
-    return queueGroup;
   }
 
-  private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) { 
+  private getQueueMinder(controlname: string, queueno?: string) {
     const queue = new QueuePlaceModel();
     const queuePlaceDescription = [
       { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
@@ -47,9 +45,11 @@ export class ItineraryRemarkService implements OnInit {
       { control: 'optional1', queueNo: '236', pcc: '', text: '', category: '50' },
       { control: 'optional2', queueNo: '237', pcc: '', text: '', category: '50' },
       { control: 'optional3', queueNo: '238', pcc: '', text: '', category: '50' },
-      { control: 'optional4', queueNo: '239', pcc: '', text: '', category: '50' }
+      { control: 'optional4', queueNo: '239', pcc: '', text: '', category: '50' },
+      { control: 'EMD', queueNo: '50', pcc: 'YTOWL2106 ', text: '', category: '221' }
     ];
-  const look = queuePlaceDescription.find((x) => x.control === controlname);
+
+    const look = queuePlaceDescription.find((x) => x.control === controlname);
     if (look) {
       queue.queueNo = look.queueNo;
       if (queueno) {
@@ -62,12 +62,11 @@ export class ItineraryRemarkService implements OnInit {
       queue.freetext = look.text;
       queue.category = look.category;
       queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
-      queueGroup.push(queue);
+      this.amadeusQueue.addQueueCollection(queue);
     }
   }
 
-  addItineraryQueue(frmGroup: FormGroup) { 
-    const queueGroup = Array<QueuePlaceModel>();
+  addItineraryQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.typeTransaction.value) {
       let tanstype = '';
       if (frmGroup.controls.typeTransaction.value === 'invoice') {
@@ -75,17 +74,13 @@ export class ItineraryRemarkService implements OnInit {
       } else if (frmGroup.controls.typeTransaction.value === 'itinerary') {
         tanstype = 'itinerary';
       }
-      this.getQueueMinder(queueGroup, tanstype);
+      this.getQueueMinder(tanstype);
     }
-    return queueGroup;
   }
 
-  addTeamQueue(frmGroup: FormGroup) { 
-    const queueGroup = Array<QueuePlaceModel>();
+  addTeamQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.teamQueue.value) {
-     
-      this.getQueueMinder(queueGroup, frmGroup.controls.teamQueue.value);
+      this.getQueueMinder(frmGroup.controls.teamQueue.value);
     }
-    return queueGroup;
   }
 }

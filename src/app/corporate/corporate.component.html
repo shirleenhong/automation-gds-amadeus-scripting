@@ -62,6 +62,29 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 'sendQueue'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i> Itinerary and Queue
+        <span class="cwt-logo"></span>
+      </div>
+       <app-itinerary-and-queue></app-itinerary-and-queue> 
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="SendItineraryAndQueue()">
+        Send Itinerary and Queue
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
+
+
 <div *ngIf="workflow === ''" class="loaderBody">
   <div class="loader">
     <div>
@@ -81,6 +104,11 @@
     <div>
       <button class="leisureButton btnMenu">
         Send Invoice/Itinerary
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
+        Itinerary and Queue
       </button>
     </div>
     <div>

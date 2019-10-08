@@ -23,6 +23,8 @@ import { InvoiceRemarkService } from '../service/corporate/invoice-remark.servic
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
+import { ItineraryAndQueueComponent } from 'src/app/corporate/itinerary-and-queue/itinerary-and-queue.component';
+import { ItineraryRemarkService } from '../service/corporate/itinerary-remark.service';
 import { AmadeusQueueService } from '../service/amadeus-queue.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
@@ -43,6 +45,7 @@ export class CorporateComponent implements OnInit {
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
+  @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
 
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -53,7 +56,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
 
   @Input() overrideValue: any;
-
+  
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
@@ -67,8 +70,9 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private amadeusQueueService: AmadeusQueueService,
+    private itineraryService: ItineraryRemarkService,
     private cleanupRemarkService: CleanUpRemarkService,
+    private amadeusQueueService: AmadeusQueueService,
     private queueService: QueueService
   ) {
     this.initData();
@@ -79,7 +83,7 @@ export class CorporateComponent implements OnInit {
       this.modalRef.hide();
     }
   }
-
+  
   async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
@@ -166,6 +170,7 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
+        
       } catch (e) {
         console.log(e);
       }
@@ -248,6 +253,16 @@ export class CorporateComponent implements OnInit {
     // debugger;
     this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
 
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+    let teamQueueCollection = Array<QueuePlaceModel>();
+
+    if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      teamQueueCollection = this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      
+    }
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    queueCollection = queueCollection.concat(teamQueueCollection);
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
@@ -265,5 +280,45 @@ export class CorporateComponent implements OnInit {
   back() {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
+  }
+
+ async sendItineraryAndQueue(){
+   await this.getPnrService();
+   this.workflow = "sendQueue";
+    }
+
+  async SendItineraryAndQueue() { 
+    if (!this.itineraryqueueComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Sending Itinerary and Queueing...');
+    let queueCollection = Array<QueuePlaceModel>();
+    let itineraryQueueCollection = Array<QueuePlaceModel>();
+    let teamQueueCollection = Array<QueuePlaceModel>();
+
+    if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
+      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      teamQueueCollection = this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      
+    }
+    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    queueCollection = queueCollection.concat(teamQueueCollection);
+   
+    try {
+        this.isPnrLoaded = false;
+        this.getPnr(queueCollection);
+        this.workflow = '';
+      }
+      catch(error) {
+        this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error,'Error','Error');
+        console.log(JSON.stringify(error));
+      }
+    
   }
 }

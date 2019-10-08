@@ -10,7 +10,7 @@ declare var smartScriptSession: any;
 export class CleanUpRemarkService {
   deleteRemarksByIds = Array<string>();
 
-  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) {}
+  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) { }
 
   cleanUpRemarks() {
     this.markIdForDeletion();
@@ -21,7 +21,6 @@ export class CleanUpRemarkService {
 
   markIdForDeletion() {
     // tslint:disable-next-line: no-debugger
-    debugger;
     const remarks = Array<string>();
     remarks.push('TKT'); // TKT
     remarks.push('SPLIT'); // RMT SPLIT

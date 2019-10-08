@@ -20,8 +20,7 @@ import { InvoiceRemarkService } from '../service/leisure/invoice-remark.service'
 import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { ItineraryRemarkService } from '../service/leisure/itinerary-remark.service';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
-import { QueueRemarkService } from '../service/queue-remark.service';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { AmadeusQueueService } from '../service/amadeus-queue.service';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
@@ -78,7 +77,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private modalService: BsModalService,
     private invoiceService: InvoiceRemarkService,
     private itineraryService: ItineraryRemarkService,
-    private queueService: QueueRemarkService,
+    private queueService: AmadeusQueueService,
     private otherService: OtherRemarksService
   ) {
     this.getPnr();
@@ -89,15 +88,14 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
-  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
+  async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
-    if (queueCollection) {
-      this.queueService.queuePNR(queueCollection);
-    }
+    this.queueService.queuePNR();
+    this.queueService.newQueueCollection();
 
     // await this.getServicingOptions();
     await this.getCountryTravelInformation();
@@ -306,10 +304,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     });
   }
 
-  async resetReloadUI(queueCollection?) {
+  async resetReloadUI() {
     this.submitProcess = false;
     this.isPnrLoaded = false;
-    await this.getPnr(queueCollection);
+    await this.getPnr();
     this.workflow = '';
   }
 
@@ -335,7 +333,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   async cancelPnr() {
-    let queueCollection = Array<QueuePlaceModel>();
+    // let queueCollection = Array<QueuePlaceModel>();
 
     if (this.submitProcess) {
       return;
@@ -362,7 +360,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -372,7 +370,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
 
-    queueCollection = this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
+    this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
     if (this.cancelComponent.refundComponent) {
       remarkCollection.push(this.segmentService.writeRefundRemarks(this.cancelComponent.refundComponent.refundForm));
     }
@@ -381,7 +379,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     await this.leisureRemarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
-        this.getPnr(queueCollection);
+        this.getPnr();
         this.workflow = '';
       },
       (error) => {
@@ -470,20 +468,17 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
     this.showLoading('Sending Itinerary and Queueing...');
     const remarkCollection = new Array<RemarkGroup>();
-    let queueCollection = Array<QueuePlaceModel>();
-    let itineraryQueueCollection = Array<QueuePlaceModel>();
 
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
-      itineraryQueueCollection = this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
+      this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-    queueCollection = this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-    queueCollection = queueCollection.concat(itineraryQueueCollection);
+    this.itineraryService.addQueue(this.itineraryqueueComponent.queueComponent.queueForm);
     this.leisureRemarkService.BuildRemarks(remarkCollection);
     this.leisureRemarkService.SubmitRemarks().then(
       () => {
         this.isPnrLoaded = false;
-        this.getPnr(queueCollection);
+        this.getPnr();
         this.workflow = '';
       },
       (error) => {

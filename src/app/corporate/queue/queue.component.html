@@ -1,6 +1,9 @@
 <tabset id="remarksTab">
-  <tab heading="Queue Placement" id="queueMinder" tabOrder="1">
+  <tab heading="Queue Placement" id="queueMinder" tabOrder="1" *ngIf="isEsc">
     <app-queue-minder>
     </app-queue-minder>
+  </tab>
+  <tab heading="Queue" id="queue" tabOrder="2">
+    <app-itinerary-invoice-queue></app-itinerary-invoice-queue>
   </tab>
 </tabset>

@@ -13,9 +13,7 @@ import { ReportingViewModel } from 'src/app/models/reporting-view.model';
 export class ReportingRemarksComponent implements OnInit {
   bspRouteCodeList: SelectItem[];
   isTripTypeCorporate = false;
-  countryDest = '';
   reportingForm: FormGroup;
-  routeCode = '';
   destinations: Array<any>;
   segments: any[];
 
@@ -35,6 +33,9 @@ export class ReportingRemarksComponent implements OnInit {
     this.segments = await this.pnrService.getTstSegments();
     for (const segment of this.segments) {
       const group = this.createFormGroup(segment);
+      const dest = group.get('destinationList') as FormControl;
+      dest.setValidators([Validators.required]);
+
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
   }

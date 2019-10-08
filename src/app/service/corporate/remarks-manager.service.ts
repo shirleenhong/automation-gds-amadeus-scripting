@@ -14,7 +14,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
 
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi

@@ -23,13 +23,13 @@ import { InvoiceRemarkService } from '../service/corporate/invoice-remark.servic
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
-import { ItineraryAndQueueComponent } from 'src/app/corporate/itinerary-and-queue/itinerary-and-queue.component';
 import { ItineraryRemarkService } from '../service/corporate/itinerary-remark.service';
 import { AmadeusQueueService } from '../service/amadeus-queue.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
 import { QueueService } from '../service/corporate/queue.service';
 import { QueueComponent } from './queue/queue.component';
+import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 
 @Component({
   selector: 'app-corporate',
@@ -45,8 +45,8 @@ export class CorporateComponent implements OnInit {
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
-  @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
 
+  @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
@@ -251,14 +251,16 @@ export class CorporateComponent implements OnInit {
 
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
     // debugger;
-    this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
+    if (this.queueComponent.queueMinderComponent) {
+      this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
+    }
 
     // let itineraryQueueCollection = Array<QueuePlaceModel>();
     // let teamQueueCollection = Array<QueuePlaceModel>();
 
-    if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
-      this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-      this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
+      this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+      this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(

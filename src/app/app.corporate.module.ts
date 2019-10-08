@@ -60,7 +60,7 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     IrdRemarksComponent,
     AddWaiverComponent,
     ItineraryAndQueueComponent,
-    ItineraryInvoiceQueue, 
+    ItineraryInvoiceQueue,
     OfcDocumentationComponent,
     QueueMinderComponent,
     QueueComponent,
@@ -86,4 +86,4 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule {}
+export class AppCorporateModule { }

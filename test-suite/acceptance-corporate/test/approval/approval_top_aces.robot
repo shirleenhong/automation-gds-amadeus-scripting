@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    top
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Top Aces Is Queued For Approval
     [Tags]    us13271
@@ -47,7 +50,7 @@ Verify That PNRs For Client Top Aces With Trans Route Do Not Go Thru Approval Pr
 Verify That Car Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Top Aces, Car Only
+    Create PNR For Client Top Aces, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
@@ -55,7 +58,7 @@ Verify That Car Only PNRs For Client Top Aces Do Not Go Thru Approval Process
 Verify That Hotel Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Top Aces, Hotel Only
+    Create PNR For Client Top Aces, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
@@ -63,7 +66,7 @@ Verify That Hotel Only PNRs For Client Top Aces Do Not Go Thru Approval Process
 Verify That Car And Hotel Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Top Aces, Car And Hotel Only
+    Create PNR For Client Top Aces, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

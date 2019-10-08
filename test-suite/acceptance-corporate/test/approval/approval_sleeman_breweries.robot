@@ -11,8 +11,11 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    sleeman
+
 *** Test Cases ***
-Verify That PNRs For Client Sleeman Breweries Are Correctly Queued To Approval Queue
+Verify That PNRs For Client Sleeman Breweries Are Correctly Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EMPLOYEE, Air Only
@@ -60,7 +63,7 @@ Verify That Car And Hotel Only PNRs For Client Sleeman Breweries Do Not Go Thru 
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser
     
-Verify That Mix Segment PNRs For Client Sleeman Breweries Are Correctly Queued To Approval Queue
+Verify That PNRs For Client Sleeman Breweries Can Skip Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EMPLOYEE, Mix Segments

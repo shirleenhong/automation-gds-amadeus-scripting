@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    securitas
+
 *** Test Cases ***
 Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP-CA 
     [Tags]    us13271
@@ -47,7 +50,7 @@ Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly 
 Verify That Air Only PNRs For Client Securitas Electronic Security Can Skip Approval Process 
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 OPERATIONS-CA, Air Only, Skip Approval
+    Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 OPERATIONS-CA, Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     [Teardown]     Close Browser

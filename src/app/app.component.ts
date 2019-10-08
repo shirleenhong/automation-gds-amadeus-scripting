@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   isMinimize = false;
   header = 'Leisure';
   @Input()
-  overrideValue: string = '';
+  overrideValue = '';
   @Input()
   counselorIdentity: string;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;

@@ -491,3 +491,9 @@ input[type='date']::-webkit-inner-spin-button {
 .fa-spinner {
   color: orangered;
 }
+.bsp-routing-remark {
+  margin-left: 10px;
+}
+.bsp-select-routing-remark {
+  margin-top: 3px;
+}

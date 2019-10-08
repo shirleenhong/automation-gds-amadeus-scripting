@@ -25,6 +25,8 @@ import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueRemarkService } from '../service/queue-remark.service';
+import { RemarkModel } from '../models/pnr/remark.model';
+import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -63,7 +65,8 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService
+    private queueService: QueueRemarkService,
+    private cleanupRemarkService: CleanUpRemarkService
   ) {
     this.initData();
   }
@@ -127,7 +130,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentsComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
-    // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+    this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
     return this.validModel.isCorporateAllValid();
@@ -140,6 +143,8 @@ export class CorporateComponent implements OnInit {
 
   async loadPnrData() {
     this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    this.cleanupRemarkService.cleanUpRemarks();
     await this.getPnrService();
 
     if (!this.pnrService.getClientSubUnit()) {
@@ -195,6 +200,7 @@ export class CorporateComponent implements OnInit {
 
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
+    let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
@@ -202,12 +208,11 @@ export class CorporateComponent implements OnInit {
         this.ticketingComponent.ticketlineComponent.approvalForm
       )
     );
-
+    accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
-
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
@@ -225,17 +230,22 @@ export class CorporateComponent implements OnInit {
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
+    this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
 
     this.invoiceRemarkService.sendU70Remarks();
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+    this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
+    this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager
-    const additionalRemarks = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     let queueCollection = Array<QueuePlaceModel>();
     queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-    await this.rms.submitToPnr(additionalRemarks, forDeleteRemarks).then(
+
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
@@ -251,5 +261,6 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+    this.cleanupRemarkService.revertDelete();
   }
 }

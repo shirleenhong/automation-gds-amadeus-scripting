@@ -11,6 +11,9 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
+*** Variables ***
+${test_file_name}    societe
+
 *** Test Cases ***
 Verify That PNRs For Client Societe Generale Exit Approval Process When First Primary Reason Is Selected
     [Tags]    us13271

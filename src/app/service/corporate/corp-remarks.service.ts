@@ -120,7 +120,7 @@ export class CorpRemarksService {
   }
   private getHeader(): string {
     for (const rm of this.pms.pnrObj.rmElements) {
-      const regex = /\*\* IRD WORKING \*\* \s(?<irdHeader>.*)/g;
+      const regex = /\*\* IRD WORKING \*\*\s(?<irdHeader>.*)/g;
       const match = regex.exec(rm.freeFlowText);
       if (match) {
         return match.groups.irdHeader;
@@ -133,9 +133,12 @@ export class CorpRemarksService {
     const items = irdGroup.get('irdItems') as FormArray;
     let status = '';
 
-    const header = new Map<string, string>();
-    header.set('IrdHeader', this.getHeader());
-    this.rms.createPlaceholderValues(header);
+    const headerIrd = this.getHeader();
+    if (headerIrd) {
+      const header = new Map<string, string>();
+      header.set('IrdHeader', headerIrd);
+      this.rms.createPlaceholderValues(header);
+    }
 
     for (const group of items.controls) {
       const nbrStatus = new Map<string, string>();

@@ -3,14 +3,12 @@
 
     <div class="row form-group">
       <div class="col-3"></div>
-      <div class="col-8">
-        Queue Place a PNR for follow up
-      </div>
     </div>
     <div class="form-group  row">
-      <div class="col-sm-4">Type of Transanction :</div>
+      <div class="col-sm-3">Type of Transaction:</div>
       <div class="col-sm-4">
-        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction" name="typeTransaction">
+        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction"
+          name="typeTransaction">
           <option *ngFor="let item of transactionTypeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
@@ -19,7 +17,7 @@
     </div>
 
     <div class="form-group  row" *ngIf="!isLeisureOnDemadOid">
-      <div class="col-sm-4">Team Queue :</div>
+      <div class="col-sm-3">Team Queue:</div>
       <div class="col-sm-4">
         <select autofocus id="teamQueue" class="form-control" formControlName="teamQueue" name="teamQueue">
           <option *ngFor="let item of teamQueueList" [value]="item.itemValue">
@@ -30,13 +28,23 @@
     </div>
 
     <div class="row form-group">
-      <div class="col-4">Personal Queue </div>
-      <div class="col-4">
+      <div class="col-3"></div>
+      <div class="col-2">
+        Queue Number
+      </div>
+      <div class="col-2">
+        Category
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-3">Personal Queue:</div>
+      <div class="col-2">
         <input type="text" class="form-control" id="queueNo" name="queueNo" formControlName="queueNo" maxlength="35" />
       </div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="queueCategory" name="queueCategory" formControlName="queueCategory" maxlength="35"
-        />
+      <div class="col-2">
+        <input type="text" class="form-control" id="queueCategory" name="queueCategory" formControlName="queueCategory"
+          maxlength="35" />
       </div>
     </div>
 

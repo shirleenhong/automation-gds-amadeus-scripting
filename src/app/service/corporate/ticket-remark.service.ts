@@ -379,7 +379,7 @@ export class TicketRemarkService {
           }
         });
       });
-    } else if (this.ddbService.approvalList.length > 0) {
+    } else if (this.ddbService.approvalList.length > 0 && this.pnrService.getRemarkLineNumber('NO APPROVAL REQUIRED') === '') {
       remarkList.push(this.remarkHelper.createRemark('NO APPROVAL REQUIRED', 'RM', 'G'));
     }
 

@@ -14,14 +14,14 @@ export class ItineraryInvoiceQueue implements OnInit {
   teamQueueList: { itemText: string; itemValue: string; }[];
   isLeisureOnDemadOid = false;
   pccList: any = "";
-  
-  constructor(private ddb : DDBService,private pnrService: PnrService) {
+
+  constructor(private ddb: DDBService, private pnrService: PnrService) {
     this.queueForm = new FormGroup({
       personalQueue: new FormControl('', []),
       queueNo: new FormControl('', []),
       typeTransaction: new FormControl('', []),
       queueCategory: new FormControl('', []),
-      teamQueue:new FormControl('',[])
+      teamQueue: new FormControl('', [])
     });
   }
 
@@ -30,24 +30,24 @@ export class ItineraryInvoiceQueue implements OnInit {
     this.isLeisureOnDemadOid = this.checkForLeisureOnDemandOID();
     this.loadTransactionType();
     this.loadTeamQueueList();
-   }
+  }
 
   get f() {
-    return this.queueForm.controls; 
+    return this.queueForm.controls;
   }
 
 
-  loadTransactionType() { 
+  loadTransactionType() {
     this.transactionTypeList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Invoice', itemValue: 'invoice' },
       { itemText: 'Itinerary', itemValue: 'itinerary' }
     ];
-  
+
   }
 
   loadTeamQueueList() {
-    this.teamQueueList= [
+    this.teamQueueList = [
       { itemText: '', itemValue: '' },
       { itemText: 'VIP', itemValue: 'vip' },
       { itemText: 'Pending Approval', itemValue: 'pendingApproval' },
@@ -65,6 +65,7 @@ export class ItineraryInvoiceQueue implements OnInit {
       { itemText: 'Optional 2', itemValue: 'optional2' },
       { itemText: 'Optional 3', itemValue: 'optional3' },
       { itemText: 'Optional 4', itemValue: 'optional4' },
+      { itemText: 'EMD', itemValue: 'EMD' }
     ]
   }
 
@@ -77,5 +78,5 @@ export class ItineraryInvoiceQueue implements OnInit {
     }
   }
 
-  
+
 }

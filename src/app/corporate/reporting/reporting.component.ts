@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { ReportingBSPComponent } from './reporting-bsp/reporting-bsp.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReportingNonbspComponent } from './reporting-nonbsp/reporting-nonbsp.component';
@@ -18,7 +18,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(ReportingRemarksComponent) reportingRemarksComponent: ReportingRemarksComponent;
   hasTst: boolean;
-  @Input() overrideValue: any;
+
   @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
 

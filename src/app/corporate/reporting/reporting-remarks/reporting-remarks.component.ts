@@ -13,9 +13,7 @@ import { ReportingViewModel } from 'src/app/models/reporting-view.model';
 export class ReportingRemarksComponent implements OnInit {
   bspRouteCodeList: SelectItem[];
   isTripTypeCorporate = false;
-  countryDest = '';
   reportingForm: FormGroup;
-  routeCode = '';
   destinations: Array<any>;
   segments: any[];
 

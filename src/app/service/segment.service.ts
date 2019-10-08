@@ -10,6 +10,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { TranslationService } from './translation.service';
+import { AmadeusQueueService } from './amadeus-queue.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -27,7 +28,8 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
+        private amadeusQueueService: AmadeusQueueService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -979,27 +981,24 @@ export class SegmentService {
 
 
     queueCancel(frmCancel: FormGroup, cfa: CfRemarkModel) {
-        const queueGroup = Array<QueuePlaceModel>();
         if (frmCancel.controls.followUpOption.value === 'BSP Queue') {
-            this.getQueueMinder(queueGroup, 'bspAllCfa');
+            this.getQueueMinder('bspAllCfa');
             if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-                this.getQueueMinder(queueGroup, 'rbpRbm');
+                this.getQueueMinder('rbpRbm');
             }
         }
 
         if (frmCancel.controls.followUpOption.value === 'Non BSP Refund') {
             if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-                this.getQueueMinder(queueGroup, 'nonBspRbmRbp');
+                this.getQueueMinder('nonBspRbmRbp');
             } else {
-                this.getQueueMinder(queueGroup, 'nonBspAllCfa');
+                this.getQueueMinder('nonBspAllCfa');
             }
         }
-
-        return queueGroup;
     }
 
 
-    private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
+    private getQueueMinder(controlname: string, queueno?: string) {
         const queue = new QueuePlaceModel();
 
         const queuePlaceDescription = [
@@ -1021,7 +1020,7 @@ export class SegmentService {
             queue.freetext = look.text;
             queue.category = look.category;
             queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
-            queueGroup.push(queue);
+            this.amadeusQueueService.addQueueCollection(queue);
         }
     }
 }

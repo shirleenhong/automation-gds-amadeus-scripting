@@ -5,6 +5,7 @@ export class ValidateModel {
   isSegmentValid = false;
   isSubmitted = false;
   isFeesValid = false;
+  isQueueValid = false;
   // isItineraryValid = false;
   isTicketingValid = false;
   paymentValidCss = '';
@@ -14,6 +15,7 @@ export class ValidateModel {
   itineraryValidCss = '';
   ticketingValidCss = '';
   feesValidCss = '';
+  queueValidCss = '';
 
   setCssClass() {
     this.paymentValidCss = this.getCss(this.isPaymentValid);
@@ -22,6 +24,7 @@ export class ValidateModel {
     this.segmentValidCss = this.getCss(this.isSegmentValid);
     this.ticketingValidCss = this.getCss(this.isTicketingValid);
     this.feesValidCss = this.getCss(this.isFeesValid);
+    this.queueValidCss = this.getCss(this.isQueueValid);
     // this.itineraryValidCss = this.getCss(this.isItineraryValid);
   }
 
@@ -40,6 +43,8 @@ export class ValidateModel {
 
   isCorporateAllValid() {
     this.setCssClass();
-    return this.isPaymentValid && this.isReportingValid && this.isTicketingValid && this.isFeesValid && this.isRemarkValid;
+    return (
+      this.isPaymentValid && this.isReportingValid && this.isTicketingValid && this.isFeesValid && this.isRemarkValid && this.isQueueValid
+    );
   }
 }

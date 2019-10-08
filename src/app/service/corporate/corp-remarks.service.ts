@@ -12,8 +12,12 @@ import { RemarkHelper } from 'src/app/helper/remark-helper';
   providedIn: 'root'
 })
 export class CorpRemarksService {
-  constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService,
-    private rms: RemarksManagerService, private remarkHelper: RemarkHelper) { }
+  constructor(
+    private remarksManagerService: RemarksManagerService,
+    private pms: PnrService,
+    private rms: RemarksManagerService,
+    private remarkHelper: RemarkHelper
+  ) {}
 
   /**
    * US11820: Write or prepare the seats for the PNR
@@ -115,7 +119,7 @@ export class CorpRemarksService {
   }
   private getHeader(): string {
     for (const rm of this.pms.pnrObj.rmElements) {
-      const regex = /\*\* IRD WORKING \*\* \s(?<irdHeader>.*)/g;
+      const regex = /\*\* IRD WORKING \*\*\s(?<irdHeader>.*)/g;
       const match = regex.exec(rm.freeFlowText);
       if (match) {
         return match.groups.irdHeader;
@@ -128,16 +132,17 @@ export class CorpRemarksService {
     const items = irdGroup.get('irdItems') as FormArray;
     let status = '';
 
-    const header = new Map<string, string>();
-    header.set('IrdHeader', this.getHeader());
-    this.rms.createPlaceholderValues(header);
+    const headerIrd = this.getHeader();
+    if (headerIrd) {
+      const header = new Map<string, string>();
+      header.set('IrdHeader', headerIrd);
+      this.rms.createPlaceholderValues(header);
+    }
 
     for (const group of items.controls) {
       const nbrStatus = new Map<string, string>();
       const irdSavings = new Map<string, string>();
       const lowFareSavings = new Map<string, string>();
-
-
 
       if (group.get('lowSavingStatus').value) {
         status = group.get('lowSavingStatus').value;
@@ -145,7 +150,7 @@ export class CorpRemarksService {
         status = group.get('irdStatus').value;
       }
 
-      status = (status.indexOf('DECLINED') > -1) ? 'DECLINED' : status;
+      status = status.indexOf('DECLINED') > -1 ? 'DECLINED' : status;
       nbrStatus.set('NbrNo', group.get('irdNumber').value);
       nbrStatus.set('IrdStatus', status);
       irdSavings.set('IrdCurrency', group.get('currency').value);

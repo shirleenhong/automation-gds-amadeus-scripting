@@ -5,6 +5,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
+import { AmadeusQueueService } from './amadeus-queue.service';
 
 declare var smartScriptSession: any;
 
@@ -20,7 +21,7 @@ export class AmadeusRemarkService {
   passiveSegmentGroup: Array<PassiveSegmentModel>;
   responseMessage: string;
 
-  constructor(private pnrService: PnrService) {
+  constructor(private pnrService: PnrService, private amadeusQueueService: AmadeusQueueService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
     this.remarksElement = new Array<any>();
@@ -514,5 +515,6 @@ export class AmadeusRemarkService {
     smartScriptSession.send('ER');
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');
+    this.amadeusQueueService.newQueueCollection();
   }
 }

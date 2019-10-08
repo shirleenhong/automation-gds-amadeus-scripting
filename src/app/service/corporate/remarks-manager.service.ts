@@ -13,7 +13,7 @@ export class RemarksManagerService {
   matchedPlaceHolderValues = new Array<PlaceholderValues>();
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
-
+  receiveFrom = '';
   constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
 
   public async getMatchcedPlaceholderValues() {
@@ -183,17 +183,32 @@ export class RemarksManagerService {
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', pnrResponse.pnrAddMultiElements).then((res) => {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
-      smartScriptSession.getActiveTask().then((x) => {
-        if (x.subtype === 'PNR') {
-          smartScriptSession.requestService('bookingfile.refresh', null, {
-            fn: '',
-            scope: this
-          });
-        } else {
-          smartScriptSession.send('RT');
-        }
-      });
+      this.endPnr();
+      this.refreshPnr();
     });
+  }
+
+  refreshPnr(): void {
+    smartScriptSession.getActiveTask().then((x) => {
+      if (x.subtype === 'PNR') {
+        smartScriptSession.requestService('bookingfile.refresh', null, {
+          fn: '',
+          scope: this
+        });
+      } else {
+        smartScriptSession.send('RT');
+      }
+      this.receiveFrom = 'CWTSCRIPT';
+    });
+  }
+
+  async endPnr() {
+    await smartScriptSession.send('RF' + this.receiveFrom);
+    await smartScriptSession.send('ER');
+  }
+
+  setReceiveFrom(rcvFrom: string) {
+    this.receiveFrom = rcvFrom;
   }
 
   private combineForDeleteItems(deleteResponse: string, additional: string[]): string {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { LoadingComponent } from '../shared/loading/loading.component';
@@ -30,6 +30,8 @@ import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.servic
 import { QueueService } from '../service/corporate/queue.service';
 import { QueueComponent } from './queue/queue.component';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
+import { OfcRemarkService } from '../service/corporate/ofc-remark.service';
+import { CounselorDetail } from '../globals/counselor-identity';
 
 @Component({
   selector: 'app-corporate',
@@ -55,8 +57,6 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
 
-  @Input() overrideValue: any;
-
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
@@ -73,7 +73,9 @@ export class CorporateComponent implements OnInit {
     private itineraryService: ItineraryRemarkService,
     private cleanupRemarkService: CleanUpRemarkService,
     private amadeusQueueService: AmadeusQueueService,
-    private queueService: QueueService
+    private queueService: QueueService,
+    private councelorDetail: CounselorDetail,
+    private ofcRemarkService: OfcRemarkService
   ) {
     this.initData();
   }
@@ -89,7 +91,6 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.amadeusQueueService.queuePNR();
     this.amadeusQueueService.newQueueCollection();
-
   }
 
   async getPnrService() {
@@ -140,6 +141,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
+    this.validModel.isQueueValid = this.queueComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 
@@ -229,9 +231,13 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
 
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
-    this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
+    this.reportingRemarkService.WriteEscOFCRemark(this.councelorDetail.getIdentity());
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    }
+
+    if (this.councelorDetail.getIdentity() === 'OFC') {
+      this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
@@ -254,9 +260,6 @@ export class CorporateComponent implements OnInit {
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
-
-    // let itineraryQueueCollection = Array<QueuePlaceModel>();
-    // let teamQueueCollection = Array<QueuePlaceModel>();
 
     if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
@@ -284,7 +287,7 @@ export class CorporateComponent implements OnInit {
 
   async sendItineraryAndQueue() {
     await this.getPnrService();
-    this.workflow = "sendQueue";
+    this.workflow = 'sendQueue';
   }
 
   async SendItineraryAndQueue() {
@@ -302,17 +305,14 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
-
     }
     try {
       this.isPnrLoaded = false;
       this.getPnr();
       this.workflow = '';
-    }
-    catch (error) {
+    } catch (error) {
       this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error, 'Error', 'Error');
       console.log(JSON.stringify(error));
     }
-
   }
 }

@@ -12,8 +12,12 @@ import { RemarkHelper } from 'src/app/helper/remark-helper';
   providedIn: 'root'
 })
 export class CorpRemarksService {
-  constructor(private remarksManagerService: RemarksManagerService, private pms: PnrService,
-    private rms: RemarksManagerService, private remarkHelper: RemarkHelper) { }
+  constructor(
+    private remarksManagerService: RemarksManagerService,
+    private pms: PnrService,
+    private rms: RemarksManagerService,
+    private remarkHelper: RemarkHelper
+  ) {}
 
   /**
    * WIP
@@ -25,7 +29,6 @@ export class CorpRemarksService {
    */
   public writeSeatRemarks(seats: Array<SeatModel>): void {
     for (const seat of seats) {
-
       // Work-around: explicitly cast seat.id to number
       seat.id = parseFloat(seat.id.toString());
 
@@ -91,7 +94,6 @@ export class CorpRemarksService {
     let model = new IrdModel();
     const irdRemarksModel = new Array<IrdModel>();
     for (const rm of this.pms.pnrObj.rmElements) {
-
       let regex = /----------CWT IRD RATE NBR(?<nbrNo>.*)-------(?<irdStatus>.*)/g;
       let match = regex.exec(rm.freeFlowText);
       if (match) {
@@ -143,15 +145,13 @@ export class CorpRemarksService {
       const irdSavings = new Map<string, string>();
       const lowFareSavings = new Map<string, string>();
 
-
-
       if (group.get('lowSavingStatus').value) {
         status = group.get('lowSavingStatus').value;
       } else {
         status = group.get('irdStatus').value;
       }
 
-      status = (status.indexOf('DECLINED') > -1) ? 'DECLINED' : status;
+      status = status.indexOf('DECLINED') > -1 ? 'DECLINED' : status;
       nbrStatus.set('NbrNo', group.get('irdNumber').value);
       nbrStatus.set('IrdStatus', status);
       irdSavings.set('IrdCurrency', group.get('currency').value);

@@ -25,6 +25,15 @@ export class SeatsComponent implements OnInit {
 
   ngOnInit() {
     this.seats = this.getSeats();
+    // tmp
+    this.seats = [
+      {
+        id: 1,
+        type: 'WINDOW',
+        number: 'A12',
+        segmentIds: '1,2,3'
+      }
+    ];
     this.seatRemarkOptions = SeatsService.REMARK_OPTIONS;
   }
 
@@ -216,10 +225,14 @@ export class SeatsComponent implements OnInit {
    * @return void
    */
   public create(): void {
-    this.modalRef = this.modalService.show(SeatsFormComponent, this.modalRefConfig);
+    // Merge config and data to pass to the modal.
+    const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats } } };
+
+    this.modalRef = this.modalService.show(SeatsFormComponent, modalConfig);
     this.modalRef.content.title = 'Manage Seats';
     this.modalRef.content.seats = this.seats;
-
+    this.modalRef.content.test = 'Test';
+    this.modalRef.content.loadSeatData();
     this.modalSubscribeOnClose();
   }
 
@@ -243,6 +256,9 @@ export class SeatsComponent implements OnInit {
           console.log('this.modalRef.content.seatsForm.value.seatsFormArray');
           console.log(this.modalRef.content.seatsForm.value.seatsFormArray);
 
+          const segmentIdsForAll = this.modalRef.content.seatsForm.value.segmentIds;
+
+          // Get the selected seats from the modal.
           const newSeats = this.modalRef.content.seatsForm.value.seatsFormArray
             .filter((newSeat: any) => newSeat.selected === true)
             .map((newSeat: any) => {
@@ -250,16 +266,15 @@ export class SeatsComponent implements OnInit {
                 id: newSeat.id ? newSeat.id : null,
                 type: newSeat.type ? newSeat.type : null,
                 number: newSeat.number ? newSeat.number : null,
-                segmentIds: newSeat.segmentIds ? newSeat.segmentIds : null
+                segmentIds: segmentIdsForAll ? segmentIdsForAll : null
               };
             });
 
           console.log('newSeats:');
           console.log(newSeats);
+
           // Add the new seat to the seats.
-          if (newSeats) {
-            this.seats = newSeats;
-          }
+          this.seats = newSeats;
         }
       }
 

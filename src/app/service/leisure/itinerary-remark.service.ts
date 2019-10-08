@@ -7,13 +7,15 @@ import { RemarkHelper } from '../../helper/remark-helper';
 import { DDBService } from '../ddb.service';
 import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItineraryRemarkService {
   destination = [];
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ddbService: DDBService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ddbService: DDBService,
+    private amadeusQueue: AmadeusQueueService) { }
 
   getItineraryRemarks(frmGroup: FormGroup) {
     const rmGroup = new RemarkGroup();
@@ -174,31 +176,28 @@ export class ItineraryRemarkService {
   }
 
   addQueue(frmGroup: FormGroup) {
-    const queueGroup = Array<QueuePlaceModel>();
-
     if (frmGroup.controls.nonBsp.value) {
-      this.getQueueMinder(queueGroup, 'nonBsp');
+      this.getQueueMinder('nonBsp');
     }
     if (frmGroup.controls.ticketExchange.value) {
-      this.getQueueMinder(queueGroup, 'ticketExchange');
+      this.getQueueMinder('ticketExchange');
     }
     if (frmGroup.controls.bspTicket.value) {
-      this.getQueueMinder(queueGroup, 'bspTicket');
+      this.getQueueMinder('bspTicket');
     }
     if (frmGroup.controls.refund.value) {
-      this.getQueueMinder(queueGroup, 'refund');
+      this.getQueueMinder('refund');
     }
     // if (frmGroup.controls.cwtItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
     if (frmGroup.controls.bspRefund.value) {
-      this.getQueueMinder(queueGroup, 'bspRefund');
+      this.getQueueMinder('bspRefund');
     }
     if (frmGroup.controls.personalQueue.value && frmGroup.controls.queueNo.value) {
-      this.getQueueMinder(queueGroup, 'personalQueue', frmGroup.controls.queueNo.value);
+      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value);
     }
-    return queueGroup;
   }
 
-  private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
+  private getQueueMinder(controlname: string, queueno?: string) {
     const queue = new QueuePlaceModel();
 
     const queuePlaceDescription = [
@@ -229,13 +228,11 @@ export class ItineraryRemarkService {
       queue.freetext = look.text;
       queue.category = look.category;
       queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
-      queueGroup.push(queue);
+      this.amadeusQueue.addQueueCollection(queue);
     }
   }
 
   addItineraryQueue(frmGroup: FormGroup) {
-    const queueGroup = Array<QueuePlaceModel>();
-
     // if (frmGroup.controls.sendItinerary.value) { this.getQueueMinder(queueGroup, 'cwtItinerary'); }
     if (frmGroup.controls.typeTransaction.value) {
       let tanstype = '';
@@ -244,8 +241,7 @@ export class ItineraryRemarkService {
       } else if (frmGroup.controls.typeTransaction.value === 'itinerary') {
         tanstype = 'itinerary';
       }
-      this.getQueueMinder(queueGroup, tanstype);
+      this.getQueueMinder(tanstype);
     }
-    return queueGroup;
   }
 }

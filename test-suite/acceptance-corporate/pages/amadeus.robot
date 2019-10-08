@@ -222,13 +222,13 @@ Create Multiple TKT Exchange PNR In The GDS
     Sleep    5
 
 Move Single Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
 
 Move Single Passenger For OBT
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
 
 Move Multiple Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
 
 Move Single Passenger And Add Single BSP Segment With TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-CN1
@@ -284,10 +284,10 @@ Handle Simultaneous Changes To PNR
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
 
 Move Single Passenger For EN
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     
 Move Single Passenger For FR
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000N    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
 
 Create ${num_of_test_dates} Test Dates
     ${tdate}    Get Current Date

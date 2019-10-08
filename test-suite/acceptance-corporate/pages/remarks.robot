@@ -9,7 +9,7 @@ Resource          amadeus.robot
 *** Variables ***
 ${tab_documentPnr}    css=#documentPnrTab-link
 ${row_documentPNR}    //div[@formarrayname='items']
-${add_button}    //i[@class='fas fa-plus-circle iconPlus']
+${button_addRemark}    //i[@id='add']
 ${input_document}    //input[@formcontrolname='documentation']
 
 *** Keywords ***
@@ -22,7 +22,7 @@ Populate Document PNR
     Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
 
 Click Add Remark Button ${button_no}
-    Click Element   ${row_documentPNR}[${button_no}]${add_button}
+    Click Element   ${row_documentPNR}[${button_no}]${button_addRemark}
     
 Populate Multiple Document PNR
     [Arguments]    @{document_values}
@@ -42,6 +42,7 @@ Verify That Multiple Document PNR Can Be Added
 Verify That Single Document PNR Can Be Added
     Navigate To Page Document PNR
     Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
+    Take Screenshot
     
 Verify That Document PNR Remarks Are Written In The PNR
     Finish PNR

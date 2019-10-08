@@ -23,13 +23,13 @@ import { InvoiceRemarkService } from '../service/corporate/invoice-remark.servic
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
-import { QueueRemarkService } from '../service/queue-remark.service';
 import { ItineraryAndQueueComponent } from 'src/app/corporate/itinerary-and-queue/itinerary-and-queue.component';
 import { ItineraryRemarkService } from '../service/corporate/itinerary-remark.service';
-
+import { AmadeusQueueService } from '../service/amadeus-queue.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
+import { QueueService } from '../service/corporate/queue.service';
+import { QueueComponent } from './queue/queue.component';
 
 @Component({
   selector: 'app-corporate',
@@ -53,6 +53,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
+  @ViewChild(QueueComponent) queueComponent: QueueComponent;
 
   @Input() overrideValue: any;
   
@@ -69,10 +70,10 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService,
     private itineraryService: ItineraryRemarkService,
-    private cleanupRemarkService: CleanUpRemarkService
-
+    private cleanupRemarkService: CleanUpRemarkService,
+    private amadeusQueueService: AmadeusQueueService,
+    private queueService: QueueService
   ) {
     this.initData();
   }
@@ -82,27 +83,12 @@ export class CorporateComponent implements OnInit {
       this.modalRef.hide();
     }
   }
-
-  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
-    try {
-      this.errorPnrMsg = '';
-      await this.getPnrService();
-      if (queueCollection) {
-        await this.queueService.queuePNR(queueCollection);
-      }
-      if (this.pnrService.errorMessage.indexOf('Error') === 0) {
-        this.errorPnrMsg = 'Unable to load PNR or no PNR is loaded in Amadeus. \r\n' + this.pnrService.errorMessage;
-      }
-      if (this.modalRef) {
-        this.modalRef.hide();
-      }
-    }
-    catch (e) {
-      console.log(e);
-    }
-  }
-
   
+  async getPnr() {
+    this.errorPnrMsg = '';
+    await this.getPnrService();
+    this.amadeusQueueService.queuePNR();
+  }
 
   async getPnrService() {
     this.pnrService.isPNRLoaded = false;
@@ -189,6 +175,7 @@ export class CorporateComponent implements OnInit {
         console.log(e);
       }
     }
+    this.amadeusQueueService.newQueueCollection();
     this.closePopup();
     this.checkHasDataLoadError();
   }
@@ -262,8 +249,9 @@ export class CorporateComponent implements OnInit {
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
-    let queueCollection = Array<QueuePlaceModel>();
-    queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    // debugger;
+    this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
 
     let itineraryQueueCollection = Array<QueuePlaceModel>();
     let teamQueueCollection = Array<QueuePlaceModel>();
@@ -279,7 +267,7 @@ export class CorporateComponent implements OnInit {
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
-        this.getPnr(queueCollection);
+        this.getPnr();
         this.closePopup();
       },
       (error) => {

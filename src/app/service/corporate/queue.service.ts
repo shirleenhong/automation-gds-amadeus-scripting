@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { QueueMinderComponent } from 'src/app/corporate/queue/queue-minder/queue-minder.component';
 import { FormGroup, FormArray } from '@angular/forms';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
-import { QueueRemarkService } from '../queue-remark.service';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QueueService {
 
-  constructor(private queueRemarksService: QueueRemarkService) { }
+  constructor(private queueRemarksService: AmadeusQueueService) { }
 
-  public getQueuePlacement(queueComp: QueueMinderComponent): void {
-    const queueGroup: FormGroup = queueComp.queueMinderForm;
+  public getQueuePlacement(queueGroup: FormGroup): void {
     const items = queueGroup.get('queues') as FormArray;
 
     for (const group of items.controls) {
@@ -22,7 +20,7 @@ export class QueueService {
       queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
       queue.queueNo = group.get('queueNumber').value;
       queue.category = group.get('category').value;
-      this.queueRemarksService.queueCollection.push(queue);
+      this.queueRemarksService.addQueueCollection(queue);
     }
   }
 }

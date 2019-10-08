@@ -28,7 +28,7 @@ export class PnrService {
     pnrResponse: any;
     clientSubUnitGuid: string;
     exchangeTatooNumbers = [];
-
+    agentSign = '';
     constructor() { }
 
     async getPNR(): Promise<void> {
@@ -45,6 +45,7 @@ export class PnrService {
                     this.getExchangeTatooNumbers();
                     await this.getTST();
                     this.getCFLine();
+                    this.getAgentInfo();
                 },
                 (error: string) => {
                     this.isPNRLoaded = false;
@@ -103,6 +104,33 @@ export class PnrService {
     getPCC(): void {
         smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
             this.PCC = x.ACTIVE_OFFICE_ID;
+        });
+    }
+
+    getAgentIdCreatedPnr(){
+        return this.pnrObj.header.agentIdCreated;
+    }
+
+    /** Get Agent Information */
+    getAgentInfo(): void {
+        smartScriptSession.retrieveUser().then(res => {
+            // {
+            //     'OCTX': '',
+            //     'OFFICE_ID': 'NCE1A0950',
+            //     'AGENT_SIGN': '1105',
+            //     'AGENT_INITIALS': 'BG',
+            //     'DUTY_CODE': 'AS',
+            //     'USER_ALIAS': 'RFEYNMAN',
+            //     'ORGANIZATION': '1A',
+            //     'FIRST_NAME': 'Richard',
+            //     'LAST_NAME': 'FEYNMAN',
+            //     'LANGUAGE_PREF': 'EN',
+            //     'SS_RIGHTS': []
+            //   }
+           
+            if (res) {
+                this.agentSign = res.AGENT_SIGN;
+            }
         });
     }
 

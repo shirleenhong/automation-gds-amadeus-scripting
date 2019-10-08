@@ -29,7 +29,7 @@ import { ReportingRemarksComponent } from './corporate/reporting/reporting-remar
 import { IrdRemarksComponent } from './corporate/corp-remarks/ird-remarks/ird-remarks.component';
 import { ItineraryAndQueueComponent } from './corporate/itinerary-and-queue/itinerary-and-queue.component';
 import { ItineraryInvoiceQueue } from './corporate/itinerary-and-queue/itinerary-invoice-queue/itinerary-invoice-queue.component';
-import { OfcDocumentationComponent } from './corporate/corp-remarks/ofc-documentation/ofc-documentation.component';
+import { OfcDocumentationComponent } from './corporate/queue/ofc-documentation/ofc-documentation.component';
 import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minder.component';
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';

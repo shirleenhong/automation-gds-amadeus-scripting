@@ -23,10 +23,11 @@ import { InvoiceRemarkService } from '../service/corporate/invoice-remark.servic
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
-import { QueueRemarkService } from '../service/queue-remark.service';
+import { AmadeusQueueService } from '../service/amadeus-queue.service';
 import { RemarkModel } from '../models/pnr/remark.model';
 import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
+import { QueueService } from '../service/corporate/queue.service';
+import { QueueComponent } from './queue/queue.component';
 
 @Component({
   selector: 'app-corporate',
@@ -49,6 +50,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
+  @ViewChild(QueueComponent) queueComponent: QueueComponent;
 
   @Input() overrideValue: any;
 
@@ -65,8 +67,9 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService,
-    private cleanupRemarkService: CleanUpRemarkService
+    private amadeusQueueService: AmadeusQueueService,
+    private cleanupRemarkService: CleanUpRemarkService,
+    private queueService: QueueService
   ) {
     this.initData();
   }
@@ -77,12 +80,10 @@ export class CorporateComponent implements OnInit {
     }
   }
 
-  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
+  async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
-    if (queueCollection) {
-      this.queueService.queuePNR(queueCollection);
-    }
+    this.amadeusQueueService.queuePNR();
   }
 
   async getPnrService() {
@@ -169,6 +170,7 @@ export class CorporateComponent implements OnInit {
         console.log(e);
       }
     }
+    this.amadeusQueueService.newQueueCollection();
     this.closePopup();
     this.checkHasDataLoadError();
   }
@@ -241,14 +243,15 @@ export class CorporateComponent implements OnInit {
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
-    let queueCollection = Array<QueuePlaceModel>();
-    queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    // debugger;
+    this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
 
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
-        this.getPnr(queueCollection);
+        this.getPnr();
         this.closePopup();
       },
       (error) => {

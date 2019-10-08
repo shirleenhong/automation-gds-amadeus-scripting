@@ -12,6 +12,7 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { FormGroup, FormArray } from '@angular/forms';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 declare var smartScriptSession: any;
 
@@ -29,8 +30,9 @@ export class TicketRemarkService {
     private remarksManager: RemarksManagerService,
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
-    private remarkHelper: RemarkHelper
-  ) {}
+    private remarkHelper: RemarkHelper,
+    private amdeusQueue: AmadeusQueueService
+  ) { }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -38,7 +40,6 @@ export class TicketRemarkService {
    */
   public submitTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
     this.cleanupTicketRemark();
-
     return this.writeTicketRemark(ticketRemark, fg);
   }
 
@@ -424,8 +425,8 @@ export class TicketRemarkService {
    * @param fg Approval Form
    * @returns Array<QueuePlaceModel> queue placement information
    */
-  getApprovalQueue(fg: FormGroup): Array<QueuePlaceModel> {
-    const queueGroup = Array<QueuePlaceModel>();
+  getApprovalQueue(fg: FormGroup) {
+
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
 
@@ -437,9 +438,8 @@ export class TicketRemarkService {
         const categoryqueue = queueInfo[1].split('C');
         queue.queueNo = categoryqueue[0];
         queue.category = categoryqueue[1];
-        queueGroup.push(queue);
+        this.amdeusQueue.addQueueCollection(queue);
       });
     }
-    return queueGroup;
   }
 }

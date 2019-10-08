@@ -1524,4 +1524,14 @@ export class PnrService {
         }
         return '';
     }
+
+    getAirDestinations() {
+        if (this.isPNRLoaded) {
+            for (const air of this.pnrObj.airSegments) {
+                const airendpoint = air.arrivalAirport;
+                this.pushDestination(airendpoint);
+            }
+            return this.destinationCity;
+        }
+    }
 }

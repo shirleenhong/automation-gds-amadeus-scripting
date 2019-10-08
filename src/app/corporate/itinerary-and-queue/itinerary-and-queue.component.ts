@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UtilHelper } from '../../helper/util.helper';
-import { ItineraryInvoiceQueue } from 'src/app/corporate/itinerary-and-queue/itinerary-invoice-queue/itinerary-invoice-queue.component';
+import { ItineraryInvoiceQueue } from './itinerary-invoice-queue/itinerary-invoice-queue.component';
+
 
 @Component({
-  selector: 'app-itinerary-and-queue', 
+  selector: 'app-itinerary-and-queue',
   templateUrl: './itinerary-and-queue.component.html',
   styleUrls: ['./itinerary-and-queue.component.scss']
 })
 export class ItineraryAndQueueComponent implements OnInit {
 
   @ViewChild(ItineraryInvoiceQueue) queueComponent: ItineraryInvoiceQueue;
-  constructor(private utilHelper: UtilHelper ) { }
+  constructor(private utilHelper: UtilHelper) { }
 
   ngOnInit() {
   }
@@ -26,5 +27,5 @@ export class ItineraryAndQueueComponent implements OnInit {
     return true;
   }
 
-  
+
 }

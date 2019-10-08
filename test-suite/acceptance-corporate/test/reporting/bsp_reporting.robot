@@ -45,7 +45,5 @@ Verify That Client Reporting Are Correct For Exchange PNR
     Verify Client Reporting Fields For Exchange PNR
     Verify That BSP Client Reporting Remarks Are Written In The PNR For Exchange TST
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
-  
-     
+    [Teardown]    Close Browser   
     

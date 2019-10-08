@@ -162,6 +162,7 @@ Navigate From Full Wrap
     ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
     ...    ELSE IF    "${destination_page}" == "Seats"    Click Remarks Panel
+    ...    ELSE IF    "${destination_page}" == "IRD Remarks"    Click Remarks Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -186,6 +187,7 @@ Navigate From Ticketing
 Navigate To Remarks
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Seats"    Navigate To Add Seat Remarks
+    Run Keyword If    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
     ...    ELSE    Collapse Remarks Panel   
 
 Finish PNR

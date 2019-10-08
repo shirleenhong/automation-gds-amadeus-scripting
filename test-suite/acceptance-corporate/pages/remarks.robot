@@ -15,7 +15,7 @@ ${select_seat_formType}    //select[@id='seatFormType']
 ${input_seat_number}    css=#seatFormNumber
 ${button_close}    //button[contains(text(), 'Close')]
 ${tab_Seats}    //span[contains(text(), 'Seat')]
-
+${tab_ird}    //span[contains(text(), 'IRD Remarks')]
 
 *** Keywords ***
 Navigate To Add Seat Remarks
@@ -23,6 +23,13 @@ Navigate To Add Seat Remarks
     Click Element    ${button_add_seat}    
     Set Test Variable    ${current_page}    Add Seat Remarks
     Set Test Variable    ${ticketing_details_complete}    no
+    
+Click IRD Remarks Tab
+    Wait Until Element Is Visible    ${tab_ird}     30
+    Click Element At Coordinates    ${tab_ird}     0    0
+    Wait Until Page Contains Element    ${tab_ird}    30
+    Set Test Variable    ${current_page}    IRD Remarks
+    
     
 Click Save Button In Seats Page
     Click Element    ${button_save}

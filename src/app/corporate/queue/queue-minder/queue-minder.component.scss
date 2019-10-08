@@ -1,10 +1,16 @@
 .queueContainer {
     padding: 10px;
-    padding-left: 30px;
 }
 
-.queueTable {
-    padding: 4px;
+.queueTable th {
+  padding: 2px;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.otherText{
+    padding: 2px;
     font-size: 12px;
   }
+
 

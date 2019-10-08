@@ -33,9 +33,6 @@ export class ReportingRemarksComponent implements OnInit {
     this.segments = await this.pnrService.getTstSegments();
     for (const segment of this.segments) {
       const group = this.createFormGroup(segment);
-      const dest = group.get('destinationList') as FormControl;
-      dest.setValidators([Validators.required]);
-
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
   }

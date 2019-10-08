@@ -1,5 +1,5 @@
 {
-	"Document PNR Remark, With Single BSP Segment": {
+	"Itinerary Queue As Part Of Full Wrap": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -34,9 +34,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "TESTING DOCUMENT PNR REMARK"
+		"ExpectedRemark1": null
 	},
-	"Multiple Document PNR Remark, With Single BSP Segment": {
+	"Invoice Queue As Part Of Full Wrap": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -71,9 +71,6 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "TESTING DOCUMENT PNR REMARK 1",
-		"ExpectedRemark2": "TESTING DOCUMENT PNR REMARK 2",
-		"ExpectedRemark3": "TESTING DOCUMENT PNR REMARK 3",
-		"ExpectedRemark4": "TESTING DOCUMENT PNR REMARK 4"
+		"ExpectedRemark1": null
 	}
 }

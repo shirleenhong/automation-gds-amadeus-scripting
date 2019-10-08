@@ -21,6 +21,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @Input() overrideValue: any;
   @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
+
   constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -43,10 +44,12 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (!this.reportingNonbspComponent.nonBspGroup.valid) {
       return false;
     }
+
     this.utilHelper.validateAllFields(this.reportingRemarksComponent.reportingForm);
     if (!this.reportingRemarksComponent.reportingForm.valid) {
       return false;
     }
+
     return true;
   }
 }

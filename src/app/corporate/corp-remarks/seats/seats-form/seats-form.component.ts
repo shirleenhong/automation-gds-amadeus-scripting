@@ -86,7 +86,7 @@ export class SeatsFormComponent implements OnInit {
                 ? this.seats[this.seats.findIndex((seat) => seat.id === 5)].type
                 : null
               : null,
-            disabled: false
+            disabled: true
           }
         ],
         number: [

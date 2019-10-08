@@ -10,7 +10,7 @@
   <form id="seatsForm" [formGroup]="seatsForm" (ngSubmit)="save()">
 
     <!-- headers -->
-    <div class="row">
+    <div class="row row-no-gutters">
       <div class="col-lg-1 col-sm-1 col-xs-1"></div>
       <div class="col-lg-5 col-sm-5 col-sm-5"><strong>Seat Remark</strong></div>
       <div class="col-lg-3 col-sm-3 col-sm-3"><strong>Seat Type</strong></div>
@@ -19,7 +19,7 @@
 
     <div formArrayName="seatsFormArray" *ngFor="let remarkOption of remarkOptions; let i = index;">
       <!-- body -->
-      <div class="row" [formGroupName]="i">
+      <div class="row row-no-gutters" [formGroupName]="i">
         <div class="col-lg-1 col-sm-1 col-xs-1">
           <div class="checkbox text-center">
             <input type="checkbox" formControlName="selected">
@@ -32,7 +32,7 @@
           </label>
         </div>
         <div class="col-lg-3 col-sm-3 col-xs-3">
-          <label for="" *ngIf="remarkOption.id === 2 || remarkOption.id === 5">
+          <label for="" *ngIf="remarkOption.id === 2">
             <select class="form-control" formControlName="type">
               <option></option>
               <option *ngFor="let type of types" [value]="type">{{ type }}</option>
@@ -48,7 +48,7 @@
       <hr>
     </div>
 
-    <div class="row">
+    <div class="row row-no-gutters">
       <div class="col-sm-12 text-center">
         <strong style="padding-right: 1rem;">Segments</strong>
         <app-segment-select formControlName="segmentIds"></app-segment-select>

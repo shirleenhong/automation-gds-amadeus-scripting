@@ -207,7 +207,6 @@ export class SeatsComponent implements OnInit {
         }
       }
     }
-
     return this.groupSeats(seats);
   }
 

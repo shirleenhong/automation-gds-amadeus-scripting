@@ -25,15 +25,6 @@ export class SeatsComponent implements OnInit {
 
   ngOnInit() {
     this.seats = this.getSeats();
-    // tmp
-    this.seats = [
-      {
-        id: 1,
-        type: 'WINDOW',
-        number: 'A12',
-        segmentIds: '1,2,3'
-      }
-    ];
     this.seatRemarkOptions = SeatsService.REMARK_OPTIONS;
   }
 
@@ -230,9 +221,8 @@ export class SeatsComponent implements OnInit {
 
     this.modalRef = this.modalService.show(SeatsFormComponent, modalConfig);
     this.modalRef.content.title = 'Manage Seats';
-    this.modalRef.content.seats = this.seats;
-    this.modalRef.content.test = 'Test';
-    this.modalRef.content.loadSeatData();
+
+    // Subscribe on the modal's dismissal.
     this.modalSubscribeOnClose();
   }
 
@@ -250,14 +240,9 @@ export class SeatsComponent implements OnInit {
    */
   private modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(() => {
-      debugger;
       if (this.modalRef) {
         if (this.modalRef.content.message === 'SAVED') {
-          console.log('this.modalRef.content.seatsForm.value.seatsFormArray');
-          console.log(this.modalRef.content.seatsForm.value.seatsFormArray);
-
           const segmentIdsForAll = this.modalRef.content.seatsForm.value.segmentIds;
-
           // Get the selected seats from the modal.
           const newSeats = this.modalRef.content.seatsForm.value.seatsFormArray
             .filter((newSeat: any) => newSeat.selected === true)
@@ -269,10 +254,6 @@ export class SeatsComponent implements OnInit {
                 segmentIds: segmentIdsForAll ? segmentIdsForAll : null
               };
             });
-
-          console.log('newSeats:');
-          console.log(newSeats);
-
           // Add the new seat to the seats.
           this.seats = newSeats;
         }

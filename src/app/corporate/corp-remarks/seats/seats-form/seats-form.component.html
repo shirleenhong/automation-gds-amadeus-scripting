@@ -8,23 +8,6 @@
 <div class="modal-body">
 
   <form id="seatsForm" [formGroup]="seatsForm" (ngSubmit)="save()">
-    <!-- <button (click)="addSeat()">Add Seat</button> -->
-
-    <p>
-      Status: {{ seatsForm.status }}
-    </p>
-    <p>
-      Value: {{ seatsForm.value | json }}
-    </p>
-    <p>
-      seatsFormArray.controls.length: {{ seatsFormArray.controls.length }}
-    </p>
-    <p>
-      seatsFormArray.controls.value: {{ seatsFormArray.controls.values }}
-    </p>
-    <p>
-      seatsFormArray.controls: {{ seatsFormArray.controls }}
-    </p>
 
     <div formArrayName="seatsFormArray" *ngFor="let remarkOption of remarkOptions; let i = index;">
       <div class="row" [formGroupName]="i">
@@ -76,7 +59,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" form="seatsForm" class="btn btn-outline-dark" [disabled]="!seatsForm.valid || exists">
+  <button type="submit" form="seatsForm" class="btn btn-outline-dark" [disabled]="!seatsForm.valid">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="close()">

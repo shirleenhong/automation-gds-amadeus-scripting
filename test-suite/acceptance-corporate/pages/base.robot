@@ -28,6 +28,8 @@ ${button_main_menu}    //button[contains(text(), 'Back To Main Menu')]
 ${button_save}    //button[contains(text(), 'Save')]
 ${panel_remarks}    //div[@class='panel-title']//div[contains(text(), 'Remarks')]
 ${text_warning}    //div[@class='col message']
+${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
+${button_itinerary_queue}    //button[contains(text(), 'Itinerary And Queue')]
 
 *** Keywords ***
 Enter Value
@@ -133,7 +135,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
-     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Document PNR"    Navigate From Remarks    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Document PNR"    Navigate From Remarks    ${destination_page}  
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
@@ -171,7 +173,8 @@ Navigate From Reporting
 Navigate From Remarks
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Document PNR"    Click Document PNR Tab
-    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel     
+    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel   
+    Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -186,10 +189,11 @@ Finish PNR
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     
 Submit To PNR
-    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
+    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no    ${destination_selected}=no
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
-    Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${routing_code_selected}" == "no"     Select Default Value For Routing Code
+    Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
+    Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks"   
     ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
     
@@ -225,6 +229,7 @@ Click Fees Panel
 Navigate From Fees
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
+    Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
     
 Click Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60

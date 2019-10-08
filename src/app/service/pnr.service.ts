@@ -115,6 +115,23 @@ export class PnrService {
             if (remarksList) {
                 for (const rm of remarksList) {
                     if (rm.freeFlowText.indexOf(searchText) === 0) {
+                        return rm.elementNumber; 
+                    }
+                }
+            }
+        }
+        return '';
+    }
+
+    getRemarkLineNumberStartsWith(searchText: string, type?: string) {        
+        if (this.isPNRLoaded) {
+            let remarksList = this.pnrObj.rmElements;
+            if (type === 'RI') {
+                remarksList = this.pnrObj.riElements;
+            }
+            if (remarksList) {
+                for (const rm of remarksList) {
+                    if (rm.freeFlowText.startsWith(searchText)) {
                         return rm.elementNumber;
                     }
                 }
@@ -1506,5 +1523,15 @@ export class PnrService {
             return this.pnrObj.tkElements[0].freeFlowText.trim();
         }
         return '';
+    }
+
+    getAirDestinations() {
+        if (this.isPNRLoaded) {
+            for (const air of this.pnrObj.airSegments) {
+                const airendpoint = air.arrivalAirport;
+                this.pushDestination(airendpoint);
+            }
+            return this.destinationCity;
+        }
     }
 }

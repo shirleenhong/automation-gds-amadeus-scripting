@@ -29,6 +29,7 @@ ${button_removeWaiver}    css=#remove
 ${input_waiver}    css=#waiver
 ${input_waiverAmount}    css=#waiverText
 ${form_segments}    //tbody[@formarrayname='segments']
+${input_destination}    //input[@id='destinationList']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -359,3 +360,25 @@ Select Default Value For Routing Code
     Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
     Set Test Variable    ${routing_code_selected}    yes
     [Teardown]    Take Screenshot
+    
+Select Default Value For Destination Code
+    ${is_destination_present}    Run Keyword And Return Status    Page Should Contain Element    ${input_destination} 
+    Run Keyword If    "${is_destination_present}" == "True"   Enter Destination Code Default Value
+
+Enter Destination Code Default Value        
+    ${elements_count}    Get Element Count    ${input_destination} 
+    Set Test Variable    ${elements_count}
+        : FOR    ${destination_index}    IN RANGE    0    ${elements_count}
+	    \    ${destination_index}    Evaluate    ${destination_index} + 1
+	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    YYZ
+    
+Select Destination Code Values
+	[Arguments]    @{destination_code}
+	Set Test Variable    ${destination_index}    1
+	: FOR    ${destination_code}    IN    @{destination_code}
+	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    ${destination_code}
+		\    ${destination_index}    Evaluate    ${destination_index} + 1
+	Set Test Variable    ${destination_selected}   yes
+
+
+

@@ -4,8 +4,14 @@
     <div class="row form-group">
       <div class="col-md-5 bsp-routing-remark">
         BSP Routing Code :
-        <select id="bspRouteCode" class="form-control bsp-select-routing-remark" formControlName="bspRouteCode"
-          name="bspRouteCode" (change)="getCountryDest($event.target.value)" required>
+        <select
+          id="bspRouteCode"
+          class="form-control bsp-select-routing-remark"
+          formControlName="bspRouteCode"
+          name="bspRouteCode"
+          (change)="getCountryDest($event.target.value)"
+          required
+        >
           <option *ngFor="let item of bspRouteCodeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
@@ -13,3 +19,39 @@
       </div>
     </div>
   </div>
+
+  <table *ngIf="destinations.length !== 1" style="margin-top:10px;margin-left: 20px; mar">
+    <tr>
+      <th width="130px"><div class="segmentTable">Segment(s)</div></th>
+      <th width="300px"><div class="segmentTable">Destination Code</div></th>
+    </tr>
+
+    <tbody formArrayName="segments" *ngFor="let item of this.reportingForm.get('segments')['controls']; let i = index">
+      <tr [formGroupName]="i">
+        <td width="130px" class="segmentTable">
+          <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
+        </td>
+        <td width="300px" class="segmentTable">
+          <!-- <select autofocus id="destinationList" class="form-control" formControlName="destinationList" name="destinationList">
+              <option *ngFor="let item of destinationList" [value]="item.endpoint">
+                {{ item.endpoint }}
+              </option>
+            </select> -->
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="destinationList"
+            name="destinationList"
+            id="destinationList"
+            list="dynamicDestinationCode"
+            required
+          />
+          <datalist id="dynamicDestinationCode">
+            <option *ngFor="let item of destinations" [value]="item.endpoint">{{ item.endpoint }} </option>
+          </datalist>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

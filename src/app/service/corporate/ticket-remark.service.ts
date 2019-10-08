@@ -30,7 +30,7 @@ export class TicketRemarkService {
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper
-  ) {}
+  ) { }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -348,6 +348,7 @@ export class TicketRemarkService {
    * @param fg Approval Form Group
    */
   public getApprovalRemarks(fg: FormGroup): Array<RemarkModel> {
+    debugger;
     const remarkList = new Array<RemarkModel>();
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
@@ -378,7 +379,7 @@ export class TicketRemarkService {
           }
         });
       });
-    } else {
+    } else if (this.ddbService.approvalList.length > 0) {
       remarkList.push(this.remarkHelper.createRemark('NO APPROVAL REQUIRED', 'RM', 'G'));
     }
 
@@ -409,9 +410,9 @@ export class TicketRemarkService {
    */
   private getApprovalIndex(fg: FormGroup): string {
     let value = '';
-    if (fg.get('secondaryReason').value !== '') {
+    if (fg.get('secondaryReason').value) {
       value = fg.get('secondaryReason').value.toString();
-    } else if (fg.get('primaryReason').value !== '') {
+    } else if (fg.get('primaryReason').value) {
       value = fg.get('primaryReason').value.toString() + '_0';
     } else {
       value = '_0';

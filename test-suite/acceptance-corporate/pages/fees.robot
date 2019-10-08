@@ -192,7 +192,7 @@ Move Single Passenger With Single Segment With Special Fee Required Inputs
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
-    Add OBT Remark In The PNR    RM*EB/-EBA    RM*CF/-RH60000000N    RFCWTPTEST    ER
+    Add OBT Remark In The PNR    RM*EB/-EBA    RM*CF/-RH60000000C    RFCWTPTEST    ER
     
 Move Single Passenger With Transborder Segments And Single Ticket
     Create And Ticket PNR With Airline Code AC

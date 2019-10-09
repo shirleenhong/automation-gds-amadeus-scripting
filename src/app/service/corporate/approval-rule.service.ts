@@ -64,7 +64,7 @@ export class ApprovalRuleService {
       const list = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_' + ctr) >= 0);
       hasGroup = list.length > 0;
       if (hasGroup) {
-        if (this.getApprovalValidResult(list[0], this.isValidRule(list))) {
+        if (this.getApprovalValidResult(list[0], this.isValidRule(list, true))) {
           return true;
         }
       }

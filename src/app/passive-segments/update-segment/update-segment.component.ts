@@ -86,7 +86,7 @@ export class UpdateSegmentComponent implements OnInit {
     mealPlan: new FormControl('', []),
     stateRoom: new FormControl('', []),
     cabinNo: new FormControl('', []),
-    dining: new FormControl('', []),
+    dining: new FormControl('', [Validators.required]),
     policyNo: new FormControl('', [Validators.required]),
     airlineCode: new FormControl('', [Validators.required]),
     flightNumber: new FormControl('', [Validators.required]),
@@ -592,7 +592,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() { }
+  pickUpLocChange() {}
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;

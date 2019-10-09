@@ -37,6 +37,7 @@ ${input_origTicketLine}    css=#originalTktLine
 ${input_departurecity}    css=#departureCity
 ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
+${button_save}    //button[contains(text(), 'Save')]
 ${button_update}    //i[@class='fas fa-edit']
 ${input_lowestGdsFare}    css=#gdsFare
 ${input_consultantNo}    css=#consultantNo

@@ -21,7 +21,6 @@ export class AddWaiverComponent implements OnInit {
   showWaiverText: boolean;
   lblWaiver: string;
   waiverText: FormControl;
-  title = '';
 
   constructor(private fb: FormBuilder, public modalRef: BsModalRef, public activeModal: BsModalService, public pnrService: PnrService) {}
   ngOnInit() {

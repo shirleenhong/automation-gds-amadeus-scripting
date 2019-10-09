@@ -115,36 +115,6 @@ export class AmadeusRemarkService {
     return { elementManagementData, fareElement };
   }
 
-  getAPRemarksElement(remarkModel: RemarkModel) {
-    const elementManagementData = {
-      segmentName: 'AP'
-    };
-    const freetextData = {
-      freetextDetail: {
-        subjectQualifier: '3',
-        type: this.checkcategory(remarkModel.category)
-      },
-      longFreetext: remarkModel.remarkText
-    };
-    return { elementManagementData, freetextData };
-  }
-
-  checkcategory(category: string): string {
-    switch (category) {
-      case 'E':
-        return 'P02';
-      case 'M':
-        return '7';
-      case 'F':
-        return 'P01';
-      case 'H':
-        return '4';
-
-      default:
-        return '3';
-    }
-  }
-
   getQueueElement(queueModel: QueuePlaceModel) {
     const reference = {
       qualifier: 'OT',
@@ -205,7 +175,7 @@ export class AmadeusRemarkService {
     };
     const elementManagementData = {
       reference,
-      segmentName: remarkModel.remarkType
+      segmentName: 'RM'
     };
 
     const remarks = {

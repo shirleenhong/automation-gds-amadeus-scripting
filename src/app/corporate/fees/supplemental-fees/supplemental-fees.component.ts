@@ -32,10 +32,6 @@ export class SupplementalFeesComponent implements OnInit {
   modalRef: BsModalRef;
   selectedGroup: FormGroup;
   isApay = false;
-  maxCount = 0;
-  isExchange = false;
-  hasAir = false;
-  hasTrain = false;
 
   constructor(
     private pnrService: PnrService,
@@ -54,11 +50,7 @@ export class SupplementalFeesComponent implements OnInit {
     this.isApay = false;
 
     await this.loadData();
-    if (this.pnrService.tstObj) {
-      this.maxCount = this.pnrService.tstObj.length;
-    } else {
-      this.maxCount = 1;
-    }
+
     this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
     this.flatFee = this.getFeeValue('Flat Exchange Fee');
     this.specialFee = this.getFeeValue('Special Fee');
@@ -66,8 +58,18 @@ export class SupplementalFeesComponent implements OnInit {
     this.checkObFee();
 
     if (!this.isObt) {
-      this.isExchange = this.exchangeSegments.length > 0;
-      this.addFee();
+      this.ticketedForm = this.fb.group({
+        segments: this.fb.array([])
+      });
+
+      this.ticketedSegments = await this.pnrService.getTicketedSegments();
+      for (const segment of this.ticketedSegments) {
+        const isExchange = this.exchangeSegments.filter((s) => segment.split(',').indexOf(s) >= 0).length > 0;
+        const group = this.createFormGroup(segment, isExchange);
+
+        (this.ticketedForm.get('segments') as FormArray).push(group);
+        this.processExchange(group, false);
+      }
     }
 
     this.handleApay();
@@ -77,15 +79,14 @@ export class SupplementalFeesComponent implements OnInit {
     this.valueChangeListener.accountingRemarkChange.subscribe((list) => {
       if (list) {
         const frmArray = [];
-        const count = (list as MatrixAccountingModel[]).filter((a) => a.accountingTypeRemark === 'APAY').length;
-
-        if (count > 0) {
-          this.maxCount = count;
-          const group = this.createFormGroup(false);
-          group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
-          frmArray.push(group);
-          this.feeChange(group);
-        }
+        (list as MatrixAccountingModel[])
+          .filter((a) => a.accountingTypeRemark === 'APAY')
+          .forEach((acc) => {
+            const group = this.createFormGroup(acc.segmentNo, false);
+            group.get('code').setValue(this.isObt ? 'NFR' : 'NFM');
+            frmArray.push(group);
+            this.feeChange(group);
+          });
         if (frmArray.length > 0) {
           this.isApay = true;
           this.supplementalFeeList = [];
@@ -98,7 +99,6 @@ export class SupplementalFeesComponent implements OnInit {
               segments: this.fb.array([])
             });
           }
-          this.maxCount = this.pnrService.tstObj.length;
           this.isApay = false;
         }
       }
@@ -107,8 +107,7 @@ export class SupplementalFeesComponent implements OnInit {
 
   async loadData(): Promise<void> {
     this.noFeeCodes = this.ddbService.getNoFeeCodes();
-    this.hasAir = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR').length > 0;
-    this.hasTrain = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'TRN').length > 0;
+
     this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;
@@ -154,8 +153,9 @@ export class SupplementalFeesComponent implements OnInit {
     }
   }
 
-  createFormGroup(exchange) {
+  createFormGroup(segmentNo, exchange) {
     return this.fb.group({
+      segment: new FormControl(segmentNo),
       isChange: new FormControl(''),
       code: new FormControl(''),
       fee: new FormControl(''),
@@ -166,18 +166,20 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
-  getCode() {
-    // const segments = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' || x.segmentType === 'TRN');
+  getCode(segmentNumbers) {
+    const segments = this.pnrService.getSegmentTatooNumber().filter((x) => segmentNumbers.split(',').indexOf(x.lineNo) >= 0);
     let code = 'A';
-    if (!this.hasAir && this.hasTrain) {
-      code = 'R';
+    if (segments.length > 0) {
+      if (segments[0].segmentType === 'TRN') {
+        code = 'R';
+      }
     }
     return code + 'T' + this.codeDestination;
   }
 
   setFee(group: FormGroup, feeValue, feeType) {
     const amountPipe = new AmountPipe();
-    let code = this.getCode();
+    let code = this.getCode(group.get('segment').value);
     let fee = amountPipe.transform(feeValue);
     if (feeValue === 0 && group.get('isChange').value === true) {
       code = 'NFR';
@@ -251,16 +253,6 @@ export class SupplementalFeesComponent implements OnInit {
     this.selectedGroup = group;
     this.modalRef.content.title = 'Add Supplemental Fees';
     this.modalRef.content.setClientFees(this.supplementalFeeList, group.get('supplementalFee'));
-  }
-
-  addFee(): void {
-    const group = this.createFormGroup(this.isExchange);
-    (this.ticketedForm.get('segments') as FormArray).push(group);
-    this.processExchange(group, false);
-  }
-
-  removeFee(indx) {
-    (this.ticketedForm.get('segments') as FormArray).removeAt(indx);
   }
 
   getFeeValue(feeType: string): number {

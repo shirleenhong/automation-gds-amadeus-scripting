@@ -14,7 +14,6 @@ export class AddSupplementalFeesComponent implements OnInit {
   formGroup: FormGroup;
   feeControl: FormControl;
   amountPipe = new AmountPipe();
-  title = '';
 
   constructor(private fb: FormBuilder, public modalRef: BsModalRef, public activeModal: BsModalService) {}
   ngOnInit() {

@@ -20,7 +20,7 @@ export class TicketingLineComponent implements OnInit {
   isOnHoldChecked = false;
   ticketForm: FormGroup;
   tkList: Array<SelectItem> = null;
-  hasApproval = false;
+  hasApproval = true;
   approvalForm: FormGroup;
   primaryReasonList: Array<ApprovalItem> = [];
   secondaryReasonList: Array<ApprovalItem> = [];
@@ -38,6 +38,13 @@ export class TicketingLineComponent implements OnInit {
       tk: new FormControl('', [Validators.required]),
       verifyAck: new FormControl('', [Validators.required])
     });
+
+    this.approvalForm = new FormGroup({
+      noApproval: new FormControl(false, [Validators.required]),
+      primaryReason: new FormControl('', [Validators.required]),
+      secondaryReason: new FormControl('', [Validators.required]),
+      additionalValues: new FormArray([])
+    });
   }
 
   ngOnInit() {
@@ -50,14 +57,7 @@ export class TicketingLineComponent implements OnInit {
     this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList();
     this.additionalReasonList = this.approvalRuleService.getAdditionalList();
     this.hasApproval = this.approvalRuleService.hasApproval();
-    this.approvalForm = new FormGroup({
-      noApproval: new FormControl(!this.hasApproval, [Validators.required]),
-      primaryReason: new FormControl('', [Validators.required]),
-      secondaryReason: new FormControl('', [Validators.required]),
-      additionalValues: new FormArray([])
-    });
-    this.noApprovalChecked(!this.hasApproval);
-    this.disableApprovalControls();
+    this.approvalForm.get('noApproval').setValue(this.hasApproval);
   }
 
   /**
@@ -250,18 +250,17 @@ export class TicketingLineComponent implements OnInit {
       return;
     }
 
-    const id = selectedRule.match(/_(\d)/g).join('') + (selectedRule.indexOf('PRIMARY') >= 0 ? '_0' : '');
+    const id = selectedRule.match(/_(\d)/g).join('');
     (this.approvalForm.get('additionalValues') as FormArray).controls = [];
 
     this.additionalReasonList
       .filter((x) => x.approvalRules.indexOf('[UI_ADDITIONAL' + id) >= 0)
-      .sort((a, b) => (a.getRuleText() > b.getRuleText() ? 1 : -1))
       .forEach((app) => {
         const type = this.getAdditionalUiType(app);
         (this.approvalForm.get('additionalValues') as FormArray).push(
           new FormGroup({
             textLabel: new FormControl(app.getRuleValueText()),
-            textValue: new FormControl('', type === '[TEXTBOX]' ? [Validators.required] : null),
+            textValue: new FormControl('', type === '[TEXT_BOX]' ? [Validators.required] : null),
             uiType: new FormControl(type)
           })
         );
@@ -286,8 +285,7 @@ export class TicketingLineComponent implements OnInit {
    * @param selectedRule selected rule keyword from UI sample [UI_SECPONDARY_1]
    */
   primaryReasonChange(selectedRule) {
-    const index = selectedRule.match(/_(\d)/g).join('');
-    this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(index);
+    this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(selectedRule.match(/_(\d)/g).join(''));
     if (this.secondaryReasonList.length > 0) {
       this.approvalForm.get('secondaryReason').enable();
     } else {
@@ -307,23 +305,9 @@ export class TicketingLineComponent implements OnInit {
       this.approvalForm.get('primaryReason').disable();
       this.approvalForm.get('secondaryReason').setValue('');
       this.approvalForm.get('secondaryReason').disable();
-    } else if (this.primaryReasonList.length > 0) {
+    } else {
       this.approvalForm.get('primaryReason').enable();
       this.primaryReasonChange('');
-    }
-  }
-
-  /**
-   * apply has approval but no UI setup in API
-   */
-  disableApprovalControls() {
-    if (this.primaryReasonList.length === 0) {
-      this.approvalForm.get('primaryReason').setValue('');
-      this.approvalForm.get('primaryReason').disable();
-    }
-    if (this.secondaryReasonList.length === 0) {
-      this.approvalForm.get('secondaryReason').setValue('');
-      this.approvalForm.get('secondaryReason').disable();
     }
   }
 }

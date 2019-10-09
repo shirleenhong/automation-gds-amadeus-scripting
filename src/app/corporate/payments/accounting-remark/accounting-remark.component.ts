@@ -8,8 +8,6 @@ import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
 import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
-import { PnrService } from 'src/app/service/pnr.service';
-import { RemarksManagerService } from 'src/app/service/corporate/remarks-manager.service';
 
 @Component({
   selector: 'app-accounting-remark',
@@ -27,13 +25,11 @@ export class AccountingRemarkComponent implements OnInit {
     private modalService: BsModalService,
     private utilHelper: UtilHelper,
     private paymentService: PaymentRemarkService,
-    private valueChangeListener: ValueChangeListener,
-    private pnrService: PnrService,
-    private rms: RemarksManagerService
+    private valueChangeListener: ValueChangeListener
   ) {}
 
   ngOnInit() {
-    this.accountingRemarks = this.extractAccountingModelsFromPnr();
+    this.accountingRemarks = this.paymentService.extractAccountingModelsFromPnr();
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
     this.paymentService.setNonBspInformation(this.accountingRemarks);
@@ -50,79 +46,6 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.response = '';
     this.modalRef.content.paramValue = r;
     this.modalRef.content.setMessageType(MessageType.YesNo);
-  }
-
-  extractAccountingModelsFromPnr() {
-    const accountingRemarks = new Array<MatrixAccountingModel>();
-    const ticketRemarkNumbers = this.rms.getValue('TktRemarkNbr');
-
-    for (let i = 0; i < ticketRemarkNumbers.length; i++) {
-      const model = new MatrixAccountingModel();
-
-      model.tkMacLine = Number.parseInt(ticketRemarkNumbers[i], null);
-
-      if (model.tkMacLine) {
-        const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
-        const slineNo = pholder[i].segmentNumberReferences[i];
-        const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
-
-        if (segment.length > 0) {
-          model.departureCity = segment[i].cityCode;
-          model.supplierConfirmatioNo = segment[i].controlNumber;
-        }
-
-        let keys: string[];
-        keys = ['TktRemarkNbr', 'TktNbr', 'SupplierCode'];
-
-        let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-        if (matchKeys) {
-          if (matchKeys[i] && matchKeys[i].matchedPlaceholders) {
-            model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
-          }
-        } else {
-          keys = ['TktRemarkNbr', 'SupplierCode'];
-          matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-          if (matchKeys && matchKeys[i] && matchKeys[i].matchedPlaceholders) {
-            model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
-          }
-        }
-
-        // keys = ['AirlineCode', 'TotalCost'];
-        // let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-        // model.tktLine = matchKeys[i].matchedPlaceholders[i];
-
-        model.fareType = this.rms.getValue('FareType')[i];
-        model.supplierCodeName = this.rms.getValue('SupplierCode')[i];
-        model.baseAmount = this.rms.getValue('BaseAmt')[i];
-        model.gst = this.rms.getValue('Gst')[i];
-        model.hst = this.rms.getValue('Hst')[i];
-        model.qst = this.rms.getValue('Qst')[i];
-        model.commisionWithoutTax = this.rms.getValue('Comm')[i];
-
-        const airlinecode = this.rms.getValue('AirlineCode')[i];
-        const totalcost = this.rms.getValue('TotalCost')[i];
-
-        if (totalcost) {
-          switch (airlinecode) {
-            case 'AC':
-              model.accountingTypeRemark = 'ACPP';
-              model.passPurchase = this.rms.getValue('PassName')[i];
-              break;
-            case 'WS':
-              model.accountingTypeRemark = 'WCPP';
-              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
-              break;
-            case 'PD':
-              model.accountingTypeRemark = 'PCPP';
-              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
-              break;
-          }
-        }
-        accountingRemarks.push(model);
-      }
-    }
-
-    return accountingRemarks;
   }
 
   modalSubscribeOnClose() {

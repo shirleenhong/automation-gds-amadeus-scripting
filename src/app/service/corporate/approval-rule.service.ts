@@ -9,7 +9,7 @@ import { ApprovalItem } from 'src/app/models/ddb/approval.model';
   providedIn: 'root'
 })
 export class ApprovalRuleService {
-  constructor(private ddbService: DDBService, private pnrService: PnrService) { }
+  constructor(private ddbService: DDBService, private pnrService: PnrService) {}
 
   /**
    * Check if the PNR needs to be approved based on conditions.
@@ -64,7 +64,7 @@ export class ApprovalRuleService {
       const list = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_' + ctr) >= 0);
       hasGroup = list.length > 0;
       if (hasGroup) {
-        if (this.isValidRule(list)) {
+        if (this.getApprovalValidResult(list[0], this.isValidRule(list))) {
           return true;
         }
       }
@@ -73,7 +73,7 @@ export class ApprovalRuleService {
     return false;
   }
 
-  isValidRule(approvalItems: ApprovalItem[]): boolean {
+  isValidRule(approvalItems: ApprovalItem[], isGroup?): boolean {
     for (const approval of approvalItems) {
       let valid = false;
       switch (approval.getRule()) {
@@ -93,9 +93,14 @@ export class ApprovalRuleService {
           valid = this.isDepartureDateValid(approval);
           break;
       }
-
-      if (!valid) {
-        return false;
+      if (!isGroup) {
+        if (!this.getApprovalValidResult(approval, valid)) {
+          return false;
+        }
+      } else {
+        if (!valid) {
+          return false;
+        }
       }
     }
     return approvalItems.length > 0;
@@ -117,7 +122,7 @@ export class ApprovalRuleService {
         }
       }
     }
-    return this.getApprovalValidResult(app, found);
+    return found;
   }
 
   /**
@@ -153,7 +158,7 @@ export class ApprovalRuleService {
         }
       }
     }
-    return this.getApprovalValidResult(app, valid);
+    return valid;
   }
 
   getApprovalValidResult(app: ApprovalItem, valid: boolean): boolean {
@@ -186,7 +191,7 @@ export class ApprovalRuleService {
         break;
       }
     }
-    return this.getApprovalValidResult(app, valid);
+    return valid;
   }
 
   /**
@@ -206,7 +211,7 @@ export class ApprovalRuleService {
         break;
       }
     }
-    return this.getApprovalValidResult(app, valid);
+    return valid;
   }
 
   isDepartureDateValid(app: ApprovalItem) {
@@ -224,7 +229,7 @@ export class ApprovalRuleService {
         }
       }
     }
-    return this.getApprovalValidResult(app, valid);
+    return valid;
   }
 
   getSecondaryApprovalList(index?: string): ApprovalItem[] {

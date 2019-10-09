@@ -161,7 +161,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
       // const response =
       smartScriptSession
         .send(
-          'PDN/' + this.pnrService.PCC + '/' + airline[0].airlineCode + ' RULES'
+          'PDN/YTOWL210N/' + airline[0].airlineCode + ' RULES'
         )
         .then(res => {
           if (

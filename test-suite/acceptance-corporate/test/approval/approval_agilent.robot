@@ -16,7 +16,7 @@ ${test_file_name}    agilent
 
 *** Test Cases ***
 Verify That PNRs For Client Agilent Exit Approval Process When Country Iran/Iraq/Afghanistan Is Selected
-    [Tags]    us13271
+    [Tags]    us13271     expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Agilent Air Only, Intl Route, Select First Option In Country
     Fill Up Approval Fields
@@ -24,7 +24,7 @@ Verify That PNRs For Client Agilent Exit Approval Process When Country Iran/Iraq
     [Teardown]     Close Browser
     
 Verify That PNRs For Client Agilent Exit Approval Process When First Secondary Reason Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Agilent Air Only, Intl Route, Select Any Country & First Secondary Reason
     Fill Up Approval Fields
@@ -32,7 +32,7 @@ Verify That PNRs For Client Agilent Exit Approval Process When First Secondary R
     [Teardown]     Close Browser
     
 Verify That PNRs For Client Agilent Exit Approval Process When Second Secondary Reason Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Agilent Air Only, Intl Route, Select Any Country & Second Secondary Reason
     Fill Up Approval Fields

@@ -9,6 +9,7 @@ Resource          payment.robot
 Resource          ticketing.robot
 Resource          reporting.robot
 Resource          remarks.robot
+Resource          queues.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -55,9 +56,11 @@ Click Full Wrap
     Set Test Variable    ${current_page}    Full Wrap PNR
     Set Test Variable    ${ticketing_complete}    no
     Set Test Variable    ${routing_code_selected}    no
+    Set Test Variable    ${destination_selected}    no
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
     
@@ -136,13 +139,14 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
      \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Document PNR"    Navigate From Remarks    ${destination_page}  
+     \    Run Keyword If    "${current_page}" == "Queue" or "${current_page}" == "Follow-Up Queue"    Navigate From Queue    ${destination_page}  
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
      Log    ${destination_page}   
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "Document PNR"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "Document PNR" or "${destination_page}" == "Follow-Up Queue"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
@@ -153,6 +157,7 @@ Navigate From Full Wrap
     ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
     ...    ELSE IF    "${destination_page}" == "Seats" or "${destination_page}" == "IRD Remarks" or "${destination_page}" == "Document PNR"   Click Remarks Panel
+    ...    ELSE IF    "${destination_page}" == "Follow-Up Queue"    Click Queue Panel
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -180,16 +185,17 @@ Navigate From Ticketing
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
-    ...    ELSE    Collapse Ticketing Panel
+    ...   ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
+    ...   ELSE   Collapse Ticketing Panel
 
 Finish PNR
-    [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
-    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR    ${close_corporate_test}    ${queueing}
+    [Arguments]     ${close_corporate_test}=yes     ${queueing}=no    
+    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR    ${close_corporate_test}    ${queueing}   
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}  
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     
 Submit To PNR
-    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no    ${destination_selected}=no
+    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no 
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${routing_code_selected}" == "no"     Select Default Value For Routing Code
     Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
@@ -199,6 +205,7 @@ Submit To PNR
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
+    Scroll Element Into View    ${panel_ticketing}
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Ticketing
     
@@ -235,7 +242,18 @@ Click Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Remarks
+
+Click Queue Panel
+    Wait Until Element Is Visible    ${panel_queue}    60
+    Click Element    ${panel_queue}
+    Set Test Variable    ${current_page}    Queue
     
+Navigate From Queue
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
+    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
+    Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
+
 Get Client Name
     [Arguments]    ${test_data_string}
     @{split_string}    Split String     ${test_data_string}    ${SPACE}

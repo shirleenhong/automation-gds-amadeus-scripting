@@ -219,7 +219,7 @@ export class SeatsComponent implements OnInit {
     const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats } } };
 
     this.modalRef = this.modalService.show(SeatsFormComponent, modalConfig);
-    this.modalRef.content.title = 'Manage Seats';
+    this.modalRef.content.title = 'Add Seat Remarks';
 
     // Subscribe on the modal's dismissal.
     this.modalSubscribeOnClose();

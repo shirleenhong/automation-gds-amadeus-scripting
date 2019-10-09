@@ -72,6 +72,8 @@ Add CFA Remark
 Verify Default Fee In Ticket Segments
     [Arguments]    @{expected_fee_amount}
     Wait Until Element Is Visible    ${input_fee}    60
+    ${elements_count}    Get Element Count    ${row_supplemental_fees}${input_fee}
+    Set Test Variable    ${elements_count}
         : FOR    ${fee_index}    IN RANGE    0    ${elements_count}
 	    \    Set Test Variable    ${div_index}    ${fee_index}
 	    \    ${div_index}    Evaluate    ${div_index} + 1

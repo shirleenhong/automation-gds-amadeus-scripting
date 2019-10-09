@@ -11,7 +11,7 @@
 
     <!-- headers -->
     <div class="row row-no-gutters">
-      <div class="col-lg-1 col-sm-1 col-xs-1"></div>
+      <div class="col-lg-1 col-sm-1 col-xs-1"><i class="fa fa-check"></i></div>
       <div class="col-lg-5 col-sm-5 col-sm-5"><strong>Seat Remark</strong></div>
       <div class="col-lg-3 col-sm-3 col-sm-3"><strong>Seat Type</strong></div>
       <div class="col-lg-3 col-sm-3 col-sm-3"><strong>Seat Number</strong></div>
@@ -19,7 +19,7 @@
 
     <div formArrayName="seatsFormArray" *ngFor="let remarkOption of remarkOptions; let i = index;">
       <!-- body -->
-      <div class="row row-no-gutters" [formGroupName]="i">
+      <div class="row row-compact" [formGroupName]="i">
         <div class="col-lg-1 col-sm-1 col-xs-1">
           <div class="checkbox text-center">
             <input type="checkbox" formControlName="selected">
@@ -27,9 +27,7 @@
         </div>
         <div class="col-lg-5 col-sm-5 col-xs-5">
           <input type="hidden" formControlName="id" [value]="remarkOption.id">
-          <label for="">
-            <p class="form-control-static">{{ remarkOption.text }}</p>
-          </label>
+          <p>{{ remarkOption.text }}</p>
         </div>
         <div class="col-lg-3 col-sm-3 col-xs-3">
           <label for="" *ngIf="remarkOption.id === 2">
@@ -45,7 +43,6 @@
           </label>
         </div>
       </div>
-      <hr>
     </div>
 
     <div class="row row-no-gutters">

@@ -10,8 +10,8 @@
 
   <table class="feeTable">
     <tr>
-      <th width="50px"><div class="">Schedule Change?</div></th>
-      <!-- <th width="50px"><div class="">Ticketed Segment</div></th> -->
+      <th width="50px"><div class="">Schedule Changed?</div></th>
+      <th width="50px"><div class="">Ticketed Segment</div></th>
       <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
       <th width="150px"><div class="">Supplemental Fee</div></th>
       <th width="70px"><div class=""></div></th>
@@ -32,9 +32,9 @@
           </div>
         </td>
 
-        <!-- <td width="50px">
+        <td width="50px">
           <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
-        </td> -->
+        </td>
 
         <td width="50px">
           <input type="text" class="form-control" formControlName="code" name="code" id="code" readonly (change)="feeChange(item)" />
@@ -63,10 +63,10 @@
             (change)="feeChange(item)"
           />
         </td>
-        <td width="100px">
+        <td width="70px">
           <div (click)="addSupplementalFee(item)">
             <i class="fas fa-plus-circle {{ !supplementalFeeList || supplementalFeeList.length === 0 ? 'disabled' : '' }}" id="add"></i>
-            Add Sup Fee
+            Add Fee
           </div>
         </td>
 
@@ -84,18 +84,7 @@
             </option>
           </select>
         </td>
-        <td *ngIf="i == this.ticketedForm.get('segments')['controls'].length - 1 && i < maxCount - 1">
-          <div (click)="addFee()">
-            <i class="fas fa-plus-circle " id="addFee"></i>
-            Add Fee
-          </div>
-        </td>
-        <td *ngIf="i > 0">
-          <div (click)="removeFee(i)">
-            <i class="fas fa-minus-circle" id="removeFee"> </i>
-            Remove Fee
-          </div>
-        </td>
+
         <input type="hidden" class="form-control" formControlName="feeType" name="feeType" id="feeType" />
       </tr>
     </tbody>

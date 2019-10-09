@@ -15,6 +15,7 @@ ${input_fee}    //input[@id='fee']
 ${input_supfee_checkbox}    //input[@id='selected']
 ${div_addFee_button}    //i[@id='add']
 ${input_feeCode}    //input[@id='code']
+${button_save_fee}    //button[contains(text(), 'Save')]
 
 *** Keywords ***
 Add Canada Domestic Segment And Store Multiple Fare
@@ -145,7 +146,7 @@ Select Supplemental Fee For First Ticket
     Wait Until Element Is Visible    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}    30
     Select Checkbox    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}  
     Take Screenshot  
-    Click Button    ${button_save}  
+    Click Button    ${button_save_fee} 
     Wait Until Element Is Enabled    ${checkbox_schedule_change}    30 
     Click Element At Coordinates    ${input_feeCode}    0    0       
 
@@ -159,7 +160,7 @@ Select Multiple Supplemental Fee
      [Arguments]   @{supplemental_fee_index}
     : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
     \    Select Checkbox    ${input_supplementalFee_chckbox}[${supplemental_fee_index}]${input_supfee_checkbox}
-    Click Button    ${button_save}  
+    Click Button    ${button_save_fee} 
     Wait Until Element Is Enabled    ${checkbox_schedule_change}    30   
     Click Element At Coordinates    ${input_feeCode}    0    0
 

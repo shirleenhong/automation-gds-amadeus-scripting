@@ -5,13 +5,13 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { TicketModel } from '../../models/pnr/ticket.model';
+import { FormGroup } from '@angular/forms';
 import { DDBService } from '../ddb.service';
 import { AquaTicketingComponent } from 'src/app/corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 import { ApprovalRuleService } from './approval-rule.service';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
-import { FormGroup, FormArray } from '@angular/forms';
 
 declare var smartScriptSession: any;
 
@@ -350,30 +350,9 @@ export class TicketRemarkService {
       const index = this.getApprovalIndex(fg);
       this.approvalRuleService.getWriteApproval(index).forEach((app) => {
         const rems = app.getRuleText().split('|');
-        let remark = rems[1];
-        const type = rems[0].substring(0, 2);
-
-        for (const control of (fg.get('additionalValues') as FormArray).controls) {
-          if (control.get('uiType').value === '[TEXTBOX]') {
-            remark = remark.replace('[' + control.get('textLabel').value.trim() + ']', control.get('textValue').value);
-          }
-        }
-
-        if (remark.indexOf('[UI_') > -1) {
-          app.getRuleKeywords().forEach((key) => {
-            this.approvalRuleService.getApprovalItem(key).forEach((a) => {
-              remark = remark.replace(key, a.getRuleText());
-            });
-          });
-        }
-
-        if (remark.indexOf('[DATE_NOW]') >= 0) {
-          const datePipe = new DatePipe('en-Us');
-          remark = remark.replace('[DATE_NOW]', datePipe.transform(Date.now(), 'yyyy-MM-dd'));
-        }
-
-        if (this.pnrService.getRemarkLineNumber(remark, type) === '') {
-          remarkList.push(this.remarkHelper.createRemark(remark, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
+        const type = rems[0].indexOf('RI') === 0 ? 'RI' : 'RM';
+        if (this.pnrService.getRemarkLineNumber(rems[1], type) === '') {
+          remarkList.push(this.remarkHelper.createRemark(rems[1], type, rems[0].charAt(3)));
         }
       });
     }
@@ -391,8 +370,6 @@ export class TicketRemarkService {
       value = fg.get('secondaryReason').value.toString();
     } else if (fg.get('primaryReason').value !== '') {
       value = fg.get('primaryReason').value.toString() + '_0';
-    } else {
-      value = '_0';
     }
     return value.match(/_(\d)/g).join('');
   }
@@ -410,7 +387,7 @@ export class TicketRemarkService {
       this.approvalRuleService.getQueueApproval(index).forEach((app) => {
         const queue = new QueuePlaceModel();
         const queueInfo = app.getRuleText().split('/');
-        queue.pcc = queueInfo[0] === '{BOOKING_OID}' ? this.pnrService.PCC : queueInfo[0];
+        queue.pcc = (queueInfo[0] === '{BOOKING_OID}') ? this.pnrService.PCC : queueInfo[0];
         queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
         const categoryqueue = queueInfo[1].split('C');
         queue.queueNo = categoryqueue[0];

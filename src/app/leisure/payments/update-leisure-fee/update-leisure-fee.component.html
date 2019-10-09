@@ -68,7 +68,7 @@
             <select id="paymentType" name="paymentType" class="form-control" formControlName="paymentType"
               [(ngModel)]="leisureFee.paymentType">
               <option value="C">Credit Card</option>
-              <option value="K">Cheque</option>
+              <option *ngIf="withcheque" value="K">Cheque</option>
             </select>
           </div>
         </div>

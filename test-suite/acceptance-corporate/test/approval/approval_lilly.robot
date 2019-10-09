@@ -12,13 +12,12 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
 
 *** Test Cases ***
-Verify That PNRs For Client Lilly Are Queued For Approval
+Verify That PNRs For Client Lilly Is Correctly Queued To Approval Queue
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Intl Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
      
 Verify That PNRs For Client Lilly With Domestic Route Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -26,7 +25,6 @@ Verify That PNRs For Client Lilly With Domestic Route Do Not Go Thru Approval Pr
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Dom Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
      
 Verify That PNRs For Client Lilly With Trans Route Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -34,7 +32,6 @@ Verify That PNRs For Client Lilly With Trans Route Do Not Go Thru Approval Proce
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Trans Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Car Only PNRs For Client Lilly Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -42,7 +39,6 @@ Verify That Car Only PNRs For Client Lilly Do Not Go Thru Approval Process
     Create PNR For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Car & Hotel Only PNRs For Client Lilly Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -50,7 +46,6 @@ Verify That Car & Hotel Only PNRs For Client Lilly Do Not Go Thru Approval Proce
     Create PNR For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Lilly Can Skip Approval Process
     [Tags]    us13271
@@ -58,7 +53,6 @@ Verify That PNRs For Client Lilly Can Skip Approval Process
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Mix Segments, Intl Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Lilly With U*50 As Guest Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -66,4 +60,3 @@ Verify That PNRs For Client Lilly With U*50 As Guest Do Not Go Thru Approval Pro
     Create PNR With Active Air Segments For Client Lilly With Udid 50 GUEST, Air Only, Intl Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser

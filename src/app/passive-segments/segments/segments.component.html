@@ -41,7 +41,7 @@
       <td>{{ r.destinationCity |uppercase}}</td>
       <td>{{ r.arrivalDate | date: "ddMMM" | uppercase}}</td>
       <td>{{ r.arrivalTime }}</td>
-      <td><i *ngIf="r.isNew" class="fas fa-edit" (click)="updateItem(r)"></i>
+      <td *ngIf="r.isNew"><i class="fas fa-edit" (click)="updateItem(r)"></i>
         &nbsp;&nbsp;&nbsp;
         <i class=" fas fa-trash-alt" (click)="deleteItem(r)"> </i>
       </td>

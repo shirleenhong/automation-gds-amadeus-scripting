@@ -13,7 +13,7 @@ Resource          reporting.robot
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
-${button_submit_pnr}    //button[@class='leisureBtnSubmit']
+${button_submit_pnr}    //button[contains(text(), 'SUBMIT TO PNR')]
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
@@ -24,7 +24,7 @@ ${input_ticketingDate}    css=#dtxtTicketDate
 ${checkbox_onHold}    css=#chkOnHold
 ${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
 ${button_main_menu}    //button[contains(text(), 'Back To Main Menu')]
-${button_save}    //button[contains(text(), 'Save')]
+
 
 *** Keywords ***
 Enter Value
@@ -73,14 +73,12 @@ Collapse Payment Panel
     [Teardown]    Take Screenshot
     
 Click Submit To PNR
-    [Arguments]    ${close_corporate_test}=yes     ${queueing}=no
+    [Arguments]    ${close_corporate_test}=yes
     Wait Until Page Contains Element    ${button_submit_pnr}    30
-    Scroll Element Into View     ${button_submit_pnr}
-    Click Button    ${button_submit_pnr}
+    Click Element    ${button_submit_pnr}    
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
-    Run Keyword If   "${queueing}" == "yes"     Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${pnr_submitted}    yes
     
@@ -99,7 +97,6 @@ Assign Current Date
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
     Set Test Variable    ${current_year}     20${current_year}
-    Set Test Variable    ${date_today}    ${current_year}-${current_month}-${current_day}
     Log    ${current_date} 
     Log    ${current_day}/${current_month}/${current_year}
 
@@ -123,7 +120,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting" or "${current_page}" == "Waivers"   Navigate From Reporting    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting"    Navigate From Reporting    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
@@ -135,14 +132,14 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
-    ...    ELSE IF    "${destination_page}" == "Reporting" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Waivers"    Click Reporting Panel
+    ...    ELSE IF    "${destination_page}" == "Reporting" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting"    Click Reporting Panel
     ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
     ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
     ...    ELSE   Click Back To Main Menu
@@ -157,8 +154,6 @@ Navigate From Reporting
     Run Keyword If    "${destination_page}" == "BSP Reporting"    Click BSP Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Non BSP Reporting"    Click Non BSP Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
-    ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
-    ...    ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
     ...    ELSE    Collapse Reporting Panel
     
 Navigate From Ticketing
@@ -167,17 +162,15 @@ Navigate From Ticketing
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
 
 Finish PNR
-    [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
-    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR    ${close_corporate_test}    ${queueing}
+    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}  
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     
 Submit To PNR
-    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
+    [Arguments]    ${close_corporate_test}=yes    
     Run Keyword If    "${current_page}" == "Add Accounting Line"    Click Save Button
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"
-    ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Click Submit To PNR    ${close_corporate_test}        
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
@@ -260,13 +253,9 @@ Get Expected Approval Values From Json
     ${primary_approval_reason}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PrimaryApprovalReason
     ${secondary_approval_reason}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SecondaryApprovalReason
     ${approver_name}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].ApproverName
-    ${total_cost}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].TotalCost
     ${addtl_message}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].AdditionalMessage
     ${queue_approval}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToApproval
     ${remark_added}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded
-    ${remark_added2}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded2
-    ${remark_added3}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded3
-    ${remark_added4}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].RemarkAdded4
     ${onhold_rmk}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].OnHoldRmk
     ${queue_tkt}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToTkt
     Set Test Variable    ${with_ui}
@@ -274,13 +263,9 @@ Get Expected Approval Values From Json
     Set Test Variable    ${primary_approval_reason}
     Set Test Variable    ${secondary_approval_reason}
     Set Test Variable    ${approver_name}
-    Set Test Variable    ${total_cost}
     Set Test Variable    ${addtl_message}
     Set Test Variable    ${queue_approval}
     Set Test Variable    ${remark_added}
-    Set Test Variable    ${remark_added2}
-    Set Test Variable    ${remark_added3}
-    Set Test Variable    ${remark_added4}
     Set Test Variable    ${onhold_rmk}
     Set Test Variable    ${queue_tkt}
 

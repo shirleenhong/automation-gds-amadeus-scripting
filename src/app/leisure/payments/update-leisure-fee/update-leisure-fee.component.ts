@@ -31,7 +31,7 @@ export class UpdateLeisureFeeComponent implements OnInit {
   isSubmitted = false;
   exemption = [];
   passengerList: Array<any>;
-  // withcheque = true;
+  withcheque = true;
 
   constructor(
     public modalRef: BsModalRef,

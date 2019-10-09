@@ -4,8 +4,6 @@ import { UpdateSegmentComponent } from '../update-segment/update-segment.compone
 import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { PnrService } from 'src/app/service/pnr.service';
-import { MessageComponent } from 'src/app/shared/message/message.component';
-import { MessageType } from 'src/app/shared/message/MessageType';
 
 @Component({
   selector: 'app-segments',
@@ -53,16 +51,6 @@ export class SegmentsComponent implements OnInit {
           this.segmentRemarks.push(this.modalRef.content.passiveSegments);
         }
         this.modalRef.content.isSubmitted = false;
-      } else {
-        if (this.modalRef.content.callerName === 'Segment' && this.modalRef.content.response === 'YES') {
-          const r = this.modalRef.content.paramValue;
-          this.segmentRemarks.splice(this.segmentRemarks.indexOf(r), 1);
-          let i = 1;
-          this.segmentRemarks.forEach((x) => {
-            x.segmentNo = i;
-            i++;
-          });
-        }
       }
     });
   }
@@ -82,16 +70,14 @@ export class SegmentsComponent implements OnInit {
   }
 
   deleteItem(r: PassiveSegmentsModel) {
-    this.modalRef = this.modalService.show(MessageComponent, {
-      backdrop: 'static'
-    });
-    this.modalRef.content.modalRef = this.modalRef;
-    this.modalRef.content.title = 'Delete?';
-    this.modalRef.content.message = 'Are you sure you want to delete this Segment?';
-    this.modalRef.content.callerName = 'Segment';
-    this.modalRef.content.response = '';
-    this.modalRef.content.paramValue = r;
-    this.modalRef.content.setMessageType(MessageType.YesNo);
+    if (confirm('Are you sure you want to delete this Segment?')) {
+      this.segmentRemarks.splice(this.segmentRemarks.indexOf(r), 1);
+      let i = 1;
+      this.segmentRemarks.forEach((x) => {
+        x.segmentNo = i;
+        i++;
+      });
+    }
   }
 
   getNoPassengers() {

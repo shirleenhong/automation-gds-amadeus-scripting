@@ -2,8 +2,8 @@
   <thead class="thead-light">
     <tr>
       <th>#</th>
-      <th>Seat Remark Option</th>
-      <th>Seat Type</th>
+      <th>Text</th>
+      <th>Type</th>
       <th>Seat Number</th>
       <th>Segment(s)</th>
       <th></th>
@@ -12,10 +12,10 @@
   <tbody>
     <tr *ngFor="let seat of seats; let i = index">
       <td>{{ i + 1 }}</td>
-      <td>{{ seatRemarkOptions[seat.id - 1].text }}</td>
-      <td>{{ seat.type }}</td>
+      <td>{{ seat.text }}</td>
+      <td>{{ seat.type | uppercase }}</td>
       <td>{{ seat.number }}</td>
-      <td>{{ seat.segmentIds }}</td>
+      <td>{{ seat.segmentId }}</td>
       <td>
         <i class="fa fa-trash-alt" (click)="delete(seat)"></i>
       </td>

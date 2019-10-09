@@ -20,17 +20,16 @@ ${tab_tktInstruction}    //tab[@id='ticketingInstruction']
 ${text_noSegments}    //b[contains(text(), '*No Segments Available for Ticketing*')]
 ${select_primaryReason}    //select[@id='primaryReason']
 ${select_secondaryReason}    //select[@id='secondaryReason']
-${input_approverName}     //div[@formarrayname='additionalValues'][1]//input[@id='textValue']
-${input_totalCost}     //div[@formarrayname='additionalValues'][2]//input[@id='textValue']
+${input_approverName}     //input[@id='textValue']
 ${text_Danger}    //div[@class='col text-danger']
-${checkbox_ignoreApproval}    css=#noApproval
+${checkbox_ignoreApproval}    css=#chkIgnoreApproval
 
 *** Keywords ***
 Select Primary Approval Reason: ${primary_reason}
-    Select From List By Label     ${select_primaryReason}    ${primary_reason}
+    Select From List By Value     ${select_primaryReason}    ${primary_reason}
 
 Select Secondary Reason: ${secondary_reason}
-    Select From List By Label     ${select_secondaryReason}    ${secondary_reason}
+    Select From List By Value     ${select_secondaryReason}    ${secondary_reason}
     
 Fill Up Approval Fields
     Navigate To Page Ticketing Line
@@ -44,10 +43,9 @@ Verify Approval Fields Are Not Displayed
     Run Keyword And Continue On Failure    Page Should Not Contain Element     ${checkbox_ignoreApproval}
 
 Fill Up Approval Reason Fields
-    Run Keyword If    "${primary_approval_reason}" != "None"    Select Primary Approval Reason: ${primary_approval_reason}
+    Select Primary Approval Reason: ${primary_approval_reason}
     Run Keyword If    "${secondary_approval_reason}" != "None"    Select Secondary Reason: ${secondary_approval_reason}
     Run Keyword If    "${approver_name}" != "None"    Enter Value    ${input_approverName}    ${approver_name}
-    Run Keyword If    "${total_cost}" != "None"    Enter Value    ${input_totalCost}    ${total_cost}  
     Run Keyword If    "${addtl_message}" != "None"    Verify Warning Message Is Displayed     ${addtl_message}
     
 Verify Warning Message Is Displayed
@@ -109,6 +107,7 @@ Select Limo Segments
 
 Fill Up Ticketing Panel With Default Values
     Navigate To Page Ticketing Line
+    Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
@@ -321,27 +320,10 @@ Verify Multiple Aqua Ticketing Instruction Remarks Are Written Correctly
     Verify Specific Remark Is Written In The PNR     RMT TKT1-INTL/S5
     
 Verify PNR Approval Is Processed Correctly
-    Finish PNR    queueing=yes
-    Assign Current Date
-    Run Keyword If    "${queue_approval}" == "Yes"    Verify PNR Is Queued For Approval
-    ...    ELSE    Verify PNR Is Not Queued For Approval
-    Run Keyword If    "${remark_added}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added}
-    Run Keyword If    "${remark_added2}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added2}  
-    Run Keyword If    "${remark_added3}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added3}  
-    Run Keyword If    "${remark_added4}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added4}    
-    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
+    Finish PNR
+    Run Keyword If    "${queue_approval}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/50C3
+    ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/50C3
+    Run Keyword If    "${remark_added}" != "None"    Verify Specific Remark Is Written In The PNR   ${remark_added}   
+    Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TKTL${tktl_date}/YTOWL2106/Q8C1-ONHOLD
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1
-
-Verify PNR Is Queued For Approval
-    Open Command Page
-    Enter Cryptic Command    RTQ 
-    Run Keyword If    "${cfa}" != "D7V"    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL28AN${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000   
-    Run Keyword If    "${cfa}" == "D7V"    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
-    [Teardown]    Take Screenshot
-    
-Verify PNR Is Not Queued For Approval
-    Open Command Page
-    Enter Cryptic Command    RTQ
-    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
-    [Teardown]    Take Screenshot

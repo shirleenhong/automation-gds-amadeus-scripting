@@ -112,11 +112,9 @@ export class PnrService {
             if (type === 'RI') {
                 remarksList = this.pnrObj.riElements;
             }
-            if (remarksList) {
-                for (const rm of remarksList) {
-                    if (rm.freeFlowText.indexOf(searchText) === 0) {
-                        return rm.elementNumber;
-                    }
+            for (const rm of remarksList) {
+                if (rm.freeFlowText.indexOf(searchText) === 0) {
+                    return rm.elementNumber;
                 }
             }
         }
@@ -1042,7 +1040,7 @@ export class PnrService {
         return matrixReceipts;
     }
 
-    getSegmentModel(freetext, index, type, lineNo) {
+    getSegmentModel(freetext, index, type) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
 
@@ -1069,7 +1067,6 @@ export class PnrService {
             if (match !== null) {
                 segmentModel.isNew = false;
                 segmentModel.segmentNo = index;
-                segmentModel.lineNo = lineNo;
                 segmentModel.segmentType = match.groups.type;
                 if (!match.groups.type) {
                     segmentModel.segmentType = type;
@@ -1083,7 +1080,6 @@ export class PnrService {
                 segmentModel.arrivalDate = match.groups.arrdate;
                 segmentModel.arrivalTime = match.groups.arrtime;
                 segmentModel.confirmationNo = match.groups.conf;
-
             } else if (type === 'HTL') {
                 segmentModel.segmentType = type;
             }
@@ -1091,12 +1087,11 @@ export class PnrService {
         }
     }
 
-    getAirSegmentModel(element, index, lineNo) {
+    getAirSegmentModel(element, index) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
-        segmentModel.lineNo = lineNo;
         segmentModel.segmentType = element.segmentType;
         segmentModel.flightNumber = element.flightNumber;
         segmentModel.classService = element.classservice;
@@ -1110,12 +1105,11 @@ export class PnrService {
         return segmentModel;
     }
 
-    getHotelSegmentModel(element, index, freetext, lineNo) {
+    getHotelSegmentModel(element, index, freetext) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
         segmentModel.isNew = false;
         segmentModel.segmentNo = index;
-        segmentModel.lineNo = lineNo;
         segmentModel.segmentType = element.segmentType;
         segmentModel.departureDate = this.formatDate(element.deptdate);
         segmentModel.departureCity = element.cityCode;
@@ -1142,13 +1136,13 @@ export class PnrService {
             switch (element.segmentType) {
                 case 'MIS':
                 case 'CAR':
-                    pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType, element.lineNo));
+                    pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType));
                     break;
                 case 'AIR':
-                    pSegment.push(this.getAirSegmentModel(element, index, element.lineNo));
+                    pSegment.push(this.getAirSegmentModel(element, index));
                     break;
                 case 'HTL':
-                    pSegment.push(this.getHotelSegmentModel(element, index, element.freetext, element.lineNo));
+                    pSegment.push(this.getHotelSegmentModel(element, index, element.freetext));
                     break;
             }
         });
@@ -1502,7 +1496,7 @@ export class PnrService {
 
 
     public getTkLineDescription(): string {
-        if (this.pnrObj.tkElements && this.pnrObj.tkElements[0] && this.pnrObj.tkElements[0].freeFlowText) {
+        if (this.pnrObj.tkElements && this.pnrObj.tkElements[0]) {
             return this.pnrObj.tkElements[0].freeFlowText.trim();
         }
         return '';

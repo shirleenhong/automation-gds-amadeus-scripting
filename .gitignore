@@ -32,5 +32,3 @@ red.xml
 *.png
 test-suite/resources/common/global_resources.robot 
 /libspecs/
-debug.log
-debug.log

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { SeatsComponent } from './seats/seats.component';
+import { IrdRemarksComponent } from './ird-remarks/ird-remarks.component';
 
 @Component({
   selector: 'app-corp-remarks',
@@ -7,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CorpRemarksComponent implements OnInit {
 
+  @ViewChild(SeatsComponent) seatsComponent: SeatsComponent;
+  @ViewChild(IrdRemarksComponent) irdRemarks: IrdRemarksComponent;
   constructor() { }
 
   ngOnInit() {

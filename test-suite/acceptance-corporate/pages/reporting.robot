@@ -364,13 +364,15 @@ Select Default Value For Routing Code
 Select Default Value For Destination Code
     ${is_destination_present}    Run Keyword And Return Status    Page Should Contain Element    ${input_destination} 
     Run Keyword If    "${is_destination_present}" == "True"   Enter Destination Code Default Value
+    Set Test Variable    ${destination_selected}    yes
+    [Teardown]    Take Screenshot
 
 Enter Destination Code Default Value        
     ${elements_count}    Get Element Count    ${input_destination} 
     Set Test Variable    ${elements_count}
         : FOR    ${destination_index}    IN RANGE    0    ${elements_count}
 	    \    ${destination_index}    Evaluate    ${destination_index} + 1
-	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    YYZ
+	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    YUL
     
 Select Destination Code Values
 	[Arguments]    @{destination_code}
@@ -378,7 +380,14 @@ Select Destination Code Values
 	: FOR    ${destination_code}    IN    @{destination_code}
 	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    ${destination_code}
 		\    ${destination_index}    Evaluate    ${destination_index} + 1
-	Set Test Variable    ${destination_selected}   yes
-
-
-
+	
+Populate Destination Code Fields For ${tst_no} TST
+    Navigate To Page Reporting Remarks
+    Run Keyword If  "${tst_no}" == "Single"   Select Destination Code Values    YUL
+    ...  ELSE IF   "${tst_no}" == "Multiple"    Select Destination Code Values   YUL   YYZ   ORD
+    Set Test Variable    ${destination_selected}    yes
+    Take Screenshot
+    
+Verify Destination Code Remarks Are Written In The PNR
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR

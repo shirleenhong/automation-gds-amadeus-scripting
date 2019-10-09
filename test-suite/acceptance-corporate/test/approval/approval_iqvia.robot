@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    iqvia
@@ -21,7 +22,6 @@ Verify That Air Only PNRs For Client IQVIA Is Correctly Queued For Approval
     Create PNR With Active Air Segments For Client IQVIA With Air Only Segments, Select Travel is Booked in Business Class
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Car Only PNRs For Client IQVIA With Any U*50 Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -29,8 +29,6 @@ Verify That Car Only PNRs For Client IQVIA With Any U*50 Do Not Go Thru Approval
     Create PNR With Active Air Segments For Client IQVIA With Any Udid 50, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
-
 
 Verify That Hotel Only PNRs For Client IQVIA With Any U*50 Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -38,5 +36,4 @@ Verify That Hotel Only PNRs For Client IQVIA With Any U*50 Do Not Go Thru Approv
     Create PNR For Client IQVIA With Any Udid 50, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     

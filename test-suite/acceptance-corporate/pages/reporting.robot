@@ -372,13 +372,13 @@ Enter Destination Code Default Value
     Set Test Variable    ${elements_count}
         : FOR    ${destination_index}    IN RANGE    0    ${elements_count}
 	    \    ${destination_index}    Evaluate    ${destination_index} + 1
-	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    YUL
+	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    YUL
     
 Select Destination Code Values
 	[Arguments]    @{destination_code}
 	Set Test Variable    ${destination_index}    1
 	: FOR    ${destination_code}    IN    @{destination_code}
-	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    ${destination_code}
+	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
 		\    ${destination_index}    Evaluate    ${destination_index} + 1
 	
 Populate Destination Code Fields For ${tst_no} TST

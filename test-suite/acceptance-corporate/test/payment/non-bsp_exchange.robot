@@ -8,6 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/payment.robot
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That Ticketing Instruction Remarks Are Written Correctly When Original Ticket Number And New Ticket Number Are Not Provided
@@ -17,7 +18,7 @@ Verify That Ticketing Instruction Remarks Are Written Correctly When Original Ti
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For PD
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange Without Ticket Number Are Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Ticketing Instruction Remarks Are Written Correctly When Original Ticket Number And New Ticket Number Are Provided
     [Tags]    us11134
@@ -26,7 +27,7 @@ Verify That Ticketing Instruction Remarks Are Written Correctly When Original Ti
     Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Verify That Supplier Code Default Value Is Correct For WN
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Supplier Codes And Without Penalty Amount
     [Tags]    us11134
@@ -36,7 +37,7 @@ Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Sup
     Verify That Supplier Code Default Value Is Correct For AC
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
     Verify Penalty Remarks Are Not Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Supplier Codes And With Penalty Amount
     [Tags]    us11134
@@ -46,7 +47,7 @@ Verify That Ticketing Instruction Remarks Are Written Correctly For Specific Sup
     Verify That Supplier Code Default Value Is Correct For AC
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
     Verify Penalty Remarks Are Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Ticketing Instruction Remarks Are Written Correctly For Other Supplier Codes And With Penalty Amount
     [Tags]    us11134
@@ -56,7 +57,7 @@ Verify That Ticketing Instruction Remarks Are Written Correctly For Other Suppli
     Verify That Supplier Code Default Value Is Correct For 4N
     Verify Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number And Penalty Amount Are Written In The PNR
     Verify Penalty Remarks Are Not Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Consultant Number Remark Is Updated When Consultant Number Field Is Not Empty
     [Tags]    us11134
@@ -66,7 +67,7 @@ Verify That Consultant Number Remark Is Updated When Consultant Number Field Is 
     Verify That Supplier Code Default Value Is Correct For PD
     Update Consultant Number To CN2
     Verify Consultant Number Remark Is Written With The Correct Value
-    [Teardown]    Close Browser
+    
     
 Verify That Consultant Number Remark Is Updated When Consultant Number Field Is Blank
     [Tags]    us11134
@@ -75,7 +76,7 @@ Verify That Consultant Number Remark Is Updated When Consultant Number Field Is 
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For PD
     Verify Consultant Number Remark Is Written With The Correct Value
-    [Teardown]    Close Browser
+    
     
 Verify That G Remark Is Written When RM*U14-[AirlineCode]PASS Is Present In PNR
     [Tags]    us11134
@@ -84,7 +85,7 @@ Verify That G Remark Is Written When RM*U14-[AirlineCode]PASS Is Present In PNR
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For MO
     Verify RMG Remark Is Written With Supplier Code MO
-    [Teardown]    Close Browser
+    
     
 Verify That RM*U14 Remark Is Updated With Lowest GDS Fare Value For Specific Client
     [Tags]    us11134
@@ -93,7 +94,7 @@ Verify That RM*U14 Remark Is Updated With Lowest GDS Fare Value For Specific Cli
     Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Verify That Supplier Code Default Value Is Correct For MO
     Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For MO
-    [Teardown]    Close Browser
+    
     
 Verify That Specific RIR Remarks In English Are Removed From PNR
     [Tags]    us11134
@@ -103,7 +104,7 @@ Verify That Specific RIR Remarks In English Are Removed From PNR
     Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Verify That Supplier Code Default Value Is Correct For WS
     Verify Specific RIR Remarks In English Are Removed From PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Specific RIR Remarks In French Are Removed From PNR
     [Tags]    us11134
@@ -114,7 +115,7 @@ Verify That Specific RIR Remarks In French Are Removed From PNR
     Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Verify That Supplier Code Default Value Is Correct For WS
     Verify Specific RIR Remarks In French Are Removed From PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Ticketing Instruction Remarks Can Be Written For Multiple Segments
     [Tags]    us11134
@@ -123,4 +124,4 @@ Verify That Ticketing Instruction Remarks Can Be Written For Multiple Segments
     Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Verify That Supplier Code Default Value Is Correct For WS
     Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange With Ticket Number Are Written In The PNR
-    [Teardown]    Close Browser 
+     

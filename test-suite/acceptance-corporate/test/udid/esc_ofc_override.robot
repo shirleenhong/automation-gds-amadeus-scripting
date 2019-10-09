@@ -8,6 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That UDID 86 Remark Is Not Written In The PNR When Counselor Identity Is Left Blank
@@ -16,7 +17,6 @@ Verify That UDID 86 Remark Is Not Written In The PNR When Counselor Identity Is 
     Move Single Passenger And Add Passive Segment With Airline Code 8P
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify UDID 86 Remark Is Not Written In The PNR
-    [Teardown]    Close Browser
     
 Verify That UDID 86 Remark Is Updated In The PNR When Coundelor Identity is ESC
     [Tags]    us9964
@@ -25,7 +25,6 @@ Verify That UDID 86 Remark Is Updated In The PNR When Coundelor Identity is ESC
     Select Counselor Identity: ESC
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify UDID 86 Remark Is Written Correctly In The PNR
-    [Teardown]    Close Browser
     
 Verify That UDID 86 Remark Is Written In The PNR When Coundelor Identity is OFC
     [Tags]    us9964
@@ -34,4 +33,3 @@ Verify That UDID 86 Remark Is Written In The PNR When Coundelor Identity is OFC
     Select Counselor Identity: OFC
     Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Verify UDID 86 Remark Is Written Correctly In The PNR
-    [Teardown]    Close Browser

@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/fees.robot
 Resource          ../../pages/ticketing.robot
+Test Teardown    Close All Browsers
 
 
 *** Test Cases ***
@@ -21,7 +22,7 @@ Verify OBT SupFee Remark Is Written In The PNR with Air, Rail, Hotel, and Car Se
     Open CA Corporate Test
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Multiple Segment
-    [Teardown]    Close Browser
+    
     
 Verify OBT SupFee Remark is written In The PNR For Air Only Segment
     Login To Amadeus Sell Connect Acceptance
@@ -30,7 +31,7 @@ Verify OBT SupFee Remark is written In The PNR For Air Only Segment
     Open CA Corporate Test
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Air Only
-    [Teardown]    Close Browser
+    
     
 Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
     Login To Amadeus Sell Connect Acceptance
@@ -39,7 +40,7 @@ Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
     Open CA Corporate Test
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Rail Only
-    [Teardown]    Close Browser
+    
     
 Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
     Login To Amadeus Sell Connect Acceptance
@@ -48,7 +49,7 @@ Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
     Open CA Corporate Test
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Hotel Only
-    [Teardown]    Close Browser
+    
     
 Verify OBT SupFee Remark is written In The PNR For Car Only Segment
     Login To Amadeus Sell Connect Acceptance
@@ -57,7 +58,7 @@ Verify OBT SupFee Remark is written In The PNR For Car Only Segment
     Open CA Corporate Test
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Car Only
-    [Teardown]    Close Browser
+    
     
 Verify That Non OBT PNR Has No Supfee Remark In The PNR
     Login To Amadeus Sell Connect Acceptance
@@ -66,4 +67,4 @@ Verify That Non OBT PNR Has No Supfee Remark In The PNR
     Open CA Corporate Test
     Click Full Wrap
     Verify The No Supfee Remark Are Written In The PNR
-    [Teardown]    Close Browser
+    

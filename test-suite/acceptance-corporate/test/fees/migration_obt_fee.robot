@@ -24,6 +24,7 @@ Verify OBT SupFee Remark Is Written In The PNR with Air, Rail, Hotel, and Car Se
     [Teardown]    Close Browser
     
 Verify OBT SupFee Remark is written In The PNR For Air Only Segment
+    [Tags]    us9402
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add International Segment And Store Single Fare
@@ -33,6 +34,7 @@ Verify OBT SupFee Remark is written In The PNR For Air Only Segment
     [Teardown]    Close Browser
     
 Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
+    [Tags]    us9402
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 1 Rail Segments
@@ -42,6 +44,7 @@ Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
     [Teardown]    Close Browser
     
 Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
+    [Tags]    us9402
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 2 Hotel Segments
@@ -51,6 +54,7 @@ Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
     [Teardown]    Close Browser
     
 Verify OBT SupFee Remark is written In The PNR For Car Only Segment
+    [Tags]    us9402
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 2 Car Segments
@@ -60,6 +64,7 @@ Verify OBT SupFee Remark is written In The PNR For Car Only Segment
     [Teardown]    Close Browser
     
 Verify That Non OBT PNR Has No Supfee Remark In The PNR
+    [Tags]    us9402
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger
     Book Multiple Segments With Air Car Rail And Hotel

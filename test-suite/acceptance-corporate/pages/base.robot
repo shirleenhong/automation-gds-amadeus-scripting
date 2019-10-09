@@ -21,7 +21,7 @@ ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
-${list_counselor_identity}    css=#selCounselorIdentity
+${list_counselor_identity}    //select[@id='selCounselorIdentity']
 ${input_ticketingDate}    css=#dtxtTicketDate
 ${checkbox_onHold}    css=#chkOnHold
 ${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
@@ -31,6 +31,8 @@ ${panel_remarks}    //div[@class='panel-title']//div[contains(text(), 'Remarks')
 ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
 ${button_itinerary_queue}    //button[contains(text(), 'Itinerary And Queue')]
+${open_bracket}     [
+${close_bracket}     ]
 
 *** Keywords ***
 Enter Value
@@ -60,7 +62,7 @@ Click Full Wrap
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
-    Scroll Element Into View     ${panel_reporting}
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
     

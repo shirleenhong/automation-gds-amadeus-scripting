@@ -8,6 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/base.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    destination_code
@@ -19,7 +20,7 @@ Verify That Destination Code Remark Is Written For Single TST
     Create PNR With Active Air Segments For Destination Code Remark With Single TST
     Populate Destination Code Fields For Single TST
     Verify Destination Code Remarks Are Written In The PNR
-    [Teardown]    Close Browser
+    
     
     
 Verify That Destination Code Remark Is Written For Multiple Segment And Single TST
@@ -28,7 +29,7 @@ Verify That Destination Code Remark Is Written For Multiple Segment And Single T
     Create PNR With Active Air Segments For Destination Code Remark With Multiple Segment And Single TST
     Populate Destination Code Fields For Single TST
     Verify Destination Code Remarks Are Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Destination Code Remark Is Written For Multiple Segment And Multiple TSTs
     [Tags]   us11100
@@ -36,4 +37,4 @@ Verify That Destination Code Remark Is Written For Multiple Segment And Multiple
     Create PNR With Active Air Segments For Destination Code Remark With Multiple Segment And Multiple TSTs
     Populate Destination Code Fields For Multiple TST
     Verify Destination Code Remarks Are Written In The PNR
-    [Teardown]    Close Browser
+    

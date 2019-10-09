@@ -141,7 +141,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting" or "${current_page}" == "Waivers" or "${current_page}" == "Reporting Remarks"    Navigate From Reporting    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Seats"    Navigate To Remarks    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Seats" or "${current_page}" == "IRD Remarks"    Navigate To Remarks    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
@@ -154,7 +154,7 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Seats" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "Document PNR"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Seats" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "Document PNR" or "${destination_page}" == "IRD Remarks"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     

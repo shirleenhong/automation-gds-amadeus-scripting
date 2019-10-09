@@ -5,6 +5,7 @@ Library           Collections
 Library           Screenshot
 Resource          base.robot
 Resource          amadeus.robot
+Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${button_add_seat}    //button[contains(text(), 'Add Seat')]
@@ -15,7 +16,11 @@ ${select_seat_formType}    //select[@id='seatFormType']
 ${input_seat_number}    css=#seatFormNumber
 ${button_close}    //button[contains(text(), 'Close')]
 ${tab_Seats}    //span[contains(text(), 'Seat')]
-${tab_ird}    //span[contains(text(), 'IRD Remarks')]
+${tab_ird_remarks}    //span[contains(text(), 'IRD Remarks')]
+${row_ird_status}    //tbody[@formarrayname='irdItems']
+${select_ird_status}    //select[@id="irdStatus"]
+${select_low_savingStatus}    //select[@id="lowSavingStatus"]
+${label_ird_savings_value}    //label[contains(text(), '0.00')]
 ${tab_documentPnr}    css=#documentPnrTab-link
 ${row_documentPNR}    //div[@formarrayname='items']
 ${add_button}    //i[@class='fas fa-plus-circle iconPlus']
@@ -29,9 +34,9 @@ Navigate To Add Seat Remarks
     Set Test Variable    ${ticketing_details_complete}    no
     
 Click IRD Remarks Tab
-    Wait Until Element Is Visible    ${tab_ird}     30
-    Click Element At Coordinates    ${tab_ird}     0    0
-    Wait Until Page Contains Element    ${tab_ird}    30
+    Wait Until Element Is Visible    ${tab_ird_remarks}     30
+    Click Element At Coordinates    ${tab_ird_remarks}     0    0
+    Wait Until Page Contains Element    ${tab_ird_remarks}    30
     Set Test Variable    ${current_page}    IRD Remarks
     
     
@@ -84,7 +89,7 @@ Select Seat Remarks Option
     \    ${index}    Evaluate   ${index} + 1
 
 Select Seat Option
-       [Arguments]    @{seat_option}    ${segment_select}    ${seat_type}=${EMPTY}    ${seat_number}=${EMPTY}
+       [Arguments]    ${seat_option}    ${segment_select}    ${seat_type}=${EMPTY}    ${seat_number}=${EMPTY}
        : FOR    ${seat_option}    IN    @{seat_option}
        \    Wait Until Page Contains Element    ${select_seat_remarkOptions}    30
        \    Select From List By Label    ${list_of_seatOption}    ${select_seat_remarkOptions}
@@ -129,3 +134,42 @@ Verify That Document PNR Remarks Are Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
+#-----------IRD Keywords And Verifiation---------------#
+
+Verify IRD Status Default Value Is Correct For ${ird_default_status} For Multi Segment
+    Set Test Variable    ${ird_default_status}    
+    ${actual_ird_status}    Get Element Attribute    ${select_ird_status}    ng-reflect-value
+    Run Keyword If    "${label_ird_savings_value}" == "0.00"    Should Contain    ${row_ird_status}[1]${select_ird_status}    NO LFO
+    
+Verify IRD Status Default Value Is Correct For ${ird_default_status} For Single Segment
+    Set Test Variable    ${ird_default_status}    
+    ${actual_ird_status}    Get Element Attribute    ${select_ird_status}    ng-reflect-value
+    Run Keyword If    "${label_ird_savings_value}" == "20.00"    Should Contain    ${row_ird_status}[3]${select_ird_status}    ACCEPTEDCP
+
+Select ${ird_status} As IRD Status With Value For Savings
+    Set Test Variable    ${ird_status}    
+    Select From List By Label    ${row_ird_status}[2]${select_ird_status}    ACCEPTEDCP
+    
+Select IRD Status With Multiple Pricing And Segment In The PNR
+    Wait Until Element Is Visible    ${row_ird_status}    
+    Select From List By Label    ${row_ird_status}[2]${select_ird_status}    ACCEPTEDCP
+    Select From List By Label    ${row_ird_status}[2]${select_ird_status}    DECLINED
+    Select From List By Label    ${row_ird_status}[2]${select_low_savingStatus}    ACCEPTEDLFO
+    Select From List By Label    ${row_ird_status}[3]${select_ird_status}    DECLINED
+    Select From List By Label    ${row_ird_status}[3]${select_low_savingStatus}    DECLINED
+    
+Select IRD Status With Single Pricing And Segment In The PNR
+    Wait Until Element Is Visible    ${row_ird_status} 
+    Select From List By Label    ${row_ird_status}[1]${select_low_savingStatus}    ACCEPTEDLFO
+
+Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
+    Verify IRD Status Default Value Is Correct For NO LFO For Multi Segment
+    Select IRD Status With Multiple Pricing And Segment In The PNR
+    Finish PNR  
+    Verify Expected Remarks Are Written In The PNR  
+    
+Verify If IRD Status Are Written Correctly For Single Segment In The PNR
+    Select IRD Status With Single Pricing And Segment In The PNR
+    Verify IRD Status Default Value Is Correct For ACCEPTEDCP For Single Segment
+    Finish PNR  
+    Verify Expected Remarks Are Written In The PNR  

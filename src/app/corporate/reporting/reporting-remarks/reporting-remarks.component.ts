@@ -16,6 +16,7 @@ export class ReportingRemarksComponent implements OnInit {
   reportingForm: FormGroup;
   destinations: Array<any>;
   segments: any[];
+  showSegments = false;
 
   @Input() reportingRemarksView = new ReportingViewModel();
   constructor(private pnrService: PnrService, private ddbService: DDBService, private fb: FormBuilder) {
@@ -32,6 +33,7 @@ export class ReportingRemarksComponent implements OnInit {
     await this.loadData();
     this.segments = await this.pnrService.getTstSegments();
     for (const segment of this.segments) {
+      this.showSegments = true;
       const group = this.createFormGroup(segment);
       (this.reportingForm.get('segments') as FormArray).push(group);
     }

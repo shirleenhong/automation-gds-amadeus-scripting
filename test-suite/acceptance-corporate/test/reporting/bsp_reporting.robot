@@ -7,7 +7,7 @@ Library           Screenshot
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/base.robot
-Test Teardown     Close All Browsers
+# Test Teardown     Close All Browsers
 
 *** Test Cases ***
 Verify That Reporting Remarks Are Written For Single TST

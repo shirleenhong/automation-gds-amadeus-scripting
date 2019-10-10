@@ -52,6 +52,7 @@ Open CA Migration Window
     Click Element    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
+    Sleep    10
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
 

@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    trend
@@ -21,7 +22,7 @@ Verify That PNRs For Client Trend Mico Exit Approval Process When First Primary 
     Create PNR With Active Air Segments For Client Trend Mico, Air Only, Select First Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Trend Mico Are Put On Hold When Second Primary Approval Reason Is Selected
     [Tags]    us13271
@@ -29,7 +30,7 @@ Verify That PNRs For Client Trend Mico Are Put On Hold When Second Primary Appro
     Create PNR With Active Air Segments For Client Trend Mico, Air Only, Select Second Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Trend Mico With Travel Auth By Remark Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -37,7 +38,7 @@ Verify That PNRs For Client Trend Mico With Travel Auth By Remark Do Not Go Thru
     Create PNR With Active Air Segments For Client Trend Mico With Travel Auth By Remark, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That Car Only PNRs For Client Trend Mico Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -45,7 +46,7 @@ Verify That Car Only PNRs For Client Trend Mico Do Not Go Thru Approval Process
     Create PNR For Client Trend Mico, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That Hotel Only PNRs For Client Trend Mico Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,7 +54,7 @@ Verify That Hotel Only PNRs For Client Trend Mico Do Not Go Thru Approval Proces
     Create PNR For Client Trend Mico, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That Car And Hotel Only PNRs For Client Trend Mico Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -61,7 +62,7 @@ Verify That Car And Hotel Only PNRs For Client Trend Mico Do Not Go Thru Approva
     Create PNR For Client Trend Mico, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Trend Mico Can Skip Approval Process
     [Tags]    us13271
@@ -69,4 +70,4 @@ Verify That PNRs For Client Trend Mico Can Skip Approval Process
     Create PNR With Active Air Segments For Client Trend Mico, Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    

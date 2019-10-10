@@ -7,6 +7,7 @@ Library           Screenshot
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/base.robot
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That CN and NUC Remarks Should Be Written and/or Updated In The PNR For OFC Agents With Exchanged PNR
@@ -20,7 +21,7 @@ Verify That CN and NUC Remarks Should Be Written and/or Updated In The PNR For O
     Verify If The Default CIC Number Value Displayed Is ADT
     Enter CIC Number Value: IFC
     Verify CN And NUC Remark Are Updated Correctly For Exchanged PNR
-    [Teardown]    Logout To Amadeus Sell Connect
+    
 
 Verify That CN and NUC Remark Should Be Written and/or Updated In The PNR For OFC Agents With IFC CN Number Remark
     [Tags]    us10550
@@ -30,7 +31,7 @@ Verify That CN and NUC Remark Should Be Written and/or Updated In The PNR For OF
     Verify If The Default CIC Number Value Displayed Is IFC
     Enter CIC Number Value: QWE
     Verify CN And NUC Remark Are Written Correctly For PNR With IFC CN Number Remark
-    [Teardown]    Logout To Amadeus Sell Connect
+    
 
 Verify That CN and NUC Remark Should Be Written and/or Updated In The PNR For OFC Agents With Hotel Changed PNR
     [Tags]    us10550
@@ -43,4 +44,4 @@ Verify That CN and NUC Remark Should Be Written and/or Updated In The PNR For OF
     Verify If The Default CIC Number Value Displayed Is IFC
     Enter CIC Number Value: ASD
     Verify CN And NUC Remark Are Updated Correctly For PNR With Hotel and Invoice Remark
-    [Teardown]    Logout To Amadeus Sell Connect
+    

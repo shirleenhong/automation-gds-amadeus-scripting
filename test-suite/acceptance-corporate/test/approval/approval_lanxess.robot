@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    lanxess
@@ -21,7 +22,6 @@ Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When M
     Create PNR With Active Air Segments For Client Lanxess With Any Udid 50, Air Only, Select Missed Savings
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When Total Cost Is Selected In Primary Approval Reason
     [Tags]    us13271
@@ -29,7 +29,6 @@ Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When T
     Create PNR With Active Air Segments For Client Lanxess With Any Udid 50, Air Only, Select Total Cost
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When Travel To Germany Is Selected In Primary Approval Reason
     [Tags]    us13271
@@ -37,7 +36,6 @@ Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When T
     Create PNR With Active Air Segments For Client Lanxess With Any Udid 50, Air Only, Select Travel To Germany
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Non Air Only PNRs For Client Lanxess Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -45,5 +43,3 @@ Verify That Non Air Only PNRs For Client Lanxess Do Not Go Thru Approval Process
     Create PNR For Client Lanxess With Any Udid 50, Hotel and Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
-    

@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    campbell
@@ -21,7 +22,6 @@ Verify That PNRs For Client Campbell Soup Is Correctly Queued To Approval Queue
     Create PNR With Active Air Segments For Client Campbell Soup With Any Udid 50, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Campbell Soup with Mixed Segments Is Correctly Queued To Approval Queue
     [Tags]    us13271
@@ -29,7 +29,6 @@ Verify That PNRs For Client Campbell Soup with Mixed Segments Is Correctly Queue
     Create PNR With Active Air Segments For Client Campbell Soup With Any Udid 50, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Hotel Only PNRs For Client Campbell Soup Is Correctly Queued To Approval Queue
     [Tags]    us13271
@@ -37,7 +36,6 @@ Verify That Hotel Only PNRs For Client Campbell Soup Is Correctly Queued To Appr
     Create PNR For Client Campbell Soup With Any Udid 50, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Car Only PNRs For Client Campbell Soup Is Correctly Queued To Approval Queue
     [Tags]    us13271
@@ -45,7 +43,6 @@ Verify That Car Only PNRs For Client Campbell Soup Is Correctly Queued To Approv
     Create PNR For Client Campbell Soup With Any Udid 50, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Rail Only PNRs For Client Campbell Soup Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -54,6 +51,5 @@ Verify That Rail Only PNRs For Client Campbell Soup Do Not Go Thru Approval Proc
     Add 1 Rail Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
     

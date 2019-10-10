@@ -24,7 +24,7 @@ export class CleanUpRemarkService {
     const remarks = Array<string>();
     remarks.push('TKT'); // TKT
     remarks.push('SPLIT'); // RMT SPLIT
-    remarks.push('SUPFEE-'); // RMF SUPFEE-
+    remarks.push('SUPFEE'); // RMF SUPFEE-
     remarks.push('REC/-RLN'); // RM*REC/-RLN
     remarks.push('U86/-'); // RM*U86/-
     remarks.push('LCC'); // RMF LCC-

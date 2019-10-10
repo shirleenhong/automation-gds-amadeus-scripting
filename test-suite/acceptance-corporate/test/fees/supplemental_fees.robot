@@ -9,6 +9,7 @@ Resource          ../../pages/base.robot
 Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/fees.robot
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify OBT PNR Added Remarks For Supplemental Fees
@@ -18,7 +19,7 @@ Verify OBT PNR Added Remarks For Supplemental Fees
     Add APAY Ticketing Details For Single Segment
     Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
    
 Verify Non OBT PNR Added Remarks For Supplemental Fees    
     [Tags]    us9619
@@ -27,7 +28,7 @@ Verify Non OBT PNR Added Remarks For Supplemental Fees
     Add APAY Ticketing Details For Single Segment
     Verify Non OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
 
 Verify That Selected No Fee Code Is Written For Non-OBT With APAY
     [Tags]    us9619
@@ -38,7 +39,7 @@ Verify That Selected No Fee Code Is Written For Non-OBT With APAY
     Select No Fee Code Associate Business
     Verify Selected No Fee Code Is Written
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
     [Tags]    us9619
@@ -47,7 +48,7 @@ Verify That Canada Domestic PNR Added Remarks For Schedule Change Fee
     Verify Default Values For Schedule Change Fees 
     Verify Selected Schedule Change Fees Are written In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify That Transborder PNR Added Remarks For Flat Fee
     [Tags]    us9619
@@ -56,7 +57,7 @@ Verify That Transborder PNR Added Remarks For Flat Fee
     Verify Default Values Of Exchange Flat Fee With Supplemental Fee
     Verify That Exchange Flat Fees Are Written In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify That International PNR Added Remarks For Special Fee
     [Tags]    us9619
@@ -65,7 +66,7 @@ Verify That International PNR Added Remarks For Special Fee
     Verify Default Values Of Special Fee For Air Ticket
     Verify That Special Fee Is Written In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify That Special Fee Is Written In the PNR For Rail
     [Tags]    us9619
@@ -74,7 +75,7 @@ Verify That Special Fee Is Written In the PNR For Rail
     Verify Default Values Of Special Fee For Rail Ticket
     Verify That Special Fee Is Written In The PNR For Rail
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify That Special Fee Amount Entered Is Written In The PNR
     [Tags]    us9619
@@ -83,7 +84,7 @@ Verify That Special Fee Amount Entered Is Written In The PNR
     Verify Default Values Of Special Fee That Has No Value in DB
     Verify That Entered Special Fee Is Written In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
     [Tags]    us9619
@@ -92,4 +93,4 @@ Verify That Flat Fee With Multiple Supplemental Fee Are Written In The PNR
     Select Supplemental Fees For All TSTs
     Verify That Multiple Supplemental Fees Are Written In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    

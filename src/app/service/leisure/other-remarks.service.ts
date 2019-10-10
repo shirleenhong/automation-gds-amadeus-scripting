@@ -6,8 +6,7 @@ import { PnrService } from '../pnr.service';
   providedIn: 'root'
 })
 export class OtherRemarksService {
-
-  constructor(private pnrService: PnrService) { }
+  constructor(private pnrService: PnrService) {}
 
   writeConceirgeRemarks() {
     const conceirgeRemarkGroup = new RemarkGroup();
@@ -16,7 +15,7 @@ export class OtherRemarksService {
     let itinLanguage = this.pnrService.getItineraryLanguage();
     const cfLine = this.pnrService.getCFLine();
     itinLanguage = itinLanguage.substr(0, 2);
-    itinLanguage = (itinLanguage ? itinLanguage : 'EN');
+    itinLanguage = itinLanguage ? itinLanguage : 'EN';
 
     if (cfLine.cfa !== 'RBM' && cfLine.cfa !== 'RBP') {
       return;
@@ -24,16 +23,15 @@ export class OtherRemarksService {
 
     if (!travelRemarks) {
       switch (itinLanguage) {
-        case ('EN'): {
+        case 'EN': {
           const commandFR = 'PBN/YTOWL210N/CONCIERGE ENGLISH*';
           conceirgeRemarkGroup.cryptics.push(commandFR);
           break;
         }
-        case ('FR'):
-          {
-            const commandFR = 'PBN/YTOWL210N/CONCIERGE FRENCH*';
-            conceirgeRemarkGroup.cryptics.push(commandFR);
-          }
+        case 'FR': {
+          const commandFR = 'PBN/YTOWL210N/CONCIERGE FRENCH*';
+          conceirgeRemarkGroup.cryptics.push(commandFR);
+        }
       }
       return conceirgeRemarkGroup;
     }

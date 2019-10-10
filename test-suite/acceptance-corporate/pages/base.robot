@@ -44,6 +44,7 @@ Close CA Corporate Test
     Unselect Frame
     Wait Until Element Is Not Visible    ${overlay_loader}    20
     Wait Until Element Is Visible    ${header_corp_test}    50
+    Wait Until Element Is Not Visible    ${overlay_loader}    40
     Click Element    ${button_close}
     Set Test Variable    ${current_page}    Amadeus
 
@@ -59,7 +60,7 @@ Click Full Wrap
     Set Test Variable    ${destination_selected}    no
 
 Click Reporting Panel
-    Wait Until Element Is Visible    ${panel_reporting}    60
+    Wait Until Element Is Visible    ${panel_payment}     60
     Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting

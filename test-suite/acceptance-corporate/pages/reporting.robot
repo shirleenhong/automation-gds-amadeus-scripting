@@ -356,7 +356,7 @@ Verify Country Of Destination Is Mapped In The FS Remark
     Verify Expected Remarks Are Written In The PNR
     
 Select Default Value For Routing Code
-    Navigate To Page Reporting Remarks
+    Run Keyword If    "${destination_selected}" == "no"   Navigate To Page Reporting Remarks
     Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
     Set Test Variable    ${routing_code_selected}    yes
     [Teardown]    Take Screenshot

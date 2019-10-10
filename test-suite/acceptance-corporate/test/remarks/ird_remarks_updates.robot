@@ -20,11 +20,11 @@ ${test_file_name}    ird_remarks
 Verify That IRD Remarks Are Defaulted And Updated In The PNR For Multiple Segment
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Corporate, With IRD Remarks For Multiple International Flight
-    Navigate To Page IRD remarks
+    Navigate To Page IRD Remarks
     Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
     
 Verify That IRD Remarks Are Defaulted And Updated In The PNR For Single Segment
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Corporate, With IRD Remarks For Single International Flight
-    Navigate To Page IRD remarks
+    Navigate To Page IRD Remarks
     Verify If IRD Status Are Written Correctly For Single Segment In The PNR

@@ -256,7 +256,7 @@ export class CorporateComponent implements OnInit {
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-    // debugger;
+
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }

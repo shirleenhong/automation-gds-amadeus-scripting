@@ -432,7 +432,6 @@ export class PnrService {
     }
 
     getSegmentTatooNumber() {
-        // const segments = new Array<any>();
         this.segments = [];
         for (const air of this.pnrObj.airSegments) {
             this.getSegmentDetails(air, 'AIR');
@@ -441,6 +440,11 @@ export class PnrService {
         for (const car of this.pnrObj.auxCarSegments) {
             this.getSegmentDetails(car, 'CAR');
         }
+
+        for (const car of this.pnrObj.carSegments) {
+            this.getSegmentDetails(car, 'CCR');
+        }
+
 
         for (const hotel of this.pnrObj.auxHotelSegments) {
             this.getSegmentDetails(hotel, 'HTL');
@@ -529,6 +533,17 @@ export class PnrService {
             if (elem.fullNode.itineraryReservationInfo) {
                 airType = 'PASSIVE';
             }
+        } else if (segType === 'CCR') {
+            departureTime = elem.pickupTime;
+            departureDate = elem.pickupDate;
+            arrivalTime = elem.dropoffTime;
+            arrivalDate = elem.dropoffDate;
+            controlNumber = elem.confirmationNumber;
+            elemStatus = elem.status;
+            elemText = elem.carType[0] + ' ' +  elem.carCompanyCode +  ' ' +
+            elemStatus + elem.quantity + ' ' +  elem.location +  ' ' +
+            this.formatDate(elem.pickupDate);
+
         } else {
             const fullnodetemp = elem.fullNode.travelProduct;
             elemText =
@@ -1087,10 +1102,10 @@ export class PnrService {
         return matrixReceipts;
     }
 
-    getSegmentModel(freetext, index, type, lineNo) {
+    getSegmentModel(freetext, index, type, lineNo, status) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
-
+        segmentModel.status =  status;
         if (type === 'MIS' || type === 'CAR' || type === 'HTL') {
             // tslint:disable-next-line:max-line-length
             let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
@@ -1152,6 +1167,7 @@ export class PnrService {
         segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
         segmentModel.arrivalTime = element.arrivalTime;
         segmentModel.airlineCode = element.airlineCode;
+        segmentModel.status = element.status;
         return segmentModel;
     }
 
@@ -1166,7 +1182,7 @@ export class PnrService {
         segmentModel.departureCity = element.cityCode;
         segmentModel.destinationCity = element.arrivalStation;
         segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
-
+        segmentModel.status = element.status;
         const regex = /(?<hotelInfo>(.*)),CF:(?<confirmationNumber>(.*?),)/g;
         const match = regex.exec(freetext);
 
@@ -1187,7 +1203,7 @@ export class PnrService {
             switch (element.segmentType) {
                 case 'MIS':
                 case 'CAR':
-                    pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType, element.lineNo));
+                    pSegment.push(this.getSegmentModel(element.freetext, index, element.segmentType, element.lineNo, element.status));
                     break;
                 case 'AIR':
                     pSegment.push(this.getAirSegmentModel(element, index, element.lineNo));

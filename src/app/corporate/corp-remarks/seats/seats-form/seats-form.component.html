@@ -62,14 +62,8 @@
         <label>
           <input type="checkbox" formControlName="check5" name="check5" (change)="checkChanged(5)" />
           UPGRADE CONFIRMED -
-          <input
-            type="text"
-            class="form-control seatType"
-            formControlName="seatNumber"
-            name="seatNumber"
-            placeholder="Seat Number"
-            disabled
-          />
+          <input type="text" class="form-control seatType" formControlName="seatNumber" name="seatNumber"
+            placeholder="Seat Number" disabled />
           CONFIRMED
         </label>
       </div>
@@ -111,7 +105,8 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" form="seatsForm" class="btn btn-outline-dark" [disabled]="!seatsForm.valid">
+  <button type="submit" form="seatsForm" class="btn btn-outline-dark"
+    [disabled]="!seatsForm.valid || !hasSelectedItems">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="close()">

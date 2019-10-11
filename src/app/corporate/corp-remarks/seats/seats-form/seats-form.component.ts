@@ -21,6 +21,7 @@ export class SeatsFormComponent implements OnInit {
   seatsForm: FormGroup;
   segmentIds = [];
   selectedItems = new Array<SeatModel>();
+  hasSelectedItems = false;
 
   types: Array<string> = ['WINDOW', 'AISLE', 'MIDDLE'];
   REGEX_ALPHANUMERIC = '^\\w*';
@@ -46,6 +47,11 @@ export class SeatsFormComponent implements OnInit {
       seatType: new FormControl(''),
       seatNumber: new FormControl('')
     });
+
+    // Subscribe and handle changes on the seatsForm.
+    this.seatsForm.valueChanges.subscribe(() => {
+      this.hasSelectedItems = this.hasChecked();
+    });
   }
 
   checkChanged(indx) {
@@ -66,6 +72,24 @@ export class SeatsFormComponent implements OnInit {
         this.seatsForm.get('seatNumber').disable();
         this.seatsForm.get('seatNumber').clearValidators();
       }
+    }
+  }
+
+  /**
+   * Check if the seatForm has checked items.
+   */
+  hasChecked(): boolean {
+    if (
+      !!this.seatsForm.get('check1').value ||
+      !!this.seatsForm.get('check2').value ||
+      !!this.seatsForm.get('check3').value ||
+      !!this.seatsForm.get('check4').value ||
+      !!this.seatsForm.get('check5').value ||
+      !!this.seatsForm.get('check6').value
+    ) {
+      return true;
+    } else {
+      return false;
     }
   }
 

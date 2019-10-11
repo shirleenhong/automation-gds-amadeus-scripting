@@ -8,12 +8,10 @@ Resource          amadeus.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
-${button_add_seat}    //button[contains(text(), 'Add Seat')]
+${button_add_seat}    //button[contains(text(), 'Add Seat Remarks')]
 ${select_seat_remarkOptions}    //select[@id='seatForm']
 ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment']
 ${list_segment}    //ul[@id='dropdown-basic']
-${select_seat_formType}    //select[@id='seatFormType']
-${input_seat_number}    css=#seatFormNumber
 ${button_close}    //button[contains(text(), 'Close')]
 ${tab_Seats}    //span[contains(text(), 'Seat')]
 ${tab_ird_remarks}    //span[contains(text(), 'IRD Remarks')]
@@ -25,6 +23,15 @@ ${tab_documentPnr}    css=#documentPnrTab-link
 ${row_documentPNR}    //div[@formarrayname='items']
 ${button_addRemark}    //i[@id='add']
 ${input_document}    //input[@formcontrolname='documentation']
+${select_seat_Type}    //select[@name='seatType']
+${input_seat_number}    //input[@name='seatNumber']
+${input_seat_select1}    //input[@name='check1']
+${input_seat_select2}    //input[@name='check2']
+${input_seat_select3}    //input[@name='check3']
+${input_seat_select4}    //input[@name='check4']
+${input_seat_select5}    //input[@name='check5']
+${input_seat_select6}    //input[@name='check6']
+
 
 *** Keywords ***
 Navigate To Add Seat Remarks
@@ -38,7 +45,6 @@ Click IRD Remarks Tab
     Click Element At Coordinates    ${tab_ird_remarks}     0    0
     Wait Until Page Contains Element    ${tab_ird_remarks}    30
     Set Test Variable    ${current_page}    IRD Remarks
-    
     
 Click Save Button In Seats Page
     Click Element    ${button_save}
@@ -59,46 +65,6 @@ Click Add Seat
     Click Element    ${button_add_seat}    
     Set Test Variable    ${current_page}    Add Seat Remarks
     Set Test Variable    ${ticketing_details_complete}    no
-
-Add Seat Remarks For Multiple Seat Remarks Options In Single Segment
-    Navigate To Page Seats 
-    Wait Until Page Contains Element    ${select_seat_remarkOptions}    30
-    Select Seat Option    SEATING SUBJECT TO AIRPORT OR ONLINE CHECK IN    2
-    Take Screenshot
-    
-Select Seat Remarks Option
-    [Arguments]    @{seat_options}
-    ${line_count}    Get Line Count    ${seat_options}
-    ${loop_max}    Evaluate    (${line_count} / 4) + 1
-    Set Test Variable    ${seat_rmk_opt_index}    0
-    Set Test Variable    ${seat_type_index}    1
-    Set Test Variable    ${seat_no_index}    2
-    Set Test Variable    ${segment_no_index}    3    
-    : FOR    ${index}    IN RANGE    1    ${loop_max}
-    \    Select From List By Label    ${select_seat_remarkOptions}    ${seat_options[${seat_rmk_opt_index}]}
-    \    ${is_visible_1}    Run Keyword And Return Status     Page Should Contain Element    ${select_seat_formType}
-    \    Run Keyword If    "${is_visible_1}" == "True"     Select From List By Label     ${select_seat_formType}    ${seat_options[${seat_type_index}]}
-    \    ${is_visible_2}    Run Keyword And Return Status     Page Should Contain Element    ${input_seat_number}
-    \    Run Keyword If    "${is_visible_2}" == "True"     Enter Value     ${input_seat_number}    ${seat_options[${seat_no_index}]}
-    \    Select Itinerary Segments    ${seat_options[${segment_no_index}]}
-    \    Click Save Button In Seats Page
-    \    ${seat_rmk_opt_index}    Evaluate    ${seat_rmk_opt_index} + 4
-    \    ${seat_type_index}    Evaluate    ${seat_type_index} + 4
-    \    ${seat_no_index}    Evaluate    ${seat_no_index} + 4
-    \    ${segment_no_index}    Evaluate    ${segment_no_index} + 4
-    \    ${index}    Evaluate   ${index} + 1
-
-Select Seat Option
-       [Arguments]    ${seat_option}    ${segment_select}    ${seat_type}=${EMPTY}    ${seat_number}=${EMPTY}
-       : FOR    ${seat_option}    IN    @{seat_option}
-       \    Wait Until Page Contains Element    ${select_seat_remarkOptions}    30
-       \    Select From List By Label    ${list_of_seatOption}    ${select_seat_remarkOptions}
-       \    ${status_1}    Run Keyword And Return Status    Page Should Contain Element    ${select_seat_formType}
-       \    ${status_2}    Run Keyword And Return Status    Page Should Contain Element    ${input_seat_number}
-       \    Run Keyword If    '${status_1}' == 'True'    Select From List By Label    ${select_seat_formType}    ${seat_type}
-       \    Run Keyword If    '${status_2}' == 'True'    Enter Value     ${input_seat_number}    ${seat_number}
-       \    Click Button    ${button_save}
-       \    Take Screenshot    
        
 Click Document PNR Tab
     Wait Until Element Is Visible    ${tab_documentPnr}    30
@@ -148,17 +114,16 @@ Verify IRD Status Default Value Is Correct For ${ird_default_status} For Single 
     Run Keyword If    "${label_ird_savings_value}" == "20.00"    Should Contain    ${row_ird_status}[3]${select_ird_status}    ACCEPTEDCP
 
 Select ${ird_status} As IRD Status With Value For Savings
-    
     Set Test Variable    ${ird_status}    
-    Select From List By Label    ${row_ird_status}[2]${select_ird_status}    ACCEPTEDCP
+    Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_ird_status}    ACCEPTEDCP
     
 Select IRD Status With Multiple Pricing And Segment In The PNR
     Wait Until Element Is Visible    ${row_ird_status}   
-    Select From List By Label    ${row_ird_status}[2]${select_ird_status}    ACCEPTEDCP
-    Select From List By Label    ${row_ird_status}[2]${select_ird_status}    DECLINED
-    Select From List By Label    ${row_ird_status}[2]${select_low_savingStatus}    ACCEPTEDLFO
-    Select From List By Label    ${row_ird_status}[3]${select_ird_status}    DECLINED
-    Select From List By Label    ${row_ird_status}[3]${select_low_savingStatus}    DECLINED
+    Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_ird_status}    ACCEPTEDCP
+    Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_ird_status}    DECLINED
+    Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_low_savingStatus}    ACCEPTEDLFO
+    Select From List By Label    ${row_ird_status}${open_bracket}3${close_bracket}${select_ird_status}    DECLINED
+    Select From List By Label    ${row_ird_status}${open_bracket}3${close_bracket}${select_low_savingStatus}    DECLINED
     
 Select Status For IRD
     [Arguments]    @{ird_status}
@@ -166,24 +131,47 @@ Select Status For IRD
     : FOR    ${ird_status}    IN    @{ird_status}
     \    #${actual_ird_status}    Get Value    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}
     \    ${status}    Run Keyword And Return Status    Element Should Be Enabled    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}
-    \    Run Keyword If    "${status}" == "Enabled"    Select From List By Label    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}    ${ird_status}
+    \    Log    ${status}
+    \    Run Keyword If    "${status}" == "True"    Select From List By Label    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}    ${ird_status}
     \    #Select From List By Label    ${row_ird_status}[${statusfield_index}]${select_ird_status}    ${ird_status}
     \    ${statusfield_index}    Evaluate    ${statusfield_index} + 1
     Take Screenshot
+    
+IRD Status
+    [Arguments]    @{ird_status}
+    ${count}    Get Element Count    ${select_ird_status}
+    ${loop}    Evaluate    ${count}
+    : FOR    ${index}    IN RANGE    1    ${loop}
+    \    ${status}    Run Keyword And Return Status    Element Should Be Enabled    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}
+    \    Run Keyword If    "${status}" == "True"    Select From List By Label    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}    ${ird_status}
+    \    ${index}    Evaluate    ${index} + 1
 
 Select IRD Status With Single Pricing And Segment In The PNR
     Wait Until Element Is Visible    ${row_ird_status} 
     Select From List By Label    ${row_ird_status}[1]${select_low_savingStatus}    ACCEPTEDLFO
 
-Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
-    #Verify IRD Status Default Value Is Correct For NO LFO For Multi Segment
-    Select Status For IRD    ACCEPTEDCP
-    #Select IRD Status With Multiple Pricing And Segment In The PNR
+Verify If IRD Status Are Written Correctly For Single Segment In The PNR
+    Select ACCEPTEDCP As IRD Status With Value For Savings
     Finish PNR  
     Verify Expected Remarks Are Written In The PNR  
     
-Verify If IRD Status Are Written Correctly For Single Segment In The PNR
-    Select IRD Status With Single Pricing And Segment In The PNR
+Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
+    Select IRD Status With Multiple Pricing And Segment In The PNR
     #Verify IRD Status Default Value Is Correct For ACCEPTEDCP For Single Segment
     Finish PNR  
-    Verify Expected Remarks Are Written In The PNR  
+    Verify Expected Remarks Are Written In The PNR
+    
+#---------Keyword and script For Seats-----------#
+
+Select Seat Remarks For Option Online Check-in, Preferred And Upgrade
+    Wait Until Element Is Visible    ${input_seat_select1}
+    Click Element    ${input_seat_select1}    
+    Click Element    ${input_seat_select2}
+    Select From List By Label    ${select_seat_Type}    WINDOW
+    Click Element    ${input_seat_select5}
+    Enter Value    ${input_seat_number}    2D
+    Click Save Button
+    
+Select Seat Remarks For Option Waitlist, Request And Clearance Check
+    Wait Until Element Is Visible    ${input_seat_select3}
+    

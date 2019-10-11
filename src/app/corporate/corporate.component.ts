@@ -268,7 +268,7 @@ export class CorporateComponent implements OnInit {
     if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
-      this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(

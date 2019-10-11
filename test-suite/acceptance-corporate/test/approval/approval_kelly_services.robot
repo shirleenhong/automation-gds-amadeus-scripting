@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    kelly
@@ -21,7 +22,6 @@ Verify That PNRs For Client Kelly Services Are Queued For Approval When First Pr
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Kelly Services Are Queued For Approval When Second Primary Reason Is Selected
     [Tags]    us13271
@@ -29,7 +29,6 @@ Verify That PNRs For Client Kelly Services Are Queued For Approval When Second P
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Kelly Services Can Skip Approval
     [Tags]    us13271
@@ -37,7 +36,6 @@ Verify That PNRs For Client Kelly Services Can Skip Approval
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air Only, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Hotel Only PNRs For Client Kelly Services Are Queued For Approval
     [Tags]    us13271
@@ -45,7 +43,6 @@ Verify That Hotel Only PNRs For Client Kelly Services Are Queued For Approval
     Create PNR For Client Kelly Services With RM*FS/-L Remark, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Air Only PNRs For Client Kelly Services With RM*FS/-L Remark Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,7 +50,6 @@ Verify That Air Only PNRs For Client Kelly Services With RM*FS/-L Remark Do Not 
     Create PNR With Active Air Segments For Client Kelly Services With RM*FS/-L Remark, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Kelly Services With RM*U20 Remark Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -61,7 +57,6 @@ Verify That PNRs For Client Kelly Services With RM*U20 Remark Do Not Go Thru App
     Create PNR With Active Air Segments For Client Kelly Services With RM*U20 Remark, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Kelly Services With Udid50 EMPLOYEE-CA Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -69,7 +64,6 @@ Verify That PNRs For Client Kelly Services With Udid50 EMPLOYEE-CA Do Not Go Thr
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EXECUTIVE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Kelly Services With Udid50 BOARD OF DIRECTORS Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -77,7 +71,6 @@ Verify That PNRs For Client Kelly Services With Udid50 BOARD OF DIRECTORS Do Not
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 BOARD OF DIRECTORS, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Car Only PNRs For Client Kelly Services Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -85,4 +78,3 @@ Verify That Car Only PNRs For Client Kelly Services Do Not Go Thru Approval Proc
     Create PNR For Client Kelly Services With Udid50 EMPLOYEE-CA, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser

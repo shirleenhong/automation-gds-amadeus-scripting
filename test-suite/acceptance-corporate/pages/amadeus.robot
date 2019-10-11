@@ -22,7 +22,7 @@ ${label_command_page}    //span[contains(@class, 'title cryptic')]
 ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
 ${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
-${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
+${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus/?corporate')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
 ${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -76,6 +76,7 @@ Open CA Corporate Test
     Click Element    ${menu_corp_test}
     Wait Until Element Is Visible    ${header_corp_test}    60
     Wait Until Element Is Visible    ${window_corp_test}    60
+    Sleep    10
     Select Frame    ${window_corp_test}
     Set Test Variable    ${current_page}    CWT Corporate
     Set Test Variable    ${pnr_submitted}    no
@@ -122,7 +123,7 @@ Logout To Amadeus Sell Connect
     Wait Until Element Is Visible    ${popUp_sign_out}    30
     Click Element    ${button_sign_out}
     Wait Until Element Is Visible    ${input_username}    30
-    Close Browser
+    Close All Browsers
 
 Get PNR Details
     Wait Until Element Is Not Visible    ${overlay_loader}    10
@@ -189,8 +190,6 @@ Verify Specific Remark Is Written In The PNR
 
 Verify Specific Remark Is Not Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
-    Wait Until Page Contains Element    ${popUp_pnr_display}    30
-    ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
     Run Keyword And Continue On Failure    Should Not Contain    ${pnr_details}    ${expected_remark}

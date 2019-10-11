@@ -15,35 +15,34 @@
     </tr>
   </thead>
   <tbody>
-
     <tr *ngFor="let r of segmentRemarks">
-      <td>{{ r.segmentType}}</td>
+      <td>{{ r.segmentType }}</td>
       <td>
-        <div *ngIf="r.segmentType === 'TOR'">{{ r.vendorName | uppercase}} {{ r.tourName| uppercase}}
-          {{ r.roomType| uppercase}} {{ r.mealPlan| uppercase}}
-          {{ r.noNights}}NTS</div>
-        <div *ngIf="r.segmentType === 'SEA'">{{ r.vendorName | uppercase}} {{ r.tourName | uppercase}}
-          {{ r.dining | uppercase}} {{ r.noNights}}NTS</div>
-        <div *ngIf="r.segmentType === 'INS'">MANULIFE INSURANCE</div>
-        <div *ngIf="r.segmentType === 'AIR'">{{ r.airlineCode | uppercase}} {{ r.flightNumber | uppercase}}
-          {{ r.classService | uppercase}}</div>
-        <div *ngIf="r.segmentType === 'LIM'">
-          {{ r.vendorName | uppercase}} {{ r.limCoAgent | uppercase}} {{ r.phone | uppercase}}
-
+        <div *ngIf="r.segmentType === 'TOR'">
+          {{ r.vendorName | uppercase }} {{ r.tourName | uppercase }} {{ r.roomType | uppercase }} {{ r.mealPlan | uppercase }}
+          {{ r.noNights }}NTS
         </div>
-
+        <div *ngIf="r.segmentType === 'SEA'">
+          {{ r.vendorName | uppercase }} {{ r.tourName | uppercase }} {{ r.dining | uppercase }} {{ r.noNights }}NTS
+        </div>
+        <div *ngIf="r.segmentType === 'INS'">MANULIFE INSURANCE</div>
+        <div *ngIf="r.segmentType === 'AIR'">
+          {{ r.airlineCode | uppercase }} {{ r.flightNumber | uppercase }} {{ r.classService | uppercase }}
+        </div>
+        <div *ngIf="r.segmentType === 'LIM'">{{ r.vendorName | uppercase }} {{ r.limCoAgent | uppercase }} {{ r.phone | uppercase }}</div>
       </td>
-      <td>{{ r.vendorCode | uppercase}}</td>
+      <td>{{ r.vendorCode | uppercase }}</td>
       <td>{{ r.confirmationNo }}</td>
-      <td>{{ r.departureDate | date: "ddMMM" | uppercase}}</td>
+      <td>{{ r.departureDate | date: 'ddMMM' | uppercase }}</td>
       <td>{{ r.departureTime }}</td>
-      <td>{{ r.departureCity | uppercase}}</td>
-      <td>{{ r.destinationCity |uppercase}}</td>
-      <td>{{ r.arrivalDate | date: "ddMMM" | uppercase}}</td>
+      <td>{{ r.departureCity | uppercase }}</td>
+      <td>{{ r.destinationCity | uppercase }}</td>
+      <td>{{ r.arrivalDate | date: 'ddMMM' | uppercase }}</td>
       <td>{{ r.arrivalTime }}</td>
-      <td><i *ngIf="r.isNew" class="fas fa-edit" (click)="updateItem(r)"></i>
+      <td>
+        <i *ngIf="r.isNew" class="fas fa-edit" (click)="updateItem(r)"></i>
         &nbsp;&nbsp;&nbsp;
-        <i class=" fas fa-trash-alt" (click)="deleteItem(r)"> </i>
+        <i *ngIf="r.status == 'GK'" class=" fas fa-trash-alt" (click)="deleteItem(r)"> </i>
       </td>
     </tr>
   </tbody>

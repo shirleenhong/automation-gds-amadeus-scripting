@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    alstom
@@ -21,7 +22,6 @@ Verify That PNRs For Client Alstom Is Correctly Queued To Approval Queue
     Create PNR With Active Air Segments For Client Alstom With Udid 50 GENERAL-CA-S, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Alstom with Mixed Segments Is Correctly Queued To Approval Queue
     [Tags]    us13271
@@ -29,7 +29,6 @@ Verify That PNRs For Client Alstom with Mixed Segments Is Correctly Queued To Ap
     Create PNR With Active Air Segments For Client Alstom With Udid 50 GENERAL-CA-S, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Hotel Only PNRs For Client Alstom Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -37,7 +36,6 @@ Verify That Hotel Only PNRs For Client Alstom Do Not Go Thru Approval Process
     Create PNR For Client Alstom With Udid 50 GENERAL-CA-S, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Car Only PNRs For Client Alstom Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -45,7 +43,6 @@ Verify That Car Only PNRs For Client Alstom Do Not Go Thru Approval Process
     Create PNR For Client Alstom With Udid 50 GENERAL-CA-S, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Alstom With U*50 As GENERAL-CA Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,5 +50,4 @@ Verify That PNRs For Client Alstom With U*50 As GENERAL-CA Do Not Go Thru Approv
     Create PNR With Active Air Segments For Client Alstom With Udid 50 GENERAL-CA, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     

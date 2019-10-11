@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    amcor
@@ -21,7 +22,6 @@ Verify That PNRs For Client Amcor Tobbacco Is Correctly Queued To Approval Queue
     Create PNR With Active Air Segments For Client Amcor Tobacco With Any Udid 50 Except EXECUTIVE ASC-CA, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Amcor Tobbacco with Mixed Segments Is Correctly Queued To Approval Queue
     [Tags]    us13271
@@ -29,7 +29,6 @@ Verify That PNRs For Client Amcor Tobbacco with Mixed Segments Is Correctly Queu
     Create PNR With Active Air Segments For Client Amcor Tobacco With Any Udid 50 Except EXECUTIVE ASC-CA, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Hotel Only PNRs For Client Amcor Tobbacco Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -37,7 +36,6 @@ Verify That Hotel Only PNRs For Client Amcor Tobbacco Do Not Go Thru Approval Pr
     Create PNR For Client Amcor Tobacco With Any Udid 50 Except EXECUTIVE ASC-CA, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That Car Only PNRs For Client Amcor Tobbacco Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -45,7 +43,6 @@ Verify That Car Only PNRs For Client Amcor Tobbacco Do Not Go Thru Approval Proc
     Create PNR For Client Amcor Tobacco With Any Udid 50 Except EXECUTIVE ASC-CA, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Amcor Tobbacco With U*50 As EXECUTIVE ASC-CA Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,7 +50,6 @@ Verify That PNRs For Client Amcor Tobbacco With U*50 As EXECUTIVE ASC-CA Do Not 
     Create PNR With Active Air Segments For Client Amcor Tobacco With Udid 50 EXECUTIVE ASC-CA, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
     
 Verify That PNRs For Client Amcor Tobbacco With Non Air Segments And U*50 As EXECUTIVE ASC-CA Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -61,5 +57,3 @@ Verify That PNRs For Client Amcor Tobbacco With Non Air Segments And U*50 As EXE
     Create PNR For Client Amcor Tobacco With Udid 50 EXECUTIVE ASC-CA, Hotel and Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
-    

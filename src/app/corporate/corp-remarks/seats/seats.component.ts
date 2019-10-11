@@ -1,8 +1,9 @@
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
-// import { PnrService } from 'src/app/service/pnr.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
+import { RemarksManagerService } from 'src/app/service/corporate/remarks-manager.service';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-seats',
@@ -21,10 +22,11 @@ export class SeatsComponent implements OnInit {
     class: 'modal-lg'
   };
 
-  constructor(private modalService: BsModalService) {}
+  constructor(private modalService: BsModalService, private remarkManager: RemarksManagerService, private pnrService: PnrService) {}
 
   ngOnInit() {
     this.seats = this.getSeats();
+    this.sortSeats();
     this.seatRemarkOptions = this.getRemarkOptions();
     this.modalSubscribeOnClose();
   }
@@ -51,7 +53,39 @@ export class SeatsComponent implements OnInit {
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    return [];
+    let list = [];
+    let seats = this.getMatchedSeats(1, 'SEATING SUBJECT TO');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(2, 'PLEASE CHECK AGAIN AT');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(3, 'THIS SEGMENT HAS BEEN');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(4, 'SEAT ASSIGNMENTS ARE ON REQUEST');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(5, 'UPGRADE CONFIRMED');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(6, 'UPGRADE REQUESTED');
+    list = list.concat(seats);
+    return list;
+  }
+
+  getMatchedSeats(id, remark) {
+    const list = [];
+    const matched = this.remarkManager.getMachedRemarkByStaticText(remark);
+    matched.forEach((m) => {
+      const seat = new SeatModel();
+      seat.segmentIds = this.pnrService.getSegmentNumbers(m.segmentNumberReferences).join(',');
+      seat.id = id;
+      if (id === 2 && this.remarkManager.getValue('CaSeatType').length > 0) {
+        seat.type = this.remarkManager.getValue('CaSeatType')[0];
+      }
+      if (id === 5 && this.remarkManager.getValue('CaUPFIB').length > 0) {
+        seat.number = this.remarkManager.getValue('CaUPFIB')[0];
+      }
+      list.push(seat);
+    });
+
+    return list;
   }
 
   /**
@@ -59,6 +93,9 @@ export class SeatsComponent implements OnInit {
    * @return void
    */
   public create(): void {
+    if (!this.seats) {
+      this.seats = [];
+    }
     // Merge config and data to pass to the modal.
     const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats } } };
 
@@ -103,17 +140,21 @@ export class SeatsComponent implements OnInit {
               this.seats = this.seats.filter((s) => s.segmentIds !== this.selectedSegment);
             }
             this.seats = this.seats.concat(newSeats);
-            this.seats = this.seats.sort((a, b) => {
-              if (a.segmentIds === b.segmentIds) {
-                return a.id - b.id;
-              }
-              return parseInt(a.segmentIds, null) - parseInt(b.segmentIds, null);
-            });
+            this.sortSeats();
           }
         }
       }
 
       this.modalRef = null; // Fixes duplication of components on dismiss
+    });
+  }
+
+  sortSeats() {
+    this.seats = this.seats.sort((a, b) => {
+      if (a.segmentIds === b.segmentIds) {
+        return a.id - b.id;
+      }
+      return parseInt(a.segmentIds, null) - parseInt(b.segmentIds, null);
     });
   }
 

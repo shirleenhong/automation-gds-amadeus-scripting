@@ -19,7 +19,9 @@ export class SeatsFormComponent implements OnInit {
   @Input()
   seats: Array<SeatModel>; // The seats to from the parent component
   seatsForm: FormGroup;
+  seatSegmentIds: Array<string>;
   segmentIds = [];
+  segmentIdOptions = [];
   selectedItems = new Array<SeatModel>();
   hasSelectedItems = false;
 
@@ -34,7 +36,9 @@ export class SeatsFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.seatSegmentIds = this.getSeatSegments();
     this.segmentIds = this.pnrService.segments.map((x) => x.lineNo);
+    this.segmentIdOptions = this.getSegmentIdOptions();
 
     this.seatsForm = this.formBuilder.group({
       segment: new FormControl(''),
@@ -91,6 +95,29 @@ export class SeatsFormComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  /**
+   * Get the unique segment Id options values as option.
+   */
+  getSegmentIdOptions(): Array<string> {
+    const segmentOptions = [];
+
+    for (const segmentId of this.segmentIds) {
+      if (this.seatSegmentIds.indexOf(segmentId) < 0) {
+        segmentOptions.push(segmentId);
+      }
+    }
+
+    return segmentOptions;
+  }
+
+  /**
+   * Get the unique segment Ids of the seats.
+   */
+  getSeatSegments() {
+    const seatSegments = this.seats.map((seat) => seat.segmentIds);
+    return seatSegments.filter((seat, i) => seatSegments.indexOf(seat) === i);
   }
 
   save(): void {

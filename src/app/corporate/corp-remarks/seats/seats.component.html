@@ -20,7 +20,7 @@
       <td>{{ seat.number }}</td>
 
       <td [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)" *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''">
-        <i class="fa fa-edit fa-fw" title="Click to Edit"></i>&nbsp;&nbsp;&nbsp;
+        <i class="fa fa-edit fa-fw" title="Click to Edit" (click)="editSeatRemark(seat.segmentIds)"></i>&nbsp;&nbsp;&nbsp;
         <i class="fa fa-trash-alt fa-fw" title="Click to Delete" (click)="delete(seat)"></i>
       </td>
     </tr>

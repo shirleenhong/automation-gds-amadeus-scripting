@@ -264,6 +264,7 @@ export class CorporateComponent implements OnInit {
     if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+      this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
     }
 
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
@@ -305,14 +306,20 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
     }
-    try {
-      this.isPnrLoaded = false;
-      this.getPnr();
-      this.workflow = '';
-    } catch (error) {
-      this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error, 'Error', 'Error');
-      console.log(JSON.stringify(error));
-    }
+
+    await this.rms.submitToPnr().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
   }
 }

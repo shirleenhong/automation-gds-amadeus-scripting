@@ -69,7 +69,7 @@ export class SeatsComponent implements OnInit {
   }
 
   public editSeatRemark(segment) {
-    const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats } } };
+    const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats, selectedSegment: segment } } };
     this.selectedSegment = segment;
     this.modalRef = this.modalService.show(SeatsFormComponent, modalConfig);
     this.modalRef.content.title = 'Modify Seat Remarks';

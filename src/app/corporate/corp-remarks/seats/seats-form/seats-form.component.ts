@@ -23,6 +23,7 @@ export class SeatsFormComponent implements OnInit {
   segmentIds = [];
   segmentIdOptions = [];
   selectedItems = new Array<SeatModel>();
+  selectedSegment: string;
   existingSegments = [];
   hasSelectedItems = false;
 
@@ -116,12 +117,17 @@ export class SeatsFormComponent implements OnInit {
    * Get the unique segment Id options values as option.
    */
   getSegmentIdOptions(): Array<string> {
-    const segmentOptions = [];
+    let segmentOptions = [];
 
     for (const segmentId of this.segmentIds) {
       if (this.seatSegmentIds.indexOf(segmentId) < 0) {
         segmentOptions.push(segmentId);
       }
+    }
+
+    // Retain the segment option on edit.
+    if (this.selectedSegment) {
+      segmentOptions = this.selectedSegment ? this.selectedSegment.split(',').concat(segmentOptions) : segmentOptions;
     }
 
     return segmentOptions;

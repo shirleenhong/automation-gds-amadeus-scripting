@@ -148,14 +148,13 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting" or "${current_page}" == "Waivers" or "${current_page}" == "Reporting Remarks"    Navigate From Reporting    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Seats" or "${current_page}" == "IRD Remarks"    Navigate To Remarks    ${destination_page}
+     \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting" or "${current_page}" == "Waivers" or "${current_page}" == "Reporting Remarks"    Navigate From Reporting    ${destination_page} 
      \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
-     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Document PNR"    Navigate From Remarks    ${destination_page}  
+     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Seats" or "${current_page}" == "IRD Remarks" or "${current_page}" == "Document PNR"    Navigate From Remarks    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Queue" or "${current_page}" == "Follow-Up Queue"    Navigate From Queue    ${destination_page}  
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Log    ${current_page}
@@ -163,7 +162,7 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Seats" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "IRD Remarks" "${destination_page}" == "Document PNR" or "${destination_page}" == "Follow-Up Queue"
+     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Seats" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "IRD Remarks" or "${destination_page}" == "Document PNR" or "${destination_page}" == "Follow-Up Queue"
      ...    Click Full Wrap
      ...    ELSE    Close CA Corporate Test
     
@@ -197,6 +196,9 @@ Navigate From Remarks
     Run Keyword If    "${destination_page}" == "Document PNR"    Click Document PNR Tab
     Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel   
     Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
+    Run Keyword If    "${destination_page}" == "Seats"    Navigate To Add Seat Remarks
+    Run Keyword If    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
+    ...    ELSE    Collapse Remarks Panel   
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -204,12 +206,6 @@ Navigate From Ticketing
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
     ...   ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
     ...   ELSE   Collapse Ticketing Panel
-
-Navigate To Remarks
-    [Arguments]    ${destination_page}
-    Run Keyword If    "${destination_page}" == "Seats"    Navigate To Add Seat Remarks
-    Run Keyword If    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
-    ...    ELSE    Collapse Remarks Panel   
 
 Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no    

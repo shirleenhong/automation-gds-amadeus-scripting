@@ -148,29 +148,42 @@ Verify IRD Status Default Value Is Correct For ${ird_default_status} For Single 
     Run Keyword If    "${label_ird_savings_value}" == "20.00"    Should Contain    ${row_ird_status}[3]${select_ird_status}    ACCEPTEDCP
 
 Select ${ird_status} As IRD Status With Value For Savings
+    
     Set Test Variable    ${ird_status}    
     Select From List By Label    ${row_ird_status}[2]${select_ird_status}    ACCEPTEDCP
     
 Select IRD Status With Multiple Pricing And Segment In The PNR
-    Wait Until Element Is Visible    ${row_ird_status}    
+    Wait Until Element Is Visible    ${row_ird_status}   
     Select From List By Label    ${row_ird_status}[2]${select_ird_status}    ACCEPTEDCP
     Select From List By Label    ${row_ird_status}[2]${select_ird_status}    DECLINED
     Select From List By Label    ${row_ird_status}[2]${select_low_savingStatus}    ACCEPTEDLFO
     Select From List By Label    ${row_ird_status}[3]${select_ird_status}    DECLINED
     Select From List By Label    ${row_ird_status}[3]${select_low_savingStatus}    DECLINED
     
+Select Status For IRD
+    [Arguments]    @{ird_status}
+    Set Test Variable    ${statusfield_index}    1
+    : FOR    ${ird_status}    IN    @{ird_status}
+    \    #${actual_ird_status}    Get Value    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}
+    \    ${status}    Run Keyword And Return Status    Element Should Be Enabled    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}
+    \    Run Keyword If    "${status}" == "Enabled"    Select From List By Label    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}    ${ird_status}
+    \    #Select From List By Label    ${row_ird_status}[${statusfield_index}]${select_ird_status}    ${ird_status}
+    \    ${statusfield_index}    Evaluate    ${statusfield_index} + 1
+    Take Screenshot
+
 Select IRD Status With Single Pricing And Segment In The PNR
     Wait Until Element Is Visible    ${row_ird_status} 
     Select From List By Label    ${row_ird_status}[1]${select_low_savingStatus}    ACCEPTEDLFO
 
 Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
-    Verify IRD Status Default Value Is Correct For NO LFO For Multi Segment
-    Select IRD Status With Multiple Pricing And Segment In The PNR
+    #Verify IRD Status Default Value Is Correct For NO LFO For Multi Segment
+    Select Status For IRD    ACCEPTEDCP
+    #Select IRD Status With Multiple Pricing And Segment In The PNR
     Finish PNR  
     Verify Expected Remarks Are Written In The PNR  
     
 Verify If IRD Status Are Written Correctly For Single Segment In The PNR
     Select IRD Status With Single Pricing And Segment In The PNR
-    Verify IRD Status Default Value Is Correct For ACCEPTEDCP For Single Segment
+    #Verify IRD Status Default Value Is Correct For ACCEPTEDCP For Single Segment
     Finish PNR  
     Verify Expected Remarks Are Written In The PNR  

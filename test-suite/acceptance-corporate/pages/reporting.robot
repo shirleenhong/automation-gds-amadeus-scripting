@@ -178,7 +178,7 @@ Select Client Reporting Fields To Be Written
     [Arguments]    @{reporting_checkbox}
     Wait Until Page Contains Element    ${checkbox_clientReporting}
     : FOR    ${reporting_checkbox}    IN    @{reporting_checkbox}
-    \    Select Checkbox    ${tab_clientReporting}[${reporting_checkbox}]${checkbox_clientReporting}
+    \    Select Checkbox    ${tab_clientReporting}${open_bracket}${reporting_checkbox}${close_bracket}${checkbox_clientReporting}
     Take Screenshot
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment

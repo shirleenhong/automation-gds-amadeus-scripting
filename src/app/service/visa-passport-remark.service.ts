@@ -20,11 +20,9 @@ export class VisaPassportRemarkService {
   constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private rms: RemarksManagerService, ) { }
 
   private writeCorpAdvisory() {
-    debugger;
     if (!this.corpRemarks.find(x => x.placeholder === 'CountryVisaRequires')) {
       this.rms.createEmptyPlaceHolderValue(['CountryVisaRequires'], null, '- A VALID PASSPORT IS REQUIRED');
     }
-
 
     if (!this.corpRemarks.find(x => x.placeholder === 'CountryVisaPassportRequires')) {
       this.rms.createEmptyPlaceHolderValue(['CountryVisaPassportRequires'], null, '- A VALID PASSPORT AND VISA ARE REQUIRED');

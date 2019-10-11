@@ -18,13 +18,13 @@ export class ItineraryRemarkService implements OnInit {
   async ngOnInit() {
 
   }
-  addQueue(frmGroup: FormGroup) {
-    if (frmGroup.controls.personalQueue.value && frmGroup.controls.queueNo.value) {
-      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value);
+  addPersonalQueue(frmGroup: FormGroup) {
+    if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
+      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
     }
   }
 
-  private getQueueMinder(controlname: string, queueno?: string) {
+  private getQueueMinder(controlname: string, queueno?: string, category?: string) {
     const queue = new QueuePlaceModel();
     const queuePlaceDescription = [
       { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
@@ -61,6 +61,9 @@ export class ItineraryRemarkService implements OnInit {
       }
       queue.freetext = look.text;
       queue.category = look.category;
+      if (category) {
+        queue.category = category;
+      }
       queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
       this.amadeusQueue.addQueueCollection(queue);
     }

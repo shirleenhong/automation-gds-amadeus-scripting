@@ -5,7 +5,6 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
 
-
 @Component({
   selector: 'app-cancel-segment',
   templateUrl: './cancel-segment.component.html',
@@ -69,6 +68,7 @@ export class CancelSegmentComponent implements OnInit {
     if (this.segments.length > 1) {
       forchecking = false;
     }
+
     this.segments.map((_o, i) => {
       const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.cancelForm.controls.segments as FormArray).push(control);
@@ -111,7 +111,8 @@ export class CancelSegmentComponent implements OnInit {
       this.reasonAcList.push(
         { itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
         { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
-        { itemText: 'DUPLICATE TICKETS', itemValue: '3' });
+        { itemText: 'DUPLICATE TICKETS', itemValue: '3' }
+      );
     }
 
     this.reasonUaList = [
@@ -146,13 +147,13 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'GRANDFATHER', itemValue: 'GFTH' },
       { itemText: 'CHILD', itemValue: 'CHLD' },
       { itemText: 'GRANDCHILD', itemValue: 'GCHL' },
-      { itemText: 'COMPANION', itemValue: 'COMP' },
+      { itemText: 'COMPANION', itemValue: 'COMP' }
     ];
 
     this.reasonNonACCancelList = [
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO IROP', itemValue: 'IROP' },
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: 'CHANGE' },
-      { itemText: 'NONE OF THE ABOVE', itemValue: 'NONE' },
+      { itemText: 'NONE OF THE ABOVE', itemValue: 'NONE' }
     ];
   }
 
@@ -213,17 +214,8 @@ export class CancelSegmentComponent implements OnInit {
       this.reasonAcList.splice(9, 3);
     }
 
-    this.enableFormControls(
-      [
-        'acFlightNo',
-        'relationship'
-      ],
-      true
-    );
-    this.enableFormControls(
-      ['reasonUACancel', 'uasegNo', 'uaPassengerNo'],
-      true
-    );
+    this.enableFormControls(['acFlightNo', 'relationship'], true);
+    this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
     const selectedPreferences = this.cancelForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
       .filter((value) => value !== null);
@@ -237,19 +229,18 @@ export class CancelSegmentComponent implements OnInit {
       if (look) {
         if (look.airlineCode === 'AC') {
           this.isAC = true;
-          if ((this.cancelForm.controls.reasonUACancel.value !== '4' || this.cancelForm.controls.reasonUACancel.value !== '5')
-            && (this.cancelForm.controls.reasonNonACCancel.value !== 'IROP'
-              && this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE')) {
+          if (
+            (this.cancelForm.controls.reasonUACancel.value !== '4' || this.cancelForm.controls.reasonUACancel.value !== '5') &&
+            (this.cancelForm.controls.reasonNonACCancel.value !== 'IROP' && this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE')
+          ) {
             this.enableFormControls(['airlineNo'], true);
           }
           this.reasonAcList.push(
             { itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
             { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
-            { itemText: 'DUPLICATE TICKETS', itemValue: '3' });
-          if (
-            this.cancelForm.value.reasonACCancel === '' ||
-            this.cancelForm.value.reasonACCancel === undefined
-          ) {
+            { itemText: 'DUPLICATE TICKETS', itemValue: '3' }
+          );
+          if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
             this.cancelForm.controls.acFlightNo.setValue('');
             this.cancelForm.controls.relationship.setValue('');
           } else {
@@ -291,9 +282,11 @@ export class CancelSegmentComponent implements OnInit {
     if (this.segments.length === 1 && this.segments[0].segmentType) {
       if (this.segments[0].airlineCode === 'AC') {
         this.isAC = true;
-        this.reasonAcList.push({ itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
+        this.reasonAcList.push(
+          { itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
           { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
-          { itemText: 'DUPLICATE TICKETS', itemValue: '3' });
+          { itemText: 'DUPLICATE TICKETS', itemValue: '3' }
+        );
       }
       if (this.segments.length === 1 && this.segments[0].airlineCode === 'UA') {
         this.isUA = true;
@@ -316,39 +309,24 @@ export class CancelSegmentComponent implements OnInit {
         this.enableFormControls(['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'], true);
         break;
       case '4':
-        this.enableFormControls(
-          ['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'],
-          true
-        );
+        this.enableFormControls(['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'], true);
         break;
       case '5':
         this.enableFormControls(['relationship'], false);
-        this.enableFormControls(
-          ['acFlightNo', 'acCancelMonth', 'acCancelYear'],
-          true
-        );
+        this.enableFormControls(['acFlightNo', 'acCancelMonth', 'acCancelYear'], true);
         break;
       case '6':
       case '9':
       case '10':
         this.enableFormControls(['acFlightNo'], false);
-        this.enableFormControls(
-          ['relationship', 'acCancelMonth', 'acCancelYear'],
-          true
-        );
+        this.enableFormControls(['relationship', 'acCancelMonth', 'acCancelYear'], true);
         break;
       case '11':
         this.enableFormControls(['acCancelMonth', 'acCancelYear'], false);
-        this.enableFormControls(
-          ['relationship', 'acFlightNo'],
-          true
-        );
+        this.enableFormControls(['relationship', 'acFlightNo'], true);
         break;
       default:
-        this.enableFormControls(
-          ['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'],
-          true
-        );
+        this.enableFormControls(['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear'], true);
         break;
     }
     this.checkAcTicketPassenger(newValue);
@@ -359,7 +337,7 @@ export class CancelSegmentComponent implements OnInit {
   checkAcTicketPassenger(newValue) {
     const arr = this.cancelForm.get('actickets') as FormArray;
 
-    if ((newValue === '1' || newValue === '2' || newValue === '3') && (this.isAC)) {
+    if ((newValue === '1' || newValue === '2' || newValue === '3') && this.isAC) {
       for (const c of arr.controls) {
         c.get('acTicketNo').enable();
         c.get('acpassengerNo').enable();
@@ -376,7 +354,6 @@ export class CancelSegmentComponent implements OnInit {
         c.get('acpassengerNo').disable();
         c.get('acTicketNo').updateValueAndValidity();
         c.get('acpassengerNo').updateValueAndValidity();
-
       }
     }
   }
@@ -394,10 +371,7 @@ export class CancelSegmentComponent implements OnInit {
       if (look) {
         if (look.airlineCode === 'AC') {
           acCount = acCount + 1;
-          controlsArr = [
-            { control: 'acFlightNo', controlvalue: look.flightNumber },
-            { control: 'acpassengerNo', controlvalue: pass }
-          ];
+          controlsArr = [{ control: 'acFlightNo', controlvalue: look.flightNumber }, { control: 'acpassengerNo', controlvalue: pass }];
         }
       }
     });
@@ -492,7 +466,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   resetAcTicket(acReasonCode) {
-    if ((acReasonCode === '1' || acReasonCode === '2' || acReasonCode === '3') && (this.isAC)) {
+    if ((acReasonCode === '1' || acReasonCode === '2' || acReasonCode === '3') && this.isAC) {
       const items = this.cancelForm.controls.tickets as FormArray;
       const acitems = this.cancelForm.controls.actickets as FormArray;
 
@@ -570,16 +544,12 @@ export class CancelSegmentComponent implements OnInit {
   changefollowUpOption(followUp) {
     if (followUp === 'Keep Ticket' || followUp === 'Non BSP Refund') {
       this.enableFormControls(
-        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel',
-          'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
         true
       );
       this.checkAcTicketPassenger('');
     } else {
-      this.enableFormControls(
-        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'],
-        false
-      );
+      this.enableFormControls(['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'], false);
       this.checkAcTicketPassenger(this.cancelForm.controls.reasonACCancel.value);
     }
     this.headerRefund = 'Non BSP Refund Commission Recall';
@@ -587,20 +557,13 @@ export class CancelSegmentComponent implements OnInit {
 
   changeCancelCheck(option) {
     if (option === 'NEVER') {
-      this.enableFormControls(
-        ['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear', 'reasonACCancel'],
-        true
-      );
+      this.enableFormControls(['acFlightNo', 'relationship', 'acCancelMonth', 'acCancelYear', 'reasonACCancel'], true);
     } else if (!this.isAC) {
-      this.enableFormControls(
-        ['reasonACCancel'],
-        false
-      );
+      this.enableFormControls(['reasonACCancel'], false);
     }
   }
 
   onchangeNonAcReasonCancel(nonAcValue) {
-
     if (this.cancelForm.controls.reasonUACancel.value !== '4' && this.cancelForm.controls.reasonUACancel.value !== '5') {
       this.enableFormControls(['airlineNo'], true);
     }

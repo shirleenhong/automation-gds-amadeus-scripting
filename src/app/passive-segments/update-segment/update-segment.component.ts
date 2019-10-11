@@ -81,7 +81,7 @@ export class UpdateSegmentComponent implements OnInit {
     arrivalTime: new FormControl('', [Validators.required]),
     tourName: new FormControl('', [Validators.required]),
     noPeople: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
-    noNights: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
+    noNights: new FormControl('', [Validators.required, Validators.pattern('^[0-9][0-9]?$')]),
     roomType: new FormControl('', []),
     mealPlan: new FormControl('', []),
     stateRoom: new FormControl('', []),
@@ -335,6 +335,8 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblvendorCode = 'Vendor Code';
         this.lbldepartureCity = 'Departure City Code';
         this.lbldestinationCity = 'Destination City Code';
+        this.lblarrivalDate = 'End Date';
+        this.lblarrivalTime = 'End Time';
         this.lbltourName = 'Tour Name or Hotel Name';
         this.lblnoPeople = 'Number of People';
         this.lblnoNights = 'Number of Nights';
@@ -592,7 +594,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() { }
+  pickUpLocChange() {}
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;
@@ -701,6 +703,12 @@ export class UpdateSegmentComponent implements OnInit {
 
     if (tempname === 'arrivalDate') {
       arrDate = tempdate2;
+    }
+
+    if (this.passiveSegments.departureDate === this.passiveSegments.arrivalDate) {
+      if (this.passiveSegments.segmentType === 'TOR') {
+        this.passiveSegments.noNights = '0';
+      }
     }
 
     if (tempdate2 < now) {

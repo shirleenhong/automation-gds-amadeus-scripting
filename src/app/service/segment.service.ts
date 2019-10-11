@@ -581,7 +581,7 @@ export class SegmentService {
             case (itinLanguage === 'EN'): {
                 const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
                 if (llbMandatoryRemarkEn === '') {
-                    const commandEN = 'PBN/LLB MANDATORY REMARKS*';
+                    const commandEN = 'PBN/YTOWL210N/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
                 const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
@@ -594,7 +594,7 @@ export class SegmentService {
             case (itinLanguage === 'FR'): {
                 const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
                 if (llbMandatoryRemarkFR === '') {
-                    const commandFR = 'PBN/LLB MANDATORY FRENCH*';
+                    const commandFR = 'PBN/YTOWL210N/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
                 const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');

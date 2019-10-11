@@ -32,6 +32,7 @@ import { QueueComponent } from './queue/queue.component';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { OfcRemarkService } from '../service/corporate/ofc-remark.service';
 import { CounselorDetail } from '../globals/counselor-identity';
+import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -75,7 +76,8 @@ export class CorporateComponent implements OnInit {
     private amadeusQueueService: AmadeusQueueService,
     private queueService: QueueService,
     private councelorDetail: CounselorDetail,
-    private ofcRemarkService: OfcRemarkService
+    private ofcRemarkService: OfcRemarkService,
+    private visaPassportService: VisaPassportRemarkService,
   ) {
     this.initData();
   }
@@ -248,6 +250,8 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.sendU70Remarks();
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+    this.visaPassportService.writeCorporateRemarks(this.corpRemarksComponent.viewPassportComponent.visaPassportFormGroup);
+
     this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
     this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager

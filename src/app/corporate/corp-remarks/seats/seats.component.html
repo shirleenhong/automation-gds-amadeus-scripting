@@ -10,16 +10,23 @@
   </thead>
   <tbody>
     <tr *ngFor="let seat of seats; let i = index">
-      <td [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)" *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''"
-        style="text-align: center; vertical-align: middle">
+      <td
+        [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)"
+        *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''"
+        style="text-align: center; vertical-align: middle"
+      >
         <span class="text-center">{{ seat.segmentIds }}</span>
       </td>
       <td>{{ seatRemarkOptions[seat.id - 1].text }}</td>
       <td>{{ seat.type }}</td>
       <td>{{ seat.number }}</td>
-      <td [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)" *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''"
-        style="text-align: center; vertical-align: middle">
-        <i class="fa fa-edit fa-fw" title="Click to Edit"></i>&nbsp;&nbsp;&nbsp;
+
+      <td
+        [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)"
+        *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''"
+        style="text-align: center; vertical-align: middle"
+      >
+        <i class="fa fa-edit fa-fw" title="Click to Edit" (click)="editSeatRemark(seat.segmentIds)"></i>&nbsp;&nbsp;&nbsp;
         <i class="fa fa-trash-alt fa-fw" title="Click to Delete" (click)="delete(seat)"></i>
       </td>
     </tr>

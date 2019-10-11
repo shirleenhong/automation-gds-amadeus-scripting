@@ -1,6 +1,6 @@
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
-//import { PnrService } from 'src/app/service/pnr.service';
+// import { PnrService } from 'src/app/service/pnr.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
 

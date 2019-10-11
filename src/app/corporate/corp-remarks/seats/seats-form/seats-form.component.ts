@@ -22,6 +22,8 @@ export class SeatsFormComponent implements OnInit {
   segmentIds = [];
   selectedItems = new Array<SeatModel>();
   existingSegments = [];
+  hasSelectedItems = false;
+
   types: Array<string> = ['WINDOW', 'AISLE', 'MIDDLE'];
   REGEX_ALPHANUMERIC = '^\\w*';
 
@@ -48,6 +50,10 @@ export class SeatsFormComponent implements OnInit {
     });
 
     this.segmentIds = this.segmentIds.filter((x) => this.existingSegments.indexOf(x) === -1);
+    // Subscribe and handle changes on the seatsForm.
+    this.seatsForm.valueChanges.subscribe(() => {
+      this.hasSelectedItems = this.hasChecked();
+    });
   }
 
   checkChanged(indx) {
@@ -69,6 +75,7 @@ export class SeatsFormComponent implements OnInit {
         this.seatsForm.get('seatNumber').clearValidators();
       }
     }
+    this.hasSelectedItems = this.hasChecked();
   }
 
   loadSelctedItems() {
@@ -82,6 +89,23 @@ export class SeatsFormComponent implements OnInit {
         this.seatsForm.get('seatNumber').setValue(seat.number);
       }
     });
+  }
+  /**
+   * Check if the seatForm has checked items.
+   */
+  hasChecked(): boolean {
+    if (
+      !!this.seatsForm.get('check1').value ||
+      !!this.seatsForm.get('check2').value ||
+      !!this.seatsForm.get('check3').value ||
+      !!this.seatsForm.get('check4').value ||
+      !!this.seatsForm.get('check5').value ||
+      !!this.seatsForm.get('check6').value
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   save(): void {

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
-import { SeatsService } from 'src/app/service/corporate/seats.service';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-seats-form',
@@ -13,108 +13,79 @@ export class SeatsFormComponent implements OnInit {
   /**
    * Modal component properties
    */
-  title: string;
+  title: 'Assign Seat Remark';
   message: string; // Value: null, SAVED or CLOSED
 
   @Input()
   seats: Array<SeatModel>; // The seats to from the parent component
   seatsForm: FormGroup;
-  segmentIdsForAll: any;
+  segmentIds = [];
+  selectedItems = new Array<SeatModel>();
 
-  remarkOptions: Array<{ id: number; text: string }>;
-  types: Array<string>;
+  types: Array<string> = ['WINDOW', 'AISLE', 'MIDDLE'];
   REGEX_ALPHANUMERIC = '^\\w*';
 
-  constructor(public activeModal: BsModalService, public modalRef: BsModalRef, public formBuilder: FormBuilder) {}
+  constructor(
+    public activeModal: BsModalService,
+    public modalRef: BsModalRef,
+    public formBuilder: FormBuilder,
+    private pnrService: PnrService
+  ) {}
 
   ngOnInit() {
-    this.remarkOptions = SeatsService.REMARK_OPTIONS;
-    this.types = SeatsService.TYPES;
-    this.segmentIdsForAll = this.seats.length ? this.seats[0].segmentIds : null;
+    this.segmentIds = this.pnrService.segments.map((x) => x.lineNo);
 
     this.seatsForm = this.formBuilder.group({
-      segmentIds: [this.segmentIdsForAll, Validators.pattern('[0-9]+(,[0-9]+)*')],
-      seatsFormArray: this.formBuilder.array(this.createSeats())
+      segment: new FormControl(''),
+      check1: new FormControl(''),
+      check2: new FormControl(''),
+      check3: new FormControl(''),
+      check4: new FormControl(''),
+      check5: new FormControl(''),
+      check6: new FormControl(''),
+      seatType: new FormControl(''),
+      seatNumber: new FormControl('')
     });
   }
 
-  /**
-   * Prepare the seats form along with default values
-   */
-  createSeats(): Array<FormGroup> {
-    return [
-      this.formBuilder.group({
-        selected: [this.seats ? this.seats.findIndex((seat) => seat.id === 1) >= 0 : null],
-        id: [1, Validators.required],
-        type: [{ value: '', disabled: true }],
-        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)]
-      }),
-      this.formBuilder.group({
-        selected: [this.seats ? this.seats.findIndex((seat) => seat.id === 2) >= 0 : null],
-        id: [2, Validators.required],
-        type: [
-          {
-            value: this.seats
-              ? this.seats.findIndex((seat) => seat.id === 2) >= 0
-                ? this.seats[this.seats.findIndex((seat) => seat.id === 2)].type
-                : ''
-              : '',
-            disabled: false
-          }
-        ],
-        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)]
-      }),
-      this.formBuilder.group({
-        selected: [this.seats ? this.seats.findIndex((seat) => seat.id === 3) >= 0 : null],
-        id: [3, Validators.required],
-        type: [{ value: '', disabled: true }],
-        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)]
-      }),
-      this.formBuilder.group({
-        selected: [this.seats ? this.seats.findIndex((seat) => seat.id === 4) >= 0 : null],
-        id: [4, Validators.required],
-        type: [{ value: '', disabled: true }],
-        number: [{ value: '', disabled: true }, Validators.pattern(this.REGEX_ALPHANUMERIC)]
-      }),
-      this.formBuilder.group({
-        selected: [this.seats ? this.seats.findIndex((seat) => seat.id === 5) >= 0 : null],
-        id: [5, Validators.required],
-        type: [
-          {
-            value: this.seats
-              ? this.seats.findIndex((seat) => seat.id === 5) >= 0
-                ? this.seats[this.seats.findIndex((seat) => seat.id === 5)].type
-                : null
-              : null,
-            disabled: true
-          }
-        ],
-        number: [
-          {
-            value: this.seats
-              ? this.seats.findIndex((seat) => seat.id === 5) >= 0
-                ? this.seats[this.seats.findIndex((seat) => seat.id === 5)].number
-                : null
-              : null,
-            disabled: false
-          },
-          Validators.pattern(this.REGEX_ALPHANUMERIC)
-        ]
-      }),
-      this.formBuilder.group({
-        selected: [this.seats ? this.seats.findIndex((seat) => seat.id === 6) >= 0 : null],
-        id: [6, Validators.required],
-        type: [{ value: '', disabled: true }],
-        number: [{ value: '', disabled: false }, Validators.pattern(this.REGEX_ALPHANUMERIC)]
-      })
-    ];
-  }
-
-  get seatsFormArray() {
-    return this.seatsForm.get('seatsFormArray') as FormArray;
+  checkChanged(indx) {
+    const check = this.seatsForm.get('check' + indx);
+    if (indx === 2) {
+      if (check.value) {
+        this.seatsForm.get('seatType').enable();
+        this.seatsForm.get('seatType').setValidators([Validators.required]);
+      } else {
+        this.seatsForm.get('seatType').disable();
+        this.seatsForm.get('seatType').clearValidators();
+      }
+    } else if (indx === 5) {
+      if (check.value) {
+        this.seatsForm.get('seatNumber').enable();
+        this.seatsForm.get('seatNumber').setValidators([Validators.required, Validators.pattern(this.REGEX_ALPHANUMERIC)]);
+      } else {
+        this.seatsForm.get('seatNumber').disable();
+        this.seatsForm.get('seatNumber').clearValidators();
+      }
+    }
   }
 
   save(): void {
+    this.selectedItems = [];
+    for (let i = 1; i <= 6; i++) {
+      const check = this.seatsForm.get('check' + i);
+      if (check.value) {
+        const seatModel = new SeatModel();
+        seatModel.id = i;
+        seatModel.segmentIds = this.seatsForm.get('segment').value;
+        if (i === 2) {
+          seatModel.type = this.seatsForm.get('seatType').value;
+        } else {
+          seatModel.number = this.seatsForm.get('seatNumber').value;
+        }
+        this.selectedItems.push(seatModel);
+      }
+    }
+
     this.message = 'SAVED';
     this.modalRef.hide();
   }

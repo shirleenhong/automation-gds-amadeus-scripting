@@ -11,6 +11,7 @@ Resource          ../../resources/common/api-utilities.txt
 ${button_add_seat}    //button[contains(text(), 'Add Seat Remarks')]
 ${select_seat_remarkOptions}    //select[@id='seatForm']
 ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment']
+${tab_visaAndPassport}     css=#visaPassportTab-link
 ${list_segment}    //ul[@id='dropdown-basic']
 ${button_close}    //button[contains(text(), 'Close')]
 ${tab_Seats}    //span[contains(text(), 'Seat')]
@@ -33,18 +34,33 @@ ${input_seat_select5}    //input[@name='check5']
 ${input_seat_select6}    //input[@name='check6']
 
 
+
 *** Keywords ***
+Click Seats Tab
+    Wait Until Element Is Visible    ${tab_seats}    30
+    Click Element    ${tab_seats}
+    Set Test Variable    ${current_page}    Seats
+    
+Click IRD Remarks Tab
+    Wait Until Element Is Visible    ${tab_irdRemarks}    30
+    Click Element    ${tab_irdRemarks}
+    Set Test Variable    ${current_page}    IRD Remarks
+
+Click Document PNR Tab
+    Wait Until Element Is Visible    ${tab_documentPnr}    30
+    Click Element    ${tab_documentPnr}
+    Set Test Variable    ${current_page}    Document PNR
+    
+Click Visa And Passport Tab
+    Wait Until Element Is Visible    ${tab_visaAndPassport}    30
+    Click Element    ${tab_visaAndPassport}
+    Set Test Variable    ${current_page}    Visa And Passport
+    
 Navigate To Add Seat Remarks
     Click Element    ${tab_Seats}    
     Click Element    ${button_add_seat}    
     Set Test Variable    ${current_page}    Add Seat Remarks
     Set Test Variable    ${ticketing_details_complete}    no
-    
-Click IRD Remarks Tab
-    Wait Until Element Is Visible    ${tab_ird_remarks}     30
-    Click Element At Coordinates    ${tab_ird_remarks}     0    0
-    Wait Until Page Contains Element    ${tab_ird_remarks}    30
-    Set Test Variable    ${current_page}    IRD Remarks
     
 Click Save Button In Seats Page
     Click Element    ${button_save}
@@ -65,11 +81,6 @@ Click Add Seat
     Click Element    ${button_add_seat}    
     Set Test Variable    ${current_page}    Add Seat Remarks
     Set Test Variable    ${ticketing_details_complete}    no
-       
-Click Document PNR Tab
-    Wait Until Element Is Visible    ${tab_documentPnr}    30
-    Click Element    ${tab_documentPnr}
-    Set Test Variable    ${current_page}    Document PNR
     
 Populate Document PNR 
     Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark

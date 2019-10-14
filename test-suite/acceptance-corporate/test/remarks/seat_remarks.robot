@@ -11,11 +11,33 @@ Resource          ../../pages/reporting.robot
 Resource          ../../pages/fees.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../pages/remarks.robot
+Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    seat_remarks
 
 *** Test Cases ***
-Verify Remarks Are Written In The PNR For Seat Selection 1,2 And 5 From Seats Pop Up Window With Seat No, Segment Relation And Seat Type
+Verify Seat Remarks Are Written Corretly In The PNR For Single Segment Selection In EN Language
     [Tags]    us11820
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger For EN
-    Add Canada Domestic Segment And Store Fare
-    Add Seat Remarks For Multiple Seat Remarks Options In Single Segment
+    Create PNR With Active Air Segments For Corporate, With Seat Remarks For Single Segment For EN
+    Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
+    
+Verify Seat Remarks Are Written Corretly In The PNR For Multiple Segment Selection In EN Language
+    [Tags]    us11820
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Corporate, With IRD Remarks For Multiple Segment For EN
+    Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
+    
+Verify Seat Remarks Are Written Corretly In The PNR For Single Segment Selection In FR Language
+    [Tags]    us11820
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Corporate, With Seat Remarks For Single Segment For FR
+    Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
+    
+Verify Seat Remarks Are Written Corretly In The PNR For Multiple Segment Selection In FR Language
+    [Tags]    us11820
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Corporate, With IRD Remarks For Multiple Segment For FR
+    Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check

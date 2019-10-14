@@ -163,15 +163,23 @@ Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
     
 #---------Keyword and script For Seats-----------#
 
-Select Seat Remarks For Option Online Check-in, Preferred And Upgrade
+Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
     Wait Until Element Is Visible    ${input_seat_select1}
     Click Element    ${input_seat_select1}    
     Click Element    ${input_seat_select2}
     Select From List By Label    ${select_seat_Type}    WINDOW
     Click Element    ${input_seat_select5}
     Enter Value    ${input_seat_number}    2D
+    Take Screenshot    
     Click Save Button
-    
-Select Seat Remarks For Option Waitlist, Request And Clearance Check
+    Verify Expected Remarks Are Written In The PNR
+
+Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     Wait Until Element Is Visible    ${input_seat_select3}
+    Click Element   ${input_seat_select3}
+    Click Element   ${input_seat_select4}
+    Click Element   ${input_seat_select6}
+    Click Save Button
+    Verify Expected Remarks Are Written In The PNR
+
     

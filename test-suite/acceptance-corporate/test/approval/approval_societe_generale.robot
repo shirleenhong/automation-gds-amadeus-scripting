@@ -25,7 +25,7 @@ Verify That PNRs For Client Societe Generale Exit Approval Process When First Pr
     
     
 Verify That PNRs For Client Societe Generale Are Put On Hold When Second Primary Reason Is Selected
-    [Tags]    us13271    expect_to_fail
+    [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Societe Generale, Air Only, Select Second Primary Reason
     Fill Up Approval Fields

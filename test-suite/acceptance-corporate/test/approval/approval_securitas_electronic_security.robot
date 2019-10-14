@@ -23,12 +23,14 @@ Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly 
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
+    
 Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP EXEMPT-CA 
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 VIP EXEMPT-CA, Air Only, Use Second Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
+    
     
 Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP GUEST-CA 
     [Tags]    us13271
@@ -37,15 +39,17 @@ Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly 
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
+    
 Verify That Air Only PNRs For Client Securitas Electronic Security Is Correctly Queued For VIP GENERAL-CA 
-    [Tags]    us13271    expect_to_fail
+    [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 GENERAL-CA, Air Only, Use Second Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
+    
 Verify That Air Only PNRs For Client Securitas Electronic Security Can Skip Approval Process 
-    [Tags]    us13271    expect_to_fail
+    [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Securitas Electronic Security With Udid50 OPERATIONS-CA, Mix Segments, Skip Approval
     Fill Up Approval Fields

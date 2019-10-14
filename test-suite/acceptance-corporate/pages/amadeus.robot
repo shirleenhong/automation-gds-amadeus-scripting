@@ -83,7 +83,6 @@ Open CA Corporate Test
     Set Test Variable    ${pnr_details}     ${EMPTY}
     Set Test Variable    ${ticketing_complete}     no
     Set Test Variable     ${ticketing_details}    no
-    Set Test Variable     ${actual_counselor_identity}    ${EMPTY}
 
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
@@ -134,7 +133,6 @@ Get PNR Details
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
     Wait Until Element Is Not Visible    ${overlay_loader}    10
-    Sleep    1
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
@@ -350,15 +348,6 @@ Create And Ticket 2nd TST With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    TRANS
     
-Ticket TST${tst_no}
-    Enter Cryptic Command    RFCWTTEST
-    Enter Cryptic Command    ER
-    Sleep    4
-    Get Record Locator Value
-    Enter Cryptic Command    TTP/T${tst_no}
-    Sleep    4
-    Enter Cryptic Command    RT${actual_record_locator}
-    
 Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
     Create 4 Test Dates
@@ -466,7 +455,8 @@ Add ${number_of_segments} Rail Segments
     \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    ${client_name}    Get Client Name    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments

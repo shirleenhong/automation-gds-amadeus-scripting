@@ -13,6 +13,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { VisaPassportComponent } from './shared/visa-passport/visa-passport.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { HttpClientModule } from '@angular/common/http';
     AllCapsMaskDirective,
     AlphaMaskDirective,
     TabOrderDirective,
-    SegmentSelectComponent
+    SegmentSelectComponent,
+    VisaPassportComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +48,8 @@ import { HttpClientModule } from '@angular/common/http';
     AllCapsMaskDirective,
     AlphaMaskDirective,
     TabOrderDirective,
-    SegmentSelectComponent
+    SegmentSelectComponent,
+    VisaPassportComponent
   ]
 })
-export class MyCommonModule {}
+export class MyCommonModule { }

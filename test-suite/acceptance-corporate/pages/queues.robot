@@ -93,4 +93,3 @@ Verify PNR Is ${is_queued} To OSC
     Enter Cryptic Command    RTQ 
     Run Keyword If    "${is_queued}" == "Queued"    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
     ...   ELSE IF    "${is_queued}" == "Not Queued"    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
-    

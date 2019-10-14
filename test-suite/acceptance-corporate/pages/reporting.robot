@@ -178,8 +178,8 @@ Select Client Reporting Fields To Be Written
     [Arguments]    @{reporting_checkbox}
     Wait Until Page Contains Element    ${checkbox_clientReporting}
     : FOR    ${reporting_checkbox}    IN    @{reporting_checkbox}
-    \    Select Checkbox    ${tab_clientReporting}[${reporting_checkbox}]${checkbox_clientReporting}
-    Take Screenshot
+    \    Select Checkbox    ${tab_clientReporting}${open_bracket}${reporting_checkbox}${close_bracket}${checkbox_clientReporting}
+    [Teardown]    Take Screenshot
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Finish PNR
@@ -356,7 +356,7 @@ Verify Country Of Destination Is Mapped In The FS Remark
     Verify Expected Remarks Are Written In The PNR
     
 Select Default Value For Routing Code
-    Navigate To Page Reporting Remarks
+    Run Keyword If    "${destination_selected}" == "no"   Navigate To Page Reporting Remarks
     Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
     Set Test Variable    ${routing_code_selected}    yes
     [Teardown]    Take Screenshot

@@ -17,21 +17,21 @@ ${test_file_name}    kelly
 
 *** Test Cases ***
 Verify That PNRs For Client Kelly Services Are Queued For Approval When First Primary Reason Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Kelly Services Are Queued For Approval When Second Primary Reason Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Kelly Services Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EMPLOYEE-CA, Air Only, Skip Approval
     Fill Up Approval Fields
@@ -45,7 +45,7 @@ Verify That Hotel Only PNRs For Client Kelly Services Are Queued For Approval
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Kelly Services With RM*FS/-L Remark Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271     expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Kelly Services With RM*FS/-L Remark, Air Only
     Fill Up Approval Fields

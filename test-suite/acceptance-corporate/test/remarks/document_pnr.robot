@@ -21,7 +21,6 @@ Verify Document Remark Can Be Written In The PNR
     Verify That Single Document PNR Can Be Added
     Verify That Document PNR Remarks Are Written In The PNR
     
-
 Verify Multiple Document Remark Can Be Written In The PNR
     [Tags]    us10039
     Login To Amadeus Sell Connect Acceptance

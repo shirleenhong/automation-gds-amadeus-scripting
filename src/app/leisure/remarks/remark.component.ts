@@ -7,11 +7,12 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from '../../helper/util.helper';
 import { CodeshareComponent } from './codeshare/codeshare.component';
 
-import { VisaPassportComponent } from './visa-passport/visa-passport.component';
+// import { VisaPassportComponent } from '../../shared/visa-passport/visa-passport.component';
 import { FareRuleSegmentComponent } from './fare-rule-segment/fare-rule-segment.component';
 import { RbcPointsRedemptionComponent } from './rbc-points-redemption/rbc-points-redemption.component';
 import { PackageRemarkHelper } from '../../helper/packageRemark-helper';
 import { AssociatedRemarksComponent } from './associated-remarks/associated-remarks.component';
+import { VisaPassportComponent } from 'src/app/shared/visa-passport/visa-passport.component';
 
 @Component({
   selector: 'app-remarks',
@@ -107,9 +108,9 @@ export class RemarkComponent implements OnInit {
 
     // Check Visa and Passport
     if (this.viewPassportComponent.isInternational
-        && (!this.viewPassportComponent.visaPassportView.citizenship.length
-            || !this.viewPassportComponent.visaPassportView.passportName.length
-            && (!this.viewPassportComponent.advisoryClicked|| !this.viewPassportComponent.isInternationalTravelAdvisorySent))
+      && (!this.viewPassportComponent.visaPassportView.citizenship.length
+        || !this.viewPassportComponent.visaPassportView.passportName.length
+        && (!this.viewPassportComponent.advisoryClicked || !this.viewPassportComponent.isInternationalTravelAdvisorySent))
     ) {
       // Indicate invalidities of the required Visa and Passport Advisory fields...
       this.viewPassportComponent.visaPassportFormGroup.controls['isInternationalTravelAdvisorySent'].markAsTouched();

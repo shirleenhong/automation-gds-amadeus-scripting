@@ -73,7 +73,7 @@ Verify That PNRs For Client Imperial Tobacco Can Skip Approval Process
     
     
 Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process When Air Savings Code L
-    [Tags]    us13271
+    [Tags]    us13271   expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Air DOM Booked More than 14 days, Air Savings Code L
     Fill Up Approval Fields
@@ -81,7 +81,7 @@ Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process Whe
     
     
 Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process When Air Savings Code 7
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Air TRANS Booked More than 14 days, Air Savings Code 7
     Fill Up Approval Fields
@@ -89,7 +89,7 @@ Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process Whe
     
     
 Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process When Air Savings Code 7 And INTL Booked More than 21 days 
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Air INTL Booked More than 21 days, Air Savings Code 7
     Fill Up Approval Fields

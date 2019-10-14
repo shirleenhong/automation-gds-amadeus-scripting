@@ -10,7 +10,7 @@ declare var smartScriptSession: any;
 export class CleanUpRemarkService {
   deleteRemarksByIds = Array<string>();
 
-  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) { }
+  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) {}
 
   cleanUpRemarks() {
     this.markIdForDeletion();
@@ -24,7 +24,7 @@ export class CleanUpRemarkService {
     const remarks = Array<string>();
     remarks.push('TKT'); // TKT
     remarks.push('SPLIT'); // RMT SPLIT
-    remarks.push('SUPFEE-'); // RMF SUPFEE-
+    remarks.push('SUPFEE'); // RMF SUPFEE-
     remarks.push('REC/-RLN'); // RM*REC/-RLN
     remarks.push('U86/-'); // RM*U86/-
     remarks.push('LCC'); // RMF LCC-
@@ -38,7 +38,7 @@ export class CleanUpRemarkService {
     remarks.push('MAC/-'); // RM*MAC/-
     remarks.push('SFC'); // RM*SFC
     remarks.push('FEE'); // RM*FEE
-    this.getIdForDeletion(remarks, true);
+    this.getIdsForDeletion(remarks);
   }
 
   writePossibleConcurObtRemark() {
@@ -91,21 +91,13 @@ export class CleanUpRemarkService {
     }
   }
 
-  getIdForDeletion(udids, isCheckStartsWith: boolean, type?) {
+  getIdsForDeletion(udids) {
+    const remarksList = this.pnrService.pnrObj.rmElements;
     udids.forEach((x) => {
-      let existNumber = '';
-      if (type === 'RIR') {
-        existNumber = this.pnrService.getRIRLineNumber(x);
-      } else {
-        if (isCheckStartsWith) {
-          existNumber = this.pnrService.getRemarkLineNumberStartsWith(x);
-        } else {
-          existNumber = this.pnrService.getRemarkLineNumber(x);
+      for (const rm of remarksList) {
+        if (rm.freeFlowText.startsWith(x)) {
+          this.ars.deleteRemarksByIds.push(rm.elementNumber);
         }
-      }
-
-      if (existNumber !== '') {
-        this.ars.deleteRemarksByIds.push(existNumber);
       }
     });
   }

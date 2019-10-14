@@ -77,7 +77,7 @@ Verify Default Fee In Ticket Segments
         : FOR    ${fee_index}    IN RANGE    0    ${elements_count}
 	    \    Set Test Variable    ${div_index}    ${fee_index}
 	    \    ${div_index}    Evaluate    ${div_index} + 1
-	    \    ${fee_value}    Get Value    ${row_supplemental_fees}[${div_index}]${input_fee}
+	    \    ${fee_value}    Get Value    ${row_supplemental_fees}${open_bracket}${div_index}${close_bracket}${input_fee}
 	    \    Run Keyword And Continue On Failure    Should Be Equal    ${expected_fee_amount[${fee_index}]}    ${fee_value}
 	    \    ${fee_index}    Evaluate    ${fee_index} + 1
 	    \    Log    Expected: ${expected_fee_amount}
@@ -92,7 +92,7 @@ Verify Default Fee Code in Ticket Segments
         : FOR    ${fee_index}    IN RANGE    0    ${elements_count}
 	    \    Set Test Variable    ${div_index}    ${fee_index}
 	    \    ${div_index}    Evaluate    ${div_index} + 1
-	    \    ${fee_code}    Get Value    ${row_supplemental_fees}[${div_index}]${input_feeCode}
+	    \    ${fee_code}    Get Value    ${row_supplemental_fees}${open_bracket}${div_index}${close_bracket}${input_feeCode}
 	    \    Run Keyword And Continue On Failure    Should Be Equal    ${expected_fee_code[${fee_index}]}    ${fee_code}
 	    \    ${fee_index}    Evaluate    ${fee_index} + 1
 	    \    Log    Expected: ${expected_fee_code}
@@ -102,7 +102,7 @@ Verify Default Fee Code in Ticket Segments
 Tick Schedule Change Checkbox
     [Arguments]   @{schedule_fee_index}
     : FOR   ${schedule_fee_index}   IN    @{schedule_fee_index}
-    \    Select Checkbox    ${row_supplemental_fees}[${schedule_fee_index}]${checkbox_schedule_change}
+    \    Select Checkbox    ${row_supplemental_fees}${open_bracket}${schedule_fee_index}${close_bracket}${checkbox_schedule_change}
 	    
 Select No Fee Code ${no_fee_code}
     Select From List By Label   ${list_no_feeCode}    ${no_fee_code}  
@@ -135,9 +135,9 @@ Select Supplemental Fee For First Ticket
     Click Element At Coordinates    ${input_feeCode}    0    0       
 
 Click Add Sup Fee Button ${add_fee_index}
-    Wait Until Element Is Visible    ${tab_supplemental_fees}[1]${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    30
-    Click Element At Coordinates    ${tab_supplemental_fees}[1]${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    0    0
-    Wait Until Element Is Visible    ${input_supplementalFee_chckbox}[1]${input_supfee_checkbox}    30
+    Wait Until Element Is Visible    ${tab_supplemental_fees}${open_bracket}1${close_bracket}${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    30
+    Click Element At Coordinates    ${tab_supplemental_fees}${open_bracket}1${close_bracket}${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    0    0
+    Wait Until Element Is Visible    ${input_supplementalFee_chckbox}${open_bracket}1${close_bracket}${input_supfee_checkbox}    30
     Sleep    4
     
 Click Add Fee Button
@@ -146,7 +146,7 @@ Click Add Fee Button
 Select Multiple Supplemental Fee
      [Arguments]   @{supplemental_fee_index}
     : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
-    \    Select Checkbox    ${input_supplementalFee_chckbox}[${supplemental_fee_index}]${input_supfee_checkbox}
+    \    Select Checkbox    ${input_supplementalFee_chckbox}${open_bracket}${supplemental_fee_index}${close_bracket}${input_supfee_checkbox}
     Click Button    ${button_save}  
     Wait Until Element Is Enabled    ${checkbox_schedule_change}    30   
     Click Element At Coordinates    ${input_feeCode}    0    0

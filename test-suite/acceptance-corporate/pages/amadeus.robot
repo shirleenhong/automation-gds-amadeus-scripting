@@ -205,7 +205,7 @@ Remove Line Break And Spaces
     Set Test Variable    ${pnr_details_flattened}
     Set Test Variable    ${expected_remark_flattened}
 
-Create Exchange NE Remark   
+Create Exchange NE Remark
    Move Profile to GDS    RM*NE/-EX-Y    TKOK
 
 Create Exchange PNR In The GDS
@@ -378,7 +378,7 @@ Create PNR With 1 TST And Ticket For Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    DOM
     
-Retrive Current PNR 
+Retrive Current PNR
     Wait Until Element Is Visible    ${label_command_page}    180
     Input Text    ${input_commandText}    RT${actual_record_locator}
     Press Key    ${input_commandText}    \\13
@@ -524,3 +524,7 @@ Add Other Remarks
     \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${other_rmk_${i}}
     \    Run Keyword If    "${exists}" == "True" and "${other_rmk_${i}}" != "None"     Enter Cryptic Command    ${other_rmk_${i}}
     \    Exit For Loop If    "${exists}" == "False"
+
+Create MIS Segment With ${mis_segment_type} 5 Months From Now
+    Create 1 Test Dates For Booking Less Than 150 days
+    Move Profile to GDS    RU1AHK1SAO${test_date_1}/TYP-CWT/${mis_segment_type}

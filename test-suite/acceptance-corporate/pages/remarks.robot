@@ -201,6 +201,7 @@ Fill Up Visa And Passport Fields With Default Values
     Tick Advisory Sent Checkbox
     Enter Value    ${input_citizenship}    CA
     Enter Value    ${input_adviseTo}    Chuck Velasquez
+    Set Test Variable    ${visa_complete}    yes
     [Teardown]    Take Screenshot
     
 Tick Advisory Sent Checkbox
@@ -225,6 +226,7 @@ Fill Up Visa And Passport With ${citizenship} Citizenship, Advised To ${advisee}
     Enter Value    ${input_citizenship}    ${citizenship}
     Enter Value    ${input_adviseTo}     ${advisee}
     Tick Visa Checkbox For Segments ${segments}
+    Set Test Variable    ${visa_complete}    yes
     [Teardown]    Take Screenshot
     
 Verify No International Destinations Found in Itinerary Message Is Displayed In Visa And Passport Tab

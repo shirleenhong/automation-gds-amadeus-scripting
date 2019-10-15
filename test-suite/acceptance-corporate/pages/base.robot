@@ -69,6 +69,8 @@ Click Full Wrap
     Set Test Variable    ${ofc_documentation_complete}     no
     Set Test Variable    ${routing_code_selected}    no
     Set Test Variable    ${destination_selected}    no
+    Set Test Variable    ${visa_complete}    no
+    [Teardown]    Take Screenshot
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
@@ -228,6 +230,7 @@ Submit To PNR
     Run Keyword If    "${routing_code_selected}" == "no"     Select Default Value For Routing Code
     Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
+    Run Keyword If    "${visa_complete} == "no"    Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
     Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks" or "${current_page}" == "OFC Documentation And Queue"   
     ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        

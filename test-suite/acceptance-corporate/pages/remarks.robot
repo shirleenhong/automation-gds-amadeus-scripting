@@ -5,7 +5,6 @@ Library           Collections
 Library           Screenshot
 Resource          base.robot
 Resource          amadeus.robot
-Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${button_add_seat}    //button[contains(text(), 'Add Seat Remarks')]
@@ -32,8 +31,12 @@ ${input_seat_select3}    //input[@name='check3']
 ${input_seat_select4}    //input[@name='check4']
 ${input_seat_select5}    //input[@name='check5']
 ${input_seat_select6}    //input[@name='check6']
-
-
+${checkbox_advisorySent}    //input[@id='senttraveladvicory']
+${input_citizenship}     css=#citizenship
+${input_adviseTo}     css=#passportName
+${checkbox_visa}     //input[@formcontrolname='visa']
+${row_visa_segment}    //div[@ng-reflect-name='segments']
+${text_noIntlMessage}    //span[@class='p3']
 
 *** Keywords ***
 Click Seats Tab
@@ -55,7 +58,7 @@ Click Visa And Passport Tab
     Wait Until Element Is Visible    ${tab_visaAndPassport}    30
     Click Element    ${tab_visaAndPassport}
     Set Test Variable    ${current_page}    Visa And Passport
-    
+
 Navigate To Add Seat Remarks
     Click Element    ${tab_Seats}    
     Click Element    ${button_add_seat}    
@@ -112,7 +115,7 @@ Verify That Document PNR Remarks Are Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
-#-----------IRD Keywords And Verifiation---------------#
+#-----------IRD Keywords And Verification---------------#
 
 Verify IRD Status Default Value Is Correct For ${ird_default_status} For Multi Segment
     Set Test Variable    ${ird_default_status}    
@@ -192,5 +195,41 @@ Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     Click Element   ${input_seat_select6}
     Click Save Button
     Verify Expected Remarks Are Written In The PNR
-
     
+Fill Up Visa And Passport Fields With Default Values
+    Navigate To Page Visa And Passport
+    Tick Advisory Sent Checkbox
+    Enter Value    ${input_citizenship}    CA
+    Enter Value    ${input_adviseTo}    Chuck Velasquez
+    Set Test Variable    ${visa_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Tick Advisory Sent Checkbox
+    Click Element    ${checkbox_advisorySent}
+    Wait Until Element Is Visible    ${input_citizenship}    
+    
+Tick Visa Checkbox For Segments ${segments}
+    @{segment_list}     Split String    ${segments}    ,
+    :FOR    ${row}    IN    @{segment_list}
+    \    Click Element    ${row_visa_segment}${open_bracket}${row}${close_bracket}${checkbox_visa}
+        
+Fill Up Visa And Passport With ${citizenship} Citizenship, Advised To ${advisee} And Leave Visa Unchecked
+    Navigate To Page Visa And Passport
+    Tick Advisory Sent Checkbox
+    Enter Value    ${input_citizenship}    ${citizenship}
+    Enter Value    ${input_adviseTo}     ${advisee}
+    [Teardown]    Take Screenshot
+    
+Fill Up Visa And Passport With ${citizenship} Citizenship, Advised To ${advisee} And Select Visa For Segment/s ${segments}
+    Navigate To Page Visa And Passport
+    Tick Advisory Sent Checkbox
+    Enter Value    ${input_citizenship}    ${citizenship}
+    Enter Value    ${input_adviseTo}     ${advisee}
+    Tick Visa Checkbox For Segments ${segments}
+    Set Test Variable    ${visa_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Verify No International Destinations Found in Itinerary Message Is Displayed In Visa And Passport Tab
+    Navigate To Page Visa And Passport
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_noIntlMessage}    * No International Destinations Found in Itinerary *
+    [Teardown]    Take Screenshot

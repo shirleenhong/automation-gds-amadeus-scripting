@@ -532,3 +532,7 @@ Add Other Remarks
     \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${other_rmk_${i}}
     \    Run Keyword If    "${exists}" == "True" and "${other_rmk_${i}}" != "None"     Enter Cryptic Command    ${other_rmk_${i}}
     \    Exit For Loop If    "${exists}" == "False"
+
+Create MIS Segment With ${mis_segment_type} 5 Months From Now
+    Create 1 Test Dates For Booking Less Than 150 days
+    Move Profile to GDS    RU1AHK1SAO${test_date_1}/TYP-CWT/${mis_segment_type}

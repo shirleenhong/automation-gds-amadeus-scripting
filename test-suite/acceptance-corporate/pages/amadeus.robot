@@ -37,6 +37,9 @@ ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading']
 ${text_record_locator}     //div[contains(text(), 'Record Locator')]
 ${icon_processing}    //div[@class='processing']
 ${text_area_command}    //div[@class='crypticContainer']
+${button_officeId}   css=#office-id-button
+${popUp_oid}    css=#ngb-popover-0 
+${oid_YTOWL2101}    //a[contains(text(), 'YTOWL2101')]
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -536,3 +539,17 @@ Add Other Remarks
 Create MIS Segment With ${mis_segment_type} 5 Months From Now
     Create 1 Test Dates For Booking Less Than 150 days
     Move Profile to GDS    RU1AHK1SAO${test_date_1}/TYP-CWT/${mis_segment_type}
+
+Emulate To Leisure On Demand OID 
+    Click Element    ${button_officeId}
+    Wait Until Page Contains Element   ${popUp_oid}     20
+    Scroll Element Into View    ${oid_YTOWL2101} 
+    Wait Until Page Contains Element    ${oid_YTOWL2101}    20   
+    Click Element    ${oid_YTOWL2101}
+    Sleep    7
+    Select Window  title=YTOWL2101 - Amadeus Selling Platform Connect  
+    Wait Until Element Is Visible    ${tab_mainPage}    60
+    Click Element    ${button_command_page}
+    Wait Until Page Contains Element    ${input_commandText}    180
+    Set Test Variable    ${current_page}    Amadeus
+    

@@ -30,7 +30,8 @@ ${button_save}    //button[contains(text(), 'Save')]
 ${panel_remarks}    //div[@class='panel-title']//div[contains(text(), 'Remarks')]
 ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
-${button_itinerary_queue}    //button[contains(text(), 'Itinerary And Queue')]
+${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
+${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
 ${open_bracket}     [
 ${close_bracket}     ]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
@@ -38,9 +39,10 @@ ${close_bracket}     ]
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport
 @{fees_pages}    Fees
-@{queue_pages}    Queue    Follow-up Queue    OFC Documentation And Queue
+@{queue_pages}    Queue    Follow-up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
+${itinerary_and_queue_pages}    @{queue_pages}
 
 *** Keywords ***
 Enter Value
@@ -71,6 +73,23 @@ Click Full Wrap
     Set Test Variable    ${destination_selected}    no
     Set Test Variable    ${visa_complete}    no
     [Teardown]    Take Screenshot
+
+Click Itinerary And Queue
+    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Click Element    ${button_itinerary_queue} 
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Itinerary And Queue  
+    
+Click Send Itinerary And Queue
+    [Arguments]    ${close_corporate_test}=yes
+    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Scroll Element Into View     ${button_submit_pnr}
+    Click Button    ${button_submit_pnr}
+    Wait Until Element Is Not Visible     ${message_sendingItinerary}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    Set Test Variable    ${current_page}     CWT Corporate
+    Sleep    5
+    Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
@@ -141,12 +160,15 @@ Convert Month To MMM
 Navigate To Page ${destination_page}
      Set Test Variable    ${i}     1
      ${to_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${destination_page}
-     Set Test Variable    ${to_full_wrap}    
+     ${to_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${destination_page}
+     Set Test Variable    ${to_full_wrap}
+     Set Test Variable    ${to_itinerary_and_queue}
      : FOR     ${i}    IN RANGE   1    10
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${to_full_wrap}" == "True"    Navigate From Full Wrap    ${destination_page}
+     \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Queue    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
@@ -156,6 +178,7 @@ Navigate To Page ${destination_page}
 Navigate From Corp
      [Arguments]    ${destination_page}  
      Run Keyword If    "${to_full_wrap}" == "True"    Click Full Wrap
+     ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
     
 Navigate From Full Wrap

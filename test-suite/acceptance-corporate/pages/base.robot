@@ -33,6 +33,7 @@ ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
 ${button_itinerary_queue}    //button[contains(text(), 'Itinerary And Queue')]
 ${open_bracket}     [
 ${close_bracket}     ]
+${button_add_segment}    //button[contains(text(), 'Add Segment')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks

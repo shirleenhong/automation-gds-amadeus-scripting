@@ -14,7 +14,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -135,6 +135,11 @@ export class RemarksManagerService {
     return ids[0];
   }
 
+  getMachedRemarkByStaticText(format) {
+    const ids = this.outputItems.filter((out) => out.format.indexOf(format) >= 0).map((out) => out.id);
+    return this.matchedPlaceHolderValues.filter((m) => ids.indexOf(m.id) >= 0);
+  }
+
   hasCompleteKeys(map: Map<string, string>, keys: string[]) {
     if (map.size !== keys.length) {
       return false;
@@ -166,6 +171,7 @@ export class RemarksManagerService {
   }
 
   private async sendPnrToAmadeus(pnrResponse: any, additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>) {
+    console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
       await smartScriptSession.send(this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted));
     }

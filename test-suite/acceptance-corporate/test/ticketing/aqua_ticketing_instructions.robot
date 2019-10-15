@@ -9,16 +9,21 @@ Resource          ../../pages/base.robot
 Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
+Resource          ../../../resources/common/api-utilities.txt
+#Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    aqua_tkt_instruction
 
 *** Test Cases ***
 Verify That Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment And Not Ticketed Air Segments 
     [Tags]    us11219
     Login To Amadeus Sell Connect Acceptance
-    Create And Ticket PNR With Airline Code AC
+    Create PNR With Active Air Segments For Air Only Segments, Ticket 2nd TST
+    Ticket TST1
     Select Unticketed TST 2
     Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 2
-    Verify Ticketing Instruction Remarks Are Written For Unticketed Air Segments 3
-    [Teardown]    Close Browser
+    Verify Remarks Are Added Correctly In The PNR
     
 Verify That Aqua Ticketing Instructions Remark are Written for Multiple Unticketed Air Segments And Not Ticketed Air Segments
     [Tags]    us11219
@@ -27,7 +32,6 @@ Verify That Aqua Ticketing Instructions Remark are Written for Multiple Unticket
     Select All Unticketed TSTs
     Verify Ticketing Instruction Remarks Are Written For Multiple Unticketed Air Segments 2 To 4
     Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 5
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Air Segments With Limo, Hotel, and Car Segments
     [Tags]    us11219
@@ -38,7 +42,6 @@ Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Air Se
     Add 1 Car Segments
     Select Unticketed TST 1
     Verify Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment 2,6 Only
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segments, Limo, Hotel And Car Segments
     [Tags]    us11219
@@ -49,7 +52,6 @@ Verify That Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air 
     Add 1 Car Segments
     Verify Message No Unticketed Air Segment Is Displayed
     Verify Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segments, Limo, Hotel And Car Segments
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instructions Remark Are Written For One Limo Only Segment
     [Tags]    us11219
@@ -57,7 +59,7 @@ Verify That Aqua Ticketing Instructions Remark Are Written For One Limo Only Seg
     Create PNR With 1 Limo Segments
     Select Unticketed Limo Segment 2
     Verify Aqua Ticketing Instructions Remark Are Written For Limo Segment 2 Only
-    [Teardown]    Close Browser
+    
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Limo Only Segment
     [Tags]    us11219
@@ -65,7 +67,6 @@ Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Limo Onl
     Create PNR With 2 Limo Segments
     Select All Unticketed Limo Segment
     Verify Aqua Ticketing Instructions Remark Are Written For Limo Segment 2-3 Only
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instructions Remark Are Written For One Car Only Segment
     [Tags]    us11219
@@ -73,7 +74,6 @@ Verify That Aqua Ticketing Instructions Remark Are Written For One Car Only Segm
     Create PNR With 1 Car Segments
     Select Unticketed Car Segment 2
     Verify Aqua Ticketing Instructions Remark Are Written For Car Segment 2 Only
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Car Only Segment
     [Tags]    us11219
@@ -81,15 +81,13 @@ Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Car Only
     Create PNR With 2 Car Segments
     Select All Unticketed Car Segment
     Verify Aqua Ticketing Instructions Remark Are Written For Car Segment 2-3 Only
-    [Teardown]    Close Browser
-
+    
 Verify That Aqua Ticketing Instructions Remark Are Written For One Hotel Only Segment
     [Tags]    us11219
     Login To Amadeus Sell Connect Acceptance
     Create PNR With 1 Hotel Segments
     Select Unticketed Hotel Segment 2
     Verify Aqua Ticketing Instructions Remark Are Written For Hotel Segment 2 Only
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Hotel Only Segment
     [Tags]    us11219
@@ -97,7 +95,6 @@ Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Hotel On
     Create PNR With 2 Hotel Segments
     Select All Unticketed Hotel Segment
     Verify Aqua Ticketing Instructions Remark Are Written For Hotel Segment 2-3 Only
-    [Teardown]    Close Browser
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Hotel And Car Only Segments
     [Tags]     us11219
@@ -106,4 +103,3 @@ Verify That Aqua Ticketing Instructions Remark Are Written For Hotel And Car Onl
     Add 1 Car Segments
     Select All Unticketed Hotel Segment
     Verify Aqua Ticketing Instructions Remark Are Written For Hotel Only Segments
-    [Teardown]    Close Browser

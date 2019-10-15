@@ -178,8 +178,8 @@ Select Client Reporting Fields To Be Written
     [Arguments]    @{reporting_checkbox}
     Wait Until Page Contains Element    ${checkbox_clientReporting}
     : FOR    ${reporting_checkbox}    IN    @{reporting_checkbox}
-    \    Select Checkbox    ${tab_clientReporting}[${reporting_checkbox}]${checkbox_clientReporting}
-    Take Screenshot
+    \    Select Checkbox    ${tab_clientReporting}${open_bracket}${reporting_checkbox}${close_bracket}${checkbox_clientReporting}
+    [Teardown]    Take Screenshot
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Finish PNR
@@ -356,29 +356,30 @@ Verify Country Of Destination Is Mapped In The FS Remark
     Verify Expected Remarks Are Written In The PNR
     
 Select Default Value For Routing Code
-    Navigate To Page Reporting Remarks
+    Run Keyword If    "${destination_selected}" == "no"   Navigate To Page Reporting Remarks
     Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
     Set Test Variable    ${routing_code_selected}    yes
-    [Teardown]    Take Screenshot
+    [Teardown]    Run Keywords    Take Screenshot    Collapse Reporting Panel
     
 Select Default Value For Destination Code
+    Navigate To Page Reporting Remarks
     ${is_destination_present}    Run Keyword And Return Status    Page Should Contain Element    ${input_destination} 
     Run Keyword If    "${is_destination_present}" == "True"   Enter Destination Code Default Value
     Set Test Variable    ${destination_selected}    yes
-    [Teardown]    Take Screenshot
+    [Teardown]    Run Keywords    Take Screenshot    Collapse Reporting Panel
 
 Enter Destination Code Default Value        
     ${elements_count}    Get Element Count    ${input_destination} 
     Set Test Variable    ${elements_count}
         : FOR    ${destination_index}    IN RANGE    0    ${elements_count}
 	    \    ${destination_index}    Evaluate    ${destination_index} + 1
-	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    YUL
+	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    YUL
     
 Select Destination Code Values
 	[Arguments]    @{destination_code}
 	Set Test Variable    ${destination_index}    1
 	: FOR    ${destination_code}    IN    @{destination_code}
-	    \    Enter Value    ${form_segments}[${destination_index}]${input_destination}    ${destination_code}
+	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
 		\    ${destination_index}    Evaluate    ${destination_index} + 1
 	
 Populate Destination Code Fields For ${tst_no} TST

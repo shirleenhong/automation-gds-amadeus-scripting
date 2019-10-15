@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    mettler
@@ -21,7 +22,6 @@ Verify That Air Only PNRs For Client Mettler Toledo Is Correctly Queued For Appr
     Create PNR With Active Air Segments For Client Mettler Toledo With Udid 50 MTMS-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Car Only PNRs For Client Mettler Toledo Is Correctly Queued For Approval
     [Tags]    us13271
@@ -29,7 +29,6 @@ Verify That Car Only PNRs For Client Mettler Toledo Is Correctly Queued For Appr
     Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Hotel Only PNRs For Client Mettler Toledo Is Correctly Queued For Approval
     [Tags]    us13271
@@ -37,7 +36,6 @@ Verify That Hotel Only PNRs For Client Mettler Toledo Is Correctly Queued For Ap
     Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That Mix Segments PNRs For Client Mettler Toledo Is Correctly Queued For Approval
     [Tags]    us13271
@@ -45,7 +43,6 @@ Verify That Mix Segments PNRs For Client Mettler Toledo Is Correctly Queued For 
     Create PNR For Client Mettler Toledo With Udid 50 MTMS-NORAM, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Mettler Toledo With U*50 Guest Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,7 +50,6 @@ Verify That PNRs For Client Mettler Toledo With U*50 Guest Do Not Go Thru Approv
     Create PNR For Client Mettler Toledo With Udid 50 Guest, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
     
 Verify That PNRs For Client Mettler Toledo Can Skip Approval
     [Tags]    us13271
@@ -61,4 +57,3 @@ Verify That PNRs For Client Mettler Toledo Can Skip Approval
     Create PNR With Active Air Segments For Client Mettler Toledo With Udid 50 MTMS-NORAM, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser

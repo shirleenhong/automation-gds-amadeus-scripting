@@ -15,7 +15,7 @@ import { RemarkService } from '../service/leisure/remark-remark.service';
 import { ValidateModel } from '../models/validate-model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { MessageComponent } from '../shared/message/message.component';
-import { VisaPassportRemarkService } from '../service/leisure/visa-passport-remark.service';
+import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
 import { InvoiceRemarkService } from '../service/leisure/invoice-remark.service';
 import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { ItineraryRemarkService } from '../service/leisure/itinerary-remark.service';

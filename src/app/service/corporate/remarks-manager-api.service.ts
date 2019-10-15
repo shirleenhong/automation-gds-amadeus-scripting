@@ -16,7 +16,7 @@ export class RemarksManagerApiService {
   isTokenExpired = true;
   token: string;
 
-  constructor(private httpClient: HttpClient, private pnrService: PnrService) {}
+  constructor(private httpClient: HttpClient, private pnrService: PnrService) { }
 
   async getToken() {
     if (this.isTokenExpired) {

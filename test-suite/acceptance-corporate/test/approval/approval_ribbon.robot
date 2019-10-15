@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    ribbon
@@ -21,7 +22,7 @@ Verify That Air Only PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, VI
     Create PNR With Active Air Segments For Client Ribbon With Any Udid 50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    
     
 Verify That Mixed Segment PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S Is Correctly Queued To Approval Queue
     [Tags]    us13271
@@ -29,7 +30,7 @@ Verify That Mixed Segment PNRs For Client Ribbon With Any U*50 Except GUEST-NORA
     Create PNR With Active Air Segments For Client Ribbon With Any Udid 50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S, Mixed Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    
     
 Verify That Air Only PNRs For Client Ribbon With U*50 As GUEST-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -37,7 +38,7 @@ Verify That Air Only PNRs For Client Ribbon With U*50 As GUEST-NORAM Do Not Go T
     Create PNR For Client Ribbon With Udid 50 GUEST-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    
     
 Verify That Air Only PNRs For Client Ribbon With U*50 As VIP-CA Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -45,7 +46,7 @@ Verify That Air Only PNRs For Client Ribbon With U*50 As VIP-CA Do Not Go Thru A
     Create PNR For Client Ribbon With Udid 50 VIP-CA, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    
     
 Verify That Air Only PNRs For Client Ribbon With U*50 As VIP-CA-S Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,7 +54,7 @@ Verify That Air Only PNRs For Client Ribbon With U*50 As VIP-CA-S Do Not Go Thru
     Create PNR For Client Ribbon With Udid 50 VIP-CA-S, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    
     
 Verify That Hotel Only PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -61,7 +62,7 @@ Verify That Hotel Only PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, 
     Create PNR With Active Air Segments For Client Ribbon With Any Udid 50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    
     
 Verify That Car Only PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -69,4 +70,4 @@ Verify That Car Only PNRs For Client Ribbon With Any U*50 Except GUEST-NORAM, VI
     Create PNR With Active Air Segments For Client Ribbon With Any Udid 50 Except GUEST-NORAM, VIP-CA, or VIP-CA-S, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Logout To Amadeus Sell Connect
+    

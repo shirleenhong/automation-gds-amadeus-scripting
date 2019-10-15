@@ -32,6 +32,7 @@ import { QueueComponent } from './queue/queue.component';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
 import { OfcRemarkService } from '../service/corporate/ofc-remark.service';
 import { CounselorDetail } from '../globals/counselor-identity';
+import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -75,7 +76,8 @@ export class CorporateComponent implements OnInit {
     private amadeusQueueService: AmadeusQueueService,
     private queueService: QueueService,
     private councelorDetail: CounselorDetail,
-    private ofcRemarkService: OfcRemarkService
+    private ofcRemarkService: OfcRemarkService,
+    private visaPassportService: VisaPassportRemarkService,
   ) {
     this.initData();
   }
@@ -248,6 +250,8 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.sendU70Remarks();
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+    this.visaPassportService.writeCorporateRemarks(this.corpRemarksComponent.viewPassportComponent.visaPassportFormGroup);
+
     this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
     this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager
@@ -256,7 +260,7 @@ export class CorporateComponent implements OnInit {
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-    // debugger;
+
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
@@ -267,6 +271,7 @@ export class CorporateComponent implements OnInit {
     if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+      this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
@@ -308,14 +313,20 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
     }
-    try {
-      this.isPnrLoaded = false;
-      this.getPnr();
-      this.workflow = '';
-    } catch (error) {
-      this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error, 'Error', 'Error');
-      console.log(JSON.stringify(error));
-    }
+
+    await this.rms.submitToPnr().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
   }
 }

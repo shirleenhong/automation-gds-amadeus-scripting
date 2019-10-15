@@ -22,7 +22,7 @@ ${label_command_page}    //span[contains(@class, 'title cryptic')]
 ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
 ${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
-${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus')]
+${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus/?corporate')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
 ${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -37,6 +37,9 @@ ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading']
 ${text_record_locator}     //div[contains(text(), 'Record Locator')]
 ${icon_processing}    //div[@class='processing']
 ${text_area_command}    //div[@class='crypticContainer']
+${button_officeId}   css=#office-id-button
+${popUp_oid}    css=#ngb-popover-0 
+${oid_YTOWL2101}    //a[contains(text(), 'YTOWL2101')]
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -76,12 +79,14 @@ Open CA Corporate Test
     Click Element    ${menu_corp_test}
     Wait Until Element Is Visible    ${header_corp_test}    60
     Wait Until Element Is Visible    ${window_corp_test}    60
+    Sleep    10
     Select Frame    ${window_corp_test}
     Set Test Variable    ${current_page}    CWT Corporate
     Set Test Variable    ${pnr_submitted}    no
     Set Test Variable    ${pnr_details}     ${EMPTY}
     Set Test Variable    ${ticketing_complete}     no
     Set Test Variable     ${ticketing_details}    no
+    Set Test Variable     ${actual_counselor_identity}    ${EMPTY}
 
 Add Single BSP Segment And Store Fare
     @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
@@ -122,7 +127,7 @@ Logout To Amadeus Sell Connect
     Wait Until Element Is Visible    ${popUp_sign_out}    30
     Click Element    ${button_sign_out}
     Wait Until Element Is Visible    ${input_username}    30
-    Close Browser
+    Close All Browsers
 
 Get PNR Details
     Wait Until Element Is Not Visible    ${overlay_loader}    10
@@ -132,6 +137,7 @@ Get PNR Details
     Press Key    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
     Wait Until Element Is Not Visible    ${overlay_loader}    10
+    Sleep    1
     ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Set Test Variable    ${pnr_details}    ${pnr_details}
@@ -189,8 +195,6 @@ Verify Specific Remark Is Written In The PNR
 
 Verify Specific Remark Is Not Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
-    Wait Until Page Contains Element    ${popUp_pnr_display}    30
-    ${pnr_details}    Get Text    ${popUp_pnr_display}
     Log    ${pnr_details}
     Run Keyword And Continue On Failure    Run Keyword If    "${multi_line_remark}" == "True"    Remove Line Break And Spaces    ${pnr_details}    ${expected_remark}
     Run Keyword And Continue On Failure    Should Not Contain    ${pnr_details}    ${expected_remark}
@@ -349,6 +353,15 @@ Create And Ticket 2nd TST With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    TRANS
     
+Ticket TST${tst_no}
+    Enter Cryptic Command    RFCWTTEST
+    Enter Cryptic Command    ER
+    Sleep    4
+    Get Record Locator Value
+    Enter Cryptic Command    TTP/T${tst_no}
+    Sleep    4
+    Enter Cryptic Command    RT${actual_record_locator}
+    
 Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
     Create 4 Test Dates
@@ -456,8 +469,7 @@ Add ${number_of_segments} Rail Segments
     \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
@@ -474,8 +486,7 @@ Create PNR With Active Air Segments For ${client_data}
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
 Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}   
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
@@ -483,8 +494,7 @@ Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_da
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
 Create PNR For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
@@ -525,3 +535,21 @@ Add Other Remarks
     \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${other_rmk_${i}}
     \    Run Keyword If    "${exists}" == "True" and "${other_rmk_${i}}" != "None"     Enter Cryptic Command    ${other_rmk_${i}}
     \    Exit For Loop If    "${exists}" == "False"
+
+Create MIS Segment With ${mis_segment_type} 5 Months From Now
+    Create 1 Test Dates For Booking Less Than 150 days
+    Move Profile to GDS    RU1AHK1SAO${test_date_1}/TYP-CWT/${mis_segment_type}
+
+Emulate To Leisure On Demand OID 
+    Click Element    ${button_officeId}
+    Wait Until Page Contains Element   ${popUp_oid}     20
+    Scroll Element Into View    ${oid_YTOWL2101} 
+    Wait Until Page Contains Element    ${oid_YTOWL2101}    20   
+    Click Element    ${oid_YTOWL2101}
+    Sleep    7
+    Select Window  title=YTOWL2101 - Amadeus Selling Platform Connect  
+    Wait Until Element Is Visible    ${tab_mainPage}    60
+    Click Element    ${button_command_page}
+    Wait Until Page Contains Element    ${input_commandText}    180
+    Set Test Variable    ${current_page}    Amadeus
+    

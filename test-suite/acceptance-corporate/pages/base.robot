@@ -21,7 +21,7 @@ ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
-${list_counselor_identity}    css=#selCounselorIdentity
+${list_counselor_identity}    //select[@id='selCounselorIdentity']
 ${input_ticketingDate}    css=#dtxtTicketDate
 ${checkbox_onHold}    css=#chkOnHold
 ${panel_fees}    //div[@class='panel-title']//div[contains(text(), 'Fees')]
@@ -30,7 +30,19 @@ ${button_save}    //button[contains(text(), 'Save')]
 ${panel_remarks}    //div[@class='panel-title']//div[contains(text(), 'Remarks')]
 ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
-${button_itinerary_queue}    //button[contains(text(), 'Itinerary And Queue')]
+${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
+${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
+${open_bracket}     [
+${close_bracket}     ]
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
+@{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
+@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport
+@{fees_pages}    Fees
+@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
+@{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
+@{full_wrap_pages}    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
+${itinerary_and_queue_pages}    Itinerary and Queue    @{queue_pages}
 
 *** Keywords ***
 Enter Value
@@ -44,6 +56,7 @@ Close CA Corporate Test
     Unselect Frame
     Wait Until Element Is Not Visible    ${overlay_loader}    20
     Wait Until Element Is Visible    ${header_corp_test}    50
+    Sleep    5
     Click Element    ${button_close}
     Set Test Variable    ${current_page}    Amadeus
 
@@ -55,11 +68,33 @@ Click Full Wrap
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    Full Wrap PNR
     Set Test Variable    ${ticketing_complete}    no
+    Set Test Variable    ${ofc_documentation_complete}     no
     Set Test Variable    ${routing_code_selected}    no
     Set Test Variable    ${destination_selected}    no
+    Set Test Variable    ${visa_complete}    no
+    [Teardown]    Take Screenshot
+
+Click Itinerary And Queue
+    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Click Element At Coordinates    ${button_itinerary_queue}    0    0 
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Wait Until Element Is Visible    ${select_transaction}      30
+    Set Test Variable    ${current_page}    Itinerary And Queue
+    [Teardown]    Take Screenshot  
+    
+Click Send Itinerary And Queue
+    [Arguments]    ${close_corporate_test}=yes
+    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Scroll Element Into View     ${button_submit_pnr}
+    Click Button    ${button_submit_pnr}
+    Wait Until Element Is Not Visible     ${message_sendingItinerary}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    Set Test Variable    ${current_page}     CWT Corporate
+    Sleep    5
+    Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
 
 Click Reporting Panel
-    Wait Until Element Is Visible    ${panel_reporting}    60
+    Wait Until Element Is Visible    ${panel_payment}     60
     Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
@@ -126,67 +161,88 @@ Convert Month To MMM
 
 Navigate To Page ${destination_page}
      Set Test Variable    ${i}     1
+     ${to_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${destination_page}
+     ${to_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${destination_page}
+     Set Test Variable    ${to_full_wrap}
+     Set Test Variable    ${to_itinerary_and_queue}
      : FOR     ${i}    IN RANGE   1    10
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Full Wrap PNR" and "${destination_page}" != "Full Wrap PNR"    Navigate From Full Wrap    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Payment" and "${destination_page}" != "Payment"    Navigate From Payment    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Reporting" or "${current_page}" == "BSP Reporting" or "${current_page}" == "Non BSP Reporting" or "${current_page}" == "Matrix Reporting" or "${current_page}" == "Waivers" or "${current_page}" == "Reporting Remarks"   Navigate From Reporting    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions"    Navigate From Ticketing    ${destination_page}
-     \    Run Keyword If    "${current_page}" == "Fees" and "${destination_page}" != "Fees"    Navigate From Fees   ${destination_page}
+     \    Run Keyword If    "${to_full_wrap}" == "True"    Navigate From Full Wrap    ${destination_page}
+     \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Queue    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
-     \    Run Keyword If    "${current_page}" == "Remarks" or "${current_page}" == "Document PNR"    Navigate From Remarks    ${destination_page}  
-     \    Run Keyword If    "${current_page}" == "Queue" or "${current_page}" == "Follow-Up Queue"    Navigate From Queue    ${destination_page}  
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
-     Log    ${current_page}
-     Log    ${destination_page}   
+     Should Be Equal   ${current_page}    ${destination_page}
      
 Navigate From Corp
-     [Arguments]    ${destination_page}
-     Run Keyword If    "${destination_page}" == "Full Wrap PNR" or "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions" or "${destination_page}" == "Fees" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks" or "${destination_page}" == "Document PNR" or "${destination_page}" == "Follow-Up Queue"
-     ...    Click Full Wrap
+     [Arguments]    ${destination_page}  
+     Run Keyword If    "${to_full_wrap}" == "True"    Click Full Wrap
+     ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
     
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
-    Run Keyword If    "${destination_page}" == "Payment" or "${destination_page}" == "Non BSP Processing" or "${destination_page}" == "Add Accounting Line"    Click Payment Panel
-    ...    ELSE IF    "${destination_page}" == "Reporting" or "${destination_page}" == "Matrix Reporting" or "${destination_page}" == "BSP Reporting" or "${destination_page}" == "Non BSP Reporting" or "${destination_page}" == "Waivers" or "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
-    ...    ELSE IF    "${destination_page}" == "Ticketing" or "${destination_page}" == "Ticketing Line" or "${destination_page}" == "Ticketing Instructions"       Click Ticketing Panel
-    ...    ELSE IF    "${destination_page}" == "Fees"    Click Fees Panel
-    ...    ELSE IF    "${destination_page}" == "Seats" or "${destination_page}" == "IRD Remarks" or "${destination_page}" == "Document PNR"   Click Remarks Panel
-    ...    ELSE IF    "${destination_page}" == "Follow-Up Queue"    Click Queue Panel
+    ${to_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${destination_page}
+    ${to_reporting}    Run Keyword And Return Status    Should Contain    ${reporting_pages}    ${destination_page}
+    ${to_remarks}    Run Keyword And Return Status    Should Contain    ${remarks_pages}    ${destination_page}
+    ${to_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${destination_page}
+    ${to_queue}    Run Keyword And Return Status    Should Contain    ${queue_pages}    ${destination_page}
+    ${to_ticketing}    Run Keyword And Return Status    Should Contain    ${ticketing_pages}    ${destination_page}
+    Run Keyword If    "${to_payment}" == "True"    Navigate From Payment    ${destination_page}    
+    ...    ELSE IF    "${to_reporting}" == "True"    Navigate From Reporting    ${destination_page}
+    ...    ELSE IF    "${to_remarks}" == "True"   Navigate From Remarks    ${destination_page}
+    ...    ELSE IF    "${to_fees}" == "True"    Click Fees Panel
+    ...    ELSE IF    "${to_queue}" == "True"    Navigate From Queue    ${destination_page}
+    ...    ELSE IF    "${to_ticketing}" == "True"       Navigate From Ticketing    ${destination_page}
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
     [Arguments]    ${destination_page}
+    ${in_payment}    Run Keyword And Return Status    Should Contain     ${payment_pages}    ${current_page}
+    Run Keyword If    "${in_payment}" == "False"    Click Payment Panel
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
     ...   ELSE     Collapse Payment Panel
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
+    ${in_reporting}    Run Keyword And Return Status    Should Contain     ${reporting_pages}    ${current_page}
+    Run Keyword If    "${in_reporting}" == "False"    Click Reporting Panel
     Run Keyword If    "${destination_page}" == "BSP Reporting"    Click BSP Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Non BSP Reporting"    Click Non BSP Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
-    ...    ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
     ...    ELSE    Collapse Reporting Panel
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
+    ${in_remarks}    Run Keyword And Return Status    Should Contain     ${remarks_pages}    ${current_page}
+    Run Keyword If    "${in_remarks}" == "False"    Click Remarks Panel
     Run Keyword If    "${destination_page}" == "Document PNR"    Click Document PNR Tab
-    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel   
-    Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
+    ...    ELSE IF    "${destination_page}" == "Seats"    Click Seats Tab
+    ...    ELSE IF    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
+    ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
+    ...    ELSE    Collapse Remarks Panel
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}
+    ${in_ticketing}    Run Keyword And Return Status    Should Contain     ${ticketing_pages}    ${current_page}
+    Run Keyword If    "${in_ticketing}" == "False"    Click Ticketing Panel
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
-    ...   ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
     ...   ELSE   Collapse Ticketing Panel
+
+Navigate From Queue
+    [Arguments]    ${destination_page}
+    ${in_queue}    Run Keyword And Return Status    Should Contain     ${queue_pages}    ${current_page}
+    Run Keyword If    "${in_queue}" == "False"    Click Queue Panel
+    Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
+    ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
+    ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
+    ...    ELSE     Collapse Queue Panel
 
 Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no    
@@ -200,7 +256,9 @@ Submit To PNR
     Run Keyword If    "${routing_code_selected}" == "no"     Select Default Value For Routing Code
     Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks"   
+    Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
+    Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
+    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks" or "${current_page}" == "OFC Documentation And Queue"   
     ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
     
 Click Ticketing Panel
@@ -242,24 +300,22 @@ Click Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Remarks
+    
+Collapse Remarks Panel
+    Wait Until Element Is Visible    ${panel_remarks}    60
+    Click Element    ${panel_remarks}
+    Set Test Variable    ${current_page}    Full Wrap PNR
 
 Click Queue Panel
     Wait Until Element Is Visible    ${panel_queue}    60
     Click Element    ${panel_queue}
     Set Test Variable    ${current_page}    Queue
     
-Navigate From Queue
-    [Arguments]    ${destination_page}
-    Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
-    Run Keyword If    "${destination_page}" == "Ticketing Line"    Click Ticketing Panel
-    Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
-
-Get Client Name
-    [Arguments]    ${test_data_string}
-    @{split_string}    Split String     ${test_data_string}    ${SPACE}
-    ${client_name}    Convert To Lowercase    ${split_string[1]}
-    [Return]    ${client_name}
-
+Collapse Queue Panel
+    Wait Until Element Is Visible    ${panel_queue}    60
+    Click Element    ${panel_queue}
+    Set Test Variable    ${current_page}    Full Wrap PNR
+    
 Get Other Remark Values From Json
     [Arguments]    ${json_file_object}     ${client_data}
     : FOR    ${i}    IN RANGE    0     99
@@ -277,6 +333,15 @@ Get Expected Remark Values From Json
     \    ${expected_remark}     Run Keyword If    "${exists}" == "True"     Get Json Value As String    ${json_file_object}    $.['${client_data}'].ExpectedRemark${i}
     \    Set Test Variable    ${expected_remark_${i}}     ${expected_remark}
     \    Exit For Loop If    "${exists}" == "False" or "${expected_remark_${i}}" == "None" 
+
+Get Unexpected Remark Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    : FOR    ${i}    IN RANGE    0     99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Get Json Value As String    ${json_file_object}    $.['${client_data}'].UnexpectedRemark${i}
+    \    ${unexpected_remark}     Run Keyword If    "${exists}" == "True"     Get Json Value As String    ${json_file_object}    $.['${client_data}'].UnexpectedRemark${i}
+    \    Set Test Variable    ${unexpected_remark_${i}}     ${unexpected_remark}
+    \    Exit For Loop If    "${exists}" == "False" or "${unexpected_remark_${i}}" == "None" 
 
 Get Test Data From Json     
     [Arguments]    ${file_name}     ${client_data}
@@ -322,6 +387,7 @@ Get Expected Approval Values From Json
     ${onhold_rmk}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].OnHoldRmk
     ${queue_tkt}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToTkt
     Get Expected Remark Values From Json    ${json_file_object}     ${client_data}
+    Get Unexpected Remark Values From Json    ${json_file_object}     ${client_data}
     Set Test Variable    ${with_ui}
     Set Test Variable    ${ignore_approval}
     Set Test Variable    ${primary_approval_reason}
@@ -345,3 +411,25 @@ Get Air Segment Values From Json
     \    Set Test Variable    ${airline_code_${i}}    ${airline_code}
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
     \    ${i}    Evaluate    ${i} + 1
+
+Verify Expected Remarks Are Written In The PNR
+    : FOR    ${i}    IN RANGE   0    99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${expected_remark_${i}}
+    \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}
+    \    Exit For Loop If    "${exists}" == "False"
+   
+Verify Unexpected Remarks Are Not Written In The PNR
+    : FOR    ${i}    IN RANGE   0    99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${unexpected_remark_${i}}
+    \    Run Keyword If    "${exists}" == "True" and "${unexpected_remark_${i}}" != "None"     Verify Specific Remark Is Not Written In The PNR   ${unexpected_remark_${i}}
+    \    Exit For Loop If    "${exists}" == "False"  
+
+Verify Remarks Are Added Correctly In The PNR
+    Finish PNR   queueing=yes
+    Verify Expected Remarks Are Written In The PNR
+    
+Verify Remarks Are Not Found In The PNR
+    Finish PNR   queueing=yes
+    Verify Unexpected Remarks Are Not Written In The PNR

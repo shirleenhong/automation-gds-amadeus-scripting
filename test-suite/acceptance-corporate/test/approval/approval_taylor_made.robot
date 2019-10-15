@@ -10,6 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    taylor
@@ -21,7 +22,7 @@ Verify That PNRs For Client Taylor Made Are Queued Correctly When 1st Primary Re
     Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select First Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Taylor Made Are Queued Correctly When 2nd Primary Reason Is Selected
     [Tags]    us13271
@@ -29,7 +30,7 @@ Verify That PNRs For Client Taylor Made Are Queued Correctly When 2nd Primary Re
     Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Second Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Taylor Made Are Queued Correctly When 3rd Primary Reason Is Selected
     [Tags]    us13271
@@ -37,7 +38,7 @@ Verify That PNRs For Client Taylor Made Are Queued Correctly When 3rd Primary Re
     Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Third Primary Reason
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Taylor Can Skip Approval
     [Tags]    us13271
@@ -45,7 +46,7 @@ Verify That PNRs For Client Taylor Can Skip Approval
     Create PNR With Active Air Segments For Client Taylor Made Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That Car Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -53,7 +54,7 @@ Verify That Car Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     Create PNR For Client Taylor Made, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -61,7 +62,7 @@ Verify That Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Proce
     Create PNR For Client Taylor Made, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That Car And Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -69,7 +70,7 @@ Verify That Car And Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approv
     Create PNR For Client Taylor Made, Car And Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Taylor Made With Udid50 CEO-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -77,7 +78,7 @@ Verify That PNRs For Client Taylor Made With Udid50 CEO-NORAM Do Not Go Thru App
     Create PNR With Active Air Segments For Client Taylor Made With Udid50 CEO-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Taylor Made With Udid50 SRVP-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -85,7 +86,7 @@ Verify That PNRs For Client Taylor Made With Udid50 SRVP-NORAM Do Not Go Thru Ap
     Create PNR With Active Air Segments For Client Taylor Made With Udid50 SRVP-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    
     
 Verify That PNRs For Client Taylor Made With Udid50 VP-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -93,4 +94,4 @@ Verify That PNRs For Client Taylor Made With Udid50 VP-NORAM Do Not Go Thru Appr
     Create PNR With Active Air Segments For Client Taylor Made With Udid50 VP-NORAM, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]     Close Browser
+    

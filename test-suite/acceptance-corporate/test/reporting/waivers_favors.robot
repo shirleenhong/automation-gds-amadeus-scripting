@@ -7,6 +7,7 @@ Library           Screenshot
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/base.robot
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify U63 Is Written For Single Ticket With Single Codes
@@ -16,7 +17,7 @@ Verify U63 Is Written For Single Ticket With Single Codes
     Select Waivers Code Option For Single Ticket
     Verify That Waivers Code Is Written In The PNR
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify U63 Is Written For Single Ticket With Multiple Codes
     [Tags]    us12284
@@ -25,7 +26,7 @@ Verify U63 Is Written For Single Ticket With Multiple Codes
     Select Multiple Waiver Code Options For Single Ticket
     Verify That Multiple Waiver Codes Are Written In The PNR For Single Ticket
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
  
 Verify U63 Is Written For Multiple Tickets With Multiple Codes  
     [Tags]    us12284
@@ -34,7 +35,7 @@ Verify U63 Is Written For Multiple Tickets With Multiple Codes
     Select Multiple Waiver Code Options For Multiple Tickets
     Verify That Multiple Waiver Codes Are Written In The PNR For Multiple Tickets
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    
     
 Verify U63 Is Written For Multiple Tickets With Multiple Codes That Has Values
     [Tags]    us12284
@@ -43,4 +44,4 @@ Verify U63 Is Written For Multiple Tickets With Multiple Codes That Has Values
     Select Multiple Waiver Code Options With Values For Multiple Tickets
     Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multiple Tickets
     Delete Fare and Itinerary
-    [Teardown]    Close Browser
+    

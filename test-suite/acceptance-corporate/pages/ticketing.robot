@@ -114,7 +114,7 @@ Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${is_ticketing_displayed}" == "True"    Click Ticketing Line Tab   ELSE    Navigate To Page Ticketing Line   
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
-    [Teardown]    Take Screenshot
+    [Teardown]    Run Keywords    Take Screenshot    Collapse Ticketing Panel
     
 Fill Up Ticketing Panel With PNR ON HOLD
     Navigate To Page Ticketing Line
@@ -340,13 +340,6 @@ Verify PNR Approval Is Processed Correctly
     Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1
-
-Verify Expected Remarks Are Written In The PNR
-    : FOR    ${i}    IN RANGE   0    99
-    \    ${i}    Evaluate    ${i} + 1
-    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${expected_remark_${i}}
-    \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}
-    \    Exit For Loop If    "${exists}" == "False"
 
 Verify PNR Is Queued For Approval
     Open Command Page

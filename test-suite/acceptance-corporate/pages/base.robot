@@ -39,10 +39,10 @@ ${close_bracket}     ]
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport
 @{fees_pages}    Fees
-@{queue_pages}    Queue    Follow-up Queue    OFC Documentation And Queue    Queue Placement
+@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
-${itinerary_and_queue_pages}    @{queue_pages}
+${itinerary_and_queue_pages}    Itinerary and Queue    @{queue_pages}
 
 *** Keywords ***
 Enter Value
@@ -76,9 +76,11 @@ Click Full Wrap
 
 Click Itinerary And Queue
     Wait Until Page Contains Element   ${button_full_wrap}    180 
-    Click Element    ${button_itinerary_queue} 
+    Click Element At Coordinates    ${button_itinerary_queue}    0    0 
     Wait Until Element Is Visible    ${button_submit_pnr}    30
-    Set Test Variable    ${current_page}    Itinerary And Queue  
+    Wait Until Element Is Visible    ${select_transaction}      30
+    Set Test Variable    ${current_page}    Itinerary And Queue
+    [Teardown]    Take Screenshot  
     
 Click Send Itinerary And Queue
     [Arguments]    ${close_corporate_test}=yes
@@ -239,6 +241,7 @@ Navigate From Queue
     Run Keyword If    "${in_queue}" == "False"    Click Queue Panel
     Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
+    ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
     ...    ELSE     Collapse Queue Panel
 
 Finish PNR
@@ -253,7 +256,7 @@ Submit To PNR
     Run Keyword If    "${routing_code_selected}" == "no"     Select Default Value For Routing Code
     Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
-    Run Keyword If    "${visa_complete} == "no"    Fill Up Visa And Passport Fields With Default Values
+    Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
     Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks" or "${current_page}" == "OFC Documentation And Queue"   
     ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        

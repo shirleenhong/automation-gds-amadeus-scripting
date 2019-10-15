@@ -8,7 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/remarks.robot
 Resource          ../../pages/base.robot
 Resource          ../../../resources/common/api-utilities.txt
-# Test Teardown     Close All Browsers
+Test Teardown     Close All Browsers
 
 *** Variables ***
 ${test_file_name}    follow_up_queue
@@ -78,5 +78,3 @@ Verify That PNR Is Queued To Correct Transaction Type And Personal Queue For Lei
     Populate Personal Queue And Select Itinerary Transaction Type
     Verify Team Queue Is Not Displayed For Leisure On Demand
     # Verify Leisure On Demand PNR Is Queued To Correct Queues
-    
-

@@ -20,7 +20,6 @@ export class CorpRemarksService {
   ) {}
 
   /**
-   * WIP
    * US11820: Write or prepare the seats for the PNR
    * based on specific conditions. See US11820.
    *

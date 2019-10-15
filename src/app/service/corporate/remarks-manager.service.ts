@@ -135,6 +135,11 @@ export class RemarksManagerService {
     return ids[0];
   }
 
+  getMachedRemarkByStaticText(format) {
+    const ids = this.outputItems.filter((out) => out.format.indexOf(format) >= 0).map((out) => out.id);
+    return this.matchedPlaceHolderValues.filter((m) => ids.indexOf(m.id) >= 0);
+  }
+
   hasCompleteKeys(map: Map<string, string>, keys: string[]) {
     if (map.size !== keys.length) {
       return false;

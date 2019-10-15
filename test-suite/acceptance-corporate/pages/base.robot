@@ -69,6 +69,7 @@ Click Full Wrap
     Set Test Variable    ${ofc_documentation_complete}     no
     Set Test Variable    ${routing_code_selected}    no
     Set Test Variable    ${destination_selected}    no
+    Set Test Variable    ${actual_counselor_identity}    ${EMPTY}
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60

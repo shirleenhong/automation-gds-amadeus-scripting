@@ -483,8 +483,7 @@ Create PNR With Active Air Segments For ${client_data}
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
 Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}   
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
@@ -492,8 +491,7 @@ Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_da
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
 Create PNR For ${client_data}
-    ${client_name}    Get Client Name    ${client_data}
-    Get Test Data From Json    ${CURDIR}${/}test_data/${client_name}_test_data    ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments

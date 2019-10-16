@@ -151,7 +151,7 @@ export class SeatsFormComponent implements OnInit {
         seatModel.segmentIds = this.seatsForm.get('segment').value;
         if (i === 2) {
           seatModel.type = this.seatsForm.get('seatType').value;
-        } else {
+        } else if (i === 5) {
           seatModel.number = this.seatsForm.get('seatNumber').value;
         }
         this.selectedItems.push(seatModel);

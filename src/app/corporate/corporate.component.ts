@@ -306,11 +306,14 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-
+    const remarkCollection = new Array<RemarkGroup>();
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      remarkCollection.push(this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm));
     }
 
     await this.rms.submitToPnr().then(

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UtilHelper } from '../../helper/util.helper';
 import { ItineraryInvoiceQueue } from './itinerary-invoice-queue/itinerary-invoice-queue.component';
+import { ItineraryComponent } from './itinerary/itinerary.component';
 
 
 @Component({
@@ -11,6 +12,7 @@ import { ItineraryInvoiceQueue } from './itinerary-invoice-queue/itinerary-invoi
 export class ItineraryAndQueueComponent implements OnInit {
 
   @ViewChild(ItineraryInvoiceQueue) queueComponent: ItineraryInvoiceQueue;
+  @ViewChild(ItineraryComponent) itineraryComponent: ItineraryComponent;
   constructor(private utilHelper: UtilHelper) { }
 
   ngOnInit() {
@@ -21,6 +23,10 @@ export class ItineraryAndQueueComponent implements OnInit {
     if (
       !this.queueComponent.queueForm.valid
     ) {
+      return false;
+    }
+    this.utilHelper.validateAllFields(this.itineraryComponent.itineraryForm);
+    if (this.itineraryComponent.itineraryForm.touched && !this.itineraryComponent.itineraryForm.valid) {
       return false;
     }
 

@@ -1330,7 +1330,15 @@ export class PnrService {
         if (this.isPNRLoaded) {
             for (const ape of this.pnrObj.apElements) {
                 if (ape.type === 'E') {
-                    emailList.push(ape.fullNode.otherDataFreetext.longFreetext);
+                    let freeText = ape.fullNode.otherDataFreetext.longFreetext;
+                    const arrRegex = /ARR\*|CTC\*/g;
+                    const match = freeText.match(arrRegex);
+                    if (match && match[0]) {
+                        freeText = freeText.replace(match[0], '');
+                        emailList.push(freeText);
+                    } else {
+                        emailList.push(ape.fullNode.otherDataFreetext.longFreetext);
+                    }
                 }
             }
         }

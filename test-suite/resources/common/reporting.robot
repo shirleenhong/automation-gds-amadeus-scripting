@@ -66,10 +66,11 @@ Select Reason Hotel Booked
     Set Suite Variable    ${reason_hotel_booked}
     [Teardown]    Take Screenshot
 
-Select Did Client Accept Insurance
-    [Arguments]    ${is_accepted}
-    Run Keyword if    '${is_accepted}' == 'Yes'    Select From List By Value    css=#showInsurance    YES
-    ...    ELSE    Select From List By Value    css=#showInsurance    NO
+Select Insurance Liability Waiver
+    [Arguments]    ${insurance_waiver}
+     Run Keyword if    '${insurance_waiver}' == 'All Inclusive or Premium Protection Insurance'    Select From List By Label    css=#showInsurance    All Inclusive or Premium Protection Insurance Purchased for the Full Value of the Trip
+    ...    ELSE    Select From List By Label   css=#showInsurance    Traveller Declined to Purchase the following Travel Insurance 
+
 
 Select Insurance Declined Reason
     [Arguments]    @{declined_insurance}

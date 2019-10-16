@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -8,7 +9,7 @@ Verify That Insurance Accounting Remark Is Correct
     Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1SIN27DEC-/TYP-INS/SUN-ABC INSURANCE/SUC-ZZ/SC-YVR/SD-27DEC/ST-1800/EC-YVR/ED-28DEC/ET-0800/CF-12345    RM*CF/-S1A0000000N    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
-    Populate Reporting Required Fields
+    Populate Routing And Destination Fields
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable

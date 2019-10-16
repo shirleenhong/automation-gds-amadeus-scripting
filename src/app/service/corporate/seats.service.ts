@@ -6,6 +6,7 @@ import { PnrService } from 'src/app/service/pnr.service';
   providedIn: 'root'
 })
 export class SeatsService {
+  constructor(private pnrService: PnrService) {}
   /**
    * The types of seat.
    */
@@ -23,13 +24,11 @@ export class SeatsService {
     { id: 6, text: 'UPGRADE REQUESTED - CHECK CLEARANCE WITH AIRLINE OR AIRLINE WEBSITE' }
   ];
 
-  constructor(private pnrService: PnrService) {}
-
   /**
    * Get the seats from the PNR based on RIR remark texts.
-   * @return Array<SeatModel>
+   * @param firstOnly Set true to only return the first result.
    */
-  public getSeatsFromPnr(): Array<SeatModel> {
+  public getSeatsFromPnr(firstOnly = false): Array<SeatModel> {
     const seats = new Array<SeatModel>();
     const pnrObj = this.pnrService.pnrObj;
     const rirElements = pnrObj.rirElements;
@@ -201,9 +200,25 @@ export class SeatsService {
           continue;
         }
       }
+
+      if (firstOnly && seats.length) {
+        return seats;
+      }
     }
 
     return this.groupSeatsFromPnr(seats);
+  }
+
+  /**
+   * Check if the PNR has any seat remark in the PNR.
+   * @return boolean
+   */
+  public hasSeatsFromPnr(): boolean {
+    if (this.getSeatsFromPnr(true).length) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**

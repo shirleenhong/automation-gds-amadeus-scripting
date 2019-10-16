@@ -13,7 +13,6 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
 })
 export class SeatsComponent implements OnInit {
   seats: Array<SeatModel>; // The seats that come from the Matched Placeholders (DB).
-  seatsFromPnr: Array<SeatModel>; // The seats that come from the PNR.
   seatRemarkOptions: Array<{ id: number; text: string }>;
   isAdd = false;
   selectedSegment = '';
@@ -32,7 +31,6 @@ export class SeatsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.seatsFromPnr = this.seatsService.getSeatsFromPnr();
     this.seatRemarkOptions = this.getRemarkOptions();
 
     this.seats = this.getSeats();
@@ -64,7 +62,7 @@ export class SeatsComponent implements OnInit {
     let list = [];
 
     // Only get seat remarks from the Match Placeholder if they exist in the PNR as well.
-    if (this.seatsFromPnr.length) {
+    if (this.seatsService.hasSeatsFromPnr()) {
       let seats = this.getMatchedSeats(1, 'SEATING SUBJECT TO');
       list = list.concat(seats);
       seats = this.getMatchedSeats(2, 'PLEASE CHECK AGAIN AT');

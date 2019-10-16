@@ -631,7 +631,7 @@ export class PaymentRemarkService {
 
     switch (fg.get('bspfop').value) {
       case 'CC':
-        remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value);
+        remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value.replace('/', ''));
         break;
       case 'CK':
         remGroup.cryptics.push('FPCHEQUE');

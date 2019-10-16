@@ -395,7 +395,8 @@ export class UpdateSegmentComponent implements OnInit {
           'stateRoom',
           'cabinNo',
           'dining',
-          'noNights'
+          'noNights',
+          'passengerNo'
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;

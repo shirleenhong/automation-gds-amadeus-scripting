@@ -114,7 +114,7 @@ Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${is_ticketing_displayed}" == "True"    Click Ticketing Line Tab   ELSE    Navigate To Page Ticketing Line   
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
-    [Teardown]    Run Keywords    Take Screenshot    Collapse Ticketing Panel
+    [Teardown]    Take Screenshot
     
 Fill Up Ticketing Panel With PNR ON HOLD
     Navigate To Page Ticketing Line

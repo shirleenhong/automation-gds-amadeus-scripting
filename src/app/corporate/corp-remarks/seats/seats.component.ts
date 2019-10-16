@@ -4,6 +4,7 @@ import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
 import { RemarksManagerService } from 'src/app/service/corporate/remarks-manager.service';
 import { PnrService } from 'src/app/service/pnr.service';
+import { SeatsService } from 'src/app/service/corporate/seats.service';
 
 @Component({
   selector: 'app-seats',
@@ -11,7 +12,8 @@ import { PnrService } from 'src/app/service/pnr.service';
   styleUrls: ['./seats.component.scss']
 })
 export class SeatsComponent implements OnInit {
-  seats: Array<SeatModel>;
+  seats: Array<SeatModel>; // The seats that come from the Matched Placeholders (DB).
+  seatsFromPnr: Array<SeatModel>; // The seats that come from the PNR.
   seatRemarkOptions: Array<{ id: number; text: string }>;
   isAdd = false;
   selectedSegment = '';
@@ -22,12 +24,20 @@ export class SeatsComponent implements OnInit {
     class: 'modal-lg'
   };
 
-  constructor(private modalService: BsModalService, private remarkManager: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(
+    private modalService: BsModalService,
+    private remarkManager: RemarksManagerService,
+    private pnrService: PnrService,
+    private seatsService: SeatsService
+  ) {}
 
   ngOnInit() {
+    this.seatsFromPnr = this.seatsService.getSeatsFromPnr();
+    this.seatRemarkOptions = this.getRemarkOptions();
+
     this.seats = this.getSeats();
     this.sortSeats();
-    this.seatRemarkOptions = this.getRemarkOptions();
+
     this.modalSubscribeOnClose();
   }
 
@@ -47,25 +57,28 @@ export class SeatsComponent implements OnInit {
   }
 
   /**
-   * Get the seats from the PNR
-   * based on RIR remark texts.
-   *
+   * Get the seats from the Matched Placeholder in Ouput Items.
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
     let list = [];
-    let seats = this.getMatchedSeats(1, 'SEATING SUBJECT TO');
-    list = list.concat(seats);
-    seats = this.getMatchedSeats(2, 'PLEASE CHECK AGAIN AT');
-    list = list.concat(seats);
-    seats = this.getMatchedSeats(3, 'THIS SEGMENT HAS BEEN');
-    list = list.concat(seats);
-    seats = this.getMatchedSeats(4, 'SEAT ASSIGNMENTS ARE ON REQUEST');
-    list = list.concat(seats);
-    seats = this.getMatchedSeats(5, 'UPGRADE CONFIRMED');
-    list = list.concat(seats);
-    seats = this.getMatchedSeats(6, 'UPGRADE REQUESTED');
-    list = list.concat(seats);
+
+    // Only get seat remarks from the Match Placeholder if they exist in the PNR as well.
+    if (this.seatsFromPnr.length) {
+      let seats = this.getMatchedSeats(1, 'SEATING SUBJECT TO');
+      list = list.concat(seats);
+      seats = this.getMatchedSeats(2, 'PLEASE CHECK AGAIN AT');
+      list = list.concat(seats);
+      seats = this.getMatchedSeats(3, 'THIS SEGMENT HAS BEEN');
+      list = list.concat(seats);
+      seats = this.getMatchedSeats(4, 'SEAT ASSIGNMENTS ARE ON REQUEST');
+      list = list.concat(seats);
+      seats = this.getMatchedSeats(5, 'UPGRADE CONFIRMED');
+      list = list.concat(seats);
+      seats = this.getMatchedSeats(6, 'UPGRADE REQUESTED');
+      list = list.concat(seats);
+    }
+
     return list;
   }
 

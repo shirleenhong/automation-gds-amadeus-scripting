@@ -36,6 +36,7 @@ ${open_bracket}     [
 ${close_bracket}     ]
 ${button_add_segment}    //button[contains(text(), 'Add Segment')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
+@{add_segment_pages}    Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport
@@ -133,6 +134,11 @@ Click Back To Main Menu
     Wait Until Element Is Visible    ${button_main_menu}
     Click Element    ${button_main_menu}
     Set Test Variable    ${current_page}    CWT Corporate
+    
+Click Add Segment
+    Wait Until Element Is Visible    ${button_add_segment}    
+    Click Element    ${button_add_segment}
+    Set Test Variable    ${current_page}    CWT Corporate
    
 Assign Current Date
     ${current_date}    Get Current Date
@@ -162,8 +168,10 @@ Convert Month To MMM
 
 Navigate To Page ${destination_page}
      Set Test Variable    ${i}     1
+     ${to_add_segment}    Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${destination_page}
      ${to_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${destination_page}
      ${to_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${destination_page}
+     Set Test Variable    ${to_add_segment}    
      Set Test Variable    ${to_full_wrap}
      Set Test Variable    ${to_itinerary_and_queue}
      : FOR     ${i}    IN RANGE   1    10
@@ -180,7 +188,8 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}  
-     Run Keyword If    "${to_full_wrap}" == "True"    Click Full Wrap
+     Run Keyword If    "${to_add_segment}" == "True"    Click Add Segment
+     ...    ELSE IF    "${to_full_wrap}" == "True"    Click Full Wrap
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
     

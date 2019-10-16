@@ -63,4 +63,7 @@ Add And Verify Air Segment for ZZ In The PNR
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_airline_recloc}    ARL76
+    Take Screenshot    
+    Click Save Button
+    Verify Expected Remarks Are Written In The PNR
     

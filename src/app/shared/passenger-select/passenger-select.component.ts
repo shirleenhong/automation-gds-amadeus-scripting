@@ -36,10 +36,10 @@ export class PassengerSelectComponent
   passengerSelected = [];
   isSinglePassenger = false;
 
-  propagateChange: any = () => {};
-  validateFn: any = () => {};
-  onTouched: any = () => {};
-  onChange: any = () => {};
+  propagateChange: any = () => { };
+  validateFn: any = () => { };
+  onTouched: any = () => { };
+  onChange: any = () => { };
 
   writeValue(obj: any): void {
     this.passengerGroup.get('passenger').setValue(obj);
@@ -105,5 +105,9 @@ export class PassengerSelectComponent
 
     this.value = this.passengerSelected.join(',');
     this.passengerGroup.get('passenger').setValue(this.val);
+  }
+
+  passengerChecked(item) {
+    return (this.val ? this.val.split(',').indexOf(item.lineNo) >= 0 : false);
   }
 }

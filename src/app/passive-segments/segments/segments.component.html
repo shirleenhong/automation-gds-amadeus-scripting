@@ -19,7 +19,8 @@
       <td>{{ r.segmentType }}</td>
       <td>
         <div *ngIf="r.segmentType === 'TOR'">
-          {{ r.vendorName | uppercase }} {{ r.tourName | uppercase }} {{ r.roomType | uppercase }} {{ r.mealPlan | uppercase }}
+          {{ r.vendorName | uppercase }} {{ r.tourName | uppercase }}
+          {{ r.roomType | uppercase }} {{ r.mealPlan | uppercase }}
           {{ r.noNights }}NTS
         </div>
         <div *ngIf="r.segmentType === 'SEA'">
@@ -29,7 +30,8 @@
         <div *ngIf="r.segmentType === 'AIR'">
           {{ r.airlineCode | uppercase }} {{ r.flightNumber | uppercase }} {{ r.classService | uppercase }}
         </div>
-        <div *ngIf="r.segmentType === 'LIM'">{{ r.vendorName | uppercase }} {{ r.limCoAgent | uppercase }} {{ r.phone | uppercase }}</div>
+        <div *ngIf="r.segmentType === 'LIM'">{{ r.vendorName | uppercase }} {{ r.limCoAgent | uppercase }}
+          {{ r.phone | uppercase }}</div>
       </td>
       <td>{{ r.vendorCode | uppercase }}</td>
       <td>{{ r.confirmationNo }}</td>

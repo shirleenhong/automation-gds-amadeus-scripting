@@ -45,10 +45,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitProcess = false;
   modalRef: BsModalRef;
   version = common.LeisureVersionNumber;
-  issuingBsp = false;
-  bspReply = false;
+  invoiceReply = false;
   errorAccounting: string;
   paymentWarning = '';
+  commonWarning = '';
 
   @ViewChild(PassiveSegmentsComponent)
   segmentComponent: PassiveSegmentsComponent;
@@ -177,23 +177,19 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
-    if (!this.bspReply && this.pnrService.getTSTTicketed()) {
+    const bspFop = (this.paymentComponent.bspTicketFop
+      && this.paymentComponent.bspTicketFop.bspTicketFopForm.controls.bspfop.value === 'AP') ? true : false;
+
+    if (bspFop) {
       this.issueBsp();
-      return;
     }
 
     this.submitProcess = true;
-    this.showLoading('Updating PNR remarks...');
+    this.showLoading({ msg: 'Updating PNR remarks...', caller: 'UpdateRemarks' });
 
     const remarkCollection = new Array<RemarkGroup>();
 
     remarkCollection.push(this.paymentRemarkService.removeRmFop());
-
-    if (this.issuingBsp) {
-      remarkCollection.push(this.paymentRemarkService.addRmFop());
-      this.issuingBsp = false;
-    }
-    this.bspReply = false;
     remarkCollection.push(
       this.paymentRemarkService.GetMatrixRemarks(
         this.paymentComponent.matrixReceipt.matrixReceipts,
@@ -250,6 +246,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
 
+    if (this.paymentComponent.bspTicketFop) {
+      remarkCollection.push(
+        this.paymentRemarkService.addBspTicketFop(this.paymentComponent.bspTicketFop)
+      );
+
+    }
+
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP');
     this.leisureRemarkService.BuildRemarks(remarkCollection);
     await this.leisureRemarkService.SubmitRemarks().then(
@@ -261,14 +264,24 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         }
       },
       (error) => {
-        this.showMessage('An Error occured upon updating PNR', MessageType.Error);
+        this.showMessage({ msg: 'An Error occured upon updating PNR', type: MessageType.Error });
         console.log(JSON.stringify(error));
       }
     );
 
     if (this.invoiceComponent.matrixInvoiceGroup.controls.selection.value) {
-      this.SendInvoiceItinerary();
+      await this.SendInvoiceItinerary();
     }
+
+    if (this.commonWarning) {
+      this.showMessage({
+        msg: this.commonWarning,
+        type: MessageType.Default, title: 'Reminder'
+      });
+    }
+
+    this.commonWarning = '';
+
   }
 
   processPassPurchase(accountingRemarks: MatrixAccountingModel[]) {
@@ -311,25 +324,26 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  showMessage(msg, type: MessageType) {
+  showMessage({ msg, type, title = 'PNR Updated' }: { msg; type: MessageType; title?: string; }) {
     this.modalRef = this.modalService.show(MessageComponent, {
       backdrop: 'static'
     });
     this.modalRef.content.modalRef = this.modalRef;
-    this.modalRef.content.title = 'PNR Updated';
+    this.modalRef.content.title = title;
     this.modalRef.content.message = msg;
     this.modalRef.content.callerName = 'SubmitToPnR';
     this.modalRef.content.response = '';
     this.modalRef.content.setMessageType(type);
   }
 
-  showLoading(msg) {
+  showLoading({ msg, caller = '' }: { msg; caller?: string; }) {
     this.modalRef = this.modalService.show(LoadingComponent, {
       backdrop: 'static'
     });
     this.modalRef.content.modalRef = this.modalRef;
     this.modalRef.content.title = 'PNR Updated';
     this.modalRef.content.message = msg;
+    this.modalRef.content.callerName = caller;
   }
 
   async cancelPnr() {
@@ -349,7 +363,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
-    this.showLoading('Applying cancellation to PNR...');
+    this.showLoading({ msg: 'Applying cancellation to PNR...' });
     this.submitProcess = true;
     const osiCollection = new Array<RemarkGroup>();
     const remarkCollection = new Array<RemarkGroup>();
@@ -383,7 +397,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        this.showMessage('An error occured during cancellation', MessageType.Error);
+        this.showMessage({ msg: 'An error occured during cancellation', type: MessageType.Error });
         console.log(JSON.stringify(error));
         this.workflow = '';
       }
@@ -394,20 +408,33 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.submitProcess) {
       return;
     }
-    this.showLoading('Sending Invoice Itinerary...');
-    this.submitProcess = true;
+
+    this.invoiceReply = false;
+    this.showLoading({ msg: 'Sending Invoice Itinerary...' });
+
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup));
-    // this.remarkService.endPNR(' Agent Invoicing', true); // end PNR First before Invoice
+    if (!this.invoiceReply) {
+      await this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup).then(
+        async (x) => {
+          remarkCollection.push(x.remgroup);
+          if (!x.invSent) {
+            this.commonWarning = this.commonWarning + '\r\n' + 'Verify Invoicing Request- Script is unable to process invoice.';
+          }
+        }
+      );
+    }
+
+    this.submitProcess = true;
     this.leisureRemarkService.BuildRemarks(remarkCollection);
     await this.leisureRemarkService.SubmitRemarks().then(
-      () => {
-        this.isPnrLoaded = false;
-        this.getPnr();
+      async () => {
+
+        // await this.getPnrService();
+        await this.getPnr();
         this.workflow = '';
       },
       (error) => {
-        this.showMessage('Error while sending Invoice Itinerary', MessageType.Error);
+        this.showMessage({ msg: 'Error while sending Invoice Itinerary', type: MessageType.Error });
         console.log(JSON.stringify(error));
       }
     );
@@ -417,7 +444,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.submitProcess) {
       return;
     }
-    this.showLoading('Adding Segment(s) to PNR...');
+    this.showLoading({ msg: 'Adding Segment(s) to PNR...' });
     this.submitProcess = true;
     const remarkCollection = new Array<RemarkGroup>();
     remarkCollection.push(this.segmentService.deleteSegments(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
@@ -430,7 +457,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        this.showMessage('An error occured while adding segment', MessageType.Error);
+        this.showMessage({ msg: 'An error occured while adding segment', type: MessageType.Error });
         console.log(JSON.stringify(error));
       }
     );
@@ -466,7 +493,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.submitProcess) {
       return;
     }
-    this.showLoading('Sending Itinerary and Queueing...');
+    this.showLoading({ msg: 'Sending Itinerary and Queueing...' });
     const remarkCollection = new Array<RemarkGroup>();
 
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
@@ -482,7 +509,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.workflow = '';
       },
       (error) => {
-        this.showMessage('Error while sending Itinerary and Queueing', MessageType.Error);
+        this.showMessage({ msg: 'Error while sending Itinerary and Queueing', type: MessageType.Error });
         console.log(JSON.stringify(error));
       }
     );
@@ -559,33 +586,40 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   issueBsp() {
-    this.issuingBsp = false;
-    this.modalRef = this.modalService.show(MessageComponent, {
-      backdrop: 'static'
-    });
-    this.modalRef.content.modalRef = this.modalRef;
-    this.modalRef.content.title = 'Issuing a BSP ticket';
-    this.modalRef.content.message = 'Are you issuing a BSP ticket on a CWT Agency Plastic Credit Card?';
-    this.modalRef.content.note =
-      'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
-      'RM*FOP/-AP format is in the PNR. \r\n' +
-      'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark.';
-    this.modalRef.content.callerName = 'issuingBSP';
-    this.modalRef.content.setMessageType(MessageType.YesNo);
+    this.commonWarning = 'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
+      'RM*FOP/-AP format is in the PNR.' +
+      'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark. <br> <br>';
+    // this.modalRef = this.modalService.show(MessageComponent, {
+    //   backdrop: 'static'
+    // });
+    // this.modalRef.content.modalRef = this.modalRef;
+    // this.modalRef.content.title = 'Issuing a BSP ticket';
+    // this.modalRef.content.note = '';
+    // this.modalRef.content.message =
+    //   'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
+    //   'RM*FOP/-AP format is in the PNR. \r\n' +
+    //   'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark.';
+    // this.modalRef.content.callerName = 'issuingBSP';
+    // this.modalRef.content.setMessageType();
   }
 
   modalSubscribeOnClose() {
-    this.modalService.onHide.subscribe(() => {
-      if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'issuingBSP') {
-        if (this.modalRef.content.response === 'YES') {
-          this.issuingBsp = true;
-        } else {
-          this.issuingBsp = false;
-        }
-        this.bspReply = true;
-        this.modalRef.content.response = '';
-        this.SubmitToPNR();
-      }
-    });
+    // this.modalService.onHide.subscribe(() => {
+    //   debugger;
+    //   if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'issuingBSP') {
+    //     this.bspReply = true;
+    //     this.modalRef.content.response = '';
+    //     this.SubmitToPNR();
+    //   }
+    //   if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'InvoiceCommand') {
+    //     this.invoiceReply = true;
+    //     this.modalRef.content.response = '';
+    //     this.SendInvoiceItinerary();
+    //   }
+    //   if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'UpdateRemarks') {
+    //     this.modalRef.content.response = '';
+    //     this.SendInvoiceItinerary();
+    //   }
+    // });
   }
 }

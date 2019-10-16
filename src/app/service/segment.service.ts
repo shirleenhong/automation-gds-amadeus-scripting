@@ -94,6 +94,16 @@ export class SegmentService {
                     }
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
+
+                if (segment.segmentType === 'TOR') {
+                    const torPassenger = segment.passengerNo.split(',');
+                    torPassenger.forEach(pass => {
+                        relatePass.push(pass);
+                    });
+                    passive.quantity = relatePass.length;
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
+                }
+
                 passive.relatedPassengers = relatePass;
                 passive.status = 'HK';
                 passive.flightNo = '1';

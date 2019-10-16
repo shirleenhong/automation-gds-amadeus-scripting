@@ -652,7 +652,7 @@ export class PaymentRemarkService {
       remGroup.deleteRemarkByIds.push(line);
     }
     const fop = this.pnrService.getFopElementLineNo();
-    if (fop.fopFreeText.indexOf('0639/') >= -1) {
+    if (fop && fop.fopFreeText.indexOf('0639/') >= -1) {
       remGroup.deleteRemarkByIds.push(fop.fopLineNo);
     }
   }

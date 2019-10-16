@@ -131,8 +131,8 @@ Select ${ird_status} As IRD Status With Value For Savings
     Set Test Variable    ${ird_status}    
     Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_ird_status}    ACCEPTEDCP
     Select From List By Label    ${row_ird_status}${open_bracket}1${close_bracket}${select_low_savingStatus}    ACCEPTEDLFO
-    Take Screenshot    
-    [Teardown]    Collapse Remarks Panel
+    [Teardown]    Take Screenshot    
+
     
 Select IRD Status With Multiple Pricing And Segment In The PNR
     Wait Until Element Is Visible    ${row_ird_status}   
@@ -141,8 +141,7 @@ Select IRD Status With Multiple Pricing And Segment In The PNR
     Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_low_savingStatus}    ACCEPTEDLFO
     Select From List By Label    ${row_ird_status}${open_bracket}3${close_bracket}${select_ird_status}    DECLINED
     Select From List By Label    ${row_ird_status}${open_bracket}3${close_bracket}${select_low_savingStatus}    DECLINED
-    Take Screenshot    
-    [Teardown]    Collapse Remarks Panel
+    [Teardown]    Take Screenshot
     
 Select Status For IRD
     [Arguments]    @{ird_status}
@@ -210,7 +209,7 @@ Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${is_dom}" == "False"    Enter Value    ${input_citizenship}    CA
     Run Keyword If    "${is_dom}" == "False"    Enter Value    ${input_adviseTo}    Chuck Velasquez
     Set Test Variable    ${visa_complete}    yes
-    [Teardown]    Run Keywords    Take Screenshot    Collapse Remarks Panel
+    [Teardown]    Take Screenshot
     
 Tick Advisory Sent Checkbox
     Click Element    ${checkbox_advisorySent}

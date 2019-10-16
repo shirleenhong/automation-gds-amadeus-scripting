@@ -68,10 +68,12 @@ Populate ${queue_type} Transaction Type Queue
     Navigate To Page Follow-Up Queue
     Run Keyword If    "${queue_type}" == "Itinerary"   Select Itinerary Transaction type
     Run Keyword If    "${queue_type}" == "Invoice"   Select Invoice Transaction type
+    [Teardown]    Take Screenshot
     
 Populate Personal Queue And Category
     Navigate To Page Follow-Up Queue
     Enter Personal Queue And Category    1   1
+    [Teardown]    Take Screenshot
 
 Fill Up OFC Documentation And Queue With Default Values
     Select Counselor Identity: OFC
@@ -91,11 +93,14 @@ Populate Personal Queue and Select ${team_queue} Team Queue
 	Navigate To Page Follow-Up Queue
 	Enter Personal Queue And Category    1    1
 	Select ${team_queue} on Team Queue List
+	[Teardown]    Take Screenshot
+	
 
 Populate Personal Queue And Select ${transaction_type} Transaction Type
 	Navigate To Page Follow-Up Queue
 	Enter Personal Queue And Category    1    1
 	Select ${transaction_type} Transaction type
+	[Teardown]    Take Screenshot
 	
 Populate ${queue_type} Transaction Type Queue In Standalone
     Navigate To Page Reporting Remarks
@@ -105,12 +110,14 @@ Populate ${queue_type} Transaction Type Queue In Standalone
     Run Keyword If    "${queue_type}" == "Invoice"   Select Invoice Transaction type
     Set Test Variable    ${transaction_type}
     Select From List By Label    ${select_transaction}    ${transaction_type} 
+    [Teardown]    Take Screenshot
     
 Populate Personal Queue And Category In Standalone
     Navigate To Page Reporting Remarks
     Submit To PNR    no
     Click Itinerary And Queue
     Enter Personal Queue And Category    1   1
+    [Teardown]    Take Screenshot
 
 Verify Team Queue Is Not Displayed For Leisure On Demand
     Page Should Not Contain Element    ${select_teamQueue}     
@@ -164,7 +171,7 @@ Verify PNR Is ${is_queued} To OSC
 Verify Correct Personal Queue
     [Arguments]   ${leisure_on_demand}=no
     Run Keyword If   "${personal_queue_complete}" == "yes" and "${leisure_on_demand}" == "no"   Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}001
-    Run Keyword If   "${personal_queue_complete}" == "yes" and "${leisure_on_demand}" == "yes"   Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}001
+    Run Keyword If   "${personal_queue_complete}" == "yes" and "${leisure_on_demand}" == "yes"   Element Should Contain    ${text_area_command}   YTOWL2101${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}001
     
 Verify Leisure On Demand PNR Is Queued To Correct Queues
     Finish PNR   queueing=yes
@@ -204,11 +211,13 @@ Populate Multiple Queue Placements
 
 Verify PNR Is Queued To Correct Queue Placement
     Finish PNR   queueing=yes
+    Open Command Page
     Enter Cryptic Command    RTQ 
     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000
 
 Verify PNR Is Queued To Correct Multiple Queue Placement
     Finish PNR   queueing=yes
+    Open Command Page
     Enter Cryptic Command    RTQ 
     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000
     Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}010${SPACE}${SPACE}${SPACE}${SPACE}000

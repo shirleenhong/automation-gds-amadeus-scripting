@@ -359,14 +359,14 @@ Select Default Value For Routing Code
     Run Keyword If    "${destination_selected}" == "no"   Navigate To Page Reporting Remarks
     Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
     Set Test Variable    ${routing_code_selected}    yes
-    [Teardown]    Run Keywords    Take Screenshot    Collapse Reporting Panel
+    Select Default Value For Destination Code
+    [Teardown]    Take Screenshot
     
 Select Default Value For Destination Code
     Navigate To Page Reporting Remarks
     ${is_destination_present}    Run Keyword And Return Status    Page Should Contain Element    ${input_destination} 
     Run Keyword If    "${is_destination_present}" == "True"   Enter Destination Code Default Value
     Set Test Variable    ${destination_selected}    yes
-    [Teardown]    Run Keywords    Take Screenshot    Collapse Reporting Panel
 
 Enter Destination Code Default Value        
     ${elements_count}    Get Element Count    ${input_destination} 

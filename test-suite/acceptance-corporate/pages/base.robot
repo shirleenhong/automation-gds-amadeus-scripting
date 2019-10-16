@@ -138,7 +138,7 @@ Click Back To Main Menu
 Click Add Segment
     Wait Until Element Is Visible    ${button_add_segment}    
     Click Element    ${button_add_segment}
-    Set Test Variable    ${current_page}    CWT Corporate
+    Set Test Variable    ${current_page}    Add Segment
    
 Assign Current Date
     ${current_date}    Get Current Date
@@ -193,6 +193,20 @@ Navigate From Corp
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
     
+Collapse Open Panel
+    ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}
+    ${in_reporting}    Run Keyword And Return Status    Should Contain    ${reporting_pages}    ${current_page}
+    ${in_remarks}    Run Keyword And Return Status    Should Contain    ${remarks_pages}    ${current_page}
+    ${in_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${current_page}
+    ${in_queue}    Run Keyword And Return Status    Should Contain    ${queue_pages}    ${current_page}
+    ${in_ticketing}    Run Keyword And Return Status    Should Contain    ${ticketing_pages}    ${current_page}
+    Run Keyword If    "${in_payment}" == "True" and "${to_payment}" == "False"    Collapse Payment Panel
+    ...    ELSE IF    "${in_reporting}" == "True" and "${to_reporting}" == "False"    Collapse Reporting Panel
+    ...    ELSE IF    "${in_remarks}" == "True" and "${to_remarks}" == "False"    Collapse Remarks Panel
+    ...    ELSE IF    "${in_fees}" == "True" and "${to_fees}" == "False"    Collapse Fees Panel
+    ...    ELSE IF    "${in_queue}" == "True" and "${to_queue}" == "False"    Collapse Queue Panel
+    ...    ELSE IF    "${in_ticketing}" == "True" and "${to_ticketing}" == "False"    Collapse Ticketing Panel
+
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     ${to_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${destination_page}
@@ -201,6 +215,13 @@ Navigate From Full Wrap
     ${to_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${destination_page}
     ${to_queue}    Run Keyword And Return Status    Should Contain    ${queue_pages}    ${destination_page}
     ${to_ticketing}    Run Keyword And Return Status    Should Contain    ${ticketing_pages}    ${destination_page}
+    Set Test Variable    ${to_payment}
+    Set Test Variable    ${to_reporting}
+    Set Test Variable    ${to_remarks}
+    Set Test Variable    ${to_fees}
+    Set Test Variable    ${to_queue}
+    Set Test Variable    ${to_ticketing}
+    Collapse Open Panel
     Run Keyword If    "${to_payment}" == "True"    Navigate From Payment    ${destination_page}    
     ...    ELSE IF    "${to_reporting}" == "True"    Navigate From Reporting    ${destination_page}
     ...    ELSE IF    "${to_remarks}" == "True"   Navigate From Remarks    ${destination_page}
@@ -268,8 +289,8 @@ Submit To PNR
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks" or "${current_page}" == "OFC Documentation And Queue"   
-    ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
+    Collapse Open Panel
+    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
@@ -300,6 +321,11 @@ Click Fees Panel
     Wait Until Element Is Visible    ${panel_fees}    60
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Fees
+    
+Collapse Fees Panel
+    Wait Until Element Is Visible    ${panel_fees}    60
+    Click Element    ${panel_fees}
+    Set Test Variable    ${current_page}    Full Wrap PNR
     
 Navigate From Fees
     [Arguments]    ${destination_page}

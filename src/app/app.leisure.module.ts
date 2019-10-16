@@ -41,6 +41,7 @@ import { RefundComponent } from './leisure/cancel/refund/refund.component';
 import { CancelSegmentComponent } from './leisure/cancel/cancel-segment/cancel-segment.component';
 import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 import { MyCommonModule } from './my-common.module';
+import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-ticket-fop.component';
 
 
 @NgModule({
@@ -79,7 +80,8 @@ import { MyCommonModule } from './my-common.module';
     QueueComponent,
     CancelComponent,
     RefundComponent,
-    AssociatedRemarksComponent
+    AssociatedRemarksComponent,
+    BspTicketFopComponent
   ],
   imports: [
     BrowserModule,

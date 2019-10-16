@@ -6,6 +6,8 @@ import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model'
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
+// import { validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
+
 
 declare var smartScriptSession: any;
 
@@ -97,6 +99,8 @@ export class UpdateSegmentComponent implements OnInit {
     zzdepartureCity: new FormControl('', []),
     zzdestinationCity: new FormControl('', []),
     seatNumber: new FormControl(''),
+    passengerNo: new FormControl('', [Validators.required,
+    Validators.pattern('[0-9]+(,[0-9]+)*')]),
     // train
     trainNumber: new FormControl('', [Validators.required]),
     carNumber: new FormControl(''),
@@ -356,7 +360,8 @@ export class UpdateSegmentComponent implements OnInit {
           'noPeople',
           'noNights',
           'roomType',
-          'mealPlan'
+          'mealPlan',
+          'passengerNo'
         ];
         this.setForm(forms);
         this.loadRoomType();
@@ -594,7 +599,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() {}
+  pickUpLocChange() { }
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;

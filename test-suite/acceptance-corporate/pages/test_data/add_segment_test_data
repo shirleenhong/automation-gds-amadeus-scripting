@@ -1,5 +1,5 @@
 {
-	"Corporate, Add Passive Segment For Non ZZ Details": {
+	"Corporate, Non ZZ Details": {
 		"PassengerName1": "CORPORATE/NORMAN MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -44,7 +44,7 @@
 		"ExpectedRemark5": null,
 
 	},
-	"Corporate, Add Passive Segment For ZZ Details": {
+	"Corporate, For ZZ Details": {
 		"PassengerName1": "CORPORATE/NORMAN MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -81,10 +81,10 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RIR THIS SEGMENT HAS BEEN WAITLISTED/S2",
-		"ExpectedRemark2": null,
-		"ExpectedRemark3": null,
-		"ExpectedRemark4": null,
+		"ExpectedRemark1": "ZZ1234 Y 02JAN 4 ZZZZZZ GK1  1530 1715  04JAN     ARL7656",
+		"ExpectedRemark2": "RIR FLIGHT IS CONFIRMED WITH AIR CANADA/S2",
+		"ExpectedRemark3": "RIR DEPARTURE CITY IS DEPARTURE ZZZ/S2",
+		"ExpectedRemark4": "RIR ARRIVAL CITY IS ARRIVAL ZZZ/S2",
 		"ExpectedRemark5": null,
 		"ExpectedRemark6": null,
 	}

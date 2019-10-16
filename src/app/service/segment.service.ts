@@ -95,7 +95,7 @@ export class SegmentService {
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
 
-                if (segment.segmentType === 'TOR') {
+                if (segment.segmentType === 'TOR' || segment.segmentType === 'SEA') {
                     const torPassenger = segment.passengerNo.split(',');
                     torPassenger.forEach(pass => {
                         relatePass.push(pass);

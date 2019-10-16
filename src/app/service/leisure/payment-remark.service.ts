@@ -12,6 +12,7 @@ import { AccountingRemarkComponent } from '../../leisure/payments/accounting-rem
 import { LeisureFeeComponent } from '../../leisure/payments/leisure-fee/leisure-fee.component';
 import { LeisureFeeModel } from '../../models/pnr/leisure-fee.model';
 import { PassiveSegmentModel } from '../../models/pnr/passive-segment.model';
+import { BspTicketFopComponent } from 'src/app/leisure/payments/bsp-ticket-fop/bsp-ticket-fop.component';
 
 @Injectable({
   providedIn: 'root'
@@ -617,5 +618,42 @@ export class PaymentRemarkService {
     remGroup.deleteRemarkByIds = [];
     remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
     return remGroup;
+  }
+
+  public addBspTicketFop(ticketfop: BspTicketFopComponent) {
+    const fg = ticketfop.bspTicketFopForm;
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'FOP';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.deleteRemarkByIds = [];
+
+    this.deleteBspTicketFop(remGroup);
+
+    switch (fg.get('bspfop').value) {
+      case 'CC':
+        remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value);
+        break;
+      case 'CK':
+        remGroup.cryptics.push('FPCHEQUE');
+        break;
+      case 'AP':
+        remGroup.cryptics.push('PBN/YTOWL210N/PCIFOPCWT BSP/*');
+        remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
+        break;
+      default:
+        break;
+    }
+    return remGroup;
+  }
+
+  private deleteBspTicketFop(remGroup: RemarkGroup) {
+    const line = this.pnrService.getRemarkLineNumber('FOP/-AP');
+    if (line) {
+      remGroup.deleteRemarkByIds.push(line);
+    }
+    const fop = this.pnrService.getFopElementLineNo();
+    if (fop.fopFreeText.indexOf('0639/') >= -1) {
+      remGroup.deleteRemarkByIds.push(fop.fopLineNo);
+    }
   }
 }

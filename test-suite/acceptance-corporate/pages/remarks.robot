@@ -198,11 +198,12 @@ Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     
 Fill Up Visa And Passport Fields With Default Values
     Navigate To Page Visa And Passport
-    Tick Advisory Sent Checkbox
-    Enter Value    ${input_citizenship}    CA
-    Enter Value    ${input_adviseTo}    Chuck Velasquez
+    ${is_dom}    Run Keyword And Return Status    Element Should Contain    ${text_noIntlMessage}    * No International Destinations Found in Itinerary *
+    Run Keyword If    "${is_dom}" == "False"    Tick Advisory Sent Checkbox
+    Run Keyword If    "${is_dom}" == "False"    Enter Value    ${input_citizenship}    CA
+    Run Keyword If    "${is_dom}" == "False"    Enter Value    ${input_adviseTo}    Chuck Velasquez
     Set Test Variable    ${visa_complete}    yes
-    [Teardown]    Take Screenshot
+    [Teardown]    Run Keywords    Take Screenshot    Collapse Remarks Panel
     
 Tick Advisory Sent Checkbox
     Click Element    ${checkbox_advisorySent}

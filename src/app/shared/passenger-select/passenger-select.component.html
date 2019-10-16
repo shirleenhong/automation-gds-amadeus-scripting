@@ -1,23 +1,22 @@
+<div [formGroup]="passengerGroup" class="btn-group passengerbox form-group " dropdown [insideClick]="true">
 
-    <div [formGroup]="passengerGroup" class="btn-group passengerbox form-group " dropdown [insideClick]="true">
-        
-        <div *ngIf="!isSinglePassenger">
-        <button formControlName="button" id="button-basic" dropdownToggle type="button" class="passengerButton float-right dropdown-toggle"
-            role="menu" aria-controls="dropdown-config">
+    <div *ngIf="!isSinglePassenger">
+        <button formControlName="button" id="button-basic" dropdownToggle type="button"
+            class="passengerButton float-right dropdown-toggle" role="menu" aria-controls="dropdown-config">
             <input type="text" class="form-control" #passenger formControlName="passenger" (click)="onTouched()"
                 readonly /> <span class="caret"></span>
         </button>
-        </div> <div *ngIf="isSinglePassenger"> 1 </div> 
-        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
-            <li role="menuitem" *ngFor="let item of passengerList">
-                <div class="dropdown-item">
-                    <input type="checkbox" [value]="item.id" (change)="updateValue($event)"
-                        [checked]="val.split(',').indexOf(item.id) >= 0" />
-                    {{item.id}}. {{item.fullname}}
-                </div>
-            </li>
-
-        </ul>
-
     </div>
+    <div *ngIf="isSinglePassenger"> 1 </div>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
+        <li role="menuitem" *ngFor="let item of passengerList">
+            <div class="dropdown-item">
+                <input type="checkbox" [value]="item.id" (change)="updateValue($event)"
+                    (checked)="passengerChecked(item)" />
+                {{item.id}}. {{item.fullname}}
+            </div>
+        </li>
 
+    </ul>
+
+</div>

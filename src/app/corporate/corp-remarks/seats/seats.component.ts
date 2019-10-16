@@ -1,9 +1,9 @@
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
-import { PnrService } from 'src/app/service/pnr.service';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
 import { SeatsFormComponent } from 'src/app/corporate/corp-remarks/seats/seats-form/seats-form.component';
-import { SeatsService } from 'src/app/service/corporate/seats.service';
+import { RemarksManagerService } from 'src/app/service/corporate/remarks-manager.service';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-seats',
@@ -13,202 +13,79 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
 export class SeatsComponent implements OnInit {
   seats: Array<SeatModel>;
   seatRemarkOptions: Array<{ id: number; text: string }>;
-
+  isAdd = false;
+  selectedSegment = '';
   modalRef: BsModalRef;
   modalRefConfig = {
     backdrop: true,
-    ignoreBackdropClick: false
+    ignoreBackdropClick: false,
+    class: 'modal-lg'
   };
 
-  constructor(private modalService: BsModalService, private pnrService: PnrService, public seatsService: SeatsService) {}
+  constructor(private modalService: BsModalService, private remarkManager: RemarksManagerService, private pnrService: PnrService) {}
 
   ngOnInit() {
     this.seats = this.getSeats();
-    this.seatRemarkOptions = SeatsService.REMARK_OPTIONS;
+    this.sortSeats();
+    this.seatRemarkOptions = this.getRemarkOptions();
+    this.modalSubscribeOnClose();
+  }
+
+  /**
+   * The remark options the user selects
+   * from and to be written in the PNR.
+   */
+  public getRemarkOptions(): Array<{ id: number; text: string }> {
+    return [
+      { id: 1, text: 'SEATING SUBJECT TO AIRPORT OR ONLINE CHECK IN' },
+      { id: 2, text: 'PREFERRED SEAT UNAVAILABLE. SEAT TYPE CONFIRMED' },
+      { id: 3, text: 'THIS SEGMENT HAS BEEN WAITLIST' },
+      { id: 4, text: 'SEAT ASSIGNMENTS ARE ON REQUEST' },
+      { id: 5, text: 'UPGRADE CONFIRMED - SEAT NUMBER CONFIRMED' },
+      { id: 6, text: 'UPGRADE REQUESTED - CHECK CLEARANCE WITH AIRLINE OR AIRLINE WEBSITE' }
+    ];
   }
 
   /**
    * Get the seats from the PNR
    * based on RIR remark texts.
-   * TODO: Handle languages
    *
    * @return Array<SeatModel>
    */
   public getSeats(): Array<SeatModel> {
-    const seats = new Array<SeatModel>();
-    const pnrObj = this.pnrService.pnrObj;
-    const rirElements = pnrObj.rirElements;
-    const language = this.pnrService.getLanguage();
+    let list = [];
+    let seats = this.getMatchedSeats(1, 'SEATING SUBJECT TO');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(2, 'PLEASE CHECK AGAIN AT');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(3, 'THIS SEGMENT HAS BEEN');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(4, 'SEAT ASSIGNMENTS ARE ON REQUEST');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(5, 'UPGRADE CONFIRMED');
+    list = list.concat(seats);
+    seats = this.getMatchedSeats(6, 'UPGRADE REQUESTED');
+    list = list.concat(seats);
+    return list;
+  }
 
-    for (const rirElement of rirElements) {
-      // For English
-      if (language === 'EN-GB') {
-        // Condition 1
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'AIRPORT OR ONLINE CHECK IN') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 1,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-        }
-
-        // Condition 2
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('PREFERRED SEAT UNAVAILABLE')) {
-          let rirSegments: any = null;
-          let seatType: any = null;
-          if (rirElement.associations) {
-            rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          }
-
-          const freeText = rirElement.fullNode.extendedRemark.structuredRemark.freetext;
-          if (freeText.split('-')) {
-            if (freeText.split('-')[1]) {
-              seatType = freeText.split('-')[1].split(' ')[0];
-            }
-          }
-          seats.push({
-            id: 2,
-            type: seatType,
-            number: null,
-            segmentIds: rirSegments
-          });
-          continue;
-        }
-
-        // Condition 3
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'THIS SEGMENT HAS BEEN WAITLISTED') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 3,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-        }
-
-        // Condition 4
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'SEAT ASSIGNMENTS ARE ON REQUEST') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 4,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-          continue;
-        }
-
-        // Condition 5
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('UPGRADE CONFIRMED')) {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
-          seats.push({
-            id: 5,
-            type: null,
-            number: seatNumber,
-            segmentIds: rirSegments
-          });
-        }
-
-        // Condition 6
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'UPGRADE REQUESTED') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 6,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-        }
+  getMatchedSeats(id, remark) {
+    const list = [];
+    const matched = this.remarkManager.getMachedRemarkByStaticText(remark);
+    matched.forEach((m) => {
+      const seat = new SeatModel();
+      seat.segmentIds = this.pnrService.getSegmentNumbers(m.segmentNumberReferences).join(',');
+      seat.id = id;
+      if (id === 2 && this.remarkManager.getValue('CaSeatType').length > 0) {
+        seat.type = this.remarkManager.getValue('CaSeatType')[0];
       }
-
-      // For French
-      if (language === 'FR-CA') {
-        // Condition 1
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'LE CHOIX DES SIEGES NE SE FAIT QU A L ENREGISTREMENT') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 1,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-        }
-
-        // Condition 2
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('CHOIX DE SIEGE NON DISPONIBLE')) {
-          let rirSegments: any = null;
-          let seatType: any = null;
-          if (rirElement.associations) {
-            rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          }
-          const freeText = rirElement.fullNode.extendedRemark.structuredRemark.freetext;
-          if (freeText.split('-')) {
-            if (freeText.split('-')[1]) {
-              seatType = freeText.split('-')[1].split(' ')[0];
-            }
-          }
-          seats.push({
-            id: 2,
-            type: seatType,
-            number: null,
-            segmentIds: rirSegments
-          });
-          continue;
-        }
-
-        // Condition 3
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'CE SEGMENT A ETE MIS EN LISTE D ATTENTE') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 3,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-        }
-
-        // Condition 4
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext === 'ATTRIBUTION DES SIEGES SUR DEMANDE') {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 4,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-          continue;
-        }
-
-        // Condition 5
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('SURCLASSEMENT CONFIRME')) {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          const seatNumber = rirElement.fullNode.extendedRemark.structuredRemark.freetext.split(' ')[4];
-          seats.push({
-            id: 5,
-            type: null,
-            number: seatNumber,
-            segmentIds: rirSegments
-          });
-        }
-
-        // Condition 6
-        if (rirElement.fullNode.extendedRemark.structuredRemark.freetext.includes('SURCLASSEMENT DEMANDE')) {
-          const rirSegments = rirElement.associations.map((association) => association.tatooNumber);
-          seats.push({
-            id: 6,
-            type: null,
-            number: null,
-            segmentIds: rirSegments
-          });
-          continue;
-        }
+      if (id === 5 && this.remarkManager.getValue('CaUPFIB').length > 0) {
+        seat.number = this.remarkManager.getValue('CaUPFIB')[0];
       }
-    }
+      list.push(seat);
+    });
 
-    return this.groupSeats(seats);
+    return list;
   }
 
   /**
@@ -216,11 +93,27 @@ export class SeatsComponent implements OnInit {
    * @return void
    */
   public create(): void {
-    this.modalRef = this.modalService.show(SeatsFormComponent, this.modalRefConfig);
-    this.modalRef.content.title = 'Add Seat Remark';
-    this.modalRef.content.seats = this.seats;
+    if (!this.seats) {
+      this.seats = [];
+    }
+    // Merge config and data to pass to the modal.
+    const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats } } };
 
-    this.modalSubscribeOnClose();
+    this.modalRef = this.modalService.show(SeatsFormComponent, modalConfig);
+    this.modalRef.content.title = 'Add Seat Remarks';
+    this.isAdd = true;
+    // Subscribe on the modal's dismissal.
+  }
+
+  public editSeatRemark(segment) {
+    const modalConfig = { ...this.modalRefConfig, ...{ initialState: { seats: this.seats, selectedSegment: segment } } };
+    this.selectedSegment = segment;
+    this.modalRef = this.modalService.show(SeatsFormComponent, modalConfig);
+    this.modalRef.content.title = 'Modify Seat Remarks';
+    this.modalRef.content.selectedItems = this.seats.filter((x) => x.segmentIds === segment);
+    this.modalRef.content.loadSelctedItems();
+    this.isAdd = false;
+    // Subscribe on the modal's dismissal.
   }
 
   /**
@@ -228,7 +121,7 @@ export class SeatsComponent implements OnInit {
    * @param seat The instance of SeatModel to delete.
    */
   public delete(seat: SeatModel): void {
-    this.seats = this.seats.filter((s) => s !== seat);
+    this.seats = this.seats.filter((s) => s.segmentIds !== seat.segmentIds);
   }
 
   /**
@@ -239,11 +132,15 @@ export class SeatsComponent implements OnInit {
     this.modalService.onHide.subscribe(() => {
       if (this.modalRef) {
         if (this.modalRef.content.message === 'SAVED') {
-          const newSeat = this.modalRef.content.seatForm.value;
-
-          // Add the new seat to the seats.
-          if (newSeat) {
-            this.seats.push(newSeat);
+          // Get the selected seats from the modal.
+          const newSeats = this.modalRef.content.selectedItems;
+          if (newSeats.length > 0) {
+            if (!this.isAdd) {
+              // Add the new seat to the seats.
+              this.seats = this.seats.filter((s) => s.segmentIds !== this.selectedSegment);
+            }
+            this.seats = this.seats.concat(newSeats);
+            this.sortSeats();
           }
         }
       }
@@ -252,39 +149,21 @@ export class SeatsComponent implements OnInit {
     });
   }
 
-  /**
-   * Group an array of seats by remark id and seat type.
-   * @param seats The grouped seats.
-   */
-  private groupSeats(seats: Array<SeatModel>) {
-    let uniqueSeats = new Array<SeatModel>();
+  sortSeats() {
+    this.seats = this.seats.sort((a, b) => {
+      if (a.segmentIds === b.segmentIds) {
+        return a.id - b.id;
+      }
+      return parseInt(a.segmentIds, null) - parseInt(b.segmentIds, null);
+    });
+  }
 
-    for (const seat of seats) {
-      if (
-        uniqueSeats.filter((item) => item.id === seat.id).length === 0 ||
-        uniqueSeats.filter((item) => item.type === seat.type).length === 0
-      ) {
-        uniqueSeats.push(seat);
-      } else {
-        const duplicateSeatIndex = uniqueSeats.findIndex((item) => item.id === seat.id);
-        try {
-          if (uniqueSeats[duplicateSeatIndex]) {
-            if (uniqueSeats[duplicateSeatIndex].segmentIds && seat.segmentIds) {
-              uniqueSeats[duplicateSeatIndex].segmentIds = uniqueSeats[duplicateSeatIndex].segmentIds.concat(seat.segmentIds);
-            }
-            uniqueSeats[duplicateSeatIndex].type = seat.type ? seat.type : null;
-            uniqueSeats[duplicateSeatIndex].number = seat.number ? seat.number : null;
-          }
-        } catch (error) {
-          console.log('Error grouping the seats...' + error);
-        }
+  getRowSpanDisplay(segment, indx) {
+    if (indx > 0) {
+      if (segment === this.seats[indx - 1].segmentIds) {
+        return '';
       }
     }
-
-    uniqueSeats = uniqueSeats.filter((uniqueSeat, i) => {
-      return i === uniqueSeats.findIndex((item) => item.id === uniqueSeat.id);
-    });
-
-    return uniqueSeats;
+    return this.seats.filter((s) => s.segmentIds === segment).length;
   }
 }

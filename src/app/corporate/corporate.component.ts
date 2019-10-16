@@ -264,6 +264,9 @@ export class CorporateComponent implements OnInit {
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
+    if (this.councelorDetail.getIdentity() === 'ESC') {
+      this.invoiceRemarkService.writeESCRemarks(this.corpRemarksComponent.escRemarksComponent);
+     }
 
     if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);

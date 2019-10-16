@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -11,6 +12,7 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBM, and T
     Click Panel    Reporting
     Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
     Enter Destination Code    YYZ
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -29,6 +31,7 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is RBP, and T
     Click Panel    Reporting
     Select Routing Code    Africa
     Enter Destination Code    YYZ
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -50,6 +53,7 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is Not RBM an
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -71,6 +75,7 @@ Verify That "Reason for Travel" In FS Remark Is "1" If the CF Line Is Not RBM an
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

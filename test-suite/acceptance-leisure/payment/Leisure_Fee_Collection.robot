@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -31,7 +32,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
     Close Cryptic Display Window
     Open CA Migration Window
     Click Wrap PNR
-    Populate Reporting Required Fields
+    # Populate Reporting Required Fields
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Click Update Button    1

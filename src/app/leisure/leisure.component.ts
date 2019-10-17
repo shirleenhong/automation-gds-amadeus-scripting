@@ -584,9 +584,9 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   issueBsp() {
-    this.commonWarning = 'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
+    this.commonWarning = 'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the ' +
       'RM*FOP/-AP format is in the PNR.' +
-      'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark. <br> <br>';
+      ' If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark. <br> <br>';
     // this.modalRef = this.modalService.show(MessageComponent, {
     //   backdrop: 'static'
     // });

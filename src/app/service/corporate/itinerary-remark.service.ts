@@ -142,7 +142,7 @@ export class ItineraryRemarkService implements OnInit {
       }
       if (rems.length > 0 && rems[0].remarkText.substr(-5) !== frmGroup.value.language) {
         const additionalLanguageMap = new Map<string, string>();
-        additionalLanguageMap.set('AdditionalLang', frmGroup.value.language.substr(0, 2));
+        additionalLanguageMap.set('ItineraryLanguage', frmGroup.value.language.substr(0, 2));
         this.rms.createPlaceholderValues(additionalLanguageMap);
       }
     }

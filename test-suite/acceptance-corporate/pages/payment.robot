@@ -38,7 +38,7 @@ ${input_origTicketLine}    css=#originalTktLine
 ${input_departurecity}    css=#departureCity
 ${list_purchasetype}    css=#passPurchase
 ${list_faretype}    css=#fareType
-${button_update}    //i[@class='fas fa-edit']
+${button_update}    //i[@title='Click to Edit']
 ${input_lowestGdsFare}    css=#gdsFare
 ${input_consultantNo}    css=#consultantNo
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']

@@ -96,7 +96,13 @@ export class SegmentService {
                 }
 
                 if (segment.segmentType === 'TOR' || segment.segmentType === 'SEA') {
-                    const torPassenger = segment.passengerNo.split(',');
+                    let torPassenger = [];
+                    if (segment.passengerNo) {
+                        torPassenger = segment.passengerNo.split(',');
+                    } else {
+                        torPassenger.push('1');
+                    }
+
                     torPassenger.forEach(pass => {
                         relatePass.push(pass);
                     });

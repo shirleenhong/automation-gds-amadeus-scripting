@@ -188,7 +188,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.showLoading({ msg: 'Updating PNR remarks...', caller: 'UpdateRemarks' });
 
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.paymentRemarkService.removeRmFop());
     remarkCollection.push(
       this.paymentRemarkService.GetMatrixRemarks(
         this.paymentComponent.matrixReceipt.matrixReceipts,

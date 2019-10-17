@@ -301,6 +301,10 @@ export class SegmentService {
             if (segmentrem.dining) {
                 remText = remText + ' ' + segmentrem.dining + ' ' + segmentrem.noNights + ' NTS';
             }
+
+            if (segmentrem.noNights) {
+                remText = remText + ' ' + segmentrem.noNights + ' NTS';
+            }
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
     }
@@ -313,7 +317,7 @@ export class SegmentService {
                 remText = segmentrem.roomType;
             }
             if (segmentrem.mealPlan) {
-                remText = remText + ' ' + segmentrem.cabinNo;
+                remText = remText + ' ' + segmentrem.mealPlan;
             }
 
             if (segmentrem.noNights) {

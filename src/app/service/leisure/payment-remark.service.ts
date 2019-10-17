@@ -598,7 +598,7 @@ export class PaymentRemarkService {
     return remGroup;
   }
 
-  public removeRmFop() {
+  public removePayment() {
     const remGroup = new RemarkGroup();
     remGroup.group = 'FOP';
     remGroup.remarks = new Array<RemarkModel>();
@@ -626,33 +626,36 @@ export class PaymentRemarkService {
     remGroup.group = 'FOP';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
-
-    this.deleteBspTicketFop(remGroup);
+    let deletePayment = false;
 
     switch (fg.get('bspfop').value) {
       case 'CC':
         remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value.replace('/', ''));
+        deletePayment = true;
         break;
       case 'CK':
         remGroup.cryptics.push('FPCHEQUE');
+        deletePayment = true;
         break;
       case 'AP':
         remGroup.cryptics.push('PBN/YTOWL210N/PCIFOPCWT BSP/*');
         remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
+        deletePayment = true;
         break;
       default:
         break;
     }
+    this.deleteBspTicketFop(remGroup, deletePayment);
     return remGroup;
   }
 
-  private deleteBspTicketFop(remGroup: RemarkGroup) {
+  private deleteBspTicketFop(remGroup: RemarkGroup, deletePayment: boolean) {
     const line = this.pnrService.getRemarkLineNumber('FOP/-AP');
     if (line) {
       remGroup.deleteRemarkByIds.push(line);
     }
     const fop = this.pnrService.getFopElementLineNo();
-    if (fop.fopFreeText && fop.fopFreeText.indexOf('0639/') > -1) {
+    if (fop.fopFreeText && (fop.fopFreeText.indexOf('0639/') > -1 || deletePayment)) {
       remGroup.deleteRemarkByIds.push(fop.fopLineNo);
     }
   }

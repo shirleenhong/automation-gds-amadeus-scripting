@@ -4,6 +4,7 @@ Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
 Resource          base.robot
+Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment']

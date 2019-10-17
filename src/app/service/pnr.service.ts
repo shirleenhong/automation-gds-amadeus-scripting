@@ -107,7 +107,7 @@ export class PnrService {
         });
     }
 
-    getAgentIdCreatedPnr(){
+    getAgentIdCreatedPnr() {
         return this.pnrObj.header.agentIdCreated;
     }
 
@@ -127,7 +127,7 @@ export class PnrService {
             //     'LANGUAGE_PREF': 'EN',
             //     'SS_RIGHTS': []
             //   }
-           
+
             if (res) {
                 this.agentSign = res.AGENT_SIGN;
             }
@@ -143,7 +143,7 @@ export class PnrService {
             if (remarksList) {
                 for (const rm of remarksList) {
                     if (rm.freeFlowText.indexOf(searchText) === 0) {
-                        return rm.elementNumber; 
+                        return rm.elementNumber;
                     }
                 }
             }
@@ -151,7 +151,7 @@ export class PnrService {
         return '';
     }
 
-    getRemarkLineNumberStartsWith(searchText: string, type?: string) {        
+    getRemarkLineNumberStartsWith(searchText: string, type?: string) {
         if (this.isPNRLoaded) {
             let remarksList = this.pnrObj.rmElements;
             if (type === 'RI') {
@@ -540,9 +540,9 @@ export class PnrService {
             arrivalDate = elem.dropoffDate;
             controlNumber = elem.confirmationNumber;
             elemStatus = elem.status;
-            elemText = elem.carType[0] + ' ' +  elem.carCompanyCode +  ' ' +
-            elemStatus + elem.quantity + ' ' +  elem.location +  ' ' +
-            this.formatDate(elem.pickupDate);
+            elemText = elem.carType[0] + ' ' + elem.carCompanyCode + ' ' +
+                elemStatus + elem.quantity + ' ' + elem.location + ' ' +
+                this.formatDate(elem.pickupDate);
 
         } else {
             const fullnodetemp = elem.fullNode.travelProduct;
@@ -1105,7 +1105,7 @@ export class PnrService {
     getSegmentModel(freetext, index, type, lineNo, status) {
         let segmentModel: PassiveSegmentsModel;
         segmentModel = new PassiveSegmentsModel();
-        segmentModel.status =  status;
+        segmentModel.status = status;
         if (type === 'MIS' || type === 'CAR' || type === 'HTL') {
             // tslint:disable-next-line:max-line-length
             let regex = /TYP-(?<type>(.*))\/SUN-((?<vendorName>(.*)))\/SUC-(?<vendorCode>(.*))\/SC-(?<depCity>(.*))\/SD-(?<depdate>(.*))\/ST-(?<dateTime>(.*))\/EC-(?<destcity>(.*))\/ED-(?<arrdate>(.*))\/ET-(?<arrtime>(.*))\/CF-(?<conf>(.*))/g;
@@ -1384,35 +1384,29 @@ export class PnrService {
         return relatedPassenger;
     }
 
-    getTSTTicketed() {
-        const segmentinPNR = this.getSegmentTatooNumber();
-        const segments = [];
+    getUnticketedTst() {
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
             if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
                 if (tst.referenceForDataElement) {
-                    tst.referenceForDataElement.reference.forEach((ref) => {
-                        if (ref.qualifier === 'ST') {
-                            segments.push(ref.number);
-                        }
-                    });
+                    return false;
                 }
             }
         }
 
-        for (const fp of this.pnrObj.fpElements) {
-            if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
-                if (fp.fullNode.referenceForDataElement === undefined && segments.length < segmentinPNR.length) {
-                    return true;
-                }
-                for (const ref of fp.fullNode.referenceForDataElement.reference) {
-                    if (segments.indexOf(ref.number) === -1) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        // for (const fp of this.pnrObj.fpElements) {
+        //     if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
+        //         if (fp.fullNode.referenceForDataElement === undefined && segments.length < segmentinPNR.length) {
+        //             return true;
+        //         }
+        //         for (const ref of fp.fullNode.referenceForDataElement.reference) {
+        //             if (segments.indexOf(ref.number) === -1) {
+        //                 return true;
+        //             }
+        //         }
+        //     }
+        // }
+        return true;
     }
 
     getTicketedSegments(): string[] {
@@ -1585,5 +1579,22 @@ export class PnrService {
             }
             return this.destinationCity;
         }
+    }
+
+    public getFopElementLineNo(fop?) {
+        let fopLineNo = '';
+        let fopFreeText = '';
+        for (const fp of this.pnrObj.fpElements) {
+            if (fop) {
+                if (fp.fullNode.otherDataFreetext.longFreetext.indexOf(fop) > -1) {
+                    fopFreeText = fp.fullNode.otherDataFreetext.longFreetext;
+                    fopLineNo = fp.elementNumber;
+                }
+            } else {
+                fopFreeText = fp.fullNode.otherDataFreetext.longFreetext;
+                fopLineNo = fp.elementNumber;
+            }
+        }
+        return { fopLineNo, fopFreeText };
     }
 }

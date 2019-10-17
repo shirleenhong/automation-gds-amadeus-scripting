@@ -33,6 +33,8 @@ import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-
 import { OfcRemarkService } from '../service/corporate/ofc-remark.service';
 import { CounselorDetail } from '../globals/counselor-identity';
 import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
+import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
+import { SegmentService } from '../service/segment.service';
 
 @Component({
   selector: 'app-corporate',
@@ -57,6 +59,8 @@ export class CorporateComponent implements OnInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
+  @ViewChild(PassiveSegmentsComponent)
+  passiveSegmentsComponent: PassiveSegmentsComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -78,6 +82,8 @@ export class CorporateComponent implements OnInit {
     private councelorDetail: CounselorDetail,
     private ofcRemarkService: OfcRemarkService,
     private visaPassportService: VisaPassportRemarkService,
+    private segmentService: SegmentService,
+    private amadeusRemarkService: AmadeusRemarkService
   ) {
     this.initData();
   }
@@ -151,6 +157,13 @@ export class CorporateComponent implements OnInit {
     await this.loadPnrData();
     this.workflow = 'wrap';
   }
+
+  public async AddSegment() {
+    await this.getPnrService();
+    this.workflow = 'segment';
+  }
+
+
 
   async loadPnrData() {
     this.showLoading('Loading PNR and Data', 'initData');
@@ -264,6 +277,9 @@ export class CorporateComponent implements OnInit {
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
+    if (this.councelorDetail.getIdentity() === 'ESC') {
+      this.invoiceRemarkService.writeESCRemarks(this.corpRemarksComponent.escRemarksComponent);
+    }
 
     if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
@@ -334,4 +350,43 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
+
+  async addSegmentToPNR() {
+    this.showLoading('Adding Segment(s) to PNR...', 'initData');
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.segmentService.deleteSegments(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    this.amadeusRemarkService.BuildRemarks(remarkCollection);
+    await this.amadeusRemarkService.SubmitRemarks().then(
+      async () => {
+        this.isPnrLoaded = false;
+        await this.getPnrService();
+        await this.addSemgentsRirRemarks();
+        this.workflow = '';
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
+
+  async addSemgentsRirRemarks() {
+    debugger;
+    const remarkCollection2 = new Array<RemarkGroup>();
+    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
+
+    await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
+    this.amadeusRemarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
 }

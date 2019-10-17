@@ -341,13 +341,6 @@ Verify PNR Approval Is Processed Correctly
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1
 
-Verify Expected Remarks Are Written In The PNR
-    : FOR    ${i}    IN RANGE   0    99
-    \    ${i}    Evaluate    ${i} + 1
-    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${expected_remark_${i}}
-    \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}
-    \    Exit For Loop If    "${exists}" == "False"
-
 Verify PNR Is Queued For Approval
     Open Command Page
     Enter Cryptic Command    RTQ 

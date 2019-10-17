@@ -30,6 +30,7 @@ export class PassiveSegmentsModel {
   zzairlineCode: string;
   lineNo: string;
   status: string;
+  passengerNo: string;
 
   // rail
   trainNumber: string;

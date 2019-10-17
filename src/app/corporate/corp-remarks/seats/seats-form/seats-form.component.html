@@ -5,57 +5,113 @@
   </button>
 </div>
 
-<div class="modal-body">
-
-  <form id="seatForm" [formGroup]="seatForm" (ngSubmit)="save()">
-
-    <p class="alert alert-danger" *ngIf="exists">
-      The seat remark already exists.
-    </p>
-
-    <div class="form-group row">
-      <div class="col-sm-4">Seat Remark Option</div>
-      <div class="col-sm-8">
-        <select class="form-control" formControlName="id" id="seatFormId">
-          <option></option>
-          <option *ngFor="let remarkOption of remarkOptions" [value]="remarkOption.id">
-            {{ remarkOption.text }}
+<div class="modal-body form-group">
+  <form id="seatsForm" [formGroup]="seatsForm" (ngSubmit)="save()">
+    <!-- headers -->
+    <div class="row">
+      <div class="col-2">Segment:</div>
+      <div class="col-3">
+        <select formControlName="segment" class="form-control">
+          <option>&nbsp;</option>
+          <option *ngFor="let id of segmentIdOptions" [value]="id">
+            {{ id }}
           </option>
         </select>
       </div>
     </div>
 
-    <div class="form-group row" *ngIf="seatForm.controls.id.value == 2">
-      <div class="col-sm-4">Seat Type</div>
-      <div class="col-sm-8">
-        <select class="form-control" formControlName="type" id="seatFormType">
-          <option></option>
-          <option *ngFor="let type of types" [value]="type">
-            {{ type }}
-          </option>
-        </select>
+    <div class="row">
+      <div class="col">
+        <label>
+          <input type="checkbox" formControlName="check1" name="check1" (change)="checkChanged(1)" />
+          SEATING SUBJECT TO AIRPORT OR ONLINE CHECK IN
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>
+          <input type="checkbox" formControlName="check2" name="check2" (change)="checkChanged(2)" />
+          PREFERRED SEAT UNAVAILABLE.
+          <select class="form-control seatType" formControlName="seatType" name="seatType" disabled>
+            <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+          </select>
+          CONFIRMED
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>
+          <input type="checkbox" formControlName="check3" name="check3" (change)="checkChanged(3)" />
+          THIS SEGMENT HAS BEEN WAITLIST
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>
+          <input type="checkbox" formControlName="check4" name="check4" (change)="checkChanged(4)" />
+          SEAT ASSIGNMENTS ARE ON REQUEST
+        </label>
       </div>
     </div>
 
-    <div class="form-group row" *ngIf="seatForm.controls.id.value == 5">
-      <div class="col-sm-4">Seat Number</div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" formControlName="number" id="seatFormNumber" />
+    <div class="row">
+      <div class="col">
+        <label>
+          <input type="checkbox" formControlName="check5" name="check5" (change)="checkChanged(5)" />
+          UPGRADE CONFIRMED -
+          <input
+            type="text"
+            class="form-control seatType"
+            formControlName="seatNumber"
+            name="seatNumber"
+            placeholder="Seat Number"
+            disabled
+          />
+          CONFIRMED
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>
+          <input type="checkbox" formControlName="check6" name="check6" (change)="checkChanged(6)" />
+          UPGRADE REQUESTED - CHECK CLEARANCE WITH AIRLINE OR AIRLINE WEBSITE
+        </label>
       </div>
     </div>
 
-    <div class="form-group  row">
-      <div class="col-sm-4">Itinerary Segments:</div>
-      <div class="col-sm-8">
-        <app-segment-select formControlName="segmentIds" name="segmentIds" id="seatFormSegmentId" #segmentApp>
-        </app-segment-select>
+    <!-- <div formArrayName="seatsFormArray" *ngFor="let remarkOption of remarkOptions; let i = index">
+     
+      <div class="row row-compact" [formGroupName]="i">
+        <div class="col-lg-8 col-sm-8 col-xs-8">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" formControlName="selected" />
+              {{ remarkOption.text }}
+            </label>
+          </div>
+        </div>
+        <div class="col-lg-4 col-sm-4 col-xs-4">
+          <label *ngIf="remarkOption.id === 2">
+            <select class="form-control" formControlName="type" style="width: 100%">
+              <option value="" disabled selected>-- Seat Type --</option>
+              <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+            </select>
+          </label>
+          <label *ngIf="remarkOption.id === 5">
+            <input type="text" class="form-control" formControlName="number" placeholder="Seat Number" />
+          </label>
+        </div>
       </div>
-    </div>
+    </div>-->
   </form>
 </div>
 
 <div class="modal-footer">
-  <button type="submit" form="seatForm" class="btn btn-outline-dark" [disabled]="!seatForm.valid || exists">
+  <button type="submit" form="seatsForm" class="btn btn-outline-dark" [disabled]="!seatsForm.valid || !hasSelectedItems">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="close()">

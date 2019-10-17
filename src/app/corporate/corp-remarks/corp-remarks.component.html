@@ -12,4 +12,7 @@
   <tab heading="Document PNR" id="documentPnrTab" tabOrder="2">
     <app-document-pnr></app-document-pnr>
   </tab>
+  <tab heading="ESC Remarks" id="escTab" tabOrder="3" *ngIf="isEsc">
+    <app-esc-remarks></app-esc-remarks>
+  </tab>
 </tabset>

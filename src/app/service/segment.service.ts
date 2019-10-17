@@ -94,6 +94,22 @@ export class SegmentService {
                     }
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
+
+                if (segment.segmentType === 'TOR' || segment.segmentType === 'SEA') {
+                    let torPassenger = [];
+                    if (segment.passengerNo) {
+                        torPassenger = segment.passengerNo.split(',');
+                    } else {
+                        torPassenger.push('1');
+                    }
+
+                    torPassenger.forEach(pass => {
+                        relatePass.push(pass);
+                    });
+                    passive.quantity = relatePass.length;
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
+                }
+
                 passive.relatedPassengers = relatePass;
                 passive.status = 'HK';
                 passive.flightNo = '1';
@@ -169,6 +185,9 @@ export class SegmentService {
                     }
                     if (segmentrem.segmentType === 'INS') {
                         this.rirIns(pnrSegment, segmentrem, rmGroup);
+                    }
+                    if (segmentrem.segmentType === 'TOR') {
+                        this.rirTour(pnrSegment, segmentrem, rmGroup);
                     }
                 }
 
@@ -280,10 +299,35 @@ export class SegmentService {
             }
 
             if (segmentrem.dining) {
-                remText = remText + ' ' + segmentrem.dining + ' ' + segmentrem.noNights + ' NTS';
+                remText = remText + ' ' + segmentrem.dining;
+            }
+
+            if (segmentrem.noNights) {
+                remText = remText + ' ' + segmentrem.noNights + ' NTS';
             }
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
+    }
+
+    private rirTour(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        let remText = '';
+        if (type === 'TOR') {
+            if (segmentrem.roomType) {
+                remText = segmentrem.roomType;
+            }
+            if (segmentrem.mealPlan) {
+                remText = remText + ' ' + segmentrem.mealPlan;
+            }
+
+            if (segmentrem.noNights) {
+                remText = remText + ' ' + segmentrem.noNights + ' NTS';
+            }
+            rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+        }
+
+        // if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+        // if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
     }
 
     private rirIns(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
@@ -454,11 +498,11 @@ export class SegmentService {
 
         switch (segment.segmentType) {
             case 'TOR':
-                let tourName = suplierName + ' ' + segment.tourName;
-                if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
-                if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
-                    'NTS/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
+                const tourName = suplierName + ' ' + segment.tourName;
+                // if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+                // if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName +
+                    '/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
                     '/ST-' + startTime + '/EC-' + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;

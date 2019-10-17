@@ -9,5 +9,7 @@
     <tab heading="Leisure Fee" id="tab1">
         <app-leisure-fee></app-leisure-fee>
     </tab>
-
+    <tab *ngIf="bspTicketFopValid" heading="BSP Ticket FOP" id="tab1">
+        <app-bsp-ticket-fop></app-bsp-ticket-fop>
+    </tab>
 </tabset>

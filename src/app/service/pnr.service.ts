@@ -491,6 +491,7 @@ export class PnrService {
         let airType = '';
         let segType = type;
         let passiveType = '';
+    
 
         if (type === 'HHL') {
             segType = 'HTL';
@@ -563,6 +564,7 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+               
                 // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
@@ -596,8 +598,9 @@ export class PnrService {
             classservice,
             controlNumber,
             airType,
-            passive: passiveType
-        };
+            passive: passiveType,
+            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' &&  elemStatus === 'GK'))
+        };      
         this.segments.push(segment);
     }
 
@@ -1143,9 +1146,11 @@ export class PnrService {
                 segmentModel.arrivalDate = match.groups.arrdate;
                 segmentModel.arrivalTime = match.groups.arrtime;
                 segmentModel.confirmationNo = match.groups.conf;
+                segmentModel.isPassive = true;
 
             } else if (type === 'HTL') {
                 segmentModel.segmentType = type;
+                segmentModel.isPassive = true;
             }
             return segmentModel;
         }
@@ -1168,6 +1173,7 @@ export class PnrService {
         segmentModel.arrivalTime = element.arrivalTime;
         segmentModel.airlineCode = element.airlineCode;
         segmentModel.status = element.status;
+        segmentModel.isPassive = (element.status === 'GK');
         return segmentModel;
     }
 
@@ -1183,6 +1189,7 @@ export class PnrService {
         segmentModel.destinationCity = element.arrivalStation;
         segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
         segmentModel.status = element.status;
+        segmentModel.isPassive = true;
         const regex = /(?<hotelInfo>(.*)),CF:(?<confirmationNumber>(.*?),)/g;
         const match = regex.exec(freetext);
 

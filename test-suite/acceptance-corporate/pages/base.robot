@@ -39,7 +39,7 @@ ${button_add_segment}    //button[contains(text(), 'Add Segment')]
 @{add_segment_pages}    Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
-@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
@@ -74,6 +74,7 @@ Click Full Wrap
     Set Test Variable    ${routing_code_selected}    no
     Set Test Variable    ${destination_selected}    no
     Set Test Variable    ${visa_complete}    no
+    Set Test Variable   ${esc_remarks_complete}    no
     [Teardown]    Take Screenshot
 
 Click Itinerary And Queue
@@ -145,7 +146,9 @@ Assign Current Date
     ${current_day}     Convert Date     ${current_date}    %d
     ${current_month}     Convert Date     ${current_date}    %m
     ${current_year}     Convert Date     ${current_date}    %y
+    ${current_time}     Convert Date     ${current_date}    %H:%M
     ${month}     Convert Month To MMM    ${current_date}
+    Set Test Variable    ${current_time}    
     Set Test Variable    ${current_date}   ${current_day}${month}
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
@@ -235,7 +238,6 @@ Navigate From Payment
     ${in_payment}    Run Keyword And Return Status    Should Contain     ${payment_pages}    ${current_page}
     Run Keyword If    "${in_payment}" == "False"    Click Payment Panel
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
-    ...   ELSE     Collapse Payment Panel
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -246,7 +248,6 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
-    ...    ELSE    Collapse Reporting Panel
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
@@ -256,7 +257,8 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "Seats"    Click Seats Tab
     ...    ELSE IF    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
-    ...    ELSE    Collapse Remarks Panel
+    ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
+
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -264,7 +266,6 @@ Navigate From Ticketing
     Run Keyword If    "${in_ticketing}" == "False"    Click Ticketing Panel
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
-    ...   ELSE   Collapse Ticketing Panel
 
 Navigate From Queue
     [Arguments]    ${destination_page}
@@ -273,7 +274,6 @@ Navigate From Queue
     Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
-    ...    ELSE     Collapse Queue Panel
 
 Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no    
@@ -304,7 +304,8 @@ Collapse Ticketing Panel
     Set Test Variable    ${current_page}    Full Wrap PNR
 
 Select Counselor Identity: ${identity}
-    Navigate To Page CWT Corporate
+    ${in_corp}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
+    Run Keyword If    "${in_corp}" == "False"    Navigate To Page CWT Corporate
     Wait Until Page Contains Element    ${list_counselor_identity}    30
     Select From List By Label    ${list_counselor_identity}     ${identity}
     Set Test Variable    ${actual_counselor_identity}    ${identity}

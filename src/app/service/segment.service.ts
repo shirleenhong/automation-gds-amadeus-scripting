@@ -299,7 +299,7 @@ export class SegmentService {
             }
 
             if (segmentrem.dining) {
-                remText = remText + ' ' + segmentrem.dining + ' ' + segmentrem.noNights + ' NTS';
+                remText = remText + ' ' + segmentrem.dining;
             }
 
             if (segmentrem.noNights) {

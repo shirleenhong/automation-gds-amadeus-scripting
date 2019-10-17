@@ -180,6 +180,9 @@ export class SegmentService {
                     if (segmentrem.segmentType === 'INS') {
                         this.rirIns(pnrSegment, segmentrem, rmGroup);
                     }
+                    if (segmentrem.segmentType === 'TOR') {
+                        this.rirTour(pnrSegment, segmentrem, rmGroup);
+                    }
                 }
 
                 if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
@@ -294,6 +297,27 @@ export class SegmentService {
             }
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
+    }
+
+    private rirTour(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        let remText = '';
+        if (type === 'TOR') {
+            if (segmentrem.roomType) {
+                remText = segmentrem.roomType;
+            }
+            if (segmentrem.mealPlan) {
+                remText = remText + ' ' + segmentrem.cabinNo;
+            }
+
+            if (segmentrem.noNights) {
+                remText = remText + ' ' + segmentrem.noNights + ' NTS';
+            }
+            rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+        }
+
+        // if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+        // if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
     }
 
     private rirIns(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
@@ -464,11 +488,11 @@ export class SegmentService {
 
         switch (segment.segmentType) {
             case 'TOR':
-                let tourName = suplierName + ' ' + segment.tourName;
-                if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
-                if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
-                    'NTS/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
+                const tourName = suplierName + ' ' + segment.tourName;
+                // if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+                // if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName +
+                    '/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
                     '/ST-' + startTime + '/EC-' + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;

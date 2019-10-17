@@ -6,8 +6,8 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -20,7 +20,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   @Input()
   accountingRemark: MatrixAccountingModel;
   accountingRemarkList: Array<SelectItem>;
+
+  airlineCorporatePass: AirlineCorporatePass;
   airlineCorporatePasses: Array<AirlineCorporatePass>;
+
   vendorCodeList: Array<SelectItem>;
   supplierCodeList: Array<any>;
   passengerList: Array<any>;
@@ -92,7 +95,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       otherDescription: new FormControl('', []),
       vendorCode: new FormControl('', [Validators.required]),
       cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
-      expDate: new FormControl('', [Validators.required, validateExpDate()])
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
+
+      airlineCorporatePass: new FormControl('', [Validators.required])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -200,11 +205,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       case 'ACPR':
         // Airline Corporate Pass Redemption
         this.name = 'Airline Record Locator';
+        this.airlineCorporatePasses = this.getAirlineCorporatePasses();
         this.checkSupplierCode();
         this.enableFormControls(['fareType'], this.needFaretype);
-        if (this.airlineCorporatePasses.length === 0) {
-          this.airlineCorporatePasses = this.getAirlineCorporatePasses();
-        }
+        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
+        this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         break;
       case 'NONBSPEXCHANGE':
         this.enableFormControls(['otherTax', 'segmentNo', 'originalTktLine'], false);
@@ -498,6 +503,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * WIP: Get the list of Airline Corporate Passes.
    */
   getAirlineCorporatePasses(): Array<AirlineCorporatePass> {
-    return [];
+    return AirlineCorporatePass.getSampleData();
   }
 }

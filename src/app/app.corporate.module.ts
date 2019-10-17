@@ -34,6 +34,7 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
+import { AirlineCorporatePassRedemptionComponent } from './corporate/payments/airline-corporate-pass-redemption/airline-corporate-pass-redemption.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-re
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent,
-    EscRemarksComponent
+    EscRemarksComponent,
+    AirlineCorporatePassRedemptionComponent
   ],
   imports: [
     BrowserModule,

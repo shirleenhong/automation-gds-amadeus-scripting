@@ -8,9 +8,8 @@ describe('AirlineCorporatePassRedemptionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AirlineCorporatePassRedemptionComponent ]
-    })
-    .compileComponents();
+      declarations: [AirlineCorporatePassRedemptionComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

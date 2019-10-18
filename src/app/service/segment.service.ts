@@ -212,7 +212,6 @@ export class SegmentService {
     }
 
     private writeCorpRirRemarks() {
-        debugger;
         this.corpRemarks.forEach(element => {
             const relatedSegments = [];
             if (element.segment) {
@@ -247,7 +246,6 @@ export class SegmentService {
     }
 
     private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
-        debugger;
         if (segmentrem.zzairlineCode) {
             if (isCorp) {
                 this.assignCorpPlaceholders(['ZZZAirlineCode'], [segmentrem.zzairlineCode], null, null, pnrSegment.tatooNo, null);
@@ -275,7 +273,6 @@ export class SegmentService {
     }
 
     private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
-        debugger;
         let province = '';
         let zip = '';
         const optionalHotelRemarks = [{

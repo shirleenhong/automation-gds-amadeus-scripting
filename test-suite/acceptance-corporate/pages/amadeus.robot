@@ -361,6 +361,7 @@ Ticket TST${tst_no}
     Enter Cryptic Command    TTP/T${tst_no}
     Sleep    4
     Enter Cryptic Command    RT${actual_record_locator}
+    Set Test Variable    ${ticketed_tst}    ${tst_no}
     
 Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH

@@ -34,7 +34,6 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
-import { AirlineCorporatePassRedemptionComponent } from './corporate/payments/airline-corporate-pass-redemption/airline-corporate-pass-redemption.component';
 
 @NgModule({
   declarations: [
@@ -67,8 +66,7 @@ import { AirlineCorporatePassRedemptionComponent } from './corporate/payments/ai
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent,
-    EscRemarksComponent,
-    AirlineCorporatePassRedemptionComponent
+    EscRemarksComponent
   ],
   imports: [
     BrowserModule,
@@ -90,4 +88,4 @@ import { AirlineCorporatePassRedemptionComponent } from './corporate/payments/ai
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

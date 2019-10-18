@@ -7,6 +7,7 @@ import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -19,6 +20,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   @Input()
   accountingRemark: MatrixAccountingModel;
   accountingRemarkList: Array<SelectItem>;
+  airlineCorporatePasses: Array<AirlineCorporatePass>;
   vendorCodeList: Array<SelectItem>;
   supplierCodeList: Array<any>;
   passengerList: Array<any>;
@@ -130,6 +132,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.accountingRemarkList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
+      { itemText: 'Airline Corporate Pass Redemption', itemValue: 'ACPR' },
       { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
       { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
       { itemText: 'Non BSP Exchange', itemValue: 'NONBSPEXCHANGE' },
@@ -193,6 +196,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
 
         this.enableFormControls(['fareType'], accRemark !== 'ACPP');
+        break;
+      case 'ACPR':
+        // Airline Corporate Pass Redemption
+        this.name = 'Airline Record Locator';
+        this.checkSupplierCode();
+        this.enableFormControls(['fareType'], this.needFaretype);
+        if (this.airlineCorporatePasses.length === 0) {
+          this.airlineCorporatePasses = this.getAirlineCorporatePasses();
+        }
         break;
       case 'NONBSPEXCHANGE':
         this.enableFormControls(['otherTax', 'segmentNo', 'originalTktLine'], false);
@@ -480,5 +492,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.get('otherDescription').clearValidators();
       this.showOtherDescription = false;
     }
+  }
+
+  /**
+   * WIP: Get the list of Airline Corporate Passes.
+   */
+  getAirlineCorporatePasses(): Array<AirlineCorporatePass> {
+    return [];
   }
 }

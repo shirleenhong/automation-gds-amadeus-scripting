@@ -115,7 +115,7 @@
 
     <div *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'" class="form-group  row">
       <div class="col-sm-4">
-        <label id="confirmationLabel">{{ name }} </label>
+        <label id="confirmationLabel">{{ name }}</label>
       </div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="supplierConfirmatioNo" formControlName="supplierConfirmatioNo"
@@ -257,9 +257,8 @@
       </div>
     </div>
 
-    <div
-      *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || (needFaretype && accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE')"
-      class="form-group row">
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || (needFaretype && accountingRemark.accountingTypeRemark
+      === 'NONBSPEXCHANGE') || accountingRemark.accountingTypeRemark === 'ACPR'" class="form-group row">
       <div class="col-sm-4">Fare Type:</div>
       <div class="col-sm-8">
         <select autofocus id="fareType" class="form-control" name="fareType" [(ngModel)]="accountingRemark.fareType"

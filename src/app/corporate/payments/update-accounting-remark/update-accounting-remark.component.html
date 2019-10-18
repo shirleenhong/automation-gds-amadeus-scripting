@@ -27,6 +27,19 @@
       </div>
     </div>
 
+    <!-- Airline Corporate Pass -->
+    <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
+      <div class="col-sm-4">Airline Corporate Pass:</div>
+      <div class="col-sm-8">
+        <select id="airlineCorporatePassSelection" class="form-control" [(ngModel)]="airlineCorporatePass"
+          formControlName="airlineCorporatePass" name="airlineCorporatePass" required>
+          <option *ngFor="let item of airlineCorporatePasses" [value]="item">
+            {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP'" class=" row form-group">
       <div class="col-4"></div>
       <div class="col-8">
@@ -61,7 +74,7 @@
       </div>
     </div>
 
-   
+
     <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
       <div class="form-group  row">
         <div class="col-sm-4">Description:</div>
@@ -77,13 +90,14 @@
     </div>
 
     <div *ngIf="showOtherDescription">
-    <div class="form-group  row">
-      <div class="col-sm-4">Other Cost Description: </div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="otherDescription" [(ngModel)]="accountingRemark.otherCostDescription" formControlName="otherDescription" required
-          formControlName="otherDescription" name="otherDescription" />
+      <div class="form-group  row">
+        <div class="col-sm-4">Other Cost Description: </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="otherDescription"
+            [(ngModel)]="accountingRemark.otherCostDescription" formControlName="otherDescription" required
+            formControlName="otherDescription" name="otherDescription" />
+        </div>
       </div>
-    </div>
     </div>
 
 

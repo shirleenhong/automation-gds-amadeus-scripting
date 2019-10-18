@@ -47,10 +47,11 @@ export class CorpRemarksService {
         } else if (seat.id === 2) {
           seatMap.set('CASeatRule', 'PREFERRED');
           if (seat.type) {
-            this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'PREFERRED SEAT UNAVAILABLE');
             const seatType = new Map<string, string>();
             seatType.set('CaSeatType', seat.type);
-            this.remarksManagerService.createPlaceholderValues(seatType, null);
+            this.remarksManagerService.createPlaceholderValues(seatType, seatMap, tatooNumber, null, 'PREFERRED SEAT UNAVAILABLE');
+          } else {
+            this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'PREFERRED SEAT UNAVAILABLE');
           }
 
           this.remarksManagerService.createPlaceholderValues(null, seatMap, tatooNumber, null, 'PLEASE CHECK AGAIN AT THE GATE');

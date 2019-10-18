@@ -291,7 +291,17 @@ export class PaymentRemarkService {
           account.otherTax,
           segmentAssoc
         );
+
         itiRemarks.set('ConfNbr', account.tktLine);
+        if (account.descriptionapay === 'OTHER COSTS') {
+          itiRemarks.set('RemarkDescription', account.otherCostDescription);
+        } else {
+          itiRemarks.set('RemarkDescription', account.descriptionapay);
+        }
+        const totalTax = parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
+        itiRemarks.set('BaseAmt', account.baseAmount);
+        itiRemarks.set('TotalTax', totalTax.toString());
+        itiRemarks.set('CCVendor', account.vendorCode);
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
     });

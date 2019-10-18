@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -163,7 +164,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     ...    Tour Package
     ...    Visa and Passport
     ...    CWT Itinerary
-    [Tags]    sanity    prod
+    [Tags]    sanity    prod    not_ready
     Login to Amadeus Production
     Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
     Open CA Migration Prod
@@ -221,7 +222,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
 
 Verify RMX Cancel Remarks Are Written In The PNR
     [Documentation]    Cancel All segments
-    [Tags]    sanity    prod
+    [Tags]    sanity    prod    not_ready
     Open CA Migration Prod
     Click Cancel Segment
     Enter Requestor Name    FirstName LastName

@@ -1,5 +1,5 @@
 *** Settings ***
-Force Tags        US7539
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -12,6 +12,7 @@ Verify Destination City Codes List When There Is 1 Segment Type In The PNR
     Click Panel    Reporting
     Select Routing Code    Asia incl. India
     Enter Destination Code    MNL
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -31,6 +32,7 @@ Verify Destination City Codes List When There Is More Than 1 Segment Type In The
     Click Panel    Reporting
     Select Routing Code    Asia incl. India
     Enter Destination Code    HKG
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

@@ -4,54 +4,82 @@ import { RemarkModel } from '../../models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 import { FormGroup } from '@angular/forms';
 
+
+declare var smartScriptSession: any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceRemarkService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
+
   constructor(private pnrService: PnrService) { }
 
-  public GetMatrixInvoice(fg: FormGroup) {
+  public async GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
     this.remGroup.group = 'Matrix Invoice';
     this.remGroup.remarks = new Array<RemarkModel>();
     this.formGroup = fg;
-    if (this.formGroup.get('selection').value === 'itinerary') {
-      this.setItineraryOnlyRemarks();
-    } else if (this.formGroup.get('selection').value === 'invoice') {
-      this.setInvoicePNRRemarks();
-    }
+    let invSent = true;
+    await this.setInvoicePNRRemarks(this.formGroup.get('selection').value).then(
+      async (x) => {
+        invSent = x;
+      }
+    );
+
     this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator());
-    return this.remGroup;
+    return { 'remgroup': this.remGroup, 'invSent': invSent };
   }
 
   public setItineraryOnlyRemarks() {
     this.remGroup.cryptics.push('BT');
   }
 
-  public setInvoicePNRRemarks() {
-    const passengers = this.formGroup.controls.passengerNo.value;
-    let segments = this.formGroup.controls.segmentNo.value;
-    const pax = this.pnrService.getPassengers().length;
-    const segmentsinpnr = this.pnrService.getSegmentTatooNumber();
-    const segmentsSelected = (this.formGroup.controls.segmentNo.value ? this.formGroup.controls.segmentNo.value.split(",") : '');
+  async getInvoiceResponse(command: string) {
+    let value = '';
+    await smartScriptSession.send(command).then((res) => {
+      value = res.Response;
+    });
+    return value;
+  }
 
-    segments = (segmentsinpnr.length === segmentsSelected.length ? '' : segments);
+  public async setInvoicePNRRemarks(selection: string) {
+    let invoiceCryptic = '';
+    let invoicesent = true;
 
-    // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
-    if (pax === 1 && !this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv" + ((segments) ? "/S" + segments : ""));
+    if (selection === 'itinerary') {
+      invoiceCryptic = 'BT';
+    } else {
+      const passengers = this.formGroup.controls.passengerNo.value;
+      let segments = this.formGroup.controls.segmentNo.value;
+      const pax = this.pnrService.getPassengers().length;
+      const segmentsinpnr = this.pnrService.getSegmentTatooNumber();
+      const segmentsSelected = (this.formGroup.controls.segmentNo.value ? this.formGroup.controls.segmentNo.value.split(",") : '');
+
+      segments = (segmentsinpnr.length === segmentsSelected.length ? '' : segments);
+
+      // Push cryptic commands for the Invoice to Matrix feature. Refer to DE2183.
+      if (pax === 1 && !this.hasAirSegmentSelected()) {
+        invoiceCryptic = 'inv' + ((segments) ? '/S' + segments : '');
+      }
+      if (pax > 1 && !this.hasAirSegmentSelected()) {
+        invoiceCryptic = 'invj' + ((passengers) ? '/P' + passengers : '') + ((segments) ? '/S' + segments : '');
+      }
+      if (pax === 1 && this.hasAirSegmentSelected()) {
+        invoiceCryptic = 'inv/nofare' + ((segments) ? '/S' + segments : '');
+      }
+      if (pax > 1 && this.hasAirSegmentSelected()) {
+        invoiceCryptic = 'invj/nofare' + ((passengers) ? '/P' + passengers : '') + ((segments) ? '/S' + segments : '');
+      }
     }
-    if (pax > 1 && !this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("invj" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
+
+    const invresponse = await this.getInvoiceResponse(invoiceCryptic);
+    if (invresponse.indexOf('OK') === -1 || invresponse.indexOf('SENT') === -1) {
+      await this.getInvoiceResponse(invoiceCryptic);
+      invoicesent = false;
     }
-    if (pax === 1 && this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("inv/nofare" + ((segments) ? "/S" + segments : ""));
-    }
-    if (pax > 1 && this.hasAirSegmentSelected()) {
-      this.remGroup.cryptics.push("invj/nofare" + ((passengers) ? "/P" + passengers : "") + ((segments) ? "/S" + segments : ""));
-    }
+    return invoicesent;
   }
 
   /**

@@ -65,6 +65,8 @@
         </select>
       </div>
     </div>
+
+    <ng-container *ngTemplateOutlet="passengerAssoc"></ng-container>
   </div>
 </ng-template>
 
@@ -141,6 +143,7 @@
           [(ngModel)]="passiveSegments.dining" />
       </div>
     </div>
+    <ng-container *ngTemplateOutlet="passengerAssoc"></ng-container>
 
   </div>
 
@@ -310,6 +313,19 @@
     <div class="col-sm-8">
       <input type="text" class="form-control" id="noPeople" name="noPeople" maxlength="2" formControlName="noPeople"
         [(ngModel)]="passiveSegments.noPeople" NumberOnlyMask />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #passengerAssoc>
+  <div class="form-group  row" [formGroup]="segmentForm">
+    <div class="col-sm-4"><label id="lblName"> Passenger(s):</label></div>
+    <div class="col-sm-8">
+      <app-passenger-select formControlName="passengerNo" name="passengerNo" id="passengerNo"
+        [(ngModel)]="passiveSegments.passengerNo" #passengerApp>
+      </app-passenger-select>
+      <!-- <input type="text" class="form-control" id="passengerNo" name="passengerNo" maxlength="12"
+            formControlName="passengerNo" [(ngModel)]="passiveSegments.passengerNo" /> -->
     </div>
   </div>
 </ng-template>
@@ -982,6 +998,18 @@
           [(ngModel)]="passiveSegments.zipCode" maxlength="10" AlphaNumericMask />
       </div>
     </div>
+
+    <!-- <div class="row form-group">
+      <div class="col-5">
+        <div class="row form-group">
+          <div class="col-sm-5">Passenger(s): </div>
+          <div class="col-sm-2">
+            <app-passenger-select formControlName="passengerNo" name="passengerNo" id="passengerNo" #passengerApp>
+            </app-passenger-select>
+          </div>
+        </div>
+      </div>
+    </div> -->
 
   </div>
 </ng-template>

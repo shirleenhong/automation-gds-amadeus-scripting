@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -13,6 +14,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Enter Destination Code    YYZ
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -53,6 +55,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -103,6 +106,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Select Leisure Fee Form of Payment    Cheque
     Select Traveler Province    Address outside of Canada
     Click Save Button
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

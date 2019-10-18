@@ -73,7 +73,8 @@ Select Unticketed Air Segments
     Wait Until Element Is Visible    ${input_unticketedTst}    30
     Click Button    ${input_unticketedTst}
     Wait Until Element Is Visible    ${list_segments}    30
-    Run Keyword And Continue On Failure    Page Should Not Contain Element    ${list_segments}//input[@value='${ticketed_tst}'] 
+    ${has_ticketed}     Run Keyword And Return Status     Should Not Be Empty     ${ticketed_tst}
+    Run Keyword If    "${has_ticketed}" == "True"    Run Keyword And Continue On Failure    Page Should Not Contain Element    ${list_segments}//input[@value='${ticketed_tst}'] 
     :FOR    ${segment_number}    IN    @{segment_number}
     \    Click Element    ${list_segments}//input[@value='${segment_number}']
     Click Element    ${input_unticketedTst}

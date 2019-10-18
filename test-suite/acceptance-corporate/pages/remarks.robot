@@ -44,8 +44,10 @@ ${input_esc_read_no}    //input[@id='isESCRead' and @ng-reflect-value='N']
 *** Keywords ***
 Click Seats Tab
     Wait Until Element Is Visible    ${tab_seats}    30
-    Click Element    ${tab_seats}
+    Click Element    ${tab_Seats}    
+    Click Element    ${button_add_seat}    
     Set Test Variable    ${current_page}    Seats
+    Set Test Variable    ${ticketing_details_complete}    no
     
 Click IRD Remarks Tab
     Wait Until Element Is Visible    ${tab_irdRemarks}    30
@@ -192,6 +194,7 @@ Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
 #---------Keyword and script For Seats-----------#
 
 Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
+    Navigate To Page Seats
     Wait Until Element Is Visible    ${input_seat_select1}
     Click Element    ${input_seat_select1}    
     Click Element    ${input_seat_select2}
@@ -200,14 +203,17 @@ Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
     Enter Value    ${input_seat_number}    2D
     Take Screenshot    
     Click Save Button
+    Finish PNR
     Verify Expected Remarks Are Written In The PNR
 
 Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
+    Navigate To Page Seats
     Wait Until Element Is Visible    ${input_seat_select3}
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
     Click Element   ${input_seat_select6}
     Click Save Button
+    Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
 Fill Up Visa And Passport Fields With Default Values

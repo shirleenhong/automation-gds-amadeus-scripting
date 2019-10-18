@@ -202,7 +202,7 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'HTL' && pnrSegment.segmentType === 'HTL') {
-                    this.rirHotel(pnrSegment, segmentrem, rmGroup);
+                    this.rirHotel(pnrSegment, segmentrem, rmGroup, isCorp);
                 }
             });
         });
@@ -222,7 +222,9 @@ export class SegmentService {
             }
             const remarks = new Map<string, string>();
             if (element.placeholder) {
-                remarks.set(element.placeholder, element.placeholdervalue);
+                for (let i = 0; i <= element.placeholder.length - 1; i++) {
+                    remarks.set(element.placeholder[i], element.placeholdervalue[i]);
+                }
                 this.rms.createPlaceholderValues(remarks, null, element.segment);
             }
 
@@ -233,7 +235,8 @@ export class SegmentService {
         });
     }
 
-    private assignCorpPlaceholders(pName: string, pValue: string, cName: string, cValue: string, segmentAssoc: string, text: string) {
+    private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
+        cValue: string, segmentAssoc: string, text: string) {
         this.corpRemarks.push(
             {
                 placeholder: pName, placeholdervalue: pValue,
@@ -245,7 +248,7 @@ export class SegmentService {
     private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
         if (segmentrem.zzairlineCode) {
             if (isCorp) {
-                this.assignCorpPlaceholders('ZZZAirlineCode', segmentrem.zzairlineCode, null, null, pnrSegment.tatooNo, null);
+                this.assignCorpPlaceholders(['ZZZAirlineCode'], [segmentrem.zzairlineCode], null, null, pnrSegment.tatooNo, null);
             } else {
                 rmGroup.remarks.push(this.getRemarksModel
                     ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
@@ -253,7 +256,7 @@ export class SegmentService {
         }
         if (segmentrem.zzdepartureCity) {
             if (isCorp) {
-                this.assignCorpPlaceholders('ZZDepartureCity', segmentrem.zzdepartureCity, null, null, pnrSegment.tatooNo, null);
+                this.assignCorpPlaceholders(['ZZDepartureCity'], [segmentrem.zzdepartureCity], null, null, pnrSegment.tatooNo, null);
             } else {
                 rmGroup.remarks.push(this.getRemarksModel
                     ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
@@ -261,7 +264,7 @@ export class SegmentService {
         }
         if (segmentrem.zzdestinationCity) {
             if (isCorp) {
-                this.assignCorpPlaceholders('ZZDestinationCity', segmentrem.zzdestinationCity, null, null, pnrSegment.tatooNo, null);
+                this.assignCorpPlaceholders(['ZZDestinationCity'], [segmentrem.zzdestinationCity], null, null, pnrSegment.tatooNo, null);
             } else {
                 rmGroup.remarks.push(this.getRemarksModel
                     ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
@@ -269,12 +272,14 @@ export class SegmentService {
         }
     }
 
-    private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
-        debugger;
+    private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
         let province = '';
         let zip = '';
-        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH - ' },
-        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ' }];
+        const optionalHotelRemarks = [{
+            include: segmentrem.confirmedWith,
+            description: 'ROOM CONFIRMED WITH - ', pName: 'RoomConfrimedWith'
+        },
+        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ', pName: 'RoomAdditionalInfo' }];
 
 
         if (segmentrem.province) { province = segmentrem.province; }
@@ -291,12 +296,23 @@ export class SegmentService {
         });
 
         const datePipe = new DatePipe('en-US');
-        rmGroup.remarks.push(this.getRemarksModel('HS' + datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
-            segmentrem.chainCode, 'RM', '*'));
+        if (isCorp) {
+            const pArray = ['RoomDatePipe', 'RoomChainCode'];
+            const pValueArray = [datePipe.transform(segmentrem.departureDate, 'ddMMM'), segmentrem.chainCode];
+            this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
+        } else {
+            rmGroup.remarks.push(this.getRemarksModel('HS' + datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
+                segmentrem.chainCode, 'RM', '*'));
+        }
 
         optionalHotelRemarks.forEach(c => {
             if (c.include) {
-                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                if (isCorp) {
+                    this.assignCorpPlaceholders([c.pName], [c.description + c.include], null, null, pnrSegment.tatooNo, null);
+                } else {
+                    rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                }
+
             }
         });
     }

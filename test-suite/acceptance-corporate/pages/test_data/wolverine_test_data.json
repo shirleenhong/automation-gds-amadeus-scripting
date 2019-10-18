@@ -1,5 +1,5 @@
 {
-	"Client Wolverine, Air Only, Select First Primary Reason": {
+	"Client Wolverine Air Only, Select First Primary Reason": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -41,14 +41,14 @@
 		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "Yes",
-		"RemarkAdded": null,
-		"RemarkAdded2": null,
-		"RemarkAdded3": null,
-		"RemarkAdded4": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Mix Segments, Skip Approval": {
+	"Client Wolverine Mix Segments, Skip Approval": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -90,14 +90,14 @@
 		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
-		"RemarkAdded2": null,
-		"RemarkAdded3": null,
-		"RemarkAdded4": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Car Only": {
+	"Client Wolverine Car Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -139,14 +139,14 @@
 		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
-		"RemarkAdded2": null,
-		"RemarkAdded3": null,
-		"RemarkAdded4": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Hotel Only": {
+	"Client Wolverine Hotel Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -188,14 +188,14 @@
 		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
-		"RemarkAdded2": null,
-		"RemarkAdded3": null,
-		"RemarkAdded4": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Wolverine, Car And Hotel Only": {
+	"Client Wolverine Car And Hotel Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -237,10 +237,11 @@
 		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
-		"RemarkAdded3": null,
-		"RemarkAdded3": null,
-		"RemarkAdded4": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	}

@@ -54,6 +54,8 @@ export class TicketingLineComponent implements OnInit {
       noApproval: new FormControl(!this.hasApproval, [Validators.required]),
       primaryReason: new FormControl('', [Validators.required]),
       secondaryReason: new FormControl('', [Validators.required]),
+      primaryText: new FormControl(''),
+      secondaryText: new FormControl(''),
       additionalValues: new FormArray([])
     });
     this.noApprovalChecked(!this.hasApproval);
@@ -245,12 +247,24 @@ export class TicketingLineComponent implements OnInit {
    * create additional form values based on selected rule
    * @param selectedRule selected rule keyword from UI sample [UI_SECPONDARY_1]
    */
-  showAdditionalInfo(selectedRule) {
-    if (!selectedRule) {
+  showAdditionalInfo(selectedIndex) {
+    if (selectedIndex === null) {
       return;
     }
+    let selectedRule: ApprovalItem = null;
+    if (this.secondaryReasonList.length > 0) {
+      selectedRule = this.secondaryReasonList[selectedIndex];
+      this.approvalForm.get('secondaryText').setValue(selectedRule.getRuleValueText());
+    } else {
+      selectedRule = this.primaryReasonList[selectedIndex];
+      this.approvalForm.get('primaryText').setValue(selectedRule.getRuleValueText());
+    }
 
-    const id = selectedRule.match(/_(\d)/g).join('') + (selectedRule.indexOf('PRIMARY') >= 0 ? '_0' : '');
+    const id =
+      selectedRule
+        .getRule()
+        .match(/_(\d)/g)
+        .join('') + (selectedRule.getRule().indexOf('PRIMARY') >= 0 ? '_0' : '');
     (this.approvalForm.get('additionalValues') as FormArray).controls = [];
 
     this.additionalReasonList
@@ -285,15 +299,24 @@ export class TicketingLineComponent implements OnInit {
    * create additional form values based on selected rule
    * @param selectedRule selected rule keyword from UI sample [UI_SECPONDARY_1]
    */
-  primaryReasonChange(selectedRule) {
-    const index = selectedRule.match(/_(\d)/g).join('');
-    this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(index);
-    if (this.secondaryReasonList.length > 0) {
-      this.approvalForm.get('secondaryReason').enable();
+  primaryReasonChange(selectedIndex) {
+    if (selectedIndex >= 0) {
+      const selectedRule = this.primaryReasonList[selectedIndex];
+      this.approvalForm.get('primaryText').setValue(selectedRule.getRuleValueText());
+      const index = selectedRule
+        .getRule()
+        .match(/_(\d)/g)
+        .join('');
+      this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(index);
+      if (this.secondaryReasonList.length > 0) {
+        this.approvalForm.get('secondaryReason').enable();
+      } else {
+        this.approvalForm.controls.secondaryReason.clearValidators();
+        this.approvalForm.get('secondaryReason').updateValueAndValidity();
+        this.showAdditionalInfo(selectedIndex);
+      }
     } else {
-      this.approvalForm.controls.secondaryReason.clearValidators();
-      this.approvalForm.get('secondaryReason').updateValueAndValidity();
-      this.showAdditionalInfo(selectedRule);
+      this.approvalForm.get('secondaryReason').setValue(null);
     }
   }
 
@@ -303,13 +326,13 @@ export class TicketingLineComponent implements OnInit {
    */
   noApprovalChecked(checked) {
     if (checked) {
-      this.approvalForm.get('primaryReason').setValue('');
+      this.approvalForm.get('primaryReason').setValue(null);
       this.approvalForm.get('primaryReason').disable();
-      this.approvalForm.get('secondaryReason').setValue('');
+      this.approvalForm.get('secondaryReason').setValue(null);
       this.approvalForm.get('secondaryReason').disable();
     } else if (this.primaryReasonList.length > 0) {
       this.approvalForm.get('primaryReason').enable();
-      this.primaryReasonChange('');
+      this.primaryReasonChange(null);
     }
   }
 

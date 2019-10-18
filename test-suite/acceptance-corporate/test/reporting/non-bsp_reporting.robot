@@ -8,6 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/payment.robot
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That Reporting Remarks Are Written For Single Non-BSP Segment
@@ -18,7 +19,7 @@ Verify That Reporting Remarks Are Written For Single Non-BSP Segment
     Click Save Button
     Verify Client Reporting Fields For Non-BSP
     Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
-    [Teardown]    Close Browser
+    
    
 Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     [Tags]    us13617
@@ -28,7 +29,7 @@ Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     Click Save Button
     Verify Client Reporting Fields For Non-BSP
     Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
-    [Teardown]    Close Browser
+    
     
 Verify That Updated Reporting Values Are Written For Multiple Non-BSP Segments
     [Tags]    us13617
@@ -38,7 +39,7 @@ Verify That Updated Reporting Values Are Written For Multiple Non-BSP Segments
     Click Save Button
     Update Client Reporting Values For Non-BSP
     Verify That Updated Non-BSP Client Reporting Remarks Are Written In The PNR
-    [Teardown]    Close Browser
+    
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
     [Tags]    us13616
@@ -47,3 +48,4 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For PD
     Verify Accounting Remark Is Written Correctly For Non BSP Exchange
+    

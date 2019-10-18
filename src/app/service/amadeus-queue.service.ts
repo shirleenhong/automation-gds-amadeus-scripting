@@ -7,13 +7,24 @@ declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
-export class QueueRemarkService {
+export class AmadeusQueueService {
   responseMessage: string;
   queueElement: Array<any>;
+  queueCollection: Array<QueuePlaceModel>;
 
-  constructor(private pnrService: PnrService) { }
+  constructor(private pnrService: PnrService) {
+    this.queueCollection = new Array<QueuePlaceModel>();
+  }
 
-  async queuePNR(queueGroup: QueuePlaceModel[]) {
+  addQueueCollection(queueModel: QueuePlaceModel) {
+    this.queueCollection.push(queueModel);
+  }
+
+  newQueueCollection() {
+    this.queueCollection = new Array<QueuePlaceModel>();
+  }
+
+  async queuePNR() {
     this.queueElement = new Array<any>();
     const selectionDetails = {
       option: 'QEQ'
@@ -32,8 +43,8 @@ export class QueueRemarkService {
       reservation
     };
 
-    if (queueGroup != null && queueGroup.length > 0) {
-      queueGroup.forEach((element) => {
+    if (this.queueCollection != null && this.queueCollection.length > 0) {
+      this.queueCollection.forEach((element) => {
         this.queueElement.push(this.buildQueueDetails(element));
       });
     }

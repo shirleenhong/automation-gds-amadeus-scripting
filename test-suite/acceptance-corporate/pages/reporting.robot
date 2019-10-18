@@ -21,12 +21,15 @@ ${input_cic_number}    //input[@formcontrolname='cicNumber']
 ${input_file_finisher_yes}    //input[@id="rbFileFinisher"][@ng-reflect-value='YES']
 ${input_file_finisher_no}    //input[@id="rbFileFinisher"][@ng-reflect-value='NO']
 ${tab_waivers}   //span[contains(text(), 'Waivers')]
+${tab_reportingRemarks}       //span[contains(text(), 'Reporting Remarks')]
+${list_routing_code}    //select[@formcontrolname='bspRouteCode']
 ${button_addWaiver}    //i[@id='add']
 ${list_waivers}    //select[@id='waiver']
 ${button_removeWaiver}    css=#remove
 ${input_waiver}    css=#waiver
 ${input_waiverAmount}    css=#waiverText
 ${form_segments}    //tbody[@formarrayname='segments']
+${input_destination}    //input[@id='destinationList']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -51,6 +54,13 @@ Click Waivers Reporting Tab
     Click Element    ${tab_waivers}
     Wait Until Element Is Visible    ${button_addWaiver}    30
     Set Test Variable    ${current_page}    Waivers
+
+Click Reporting Remarks Tab
+    Scroll Element Into View     ${tab_reportingRemarks}
+    Wait Until Element Is Visible    ${tab_reportingRemarks}    30
+    Click Element    ${tab_reportingRemarks}
+    Wait Until Page Contains Element    ${list_routing_code}    30
+    Set Test Variable    ${current_page}    Reporting Remarks
 
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
@@ -168,8 +178,8 @@ Select Client Reporting Fields To Be Written
     [Arguments]    @{reporting_checkbox}
     Wait Until Page Contains Element    ${checkbox_clientReporting}
     : FOR    ${reporting_checkbox}    IN    @{reporting_checkbox}
-    \    Select Checkbox    ${tab_clientReporting}[${reporting_checkbox}]${checkbox_clientReporting}
-    Take Screenshot
+    \    Select Checkbox    ${tab_clientReporting}${open_bracket}${reporting_checkbox}${close_bracket}${checkbox_clientReporting}
+    [Teardown]    Take Screenshot
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Finish PNR
@@ -319,3 +329,66 @@ Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multipl
     Verify Specific Remark Is Written In The PNR    RM *U63/-AFMCN11234/AMTCN11234/S3,5-6
     Verify Specific Remark Is Written In The PNR    RM *U63/-HNSCN11234/S2,4
     Switch To Command Page
+
+Verify Routing Code Dropdown Is Displayed With Correct Values
+    Navigate To Page Reporting Remarks
+    #Click Element    ${list_routing_code}
+    ${list}     Get Selected List Labels         ${list_routing_code}
+    Log     ${list}
+    Run Keyword And Continue On Failure    List Selection Should Be    ${list_routing_code}    USA incl. all US Territories and Possessions    Mexico/Central America/Canal Zone/Costa Rica
+    ...    Caribbean and Bermuda    South America    Europe-incl. Morocco/Tunisia/Algeria/Greenland    Africa    Middle East/Western Asia
+    ...    Asia incl. India    Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam    Canada and St. Pierre et Miquelon
+    
+Verify Routing Code Dropdown Is A Required Field
+    Fill Up Ticketing Panel With Default Values
+    Scroll Element Into View    ${list_routing_code}
+    Click Submit To PNR
+    Element Should Contain    ${text_warning}     Please make sure all the inputs are valid and put required values!
+    
+Fill Up Routing Code With ${selection}
+    Navigate To Page Reporting Remarks
+    Select From List By Label    ${list_routing_code}     ${selection}
+    Set Test Variable    ${routing_code_selected}    yes
+    [Teardown]    Take Screenshot
+    
+Verify Country Of Destination Is Mapped In The FS Remark
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR
+    
+Select Default Value For Routing Code
+    Run Keyword If    "${destination_selected}" == "no"   Navigate To Page Reporting Remarks
+    Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
+    Set Test Variable    ${routing_code_selected}    yes
+    Select Default Value For Destination Code
+    [Teardown]    Take Screenshot
+    
+Select Default Value For Destination Code
+    Navigate To Page Reporting Remarks
+    ${is_destination_present}    Run Keyword And Return Status    Page Should Contain Element    ${input_destination} 
+    Run Keyword If    "${is_destination_present}" == "True"   Enter Destination Code Default Value
+    Set Test Variable    ${destination_selected}    yes
+
+Enter Destination Code Default Value        
+    ${elements_count}    Get Element Count    ${input_destination} 
+    Set Test Variable    ${elements_count}
+        : FOR    ${destination_index}    IN RANGE    0    ${elements_count}
+	    \    ${destination_index}    Evaluate    ${destination_index} + 1
+	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    YUL
+    
+Select Destination Code Values
+	[Arguments]    @{destination_code}
+	Set Test Variable    ${destination_index}    1
+	: FOR    ${destination_code}    IN    @{destination_code}
+	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
+		\    ${destination_index}    Evaluate    ${destination_index} + 1
+	
+Populate Destination Code Fields For ${tst_no} TST
+    Navigate To Page Reporting Remarks
+    Run Keyword If  "${tst_no}" == "Single"   Select Destination Code Values    YUL
+    ...  ELSE IF   "${tst_no}" == "Multiple"    Select Destination Code Values   YUL   YYZ   ORD
+    Set Test Variable    ${destination_selected}    yes
+    Take Screenshot
+    
+Verify Destination Code Remarks Are Written In The PNR
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR

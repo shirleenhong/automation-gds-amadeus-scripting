@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { LoadingComponent } from '../shared/loading/loading.component';
@@ -23,8 +23,18 @@ import { InvoiceRemarkService } from '../service/corporate/invoice-remark.servic
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
-import { QueuePlaceModel } from '../models/pnr/queue-place.model';
-import { QueueRemarkService } from '../service/queue-remark.service';
+import { ItineraryRemarkService } from '../service/corporate/itinerary-remark.service';
+import { AmadeusQueueService } from '../service/amadeus-queue.service';
+import { RemarkModel } from '../models/pnr/remark.model';
+import { CleanUpRemarkService } from '../service/corporate/cleanup-remark.service';
+import { QueueService } from '../service/corporate/queue.service';
+import { QueueComponent } from './queue/queue.component';
+import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
+import { OfcRemarkService } from '../service/corporate/ofc-remark.service';
+import { CounselorDetail } from '../globals/counselor-identity';
+import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
+import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
+import { SegmentService } from '../service/segment.service';
 
 @Component({
   selector: 'app-corporate',
@@ -41,14 +51,16 @@ export class CorporateComponent implements OnInit {
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
 
+  @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
   @ViewChild(TicketingComponent) ticketingComponent: TicketingComponent;
   @ViewChild(FeesComponent) feesComponent: FeesComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
-
-  @Input() overrideValue: any;
+  @ViewChild(QueueComponent) queueComponent: QueueComponent;
+  @ViewChild(PassiveSegmentsComponent)
+  passiveSegmentsComponent: PassiveSegmentsComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -63,7 +75,15 @@ export class CorporateComponent implements OnInit {
     private invoiceRemarkService: InvoiceRemarkService,
     private ticketRemarkService: TicketRemarkService,
     private feesRemarkService: FeesRemarkService,
-    private queueService: QueueRemarkService
+    private itineraryService: ItineraryRemarkService,
+    private cleanupRemarkService: CleanUpRemarkService,
+    private amadeusQueueService: AmadeusQueueService,
+    private queueService: QueueService,
+    private councelorDetail: CounselorDetail,
+    private ofcRemarkService: OfcRemarkService,
+    private visaPassportService: VisaPassportRemarkService,
+    private segmentService: SegmentService,
+    private amadeusRemarkService: AmadeusRemarkService
   ) {
     this.initData();
   }
@@ -74,12 +94,11 @@ export class CorporateComponent implements OnInit {
     }
   }
 
-  async getPnr(queueCollection?: Array<QueuePlaceModel>) {
+  async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
-    if (queueCollection) {
-      this.queueService.queuePNR(queueCollection);
-    }
+    this.amadeusQueueService.queuePNR();
+    this.amadeusQueueService.newQueueCollection();
   }
 
   async getPnrService() {
@@ -127,9 +146,10 @@ export class CorporateComponent implements OnInit {
     this.validModel.isSubmitted = true;
     this.validModel.isPaymentValid = this.paymentsComponent.checkValid();
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
-    // this.validModel.isRemarkValid = this.remarkComponent.checkValid();
+    this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
+    this.validModel.isQueueValid = this.queueComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 
@@ -138,8 +158,15 @@ export class CorporateComponent implements OnInit {
     this.workflow = 'wrap';
   }
 
+  public async AddSegment() {
+    await this.getPnrService();
+    this.workflow = 'segment';
+  }
+
   async loadPnrData() {
     this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    this.cleanupRemarkService.cleanUpRemarks();
     await this.getPnrService();
 
     if (!this.pnrService.getClientSubUnit()) {
@@ -195,6 +222,7 @@ export class CorporateComponent implements OnInit {
 
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
+    let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
@@ -202,12 +230,12 @@ export class CorporateComponent implements OnInit {
         this.ticketingComponent.ticketlineComponent.approvalForm
       )
     );
+    accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
 
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
-
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
@@ -217,29 +245,58 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
 
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
-    this.reportingRemarkService.WriteEscOFCRemark(this.overrideValue);
+    this.reportingRemarkService.WriteEscOFCRemark(this.councelorDetail.getIdentity());
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+    }
+
+    if (this.councelorDetail.getIdentity() === 'OFC') {
+      this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
 
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
+    this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
 
     this.invoiceRemarkService.sendU70Remarks();
 
     this.ticketRemarkService.WriteAquaTicketing(this.ticketingComponent.aquaTicketingComponent);
+    this.visaPassportService.writeCorporateRemarks(this.corpRemarksComponent.viewPassportComponent.visaPassportFormGroup);
+
+    this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
+    this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager
-    const additionalRemarks = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
 
-    let queueCollection = Array<QueuePlaceModel>();
-    queueCollection = this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-    await this.rms.submitToPnr(additionalRemarks, forDeleteRemarks).then(
+    this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+
+    if (this.queueComponent.queueMinderComponent) {
+      this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
+    }
+    if (this.councelorDetail.getIdentity() === 'ESC') {
+      this.invoiceRemarkService.writeESCRemarks(this.corpRemarksComponent.escRemarksComponent);
+    }
+
+    if (!this.queueComponent.itineraryInvoiceQueue.queueForm.pristine) {
+      this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+      this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+      this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+    }
+
+    await this.rms.SendPbn(
+      this.paymentRemarkService.moveProfile(
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+      )
+    );
+
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';
-        this.getPnr(queueCollection);
+        this.getPnr();
         this.closePopup();
       },
       (error) => {
@@ -251,5 +308,81 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+    this.cleanupRemarkService.revertDelete();
+  }
+
+  async sendItineraryAndQueue() {
+    await this.getPnrService();
+    this.workflow = 'sendQueue';
+  }
+
+  async SendItineraryAndQueue() {
+    if (!this.itineraryqueueComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Sending Itinerary and Queueing...');
+
+    if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
+      this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+      this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+
+    await this.rms.submitToPnr().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
+
+  async addSegmentToPNR() {
+    this.showLoading('Adding Segment(s) to PNR...', 'initData');
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.segmentService.deleteSegments(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    remarkCollection.push(this.segmentService.GetSegmentRemark(this.passiveSegmentsComponent.segmentRemark.segmentRemarks));
+    this.amadeusRemarkService.BuildRemarks(remarkCollection);
+    await this.amadeusRemarkService.SubmitRemarks().then(
+      async () => {
+        this.isPnrLoaded = false;
+        await this.getPnrService();
+        await this.addSemgentsRirRemarks();
+        this.workflow = '';
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
+
+  async addSemgentsRirRemarks() {
+    debugger;
+    const remarkCollection2 = new Array<RemarkGroup>();
+    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
+
+    await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
+    this.amadeusRemarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
   }
 }

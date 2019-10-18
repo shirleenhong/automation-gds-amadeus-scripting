@@ -20,6 +20,7 @@ export class PassiveSegmentsModel {
   dining: string;
   policyNo: string;
   isNew: boolean;
+  isPassive: boolean;
   airlineCode: string;
   flightNumber: string;
   classService: string;
@@ -29,6 +30,8 @@ export class PassiveSegmentsModel {
   zzdestinationCity: string;
   zzairlineCode: string;
   lineNo: string;
+  status: string;
+  passengerNo: string;
 
   // rail
   trainNumber: string;
@@ -72,7 +75,7 @@ export class PassiveSegmentsModel {
   specialRequest: string;
   frequentflightNumber: string;
   rateBooked: string;
-  //hotel
+  // hotel
   chainCode: string;
   nightlyRate: string;
   numberOfRooms = 1;
@@ -87,6 +90,6 @@ export class PassiveSegmentsModel {
   zipCode: string;
   country: string;
 
-  //insurance
+  // insurance
   insuranceType: string;
 }

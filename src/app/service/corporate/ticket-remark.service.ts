@@ -12,6 +12,7 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { FormGroup, FormArray } from '@angular/forms';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 declare var smartScriptSession: any;
 
@@ -29,7 +30,8 @@ export class TicketRemarkService {
     private remarksManager: RemarksManagerService,
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
-    private remarkHelper: RemarkHelper
+    private remarkHelper: RemarkHelper,
+    private amdeusQueue: AmadeusQueueService
   ) { }
 
   /**
@@ -38,7 +40,6 @@ export class TicketRemarkService {
    */
   public submitTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
     this.cleanupTicketRemark();
-
     return this.writeTicketRemark(ticketRemark, fg);
   }
 
@@ -49,7 +50,7 @@ export class TicketRemarkService {
     const linesToDelete: Array<number> = new Array();
 
     const existingTkLineNum = this.pnrService.getTkLineNumber();
-
+    const existingFSLineNum = this.pnrService.getFSLineNumber();
     if (existingTkLineNum >= 0) {
       linesToDelete.push(existingTkLineNum);
 
@@ -57,6 +58,9 @@ export class TicketRemarkService {
       if (existingRirLineNum && existingRirLineNum >= 0) {
         linesToDelete.push(existingRirLineNum);
       }
+    }
+    if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
+      linesToDelete.push(existingFSLineNum);
     }
 
     if (linesToDelete.length > 0) {
@@ -360,11 +364,8 @@ export class TicketRemarkService {
         }
 
         if (remark.indexOf('[UI_') > -1) {
-          app.getRuleKeywords().forEach((key) => {
-            this.approvalRuleService.getApprovalItem(key).forEach((a) => {
-              remark = remark.replace(key, a.getRuleText());
-            });
-          });
+          remark = remark.replace(fg.get('primaryReason').value, fg.get('primaryText').value);
+          remark = remark.replace(fg.get('secondaryReason').value, fg.get('secondaryText').value);
         }
 
         if (remark.indexOf('[DATE_NOW]') >= 0) {
@@ -372,12 +373,34 @@ export class TicketRemarkService {
           remark = remark.replace('[DATE_NOW]', datePipe.transform(Date.now(), 'yyyy-MM-dd'));
         }
 
-        if (this.pnrService.getRemarkLineNumber(remark, type) === '') {
-          remarkList.push(this.remarkHelper.createRemark(remark, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
-        }
+        this.getSplitRemark(remark).forEach((text) => {
+          if (this.pnrService.getRemarkLineNumber(text, type) === '') {
+            remarkList.push(this.remarkHelper.createRemark(text, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
+          }
+        });
       });
+    } else if (this.ddbService.approvalList.length > 0 && this.pnrService.getRemarkLineNumber('NO APPROVAL REQUIRED') === '') {
+      remarkList.push(this.remarkHelper.createRemark('NO APPROVAL REQUIRED', 'RM', 'G'));
     }
+
     return remarkList;
+  }
+  getSplitRemark(remark: string) {
+    const splitRemarks = [];
+    if (remark.length > 55) {
+      while (remark.length > 55) {
+        const c = remark.substring(0, 55);
+        const rem = remark.substring(0, c.lastIndexOf(' '));
+        splitRemarks.push(rem);
+        remark = remark.replace(rem, '').trim();
+        if (remark.length <= 55) {
+          splitRemarks.push(remark);
+        }
+      }
+    } else {
+      splitRemarks.push(remark);
+    }
+    return splitRemarks;
   }
 
   /**
@@ -387,9 +410,9 @@ export class TicketRemarkService {
    */
   private getApprovalIndex(fg: FormGroup): string {
     let value = '';
-    if (fg.get('secondaryReason').value !== '') {
+    if (fg.get('secondaryReason').value) {
       value = fg.get('secondaryReason').value.toString();
-    } else if (fg.get('primaryReason').value !== '') {
+    } else if (fg.get('primaryReason').value) {
       value = fg.get('primaryReason').value.toString() + '_0';
     } else {
       value = '_0';
@@ -402,8 +425,8 @@ export class TicketRemarkService {
    * @param fg Approval Form
    * @returns Array<QueuePlaceModel> queue placement information
    */
-  getApprovalQueue(fg: FormGroup): Array<QueuePlaceModel> {
-    const queueGroup = Array<QueuePlaceModel>();
+  getApprovalQueue(fg: FormGroup) {
+
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
 
@@ -415,9 +438,8 @@ export class TicketRemarkService {
         const categoryqueue = queueInfo[1].split('C');
         queue.queueNo = categoryqueue[0];
         queue.category = categoryqueue[1];
-        queueGroup.push(queue);
+        this.amdeusQueue.addQueueCollection(queue);
       });
     }
-    return queueGroup;
   }
 }

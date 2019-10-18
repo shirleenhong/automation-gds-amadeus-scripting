@@ -24,7 +24,7 @@
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/styles.css"
             ],
-            "scripts": ["src/js/WebSDK/BusinessObjects/v2.1.0/pnr.js", "src/js/WebSDK/Utils/v1.5.4/coreSDK.js"],
+            "scripts": ["src/js/WebSDK/BusinessObjects/v2.1.0/pnr.js", "src/js/WebSDK/Utils/v1.6.2/coreSDK.js"],
             "es5BrowserSupport": true
           },
           "configurations": {

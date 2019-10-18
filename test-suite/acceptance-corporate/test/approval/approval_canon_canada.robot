@@ -10,6 +10,10 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    canon
 
 *** Test Cases ***
 Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue With Air, Hotel, And Car
@@ -18,7 +22,6 @@ Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue W
     Create PNR With Active Air Segments For Client Canon Canada With Any Udid, Air with Hotel and Car
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Close Browser
     
 Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue With Hotel Only
     [Tags]    us13271
@@ -26,7 +29,6 @@ Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue W
     Create PNR For Client Canon Canada With Any Udid, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Close Browser
     
 Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue With Car Only
     [Tags]    us13271
@@ -34,7 +36,6 @@ Verify That PNRs For Client Canon Canada Is Correctly Queued To Approval Queue W
     Create PNR For Client Canon Canada With Any Udid, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Close Browser
     
 Verify That PNRs For Client Canon Canada Can Skip Approval Process
     [Tags]    us13271
@@ -42,7 +43,6 @@ Verify That PNRs For Client Canon Canada Can Skip Approval Process
     Create PNR With Active Air Segments For Client Canon Canada With Any Udid, Air with Hotel and Car, Ignore Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Close Browser
     
 Verify That PNRs For Client Canon Canada Do Not Go Thru Approval Process For Udid Guest
     [Tags]    us13271
@@ -50,7 +50,6 @@ Verify That PNRs For Client Canon Canada Do Not Go Thru Approval Process For Udi
     Create PNR With Active Air Segments For Client Canon Canada With Udid Guest, Air only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Close Browser
     
 Verify That PNRs For Client Canon Canada Do Not Go Thru Approval Process For Udid President
     [Tags]    us13271
@@ -58,4 +57,3 @@ Verify That PNRs For Client Canon Canada Do Not Go Thru Approval Process For Udi
     Create PNR With Active Air Segments For Client Canon Canada With Udid President, Air with Hotel and Car
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    [Teardown]    Close Browser

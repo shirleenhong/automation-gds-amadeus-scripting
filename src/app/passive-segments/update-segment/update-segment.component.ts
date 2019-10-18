@@ -6,6 +6,8 @@ import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model'
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
+// import { validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
+
 
 declare var smartScriptSession: any;
 
@@ -81,7 +83,7 @@ export class UpdateSegmentComponent implements OnInit {
     arrivalTime: new FormControl('', [Validators.required]),
     tourName: new FormControl('', [Validators.required]),
     noPeople: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
-    noNights: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]?$')]),
+    noNights: new FormControl('', [Validators.required, Validators.pattern('^[0-9][0-9]?$')]),
     roomType: new FormControl('', []),
     mealPlan: new FormControl('', []),
     stateRoom: new FormControl('', []),
@@ -97,6 +99,7 @@ export class UpdateSegmentComponent implements OnInit {
     zzdepartureCity: new FormControl('', []),
     zzdestinationCity: new FormControl('', []),
     seatNumber: new FormControl(''),
+    passengerNo: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
     // train
     trainNumber: new FormControl('', [Validators.required]),
     carNumber: new FormControl(''),
@@ -302,6 +305,8 @@ export class UpdateSegmentComponent implements OnInit {
     this.lblnoPeople = 'Number of Passengers';
     this.lblconfirmationNo = 'Confirmation Number';
     const destination = this.formControls.get('destinationCity');
+    this.formControls.get('passengerNo').updateValueAndValidity();
+
     if (destination !== undefined && destination !== null) {
       destination.clearValidators();
       destination.setValidators([Validators.required]);
@@ -335,6 +340,8 @@ export class UpdateSegmentComponent implements OnInit {
         this.lblvendorCode = 'Vendor Code';
         this.lbldepartureCity = 'Departure City Code';
         this.lbldestinationCity = 'Destination City Code';
+        this.lblarrivalDate = 'End Date';
+        this.lblarrivalTime = 'End Time';
         this.lbltourName = 'Tour Name or Hotel Name';
         this.lblnoPeople = 'Number of People';
         this.lblnoNights = 'Number of Nights';
@@ -354,12 +361,17 @@ export class UpdateSegmentComponent implements OnInit {
           'noPeople',
           'noNights',
           'roomType',
-          'mealPlan'
+          'mealPlan',
+          'passengerNo'
         ];
         this.setForm(forms);
         this.loadRoomType();
         this.filterSupplierCodeList = this.ddbService.getSupplierCodes('TOUR');
         this.selectedTmpl = this.tourTmpl;
+        if (this.passengers.length > 1) {
+          this.formControls.controls.passengerNo.setValidators(Validators.required);
+          this.formControls.get('passengerNo').updateValueAndValidity();
+        }
         break;
       case 'SEA':
         this.lblvendorName = 'Cruise Line';
@@ -388,11 +400,16 @@ export class UpdateSegmentComponent implements OnInit {
           'stateRoom',
           'cabinNo',
           'dining',
-          'noNights'
+          'noNights',
+          'passengerNo'
         ];
         this.setForm(forms);
         this.selectedTmpl = this.cruiseTmpl;
         this.filterSupplierCodeList = this.ddbService.getSupplierCodes('SEA');
+        if (this.passengers.length > 1) {
+          this.formControls.controls.passengerNo.setValidators(Validators.required);
+          this.formControls.get('passengerNo').updateValueAndValidity();
+        }
         break;
 
       case 'INS':
@@ -701,6 +718,12 @@ export class UpdateSegmentComponent implements OnInit {
 
     if (tempname === 'arrivalDate') {
       arrDate = tempdate2;
+    }
+
+    if (this.passiveSegments.departureDate === this.passiveSegments.arrivalDate) {
+      if (this.passiveSegments.segmentType === 'TOR') {
+        this.passiveSegments.noNights = '0';
+      }
     }
 
     if (tempdate2 < now) {

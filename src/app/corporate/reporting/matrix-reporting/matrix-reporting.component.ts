@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatrixReportingModel } from 'src/app/models/pnr/matirx-reporting.model';
 import { PnrService } from 'src/app/service/pnr.service';
+import { CounselorDetail } from 'src/app/globals/counselor-identity';
 
 @Component({
   selector: 'app-matrix-reporting',
@@ -11,11 +12,10 @@ import { PnrService } from 'src/app/service/pnr.service';
 export class MatrixReportingComponent implements OnInit {
   @Input()
   matrixReporting: MatrixReportingModel;
-  @Input() overrideValue: string;
   invoiceMessageForm: FormGroup;
   isOFC = false;
   isMatrixPnr = true;
-  constructor(private pnrService: PnrService) {
+  constructor(private pnrService: PnrService, private counselorDetail: CounselorDetail) {
     this.matrixReporting = new MatrixReportingModel();
     this.matrixReporting.mode = 'YES';
   }
@@ -26,6 +26,7 @@ export class MatrixReportingComponent implements OnInit {
       cicNumber: new FormControl('')
     });
     this.isMatrixPnr = this.IsSegmentExchange() || this.IsContainsThisRemark('CN/-IFC') || this.IsContainsFIRemark('PAX 0000000000 INV');
+    this.subscribeOnOfcEscDropdown();
   }
 
   // tslint:disable-next-line: use-life-cycle-interface
@@ -35,18 +36,19 @@ export class MatrixReportingComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: use-life-cycle-interface
-  ngOnChanges() {
-    if (this.overrideValue === 'OFC') {
-      this.isOFC = true;
-    } else {
-      this.isOFC = false;
-      this.matrixReporting.mode = 'YES';
-      if (this.invoiceMessageForm !== undefined) {
-        this.invoiceMessageForm.get('cicNumber').setValue('');
-        this.invoiceMessageForm.get('cicNumber').enable();
+  subscribeOnOfcEscDropdown() {
+    this.counselorDetail.identityOnChange.subscribe((value) => {
+      if (value === 'OFC') {
+        this.isOFC = true;
+      } else {
+        this.isOFC = false;
+        this.matrixReporting.mode = 'YES';
+        if (this.invoiceMessageForm !== undefined) {
+          this.invoiceMessageForm.get('cicNumber').setValue('');
+          this.invoiceMessageForm.get('cicNumber').enable();
+        }
       }
-    }
+    });
   }
 
   setADTValue() {

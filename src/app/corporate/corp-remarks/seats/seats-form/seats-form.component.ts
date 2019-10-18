@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SeatModel } from 'src/app/models/pnr/seat.model';
-import { SeatsService } from 'src/app/service/corporate/seats.service';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-seats-form',
@@ -10,102 +10,160 @@ import { SeatsService } from 'src/app/service/corporate/seats.service';
   styleUrls: ['./seats-form.component.scss']
 })
 export class SeatsFormComponent implements OnInit {
-  REGEX_ALPHANUMERIC = '^\\w*';
+  /**
+   * Modal component properties
+   */
+  title: 'Assign Seat Remark';
+  message: string; // Value: null, SAVED or CLOSED
 
   @Input()
   seats: Array<SeatModel>; // The seats to from the parent component
-  seat: SeatModel;
-  id: number = null;
-  type: string = null;
-  number: string = null;
-  segmentIds: string = null;
+  seatsForm: FormGroup;
+  seatSegmentIds: Array<string>;
+  segmentIds = [];
+  segmentIdOptions = [];
+  selectedItems = new Array<SeatModel>();
+  selectedSegment: string;
+  existingSegments = [];
+  hasSelectedItems = false;
 
-  remarkOptions: Array<{ id: number; text: string }>;
-  types: Array<string>;
+  types: Array<string> = ['WINDOW', 'AISLE', 'MIDDLE'];
+  REGEX_ALPHANUMERIC = '^\\w*';
 
-  seatForm: FormGroup;
-  exists: boolean;
-
-  /**
-   * The message of the modal.
-   * Values: SAVED, CLOSED
-   */
-  message: string;
-
-  title = '';
-
-  constructor(public activeModal: BsModalService, public modalRef: BsModalRef) {}
+  constructor(
+    public activeModal: BsModalService,
+    public modalRef: BsModalRef,
+    public formBuilder: FormBuilder,
+    private pnrService: PnrService
+  ) {}
 
   ngOnInit() {
-    this.seat = new SeatModel();
-    this.remarkOptions = SeatsService.REMARK_OPTIONS;
-    this.types = SeatsService.TYPES;
+    this.seatSegmentIds = this.getSeatSegments();
+    this.segmentIds = this.pnrService.segments.map((x) => x.lineNo);
+    this.segmentIdOptions = this.getSegmentIdOptions();
 
-    this.seatForm = new FormGroup({
-      id: new FormControl('', [Validators.required]),
-      type: new FormControl({ value: '', disabled: true }, []),
-      number: new FormControl({ value: '', disabled: true }, [Validators.pattern(this.REGEX_ALPHANUMERIC)]),
-      segmentIds: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')])
+    this.seatsForm = this.formBuilder.group({
+      segment: new FormControl(''),
+      check1: new FormControl(''),
+      check2: new FormControl(''),
+      check3: new FormControl(''),
+      check4: new FormControl(''),
+      check5: new FormControl(''),
+      check6: new FormControl(''),
+      seatType: new FormControl(''),
+      seatNumber: new FormControl('')
     });
 
-    this.onChanges();
+    this.segmentIds = this.segmentIds.filter((x) => this.existingSegments.indexOf(x) === -1);
+    // Subscribe and handle changes on the seatsForm.
+    this.seatsForm.valueChanges.subscribe(() => {
+      this.hasSelectedItems = this.hasChecked();
+    });
+  }
+
+  checkChanged(indx) {
+    const check = this.seatsForm.get('check' + indx);
+    if (indx === 2) {
+      if (check.value) {
+        this.seatsForm.get('seatType').enable();
+        this.seatsForm.get('seatType').setValidators([Validators.required]);
+      } else {
+        this.seatsForm.get('seatType').disable();
+        this.seatsForm.get('seatType').clearValidators();
+      }
+    } else if (indx === 5) {
+      if (check.value) {
+        this.seatsForm.get('seatNumber').enable();
+        this.seatsForm.get('seatNumber').setValidators([Validators.required, Validators.pattern(this.REGEX_ALPHANUMERIC)]);
+      } else {
+        this.seatsForm.get('seatNumber').disable();
+        this.seatsForm.get('seatNumber').clearValidators();
+      }
+    }
+    this.hasSelectedItems = this.hasChecked();
+  }
+
+  loadSelctedItems() {
+    this.selectedItems.forEach((seat) => {
+      this.seatsForm.get('segment').setValue(seat.segmentIds);
+      this.seatsForm.get('check' + seat.id).setValue(true);
+      if (seat.type) {
+        this.seatsForm.get('seatType').setValue(seat.type);
+      }
+      if (seat.number) {
+        this.seatsForm.get('seatNumber').setValue(seat.number);
+      }
+    });
+  }
+  /**
+   * Check if the seatForm has checked items.
+   */
+  hasChecked(): boolean {
+    if (
+      !!this.seatsForm.get('check1').value ||
+      !!this.seatsForm.get('check2').value ||
+      !!this.seatsForm.get('check3').value ||
+      !!this.seatsForm.get('check4').value ||
+      !!this.seatsForm.get('check5').value ||
+      !!this.seatsForm.get('check6').value
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Get the unique segment Id options values as option.
+   */
+  getSegmentIdOptions(): Array<string> {
+    let segmentOptions = [];
+
+    for (const segmentId of this.segmentIds) {
+      if (this.seatSegmentIds.indexOf(segmentId) < 0) {
+        segmentOptions.push(segmentId);
+      }
+    }
+
+    // Retain the segment option on edit.
+    if (this.selectedSegment) {
+      segmentOptions = this.selectedSegment ? this.selectedSegment.split(',').concat(segmentOptions) : segmentOptions;
+    }
+
+    return segmentOptions;
+  }
+
+  /**
+   * Get the unique segment Ids of the seats.
+   */
+  getSeatSegments() {
+    const seatSegments = this.seats.map((seat) => seat.segmentIds);
+    return seatSegments.filter((seat, i) => seatSegments.indexOf(seat) === i);
   }
 
   save(): void {
+    this.selectedItems = [];
+    for (let i = 1; i <= 6; i++) {
+      const check = this.seatsForm.get('check' + i);
+      if (check.value) {
+        const seatModel = new SeatModel();
+        seatModel.id = i;
+        seatModel.segmentIds = this.seatsForm.get('segment').value;
+        if (i === 2) {
+          seatModel.type = this.seatsForm.get('seatType').value;
+        } else if (i === 5) {
+          seatModel.number = this.seatsForm.get('seatNumber').value;
+        }
+        this.selectedItems.push(seatModel);
+      }
+    }
+
     this.message = 'SAVED';
     this.modalRef.hide();
-  }
-
-  /**
-   * Handle changes on the seat form.
-   */
-  public onChanges(): void {
-    this.seatForm.valueChanges.subscribe((value) => {
-      this.seatExists(value);
-    });
-
-    // Disable or enable the type and number form controls based on type.
-    this.seatForm.get('id').valueChanges.subscribe((value) => {
-      switch (value) {
-        case '2':
-          this.seatForm.get('type').enable();
-          break;
-        case '5':
-          this.seatForm.get('number').enable();
-          break;
-        default:
-          this.seatForm.get('type').disable();
-          this.seatForm.get('number').disable();
-          break;
-      }
-    });
   }
 
   public close(): void {
     this.message = 'CLOSED';
     this.modalRef.hide();
-  }
-
-  /**
-   * Check if a seat exists in the seats
-   * along with its segments.
-   * @param newSeat The seat to match
-   */
-  public seatExists(newSeat: SeatModel): boolean {
-    for (const seat of this.seats) {
-      const newSeatSegments = newSeat.segmentIds.split(',');
-      for (const newSeatSegment of newSeatSegments) {
-        if (newSeatSegment) {
-          if (seat.id === newSeat.id && seat.segmentIds.toString().indexOf(newSeatSegment) >= 0) {
-            this.exists = true;
-            return true;
-          } else {
-            this.exists = false;
-          }
-        }
-      }
-    }
-
-    return false;
   }
 }

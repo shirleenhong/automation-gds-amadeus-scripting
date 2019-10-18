@@ -1,14 +1,18 @@
 <tabset id="reportingTab">
-  <tab heading="BSP Reporting" id="bspReportingTab" *ngIf="hasTst" tabOrder="1">
+  <tab heading="Reporting Remarks" id="reportingRemarksTab" tabOrder="1">
+    <app-reporting-remarks></app-reporting-remarks>
+  </tab>
+  <tab heading="BSP Reporting" id="bspReportingTab" *ngIf="hasTst" tabOrder="2">
     <app-reporting-bsp></app-reporting-bsp>
   </tab>
-  <tab heading="NON BSP Reporting" id="bspNonReportingTab" tabOrder="2">
+  <tab heading="NON BSP Reporting" id="bspNonReportingTab" tabOrder="3">
     <app-reporting-nonbsp></app-reporting-nonbsp>
   </tab>
-  <tab heading="Matrix Reporting" id="bspNonReportingTab" tabOrder="3">
-    <app-matrix-reporting [overrideValue]="overrideValue"></app-matrix-reporting>
+  <tab heading="Matrix Reporting" id="bspNonReportingTab" tabOrder="4">
+    <app-matrix-reporting></app-matrix-reporting>
   </tab>
-  <tab heading="Waivers / Favors" id="waiverFavorsTab" tabOrder="3">
+
+  <tab heading="Waivers / Favors" id="waiverFavorsTab" tabOrder="5">
     <app-waivers></app-waivers>
   </tab>
 </tabset>

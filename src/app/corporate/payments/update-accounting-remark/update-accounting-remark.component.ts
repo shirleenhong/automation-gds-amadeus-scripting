@@ -6,6 +6,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -32,6 +33,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   filterSupplierCodeList: Array<any>;
   reasonCodeList: Array<SelectItem>;
   needFaretype = false;
+  descriptionList: Array<SelectItem>;
+  showOtherDescription = false;
 
   constructor(
     public activeModal: BsModalService,
@@ -83,14 +86,19 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       penaltyBaseAmount: new FormControl(''),
       originalTktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
       duplicateFare: new FormControl(''),
-      typeOfPass: new FormControl('')
+      typeOfPass: new FormControl(''),
+      otherDescription: new FormControl('', []),
+      vendorCode: new FormControl('', [Validators.required]),
+      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()])
     });
 
     this.name = 'Supplier Confirmation Number:';
     this.utilHelper.validateAllFields(this.matrixAccountingForm);
     this.onChanges();
     this.showFareType();
-
+    this.loadDescription();
+    this.loadVendorCode();
   }
 
   showFareType() {
@@ -131,10 +139,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   loadReasonCodeList() {
-    this.reasonCodeList = [
-      { itemText: '', itemValue: '' },
-      { itemText: 'L - Low Fare', itemValue: 'L' }
-    ];
+    this.reasonCodeList = [{ itemText: '', itemValue: '' }, { itemText: 'L - Low Fare', itemValue: 'L' }];
   }
 
   loadPassType(accountingType) {
@@ -162,7 +167,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.ticketNumber = 'Ticket Number: ';
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
-    this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine'], false);
+    this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
     this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
     switch (accRemark) {
       case 'ACPP':
@@ -171,13 +176,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         accRemark === 'ACPP'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
-            ? (this.accountingRemark.supplierCodeName = 'WJP')
-            : (this.accountingRemark.supplierCodeName = 'PTP');
+          ? (this.accountingRemark.supplierCodeName = 'WJP')
+          : (this.accountingRemark.supplierCodeName = 'PTP');
 
-        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([
-          Validators.required,
-          Validators.maxLength(15)
-        ]);
+        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
         this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
@@ -200,9 +202,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
         break;
       case 'APAY':
-        this.enableFormControls(['supplierCodeName', 'otherTax', 'segmentNo'], false);
-        this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase',
-          'fareType', 'supplierConfirmatioNo', 'commisionWithoutTax'], true);
+        this.enableFormControls(
+          ['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription', 'vendorCode', 'cardNumber', 'expDate'],
+          false
+        );
+        this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo', 'commisionWithoutTax'], true);
         this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
         this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         break;
@@ -215,10 +219,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
         if (accRemark === 'NONBSP') {
-          this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([
-            Validators.required,
-            Validators.maxLength(10)
-          ]);
+          this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
           this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         }
 
@@ -236,19 +237,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   configureNonBSPExchangeControls(): void {
     this.name = 'Airline Record Locator:';
-    this.matrixAccountingForm.get('airlineRecordLocator')
-      .setValidators([
-        Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(10)
-      ]);
+    this.matrixAccountingForm
+      .get('airlineRecordLocator')
+      .setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
 
-    this.matrixAccountingForm.get('supplierConfirmatioNo')
-      .setValidators([
-        Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(10)
-      ]);
+    this.matrixAccountingForm
+      .get('supplierConfirmatioNo')
+      .setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
 
     // Require GDS Fare if CFA remark is in [ZZB, 92Z, YVQ, YFV].
     const cfaLine = this.pnrService.getCFLine();
@@ -262,10 +257,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       }
     }
 
-    this.matrixAccountingForm.get('consultantNo').setValidators([
-      Validators.minLength(3),
-      Validators.maxLength(3),
-    ]);
+    this.matrixAccountingForm.get('consultantNo').setValidators([Validators.minLength(3), Validators.maxLength(3)]);
   }
 
   setMandatoryTicket(supCode: string[], isRequired: boolean) {
@@ -398,9 +390,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
-    // this.matrixAccountingForm.valueChanges.subscribe(val => {
-    //   console.log(val);
-    // });
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(() => {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       switch (this.accountingRemark.accountingTypeRemark) {
@@ -429,34 +418,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         default:
           this.setMandatoryTicket([], false);
           break;
-
       }
     });
 
     // Require penalty fields when penalty is > 0
-    this.matrixAccountingForm.get('penaltyBaseAmount').valueChanges.subscribe(penaltyBaseAmount => {
-      const regexDecimal = '[0-9]*(\.[0-9]+)'; // Regex pattern for decimals
+    this.matrixAccountingForm.get('penaltyBaseAmount').valueChanges.subscribe((penaltyBaseAmount) => {
+      const regexDecimal = '[0-9]*(.[0-9]+)'; // Regex pattern for decimals
 
       if (parseFloat(penaltyBaseAmount) > 0) {
-        this.matrixAccountingForm.get('penaltyGst').setValidators([
-          Validators.required,
-          Validators.pattern(regexDecimal)
-        ]);
-        this.matrixAccountingForm.get('penaltyHst').setValidators([
-          Validators.required,
-          Validators.pattern(regexDecimal)
-        ]);
-        this.matrixAccountingForm.get('penaltyQst').setValidators([
-          Validators.required,
-          Validators.pattern(regexDecimal)
-        ]);
+        this.matrixAccountingForm.get('penaltyGst').setValidators([Validators.required, Validators.pattern(regexDecimal)]);
+        this.matrixAccountingForm.get('penaltyHst').setValidators([Validators.required, Validators.pattern(regexDecimal)]);
+        this.matrixAccountingForm.get('penaltyQst').setValidators([Validators.required, Validators.pattern(regexDecimal)]);
       } else {
         this.matrixAccountingForm.get('penaltyGst').clearValidators();
         this.matrixAccountingForm.get('penaltyHst').clearValidators();
         this.matrixAccountingForm.get('penaltyQst').clearValidators();
       }
     });
-
   }
 
   setTktNumber() {
@@ -468,6 +446,39 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   changetoExchange(valueCheck) {
     if (valueCheck) {
       this.matrixAccountingForm.controls.accountingTypeRemark.patchValue('NONBSPEXCHANGE');
+    }
+  }
+
+  loadVendorCode() {
+    this.vendorCodeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'VI- Visa', itemValue: 'VI' },
+      { itemText: 'CA - Mastercard', itemValue: 'CA' },
+      { itemText: 'AX - American Express', itemValue: 'AX' },
+      { itemText: 'DC -Diners', itemValue: 'DC' }
+    ];
+  }
+
+  loadDescription() {
+    this.descriptionList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'SEAT COSTS', itemValue: 'SEAT COSTS' },
+      { itemText: 'MAPLE LEAF LOUNGE COSTS', itemValue: 'MAPLE LEAF' },
+      { itemText: 'PET TRANSPORTATION', itemValue: 'PET TRANSPORTATION' },
+      { itemText: 'FREIGHT COSTS', itemValue: 'FREIGHT COSTS' },
+      { itemText: 'BAGGAGE FEES', itemValue: 'BAGGAGE FEES' },
+      { itemText: 'FOOD COSTS', itemValue: 'FOOD COSTS' },
+      { itemText: 'OTHER COSTS', itemValue: 'OTHER COSTS' }
+    ];
+  }
+
+  assignSupplierCode(typeCode: any) {
+    if (typeCode === 'OTHER COSTS') {
+      this.showOtherDescription = true;
+      this.matrixAccountingForm.get('otherDescription').setValidators([Validators.required]);
+    } else {
+      this.matrixAccountingForm.get('otherDescription').clearValidators();
+      this.showOtherDescription = false;
     }
   }
 }

@@ -168,7 +168,7 @@ export class CorporateComponent implements OnInit {
     } else {
       try {
         this.workflow = 'segment';
-        // .this.showLoading('Matching Remarks', 'initData');
+        // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
 
       } catch (e) {
@@ -378,10 +378,17 @@ export class CorporateComponent implements OnInit {
   }
 
   async addSemgentsRirRemarks() {
-    const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
-    this.rms.submitToPnr().then(
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
+    debugger;
+    remarkCollection.forEach(rem => {
+      rem.remarks.forEach(remModel => {
+        remarkList.push(remModel);
+      });
+    });
+    // await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
+    this.rms.submitToPnr(remarkList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

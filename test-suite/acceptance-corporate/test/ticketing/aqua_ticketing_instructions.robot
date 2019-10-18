@@ -19,7 +19,7 @@ ${test_file_name}    aqua_tkt_instruction
 Verify That Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment And Not Ticketed Air Segments 
     [Tags]    us11219
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Air Only Segments, Ticket 2nd TST
+    Create PNR With Active Air Segments For Air Only Segments, Ticket 1st TST
     Ticket TST1
     Select Unticketed TST 2
     Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 2

@@ -37,6 +37,9 @@ ${input_adviseTo}     css=#passportName
 ${checkbox_visa}     //input[@formcontrolname='visa']
 ${row_visa_segment}    //div[@ng-reflect-name='segments']
 ${text_noIntlMessage}    //span[@class='p3']
+${tab_escRemarks}    //span[contains(text(), 'ESC Remarks')]
+${input_esc_read_yes}    //input[@id='isESCRead' and @ng-reflect-value='Y']
+${input_esc_read_no}    //input[@id='isESCRead' and @ng-reflect-value='N']
 
 *** Keywords ***
 Click Seats Tab
@@ -48,6 +51,11 @@ Click IRD Remarks Tab
     Wait Until Element Is Visible    ${tab_irdRemarks}    30
     Click Element    ${tab_irdRemarks}
     Set Test Variable    ${current_page}    IRD Remarks
+    
+Click ESC Remarks Tab
+    Wait Until Element Is Visible    ${tab_escRemarks}    30
+    Click Element    ${tab_escRemarks}
+    Set Test Variable    ${current_page}    ESC Remarks
 
 Click Document PNR Tab
     Wait Until Element Is Visible    ${tab_documentPnr}    30
@@ -240,3 +248,27 @@ Verify No International Destinations Found in Itinerary Message Is Displayed In 
     Navigate To Page Visa And Passport
     Run Keyword And Continue On Failure    Element Should Contain    ${text_noIntlMessage}    * No International Destinations Found in Itinerary *
     [Teardown]    Take Screenshot
+    
+Select ${selected_option} In Verify ESC Remarks Have Been Read
+    Navigate To Page ESC Remarks
+    Click Element At Coordinates    ${input_esc_read_${selected_option.lower()}}    0    0
+    Set Test Variable    ${esc_remarks_complete}    yes
+    Set Test Variable    ${is_esc_read}   ${selected_option.lower()}
+    [Teardown]    Take Screenshot
+    
+Verify That ESC Remarks Tab Is Not Displayed
+    Navigate To Page Remarks
+    Run Keyword And Return Status    Element Should Not Be Visible     ${tab_esc_remarks}
+    [Teardown]     Take Screenshot
+    
+Verify ESC Remarks Are Written Correctly In The PNR
+    Assign Current Date
+    Finish PNR
+    Run Keyword If    "${is_esc_read}" == "yes"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT READ ESC REMARKS/${current_time}/${current_date}
+    Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT DID NOT HAVE TIME TO READ ESC
+    Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    REMARKS/${current_time}/${current_date}
+
+Verify ESC Remarks Are Not Written In The PNR
+    Finish PNR
+    Verify Specific Remark Is Not Written In The PNR    RME ESC AGENT
+    

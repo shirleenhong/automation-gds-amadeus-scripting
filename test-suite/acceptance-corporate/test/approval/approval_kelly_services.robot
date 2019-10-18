@@ -52,14 +52,14 @@ Verify That Air Only PNRs For Client Kelly Services With RM*FS/-L Remark Do Not 
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Kelly Services With RM*U20 Remark Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Kelly Services With RM*U20 Remark, Air And Hotel
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Kelly Services With Udid50 EMPLOYEE-CA Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Kelly Services With Udid50 EXECUTIVE-CA, Air And Hotel
     Fill Up Approval Fields
@@ -73,7 +73,7 @@ Verify That PNRs For Client Kelly Services With Udid50 BOARD OF DIRECTORS Do Not
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Kelly Services Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Kelly Services With Udid50 EMPLOYEE-CA, Car Only
     Fill Up Approval Fields

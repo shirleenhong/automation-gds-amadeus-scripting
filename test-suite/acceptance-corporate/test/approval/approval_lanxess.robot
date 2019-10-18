@@ -24,14 +24,14 @@ Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When M
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When Total Cost Is Selected In Primary Approval Reason
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lanxess With Any Udid 50, Air Only, Select Total Cost
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Lanxess Is Correctly Queued To Approval Queue When Travel To Germany Is Selected In Primary Approval Reason
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lanxess With Any Udid 50, Air Only, Select Travel To Germany
     Fill Up Approval Fields

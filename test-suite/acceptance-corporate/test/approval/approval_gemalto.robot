@@ -23,7 +23,6 @@ Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Ti
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Exchange ticket
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
@@ -41,7 +40,7 @@ Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Ca
     
     
 Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Hotel Modified and Cost
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Gemalto With Any Udid, Hotel only, Hotel Modified and Cost
     Fill Up Approval Fields
@@ -49,7 +48,7 @@ Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Ho
     
     
 Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For No Travel for Relocation
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Gemalto With Any Udid, Air with Hotel and Car, No Travel for Relocation
     Fill Up Approval Fields
@@ -65,7 +64,7 @@ Verify That PNRs For Client Gemalto Is Correctly Queued To Approval Queue For Tr
     
     
 Verify That PNRs For Client Gemalto Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Gemalto With Any Udid, Ignore Approval Process
     Fill Up Approval Fields
@@ -73,7 +72,7 @@ Verify That PNRs For Client Gemalto Can Skip Approval Process
     
     
 Verify That PNRs For Client Gemalto Do Not Go Thru Approval When RM U13 Is Written
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Gemalto With Any Udid and RM U13 Remark
     Fill Up Approval Fields

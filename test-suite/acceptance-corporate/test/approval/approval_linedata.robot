@@ -17,21 +17,21 @@ ${test_file_name}    linedata
 
 *** Test Cases ***
 Verify That Air Only PNRs For Client Linedata Is Queued For Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Linedata Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Linedata Is Queued For Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Linedata Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Hotel Only PNRs For Client Linedata Is Queued For Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Linedata Hotel Only
     Fill Up Approval Fields
@@ -53,7 +53,7 @@ Verify That Rail Only PNRs For Client Linedata Do Not Go Thru Approval Process
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Linedata Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Linedata Air Only, Skip Approval
     Fill Up Approval Fields

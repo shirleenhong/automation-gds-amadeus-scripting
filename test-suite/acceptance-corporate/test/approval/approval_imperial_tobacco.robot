@@ -25,7 +25,7 @@ Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Que
     
     
 Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Queue For TRANS Booked Less than 14 days
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments Less Than 14 Days For Client Imperial With Any Udid, Air TRANS Booked Less than 14 days
     Fill Up Approval Fields
@@ -33,7 +33,7 @@ Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Que
     
     
 Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Queue For DOM Booked More than 14 days
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Air DOM Booked More than 14 days, Lowest Fare Declined Reason
     Fill Up Approval Fields
@@ -57,7 +57,7 @@ Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Que
     
     
 Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Queue For INTL Booked More than 21 days 
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Air INTL Booked More than 21 days, Lowest Fare Declined Reason
     Fill Up Approval Fields
@@ -65,7 +65,7 @@ Verify That PNRs For Client Imperial Tobacco Is Correctly Queued To Approval Que
     
     
 Verify That PNRs For Client Imperial Tobacco Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Ignore Approval Process
     Fill Up Approval Fields
@@ -73,7 +73,7 @@ Verify That PNRs For Client Imperial Tobacco Can Skip Approval Process
     
     
 Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process When Air Savings Code L
-    [Tags]    us13271   expect_to_fail
+    [Tags]    us13271   expect_to_fail    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Imperial With Any Udid, Air DOM Booked More than 14 days, Air Savings Code L
     Fill Up Approval Fields
@@ -97,7 +97,7 @@ Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process Whe
     
     
 Verify That PNRs For Client Imperial Tobacco Do Not Go Thru Approval Process When UDID is President
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments Less Than 14 Days For Client Imperial With Udid President, Air DOM Booked
     Fill Up Approval Fields

@@ -31,28 +31,28 @@ Verify That Air Only PNRs For Client Jaguar Land Rover Is Correctly Queued For A
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Jaguar Land Rover Is Correctly Queued For Approval When Travel does not include Any Country listed Above Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Jaguar Land Rover With Air Only Segments, Select Travel does not include Any Country Listed Above
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only Transborder PNRs For Client Jaguar Land Rover Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Jaguar Land Rover With Air Only Transborder Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only Domestic PNRs For Client Jaguar Land Rover Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Jaguar Land Rover With Air Only Domestic Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Jaguar Land Rover With RMG/ECM APPROVAL-RECEIVED Remark Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Jaguar Land Rover With Air Only Segments, RMG/ECM APPROVAL-RECEIVED
     Fill Up Approval Fields
@@ -66,14 +66,14 @@ Verify That Air Only PNRs For Client Jaguar Land Rover With RMG/ECM-APPROVAL NOT
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Jaguar Land Rover Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Jaguar Land Rover With Car Only Segment
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
 
 Verify That Hotel Only PNRs For Client Jaguar Land Rover With Any U*50 Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Jaguar Land Rover With Hotel Only Segment
     Fill Up Approval Fields

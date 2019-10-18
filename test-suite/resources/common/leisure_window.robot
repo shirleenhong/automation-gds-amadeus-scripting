@@ -9,6 +9,7 @@ Click Panel
     [Teardown]    Take Screenshot
 
 Click Submit To PNR
+    Scroll Element Into View    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
     Sleep    5
     Click Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
@@ -20,10 +21,12 @@ Enter Company Name
     Input Text    css=#companyName    ${company_name}
 
 Click Wrap PNR
+    Sleep    5
     Click Element    xpath=//button[contains(text(), 'Wrap PNR')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
 
 Click Cancel Segment
+    Sleep    5
     Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Back To Main Menu')]    30
 
@@ -44,6 +47,7 @@ Click Back To Main Menu
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    30
 
 Click Itinerary And Queue
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Itinerary and Queue')]
     Click Element    xpath=//button[contains(text(), 'Itinerary and Queue')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), ' Send Itinerary and Queue')]    30
 

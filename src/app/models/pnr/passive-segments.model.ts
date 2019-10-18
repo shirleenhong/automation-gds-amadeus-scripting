@@ -20,6 +20,7 @@ export class PassiveSegmentsModel {
   dining: string;
   policyNo: string;
   isNew: boolean;
+  isPassive: boolean;
   airlineCode: string;
   flightNumber: string;
   classService: string;

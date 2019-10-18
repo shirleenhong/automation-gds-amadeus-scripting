@@ -33,6 +33,7 @@ import { OfcDocumentationComponent } from './corporate/queue/ofc-documentation/o
 import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minder.component';
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
+import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
     OfcDocumentationComponent,
     QueueMinderComponent,
     QueueComponent,
-    DocumentPnrComponent
+    DocumentPnrComponent,
+    EscRemarksComponent
   ],
   imports: [
     BrowserModule,

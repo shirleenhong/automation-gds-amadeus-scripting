@@ -39,7 +39,7 @@ ${button_add_segment}    //button[contains(text(), 'Add Segment')]
 @{add_segment_pages}    Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
-@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
@@ -74,6 +74,7 @@ Click Full Wrap
     Set Test Variable    ${routing_code_selected}    no
     Set Test Variable    ${destination_selected}    no
     Set Test Variable    ${visa_complete}    no
+    Set Test Variable   ${esc_remarks_complete}    no
     [Teardown]    Take Screenshot
 
 Click Itinerary And Queue
@@ -138,14 +139,16 @@ Click Back To Main Menu
 Click Add Segment
     Wait Until Element Is Visible    ${button_add_segment}    
     Click Element    ${button_add_segment}
-    Set Test Variable    ${current_page}    CWT Corporate
+    Set Test Variable    ${current_page}    Add Segment
    
 Assign Current Date
     ${current_date}    Get Current Date
     ${current_day}     Convert Date     ${current_date}    %d
     ${current_month}     Convert Date     ${current_date}    %m
     ${current_year}     Convert Date     ${current_date}    %y
+    ${current_time}     Convert Date     ${current_date}    %H:%M
     ${month}     Convert Month To MMM    ${current_date}
+    Set Test Variable    ${current_time}    
     Set Test Variable    ${current_date}   ${current_day}${month}
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
@@ -193,6 +196,20 @@ Navigate From Corp
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
     
+Collapse Open Panel
+    ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}
+    ${in_reporting}    Run Keyword And Return Status    Should Contain    ${reporting_pages}    ${current_page}
+    ${in_remarks}    Run Keyword And Return Status    Should Contain    ${remarks_pages}    ${current_page}
+    ${in_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${current_page}
+    ${in_queue}    Run Keyword And Return Status    Should Contain    ${queue_pages}    ${current_page}
+    ${in_ticketing}    Run Keyword And Return Status    Should Contain    ${ticketing_pages}    ${current_page}
+    Run Keyword If    "${in_payment}" == "True" and "${to_payment}" == "False"    Collapse Payment Panel
+    ...    ELSE IF    "${in_reporting}" == "True" and "${to_reporting}" == "False"    Collapse Reporting Panel
+    ...    ELSE IF    "${in_remarks}" == "True" and "${to_remarks}" == "False"    Collapse Remarks Panel
+    ...    ELSE IF    "${in_fees}" == "True" and "${to_fees}" == "False"    Collapse Fees Panel
+    ...    ELSE IF    "${in_queue}" == "True" and "${to_queue}" == "False"    Collapse Queue Panel
+    ...    ELSE IF    "${in_ticketing}" == "True" and "${to_ticketing}" == "False"    Collapse Ticketing Panel
+
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     ${to_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${destination_page}
@@ -201,6 +218,13 @@ Navigate From Full Wrap
     ${to_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${destination_page}
     ${to_queue}    Run Keyword And Return Status    Should Contain    ${queue_pages}    ${destination_page}
     ${to_ticketing}    Run Keyword And Return Status    Should Contain    ${ticketing_pages}    ${destination_page}
+    Set Test Variable    ${to_payment}
+    Set Test Variable    ${to_reporting}
+    Set Test Variable    ${to_remarks}
+    Set Test Variable    ${to_fees}
+    Set Test Variable    ${to_queue}
+    Set Test Variable    ${to_ticketing}
+    Collapse Open Panel
     Run Keyword If    "${to_payment}" == "True"    Navigate From Payment    ${destination_page}    
     ...    ELSE IF    "${to_reporting}" == "True"    Navigate From Reporting    ${destination_page}
     ...    ELSE IF    "${to_remarks}" == "True"   Navigate From Remarks    ${destination_page}
@@ -214,7 +238,6 @@ Navigate From Payment
     ${in_payment}    Run Keyword And Return Status    Should Contain     ${payment_pages}    ${current_page}
     Run Keyword If    "${in_payment}" == "False"    Click Payment Panel
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
-    ...   ELSE     Collapse Payment Panel
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -225,7 +248,6 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
-    ...    ELSE    Collapse Reporting Panel
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
@@ -235,7 +257,8 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "Seats"    Click Seats Tab
     ...    ELSE IF    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
-    ...    ELSE    Collapse Remarks Panel
+    ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
+
     
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -243,7 +266,6 @@ Navigate From Ticketing
     Run Keyword If    "${in_ticketing}" == "False"    Click Ticketing Panel
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
-    ...   ELSE   Collapse Ticketing Panel
 
 Navigate From Queue
     [Arguments]    ${destination_page}
@@ -252,7 +274,6 @@ Navigate From Queue
     Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
-    ...    ELSE     Collapse Queue Panel
 
 Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no    
@@ -268,8 +289,8 @@ Submit To PNR
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
-    Run Keyword If    "${current_page}" == "Payment" or "${current_page}" == "Reporting" or "${current_page}" == "Full Wrap PNR" or "${current_page}" == "Ticketing" or "${current_page}" == "Ticketing Line" or "${current_page}" == "Ticketing Instructions" or "${current_page}" == "Reporting Remarks" or "${current_page}" == "OFC Documentation And Queue"   
-    ...    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
+    Collapse Open Panel
+    Click Submit To PNR    ${close_corporate_test}    ${queueing}        
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
@@ -283,7 +304,8 @@ Collapse Ticketing Panel
     Set Test Variable    ${current_page}    Full Wrap PNR
 
 Select Counselor Identity: ${identity}
-    Navigate To Page CWT Corporate
+    ${in_corp}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
+    Run Keyword If    "${in_corp}" == "False"    Navigate To Page CWT Corporate
     Wait Until Page Contains Element    ${list_counselor_identity}    30
     Select From List By Label    ${list_counselor_identity}     ${identity}
     Set Test Variable    ${actual_counselor_identity}    ${identity}
@@ -300,6 +322,11 @@ Click Fees Panel
     Wait Until Element Is Visible    ${panel_fees}    60
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Fees
+    
+Collapse Fees Panel
+    Wait Until Element Is Visible    ${panel_fees}    60
+    Click Element    ${panel_fees}
+    Set Test Variable    ${current_page}    Full Wrap PNR
     
 Navigate From Fees
     [Arguments]    ${destination_page}

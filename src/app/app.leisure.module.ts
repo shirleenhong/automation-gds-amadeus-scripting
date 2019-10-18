@@ -12,7 +12,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { MatrixReceiptComponent } from './leisure/payments/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './leisure/payments/update-matrix-receipt/update-matrix-receipt.component';
-import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
+// import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './leisure/payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './leisure/payments/accounting-remark/accounting-remark.component';
@@ -20,7 +20,7 @@ import { LeisureFeeComponent } from './leisure/payments/leisure-fee/leisure-fee.
 import { ItcPackageComponent } from './leisure/remarks/itc-package/itc-package.component';
 import { ConciergeUdidsComponent } from './leisure/reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
-import { SegmentsComponent } from './passive-segments/segments/segments.component';
+// import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { MessageComponent } from './shared/message/message.component';
 import { CodeshareComponent } from './leisure/remarks/codeshare/codeshare.component';
@@ -48,13 +48,13 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
   declarations: [
     LeisureComponent,
     ReportingComponent,
-    PassiveSegmentsComponent,
+    // PassiveSegmentsComponent,
     RemarkComponent,
     TourPackageComponent,
     PaymentComponent,
     MatrixReceiptComponent,
     UpdateMatrixReceiptComponent,
-    PassiveSegmentsComponent,
+    // PassiveSegmentsComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
     LeisureFeeComponent,
@@ -62,7 +62,7 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     ConciergeUdidsComponent,
     AmountPipe,
     CancelSegmentComponent,
-    SegmentsComponent,
+    // SegmentsComponent,
     UpdateSegmentComponent,
     MessageComponent,
     LoadingComponent,

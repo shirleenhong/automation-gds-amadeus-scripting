@@ -8,7 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/remarks.robot
 Resource          ../../pages/base.robot
 Resource          ../../../resources/common/api-utilities.txt
-# Test Teardown     Close All Browsers
+Test Teardown     Close All Browsers
 
 *** Variables ***
 ${test_file_name}    queue_placement
@@ -27,3 +27,4 @@ Verify That Multiple Queue Placement For OSC PNR Is Queued To Correct Queue
     Create PNR With Active Air Segments For Queue Placement
     Populate Multiple Queue Placements
     Verify PNR Is Queued To Correct Multiple Queue Placement
+    

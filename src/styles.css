@@ -497,3 +497,6 @@ input[type='date']::-webkit-inner-spin-button {
 .bsp-select-routing-remark {
   margin-top: 3px;
 }
+.isESCRead{
+  font-size: 0.8rem;
+}

@@ -393,7 +393,7 @@ export class CorporateComponent implements OnInit {
         remarkList.push(remModel);
       });
     });
-    // await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
+
     this.rms.submitToPnr(remarkList).then(
       () => {
         this.isPnrLoaded = false;

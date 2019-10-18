@@ -472,7 +472,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     ];
   }
 
-  assignSupplierCode(typeCode: any) {
+  descriptionChanged(typeCode: any) {
     if (typeCode === 'OTHER COSTS') {
       this.showOtherDescription = true;
       this.matrixAccountingForm.get('otherDescription').setValidators([Validators.required]);

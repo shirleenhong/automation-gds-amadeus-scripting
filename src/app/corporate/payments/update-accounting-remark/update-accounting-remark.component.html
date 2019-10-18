@@ -68,7 +68,7 @@
         <div class="col-sm-8">
           <input type="text" class="form-control" formControlName="descriptionapay"
             id="descriptionapay" list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
-            formControlName="descriptionapay" (change)="assignSupplierCode($event.target.value)" />
+            formControlName="descriptionapay" (change)="descriptionChanged($event.target.value)" />
           <datalist id="dynamicSupplierCode1">
             <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>
           </datalist>

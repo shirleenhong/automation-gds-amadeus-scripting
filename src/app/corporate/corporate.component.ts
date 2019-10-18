@@ -77,7 +77,7 @@ export class CorporateComponent implements OnInit {
     private queueService: QueueService,
     private councelorDetail: CounselorDetail,
     private ofcRemarkService: OfcRemarkService,
-    private visaPassportService: VisaPassportRemarkService,
+    private visaPassportService: VisaPassportRemarkService
   ) {
     this.initData();
   }
@@ -220,6 +220,7 @@ export class CorporateComponent implements OnInit {
       )
     );
     accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
+
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
@@ -270,6 +271,12 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
+
+    await this.rms.SendPbn(
+      this.paymentRemarkService.moveProfile(
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+      )
+    );
 
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {

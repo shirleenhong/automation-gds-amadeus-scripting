@@ -270,6 +270,7 @@ export class SegmentService {
     }
 
     private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        debugger;
         let province = '';
         let zip = '';
         const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH - ' },
@@ -369,6 +370,7 @@ export class SegmentService {
             if (segmentrem.noNights) {
                 remText = remText + ' ' + segmentrem.noNights + ' NTS';
             }
+
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
 

@@ -33,6 +33,7 @@
       <div class="col-sm-8">
         <select id="airlineCorporatePassSelection" class="form-control" [(ngModel)]="airlineCorporatePass"
           formControlName="airlineCorporatePass" name="airlineCorporatePass" required>
+          <option></option>
           <option *ngFor="let item of airlineCorporatePasses" [value]="item">
             {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
           </option>
@@ -79,8 +80,8 @@
       <div class="form-group  row">
         <div class="col-sm-4">Description:</div>
         <div class="col-sm-8">
-          <input type="text" class="form-control" formControlName="descriptionapay"
-            id="descriptionapay" list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
+          <input type="text" class="form-control" formControlName="descriptionapay" id="descriptionapay"
+            list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
             formControlName="descriptionapay" (change)="descriptionChanged($event.target.value)" />
           <datalist id="dynamicSupplierCode1">
             <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>

@@ -1189,7 +1189,7 @@ export class PnrService {
         segmentModel.destinationCity = element.arrivalStation;
         segmentModel.arrivalDate = this.formatDate(element.arrivalDate);
         segmentModel.status = element.status;
-        segmentModel.isPassive = true;
+        segmentModel.isPassive = (element.passive === 'HTL');
         const regex = /(?<hotelInfo>(.*)),CF:(?<confirmationNumber>(.*?),)/g;
         const match = regex.exec(freetext);
 

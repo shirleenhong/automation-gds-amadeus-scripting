@@ -159,8 +159,23 @@ export class CorporateComponent implements OnInit {
   }
 
   public async AddSegment() {
+    // this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'segment';
+    if (!this.pnrService.getClientSubUnit()) {
+      this.closePopup();
+      this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
+      this.workflow = 'error';
+    } else {
+      try {
+        this.workflow = 'segment';
+        // .this.showLoading('Matching Remarks', 'initData');
+        await this.rms.getMatchcedPlaceholderValues();
+
+      } catch (e) {
+        console.log(e);
+      }
+      this.closePopup();
+    }
   }
 
   async loadPnrData() {
@@ -370,12 +385,10 @@ export class CorporateComponent implements OnInit {
   }
 
   async addSemgentsRirRemarks() {
-    debugger;
     const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
-
+    remarkCollection2.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
     await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
-    this.amadeusRemarkService.SubmitRemarks().then(
+    this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

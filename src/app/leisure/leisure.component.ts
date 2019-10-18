@@ -463,7 +463,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   async addSemgentsRirRemarks() {
     const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
+    remarkCollection2.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark }));
 
     await this.leisureRemarkService.BuildRemarks(remarkCollection2);
     this.leisureRemarkService.SubmitRemarks().then(

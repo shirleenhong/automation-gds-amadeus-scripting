@@ -381,7 +381,6 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    debugger;
     remarkCollection.forEach(rem => {
       rem.remarks.forEach(remModel => {
         remarkList.push(remModel);

@@ -23,7 +23,6 @@ Verify That Air Only PNRs For Client Senvion Is Correctly Queued For Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That Car Only PNRs For Client Senvion Is Correctly Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
@@ -33,20 +32,18 @@ Verify That Car Only PNRs For Client Senvion Is Correctly Queued For Approval
     
     
 Verify That Hotel Only PNRs For Client Senvion Is Correctly Queued For Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Senvion With Udid 50 VIP-CA-S, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Senvion Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Senvion With Udid 50 VIP-CA-S, Mix Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    
     
 Verify That PNRs For Client Senvion With U*50 GUEST-CA-S Do Not Go Thru Approval Process
     [Tags]    us13271

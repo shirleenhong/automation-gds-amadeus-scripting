@@ -23,7 +23,6 @@ Verify That PNRs For Client Societe Generale Exit Approval Process When First Pr
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Societe Generale Are Put On Hold When Second Primary Reason Is Selected
     [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
@@ -31,14 +30,12 @@ Verify That PNRs For Client Societe Generale Are Put On Hold When Second Primary
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Societe Generale Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Societe Generale, Mix Segments, Skip Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    
     
 Verify That PNRs For Client Societe Generale With FOP That Is Not AX Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -47,7 +44,6 @@ Verify That PNRs For Client Societe Generale With FOP That Is Not AX Do Not Go T
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-
 Verify That PNRs For Client Societe Generale With FOP That Is AX But Does Not End In 1010 Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
@@ -55,10 +51,10 @@ Verify That PNRs For Client Societe Generale With FOP That Is AX But Does Not En
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Societe Generale With BTA APPR RECEIVED Remark Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Societe Generale With BTA APPR RECEIVED Remark, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
+    

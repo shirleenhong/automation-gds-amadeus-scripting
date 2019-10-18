@@ -24,21 +24,21 @@ Verify That Air Only PNRs For Client Glaukos Is Correctly Queued For Approval Wh
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Glaukos Is Correctly Queued For Approval When Travel is Booked Business Class is Selected
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Glaukos With Udid 50 GUEST-CA, Air Only, Select Travel is Booked Business Class
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Glaukos Is Correctly Queued For Approval When Travel is Booked Premium Economy is Selected
-    [Tags]    us13271
+    [Tags]    us13271    
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Glaukos With Udid 50 GENERAL-CA, Air Only, Select Travel is Booked Premium Economy
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
 
 Verify That Hotel And Car Only PNRs For Client Glaukos Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Glaukos With Udid 50 GUEST-CA, Hotel And Car Segments
     Fill Up Approval Fields

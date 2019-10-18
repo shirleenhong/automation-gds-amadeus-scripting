@@ -31,21 +31,21 @@ Verify That Air Only, Domestic Route PNRs For Client Purdue Pharma Do Not Go Thr
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only, Trans Route PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Purdue Pharma Air Only, Trans Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Purdue Pharma Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Hotel Only PNRs For Client Purdue Pharma Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Purdue Pharma Hotel Only
     Fill Up Approval Fields
@@ -59,7 +59,7 @@ Verify That Car And Hotel Only PNRs For Client Purdue Pharma Do Not Go Thru Appr
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Purdue Pharma Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Purdue Pharma Air Only, Skip Approval
     Fill Up Approval Fields

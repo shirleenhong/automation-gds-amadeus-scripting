@@ -169,6 +169,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
     this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
     this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
+    this.matrixAccountingForm.get('otherDescription').clearValidators();
+    this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
+    this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
+    this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
     switch (accRemark) {
       case 'ACPP':
       case 'WCPP':
@@ -206,8 +210,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           ['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription', 'vendorCode', 'cardNumber', 'expDate'],
           false
         );
-        this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo', 'commisionWithoutTax'], true);
-        this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
+        this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], true);
+        this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
+        this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
         this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         break;
       case 'NONBSP':
@@ -222,6 +227,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
           this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         }
+        this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
+        this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
 
         break;
       default:
@@ -230,6 +237,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.accountingRemark.bsp = '1';
         this.name = 'Supplier Confirmation Number:';
         this.setMandatoryTicket([], false);
+        this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
+        this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
         break;
     }
     this.loadPassType(accRemark);
@@ -473,12 +482,20 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   descriptionChanged(typeCode: any) {
+    if (typeCode === 'SEAT COSTS') {
+      this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
+    } else {
+      this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
+    }
+
     if (typeCode === 'OTHER COSTS') {
       this.showOtherDescription = true;
       this.matrixAccountingForm.get('otherDescription').setValidators([Validators.required]);
+      this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     } else {
-      this.matrixAccountingForm.get('otherDescription').clearValidators();
       this.showOtherDescription = false;
+      this.matrixAccountingForm.get('otherDescription').clearValidators();
+      this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     }
   }
 }

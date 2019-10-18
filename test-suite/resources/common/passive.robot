@@ -92,6 +92,7 @@ Select Room Type
 Select Meal Plan
     [Arguments]    ${meal_plan}
     Select From List By Label    css=#mealPlan    ${meal_plan}
+    Press Key    css=#mealPlan    \\09
     Set Test Variable    ${meal_plan.upper()}
     [Teardown]    Take Screenshot
 
@@ -437,7 +438,14 @@ Enter Rate Booked
 
 Enter Type Of Insurance Purchased
     [Arguments]    ${rate_booked}
-    # Double Click Element    css=#insuranceType
-    # Press Key    css=#insuranceType    \\08
     Input text      css=#insuranceType      ${rate_booked}
     Press Key    css=#insuranceType    \\09
+
+Select Passengers For Passive Segments
+    [Arguments]   @{passenger_number}
+    Click Element    //input[@formcontrolname='passenger']
+    : FOR    ${passenger_number}    IN    @{passenger_number}
+    \    Click Element    //div[@class='dropdown-item']//input[@value='${passenger_number}']
+    Click Element    //input[@formcontrolname='passenger']
+    Press Key    //input[@formcontrolname='passenger']    \\09
+    

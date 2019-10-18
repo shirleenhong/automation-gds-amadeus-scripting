@@ -11,6 +11,7 @@ import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { TranslationService } from './translation.service';
 import { AmadeusQueueService } from './amadeus-queue.service';
+import { RemarksManagerService } from './corporate/remarks-manager.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -18,6 +19,7 @@ declare var smartScriptSession: any;
 })
 
 export class SegmentService {
+    corpRemarks = [];
     // check if this can be retrieved from ddb
     mexicoCities: Array<string> =
         ['ACA', 'MEX', 'TIJ', 'CUN', 'CNA', 'AGU', 'XAL', 'AZG', 'AZP', 'CPA', 'CYW', 'CTM', 'CZA', 'CUU',
@@ -29,7 +31,7 @@ export class SegmentService {
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
-        private amadeusQueueService: AmadeusQueueService) { }
+        private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -144,8 +146,8 @@ export class SegmentService {
         return remGroup;
     }
 
-    addSegmentRir(segRemark: any) {
-
+    addSegmentRir({ segRemark, isCorp = false }: { segRemark: any; isCorp?: boolean; }) {
+        this.corpRemarks = [];
         let segmentRemarks: PassiveSegmentsModel[];
         segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');
@@ -192,7 +194,7 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
-                    this.rirAir(pnrSegment, segmentrem, rmGroup);
+                    this.rirAir(pnrSegment, segmentrem, rmGroup, isCorp);
                 }
 
                 if (segmentrem.segmentType === 'CAR' && pnrSegment.segmentType === 'CAR') {
@@ -205,21 +207,65 @@ export class SegmentService {
             });
         });
 
+        this.writeCorpRirRemarks();
         return rmGroup;
     }
 
-    private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+    private writeCorpRirRemarks() {
+        this.corpRemarks.forEach(element => {
+            const relatedSegments = [];
+            if (element.segment) {
+                const s = element.segment.split(',');
+                s.forEach((x) => {
+                    relatedSegments.push(x);
+                });
+            }
+            const remarks = new Map<string, string>();
+            if (element.placeholder) {
+                remarks.set(element.placeholder, element.placeholdervalue);
+                this.rms.createPlaceholderValues(remarks, null, element.segment);
+            }
+
+            if (element.condition) {
+                remarks.set(element.condition, element.conditionvalue);
+                this.rms.createPlaceholderValues(null, remarks, null, null, element.text);
+            }
+        });
+    }
+
+    private assignCorpPlaceholders(pName: string, pValue: string, cName: string, cValue: string, segmentAssoc: string, text: string) {
+        this.corpRemarks.push(
+            {
+                placeholder: pName, placeholdervalue: pValue,
+                condition: cName, conditionValue: cValue, segment: segmentAssoc, staticText: text
+            }
+        );
+    }
+
+    private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
         if (segmentrem.zzairlineCode) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders('ZZZAirlineCode', segmentrem.zzairlineCode, null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
         if (segmentrem.zzdepartureCity) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders('ZZDepartureCity', segmentrem.zzdepartureCity, null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
         if (segmentrem.zzdestinationCity) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders('ZZDestinationCity', segmentrem.zzdestinationCity, null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
     }
 

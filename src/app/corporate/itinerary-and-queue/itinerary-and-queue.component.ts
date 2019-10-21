@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UtilHelper } from '../../helper/util.helper';
 import { ItineraryInvoiceQueue } from './itinerary-invoice-queue/itinerary-invoice-queue.component';
-import { ItineraryComponent } from './itinerary/itinerary.component';
+import { ItineraryComponent } from 'src/app/leisure/itinerary-and-queue/itinerary/itinerary.component';
 
 
 @Component({

@@ -33,7 +33,6 @@ import { OfcDocumentationComponent } from './corporate/queue/ofc-documentation/o
 import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minder.component';
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
-import { ItineraryComponent } from './corporate/itinerary-and-queue/itinerary/itinerary.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
 
 @NgModule({
@@ -67,7 +66,6 @@ import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-re
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent,
-    ItineraryComponent,
     EscRemarksComponent
   ],
   imports: [

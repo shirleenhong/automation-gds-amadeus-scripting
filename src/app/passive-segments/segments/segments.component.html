@@ -44,7 +44,7 @@
       <td>
         <i *ngIf="r.isNew" class="fas fa-edit" (click)="updateItem(r)"></i>
         &nbsp;&nbsp;&nbsp;
-        <i *ngIf="r.status == 'GK'" class=" fas fa-trash-alt" (click)="deleteItem(r)"> </i>
+        <i *ngIf="r.isPassive" class=" fas fa-trash-alt" (click)="deleteItem(r)"> </i>
       </td>
     </tr>
   </tbody>

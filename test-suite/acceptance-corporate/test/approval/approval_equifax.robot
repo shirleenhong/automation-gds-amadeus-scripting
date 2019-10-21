@@ -17,7 +17,7 @@ ${test_file_name}    equifax
 
 *** Test Cases ***
 Verify That Air Only PNRs For Client Equifax Is Correctly Queued For Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Equifax Air Only To SYD, Select International Travel country includes Australia or New Zealand
     Fill Up Approval Fields
@@ -38,14 +38,14 @@ Verify That Air Only PNRs For Client Equifax With U*50 As CONCIERGE-NORAM-S Do N
     Verify PNR Approval Is Processed Correctly
 
 Verify That Hotel Only PNRs For Client Equifax With Any U*50 Except CONCIERGE-NORAM-S Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Equifax With Any Udid 50 Except CONCIERGE-NORAM-S, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Equifax With Any U*50 Except CONCIERGE-NORAM-S Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Equifax With Any Udid 50 Except CONCIERGE-NORAM-S, Car Only
     Fill Up Approval Fields

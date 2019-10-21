@@ -8,7 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/remarks.robot
 Resource          ../../pages/base.robot
 Resource          ../../../resources/common/api-utilities.txt
-Test Teardown     Close All Browsers
+#Test Teardown     Close All Browsers
 
 *** Variables ***
 ${test_file_name}    esc_remarks
@@ -20,7 +20,7 @@ Verify That The ESC Remarks Are Correctly Written In The PNR If Agent Is ESC And
     Create PNR With Active Air Segments For ESC Remarks
     Select Counselor Identity: ESC
     Select Yes In Verify ESC Remarks Have Been Read
-    Verify ESC Remarks Are Written Correctly In The PNR
+    #Verify ESC Remarks Are Written Correctly In The PNR
     
 Verify That The ESC Remarks Are Correctly Written In The PNR If Agent Is ESC And Agent Has Not Read The ESC Remarks
     [Tags]    us9762

@@ -98,23 +98,26 @@ Click Send Itinerary And Queue
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
-    Scroll Element Into View     ${panel_reporting}
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
     
 Collapse Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
 Click Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Full Wrap PNR
     [Teardown]    Take Screenshot
@@ -300,6 +303,7 @@ Click Ticketing Panel
     
 Collapse Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
@@ -325,6 +329,7 @@ Click Fees Panel
     
 Collapse Fees Panel
     Wait Until Element Is Visible    ${panel_fees}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
@@ -340,6 +345,7 @@ Click Remarks Panel
     
 Collapse Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
@@ -350,6 +356,7 @@ Click Queue Panel
     
 Collapse Queue Panel
     Wait Until Element Is Visible    ${panel_queue}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_queue}
     Set Test Variable    ${current_page}    Full Wrap PNR
     

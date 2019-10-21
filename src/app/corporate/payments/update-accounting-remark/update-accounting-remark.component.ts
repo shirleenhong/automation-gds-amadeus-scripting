@@ -282,7 +282,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   getAirlineCode(segmentno) {
     const segments = segmentno.split(',');
-    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
+    const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
     if (air && segments.length === 1) {
       return air[0].airlineCode;
     }
@@ -369,7 +369,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
-      const segmentDetails = this.pnrService.getSegmentTatooNumber();
+      const segmentDetails = this.pnrService.getSegmentList();
       segmentDetails.forEach((segments) => {
         segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {

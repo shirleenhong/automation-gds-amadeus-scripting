@@ -384,7 +384,7 @@ export class PnrService {
     getPassiveSegmentTypes(segmentType: string) {
         const elements = new Array<any>();
 
-        this.getSegmentTatooNumber().forEach((c) => {
+        this.getSegmentList().forEach((c) => {
             if (c.segmentType === segmentType) {
                 elements.push(c);
             }
@@ -400,7 +400,7 @@ export class PnrService {
     getPassiveAirSegments(lineNo: any) {
         const elements = new Array<any>();
 
-        this.getSegmentTatooNumber().forEach((c) => {
+        this.getSegmentList().forEach((c) => {
             if (lineNo === '') {
                 if (c.segmentType === 'AIR') {
                     elements.push({
@@ -431,7 +431,7 @@ export class PnrService {
         return elementNumbers;
     }
 
-    getSegmentTatooNumber() {
+    getSegmentList() {
         this.segments = [];
         for (const air of this.pnrObj.airSegments) {
             this.getSegmentDetails(air, 'AIR');
@@ -491,8 +491,6 @@ export class PnrService {
         let airType = '';
         let segType = type;
         let passiveType = '';
-    
-
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -564,7 +562,6 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
-               
                 // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
@@ -600,7 +597,7 @@ export class PnrService {
             airType,
             passive: passiveType,
             isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' &&  elemStatus === 'GK'))
-        };      
+        };
         this.segments.push(segment);
     }
 
@@ -937,7 +934,7 @@ export class PnrService {
                     model.passPurchase = vals[0].trim();
                     model.fareType = vals[1].replace('FARE', '').trim();
                     model.accountingTypeRemark = 'ACPP';
-                    const air = this.getSegmentTatooNumber()
+                    const air = this.getSegmentList()
                         .find((z) => z.segmentType === 'AIR' && z.controlNumber === model.supplierConfirmatioNo);
                     if (air) {
                         model.departureCity = air.cityCode;
@@ -1021,7 +1018,7 @@ export class PnrService {
         }
         const s = [];
         assoc.forEach((x) => {
-            const segment = this.getSegmentTatooNumber().find((z) => z.tatooNo === x.tatooNumber && x.segmentType === 'ST');
+            const segment = this.getSegmentList().find((z) => z.tatooNo === x.tatooNumber && x.segmentType === 'ST');
             if (segment !== null && segment !== undefined) {
                 s.push(segment.lineNo);
             }
@@ -1202,7 +1199,7 @@ export class PnrService {
 
     getModelPassiveSegments(): PassiveSegmentsModel[] {
         const pSegment: PassiveSegmentsModel[] = [];
-        const segment = this.getSegmentTatooNumber();
+        const segment = this.getSegmentList();
         let index = 0;
         segment.forEach((element) => {
             index++;
@@ -1491,7 +1488,7 @@ export class PnrService {
 
     getTatooNumberFromSegmentNumber(segments: string[]): string[] {
         if (this.segments.length === 0) {
-            this.getSegmentTatooNumber();
+            this.getSegmentList();
         }
         const lineNos = this.segments.filter(s => segments.indexOf(s.lineNo) >= 0).map(x => x.tatooNo);
         return lineNos;
@@ -1499,7 +1496,7 @@ export class PnrService {
 
     getSegmentNumbers(tatooNumbers: any[]): string[] {
         if (this.segments.length === 0) {
-            this.getSegmentTatooNumber();
+            this.getSegmentList();
         }
         const segmentLines = [];
         for (const tatooNo of tatooNumbers) {

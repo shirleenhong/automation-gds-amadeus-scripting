@@ -170,7 +170,6 @@ export class CorporateComponent implements OnInit {
         this.workflow = 'segment';
         // .this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
-
       } catch (e) {
         console.log(e);
       }

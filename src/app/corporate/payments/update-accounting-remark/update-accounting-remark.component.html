@@ -297,7 +297,7 @@
         </div>
       </div>
       <!-- Consulatant Number -->
-      <div class="form-group row">
+      <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
         <div class="col-sm-4">Consultant No:</div>
         <div class="col-sm-8">
           <input type="text" class="form-control" formControlName="consultantNo" id="consultantNo"

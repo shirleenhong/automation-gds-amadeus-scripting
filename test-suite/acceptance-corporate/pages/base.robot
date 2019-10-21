@@ -213,6 +213,8 @@ Collapse Open Panel
     ...    ELSE IF    "${in_queue}" == "True" and "${to_queue}" == "False"    Collapse Queue Panel
     ...    ELSE IF    "${in_ticketing}" == "True" and "${to_ticketing}" == "False"    Collapse Ticketing Panel
 
+
+
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     ${to_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${destination_page}

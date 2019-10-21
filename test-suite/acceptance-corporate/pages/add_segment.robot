@@ -31,6 +31,7 @@ ${input_airline_recloc}    css=#airlineRecloc
 
 *** Keywords ***
 Add And Verify Air Segment for Non ZZ Details In The PNR
+    Navigate To Page Add Segment
     Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    AC
@@ -48,6 +49,7 @@ Add And Verify Air Segment for Non ZZ Details In The PNR
     Verify Expected Remarks Are Written In The PNR
     
 Add And Verify Air Segment for ZZ In The PNR
+    Navigate To Page Add Segment
     Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    ZZ

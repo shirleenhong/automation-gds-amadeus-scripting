@@ -12,6 +12,9 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../pages/add_segment.robot
 Test Teardown    Close All Browsers
 
+*** Variables ***
+${test_file_name}    add_segment
+
 *** Test Cases ***
 Verify Corp Passive Air Segment Is Added In the PNR For Non ZZ Details
     Login To Amadeus Sell Connect Acceptance

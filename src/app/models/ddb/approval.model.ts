@@ -3,26 +3,9 @@ export class ApprovalItem {
   approvalGroupName: string;
   approvalGroupApprovalTypeId = 0;
   approvalRules: string;
+  approvalType: string;
   approvalResult: string;
 
-  //
-  public getRule() {
-    const splitVal = this.approvalRules.split('=');
-    if (splitVal.length > 1) {
-      return splitVal[0];
-    }
-    return '';
-  }
-  /**
-   * returns rule value with Keywords;
-   */
-  public getRuleText() {
-    const splitVal = this.approvalRules.split('=');
-    if (splitVal.length > 1) {
-      return splitVal[1];
-    }
-    return '';
-  }
   /**
    * Returns list of Keywords
    */
@@ -46,7 +29,7 @@ export class ApprovalItem {
    */
   public getRuleValueText(value?) {
     if (!value) {
-      value = this.getRuleText();
+      value = this.approvalRules;
     }
     this.getRuleKeywords(value).forEach((r) => {
       value = value.replace(r, '');
@@ -59,7 +42,8 @@ export class ApprovalItem {
       this.approvalId = jsonObj.ApprovalGroupId;
       this.approvalGroupName = jsonObj.ApprovalGroupName;
       this.approvalGroupApprovalTypeId = jsonObj.ApprovalGroupApprovalTypeId;
-      this.approvalRules = jsonObj.ApprovalGroupApprovalTypeDescription;
+      this.approvalRules = jsonObj.ApprovalGroupApprovalTypeFormat;
+      this.approvalType = jsonObj.ApprovalGroupApprovalTypeDescription;
       this.approvalResult = jsonObj.ApprovalGroupApprovalTypeItemValue;
     }
   }

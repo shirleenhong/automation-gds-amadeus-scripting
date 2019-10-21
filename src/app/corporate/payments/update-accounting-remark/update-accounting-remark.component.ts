@@ -272,6 +272,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
     this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
 
+    this.matrixAccountingForm.get('gst').setValue(0.0);
+    this.matrixAccountingForm.get('hst').setValue(0.0);
+    this.matrixAccountingForm.get('qst').setValue(0.0);
+    this.matrixAccountingForm.get('otherTax').setValue(0.0);
+    this.matrixAccountingForm.get('commisionWithoutTax').setValue(0.0);
+
     this.requireGDSFare();
   }
 

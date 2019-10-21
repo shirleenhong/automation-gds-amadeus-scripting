@@ -286,7 +286,8 @@
     </div>
 
     <!-- GDS Fare for Non BSP Exchange -->
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+    <div
+      *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' || accountingRemark.accountingTypeRemark === 'ACPR'">
       <!-- GDS Fare -->
       <div class="form-group row">
         <div class="col-sm-4">GDS Fare:</div>

@@ -205,13 +205,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['fareType'], accRemark !== 'ACPP');
         break;
       case 'ACPR':
-        // Airline Corporate Pass Redemption
-        this.name = 'Airline Record Locator';
-        this.airlineCorporatePasses = this.airlineCorporatePassService.getAll();
-        this.checkSupplierCode();
-        this.enableFormControls(['fareType'], this.needFaretype);
-        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
-        this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
+        this.configureACPRControls();
         break;
       case 'NONBSPEXCHANGE':
         this.enableFormControls(['otherTax', 'segmentNo', 'originalTktLine'], false);
@@ -264,7 +258,27 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       .get('supplierConfirmatioNo')
       .setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
 
-    // Require GDS Fare if CFA remark is in [ZZB, 92Z, YVQ, YFV].
+    this.requireGDSFare();
+
+    this.matrixAccountingForm.get('consultantNo').setValidators([Validators.minLength(3), Validators.maxLength(3)]);
+  }
+
+  configureACPRControls(): void {
+    // Airline Corporate Pass Redemption
+    this.name = 'Airline Record Locator';
+    this.airlineCorporatePasses = this.airlineCorporatePassService.getAll();
+    this.checkSupplierCode();
+    this.enableFormControls(['fareType'], this.needFaretype);
+    this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
+    this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
+
+    this.requireGDSFare();
+  }
+
+  /**
+   * Require GDS Fare if CFA remark is in [ZZB, 92Z, YVQ, YFV].
+   */
+  requireGDSFare(): void {
     const cfaLine = this.pnrService.getCFLine();
     if (cfaLine !== undefined) {
       if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
@@ -275,8 +289,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('gdsFare').clearValidators();
       }
     }
-
-    this.matrixAccountingForm.get('consultantNo').setValidators([Validators.minLength(3), Validators.maxLength(3)]);
   }
 
   setMandatoryTicket(supCode: string[], isRequired: boolean) {

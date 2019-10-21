@@ -8,6 +8,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
 import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+import { AirlineCorporatePassService } from 'src/app/service/corporate/airline-corporate-pass.service';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -46,7 +47,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     private pnrService: PnrService,
     public modalRef: BsModalRef,
     private ddbService: DDBService,
-    private utilHelper: UtilHelper
+    private utilHelper: UtilHelper,
+    private airlineCorporatePassService: AirlineCorporatePassService
   ) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.accountingRemark = new MatrixAccountingModel();
@@ -205,7 +207,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       case 'ACPR':
         // Airline Corporate Pass Redemption
         this.name = 'Airline Record Locator';
-        this.airlineCorporatePasses = this.getAirlineCorporatePasses();
+        this.airlineCorporatePasses = this.airlineCorporatePassService.getAll();
         this.checkSupplierCode();
         this.enableFormControls(['fareType'], this.needFaretype);
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
@@ -503,12 +505,5 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.get('otherDescription').clearValidators();
       this.showOtherDescription = false;
     }
-  }
-
-  /**
-   * WIP: Get the list of Airline Corporate Passes.
-   */
-  getAirlineCorporatePasses(): Array<AirlineCorporatePass> {
-    return AirlineCorporatePass.getSampleData();
   }
 }

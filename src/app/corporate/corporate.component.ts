@@ -325,10 +325,16 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
   }
-
   async sendItineraryAndQueue() {
+    this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'sendQueue';
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendQueue';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async SendItineraryAndQueue() {
@@ -342,11 +348,13 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
     await this.rms.submitToPnr().then(

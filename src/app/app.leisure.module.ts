@@ -32,7 +32,7 @@ import { UpdateFareRuleSegmentComponent } from './leisure/remarks/update-fare-ru
 import { RbcPointsRedemptionComponent } from './leisure/remarks/rbc-points-redemption/rbc-points-redemption.component';
 import { UpdateRbcPointsRedemptionComponent } from './leisure/remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
 import { UpdateLeisureFeeComponent } from './leisure/payments/update-leisure-fee/update-leisure-fee.component';
-import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itinerary.component';
+// import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itinerary.component';
 import { ItineraryAndQueueComponent } from './leisure/itinerary-and-queue/itinerary-and-queue.component';
 import { QueueComponent } from './leisure/itinerary-and-queue/queue/queue.component';
 import { LoadingComponent } from './shared/loading/loading.component';
@@ -75,7 +75,6 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     RbcPointsRedemptionComponent,
     UpdateRbcPointsRedemptionComponent,
     UpdateLeisureFeeComponent,
-    ItineraryComponent,
     ItineraryAndQueueComponent,
     QueueComponent,
     CancelComponent,

@@ -51,7 +51,7 @@
     </div>
 
     <div
-      *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+      *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' || accountingRemark.accountingTypeRemark === 'ACPR'">
       <div class="form-group  row">
         <div class="col-sm-4">Itinerary Segments:</div>
         <div class="col-sm-8">
@@ -273,7 +273,7 @@
     </div>
 
     <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || (needFaretype && accountingRemark.accountingTypeRemark
-      === 'NONBSPEXCHANGE') || accountingRemark.accountingTypeRemark === 'ACPR'" class="form-group row">
+      === 'NONBSPEXCHANGE')" class="form-group row">
       <div class="col-sm-4">Fare Type:</div>
       <div class="col-sm-8">
         <select autofocus id="fareType" class="form-control" name="fareType" [(ngModel)]="accountingRemark.fareType"

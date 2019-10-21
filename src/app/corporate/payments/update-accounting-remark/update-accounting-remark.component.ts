@@ -454,7 +454,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     });
 
     // Calculate the Base Amount depending on airlineCorporatePass.
-    this.matrixAccountingForm.get('airlineCorporatePass').valueChanges.subscribe((value) => {
+    this.matrixAccountingForm.get('airlineCorporatePass').valueChanges.subscribe(() => {
       const baseAmount = this.pnrService.getPassiveAirSegmentNumbers().length * this.airlineCorporatePasses[0].segmentCost;
       this.matrixAccountingForm.get('baseAmount').setValue(baseAmount);
     });

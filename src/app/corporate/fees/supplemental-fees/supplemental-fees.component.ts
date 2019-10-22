@@ -289,10 +289,11 @@ export class SupplementalFeesComponent implements OnInit {
       { cfa: 'J6O', text: 'Technical Help Support Desk' },
       { cfa: '2PX', text: 'CWT Technology Helpdesk Support' },
       { cfa: 'YPD', text: 'Web Session for OBT Training Only' },
-      { cfa: 'YPF', text: 'Web Session for OBT Training Only' },
-      { cfa: 'D4N', text: 'Web Session for OBT Training Only' },
+      { cfa: 'R9W', text: 'Web Session for OBT Training Only' },
       { cfa: 'F6D', text: 'Technical Help Support Desk' },
-      { cfa: 'F3X', text: 'Virtual Card' }
+      { cfa: 'F3X', text: 'Virtual Card' },
+      { cfa: 'YJN', text: 'Technical Help Support Desk' },
+      { cfa: 'M2L', text: 'CWT HelpDesk' }
     ];
   }
 }

@@ -180,7 +180,7 @@ export class SegmentService {
                         if (segmentrem.vendorCode === 'VIB') {
                             vib = vib + 1;
                         }
-                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vib, itinLanguage);
+                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vib, itinLanguage, isCorp);
                     }
                     if (segmentrem.segmentType === 'LIM') {
                         this.rirLimo(pnrSegment, segmentrem, rmGroup, itinLanguage);
@@ -229,18 +229,18 @@ export class SegmentService {
             }
 
             if (element.condition) {
-                remarks.set(element.condition, element.conditionvalue);
-                this.rms.createPlaceholderValues(null, remarks, null, null, element.text);
+                remarks.set(element.condition, element.conditionValue);
+                this.rms.createPlaceholderValues(null, remarks, element.segment, null, element.staticText);
             }
         });
     }
 
     private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
-        cValue: string, segmentAssoc: string, text: string) {
+        cValue: string, segmentAssoc: string, pText: string) {
         this.corpRemarks.push(
             {
                 placeholder: pName, placeholdervalue: pValue,
-                condition: cName, conditionValue: cValue, segment: segmentAssoc, staticText: text
+                condition: cName, conditionValue: cValue, segment: segmentAssoc, staticText: pText
             }
         );
     }
@@ -402,12 +402,18 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string) {
+        amk: number, vib: number, itinLanguage: string, isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('TRAIN NUMBER-' + segmentrem.trainNumber.toString()
-                    + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                const pHolder = ['TrainNumber', 'TrainClassService'];
+                const pValue = [segmentrem.trainNumber.toString(), segmentrem.classService];
+                this.assignCorpPlaceholders(pHolder, pValue, null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('TRAIN NUMBER-' + segmentrem.trainNumber.toString()
+                        + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
 
         let carseat = '';
@@ -425,17 +431,29 @@ export class SegmentService {
         }
 
         if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
-            const segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
-            segRemarks.forEach(c => {
-                rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
-            });
+            let segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
+            if (isCorp) {
+                segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', 'EN');
+                segRemarks.forEach(c => {
+                    this.assignCorpPlaceholders(null, null, 'TrainVendorCode', 'vbk', pnrSegment.tatooNo, c);
+                });
+            } else {
+                segRemarks.forEach(c => {
+                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                });
+            }
         }
         if (amk === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
             this.getAmkRemark().forEach(c => {
-                rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                if (isCorp) {
+                    this.assignCorpPlaceholders(null, null, 'TrainVendorCode', 'amk', pnrSegment.tatooNo, c);
+                } else {
+                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                }
             });
         }
     }
+
     getAmkRemark() {
         const amkRemark = [
             'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER.',

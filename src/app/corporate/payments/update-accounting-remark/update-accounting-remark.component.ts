@@ -6,6 +6,9 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+import { AirlineCorporatePassService } from 'src/app/service/corporate/airline-corporate-pass.service';
 // import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
@@ -93,10 +96,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       originalTktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
       duplicateFare: new FormControl(''),
       typeOfPass: new FormControl(''),
-      otherDescription: new FormControl('', [])
+      otherDescription: new FormControl('', []),
       // vendorCode: new FormControl('', [Validators.required]),
       // cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
-      // expDate: new FormControl('', [Validators.required, validateExpDate()])
+      // expDate: new FormControl('', [Validators.required, validateExpDate()]),
+
+      airlineCorporatePass: new FormControl('', [Validators.required])
     });
 
     this.name = 'Supplier Confirmation Number:';

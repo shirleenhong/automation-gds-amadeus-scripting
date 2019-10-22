@@ -1604,4 +1604,14 @@ export class PnrService {
         }
         return { fopLineNo, fopFreeText };
     }
+
+    getCCVendorCode(): string {
+        let val: string;
+        val = '';
+        debugger;
+        for (const element of this.pnrObj.fpElements) {
+          val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
+        }
+        return val;
+      }
 }

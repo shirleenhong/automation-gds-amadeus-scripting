@@ -6,7 +6,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+// import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -87,10 +87,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       originalTktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
       duplicateFare: new FormControl(''),
       typeOfPass: new FormControl(''),
-      otherDescription: new FormControl('', []),
-      vendorCode: new FormControl('', [Validators.required]),
-      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
-      expDate: new FormControl('', [Validators.required, validateExpDate()])
+      otherDescription: new FormControl('', [])
+      // vendorCode: new FormControl('', [Validators.required]),
+      // cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      // expDate: new FormControl('', [Validators.required, validateExpDate()])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -98,7 +98,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.onChanges();
     this.showFareType();
     this.loadDescription();
-    this.loadVendorCode();
   }
 
   showFareType() {
@@ -206,10 +205,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
         break;
       case 'APAY':
-        this.enableFormControls(
-          ['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription', 'vendorCode', 'cardNumber', 'expDate'],
-          false
-        );
+        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription'], false);
+        // 'vendorCode', 'cardNumber', 'expDate'],
         this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], true);
         this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
@@ -421,6 +418,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
           break;
         case 'APAY':
+          this.matrixAccountingForm.controls.originalTktLine.setValidators(Validators.required);
+          this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
+          break;
         case 'NONBSP':
           this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
           break;
@@ -483,6 +483,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   descriptionChanged(typeCode: any) {
     if (typeCode === 'SEAT COSTS') {
+      this.showOtherDescription = false;
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
     } else {
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
@@ -497,5 +498,46 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.get('otherDescription').clearValidators();
       this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     }
+  }
+
+  getCCVendor(): string {
+    let val: string;
+    val = '';
+
+    for (const element of this.pnrService.pnrObj.fpElements) {
+      val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
+    }
+
+    // if (val !== '') {
+    //   switch (val) {
+    //     case 'VI':
+    //       val = 'VI- Visa';
+    //       break;
+    //     case 'CA':
+    //       val = 'CA - Mastercard';
+    //       break;
+    //     case 'AX':
+    //       val = 'AX - American Express';
+    //       break;
+    //     case 'DC':
+    //       val = 'DC -Diners';
+    //       break;
+    //   }
+
+    debugger;
+    return val;
+    // } else {
+    //   return val;
+    // }
+  }
+
+  getCCExpDate(): string {
+    let val: string;
+    val = '';
+    for (const element of this.pnrService.pnrObj.fpElements) {
+      val = element.fullNode.otherDataFreetext.longFreetext.split('/')[1];
+    }
+    val = val.substr(0, 2) + '/' + val.substr(2, 4);
+    return val;
   }
 }

@@ -1,0 +1,49 @@
+{
+  "family": "$APPLICATION_NAME",
+  "containerDefinitions": [
+    {
+      "name": "$APPLICATION_NAME",
+      "environment": [
+        {
+          "name": "ENV",
+          "value": "$ENVIRONMENT"
+        },
+        {
+          "name": "PORT",
+          "value": "$SSL_PORT"
+        },
+        {
+          "name": "SERVICE_NAME",
+          "value": "$SERVICE_NAME"
+        },
+        {
+          "name": "ARTIFACT_NAME",
+          "value": "$ARTIFACT_NAME"
+        }
+      ],
+      "image": "$REGISTRY_ID.$ECR_HOST/$SERVICE_NAME:$TAG_VERSION",
+      "memoryReservation": $MEM_RESERVATION,
+      "memory": $MEM_LIMIT,
+      "portMappings": [
+        {
+          "containerPort": $NON_SSL_PORT,
+          "hostPort": 0,
+          "protocol": "tcp"
+        },
+        {
+          "containerPort": $SSL_PORT,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/ecs/$APPLICATION_NAME",
+          "awslogs-stream-prefix": "$APPLICATION_NAME",
+          "awslogs-region": "$AWS_REGION"
+        }
+      }
+    }
+  ]
+}

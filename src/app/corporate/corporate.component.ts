@@ -168,7 +168,7 @@ export class CorporateComponent implements OnInit {
     } else {
       try {
         this.workflow = 'segment';
-        // .this.showLoading('Matching Remarks', 'initData');
+        // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
       } catch (e) {
         console.log(e);
@@ -324,10 +324,16 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
   }
-
   async sendItineraryAndQueue() {
+    this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'sendQueue';
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendQueue';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async SendItineraryAndQueue() {
@@ -341,11 +347,13 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
     await this.rms.submitToPnr().then(
@@ -384,10 +392,16 @@ export class CorporateComponent implements OnInit {
   }
 
   async addSemgentsRirRemarks() {
-    const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
-    this.rms.submitToPnr().then(
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
+    remarkCollection.forEach(rem => {
+      rem.remarks.forEach(remModel => {
+        remarkList.push(remModel);
+      });
+    });
+
+    this.rms.submitToPnr(remarkList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

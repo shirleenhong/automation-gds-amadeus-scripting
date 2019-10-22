@@ -147,9 +147,33 @@ export class PaymentRemarkService {
     });
   }
 
+  getFareType(fareType: string) {
+    if (fareType.includes('FLEX')) {
+      return 'FLE';
+    }
+
+    if (fareType.includes('LATITUDE')) {
+      return 'LAT';
+    }
+
+    if (fareType.includes('EXECUTIVE')) {
+      return 'EXE';
+    }
+
+    if (fareType.includes('TANGO')) {
+      return 'TAN';
+    }
+
+    if (fareType.includes('PREMIUM ECONOMY')) {
+      return 'PEC';
+    }
+
+    return '';
+  }
+
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
     if (accountingRemarks.length > 0) {
-      return 'PBN/YTOWL210N/AC PASS ' + accountingRemarks[0].fareType + '*';
+      return 'PBN/YTOWL210N/AC PASS ' + this.getFareType(accountingRemarks[0].fareType) + '*';
     }
   }
 
@@ -337,7 +361,7 @@ export class PaymentRemarkService {
       if (account.accountingTypeRemark === 'APAY' && parseFloat(account.baseAmount) > 0) {
         this.writeTicketingPenalty(
           account.tkMacLine.toString(),
-          'PFS',
+          account.supplierCodeName,
           account.baseAmount,
           account.gst,
           account.hst,
@@ -346,16 +370,29 @@ export class PaymentRemarkService {
           segmentAssoc
         );
 
-        itiRemarks.set('ConfNbr', account.tktLine);
+        if (account.tkMacLine.toString() !== null && account.tkMacLine.toString() !== '') {
+          itiRemarks.set('ConfNbr', account.tktLine);
+        }
+
         if (account.descriptionapay === 'OTHER COSTS') {
           itiRemarks.set('RemarkDescription', account.otherCostDescription);
         } else {
           itiRemarks.set('RemarkDescription', account.descriptionapay);
         }
         const totalTax = parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
+
         itiRemarks.set('BaseAmt', account.baseAmount);
-        itiRemarks.set('TotalTax', totalTax.toString());
-        itiRemarks.set('CCVendor', account.vendorCode);
+        itiRemarks.set(
+          'TotalTax',
+          this.decPipe
+            .transform(totalTax, '1.2-2')
+            .replace(',', '')
+            .toString()
+        );
+        const ccVendor = this.pnrService.getCCVendorCode();
+        if (ccVendor !== '') {
+          itiRemarks.set('CCVendor', ccVendor);
+        }
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
     });

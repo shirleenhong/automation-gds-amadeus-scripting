@@ -25,7 +25,7 @@ Verify That PNRs For Client Wolverine Are Queued For Approval
     
     
 Verify That PNRs For Client Wolverine Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Wolverine Mix Segments, Skip Approval
     Fill Up Approval Fields
@@ -33,7 +33,7 @@ Verify That PNRs For Client Wolverine Can Skip Approval
     
     
 Verify That Car Only PNRs For Client Wolverine Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Wolverine Car Only
     Fill Up Approval Fields
@@ -41,7 +41,7 @@ Verify That Car Only PNRs For Client Wolverine Do Not Go Thru Approval Process
     
     
 Verify That Hotel Only PNRs For Client Wolverine Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Wolverine Hotel Only
     Fill Up Approval Fields

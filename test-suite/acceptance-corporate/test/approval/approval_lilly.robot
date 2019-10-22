@@ -31,14 +31,14 @@ Verify That PNRs For Client Lilly With Domestic Route Do Not Go Thru Approval Pr
     Verify PNR Approval Is Processed Correctly
      
 Verify That PNRs For Client Lilly With Trans Route Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Trans Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Lilly Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Car Only
     Fill Up Approval Fields
@@ -52,7 +52,7 @@ Verify That Car & Hotel Only PNRs For Client Lilly Do Not Go Thru Approval Proce
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Lilly Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Mix Segments, Intl Route
     Fill Up Approval Fields

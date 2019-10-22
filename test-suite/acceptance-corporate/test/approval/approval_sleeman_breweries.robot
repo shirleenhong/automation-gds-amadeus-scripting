@@ -23,7 +23,6 @@ Verify That PNRs For Client Sleeman Breweries Are Correctly Queued For Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Sleeman Breweries With Udid50 Guest Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
@@ -31,30 +30,26 @@ Verify That PNRs For Client Sleeman Breweries With Udid50 Guest Do Not Go Thru A
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Sleeman Breweries With Udid50 Executive Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EXECUTIVE, Air Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That Car Only PNRs For Client Sleeman Breweries Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Sleeman Breweries With Udid 50 EMPLOYEE, Car Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That Hotel Only PNRs For Client Sleeman Breweries Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Sleeman Breweries With Udid 50 EMPLOYEE, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-    
     
 Verify That Car And Hotel Only PNRs For Client Sleeman Breweries Do Not Go Thru Approval Process
     [Tags]    us13271
@@ -63,9 +58,8 @@ Verify That Car And Hotel Only PNRs For Client Sleeman Breweries Do Not Go Thru 
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Sleeman Breweries Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sleeman Breweries With Udid 50 EMPLOYEE, Mix Segments
     Fill Up Approval Fields

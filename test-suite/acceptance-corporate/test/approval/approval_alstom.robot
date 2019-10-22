@@ -31,14 +31,14 @@ Verify That PNRs For Client Alstom with Mixed Segments Is Correctly Queued To Ap
     Verify PNR Approval Is Processed Correctly
     
 Verify That Hotel Only PNRs For Client Alstom Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Alstom With Udid 50 GENERAL-CA-S, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Alstom Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Alstom With Udid 50 GENERAL-CA-S, Car Only
     Fill Up Approval Fields

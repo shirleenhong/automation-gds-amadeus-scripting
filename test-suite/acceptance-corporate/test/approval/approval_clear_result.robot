@@ -17,7 +17,7 @@ ${test_file_name}    clearresult
 
 *** Test Cases ***
 Verify That PNRs For Client ClearResult Is Correctly Queued To Approval Queue With Udid General, Total Ticket Cost
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client ClearResult With Udid General, Total Ticket Costs
     Fill Up Approval Fields
@@ -57,7 +57,7 @@ Verify That PNRs For Client ClearResult Is Correctly Queued To Approval Queue Wi
     
     
 Verify That PNRs For Client ClearResult Is Correctly Queued To Approval Queue With Udid Road Warrior, Car Reservation Is Not Booked 
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client ClearResult With Udid Road Warrior, Car reservation is not booked
     Fill Up Approval Fields
@@ -73,7 +73,7 @@ Verify That PNRs For Client ClearResult Is Correctly Queued To Approval Queue Wi
     
     
 Verify That PNRs For Client ClearResult Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client ClearResult With Udid General, Ignore Approval Process
     Fill Up Approval Fields
@@ -89,7 +89,7 @@ Verify That PNRs For Client ClearResult Do Not Go Thru Approval For Udid VIP CEO
     
     
 Verify That PNRs For Client ClearResult Do Not Go Thru Approval For Udid VIP EXEC
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client ClearResult With Udid VIP EXEC
     Fill Up Approval Fields

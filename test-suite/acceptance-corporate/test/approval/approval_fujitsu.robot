@@ -33,7 +33,7 @@ Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Co
     
     
 Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Client Visit NonBillable
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Fujitsu With Any Udid, Air with Hotel and Car, Client Visit-Nonbillable
     Fill Up Approval Fields
@@ -41,7 +41,7 @@ Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Cl
     
     
 Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Internal Meeting
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Fujitsu With Any Udid, Air only, Internal Meeting
     Fill Up Approval Fields
@@ -65,7 +65,7 @@ Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Re
     
     
 Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Sales Call
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Fujitsu With Any Udid, Air with Hotel and Car, Sales Call
     Fill Up Approval Fields
@@ -81,7 +81,7 @@ Verify That PNRs For Client Fujitsu Is Correctly Queued To Approval Queue For Tr
     
     
 Verify That PNRs For Client Fujitsu Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Fujitsu With Any Udid, Air with Hotel and Car, Ignore Approval
     Fill Up Approval Fields
@@ -89,7 +89,7 @@ Verify That PNRs For Client Fujitsu Can Skip Approval Process
     
     
 Verify That PNRs For Client Fujitsu Do Not Go Thru Approval Process For Rail
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Fujitsu With Any Udid, Rail only
     Add 1 Rail Segments

@@ -32,7 +32,7 @@ export class TicketRemarkService {
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper,
     private amdeusQueue: AmadeusQueueService
-  ) { }
+  ) {}
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
@@ -331,7 +331,7 @@ export class TicketRemarkService {
       const forDelete = [];
       const index = this.getApprovalIndex(fg);
       this.approvalRuleService.getDeleteRemarkApproval(index).forEach((app) => {
-        const rems = app.getRuleText().split('|');
+        const rems = app.approvalRules.split('|');
         if (rems[0].indexOf('RM') === 0) {
           const line = this.pnrService.getRemarkLineNumber(rems[1]);
           if (line !== '') {
@@ -353,7 +353,7 @@ export class TicketRemarkService {
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
       this.approvalRuleService.getWriteApproval(index).forEach((app) => {
-        const rems = app.getRuleText().split('|');
+        const rems = app.approvalRules.split('|');
         let remark = rems[1];
         const type = rems[0].substring(0, 2);
 
@@ -363,7 +363,7 @@ export class TicketRemarkService {
           }
         }
 
-        if (remark.indexOf('[UI_') > -1) {
+        if (remark.indexOf('UI_') > -1) {
           remark = remark.replace(fg.get('primaryReason').value, fg.get('primaryText').value);
           remark = remark.replace(fg.get('secondaryReason').value, fg.get('secondaryText').value);
         }
@@ -405,7 +405,7 @@ export class TicketRemarkService {
 
   /**
    *  Get Approval Selected index, return 1 if Primary and Secondary selection has no value
-   * Gets _2_1 in [UI_SECONDARY_2_1]
+   * Gets _2_1 in UI_SECONDARY_2_1
    * @param fg Approval Form
    */
   private getApprovalIndex(fg: FormGroup): string {
@@ -426,13 +426,12 @@ export class TicketRemarkService {
    * @returns Array<QueuePlaceModel> queue placement information
    */
   getApprovalQueue(fg: FormGroup) {
-
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
 
       this.approvalRuleService.getQueueApproval(index).forEach((app) => {
         const queue = new QueuePlaceModel();
-        const queueInfo = app.getRuleText().split('/');
+        const queueInfo = app.approvalRules.split('/');
         queue.pcc = queueInfo[0] === '{BOOKING_OID}' ? this.pnrService.PCC : queueInfo[0];
         queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
         const categoryqueue = queueInfo[1].split('C');

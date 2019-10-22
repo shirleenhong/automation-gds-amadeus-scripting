@@ -24,6 +24,7 @@ ${row_documentPNR}    //div[@formarrayname='items']
 ${button_addRemark}    //i[@id='add']
 ${input_document}    //input[@formcontrolname='documentation']
 ${select_seat_Type}    //select[@name='seatType']
+${select_segment_number}    //select[@formcontrolname='segment']
 ${input_seat_number}    //input[@name='seatNumber']
 ${input_seat_select1}    //input[@name='check1']
 ${input_seat_select2}    //input[@name='check2']
@@ -44,18 +45,20 @@ ${input_esc_read_no}    //input[@id='isESCRead' and @ng-reflect-value='N']
 *** Keywords ***
 Click Seats Tab
     Wait Until Element Is Visible    ${tab_seats}    30
-    Click Element    ${tab_seats}
+    Click Element    ${tab_Seats}    
+    Click Element    ${button_add_seat}    
     Set Test Variable    ${current_page}    Seats
+    Set Test Variable    ${ticketing_details_complete}    no
+	
+Click ESC Remarks Tab
+   Wait Until Element Is Visible    ${tab_escRemarks}    30
+   Click Element    ${tab_escRemarks}
+   Set Test Variable    ${current_page}    ESC Remarks
     
 Click IRD Remarks Tab
     Wait Until Element Is Visible    ${tab_irdRemarks}    30
     Click Element    ${tab_irdRemarks}
     Set Test Variable    ${current_page}    IRD Remarks
-    
-Click ESC Remarks Tab
-    Wait Until Element Is Visible    ${tab_escRemarks}    30
-    Click Element    ${tab_escRemarks}
-    Set Test Variable    ${current_page}    ESC Remarks
 
 Click Document PNR Tab
     Wait Until Element Is Visible    ${tab_documentPnr}    30
@@ -139,8 +142,8 @@ Select ${ird_status} As IRD Status With Value For Savings
     Set Test Variable    ${ird_status}    
     Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_ird_status}    ACCEPTEDCP
     Select From List By Label    ${row_ird_status}${open_bracket}1${close_bracket}${select_low_savingStatus}    ACCEPTEDLFO
-    [Teardown]    Take Screenshot    
-
+    Take Screenshot    
+    [Teardown]    Collapse Remarks Panel
     
 Select IRD Status With Multiple Pricing And Segment In The PNR
     Wait Until Element Is Visible    ${row_ird_status}   
@@ -149,7 +152,8 @@ Select IRD Status With Multiple Pricing And Segment In The PNR
     Select From List By Label    ${row_ird_status}${open_bracket}2${close_bracket}${select_low_savingStatus}    ACCEPTEDLFO
     Select From List By Label    ${row_ird_status}${open_bracket}3${close_bracket}${select_ird_status}    DECLINED
     Select From List By Label    ${row_ird_status}${open_bracket}3${close_bracket}${select_low_savingStatus}    DECLINED
-    [Teardown]    Take Screenshot
+    Take Screenshot    
+    [Teardown]    Collapse Remarks Panel
     
 Select Status For IRD
     [Arguments]    @{ird_status}
@@ -192,6 +196,7 @@ Verify If IRD Status Are Written Correctly For Multi Segment In The PNR
 #---------Keyword and script For Seats-----------#
 
 Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
+    Navigate To Page Seats
     Wait Until Element Is Visible    ${input_seat_select1}
     Click Element    ${input_seat_select1}    
     Click Element    ${input_seat_select2}
@@ -199,15 +204,26 @@ Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
     Click Element    ${input_seat_select5}
     Enter Value    ${input_seat_number}    2D
     Take Screenshot    
-    Click Save Button
+    Click Save Button In Seats
+    Finish PNR
     Verify Expected Remarks Are Written In The PNR
 
 Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
+    Navigate To Page Seats
     Wait Until Element Is Visible    ${input_seat_select3}
+    Select From List By Label    ${select_segment_number}    2
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
-    Click Element   ${input_seat_select6}
-    Click Save Button
+    Click Element   ${input_seat_select6}    
+    Click Save Button In Seats
+    Click Element    ${button_add_seat}
+    Wait Until Element Is Visible    ${input_seat_select3}
+    Select From List By Label    ${select_segment_number}    3
+    Click Element   ${input_seat_select3}
+    Click Element   ${input_seat_select4}
+    Click Element   ${input_seat_select6}    
+    Click Save Button In Seats
+    Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
 Fill Up Visa And Passport Fields With Default Values
@@ -217,7 +233,7 @@ Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${is_dom}" == "False"    Enter Value    ${input_citizenship}    CA
     Run Keyword If    "${is_dom}" == "False"    Enter Value    ${input_adviseTo}    Chuck Velasquez
     Set Test Variable    ${visa_complete}    yes
-    [Teardown]    Take Screenshot
+    [Teardown]    Run Keywords    Take Screenshot    Collapse Remarks Panel
     
 Tick Advisory Sent Checkbox
     Click Element    ${checkbox_advisorySent}
@@ -248,27 +264,33 @@ Verify No International Destinations Found in Itinerary Message Is Displayed In 
     Navigate To Page Visa And Passport
     Run Keyword And Continue On Failure    Element Should Contain    ${text_noIntlMessage}    * No International Destinations Found in Itinerary *
     [Teardown]    Take Screenshot
-    
+	
 Select ${selected_option} In Verify ESC Remarks Have Been Read
-    Navigate To Page ESC Remarks
-    Click Element At Coordinates    ${input_esc_read_${selected_option.lower()}}    0    0
-    Set Test Variable    ${esc_remarks_complete}    yes
-    Set Test Variable    ${is_esc_read}   ${selected_option.lower()}
-    [Teardown]    Take Screenshot
-    
+   Navigate To Page ESC Remarks
+   Click Element At Coordinates    ${input_esc_read_${selected_option.lower()}}    0    0
+   Set Test Variable    ${esc_remarks_complete}    yes
+   Set Test Variable    ${is_esc_read}   ${selected_option.lower()}
+   [Teardown]    Take Screenshot
+
 Verify That ESC Remarks Tab Is Not Displayed
-    Navigate To Page Remarks
-    Run Keyword And Return Status    Element Should Not Be Visible     ${tab_esc_remarks}
-    [Teardown]     Take Screenshot
-    
+   Navigate To Page Remarks
+   Run Keyword And Return Status    Element Should Not Be Visible     ${tab_esc_remarks}
+   [Teardown]     Take Screenshot
+
 Verify ESC Remarks Are Written Correctly In The PNR
-    Assign Current Date
-    Finish PNR
-    Run Keyword If    "${is_esc_read}" == "yes"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT READ ESC REMARKS/${current_time}/${current_date}
-    Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT DID NOT HAVE TIME TO READ ESC
-    Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    REMARKS/${current_time}/${current_date}
+   Assign Current Date
+   Finish PNR
+   Run Keyword If    "${is_esc_read}" == "yes"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT READ ESC REMARKS/${current_time}/${current_date}
+   Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT DID NOT HAVE TIME TO READ ESC
+   Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    REMARKS/${current_time}/${current_date}
 
 Verify ESC Remarks Are Not Written In The PNR
-    Finish PNR
-    Verify Specific Remark Is Not Written In The PNR    RME ESC AGENT
-    
+   Finish PNR
+   Verify Specific Remark Is Not Written In The PNR    RME ESC AGENT
+   
+Click Save Button In Seats
+    Click Element    ${button_save}
+    Wait Until Page Contains Element    ${button_update}     30
+    Set Focus To Element    ${button_submit_pnr}
+    Set Test Variable    ${current_page}    Seats
+    [Teardown]    Take Screenshot

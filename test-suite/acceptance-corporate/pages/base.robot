@@ -34,7 +34,9 @@ ${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
 ${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
 ${open_bracket}     [
 ${close_bracket}     ]
+${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
 ${button_add_segment}    //button[contains(text(), 'Add Segment')]
+${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
 @{add_segment_pages}    Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
@@ -98,23 +100,34 @@ Click Send Itinerary And Queue
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
-    Scroll Element Into View     ${panel_reporting}
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
     
 Collapse Reporting Panel
     Wait Until Element Is Visible    ${panel_reporting}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
 Click Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
+Click Passive Segment Panel
+    Wait Until Page Contains Element   ${button_full_wrap}    60
+    Click Element At Coordinates    ${panel_passive_segment}    0    0
+    Scroll Element Into View    ${panel_passive_segment}
+    Click Element    ${panel_passive_segment}
+    Set Test Variable    ${current_page}    Passive Segment
+    [Teardown]    Take Screenshot
+    
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Full Wrap PNR
     [Teardown]    Take Screenshot
@@ -140,7 +153,12 @@ Click Add Segment
     Wait Until Element Is Visible    ${button_add_segment}    
     Click Element    ${button_add_segment}
     Set Test Variable    ${current_page}    Add Segment
-   
+    
+Click Add Passive Segment
+    Wait Until Element Is Visible    ${button_add_passive_segment}
+    Click Element    ${button_add_passive_segment}
+    Set Test Variable    ${current_page}    Add Segment
+  
 Assign Current Date
     ${current_date}    Get Current Date
     ${current_day}     Convert Date     ${current_date}    %d
@@ -171,7 +189,7 @@ Convert Month To MMM
 
 Navigate To Page ${destination_page}
      Set Test Variable    ${i}     1
-     ${to_add_segment}    Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${destination_page}
+     ${to_add_segment}    Run Keyword And Return Status    Should Contain    ${corp_pages}    ${destination_page}
      ${to_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${destination_page}
      ${to_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${destination_page}
      Set Test Variable    ${to_add_segment}    
@@ -181,6 +199,7 @@ Navigate To Page ${destination_page}
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
+     \    Run Keyword If    "${to_add_segment}" == "True"    Navigate From Add Segment    ${destination_page}
      \    Run Keyword If    "${to_full_wrap}" == "True"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Queue    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
@@ -195,7 +214,19 @@ Navigate From Corp
      ...    ELSE IF    "${to_full_wrap}" == "True"    Click Full Wrap
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
+
+Navigate From Add Segment
+    [Arguments]    ${destination_page}
+    ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${corp_pages}    ${current_page}
+    Run Keyword If    "${in_add_segment}" == "False"    Click Passive Segment Panel
+    Run Keyword If    "${destination_page}" == "Add Segment"    Navigate To Add Passive Segment
     
+Navigate To Add Passive Segment
+    Wait Until Element Is Visible    ${button_add_passive_segment}    
+    Click Element    ${button_add_passive_segment}
+    Set Test Variable    ${current_page}    Passive Segment
+    
+
 Collapse Open Panel
     ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}
     ${in_reporting}    Run Keyword And Return Status    Should Contain    ${reporting_pages}    ${current_page}
@@ -300,6 +331,7 @@ Click Ticketing Panel
     
 Collapse Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
@@ -325,6 +357,7 @@ Click Fees Panel
     
 Collapse Fees Panel
     Wait Until Element Is Visible    ${panel_fees}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
@@ -340,6 +373,7 @@ Click Remarks Panel
     
 Collapse Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
@@ -350,6 +384,7 @@ Click Queue Panel
     
 Collapse Queue Panel
     Wait Until Element Is Visible    ${panel_queue}    60
+    Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_queue}
     Set Test Variable    ${current_page}    Full Wrap PNR
     

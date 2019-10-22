@@ -25,7 +25,7 @@ Verify That PNRs For Client Taylor Made Are Queued Correctly When 1st Primary Re
     
     
 Verify That PNRs For Client Taylor Made Are Queued Correctly When 2nd Primary Reason Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Second Primary Reason
     Fill Up Approval Fields
@@ -33,7 +33,7 @@ Verify That PNRs For Client Taylor Made Are Queued Correctly When 2nd Primary Re
     
     
 Verify That PNRs For Client Taylor Made Are Queued Correctly When 3rd Primary Reason Is Selected
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Taylor Made, Air Only, Select Third Primary Reason
     Fill Up Approval Fields
@@ -41,7 +41,7 @@ Verify That PNRs For Client Taylor Made Are Queued Correctly When 3rd Primary Re
     
     
 Verify That PNRs For Client Taylor Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Taylor Made Mix Segments, Skip Approval
     Fill Up Approval Fields
@@ -49,7 +49,7 @@ Verify That PNRs For Client Taylor Can Skip Approval
     
     
 Verify That Car Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Taylor Made, Car Only
     Fill Up Approval Fields
@@ -57,7 +57,7 @@ Verify That Car Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
     
     
 Verify That Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Taylor Made, Hotel Only
     Fill Up Approval Fields
@@ -71,7 +71,6 @@ Verify That Car And Hotel Only PNRs For Client Taylor Made Do Not Go Thru Approv
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
-    
 Verify That PNRs For Client Taylor Made With Udid50 CEO-NORAM Do Not Go Thru Approval Process
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
@@ -81,7 +80,7 @@ Verify That PNRs For Client Taylor Made With Udid50 CEO-NORAM Do Not Go Thru App
     
     
 Verify That PNRs For Client Taylor Made With Udid50 SRVP-NORAM Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Taylor Made With Udid50 SRVP-NORAM, Air Only
     Fill Up Approval Fields
@@ -89,7 +88,7 @@ Verify That PNRs For Client Taylor Made With Udid50 SRVP-NORAM Do Not Go Thru Ap
     
     
 Verify That PNRs For Client Taylor Made With Udid50 VP-NORAM Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Taylor Made With Udid50 VP-NORAM, Air Only
     Fill Up Approval Fields

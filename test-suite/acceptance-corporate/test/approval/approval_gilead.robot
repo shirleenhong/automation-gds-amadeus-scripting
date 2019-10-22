@@ -25,7 +25,7 @@ Verify That PNRs For Client Gilead Is Writing Correct Remarks For Approval E-Mai
     
     
 Verify That PNRs For Client Gilead Is Writing Correct Remarks Approval E-Mail Required For Exchange
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Gilead With Any Udid, Air Only, Approval E-Mail Required For Exchange
     Fill Up Approval Fields
@@ -49,7 +49,7 @@ Verify That PNRs For Client Gilead Is Writing Correct Remarks For Air, Hotel, Ca
     
     
 Verify That PNRs For Client Gilead Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Gilead With Any Udid, Air Only, Ignore Approval Process
     Fill Up Approval Fields
@@ -57,7 +57,7 @@ Verify That PNRs For Client Gilead Can Skip Approval Process
     
     
 Verify That PNRs For Client Gilead Do Not Go Thru Approval For Hotel Only
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Gilead With Any Udid, Hotel Only
     Fill Up Approval Fields
@@ -65,7 +65,7 @@ Verify That PNRs For Client Gilead Do Not Go Thru Approval For Hotel Only
     
     
 Verify That PNRs For Client Gilead Do Not Go Thru Approval For Car Only
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Gilead With Any Udid, Car Only
     Fill Up Approval Fields

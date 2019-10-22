@@ -159,11 +159,24 @@ export class CorporateComponent implements OnInit {
   }
 
   public async AddSegment() {
+    // this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'segment';
+    if (!this.pnrService.getClientSubUnit()) {
+      this.closePopup();
+      this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
+      this.workflow = 'error';
+    } else {
+      try {
+        this.workflow = 'segment';
+        // this.showLoading('Matching Remarks', 'initData');
+        await this.rms.getMatchcedPlaceholderValues();
+
+      } catch (e) {
+        console.log(e);
+      }
+      this.closePopup();
+    }
   }
-
-
 
   async loadPnrData() {
     this.showLoading('Loading PNR and Data', 'initData');
@@ -233,6 +246,7 @@ export class CorporateComponent implements OnInit {
       )
     );
     accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
+
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
@@ -287,6 +301,12 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
+    await this.rms.SendPbn(
+      this.paymentRemarkService.moveProfile(
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+      )
+    );
+
     await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
       () => {
         this.isPnrLoaded = false;
@@ -305,10 +325,16 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
   }
-
   async sendItineraryAndQueue() {
+    this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'sendQueue';
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendQueue';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async SendItineraryAndQueue() {
@@ -322,11 +348,13 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
     await this.rms.submitToPnr().then(
@@ -365,12 +393,16 @@ export class CorporateComponent implements OnInit {
   }
 
   async addSemgentsRirRemarks() {
-    debugger;
-    const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
+    remarkCollection.forEach(rem => {
+      rem.remarks.forEach(remModel => {
+        remarkList.push(remModel);
+      });
+    });
 
-    await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
-    this.amadeusRemarkService.SubmitRemarks().then(
+    this.rms.submitToPnr(remarkList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -380,5 +412,4 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
-
 }

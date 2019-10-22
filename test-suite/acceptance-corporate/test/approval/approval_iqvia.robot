@@ -31,7 +31,7 @@ Verify That Car Only PNRs For Client IQVIA With Any U*50 Do Not Go Thru Approval
     Verify PNR Approval Is Processed Correctly
 
 Verify That Hotel Only PNRs For Client IQVIA With Any U*50 Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client IQVIA With Any Udid 50, Hotel Only
     Fill Up Approval Fields

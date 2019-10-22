@@ -27,10 +27,12 @@ ${input_arrival_date}    css=#arrivalDate
 ${input_departure_time}    css=#departureTime
 ${input_arrival_time}    css=#arrivalTime
 ${input_airline_recloc}    css=#airlineRecloc
-
+${button_save_passive}    xpath=//button[contains(text(), 'Save')]
+${button_add_segment_toPNR}    xpath=//button[contains(text(),'Add Segments To PNR')]
 
 *** Keywords ***
 Add And Verify Air Segment for Non ZZ Details In The PNR
+    Navigate To Page Add Segment
     Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    AC
@@ -44,10 +46,14 @@ Add And Verify Air Segment for Non ZZ Details In The PNR
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_airline_recloc}    ARL1234
     Take Screenshot    
-    Click Save Button
-    Verify Expected Remarks Are Written In The PNR
+    Click Add Passive Save Button
+    Click Add Segment to PNR    
+    Verify Specific Remark Is Written In The PNR    AC8901 Y 02JAN
+    Verify Specific Remark Is Written In The PNR    1 YULCDG GK1 1530 1715 03JAN ARL1234    True
+    
     
 Add And Verify Air Segment for ZZ In The PNR
+    Navigate To Page Add Segment
     Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    ZZ
@@ -64,6 +70,16 @@ Add And Verify Air Segment for ZZ In The PNR
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_airline_recloc}    ARL76
     Take Screenshot    
-    Click Save Button
-    Verify Expected Remarks Are Written In The PNR
+    Click Add Passive Save Button
+    Click Add Segment to PNR
+    Verify Specific Remark Is Written In The PNR    AC8901 Y 02JAN
+    Verify Specific Remark Is Written In The PNR    1 YULCDG GK1 1530 1715 03JAN ARL76    True
+    
+Click Add Passive Save Button
+    Wait Until Element Is Visible    ${button_save_passive}
+    Click Element    ${button_save_passive}
+    
+Click Add Segment to PNR
+    Wait Until Element Is Visible    ${button_add_segment_toPNR}    
+    Click Element    ${button_add_segment_toPNR}
     

@@ -45,19 +45,33 @@ export class PaymentRemarkService {
       const airlineCodeRemark = new Map<string, string>();
       const airlineCodeInvoice = new Map<string, string>();
       const staticRemarksCondition = new Map<string, string>();
+      const redemptionRemark = new Map<string, string>();
+      const passNameRedemptionRemark = new Map<string, string>();
+      const confNbrRem = new Map<string, string>();
+
+      confNbrRem.set('ConfNbr', account.supplierConfirmatioNo);
 
       if (account.accountingTypeRemark === 'ACPP') {
         paymentRemark.set('PassName', account.passPurchase);
         paymentRemark.set('FareType', account.fareType);
         airlineCodeRemark.set('AirlineCode', 'AC');
         airlineCodeInvoice.set('AirlineCode', 'AC');
+        confNbrRem.set('AirlineCode', 'AC');
+        redemptionRemark.set('PassName', 'Air Canada Individual');
+        passNameRedemptionRemark.set('PassNameRedemption', 'Air Canada Individual');
       } else {
         if (account.accountingTypeRemark === 'WCPP') {
           airlineCodeRemark.set('AirlineCode', 'WS');
           airlineCodeInvoice.set('AirlineCode', 'WS');
+          confNbrRem.set('AirlineCode', 'WS');
+          redemptionRemark.set('PassName', 'Westjet Individual');
+          passNameRedemptionRemark.set('PassNameRedemption', 'Westjet Individual');
         } else {
           airlineCodeRemark.set('AirlineCode', 'PD');
           airlineCodeInvoice.set('AirlineCode', 'PD');
+          confNbrRem.set('AirlineCode', 'PD');
+          redemptionRemark.set('PassName', 'Porter Individual');
+          passNameRedemptionRemark.set('PassNameRedemption', 'Porter Individual');
         }
         paymentRemark.set('PassNameNonAc', account.passPurchase);
       }
@@ -96,7 +110,22 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
+
+      if (account.fareType !== '') {
+        passNameRedemptionRemark.set('FareType', account.fareType);
+        this.remarksManager.createPlaceholderValues(passNameRedemptionRemark, null, segmentrelate);
+      } else {
+        this.remarksManager.createPlaceholderValues(redemptionRemark, null, segmentrelate);
+      }
+
+      this.remarksManager.createPlaceholderValues(confNbrRem, null, segmentrelate);
     });
+  }
+
+  moveProfile(accountingRemarks: MatrixAccountingModel[]) {
+    if (accountingRemarks.length > 0) {
+      return 'PBN/YTOWL210N/AC PASS ' + accountingRemarks[0].fareType + '*';
+    }
   }
 
   writeHighLowFareSavingCode(highFare, lowFare, savingsCode, segmentAssoc) {

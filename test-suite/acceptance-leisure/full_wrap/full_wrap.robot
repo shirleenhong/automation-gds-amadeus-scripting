@@ -394,8 +394,9 @@ Add Air Canada Pass Redemption Remarks
 
 Verify Air, Tour, And Hotel Passive Segments Are Added In the PNR
     Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ${airline_recloc}
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 CDG 14JAN-/TYP-TOR/SUN-TEST VENDOR TOUR NAME TEST TRPL ALL INCLUSIVE 8NTS/SUC-ABC/SC-CDG/SD-14JAN/ST-1300/EC-AMS/ED-20JAN/ET-1200/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 CDG 14JAN-/TYP-TOR/SUN-TEST VENDOR TOUR NAME TEST/SUC-ABC/SC-CDG/SD-14JAN/ST-1300/EC-AMS/ED-20JAN/ET-1200/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    HTL 1A HK1 AMS 20JAN-22JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12312414,TWIN ROOM,RATE:TEST RATE TYPE CAD100.55/NIGHT,SI-HOTEL ADDITIONAL INFO    True
+    Verify Specific Remark Is Written In The PNR    RIR TRPL ALL INCLUSIVE 8 NTS/S4
 
 Verify That Hotel RIR Remarks Are Written
     Verify Specific Remark Is Written In The PNR    RIR ADDRESS-${hotel_address}/S5

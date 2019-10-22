@@ -88,9 +88,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       duplicateFare: new FormControl(''),
       typeOfPass: new FormControl(''),
       otherDescription: new FormControl('', [])
-      // vendorCode: new FormControl('', [Validators.required]),
-      // cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
-      // expDate: new FormControl('', [Validators.required, validateExpDate()])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -202,15 +199,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.configureNonBSPExchangeControls();
         this.checkSupplierCode();
         this.enableFormControls(['fareType'], !this.needFaretype);
-
         break;
       case 'APAY':
-        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription'], false);
-        // 'vendorCode', 'cardNumber', 'expDate'],
+        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription', 'tktLine'], false);
         this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], true);
+        this.ticketNumber = 'Ticket Number / Confirmation Number: ';
+        this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+        this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
         this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
-        this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
-        this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         break;
       case 'NONBSP':
         this.name = 'Airline Record Locator:';
@@ -230,12 +226,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       default:
         this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
-        this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
+        this.enableFormControls(['descriptionapay', 'commisionPercentage', 'tktLine'], true);
         this.accountingRemark.bsp = '1';
         this.name = 'Supplier Confirmation Number:';
         this.setMandatoryTicket([], false);
         this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
+        this.matrixAccountingForm.get('tktLine').clearValidators();
         break;
     }
     this.loadPassType(accRemark);
@@ -504,37 +501,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     for (const element of this.pnrService.pnrObj.fpElements) {
       val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
     }
-
-    // if (val !== '') {
-    //   switch (val) {
-    //     case 'VI':
-    //       val = 'VI- Visa';
-    //       break;
-    //     case 'CA':
-    //       val = 'CA - Mastercard';
-    //       break;
-    //     case 'AX':
-    //       val = 'AX - American Express';
-    //       break;
-    //     case 'DC':
-    //       val = 'DC -Diners';
-    //       break;
-    //   }
-
-    debugger;
-    return val;
-    // } else {
-    //   return val;
-    // }
-  }
-
-  getCCExpDate(): string {
-    let val: string;
-    val = '';
-    for (const element of this.pnrService.pnrObj.fpElements) {
-      val = element.fullNode.otherDataFreetext.longFreetext.split('/')[1];
-    }
-    val = val.substr(0, 2) + '/' + val.substr(2, 4);
     return val;
   }
 }

@@ -341,11 +341,16 @@ export class PaymentRemarkService {
             .toString()
         );
         const ccVendor = this.pnrService.getCCVendorCode();
-        if (ccVendor !== ''){
+        if (ccVendor !== '') {
           itiRemarks.set('CCVendor', ccVendor);
         }
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
+
+      const ebRemark = new Map<string, string>();
+      ebRemark.set('TouchLevel', 'AMA');
+      ebRemark.set('OBTVendorCode', 'GIS');
+      this.remarksManager.createPlaceholderValues(ebRemark, null, null);
     });
 
     totalcostlist.forEach((element) => {

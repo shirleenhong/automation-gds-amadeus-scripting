@@ -53,7 +53,7 @@ export class ReportingRemarkService {
 
   getRemarkSegmentAssociation(segments: string[]): string[] {
     const segmentrelate: string[] = [];
-    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
+    const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
     air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
@@ -63,7 +63,7 @@ export class ReportingRemarkService {
 
   WriteEscOFCRemark(value: string) {
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
-    if (value !== '') {
+    if (value && value !== '') {
       const escOfc = new Map<string, string>();
       escOfc.set('CAOverrideValue', value);
       this.remarksManager.createPlaceholderValues(escOfc);

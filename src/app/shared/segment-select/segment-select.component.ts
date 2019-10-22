@@ -75,9 +75,9 @@ export class SegmentSelectComponent
 
   ngOnInit() {
     if (this.segmentFilter) {
-      this.segmentList = this.pnrService.getSegmentTatooNumber().filter(x => x.passive === this.segmentFilter);
+      this.segmentList = this.pnrService.getSegmentList().filter(x => x.passive === this.segmentFilter);
     } else {
-      this.segmentList = this.pnrService.getSegmentTatooNumber();
+      this.segmentList = this.pnrService.getSegmentList();
     }
 
     this.segmentGroup.get('segment').markAsDirty();

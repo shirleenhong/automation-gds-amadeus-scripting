@@ -107,8 +107,8 @@ export class SupplementalFeesComponent implements OnInit {
 
   async loadData(): Promise<void> {
     this.noFeeCodes = this.ddbService.getNoFeeCodes();
-    this.hasAir = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR').length > 0;
-    this.hasTrain = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'TRN' || x.passive === 'TYP-TRN').length > 0;
+    this.hasAir = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR').length > 0;
+    this.hasTrain = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'TRN' || x.passive === 'TYP-TRN').length > 0;
     this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;

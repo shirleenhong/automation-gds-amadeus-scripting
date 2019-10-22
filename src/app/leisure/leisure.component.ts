@@ -295,7 +295,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
       let found = false;
       acpp.forEach((a) => {
-        const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);
+        const dummy = this.pnrService.getSegmentList().find((x) => x.controlNumber === a.supplierConfirmatioNo);
         if (dummy) {
           found = true;
           a.segmentNo = dummy.lineNo;
@@ -530,7 +530,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.isPnrLoaded) {
       await this.getPnrService();
       this.workflow = 'cancel';
-      this.segment = this.pnrService.getSegmentTatooNumber();
+      this.segment = this.pnrService.getSegmentList();
       this.setControl();
     }
   }

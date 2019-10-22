@@ -417,8 +417,10 @@ export class DDBService implements OnInit {
       let lodPCC = null;
       const response = await this.getConfigurationParameter('LeisureOnDemand');
       lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-      lodPCC = lodPCC.map(pcc => { return pcc.trim(); });
-      return lodPCC;         
+      lodPCC = lodPCC.map((pcc) => {
+        return pcc.trim();
+      });
+      return lodPCC;
     } catch (error) {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
     }

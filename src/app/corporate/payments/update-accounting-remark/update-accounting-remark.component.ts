@@ -73,7 +73,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
       otherTax: new FormControl('', []),
-      tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
+      tktLine: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
       descriptionapay: new FormControl('', []),
       commisionPercentage: new FormControl('', []),
       passRelate: new FormControl('', []),
@@ -162,7 +162,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.ticketNumber = 'Ticket Number: ';
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
-    this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
+    this.setRequired(['departureCity', 'originalTktLine'], false);
+    this.setRequired(['tktLine'], true);
     this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
     this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
     this.matrixAccountingForm.get('otherDescription').clearValidators();
@@ -201,18 +202,16 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.enableFormControls(['fareType'], !this.needFaretype);
         break;
       case 'APAY':
-        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription', 'tktLine'], false);
+        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription'], false);
         this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], true);
-        this.ticketNumber = 'Ticket Number / Confirmation Number: ';
-        this.matrixAccountingForm.controls.tktLine.setValidators(Validators.required);
+        this.ticketNumber = 'Ticket Number / Confirmation Number:';
+        this.matrixAccountingForm.get('tktLine').setValidators([Validators.required, Validators.maxLength(10)]);
         this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
         this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
         break;
       case 'NONBSP':
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
-        // this.accountingRemark.commisionWithoutTax = '0.00';
-        // this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
@@ -222,17 +221,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
         this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
-
         break;
       default:
         this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
-        this.enableFormControls(['descriptionapay', 'commisionPercentage', 'tktLine'], true);
+        this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
         this.name = 'Supplier Confirmation Number:';
-        this.setMandatoryTicket([], false);
+        this.setRequired(['tktLine'], true);
         this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
-        this.matrixAccountingForm.get('tktLine').clearValidators();
         break;
     }
     this.loadPassType(accRemark);
@@ -271,7 +268,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       console.log('supCode: ' + this.accountingRemark.supplierCodeName);
     }
-    this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
   }
 
   getAirlineCode(segmentno) {

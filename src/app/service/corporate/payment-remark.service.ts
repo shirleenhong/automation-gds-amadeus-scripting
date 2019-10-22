@@ -348,9 +348,8 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
 
       const ebRemark = new Map<string, string>();
-      ebRemark.set('TouchLevel', 'AMA');
-      ebRemark.set('OBTVendorCode', 'GIS');
-      this.remarksManager.createPlaceholderValues(ebRemark, null, null);
+      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
+      this.remarksManager.createPlaceholderValues(ebRemark);
     });
 
     totalcostlist.forEach((element) => {

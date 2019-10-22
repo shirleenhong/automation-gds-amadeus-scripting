@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -29,7 +30,8 @@ Verify Tour Passive Segment Is Added In the PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 ${departure_city} 12DEC-/TYP-TOR/SUN-${vendor_name} ${segment_name} ${room_type} ${meal_plan.upper()} ${number_of_nights}NTS/SUC-${vendor_code}/SC-${departure_city}/SD-12DEC/ST-1300/EC-${destination_city}/ED-20DEC/ET-1200/CF-${confirmation_number}    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 ${departure_city} 12DEC-/TYP-TOR/SUN-${vendor_name} ${segment_name}/SUC-${vendor_code}/SC-${departure_city}/SD-12DEC/ST-1300/EC-${destination_city}/ED-20DEC/ET-1200/CF-${confirmation_number}    True
+    Verify Specific Remark Is Written In The PNR    RIR ${room_type} ${meal_plan.upper()} ${number_of_nights} NTS/S3
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -56,12 +58,13 @@ Verify Cruise Passive Segment Is Added In the PNR
     Select State Room    Interior
     Enter Cabin Number    11122333
     Enter Dining    Early Dining
+    Select Passengers For Passive Segments    1    2
     Click Add Passive Save Button
     Click Add Segments To PNR
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 ${departure_city} 12JAN-/TYP-SEA/SUN-${vendor_name} ${segment_name}/SUC-${vendor_code}/SC-${departure_city}/SD-12JAN/ST-0300/ED-20JAN/ET-1000/EC-${destination_city}/CF-${confirmation_number}    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 ${departure_city} 12JAN-/TYP-SEA/SUN-${vendor_name} ${segment_name}/SUC-${vendor_code}/SC-${departure_city}/SD-12JAN/ST-0300/ED-20JAN/ET-1000/EC-${destination_city}/CF-${confirmation_number}/P1-2    True
     Verify Specific Remark Is Written In The PNR    RIR INTERIOR 1112233 ${dining.upper()} 8 NTS/S4
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect

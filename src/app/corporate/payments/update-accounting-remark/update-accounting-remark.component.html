@@ -47,6 +47,30 @@
       </div>
     </div>
 
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Description:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="descriptionapay"
+            id="descriptionapay" list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
+            formControlName="descriptionapay" (change)="descriptionChanged($event.target.value)" required />
+          <datalist id="dynamicSupplierCode1">
+            <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>
+          </datalist>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showOtherDescription">
+    <div class="form-group  row">
+      <div class="col-sm-4">Other Cost Description: </div>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="otherDescription" [(ngModel)]="accountingRemark.otherCostDescription" formControlName="otherDescription" required
+          formControlName="otherDescription" name="otherDescription" />
+      </div>
+    </div>
+    </div>
+
     <div class="form-group row">
       <div class="col-sm-4">Supplier Code:</div>
       <div class="col-sm-8">
@@ -60,6 +84,32 @@
         </datalist>
       </div>
     </div>
+
+    <!-- <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Vendor Code:</div>
+        <div class="col-sm-8">
+          <select autofocus id="vendorCode" class="form-control" name="vendorCode"
+            [(ngModel)]="accountingRemark.vendorCode" formControlName="vendorCode" required>
+            <option *ngFor="let item of vendorCodeList" [value]="item.itemValue">
+              {{ item.itemText }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Card Number:</div>
+        <div class="col">
+          <input type="cardNumber" class="form-control" id="ccNo" [(ngModel)]="accountingRemark.cardNumber"
+            maxlength="16" formControlName="cardNumber" name="cardNumber" NumberOnlyMask />
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="expDate" required formControlName="expDate" name="expDate"
+            placeholder="MM/YY" [(ngModel)]="accountingRemark.expDate" CCDateExpMask formControlName="expDate" />
+        </div>
+      </div>
+    </div> -->
 
     <div *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'" class="form-group  row">
       <div class="col-sm-4">
@@ -104,14 +154,14 @@
 
     <div class="form-group  row">
       <div class="col-sm-4"></div>
-      <div class="col">
+      <div class="col-sm-4">
         <div class="">Other Tax:</div>
         <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
           [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
           placeholder="00.00" AmountMask />
       </div>
 
-      <div class="col">
+      <div class="col" *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'">
         <div class="">Commission:</div>
         <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
           [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
@@ -171,7 +221,7 @@
       <div class="col-sm-4">Original Ticket Number:</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="originalTktLine" formControlName="originalTktLine"
-          [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine"
+          [(ngModel)]="accountingRemark.originalTktLine" formControlName="originalTktLine" name="originalTktLine" 
           NumberOnlyMask maxlength="10" />
       </div>
     </div>

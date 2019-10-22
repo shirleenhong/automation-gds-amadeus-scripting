@@ -10,6 +10,10 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    sobeys
 
 *** Test Cases ***
 Verify That PNRs For Client Sobeys Is Writing Correct Remarks When Traveller Received Approval
@@ -18,9 +22,9 @@ Verify That PNRs For Client Sobeys Is Writing Correct Remarks When Traveller Rec
     Create PNR With Active Air Segments For Client Sobeys With Any Udid, Air with Hotel and Car, Traveller Received Approval
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
-     
+    
 Verify That PNRs For Client Sobeys Is Writing Correct Remarks When Traveller Obtain Approval
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sobeys With Any Udid, Air with Hotel and Car, Traveller Must Obtain Approval
     Fill Up Approval Fields
@@ -34,7 +38,7 @@ Verify That PNRs For Client Sobeys Is Writing Correct Remarks When PNR Has U47 A
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Sobeys Is Writing Correct Remarks For Hotel Only And Traveller Obtain Approval
-    [Tags]    us13271
+    [Tags]    us13271    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sobeys With Any Udid, Hotel Only, Traveller Must Obtain Approval
     Fill Up Approval Fields
@@ -48,7 +52,7 @@ Verify That PNRs For Client Sobeys Is Writing Correct Remarks For Car Only And T
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Sobeys Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Sobeys With Any Udid, Air with Hotel and Car, Ignore Approval
     Fill Up Approval Fields

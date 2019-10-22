@@ -10,9 +10,13 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    lilly
 
 *** Test Cases ***
-Verify That PNRs For Client Lilly Is Correctly Queued To Approval Queue
+Verify That PNRs For Client Lilly Are Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Intl Route
@@ -27,14 +31,14 @@ Verify That PNRs For Client Lilly With Domestic Route Do Not Go Thru Approval Pr
     Verify PNR Approval Is Processed Correctly
      
 Verify That PNRs For Client Lilly With Trans Route Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Trans Route
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Lilly Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Car Only
     Fill Up Approval Fields
@@ -48,7 +52,7 @@ Verify That Car & Hotel Only PNRs For Client Lilly Do Not Go Thru Approval Proce
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Lilly Can Skip Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Mix Segments, Intl Route
     Fill Up Approval Fields

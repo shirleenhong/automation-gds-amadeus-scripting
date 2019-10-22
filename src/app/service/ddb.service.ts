@@ -94,9 +94,11 @@ export class DDBService implements OnInit {
     this.approvalList = [];
     await this.getRequest(common.approversService + clientSubUnit + '&SourceSystemCode=CA1&ClientAccountNumber=1' + cfa).then(
       (response) => {
-        response.ApproversResponseItem.forEach((approverJson) => {
-          this.approvalList.push(new ApprovalItem(approverJson));
-        });
+        if (response && response.ApproversResponseItem) {
+          response.ApproversResponseItem.forEach((approverJson) => {
+            this.approvalList.push(new ApprovalItem(approverJson));
+          });
+        }
       }
     );
   }
@@ -405,5 +407,20 @@ export class DDBService implements OnInit {
 
   getNoFeeCodes() {
     return this.staticValues.getNoFeeCodes();
+  }
+
+  /**
+   * Get the Leisure On Demand PCCs
+   */
+  public async getLeisureOnDemandPCC() {
+    try {
+      let lodPCC = null;
+      const response = await this.getConfigurationParameter('LeisureOnDemand');
+      lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      lodPCC = lodPCC.map(pcc => { return pcc.trim(); });
+      return lodPCC;         
+    } catch (error) {
+      throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
+    }
   }
 }

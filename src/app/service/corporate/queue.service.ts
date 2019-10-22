@@ -1,0 +1,26 @@
+import { Injectable } from '@angular/core';
+import { FormGroup, FormArray } from '@angular/forms';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { formatDate } from '@angular/common';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class QueueService {
+
+  constructor(private queueRemarksService: AmadeusQueueService) { }
+
+  public getQueuePlacement(queueGroup: FormGroup): void {
+    const items = queueGroup.get('queues') as FormArray;
+
+    for (const group of items.controls) {
+      const queue = new QueuePlaceModel();
+      queue.pcc = group.get('oid').value;
+      queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+      queue.queueNo = group.get('queueNumber').value;
+      queue.category = group.get('category').value;
+      this.queueRemarksService.addQueueCollection(queue);
+    }
+  }
+}

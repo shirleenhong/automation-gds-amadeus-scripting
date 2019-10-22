@@ -15,8 +15,7 @@ export class AppComponent implements OnInit {
   isCorporate = false;
   isMinimize = false;
   header = 'Leisure';
-  @Input()
-  overrideValue: string = '';
+
   @Input()
   counselorIdentity: string;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
@@ -52,7 +51,6 @@ export class AppComponent implements OnInit {
 
   onChangeIdentity() {
     this.counselorDetail.updateIdentity(this.counselorIdentity);
-    this.overrideValue = this.counselorIdentity;
   }
 
   getParamValueQueryString(paramName) {

@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -13,6 +14,7 @@ Verify RIR remarks Is Written In The PNR When 'All Inclusive or Premium Protecti
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
@@ -42,6 +44,7 @@ Verify RIR Remarks Is Written In The PNR When 'All Inclusive or Premium Protecti
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Test Fees
@@ -69,7 +72,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With All Inc
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    All Inclusive or Premium
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -100,7 +103,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With All Inc
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    All Inclusive or Premium
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -133,7 +136,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Cancell
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Cancellation/Interruption
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -164,7 +167,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Cancell
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Cancellation/Interruption
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -199,7 +202,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Emergen
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Emergency Medical/Transportation
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -230,7 +233,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Emergen
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Emergency Medical/Transportation
     Enter Insurance Declined Reason    Emergency Medical Decline reason
     Click Panel    Payment
@@ -265,7 +268,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Flight 
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Flight and Travel Accident
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -296,7 +299,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Flight 
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Flight and Travel Accident
     Enter Insurance Declined Reason    Flight and Travel Decline reason
     Click Panel    Payment
@@ -328,7 +331,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Rental 
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Rental Car Physical Damage
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -360,7 +363,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Coverag
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    Coverage for the Full Dollar Value
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment
@@ -392,7 +395,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Multipl
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    All Inclusive or Premium    Cancellation/Interruption    Coverage for the Full Dollar Value
     Enter Insurance Declined Reason    Testing Insurance Decline reason
     Click Panel    Payment

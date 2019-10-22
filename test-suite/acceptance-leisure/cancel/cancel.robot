@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -38,7 +39,7 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Written In The PNR    /10741075
     Verify Specific Remark Is Not Written In The PNR    AF1074 Y 10NOV 7 YYZCDG GK1 \ 1155 1440 \ 10NOV \ \ \ \ ABCDEFG
     Verify Specific Remark Is Not Written In The PNR    HTL 1A HK1 STR 15NOV-17NOV/GERMANY,PARK INN
-    Verify Specific Remark Is Not Written In The PNR    RM *NUC
+    # Verify Specific Remark Is Not Written In The PNR    RM *NUC
     Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
     Close Cryptic Display Window
 

@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -13,6 +14,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Enter Destination Code    YYZ
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
+    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

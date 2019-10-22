@@ -1,5 +1,19 @@
 <tabset id="remarksTab">
-  <tab heading="Seats" id="seatsTab" tabOrder="1">
+  <tab heading="Visa and Passport" id="visaPassportTab" tabOrder="1">
+    <app-visa-passport></app-visa-passport>
+  </tab>
+  <tab heading="Seats" id="seatsTab" tabOrder="2">
     <app-seats></app-seats>
   </tab>
+  <tab heading="IRD Remarks" id="irdRemarksTab" tabOrder="2">
+    <app-ird-remarks></app-ird-remarks>
+  </tab>
+
+  <tab heading="Document PNR" id="documentPnrTab" tabOrder="2">
+    <app-document-pnr></app-document-pnr>
+  </tab>
+  <tab heading="ESC Remarks" id="escTab" tabOrder="3" *ngIf="isEsc">
+    <app-esc-remarks></app-esc-remarks>
+  </tab>
+
 </tabset>

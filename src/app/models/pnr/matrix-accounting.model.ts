@@ -38,4 +38,5 @@ export class MatrixAccountingModel {
 
   // Non BSP Exchange properties
   gdsFare: number;
+  otherCostDescription: string;
 }

@@ -1,5 +1,5 @@
 {
-	"Client Purdue Pharma, Air Only, Intl Route": {
+	"Client Purdue Pharma Air Only, Intl Route": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -38,13 +38,17 @@
 		"PrimaryApprovalReason": "International Travel Booked Business Class",
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "Yes",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Purdue Pharma, Air Only, Dom Route": {
+	"Client Purdue Pharma Air Only, Dom Route": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -83,13 +87,17 @@
 		"PrimaryApprovalReason": null,
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Purdue Pharma, Air Only, Trans Route": {
+	"Client Purdue Pharma Air Only, Trans Route": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -128,13 +136,17 @@
 		"PrimaryApprovalReason": null,
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Purdue Pharma, Car Only": {
+	"Client Purdue Pharma Car Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -173,13 +185,17 @@
 		"PrimaryApprovalReason": null,
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Purdue Pharma, Hotel Only": {
+	"Client Purdue Pharma Hotel Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -218,13 +234,17 @@
 		"PrimaryApprovalReason": null,
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Purdue Pharma, Car And Hotel Only": {
+	"Client Purdue Pharma Car And Hotel Only": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -263,13 +283,17 @@
 		"PrimaryApprovalReason": null,
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Purdue Pharma, Air Only, Skip Approval": {
+	"Client Purdue Pharma Air Only, Skip Approval": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -308,9 +332,13 @@
 		"PrimaryApprovalReason": null,
 		"SecondaryApprovalReason": null,
 		"ApproverName": null,
+		"TotalCost": null,
 		"AdditionalMessage": null,
 		"QueueToApproval": "No",
-		"RemarkAdded": null,
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	}

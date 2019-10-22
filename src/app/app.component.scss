@@ -5,7 +5,7 @@
     border-radius: 0;
     cursor: pointer;
 
-    > .card-header:first-child {
+    >.card-header:first-child {
       border-radius: 0;
       border-bottom: 1px solid gray;
     }
@@ -31,7 +31,7 @@
   }
 
   &.card-header:first-child {
-    > .accordion-toggle .accordion-toggle {
+    >.accordion-toggle .accordion-toggle {
       color: #fc6640;
     }
   }
@@ -40,7 +40,7 @@
 ::ng-deep .panel-open {
   .panel-title {
     color: #fc6640;
-    font-weight: bold;
+    // font-weight: bold;
   }
 }
 

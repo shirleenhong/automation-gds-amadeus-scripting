@@ -418,9 +418,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
           break;
         case 'APAY':
-          this.matrixAccountingForm.controls.originalTktLine.setValidators(Validators.required);
-          this.matrixAccountingForm.get('originalTktLine').updateValueAndValidity();
-          break;
         case 'NONBSP':
           this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
           break;

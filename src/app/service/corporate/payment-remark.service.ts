@@ -80,9 +80,12 @@ export class PaymentRemarkService {
       if (account.accountingTypeRemark === 'ACPR') {
         paymentRemark.set('PassName', account.passPurchase);
         paymentRemark.set('FareType', account.fareType);
-        airlineCodeRemark.set('AirlineCode', 'AC');
-        airlineCodeInvoice.set('AirlineCode', 'AC');
-        confNbrRem.set('AirlineCode', 'AC');
+        airlineCodeRemark.set('AirlineCode', account.airlineCorporatePass.airlineCode);
+        airlineCodeInvoice.set('AirlineCode', account.airlineCorporatePass.airlineCode);
+        airlineCodeInvoice.set('PassNumber', account.tktLine);
+        airlineCodeInvoice.set('PassName', account.passPurchase);
+        airlineCodeInvoice.set('FareType', account.fareType);
+        confNbrRem.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         redemptionRemark.set('PassName', 'Airline Corporate');
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
       }

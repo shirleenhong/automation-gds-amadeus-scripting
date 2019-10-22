@@ -302,7 +302,9 @@ export class CorporateComponent implements OnInit {
 
     await this.rms.SendPbn(
       this.paymentRemarkService.moveProfile(
-        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter(
+          (x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'ACPR'
+        )
       )
     );
 
@@ -395,8 +397,8 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    remarkCollection.forEach(rem => {
-      rem.remarks.forEach(remModel => {
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
       });
     });

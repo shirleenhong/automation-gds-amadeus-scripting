@@ -7,7 +7,6 @@ import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
-import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 import { AirlineCorporatePassService } from 'src/app/service/corporate/airline-corporate-pass.service';
 // import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 

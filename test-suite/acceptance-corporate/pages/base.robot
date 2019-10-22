@@ -38,7 +38,7 @@ ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
 ${button_add_segment}    //button[contains(text(), 'Add Segment')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
-@{add_segment_pages}    Passive Segment
+@{add_segment_pages}    Passive Segment    Add Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks
@@ -118,11 +118,11 @@ Click Payment Panel
     [Teardown]    Take Screenshot
     
 Click Passive Segment Panel
-    Wait Until Page Contains Element   ${button_full_wrap}    60
+    Wait Until Page Contains Element   ${panel_passive_segment}    60
     Click Element At Coordinates    ${panel_passive_segment}    0    0
     Scroll Element Into View    ${panel_passive_segment}
     Click Element    ${panel_passive_segment}
-    Set Test Variable    ${current_page}    Passive Segment
+    #Set Test Variable    ${current_page}    Passive Segment
     [Teardown]    Take Screenshot
     
 Collapse Payment Panel
@@ -149,7 +149,7 @@ Click Back To Main Menu
     Click Element    ${button_main_menu}
     Set Test Variable    ${current_page}    CWT Corporate
     
-Click Add Segment
+Click Add Segment From Main Menu
     Wait Until Element Is Visible    ${button_add_segment}    
     Click Element    ${button_add_segment}
     Set Test Variable    ${current_page}    Add Segment
@@ -189,7 +189,7 @@ Convert Month To MMM
 
 Navigate To Page ${destination_page}
      Set Test Variable    ${i}     1
-     ${to_add_segment}    Run Keyword And Return Status    Should Contain    ${corp_pages}    ${destination_page}
+     ${to_add_segment}    Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${destination_page}
      ${to_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${destination_page}
      ${to_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${destination_page}
      Set Test Variable    ${to_add_segment}    
@@ -210,22 +210,21 @@ Navigate To Page ${destination_page}
      
 Navigate From Corp
      [Arguments]    ${destination_page}  
-     Run Keyword If    "${to_add_segment}" == "True"    Click Add Segment
+     Run Keyword If    "${to_add_segment}" == "True"    Click Add Segment From Main Menu
      ...    ELSE IF    "${to_full_wrap}" == "True"    Click Full Wrap
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Add Segment
     [Arguments]    ${destination_page}
-    ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${corp_pages}    ${current_page}
+    ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${current_page}
     Run Keyword If    "${in_add_segment}" == "False"    Click Passive Segment Panel
-    Run Keyword If    "${destination_page}" == "Add Segment"    Navigate To Add Passive Segment
+    Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
     
-Navigate To Add Passive Segment
+Click Add Passive Segment Button
     Wait Until Element Is Visible    ${button_add_passive_segment}    
     Click Element    ${button_add_passive_segment}
-    Set Test Variable    ${current_page}    Passive Segment
-    
+    Set Test Variable    ${current_page}    Add Passive Segment
 
 Collapse Open Panel
     ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}

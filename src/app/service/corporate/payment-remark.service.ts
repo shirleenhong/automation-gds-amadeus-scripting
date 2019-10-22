@@ -122,9 +122,33 @@ export class PaymentRemarkService {
     });
   }
 
+  getFareType(fareType: string) {
+    if (fareType.includes('FLEX')) {
+      return 'FLE';
+    }
+
+    if (fareType.includes('LATITUDE')) {
+      return 'LAT';
+    }
+
+    if (fareType.includes('EXECUTIVE')) {
+      return 'EXE';
+    }
+
+    if (fareType.includes('TANGO')) {
+      return 'TAN';
+    }
+
+    if (fareType.includes('PREMIUM ECONOMY')) {
+      return 'PEC';
+    }
+
+    return '';
+  }
+
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
     if (accountingRemarks.length > 0) {
-      return 'PBN/YTOWL210N/AC PASS ' + accountingRemarks[0].fareType + '*';
+      return 'PBN/YTOWL210N/AC PASS ' + this.getFareType(accountingRemarks[0].fareType) + '*';
     }
   }
 
@@ -341,7 +365,7 @@ export class PaymentRemarkService {
             .toString()
         );
         const ccVendor = this.pnrService.getCCVendorCode();
-        if (ccVendor !== ''){
+        if (ccVendor !== '') {
           itiRemarks.set('CCVendor', ccVendor);
         }
       }

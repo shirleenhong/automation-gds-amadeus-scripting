@@ -300,6 +300,10 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
+    if (this.corpRemarksComponent.isPassive) {
+     await this.invoiceRemarkService.sendEmergencyContactEntry(this.corpRemarksComponent.addContactComponent);
+    }
+    
 
     await this.rms.SendPbn(
       this.paymentRemarkService.moveProfile(

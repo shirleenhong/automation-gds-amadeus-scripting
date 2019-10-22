@@ -4,6 +4,9 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { MatrixReportingComponent } from 'src/app/corporate/reporting/matrix-reporting/matrix-reporting.component';
 import {EscRemarksComponent} from 'src/app/corporate/corp-remarks/esc-remarks/esc-remarks.component'
 import { DatePipe } from '@angular/common';
+import { AddContactComponent } from '../../corporate/corp-remarks/add-contact/add-contact.component';
+import { FormArray } from '@angular/forms';
+declare var smartScriptSession: any;
 
 @Injectable({
   providedIn: 'root'
@@ -65,5 +68,38 @@ export class InvoiceRemarkService {
       this.rms.createPlaceholderValues(escMap);
     }
     
+  }
+
+   sendEmergencyContactEntry(addConact: AddContactComponent) {
+    const srCommands = this.getSSRCommandsForContact(addConact);
+     this.sendSSRCommands(srCommands,0);
+  
+  }
+  getSSRCommandsForContact(addConact:AddContactComponent) {
+    const formCommandArr = [];
+    let formCommand = "";
+    const arr = addConact.addContactForm.get('items') as FormArray;
+    for (const c of arr.controls) {
+      const name = c.get('name').value;
+      const countryCode = c.get('countryCode').value;
+      const phone = c.get('phone').value;
+      const freeFlow = c.get('freeFlowText').value;
+      if (name && countryCode && phone && freeFlow) {
+        formCommand =  "SR PCTC LH HK/ " + name + " /" + countryCode + phone + ". " + freeFlow;
+        formCommandArr.push(formCommand);
+     }
+    }
+    return formCommandArr;
+  }
+
+  async sendSSRCommands(cmds, index) {
+    const self = this;
+    if (index == cmds.length) {
+    }
+    else {
+      await smartScriptSession.send(cmds[index]).then(async function (x) {
+        await self.sendSSRCommands(cmds,index+1)
+      })
+    }
   }
 }

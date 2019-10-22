@@ -1,0 +1,78 @@
+<form [formGroup]="addContactForm">
+    <div class="documentContainer">
+      <table>
+          <tr>
+              <td style="width:16%;text-align: center">
+                Name
+              </td>
+
+              <td style="width:16%;text-align: center">
+                Country Code
+              </td>
+
+              <td style="width:16%;text-align: center">
+                Phone
+              </td>
+
+              <td style="width:16%;text-align: center">
+                Free Flow Text
+              </td>
+
+              <td style="width:16%;text-align: center">
+                Passenger/s
+              </td>
+            </tr>
+      </table>
+      <div formArrayName="items" *ngFor="let item of this.addContactForm.get('items')['controls']; let i = index;" class="col">
+        <div [formGroupName]="i">
+          <table style="width:100%">
+           
+            <tr >
+              <td style="width: 16%" >
+                <input style="width:100%" formControlName="name" type="text" class="form-control" maxlength="55"
+                   />
+              </td>
+             
+              <td style="width: 16%">
+                <input style="width:100%" formControlName="countryCode" type="text" class="form-control" maxlength="55"
+                   />
+              </td>
+              
+              <td style="width: 16%">
+                <input style="width:100%" formControlName="phone" type="text" class="form-control" maxlength="55"
+                   />
+              </td>
+             
+              <td style="width: 16%">
+                <input style="width:100%" formControlName="freeFlowText" type="text" class="form-control" maxlength="55"
+                   />
+              </td>
+              <td style="width: 12%">
+                  <select style="width:96px" formControlName="passengers"  class="form-control" >
+                    <option></option>
+                    <option *ngFor="let pax of paxArray" [value]="pax.paxValue">{{pax.paxValue}}</option>
+                  </select>
+              </td>
+  
+              <td  style="width: 6%" class="docTable">
+                <div (click)="addItem()">
+                  <i class="fas fa-plus-circle" id="add"></i>
+                  Add
+                </div>
+              </td>
+  
+              <td  style="width: 10%" class="docTable">
+                <div (click)="removeInputField(i)" *ngIf="i > 0">
+                  <i class="fas fa-minus-circle" id="remove"></i>
+                  Remove
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+  
+  
+    </div>
+  
+  </form>

@@ -292,7 +292,10 @@ export class PaymentRemarkService {
           segmentAssoc
         );
 
-        itiRemarks.set('ConfNbr', account.tktLine);
+        if (account.tkMacLine.toString() !== null && account.tkMacLine.toString() !== '') {
+          itiRemarks.set('ConfNbr', account.tktLine);
+        }
+
         if (account.descriptionapay === 'OTHER COSTS') {
           itiRemarks.set('RemarkDescription', account.otherCostDescription);
         } else {
@@ -308,7 +311,10 @@ export class PaymentRemarkService {
             .replace(',', '')
             .toString()
         );
-        itiRemarks.set('CCVendor', account.vendorCode);
+        const ccVendor = this.pnrService.getCCVendorCode();
+        if (ccVendor !== ''){
+          itiRemarks.set('CCVendor', ccVendor);
+        }
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
     });

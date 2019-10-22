@@ -20,7 +20,9 @@ export class ApprovalRuleService {
       this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' &&
       this.pnrService.getRemarkText('EB/') === '';
 
-    const segmentValid = this.pnrService.getSegmentTatooNumber().find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
+    const segmentValid = this.pnrService
+      .getSegmentList()
+      .find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
       ? false
       : true;
 
@@ -42,7 +44,6 @@ export class ApprovalRuleService {
    * check if the set rules of approval in the DB is valid in the pnr
    */
   public hasApproval() {
- 
     if (this.needsApproval()) {
       const approvalItems = this.ddbService.approvalList.filter(
         (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
@@ -177,7 +178,7 @@ export class ApprovalRuleService {
   isSegmentTypeValid(app: ApprovalItem) {
     let valid = false;
     const multiremarks = this.getMultipleConditions(app.approvalRules);
-    const segmentList = this.pnrService.getSegmentTatooNumber();
+    const segmentList = this.pnrService.getSegmentList();
     for (const rem of multiremarks) {
       const type = SegmentTypeEnum[app.getRuleValueText(rem).toUpperCase()];
       const segments = segmentList.filter((seg) => seg.segmentType === type);
@@ -220,7 +221,9 @@ export class ApprovalRuleService {
     let valid = false;
     const multiremarks = this.getMultipleConditions(app.approvalRules);
     for (const rem of multiremarks) {
-      const firstAirSegment = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR');
+      const firstAirSegment = this.pnrService
+        .getSegmentList()
+        .filter((x) => x.segmentType === 'AIR');
       if (firstAirSegment) {
         const dtNow = new Date();
         const depdate = new Date(firstAirSegment[0].departureDate);

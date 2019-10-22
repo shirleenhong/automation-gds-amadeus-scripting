@@ -129,7 +129,7 @@ export class TicketingLineComponent implements OnInit {
    * @returns A flag indicator if a match was found, therefore presetting a value.
    */
   private presetSegmentFee(): boolean {
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     let hasSegmentMatch = false;
 
     segmentDetails.forEach((segments) => {
@@ -247,7 +247,9 @@ export class TicketingLineComponent implements OnInit {
    * create additional form values based on selected rule
    * @param selectedRule selected rule keyword from UI sample UI_SECPONDARY_1
    */
+
   showAdditionalInfo(selectedIndex) {  
+
     if (selectedIndex === null) {
       return;
     }

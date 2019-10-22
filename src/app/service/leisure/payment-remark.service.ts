@@ -179,7 +179,7 @@ export class PaymentRemarkService {
       return null;
     }
     const relatedSegment = [];
-    const tatooSegment = this.pnrService.getSegmentTatooNumber();
+    const tatooSegment = this.pnrService.getSegmentList();
     segmentrelate.forEach((element) => {
       if (tatooSegment.length > 0) {
         const look = tatooSegment.find((x) => x.lineNo === element);
@@ -322,7 +322,7 @@ export class PaymentRemarkService {
       }
 
       const air = this.pnrService
-        .getSegmentTatooNumber()
+        .getSegmentList()
         .find((x) => x.segmentType === 'AIR' && x.controlNumber === accounting.supplierConfirmatioNo);
 
       if (!air) {

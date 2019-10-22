@@ -384,7 +384,7 @@ export class PaymentRemarkService {
 
   private GetSegmentAssociation(account: MatrixAccountingModel) {
     const segmentNos = account.segmentNo.split(',');
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     const segmentAssoc = new Array<string>();
     let uniqueairlineCode = '';
     segmentNos.forEach((segs) => {
@@ -407,7 +407,7 @@ export class PaymentRemarkService {
       let airline = '';
       accounting.forEach((account) => {
         const air = this.pnrService
-          .getSegmentTatooNumber()
+          .getSegmentList()
           .find((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo);
 
         airline = this.getAirline(account.accountingTypeRemark);
@@ -456,7 +456,7 @@ export class PaymentRemarkService {
 
   getRemarkSegmentAssociation(account: MatrixAccountingModel, segmentrelate: string[]) {
     const air = this.pnrService
-      .getSegmentTatooNumber()
+      .getSegmentList()
       .filter(
         (x) =>
           x.segmentType === 'AIR' &&
@@ -476,7 +476,7 @@ export class PaymentRemarkService {
 
   allRailSegment(account: MatrixAccountingModel) {
     const segmentNos = account.segmentNo.split(',');
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     let segmentAssoc = new Array<string>();
     let hasNonTrain = false;
     let route = '';

@@ -63,7 +63,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.segments = this.pnrService.getSegmentTatooNumber();
+    this.segments = this.pnrService.getSegmentList();
     this.passengerList = this.pnrService.getPassengers();
     this.matrixAccountingForm = new FormGroup({
       accountingTypeRemark: new FormControl('', [Validators.required]),
@@ -458,7 +458,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
-      const segmentDetails = this.pnrService.getSegmentTatooNumber();
+      const segmentDetails = this.pnrService.getSegmentList();
       segmentDetails.forEach((segments) => {
         segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {
@@ -494,7 +494,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   isTypeINSExist(segmentNo: any) {
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     let res = false;
     segmentDetails.forEach((element) => {
       if (segmentDetails.length > 0) {

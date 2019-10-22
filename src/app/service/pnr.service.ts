@@ -491,8 +491,6 @@ export class PnrService {
         let airType = '';
         let segType = type;
         let passiveType = '';
-    
-
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -564,7 +562,6 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
-               
                 // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
@@ -600,7 +597,7 @@ export class PnrService {
             airType,
             passive: passiveType,
             isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' &&  elemStatus === 'GK'))
-        };      
+        };
         this.segments.push(segment);
     }
 
@@ -1608,7 +1605,6 @@ export class PnrService {
     getCCVendorCode(): string {
         let val: string;
         val = '';
-        debugger;
         for (const element of this.pnrObj.fpElements) {
           val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
         }

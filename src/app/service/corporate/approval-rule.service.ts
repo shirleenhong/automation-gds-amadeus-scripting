@@ -42,7 +42,7 @@ export class ApprovalRuleService {
    * check if the set rules of approval in the DB is valid in the pnr
    */
   public hasApproval() {
-    debugger;
+ 
     if (this.needsApproval()) {
       const approvalItems = this.ddbService.approvalList.filter(
         (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'

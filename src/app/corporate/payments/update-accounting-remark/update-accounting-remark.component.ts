@@ -36,6 +36,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   ticketNumber: string;
   isAddNew = false;
   isCopy = false;
+  isGdsFareRequired = false;
   filterSupplierCodeList: Array<any>;
   reasonCodeList: Array<SelectItem>;
   needFaretype = false;
@@ -290,9 +291,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
         this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
         this.matrixAccountingForm.get('gdsFare').enable();
+        this.isGdsFareRequired = true;
       } else {
         this.matrixAccountingForm.get('gdsFare').disable();
         this.matrixAccountingForm.get('gdsFare').clearValidators();
+        this.isGdsFareRequired = false;
       }
     }
   }

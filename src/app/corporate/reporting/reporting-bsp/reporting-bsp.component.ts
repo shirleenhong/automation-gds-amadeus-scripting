@@ -237,7 +237,7 @@ export class ReportingBSPComponent implements OnInit {
     });
 
     let segments = '';
-    const seg = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
+    const seg = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
     seg.forEach((s) => {
       if (segments === '') {
         segments = s.lineNo;

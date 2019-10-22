@@ -24,6 +24,7 @@ ${row_documentPNR}    //div[@formarrayname='items']
 ${button_addRemark}    //i[@id='add']
 ${input_document}    //input[@formcontrolname='documentation']
 ${select_seat_Type}    //select[@name='seatType']
+${select_segment_number}    //select[@formcontrolname='segment']
 ${input_seat_number}    //input[@name='seatNumber']
 ${input_seat_select1}    //input[@name='check1']
 ${input_seat_select2}    //input[@name='check2']
@@ -203,17 +204,25 @@ Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
     Click Element    ${input_seat_select5}
     Enter Value    ${input_seat_number}    2D
     Take Screenshot    
-    Click Save Button
+    Click Save Button In Seats
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
 
 Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     Navigate To Page Seats
     Wait Until Element Is Visible    ${input_seat_select3}
+    Select From List By Label    ${select_segment_number}    2
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
-    Click Element   ${input_seat_select6}
-    Click Save Button
+    Click Element   ${input_seat_select6}    
+    Click Save Button In Seats
+    Click Element    ${button_add_seat}
+    Wait Until Element Is Visible    ${input_seat_select3}
+    Select From List By Label    ${select_segment_number}    3
+    Click Element   ${input_seat_select3}
+    Click Element   ${input_seat_select4}
+    Click Element   ${input_seat_select6}    
+    Click Save Button In Seats
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
@@ -278,3 +287,10 @@ Verify ESC Remarks Are Written Correctly In The PNR
 Verify ESC Remarks Are Not Written In The PNR
    Finish PNR
    Verify Specific Remark Is Not Written In The PNR    RME ESC AGENT
+   
+Click Save Button In Seats
+    Click Element    ${button_save}
+    Wait Until Page Contains Element    ${button_update}     30
+    Set Focus To Element    ${button_submit_pnr}
+    Set Test Variable    ${current_page}    Seats
+    [Teardown]    Take Screenshot

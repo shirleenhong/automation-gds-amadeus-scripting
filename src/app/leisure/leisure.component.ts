@@ -88,7 +88,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr() {
     this.errorPnrMsg = '';
@@ -177,8 +177,10 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       return;
     }
 
-    const bspFop = (this.paymentComponent.bspTicketFop
-      && this.paymentComponent.bspTicketFop.bspTicketFopForm.controls.bspfop.value === 'AP') ? true : false;
+    const bspFop =
+      this.paymentComponent.bspTicketFop && this.paymentComponent.bspTicketFop.bspTicketFopForm.controls.bspfop.value === 'AP'
+        ? true
+        : false;
 
     if (bspFop) {
       this.issueBsp();
@@ -245,10 +247,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     );
 
     if (this.paymentComponent.bspTicketFop) {
-      remarkCollection.push(
-        this.paymentRemarkService.addBspTicketFop(this.paymentComponent.bspTicketFop)
-      );
-
+      remarkCollection.push(this.paymentRemarkService.addBspTicketFop(this.paymentComponent.bspTicketFop));
     }
 
     const acpp = this.paymentComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP');
@@ -274,12 +273,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.commonWarning) {
       this.showMessage({
         msg: this.commonWarning,
-        type: MessageType.Default, title: 'Reminder'
+        type: MessageType.Default,
+        title: 'Reminder'
       });
     }
 
     this.commonWarning = '';
-
   }
 
   processPassPurchase(accountingRemarks: MatrixAccountingModel[]) {
@@ -296,7 +295,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
       let found = false;
       acpp.forEach((a) => {
-        const dummy = this.pnrService.getSegmentTatooNumber().find((x) => x.controlNumber === a.supplierConfirmatioNo);
+        const dummy = this.pnrService.getSegmentList().find((x) => x.controlNumber === a.supplierConfirmatioNo);
         if (dummy) {
           found = true;
           a.segmentNo = dummy.lineNo;
@@ -322,7 +321,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.workflow = '';
   }
 
-  showMessage({ msg, type, title = 'PNR Updated' }: { msg; type: MessageType; title?: string; }) {
+  showMessage({ msg, type, title = 'PNR Updated' }: { msg; type: MessageType; title?: string }) {
     this.modalRef = this.modalService.show(MessageComponent, {
       backdrop: 'static'
     });
@@ -334,7 +333,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.modalRef.content.setMessageType(type);
   }
 
-  showLoading({ msg, caller = '' }: { msg; caller?: string; }) {
+  showLoading({ msg, caller = '' }: { msg; caller?: string }) {
     this.modalRef = this.modalService.show(LoadingComponent, {
       backdrop: 'static'
     });
@@ -372,7 +371,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => { },
+      () => {},
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -412,21 +411,18 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     const remarkCollection = new Array<RemarkGroup>();
     if (!this.invoiceReply) {
-      await this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup).then(
-        async (x) => {
-          remarkCollection.push(x.remgroup);
-          if (!x.invSent) {
-            this.commonWarning = this.commonWarning + '\r\n' + 'Verify Invoicing Request- Script is unable to process invoice.';
-          }
+      await this.invoiceService.GetMatrixInvoice(this.invoiceComponent.matrixInvoiceGroup).then(async (x) => {
+        remarkCollection.push(x.remgroup);
+        if (!x.invSent) {
+          this.commonWarning = this.commonWarning + '\r\n' + 'Verify Invoicing Request- Script is unable to process invoice.';
         }
-      );
+      });
     }
 
     this.submitProcess = true;
     this.leisureRemarkService.BuildRemarks(remarkCollection);
     await this.leisureRemarkService.SubmitRemarks().then(
       async () => {
-
         // await this.getPnrService();
         await this.getPnr();
         this.workflow = '';
@@ -534,7 +530,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.isPnrLoaded) {
       await this.getPnrService();
       this.workflow = 'cancel';
-      this.segment = this.pnrService.getSegmentTatooNumber();
+      this.segment = this.pnrService.getSegmentList();
       this.setControl();
     }
   }
@@ -584,7 +580,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   issueBsp() {
-    this.commonWarning = 'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the ' +
+    this.commonWarning =
+      'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the ' +
       'RM*FOP/-AP format is in the PNR.' +
       ' If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark. <br> <br>';
     // this.modalRef = this.modalService.show(MessageComponent, {

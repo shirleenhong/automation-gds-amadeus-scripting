@@ -20,7 +20,9 @@ export class ApprovalRuleService {
       this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' &&
       this.pnrService.getRemarkText('EB/') === '';
 
-    const segmentValid = this.pnrService.getSegmentTatooNumber().find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
+    const segmentValid = this.pnrService
+      .getSegmentList()
+      .find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
       ? false
       : true;
 
@@ -46,8 +48,9 @@ export class ApprovalRuleService {
       const approvalItems = this.ddbService.approvalList.filter(
         (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
       );
-      const appGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') >= 0);
-      const appNoGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') === -1);
+
+      const appGroup = approvalItems.filter((a) => a.approvalRules.indexOf('[GROUP_') >= 0);
+      const appNoGroup = approvalItems.filter((a) => a.approvalRules.indexOf('[GROUP_') === -1);
       if (appGroup.length > 0) {
         return this.isValidRule(appNoGroup) && this.isValidGroup(appGroup);
       } else {
@@ -61,7 +64,7 @@ export class ApprovalRuleService {
     let ctr = 1;
     let hasGroup = true;
     while (hasGroup) {
-      const list = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_' + ctr) >= 0);
+      const list = approvalItems.filter((a) => a.approvalRules.indexOf('[GROUP_' + ctr) >= 0);
       hasGroup = list.length > 0;
       if (hasGroup) {
         if (this.getApprovalValidResult(list[0], this.isValidRule(list, true))) {
@@ -76,20 +79,20 @@ export class ApprovalRuleService {
   isValidRule(approvalItems: ApprovalItem[], isGroup?): boolean {
     for (const approval of approvalItems) {
       let valid = false;
-      switch (approval.getRule()) {
-        case '[REMARKS_EXISTS]':
+      switch (approval.approvalType) {
+        case 'REMARKS_EXISTS':
           valid = this.isRemarkExistValid(approval);
           break;
-        case '[SEGMENT_TYPE]':
+        case 'SEGMENT_TYPE':
           valid = this.isSegmentTypeValid(approval);
           break;
-        case '[FOP]':
+        case 'FOP':
           valid = this.isFopValid(approval);
           break;
-        case '[ROUTE]':
+        case 'ROUTE':
           valid = this.isRouteValid(approval);
           break;
-        case '[DEPARTURE]':
+        case 'DEPARTURE':
           valid = this.isDepartureDateValid(approval);
           break;
       }
@@ -108,7 +111,7 @@ export class ApprovalRuleService {
 
   isRemarkExistValid(app: ApprovalItem) {
     let found = false;
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
+    const multiremarks = this.getMultipleConditions(app.approvalRules);
     for (const rem of multiremarks) {
       const val = rem.split('|');
       if (val.length > 1) {
@@ -141,7 +144,7 @@ export class ApprovalRuleService {
       ccNo = match.groups.cardNo;
       //   const expDate = match.groups.exp.substr(0, 2) + '/' + match.groups.exp.substr(2, 2);
     }
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
+    const multiremarks = this.getMultipleConditions(app.approvalRules);
     for (const rem of multiremarks) {
       if (vendorCode !== '') {
         const noKeywordValue = app.getRuleValueText(rem);
@@ -174,8 +177,8 @@ export class ApprovalRuleService {
    */
   isSegmentTypeValid(app: ApprovalItem) {
     let valid = false;
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
-    const segmentList = this.pnrService.getSegmentTatooNumber();
+    const multiremarks = this.getMultipleConditions(app.approvalRules);
+    const segmentList = this.pnrService.getSegmentList();
     for (const rem of multiremarks) {
       const type = SegmentTypeEnum[app.getRuleValueText(rem).toUpperCase()];
       const segments = segmentList.filter((seg) => seg.segmentType === type);
@@ -199,7 +202,7 @@ export class ApprovalRuleService {
    */
   isRouteValid(app: ApprovalItem) {
     let valid = false;
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
+    const multiremarks = this.getMultipleConditions(app.approvalRules);
     const route = this.ddbService.isPnrTransBorder() ? 'TRA' : this.ddbService.isPnrDomestic() ? 'DOM' : 'INT';
     for (const rem of multiremarks) {
       const noKeywordValue = app
@@ -216,9 +219,11 @@ export class ApprovalRuleService {
 
   isDepartureDateValid(app: ApprovalItem) {
     let valid = false;
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
+    const multiremarks = this.getMultipleConditions(app.approvalRules);
     for (const rem of multiremarks) {
-      const firstAirSegment = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR');
+      const firstAirSegment = this.pnrService
+        .getSegmentList()
+        .filter((x) => x.segmentType === 'AIR');
       if (firstAirSegment) {
         const dtNow = new Date();
         const depdate = new Date(firstAirSegment[0].departureDate);
@@ -233,25 +238,25 @@ export class ApprovalRuleService {
   }
 
   getSecondaryApprovalList(index?: string): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_SECONDARY' + (index ? index : '_1')) === 0);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('UI_SECONDARY' + (index ? index : '_1')) === 0);
   }
 
   getAdditionalList(): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_ADDITIONAL_') === 0);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('UI_ADDITIONAL_') === 0);
   }
 
   getPrimaryApprovalList(): ApprovalItem[] {
-    const primaryList = this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    const primaryList = this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('UI_PRIMARY') === 0);
     let ctr = 1;
     let done = false;
     let sortedList = [];
     while (!done) {
       const list = primaryList
-        .filter((x) => x.approvalRules.indexOf('[UI_PRIMARY_' + ctr) === 0)
+        .filter((x) => x.approvalType.indexOf('UI_PRIMARY_' + ctr) === 0)
         .sort((a, b) => {
-          if (a.getRuleText() < b.getRuleText()) {
+          if (a.approvalRules < b.approvalRules) {
             return -1;
-          } else if (a.getRuleText() > b.getRuleText()) {
+          } else if (a.approvalRules > b.approvalRules) {
             return 1;
           } else {
             return 0;
@@ -268,21 +273,21 @@ export class ApprovalRuleService {
   }
 
   getWriteApproval(index?: string): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[WRITE_REMARK' + (index ? index : '_1')) === 0);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('WRITE_REMARK' + (index ? index : '_1')) === 0);
   }
   getDeleteRemarkApproval(index?: string): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[DELETE_REMARK' + (index ? index : '_1')) === 0);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('DELETE_REMARK' + (index ? index : '_1')) === 0);
   }
 
   getQueueApproval(index?: string): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('QUEUE' + (index ? index : '_1')) > -1);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('QUEUE' + (index ? index : '_1')) > -1);
   }
 
   getTicketApproval(index?: string): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('TICKET' + (index ? index : '_1')) > -1);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf('TICKET' + (index ? index : '_1')) > -1);
   }
 
   getApprovalItem(keyword: string): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf(keyword) === 0);
+    return this.ddbService.approvalList.filter((x) => x.approvalType.indexOf(keyword) === 0);
   }
 }

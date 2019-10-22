@@ -247,8 +247,7 @@ export class TicketingLineComponent implements OnInit {
    * create additional form values based on selected rule
    * @param selectedRule selected rule keyword from UI sample UI_SECPONDARY_1
    */
-  showAdditionalInfo(selectedIndex) {
-    debugger;
+  showAdditionalInfo(selectedIndex) {  
     if (selectedIndex === null) {
       return;
     }

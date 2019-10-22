@@ -19,12 +19,10 @@ ${test_file_name}    add_segment
 Verify Corp Passive Air Segment Is Added In the PNR For Non ZZ Details
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger
-    #Create PNR With Passive Air Segments For Corporate, Non ZZ Details
     Add And Verify Air Segment for Non ZZ Details In The PNR
     
 Verify Corp Passive Air Segment Is Added In the PNR For ZZ Details
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger
-    #Create PNR With Passive Air Segments For Corporate, For ZZ Details
     Add And Verify Air Segment for ZZ In The PNR
     

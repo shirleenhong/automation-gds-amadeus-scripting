@@ -32,12 +32,14 @@ ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
 ${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
 ${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
+${button_send_invoice_itinerary}    //button[contains(text(), 'Send Invoice/Itinerary')]
 ${open_bracket}     [
 ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
 ${button_add_segment}    //button[contains(text(), 'Add Segment')]
-${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
+${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
+${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
@@ -46,8 +48,8 @@ ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
-@{full_wrap_pages}    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
-${itinerary_and_queue_pages}    Itinerary and Queue    @{queue_pages}
+@{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
+${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S
 
 *** Keywords ***
 Enter Value
@@ -85,7 +87,8 @@ Click Itinerary And Queue
     Click Element At Coordinates    ${button_itinerary_queue}    0    0 
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Wait Until Element Is Visible    ${select_transaction}      30
-    Set Test Variable    ${current_page}    Itinerary And Queue
+    Set Test Variable    ${current_page}    Follow-Up Queue S
+    Set Test Variable    ${pnr_submitted}    no
     [Teardown]    Take Screenshot  
     
 Click Send Itinerary And Queue
@@ -207,7 +210,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${to_add_segment}" == "True"    Navigate From Add Segment    ${destination_page}
      \    Run Keyword If    "${to_full_wrap}" == "True"    Navigate From Full Wrap    ${destination_page}
-     \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Queue    ${destination_page}
+     \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Itinerary And Queue    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
@@ -295,7 +298,6 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
     ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
 
-    
 Navigate From Ticketing
     [Arguments]    ${destination_page}
     ${in_ticketing}    Run Keyword And Return Status    Should Contain     ${ticketing_pages}    ${current_page}
@@ -310,10 +312,25 @@ Navigate From Queue
     Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
+    
+Navigate From Itinerary And Queue
+    [Arguments]    ${destination_page}
+    ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain     ${itinerary_and_queue_pages}    ${current_page}
+    Run Keyword If    "${in_itinerary_and_queue}" == "False"    Click Itinerary And Queue Panel
+    Run Keyword If    "${destination_page}" == "Follow-Up Queue S"    Click Follow-Up Queue Tab
+    ...    ELSE IF    "${destination_page}" == "CWT Itinerary"    Click CWT Itinerary Tab
+       
+Click Itinerary And Queue Panel
+    Wait Until Element Is Visible    ${panel_itinerary_and_queue}    60
+    Click Element    ${panel_itinerary_and_queue}
+    Set Test Variable    ${current_page}    Itinerary And Queue
 
 Finish PNR
-    [Arguments]     ${close_corporate_test}=yes     ${queueing}=no    
-    Run Keyword If    "${pnr_submitted}" == "no"    Submit To PNR    ${close_corporate_test}    ${queueing}   
+    [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
+    ${in_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
+    ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}    
+    Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}   
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}  
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     
@@ -510,3 +527,7 @@ Verify Remarks Are Added Correctly In The PNR
 Verify Remarks Are Not Found In The PNR
     Finish PNR   queueing=yes
     Verify Unexpected Remarks Are Not Written In The PNR
+    
+Complete The PNR With Default Values
+    Navigate To Page Reporting Remarks
+    Submit To PNR    close_corporate_test=no

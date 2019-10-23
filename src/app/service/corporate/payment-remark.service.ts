@@ -30,7 +30,13 @@ export class PaymentRemarkService {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
     this.writePassPurchase(
-      accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
+      accList.filter(
+        (x) =>
+          x.accountingTypeRemark === 'ACPP' ||
+          x.accountingTypeRemark === 'ACPR' ||
+          x.accountingTypeRemark === 'WCPP' ||
+          x.accountingTypeRemark === 'PCPP'
+      )
     );
 
     // Write Non BSP Exhange Remarks
@@ -76,6 +82,7 @@ export class PaymentRemarkService {
         paymentRemark.set('PassNameNonAc', account.passPurchase);
       }
 
+      // debugger;
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
         paymentRemark.set('PassName', account.passPurchase);
@@ -88,6 +95,38 @@ export class PaymentRemarkService {
         confNbrRem.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         redemptionRemark.set('PassName', 'Airline Corporate');
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
+
+        // debugger;
+        // US10574: Airline Corporate Pass Redemption
+        staticRemarksCondition.set('PassPurchase', 'true');
+        this.remarksManager.createPlaceholderValues(
+          null,
+          staticRemarksCondition,
+          account.segmentNo.split(','),
+          null,
+          'THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          staticRemarksCondition,
+          account.segmentNo.split(','),
+          null,
+          'IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY.'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          staticRemarksCondition,
+          account.segmentNo.split(','),
+          null,
+          '**PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          staticRemarksCondition,
+          account.segmentNo.split(','),
+          null,
+          'ON YOUR CREDIT CARD STATEMENT.'
+        );
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
@@ -120,24 +159,11 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       this.remarksManager.createPlaceholderValues(airlineCodeInvoice);
 
+      // debugger;
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ALL DETAILS DISCUSSED AND');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
-
-      // US10574: Airline Corporate Pass Redemption
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'THE AIRLINE TICKET CHARGE');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ON THIS ITINERARY/INVOICE');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'IS FOR INTERNAL COST');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'RE-ALLOCATION PURPOSES ONLY.');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, '**PLEASE DO NOT EXPENSE**');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'THIS CHARGE AS IT WILL NOT APPEAR');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ON YOUR CREDIT');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CARD STATEMENT.');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ALL OTHER CHARGES INDICATED');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'WILL APPEAR ON YOUR CREDIT CARD');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AND SHOULD BE');
-      this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'EXPENSED ACCORDINGLY.');
 
       if (account.fareType !== '') {
         passNameRedemptionRemark.set('FareType', account.fareType);
@@ -145,7 +171,6 @@ export class PaymentRemarkService {
       } else {
         this.remarksManager.createPlaceholderValues(redemptionRemark, null, segmentrelate);
       }
-
       this.remarksManager.createPlaceholderValues(confNbrRem, null, segmentrelate);
     });
   }

@@ -37,6 +37,7 @@ ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
 ${button_add_segment}    //button[contains(text(), 'Add Segment')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
+${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
@@ -150,14 +151,19 @@ Click Back To Main Menu
     Set Test Variable    ${current_page}    CWT Corporate
     
 Click Add Segment From Main Menu
-    Wait Until Element Is Visible    ${button_add_segment}    
+    Wait Until Element Is Visible    ${button_add_segment}     60   
     Click Element    ${button_add_segment}
     Set Test Variable    ${current_page}    Add Segment
     
-Click Add Passive Segment
-    Wait Until Element Is Visible    ${button_add_passive_segment}
-    Click Element    ${button_add_passive_segment}
-    Set Test Variable    ${current_page}    Add Segment
+Click Add Segment to PNR
+    [Arguments]    ${close_corporate_test}=yes
+    Wait Until Element Is Visible    ${button_add_segment_toPNR}    60  
+    Sleep   3  
+    Click Element    ${button_add_segment_toPNR}
+    Wait Until Element Is Not Visible     ${message_add_segments}      180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+    Set Test Variable    ${current_page}     CWT Corporate
   
 Assign Current Date
     ${current_date}    Get Current Date

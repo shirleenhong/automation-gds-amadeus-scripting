@@ -226,10 +226,10 @@ Create Multiple TKT Exchange PNR In The GDS
     Sleep    5
 
 Move Single Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    APE-test@email.com    RM*CF/-VB70000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C   RM*CN/-CN1
 
 Move Single Passenger For OBT
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    APE-test@email.com    RM*CF/-VB70000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C 
 
 Move Multiple Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177

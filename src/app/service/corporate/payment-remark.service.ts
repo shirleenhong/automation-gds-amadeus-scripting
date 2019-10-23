@@ -148,7 +148,11 @@ export class PaymentRemarkService {
 
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
     if (accountingRemarks.length > 0) {
-      return 'PBN/YTOWL210N/AC PASS ' + this.getFareType(accountingRemarks[0].fareType) + '*';
+      let airline = '';
+      if (accountingRemarks[0].accountingTypeRemark === 'ACPP') {
+        airline = 'AC';
+      }
+      return 'PBN/YTOWL210N/' + airline + ' PASS ' + this.getFareType(accountingRemarks[0].fareType) + '/*';
     }
   }
 
@@ -370,6 +374,10 @@ export class PaymentRemarkService {
         }
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
+
+      const ebRemark = new Map<string, string>();
+      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
+      this.remarksManager.createPlaceholderValues(ebRemark);
     });
 
     totalcostlist.forEach((element) => {

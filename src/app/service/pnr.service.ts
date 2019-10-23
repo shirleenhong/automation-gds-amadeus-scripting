@@ -1335,10 +1335,13 @@ export class PnrService {
             for (const ape of this.pnrObj.apElements) {
                 if (ape.type === 'E') {
                     let freeText = ape.fullNode.otherDataFreetext.longFreetext;
-                    const arrRegex = /ARR\*|CTC\*/g;
+                    const arrRegex = /ARR\*|CTC\*|\/PARR|\/WORK/g;
                     const match = freeText.match(arrRegex);
                     if (match && match[0]) {
                         freeText = freeText.replace(match[0], '');
+                        if (match[1]) {
+                            freeText = freeText.replace(match[1], '');
+                        }
                         emailList.push(freeText);
                     } else {
                         emailList.push(ape.fullNode.otherDataFreetext.longFreetext);

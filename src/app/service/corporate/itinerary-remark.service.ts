@@ -4,7 +4,6 @@ import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormArray } from '@angular/forms';
 import { AmadeusQueueService } from '../amadeus-queue.service';
-import { DDBService } from '../ddb.service';
 import { RemarksManagerService } from './remarks-manager.service';
 
 @Injectable({
@@ -15,8 +14,7 @@ export class ItineraryRemarkService implements OnInit {
   leisureOnDemandOID: any = '';
 
   constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService,
-              private rms: RemarksManagerService,
-              private ddbService: DDBService) {
+              private rms: RemarksManagerService) {
   }
 
   async ngOnInit() {
@@ -151,44 +149,5 @@ export class ItineraryRemarkService implements OnInit {
       aquaRmkConditions.set('EmailAddNo', 'true');
       this.rms.createPlaceholderValues(null, aquaRmkConditions, null, null, 'EMAIL ADD-NO');
     }
-    this.writeTktLine();
-  }
-  async writeTktLine() {
-    const air = this.pnrService.pnrObj.airSegments;
-    const regx = new RegExp('TKT-(?<service>(.*))');
-    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
-    let writetkt = true;
-    rems.forEach((element) => {
-      if (element.qualifier === 'T') {
-        writetkt = false;
-      }
-    });
-    let route = '';
-    if (air.length > 0 && writetkt) {
-      route = this.writeRouteType();
-      const departureCheck = new Map<string, string>();
-      departureCheck.set('TktRoute', route);
-      departureCheck.set('TicketSequence', '1');
-      this.rms.createPlaceholderValues(departureCheck);
-    }
-  }
-  writeRouteType() {
-    let route = 'DOM';
-    this.pnrService.pnrObj.airSegments.forEach((element) => {
-      const arrival = this.ddbService.getCityCountry(element.arrivalAirport);
-      route = this.getRoute(arrival.country, route);
-      const departure = this.ddbService.getCityCountry(element.departureAirport);
-      route = this.getRoute(departure.country, route);
-    });
-    return route;
-  }
-  private getRoute(element: any, route: string) {
-    if (element !== 'Canada' && element !== 'United States') {
-      route = 'INTL';
-    }
-    if (element === 'United States' && route !== 'INTL') {
-      route = 'TRANS';
-    }
-    return route;
   }
 }

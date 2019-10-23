@@ -147,8 +147,12 @@ export class PaymentRemarkService {
   }
 
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
+    let airline = '';
+    if (accountingRemarks[0].accountingTypeRemark === 'ACPP') {
+      airline = 'AC';
+    }
     if (accountingRemarks.length > 0) {
-      return 'PBN/YTOWL210N/AC PASS ' + this.getFareType(accountingRemarks[0].fareType) + '*';
+      return 'PBN/YTOWL210N/' + airline + ' PASS ' + this.getFareType(accountingRemarks[0].fareType) + '/*';
     }
   }
 

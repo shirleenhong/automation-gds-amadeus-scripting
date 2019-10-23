@@ -162,7 +162,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   getSegmentTatooValue() {
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     segmentDetails.forEach((element) => {
       if (segmentDetails.length > 0) {
         const details = {

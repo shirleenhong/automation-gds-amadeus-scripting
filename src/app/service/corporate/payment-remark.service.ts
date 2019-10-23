@@ -122,9 +122,37 @@ export class PaymentRemarkService {
     });
   }
 
+  getFareType(fareType: string) {
+    if (fareType.includes('FLEX')) {
+      return 'FLE';
+    }
+
+    if (fareType.includes('LATITUDE')) {
+      return 'LAT';
+    }
+
+    if (fareType.includes('EXECUTIVE')) {
+      return 'EXE';
+    }
+
+    if (fareType.includes('TANGO')) {
+      return 'TAN';
+    }
+
+    if (fareType.includes('PREMIUM ECONOMY')) {
+      return 'PEC';
+    }
+
+    return '';
+  }
+
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
     if (accountingRemarks.length > 0) {
-      return 'PBN/YTOWL210N/AC PASS ' + accountingRemarks[0].fareType + '*';
+      let airline = '';
+      if (accountingRemarks[0].accountingTypeRemark === 'ACPP') {
+        airline = 'AC';
+      }
+      return 'PBN/YTOWL210N/' + airline + ' PASS ' + this.getFareType(accountingRemarks[0].fareType) + '/*';
     }
   }
 
@@ -321,7 +349,10 @@ export class PaymentRemarkService {
           segmentAssoc
         );
 
-        itiRemarks.set('ConfNbr', account.tktLine);
+        if (account.tkMacLine.toString() !== null && account.tkMacLine.toString() !== '') {
+          itiRemarks.set('ConfNbr', account.tktLine);
+        }
+
         if (account.descriptionapay === 'OTHER COSTS') {
           itiRemarks.set('RemarkDescription', account.otherCostDescription);
         } else {
@@ -337,9 +368,16 @@ export class PaymentRemarkService {
             .replace(',', '')
             .toString()
         );
-        itiRemarks.set('CCVendor', account.vendorCode);
+        const ccVendor = this.pnrService.getCCVendorCode();
+        if (ccVendor !== '') {
+          itiRemarks.set('CCVendor', ccVendor);
+        }
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
+
+      const ebRemark = new Map<string, string>();
+      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
+      this.remarksManager.createPlaceholderValues(ebRemark);
     });
 
     totalcostlist.forEach((element) => {
@@ -354,7 +392,7 @@ export class PaymentRemarkService {
 
   private GetSegmentAssociation(account: MatrixAccountingModel) {
     const segmentNos = account.segmentNo.split(',');
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     const segmentAssoc = new Array<string>();
     let uniqueairlineCode = '';
     segmentNos.forEach((segs) => {
@@ -377,7 +415,7 @@ export class PaymentRemarkService {
       let airline = '';
       accounting.forEach((account) => {
         const air = this.pnrService
-          .getSegmentTatooNumber()
+          .getSegmentList()
           .find((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo);
 
         airline = this.getAirline(account.accountingTypeRemark);
@@ -426,7 +464,7 @@ export class PaymentRemarkService {
 
   getRemarkSegmentAssociation(account: MatrixAccountingModel, segmentrelate: string[]) {
     const air = this.pnrService
-      .getSegmentTatooNumber()
+      .getSegmentList()
       .filter(
         (x) =>
           x.segmentType === 'AIR' &&
@@ -446,7 +484,7 @@ export class PaymentRemarkService {
 
   allRailSegment(account: MatrixAccountingModel) {
     const segmentNos = account.segmentNo.split(',');
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     let segmentAssoc = new Array<string>();
     let hasNonTrain = false;
     let route = '';

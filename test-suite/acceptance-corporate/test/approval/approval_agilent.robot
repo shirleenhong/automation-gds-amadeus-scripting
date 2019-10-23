@@ -10,7 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
-# Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    agilent

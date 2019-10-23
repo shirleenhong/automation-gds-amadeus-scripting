@@ -6,23 +6,6 @@
 </div>
 <div class="modal-body">
 
-  <p>
-    airlineCorporatePassId: {{ airlineCorporatePassId }}
-  </p>
-  <p>
-    matrixAccountingForm
-  </p>
-  <p>
-    {{ matrixAccountingForm.controls.value | json }}
-  </p>
-  <p>
-    {{ airlineCorporatePasses | json }}
-  </p>
-  <p>
-    segmentsCount {{ matrixAccountingForm.get('segmentsCount').value | json }}
-  </p>
-
-
   <form [formGroup]="matrixAccountingForm">
     <div class="form-group  row">
       <div class="col-sm-4">TKT Line #:</div>

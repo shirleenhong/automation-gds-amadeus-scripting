@@ -95,13 +95,6 @@ export class AirlineCorporatePassService {
    * @param id The Id of the item.
    */
   getById(id: number): AirlineCorporatePass {
-    debugger;
-    const items = this.getAll();
-    // const items = this.getSampleData();
-    const item = items.filter((x) => x.id === parseFloat(id.toString()))[0];
-    console.log(item);
-    debugger;
-
-    return this.getAll().filter((x) => x.id === id)[0];
+    return this.getAll().filter((x) => x.id === parseFloat(id.toString()))[0];
   }
 }

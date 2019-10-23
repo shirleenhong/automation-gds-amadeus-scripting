@@ -275,7 +275,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Configure form controls for Airlin Corporate Pass Redemption.
    */
   configureACPRControls(): void {
-    console.log('ACPR selected...');
     this.name = 'Airline Record Locator';
     this.airlineCorporatePasses = this.airlineCorporatePassService.getAll();
     // this.airlineCorporatePasses = AirlineCorporatePass.getSampleData();
@@ -289,7 +288,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('otherTax').setValue('0.00');
     this.matrixAccountingForm.get('commisionWithoutTax').setValue('0.00');
     this.matrixAccountingForm.get('segmentsCount').setValue(this.pnrService.getPassiveAirSegmentNumbers().length);
-    // console.log(segmentCo)
 
     this.requireGDSFare();
   }
@@ -299,8 +297,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    */
   requireGDSFare(): void {
     const cfaLine = this.pnrService.getCFLine();
-    // console.log('================ cfaLine ================');
-    // console.log(cfaLine);
     if (cfaLine !== undefined) {
       if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
         this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);

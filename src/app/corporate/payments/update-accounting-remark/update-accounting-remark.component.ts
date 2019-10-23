@@ -276,7 +276,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    */
   configureACPRControls(): void {
     this.name = 'Airline Record Locator';
-    this.airlineCorporatePasses = this.airlineCorporatePassService.getAll();
+    // Get AC segments only.
+    this.airlineCorporatePasses = this.airlineCorporatePassService.getAll().filter((x) => x.airlineCode === 'AC');
     // this.airlineCorporatePasses = AirlineCorporatePass.getSampleData();
     this.checkSupplierCode();
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);

@@ -12,6 +12,7 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          queues.robot
 Resource          ../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${select_segment_type}    //select[@id='segmentType']

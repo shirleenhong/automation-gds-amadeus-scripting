@@ -32,8 +32,7 @@
     <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
       <div class="col-sm-4">Airline Corporate Pass:</div>
       <div class="col-sm-8">
-        <select id="airlineCorporatePassSelection" class="form-control"
-          [(ngModel)]="accountingRemark.airlineCorporatePassId" formControlName="airlineCorporatePassId"
+        <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePassId"
           name="airlineCorporatePassId" required>
           <option></option>
           <option *ngFor="let item of airlineCorporatePasses" [value]="item.id">

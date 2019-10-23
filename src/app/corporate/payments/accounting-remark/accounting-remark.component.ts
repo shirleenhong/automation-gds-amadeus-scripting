@@ -136,6 +136,8 @@ export class AccountingRemarkComponent implements OnInit {
             acc.status = 'UPDATED';
             this.utilHelper.modelCopy(acc, cur);
           } else {
+            console.log('new:');
+            console.log(acc);
             this.accountingRemarks.push(acc);
           }
           this.modalRef.content.isSubmitted = false;
@@ -154,6 +156,10 @@ export class AccountingRemarkComponent implements OnInit {
       this.isPassPurchaseTransaction();
       this.paymentService.setNonBspInformation(this.accountingRemarks);
       this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
+
+      // tmp
+      console.log('Accounting Remarks:');
+      console.log(this.accountingRemarks);
     });
   }
 

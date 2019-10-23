@@ -5,6 +5,24 @@
   </button>
 </div>
 <div class="modal-body">
+
+  <p>
+    airlineCorporatePassId: {{ airlineCorporatePassId }}
+  </p>
+  <p>
+    matrixAccountingForm
+  </p>
+  <p>
+    {{ matrixAccountingForm.controls.value | json }}
+  </p>
+  <p>
+    {{ airlineCorporatePasses | json }}
+  </p>
+  <p>
+    segmentsCount {{ matrixAccountingForm.get('segmentsCount').value | json }}
+  </p>
+
+
   <form [formGroup]="matrixAccountingForm">
     <div class="form-group  row">
       <div class="col-sm-4">TKT Line #:</div>
@@ -31,10 +49,11 @@
     <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
       <div class="col-sm-4">Airline Corporate Pass:</div>
       <div class="col-sm-8">
-        <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePass"
-          name="airlineCorporatePass" required>
+        <select id="airlineCorporatePassSelection" class="form-control"
+          [(ngModel)]="accountingRemark.airlineCorporatePassId" formControlName="airlineCorporatePassId"
+          name="airlineCorporatePassId" required>
           <option></option>
-          <option *ngFor="let item of airlineCorporatePasses" [value]="item">
+          <option *ngFor="let item of airlineCorporatePasses" [value]="item.id">
             {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
           </option>
         </select>
@@ -57,6 +76,17 @@
         <div class="col-sm-8">
           <app-segment-select formControlName="segmentNo" [(ngModel)]="accountingRemark.segmentNo" name="segmentNo"
             id="segmentNo" #segmentApp (change)="checkSupplierCode()"></app-segment-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segments Count -->
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Segments Count:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="segmentsCount" name="segmentsCount"
+            id="segmentsCount" min="0">
         </div>
       </div>
     </div>

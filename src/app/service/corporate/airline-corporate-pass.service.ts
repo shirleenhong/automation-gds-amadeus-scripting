@@ -48,6 +48,7 @@ export class AirlineCorporatePassService {
       );
 
       airlineCorporatePasses.push({
+        id: i,
         airlineCode: airlineCodeExtracted,
         name: passNameExtracted,
         fareType: fareTypeExtracted,
@@ -57,5 +58,50 @@ export class AirlineCorporatePassService {
     }
 
     return airlineCorporatePasses;
+  }
+
+  /**
+   * Return an array of AirlineCorporatePass with sample data.
+   */
+  public getSampleData(): Array<AirlineCorporatePass> {
+    return [
+      {
+        id: 1,
+        airlineCode: 'AC',
+        name: 'TRANSCONTL',
+        fareType: 'LAT',
+        number: 1234567890123,
+        segmentCost: 111.11,
+        bookingDate: '24SEP19',
+        creditCardNumber: null,
+        creditCardExpiration: '1221'
+      },
+      {
+        id: 2,
+        airlineCode: 'AC',
+        name: 'RAPIDAIR',
+        fareType: 'FLE',
+        number: 1234567890123,
+        segmentCost: 222.22,
+        bookingDate: '03NOV20',
+        creditCardNumber: null,
+        creditCardExpiration: '1221'
+      }
+    ];
+  }
+
+  /**
+   * Get an item by it's Id.
+   * @param id The Id of the item.
+   */
+  getById(id: number): AirlineCorporatePass {
+    debugger;
+    const items = this.getAll();
+    // const items = this.getSampleData();
+    const item = items.filter((x) => x.id === parseFloat(id.toString()))[0];
+    console.log(item);
+    debugger;
+
+    return this.getAll().filter((x) => x.id === id)[0];
   }
 }

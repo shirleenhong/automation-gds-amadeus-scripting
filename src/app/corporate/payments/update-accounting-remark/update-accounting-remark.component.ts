@@ -3,7 +3,7 @@ import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.mode
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, Validators, ValidationErrors, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
@@ -22,8 +22,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   accountingRemark: MatrixAccountingModel;
   accountingRemarkList: Array<SelectItem>;
 
-  airlineCorporatePass: AirlineCorporatePass;
   airlineCorporatePasses: Array<AirlineCorporatePass>;
+  airlineCorporatePassId: AirlineCorporatePass;
 
   vendorCodeList: Array<SelectItem>;
   supplierCodeList: Array<any>;
@@ -100,7 +100,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       // cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
       // expDate: new FormControl('', [Validators.required, validateExpDate()]),
 
-      airlineCorporatePass: new FormControl('', [Validators.required])
+      airlineCorporatePassId: new FormControl('', [Validators.required]),
+      segmentsCount: new FormControl(this.pnrService.getPassiveAirSegmentNumbers().length.toString(), [])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -270,20 +271,25 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('consultantNo').setValidators([Validators.minLength(3), Validators.maxLength(3)]);
   }
 
+  /**
+   * Configure form controls for Airlin Corporate Pass Redemption.
+   */
   configureACPRControls(): void {
-    // Airline Corporate Pass Redemption
+    console.log('ACPR selected...');
     this.name = 'Airline Record Locator';
     this.airlineCorporatePasses = this.airlineCorporatePassService.getAll();
+    // this.airlineCorporatePasses = AirlineCorporatePass.getSampleData();
     this.checkSupplierCode();
-    this.enableFormControls(['fareType'], this.needFaretype);
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
     this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
 
-    this.matrixAccountingForm.get('gst').setValue(0.0);
-    this.matrixAccountingForm.get('hst').setValue(0.0);
-    this.matrixAccountingForm.get('qst').setValue(0.0);
-    this.matrixAccountingForm.get('otherTax').setValue(0.0);
-    this.matrixAccountingForm.get('commisionWithoutTax').setValue(0.0);
+    this.matrixAccountingForm.get('gst').setValue('0.00');
+    this.matrixAccountingForm.get('hst').setValue('0.00');
+    this.matrixAccountingForm.get('qst').setValue('0.00');
+    this.matrixAccountingForm.get('otherTax').setValue('0.00');
+    this.matrixAccountingForm.get('commisionWithoutTax').setValue('0.00');
+    this.matrixAccountingForm.get('segmentsCount').setValue(this.pnrService.getPassiveAirSegmentNumbers().length);
+    // console.log(segmentCo)
 
     this.requireGDSFare();
   }
@@ -293,6 +299,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    */
   requireGDSFare(): void {
     const cfaLine = this.pnrService.getCFLine();
+    // console.log('================ cfaLine ================');
+    // console.log(cfaLine);
     if (cfaLine !== undefined) {
       if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
         this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
@@ -304,6 +312,21 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.isGdsFareRequired = false;
       }
     }
+  }
+
+  /**
+   * tmp
+   */
+  logFormValidationErrors() {
+    console.log('================ matrixAccountingForm ERRORS: ================');
+    Object.keys(this.matrixAccountingForm.controls).forEach((key) => {
+      const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach((keyError) => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+        });
+      }
+    });
   }
 
   setMandatoryTicket(supCode: string[], isRequired: boolean) {
@@ -359,6 +382,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       alert('Please Complete And Complete all the required Information');
       this.isSubmitted = false;
       return;
+    }
+
+    // Set the selected airlineCorporatePass into the accountingRemark.
+    if (this.accountingRemark.accountingTypeRemark === 'ACPR') {
+      this.accountingRemark.airlineCorporatePass = this.airlineCorporatePassService.getById(
+        this.matrixAccountingForm.get('airlineCorporatePassId').value
+      );
+      console.log('this.accountingRemark.airlineCorporatePass');
+      console.log(this.accountingRemark.airlineCorporatePass);
     }
 
     this.isSubmitted = true;
@@ -436,6 +468,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
+    this.matrixAccountingForm.valueChanges.subscribe((value) => {
+      console.log(value);
+      this.logFormValidationErrors();
+
+      // if (this.accountingRemark.accountingTypeRemark === 'ACPR') {
+      //   // this.accountingRemark.airlineCorporatePass = this.airlineCorporatePasses[0];
+      // }
+    });
+
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(() => {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       switch (this.accountingRemark.accountingTypeRemark) {
@@ -485,11 +526,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       }
     });
 
-    // Calculate the Base Amount depending on airlineCorporatePass.
-    this.matrixAccountingForm.get('airlineCorporatePass').valueChanges.subscribe(() => {
-      const baseAmount = this.pnrService.getPassiveAirSegmentNumbers().length * this.airlineCorporatePasses[0].segmentCost;
-      this.matrixAccountingForm.get('baseAmount').setValue(baseAmount);
+    // Calculate the Base Amount depending on airlineCorporatePass and number of Air Segments, etc...
+    this.matrixAccountingForm.get('airlineCorporatePassId').valueChanges.subscribe((value) => {
+      this.accountingRemark.airlineCorporatePass = this.airlineCorporatePassService.getById(value);
+      this.setBaseAmount();
     });
+    this.matrixAccountingForm.get('segmentsCount').valueChanges.subscribe((value) => {
+      console.log('segmentsCount: ' + value);
+      this.setBaseAmount();
+    });
+  }
+
+  setBaseAmount(): void {
+    console.log('Setting baseAmount: ' + this.matrixAccountingForm.get('baseAmount').value);
+    // const baseAmount = this.pnrService.getPassiveAirSegmentNumbers().length * this.airlineCorporatePasses[0].segmentCost;
+    const baseAmount = this.matrixAccountingForm.get('segmentsCount').value * this.airlineCorporatePasses[0].segmentCost;
+    this.matrixAccountingForm.get('baseAmount').setValue(baseAmount);
+    console.log('baseAmount: ' + this.matrixAccountingForm.get('baseAmount').value);
   }
 
   setTktNumber() {

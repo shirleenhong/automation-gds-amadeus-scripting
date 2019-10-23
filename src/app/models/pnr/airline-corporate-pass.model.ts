@@ -8,6 +8,11 @@ export class AirlineCorporatePass {
    */
 
   /**
+   * The identification number.
+   */
+  id: number;
+
+  /**
    * The airline code of the pass. Eg. AC for Air Canada.
    */
   airlineCode: string;
@@ -53,6 +58,7 @@ export class AirlineCorporatePass {
   static getSampleData(): Array<AirlineCorporatePass> {
     return [
       {
+        id: 1,
         airlineCode: 'AC',
         name: 'TRANSCONTL',
         fareType: 'LAT',
@@ -63,11 +69,12 @@ export class AirlineCorporatePass {
         creditCardExpiration: '1221'
       },
       {
+        id: 2,
         airlineCode: 'AC',
         name: 'RAPIDAIR',
         fareType: 'FLE',
         number: 1234567890123,
-        segmentCost: 111.11,
+        segmentCost: 222.22,
         bookingDate: '03NOV20',
         creditCardNumber: null,
         creditCardExpiration: '1221'

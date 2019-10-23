@@ -308,7 +308,7 @@ export class SegmentService {
         optionalHotelRemarks.forEach(c => {
             if (c.include) {
                 if (isCorp) {
-                    this.assignCorpPlaceholders([c.pName], [c.description + c.include], null, null, pnrSegment.tatooNo, null);
+                    this.assignCorpPlaceholders([c.pName], [c.include], null, null, pnrSegment.tatooNo, null);
                 } else {
                     rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
                 }

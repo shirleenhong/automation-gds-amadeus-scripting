@@ -24,6 +24,17 @@ Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass 
     Verify PE Remark Are Written For Air Canada Pass Purchase PNR
     Verify UDID Remark Are Written For Air Canada Pass Purchase PNR
     
+Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass Purchase Premium
+    [Tags]    us10869    us14121
+    Login To Amadeus Sell Connect Acceptance
+    Move Single Passenger For EN
+    Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
+    Finish PNR
+    Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
+    Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR For Premium
+    Verify Ticketing Remarks Are Written For Air Canada Pass Purchase PNR
+    Verify PE Remark Are Written For Air Canada Pass Purchase PNR
+    Verify UDID Remark Are Written For Air Canada Pass Purchase PNR
     
 Verify That Non BSP Processing Remark Is Written For Westjet Individual Pass Purchase PNR
     [Tags]    us10869    us14121

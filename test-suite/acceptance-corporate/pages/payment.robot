@@ -285,6 +285,19 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
     Take Screenshot
+    
+Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    879111
+    Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
+    Enter Value    ${input_tktnumber}    0002167899
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       PREMIUM ECONOMY
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Click Save Button
+    Take Screenshot
 
 Click Matrix Accounting Remark Tab
     Wait Until Element Is Visible   ${tab_nonBsp_processing}    60
@@ -456,16 +469,19 @@ Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    AC 123 Q ${current_date}
     Verify Specific Remark Is Written In The PNR    YVRYVR GK1 0700 0800 ${current_date} 879111   True
+    
 
 Verify Passive Segment Are Written For Westjet Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    WS 123 Q ${current_date} 
-    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date} 123456   True
+    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date}   True
+    Verify Specific Remark Is Written In The PNR    123456    
     
 Verify Passive Segment Are Written For Porter Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    PD 123 Q ${current_date} 
-    Verify Specific Remark Is Written In The PNR    YCCYCC GK1 0700 0800 ${current_date} 123ABC    True
+    Verify Specific Remark Is Written In The PNR    YCCYCC GK1 0700 0800 ${current_date}    True
+    Verify Specific Remark Is Written In The PNR    123ABC    
     
 Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
     Assign Current Date
@@ -478,7 +494,16 @@ Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
     Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
     Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    
-    Verify Specific Remark Is Written In The PNR    COMMUTER-U.S COMMUTER-FLEX FARE/S2
+    Take Screenshot
+    
+Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR For Premium
+    Verify Specific Remark Is Written In The PNR    RIR U.S COMMUTER PASS-PREMIUM ECONOMY/S2    
+    Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    
+    Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
+    Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
+    Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    
+    Verify Specific Remark Is Written In The PNR    RIR AIR CANADA INDIVIDUAL PASS REDEMPTION-PREMIUM ECONOMY FARE/S2    True
+    Verify Specific Remark Is Written In The PNR    RIR YOUR AC CONFIRMATION NUMBER IS 879111/S2    
     Take Screenshot
     
 Verify Updated Itinerary Remarks Are Written For Air Canada Pass Purchase PNR

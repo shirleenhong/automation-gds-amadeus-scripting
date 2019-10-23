@@ -11,6 +11,7 @@ Resource          ticketing.robot
 Resource          reporting.robot
 Resource          remarks.robot
 Resource          queues.robot
+Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${select_segment_type}    //select[@id='segmentType']
@@ -46,6 +47,15 @@ ${input_address}    css=#address
 ${input_country}    css=#country
 ${input_zipCode}    css=#zipCode
 ${select_provice}    css=#province
+#-----Rail Variables-----
+${input_train_number}    css=#trainNumber
+${input_from_station}    css=#fromStation
+${input_arrival_station}    css=#arrivalStation
+${input_car_number}    css=#carNumber
+${input_seat_number}    css=#seatNumber
+${input_vendor_name}    css=#vendorName
+${input_vendor_code}    css=#vendorCode
+${input_confirmation_number}    css=#confirmationNo
 
 *** Keywords ***
 Add And Verify Air Segment for Non ZZ Details In The PNR
@@ -207,3 +217,5 @@ Verify Hotel Passive RIR Remarks Are Written
 Verify Hotel Mandatory Matrix Remark Is Written In The PNR   
     Run Keyword If    "${is_manual_entered}" == "no"    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-HI    ELSE    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-AC
     
+    
+#-----Keyword For Rail-----

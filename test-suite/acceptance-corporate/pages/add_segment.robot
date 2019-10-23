@@ -11,7 +11,7 @@ Resource          ticketing.robot
 Resource          reporting.robot
 Resource          remarks.robot
 Resource          queues.robot
-Test Teardown    Close All Browsers
+Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${select_segment_type}    //select[@id='segmentType']
@@ -30,6 +30,15 @@ ${input_arrival_time}    css=#arrivalTime
 ${input_airline_recloc}    css=#airlineRecloc
 ${button_save_passive}    xpath=//button[contains(text(), 'Save')]
 ${button_add_segment_toPNR}    xpath=//button[contains(text(),'Add Segments To PNR')]
+#-----Rail Variables-----
+${input_train_number}    css=#trainNumber
+${input_from_station}    css=#fromStation
+${input_arrival_station}    css=#arrivalStation
+${input_car_number}    css=#carNumber
+${input_seat_number}    css=#seatNumber
+${input_vendor_name}    css=#vendorName
+${input_vendor_code}    css=#vendorCode
+${input_confirmation_number}    css=#confirmationNo
 
 *** Keywords ***
 Add And Verify Air Segment for Non ZZ Details In The PNR
@@ -96,3 +105,4 @@ Click Add Segment to PNR
     Wait Until Element Is Visible    ${button_add_segment_toPNR}    60
     Click Element    ${button_add_segment_toPNR}
     
+#-----Keyword For Rail-----

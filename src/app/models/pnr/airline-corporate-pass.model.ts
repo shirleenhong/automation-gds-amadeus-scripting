@@ -51,34 +51,4 @@ export class AirlineCorporatePass {
    * The expiration of the Credit Card. Eg. '1221'.
    */
   creditCardExpiration: string;
-
-  /**
-   * Return an array of AirlineCorporatePass with sample data.
-   */
-  static getSampleData(): Array<AirlineCorporatePass> {
-    return [
-      {
-        id: 1,
-        airlineCode: 'AC',
-        name: 'TRANSCONTL',
-        fareType: 'LAT',
-        number: 1234567890123,
-        segmentCost: 111.11,
-        bookingDate: '24SEP19',
-        creditCardNumber: null,
-        creditCardExpiration: '1221'
-      },
-      {
-        id: 2,
-        airlineCode: 'AC',
-        name: 'RAPIDAIR',
-        fareType: 'FLE',
-        number: 1234567890123,
-        segmentCost: 222.22,
-        bookingDate: '03NOV20',
-        creditCardNumber: null,
-        creditCardExpiration: '1221'
-      }
-    ];
-  }
 }

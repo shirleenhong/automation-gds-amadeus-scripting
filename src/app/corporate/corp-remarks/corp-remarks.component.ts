@@ -56,6 +56,11 @@ export class CorpRemarksComponent implements OnInit {
       return false;
     }
 
+    this.utilHelper.validateAllFields(this.addContactComponent.addContactForm);
+    if (!this.addContactComponent.addContactForm.valid) {
+      return false;
+    }
+
     // this.utilHelper.validateAllFields(this.seatsComponent);
     // if (!this.seatsComponent.valid) {
     //   return false;
@@ -70,6 +75,6 @@ export class CorpRemarksComponent implements OnInit {
     for (const seg of this.getPassiveSegments) {
       count = seg.isPassive === true ? count + 1 : count;
     }
-    return count > 0 ? true : false;
+    return count > 0 ? true : false ; 
   }
 }

@@ -1,24 +1,33 @@
-<form [formGroup]="addContactForm">
+
+<div class="row" *ngIf="!showComponent">
+    <div class="col">
+      <button class="leisureBtnSubmit addContactButton" (click)="addEmergencyContact()">
+       Add Emergency Contact
+      </button>
+     </div>
+  </div>
+
+<form [formGroup]="addContactForm" class="form-group" *ngIf="showComponent">
     <div class="documentContainer">
       <table>
           <tr>
-              <td style="width:16%;text-align: center">
+              <td class="column-header" style="padding-left: 9px;" >
                 Name
               </td>
 
-              <td style="width:16%;text-align: center">
+              <td class="column-header" style="padding-left: 11px;">
                 Country Code
               </td>
 
-              <td style="width:16%;text-align: center">
+              <td class="column-header">
                 Phone
               </td>
 
-              <td style="width:16%;text-align: center">
+              <td class="column-header">
                 Free Flow Text
               </td>
 
-              <td style="width:16%;text-align: center">
+              <td class="column-header" style="text-align: left;">
                 Passenger/s
               </td>
             </tr>
@@ -29,22 +38,22 @@
            
             <tr >
               <td style="width: 16%" >
-                <input style="width:100%" formControlName="name" type="text" class="form-control" maxlength="55"
+                <input style="width:100%" formControlName="name" type="text" class="form-control" maxlength="55" required
                    />
               </td>
              
               <td style="width: 16%">
-                <input style="width:100%" formControlName="countryCode" type="text" class="form-control" maxlength="55"
+                <input style="width:100%" formControlName="countryCode" type="text" class="form-control" maxlength="55" required
                    />
               </td>
               
               <td style="width: 16%">
-                <input style="width:100%" formControlName="phone" type="text" class="form-control" maxlength="55"
+                <input style="width:100%" formControlName="phone" type="text" class="form-control" maxlength="55" required
                    />
               </td>
              
               <td style="width: 16%">
-                <input style="width:100%" formControlName="freeFlowText" type="text" class="form-control" maxlength="55"
+                <input style="width:100%" formControlName="freeFlowText" type="text" class="form-control" maxlength="55" 
                    />
               </td>
               <td style="width: 12%">
@@ -62,7 +71,7 @@
               </td>
   
               <td  style="width: 10%" class="docTable">
-                <div (click)="removeInputField(i)" *ngIf="i > 0">
+                <div (click)="removeInputField(i)">
                   <i class="fas fa-minus-circle" id="remove"></i>
                   Remove
                 </div>

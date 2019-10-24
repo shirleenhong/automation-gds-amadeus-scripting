@@ -69,11 +69,9 @@ export class InvoiceRemarkService {
     }
     
   }
-
-   sendEmergencyContactEntry(addConact: AddContactComponent) {
-    const srCommands = this.getSSRCommandsForContact(addConact);
-     this.sendSSRCommands(srCommands,0);
-  
+  async deleteSSRLines(addConact: AddContactComponent) {
+    const deleteLines = addConact.deleteSRline.join(',');
+    await smartScriptSession.send("XE" + deleteLines);
   }
   getSSRCommandsForContact(addConact:AddContactComponent) {
     const formCommandArr = [];
@@ -84,22 +82,14 @@ export class InvoiceRemarkService {
       const countryCode = c.get('countryCode').value;
       const phone = c.get('phone').value;
       const freeFlow = c.get('freeFlowText').value;
+      const pax = c.get('passengers').value;
       if (name && countryCode && phone && freeFlow) {
-        formCommand =  "SR PCTC LH HK/ " + name + " /" + countryCode + phone + ". " + freeFlow;
+        formCommand =  "SR PCTC YY HK/ " + name + " /" + countryCode + phone + ". " + freeFlow+"/"+pax;
         formCommandArr.push(formCommand);
      }
     }
     return formCommandArr;
   }
 
-  async sendSSRCommands(cmds, index) {
-    const self = this;
-    if (index == cmds.length) {
-    }
-    else {
-      await smartScriptSession.send(cmds[index]).then(async function (x) {
-        await self.sendSSRCommands(cmds,index+1)
-      })
-    }
-  }
+  
 }

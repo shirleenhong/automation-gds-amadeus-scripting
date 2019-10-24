@@ -298,12 +298,13 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
+
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent)
      }
     
-    await this.rms.SendPbn(
+    await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
         this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
       )

@@ -170,8 +170,10 @@ export class RemarksManagerService {
     );
   }
 
-  async SendPbn(command: string) {
-    await smartScriptSession.send(command);
+  async SendCommand(command: string) {
+    if (command) {
+      await smartScriptSession.send(command);
+    }
   }
 
   private async sendPnrToAmadeus(pnrResponse: any, additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>) {

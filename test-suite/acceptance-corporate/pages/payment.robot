@@ -20,7 +20,7 @@ ${fop_visacard}    xpath=//option[contains(text(),'Visa')]
 ${fop_mastercard}    xpath=//option[contains(text(),'Mastercard')]
 ${fop_amexcard}    xpath=//option[contains(text(),'American Express')]
 ${fop_dinerscard}    xpath=//option[contains(text(),'Diners')]
-${input_confirmationNo}    css=#supplierConfirmatioNo
+${input_supplier_confirmationNo}    css=#supplierConfirmatioNo
 ${input_ccNo}    css=#ccNo
 ${input_expirydate}    css=#expDate
 ${input_baseamount}    css=#baseAmount
@@ -48,7 +48,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    0000054321
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
     Select From List By Label    ${list_faretype}       FLEX
     Set Test Variable    ${tkt_number}    ${EMPTY}
@@ -60,7 +60,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    0000054321
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
     Select From List By Label    ${list_faretype}       FLEX
     Enter 1000 In Lowest GDS Fare Field
@@ -75,7 +75,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    0000054321
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Select From List By Label    ${list_faretype}       FLEX
     Enter Value    ${input_tktnumber}    1234567890
@@ -89,7 +89,7 @@ Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2    3
-    Enter Value    ${input_confirmationNo}    0000054321
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_origTicketLine}    0987654321
@@ -101,7 +101,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
     Select Itinerary Segments    2
-    Enter Value    ${input_confirmationNo}    0000054321
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
     Add Penalty Amount Details    10.00    1.00    1.00    1.00
     Select From List By Label    ${list_faretype}       FLEX
@@ -118,7 +118,7 @@ Add Non-BSP Ticketing Details For Segment ${segment_no}
     Wait Until Element Is Visible    ${list_accounting_type}    30
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
     Select Itinerary Segments   ${segment_no} 
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_supplier_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
@@ -127,7 +127,7 @@ Add Non-BSP Ticketing Details For Multiple Segments
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
     Select Itinerary Segments    2    3
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_supplier_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission     750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
@@ -136,7 +136,7 @@ Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
     Select Itinerary Segments   ${segment_no} 
-    Enter Value    ${input_confirmationNo}    54321
+    Enter Value    ${input_supplier_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Take Screenshot
 
@@ -153,7 +153,7 @@ Add APAY Ticketing Details For Multiple Segments
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2    3
-    # Enter Value    ${input_confirmationNo}    54321
+    # Enter Value    ${input_supplier_confirmationNo}    54321
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
@@ -276,12 +276,25 @@ Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Wr
 Add Matrix Accounting Remark For Air Canada Pass Purchase 
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    879111
+    Enter Value    ${input_supplier_confirmationNo}    879111
     Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
     Enter Value    ${input_departurecity}    YVR        
     Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Click Save Button
+    Take Screenshot
+    
+Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value    ${input_confirmationNo}    879111
+    Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
+    Enter Value    ${input_tktnumber}    0002167899
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       PREMIUM ECONOMY
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
     Take Screenshot
@@ -309,7 +322,7 @@ Select Accounting Remark Type
 Enter Supplier Confirmation Number ${supplier_confirmation_number}
     Set Suite Variable    ${supplier_confirmation_number}
     Click Element    ${input_confirmationNo}
-    Input Text    ${input_confirmationNo}    ${supplier_confirmation_number}
+    Input Text    ${input_supplier_confirmationNo}    ${supplier_confirmation_number}
     
 Select Visa As FOP
     Wait Until Page Contains Element    ${field_vendorcode}    30
@@ -456,16 +469,19 @@ Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    AC 123 Q ${current_date}
     Verify Specific Remark Is Written In The PNR    YVRYVR GK1 0700 0800 ${current_date} 879111   True
+    
 
 Verify Passive Segment Are Written For Westjet Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    WS 123 Q ${current_date} 
-    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date} 123456   True
+    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date}   True
+    Verify Specific Remark Is Written In The PNR    123456    
     
 Verify Passive Segment Are Written For Porter Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    PD 123 Q ${current_date} 
-    Verify Specific Remark Is Written In The PNR    YCCYCC GK1 0700 0800 ${current_date} 123ABC    True
+    Verify Specific Remark Is Written In The PNR    YCCYCC GK1 0700 0800 ${current_date}    True
+    Verify Specific Remark Is Written In The PNR    123ABC    
     
 Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
     Assign Current Date
@@ -478,6 +494,16 @@ Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
     Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
     Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    
+    Take Screenshot
+    
+Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR For Premium
+    Verify Specific Remark Is Written In The PNR    RIR U.S COMMUTER PASS-PREMIUM ECONOMY/S2    
+    Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    
+    Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
+    Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
+    Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    
+    Verify Specific Remark Is Written In The PNR    RIR AIR CANADA INDIVIDUAL PASS REDEMPTION-PREMIUM ECONOMY FARE/S2    True
+    Verify Specific Remark Is Written In The PNR    RIR YOUR AC CONFIRMATION NUMBER IS 879111/S2    
     Take Screenshot
     
 Verify Updated Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
@@ -505,6 +531,8 @@ Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    APPROUVES PAR CE DERNIER    
     Verify Specific Remark Is Written In The PNR    LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES    
     Verify Specific Remark Is Written In The PNR    CLIENTS ONT ETE APPROUVES PAR LE CLIENT    
+    Verify Specific Remark Is Written In The PNR    RIR WESTJET INDIVIDUAL PASS REDEMPTION/S2  
+    Verify Specific Remark Is Written In The PNR    RIR VOTRE NUMERO DE CONFIRMATION WS EST 123456/S2
     Take Screenshot
     
 Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
@@ -524,6 +552,7 @@ Verify Itinerary Remarks Are Written For Porter Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT
     Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD 
     Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT
+    Verify Specific Remark Is Written In The PNR    RIR PORTER INDIVIDUAL PASS REDEMPTION/S2   
     Take Screenshot
     
 Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR
@@ -553,7 +582,7 @@ Verify Updated UDID Remark Are Written For Air Canada Pass Purchase PNR
 Add Matrix Accounting Remark For WestJet Pass Purchase
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    123456
+    Enter Value    ${input_supplier_confirmationNo}    123456
     Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0987612345
     Enter Value    ${input_departurecity}    YYZ        
@@ -565,7 +594,7 @@ Add Matrix Accounting Remark For WestJet Pass Purchase
 Add Matrix Accounting Remark For Porter Pass Purchase
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    123ABC
+    Enter Value    ${input_supplier_confirmationNo}    123ABC
     Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_departurecity}    YCC        
@@ -580,7 +609,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Click Payment Panel
     Click Update Button
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
-    Enter Value    ${input_confirmationNo}    879222
+    Enter Value    ${input_supplier_confirmationNo}    879222
     Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
     Enter Value    ${input_tktnumber}    0987654321
     Enter Value    ${input_departurecity}    YCC        
@@ -595,3 +624,55 @@ Navigate To Add Accounting Line
     Click Element    ${button_addaccountingline} 
     Set Test Variable    ${current_page}    Add Accounting Line
     Set Test Variable    ${ticketing_details_complete}    no
+
+Verify Airline Corporate Pass Remarks Are Written In The PNR
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR
+    
+Select Airline Corporate Pass Redemption
+    Navigate To Page Add Accounting Line
+    Wait Until Element Is Visible    ${list_accounting_type}    30
+    Select From List By Label    ${list_accounting_type}    Airline Corporate Pass Redemption
+
+Add Airline Corporate Pass Redemption And Verify Default Amount Values
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   2   3   4
+    Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Enter Value    ${input_tktnumber}    1234561234
+    
+Add Airline Corporate Pass Redemption And Verify Default Amount Values For ZZB
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   2   3
+	Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Enter Value    ${input_tktnumber}    1234561234
+    
+Add Airline Corporate Pass Redemption And Verify Default Amount Values For 92Z
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   2
+	Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Enter Value    ${input_tktnumber}    1234561234
+    
+Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVQ
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   2
+	Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Enter Value    ${input_tktnumber}    1234561234
+    Click Save Button
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   2
+    Enter Value    ${input_supplier_confirmationNo}    1212321234
+    Enter Value    ${input_tktnumber}    9812356781
+    Click Save Button
+    
+Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVF
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   2   3
+	Enter Value   lowest GDS fare field  2134
+    Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Click Save Button
+    Select Airline Corporate Pass Redemption
+    Select Itinerary Segments   4   5
+	Enter Value   lowest GDS fare field  2311
+    Enter Value    ${input_supplier_confirmationNo}    1212321234
+    Click Save Button
+    

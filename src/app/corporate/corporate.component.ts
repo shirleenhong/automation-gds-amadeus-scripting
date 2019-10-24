@@ -170,7 +170,6 @@ export class CorporateComponent implements OnInit {
         this.workflow = 'segment';
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
-
       } catch (e) {
         console.log(e);
       }
@@ -285,7 +284,6 @@ export class CorporateComponent implements OnInit {
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     if (this.queueComponent.queueMinderComponent) {
@@ -329,10 +327,16 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
   }
-
   async sendItineraryAndQueue() {
+    this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'sendQueue';
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendQueue';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async SendItineraryAndQueue() {
@@ -346,11 +350,13 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
     await this.rms.submitToPnr().then(
@@ -392,8 +398,8 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    remarkCollection.forEach(rem => {
-      rem.remarks.forEach(remModel => {
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
       });
     });

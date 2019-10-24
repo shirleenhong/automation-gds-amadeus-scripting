@@ -23,6 +23,20 @@ ${row_queuePlacement}    //tbody[@formarrayname='queues']
 ${input_oid}    //input[@id='oid']
 ${input_queueNo_placement}    //input[@id='queueNumber']
 ${input_queueCat_placement}    //input[@id='category']
+${list_email_address}    //input[@id='emailAddress']
+${list_language}     //select[@id='language']
+${list_transaction_type}    //div[@class='itineraryContainer']//select[@id='typeTransaction']
+${input_service}    //input[@id='service']
+${input_ticket}    //input[@id='ticket']
+${input_offer}    //input[@id='offer']
+${button_add}    //i[@id='add']
+${button_remove}    //i[@id='remove']
+${div_email_addresses}    //div[@ng-reflect-name='emailAddresses']
+${div_services}    //div[@ng-reflect-name='services']
+${div_tickets}    //div[@ng-reflect-name='tickets']
+${div_offers}     //div[@ng-reflect-name='offers']
+${tab_cwt_itinerary}    //a[@id='tab2-link']
+${option_email}    //option[@ng-reflect-value='
 
 *** Keywords ***
 Click OFC Documentation And Queue Tab
@@ -95,7 +109,6 @@ Populate Personal Queue and Select ${team_queue} Team Queue
 	Select ${team_queue} on Team Queue List
 	[Teardown]    Take Screenshot
 	
-
 Populate Personal Queue And Select ${transaction_type} Transaction Type
 	Navigate To Page Follow-Up Queue
 	Enter Personal Queue And Category    1    1
@@ -135,6 +148,7 @@ Verify PNR Is Queued To Correct ${queue_type} Queue
     Run Keyword If  "${queue_type}" == "Itinerary And Personal"  Verify Correct Personal Queue 
     [Teardown]    Take Screenshot
     
+
 Verify PNR Is Queued To Correct ${queue_type} Queue For Standalone
     Click Submit To PNR   queueing=yes
     Enter Cryptic Command    RTQ 
@@ -222,3 +236,115 @@ Verify PNR Is Queued To Correct Multiple Queue Placement
     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000
     Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}010${SPACE}${SPACE}${SPACE}${SPACE}000
     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}001
+    
+Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type  
+    Navigate To Page CWT Itinerary
+    Select Emails In CWT Itinerary    ${email}
+    Select From List By Label    ${list_language}    ${language}
+    Select From List By Label    ${list_transaction_type}    ${transaction}
+    Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
+    Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
+    Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    [Teardown]    Take Screenshot
+    
+Add CWT Itinerary Details For All Emails, In ${language} Language And For ${transcation} Transaction Type
+    Navigate To Page CWT Itinerary
+    Select Emails In CWT Itinerary    TEST@EMAIL.COM    TEST_ARR@EMAIL.COM    TEST_CTC@EMAIL.COM
+    Select From List By Label    ${list_language}    ${language}
+    Select From List By Label    ${list_transaction_type}    ${transcation}
+    [Teardown]    Take Screenshot
+    
+Update Services And Test Remarks
+    Update Existing Services Remarks    1     UPDATED SERVICES REMARK
+    Delete Existing Services Remarks    2
+    Update Existing Ticket Remarks    2    UPDATED TICKETS REMARK 
+    Delete Existing Ticket Remarks    1
+    [Teardown]    Take Screenshot
+    
+Select Emails In CWT Itinerary    
+    [Arguments]    @{email}
+    ${index}    Set Variable    1
+    ${length}    Get Length    ${email}
+    : FOR     ${email}    IN    @{email}
+    \    Enter Value    ${div_email_addresses}${open_bracket}${index}${close_bracket}${list_email_address}    ${email.upper()}
+    \    Run Keyword If    ${index} < ${length}     Click Element    ${div_email_addresses}${open_bracket}${index}${close_bracket}${button_add}
+    \    ${index}    Evaluate    ${index} + 1 
+    
+Add Services Remark
+    [Arguments]    @{service_remark}
+    ${index}    Set Variable    1
+    ${length}    Get Length    ${service_remark}
+    : FOR    ${service_remark}    IN    @{service_remark}
+    \    Enter Value    ${div_services}${open_bracket}${index}${close_bracket}${input_service}    ${service_remark}
+    \    Run Keyword If    ${index} < ${length}     Click Element    ${div_services}${open_bracket}${index}${close_bracket}${button_add}
+    \    ${index}    Evaluate    ${index} + 1
+
+Update Existing Services Remarks
+    [Arguments]    ${index}    ${update_remark}
+    Delete Input Text    ${div_services}${open_bracket}${index}${close_bracket}${input_service}
+    Enter Value    ${div_services}${open_bracket}${index}${close_bracket}${input_service}     ${update_remark}
+
+Delete Existing Services Remarks
+    [Arguments]   ${index}
+    Click Element     ${div_services}${open_bracket}${index}${close_bracket}${button_remove}  
+        
+Add Tickets Remark
+    [Arguments]    @{ticket_remark}
+    ${index}    Set Variable    1
+    ${length}    Get Length    ${ticket_remark}
+    : FOR    ${ticket_remark}    IN    @{ticket_remark}
+    \    Enter Value    ${div_tickets}${open_bracket}${index}${close_bracket}${input_ticket}    ${ticket_remark}
+    \    Run Keyword If    ${index} < ${length}     Click Element    ${div_tickets}${open_bracket}${index}${close_bracket}${button_add}
+    \    ${index}    Evaluate    ${index} + 1
+    
+Update Existing Ticket Remarks
+    [Arguments]    ${index}    ${update_remark}
+    Delete Input Text    ${div_tickets}${open_bracket}${index}${close_bracket}${input_ticket}
+    Enter Value    ${div_tickets}${open_bracket}${index}${close_bracket}${input_ticket}     ${update_remark}
+
+Delete Input Text
+    [Arguments]    ${input_element}
+    Double Click Element    ${input_element}
+    Press Keys    ${input_element}    HOME
+    Press Keys    ${input_element}    SHIFT+END
+    Press Keys    ${input_element}    \ue017    
+    
+Delete Existing Ticket Remarks
+    [Arguments]    ${index}
+    Click Element    ${div_tickets}${open_bracket}${index}${close_bracket}${button_remove}
+    
+Click CWT Itinerary Tab
+    Wait Until Element Is Visible     ${tab_cwt_itinerary}    30
+    Click Element At Coordinates    ${tab_cwt_itinerary}    0    0
+    Wait Until Element Is Visible    ${list_email_address}    30    
+    Set Test Variable    ${current_page}     CWT Itinerary        
+
+Add Offers Remark
+    [Arguments]    @{offer_remark}
+    ${index}    Set Variable    1
+    ${length}    Get Length    ${offer_remark}
+    : FOR    ${offer_remark}    IN    @{offer_remark}
+    \    Enter Value    ${div_offers}${open_bracket}${index}${close_bracket}${input_offer}    ${offer_remark}
+    \    Run Keyword If    ${index} < ${length}     Click Element    ${div_offers}${open_bracket}${index}${close_bracket}${button_add}
+    \    ${index}    Evaluate    ${index} + 1
+    
+Update Existing Offer Remarks
+    [Arguments]    ${existing_remark}    ${update_remark}
+    ${num_of_element}    Get Element Count    ${input_offer}
+    : FOR     ${index}    IN RANGE    1    ${num_of_element}
+    \    ${matches}    Run Keyword And Return Status    Element Should Contain     ${div_offers}${open_bracket}${index}${close_bracket}${input_offer}    ${existing_remark}
+    \    Run Keyword If    "${matches}" == "True"    Clear Element Text    ${div_offers}${open_bracket}${index}${close_bracket}${input_offer}
+    \    Run Keyword If    "${matches}" == "True"    Enter Value    ${div_offers}${open_bracket}${index}${close_bracket}${input_offer}     ${update_remark}
+
+Delete Existing Offer Remarks
+    [Arguments]    @{offer_remark}
+    : FOR    ${offer_remark}    IN    @{offer_remark}
+    \    Delete Service Remark    ${offer_remark}
+    [Teardown]     Take Screenshot
+
+Delete Offer Remark
+    [Arguments]    ${offer_remark}  
+    ${num_of_element}    Get Element Count    ${input_offer}
+    : FOR     ${index}    IN RANGE    1    ${num_of_element}
+    \    ${matches}    Run Keyword And Return Status    Element Should Contain     ${div_offers}${open_bracket}${index}${close_bracket}${input_offer}    ${offer_remark}
+    \    Run Keyword If    "${matches}" == "True"    Click Element    ${div_offers}${open_bracket}${index}${close_bracket}${button_remove}

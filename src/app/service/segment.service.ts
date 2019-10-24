@@ -31,7 +31,7 @@ export class SegmentService {
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
-        private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService) { }
+                private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -131,7 +131,7 @@ export class SegmentService {
     }
 
     deleteSegments(segmentRemarks: PassiveSegmentsModel[]) {
-        const segments = this.pnrService.getSegmentTatooNumber();
+        const segments = this.pnrService.getSegmentList();
         const remGroup = new RemarkGroup();
         remGroup.group = 'Remove Segments';
         segments.forEach(segment => {
@@ -159,14 +159,15 @@ export class SegmentService {
         let itinLanguage = this.pnrService.getItineraryLanguage();
         itinLanguage = itinLanguage.substr(0, 2);
 
-        const segments = this.pnrService.getSegmentTatooNumber();
+        const segments = this.pnrService.getSegmentList();
         segmentRemarks.forEach(segmentrem => {
             if (!segmentrem.isNew) {
                 return;
             }
             segments.forEach(pnrSegment => {
                 const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity) {
+                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity ||
+                     pnrSegment.passengerNo !== segmentrem.passengerNo) {
                     return;
                 }
                 if (pnrSegment.segmentType === 'MIS') {
@@ -236,7 +237,7 @@ export class SegmentService {
     }
 
     private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
-        cValue: string, segmentAssoc: string, pText: string) {
+                                   cValue: string, segmentAssoc: string, pText: string) {
         this.corpRemarks.push(
             {
                 placeholder: pName, placeholdervalue: pValue,
@@ -308,7 +309,7 @@ export class SegmentService {
         optionalHotelRemarks.forEach(c => {
             if (c.include) {
                 if (isCorp) {
-                    this.assignCorpPlaceholders([c.pName], [c.description + c.include], null, null, pnrSegment.tatooNo, null);
+                    this.assignCorpPlaceholders([c.pName], [c.include], null, null, pnrSegment.tatooNo, null);
                 } else {
                     rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
                 }
@@ -402,7 +403,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string, isCorp: boolean) {
+                     amk: number, vib: number, itinLanguage: string, isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             if (isCorp) {
@@ -571,7 +572,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -884,7 +885,7 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        if (this.pnrService.getSegmentTatooNumber().length === segmentselected.length) {
+        if (this.pnrService.getSegmentList().length === segmentselected.length) {
             remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
 
@@ -1043,7 +1044,7 @@ export class SegmentService {
                 }
             }
 
-            const segments = this.pnrService.getSegmentTatooNumber();
+            const segments = this.pnrService.getSegmentList();
             for (const fg of model.remarkList) {
                 const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
                 const s = model.segmentNo.split(',');

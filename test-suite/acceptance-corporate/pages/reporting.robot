@@ -358,8 +358,8 @@ Verify Country Of Destination Is Mapped In The FS Remark
 Select Default Value For Routing Code
     Run Keyword If    "${destination_selected}" == "no"   Navigate To Page Reporting Remarks
     Select From List By Label    ${list_routing_code}     Canada and St. Pierre et Miquelon
+    Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
     Set Test Variable    ${routing_code_selected}    yes
-    Select Default Value For Destination Code
     [Teardown]    Take Screenshot
     
 Select Default Value For Destination Code

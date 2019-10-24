@@ -6,7 +6,7 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+// import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -73,7 +73,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
       otherTax: new FormControl('', []),
-      tktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
+      tktLine: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
       descriptionapay: new FormControl('', []),
       commisionPercentage: new FormControl('', []),
       passRelate: new FormControl('', []),
@@ -87,10 +87,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       originalTktLine: new FormControl('', [Validators.maxLength(10), Validators.pattern('[0-9]{10}')]),
       duplicateFare: new FormControl(''),
       typeOfPass: new FormControl(''),
-      otherDescription: new FormControl('', []),
-      vendorCode: new FormControl('', [Validators.required]),
-      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
-      expDate: new FormControl('', [Validators.required, validateExpDate()])
+      otherDescription: new FormControl('', [])
     });
 
     this.name = 'Supplier Confirmation Number:';
@@ -98,7 +95,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.onChanges();
     this.showFareType();
     this.loadDescription();
-    this.loadVendorCode();
   }
 
   showFareType() {
@@ -166,7 +162,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     // initial state
     this.ticketNumber = 'Ticket Number: ';
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.maxLength(20)]);
-    this.setRequired(['tktLine', 'departureCity', 'originalTktLine'], false);
+    this.setRequired(['departureCity', 'originalTktLine'], false);
+    this.setRequired(['tktLine'], true);
     this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
     this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
     this.matrixAccountingForm.get('otherDescription').clearValidators();
@@ -203,23 +200,18 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.configureNonBSPExchangeControls();
         this.checkSupplierCode();
         this.enableFormControls(['fareType'], !this.needFaretype);
-
         break;
       case 'APAY':
-        this.enableFormControls(
-          ['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription', 'vendorCode', 'cardNumber', 'expDate'],
-          false
-        );
+        this.enableFormControls(['descriptionapay', 'supplierCodeName', 'otherTax', 'segmentNo', 'otherDescription'], false);
         this.enableFormControls(['departureCity', 'passPurchase', 'fareType', 'supplierConfirmatioNo'], true);
+        this.ticketNumber = 'Ticket Number / Confirmation Number:';
+        this.matrixAccountingForm.get('tktLine').setValidators([Validators.required, Validators.maxLength(10)]);
+        this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
         this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
-        this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
-        this.ticketNumber = 'Ticket Number/Confirmation Number: ';
         break;
       case 'NONBSP':
         this.name = 'Airline Record Locator:';
         this.checkSupplierCode();
-        // this.accountingRemark.commisionWithoutTax = '0.00';
-        // this.setMandatoryTicket(['ACY', 'SOA', 'WJ3'], false);
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
@@ -229,14 +221,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         }
         this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
-
         break;
       default:
         this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'commisionPercentage'], true);
         this.accountingRemark.bsp = '1';
         this.name = 'Supplier Confirmation Number:';
-        this.setMandatoryTicket([], false);
+        this.setRequired(['tktLine'], true);
         this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
         break;
@@ -277,12 +268,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       console.log('supCode: ' + this.accountingRemark.supplierCodeName);
     }
-    this.matrixAccountingForm.get('tktLine').updateValueAndValidity();
   }
 
   getAirlineCode(segmentno) {
     const segments = segmentno.split(',');
-    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
+    const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && x.lineNo === segmentno);
     if (air && segments.length === 1) {
       return air[0].airlineCode;
     }
@@ -369,7 +359,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
-      const segmentDetails = this.pnrService.getSegmentTatooNumber();
+      const segmentDetails = this.pnrService.getSegmentList();
       segmentDetails.forEach((segments) => {
         segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {
@@ -483,6 +473,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   descriptionChanged(typeCode: any) {
     if (typeCode === 'SEAT COSTS') {
+      this.showOtherDescription = false;
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');
     } else {
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('CGO');
@@ -497,5 +488,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.get('otherDescription').clearValidators();
       this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     }
+  }
+
+  getCCVendor(): string {
+    let val: string;
+    val = '';
+
+    for (const element of this.pnrService.pnrObj.fpElements) {
+      val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
+    }
+    return val;
   }
 }

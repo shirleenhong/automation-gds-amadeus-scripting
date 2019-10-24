@@ -170,7 +170,6 @@ export class CorporateComponent implements OnInit {
         this.workflow = 'segment';
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
-
       } catch (e) {
         console.log(e);
       }
@@ -285,7 +284,6 @@ export class CorporateComponent implements OnInit {
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     if (this.queueComponent.queueMinderComponent) {
@@ -396,8 +394,8 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    remarkCollection.forEach(rem => {
-      rem.remarks.forEach(remModel => {
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
       });
     });

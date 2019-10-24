@@ -428,7 +428,6 @@ export class TicketRemarkService {
   getApprovalQueue(fg: FormGroup) {
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
-
       this.approvalRuleService.getQueueApproval(index).forEach((app) => {
         const queue = new QueuePlaceModel();
         const queueInfo = app.approvalRules.split('/');

@@ -20,11 +20,7 @@ export class ApprovalRuleService {
       this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' &&
       this.pnrService.getRemarkText('EB/') === '';
 
-    const segmentValid = this.pnrService
-      .getSegmentList()
-      .find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
-      ? false
-      : true;
+    const segmentValid = this.pnrService.getSegmentList().find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK') ? false : true;
 
     const description = ['-ONHOLD', '-CHG', '-FEE-No Approval Required', '-CXL'];
     const ticketingValid = description.indexOf(this.pnrService.getTkLineDescription()) > -1 ? false : true;
@@ -113,12 +109,12 @@ export class ApprovalRuleService {
     let found = false;
     const multiremarks = this.getMultipleConditions(app.approvalRules);
     for (const rem of multiremarks) {
-      const val = rem.split('|');
+      const val = app.getRuleValueText(rem).split('|');
       if (val.length > 1) {
         if (val[0].indexOf('RM') >= 0) {
-          found = this.pnrService.getRemarkText(val[1]) !== '';
+          found = this.pnrService.getRemarkText(val[1].trim()) !== '';
         } else if (val[0].indexOf('RIR') >= 0) {
-          found = this.pnrService.getRirRemarkText(val[1]) !== '';
+          found = this.pnrService.getRirRemarkText(val[1].trim()) !== '';
         }
         if (found) {
           break;
@@ -221,14 +217,27 @@ export class ApprovalRuleService {
     let valid = false;
     const multiremarks = this.getMultipleConditions(app.approvalRules);
     for (const rem of multiremarks) {
-      const firstAirSegment = this.pnrService
-        .getSegmentList()
-        .filter((x) => x.segmentType === 'AIR');
+      const firstAirSegment = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR');
+      const remValue = app.getRuleValueText(rem);
       if (firstAirSegment) {
         const dtNow = new Date();
-        const depdate = new Date(firstAirSegment[0].departureDate);
-        const diffDays = depdate.getDate() - dtNow.getDate();
-        valid = diffDays.toString() === rem.replace('days', '');
+        const dep = firstAirSegment[0].departureDate;
+        const depdate = new Date(
+          dep.substr(2, 2) +
+            '/' +
+            dep.substr(2, 2) +
+            '/' +
+            dtNow
+              .getFullYear()
+              .toString()
+              .substr(0, 2) +
+            dep.substr(4, 2)
+        );
+
+        const t2 = depdate.getTime();
+        const t1 = dtNow.getTime();
+        const diffDays = (t2 - t1) / (24 * 3600 * 1000);
+        valid = diffDays >= parseInt(remValue.replace('days', ''), null);
         if (valid) {
           break;
         }

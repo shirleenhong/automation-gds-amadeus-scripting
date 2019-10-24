@@ -406,6 +406,8 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
+    let hasApay: boolean;
+    hasApay = false;
 
     if (accounting !== null) {
       let airline = '';
@@ -438,7 +440,16 @@ export class PaymentRemarkService {
           //  passive.confirmationNo = accounting.supplierConfirmatioNo;
           remGroup.passiveSegments.push(passive);
         }
+
+        if (account.accountingTypeRemark === 'APAY') {
+          hasApay = true;
+        }
       });
+    }
+
+    if (hasApay) {
+      const lineNo = this.pnrService.getRemarkLineNumber('EB/-');
+      remGroup.deleteRemarkByIds.push(lineNo);
     }
     return remGroup;
   }

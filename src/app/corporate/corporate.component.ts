@@ -299,7 +299,7 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
-    await this.rms.SendPbn(
+    await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
         this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
       )

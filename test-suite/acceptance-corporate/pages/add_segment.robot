@@ -47,7 +47,6 @@ ${input_address}    css=#address
 ${input_country}    css=#country
 ${input_zipCode}    css=#zipCode
 ${select_provice}    css=#province
-#-----Rail Variables-----
 ${input_train_number}    css=#trainNumber
 ${input_from_station}    css=#fromStation
 ${input_arrival_station}    css=#arrivalStation
@@ -216,8 +215,6 @@ Verify Hotel Passive RIR Remarks Are Written
 Verify Hotel Mandatory Matrix Remark Is Written In The PNR   
     Run Keyword If    "${is_manual_entered}" == "no"    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-HI    ELSE    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-AC
     
-    
-#-----Keyword For Rail-----
 Add Multiple Passive Rail Segment For EN PNR
     #Move Profile to GDS    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Navigate To Page Add Passive Segment

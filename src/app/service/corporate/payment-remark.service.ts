@@ -304,6 +304,9 @@ export class PaymentRemarkService {
 
   writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
     const totalcostlist = [];
+    let hasApay: boolean;
+    hasApay = false;
+
     accountingRemarks.forEach((account) => {
       const itiRemarks = new Map<string, string>();
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
@@ -374,10 +377,7 @@ export class PaymentRemarkService {
         }
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
-
-      const ebRemark = new Map<string, string>();
-      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
-      this.remarksManager.createPlaceholderValues(ebRemark);
+      hasApay = true;
     });
 
     totalcostlist.forEach((element) => {
@@ -388,6 +388,13 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       }
     });
+
+    if (hasApay) {
+      const ebRemark = new Map<string, string>();
+      ebRemark.set('TouchLevel', 'AMA');
+      ebRemark.set('OBTVendorCode', '/-GIS');
+      this.remarksManager.createPlaceholderValues(ebRemark);
+    }
   }
 
   private GetSegmentAssociation(account: MatrixAccountingModel) {
@@ -410,8 +417,6 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
-    let hasApay: boolean;
-    hasApay = false;
 
     if (accounting !== null) {
       let airline = '';
@@ -444,16 +449,7 @@ export class PaymentRemarkService {
           //  passive.confirmationNo = accounting.supplierConfirmatioNo;
           remGroup.passiveSegments.push(passive);
         }
-
-        if (account.accountingTypeRemark === 'APAY') {
-          hasApay = true;
-        }
       });
-    }
-
-    if (hasApay) {
-      const lineNo = this.pnrService.getRemarkLineNumber('EB/-');
-      remGroup.deleteRemarkByIds.push(lineNo);
     }
     return remGroup;
   }

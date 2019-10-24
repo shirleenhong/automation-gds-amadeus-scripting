@@ -13,7 +13,7 @@ Resource          queues.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
-${button_close}    //span[@class='xDialog_close xDialog_std_close']
+${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]

@@ -12,7 +12,7 @@ Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That UDID 86 Remark Is Not Written In The PNR When Counselor Identity Is Left Blank
-    [Tags]    us9964
+    [Tags]    us9964    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Passive Segment With Airline Code 8P
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number

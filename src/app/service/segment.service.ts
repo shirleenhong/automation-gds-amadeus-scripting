@@ -166,7 +166,8 @@ export class SegmentService {
             }
             segments.forEach(pnrSegment => {
                 const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity) {
+                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity ||
+                     pnrSegment.passengerNo !== segmentrem.passengerNo) {
                     return;
                 }
                 if (pnrSegment.segmentType === 'MIS') {

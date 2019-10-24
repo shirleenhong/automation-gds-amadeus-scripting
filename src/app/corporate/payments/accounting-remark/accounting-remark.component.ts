@@ -170,6 +170,10 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.isAddNew = false;
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     r.supplierCodeName = code;
+
+    if (r.accountingTypeRemark === 'APAY') {
+      this.modalRef.content.showOtherDescription = true;
+    }
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();
   }

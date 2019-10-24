@@ -12,9 +12,6 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../pages/add_segment.robot
 Test Teardown    Close All Browsers
 
-*** Variables ***
-${test_file_name}    add_segment
-
 *** Test Cases ***
 Verify Passive Rail Segments Are Added In The PNR For EN
     [Tags]    us9882

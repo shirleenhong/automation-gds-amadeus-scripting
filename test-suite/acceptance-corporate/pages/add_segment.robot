@@ -80,7 +80,6 @@ Add And Verify Air Segment for Non ZZ Details In The PNR
     Verify Specific Remark Is Written In The PNR    AC8901 Y 02JAN
     Verify Specific Remark Is Written In The PNR    YULCDG GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL1234
     
-    
 Add And Verify Air Segment for ZZ In The PNR
     Navigate To Page Add Passive Segment
     Wait Until Element Is Visible    ${select_segment_type}
@@ -349,7 +348,6 @@ Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE./S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR/S${segment_number}    True
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TRAIN DEPARTURE/ARRIVAL TIMES./S${segment_number}
-    #french
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS/S${segment_number}    True
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR PRESENTER A LA GARE AU MOINS 45 MINUTES AVANT L HEURE PREVUE DE/S${segment_number}    True
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR VOTRE DEPART SUIVANT LA POLITIQUE DE VIA RAIL-TOUS LES/S${segment_number}    True

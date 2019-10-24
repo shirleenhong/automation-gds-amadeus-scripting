@@ -288,10 +288,10 @@ Handle Simultaneous Changes To PNR
     Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
 
 Move Single Passenger For EN
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
     
 Move Single Passenger For FR
-    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+    Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
 
 Create ${num_of_test_dates} Test Dates
     ${tdate}    Get Current Date

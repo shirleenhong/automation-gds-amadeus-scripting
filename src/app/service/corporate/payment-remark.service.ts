@@ -110,8 +110,17 @@ export class PaymentRemarkService {
         airlineCodeRemark.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         airlineCodeInvoice.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         airlineCodeInvoice.set('PassNumber', account.airlineCorporatePass.number.toString());
-        airlineCodeInvoice.set('PassName', account.airlineCorporatePass.name);
         airlineCodeInvoice.set('FareType', account.fareType);
+
+        const cfaLine = this.pnrService.getCFLine();
+        if (cfaLine !== undefined) {
+          if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
+            airlineCodeInvoice.set('GdsFare', account.gdsFare.toString());
+          } else {
+            airlineCodeInvoice.set('PassName', account.airlineCorporatePass.name);
+          }
+        }
+
         confNbrRem.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         redemptionRemark.set('PassName', 'Airline Corporate');
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
@@ -222,8 +231,6 @@ export class PaymentRemarkService {
   }
 
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
-    debugger;
-
     if (accountingRemarks.length > 0) {
       const airline = 'AC';
       let fareType = '';

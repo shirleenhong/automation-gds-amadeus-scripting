@@ -78,8 +78,8 @@
       <div class="form-group  row">
         <div class="col-sm-4">Segments Count:</div>
         <div class="col-sm-8">
-          <input type="text" class="form-control" formControlName="segmentsCount" name="segmentsCount"
-            id="segmentsCount" min="0">
+          <input type="text" class="form-control" formControlName="segmentsCount" name="segmentsCount" minlength="0"
+            maxlength="maxSegmentsCount" id="segmentsCount" min="0">
         </div>
       </div>
     </div>
@@ -315,8 +315,15 @@
           <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">Lowest GDS Fare:</span>
         </div>
         <div class="col-sm-8">
-          <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
-            [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0.00" />
+          <div *ngIf="accountingRemark.accountingTypeRemark !== 'ACPR'">
+            <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
+              [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0.00" />
+          </div>
+          <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
+            <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
+              [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0" step="1"
+              pattern="[0-9]*" />
+          </div>
         </div>
       </div>
       <!-- Consulatant Number -->

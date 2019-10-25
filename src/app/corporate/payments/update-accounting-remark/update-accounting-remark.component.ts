@@ -42,6 +42,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   descriptionList: Array<SelectItem>;
   showOtherDescription = false;
 
+  maxSegmentsCount = this.pnrService.getPassiveAirSegmentNumbers().length;
+
   constructor(
     public activeModal: BsModalService,
     private pnrService: PnrService,
@@ -288,6 +290,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('qst').setValue('0.00');
     this.matrixAccountingForm.get('otherTax').setValue('0.00');
     this.matrixAccountingForm.get('commisionWithoutTax').setValue('0.00');
+    this.matrixAccountingForm
+      .get('segmentsCount')
+      .setValidators([Validators.required, Validators.min(1), Validators.max(this.maxSegmentsCount)]);
     this.matrixAccountingForm.get('segmentsCount').setValue(this.pnrService.getPassiveAirSegmentNumbers().length);
 
     this.requireGDSFare();
@@ -300,7 +305,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     const cfaLine = this.pnrService.getCFLine();
     if (cfaLine !== undefined) {
       if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
-        this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required]);
+        this.matrixAccountingForm.get('gdsFare').setValidators([Validators.required, Validators.pattern('[0-9]*')]);
         this.matrixAccountingForm.get('gdsFare').enable();
         this.isGdsFareRequired = true;
       } else {

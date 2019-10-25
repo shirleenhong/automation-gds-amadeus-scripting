@@ -227,13 +227,14 @@ Navigate From Corp
 Navigate From Add Segment
     [Arguments]    ${destination_page}
     ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${current_page}
-    Run Keyword If    "${in_add_segment}" == "False"    Click Passive Segment Panel
+    # Run Keyword If    "${in_add_segment}" == "False"    Click Passive Segment Panel
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
     
 Click Add Passive Segment Button
     Wait Until Element Is Visible    ${button_add_passive_segment}    
     Click Element    ${button_add_passive_segment}
     Set Test Variable    ${current_page}    Add Passive Segment
+    Wait Until Element Is Visible    ${select_segment_type}    30
 
 Collapse Open Panel
     ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}

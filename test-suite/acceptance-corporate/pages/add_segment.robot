@@ -157,7 +157,6 @@ Verify Hotel Mandatory Matrix Remark Is Written In The PNR
 	
 Add And Verify Air Segment for Non ZZ Details In The PNR
     Navigate To Page Add Passive Segment
-    Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    AC
     Enter Value    ${input_flight_number}    8901
@@ -181,7 +180,6 @@ Add And Verify Air Segment for Non ZZ Details In The PNR
     
 Add And Verify Air Segment for ZZ In The PNR
     Navigate To Page Add Passive Segment
-    Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    ZZ
     Input Text    ${input_zz_airline}    AC
@@ -214,9 +212,7 @@ Click Add Passive Save Button
     Click Element    ${button_save_passive}	
 
 Add Multiple Passive Rail Segment For EN PNR
-    #Move Profile to GDS    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
     Navigate To Page Add Passive Segment
-    Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Rail
     Enter Value    ${input_train_number}    TR123
     Enter Value    ${input_class_service}    CL12345
@@ -255,9 +251,7 @@ Add Multiple Passive Rail Segment For EN PNR
     Click Add Segment to PNR    yes
     
 Add Multiple Passive Rail Segment For FR PNR
-    #Move Profile to GDS     RU1AHK1SIN21NOV-CWT RETENTION SEGMENT 
     Navigate To Page Add Passive Segment
-    Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Rail
     Enter Value    ${input_train_number}    TR123
     Enter Value    ${input_class_service}    CL12345
@@ -301,11 +295,13 @@ Verify Passive Rail Segment And RIR Added In The PNR For EN
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C123 SEAT NUMBER-S123/S2
     Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
-    Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR254 CLASS-CL22222/S3
+    Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR245 CLASS-CL22222/S3
     Verify Specific Remark Is Written In The PNR    RIR SEAT NUMBER-S123/S3
-    Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    4    EN
+    Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    3    EN
     
 Verify Passive Rail Segment And RIR Added In The PNR For FR
+    Switch To Graphic Mode
+    Get PNR Details
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S2
@@ -345,7 +341,8 @@ Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR VIA COUPONS ARE NOT VALID FOR AIR TRAVEL./S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR IF CHANGES ARE MADE ENROUTE PLEASE ENSURE YOUR/S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE./S${segment_number}
-    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR/S${segment_number}    True
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR PLEASE CALL VIA RAIL AT 1-888-842-7245/S${segment_number} 
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TO RECONFIRM YOUR/S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TRAIN DEPARTURE/ARRIVAL TIMES./S${segment_number}
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS/S${segment_number}    True
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR PRESENTER A LA GARE AU MOINS 45 MINUTES AVANT L HEURE PREVUE DE/S${segment_number}    True

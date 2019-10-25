@@ -3,6 +3,8 @@ import { LeisureFeeComponent } from './leisure-fee/leisure-fee.component';
 import { MatrixReceiptComponent } from './matrix-receipt/matrix-receipt.component';
 import { AccountingRemarkComponent } from './accounting-remark/accounting-remark.component';
 import { UtilHelper } from '../../helper/util.helper';
+import { BspTicketFopComponent } from './bsp-ticket-fop/bsp-ticket-fop.component';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-payment',
@@ -14,12 +16,16 @@ export class PaymentComponent {
   @ViewChild(MatrixReceiptComponent) matrixReceipt: MatrixReceiptComponent;
   @ViewChild(AccountingRemarkComponent)
   accountingRemark: AccountingRemarkComponent;
+  @ViewChild(BspTicketFopComponent) bspTicketFop: BspTicketFopComponent;
 
-  constructor(private utilHelper: UtilHelper) {}
+  bspTicketFopValid = false;
+  constructor(private utilHelper: UtilHelper, private pnrService: PnrService) {
+    this.isBspTicketFop();
+  }
 
-  onEditReceipt() {}
+  onEditReceipt() { }
 
-  onAddReceipt() {}
+  onAddReceipt() { }
 
   checkValid() {
     this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);
@@ -31,6 +37,14 @@ export class PaymentComponent {
     if (!this.accountingRemark.accountingForm.valid) {
       return false;
     }
+
+    if (this.bspTicketFop) {
+      this.utilHelper.validateAllFields(this.bspTicketFop.bspTicketFopForm);
+      if (!this.bspTicketFop.bspTicketFopForm.valid) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -88,5 +102,18 @@ export class PaymentComponent {
       return 'Leisure Fee #: ' + fees.join(',');
     }
     return null;
+  }
+
+  private isBspTicketFop(): void {
+    const segment = this.pnrService.getSegmentTatooNumber();
+    const look = segment.find(x => x.segmentType === 'AIR' && (x.airlineCode === 'AC' || x.airlineCode === 'WS' || x.airlineCode === 'PD')
+      && (x.status === 'DK' || x.status === 'HK'));
+    const unticketedTst = this.pnrService.getUnticketedTst();
+    if (look && unticketedTst) {
+      this.bspTicketFopValid = true;
+      // this.bspTicketFop.bspTicketFopForm.disable();
+    } else {
+      this.bspTicketFopValid = false;
+    }
   }
 }

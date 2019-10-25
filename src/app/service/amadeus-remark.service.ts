@@ -5,6 +5,7 @@ import { RemarkModel } from '../models/pnr/remark.model';
 import { PnrService } from './pnr.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
+import { AmadeusQueueService } from './amadeus-queue.service';
 
 declare var smartScriptSession: any;
 
@@ -20,7 +21,7 @@ export class AmadeusRemarkService {
   passiveSegmentGroup: Array<PassiveSegmentModel>;
   responseMessage: string;
 
-  constructor(private pnrService: PnrService) {
+  constructor(private pnrService: PnrService, private amadeusQueueService: AmadeusQueueService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
     this.remarksElement = new Array<any>();
@@ -115,6 +116,36 @@ export class AmadeusRemarkService {
     return { elementManagementData, fareElement };
   }
 
+  getAPRemarksElement(remarkModel: RemarkModel) {
+    const elementManagementData = {
+      segmentName: 'AP'
+    };
+    const freetextData = {
+      freetextDetail: {
+        subjectQualifier: '3',
+        type: this.checkcategory(remarkModel.category)
+      },
+      longFreetext: remarkModel.remarkText
+    };
+    return { elementManagementData, freetextData };
+  }
+
+  checkcategory(category: string): string {
+    switch (category) {
+      case 'E':
+        return 'P02';
+      case 'M':
+        return '7';
+      case 'F':
+        return 'P01';
+      case 'H':
+        return '4';
+
+      default:
+        return '3';
+    }
+  }
+
   getQueueElement(queueModel: QueuePlaceModel) {
     const reference = {
       qualifier: 'OT',
@@ -175,7 +206,7 @@ export class AmadeusRemarkService {
     };
     const elementManagementData = {
       reference,
-      segmentName: 'RM'
+      segmentName: remarkModel.remarkType
     };
 
     const remarks = {
@@ -484,5 +515,6 @@ export class AmadeusRemarkService {
     smartScriptSession.send('ER');
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');
+    this.amadeusQueueService.newQueueCollection();
   }
 }

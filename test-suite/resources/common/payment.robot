@@ -4,6 +4,7 @@ Resource          common_library.robot
 *** Keywords ***
 Click Add Matrix Receipt Button
     Sleep    5
+    Scroll Element Into View    xpath=//button[contains(text(), 'Add Matrix Receipt')]
     Click Element    xpath=//button[contains(text(), 'Add Matrix Receipt')]
 
 Select Bank Account
@@ -16,8 +17,6 @@ Select Passenger Name
     [Arguments]    ${passenger_name}
     Click Element    css=#pasenger
     Input Text    css=#pasenger    ${passenger_name}
-    # Wait Until Page Contains Element    xpath=//datalist[@id='dynamicPassengerName']//option[contains(text(), '${passenger_name}')]
-    # Click Element    xpath=//datalist[@id='dynamicPassengerName']//option[contains(text(), '${passenger_name}')]
     Press Key    css=#pasenger    \\09
     Set Suite Variable    ${passenger_name}
 
@@ -123,6 +122,7 @@ Enter Reason for No Association Fees
     [Teardown]    Take Screenshot
 
 Click Add Accounting Line Button
+    Scroll Element Into View      xpath=//button[contains(text(), 'Add Accounting Line')]
     Click Element    xpath=//button[contains(text(), 'Add Accounting Line')]
 
 Enter Matrix Accounting Description
@@ -303,6 +303,7 @@ Enter Description
     Set Suite Variable    ${description}
 
 Click Add Leisure Fee Collection Button
+    Scroll Element Into View    xpath=//button[contains(text(), 'Add Leisure Fee Collection')]
     Click Element    xpath=//button[contains(text(), 'Add Leisure Fee Collection')]
 
 Select Tax Exemption

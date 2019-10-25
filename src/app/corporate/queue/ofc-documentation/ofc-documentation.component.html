@@ -1,0 +1,46 @@
+<div class="form-group" style="padding:10px" [formGroup]="ofcDocForm">
+  <div class="row">
+    <div class="col-4">Ticket Type:</div>
+    <div class="col-6" style="padding-left:0px">
+      <select class="form-control" name="ticketType" formControlName="ticketType" id="ticketType">
+        <option value="bsp">BSP Airline Ticket</option>
+        <option value="non-bsp">Non-BSP/Vendor Ticket</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      Issued by the OSC for Fare/Travel? &nbsp;&nbsp;
+    </div>
+    <div class="w-10">
+      <label class="control control-radio ">
+        <input type="radio" name="isOscTravel" formControlName="isOscTravel" id="isOscTravel" value="Y" />Yes &nbsp;&nbsp;
+        <div class="control_indicator"></div>
+      </label>
+    </div>
+    <div class="w-20">
+      <label class="control control-radio ">
+        <input type="radio" name="isOscTravel" formControlName="isOscTravel" id="isOscTravel" value="N" /> No
+        <div class="control_indicator"></div>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-4">
+      OSC to Queue NR/Cancelled PNR’s? &nbsp;&nbsp;
+    </div>
+    <div class="w-10">
+      <label class="control control-radio ">
+        <input type="radio" value="Y" name="isOscQueue" formControlName="isOscQueue" id="isOscQueue" />Yes &nbsp;&nbsp;
+        <div class="control_indicator"></div>
+      </label>
+    </div>
+    <div class="w-20">
+      <label class="control control-radio col">
+        <input type="radio" value="N" name="isOscQueue" formControlName="isOscQueue" id="isOscQueue" /> No
+        <div class="control_indicator"></div>
+      </label>
+    </div>
+  </div>
+</div>

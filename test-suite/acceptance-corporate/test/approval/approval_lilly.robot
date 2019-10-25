@@ -10,9 +10,13 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    lilly
 
 *** Test Cases ***
-Verify That PNRs For Client Lilly Is Correctly Queued To Approval Queue
+Verify That PNRs For Client Lilly Are Queued For Approval
     [Tags]    us13271
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Lilly With Udid 50 NORAM-ASSOCIATE-S, Air Only, Intl Route

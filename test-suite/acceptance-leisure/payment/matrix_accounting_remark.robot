@@ -1,4 +1,5 @@
 *** Settings ***
+Force Tags        leisure
 Resource          ../../resources/common/global_resources.robot
 
 *** Test Cases ***
@@ -320,7 +321,7 @@ Verify That APAY Matrix Accounting Remark Is Updated For Seat Costs Accounting R
     Click Payment Tab    Matrix Accounting Remark
     Click Update Button    1
     Verify Matrix Accounting Default Values Are Correct    APAY
-    Select Matrix Form Of Payment    RBC Points
+    Select Matrix Form Of Payment    Cash
     Enter Base Amount    111.00
     Enter GST Tax Amount    3.44
     Enter HST Tax Amount    5.11
@@ -330,7 +331,7 @@ Verify That APAY Matrix Accounting Remark Is Updated For Seat Costs Accounting R
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/P3    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CK/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CA/-MP-ALL/-BKN-${supplier_confirmation_number}/S4/P3    True
     Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 14.55 TAX ON CK/S4    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
@@ -513,7 +514,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Acco
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Segment    3
-    Create Matrix Accounting Remark    YES    Apay Accounting Remark    CGO    345612    RBC Points    ${EMPTY}
+    Create Matrix Accounting Remark    YES    Apay Accounting Remark    CGO    345612    Cash    ${EMPTY}
     ...    \    \    PET TRANSPORTATION
     Enter Base Amount    100.50
     Enter GST Tax Amount    15.00
@@ -525,7 +526,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Acco
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CK/-MP-ALL/-BKN-${supplier_confirmation_number}/S3    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CA/-MP-ALL/-BKN-${supplier_confirmation_number}/S3    True
     Verify Specific Remark Is Written In The PNR    RIR PAID ${remark_description} CF-${supplier_confirmation_number} CAD${base_amount} PLUS 48.00 TAX ON CK/S3    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect

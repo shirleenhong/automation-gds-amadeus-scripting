@@ -1,0 +1,100 @@
+<!-- <div class="ird-container">
+  <div [formGroup]="irdGroup" width>
+    <div class="row">
+      <div class="col-4">
+        IRD Number
+      </div>
+      <div class="col-2">
+        IRD Status
+      </div>
+      <div class="col-2">
+        Lowfare Status
+      </div>
+    </div>
+    <div formArrayName="irdItems" *ngFor="let item of this.irdGroup.get('irdItems')['controls']; let i = index"
+      class="col">
+      <div [formGroupName]="i" class="row">
+        <div class="col-4">
+          <label>{{ item.value.irdNumber }}</label>
+          <input type="text" name="irdNumber" formControlName="irdNumber" id="irdNumber" readonly />
+        </div>
+        <div class="col-2">
+          <select autofocus id="irdStatus" class="form-control" formControlName="irdStatus" name="irdStatus"
+            (change)="irdChangeValue($event.target.value)" required>
+            <option *ngFor="let item of  listIrdStatus" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="showLowStatus" class="col-2">
+          <select autofocus id="lowSavingStatus" class="form-control" formControlName="lowSavingStatus"
+            name="lowSavingStatus">
+            <option *ngFor="let item of  listLowStatus" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div [formGroup]="irdGroup" class="form-group" style="margin-top:10px;padding-left: 10px">
+  <table class="irdTable">
+    <tr>
+      <th width="100px">
+        <div class="">IRD Number</div>
+      </th>
+      <th width="100px">
+        <div class="">IRD Savings</div>
+      </th>
+      <th width="150px">
+        <div class="cl">Low Fare Savings</div>
+      </th>
+      <th width="150px">
+        <div class="cl">IRD Status</div>
+      </th>
+      <th width="150px">
+        <div class="cl">Low Fare Status</div>
+      </th>
+    </tr>
+
+    <tbody formArrayName="irdItems" *ngFor="let item of this.irdGroup.get('irdItems')['controls']; let i = index">
+      <tr [formGroupName]="i">
+        <td width="50px">
+          <label>{{ item.value.irdNumber }}</label>
+        </td>
+
+        <td width="50px">
+          <label>{{ item.value.irdSavings }}</label>
+        </td>
+        <td width="50px">
+          <label>{{ item.value.lowSavings }}</label>
+        </td>
+        <td *ngIf="item.value.noLfoStatus === 'NO LFO'" width="50px">
+          <select autofocus id="irdStatus" class="form-control" formControlName="irdStatus" name="irdStatus">
+            <option *ngFor="let item of  listnolfoStatus" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="item.value.noLfoStatus !== 'NO LFO'" width="50px">
+          <select autofocus id="irdStatus" class="form-control" formControlName="irdStatus" name="irdStatus"
+            (change)="irdChangeValue($event.target.value, i)">
+            <option *ngFor="let item of  listIrdStatus" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </td>
+        <td width="50px">
+          <select autofocus id="lowSavingStatus" class="form-control" formControlName="lowSavingStatus"
+            name="lowSavingStatus">
+            <option *ngFor="let item of  listLowStatus" [value]="item.itemValue">
+              {{item.itemText}}
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

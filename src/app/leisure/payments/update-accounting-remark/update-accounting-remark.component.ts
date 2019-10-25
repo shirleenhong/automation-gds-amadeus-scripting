@@ -437,6 +437,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     } else {
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('');
     }
+    this.setTktNumber(this.accountingRemark.supplierCodeName);
   }
 
   checkSupplierCode() {

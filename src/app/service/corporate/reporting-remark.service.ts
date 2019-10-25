@@ -5,13 +5,18 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { ReportingBSPComponent } from 'src/app/corporate/reporting/reporting-bsp/reporting-bsp.component';
 import { ReportingNonbspComponent } from 'src/app/corporate/reporting/reporting-nonbsp/reporting-nonbsp.component';
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
+import { ReportingViewModel } from 'src/app/models/reporting-view.model';
+import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting-remarks/reporting-remarks.component';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReportingRemarkService {
   hasTransborder: boolean;
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
   WriteBspRemarks(rbc: ReportingBSPComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;
@@ -137,11 +142,70 @@ export class ReportingRemarkService {
           }
 
           if (key === 'waiver') {
-            waiverRemark.set('WaiverLine', fg.get(key).value);
+            if (fg.get(key).value !== null && fg.get(key).value !== '') {
+              waiverRemark.set('WaiverLine', fg.get(key).value);
+            }
           }
         });
 
         this.remarksManager.createPlaceholderValues(waiverRemark, null, segmentrelate);
+      }
+    }
+  }
+  public GetRoutingRemark(reporting: ReportingViewModel) {
+    const rmGroup = new RemarkGroup();
+    rmGroup.group = 'Routing';
+    rmGroup.remarks = new Array<RemarkModel>();
+    rmGroup.deleteRemarkByIds = new Array<string>();
+    this.getFSRemarks(reporting, rmGroup);
+    return rmGroup;
+  }
+  getFSRemarks(reporting: ReportingViewModel, rmGroup: RemarkGroup) {
+    if (reporting.routeCode == null) {
+      return;
+    }
+    const remText = reporting.routeCode + '' + reporting.tripType;
+    rmGroup.remarks.push(this.getRemark(remText, 'FS', ''));
+  }
+  getRemark(remarkText, remarkType, remarkCategory) {
+    const rem = new RemarkModel();
+    rem.remarkType = remarkType;
+    rem.remarkText = remarkText;
+    rem.category = remarkCategory;
+    return rem;
+  }
+
+  WriteDestinationCode(rc: ReportingRemarksComponent) {
+    const reportingRemarksGroup: FormGroup = rc.reportingForm;
+    const items = reportingRemarksGroup.get('segments') as FormArray;
+
+    for (const control of items.controls) {
+      if (control instanceof FormGroup) {
+        const fg = control as FormGroup;
+        const destinationRemark = new Map<string, string>();
+
+        const segments: string[] = [];
+        let segmentrelate: string[] = [];
+
+        Object.keys(fg.controls).forEach((key) => {
+          if (key === 'segment') {
+            fg.get(key)
+              .value.split(',')
+              .forEach((val) => {
+                segments.push(val);
+              });
+
+            segmentrelate = this.getRemarkSegmentAssociation(segments);
+          }
+
+          if (key === 'destinationList') {
+            if (fg.get(key).value !== null && fg.get(key).value !== '') {
+              destinationRemark.set('IataCode', fg.get(key).value);
+            }
+          }
+        });
+
+        this.remarksManager.createPlaceholderValues(destinationRemark, null, segmentrelate);
       }
     }
   }

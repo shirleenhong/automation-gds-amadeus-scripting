@@ -1,23 +1,27 @@
-<table class="table">
+<table class="table table-bordered table-hover">
   <thead class="thead-light">
     <tr>
-      <th>#</th>
-      <th>Text</th>
-      <th>Type</th>
-      <th>Seat Number</th>
       <th>Segment(s)</th>
+      <th>Seat Remark Option</th>
+      <th>Seat Type</th>
+      <th>Seat Number</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let seat of seats; let i = index">
-      <td>{{ i + 1 }}</td>
-      <td>{{ seat.text }}</td>
-      <td>{{ seat.type | uppercase }}</td>
+      <td [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)" *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''"
+        style="text-align: center; vertical-align: middle">
+        <span class="text-center">{{ seat.segmentIds }}</span>
+      </td>
+      <td>{{ seatRemarkOptions[seat.id - 1].text }}</td>
+      <td>{{ seat.type }}</td>
       <td>{{ seat.number }}</td>
-      <td>{{ seat.segmentId }}</td>
-      <td>
-        <i class="fa fa-trash-alt" (click)="delete(seat)"></i>
+
+      <td [attr.rowspan]="getRowSpanDisplay(seat.segmentIds, i)" *ngIf="getRowSpanDisplay(seat.segmentIds, i) != ''"
+        style="text-align: center; vertical-align: middle">
+        <i class="fas fa-edit" title="Click to Edit" (click)="editSeatRemark(seat.segmentIds)"></i>&nbsp;&nbsp;&nbsp;
+        <i class="fa fa-trash-alt fa-fw" title="Click to Delete" (click)="delete(seat)"></i>
       </td>
     </tr>
   </tbody>
@@ -25,6 +29,6 @@
 
 <div class="row">
   <div class="col">
-    <button (click)="create()">Add Seat</button>
+    <button (click)="create()">Add Seat Remarks</button>
   </div>
 </div>

@@ -10,6 +10,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { TranslationService } from './translation.service';
+import { AmadeusQueueService } from './amadeus-queue.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -27,7 +28,8 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService) { }
+    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
+        private amadeusQueueService: AmadeusQueueService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -92,6 +94,22 @@ export class SegmentService {
                     }
                     relatePass = this.pnrService.getPassengerTatooValue(relatePass);
                 }
+
+                if (segment.segmentType === 'TOR' || segment.segmentType === 'SEA') {
+                    let torPassenger = [];
+                    if (segment.passengerNo) {
+                        torPassenger = segment.passengerNo.split(',');
+                    } else {
+                        torPassenger.push('1');
+                    }
+
+                    torPassenger.forEach(pass => {
+                        relatePass.push(pass);
+                    });
+                    passive.quantity = relatePass.length;
+                    relatePass = this.pnrService.getPassengerTatooValue(relatePass);
+                }
+
                 passive.relatedPassengers = relatePass;
                 passive.status = 'HK';
                 passive.flightNo = '1';
@@ -108,6 +126,22 @@ export class SegmentService {
         passGroup.group = 'Segment Remark';
         passGroup.passiveSegments = tourSegment;
         return passGroup;
+    }
+
+    deleteSegments(segmentRemarks: PassiveSegmentsModel[]) {
+        const segments = this.pnrService.getSegmentTatooNumber();
+        const remGroup = new RemarkGroup();
+        remGroup.group = 'Remove Segments';
+        segments.forEach(segment => {
+            const look = segmentRemarks.find(x => x.lineNo === segment.lineNo);
+            if (!look) {
+                remGroup.deleteSegmentByIds.push(segment.lineNo);
+            }
+        });
+        if (remGroup.deleteSegmentByIds) {
+            remGroup.deleteRemarkByIds = this.pnrService.getMatrixAccountingLineNumbers();
+        }
+        return remGroup;
     }
 
     addSegmentRir(segRemark: any) {
@@ -151,6 +185,9 @@ export class SegmentService {
                     }
                     if (segmentrem.segmentType === 'INS') {
                         this.rirIns(pnrSegment, segmentrem, rmGroup);
+                    }
+                    if (segmentrem.segmentType === 'TOR') {
+                        this.rirTour(pnrSegment, segmentrem, rmGroup);
                     }
                 }
 
@@ -262,10 +299,35 @@ export class SegmentService {
             }
 
             if (segmentrem.dining) {
-                remText = remText + ' ' + segmentrem.dining + ' ' + segmentrem.noNights + ' NTS';
+                remText = remText + ' ' + segmentrem.dining;
+            }
+
+            if (segmentrem.noNights) {
+                remText = remText + ' ' + segmentrem.noNights + ' NTS';
             }
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
+    }
+
+    private rirTour(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+        const type = pnrSegment.freetext.substr(6, 3);
+        let remText = '';
+        if (type === 'TOR') {
+            if (segmentrem.roomType) {
+                remText = segmentrem.roomType;
+            }
+            if (segmentrem.mealPlan) {
+                remText = remText + ' ' + segmentrem.mealPlan;
+            }
+
+            if (segmentrem.noNights) {
+                remText = remText + ' ' + segmentrem.noNights + ' NTS';
+            }
+            rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
+        }
+
+        // if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+        // if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
     }
 
     private rirIns(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
@@ -436,11 +498,11 @@ export class SegmentService {
 
         switch (segment.segmentType) {
             case 'TOR':
-                let tourName = suplierName + ' ' + segment.tourName;
-                if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
-                if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
-                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName + ' ' + segment.noNights +
-                    'NTS/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
+                const tourName = suplierName + ' ' + segment.tourName;
+                // if (segment.roomType !== undefined) { tourName = tourName + ' ' + segment.roomType; }
+                // if (segment.mealPlan !== undefined) { tourName = tourName + ' ' + segment.mealPlan; }
+                freetext = '/TYP-' + segment.segmentType + '/SUN-' + tourName +
+                    '/SUC-' + segment.vendorCode + '/SC-' + segment.departureCity + '/SD-' + startdatevalue +
                     '/ST-' + startTime + '/EC-' + segment.destinationCity +
                     '/ED-' + enddatevalue + '/ET-' + endTime + '/CF-' + segment.confirmationNo;
                 break;
@@ -563,7 +625,7 @@ export class SegmentService {
             case (itinLanguage === 'EN'): {
                 const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
                 if (llbMandatoryRemarkEn === '') {
-                    const commandEN = 'PBN/LLB MANDATORY REMARKS*';
+                    const commandEN = 'PBN/YTOWL210N/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
                 const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
@@ -576,7 +638,7 @@ export class SegmentService {
             case (itinLanguage === 'FR'): {
                 const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
                 if (llbMandatoryRemarkFR === '') {
-                    const commandFR = 'PBN/LLB MANDATORY FRENCH*';
+                    const commandFR = 'PBN/YTOWL210N/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
                 const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
@@ -963,27 +1025,24 @@ export class SegmentService {
 
 
     queueCancel(frmCancel: FormGroup, cfa: CfRemarkModel) {
-        const queueGroup = Array<QueuePlaceModel>();
         if (frmCancel.controls.followUpOption.value === 'BSP Queue') {
-            this.getQueueMinder(queueGroup, 'bspAllCfa');
+            this.getQueueMinder('bspAllCfa');
             if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-                this.getQueueMinder(queueGroup, 'rbpRbm');
+                this.getQueueMinder('rbpRbm');
             }
         }
 
         if (frmCancel.controls.followUpOption.value === 'Non BSP Refund') {
             if (cfa.cfa === 'RBP' || cfa.cfa === 'RBM') {
-                this.getQueueMinder(queueGroup, 'nonBspRbmRbp');
+                this.getQueueMinder('nonBspRbmRbp');
             } else {
-                this.getQueueMinder(queueGroup, 'nonBspAllCfa');
+                this.getQueueMinder('nonBspAllCfa');
             }
         }
-
-        return queueGroup;
     }
 
 
-    private getQueueMinder(queueGroup: Array<QueuePlaceModel>, controlname: string, queueno?: string) {
+    private getQueueMinder(controlname: string, queueno?: string) {
         const queue = new QueuePlaceModel();
 
         const queuePlaceDescription = [
@@ -1005,7 +1064,7 @@ export class SegmentService {
             queue.freetext = look.text;
             queue.category = look.category;
             queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
-            queueGroup.push(queue);
+            this.amadeusQueueService.addQueueCollection(queue);
         }
     }
 }

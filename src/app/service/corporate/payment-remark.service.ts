@@ -45,19 +45,33 @@ export class PaymentRemarkService {
       const airlineCodeRemark = new Map<string, string>();
       const airlineCodeInvoice = new Map<string, string>();
       const staticRemarksCondition = new Map<string, string>();
+      const redemptionRemark = new Map<string, string>();
+      const passNameRedemptionRemark = new Map<string, string>();
+      const confNbrRem = new Map<string, string>();
+
+      confNbrRem.set('ConfNbr', account.supplierConfirmatioNo);
 
       if (account.accountingTypeRemark === 'ACPP') {
         paymentRemark.set('PassName', account.passPurchase);
         paymentRemark.set('FareType', account.fareType);
         airlineCodeRemark.set('AirlineCode', 'AC');
         airlineCodeInvoice.set('AirlineCode', 'AC');
+        confNbrRem.set('AirlineCode', 'AC');
+        redemptionRemark.set('PassName', 'Air Canada Individual');
+        passNameRedemptionRemark.set('PassNameRedemption', 'Air Canada Individual');
       } else {
         if (account.accountingTypeRemark === 'WCPP') {
           airlineCodeRemark.set('AirlineCode', 'WS');
           airlineCodeInvoice.set('AirlineCode', 'WS');
+          confNbrRem.set('AirlineCode', 'WS');
+          redemptionRemark.set('PassName', 'Westjet Individual');
+          passNameRedemptionRemark.set('PassNameRedemption', 'Westjet Individual');
         } else {
           airlineCodeRemark.set('AirlineCode', 'PD');
           airlineCodeInvoice.set('AirlineCode', 'PD');
+          confNbrRem.set('AirlineCode', 'PD');
+          redemptionRemark.set('PassName', 'Porter Individual');
+          passNameRedemptionRemark.set('PassNameRedemption', 'Porter Individual');
         }
         paymentRemark.set('PassNameNonAc', account.passPurchase);
       }
@@ -96,7 +110,22 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'AUTHORIZED BY CLIENT.');
+
+      if (account.fareType !== '') {
+        passNameRedemptionRemark.set('FareType', account.fareType);
+        this.remarksManager.createPlaceholderValues(passNameRedemptionRemark, null, segmentrelate);
+      } else {
+        this.remarksManager.createPlaceholderValues(redemptionRemark, null, segmentrelate);
+      }
+
+      this.remarksManager.createPlaceholderValues(confNbrRem, null, segmentrelate);
     });
+  }
+
+  moveProfile(accountingRemarks: MatrixAccountingModel[]) {
+    if (accountingRemarks.length > 0) {
+      return 'PBN/YTOWL210N/AC PASS ' + accountingRemarks[0].fareType + '*';
+    }
   }
 
   writeHighLowFareSavingCode(highFare, lowFare, savingsCode, segmentAssoc) {
@@ -216,7 +245,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(passchange);
       }
 
-      if (account.gdsFare != undefined) {
+      if (account.gdsFare !== undefined) {
         gdsFare.set('AirlineCode', uniqueairlineCode);
         gdsFare.set('PassNumber', account.tktLine);
         gdsFare.set('FareType', account.fareType);
@@ -291,7 +320,17 @@ export class PaymentRemarkService {
           account.otherTax,
           segmentAssoc
         );
+
         itiRemarks.set('ConfNbr', account.tktLine);
+        if (account.descriptionapay === 'OTHER COSTS') {
+          itiRemarks.set('RemarkDescription', account.otherCostDescription);
+        } else {
+          itiRemarks.set('RemarkDescription', account.descriptionapay);
+        }
+        const totalTax = parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
+        itiRemarks.set('BaseAmt', account.baseAmount);
+        itiRemarks.set('TotalTax', totalTax.toString());
+        itiRemarks.set('CCVendor', account.vendorCode);
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
     });
@@ -392,75 +431,6 @@ export class PaymentRemarkService {
     air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
-  }
-
-  extractAccountingModelsFromPnr() {
-    const accountingRemarks = new Array<MatrixAccountingModel>();
-    const ticketRemarkNumbers = this.rms.getValue('TktRemarkNbr');
-
-    for (let i = 0; i < ticketRemarkNumbers.length; i++) {
-      const model = new MatrixAccountingModel();
-
-      model.tkMacLine = Number.parseInt(ticketRemarkNumbers[i]);
-
-      if (model.tkMacLine) {
-        const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
-        const slineNo = pholder[i].segmentNumberReferences[i];
-        const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
-
-        if (segment.length > 0) {
-          model.departureCity = segment[i].cityCode;
-          model.supplierConfirmatioNo = segment[i].controlNumber;
-        }
-
-        let keys: string[];
-        keys = ['TktRemarkNbr', 'TktNbr', 'SupplierCode'];
-
-        let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-        if (matchKeys) {
-          model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
-        } else {
-          keys = ['TktRemarkNbr', 'SupplierCode'];
-          matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-          model.tktLine = matchKeys[i].matchedPlaceholders.get('TktNbr');
-        }
-
-        // keys = ['AirlineCode', 'TotalCost'];
-        // let matchKeys = this.rms.getMatchedPlaceHoldersWithExactKeys(keys);
-        // model.tktLine = matchKeys[i].matchedPlaceholders[i];
-
-        model.fareType = this.rms.getValue('FareType')[i];
-        model.supplierCodeName = this.rms.getValue('SupplierCode')[i];
-        model.baseAmount = this.rms.getValue('BaseAmt')[i];
-        model.gst = this.rms.getValue('Gst')[i];
-        model.hst = this.rms.getValue('Hst')[i];
-        model.qst = this.rms.getValue('Qst')[i];
-        model.commisionWithoutTax = this.rms.getValue('Comm')[i];
-
-        const airlinecode = this.rms.getValue('AirlineCode')[i];
-        const totalcost = this.rms.getValue('TotalCost')[i];
-
-        if (totalcost) {
-          switch (airlinecode) {
-            case 'AC':
-              model.accountingTypeRemark = 'ACPP';
-              model.passPurchase = this.rms.getValue('PassName')[i];
-              break;
-            case 'WS':
-              model.accountingTypeRemark = 'WCPP';
-              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
-              break;
-            case 'PD':
-              model.accountingTypeRemark = 'PCPP';
-              model.passPurchase = this.rms.getValue('PassNameNonAc')[i];
-              break;
-          }
-        }
-        accountingRemarks.push(model);
-      }
-    }
-
-    return accountingRemarks;
   }
 
   setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {

@@ -1,28 +1,30 @@
 import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
 import { DDBService } from '../ddb.service';
-import { ApprovalItem } from 'src/app/models/ddb/approval.model';
+
 import { SegmentTypeEnum } from 'src/app/enums/segment-type';
+import { ApprovalItem } from 'src/app/models/ddb/approval.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApprovalRuleService {
-  constructor(private ddbService: DDBService, private pnrService: PnrService) { }
+  constructor(private ddbService: DDBService, private pnrService: PnrService) {}
 
   /**
-  * Check if the PNR needs to be approved based on conditions.
-  */
+   * Check if the PNR needs to be approved based on conditions.
+   */
   private needsApproval(): boolean {
     const remarksValid =
-      this.pnrService.getRemarkText('CB/QUE/QUE FOR TICKET') === '' ||
-      this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' ||
+      this.pnrService.getRemarkText('CB/QUE/QUE FOR TICKET') === '' &&
+      this.pnrService.getRemarkText('U86/-OVERRIDE ESC') === '' &&
       this.pnrService.getRemarkText('EB/') === '';
 
-    const segmentValid = (this.pnrService.getSegmentTatooNumber().find
-      ((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')) ? false : true;
+    const segmentValid = this.pnrService.getSegmentTatooNumber().find((seg) => seg.segmentType === 'AIR' && seg.status === 'GK')
+      ? false
+      : true;
 
-    const description = ['-ONHOLD', '-CHG', '-FEE-No Approval Required'];
+    const description = ['-ONHOLD', '-CHG', '-FEE-No Approval Required', '-CXL'];
     const ticketingValid = description.indexOf(this.pnrService.getTkLineDescription()) > -1 ? false : true;
 
     return remarksValid && segmentValid && ticketingValid;
@@ -40,60 +42,87 @@ export class ApprovalRuleService {
    * check if the set rules of approval in the DB is valid in the pnr
    */
   public hasApproval() {
-    const approvalItems = this.ddbService.approvalList.filter(
-      (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
-    );
     if (this.needsApproval()) {
-      for (const approval of approvalItems) {
-        let valid = false;
-        switch (approval.getRule()) {
-          case '[REMARKS_EXISTS]':
-            valid = this.isRemarkExistValid(approval);
-            break;
-          case '[SEGMENT_TYPE]':
-            valid = this.isSegmentTypeValid(approval);
-            break;
-          case '[FOP]':
-            valid = this.isFopValid(approval);
-            break;
-          case '[ROUTE]':
-            valid = this.isRouteValid(approval);
-            break;
-          case '[DEPARTURE]':
-            valid = this.isDepartureDateValid(approval);
-            break;
-          case '[U]':
-            valid = this.isUdidValid(approval);
-            break;
-        }
-
-        if (!valid) {
-          return false;
-        }
+      const approvalItems = this.ddbService.approvalList.filter(
+        (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
+      );
+      const appGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') >= 0);
+      const appNoGroup = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_') === -1);
+      if (appGroup.length > 0) {
+        return this.isValidRule(appNoGroup) && this.isValidGroup(appGroup);
+      } else {
+        return this.isValidRule(appNoGroup);
       }
-      return approvalItems.length > 0;
     }
     return false;
   }
 
+  isValidGroup(approvalItems) {
+    let ctr = 1;
+    let hasGroup = true;
+    while (hasGroup) {
+      const list = approvalItems.filter((a) => a.getRuleText().indexOf('[GROUP_' + ctr) >= 0);
+      hasGroup = list.length > 0;
+      if (hasGroup) {
+        if (this.getApprovalValidResult(list[0], this.isValidRule(list, true))) {
+          return true;
+        }
+      }
+      ctr += 1;
+    }
+    return false;
+  }
+
+  isValidRule(approvalItems: ApprovalItem[], isGroup?): boolean {
+    for (const approval of approvalItems) {
+      let valid = false;
+      switch (approval.getRule()) {
+        case '[REMARKS_EXISTS]':
+          valid = this.isRemarkExistValid(approval);
+          break;
+        case '[SEGMENT_TYPE]':
+          valid = this.isSegmentTypeValid(approval);
+          break;
+        case '[FOP]':
+          valid = this.isFopValid(approval);
+          break;
+        case '[ROUTE]':
+          valid = this.isRouteValid(approval);
+          break;
+        case '[DEPARTURE]':
+          valid = this.isDepartureDateValid(approval);
+          break;
+      }
+      if (!isGroup) {
+        if (!this.getApprovalValidResult(approval, valid)) {
+          return false;
+        }
+      } else {
+        if (!valid) {
+          return false;
+        }
+      }
+    }
+    return approvalItems.length > 0;
+  }
+
   isRemarkExistValid(app: ApprovalItem) {
+    let found = false;
     const multiremarks = this.getMultipleConditions(app.getRuleText());
     for (const rem of multiremarks) {
       const val = rem.split('|');
       if (val.length > 1) {
-        let found = false;
-        if (val[0].indexOf('RM') === 0) {
+        if (val[0].indexOf('RM') >= 0) {
           found = this.pnrService.getRemarkText(val[1]) !== '';
-        } else if (val[0].indexOf('RIR') === 0) {
+        } else if (val[0].indexOf('RIR') >= 0) {
           found = this.pnrService.getRirRemarkText(val[1]) !== '';
         }
-        found = this.getApprovalValidResult(app, found);
         if (found) {
-          return true;
+          break;
         }
       }
     }
-    return false;
+    return found;
   }
 
   /**
@@ -124,13 +153,12 @@ export class ApprovalRuleService {
           valid = vendorCode === noKeywordValue;
         }
 
-        valid = this.getApprovalValidResult(app, valid);
         if (valid) {
-          return true;
+          break;
         }
       }
     }
-    return false;
+    return valid;
   }
 
   getApprovalValidResult(app: ApprovalItem, valid: boolean): boolean {
@@ -145,11 +173,11 @@ export class ApprovalRuleService {
    * check condition for segment type rule
    */
   isSegmentTypeValid(app: ApprovalItem) {
+    let valid = false;
     const multiremarks = this.getMultipleConditions(app.getRuleText());
     const segmentList = this.pnrService.getSegmentTatooNumber();
     for (const rem of multiremarks) {
       const type = SegmentTypeEnum[app.getRuleValueText(rem).toUpperCase()];
-      let valid = false;
       const segments = segmentList.filter((seg) => seg.segmentType === type);
       if (rem.indexOf('[NO]') >= 0) {
         valid = segments.length === 0;
@@ -158,12 +186,12 @@ export class ApprovalRuleService {
       } else {
         valid = segments.length > 0;
       }
-      valid = this.getApprovalValidResult(app, valid);
+
       if (valid) {
-        return true;
+        break;
       }
     }
-    return false;
+    return valid;
   }
 
   /**
@@ -179,12 +207,11 @@ export class ApprovalRuleService {
         .substr(0, 3)
         .toUpperCase();
       valid = rem.indexOf('[NOT]') > -1 ? !(noKeywordValue === route) : noKeywordValue === route;
-      valid = this.getApprovalValidResult(app, valid);
       if (valid) {
-        return true;
+        break;
       }
     }
-    return false;
+    return valid;
   }
 
   isDepartureDateValid(app: ApprovalItem) {
@@ -197,30 +224,12 @@ export class ApprovalRuleService {
         const depdate = new Date(firstAirSegment[0].departureDate);
         const diffDays = depdate.getDate() - dtNow.getDate();
         valid = diffDays.toString() === rem.replace('days', '');
-        valid = this.getApprovalValidResult(app, valid);
         if (valid) {
-          return true;
+          break;
         }
       }
     }
-    return false;
-  }
-
-  /**
-   * check if the set condition for UDID is in the PNR
-   * @param app ApprovalItem
-   */
-  isUdidValid(app: ApprovalItem) {
-    let valid = false;
-    const multiremarks = this.getMultipleConditions(app.getRuleText());
-    for (const rem of multiremarks) {
-      valid = this.pnrService.getRemarkText('U' + rem.replace('|', '/-')) !== '';
-      valid = this.getApprovalValidResult(app, valid);
-      if (valid) {
-        return true;
-      }
-    }
-    return false;
+    return valid;
   }
 
   getSecondaryApprovalList(index?: string): ApprovalItem[] {
@@ -232,7 +241,30 @@ export class ApprovalRuleService {
   }
 
   getPrimaryApprovalList(): ApprovalItem[] {
-    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    const primaryList = this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('[UI_PRIMARY') === 0);
+    let ctr = 1;
+    let done = false;
+    let sortedList = [];
+    while (!done) {
+      const list = primaryList
+        .filter((x) => x.approvalRules.indexOf('[UI_PRIMARY_' + ctr) === 0)
+        .sort((a, b) => {
+          if (a.getRuleText() < b.getRuleText()) {
+            return -1;
+          } else if (a.getRuleText() > b.getRuleText()) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      if (list && list.length > 0) {
+        sortedList = sortedList.concat(list);
+        ctr += 1;
+      } else {
+        done = true;
+      }
+    }
+    return sortedList;
   }
 
   getWriteApproval(index?: string): ApprovalItem[] {
@@ -248,5 +280,9 @@ export class ApprovalRuleService {
 
   getTicketApproval(index?: string): ApprovalItem[] {
     return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf('TICKET' + (index ? index : '_1')) > -1);
+  }
+
+  getApprovalItem(keyword: string): ApprovalItem[] {
+    return this.ddbService.approvalList.filter((x) => x.approvalRules.indexOf(keyword) === 0);
   }
 }

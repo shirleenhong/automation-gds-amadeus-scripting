@@ -12,7 +12,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { MatrixReceiptComponent } from './leisure/payments/matrix-receipt/matrix-receipt.component';
 import { UpdateMatrixReceiptComponent } from './leisure/payments/update-matrix-receipt/update-matrix-receipt.component';
-import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
+// import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
 import { AccordionModule, ModalModule, TabsModule, BsDatepickerModule, BsDropdownModule } from 'ngx-bootstrap';
 import { UpdateAccountingRemarkComponent } from './leisure/payments/update-accounting-remark/update-accounting-remark.component';
 import { AccountingRemarkComponent } from './leisure/payments/accounting-remark/accounting-remark.component';
@@ -20,11 +20,11 @@ import { LeisureFeeComponent } from './leisure/payments/leisure-fee/leisure-fee.
 import { ItcPackageComponent } from './leisure/remarks/itc-package/itc-package.component';
 import { ConciergeUdidsComponent } from './leisure/reporting/concierge-udids/concierge-udids.component';
 import { AmountPipe } from './pipes/amount.pipe';
-import { SegmentsComponent } from './passive-segments/segments/segments.component';
+// import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { UpdateSegmentComponent } from './passive-segments/update-segment/update-segment.component';
 import { MessageComponent } from './shared/message/message.component';
 import { CodeshareComponent } from './leisure/remarks/codeshare/codeshare.component';
-import { VisaPassportComponent } from './leisure/remarks/visa-passport/visa-passport.component';
+// import { VisaPassportComponent } from './shared/visa-passport/visa-passport.component';
 import { MatrixInvoiceComponent } from './leisure/invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
 import { FareRuleSegmentComponent } from './leisure/remarks/fare-rule-segment/fare-rule-segment.component';
@@ -41,19 +41,20 @@ import { RefundComponent } from './leisure/cancel/refund/refund.component';
 import { CancelSegmentComponent } from './leisure/cancel/cancel-segment/cancel-segment.component';
 import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 import { MyCommonModule } from './my-common.module';
+import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-ticket-fop.component';
 
 
 @NgModule({
   declarations: [
     LeisureComponent,
     ReportingComponent,
-    PassiveSegmentsComponent,
+    // PassiveSegmentsComponent,
     RemarkComponent,
     TourPackageComponent,
     PaymentComponent,
     MatrixReceiptComponent,
     UpdateMatrixReceiptComponent,
-    PassiveSegmentsComponent,
+    // PassiveSegmentsComponent,
     UpdateAccountingRemarkComponent,
     AccountingRemarkComponent,
     LeisureFeeComponent,
@@ -61,11 +62,11 @@ import { MyCommonModule } from './my-common.module';
     ConciergeUdidsComponent,
     AmountPipe,
     CancelSegmentComponent,
-    SegmentsComponent,
+    // SegmentsComponent,
     UpdateSegmentComponent,
     MessageComponent,
     LoadingComponent,
-    VisaPassportComponent,
+    // VisaPassportComponent,
     CodeshareComponent,
     FareRuleSegmentComponent,
     UpdateFareRuleSegmentComponent,
@@ -79,7 +80,8 @@ import { MyCommonModule } from './my-common.module';
     QueueComponent,
     CancelComponent,
     RefundComponent,
-    AssociatedRemarksComponent
+    AssociatedRemarksComponent,
+    BspTicketFopComponent
   ],
   imports: [
     BrowserModule,

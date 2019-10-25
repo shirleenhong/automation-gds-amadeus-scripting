@@ -5,13 +5,14 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { RemarkGroup } from '../../models/pnr/remark.group.model';
 import { TicketModel } from '../../models/pnr/ticket.model';
-import { FormGroup } from '@angular/forms';
 import { DDBService } from '../ddb.service';
 import { AquaTicketingComponent } from 'src/app/corporate/ticketing/aqua-ticketing/aqua-ticketing.component';
 import { ApprovalRuleService } from './approval-rule.service';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { FormGroup, FormArray } from '@angular/forms';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 declare var smartScriptSession: any;
 
@@ -29,7 +30,8 @@ export class TicketRemarkService {
     private remarksManager: RemarksManagerService,
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
-    private remarkHelper: RemarkHelper
+    private remarkHelper: RemarkHelper,
+    private amdeusQueue: AmadeusQueueService
   ) { }
 
   /**
@@ -38,7 +40,6 @@ export class TicketRemarkService {
    */
   public submitTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
     this.cleanupTicketRemark();
-
     return this.writeTicketRemark(ticketRemark, fg);
   }
 
@@ -49,7 +50,7 @@ export class TicketRemarkService {
     const linesToDelete: Array<number> = new Array();
 
     const existingTkLineNum = this.pnrService.getTkLineNumber();
-
+    const existingFSLineNum = this.pnrService.getFSLineNumber();
     if (existingTkLineNum >= 0) {
       linesToDelete.push(existingTkLineNum);
 
@@ -57,6 +58,9 @@ export class TicketRemarkService {
       if (existingRirLineNum && existingRirLineNum >= 0) {
         linesToDelete.push(existingRirLineNum);
       }
+    }
+    if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
+      linesToDelete.push(existingFSLineNum);
     }
 
     if (linesToDelete.length > 0) {
@@ -350,13 +354,53 @@ export class TicketRemarkService {
       const index = this.getApprovalIndex(fg);
       this.approvalRuleService.getWriteApproval(index).forEach((app) => {
         const rems = app.getRuleText().split('|');
-        const type = rems[0].indexOf('RI') === 0 ? 'RI' : 'RM';
-        if (this.pnrService.getRemarkLineNumber(rems[1], type) === '') {
-          remarkList.push(this.remarkHelper.createRemark(rems[1], type, rems[0].charAt(3)));
+        let remark = rems[1];
+        const type = rems[0].substring(0, 2);
+
+        for (const control of (fg.get('additionalValues') as FormArray).controls) {
+          if (control.get('uiType').value === '[TEXTBOX]') {
+            remark = remark.replace('[' + control.get('textLabel').value.trim() + ']', control.get('textValue').value);
+          }
         }
+
+        if (remark.indexOf('[UI_') > -1) {
+          remark = remark.replace(fg.get('primaryReason').value, fg.get('primaryText').value);
+          remark = remark.replace(fg.get('secondaryReason').value, fg.get('secondaryText').value);
+        }
+
+        if (remark.indexOf('[DATE_NOW]') >= 0) {
+          const datePipe = new DatePipe('en-Us');
+          remark = remark.replace('[DATE_NOW]', datePipe.transform(Date.now(), 'yyyy-MM-dd'));
+        }
+
+        this.getSplitRemark(remark).forEach((text) => {
+          if (this.pnrService.getRemarkLineNumber(text, type) === '') {
+            remarkList.push(this.remarkHelper.createRemark(text, type, rems[0].length === 2 ? '' : rems[0].charAt(2)));
+          }
+        });
       });
+    } else if (this.ddbService.approvalList.length > 0 && this.pnrService.getRemarkLineNumber('NO APPROVAL REQUIRED') === '') {
+      remarkList.push(this.remarkHelper.createRemark('NO APPROVAL REQUIRED', 'RM', 'G'));
     }
+
     return remarkList;
+  }
+  getSplitRemark(remark: string) {
+    const splitRemarks = [];
+    if (remark.length > 55) {
+      while (remark.length > 55) {
+        const c = remark.substring(0, 55);
+        const rem = remark.substring(0, c.lastIndexOf(' '));
+        splitRemarks.push(rem);
+        remark = remark.replace(rem, '').trim();
+        if (remark.length <= 55) {
+          splitRemarks.push(remark);
+        }
+      }
+    } else {
+      splitRemarks.push(remark);
+    }
+    return splitRemarks;
   }
 
   /**
@@ -366,10 +410,12 @@ export class TicketRemarkService {
    */
   private getApprovalIndex(fg: FormGroup): string {
     let value = '';
-    if (fg.get('secondaryReason').value !== '') {
+    if (fg.get('secondaryReason').value) {
       value = fg.get('secondaryReason').value.toString();
-    } else if (fg.get('primaryReason').value !== '') {
+    } else if (fg.get('primaryReason').value) {
       value = fg.get('primaryReason').value.toString() + '_0';
+    } else {
+      value = '_0';
     }
     return value.match(/_(\d)/g).join('');
   }
@@ -379,22 +425,21 @@ export class TicketRemarkService {
    * @param fg Approval Form
    * @returns Array<QueuePlaceModel> queue placement information
    */
-  getApprovalQueue(fg: FormGroup): Array<QueuePlaceModel> {
-    const queueGroup = Array<QueuePlaceModel>();
+  getApprovalQueue(fg: FormGroup) {
+
     if (fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
 
       this.approvalRuleService.getQueueApproval(index).forEach((app) => {
         const queue = new QueuePlaceModel();
         const queueInfo = app.getRuleText().split('/');
-        queue.pcc = (queueInfo[0] === '{BOOKING_OID}') ? this.pnrService.PCC : queueInfo[0];
+        queue.pcc = queueInfo[0] === '{BOOKING_OID}' ? this.pnrService.PCC : queueInfo[0];
         queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
         const categoryqueue = queueInfo[1].split('C');
         queue.queueNo = categoryqueue[0];
         queue.category = categoryqueue[1];
-        queueGroup.push(queue);
+        this.amdeusQueue.addQueueCollection(queue);
       });
     }
-    return queueGroup;
   }
 }

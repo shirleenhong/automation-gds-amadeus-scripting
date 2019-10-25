@@ -80,7 +80,7 @@
             name="primaryReason"
             id="primaryReason"
             formControlName="primaryReason"
-            (change)="primaryReasonChange($event.target.value)"
+            (change)="primaryReasonChange($event.target.selectedIndex)"
           >
             <option *ngFor="let item of primaryReasonList" [value]="item.getRule()">
               {{ item.getRuleText() }}
@@ -97,7 +97,7 @@
             name="secondaryReason"
             id="secondaryReason"
             formControlName="secondaryReason"
-            (change)="showAdditionalInfo($event.target.value)"
+            (change)="showAdditionalInfo($event.target.selectedIndex)"
           >
             <option *ngFor="let item of secondaryReasonList" [value]="item.getRule()">
               {{ item.getRuleText() }}
@@ -114,7 +114,7 @@
               {{ item.get('textLabel').value }}
             </div>
           </div>
-          <div class="row" *ngIf="item.get('uiType').value == '[TEXT_BOX]'">
+          <div class="row" *ngIf="item.get('uiType').value == '[TEXTBOX]'">
             <div class="col-3">{{ item.get('textLabel').value }} :</div>
             <div class="col-4">
               <input type="text" class="form-control" name="textValue" id="textValue" formControlName="textValue" />

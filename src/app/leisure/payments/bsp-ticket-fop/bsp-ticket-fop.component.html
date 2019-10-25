@@ -1,0 +1,45 @@
+<form [formGroup]="bspTicketFopForm" class="col">
+  <div class="bspticketfop">
+    <div class="row form-group">
+      <div class="col-4">BSP Form of Payment:</div>
+      <div class="col-4">
+        <select id="bspfop" class="form-control" formControlName="bspfop" name="bspfop"
+          (change)="onchangePaymentType($event.target.value)">
+          <option *ngFor="let item of bspfopList" [value]="item.itemValue">
+            {{ item.itemText }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="f.bspfop.value === 'CC'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Credit Card No: </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="ccNo" required maxlength="16" formControlName="ccNo" name="ccNo"
+            [ngClass]="{ 'is-invalid': f.ccNo.touched && f.ccNo.invalid }" />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Expiration Date: </div>
+        <div class="col-sm-4">
+          <input type="input" class="form-control" id="expDate" required formControlName="expDate" name="expDate"
+            CCDateExpMask [ngClass]="{ 'is-invalid': f.expDate.touched && f.expDate.invalid }" />
+        </div>
+      </div>
+
+      <div class="form-group  row">
+        <div class="col-sm-4">Vendor Code:</div>
+        <div class="col-sm-4">
+          <select autofocus id="vendorCode" class="form-control" name="vendorCode" formControlName="vendorCode" required
+            (change)="creditcardMaxValidator($event.target.value)">
+            <option *ngFor="let item of vendorCodeList" [value]="item.itemValue">
+              {{ item.itemText }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

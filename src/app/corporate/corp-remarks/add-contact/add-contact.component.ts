@@ -13,10 +13,8 @@ export class AddContactComponent implements OnInit {
   deleteSRline = [];
   paxArray = [];
   arrayGroup = [];
-  showComponent: boolean = false;
-  constructor(private fb: FormBuilder, private pnrService: PnrService) {
-
-  }
+  showComponent = false;
+  constructor(private fb: FormBuilder, private pnrService: PnrService) {}
   ngOnInit() {
     this.getPassengers();
     this.arrayGroup = this.getSSRPreFilledValues();
@@ -24,7 +22,7 @@ export class AddContactComponent implements OnInit {
       this.showComponent = this.arrayGroup.length > 0 ? true : this.showComponent;
       this.arrayGroup.push(this.createItem());
       this.addContactForm = new FormGroup({
-      items: this.fb.array(this.arrayGroup)
+        items: this.fb.array(this.arrayGroup)
       });
       this.items = this.addContactForm.get('items') as FormArray;
     }
@@ -33,11 +31,11 @@ export class AddContactComponent implements OnInit {
   getPassengers() {
     const passengers = this.pnrService.pnrObj.nameElements;
     for (const pax of passengers) {
-      let temp = {
+      const temp = {
         tatooNumber: pax.tatooNumber,
         segmentType: pax.segmentType,
-        paxValue: "P" + pax.elementNumber
-      }
+        paxValue: 'P' + pax.elementNumber
+      };
       this.paxArray.push(temp);
     }
   }
@@ -46,7 +44,7 @@ export class AddContactComponent implements OnInit {
     const group = this.fb.group({
       name: new FormControl('', [Validators.required]),
       countryCode: new FormControl('', [Validators.required]),
-      phone: new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+      phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
       freeFlowText: new FormControl('', []),
       passengers: new FormControl('', [])
     });
@@ -63,22 +61,30 @@ export class AddContactComponent implements OnInit {
   removeInputField(i: number): void {
     const control = this.items;
     control.removeAt(i);
-    this.showComponent = i == 0 && this.items.length === 0 ? false : this.showComponent;
+    this.showComponent = i === 0 && this.items.length === 0 ? false : this.showComponent;
   }
 
   getSSRPreFilledValues() {
     let ssrElements = this.pnrService.pnrObj.ssrElements;
-    ssrElements = ssrElements.filter(x => { if (x.fullNode.serviceRequest.ssr.type === 'PCTC') { return x; } });
+    ssrElements = ssrElements.filter((x) => {
+      if (x.fullNode.serviceRequest.ssr.type === 'PCTC') {
+        return x;
+      }
+    });
     this.getDeleteSSRElements(ssrElements);
     const groupArray = [];
     const valuesArr = [];
     for (const sr of ssrElements) {
       const freeFlowText = sr.freeFlowText;
       const reg = /([A-Z\s]{1,})\s(\/)([A-Z]{2}[0-9]{1,})(.)\s([A-Z-.\s]{1,})/g;
-      const matchedGroups = reg.exec(freeFlowText); 
+      const matchedGroups = reg.exec(freeFlowText);
       const association = this.getPaxAssociations(sr.associations);
-      const ssr = matchedGroups[1] + matchedGroups[3].substring(0, 2) + matchedGroups[3].substring(2, matchedGroups[3].length) +
-        matchedGroups[5] + association;
+      const ssr =
+        matchedGroups[1] +
+        matchedGroups[3].substring(0, 2) +
+        matchedGroups[3].substring(2, matchedGroups[3].length) +
+        matchedGroups[5] +
+        association;
       valuesArr.push(ssr);
       const group = this.fb.group({
         name: new FormControl(matchedGroups[1], [Validators.required]),
@@ -87,11 +93,11 @@ export class AddContactComponent implements OnInit {
         freeFlowText: new FormControl(matchedGroups[5], [Validators.required]),
         passengers: new FormControl(association, [])
       });
-      if(valuesArr.length===1 || valuesArr.indexOf(ssr)===-1)
-      groupArray.push(group);
+      if (valuesArr.length === 1 || valuesArr.indexOf(ssr) === -1) {
+        groupArray.push(group);
+      }
     }
     return groupArray;
-
   }
 
   getDeleteSSRElements(ssr) {
@@ -107,7 +113,7 @@ export class AddContactComponent implements OnInit {
       for (const a of associations) {
         for (const p of this.pnrService.pnrObj.nameElements) {
           if (a.tatooNumber === p.tatooNumber && a.segmentType === p.segmentType) {
-            return "P" + p.elementNumber;
+            return 'P' + p.elementNumber;
           }
         }
       }
@@ -120,7 +126,6 @@ export class AddContactComponent implements OnInit {
       items: this.fb.array(this.arrayGroup)
     });
     this.items = this.addContactForm.get('items') as FormArray;
-    this.showComponent = true; 
+    this.showComponent = true;
   }
-
 }

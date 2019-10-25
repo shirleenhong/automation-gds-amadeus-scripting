@@ -301,18 +301,17 @@ export class CorporateComponent implements OnInit {
 
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
-      commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent)
-     }
-    
+      commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
+    }
+
     await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
         this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
       )
     );
 
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks,commandList).then(
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
       async () => {
-       
         this.isPnrLoaded = false;
         this.workflow = '';
         this.getPnr();
@@ -323,8 +322,6 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
-
-   
   }
 
   back() {

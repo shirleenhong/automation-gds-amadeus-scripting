@@ -238,10 +238,13 @@ export class PaymentRemarkService {
         fareType = this.getFareType(accountingRemarks[0].fareType);
       }
       if (accountingRemarks[0].accountingTypeRemark === 'ACPR') {
-        fareType = accountingRemarks[0].fareType;
+        if (accountingRemarks[0].airlineCorporatePass.airlineCode === 'AC') {
+          fareType = accountingRemarks[0].fareType;
+        }
       }
-
-      return 'PBN/YTOWL210N/' + airline + ' PASS ' + fareType + '/*';
+      if (fareType !== '') {
+        return 'PBN/YTOWL210N/' + airline + ' PASS ' + fareType + '/*';
+      }
     }
   }
 

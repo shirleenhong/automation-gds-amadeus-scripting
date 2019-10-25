@@ -3,7 +3,7 @@ import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.mode
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
-import { FormGroup, Validators, ValidationErrors, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
@@ -278,7 +278,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   configureACPRControls(): void {
     this.name = 'Airline Record Locator';
     // Get AC segments only.
-    this.airlineCorporatePasses = this.airlineCorporatePassService.getAll().filter((x) => x.airlineCode === 'AC');
+    this.airlineCorporatePasses = this.airlineCorporatePassService
+      .getAll()
+      .filter((x) => x.airlineCode === this.pnrService.segments[0].airlineCode);
     // this.airlineCorporatePasses = AirlineCorporatePass.getSampleData();
     this.checkSupplierCode();
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
@@ -524,7 +526,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.accountingRemark.fareType = airlineCorporatePassSelected.fareType;
       this.setBaseAmount();
     });
-    this.matrixAccountingForm.get('segmentsCount').valueChanges.subscribe((value) => {
+    this.matrixAccountingForm.get('segmentsCount').valueChanges.subscribe(() => {
       this.setBaseAmount();
     });
   }

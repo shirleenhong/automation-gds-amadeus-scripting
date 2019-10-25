@@ -300,6 +300,8 @@ Verify Passive Rail Segment And RIR Added In The PNR For EN
     Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    3    EN
     
 Verify Passive Rail Segment And RIR Added In The PNR For FR
+    Switch To Graphic Mode
+    Get PNR Details
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S2

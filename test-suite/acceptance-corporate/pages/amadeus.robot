@@ -232,7 +232,7 @@ Move Single Passenger For OBT
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    APE-test@email.com    RM*CF/-VB70000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C 
 
 Move Multiple Passenger
-    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM SYEXGVS: A:FA177
+    Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-AAA0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177
 
 Move Single Passenger And Add Single BSP Segment With TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-CN1

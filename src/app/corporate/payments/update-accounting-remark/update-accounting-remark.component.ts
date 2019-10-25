@@ -317,19 +317,19 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   /**
-   * tmp
+   * Log matrixAccountingForm validation errors for tracking.
    */
-  logFormValidationErrors() {
-    console.log('================ matrixAccountingForm ERRORS: ================');
-    Object.keys(this.matrixAccountingForm.controls).forEach((key) => {
-      const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
-      if (controlErrors != null) {
-        Object.keys(controlErrors).forEach((keyError) => {
-          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-        });
-      }
-    });
-  }
+  // logFormValidationErrors() {
+  //   console.log('================ matrixAccountingForm ERRORS: ================');
+  //   Object.keys(this.matrixAccountingForm.controls).forEach((key) => {
+  //     const controlErrors: ValidationErrors = this.matrixAccountingForm.get(key).errors;
+  //     if (controlErrors != null) {
+  //       Object.keys(controlErrors).forEach((keyError) => {
+  //         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+  //       });
+  //     }
+  //   });
+  // }
 
   setMandatoryTicket(supCode: string[], isRequired: boolean) {
     if (supCode.indexOf(this.accountingRemark.supplierCodeName) >= 0 || isRequired) {
@@ -391,8 +391,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.accountingRemark.airlineCorporatePass = this.airlineCorporatePassService.getById(
         this.matrixAccountingForm.get('airlineCorporatePassId').value
       );
-      console.log('this.accountingRemark.airlineCorporatePass');
-      console.log(this.accountingRemark.airlineCorporatePass);
     }
 
     this.isSubmitted = true;
@@ -470,15 +468,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
    * Subscribe to observable FormControls and FormGroups
    */
   onChanges(): void {
-    this.matrixAccountingForm.valueChanges.subscribe((value) => {
-      console.log(value);
-      this.logFormValidationErrors();
-
-      // if (this.accountingRemark.accountingTypeRemark === 'ACPR') {
-      //   // this.accountingRemark.airlineCorporatePass = this.airlineCorporatePasses[0];
-      // }
-    });
-
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(() => {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       switch (this.accountingRemark.accountingTypeRemark) {
@@ -536,15 +525,11 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.setBaseAmount();
     });
     this.matrixAccountingForm.get('segmentsCount').valueChanges.subscribe((value) => {
-      console.log('segmentsCount: ' + value);
       this.setBaseAmount();
     });
   }
 
   setBaseAmount(): void {
-    console.log('Setting baseAmount: ' + this.matrixAccountingForm.get('baseAmount').value);
-    // const baseAmount = this.pnrService.getPassiveAirSegmentNumbers().length * this.airlineCorporatePasses[0].segmentCost;
-    // const baseAmount = this.matrixAccountingForm.get('segmentsCount').value * this.airlineCorporatePasses[0].segmentCost;
     let baseAmount = 0;
     if (this.matrixAccountingForm.get('airlineCorporatePassId').value) {
       baseAmount =
@@ -554,7 +539,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         )[0].segmentCost;
     }
     this.matrixAccountingForm.get('baseAmount').setValue(baseAmount);
-    console.log('baseAmount: ' + this.matrixAccountingForm.get('baseAmount').value);
   }
 
   setTktNumber() {

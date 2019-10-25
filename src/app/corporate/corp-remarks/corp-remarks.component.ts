@@ -56,9 +56,11 @@ export class CorpRemarksComponent implements OnInit {
       return false;
     }
 
-    this.utilHelper.validateAllFields(this.addContactComponent.addContactForm);
-    if (!this.addContactComponent.addContactForm.valid) {
-      return false;
+    if (this.addContactComponent!==undefined) {
+      this.utilHelper.validateAllFields(this.addContactComponent.addContactForm);
+      if (!this.addContactComponent.addContactForm.valid) {
+        return false;
+      }
     }
 
     // this.utilHelper.validateAllFields(this.seatsComponent);
@@ -71,10 +73,12 @@ export class CorpRemarksComponent implements OnInit {
 
   checkIfPassiveSegmentPresent() {
     this.getPassiveSegments = this.pnrService.getModelPassiveSegments();
-    let count = 0;
-    for (const seg of this.getPassiveSegments) {
-      count = seg.isPassive === true ? count + 1 : count;
+    for (const seg of this.pnrService.pnrObj.airSegments) {
+      if (seg.status !== "GK") {
+        return false;
+      }
     }
-    return count > 0 ? true : false ; 
+   
+    return true ; 
   }
 }

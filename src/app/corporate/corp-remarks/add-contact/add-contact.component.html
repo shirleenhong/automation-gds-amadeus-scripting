@@ -32,19 +32,19 @@
               </td>
             </tr>
       </table>
-      <div formArrayName="items" *ngFor="let item of this.addContactForm.get('items')['controls']; let i = index;" class="col">
+      <div formArrayName="items" name="items" *ngFor="let item of this.addContactForm.get('items')['controls']; let i = index;" class="col">
         <div [formGroupName]="i">
           <table style="width:100%">
            
             <tr >
               <td style="width: 16%" >
                 <input style="width:100%" formControlName="name" type="text" class="form-control" maxlength="55" required
-                   />
+                AlphaMask  />
               </td>
              
               <td style="width: 16%">
-                <input style="width:100%" formControlName="countryCode" type="text" class="form-control" maxlength="55" required
-                   />
+                <input style="width:100%" formControlName="countryCode" type="text" class="form-control" maxlength="2" required
+                AlphaMask  />
               </td>
               
               <td style="width: 16%">

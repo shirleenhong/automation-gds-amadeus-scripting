@@ -31,11 +31,23 @@
     <!-- Airline Corporate Pass -->
     <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
       <div class="col-sm-4">Airline Corporate Pass:</div>
-      <div class="col-sm-8">
+      <div class="col-sm-8" *ngIf="title === 'Add Accounting Remarks'">
+        <!-- Add -->
         <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePassId"
           name="airlineCorporatePassId" required>
           <option></option>
           <option *ngFor="let item of airlineCorporatePasses" [value]="item.id">
+            {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
+          </option>
+        </select>
+      </div>
+      <div class="col-sm-8" *ngIf="title === 'Update Accounting Remarks'">
+        <!-- Update -->
+        <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePassId"
+          name="airlineCorporatePassId" required>
+          <option></option>
+          <option *ngFor="let item of airlineCorporatePasses" [value]="item.id"
+            [selected]="item.id === accountingRemark.airlineCorporatePass.id">
             {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
           </option>
         </select>

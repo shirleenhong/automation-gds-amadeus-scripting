@@ -96,37 +96,35 @@ export class PaymentRemarkService {
         redemptionRemark.set('PassName', 'Airline Corporate');
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
 
-        // debugger;
         // US10574: Airline Corporate Pass Redemption
-        staticRemarksCondition.set('PassPurchase', 'true');
+        // debugger;
+        // const tattooNumbers = account.segmentNo ? this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(',')) : null;
+        const tattooNumbers = account.segmentNo ? account.segmentNo.split(',') : null;
+        // const tattooNumbers = ['2'];
+        // const tattooNumbers = null;
+        staticRemarksCondition.set('CAAirlineCorporatePass', 'true');
         this.remarksManager.createPlaceholderValues(
           null,
           staticRemarksCondition,
-          account.segmentNo.split(','),
+          tattooNumbers,
           null,
           'THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE'
         );
         this.remarksManager.createPlaceholderValues(
           null,
           staticRemarksCondition,
-          account.segmentNo.split(','),
+          tattooNumbers,
           null,
           'IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY.'
         );
         this.remarksManager.createPlaceholderValues(
           null,
           staticRemarksCondition,
-          account.segmentNo.split(','),
+          tattooNumbers,
           null,
           '**PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR'
         );
-        this.remarksManager.createPlaceholderValues(
-          null,
-          staticRemarksCondition,
-          account.segmentNo.split(','),
-          null,
-          'ON YOUR CREDIT CARD STATEMENT.'
-        );
+        this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, tattooNumbers, null, 'ON YOUR CREDIT CARD STATEMENT.');
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);

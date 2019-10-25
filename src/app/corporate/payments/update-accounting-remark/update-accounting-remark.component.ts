@@ -100,7 +100,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       // cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
       // expDate: new FormControl('', [Validators.required, validateExpDate()]),
 
-      airlineCorporatePassId: new FormControl('', [Validators.required]),
+      airlineCorporatePassId: new FormControl('', []),
       segmentsCount: new FormControl(this.pnrService.getPassiveAirSegmentNumbers().length.toString(), [])
     });
 
@@ -282,6 +282,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.checkSupplierCode();
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
     this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
+    this.matrixAccountingForm.get('airlineCorporatePassId').setValidators([Validators.required]);
 
     this.matrixAccountingForm.get('gst').setValue('0.00');
     this.matrixAccountingForm.get('hst').setValue('0.00');

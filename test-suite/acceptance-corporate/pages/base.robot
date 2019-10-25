@@ -36,7 +36,7 @@ ${button_send_invoice_itinerary}    //button[contains(text(), 'Send Invoice/Itin
 ${open_bracket}     [
 ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
-${button_add_segment}    //button[contains(text(), 'Add Segment')]
+${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Segment')]
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
@@ -63,7 +63,7 @@ Close CA Corporate Test
     Unselect Frame
     Wait Until Element Is Not Visible    ${overlay_loader}    20
     Wait Until Element Is Visible    ${header_corp_test}    50
-    Sleep    5
+    Run Keyword If    "${current_page}" == 'Add Passive Segment'   Sleep  10   ELSE   Sleep    5
     Click Element    ${button_close}
     Set Test Variable    ${current_page}    Amadeus
 
@@ -121,14 +121,6 @@ Click Payment Panel
     Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
-Click Passive Segment Panel
-    Wait Until Page Contains Element   ${panel_passive_segment}    60
-    Click Element At Coordinates    ${panel_passive_segment}    0    0
-    Scroll Element Into View    ${panel_passive_segment}
-    Click Element    ${panel_passive_segment}
-    #Set Test Variable    ${current_page}    Passive Segment
-    [Teardown]    Take Screenshot
-    
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
     Scroll Element Into View     ${panel_payment}
@@ -162,9 +154,10 @@ Click Add Segment to PNR
     [Arguments]    ${close_corporate_test}=yes
     Wait Until Element Is Visible    ${button_add_segment_toPNR}    60  
     Sleep   3  
-    Click Element    ${button_add_segment_toPNR}
+    Click Element At Coordinates    ${button_add_segment_toPNR}   0   0
     Wait Until Element Is Not Visible     ${message_add_segments}      180
     Wait Until Element Is Visible    ${button_full_wrap}    180
+    Sleep   3 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${current_page}     CWT Corporate
   
@@ -227,13 +220,14 @@ Navigate From Corp
 Navigate From Add Segment
     [Arguments]    ${destination_page}
     ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${current_page}
-    Run Keyword If    "${in_add_segment}" == "False"    Click Passive Segment Panel
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
     
 Click Add Passive Segment Button
-    Wait Until Element Is Visible    ${button_add_passive_segment}    
-    Click Element    ${button_add_passive_segment}
-    Set Test Variable    ${current_page}    Add Passive Segment
+	Wait Until Element Is Visible     ${button_add_passive_segment}    30
+	Click Element At Coordinates    ${button_add_passive_segment}   0   0
+	Click Element At Coordinates    ${button_add_passive_segment}   0   0
+	Wait Until Element Is Visible    ${select_segment_type}    30
+	Set Test Variable   ${current_page}    Add Passive Segment
 
 Collapse Open Panel
     ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}

@@ -7,7 +7,7 @@ import { CounselorDetail } from '../../globals/counselor-identity';
 import { EscRemarksComponent } from './esc-remarks/esc-remarks.component';
 import { VisaPassportComponent } from 'src/app/shared/visa-passport/visa-passport.component';
 import { PnrService } from '../../service/pnr.service';
-import {AddContactComponent} from './add-contact/add-contact.component'
+import { AddContactComponent } from './add-contact/add-contact.component';
 
 @Component({
   selector: 'app-corp-remarks',
@@ -22,19 +22,19 @@ export class CorpRemarksComponent implements OnInit {
   @ViewChild(AddContactComponent) addContactComponent: AddContactComponent;
   @ViewChild(VisaPassportComponent)
   viewPassportComponent: VisaPassportComponent;
-  getPassiveSegments=[];
+  getPassiveSegments = [];
   isOfc = false;
   isEsc: boolean;
   isPassive: any;
 
-  constructor(private utilHelper: UtilHelper,private counselorDetail:CounselorDetail,private pnrService: PnrService) {}
+  constructor(private utilHelper: UtilHelper, private counselorDetail: CounselorDetail, private pnrService: PnrService) {}
 
   ngOnInit() {
     this.counselorDetail.identityOnChange.subscribe((x) => {
-    this.isEsc = x === 'ESC';
+      this.isEsc = x === 'ESC';
     });
     this.isPassive = this.checkIfPassiveSegmentPresent();
-   }
+  }
   checkValid() {
     if (this.irdRemarks !== undefined) {
       this.utilHelper.validateAllFields(this.irdRemarks.irdGroup);
@@ -43,20 +43,22 @@ export class CorpRemarksComponent implements OnInit {
       }
     }
 
-    if (this.viewPassportComponent.isInternational
-      && (!this.viewPassportComponent.visaPassportView.citizenship.length
-        || !this.viewPassportComponent.visaPassportView.passportName.length
-        && (!this.viewPassportComponent.advisoryClicked || !this.viewPassportComponent.isInternationalTravelAdvisorySent))
+    if (
+      this.viewPassportComponent.isInternational &&
+      (!this.viewPassportComponent.visaPassportView.citizenship.length ||
+        (!this.viewPassportComponent.visaPassportView.passportName.length &&
+          (!this.viewPassportComponent.advisoryClicked || !this.viewPassportComponent.isInternationalTravelAdvisorySent)))
     ) {
       // Indicate invalidities of the required Visa and Passport Advisory fields...
-      this.viewPassportComponent.visaPassportFormGroup.controls['isInternationalTravelAdvisorySent'].markAsTouched();
-      this.viewPassportComponent.visaPassportFormGroup.controls['citizenship'].markAsTouched();
-      this.viewPassportComponent.visaPassportFormGroup.controls['passportName'].markAsTouched();
+      const group = this.viewPassportComponent.visaPassportFormGroup;
+      group.get('isInternationalTravelAdvisorySent').markAsTouched();
+      group.get('citizenship').markAsTouched();
+      group.get('passportName').markAsTouched();
 
       return false;
     }
 
-    if (this.addContactComponent!==undefined) {
+    if (this.addContactComponent && this.addContactComponent.addContactForm) {
       this.utilHelper.validateAllFields(this.addContactComponent.addContactForm);
       if (!this.addContactComponent.addContactForm.valid) {
         return false;
@@ -73,11 +75,11 @@ export class CorpRemarksComponent implements OnInit {
 
   checkIfPassiveSegmentPresent() {
     for (const seg of this.pnrService.pnrObj.airSegments) {
-      if (seg.status !== "GK") {
+      if (seg.status !== 'GK') {
         return false;
       }
     }
-   
-    return true ; 
+
+    return true;
   }
 }

@@ -391,8 +391,7 @@ export class PaymentRemarkService {
 
     if (hasApay) {
       const ebRemark = new Map<string, string>();
-      ebRemark.set('TouchLevel', 'AMA');
-      ebRemark.set('OBTVendorCode', '/-GIS');
+      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
       this.remarksManager.createPlaceholderValues(ebRemark);
     }
   }

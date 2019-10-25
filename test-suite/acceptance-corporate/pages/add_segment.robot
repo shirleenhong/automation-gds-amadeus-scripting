@@ -54,12 +54,75 @@ ${input_seat_number}    css=#seatNumber
 ${input_vendor_name}    css=#vendorName
 ${input_vendor_code}    css=#vendorCode
 ${input_confirmationNo}    css=#confirmationNo
+${input_tour_name}    css=#tourName
+${select_meal_plan}    css=#mealPlan
+${input_passenger}    xpath=//input[@formcontrolname='passenger']
+${start_passenger}    //div[@class='dropdown-item']//input[@value='
+${end_passenger}     ']
+
 
 *** Keywords ***
-   
+Add And Verify Air Segment for Non ZZ Details In The PNR
+    Navigate To Page Add Passive Segment
+    Wait Until Element Is Visible    ${select_segment_type}     30
+    Select From List By Label    ${select_segment_type}    Air
+    Enter Value    ${input_airline_code}    AC
+    Enter Value    ${input_flight_number}    8901
+    Enter Value    ${input_class_service}    Y
+    Enter Value    ${input_departure_city}    YUL
+    Enter Value    ${input_destination_city}    CDG  
+    Input Text    ${input_departure_date}    01022020
+    Input Text    ${input_arrival_date}    01032020
+    Enter Value    ${input_departure_time}    0330PM
+    Enter Value    ${input_arrival_time}    0515PM
+    Enter Value    ${input_airline_recloc}    ARL1234
+    Take Screenshot    
+    Click Add Passive Save Button
+    Sleep    3
+    Click Add Segment to PNR    
+    Close CA Corporate Test
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    AC8901 Y 02JAN
+    Verify Specific Remark Is Written In The PNR    YULCDG GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL1234
+    
+Add And Verify Air Segment for ZZ In The PNR
+    Navigate To Page Add Passive Segment
+    Wait Until Element Is Visible    ${select_segment_type}     30
+    Select From List By Label    ${select_segment_type}    Air
+    Enter Value    ${input_airline_code}    ZZ
+    Input Text    ${input_zz_airline}    AC
+    Enter Value    ${input_flight_number}    8888
+    Enter Value    ${input_class_service}    Y
+    Enter Value    ${input_departure_city}    ZZZ
+    Input Text    ${input_zzz_departure}    ZZZ
+    Enter Value    ${input_destination_city}    ZZZ
+    Input Text    ${input_zzz_arrival}    ZZZ
+    Input Text    ${input_departure_date}    01022020
+    Input Text    ${input_arrival_date}    01032020
+    Enter Value    ${input_departure_time}    0330PM
+    Enter Value    ${input_arrival_time}    0515PM
+    Enter Value    ${input_airline_recloc}    ARL76
+    Take Screenshot    
+    Click Add Passive Save Button
+    Sleep    3
+    Click Add Segment to PNR    
+    Close CA Corporate Test
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    ZZ8888 Y 02JAN
+    Verify Specific Remark Is Written In The PNR    ZZZZZZ GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL76
+    Verify Specific Remark Is Written In The PNR    RIR FLIGHT IS CONFIRMED WITH ZZ/S2    
+    Verify Specific Remark Is Written In The PNR    RIR DEPARTURE CITY IS ZZZ/S2
+    Verify Specific Remark Is Written In The PNR    RIR ARRIVAL CITY IS ZZZ/S2        
+    
+Click Add Passive Save Button
+    Wait Until Element Is Visible    ${button_save_passive}    60
+    Click Element At Coordinates  ${button_save_passive}    0    0
+    Wait Until Element Is Visible    ${button_add_passive_segment}   30
+    
 Add Passive Hotel Segment ${with_optional} Values On Optional Fields
     Navigate To Page Add Passive Segment
-    Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Hotel
     Enter Value    ${input_chain_code}    HI
     Enter Value    ${input_departure_city}    YYZ
@@ -101,7 +164,6 @@ Get Hotel Details
     
 Add Passive Hotel Segment ${with_optional} Hotel Details Input
     Navigate To Page Add Passive Segment
-    Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Hotel
     Enter Value    ${input_chain_code}    AC
     Enter Value    ${input_departure_city}    YYZ
@@ -155,61 +217,86 @@ Verify Hotel Passive RIR Remarks Are Written
 Verify Hotel Mandatory Matrix Remark Is Written In The PNR   
     Run Keyword If    "${is_manual_entered}" == "no"    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-HI    ELSE    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-AC
 	
-Add And Verify Air Segment for Non ZZ Details In The PNR
+Add Passive Tour Segment ${with_optional} Optional Values
     Navigate To Page Add Passive Segment
-    Select From List By Label    ${select_segment_type}    Air
-    Enter Value    ${input_airline_code}    AC
-    Enter Value    ${input_flight_number}    8901
-    Enter Value    ${input_class_service}    Y
+    Select From List By Label    ${select_segment_type}    Tour
+    Enter Value    ${input_vendor_code}     AB6
+    Enter Value    ${input_confirmationNo}     cf12345678
     Enter Value    ${input_departure_city}    YUL
     Enter Value    ${input_destination_city}    CDG  
-    Input Text    ${input_departure_date}    01022020
-    Input Text    ${input_arrival_date}    01032020
+    Input Text    ${input_departure_date}    04022020
+    Input Text    ${input_arrival_date}    04032020
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
-    Enter Value    ${input_airline_recloc}    ARL1234
-    Take Screenshot    
-    Click Add Passive Save Button
-    Sleep    3
-    Click Add Segment to PNR    
-    Close CA Corporate Test
-    Switch To Graphic Mode
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    AC8901 Y 02JAN
-    Verify Specific Remark Is Written In The PNR    YULCDG GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL1234
+    Enter Value    ${input_tour_name}     Tour Name Test
+    Run Keyword If    "${with_optional}" == "With"    Select From List By Label    ${select_room_type}    DBLB
+    Run Keyword If    "${with_optional}" == "With"    Select From List By Label    ${select_meal_plan}    All Inclusive 
+    Click Add Passive Save Button 
+    Click Add Segment to PNR    yes
+    Set Test Variable    ${with_optional}
     
-Add And Verify Air Segment for ZZ In The PNR
+Add Multiple Passive Tour Segments
     Navigate To Page Add Passive Segment
-    Select From List By Label    ${select_segment_type}    Air
-    Enter Value    ${input_airline_code}    ZZ
-    Input Text    ${input_zz_airline}    AC
-    Enter Value    ${input_flight_number}    8888
-    Enter Value    ${input_class_service}    Y
-    Enter Value    ${input_departure_city}    ZZZ
-    Input Text    ${input_zzz_departure}    ZZZ
-    Enter Value    ${input_destination_city}    ZZZ
-    Input Text    ${input_zzz_arrival}    ZZZ
-    Input Text    ${input_departure_date}    01022020
-    Input Text    ${input_arrival_date}    01032020
+    Select From List By Label    ${select_segment_type}    Tour
+    Enter Value    ${input_vendor_code}     AB6
+    Enter Value    ${input_confirmationNo}     cf12345678
+    Enter Value    ${input_departure_city}    YUL
+    Enter Value    ${input_destination_city}    CDG  
+    Input Text    ${input_departure_date}    04022020
+    Input Text    ${input_arrival_date}    04032020
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
-    Enter Value    ${input_airline_recloc}    ARL76
-    Take Screenshot    
-    Click Add Passive Save Button
-    Sleep    3
-    Click Add Segment to PNR    
-    Close CA Corporate Test
+    Enter Value    ${input_tour_name}     Tour Name Test
+    Select From List By Label    ${select_room_type}    DBLB
+    Select From List By Label    ${select_meal_plan}    All Inclusive 
+    Select Passenger    1
+    Click Add Passive Save Button 
+    Click Add Passive Segment Button
+    Select From List By Label    ${select_segment_type}    Tour
+    Enter Value    ${input_vendor_code}     AO2
+    Enter Value    ${input_confirmationNo}     cf98765432
+    Enter Value    ${input_departure_city}    CDG
+    Enter Value    ${input_destination_city}    LHR  
+    Input Text    ${input_departure_date}    04102020
+    Input Text    ${input_arrival_date}    04132020
+    Enter Value    ${input_departure_time}    1230PM
+    Enter Value    ${input_arrival_time}    1115PM
+    Enter Value    ${input_tour_name}     2nd Tour
+    Select From List By Label    ${select_room_type}    TRPL
+    Select From List By Label    ${select_meal_plan}    American Plan 
+    Select Passenger    2
+    Click Add Passive Save Button 
+    Click Add Segment to PNR    yes
+
+Select Passenger
+    [Arguments]   @{passenger_number}
+    Click Element    ${input_passenger} 
+    : FOR    ${passenger_number}    IN    @{passenger_number}
+    \    Click Element    ${start_passenger}${passenger_number}${end_passenger} 
+    Click Element    ${input_passenger} 
+    Press Key   ${input_passenger}     \\09
+    
+Verify Passive Tour Segment And RIR Remarks Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    ZZ8888 Y 02JAN
-    Verify Specific Remark Is Written In The PNR    ZZZZZZ GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL76
-    Verify Specific Remark Is Written In The PNR    RIR FLIGHT IS CONFIRMED WITH ZZ/S2    
-    Verify Specific Remark Is Written In The PNR    RIR DEPARTURE CITY IS ZZZ/S2
-    Verify Specific Remark Is Written In The PNR    RIR ARRIVAL CITY IS ZZZ/S2        
+    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 YUL 02APR-/TYP-TOR/SUN-ADAMS & BUTLER TOUR NAME TEST/SUC-AB6/SC-YUL/SD-02APR/ST-1530/EC-CDG/ED-03APR/ET-1715/CF-CF12345678    True
+    Run Keyword If    "${with_optional}" == "With"   Verify Passive Tour RIR Remarks Is Written In The PNR     RIR DBLB ALL INCLUSIVE 1 NTS/S2   ELSE    Verify Passive Tour RIR Remarks Is Written In The PNR     RIR 1 NTS/S2
     
-Click Add Passive Save Button
-    Wait Until Element Is Visible    ${button_save_passive}    60
-    Click Element    ${button_save_passive}	
+Verify Passive Tour Segment Is Added In The PNR
+     [Arguments]   ${tour_segment remark}    ${multi_line_remark}
+     Verify Specific Remark Is Written In The PNR    ${tour_segment remark}    ${multi_line_remark}
+
+Verify Passive Tour RIR Remarks Is Written In The PNR
+    [Arguments]    @{tour_rir}
+    : FOR    ${tour_rir}    IN    @{tour_rir}
+    \    Verify Specific Remark Is Written In The PNR    ${tour_rir}
+
+Verify Multiple Passive Tour Segment And RIR Remarks Are Written In The PNR
+    Switch To Graphic Mode
+    Get PNR Details  
+    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 YUL 02APR-/TYP-TOR/SUN-ADAMS & BUTLER TOUR NAME TEST/SUC-AB6/SC-YUL/SD-02APR/ST-1530/EC-CDG/ED-03APR/ET-1715/CF-CF12345678/P1    True
+    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 CDG 10APR-/TYP-TOR/SUN-ABERCROMBIE & KENT 2ND TOUR/SUC-AO2/SC-CDG/SD-10APR/ST-1230/EC-LHR/ED-13APR/ET-2315/CF-CF98765432/P2    True 
+    Verify Passive Tour RIR Remarks Is Written In The PNR     RIR DBLB ALL INCLUSIVE 1 NTS/S3     RIR TRPL AMERICAN PLAN 3 NTS/S4
 
 Add Multiple Passive Rail Segment For EN PNR
     Navigate To Page Add Passive Segment

@@ -75,16 +75,18 @@ export class InvoiceRemarkService {
   getSSRCommandsForContact(addConact: AddContactComponent) {
     const formCommandArr = [];
     let formCommand = '';
-    const arr = addConact.addContactForm.get('items') as FormArray;
-    for (const c of arr.controls) {
-      const name = c.get('name').value;
-      const countryCode = c.get('countryCode').value;
-      const phone = c.get('phone').value;
-      const freeFlow = c.get('freeFlowText').value;
-      const pax = c.get('passengers').value;
-      if (name && countryCode && phone) {
-        formCommand = 'SR PCTC YY HK/' + name + '/' + countryCode + phone + '.' + freeFlow + '/' + pax;
-        formCommandArr.push(formCommand);
+    if (addConact.addContactForm) {
+      const arr = addConact.addContactForm.get('items') as FormArray;
+      for (const c of arr.controls) {
+        const name = c.get('name').value;
+        const countryCode = c.get('countryCode').value;
+        const phone = c.get('phone').value;
+        const freeFlow = c.get('freeFlowText').value;
+        const pax = c.get('passengers').value;
+        if (name && countryCode && phone) {
+          formCommand = 'SR PCTC YY HK/' + name + '/' + countryCode + phone + '.' + freeFlow + '/' + pax;
+          formCommandArr.push(formCommand);
+        }
       }
     }
     return formCommandArr;

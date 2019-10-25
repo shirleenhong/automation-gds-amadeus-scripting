@@ -83,7 +83,7 @@ export class InvoiceRemarkService {
       const freeFlow = c.get('freeFlowText').value;
       const pax = c.get('passengers').value;
       if (name && countryCode && phone) {
-        formCommand = 'SR PCTC YY HK/ ' + name + ' /' + countryCode + phone + '. ' + freeFlow + '/' + pax;
+        formCommand = 'SR PCTC YY HK/' + name + '/' + countryCode + phone + '.' + freeFlow + '/' + pax;
         formCommandArr.push(formCommand);
       }
     }

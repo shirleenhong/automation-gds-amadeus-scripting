@@ -42,12 +42,11 @@
         </select>
       </div>
       <div class="col-sm-8" *ngIf="title === 'Update Accounting Remarks'">
-        <!-- Update -->
         <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePassId"
           name="airlineCorporatePassId" required>
           <option></option>
-          <option *ngFor="let item of airlineCorporatePasses" [value]="item.id"
-            [selected]="item.id === accountingRemark.airlineCorporatePass.id">
+          <option *ngFor="let item of airlineCorporatePasses" [value]="accountingRemark.airlineCorporatePass.id"
+            [selected]="item.id == accountingRemark.airlineCorporatePass.id">
             {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
           </option>
         </select>
@@ -311,7 +310,10 @@
     <div *ngIf="isGdsFareRequired">
       <!-- GDS Fare -->
       <div class="form-group row">
-        <div class="col-sm-4">GDS Fare:</div>
+        <div class="col-sm-4">
+          <span *ngIf="accountingRemark.accountingTypeRemark !== 'ACPR'">GDS Fare:</span>
+          <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">Lowest GDS Fare:</span>
+        </div>
         <div class="col-sm-8">
           <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
             [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0.00" />

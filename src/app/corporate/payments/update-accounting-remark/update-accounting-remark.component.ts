@@ -23,7 +23,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   accountingRemarkList: Array<SelectItem>;
 
   airlineCorporatePasses: Array<AirlineCorporatePass>;
-  airlineCorporatePassId: AirlineCorporatePass;
 
   vendorCodeList: Array<SelectItem>;
   supplierCodeList: Array<any>;
@@ -540,7 +539,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   setBaseAmount(): void {
     console.log('Setting baseAmount: ' + this.matrixAccountingForm.get('baseAmount').value);
     // const baseAmount = this.pnrService.getPassiveAirSegmentNumbers().length * this.airlineCorporatePasses[0].segmentCost;
-    const baseAmount = this.matrixAccountingForm.get('segmentsCount').value * this.airlineCorporatePasses[0].segmentCost;
+    // const baseAmount = this.matrixAccountingForm.get('segmentsCount').value * this.airlineCorporatePasses[0].segmentCost;
+    let baseAmount = 0;
+    if (this.matrixAccountingForm.get('airlineCorporatePassId').value) {
+      baseAmount =
+        this.matrixAccountingForm.get('segmentsCount').value *
+        this.airlineCorporatePasses.filter(
+          (x) => x.id.toString() === this.matrixAccountingForm.get('airlineCorporatePassId').value.toString()
+        )[0].segmentCost;
+    }
     this.matrixAccountingForm.get('baseAmount').setValue(baseAmount);
     console.log('baseAmount: ' + this.matrixAccountingForm.get('baseAmount').value);
   }

@@ -72,7 +72,6 @@ export class CorpRemarksComponent implements OnInit {
   }
 
   checkIfPassiveSegmentPresent() {
-    this.getPassiveSegments = this.pnrService.getModelPassiveSegments();
     for (const seg of this.pnrService.pnrObj.airSegments) {
       if (seg.status !== "GK") {
         return false;

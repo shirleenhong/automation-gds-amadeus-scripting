@@ -260,6 +260,12 @@ Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
+    
+Move Single Passenger And Add Passive Segment For APAY With Airline Code ${airline_code}
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK     RM*CF/-VB70000000C
+    Add Passive Air Segment In The GDS With Airline Code ${airline_code}
+    Set Test Variable    ${consultant_number}    CN1
+    Set Test Variable    ${airline_code}
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK
@@ -275,6 +281,12 @@ Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-AAA0000000C
     Add Multiple Passive Air Segments In The GDS With Different Airline Codes
+
+Enter FOP Credit Card Remark
+    Move Profile to GDS    FPCCVI4444333322221111/1029
+    
+Enter EB Remark For APAY
+    Move Profile to GDS    RM*EB/-EBA
 
 Enter RIR Remarks In English
     Move Profile to GDS    RMZ/LANGUAGE-EN-CA    RIR THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE/S2    RIR IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY./S2    RIR **PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR/S2    RIR ON YOUR CREDIT CARD STATEMENT./S2

@@ -35,6 +35,7 @@ import { CounselorDetail } from '../globals/counselor-identity';
 import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { SegmentService } from '../service/segment.service';
+import { SendInvoiceItineraryComponent } from './send-invoice-itinerary/send-invoice-itinerary.component';
 
 @Component({
   selector: 'app-corporate',
@@ -60,6 +61,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
   @ViewChild(PassiveSegmentsComponent)
+  @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
 
   constructor(
@@ -336,7 +338,6 @@ export class CorporateComponent implements OnInit {
       console.log(e);
     }
   }
-
   async SendItineraryAndQueue() {
     if (!this.itineraryqueueComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
@@ -356,7 +357,7 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-
+    
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
@@ -411,5 +412,16 @@ export class CorporateComponent implements OnInit {
         console.log(JSON.stringify(error));
       }
     );
+  }
+  async sendInvoice() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendInvoice';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

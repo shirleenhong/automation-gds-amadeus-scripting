@@ -17,6 +17,7 @@ import { VisaPassportComponent } from './shared/visa-passport/visa-passport.comp
 import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
 import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itinerary.component';
+import { GenericSelectComponent } from './shared/generic-select/generic-select.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itin
     VisaPassportComponent,
     SegmentsComponent,
     PassiveSegmentsComponent,
-    ItineraryComponent
+    ItineraryComponent,
+    GenericSelectComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +60,8 @@ import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itin
     VisaPassportComponent,
     SegmentsComponent,
     PassiveSegmentsComponent,
-    ItineraryComponent
+    ItineraryComponent,
+    GenericSelectComponent
   ]
 })
 export class MyCommonModule { }

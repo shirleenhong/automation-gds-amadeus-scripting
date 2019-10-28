@@ -34,6 +34,8 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
+import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
+import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,9 @@ import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-re
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent,
-    EscRemarksComponent
+    EscRemarksComponent,
+    SendInvoiceItineraryComponent,
+    ResendInvoiceComponent,
   ],
   imports: [
     BrowserModule,

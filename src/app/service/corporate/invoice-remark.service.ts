@@ -4,7 +4,7 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { MatrixReportingComponent } from 'src/app/corporate/reporting/matrix-reporting/matrix-reporting.component';
 import {EscRemarksComponent} from 'src/app/corporate/corp-remarks/esc-remarks/esc-remarks.component'
 import { DatePipe } from '@angular/common';
-
+declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
@@ -66,4 +66,13 @@ export class InvoiceRemarkService {
     }
     
   }
+  async sendRTFCommand() {
+    const tempRTFRes = await smartScriptSession.send('RTF');
+    return await smartScriptSession.getFullCryptic(tempRTFRes.Response);
+  }
+  async sendINVCommand(command) {
+    const tempINVRes = await smartScriptSession.send(command);
+    return await smartScriptSession.getFullCryptic(tempINVRes.Response);
+  }
+  
 }

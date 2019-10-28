@@ -595,35 +595,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
     }
 
-    // if (val !== '') {
-    //   switch (val) {
-    //     case 'VI':
-    //       val = 'VI- Visa';
-    //       break;
-    //     case 'CA':
-    //       val = 'CA - Mastercard';
-    //       break;
-    //     case 'AX':
-    //       val = 'AX - American Express';
-    //       break;
-    //     case 'DC':
-    //       val = 'DC -Diners';
-    //       break;
-    //   }
-
-    return val;
-    // } else {
-    //   return val;
-    // }
-  }
-
-  getCCExpDate(): string {
-    let val: string;
-    val = '';
-    for (const element of this.pnrService.pnrObj.fpElements) {
-      val = element.fullNode.otherDataFreetext.longFreetext.split('/')[1];
-    }
-    val = val.substr(0, 2) + '/' + val.substr(2, 4);
     return val;
   }
 }

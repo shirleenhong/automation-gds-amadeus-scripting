@@ -306,7 +306,9 @@ export class CorporateComponent implements OnInit {
 
     await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
-        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter(
+          (x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'ACPR'
+        )
       )
     );
 

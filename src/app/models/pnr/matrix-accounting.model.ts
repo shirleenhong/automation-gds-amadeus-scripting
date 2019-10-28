@@ -1,3 +1,5 @@
+import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
+
 export class MatrixAccountingModel {
   airlineRecordLocator: string; // 10-characters
   bsp: string;
@@ -40,4 +42,5 @@ export class MatrixAccountingModel {
   gdsFare: number;
   otherCostDescription: string;
   typeCode: string;
+  airlineCorporatePass: AirlineCorporatePass;
 }

@@ -90,4 +90,4 @@ import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-co
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

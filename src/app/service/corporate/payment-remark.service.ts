@@ -30,7 +30,13 @@ export class PaymentRemarkService {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
     this.writePassPurchase(
-      accList.filter((x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'WCPP' || x.accountingTypeRemark === 'PCPP')
+      accList.filter(
+        (x) =>
+          x.accountingTypeRemark === 'ACPP' ||
+          x.accountingTypeRemark === 'ACPR' ||
+          x.accountingTypeRemark === 'WCPP' ||
+          x.accountingTypeRemark === 'PCPP'
+      )
     );
 
     // Write Non BSP Exhange Remarks
@@ -45,6 +51,7 @@ export class PaymentRemarkService {
       const airlineCodeRemark = new Map<string, string>();
       const airlineCodeInvoice = new Map<string, string>();
       const staticRemarksCondition = new Map<string, string>();
+      const airlineCorporatePassCondition = new Map<string, string>();
       const redemptionRemark = new Map<string, string>();
       const passNameRedemptionRemark = new Map<string, string>();
       const confNbrRem = new Map<string, string>();
@@ -77,9 +84,11 @@ export class PaymentRemarkService {
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
+      // debugger;
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
-
+      // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
+      // debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -92,6 +101,81 @@ export class PaymentRemarkService {
         account.supplierCodeName,
         account.tktLine
       );
+
+      // debugger;
+      // US10574: Airline Corporate Pass Redemption
+      if (account.accountingTypeRemark === 'ACPR') {
+        paymentRemark.set('PassName', account.passPurchase);
+        paymentRemark.set('FareType', account.fareType);
+        airlineCodeRemark.set('AirlineCode', account.airlineCorporatePass.airlineCode);
+        airlineCodeInvoice.set('AirlineCode', account.airlineCorporatePass.airlineCode);
+        airlineCodeInvoice.set('PassNumber', account.airlineCorporatePass.number.toString());
+        airlineCodeInvoice.set('FareType', account.fareType);
+
+        const cfaLine = this.pnrService.getCFLine();
+        if (cfaLine !== undefined) {
+          if (['ZZB', '92Z', 'YVQ', 'YFV'].includes(cfaLine.cfa)) {
+            airlineCodeInvoice.set('GdsFare', account.gdsFare.toString());
+          } else {
+            airlineCodeInvoice.set('PassName', account.airlineCorporatePass.name);
+          }
+        }
+
+        confNbrRem.set('AirlineCode', account.airlineCorporatePass.airlineCode);
+        redemptionRemark.set('PassName', 'Airline Corporate');
+        passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
+
+        // US10574: Airline Corporate Pass Redemption
+        // debugger;
+        const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
+        // const tattooNumbers = account.segmentNo ? account.segmentNo.split(',') : null;
+        // const tattooNumbers = ['2'];
+        // const tattooNumbers = null;
+        airlineCorporatePassCondition.set('AirlineCorporatePass', 'true');
+        this.remarksManager.createPlaceholderValues(
+          null,
+          airlineCorporatePassCondition,
+          tattooNumbers,
+          null,
+          'THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          airlineCorporatePassCondition,
+          tattooNumbers,
+          null,
+          'IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY.'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          airlineCorporatePassCondition,
+          tattooNumbers,
+          null,
+          '**PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          airlineCorporatePassCondition,
+          tattooNumbers,
+          null,
+          'ON YOUR CREDIT CARD STATEMENT.'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          airlineCorporatePassCondition,
+          tattooNumbers,
+          null,
+          'ALL OTHER CHARGES INDICATED WILL APPEAR'
+        );
+        this.remarksManager.createPlaceholderValues(
+          null,
+          airlineCorporatePassCondition,
+          tattooNumbers,
+          null,
+          'ON YOUR CREDIT CARD AND SHOULD BE'
+        );
+        this.remarksManager.createPlaceholderValues(null, airlineCorporatePassCondition, tattooNumbers, null, 'EXPENSED ACCORDINGLY.');
+      }
 
       staticRemarksCondition.set('PassPurchase', 'true');
 
@@ -106,6 +190,7 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       this.remarksManager.createPlaceholderValues(airlineCodeInvoice);
 
+      // debugger;
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ALL DETAILS DISCUSSED AND');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
@@ -117,7 +202,6 @@ export class PaymentRemarkService {
       } else {
         this.remarksManager.createPlaceholderValues(redemptionRemark, null, segmentrelate);
       }
-
       this.remarksManager.createPlaceholderValues(confNbrRem, null, segmentrelate);
     });
   }
@@ -148,11 +232,19 @@ export class PaymentRemarkService {
 
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
     if (accountingRemarks.length > 0) {
-      let airline = '';
+      const airline = 'AC';
+      let fareType = '';
       if (accountingRemarks[0].accountingTypeRemark === 'ACPP') {
-        airline = 'AC';
+        fareType = this.getFareType(accountingRemarks[0].fareType);
       }
-      return 'PBN/YTOWL210N/' + airline + ' PASS ' + this.getFareType(accountingRemarks[0].fareType) + '/*';
+      if (accountingRemarks[0].accountingTypeRemark === 'ACPR') {
+        if (accountingRemarks[0].airlineCorporatePass.airlineCode === 'AC') {
+          fareType = accountingRemarks[0].fareType;
+        }
+      }
+      if (fareType !== '') {
+        return 'PBN/YTOWL210N/' + airline + ' PASS ' + fareType + '/*';
+      }
     }
   }
 

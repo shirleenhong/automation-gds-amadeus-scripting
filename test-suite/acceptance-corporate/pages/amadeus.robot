@@ -515,7 +515,7 @@ Create PNR For ${client_data}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
-    Sleep     5    #lets amadeus get it shit together
+    Sleep     5
 
 Enter Cryptic Command
     [Arguments]    ${gds_command}

@@ -41,9 +41,6 @@ export class MatrixAccountingModel {
   // Non BSP Exchange properties
   gdsFare: number;
   otherCostDescription: string;
-
-  /**
-   * The Airline Corporate Pass.
-   */
+  typeCode: string;
   airlineCorporatePass: AirlineCorporatePass;
 }

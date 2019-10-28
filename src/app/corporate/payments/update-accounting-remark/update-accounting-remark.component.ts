@@ -569,6 +569,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   descriptionChanged(typeCode: any) {
+    this.accountingRemark.typeCode = typeCode;
     if (typeCode === 'SEAT COSTS') {
       this.showOtherDescription = false;
       this.matrixAccountingForm.controls.supplierCodeName.patchValue('PFS');

@@ -44,7 +44,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
-@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
@@ -198,7 +198,7 @@ Navigate To Page ${destination_page}
      Set Test Variable    ${to_add_segment}    
      Set Test Variable    ${to_full_wrap}
      Set Test Variable    ${to_itinerary_and_queue}
-     : FOR     ${i}    IN RANGE   1    10
+     : FOR     ${i}    IN RANGE   1    2
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
@@ -292,6 +292,7 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
     ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
+    ...    ELSE IF    "${destination_page}" == "Emergency Contact"    Click Emergency Contact Tab
 
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -524,5 +525,7 @@ Verify Remarks Are Not Found In The PNR
     Verify Unexpected Remarks Are Not Written In The PNR
     
 Complete The PNR With Default Values
+    Sleep    5
+    Enter Cryptic Command    RT
     Navigate To Page Reporting Remarks
     Submit To PNR    close_corporate_test=no

@@ -497,6 +497,7 @@ Create PNR With Active Air Segments For ${client_data}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Sleep     5    #lets amadeus get it shit together
     
 Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
@@ -505,6 +506,7 @@ Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_da
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Sleep     30    #lets amadeus get it shit together
     
 Create PNR For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
@@ -513,6 +515,7 @@ Create PNR For ${client_data}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Sleep     5    #lets amadeus get it shit together
 
 Enter Cryptic Command
     [Arguments]    ${gds_command}

@@ -1,0 +1,79 @@
+<div class="row" *ngIf="!showComponent">
+  <div class="col">
+    <button class="leisureBtnSubmit addContactButton" (click)="addEmergencyContact()">
+      Add Emergency Contact
+    </button>
+  </div>
+</div>
+
+<form [formGroup]="addContactForm" class="form-group" *ngIf="showComponent">
+  <div class="documentContainer">
+    <table>
+      <tr>
+        <td class="column-header" style="padding-left: 9px;">
+          Name
+        </td>
+
+        <td class="column-header" style="padding-left: 11px;">
+          Country Code
+        </td>
+
+        <td class="column-header">
+          Phone
+        </td>
+
+        <td class="column-header">
+          Free Flow Text
+        </td>
+
+        <td class="column-header" style="text-align: left;">
+          Passenger/s
+        </td>
+      </tr>
+    </table>
+
+    <div formArrayName="items" name="items" *ngFor="let item of this.addContactForm.get('items')['controls']; let i = index" class="col">
+      <div [formGroupName]="i">
+        <table style="width:100%">
+          <tr>
+            <td style="width: 16%">
+              <input style="width:100%" formControlName="name" type="text" class="form-control" maxlength="55" required />
+            </td>
+
+            <td style="width: 16%">
+              <input style="width:100%" formControlName="countryCode" type="text" class="form-control" maxlength="2" required AlphaMask />
+            </td>
+
+            <td style="width: 16%">
+              <input style="width:100%" formControlName="phone" type="text" class="form-control" maxlength="55" required />
+            </td>
+
+            <td style="width: 16%">
+              <input style="width:100%" formControlName="freeFlowText" type="text" class="form-control" maxlength="55" />
+            </td>
+            <td style="width: 12%">
+              <select style="width:96px" formControlName="passengers" class="form-control">
+                <option></option>
+                <option *ngFor="let pax of paxArray" [value]="pax.paxValue">{{ pax.paxValue }}</option>
+              </select>
+            </td>
+
+            <td style="width: 6%" class="docTable">
+              <div (click)="addItem()">
+                <i class="fas fa-plus-circle" id="add"></i>
+                Add
+              </div>
+            </td>
+
+            <td style="width: 10%" class="docTable">
+              <div (click)="removeInputField(i)">
+                <i class="fas fa-minus-circle" id="remove"></i>
+                Remove
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>

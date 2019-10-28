@@ -53,7 +53,7 @@ export class ReportingRemarkService {
 
   getRemarkSegmentAssociation(segments: string[]): string[] {
     const segmentrelate: string[] = [];
-    const air = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
+    const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
     air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });

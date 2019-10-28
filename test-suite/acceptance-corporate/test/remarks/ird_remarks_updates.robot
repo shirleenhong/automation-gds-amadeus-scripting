@@ -12,7 +12,7 @@ Resource          ../../pages/fees.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../pages/remarks.robot
 Resource          ../../../resources/common/api-utilities.txt
-#Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    ird_remarks

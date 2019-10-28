@@ -284,7 +284,6 @@ export class CorporateComponent implements OnInit {
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     if (this.queueComponent.queueMinderComponent) {
@@ -300,7 +299,12 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
-    await this.rms.SendPbn(
+    let commandList = [];
+    if (!this.corpRemarksComponent.isPassive) {
+      commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
+    }
+
+    await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
         this.paymentsComponent.accountingRemark.accountingRemarks.filter(
           (x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'ACPR'
@@ -308,8 +312,8 @@ export class CorporateComponent implements OnInit {
       )
     );
 
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
-      () => {
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+      async () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.getPnr();

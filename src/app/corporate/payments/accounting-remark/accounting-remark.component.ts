@@ -64,7 +64,7 @@ export class AccountingRemarkComponent implements OnInit {
       if (model.tkMacLine) {
         const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
         const slineNo = pholder[i].segmentNumberReferences[i];
-        const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
+        const segment = this.pnrService.getSegmentList().filter((x) => x.tatooNo === slineNo);
 
         if (segment.length > 0) {
           model.departureCity = segment[i].cityCode;
@@ -170,6 +170,10 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.isAddNew = false;
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     r.supplierCodeName = code;
+
+    if (r.accountingTypeRemark === 'APAY') {
+      this.modalRef.content.showOtherDescription = true;
+    }
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();
   }

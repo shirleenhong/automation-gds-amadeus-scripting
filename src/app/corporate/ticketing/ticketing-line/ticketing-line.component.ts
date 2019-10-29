@@ -8,6 +8,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { ApprovalRuleService } from 'src/app/service/corporate/approval-rule.service';
 import { ApprovalItem } from 'src/app/models/ddb/approval.model';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-ticketing-line',
@@ -29,7 +30,8 @@ export class TicketingLineComponent implements OnInit {
     private staticValues: StaticValuesService,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private approvalRuleService: ApprovalRuleService
+    private approvalRuleService: ApprovalRuleService,
+    private valueChangeListener: ValueChangeListener
   ) {
     this.ticketForm = new FormGroup({
       officeId: new FormControl('', [Validators.required]),
@@ -49,7 +51,16 @@ export class TicketingLineComponent implements OnInit {
     this.primaryReasonList = this.approvalRuleService.getPrimaryApprovalList();
     this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList();
     this.additionalReasonList = this.approvalRuleService.getAdditionalList();
-    this.hasApproval = this.approvalRuleService.hasApproval();
+    this.loadApproval([]);
+    this.valueChangeListener.reasonCodeOnChange.subscribe((reasonCodes) => {
+      if (reasonCodes.length > 0) {
+        this.loadApproval(reasonCodes);
+      }
+    });
+  }
+
+  loadApproval(reasonCodes) {
+    this.hasApproval = this.approvalRuleService.hasApproval(reasonCodes);
     this.approvalForm = new FormGroup({
       noApproval: new FormControl(!this.hasApproval, [Validators.required]),
       primaryReason: new FormControl('', [Validators.required]),
@@ -248,8 +259,7 @@ export class TicketingLineComponent implements OnInit {
    * @param selectedRule selected rule keyword from UI sample UI_SECPONDARY_1
    */
 
-  showAdditionalInfo(selectedIndex) {  
-
+  showAdditionalInfo(selectedIndex) {
     if (selectedIndex === null) {
       return;
     }

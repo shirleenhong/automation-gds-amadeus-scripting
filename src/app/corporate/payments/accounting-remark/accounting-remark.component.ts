@@ -6,7 +6,6 @@ import { FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
-import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 import { PnrService } from 'src/app/service/pnr.service';
 import { RemarksManagerService } from 'src/app/service/corporate/remarks-manager.service';
@@ -26,7 +25,6 @@ export class AccountingRemarkComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private utilHelper: UtilHelper,
-    private paymentService: PaymentRemarkService,
     private valueChangeListener: ValueChangeListener,
     private pnrService: PnrService,
     private rms: RemarksManagerService
@@ -36,7 +34,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.accountingRemarks = this.extractAccountingModelsFromPnr();
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
-    this.paymentService.setNonBspInformation(this.accountingRemarks);
+    this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
   }
 
   deleteItem(r: MatrixAccountingModel) {
@@ -152,7 +150,6 @@ export class AccountingRemarkComponent implements OnInit {
         }
       }
       this.isPassPurchaseTransaction();
-      this.paymentService.setNonBspInformation(this.accountingRemarks);
       this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
     });
   }
@@ -171,7 +168,6 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     r.supplierCodeName = code;
 
-    debugger;
     if (r.accountingTypeRemark === 'APAY' && r.typeCode === 'OTHER COSTS') {
       this.modalRef.content.showOtherDescription = true;
     } else {

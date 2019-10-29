@@ -7,7 +7,7 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
-import { BehaviorSubject } from 'rxjs';
+
 import { DDBService } from '../ddb.service';
 
 @Injectable({
@@ -15,9 +15,6 @@ import { DDBService } from '../ddb.service';
 })
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
-  // nonbspInformation: MatrixAccountingModel[];
-  nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
-  currentMessage = this.nonbspInformation.asObservable();
 
   constructor(
     private remarksManager: RemarksManagerService,
@@ -84,11 +81,10 @@ export class PaymentRemarkService {
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
-      // debugger;
+
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
-      // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-      // debugger;
+
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -102,7 +98,6 @@ export class PaymentRemarkService {
         account.tktLine
       );
 
-      // debugger;
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
         paymentRemark.set('PassName', account.passPurchase);
@@ -126,7 +121,7 @@ export class PaymentRemarkService {
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
 
         // US10574: Airline Corporate Pass Redemption
-        // debugger;
+
         const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
         // const tattooNumbers = account.segmentNo ? account.segmentNo.split(',') : null;
         // const tattooNumbers = ['2'];
@@ -190,7 +185,6 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       this.remarksManager.createPlaceholderValues(airlineCodeInvoice);
 
-      // debugger;
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ALL DETAILS DISCUSSED AND');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');
@@ -574,10 +568,6 @@ export class PaymentRemarkService {
     air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
-  }
-
-  setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
-    this.nonbspInformation.next(accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP'));
   }
 
   allRailSegment(account: MatrixAccountingModel) {

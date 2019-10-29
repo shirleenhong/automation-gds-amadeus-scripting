@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
-import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { DecimalPipe } from '@angular/common';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-reporting-nonbsp',
@@ -16,15 +16,15 @@ export class ReportingNonbspComponent implements OnInit {
   nonBspReasonList: Array<SelectItem>;
   decPipe = new DecimalPipe('en-US');
 
-  constructor(private fb: FormBuilder, private paymentService: PaymentRemarkService, ) { }
+  constructor(private fb: FormBuilder, private valueChagneListener: ValueChangeListener) {}
 
   ngOnInit() {
     this.nonBspGroup = this.fb.group({
       nonbsp: this.fb.array([])
     });
 
-    this.paymentService.currentMessage.subscribe((message) => {
-      this.nonBspInformation = message;
+    this.valueChagneListener.accountingRemarkChange.subscribe((accRemarks) => {
+      this.nonBspInformation = accRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP');
       this.drawControlsForNonBsp();
     });
   }
@@ -46,15 +46,11 @@ export class ReportingNonbspComponent implements OnInit {
 
       const formatCost = this.decPipe.transform(totalCost, '1.2-2').replace(',', '');
       items.push(this.createFormGroup(element.segmentNo, formatCost.toString(), formatCost.toString(), 'L'));
+      this.valueChagneListener.reasonCodeChange(['L']);
     });
   }
 
-  createFormGroup(
-    segmentNo: string,
-    highFare: string,
-    lowFare: string,
-    reasonCode: string
-  ): FormGroup {
+  createFormGroup(segmentNo: string, highFare: string, lowFare: string, reasonCode: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       highFareText: new FormControl(highFare, [Validators.required]),
@@ -65,5 +61,4 @@ export class ReportingNonbspComponent implements OnInit {
 
     return group;
   }
-
 }

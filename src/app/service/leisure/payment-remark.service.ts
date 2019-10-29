@@ -19,7 +19,7 @@ import { BspTicketFopComponent } from 'src/app/leisure/payments/bsp-ticket-fop/b
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -100,7 +100,7 @@ export class PaymentRemarkService {
     // write new Lines
     if (accountingRemarks !== null) {
       let found = false;
-      let nucFound = false;
+      // let nucFound = false;
       accountingRemarks.forEach((account) => {
         if (account.accountingTypeRemark === 'NAE') {
           if (account.supplierCodeName !== 'ACY' && account.supplierCodeName !== 'A22') {
@@ -120,11 +120,12 @@ export class PaymentRemarkService {
               remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
             }
           }
-          const nuc = 'NUC';
-          if (!nucFound && this.pnrService.getRemarkLineNumber(nuc) === '') {
-            remGroup.remarks.push(this.getRemarksModel(nuc, '*', 'RM'));
-            nucFound = true;
-          }
+
+          // const nuc = 'NUC';
+          // if (!nucFound && this.pnrService.getRemarkLineNumber(nuc) === '') {
+          //   remGroup.remarks.push(this.getRemarksModel(nuc, '*', 'RM'));
+          //   nucFound = true;
+          // }
         }
 
         if (matrixAccountingReceiptsToUdpate.length > 0 || fordelete.length > 0 || account.status === 'ADDED') {
@@ -296,7 +297,7 @@ export class PaymentRemarkService {
     const pass = accounting.passengerNo !== undefined ? accounting.passengerNo : '1';
     const segmentrelate = accounting.segmentNo !== undefined ? accounting.segmentNo.toString() : '';
 
-    if ((accounting.accountingTypeRemark !== 'ACPP') || (accounting.accountingTypeRemark === 'ACPP' && segmentrelate)) {
+    if (accounting.accountingTypeRemark !== 'ACPP' || (accounting.accountingTypeRemark === 'ACPP' && segmentrelate)) {
       remarkList.push(this.getRemarksModel(facc, '*', 'RM', '', pass.toString()));
       remarkList.push(this.getRemarksModel(acc2, '*', 'RM', segmentrelate, pass.toString()));
     }
@@ -314,7 +315,6 @@ export class PaymentRemarkService {
         this.getRemarksModel(accounting.passPurchase + ' PASS REDEMPTION-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
       );
     } else if (accounting.accountingTypeRemark === 'ACPP') {
-
       if (accounting.segmentNo) {
         remarkList.push(
           this.getRemarksModel(accounting.passPurchase + ' PASS-' + accounting.fareType + ' FARE', 'R', 'RI', accounting.segmentNo)
@@ -407,11 +407,10 @@ export class PaymentRemarkService {
       Diners = '118000'
     }
     let fop = '';
-    if (Object.values(CardType).includes(matrix.bankAccount)) {
+    if (CardType[matrix.bankAccount]) {
       fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
     } else {
-      fop = (matrix.bankAccount === '109000' ? 'DB' : matrix.bankAccount === '227000'
-        ? 'GC-' + matrix.gcNumber : matrix.modePayment);
+      fop = matrix.bankAccount === '109000' ? 'DB' : matrix.bankAccount === '227000' ? 'GC-' + matrix.gcNumber : matrix.modePayment;
     }
 
     let gcNo = '';
@@ -556,9 +555,9 @@ export class PaymentRemarkService {
       taxType1 = provTax[0].taxType1 === 'GST' ? 'XG' : 'RC';
     }
 
-    tax1 = (taxType1 === 'XG' && (exempt.find((x) => x.checked === true && x.label === 'GST Exempt'))) ? '0.00' : tax1;
-    tax1 = (taxType1 === 'RC' && (exempt.find((x) => x.checked === true && x.label === 'HST Exempt'))) ? '0.00' : tax1;
-    tax2 = ((exempt.find((x) => x.checked === true && x.label === 'QST Exempt'))) ? '0.00' : tax2;
+    tax1 = taxType1 === 'XG' && exempt.find((x) => x.checked === true && x.label === 'GST Exempt') ? '0.00' : tax1;
+    tax1 = taxType1 === 'RC' && exempt.find((x) => x.checked === true && x.label === 'HST Exempt') ? '0.00' : tax1;
+    tax2 = exempt.find((x) => x.checked === true && x.label === 'QST Exempt') ? '0.00' : tax2;
     let txt = '/-PT-' + tax1 + taxType1;
     txt += '/-PT-' + tax2 + 'XQ';
     return txt;

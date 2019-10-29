@@ -120,7 +120,7 @@ export class PaymentRemarkService {
               remGroup.remarks.push(this.getRemarksModel(neRem, '*', 'RM'));
             }
           }
-          debugger;
+
           // const nuc = 'NUC';
           // if (!nucFound && this.pnrService.getRemarkLineNumber(nuc) === '') {
           //   remGroup.remarks.push(this.getRemarksModel(nuc, '*', 'RM'));

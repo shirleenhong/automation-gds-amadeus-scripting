@@ -35,6 +35,7 @@ import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
 import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
+import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-co
     QueueComponent,
     DocumentPnrComponent,
     EscRemarksComponent,
-    AddContactComponent
+    AddContactComponent,
+    CorpCancelComponent
   ],
   imports: [
     BrowserModule,

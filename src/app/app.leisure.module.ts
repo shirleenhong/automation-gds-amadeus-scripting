@@ -38,7 +38,7 @@ import { QueueComponent } from './leisure/itinerary-and-queue/queue/queue.compon
 import { LoadingComponent } from './shared/loading/loading.component';
 import { CancelComponent } from './leisure/cancel/cancel.component';
 import { RefundComponent } from './leisure/cancel/refund/refund.component';
-import { CancelSegmentComponent } from './leisure/cancel/cancel-segment/cancel-segment.component';
+// import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.component';
 import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 import { MyCommonModule } from './my-common.module';
 import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-ticket-fop.component';
@@ -61,7 +61,7 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     ItcPackageComponent,
     ConciergeUdidsComponent,
     AmountPipe,
-    CancelSegmentComponent,
+    // CancelSegmentComponent,
     // SegmentsComponent,
     UpdateSegmentComponent,
     MessageComponent,

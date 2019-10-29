@@ -30,7 +30,7 @@ export class AccountingRemarkComponent implements OnInit {
     private valueChangeListener: ValueChangeListener,
     private pnrService: PnrService,
     private rms: RemarksManagerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.accountingRemarks = this.extractAccountingModelsFromPnr();
@@ -171,7 +171,6 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     r.supplierCodeName = code;
 
-    debugger;
     if (r.accountingTypeRemark === 'APAY' && r.typeCode === 'OTHER COSTS') {
       this.modalRef.content.showOtherDescription = true;
     } else {

@@ -47,9 +47,11 @@ export class CorporateComponent implements OnInit {
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
+  cancelEnabled = true;
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
+  segment = [];
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -86,6 +88,7 @@ export class CorporateComponent implements OnInit {
     private amadeusRemarkService: AmadeusRemarkService
   ) {
     this.initData();
+    this.getPnrService();
   }
 
   async ngOnInit(): Promise<void> {
@@ -330,6 +333,7 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
   }
+
   async sendItineraryAndQueue() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
@@ -339,6 +343,23 @@ export class CorporateComponent implements OnInit {
       this.closePopup();
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  public async cancelSegment() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      this.workflow = 'cancel';
+      this.segment = this.pnrService.getSegmentList();
+      this.setControl();
+    }
+  }
+
+  setControl() {
+    if (this.isPnrLoaded) {
+      if (this.pnrService.recordLocator()) {
+        this.cancelEnabled = false;
+      }
     }
   }
 

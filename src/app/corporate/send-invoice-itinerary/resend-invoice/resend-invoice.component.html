@@ -2,13 +2,13 @@
   <div class="itineraryContainer">
     <div *ngIf='showSegments' class="segment-list">
       <div class="form-group  row">
-        <div class="col-xs-4">Itinerary Segments:</div>
-        <div class="col-xs-4">
+        <div class="col-md-4">Itinerary Segments:</div>
+        <div class="col-md-4">
           <app-segment-select formControlName="segmentNo" [(ngModel)]='segmentNum' name="segmentNo" id="segmentNo">
           </app-segment-select>
         </div>
         <div class="col-xs-4">
-          <button class="leisureBtnSubmit">
+          <button class="leisureBtnSubmit" (click) = 'generateInvoice()'>
             Get Invoice
           </button>
         </div>

@@ -22,6 +22,7 @@ export class ResendInvoiceComponent implements OnInit {
   invoiceGroup: FormGroup;
   ngOnInit() {
     this.invoiceFormGroup = new FormGroup({
+      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
       invoiceNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
       emailAddresses: new FormArray([this.createFormGroup()]),
     });
@@ -105,6 +106,9 @@ export class ResendInvoiceComponent implements OnInit {
           this.add = false;
         }
         break;
-      }
     }
+  }
+  generateInvoice() {
+    console.log(this.segmentNum);
+  }
 }

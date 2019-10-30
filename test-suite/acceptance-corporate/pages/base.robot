@@ -13,7 +13,7 @@ Resource          queues.robot
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
-${button_close}    //span[@class='xDialog_close xDialog_std_close']
+${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
@@ -36,7 +36,7 @@ ${button_send_invoice_itinerary}    //button[contains(text(), 'Send Invoice/Itin
 ${open_bracket}     [
 ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
-${button_add_segment}    //button[contains(text(), 'Add Segment')]
+${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Segment')]
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
@@ -44,7 +44,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
-@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
@@ -63,7 +63,7 @@ Close CA Corporate Test
     Unselect Frame
     Wait Until Element Is Not Visible    ${overlay_loader}    20
     Wait Until Element Is Visible    ${header_corp_test}    50
-    Sleep    5
+    Run Keyword If    "${current_page}" == 'Add Passive Segment'   Sleep  10   ELSE   Sleep    5
     Click Element    ${button_close}
     Set Test Variable    ${current_page}    Amadeus
 
@@ -121,14 +121,6 @@ Click Payment Panel
     Set Test Variable    ${current_page}    Payment
     [Teardown]    Take Screenshot
     
-Click Passive Segment Panel
-    Wait Until Page Contains Element   ${panel_passive_segment}    60
-    Click Element At Coordinates    ${panel_passive_segment}    0    0
-    Scroll Element Into View    ${panel_passive_segment}
-    Click Element    ${panel_passive_segment}
-    #Set Test Variable    ${current_page}    Passive Segment
-    [Teardown]    Take Screenshot
-    
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
     Scroll Element Into View     ${panel_payment}
@@ -145,6 +137,7 @@ Click Submit To PNR
     Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
     Run Keyword If   "${queueing}" == "yes"     Sleep    5
+    # Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${pnr_submitted}    yes
     
@@ -162,9 +155,10 @@ Click Add Segment to PNR
     [Arguments]    ${close_corporate_test}=yes
     Wait Until Element Is Visible    ${button_add_segment_toPNR}    60  
     Sleep   3  
-    Click Element    ${button_add_segment_toPNR}
+    Click Element At Coordinates    ${button_add_segment_toPNR}   0   0
     Wait Until Element Is Not Visible     ${message_add_segments}      180
     Wait Until Element Is Visible    ${button_full_wrap}    180
+    Sleep   3 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${current_page}     CWT Corporate
   
@@ -204,7 +198,7 @@ Navigate To Page ${destination_page}
      Set Test Variable    ${to_add_segment}    
      Set Test Variable    ${to_full_wrap}
      Set Test Variable    ${to_itinerary_and_queue}
-     : FOR     ${i}    IN RANGE   1    10
+     : FOR     ${i}    IN RANGE   1    2
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
@@ -227,13 +221,14 @@ Navigate From Corp
 Navigate From Add Segment
     [Arguments]    ${destination_page}
     ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${current_page}
-    Run Keyword If    "${in_add_segment}" == "False"    Click Passive Segment Panel
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
     
 Click Add Passive Segment Button
-    Wait Until Element Is Visible    ${button_add_passive_segment}    
-    Click Element    ${button_add_passive_segment}
-    Set Test Variable    ${current_page}    Add Passive Segment
+	Wait Until Element Is Visible     ${button_add_passive_segment}    30
+	Click Element At Coordinates    ${button_add_passive_segment}   0   0
+	Click Element At Coordinates    ${button_add_passive_segment}   0   0
+	Wait Until Element Is Visible    ${select_segment_type}    30
+	Set Test Variable   ${current_page}    Add Passive Segment
 
 Collapse Open Panel
     ${in_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${current_page}
@@ -297,6 +292,7 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "IRD Remarks"    Click IRD Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
     ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
+    ...    ELSE IF    "${destination_page}" == "Emergency Contact"    Click Emergency Contact Tab
 
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -529,5 +525,7 @@ Verify Remarks Are Not Found In The PNR
     Verify Unexpected Remarks Are Not Written In The PNR
     
 Complete The PNR With Default Values
+    Sleep    5
+    Enter Cryptic Command    RT
     Navigate To Page Reporting Remarks
     Submit To PNR    close_corporate_test=no

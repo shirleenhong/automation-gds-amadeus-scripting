@@ -12,9 +12,6 @@ Resource          ../../pages/ticketing.robot
 Resource          ../../pages/add_segment.robot
 # Test Teardown    Close All Browsers
 
-*** Variables ***
-${test_file_name}    hotel_passive
-
 *** Test Cases ***
 Verify Hotel Segment and RIR Remarks Are Written If Hotel Chain Code and Airport Code added in the UI is Valid
     [Tags]  us9881

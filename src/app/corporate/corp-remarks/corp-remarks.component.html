@@ -16,4 +16,7 @@
     <app-esc-remarks></app-esc-remarks>
   </tab>
 
+  <tab heading="Emergency Contact" id="emergencyContact" tabOrder="4" *ngIf="!isPassive">
+     <app-add-contact></app-add-contact>
+  </tab>
 </tabset>

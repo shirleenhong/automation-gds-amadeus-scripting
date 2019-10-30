@@ -574,7 +574,7 @@ export class PnrService {
         } else {
             passiveType = type;
         }
-
+        
         const segment = {
             lineNo: elem.elementNumber,
             tatooNo: elem.tatooNumber,
@@ -596,7 +596,8 @@ export class PnrService {
             controlNumber,
             airType,
             passive: passiveType,
-            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' &&  elemStatus === 'GK'))
+            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' &&  elemStatus === 'GK')),
+            passengerNo: this.getPassengerAssocNumbers(elem.associations)
         };
         this.segments.push(segment);
     }

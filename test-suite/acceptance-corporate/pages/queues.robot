@@ -248,6 +248,7 @@ Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${
     [Teardown]    Take Screenshot
     
 Add CWT Itinerary Details For All Emails, In ${language} Language And For ${transcation} Transaction Type
+    Sleep    10
     Navigate To Page CWT Itinerary
     Select Emails In CWT Itinerary    TEST@EMAIL.COM    TEST_ARR@EMAIL.COM    TEST_CTC@EMAIL.COM
     Select From List By Label    ${list_language}    ${language}

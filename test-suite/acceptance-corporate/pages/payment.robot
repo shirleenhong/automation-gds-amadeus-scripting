@@ -3,6 +3,7 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
+Library           pyautogui
 Resource          base.robot
 Resource          ../../resources/common/api-utilities.txt
 
@@ -42,6 +43,8 @@ ${button_update}    //i[@class='fas fa-edit']
 ${input_lowestGdsFare}    css=#gdsFare
 ${input_consultantNo}    css=#consultantNo
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
+${list_description}    css=#descriptionapay
+${input_otherCostDesc}    css=#otherDescription
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -144,16 +147,29 @@ Add APAY Ticketing Details For Single Segment
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2
+    # Development in progress - unable to write remark for OTHER COSTS
+    Press A Key X Times     tab     1
+    Press A Key X Times     down     7
+    Press A Key X Times     enter    1     
+    Wait Until Element Is Visible    ${input_otherCostDesc}    20
+    Enter Value    ${input_otherCostDesc}    TEST DESCRIPTION
+    Press Keys    ${input_otherCostDesc}    ENTER
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
-    Set Test Variable     ${ticketing_details}    yes
     Take Screenshot
+    
+Press A Key X Times
+    [Arguments]   ${key}     ${times}
+    :FOR     ${i}    IN RANGE     0     ${times}
+    \    Keydown     ${key}
+    \    Keyup     ${key}
+    \    ${i}    Evaluate    ${i} + 1
     
 Add APAY Ticketing Details For Multiple Segments
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2    3
-    # Enter Value    ${input_supplier_confirmationNo}    54321
+    Enter Value    ${list_description}    SEAT COSTS
     Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
@@ -165,9 +181,21 @@ Add Non-BSP and APAY Ticketing Detals For Multiple Segments
     Navigate To Page Add Accounting Line
     Wait Until Element Is Visible    ${list_accounting_type}    30
     Select From List By Label    ${list_accounting_type}    APAY
-    Select Itinerary Segments    3    4
+    Select Itinerary Segments    3
+    Enter Value    ${list_description}    FREIGHT COSTS
+    Verify That Supplier Code Default Value Is Correct For Other Type Of APAY
     Add Ticketing Amount Details With Other Tax    1230.00    11.00    12.00    13.00    14.00
     Enter Value    ${input_tktnumber}    9876543210
+    Take Screenshot
+    Click Save Button
+    Navigate To Page Add Accounting Line
+    Wait Until Element Is Visible    ${list_accounting_type}    30
+    Select From List By Label    ${list_accounting_type}    APAY
+    Select Itinerary Segments    4
+    Enter Value    ${list_description}    BAGGAGE FEES
+    Verify That Supplier Code Default Value Is Correct For Other Type Of APAY
+    Add Ticketing Amount Details With Other Tax    1234.34    10.09    11.01    12.00    13.00
+    Enter Value    ${input_tktnumber}    3210987654
     Take Screenshot
 # For Non-BSP Airline and APAY # 
 
@@ -252,14 +280,18 @@ Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
     
 Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2    True
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 1234567890/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-CGO/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2    True
+    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 1234567890/S2
+    Verify Specific Remark Is Written In The PNR    RIR PAID TEST DESCRIPTION CF-1234567890 CAD750.00 PLUS 6.00TAX ON VI/S2    True
+    Verify Specific Remark Is Written In The PNR    RM *EB/-AMA/-GIS
+    Verify Specific Remark Is Not Written In The PNR    RM *EB/-EBA 
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00    
     
 Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3    True
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 1234567890/S2-3
+    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 1234567890/S2-3
+    Verify Specific Remark Is Written In The PNR    RIR PAID SEAT COSTS CF-1234567890 CAD750.00 PLUS 6.00TAX ON VI/S2-3    True
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     
 Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR
@@ -268,8 +300,14 @@ Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Wr
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-UA*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
-    Verify Specific Remark Is Written In The PNR    RMT TKT2-VN-PFS/BA-1230.00/TX1-11.00XG/TX2-12.00RC/TX3-13.00XQ/TX4-14.00XT/S3-4    True
-    Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 9876543210/S3-4
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-VN-CGO/BA-1230.00/TX1-11.00XG/TX2-12.00RC/TX3-13.00XQ/TX4-14.00XT/S3    True
+    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 9876543210/S3
+    Verify Specific Remark Is Written In The PNR    RIR PAID FREIGHT COSTS CF-9876543210 CAD1230.00 PLUS 36.00TAX ON VI/S3    True
+    Verify Specific Remark Is Written In The PNR    RMT TKT3-VN-CGO/BA-1234.34/TX1-10.09XG/TX2-11.01RC/TX3-12.00XQ/TX4-13.00XT/S4    True
+    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 3210987654/S4
+    Verify Specific Remark Is Written In The PNR    RIR PAID BAGGAGE FEES CF-3210987654 CAD1234.34 PLUS 33.10TAX ON VI/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *EB/-AMA/-GIS
+    Verify Specific Remark Is Not Written In The PNR    RM *EB/-EBA 
 # Verification For Non-BSP Airline and APAY # 
 
 #-----For Payment Keywords-------#  
@@ -387,7 +425,8 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Run Keyword If    "${airline_code}" == "8P"   Should Contain    ${actual_supplier_code}    PF3
     Run Keyword If    "${airline_code}" == "WJ"   Should Contain    ${actual_supplier_code}    ALO
     Run Keyword If    "${airline_code}" == "WN"   Should Contain    ${actual_supplier_code}    SOA
-    Run Keyword If    "${airline_code}" == "APAY"   Should Contain    ${actual_supplier_code}    PFS
+    Run Keyword If    "${airline_code}" == "Seat Costs APAY"   Should Contain    ${actual_supplier_code}    PFS
+    Run Keyword If    "${airline_code}" == "Other Type Of APAY"   Should Contain    ${actual_supplier_code}    CGO
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR 
@@ -620,7 +659,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Click Save Button
 
 Navigate To Add Accounting Line
-    Click Element    ${tab_nonBsp_processing}    
+    Click Element At Coordinates    ${tab_nonBsp_processing}    0    0    
     Click Element    ${button_addaccountingline} 
     Set Test Variable    ${current_page}    Add Accounting Line
     Set Test Variable    ${ticketing_details_complete}    no

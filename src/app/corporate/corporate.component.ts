@@ -48,9 +48,11 @@ export class CorporateComponent implements OnInit {
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
+  cancelEnabled = true;
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
+  segment = [];
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -88,6 +90,7 @@ export class CorporateComponent implements OnInit {
     private amadeusRemarkService: AmadeusRemarkService
   ) {
     this.initData();
+    this.getPnrService();
   }
 
   async ngOnInit(): Promise<void> {
@@ -172,7 +175,6 @@ export class CorporateComponent implements OnInit {
         this.workflow = 'segment';
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
-
       } catch (e) {
         console.log(e);
       }
@@ -287,7 +289,6 @@ export class CorporateComponent implements OnInit {
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     if (this.queueComponent.queueMinderComponent) {
@@ -303,14 +304,21 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
-    await this.rms.SendPbn(
+    let commandList = [];
+    if (!this.corpRemarksComponent.isPassive) {
+      commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
+    }
+
+    await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
-        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter(
+          (x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'ACPR'
+        )
       )
     );
 
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
-      () => {
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+      async () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.getPnr();
@@ -327,6 +335,7 @@ export class CorporateComponent implements OnInit {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
   }
+
   async sendItineraryAndQueue() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
@@ -338,6 +347,24 @@ export class CorporateComponent implements OnInit {
       console.log(e);
     }
   }
+
+  public async cancelSegment() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      this.workflow = 'cancel';
+      this.segment = this.pnrService.getSegmentList();
+      this.setControl();
+    }
+  }
+
+  setControl() {
+    if (this.isPnrLoaded) {
+      if (this.pnrService.recordLocator()) {
+        this.cancelEnabled = false;
+      }
+    }
+  }
+
   async SendItineraryAndQueue() {
     if (!this.itineraryqueueComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
@@ -397,8 +424,8 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
-    remarkCollection.forEach(rem => {
-      rem.remarks.forEach(remModel => {
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
       });
     });

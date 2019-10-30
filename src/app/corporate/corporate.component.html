@@ -124,6 +124,27 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 'cancel'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="fas fa-plane"></i> Cancel Segment
+        <span class="cwt-logo"></span>
+      </div>
+      <app-corp-cancel> </app-corp-cancel>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="cancelsegment" (click)="cancelPnr()" [disabled]="cancelEnabled">
+        Cancel Segments
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="workflow === ''" class="loaderBody">
   <div class="loader">
     <div>
@@ -151,7 +172,7 @@
       </button>
     </div>
     <div>
-      <button class="leisureButton btnMenu">
+      <button class="leisureButton btnMenu" (click)="cancelSegment()">
         Cancel Segments
       </button>
     </div>

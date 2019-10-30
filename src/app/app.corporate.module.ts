@@ -36,6 +36,8 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
 import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
 import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
+import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
+import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +73,8 @@ import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resen
     EscRemarksComponent,
     SendInvoiceItineraryComponent,
     ResendInvoiceComponent,
+    AddContactComponent,
+    CorpCancelComponent
   ],
   imports: [
     BrowserModule,
@@ -92,4 +96,4 @@ import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resen
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

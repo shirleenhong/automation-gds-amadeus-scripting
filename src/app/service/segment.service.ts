@@ -384,7 +384,7 @@ export class SegmentService {
                 remText = remText + ' ' + segmentrem.mealPlan;
             }
 
-            if (segmentrem.noNights) {
+            if (segmentrem.noNights && segmentrem.noNights !== '0') {
                 remText = remText + ' ' + segmentrem.noNights + ' NTS';
             }
 
@@ -706,31 +706,31 @@ export class SegmentService {
         itinLanguage = itinLanguage.substr(0, 2);
         switch (true) {
             case (itinLanguage === 'EN'): {
-                const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
-                if (llbMandatoryRemarkEn === '') {
+                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+               // const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/EN/PRIVACY-POLICY');
+                if (mexicoMandatoryRemark === '') {
                     const commandEN = 'PBN/YTOWL210N/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
-                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
-                if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
-                    const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
-                }
+                // if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
+                //     const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
+                //     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
+                // }
                 break;
             }
             case (itinLanguage === 'FR'): {
-                const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
-                if (llbMandatoryRemarkFR === '') {
+                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
+               // const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/FR/POLITIQUE-DE-CONFIDENTIALITE');
+                if (mexicoMandatoryRemark === '') {
                     const commandFR = 'PBN/YTOWL210N/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
-                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
-                if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
-                    let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
-                    command = 'POUR ENTRER AU MEXIQUE';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
-                }
+                // if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
+                //     let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
+                //     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
+                //     command = 'POUR ENTRER AU MEXIQUE';
+                //     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
+                // }
                 break;
             }
             default: {

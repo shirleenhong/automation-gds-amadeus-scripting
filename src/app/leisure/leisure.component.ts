@@ -20,7 +20,6 @@ import { InvoiceRemarkService } from '../service/leisure/invoice-remark.service'
 import { MatrixInvoiceComponent } from './invoice/matrix-invoice.component';
 import { ItineraryRemarkService } from '../service/leisure/itinerary-remark.service';
 import { ItineraryAndQueueComponent } from './itinerary-and-queue/itinerary-and-queue.component';
-import { AmadeusQueueService } from '../service/amadeus-queue.service';
 import { MessageType } from '../shared/message/MessageType';
 import { LoadingComponent } from '../shared/loading/loading.component';
 import { CancelComponent } from './cancel/cancel.component';
@@ -77,7 +76,6 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private modalService: BsModalService,
     private invoiceService: InvoiceRemarkService,
     private itineraryService: ItineraryRemarkService,
-    private queueService: AmadeusQueueService,
     private otherService: OtherRemarksService
   ) {
     this.getPnr();
@@ -88,14 +86,12 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   async getPnr() {
     this.errorPnrMsg = '';
     await this.getPnrService();
     this.cfLine = this.pnrService.getCFLine();
-    this.queueService.queuePNR();
-    this.queueService.newQueueCollection();
 
     // await this.getServicingOptions();
     await this.getCountryTravelInformation();
@@ -371,7 +367,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => { },
+      () => {},
       (error) => {
         console.log(JSON.stringify(error));
       }
@@ -584,23 +580,11 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the ' +
       'RM*FOP/-AP format is in the PNR.' +
       ' If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark. <br> <br>';
-    // this.modalRef = this.modalService.show(MessageComponent, {
-    //   backdrop: 'static'
-    // });
-    // this.modalRef.content.modalRef = this.modalRef;
-    // this.modalRef.content.title = 'Issuing a BSP ticket';
-    // this.modalRef.content.note = '';
-    // this.modalRef.content.message =
-    //   'For BSP Ticketing ensure only tickets being charged to the Agency Plastic Card are issued while the' +
-    //   'RM*FOP/-AP format is in the PNR. \r\n' +
-    //   'If issuing BSP ticket using Traveller’s Personal Credit Card, delete the RM*FOP/-AP remark.';
-    // this.modalRef.content.callerName = 'issuingBSP';
-    // this.modalRef.content.setMessageType();
   }
 
   modalSubscribeOnClose() {
     // this.modalService.onHide.subscribe(() => {
-    //   debugger;
+    //
     //   if (this.modalRef !== undefined && this.modalRef.content !== undefined && this.modalRef.content.callerName === 'issuingBSP') {
     //     this.bspReply = true;
     //     this.modalRef.content.response = '';

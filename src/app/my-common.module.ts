@@ -16,6 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { VisaPassportComponent } from './shared/visa-passport/visa-passport.component';
 import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
+import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itinerary.component';
+import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { PassiveSegmentsComponent } from './passive-segments/passive-segments.co
     SegmentSelectComponent,
     VisaPassportComponent,
     SegmentsComponent,
-    PassiveSegmentsComponent
+    PassiveSegmentsComponent,
+    ItineraryComponent,
+    CancelSegmentComponent
   ],
   imports: [
     CommonModule,
@@ -55,7 +59,9 @@ import { PassiveSegmentsComponent } from './passive-segments/passive-segments.co
     SegmentSelectComponent,
     VisaPassportComponent,
     SegmentsComponent,
-    PassiveSegmentsComponent
+    PassiveSegmentsComponent,
+    ItineraryComponent,
+    CancelSegmentComponent
   ]
 })
 export class MyCommonModule { }

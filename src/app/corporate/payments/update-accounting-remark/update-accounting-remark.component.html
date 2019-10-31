@@ -5,6 +5,7 @@
   </button>
 </div>
 <div class="modal-body">
+
   <form [formGroup]="matrixAccountingForm">
     <div class="form-group  row">
       <div class="col-sm-4">TKT Line #:</div>
@@ -27,6 +28,31 @@
       </div>
     </div>
 
+    <!-- Airline Corporate Pass -->
+    <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
+      <div class="col-sm-4">Airline Corporate Pass:</div>
+      <div class="col-sm-8" *ngIf="title === 'Add Accounting Remarks'">
+        <!-- Add -->
+        <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePassId"
+          name="airlineCorporatePassId" required>
+          <option></option>
+          <option *ngFor="let item of airlineCorporatePasses" [value]="item.id">
+            {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
+          </option>
+        </select>
+      </div>
+      <div class="col-sm-8" *ngIf="title === 'Update Accounting Remarks'">
+        <select id="airlineCorporatePassSelection" class="form-control" formControlName="airlineCorporatePassId"
+          name="airlineCorporatePassId" required>
+          <option></option>
+          <option *ngFor="let item of airlineCorporatePasses" [value]="accountingRemark.airlineCorporatePass.id"
+            [selected]="item.id == accountingRemark.airlineCorporatePass.id">
+            {{ item.airlineCode }}/{{ item.name }}.{{ item.fareType }}/{{ item.number }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP'" class=" row form-group">
       <div class="col-4"></div>
       <div class="col-8">
@@ -37,12 +63,48 @@
     </div>
 
     <div
-      *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+      *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' || accountingRemark.accountingTypeRemark === 'ACPR'">
       <div class="form-group  row">
         <div class="col-sm-4">Itinerary Segments:</div>
         <div class="col-sm-8">
           <app-segment-select formControlName="segmentNo" [(ngModel)]="accountingRemark.segmentNo" name="segmentNo"
             id="segmentNo" #segmentApp (change)="checkSupplierCode()"></app-segment-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segments Count -->
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Segments Count:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="segmentsCount" name="segmentsCount" minlength="0"
+            maxlength="maxSegmentsCount" id="segmentsCount" min="0">
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
+      <div class="form-group  row">
+        <div class="col-sm-4">Description:</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="descriptionapay" id="descriptionapay"
+            list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
+            formControlName="descriptionapay" (change)="descriptionChanged($event.target.value)" required />
+          <datalist id="dynamicSupplierCode1">
+            <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>
+          </datalist>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showOtherDescription">
+      <div class="form-group  row">
+        <div class="col-sm-4">Other Cost Description: </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="otherDescription"
+            [(ngModel)]="accountingRemark.otherCostDescription" formControlName="otherDescription" required
+            formControlName="otherDescription" name="otherDescription" />
         </div>
       </div>
     </div>
@@ -61,33 +123,7 @@
       </div>
     </div>
 
-   
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
-      <div class="form-group  row">
-        <div class="col-sm-4">Description:</div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" formControlName="descriptionapay"
-            id="descriptionapay" list="dynamicSupplierCode1" [(ngModel)]="accountingRemark.descriptionapay" AllCapsMask
-            formControlName="descriptionapay" (change)="descriptionChanged($event.target.value)" />
-          <datalist id="dynamicSupplierCode1">
-            <option *ngFor="let item of descriptionList" [value]="item.itemValue">{{ item.itemValue }} </option>
-          </datalist>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="showOtherDescription">
-    <div class="form-group  row">
-      <div class="col-sm-4">Other Cost Description: </div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="otherDescription" [(ngModel)]="accountingRemark.otherCostDescription" formControlName="otherDescription" required
-          formControlName="otherDescription" name="otherDescription" />
-      </div>
-    </div>
-    </div>
-
-
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
+    <!-- <div *ngIf="accountingRemark.accountingTypeRemark === 'APAY'">
       <div class="form-group  row">
         <div class="col-sm-4">Vendor Code:</div>
         <div class="col-sm-8">
@@ -111,11 +147,11 @@
             placeholder="MM/YY" [(ngModel)]="accountingRemark.expDate" CCDateExpMask formControlName="expDate" />
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'" class="form-group  row">
       <div class="col-sm-4">
-        <label id="confirmationLabel">{{ name }} </label>
+        <label id="confirmationLabel">{{ name }}</label>
       </div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="supplierConfirmatioNo" formControlName="supplierConfirmatioNo"
@@ -156,14 +192,14 @@
 
     <div class="form-group  row">
       <div class="col-sm-4"></div>
-      <div class="col">
+      <div class="col-sm-4">
         <div class="">Other Tax:</div>
         <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
           [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
           placeholder="00.00" AmountMask />
       </div>
 
-      <div class="col">
+      <div class="col" *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'">
         <div class="">Commission:</div>
         <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
           [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
@@ -213,7 +249,7 @@
       <div class="col-sm-4">{{ ticketNumber }}</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="tktLine" formControlName="tktLine"
-          [(ngModel)]="accountingRemark.tktLine" formControlName="tktLine" name="tktLine" NumberOnlyMask
+          [(ngModel)]="accountingRemark.tktLine" name="tktLine" NumberOnlyMask 
           maxlength="10" />
       </div>
     </div>
@@ -257,9 +293,8 @@
       </div>
     </div>
 
-    <div
-      *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || (needFaretype && accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE')"
-      class="form-group row">
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPP' || (needFaretype && accountingRemark.accountingTypeRemark
+      === 'NONBSPEXCHANGE')" class="form-group row">
       <div class="col-sm-4">Fare Type:</div>
       <div class="col-sm-8">
         <select autofocus id="fareType" class="form-control" name="fareType" [(ngModel)]="accountingRemark.fareType"
@@ -271,18 +306,28 @@
       </div>
     </div>
 
-    <!-- GDS Fare for Non BSP Exchange -->
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
+    <!-- GDS Fare for Non BSP Exchange or Airline Corporate Pass Redemption (ACPR) -->
+    <div *ngIf="isGdsFareRequired">
       <!-- GDS Fare -->
       <div class="form-group row">
-        <div class="col-sm-4">GDS Fare:</div>
+        <div class="col-sm-4">
+          <span *ngIf="accountingRemark.accountingTypeRemark !== 'ACPR'">GDS Fare:</span>
+          <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">Lowest GDS Fare:</span>
+        </div>
         <div class="col-sm-8">
-          <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
-            [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0.00" />
+          <div *ngIf="accountingRemark.accountingTypeRemark !== 'ACPR'">
+            <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
+              [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0.00" />
+          </div>
+          <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPR'">
+            <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
+              [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0" step="1"
+              pattern="[0-9]*" />
+          </div>
         </div>
       </div>
       <!-- Consulatant Number -->
-      <div class="form-group row">
+      <div class="form-group row" *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
         <div class="col-sm-4">Consultant No:</div>
         <div class="col-sm-8">
           <input type="text" class="form-control" formControlName="consultantNo" id="consultantNo"

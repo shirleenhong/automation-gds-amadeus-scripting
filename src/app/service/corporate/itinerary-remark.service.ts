@@ -2,17 +2,19 @@ import { Injectable, OnInit } from '@angular/core';
 import { PnrService } from '../pnr.service';
 import { QueuePlaceModel } from '../../models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray } from '@angular/forms';
 import { AmadeusQueueService } from '../amadeus-queue.service';
+import { RemarksManagerService } from './remarks-manager.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItineraryRemarkService implements OnInit {
   destination = [];
-  leisureOnDemandOID: any = "";
+  leisureOnDemandOID: any = '';
 
-  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService) {
+  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService,
+              private rms: RemarksManagerService) {
   }
 
   async ngOnInit() {
@@ -84,6 +86,68 @@ export class ItineraryRemarkService implements OnInit {
   addTeamQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.teamQueue.value) {
       this.getQueueMinder(frmGroup.controls.teamQueue.value);
+    }
+  }
+  getItineraryRemarks(frmGroup: FormGroup) {
+    let arr = frmGroup.get('emailAddresses') as FormArray;
+    for (const c of arr.controls) {
+      const email = c.get('emailAddress').value;
+      if (email) {
+        const emailAddresses = new Map<string, string>();
+        emailAddresses.set('CWTItineraryEmailRecipient', email);
+        this.rms.createPlaceholderValues(emailAddresses);
+      }
+    }
+    if (frmGroup.value.typeTransaction) {
+      arr = frmGroup.get('services') as FormArray;
+      for (const c of arr.controls) {
+        const service = c.get('service').value;
+        if (service) {
+          const serviceValues = new Map<string, string>();
+          serviceValues.set('Service', service);
+          this.rms.createPlaceholderValues(serviceValues);
+        }
+      }
+      arr = frmGroup.get('tickets') as FormArray;
+      for (const c of arr.controls) {
+        const ticket = c.get('ticket').value;
+        if (ticket) {
+          const ticketValues = new Map<string, string>();
+          ticketValues.set('CWTItineraryTicketRemark', ticket);
+          this.rms.createPlaceholderValues(ticketValues);
+        }
+      }
+      arr = frmGroup.get('offers') as FormArray;
+      for (const c of arr.controls) {
+        if (frmGroup.value.typeTransaction === 'itinerary') {
+          const offer = c.get('offer').value;
+          if (offer) {
+            const offerValues = new Map<string, string>();
+            offerValues.set('Offer', offer);
+            this.rms.createPlaceholderValues(offerValues);
+          }
+        }
+      }
+    }
+    if (frmGroup.value.language) {
+      const rirService = 'LANGUAGE-(EN-US|FR-CA)';
+      const regx = new RegExp(rirService);
+      const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+      if (rems.length === 0) {
+        const languageMap = new Map<string, string>();
+        languageMap.set('Language', frmGroup.value.language);
+        this.rms.createPlaceholderValues(languageMap);
+      }
+      if (rems.length > 0 && rems[0].remarkText.substr(-5) !== frmGroup.value.language) {
+        const additionalLanguageMap = new Map<string, string>();
+        additionalLanguageMap.set('ItineraryLanguage', frmGroup.value.language.substr(0, 2));
+        this.rms.createPlaceholderValues(additionalLanguageMap);
+      }
+    }
+    if (!this.pnrService.getRmqEmail()) {
+      const aquaRmkConditions = new Map<string, string>();
+      aquaRmkConditions.set('EmailAddNo', 'true');
+      this.rms.createPlaceholderValues(null, aquaRmkConditions, null, null, 'EMAIL ADD-NO');
     }
   }
 }

@@ -47,9 +47,11 @@ export class CorporateComponent implements OnInit {
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
+  cancelEnabled = true;
   validModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
+  segment = [];
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -86,6 +88,7 @@ export class CorporateComponent implements OnInit {
     private amadeusRemarkService: AmadeusRemarkService
   ) {
     this.initData();
+    this.getPnrService();
   }
 
   async ngOnInit(): Promise<void> {
@@ -159,8 +162,22 @@ export class CorporateComponent implements OnInit {
   }
 
   public async AddSegment() {
+    // this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'segment';
+    if (!this.pnrService.getClientSubUnit()) {
+      this.closePopup();
+      this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
+      this.workflow = 'error';
+    } else {
+      try {
+        this.workflow = 'segment';
+        // this.showLoading('Matching Remarks', 'initData');
+        await this.rms.getMatchcedPlaceholderValues();
+      } catch (e) {
+        console.log(e);
+      }
+      this.closePopup();
+    }
   }
 
   async loadPnrData() {
@@ -270,7 +287,6 @@ export class CorporateComponent implements OnInit {
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
     if (this.queueComponent.queueMinderComponent) {
@@ -286,14 +302,21 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
 
-    await this.rms.SendPbn(
+    let commandList = [];
+    if (!this.corpRemarksComponent.isPassive) {
+      commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
+    }
+
+    await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
-        this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'ACPP')
+        this.paymentsComponent.accountingRemark.accountingRemarks.filter(
+          (x) => x.accountingTypeRemark === 'ACPP' || x.accountingTypeRemark === 'ACPR'
+        )
       )
     );
 
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks).then(
-      () => {
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+      async () => {
         this.isPnrLoaded = false;
         this.workflow = '';
         this.getPnr();
@@ -312,8 +335,46 @@ export class CorporateComponent implements OnInit {
   }
 
   async sendItineraryAndQueue() {
+    this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    this.workflow = 'sendQueue';
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendQueue';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async cancelSegment() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      if (this.checkHasPowerHotel()) {
+        this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
+      } else {
+        this.workflow = 'cancel';
+        this.segment = this.pnrService.getSegmentList();
+        this.setControl();
+      }
+    }
+  }
+
+  checkHasPowerHotel() {
+    const segmentDetails = this.pnrService.getSegmentList();
+    for (const seg of segmentDetails) {
+      if (seg.segmentType === 'HTL') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  setControl() {
+    if (this.isPnrLoaded) {
+      if (this.pnrService.recordLocator()) {
+        this.cancelEnabled = false;
+      }
+    }
   }
 
   async SendItineraryAndQueue() {
@@ -327,11 +388,13 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
-
     if (!this.itineraryqueueComponent.queueComponent.queueForm.pristine) {
       this.itineraryService.addItineraryQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addTeamQueue(this.itineraryqueueComponent.queueComponent.queueForm);
       this.itineraryService.addPersonalQueue(this.itineraryqueueComponent.queueComponent.queueForm);
+    }
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
     await this.rms.submitToPnr().then(
@@ -370,12 +433,16 @@ export class CorporateComponent implements OnInit {
   }
 
   async addSemgentsRirRemarks() {
-    debugger;
-    const remarkCollection2 = new Array<RemarkGroup>();
-    remarkCollection2.push(this.segmentService.addSegmentRir(this.passiveSegmentsComponent.segmentRemark));
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    remarkCollection.push(this.segmentService.addSegmentRir({ segRemark: this.passiveSegmentsComponent.segmentRemark, isCorp: true }));
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
+        remarkList.push(remModel);
+      });
+    });
 
-    await this.amadeusRemarkService.BuildRemarks(remarkCollection2);
-    this.amadeusRemarkService.SubmitRemarks().then(
+    this.rms.submitToPnr(remarkList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

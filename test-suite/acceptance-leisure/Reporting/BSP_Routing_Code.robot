@@ -53,7 +53,6 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is Not RBM an
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
-    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode
@@ -75,7 +74,6 @@ Verify That "Reason for Travel" In FS Remark Is "1" If the CF Line Is Not RBM an
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
-    Populate RBC Conceirge Required Fields
     Click Submit To PNR
     Close CA Migration Window
     Switch To Graphic Mode

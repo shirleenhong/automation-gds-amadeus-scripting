@@ -25,7 +25,7 @@ Verify That Air Only PNRs For Client Top Aces Is Queued For Approval
     
     
 Verify That PNRs For Client Top Aces Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Top Aces, Mix Segments, Intl Route
     Fill Up Approval Fields
@@ -41,7 +41,7 @@ Verify That PNRs For Client Top Aces With Domestic Route Do Not Go Thru Approval
     
     
 Verify That PNRs For Client Top Aces With Trans Route Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Top Aces, Air Only, Trans Route
     Fill Up Approval Fields
@@ -49,7 +49,7 @@ Verify That PNRs For Client Top Aces With Trans Route Do Not Go Thru Approval Pr
     
     
 Verify That Car Only PNRs For Client Top Aces Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Top Aces, Car Only
     Fill Up Approval Fields
@@ -57,7 +57,7 @@ Verify That Car Only PNRs For Client Top Aces Do Not Go Thru Approval Process
     
     
 Verify That Hotel Only PNRs For Client Top Aces Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Top Aces, Hotel Only
     Fill Up Approval Fields

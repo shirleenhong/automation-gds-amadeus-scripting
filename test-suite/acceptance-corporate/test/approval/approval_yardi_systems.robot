@@ -73,7 +73,7 @@ Verify That PNRs For Client Yardi Systems Are Queued For Approval When Eight Pri
     Verify PNR Approval Is Processed Correctly
     
 Verify That PNRs For Client Yardi Systems Can Skip Approval
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Yardi Systems With Udid50 VIP-CA-S, Air Only, Skip Approval
     Fill Up Approval Fields

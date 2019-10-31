@@ -4,6 +4,7 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
+Library           pyautogui
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot
@@ -52,29 +53,33 @@ Verify That Multiple Non-BSP Ticketing Remarks Are Written
     
    
 Verify That APAY Ticketing Remarks Are Written For Single Segment
-    [Tags]    us10552
+    [Tags]    us10552    us10028    not_ready
     Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Passive Segment With Airline Code WS
+    Move Single Passenger And Add Passive Segment For APAY With Airline Code WS
+    Enter FOP Credit Card Remark
+    Enter EB Remark For APAY
     Add APAY Ticketing Details For Single Segment
-    Verify That Supplier Code Default Value Is Correct For APAY
+    Verify That Supplier Code Default Value Is Correct For Other Type Of APAY
     Click Save Button
     Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
     
-    
 Verify That APAY Ticketing Remarks Are Written For Multiple Segments
-    [Tags]    us10552
+    [Tags]    us10552    us10028
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WN
+    Enter FOP Credit Card Remark
     Add APAY Ticketing Details For Multiple Segments
-    Verify That Supplier Code Default Value Is Correct For APAY
+    Verify That Supplier Code Default Value Is Correct For Seat Costs APAY
     Click Save Button
     Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
     
 
 Verify That Non-BSP With APAY Ticketing Remarks Are Written 
-    [Tags]    us10552
+    [Tags]    us10552    us10028
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
+    Enter FOP Credit Card Remark
+    Enter EB Remark For APAY
     Add Non-BSP and APAY Ticketing Detals For Multiple Segments
     Click Save Button
     Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR

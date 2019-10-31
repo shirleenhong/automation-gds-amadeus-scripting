@@ -163,6 +163,7 @@ Populate RBC Conceirge Required Fields
     Enter Hotel Name    Hotel Name for Leisure
     Select Reservation For Business Travel    YES
     Select Hotel Reservation Booked    YES
+    Click Panel    Reporting
 
 Get Hotel Details Values
     ${hotel_city}    Get Element Attribute    xpath=//input[@id='hotelCityName']    ng-reflect-model

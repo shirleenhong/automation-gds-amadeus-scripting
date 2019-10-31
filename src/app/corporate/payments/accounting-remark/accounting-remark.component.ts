@@ -6,7 +6,6 @@ import { FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { MessageComponent } from 'src/app/shared/message/message.component';
 import { MessageType } from 'src/app/shared/message/MessageType';
-import { PaymentRemarkService } from 'src/app/service/corporate/payment-remark.service';
 import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 import { PnrService } from 'src/app/service/pnr.service';
 import { RemarksManagerService } from 'src/app/service/corporate/remarks-manager.service';
@@ -26,17 +25,16 @@ export class AccountingRemarkComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private utilHelper: UtilHelper,
-    private paymentService: PaymentRemarkService,
     private valueChangeListener: ValueChangeListener,
     private pnrService: PnrService,
     private rms: RemarksManagerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.accountingRemarks = this.extractAccountingModelsFromPnr();
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
-    this.paymentService.setNonBspInformation(this.accountingRemarks);
+    this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
   }
 
   deleteItem(r: MatrixAccountingModel) {
@@ -64,7 +62,7 @@ export class AccountingRemarkComponent implements OnInit {
       if (model.tkMacLine) {
         const pholder = this.rms.getMatchedPlaceHoldersWithKey('TktRemarkNbr');
         const slineNo = pholder[i].segmentNumberReferences[i];
-        const segment = this.pnrService.getSegmentTatooNumber().filter((x) => x.tatooNo === slineNo);
+        const segment = this.pnrService.getSegmentList().filter((x) => x.tatooNo === slineNo);
 
         if (segment.length > 0) {
           model.departureCity = segment[i].cityCode;
@@ -152,7 +150,6 @@ export class AccountingRemarkComponent implements OnInit {
         }
       }
       this.isPassPurchaseTransaction();
-      this.paymentService.setNonBspInformation(this.accountingRemarks);
       this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
     });
   }
@@ -170,6 +167,12 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.isAddNew = false;
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     r.supplierCodeName = code;
+
+    if (r.accountingTypeRemark === 'APAY' && r.typeCode === 'OTHER COSTS') {
+      this.modalRef.content.showOtherDescription = true;
+    } else {
+      this.modalRef.content.showOtherDescription = false;
+    }
     this.modalRef.content.FormOfPaymentChange(r.fop);
     this.modalRef.content.loadData();
   }

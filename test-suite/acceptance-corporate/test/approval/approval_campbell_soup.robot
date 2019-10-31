@@ -17,7 +17,7 @@ ${test_file_name}    campbell
 
 *** Test Cases ***
 Verify That PNRs For Client Campbell Soup Is Correctly Queued To Approval Queue
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client Campbell Soup With Any Udid 50, Air Only
     Fill Up Approval Fields
@@ -31,14 +31,14 @@ Verify That PNRs For Client Campbell Soup with Mixed Segments Is Correctly Queue
     Verify PNR Approval Is Processed Correctly
     
 Verify That Hotel Only PNRs For Client Campbell Soup Is Correctly Queued To Approval Queue
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Campbell Soup With Any Udid 50, Hotel Only
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Car Only PNRs For Client Campbell Soup Is Correctly Queued To Approval Queue
-    [Tags]    us13271
+    [Tags]    us13271    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Client Campbell Soup With Any Udid 50, Car Only
     Fill Up Approval Fields

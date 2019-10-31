@@ -1,11 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
-  FormArray,
-  Validators
-} from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
@@ -32,17 +26,15 @@ export class CodeshareComponent implements OnInit, AfterViewInit {
     const regx = new RegExp(rirCheckin);
     const rems = this.pnr.getRemarksFromGDSByRegex(regx, 'RIR');
     const items = this.codeShareGroup.get('segments') as FormArray;
-    const segmentList = this.pnr.getSegmentTatooNumber();
+    const segmentList = this.pnr.getSegmentList();
     if (rems.length > 0) {
       items.controls = [];
     }
 
-    rems.forEach(r => {
-      const airline = r.remarkText
-        .replace('CHECK-IN AT', '')
-        .replace('TICKET COUNTER', ''.trim());
+    rems.forEach((r) => {
+      const airline = r.remarkText.replace('CHECK-IN AT', '').replace('TICKET COUNTER', ''.trim());
       const segment = [];
-      segmentList.forEach(x => {
+      segmentList.forEach((x) => {
         if (r.segments.indexOf(x.tatooNo) >= 0) {
           segment.push(x.lineNo);
         }

@@ -13,13 +13,17 @@ Resource          ../../pages/add_segment.robot
 Test Teardown    Close All Browsers
 
 *** Test Cases ***
-Verify Corp Passive Air Segment Is Added In the PNR For Non ZZ Details
+Verify Passive Rail Segments Are Added In The PNR For EN
+    [Tags]    us9882
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Passive Air Segments For Corporate, Non ZZ Details
-    Add And Verify Air Segment for Non ZZ Details In The PNR
+    Move Single Passenger For EN
+    Add Multiple Passive Rail Segment For EN PNR
+    Verify Passive Rail Segment And RIR Added In The PNR For EN
     
-Verify Corp Passive Air Segment Is Added In the PNR For ZZ Details
+Verify Passive Rail Segments Are Added In The PNR For FR
+    [Tags]    us9882
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Passive Air Segments For Corporate, For ZZ Details
-    Add And Verify Air Segment for ZZ In The PNR
+    Move Single Passenger For FR
+    Add Multiple Passive Rail Segment For FR PNR
+    Verify Passive Rail Segment And RIR Added In The PNR For FR
     

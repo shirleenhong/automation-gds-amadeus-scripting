@@ -105,9 +105,13 @@ export class PaymentComponent {
   }
 
   private isBspTicketFop(): void {
-    const segment = this.pnrService.getSegmentTatooNumber();
-    const look = segment.find(x => x.segmentType === 'AIR' && (x.airlineCode === 'AC' || x.airlineCode === 'WS' || x.airlineCode === 'PD')
-      && (x.status === 'DK' || x.status === 'HK'));
+    const segment = this.pnrService.getSegmentList();
+    const look = segment.find(
+      (x) =>
+        x.segmentType === 'AIR' &&
+        (x.airlineCode === 'AC' || x.airlineCode === 'WS' || x.airlineCode === 'PD') &&
+        (x.status === 'DK' || x.status === 'HK')
+    );
     const unticketedTst = this.pnrService.getUnticketedTst();
     if (look && unticketedTst) {
       this.bspTicketFopValid = true;

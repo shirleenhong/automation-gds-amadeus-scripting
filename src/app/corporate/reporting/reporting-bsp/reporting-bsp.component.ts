@@ -6,6 +6,7 @@ import { ServicingOptionEnums } from '../../../enums/servicing-options';
 import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
 import { ReasonCode } from '../../../models/ddb/reason-code.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 declare var smartScriptSession: any;
 
@@ -29,7 +30,13 @@ export class ReportingBSPComponent implements OnInit {
   hasTst = true;
 
   // tslint:disable-next-line:max-line-length
-  constructor(private fb: FormBuilder, private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
+  constructor(
+    private fb: FormBuilder,
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private utilHelper: UtilHelper,
+    private valueChagneListener: ValueChangeListener
+  ) {}
 
   ngOnInit() {
     this.isDoneLoading = false;
@@ -91,6 +98,22 @@ export class ReportingBSPComponent implements OnInit {
       isExchange: new FormControl(isExchange)
     });
 
+    group.get('reasonCodeText').valueChanges.subscribe((val) => {
+      if (!val) {
+        return;
+      }
+      const arr = this.bspGroup.get('fares') as FormArray;
+      const reasons = [];
+      for (const control of arr.controls) {
+        if (control.get('reasonCodeText').value) {
+          reasons.push(control.get('reasonCodeText').value);
+        }
+      }
+      if (reasons.length > 0) {
+        this.valueChagneListener.reasonCodeChange(reasons);
+      }
+    });
+
     const currentIndex = this.reasonCodes.length - 1;
     if (this.thresholdAmount > 0) {
       if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
@@ -104,12 +127,7 @@ export class ReportingBSPComponent implements OnInit {
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
         this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
-        // reasonCode = this.getReasonCodeValue('7', currentIndex);
-        // if (reasonCode === '') {
-        //   group.get('reasonCodeText').setValue('E : Exchange');
-        // } else {
         group.get('reasonCodeText').setValue('E');
-        // }
       }
 
       group.get('highFareText').setValue(chargeFare);

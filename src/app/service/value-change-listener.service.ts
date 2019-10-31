@@ -4,11 +4,18 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ValueChangeListener {
-  listObserver: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
-  accountingRemarkChange = this.listObserver.asObservable();
+  accountingObserver: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+  accountingRemarkChange = this.accountingObserver.asObservable();
+
+  reasonCodeObserver = new BehaviorSubject([]);
+  reasonCodeOnChange = this.reasonCodeObserver.asObservable();
 
   constructor() {}
   accountingRemarksChange(accountingRemarks) {
-    this.listObserver.next(accountingRemarks);
+    this.accountingObserver.next(accountingRemarks);
+  }
+
+  reasonCodeChange(reasonCodes) {
+    this.reasonCodeObserver.next(reasonCodes);
   }
 }

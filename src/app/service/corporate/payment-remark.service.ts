@@ -7,7 +7,7 @@ import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
-import { BehaviorSubject } from 'rxjs';
+
 import { DDBService } from '../ddb.service';
 
 @Injectable({
@@ -15,9 +15,6 @@ import { DDBService } from '../ddb.service';
 })
 export class PaymentRemarkService {
   decPipe = new DecimalPipe('en-US');
-  // nonbspInformation: MatrixAccountingModel[];
-  nonbspInformation: BehaviorSubject<Array<MatrixAccountingModel>> = new BehaviorSubject([]);
-  currentMessage = this.nonbspInformation.asObservable();
 
   constructor(
     private remarksManager: RemarksManagerService,
@@ -86,7 +83,6 @@ export class PaymentRemarkService {
       airlineCodeRemark.set('TotalCost', account.baseAmount);
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
-      // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -569,10 +565,6 @@ export class PaymentRemarkService {
     air.forEach((airElement) => {
       segmentrelate.push(airElement.tatooNo);
     });
-  }
-
-  setNonBspInformation(accountingRemarks: MatrixAccountingModel[]) {
-    this.nonbspInformation.next(accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP'));
   }
 
   allRailSegment(account: MatrixAccountingModel) {

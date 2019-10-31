@@ -9,6 +9,7 @@ import { ApprovalItem } from 'src/app/models/ddb/approval.model';
   providedIn: 'root'
 })
 export class ApprovalRuleService {
+  reasonCodes = [];
   constructor(private ddbService: DDBService, private pnrService: PnrService) {}
 
   /**
@@ -39,12 +40,12 @@ export class ApprovalRuleService {
   /**
    * check if the set rules of approval in the DB is valid in the pnr
    */
-  public hasApproval() {
+  public hasApproval(_reasonCodes) {
+    this.reasonCodes = _reasonCodes;
     if (this.needsApproval()) {
       const approvalItems = this.ddbService.approvalList.filter(
         (app) => app.approvalResult === 'EXCLUDE' || app.approvalResult === 'INCLUDE'
       );
-
       const appGroup = approvalItems.filter((a) => a.approvalRules.indexOf('[GROUP_') >= 0);
       const appNoGroup = approvalItems.filter((a) => a.approvalRules.indexOf('[GROUP_') === -1);
       if (appGroup.length > 0) {
@@ -63,13 +64,14 @@ export class ApprovalRuleService {
       const list = approvalItems.filter((a) => a.approvalRules.indexOf('[GROUP_' + ctr) >= 0);
       hasGroup = list.length > 0;
       if (hasGroup) {
-        if (this.getApprovalValidResult(list[0], this.isValidRule(list, true))) {
-          return true;
+        const valid = this.isValidRule(list, true);
+        if (valid) {
+          return this.getApprovalValidResult(list[0], valid);
         }
       }
       ctr += 1;
     }
-    return false;
+    return ctr > 1;
   }
 
   isValidRule(approvalItems: ApprovalItem[], isGroup?): boolean {
@@ -116,6 +118,11 @@ export class ApprovalRuleService {
         } else if (val[0].indexOf('RIR') >= 0) {
           found = this.pnrService.getRirRemarkText(val[1].trim()) !== '';
         }
+
+        if (!found && this.reasonCodes && val[1].trim().indexOf('FS/-') >= 0) {
+          found = this.reasonCodes.filter((x) => 'FS/-' + x === val[1].trim()).length > 0;
+        }
+
         if (found) {
           break;
         }

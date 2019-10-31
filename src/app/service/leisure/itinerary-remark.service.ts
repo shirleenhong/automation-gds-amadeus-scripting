@@ -14,8 +14,12 @@ import { AmadeusQueueService } from '../amadeus-queue.service';
 })
 export class ItineraryRemarkService {
   destination = [];
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ddbService: DDBService,
-    private amadeusQueue: AmadeusQueueService) { }
+  constructor(
+    private remarkHelper: RemarkHelper,
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private amadeusQueue: AmadeusQueueService
+  ) {}
 
   getItineraryRemarks(frmGroup: FormGroup) {
     const rmGroup = new RemarkGroup();

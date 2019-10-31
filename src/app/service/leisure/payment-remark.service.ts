@@ -19,7 +19,7 @@ import { BspTicketFopComponent } from 'src/app/leisure/payments/bsp-ticket-fop/b
 })
 export class PaymentRemarkService {
   amountPipe = new AmountPipe();
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private ddbService: DDBService) { }
 
   accountingRemarks: Array<MatrixAccountingModel>;
 
@@ -620,29 +620,30 @@ export class PaymentRemarkService {
   }
 
   public addBspTicketFop(ticketfop: BspTicketFopComponent) {
-    const fg = ticketfop.bspTicketFopForm;
     const remGroup = new RemarkGroup();
     remGroup.group = 'FOP';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
     let deletePayment = false;
-
-    switch (fg.get('bspfop').value) {
-      case 'CC':
-        remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value.replace('/', ''));
-        deletePayment = true;
-        break;
-      case 'CK':
-        remGroup.cryptics.push('FPCHEQUE');
-        deletePayment = true;
-        break;
-      case 'AP':
-        remGroup.cryptics.push('PBN/YTOWL210N/PCIFOPCWT BSP/*');
-        remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
-        deletePayment = true;
-        break;
-      default:
-        break;
+    if (ticketfop) {
+      const fg = ticketfop.bspTicketFopForm;
+      switch (fg.get('bspfop').value) {
+        case 'CC':
+          remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value.replace('/', ''));
+          deletePayment = true;
+          break;
+        case 'CK':
+          remGroup.cryptics.push('FPCHEQUE');
+          deletePayment = true;
+          break;
+        case 'AP':
+          remGroup.cryptics.push('PBN/YTOWL210N/PCIFOPCWT BSP/*');
+          remGroup.remarks.push(this.getRemarksModel('FOP/-AP', '*'));
+          deletePayment = true;
+          break;
+        default:
+          break;
+      }
     }
     this.deleteBspTicketFop(remGroup, deletePayment);
     return remGroup;

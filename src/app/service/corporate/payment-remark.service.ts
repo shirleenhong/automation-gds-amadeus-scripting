@@ -21,7 +21,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) {}
+  ) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -81,10 +81,8 @@ export class PaymentRemarkService {
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
-
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
-
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -121,7 +119,6 @@ export class PaymentRemarkService {
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
 
         // US10574: Airline Corporate Pass Redemption
-
         const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
         // const tattooNumbers = account.segmentNo ? account.segmentNo.split(',') : null;
         // const tattooNumbers = ['2'];

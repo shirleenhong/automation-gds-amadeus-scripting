@@ -16,6 +16,9 @@ export class ResendInvoiceComponent implements OnInit {
   showInvoiceList = false;
   segmentNum = '';
   invoiceList = [];
+  feeAccountingList = [];
+  nonBspAccountingList = [];
+  eTicketsList = [];
   remove = false;
   add = true;
   listEmail: Array<string>;
@@ -24,16 +27,24 @@ export class ResendInvoiceComponent implements OnInit {
     this.invoiceFormGroup = new FormGroup({
       segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
       invoiceNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      feesAccountingNo: new FormControl('', []),
+      nonBspAccountingNo: new FormControl('', []),
       emailAddresses: new FormArray([this.createFormGroup()]),
     });
-    this.getInvoicesFromPNR();
+    this.resendInvoiceProcess();
+  }
+  async resendInvoiceProcess() {
+    await this.getInvoicesFromPNR();
+    await this.getAllETickets();
+    this.getFeeAccountingLines();
     this.listEmail = this.pnrService.getEmailAddressesFromGds();
   }
-  getInvoicesFromPNR() {
+  async getInvoicesFromPNR() {
     const fiElements = this.pnrService.pnrObj.fiElements;
     if (fiElements.length > 0) {
       this.showInvoiceList = true;
       const selectAllObj = {
+        lineNo: 'All',
         freeText: 'Select All',
         isChecked: false
       };
@@ -42,7 +53,7 @@ export class ResendInvoiceComponent implements OnInit {
       console.log(fiElements);
       // show the invoice elements in UI
     } else {
-      this.invoiceProcess();
+      await this.invoiceProcess();
     }
   }
   async invoiceProcess() {
@@ -52,18 +63,27 @@ export class ResendInvoiceComponent implements OnInit {
     console.log(invResponse);
     console.log(rtfRes);
   }
+  async getAllETickets() {
+    const rttnCmd = 'RTTN/H';
+    const rttnResponse = await this.invoiceRmkService.sendINVCommand(rttnCmd);
+    const eTickets = this.getAllTickets(rttnResponse);
+    this.makeETicketsListUI(eTickets);
+    console.log(eTickets);
+  }
   addInvoicesToList(fiElements) {
     const regex = /PAX|INF|INS|CHD/g;
     for (const fiElement of fiElements) {
       const invoiceObj = {
-        freeText : '',
-        isChecked : false
+        lineNo: '',
+        freeText: '',
+        isChecked: false
       };
       let freeText = fiElement.fullNode.otherDataFreetext.longFreetext;
       const match = freeText.match(regex);
       if (match && match[0]) {
         freeText = freeText.replace(match[0], '').trim();
       }
+      invoiceObj.lineNo = fiElement.elementNumber;
       invoiceObj.freeText = freeText;
       this.invoiceList.push(invoiceObj);
     }
@@ -71,10 +91,8 @@ export class ResendInvoiceComponent implements OnInit {
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
       emailAddress: new FormControl('',
-        // tslint:disable-next-line:max-line-length
         [Validators.required, Validators.pattern('^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[A-Z0-9.-]+?\\.[A-Z]{2,3}$')])
     });
-
     return group;
   }
   removeItems(i, type) {
@@ -108,7 +126,111 @@ export class ResendInvoiceComponent implements OnInit {
         break;
     }
   }
+  getFeeAccountingLines() {
+    const rmElements = this.pnrService.pnrObj.rmElements;
+    for (const rmElement of rmElements) {
+      if (rmElement.category === 'F') {
+      }
+    }
+  }
   generateInvoice() {
     console.log(this.segmentNum);
+  }
+  checkSelectedInvoice(data: any) {
+    if (data.lineNo === 'All') {
+      const newVal = !data.isChecked;
+      for (const ele of this.invoiceList) {
+        ele.isChecked = newVal;
+      }
+    } else {
+      for (const ele of this.invoiceList) {
+        if (data.lineNo === ele.lineNo) {
+          ele.isChecked = !ele.isChecked;
+        }
+      }
+      if (this.checkForAllSelectionInvoice()) {
+        this.invoiceList[0].isChecked = true;
+      } else {
+        this.invoiceList[0].isChecked = false;
+      }
+    }
+  }
+  checkSelectedTickets(data: any) {
+    if(data.lineNo === 'All') {
+      const newVal = !data.isChecked;
+      for (const ele of this.eTicketsList) {
+        ele.isChecked = newVal;
+      }
+    } else {
+      for (const ele of this.eTicketsList) {
+        if (data.lineNo === ele.lineNo) {
+          ele.isChecked = !ele.isChecked;
+        }
+      }
+      if (this.checkForAllSelectionTickets()) {
+        this.eTicketsList[0].isChecked = true;
+      } else {
+        this.eTicketsList[0].isChecked = false;
+      }
+    }
+  }
+  private checkForAllSelectionInvoice() {
+    let isAllSelected = true;
+    this.invoiceList.forEach((ele, index) => {
+      if (index !== 0 && !ele.isChecked) {
+        isAllSelected = false;
+      }
+    });
+    return isAllSelected;
+  }
+  private checkForAllSelectionTickets() {
+    let isAllSelected = true;
+    this.eTicketsList.forEach((ele, index) => {
+      if (index !== 0 && !ele.isChecked) {
+        isAllSelected = false;
+      }
+    });
+    return isAllSelected;
+  }
+  private getAllTickets(response) {
+    const eTickets = [];
+    const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
+    const match = response.match(resregex);
+    if (match) {
+      const ticketTypeRegex = /[A-Z]{4}/g;
+      const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
+      for (const matchEle of match) {
+        const typeMatch = matchEle.match(ticketTypeRegex);
+        if (typeMatch && typeMatch[0].indexOf('ET') > -1) {
+          const ticketNumMatch = matchEle.match(ticketNumRegex);
+          if (ticketNumMatch && ticketNumMatch[0]) {
+            eTickets.push(ticketNumMatch[0].replace('-', '').trim());
+          }
+        }
+      }
+    }
+    return eTickets;
+  }
+  makeETicketsListUI(eTickets) {
+    const selectAllObj = {
+      lineNo: 'All',
+      freeText: 'Send All E-tickets listed in PNR',
+      isChecked: false
+    };
+    this.eTicketsList.push(selectAllObj);
+    eTickets.forEach((ticket, index) => {
+      const ticketObj = {
+        lineNo: index + 1,
+        freeText: ticket,
+        isChecked: false
+      };
+      this.eTicketsList.push(ticketObj);
+    });
+    const selectNoneObj = {
+      lineNo: 'None',
+      freeText: 'No E-tickets Required',
+      isChecked: false
+    };
+    this.eTicketsList.push(selectNoneObj);
   }
 }

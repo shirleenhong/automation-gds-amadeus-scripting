@@ -99,5 +99,8 @@ export class InvoiceRemarkService {
     const tempINVRes = await smartScriptSession.send(command);
     return await smartScriptSession.getFullCryptic(tempINVRes.Response);
   }
-  
+  async sendRTTNCommand(command) {
+    const tempRTTNRes = await smartScriptSession.send(command);
+    return await smartScriptSession.getFullCryptic(tempRTTNRes.Response);
+  }
 }

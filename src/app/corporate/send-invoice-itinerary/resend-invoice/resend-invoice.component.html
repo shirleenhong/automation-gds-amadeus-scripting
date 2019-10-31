@@ -18,7 +18,34 @@
       <div class="form-group row">
         <div class="col-md-4">Invoice Numbers:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='invoiceList' formControlName="invoiceNo" name="invoiceNo" id="invoiceNo">
+          <app-generic-select [genericList]='invoiceList' formControlName="invoiceNo" name="invoiceNo" id="invoiceNo" (passDataParent) = 'checkSelectedInvoice($event)'>
+          </app-generic-select>
+        </div>
+      </div>
+    </div>
+    <div  class="non-bsp-accounting-list">
+      <div class="form-group row">
+        <div class="col-md-4">Select E-tickets for Re-Send:</div>
+        <div class="col-sm-8">
+          <app-generic-select [genericList]='eTicketsList' name="eTicketNo" id="eTicketNo" (passDataParent) = 'checkSelectedTickets($event)'>
+          </app-generic-select>
+        </div>
+      </div>
+    </div>
+    <div  class="fee-accounting-list">
+      <div class="form-group row">
+        <div class="col-md-4">Fee Accounting Lines:</div>
+        <div class="col-sm-8">
+          <app-generic-select [genericList]='feeAccountingList' formControlName="feesAccountingNo" name="feesAccountingNo" id="feesAccountingNo">
+          </app-generic-select>
+        </div>
+      </div>
+    </div>
+    <div  class="non-bsp-accounting-list">
+      <div class="form-group row">
+        <div class="col-md-4">Non BSP Accounting Lines:</div>
+        <div class="col-sm-8">
+          <app-generic-select [genericList]='nonBspAccountingList' formControlName="nonBspAccountingNo" name="nonBspAccountingNo" id="nonBspAccountingNo">
           </app-generic-select>
         </div>
       </div>

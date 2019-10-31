@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -19,7 +19,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, NG_VALIDATORS, NG_VALU
     /// { provide: BsDropdownConfig, useValue: { autoClose: false } }
   ]
 })
-export class GenericSelectComponent implements OnInit {
+export class GenericSelectComponent implements OnInit, OnChanges {
   genericElementGroup: FormGroup;
   constructor(fb: FormBuilder) {
     this.genericElementGroup = fb.group({
@@ -27,32 +27,53 @@ export class GenericSelectComponent implements OnInit {
     });
   }
   val = '';
+  
   elementSelected = [];
   @Input() genericList;
+  @Output() passDataParent: EventEmitter<any> = new EventEmitter<any>();
   onTouched: any = () => { };
+  onChange: any = () => { };
   ngOnInit() {
+  }
+  ngOnChanges() {
+    // this.updateValue()
   }
   set value(val) {
     this.val = val;
+    this.onChange(val);
     this.onTouched();
+  }
+  writeValue(obj: any): void {
+    this.genericElementGroup.get('genericElement').setValue(obj);
+    this.val = obj;
   }
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  updateValue(val) {
-    const newVal = val.currentTarget.value;
-    const isChecked = val.currentTarget.checked;
-
-    if (isChecked) {
-      this.elementSelected.push(newVal);
-    } else {
-      this.elementSelected.splice(this.elementSelected.indexOf(newVal), 1);
+  updateValue() {
+    const selectedEle = [];
+    for (const ele of this.genericList) {
+      if (ele.lineNo === 'All' && ele.isChecked) {
+        selectedEle.push(ele.lineNo);
+        break;
+      } else {
+        if (ele.isChecked) {
+          selectedEle.push(ele.lineNo);
+        }
+      }
     }
-
-    this.value = this.elementSelected.join(',');
-    this.genericElementGroup.get('genericElement').setValue(this.val);
+    const value = selectedEle.join(',');
+    this.genericElementGroup.get('genericElement').setValue(value);
   }
   elementChecked(item) {
     return (this.val ? this.val.split(',').indexOf(item.lineNo) >= 0 : false);
+  }
+  selectedAll() {
+    for (const ele of this.genericList) {
+      ele.isChecked = true;
+    }
+  }
+  getSelected(data: any) {
+    this.passDataParent.emit(data);
   }
 }

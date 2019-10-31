@@ -6,9 +6,13 @@
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
       <li role="menuitem" *ngFor="let item of genericList">
-        <div class="dropdown-item">
-          <input type="checkbox" [value]="item.lineNo" (change)="updateValue($event)"/>
-          {{item.freeText}}
+          <div class="dropdown-item" *ngIf = "item.lineNo === 'All' || item.lineNo === 'None'">
+              <input type="checkbox" [value]="item.lineNo" (change) = 'updateValue()' [checked] = 'item.isChecked' (click) = 'getSelected(item)'/>
+              {{item.freeText}}
+            </div>
+        <div class="dropdown-item" *ngIf = "item.lineNo !== 'All' && item.lineNo !== 'None'">
+          <input type="checkbox" [value]="item.lineNo" (change) = 'updateValue()' [checked] = 'item.isChecked' (click) = 'getSelected(item)'/>
+          {{item.lineNo + ' ' + item.freeText}}
         </div>
       </li>
     </ul>

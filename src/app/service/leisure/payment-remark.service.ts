@@ -620,7 +620,6 @@ export class PaymentRemarkService {
   }
 
   public addBspTicketFop(ticketfop: BspTicketFopComponent) {
-    debugger;
     const remGroup = new RemarkGroup();
     remGroup.group = 'FOP';
     remGroup.remarks = new Array<RemarkModel>();

@@ -88,7 +88,6 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   private checkCorpPreCancel() {
-    debugger;
     this.isCorporate = this.counselorDetail.getIsCorporate();
     const eba = this.pnrService.getRemarkText('EB/-EBA');
     const cxl = this.pnrService.getRemarkText('CB/CXL/PNR');
@@ -297,7 +296,6 @@ export class CancelSegmentComponent implements OnInit {
             this.acChange(this.cancelForm.value.reasonACCancel);
           }
         }
-        debugger;
         // this.checkPowerHotelCancellation(look);
       }
     });

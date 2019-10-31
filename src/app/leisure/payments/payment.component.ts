@@ -105,7 +105,6 @@ export class PaymentComponent {
   }
 
   private isBspTicketFop(): void {
-    debugger;
     const segment = this.pnrService.getSegmentList();
     const look = segment.find(
       (x) =>

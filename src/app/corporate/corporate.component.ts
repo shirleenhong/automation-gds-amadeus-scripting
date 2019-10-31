@@ -347,7 +347,6 @@ export class CorporateComponent implements OnInit {
   }
 
   public async cancelSegment() {
-    debugger;
     if (this.isPnrLoaded) {
       await this.getPnrService();
       if (this.checkHasPowerHotel()) {

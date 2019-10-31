@@ -24,7 +24,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) {}
+  ) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -84,11 +84,9 @@ export class PaymentRemarkService {
       }
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
-      // debugger;
       const segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
       // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-      // debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -102,7 +100,6 @@ export class PaymentRemarkService {
         account.tktLine
       );
 
-      // debugger;
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
         paymentRemark.set('PassName', account.passPurchase);
@@ -126,7 +123,6 @@ export class PaymentRemarkService {
         passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
 
         // US10574: Airline Corporate Pass Redemption
-        // debugger;
         const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
         // const tattooNumbers = account.segmentNo ? account.segmentNo.split(',') : null;
         // const tattooNumbers = ['2'];
@@ -190,7 +186,6 @@ export class PaymentRemarkService {
       this.remarksManager.createPlaceholderValues(airlineCodeRemark);
       this.remarksManager.createPlaceholderValues(airlineCodeInvoice);
 
-      // debugger;
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ALL DETAILS DISCUSSED AND');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'APPROVED BY CLIENT.');
       this.remarksManager.createPlaceholderValues(null, staticRemarksCondition, null, null, 'CHARGE TO CLIENTS CREDIT CARD');

@@ -347,12 +347,27 @@ export class CorporateComponent implements OnInit {
   }
 
   public async cancelSegment() {
+    debugger;
     if (this.isPnrLoaded) {
       await this.getPnrService();
-      this.workflow = 'cancel';
-      this.segment = this.pnrService.getSegmentList();
-      this.setControl();
+      if (this.checkHasPowerHotel()) {
+        this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
+      } else {
+        this.workflow = 'cancel';
+        this.segment = this.pnrService.getSegmentList();
+        this.setControl();
+      }
     }
+  }
+
+  checkHasPowerHotel() {
+    const segmentDetails = this.pnrService.getSegmentList();
+    for (const seg of segmentDetails) {
+      if (seg.segmentType === 'HTL') {
+        return true;
+      }
+    }
+    return false;
   }
 
   setControl() {

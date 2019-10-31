@@ -23,9 +23,9 @@ export class PaymentComponent {
     this.isBspTicketFop();
   }
 
-  onEditReceipt() {}
+  onEditReceipt() { }
 
-  onAddReceipt() {}
+  onAddReceipt() { }
 
   checkValid() {
     this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);
@@ -105,6 +105,7 @@ export class PaymentComponent {
   }
 
   private isBspTicketFop(): void {
+    debugger;
     const segment = this.pnrService.getSegmentList();
     const look = segment.find(
       (x) =>

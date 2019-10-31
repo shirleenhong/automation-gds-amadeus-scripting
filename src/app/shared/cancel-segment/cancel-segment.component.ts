@@ -4,6 +4,10 @@ import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
+import { CounselorDetail } from 'src/app/globals/counselor-identity';
+// import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+// import { MessageType } from '../message/MessageType';
+// import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'app-cancel-segment',
@@ -14,6 +18,7 @@ export class CancelSegmentComponent implements OnInit {
   cancelForm: FormGroup;
   reasonAcList: Array<SelectItem>;
   followUpOptionList: Array<SelectItem>;
+  voidList: Array<SelectItem>;
   reasonUaList: Array<SelectItem>;
   cancelProcessList: Array<SelectItem>;
   relationshipList: Array<SelectItem>;
@@ -32,8 +37,12 @@ export class CancelSegmentComponent implements OnInit {
   acadd = true;
   headerRefund = 'Refund Commission Recall';
   isACPassive = false;
+  preCancel = false;
+  isCorporate = false;
+  // modalRef: BsModalRef;
 
-  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
+  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper, private counselorDetail: CounselorDetail) {
+    // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
       requestor: new FormControl('', [Validators.required]),
@@ -61,6 +70,9 @@ export class CancelSegmentComponent implements OnInit {
       reasonNonACCancel: new FormControl('', []),
       actickets: new FormArray([this.createAcFormGroup()])
     });
+    // this.showMessage();
+    // this.checkHasPowerHotel();
+    // this.checkCorpPreCancel();
   }
 
   private addCheckboxes() {
@@ -73,6 +85,17 @@ export class CancelSegmentComponent implements OnInit {
       const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.cancelForm.controls.segments as FormArray).push(control);
     });
+  }
+
+  private checkCorpPreCancel() {
+    debugger;
+    this.isCorporate = this.counselorDetail.getIsCorporate();
+    const eba = this.pnrService.getRemarkText('EB/-EBA');
+    const cxl = this.pnrService.getRemarkText('CB/CXL/PNR');
+    if (this.isCorporate && eba && cxl) {
+      this.cancelForm.controls['requestor'].setValue('PAX CXLD PNR VIA OBT');
+      this.cancelForm.controls['desc1'].setValue('PAX CXLD PNR VIA OBT');
+    }
   }
 
   checkValid() {
@@ -92,6 +115,7 @@ export class CancelSegmentComponent implements OnInit {
     this.addCheckboxes();
     this.checkFirstSegment();
     this.getPassengers();
+    this.checkCorpPreCancel();
   }
 
   loadStaticValue() {
@@ -129,6 +153,12 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'BSP Queue for Refund', itemValue: 'BSP Queue' },
       { itemText: 'Non BSP Refund Recall Commission Request', itemValue: 'Non BSP Refund' },
       { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' }
+    ];
+
+    this.voidList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'VOID entry successfully completed by OBT', itemValue: 'VoidComplete' },
+      { itemText: 'OBT was unable to VOID ticket/Consultant will complete VOID entry', itemValue: 'VoidNotComplete' }
     ];
 
     this.cancelProcessList = [
@@ -267,10 +297,47 @@ export class CancelSegmentComponent implements OnInit {
             this.acChange(this.cancelForm.value.reasonACCancel);
           }
         }
+        debugger;
+        // this.checkPowerHotelCancellation(look);
       }
     });
     this.loadStaticValue();
   }
+
+  // checkHasPowerHotel() {
+  //   if (this.isCorporate) {
+  //     const segmentDetails = this.pnrService.getSegmentList();
+  //     for (const seg of segmentDetails) {
+  //       if (seg.segmentType === 'HTL') {
+  //         return true;
+  //       }
+  //     }
+  //     return false;
+  //   }
+  // }
+
+  // showMessage() {
+  //   this.modalRef = this.modalService.show(MessageComponent, {
+  //     backdrop: 'static'
+  //   });
+  //   this.modalRef.content.modalRef = this.modalRef;
+  //   this.modalRef.content.title = 'Hotel(s) booked via Power Hotel';
+  //   this.modalRef.content.message = 'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script';
+  //   this.modalRef.content.callerName = 'Cancel';
+  //   this.modalRef.content.response = '';
+  //   // this.modalRef.content.paramValue = r;
+  //   this.modalRef.content.setMessageType(MessageType.Default);
+  // }
+
+  // modalSubscribeOnClose() {
+  //   this.modalService.onHide.subscribe(() => {
+  //     if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+  //       if (this.modalRef.content.callerName === 'Cancel' && this.modalRef.content.response === 'NO') {
+
+  //       }
+  //     }
+  //   });
+  // }
 
   checkFirstSegment() {
     if (this.reasonAcList.length > 9) {
@@ -553,6 +620,13 @@ export class CancelSegmentComponent implements OnInit {
       this.checkAcTicketPassenger(this.cancelForm.controls.reasonACCancel.value);
     }
     this.headerRefund = 'Non BSP Refund Commission Recall';
+  }
+
+
+  changeVoidOption(followUp) {
+    if (followUp === 'VoidComplete') {
+      this.cancelForm.controls['requestor'].setValue('PAX Cancelled BSP PNR on OBT');
+    }
   }
 
   changeCancelCheck(option) {

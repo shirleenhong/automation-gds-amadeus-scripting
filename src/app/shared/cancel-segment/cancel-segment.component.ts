@@ -23,6 +23,7 @@ export class CancelSegmentComponent implements OnInit {
   cancelProcessList: Array<SelectItem>;
   relationshipList: Array<SelectItem>;
   reasonNonACCancelList: Array<SelectItem>;
+  reverseItemList: Array<SelectItem>;
   segments = [];
   isAC = false;
   isUA = false;
@@ -40,8 +41,16 @@ export class CancelSegmentComponent implements OnInit {
   preCancel = false;
   isCorporate = false;
   // modalRef: BsModalRef;
+  isBSP = false;
+  isNonBSP = false;
+  segmentsVoided = [];
 
-  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper, private counselorDetail: CounselorDetail) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper,
+    private counselorDetail: CounselorDetail
+  ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
@@ -68,7 +77,15 @@ export class CancelSegmentComponent implements OnInit {
       acCancelYear: new FormControl('', []),
       cancelProcess: new FormControl('', []),
       reasonNonACCancel: new FormControl('', []),
-      actickets: new FormArray([this.createAcFormGroup()])
+      actickets: new FormArray([this.createAcFormGroup()]),
+      currentDate: new FormControl('', []),
+      cFirstInitial: new FormControl('', []),
+      cLastName: new FormControl('', []),
+      reuseCC: new FormControl('', []),
+      authorization: new FormControl('', []),
+      reverseItem: new FormControl('', []),
+      otherDetails1: new FormControl('', []),
+      otherDetails2: new FormControl('', [])
     });
     // this.showMessage();
     // this.checkHasPowerHotel();
@@ -151,7 +168,9 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'BSP Queue for Refund', itemValue: 'BSP Queue' },
       { itemText: 'Non BSP Refund Recall Commission Request', itemValue: 'Non BSP Refund' },
-      { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' }
+      { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' },
+      { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
+      { itemText: 'Void - Non BSP Ticket', itemValue: 'Void Non BSP' }
     ];
 
     this.voidList = [
@@ -184,6 +203,13 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: 'CHANGE' },
       { itemText: 'NONE OF THE ABOVE', itemValue: 'NONE' }
     ];
+
+    this.reverseItemList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'Reverse All Items', itemValue: '1' },
+      { itemText: 'Reverse Fee only', itemValue: '2' },
+      { itemText: 'Reverse Document', itemValue: '3' }
+    ];
   }
 
   get f() {
@@ -203,12 +229,31 @@ export class CancelSegmentComponent implements OnInit {
           flightNumber: element.flightNumber,
           departureDate: element.departureDate,
           cityCode: element.cityCode,
-          arrivalAirport: element.arrivalAirport
+          arrivalAirport: element.arrivalAirport,
+          tatooNo: element.tatooNo
         };
         this.segments.push(details);
+
+        if (this.checkVoided(details)) {
+          this.segmentsVoided.push(details);
+        }
       }
     });
     // return segments;
+  }
+
+  checkVoided(segment: any): boolean {
+    if (this.pnrService.pnrObj.faElements.length > 0) {
+      for (const fa of this.pnrService.pnrObj.faElements) {
+        if (fa.associations[0].tatooNumber === segment.tatooNo) {
+          if (fa.freeFlowText.split('/')[1].substr(1, 1) === 'V') {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+    }
   }
 
   getPassengers() {
@@ -613,13 +658,26 @@ export class CancelSegmentComponent implements OnInit {
         true
       );
       this.checkAcTicketPassenger('');
+    } else if (followUp === 'Void BSP') {
+      this.isBSP = true;
+      this.isNonBSP = false;
+      this.enableFormControls(
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        true
+      );
+    } else if (followUp === 'Void Non BSP') {
+      this.isBSP = false;
+      this.isNonBSP = true;
+      this.enableFormControls(
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        true
+      );
     } else {
       this.enableFormControls(['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'], false);
       this.checkAcTicketPassenger(this.cancelForm.controls.reasonACCancel.value);
     }
     this.headerRefund = 'Non BSP Refund Commission Recall';
   }
-
 
   changeVoidOption(followUp) {
     if (followUp === 'VoidComplete') {

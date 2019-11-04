@@ -4,7 +4,6 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Library           pyautogui
 Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot

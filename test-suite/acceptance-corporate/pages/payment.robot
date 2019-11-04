@@ -3,7 +3,6 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Library           pyautogui
 Resource          base.robot
 Resource          ../../resources/common/api-utilities.txt
 
@@ -45,6 +44,7 @@ ${input_consultantNo}    css=#consultantNo
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
 ${list_description}    css=#descriptionapay
 ${input_otherCostDesc}    css=#otherDescription
+${list_airlineCorporatePass}     //select[@id='airlineCorporatePassSelection']
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -675,43 +675,73 @@ Select Airline Corporate Pass Redemption
 
 Add Airline Corporate Pass Redemption And Verify Default Amount Values
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Value     1
     Select Itinerary Segments   2   3   4
     Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Take Screenshot
+    Set Test Variable    ${ticketing_details}    yes
+    
+Select Airline Corporate Pass By Value
+    [Arguments]    ${index_value}
+    Wait Until Page Contains Element   ${list_airlineCorporatePass}    5
+    Select From List By Value     ${list_airlineCorporatePass}     ${index_value}
+
+Select Airline Corporate Pass By Label
+    [Arguments]    @{labels}
+    Wait Until Page Contains Element   ${list_airlineCorporatePass}    5
+    : FOR    ${label}   IN     @{labels}
+    \    Select From List By Label     ${list_airlineCorporatePass}     ${label}    
     
 Add Airline Corporate Pass Redemption And Verify Default Amount Values For ZZB
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Label    AC/TRANSTEST.LAT/1238903456789
     Select Itinerary Segments   2   3
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Enter 123 In Lowest GDS Fare Field
+    Take Screenshot
     
 Add Airline Corporate Pass Redemption And Verify Default Amount Values For 92Z
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414
     Select Itinerary Segments   2
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Enter 2134 In Lowest GDS Fare Field
+    Take Screenshot
     
 Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVQ
     Select Airline Corporate Pass Redemption
-    Select Itinerary Segments   2
+    Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414
+    Select Itinerary Segments   2    4
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Enter 2134 In Lowest GDS Fare Field
+    Take Screenshot
     Click Save Button
     Select Airline Corporate Pass Redemption
-    Select Itinerary Segments   2
+    Select Airline Corporate Pass By Label    WS/TRANSCONTL.LAT/0140831475422
+    Select Itinerary Segments   3
     Enter Value    ${input_supplier_confirmationNo}    1212321234
     Enter Value    ${input_tktnumber}    9812356781
+    Enter 2311 In Lowest GDS Fare Field
+    Take Screenshot
     Click Save Button
     
-Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVF
+Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414 
     Select Itinerary Segments   2   3
-	Enter Value   lowest GDS fare field  2134
     Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Enter 2134 In Lowest GDS Fare Field
+    Take Screenshot
     Click Save Button
-    Select Airline Corporate Pass Redemption
-    Select Itinerary Segments   4   5
-	Enter Value   lowest GDS fare field  2311
-    Enter Value    ${input_supplier_confirmationNo}    1212321234
-    Click Save Button
+    #Select Airline Corporate Pass Redemption
+    #Select Airline Corporate Pass By Label    WS/TRANSTEST.LAT/1238903456789
+    #Select Itinerary Segments   4   5
+    #Enter Value    ${input_supplier_confirmationNo}    1212321234
+    #Enter 2311 In Lowest GDS Fare Field
+    #Click Save Button
+    #Take Screenshot
     

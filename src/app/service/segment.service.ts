@@ -11,6 +11,7 @@ import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { TranslationService } from './translation.service';
 import { AmadeusQueueService } from './amadeus-queue.service';
+import { RemarksManagerService } from './corporate/remarks-manager.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -18,6 +19,7 @@ declare var smartScriptSession: any;
 })
 
 export class SegmentService {
+    corpRemarks = [];
     // check if this can be retrieved from ddb
     mexicoCities: Array<string> =
         ['ACA', 'MEX', 'TIJ', 'CUN', 'CNA', 'AGU', 'XAL', 'AZG', 'AZP', 'CPA', 'CYW', 'CTM', 'CZA', 'CUU',
@@ -29,7 +31,7 @@ export class SegmentService {
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
-        private amadeusQueueService: AmadeusQueueService) { }
+                private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -129,7 +131,7 @@ export class SegmentService {
     }
 
     deleteSegments(segmentRemarks: PassiveSegmentsModel[]) {
-        const segments = this.pnrService.getSegmentTatooNumber();
+        const segments = this.pnrService.getSegmentList();
         const remGroup = new RemarkGroup();
         remGroup.group = 'Remove Segments';
         segments.forEach(segment => {
@@ -144,8 +146,8 @@ export class SegmentService {
         return remGroup;
     }
 
-    addSegmentRir(segRemark: any) {
-
+    addSegmentRir({ segRemark, isCorp = false }: { segRemark: any; isCorp?: boolean; }) {
+        this.corpRemarks = [];
         let segmentRemarks: PassiveSegmentsModel[];
         segmentRemarks = segRemark.segmentRemarks;
         const datePipe = new DatePipe('en-US');
@@ -157,14 +159,15 @@ export class SegmentService {
         let itinLanguage = this.pnrService.getItineraryLanguage();
         itinLanguage = itinLanguage.substr(0, 2);
 
-        const segments = this.pnrService.getSegmentTatooNumber();
+        const segments = this.pnrService.getSegmentList();
         segmentRemarks.forEach(segmentrem => {
             if (!segmentrem.isNew) {
                 return;
             }
             segments.forEach(pnrSegment => {
                 const ddate = datePipe.transform(segmentrem.departureDate, 'ddMMyy');
-                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity) {
+                if (pnrSegment.deptdate !== ddate || pnrSegment.cityCode !== segmentrem.departureCity ||
+                    (segmentrem.passengerNo && pnrSegment.passengerNo !== segmentrem.passengerNo) ) {
                     return;
                 }
                 if (pnrSegment.segmentType === 'MIS') {
@@ -178,7 +181,7 @@ export class SegmentService {
                         if (segmentrem.vendorCode === 'VIB') {
                             vib = vib + 1;
                         }
-                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vib, itinLanguage);
+                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vib, itinLanguage, isCorp);
                     }
                     if (segmentrem.segmentType === 'LIM') {
                         this.rirLimo(pnrSegment, segmentrem, rmGroup, itinLanguage);
@@ -192,7 +195,7 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'AIR' && pnrSegment.segmentType === 'AIR') {
-                    this.rirAir(pnrSegment, segmentrem, rmGroup);
+                    this.rirAir(pnrSegment, segmentrem, rmGroup, isCorp);
                 }
 
                 if (segmentrem.segmentType === 'CAR' && pnrSegment.segmentType === 'CAR') {
@@ -200,34 +203,84 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'HTL' && pnrSegment.segmentType === 'HTL') {
-                    this.rirHotel(pnrSegment, segmentrem, rmGroup);
+                    this.rirHotel(pnrSegment, segmentrem, rmGroup, isCorp);
                 }
             });
         });
 
+        this.writeCorpRirRemarks();
         return rmGroup;
     }
 
-    private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+    private writeCorpRirRemarks() {
+        this.corpRemarks.forEach(element => {
+            const relatedSegments = [];
+            if (element.segment) {
+                const s = element.segment.split(',');
+                s.forEach((x) => {
+                    relatedSegments.push(x);
+                });
+            }
+            const remarks = new Map<string, string>();
+            if (element.placeholder) {
+                for (let i = 0; i <= element.placeholder.length - 1; i++) {
+                    remarks.set(element.placeholder[i], element.placeholdervalue[i]);
+                }
+                this.rms.createPlaceholderValues(remarks, null, element.segment);
+            }
+
+            if (element.condition) {
+                remarks.set(element.condition, element.conditionValue);
+                this.rms.createPlaceholderValues(null, remarks, element.segment, null, element.staticText);
+            }
+        });
+    }
+
+    private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
+                                   cValue: string, segmentAssoc: string, pText: string) {
+        this.corpRemarks.push(
+            {
+                placeholder: pName, placeholdervalue: pValue,
+                condition: cName, conditionValue: cValue, segment: segmentAssoc, staticText: pText
+            }
+        );
+    }
+
+    private rirAir(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
         if (segmentrem.zzairlineCode) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders(['ZZZAirlineCode'], [segmentrem.zzairlineCode], null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Flight is Confirmed with ' + segmentrem.zzairlineCode, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
         if (segmentrem.zzdepartureCity) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders(['ZZDepartureCity'], [segmentrem.zzdepartureCity], null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Departure City is ' + segmentrem.zzdepartureCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
         if (segmentrem.zzdestinationCity) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders(['ZZDestinationCity'], [segmentrem.zzdestinationCity], null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('Arrival City is ' + segmentrem.zzdestinationCity, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
     }
 
-    private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+    private rirHotel(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
         let province = '';
         let zip = '';
-        const optionalHotelRemarks = [{ include: segmentrem.confirmedWith, description: 'ROOM CONFIRMED WITH - ' },
-        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ' }];
+        const optionalHotelRemarks = [{
+            include: segmentrem.confirmedWith,
+            description: 'ROOM CONFIRMED WITH - ', pName: 'RoomConfrimedWith'
+        },
+        { include: segmentrem.additionalInfo, description: 'ADDITONAL INFORMATION - ', pName: 'RoomAdditionalInfo' }];
 
 
         if (segmentrem.province) { province = segmentrem.province; }
@@ -244,12 +297,23 @@ export class SegmentService {
         });
 
         const datePipe = new DatePipe('en-US');
-        rmGroup.remarks.push(this.getRemarksModel('HS' + datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
-            segmentrem.chainCode, 'RM', '*'));
+        if (isCorp) {
+            const pArray = ['RoomDatePipe', 'RoomChainCode'];
+            const pValueArray = [datePipe.transform(segmentrem.departureDate, 'ddMMM'), segmentrem.chainCode];
+            this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
+        } else {
+            rmGroup.remarks.push(this.getRemarksModel('HS' + datePipe.transform(segmentrem.departureDate, 'ddMMM') + '/-CHN-' +
+                segmentrem.chainCode, 'RM', '*'));
+        }
 
         optionalHotelRemarks.forEach(c => {
             if (c.include) {
-                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                if (isCorp) {
+                    this.assignCorpPlaceholders([c.pName], [c.include], null, null, pnrSegment.tatooNo, null);
+                } else {
+                    rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                }
+
             }
         });
     }
@@ -320,9 +384,10 @@ export class SegmentService {
                 remText = remText + ' ' + segmentrem.mealPlan;
             }
 
-            if (segmentrem.noNights) {
+            if (segmentrem.noNights && segmentrem.noNights !== '0') {
                 remText = remText + ' ' + segmentrem.noNights + ' NTS';
             }
+
             rmGroup.remarks.push(this.getRemarksModel(remText, 'RI', 'R', pnrSegment.tatooNo));
         }
 
@@ -338,12 +403,18 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string) {
+                     amk: number, vib: number, itinLanguage: string, isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
-            rmGroup.remarks.push(this.getRemarksModel
-                ('TRAIN NUMBER-' + segmentrem.trainNumber.toString()
-                    + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                const pHolder = ['TrainNumber', 'TrainClassService'];
+                const pValue = [segmentrem.trainNumber.toString(), segmentrem.classService];
+                this.assignCorpPlaceholders(pHolder, pValue, null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel
+                    ('TRAIN NUMBER-' + segmentrem.trainNumber.toString()
+                        + ' CLASS-' + segmentrem.classService, 'RI', 'R', pnrSegment.tatooNo));
+            }
         }
 
         let carseat = '';
@@ -361,17 +432,29 @@ export class SegmentService {
         }
 
         if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
-            const segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
-            segRemarks.forEach(c => {
-                rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
-            });
+            let segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
+            if (isCorp) {
+                segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', 'EN');
+                segRemarks.forEach(c => {
+                    this.assignCorpPlaceholders(null, null, 'TrainVendorCode', 'vbk', pnrSegment.tatooNo, c);
+                });
+            } else {
+                segRemarks.forEach(c => {
+                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                });
+            }
         }
         if (amk === 1 && segmentrem.vendorCode === 'AMK' && !this.pnrService.IsExistAmkVib('AMK')) {
             this.getAmkRemark().forEach(c => {
-                rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                if (isCorp) {
+                    this.assignCorpPlaceholders(null, null, 'TrainVendorCode', 'amk', pnrSegment.tatooNo, c);
+                } else {
+                    rmGroup.remarks.push(this.getRemarksModel(c, 'RI', 'R', pnrSegment.tatooNo));
+                }
             });
         }
     }
+
     getAmkRemark() {
         const amkRemark = [
             'VALID IDENTIFICATION IS REQUIRED FOR ALL PASSENGERS 18 AND OVER.',
@@ -489,7 +572,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -623,31 +706,31 @@ export class SegmentService {
         itinLanguage = itinLanguage.substr(0, 2);
         switch (true) {
             case (itinLanguage === 'EN'): {
-                const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/CWT/DO/INFO/PRIVACY');
-                if (llbMandatoryRemarkEn === '') {
+                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
+               // const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/EN/PRIVACY-POLICY');
+                if (mexicoMandatoryRemark === '') {
                     const commandEN = 'PBN/YTOWL210N/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
-                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
-                if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
-                    const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
-                }
+                // if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
+                //     const command = 'MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO';
+                //     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
+                // }
                 break;
             }
             case (itinLanguage === 'FR'): {
-                const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACANCES.CA/DO/INFO/PRIVACY');
-                if (llbMandatoryRemarkFR === '') {
+                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
+               // const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/FR/POLITIQUE-DE-CONFIDENTIALITE');
+                if (mexicoMandatoryRemark === '') {
                     const commandFR = 'PBN/YTOWL210N/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }
-                const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
-                if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
-                    let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
-                    command = 'POUR ENTRER AU MEXIQUE';
-                    mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
-                }
+                // if (this.checkCityInSegments(this.mexicoCities) && mexicoMandatoryRemark === '') {
+                //     let command = 'VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN';
+                //     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
+                //     command = 'POUR ENTRER AU MEXIQUE';
+                //     mandatoryRemarkGroup.remarks.push(this.remarkHelper.createRemark(command, 'RI', 'R'));
+                // }
                 break;
             }
             default: {
@@ -802,7 +885,7 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        if (this.pnrService.getSegmentTatooNumber().length === segmentselected.length) {
+        if (this.pnrService.getSegmentList().length === segmentselected.length) {
             remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
 
@@ -961,7 +1044,7 @@ export class SegmentService {
                 }
             }
 
-            const segments = this.pnrService.getSegmentTatooNumber();
+            const segments = this.pnrService.getSegmentList();
             for (const fg of model.remarkList) {
                 const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
                 const s = model.segmentNo.split(',');

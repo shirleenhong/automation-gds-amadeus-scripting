@@ -81,7 +81,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   }
 
   isPnrTypeOnly(passiveType: string): boolean {
-    const passiveSegments = this.pnrService.getSegmentTatooNumber().filter((passiveSegment) => passiveSegment.passive === passiveType);
+    const passiveSegments = this.pnrService.getSegmentList().filter((passiveSegment) => passiveSegment.passive === passiveType);
 
     if (passiveSegments.length > 0) {
       return true;
@@ -120,7 +120,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     });
 
     let segments = '';
-    const seg = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
+    const seg = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
     seg.forEach((s) => {
       if (segments === '') {
         segments = s.lineNo;

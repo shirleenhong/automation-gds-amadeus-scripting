@@ -34,6 +34,8 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
+import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
+import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,9 @@ import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-re
     QueueMinderComponent,
     QueueComponent,
     DocumentPnrComponent,
-    EscRemarksComponent
+    EscRemarksComponent,
+    AddContactComponent,
+    CorpCancelComponent
   ],
   imports: [
     BrowserModule,
@@ -88,4 +92,4 @@ import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-re
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

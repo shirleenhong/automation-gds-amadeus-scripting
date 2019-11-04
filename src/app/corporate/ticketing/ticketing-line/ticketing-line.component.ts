@@ -8,6 +8,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { ApprovalRuleService } from 'src/app/service/corporate/approval-rule.service';
 import { ApprovalItem } from 'src/app/models/ddb/approval.model';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-ticketing-line',
@@ -29,7 +30,8 @@ export class TicketingLineComponent implements OnInit {
     private staticValues: StaticValuesService,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private approvalRuleService: ApprovalRuleService
+    private approvalRuleService: ApprovalRuleService,
+    private valueChangeListener: ValueChangeListener
   ) {
     this.ticketForm = new FormGroup({
       officeId: new FormControl('', [Validators.required]),
@@ -49,7 +51,16 @@ export class TicketingLineComponent implements OnInit {
     this.primaryReasonList = this.approvalRuleService.getPrimaryApprovalList();
     this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList();
     this.additionalReasonList = this.approvalRuleService.getAdditionalList();
-    this.hasApproval = this.approvalRuleService.hasApproval();
+    this.loadApproval([]);
+    this.valueChangeListener.reasonCodeOnChange.subscribe((reasonCodes) => {
+      if (reasonCodes.length > 0) {
+        this.loadApproval(reasonCodes);
+      }
+    });
+  }
+
+  loadApproval(reasonCodes) {
+    this.hasApproval = this.approvalRuleService.hasApproval(reasonCodes);
     this.approvalForm = new FormGroup({
       noApproval: new FormControl(!this.hasApproval, [Validators.required]),
       primaryReason: new FormControl('', [Validators.required]),
@@ -129,7 +140,7 @@ export class TicketingLineComponent implements OnInit {
    * @returns A flag indicator if a match was found, therefore presetting a value.
    */
   private presetSegmentFee(): boolean {
-    const segmentDetails = this.pnrService.getSegmentTatooNumber();
+    const segmentDetails = this.pnrService.getSegmentList();
     let hasSegmentMatch = false;
 
     segmentDetails.forEach((segments) => {
@@ -245,8 +256,9 @@ export class TicketingLineComponent implements OnInit {
 
   /**
    * create additional form values based on selected rule
-   * @param selectedRule selected rule keyword from UI sample [UI_SECPONDARY_1]
+   * @param selectedRule selected rule keyword from UI sample UI_SECPONDARY_1
    */
+
   showAdditionalInfo(selectedIndex) {
     if (selectedIndex === null) {
       return;
@@ -260,16 +272,12 @@ export class TicketingLineComponent implements OnInit {
       this.approvalForm.get('primaryText').setValue(selectedRule.getRuleValueText());
     }
 
-    const id =
-      selectedRule
-        .getRule()
-        .match(/_(\d)/g)
-        .join('') + (selectedRule.getRule().indexOf('PRIMARY') >= 0 ? '_0' : '');
+    const id = selectedRule.approvalType.match(/_(\d)/g).join('') + (selectedRule.approvalType.indexOf('PRIMARY') >= 0 ? '_0' : '');
     (this.approvalForm.get('additionalValues') as FormArray).controls = [];
 
     this.additionalReasonList
-      .filter((x) => x.approvalRules.indexOf('[UI_ADDITIONAL' + id) >= 0)
-      .sort((a, b) => (a.getRuleText() > b.getRuleText() ? 1 : -1))
+      .filter((x) => x.approvalType.indexOf('UI_ADDITIONAL' + id) >= 0)
+      .sort((a, b) => (a.approvalRules > b.approvalRules ? 1 : -1))
       .forEach((app) => {
         const type = this.getAdditionalUiType(app);
         (this.approvalForm.get('additionalValues') as FormArray).push(
@@ -289,24 +297,21 @@ export class TicketingLineComponent implements OnInit {
    * @param app ApprovalItem
    */
   getAdditionalUiType(app: ApprovalItem) {
-    if (app.getRuleKeywords().length < 1) {
+    if (app.getRuleKeywords().length === 0) {
       return '';
     }
-    return app.getRuleKeywords()[1];
+    return app.getRuleKeywords()[0];
   }
 
   /**
    * create additional form values based on selected rule
-   * @param selectedRule selected rule keyword from UI sample [UI_SECPONDARY_1]
+   * @param selectedRule selected rule keyword from UI sample UI_SECPONDARY_1
    */
   primaryReasonChange(selectedIndex) {
-    if (selectedIndex >= 0) {
+    if (selectedIndex && selectedIndex >= 0) {
       const selectedRule = this.primaryReasonList[selectedIndex];
       this.approvalForm.get('primaryText').setValue(selectedRule.getRuleValueText());
-      const index = selectedRule
-        .getRule()
-        .match(/_(\d)/g)
-        .join('');
+      const index = selectedRule.approvalType.match(/_(\d)/g).join('');
       this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList(index);
       if (this.secondaryReasonList.length > 0) {
         this.approvalForm.get('secondaryReason').enable();

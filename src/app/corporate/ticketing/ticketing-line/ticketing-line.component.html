@@ -20,10 +20,9 @@
           <label class="emphasize">
             <input id="chkOnHold" type="checkbox" name="pnrOnHold" formControlName="pnrOnHold" (change)="onChangePnrOnHold()" /> PNR ON HOLD
           </label>
+          <span class="italicize"> &nbsp; (PNR will be sent to Aqua QC) </span>
         </div>
-        <div>
-          <span class="italicize">PNR will be sent to Aqua QC</span>
-        </div>
+        <div></div>
       </div>
     </div>
 
@@ -82,8 +81,8 @@
             formControlName="primaryReason"
             (change)="primaryReasonChange($event.target.selectedIndex)"
           >
-            <option *ngFor="let item of primaryReasonList" [value]="item.getRule()">
-              {{ item.getRuleText() }}
+            <option *ngFor="let item of primaryReasonList" [value]="item.approvalType">
+              {{ item.approvalRules }}
             </option>
           </select>
         </div>
@@ -99,8 +98,8 @@
             formControlName="secondaryReason"
             (change)="showAdditionalInfo($event.target.selectedIndex)"
           >
-            <option *ngFor="let item of secondaryReasonList" [value]="item.getRule()">
-              {{ item.getRuleText() }}
+            <option *ngFor="let item of secondaryReasonList" [value]="item.approvalType">
+              {{ item.approvalRules }}
             </option>
           </select>
         </div>

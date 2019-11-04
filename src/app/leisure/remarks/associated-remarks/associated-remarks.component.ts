@@ -42,7 +42,6 @@ export class AssociatedRemarksComponent implements OnInit {
   }
 
   loadSegments(): void {
-    this.segments = this.pnrService.getSegmentTatooNumber();
+    this.segments = this.pnrService.getSegmentList();
   }
-
 }

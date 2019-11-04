@@ -213,7 +213,7 @@ export class RemarkService {
     rmGroup.group = 'Code Share';
     rmGroup.remarks = new Array<RemarkModel>();
     const arr = frmGroup.get('segments') as FormArray;
-    const segmentList = this.pnrService.getSegmentTatooNumber();
+    const segmentList = this.pnrService.getSegmentList();
     const regex = /CHECK-IN AT (?<airline>.*) TICKET COUNTER/g;
     const rems = this.pnrService.getRemarksFromGDSByRegex(regex, 'RIR');
     if (rems.length > 0) {
@@ -510,7 +510,7 @@ export class RemarkService {
     rmGroup.deleteRemarkByIds = new Array<string>();
 
     const arr = group.get('items') as FormArray;
-    const segmentList = this.pnrService.getSegmentTatooNumber();
+    const segmentList = this.pnrService.getSegmentList();
 
     for (const c of arr.controls) {
       const tattoosegments = [];

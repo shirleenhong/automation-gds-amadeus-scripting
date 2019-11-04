@@ -515,6 +515,7 @@ export class AmadeusRemarkService {
     smartScriptSession.send('ER');
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');
+    this.amadeusQueueService.queuePNR();
     this.amadeusQueueService.newQueueCollection();
   }
 }

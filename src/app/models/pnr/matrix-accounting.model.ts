@@ -43,4 +43,13 @@ export class MatrixAccountingModel {
   otherCostDescription: string;
   typeCode: string;
   airlineCorporatePass: AirlineCorporatePass;
+
+  //
+  baseAmountRefund: string;
+  gstRefund: string;
+  hstRefund: string;
+  qstRefund: string;
+  otherTaxRefund: string;
+  recordLocator: string;
+  segments: any;
 }

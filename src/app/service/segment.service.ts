@@ -707,8 +707,8 @@ export class SegmentService {
         switch (true) {
             case (itinLanguage === 'EN'): {
                 const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('MEXICAN TOURIST CARD IS REQUIRED FOR ENTRY INTO MEXICO');
-               // const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/EN/PRIVACY-POLICY');
-                if (mexicoMandatoryRemark === '') {
+                const llbMandatoryRemarkEn = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/EN/PRIVACY-POLICY');
+                if (mexicoMandatoryRemark === '' && llbMandatoryRemarkEn === '') {
                     const commandEN = 'PBN/YTOWL210N/LLB MANDATORY REMARKS*';
                     mandatoryRemarkGroup.cryptics.push(commandEN);
                 }
@@ -720,8 +720,8 @@ export class SegmentService {
             }
             case (itinLanguage === 'FR'): {
                 const mexicoMandatoryRemark = this.pnrService.getRIRLineNumber('VOUS DEVEZ AVOIR UNE CARTE DE TOURISTE MEXICAIN');
-               // const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/FR/POLITIQUE-DE-CONFIDENTIALITE');
-                if (mexicoMandatoryRemark === '') {
+                const llbMandatoryRemarkFR = this.pnrService.getRIRLineNumber('WWW.CWTVACATIONS.CA/FR/POLITIQUE-DE-CONFIDENTIALITE');
+                if (mexicoMandatoryRemark === '' && llbMandatoryRemarkFR === '') {
                     const commandFR = 'PBN/YTOWL210N/LLB MANDATORY FRENCH*';
                     mandatoryRemarkGroup.cryptics.push(commandFR);
                 }

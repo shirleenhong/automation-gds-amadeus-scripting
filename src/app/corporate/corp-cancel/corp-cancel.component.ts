@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CancelSegmentComponent } from 'src/app/shared/cancel-segment/cancel-segment.component';
 
 @Component({
   selector: 'app-corp-cancel',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./corp-cancel.component.scss']
 })
 export class CorpCancelComponent implements OnInit {
+
+  @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
 
   constructor() { }
 

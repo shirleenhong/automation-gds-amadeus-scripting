@@ -35,6 +35,10 @@ import { CounselorDetail } from '../globals/counselor-identity';
 import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { SegmentService } from '../service/segment.service';
+import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
+
 
 @Component({
   selector: 'app-corporate',
@@ -52,6 +56,7 @@ export class CorporateComponent implements OnInit {
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
   segment = [];
+  cfLine: CfRemarkModel;
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -63,6 +68,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
   @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
+  @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -107,6 +113,7 @@ export class CorporateComponent implements OnInit {
   async getPnrService() {
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
+    this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
@@ -329,6 +336,89 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+
+  async cancelPnr() {
+    // let queueCollection = Array<QueuePlaceModel>();
+
+    // if (!this.cancelComponent.checkValid()) {
+    //   const modalRef = this.modalService.show(MessageComponent, {
+    //     backdrop: 'static'
+    //   });
+    //   modalRef.content.modalRef = modalRef;
+    //   modalRef.content.title = 'Invalid Inputs';
+    //   modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+    //   return;
+    // }
+
+    this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+    const osiCollection = new Array<RemarkGroup>();
+    const cancel = this.cancelComponent.cancelSegmentComponent;
+    const getSelected = cancel.submit();
+
+    // if (getSelected.length >= 1) {
+    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+    this.corpRemarkService.BuildRemarks(osiCollection);
+    await this.corpRemarkService.cancelOSIRemarks().then(
+      async () => {
+        await this.addCancelRemarksRemarks(cancel, getSelected);
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
+
+    // if (getSelected.length === this.segment.length) {
+    //   remarkCollection.push(this.segmentService.cancelMisSegment());
+    // }
+
+    // this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
+    // remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    // this.corpRemarkService.BuildRemarks(remarkCollection);
+    // await this.corpRemarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
+    //   () => {
+    //     this.isPnrLoaded = false;
+    //     this.getPnr();
+    //     this.workflow = '';
+    //     this.closePopup();
+    //   },
+    //   (error) => {
+    //     console.log(JSON.stringify(error));
+    //     this.workflow = '';
+    //   }
+    // );
+  }
+
+  async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {
+    debugger;
+    this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    const forDeletion = new Array<string>();
+    remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
+        remarkList.push(remModel);
+      });
+
+      rem.deleteSegmentByIds.forEach((deleteSegments) => {
+        forDeletion.push(deleteSegments);
+      });
+    });
+
+    this.rms.submitToPnr(remarkList, forDeletion).then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+        this.workflow = '';
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
+
   back() {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
@@ -352,9 +442,12 @@ export class CorporateComponent implements OnInit {
       if (this.checkHasPowerHotel()) {
         this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
       } else {
+        this.showLoading('Loading PNR and Data', 'initData');
+        await this.rms.getMatchcedPlaceholderValues();
         this.workflow = 'cancel';
         this.segment = this.pnrService.getSegmentList();
         this.setControl();
+        this.closePopup();
       }
     }
   }

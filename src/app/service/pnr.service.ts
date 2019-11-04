@@ -1393,7 +1393,7 @@ export class PnrService {
     }
 
     getUnticketedTst() {
-        const tst = this.getTstSegments();
+        const tstLen = this.tstObj.length;
         let ticketed = 0;
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
@@ -1404,7 +1404,7 @@ export class PnrService {
             }
         }
 
-        if (ticketed < tst.length) {
+        if (ticketed < tstLen) {
             return true;
         }
         return false;

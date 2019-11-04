@@ -28,7 +28,7 @@ BEGIN TRY
 	PRINT 'START Script'
 		SET @CreationUserIdentifier			= 'Amadeus CA Migration - US11820'	
 		SET @PNROutputItemID    =	(SELECT MAX(PNROutputItemId)   FROM [PNROutputItem])
-		SET @PNROutputGroupID   =	(SELECT PNROutputGroupId  FROM [PNROutputGroup] Where PNROutputGroupName = 'Canada Itinerary Remarks Group')
+		SET @PNROutputGroupID   =	(SELECT PNROutputGroupId  FROM [PNROutputGroup] Where PNROutputGroupName = 'Canada Migration Itinerary Group')
 
 
 	    INSERT INTO [dbo].[PNROutputPlaceHolder]([PNROutputPlaceHolderName],[PNROutputPlaceHolderRegularExpresssion],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber])

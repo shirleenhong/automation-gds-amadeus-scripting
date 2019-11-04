@@ -8,7 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/payment.robot
-Test Teardown    Close All Browsers
+#Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    corporate_pass_redemption
@@ -42,19 +42,19 @@ Verify Remarks Are Written For Multiple Airline Corporate Pass Redemption With T
     Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVQ
     Verify Airline Corporate Pass Remarks Are Written In The PNR
     
-Verify Remarks Are Written For Multiple Airline Corporate Pass Redemption Without Ticket Number And CF Is YVF
+Verify Remarks Are Written For Multiple Airline Corporate Pass Redemption Without Ticket Number And CF Is YFV
     [Tags]    us10574    not_ready
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Corporate Pass Redemption With Multiple Airline Corporate Pass Redemption Without Ticket Number
-    Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVF
+    Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Verify Airline Corporate Pass Remarks Are Written In The PNR
     
 Verify Remarks Are Written When Airline Corporate Pass Redemption Is Added With APAY
     [Tags]    us10574    not_ready
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Air Segments For Corporate Pass Redemption Wit Single Corporate Pass And With APAY
+    Create PNR With Active Air Segments For Corporate Pass Redemption With Single Corporate Pass And With APAY
     Add Airline Corporate Pass Redemption And Verify Default Amount Values
-    Add APAY Ticketing Details For Single Segment
+    Add APAY Ticketing Details For Multiple Segments
     Verify Airline Corporate Pass Remarks Are Written In The PNR
 
     

@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.isCorporate = this.getParamValueQueryString('corporate') === 'true';
-    debugger;
     this.counselorDetail.setCorporate(this.isCorporate);
     if (this.isCorporate) {
       this.header = 'Corporate';

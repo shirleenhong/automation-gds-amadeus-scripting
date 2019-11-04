@@ -44,7 +44,7 @@ export class AirlineCorporatePassService {
       );
       const segmentCostExtracted = airlineCorporatePassRemark.remarkText.substring(
         indicesOfForwardSlashes[2] + 1,
-        indicesOfForwardSlashes[3] - 1
+        indicesOfForwardSlashes[3]
       );
 
       airlineCorporatePasses.push({

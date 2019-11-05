@@ -41,6 +41,7 @@ import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 
+
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -244,7 +245,6 @@ export class CorporateComponent implements OnInit {
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
-
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
@@ -261,6 +261,24 @@ export class CorporateComponent implements OnInit {
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
+
+    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined) {
+      if (
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
+      ) {
+        const forDeletion = new Array<string>();
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
+          forDeletion.push(element.lineNo);
+        });
+        await this.rms.deleteSegments(forDeletion).then(async () => {
+          await this.getPnr();
+          await this.rms.getMatchcedPlaceholderValues();
+        });
+      }
+    }
+
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
@@ -374,6 +392,7 @@ export class CorporateComponent implements OnInit {
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
+
     getSelected.forEach((element) => {
       forDeletion.push(element.lineNo);
     });
@@ -397,13 +416,14 @@ export class CorporateComponent implements OnInit {
       }
     });
 
+
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
-
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

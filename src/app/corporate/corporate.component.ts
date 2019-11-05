@@ -39,7 +39,7 @@ import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
-
+import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -74,7 +74,6 @@ export class CorporateComponent implements OnInit {
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: AmadeusRemarkService,
@@ -92,7 +91,8 @@ export class CorporateComponent implements OnInit {
     private ofcRemarkService: OfcRemarkService,
     private visaPassportService: VisaPassportRemarkService,
     private segmentService: SegmentService,
-    private amadeusRemarkService: AmadeusRemarkService
+    private amadeusRemarkService: AmadeusRemarkService,
+    private corpCancelRemarkService: CorpCancelRemarkService
   ) {
     this.initData();
     this.getPnrService();
@@ -337,7 +337,6 @@ export class CorporateComponent implements OnInit {
     );
   }
 
-
   async cancelPnr() {
     if (!this.cancelComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
@@ -374,19 +373,18 @@ export class CorporateComponent implements OnInit {
     const remarkList = new Array<RemarkModel>();
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const forDeletion = new Array<string>();
-
-    getSelected.forEach(element => {
+    const commandList = new Array<string>();
+    getSelected.forEach((element) => {
       forDeletion.push(element.lineNo);
     });
-    await this.rms.deleteSegments(forDeletion).then(
-      async () => {
-        await this.getPnr();
-        await this.rms.getMatchcedPlaceholderValues();
-      }
-    );
+    await this.rms.deleteSegments(forDeletion).then(async () => {
+      await this.getPnr();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
+
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
@@ -399,8 +397,13 @@ export class CorporateComponent implements OnInit {
       }
     });
 
+    const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
+    if (nonBspTicket) {
+      nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
+      nonBspTicket.commands.forEach((c) => commandList.push(c));
+    }
 
-    await this.rms.submitToPnr(remarkList, null, null, passiveSegmentList).then(
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -412,7 +415,6 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
-
 
   back() {
     this.workflow = '';
@@ -435,7 +437,12 @@ export class CorporateComponent implements OnInit {
     if (this.isPnrLoaded) {
       await this.getPnrService();
       if (this.checkHasPowerHotel()) {
-        this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
+        this.showMessage(
+          'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script',
+          MessageType.Default,
+          'Hotel(s) booked via Power Hotel',
+          'CancelHotel'
+        );
       } else {
         // this.showLoading('Loading PNR and Data', 'initData');
         // await this.rms.getMatchcedPlaceholderValues();

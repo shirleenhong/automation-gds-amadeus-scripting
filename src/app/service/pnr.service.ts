@@ -235,6 +235,21 @@ export class PnrService {
         }
     }
 
+     extractOidFromBookRemark(): string {
+        // const remarks = this.pnrService.getRemarksFromGDSByRegex(/BOOK-/g);
+        const BOOK_REMARK_PREFIX = 'BOOK-';
+        const TKT_PREFIX = 'TKT-';
+        const remarks = this.getRemarkText(BOOK_REMARK_PREFIX);
+        let oid = null;
+        const remarkSplitted: Array<string> = remarks.split('/');
+        for (const ctrRemarkSplit of remarkSplitted) {
+          if (ctrRemarkSplit.match(TKT_PREFIX)) {
+            oid = ctrRemarkSplit.replace(TKT_PREFIX, '');
+            break;
+          }
+        }
+        return oid;
+      }
     /**
      * Check if PNR has OBT remark.
      * @return boolean
@@ -574,7 +589,6 @@ export class PnrService {
         } else {
             passiveType = type;
         }
-
         const segment = {
             lineNo: elem.elementNumber,
             tatooNo: elem.tatooNumber,

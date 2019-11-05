@@ -57,17 +57,7 @@
         </select>
       </div>
     </div>
-
-    <div *ngIf="f.followUpOption.value === 'Void BSP' || f.followUpOption.value === 'Void Non BSP'">
-      <div class="row form-group">
-        <div class="col-4">
-          Current Date:
-        </div>
-        <div class="col-8">
-          <input type="date" class="form-control" id="currentDate" name="currentDate" formControlName="currentDate" required />
-        </div>
-      </div>
-
+    <div *ngIf="f.voidOption.value === 'Void Non BSP' || (f.voidOption.value === 'Void BSP' && isVoided) ">
       <div class="row form-group">
         <div class="col-4"></div>
         <div class="col-4">
@@ -79,24 +69,32 @@
           <input type="text" class="form-control" id="cLastName" formControlName="cLastName" name="cLastName" />
         </div>
       </div>
+    </div>
 
-      <div *ngIf="isBSP">
-        <div class="row form-group">
-          <div class="col-4">Reuse credit card authorization on voided ticket?</div>
-          <div class="col-4">
-            <div class="">Yes/No?</div>
-            <select class="form-control" name="reuseCC" formControlName="reuseCC" id="reuseCC" required>
-              <option value=""></option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
+    <div *ngIf="f.voidOption.value === 'Void BSP'">
+        <div class="row form-group" *ngIf="!isVoided">
+            <div class="col-2"></div>
+            <div class="col-8" style="color: red">Please process void in graphical first then relaunch Cancel/BSP ticket - Void</div>
+         </div>
+
+         <div *ngIf="isBSP && isVoided">
+            <div class="row form-group">
+              <div class="col-4">Reuse credit card authorization on voided ticket?</div>
+              <div class="col-4">
+                <div class="">Yes/No?</div>
+                <select class="form-control" name="reuseCC" formControlName="reuseCC" id="reuseCC" required>
+                  <option value=""></option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <div class="">Authorization:</div>
+                <input type="text" class="form-control" id="authorization" required formControlName="authorization" name="authorization" />
+              </div>
+            </div>
           </div>
-          <div class="col-4">
-            <div class="">Authorization:</div>
-            <input type="text" class="form-control" id="authorization" formControlName="authorization" name="authorization" />
-          </div>
-        </div>
-      </div>
+    </div>
 
       <div *ngIf="isNonBSP">
         <div class="row form-group">
@@ -114,14 +112,13 @@
           <div class="col-4">Other Details:</div>
           <div class="col-4">
             <div class="">Reason 1:</div>
-            <input type="text" class="form-control" id="otherDetails1" formControlName="otherDetails1" name="otherDetails1" />
+            <input type="text" class="form-control" id="otherDetails1" formControlName="otherDetails1" name="otherDetails1" maxlength="30" />
           </div>
           <div class="col-4">
             <div class="">Reason 2:</div>
             <input
               type="text"
-              disabled
-              maxlength="1"
+              maxlength="30"
               class="form-control"
               id="otherDetails2"
               formControlName="otherDetails2"
@@ -130,8 +127,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <div *ngIf="f.followUpOption.value !== 'Void BSP' && f.followUpOption.value !== 'Void Non BSP'">
+    <div *ngIf="f.voidOption.value !== 'Void BSP' && f.voidOption.value !== 'Void Non BSP'">
       <div class="row form-group">
         <div class="col-4"></div>
         <div class="col-8 note">
@@ -165,8 +161,8 @@
       *ngIf="
         f.followUpOption.value !== 'Keep Ticket' &&
         f.followUpOption.value !== 'Non BSP Refund' &&
-        f.followUpOption.value !== 'Void BSP' &&
-        f.followUpOption.value !== 'Void Non BSP'
+        f.voidOption.value !== 'Void BSP' &&
+        f.voidOption.value !== 'Void Non BSP'
       "
     >
       <div *ngIf="!isAC" class="row form-group">

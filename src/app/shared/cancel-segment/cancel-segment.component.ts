@@ -43,7 +43,7 @@ export class CancelSegmentComponent implements OnInit {
   // modalRef: BsModalRef;
   isBSP = false;
   isNonBSP = false;
-  segmentsVoided = [];
+  isVoided = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -78,18 +78,32 @@ export class CancelSegmentComponent implements OnInit {
       cancelProcess: new FormControl('', []),
       reasonNonACCancel: new FormControl('', []),
       actickets: new FormArray([this.createAcFormGroup()]),
-      currentDate: new FormControl('', []),
       cFirstInitial: new FormControl('', []),
       cLastName: new FormControl('', []),
       reuseCC: new FormControl('', []),
-      authorization: new FormControl('', []),
+      authorization: new FormControl('', [Validators.required]),
       reverseItem: new FormControl('', []),
       otherDetails1: new FormControl('', []),
-      otherDetails2: new FormControl('', [])
+      otherDetails2: new FormControl('', []),
+      voidOption: new FormControl('', [])
     });
     // this.showMessage();
     // this.checkHasPowerHotel();
     // this.checkCorpPreCancel();
+    this.onChanges();
+  }
+
+  onChanges(): void {
+    this.cancelForm.get('reuseCC').valueChanges.subscribe((value) => {
+      if (value === 'no') {
+        this.enableFormControls(['authorization'], true);
+        this.cancelForm.controls.authorization.clearValidators();
+        this.cancelForm.controls.authorization.setValue('');
+      } else {
+        this.enableFormControls(['authorization'], false);
+        this.cancelForm.controls.authorization.setValidators(Validators.required);
+      }
+    });
   }
 
   private addCheckboxes() {
@@ -168,15 +182,15 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'BSP Queue for Refund', itemValue: 'BSP Queue' },
       { itemText: 'Non BSP Refund Recall Commission Request', itemValue: 'Non BSP Refund' },
-      { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' },
-      { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
-      { itemText: 'Void - Non BSP Ticket', itemValue: 'Void Non BSP' }
+      { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' }
     ];
 
     this.voidList = [
       { itemText: '', itemValue: '' },
       { itemText: 'VOID entry successfully completed by OBT', itemValue: 'VoidComplete' },
-      { itemText: 'OBT was unable to VOID ticket/Consultant will complete VOID entry', itemValue: 'VoidNotComplete' }
+      { itemText: 'OBT was unable to VOID ticket/Consultant will complete VOID entry', itemValue: 'VoidNotComplete' },
+      { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
+      { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' }
     ];
 
     this.cancelProcessList = [
@@ -206,9 +220,9 @@ export class CancelSegmentComponent implements OnInit {
 
     this.reverseItemList = [
       { itemText: '', itemValue: '' },
-      { itemText: 'Reverse All Items', itemValue: '1' },
-      { itemText: 'Reverse Fee only', itemValue: '2' },
-      { itemText: 'Reverse Document', itemValue: '3' }
+      { itemText: 'Reverse All Items', itemValue: 'REVERSE MATRIX ALL ITEMS' },
+      { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
+      { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
   }
 
@@ -234,27 +248,27 @@ export class CancelSegmentComponent implements OnInit {
         };
         this.segments.push(details);
 
-        if (this.checkVoided(details)) {
-          this.segmentsVoided.push(details);
-        }
+        // if (this.checkVoided(details)) {
+        //   this.segmentsVoided.push(details);
+        // }
       }
     });
     // return segments;
   }
 
-  checkVoided(segment: any): boolean {
-    if (this.pnrService.pnrObj.faElements.length > 0) {
-      for (const fa of this.pnrService.pnrObj.faElements) {
-        if (fa.associations[0].tatooNumber === segment.tatooNo) {
-          if (fa.freeFlowText.split('/')[1].substr(1, 1) === 'V') {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      }
-    }
-  }
+  // checkVoided(segment: any): boolean {
+  //   if (this.pnrService.pnrObj.faElements.length > 0) {
+  //     for (const fa of this.pnrService.pnrObj.faElements) {
+  //       if (fa.associations[0].tatooNumber === segment.tatooNo) {
+  //         if (fa.freeFlowText.split('/')[1].substr(1, 1) === 'V') {
+  //           return true;
+  //         } else {
+  //           return false;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   getPassengers() {
     this.passengers = this.pnrService.getPassengers();
@@ -658,20 +672,6 @@ export class CancelSegmentComponent implements OnInit {
         true
       );
       this.checkAcTicketPassenger('');
-    } else if (followUp === 'Void BSP') {
-      this.isBSP = true;
-      this.isNonBSP = false;
-      this.enableFormControls(
-        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
-        true
-      );
-    } else if (followUp === 'Void Non BSP') {
-      this.isBSP = false;
-      this.isNonBSP = true;
-      this.enableFormControls(
-        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
-        true
-      );
     } else {
       this.enableFormControls(['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'], false);
       this.checkAcTicketPassenger(this.cancelForm.controls.reasonACCancel.value);
@@ -682,6 +682,29 @@ export class CancelSegmentComponent implements OnInit {
   changeVoidOption(followUp) {
     if (followUp === 'VoidComplete') {
       this.cancelForm.controls['requestor'].setValue('PAX Cancelled BSP PNR on OBT');
+    } else if (followUp === 'Void BSP') {
+      this.isBSP = true;
+      this.isNonBSP = false;
+      this.enableFormControls(
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        true
+      );
+
+      if (this.pnrService.getTktNumber() !== '') {
+        this.isVoided = true;
+        this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], false);
+      } else {
+        this.isVoided = false;
+        this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], true);
+      }
+    } else if (followUp === 'Void Non BSP') {
+      this.isBSP = false;
+      this.isNonBSP = true;
+      this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], false);
+      this.enableFormControls(
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        true
+      );
     }
   }
 

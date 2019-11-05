@@ -39,7 +39,6 @@ import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
 
-
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -336,7 +335,6 @@ export class CorporateComponent implements OnInit {
     );
   }
 
-
   async cancelPnr() {
     // let queueCollection = Array<QueuePlaceModel>();
 
@@ -389,12 +387,12 @@ export class CorporateComponent implements OnInit {
   }
 
   async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {
-    debugger;
     this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     const forDeletion = new Array<string>();
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    remarkCollection.push(this.segmentService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
@@ -418,7 +416,6 @@ export class CorporateComponent implements OnInit {
     );
   }
 
-
   back() {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
@@ -440,7 +437,12 @@ export class CorporateComponent implements OnInit {
     if (this.isPnrLoaded) {
       await this.getPnrService();
       if (this.checkHasPowerHotel()) {
-        this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
+        this.showMessage(
+          'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script',
+          MessageType.Default,
+          'Hotel(s) booked via Power Hotel',
+          'CancelHotel'
+        );
       } else {
         this.showLoading('Loading PNR and Data', 'initData');
         await this.rms.getMatchcedPlaceholderValues();

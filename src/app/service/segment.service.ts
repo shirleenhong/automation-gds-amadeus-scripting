@@ -858,6 +858,45 @@ export class SegmentService {
         return rmGroup;
     }
 
+    buildVoidRemarks(cancel: any) {
+        const datePipe = new DatePipe('en-US');
+        const dateToday = datePipe.transform(Date.now(), 'ddMMM');
+        let remarkSet = new Map<string, string>();
+
+        const rmGroup = new RemarkGroup();
+        rmGroup.group = 'Void';
+        rmGroup.remarks = new Array<RemarkModel>();
+
+        if (this.counselorDetail.getIsCorporate()) {
+        if (cancel.value.voidOption === 'Void BSP') {
+            remarkSet = new Map<string, string>();
+            remarkSet.set('VoidDate', dateToday);
+            remarkSet.set('Auth', cancel.value.authorization);
+            this.rms.createPlaceholderValues(remarkSet, null, null);
+            remarkSet = new Map<string, string>();
+            remarkSet.set('VTkt', this.pnrService.getTktNumber());
+            this.rms.createPlaceholderValues(remarkSet, null, null);
+            remarkSet = new Map<string, string>();
+            remarkSet.set('VoidDate', dateToday);
+            remarkSet.set('CounselorFirstName', cancel.value.cFirstInitial);
+            remarkSet.set('CounselorLastName', cancel.value.cLastName);
+            this.rms.createPlaceholderValues(remarkSet, null, null);
+            remarkSet = new Map<string, string>();
+            remarkSet.set('VRsn', this.pnrService.getBookingInfo());
+            this.rms.createPlaceholderValues(remarkSet, null, null);
+        } else if (cancel.value.voidOption === 'Void Non BSP') {
+            remarkSet = new Map<string, string>();
+            remarkSet.set('RevType', cancel.value.reverseItem);
+            this.rms.createPlaceholderValues(remarkSet, null, null);
+            if (cancel.value.otherDetails1.trim !== '') {
+            rmGroup.remarks.push(this.getRemarksModel(cancel.value.otherDetails1, 'RM', 'X')); }
+            if (cancel.value.otherDetails2.trim !== '') {
+                rmGroup.remarks.push(this.getRemarksModel(cancel.value.otherDetails2, 'RM', 'X')); }
+        }}
+
+        return rmGroup;
+    }
+
     buildCancelRemarks(cancel: any, segmentselected: any) {
         this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
@@ -878,8 +917,10 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        remText = dateToday + '/' + cancel.value.desc1;
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        if (cancel.value.desc1) {
+            remText = dateToday + '/' + cancel.value.desc1;
+            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        }
 
         if (cancel.value.desc2) {
             remText = dateToday + '/' + cancel.value.desc2;

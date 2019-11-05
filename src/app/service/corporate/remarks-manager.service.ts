@@ -6,7 +6,6 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { AmadeusRemarkService } from '../amadeus-remark.service';
 import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 
-
 declare var smartScriptSession: any;
 declare var PNR: any;
 @Injectable({
@@ -17,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -165,8 +164,12 @@ export class RemarksManagerService {
     return result;
   }
 
-  async submitToPnr(additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>, commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>) {
+  async submitToPnr(
+    additionalRemarks?: Array<RemarkModel>,
+    additionalRemarksToBeDeleted?: Array<string>,
+    commandList?,
+    passiveSegment?: Array<PassiveSegmentModel>
+  ) {
     await this.sendPnrToAmadeus(
       await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues),
       additionalRemarks,
@@ -188,9 +191,13 @@ export class RemarksManagerService {
     }
   }
 
-
-  private async sendPnrToAmadeus(pnrResponse: any, additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>, commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>) {
+  private async sendPnrToAmadeus(
+    pnrResponse: any,
+    additionalRemarks?: Array<RemarkModel>,
+    additionalRemarksToBeDeleted?: Array<string>,
+    commandList?,
+    passiveSegment?: Array<PassiveSegmentModel>
+  ) {
     console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
       await smartScriptSession.send(this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted));
@@ -272,10 +279,10 @@ export class RemarksManagerService {
   }
   async sendSSRCommands(cmds, index) {
     const self = this;
-    if (!(index == cmds.length)) {
-      await smartScriptSession.send(cmds[index]).then(async function () {
-        await self.sendSSRCommands(cmds, index + 1)
-      })
+    if (!(index === cmds.length)) {
+      await smartScriptSession.send(cmds[index]).then(async () => {
+        await self.sendSSRCommands(cmds, index + 1);
+      });
     }
   }
 
@@ -290,7 +297,7 @@ export class RemarksManagerService {
       }
     });
     if (deleteSRline.length > 0) {
-      await smartScriptSession.send("XE" + deleteSRline.join(','));
+      await smartScriptSession.send('XE' + deleteSRline.join(','));
     }
   }
 }

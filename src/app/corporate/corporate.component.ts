@@ -233,7 +233,6 @@ export class CorporateComponent implements OnInit {
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
-
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
@@ -250,6 +249,7 @@ export class CorporateComponent implements OnInit {
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
+
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);

@@ -179,7 +179,7 @@
           <label>
             <div formArrayName="segments"
               *ngFor="let name of this.matrixAccountingForm.controls.segments['controls']; let i = index">
-              <input type="checkbox" [formControlName]="i" [(ngModel)]="accountingRemark.segments">
+              <input type="checkbox" [formControlName]="i" (change)="onCheckChange()">
               {{segments[i].name}}
             </div>
           </label>
@@ -277,6 +277,19 @@
               formControlName="recordLocator" name="recordLocator" required />
           </div>   
         </div>
+        <div class="form-group  row">
+            <div class="col-sm-4"></div>
+            <div class="col">
+              <div class="">Commision Refund:</div>
+              <input type="text" class="form-control" id="commisionRefund" [(ngModel)]="accountingRemark.commisionRefund" maxlength="10"
+                formControlName="commisionRefund" name="commisionRefund" required placeholder="00.00" AmountMask />
+            </div>    
+            <div class="col">
+              <div class="">OID Orig Ticket Issue</div>
+              <input type="text" class="form-control" id="oidOrigTicketIssue" [(ngModel)]="accountingRemark.oidOrigTicketIssue" maxlength="10"
+                formControlName="oidOrigTicketIssue" name="oidOrigTicketIssue" required />
+            </div>   
+          </div>
       </div>
 
     <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
@@ -325,7 +338,30 @@
           maxlength="10" />
       </div>
     </div>
-
+  <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">   
+      <div class="form-group  row">
+          <div class="col-sm-4">Additional Details</div>
+          <div class="col-sm-8">
+              <textarea type="text" class="form-control" id="additionalInfo" formControlName="additionalNotes1"
+              [(ngModel)]="accountingRemark.additionalNotes1"
+               name="additionalNotes1" maxlength="40"></textarea>
+          </div>
+      </div>
+      <div class="form-group  row">
+          <div class="col-sm-4">Notes</div>
+          <div class="col-sm-8">
+              <textarea type="text" class="form-control" id="additionalNotes2" formControlName="additionalNotes2"
+              [(ngModel)]="accountingRemark.additionalNotes2"
+               name="additionalNotes2" maxlength="40"></textarea>
+          </div>
+      </div>
+    <div  class="form-group  row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-8 noteText" >        
+        *If Client paid by Cheque, you must complete a Cheque Requisition.<br>A Cheque Requisition for Commission Recall may also be necessary.
+      </div>
+    </div>
+  </div>
 
     <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'" class="form-group row">
       <div class="col-sm-4">Original Ticket Number:</div>

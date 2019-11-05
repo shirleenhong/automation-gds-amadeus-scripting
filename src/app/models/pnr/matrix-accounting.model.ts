@@ -50,6 +50,11 @@ export class MatrixAccountingModel {
   hstRefund: string;
   qstRefund: string;
   otherTaxRefund: string;
+  commisionRefund: string;
+  oidOrigTicketIssue: string;
   recordLocator: string;
   segments: any;
+  additionalNotes1: string;
+  additionalNotes2: string;
+  oid: string;
 }

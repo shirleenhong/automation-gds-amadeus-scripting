@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { RemarksManagerService } from './remarks-manager.service';
 import { MatrixAccountingModel } from 'src/app/models/pnr/matrix-accounting.model';
 import { AccountingRemarkComponent } from 'src/app/corporate/payments/accounting-remark/accounting-remark.component';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, formatDate } from '@angular/common';
 import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 import { BehaviorSubject } from 'rxjs';
 import { DDBService } from '../ddb.service';
-
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +35,10 @@ export class PaymentRemarkService {
           x.accountingTypeRemark === 'ACPP' ||
           x.accountingTypeRemark === 'ACPR' ||
           x.accountingTypeRemark === 'WCPP' ||
-          x.accountingTypeRemark === 'PCPP'
+          x.accountingTypeRemark === 'PCPP' ||
+          x.accountingTypeRemark === 'ACPPC' ||
+          x.accountingTypeRemark === 'WCPPC' ||
+          x.accountingTypeRemark === 'PCPPC'
       )
     );
 
@@ -47,6 +49,7 @@ export class PaymentRemarkService {
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
       const airlineCodeRemark = new Map<string, string>();
@@ -208,29 +211,37 @@ export class PaymentRemarkService {
       }
       this.remarksManager.createPlaceholderValues(confNbrRem, null, segmentrelate);
 
+      debugger;
       // tslint:disable-next-line: max-line-length
       if (
         account.accountingTypeRemark === 'ACPPC' ||
         account.accountingTypeRemark === 'WCPPC' ||
         account.accountingTypeRemark === 'PCPPC'
       ) {
-        //        
+        //
         // account.segments.forEach(element => {
         //   rmGroup.deleteSegmentByIds.push(element.lineNo);
-      //});
+        //});
+        debugger; //1 2
 
+        const cancelSegmentrelate: string[] = [];
+        //this.getRemarkSegmentAssociation(account, cancelSegmentrelate);
+        account.segments.forEach((element) => {
+          debugger;
+          console.log(element);
+        });
 
         const passCancellationRemark = new Map<string, string>();
         passCancellationRemark.set('AirlineCode', airline);
         passCancellationRemark.set('WebLocator', account.recordLocator);
-        this.remarksManager.createPlaceholderValues(passCancellationRemark, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(passCancellationRemark, null, cancelSegmentrelate);
 
         // TKT%TktRemarkNbr%-VEN/TK-%TktNbr%/VN-%SupplierCode%
         const tktWebTicket = new Map<string, string>();
         tktWebTicket.set('TktRemarkNbr', account.tkMacLine.toString());
         tktWebTicket.set('TktNbr', account.tktLine);
         tktWebTicket.set('SupplierCode', account.supplierCodeName);
-        this.remarksManager.createPlaceholderValues(tktWebTicket, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(tktWebTicket, null, cancelSegmentrelate);
 
         // TKT%TktRemarkNbr%-BA-%CancelFee%/TX1-%CancelGst%XG/TX2-%CancelHst%RC/TX3-%CancelQst%XQ/TX4-%CancelOthTax%XT/COMM-0.00'
         const cancelFeeTktRemark = new Map<string, string>();
@@ -240,7 +251,42 @@ export class PaymentRemarkService {
         cancelFeeTktRemark.set('CancelHst', account.hstRefund);
         cancelFeeTktRemark.set('CancelQst', account.qstRefund);
         cancelFeeTktRemark.set('CancelOthTax', account.otherTaxRefund);
-        this.remarksManager.createPlaceholderValues(cancelFeeTktRemark, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(cancelFeeTktRemark, null, cancelSegmentrelate);
+
+        const refundStart = new Map<string, string>();
+        refundStart.set('CARefundStart', 'true');
+        this.remarksManager.createPlaceholderValues(null, refundStart, null, null, '**********************************************');
+
+        const webLocatorRemark = new Map<string, string>();
+        webLocatorRemark.set('WebLocator', account.recordLocator);
+        webLocatorRemark.set('CurrentDateY', formatDate(Date.now(), 'ddMMyy', 'en').toString());
+        this.remarksManager.createPlaceholderValues(webLocatorRemark, null, null);
+
+        const nonBspRemark = new Map<string, string>();
+        nonBspRemark.set('SupplierCode', account.supplierCodeName);
+        nonBspRemark.set('OrgOid', account.oidOrigTicketIssue);
+        this.remarksManager.createPlaceholderValues(nonBspRemark, null, null);
+
+        const refundBaseRemark = new Map<string, string>();
+        refundBaseRemark.set('CancelFee', account.baseAmountRefund);
+        refundBaseRemark.set('CancelGst', account.gstRefund);
+        refundBaseRemark.set('CancelHst', account.hstRefund);
+        refundBaseRemark.set('CancelQst', account.qstRefund);
+        refundBaseRemark.set('CancelOthTax', account.otherTaxRefund);
+        refundBaseRemark.set('CaRefundCommision', account.commisionRefund);
+        this.remarksManager.createPlaceholderValues(refundBaseRemark, null, null);
+
+        const notes1 = new Map<string, string>();
+        notes1.set('CaAmadeusNotes1', account.additionalNotes1);
+        this.remarksManager.createPlaceholderValues(notes1, null, null);
+
+        const notes2 = new Map<string, string>();
+        notes2.set('CaAmadeusNotes2', account.additionalNotes2);
+        this.remarksManager.createPlaceholderValues(notes2, null, null);
+
+        const refundEnd = new Map<string, string>();
+        refundEnd.set('CARefundEnd', 'true');
+        this.remarksManager.createPlaceholderValues(null, refundEnd, null, null, '**********************************************');
 
         const priceForRemark = new Map<string, string>();
         // tslint:disable-next-line: max-line-length

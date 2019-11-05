@@ -106,9 +106,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       hstRefund: new FormControl(''),
       qstRefund: new FormControl(''),
       otherTaxRefund: new FormControl(''),
-      recordLocator: new FormControl('')
+      recordLocator: new FormControl(''),
+      commisionRefund: new FormControl(''),
+      oidOrigTicketIssue: new FormControl(''),
+      additionalNotes1: new FormControl(''),
+      additionalNotes2: new FormControl(''),
+      cancelAll: new FormControl('')
     });
-
     this.name = 'Supplier Confirmation Number:';
     this.utilHelper.validateAllFields(this.matrixAccountingForm);
     this.onChanges();
@@ -196,7 +200,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     segment.controls.forEach((element) => {
       element.setValue(checkValue);
     });
-    /// this.checkSegmentAirline();
+    this.onCheckChange();
   }
 
   loadReasonCodeList() {
@@ -240,7 +244,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
     switch (accRemark) {
       case 'ACPP':
+      case 'ACPPC':
       case 'WCPP':
+      case 'WCPPC':
+      case 'PCPPC':
       case 'PCPP':
         accRemark === 'ACPP' || accRemark === 'ACPPC'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
@@ -654,7 +661,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     return val;
   }
 
-  submit() {
+  onCheckChange() {
     // Filter out the unselected ids
     const checkSegment = [];
     const selectedPreferences = this.matrixAccountingForm.value.segments
@@ -670,6 +677,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         checkSegment.push(textLine);
       }
     });
-    return checkSegment;
+    debugger;
+    this.accountingRemark.segments = checkSegment;
+    //return checkSegment;
   }
 }

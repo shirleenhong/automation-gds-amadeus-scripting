@@ -451,4 +451,36 @@ export class CorporateComponent implements OnInit {
       console.log(e);
     }
   }
+  async ReSendInvoice() {
+    if (!this.sendInvoiceItineraryComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Sending Invoice...');
+    const resendCompData = this.sendInvoiceItineraryComponent.resendInvoiceComponent;
+    this.invoiceRemarkService.addEmailRemarks(resendCompData.invoiceFormGroup);
+    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(resendCompData.selectedElementsUI,
+      resendCompData.invoiceList);
+    this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
+    this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
+    this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);
+    const commandList = ['QE/YTOWL210E/66C1'];
+    await this.rms.submitToPnr(null, deletedInvoiceLines, commandList).then(
+      () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
+import { DDBService } from 'src/app/service/ddb.service';
 @Component({
   selector: 'app-resend-invoice',
   templateUrl: './resend-invoice.component.html',
@@ -11,12 +12,21 @@ export class ResendInvoiceComponent implements OnInit {
   invoiceFormGroup: FormGroup;
   constructor(private pnrService: PnrService,
               private invoiceRmkService: InvoiceRemarkService,
-              private formBuilder: FormBuilder) { }
-  showSegments = true;
+              private formBuilder: FormBuilder,
+              private ddbService: DDBService) { }
+  showSegments = false;
   showInvoiceList = false;
-  segmentNum = '';
+  selectedElementsUI = {
+    selectedSegments: '',
+    selectedInvoice: '',
+    selectedETickets: '',
+    selectedFeeLines: '',
+    selectedNonBspLines: ''
+  };
   invoiceList = [];
   feeAccountingList = [];
+  feeRemarks = [];
+  nonBspRemarks = [];
   nonBspAccountingList = [];
   eTicketsList = [];
   remove = false;
@@ -25,10 +35,10 @@ export class ResendInvoiceComponent implements OnInit {
   invoiceGroup: FormGroup;
   ngOnInit() {
     this.invoiceFormGroup = new FormGroup({
-      segmentNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      invoiceNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      feesAccountingNo: new FormControl('', []),
-      nonBspAccountingNo: new FormControl('', []),
+      invoiceNo: new FormControl('', [Validators.required]),
+      eTicketNo: new FormControl('', [Validators.required]),
+      feesAccountingNo: new FormControl('', [Validators.required]),
+      nonBspAccountingNo: new FormControl('', [Validators.required]),
       emailAddresses: new FormArray([this.createFormGroup()]),
     });
     this.resendInvoiceProcess();
@@ -36,13 +46,13 @@ export class ResendInvoiceComponent implements OnInit {
   async resendInvoiceProcess() {
     await this.getInvoicesFromPNR();
     await this.getAllETickets();
-    this.getFeeAccountingLines();
+    this.feeRemarks = this.getFeeAccountingLines();
+    this.nonBspRemarks = this.getNonBspAccountingLines();
     this.listEmail = this.pnrService.getEmailAddressesFromGds();
   }
   async getInvoicesFromPNR() {
     const fiElements = this.pnrService.pnrObj.fiElements;
     if (fiElements.length > 0) {
-      this.showInvoiceList = true;
       const selectAllObj = {
         lineNo: 'All',
         freeText: 'Select All',
@@ -50,25 +60,40 @@ export class ResendInvoiceComponent implements OnInit {
       };
       this.invoiceList.push(selectAllObj);
       this.addInvoicesToList(fiElements);
-      console.log(fiElements);
-      // show the invoice elements in UI
     } else {
       await this.invoiceProcess();
     }
   }
   async invoiceProcess() {
     const invCommand = 'INV/ZX/RT';
-    const invResponse = await this.invoiceRmkService.sendINVCommand(invCommand);
+    await this.invoiceRmkService.sendINVCommand(invCommand);
     const rtfRes = await this.invoiceRmkService.sendRTFCommand();
-    console.log(invResponse);
-    console.log(rtfRes);
+    const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);
+    if (invoiceElements.length > 0) {
+      this.showInvoiceList = true;
+      this.addInvoiceFromGDS(invoiceElements);
+    } else {
+      this.showSegments = true;
+    }
   }
   async getAllETickets() {
     const rttnCmd = 'RTTN/H';
     const rttnResponse = await this.invoiceRmkService.sendINVCommand(rttnCmd);
-    const eTickets = this.getAllTickets(rttnResponse);
+    const eTickets = this.invoiceRmkService.getAllTickets(rttnResponse);
     this.makeETicketsListUI(eTickets);
     console.log(eTickets);
+  }
+  addInvoiceFromGDS(invoiceElements) {
+    const selectAllObj = {
+      lineNo: 'All',
+      freeText: 'Select All',
+      isChecked: false
+    };
+    this.invoiceList.push(selectAllObj);
+    for (const ele of invoiceElements) {
+        const invoiceObj = this.invoiceRmkService.getInvoiceDetails(ele);
+        this.invoiceList.push(invoiceObj);
+    }
   }
   addInvoicesToList(fiElements) {
     const regex = /PAX|INF|INS|CHD/g;
@@ -127,14 +152,96 @@ export class ResendInvoiceComponent implements OnInit {
     }
   }
   getFeeAccountingLines() {
+    const feeDetails = [];
     const rmElements = this.pnrService.pnrObj.rmElements;
     for (const rmElement of rmElements) {
-      if (rmElement.category === 'F') {
+      if (rmElement.category === 'F' && rmElement.freeFlowText.indexOf('TKT') > -1) {
+        if(!this.checkFeePresent(rmElement.freeFlowText)) {
+          const feeObj = this.invoiceRmkService.getFeeDetailsUI(rmElement.freeFlowText);
+          this.feeAccountingList.push(feeObj);
+        }
+        const feeLineObj = this.invoiceRmkService.getFeeDetails(rmElement);
+        feeDetails.push(feeLineObj);
       }
     }
+    return feeDetails;
   }
-  generateInvoice() {
-    console.log(this.segmentNum);
+  getNonBspAccountingLines() {
+    const nonBspDetails = [];
+    const rmElements = this.pnrService.pnrObj.rmElements;
+    for (const rmEle of rmElements) {
+      if (rmEle.category === 'F' && rmEle.freeFlowText.indexOf('MAC/-') > -1) {
+        const nonBspLine = {
+          nonBspLineNum: '',
+          nonBspRmk: '',
+          associations: []
+        }
+        const supplierRegex = /MAC\/-SUP-[-A-Z, 0-9]{1,}/g;
+        const supplierMatch = rmEle.freeFlowText.match(supplierRegex);
+        if (supplierMatch && supplierMatch[0]) {
+          const nonBspObj = {
+            lineNo: '',
+            freeText: '',
+            isChecked: false
+          };
+          const supplierCode = supplierMatch[0].replace('MAC/-SUP-', '').trim();
+          const supplierName = this.getSupplierName(supplierCode);
+          nonBspObj.freeText = supplierCode + '-' + supplierName;
+          const lkRegex = /LK-MAC[0-9]{1,}/g;
+          const lkMatch = rmEle.freeFlowText.match(lkRegex);
+          if (lkMatch && lkMatch[0]) {
+            nonBspObj.lineNo = lkMatch[0].replace('LK-MAC', '').trim();
+          }
+          nonBspLine.nonBspLineNum = nonBspObj.lineNo;
+          nonBspLine.nonBspRmk = rmEle.freeFlowText;
+          nonBspLine.associations = rmEle.associations;
+          nonBspDetails.push(nonBspLine);
+          this.nonBspAccountingList.push(nonBspObj);
+        } else {
+          const lkRegex = /LK-MAC[0-9]{1,}/g;
+          const lkMatch = rmEle.freeFlowText.match(lkRegex);
+          if (lkMatch && lkMatch[0]) {
+            nonBspLine.nonBspLineNum = lkMatch[0].replace('LK-MAC', '').trim();
+          }
+          nonBspLine.nonBspRmk = rmEle.freeFlowText;
+          nonBspLine.associations = rmEle.associations;
+          nonBspDetails.push(nonBspLine);
+        }
+      }
+    }
+    return nonBspDetails;
+  }
+  getSupplierName(supplierCode) {
+    let supplierName = '';
+    const supplierCodeList = this.ddbService.supplierCodes;
+    for (const ele of supplierCodeList) {
+      if (supplierCode === ele.supplierCode) {
+        supplierName = ele.supplierName;
+        break;
+      }
+    }
+    return supplierName;
+  }
+  checkFeePresent(freeText) {
+    const ticketRegex = /TKT[0-9]{1,2}/g;
+    const ticketMatch = freeText.match(ticketRegex);
+    let lineNum: '';
+    if (ticketMatch && ticketMatch[0]) {
+      lineNum = ticketMatch[0].replace('TKT', '').trim();
+    }
+    for (const feeEle of this.feeAccountingList) {
+      if (feeEle.lineNo === lineNum) {
+        return true;
+      }
+    }
+    return false;
+  }
+  async generateInvoice() {
+    const invCommand = 'INV/ZX/S' + this.selectedElementsUI.selectedSegments + 'RT';
+    await this.invoiceRmkService.sendINVCommand(invCommand);
+    const rtfRes = await this.invoiceRmkService.sendRTFCommand();
+    const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);
+    this.addInvoiceFromGDS(invoiceElements);
   }
   checkSelectedInvoice(data: any) {
     if (data.lineNo === 'All') {
@@ -154,16 +261,51 @@ export class ResendInvoiceComponent implements OnInit {
         this.invoiceList[0].isChecked = false;
       }
     }
+    this.selectedElementsUI.selectedInvoice = this.updateValUI(this.invoiceList);
+    this.invoiceFormGroup.controls.invoiceNo.setValue(this.selectedElementsUI.selectedInvoice);
+  }
+  checkSelectedFeeLines(data: any) {
+    for (const ele of this.feeAccountingList) {
+      if (ele.lineNo === data.lineNo) {
+        ele.isChecked = !ele.isChecked;
+      }
+    }
+    this.selectedElementsUI.selectedFeeLines = this.updateValUI(this.feeAccountingList);
+    this.invoiceFormGroup.controls.feesAccountingNo.setValue(this.selectedElementsUI.selectedFeeLines);
+  }
+  checkSelectedNonBspLines(data: any) {
+    for (const ele of this.nonBspAccountingList) {
+      if (ele.lineNo === data.lineNo) {
+        ele.isChecked = !ele.isChecked;
+      }
+    }
+    this.selectedElementsUI.selectedNonBspLines = this.updateValUI(this.nonBspAccountingList);
+    this.invoiceFormGroup.controls.nonBspAccountingNo.setValue(this.selectedElementsUI.selectedNonBspLines);
   }
   checkSelectedTickets(data: any) {
-    if(data.lineNo === 'All') {
+    if (data.lineNo === 'All') {
       const newVal = !data.isChecked;
       for (const ele of this.eTicketsList) {
-        ele.isChecked = newVal;
+        if (ele.lineNo !== 'None') {
+          ele.isChecked = newVal;
+        } else {
+          ele.isChecked = !newVal;
+        }
+      }
+    } else if (data.lineNo === 'None') {
+      for (const ele of this.eTicketsList) {
+        if (ele.lineNo !== 'None') {
+          ele.isChecked = false;
+        } else {
+          ele.isChecked = true;
+        }
       }
     } else {
       for (const ele of this.eTicketsList) {
         if (data.lineNo === ele.lineNo) {
+          ele.isChecked = !ele.isChecked;
+        }
+        if (ele.lineNo === 'None' && ele.isChecked) {
           ele.isChecked = !ele.isChecked;
         }
       }
@@ -173,6 +315,8 @@ export class ResendInvoiceComponent implements OnInit {
         this.eTicketsList[0].isChecked = false;
       }
     }
+    this.selectedElementsUI.selectedETickets = this.updateValUI(this.eTicketsList);
+    this.invoiceFormGroup.controls.eTicketNo.setValue(this.selectedElementsUI.selectedETickets);
   }
   private checkForAllSelectionInvoice() {
     let isAllSelected = true;
@@ -186,30 +330,27 @@ export class ResendInvoiceComponent implements OnInit {
   private checkForAllSelectionTickets() {
     let isAllSelected = true;
     this.eTicketsList.forEach((ele, index) => {
-      if (index !== 0 && !ele.isChecked) {
+      if (index !== 0  && index !== this.eTicketsList.length - 1 && !ele.isChecked) {
         isAllSelected = false;
       }
     });
     return isAllSelected;
   }
-  private getAllTickets(response) {
-    const eTickets = [];
-    const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
-    const match = response.match(resregex);
-    if (match) {
-      const ticketTypeRegex = /[A-Z]{4}/g;
-      const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
-      for (const matchEle of match) {
-        const typeMatch = matchEle.match(ticketTypeRegex);
-        if (typeMatch && typeMatch[0].indexOf('ET') > -1) {
-          const ticketNumMatch = matchEle.match(ticketNumRegex);
-          if (ticketNumMatch && ticketNumMatch[0]) {
-            eTickets.push(ticketNumMatch[0].replace('-', '').trim());
-          }
+  updateValUI(list) {
+    const selectedItem = [];
+    let selectedVal = '';
+    for (const ele of list) {
+      if (ele.lineNo === 'All' && ele.isChecked) {
+        selectedItem.push(ele.lineNo);
+        break;
+      } else {
+        if (ele.isChecked) {
+          selectedItem.push(ele.lineNo);
         }
       }
     }
-    return eTickets;
+    selectedVal = selectedItem.join(',');
+    return selectedVal;
   }
   makeETicketsListUI(eTickets) {
     const selectAllObj = {

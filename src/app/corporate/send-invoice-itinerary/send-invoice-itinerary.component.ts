@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ResendInvoiceComponent } from './resend-invoice/resend-invoice.component';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-send-invoice-itinerary',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SendInvoiceItineraryComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private utilHelper: UtilHelper) { }
+  @ViewChild(ResendInvoiceComponent) resendInvoiceComponent: ResendInvoiceComponent;
   ngOnInit() {
+  }
+  checkValid() {
+    this.utilHelper.validateAllFields(this.resendInvoiceComponent.invoiceFormGroup);
+    if (this.resendInvoiceComponent.invoiceFormGroup.touched && !this.resendInvoiceComponent.invoiceFormGroup.valid) {
+      return false;
+    }
+    return true;
   }
 
 }

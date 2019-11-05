@@ -4,7 +4,7 @@
       <div class="form-group  row">
         <div class="col-md-4">Itinerary Segments:</div>
         <div class="col-md-4">
-          <app-segment-select formControlName="segmentNo" [(ngModel)]='segmentNum' name="segmentNo" id="segmentNo">
+          <app-segment-select formControlName="segmentNo" [(ngModel)]='selectedElementsUI.selectedSegments' name="segmentNo" id="segmentNo">
           </app-segment-select>
         </div>
         <div class="col-xs-4">
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf='showInvoiceList' class="invoice-list">
+    <div class="invoice-list">
       <div class="form-group row">
         <div class="col-md-4">Invoice Numbers:</div>
         <div class="col-sm-8">
@@ -36,7 +36,7 @@
       <div class="form-group row">
         <div class="col-md-4">Fee Accounting Lines:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='feeAccountingList' formControlName="feesAccountingNo" name="feesAccountingNo" id="feesAccountingNo">
+          <app-generic-select [genericList]='feeAccountingList' formControlName="feesAccountingNo" name="feesAccountingNo" id="feesAccountingNo" (passDataParent) = 'checkSelectedFeeLines($event)'>
           </app-generic-select>
         </div>
       </div>
@@ -45,7 +45,7 @@
       <div class="form-group row">
         <div class="col-md-4">Non BSP Accounting Lines:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='nonBspAccountingList' formControlName="nonBspAccountingNo" name="nonBspAccountingNo" id="nonBspAccountingNo">
+          <app-generic-select [genericList]='nonBspAccountingList' formControlName="nonBspAccountingNo" name="nonBspAccountingNo" id="nonBspAccountingNo" (passDataParent) = 'checkSelectedNonBspLines($event)'>
           </app-generic-select>
         </div>
       </div>

@@ -637,6 +637,7 @@ export class CancelSegmentComponent implements OnInit {
   changeVoidOption(followUp) {
     if (followUp === 'VoidComplete') {
       this.cancelForm.controls['requestor'].setValue('PAX Cancelled BSP PNR on OBT');
+      this.cancelForm.controls['desc1'].setValue('PAX Cancelled BSP PNR on OBT');
     }
   }
 

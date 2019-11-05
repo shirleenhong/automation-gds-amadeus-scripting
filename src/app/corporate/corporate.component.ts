@@ -40,7 +40,6 @@ import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 
-
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -244,7 +243,6 @@ export class CorporateComponent implements OnInit {
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
-
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
@@ -261,6 +259,24 @@ export class CorporateComponent implements OnInit {
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
+
+    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined) {
+      if (
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
+      ) {
+        const forDeletion = new Array<string>();
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
+          forDeletion.push(element.lineNo);
+        });
+        await this.rms.deleteSegments(forDeletion).then(async () => {
+          await this.getPnr();
+          await this.rms.getMatchcedPlaceholderValues();
+        });
+      }
+    }
+
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
@@ -337,7 +353,6 @@ export class CorporateComponent implements OnInit {
     );
   }
 
-
   async cancelPnr() {
     if (!this.cancelComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
@@ -375,15 +390,13 @@ export class CorporateComponent implements OnInit {
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const forDeletion = new Array<string>();
 
-    getSelected.forEach(element => {
+    getSelected.forEach((element) => {
       forDeletion.push(element.lineNo);
     });
-    await this.rms.deleteSegments(forDeletion).then(
-      async () => {
-        await this.getPnr();
-        await this.rms.getMatchcedPlaceholderValues();
-      }
-    );
+    await this.rms.deleteSegments(forDeletion).then(async () => {
+      await this.getPnr();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
@@ -399,7 +412,6 @@ export class CorporateComponent implements OnInit {
       }
     });
 
-
     await this.rms.submitToPnr(remarkList, null, null, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;
@@ -412,7 +424,6 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
-
 
   back() {
     this.workflow = '';
@@ -435,7 +446,12 @@ export class CorporateComponent implements OnInit {
     if (this.isPnrLoaded) {
       await this.getPnrService();
       if (this.checkHasPowerHotel()) {
-        this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
+        this.showMessage(
+          'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script',
+          MessageType.Default,
+          'Hotel(s) booked via Power Hotel',
+          'CancelHotel'
+        );
       } else {
         // this.showLoading('Loading PNR and Data', 'initData');
         // await this.rms.getMatchcedPlaceholderValues();

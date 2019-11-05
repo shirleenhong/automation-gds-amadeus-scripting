@@ -4,6 +4,7 @@ import { PlaceholderValues } from 'src/app/models/placeholder-values';
 import { OutputItem } from 'src/app/models/output-item.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { AmadeusRemarkService } from '../amadeus-remark.service';
+import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
 
 
 declare var smartScriptSession: any;
@@ -164,12 +165,14 @@ export class RemarksManagerService {
     return result;
   }
 
-  async submitToPnr(additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>,commandList?) {
+  async submitToPnr(additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>, commandList?,
+    passiveSegment?: Array<PassiveSegmentModel>) {
     await this.sendPnrToAmadeus(
       await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues),
       additionalRemarks,
       additionalRemarksToBeDeleted,
-      commandList
+      commandList,
+      passiveSegment
     );
   }
 
@@ -179,10 +182,29 @@ export class RemarksManagerService {
     }
   }
 
-  private async sendPnrToAmadeus(pnrResponse: any, additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>,commandList?) {
+  async deleteSegments(deleteSegmentByIds) {
+    if (deleteSegmentByIds.length >= 1) {
+      await smartScriptSession.send('XE' + deleteSegmentByIds.join(','));
+    }
+  }
+
+
+  private async sendPnrToAmadeus(pnrResponse: any, additionalRemarks?: Array<RemarkModel>, additionalRemarksToBeDeleted?: Array<string>, commandList?,
+    passiveSegment?: Array<PassiveSegmentModel>) {
     console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
       await smartScriptSession.send(this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted));
+    }
+
+    if (passiveSegment) {
+      passiveSegment.forEach((rem) => {
+        const originDestination = {
+          origin: '',
+          destination: ''
+        };
+        const itineraryInfo = this.amadeusRemarkService.addPassiveSegmentElement(rem);
+        pnrResponse.pnrAddMultiElements.originDestinationDetails.push({ originDestination, itineraryInfo });
+      });
     }
 
     if (additionalRemarks) {
@@ -199,7 +221,9 @@ export class RemarksManagerService {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
       await this.deleteSSRLines();
-      await this.sendSSRCommands(commandList,0);
+      if (commandList) {
+        await this.sendSSRCommands(commandList, 0);
+      }
       this.endPnr();
       this.refreshPnr();
     });
@@ -250,13 +274,13 @@ export class RemarksManagerService {
     const self = this;
     if (!(index == cmds.length)) {
       await smartScriptSession.send(cmds[index]).then(async function () {
-        await self.sendSSRCommands(cmds,index+1)
+        await self.sendSSRCommands(cmds, index + 1)
       })
     }
   }
 
   async deleteSSRLines() {
-    const deleteSRline=[];
+    const deleteSRline = [];
     const pnrObj = new PNR();
     await pnrObj.retrievePNR().then(() => {
       for (const sr of pnrObj.ssrElements) {

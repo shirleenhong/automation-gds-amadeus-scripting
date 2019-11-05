@@ -38,6 +38,7 @@ import { SegmentService } from '../service/segment.service';
 import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
+import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 
 
 @Component({
@@ -338,17 +339,15 @@ export class CorporateComponent implements OnInit {
 
 
   async cancelPnr() {
-    // let queueCollection = Array<QueuePlaceModel>();
-
-    // if (!this.cancelComponent.checkValid()) {
-    //   const modalRef = this.modalService.show(MessageComponent, {
-    //     backdrop: 'static'
-    //   });
-    //   modalRef.content.modalRef = modalRef;
-    //   modalRef.content.title = 'Invalid Inputs';
-    //   modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
-    //   return;
-    // }
+    if (!this.cancelComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
 
     this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
     const osiCollection = new Array<RemarkGroup>();
@@ -360,52 +359,48 @@ export class CorporateComponent implements OnInit {
     this.corpRemarkService.BuildRemarks(osiCollection);
     await this.corpRemarkService.cancelOSIRemarks().then(
       async () => {
+        this.getPnr();
         await this.addCancelRemarksRemarks(cancel, getSelected);
       },
       (error) => {
         console.log(JSON.stringify(error));
       }
     );
-
-    // if (getSelected.length === this.segment.length) {
-    //   remarkCollection.push(this.segmentService.cancelMisSegment());
-    // }
-
-    // this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
-    // remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    // this.corpRemarkService.BuildRemarks(remarkCollection);
-    // await this.corpRemarkService.SubmitRemarks(cancel.cancelForm.value.requestor).then(
-    //   () => {
-    //     this.isPnrLoaded = false;
-    //     this.getPnr();
-    //     this.workflow = '';
-    //     this.closePopup();
-    //   },
-    //   (error) => {
-    //     console.log(JSON.stringify(error));
-    //     this.workflow = '';
-    //   }
-    // );
   }
 
   async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {
-    debugger;
     this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
     const forDeletion = new Array<string>();
+
+    getSelected.forEach(element => {
+      forDeletion.push(element.lineNo);
+    });
+    await this.rms.deleteSegments(forDeletion).then(
+      async () => {
+        await this.getPnr();
+        await this.rms.getMatchcedPlaceholderValues();
+      }
+    );
+    if (getSelected.length === this.segment.length) {
+      remarkCollection.push(this.segmentService.cancelMisSegment());
+    }
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
       });
-
-      rem.deleteSegmentByIds.forEach((deleteSegments) => {
-        forDeletion.push(deleteSegments);
-      });
+      if (rem.passiveSegments) {
+        rem.passiveSegments.forEach((pasModel) => {
+          passiveSegmentList.push(pasModel);
+        });
+      }
     });
 
-    this.rms.submitToPnr(remarkList, forDeletion).then(
+
+    await this.rms.submitToPnr(remarkList, null, null, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -442,12 +437,12 @@ export class CorporateComponent implements OnInit {
       if (this.checkHasPowerHotel()) {
         this.showMessage('Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script', MessageType.Default, 'Hotel(s) booked via Power Hotel', 'CancelHotel');
       } else {
-        this.showLoading('Loading PNR and Data', 'initData');
-        await this.rms.getMatchcedPlaceholderValues();
+        // this.showLoading('Loading PNR and Data', 'initData');
+        // await this.rms.getMatchcedPlaceholderValues();
         this.workflow = 'cancel';
         this.segment = this.pnrService.getSegmentList();
         this.setControl();
-        this.closePopup();
+        // this.closePopup();
       }
     }
   }

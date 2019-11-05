@@ -39,6 +39,7 @@ export class CancelSegmentComponent implements OnInit {
   isACPassive = false;
   preCancel = false;
   isCorporate = false;
+  isVoid = false;
   // modalRef: BsModalRef;
 
   constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper, private counselorDetail: CounselorDetail) {
@@ -75,6 +76,19 @@ export class CancelSegmentComponent implements OnInit {
     // this.checkCorpPreCancel();
   }
 
+  ngOnInit() {
+    // this.codeShareGroup = this.formBuilder.group({
+    //   tickets: this.formBuilder.array([this.createFormGroup()])
+    // });
+    this.loadStaticValue();
+    this.getSegmentTatooValue();
+    this.addCheckboxes();
+    this.checkFirstSegment();
+    this.getPassengers();
+    this.checkCorpPreCancel();
+    this.checkVoid();
+  }
+
   private addCheckboxes() {
     let forchecking = true;
     if (this.segments.length > 1) {
@@ -97,24 +111,23 @@ export class CancelSegmentComponent implements OnInit {
     }
   }
 
+  private checkVoid() {
+    this.isCorporate = this.counselorDetail.getIsCorporate();
+    const eba = this.pnrService.getRemarkText('EB/-EBA');
+    const cxl = this.pnrService.getRemarkText('CB/CXL/PNR');
+    const voidCorp = this.pnrService.getRemarkText('CB/VOID/TICKET');
+
+    if (this.isCorporate && eba && cxl && voidCorp) {
+      this.isVoid = true;
+    }
+  }
+
   checkValid() {
     this.utilHelper.validateAllFields(this.cancelForm);
     if (!this.cancelForm.valid) {
       return false;
     }
     return true;
-  }
-
-  ngOnInit() {
-    // this.codeShareGroup = this.formBuilder.group({
-    //   tickets: this.formBuilder.array([this.createFormGroup()])
-    // });
-    this.loadStaticValue();
-    this.getSegmentTatooValue();
-    this.addCheckboxes();
-    this.checkFirstSegment();
-    this.getPassengers();
-    this.checkCorpPreCancel();
   }
 
   loadStaticValue() {

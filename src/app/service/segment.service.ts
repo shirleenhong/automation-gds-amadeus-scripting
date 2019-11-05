@@ -799,6 +799,7 @@ export class SegmentService {
     }
 
     osiCancelRemarks(cancel: any) {
+        this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Cancel OSI';
@@ -855,10 +856,12 @@ export class SegmentService {
         if (nuRemarks !== '0') {
             rmGroup.deleteRemarkByIds.push(nuRemarks);
         }
+
         return rmGroup;
     }
 
     buildCancelRemarks(cancel: any, segmentselected: any) {
+        this.corpRemarks = [];
         this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
         const rmGroup = new RemarkGroup();
@@ -903,7 +906,9 @@ export class SegmentService {
             }
         }
 
-        if (this.pnrService.getSegmentList().length === segmentselected.length) {
+
+        if ((this.pnrService.getSegmentList().length === segmentselected.length && !this.isCorporate) ||
+            (this.isCorporate && this.pnrService.getSegmentList().length === 0)) {
             if (this.isCorporate) {
                 this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'allSegment', null, '/CANCELLED/CXLD SEG-ALL');
                 this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'fullCancel', null, '*FULLCXL**');
@@ -936,6 +941,8 @@ export class SegmentService {
                 }
             }
         }
+
+
 
         if (cancel.value.airlineNo || (cancel.value.acFlightNo && cancel.value.reasonACCancel === '6')) {
             let affectedairline = '';
@@ -999,15 +1006,14 @@ export class SegmentService {
                 default:
                     break;
             }
-        }
-        if (remText) {
-            if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelReasonAC'], [remText], null, null, null, null);
-            } else {
-                rmGroup.remarks.push(this.remarkHelper.getRemark('AC Refund Waiver Code - ' + remText, 'RM', 'X'));
+            if (remText) {
+                if (this.isCorporate) {
+                    this.assignCorpPlaceholders(['CancelReasonAC'], [remText], null, null, null, null);
+                } else {
+                    rmGroup.remarks.push(this.remarkHelper.getRemark('AC Refund Waiver Code - ' + remText, 'RM', 'X'));
+                }
             }
         }
-
 
         segmentselected.forEach(element => {
             rmGroup.deleteSegmentByIds.push(element.lineNo);
@@ -1024,6 +1030,16 @@ export class SegmentService {
         this.writeCorpRirRemarks();
         return rmGroup;
     }
+
+    // getDeletedSegments(segmentselected) {
+    //     const rmGroup = new RemarkGroup();
+    //     rmGroup.group = 'Cancel';
+    //     rmGroup.remarks = new Array<RemarkModel>();
+    //     segmentselected.forEach(element => {
+    //         rmGroup.deleteSegmentByIds.push(element.lineNo);
+    //     });
+    //     return rmGroup;
+    // }
 
     cancelMisSegment() {
         const misSegment = new Array<PassiveSegmentModel>();

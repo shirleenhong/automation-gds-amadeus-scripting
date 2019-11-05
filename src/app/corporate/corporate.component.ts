@@ -41,7 +41,6 @@ import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 
-
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -405,6 +404,7 @@ export class CorporateComponent implements OnInit {
     }
 
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    remarkCollection.push(this.segmentService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);

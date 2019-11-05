@@ -23,6 +23,7 @@ export class CancelSegmentComponent implements OnInit {
   cancelProcessList: Array<SelectItem>;
   relationshipList: Array<SelectItem>;
   reasonNonACCancelList: Array<SelectItem>;
+  reverseItemList: Array<SelectItem>;
   segments = [];
   isAC = false;
   isUA = false;
@@ -41,8 +42,16 @@ export class CancelSegmentComponent implements OnInit {
   isCorporate = false;
   isVoid = false;
   // modalRef: BsModalRef;
+  isBSP = false;
+  isNonBSP = false;
+  isVoided = false;
 
-  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper, private counselorDetail: CounselorDetail) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper,
+    private counselorDetail: CounselorDetail
+  ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
@@ -69,11 +78,33 @@ export class CancelSegmentComponent implements OnInit {
       acCancelYear: new FormControl('', []),
       cancelProcess: new FormControl('', []),
       reasonNonACCancel: new FormControl('', []),
-      actickets: new FormArray([this.createAcFormGroup()])
+      actickets: new FormArray([this.createAcFormGroup()]),
+      cFirstInitial: new FormControl('', []),
+      cLastName: new FormControl('', []),
+      reuseCC: new FormControl('', []),
+      authorization: new FormControl('', [Validators.required]),
+      reverseItem: new FormControl('', []),
+      otherDetails1: new FormControl('', []),
+      otherDetails2: new FormControl('', []),
+      voidOption: new FormControl('', [])
     });
     // this.showMessage();
     // this.checkHasPowerHotel();
     // this.checkCorpPreCancel();
+    this.onChanges();
+  }
+
+  onChanges(): void {
+    this.cancelForm.get('reuseCC').valueChanges.subscribe((value) => {
+      if (value === 'no') {
+        this.enableFormControls(['authorization'], true);
+        this.cancelForm.controls.authorization.clearValidators();
+        this.cancelForm.controls.authorization.setValue('');
+      } else {
+        this.enableFormControls(['authorization'], false);
+        this.cancelForm.controls.authorization.setValidators(Validators.required);
+      }
+    });
   }
 
   ngOnInit() {
@@ -170,7 +201,9 @@ export class CancelSegmentComponent implements OnInit {
     this.voidList = [
       { itemText: '', itemValue: '' },
       { itemText: 'VOID entry successfully completed by OBT', itemValue: 'VoidComplete' },
-      { itemText: 'OBT was unable to VOID ticket/Consultant will complete VOID entry', itemValue: 'VoidNotComplete' }
+      { itemText: 'OBT was unable to VOID ticket/Consultant will complete VOID entry', itemValue: 'VoidNotComplete' },
+      { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
+      { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' }
     ];
 
     this.cancelProcessList = [
@@ -197,6 +230,13 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: 'CHANGE' },
       { itemText: 'NONE OF THE ABOVE', itemValue: 'NONE' }
     ];
+
+    this.reverseItemList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'Reverse All Items', itemValue: 'REVERSE MATRIX ALL ITEMS' },
+      { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
+      { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
+    ];
   }
 
   get f() {
@@ -216,13 +256,32 @@ export class CancelSegmentComponent implements OnInit {
           flightNumber: element.flightNumber,
           departureDate: element.departureDate,
           cityCode: element.cityCode,
-          arrivalAirport: element.arrivalAirport
+          arrivalAirport: element.arrivalAirport,
+          tatooNo: element.tatooNo
         };
         this.segments.push(details);
+
+        // if (this.checkVoided(details)) {
+        //   this.segmentsVoided.push(details);
+        // }
       }
     });
     // return segments;
   }
+
+  // checkVoided(segment: any): boolean {
+  //   if (this.pnrService.pnrObj.faElements.length > 0) {
+  //     for (const fa of this.pnrService.pnrObj.faElements) {
+  //       if (fa.associations[0].tatooNumber === segment.tatooNo) {
+  //         if (fa.freeFlowText.split('/')[1].substr(1, 1) === 'V') {
+  //           return true;
+  //         } else {
+  //           return false;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   getPassengers() {
     this.passengers = this.pnrService.getPassengers();
@@ -633,11 +692,33 @@ export class CancelSegmentComponent implements OnInit {
     this.headerRefund = 'Non BSP Refund Commission Recall';
   }
 
-
   changeVoidOption(followUp) {
     if (followUp === 'VoidComplete') {
       this.cancelForm.controls['requestor'].setValue('PAX Cancelled BSP PNR on OBT');
       this.cancelForm.controls['desc1'].setValue('PAX Cancelled BSP PNR on OBT');
+    } else if (followUp === 'Void BSP') {
+      this.isBSP = true;
+      this.isNonBSP = false;
+      this.enableFormControls(
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        true
+      );
+
+      if (this.pnrService.getTktNumber() !== '') {
+        this.isVoided = true;
+        this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], false);
+      } else {
+        this.isVoided = false;
+        this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], true);
+      }
+    } else if (followUp === 'Void Non BSP') {
+      this.isBSP = false;
+      this.isNonBSP = true;
+      this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], false);
+      this.enableFormControls(
+        ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+        true
+      );
     }
   }
 

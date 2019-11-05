@@ -235,6 +235,21 @@ export class PnrService {
         }
     }
 
+     extractOidFromBookRemark(): string {
+        // const remarks = this.pnrService.getRemarksFromGDSByRegex(/BOOK-/g);
+        const BOOK_REMARK_PREFIX = 'BOOK-';
+        const TKT_PREFIX = 'TKT-';
+        const remarks = this.getRemarkText(BOOK_REMARK_PREFIX);
+        let oid = null;
+        const remarkSplitted: Array<string> = remarks.split('/');
+        for (const ctrRemarkSplit of remarkSplitted) {
+          if (ctrRemarkSplit.match(TKT_PREFIX)) {
+            oid = ctrRemarkSplit.replace(TKT_PREFIX, '');
+            break;
+          }
+        }
+        return oid;
+      }
     /**
      * Check if PNR has OBT remark.
      * @return boolean
@@ -574,7 +589,6 @@ export class PnrService {
         } else {
             passiveType = type;
         }
-        
         const segment = {
             lineNo: elem.elementNumber,
             tatooNo: elem.tatooNumber,
@@ -596,7 +610,7 @@ export class PnrService {
             controlNumber,
             airType,
             passive: passiveType,
-            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' &&  elemStatus === 'GK')),
+            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
             passengerNo: this.getPassengerAssocNumbers(elem.associations)
         };
         this.segments.push(segment);
@@ -1393,28 +1407,21 @@ export class PnrService {
     }
 
     getUnticketedTst() {
+        const tstLen = this.tstObj.length;
+        let ticketed = 0;
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
             if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
                 if (tst.referenceForDataElement) {
-                    return false;
+                    ticketed++;
                 }
             }
         }
 
-        // for (const fp of this.pnrObj.fpElements) {
-        //     if (fp.fullNode.otherDataFreetext.longFreetext.indexOf('CCCA') > -1) {
-        //         if (fp.fullNode.referenceForDataElement === undefined && segments.length < segmentinPNR.length) {
-        //             return true;
-        //         }
-        //         for (const ref of fp.fullNode.referenceForDataElement.reference) {
-        //             if (segments.indexOf(ref.number) === -1) {
-        //                 return true;
-        //             }
-        //         }
-        //     }
-        // }
-        return true;
+        if (ticketed < tstLen) {
+            return true;
+        }
+        return false;
     }
 
     getTicketedSegments(): string[] {
@@ -1610,8 +1617,8 @@ export class PnrService {
         let val: string;
         val = '';
         for (const element of this.pnrObj.fpElements) {
-          val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
+            val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
         }
         return val;
-      }
+    }
 }

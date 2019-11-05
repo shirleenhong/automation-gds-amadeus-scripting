@@ -16,6 +16,7 @@ ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
+${button_cancel_segments}    //button[contains(text(), 'Cancel Segments')]
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
@@ -81,6 +82,13 @@ Click Full Wrap
     Set Test Variable    ${visa_complete}    no
     Set Test Variable   ${esc_remarks_complete}    no
     [Teardown]    Take Screenshot
+    
+Click Cancel Segments
+    Wait Until Page Contains Element    ${button_cancel_segments}     180
+    Click Element     ${button_cancel_segments}
+    Wait Until Element Is Visible    ${input_requestor}     30
+    Set Test Variable    ${current_page}    Full Wrap PNR
+    Set Test Variable    ${pnr_submitted}   no
 
 Click Itinerary And Queue
     Wait Until Page Contains Element   ${button_full_wrap}    180 
@@ -201,12 +209,12 @@ Navigate To Page ${destination_page}
      : FOR     ${i}    IN RANGE   1    2
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
+     \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "CWT Corporate" and "${destination_page}" != "CWT Corporate"     Navigate From Corp    ${destination_page}
      \    Run Keyword If    "${to_add_segment}" == "True"    Navigate From Add Segment    ${destination_page}
      \    Run Keyword If    "${to_full_wrap}" == "True"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Itinerary And Queue    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
-     \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${ticketing_details}" == "yes"     Click Save Button
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
      Should Be Equal   ${current_page}    ${destination_page}
@@ -216,6 +224,7 @@ Navigate From Corp
      Run Keyword If    "${to_add_segment}" == "True"    Click Add Segment From Main Menu
      ...    ELSE IF    "${to_full_wrap}" == "True"    Click Full Wrap
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
+     ...    ELSE IF    "${destination_page}" == "Cancel Segments"    Click Cancel Segments
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Add Segment
@@ -324,9 +333,10 @@ Click Itinerary And Queue Panel
 Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
     ${in_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
-    ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}    
+    ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
-    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}   
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${current_page}" == "Cancel Segments"       Click Submit To PNR    ${close_corporate_test}    ${queueing}
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}  
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
     

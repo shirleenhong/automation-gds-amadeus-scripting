@@ -23,9 +23,9 @@ export class PaymentComponent {
     this.isBspTicketFop();
   }
 
-  onEditReceipt() {}
+  onEditReceipt() { }
 
-  onAddReceipt() {}
+  onAddReceipt() { }
 
   checkValid() {
     this.utilHelper.validateAllFields(this.leisureFee.leisureFeeForm);

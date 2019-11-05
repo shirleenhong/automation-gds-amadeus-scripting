@@ -22,10 +22,11 @@ export class AppComponent implements OnInit {
 
   identityList: Array<SelectItem> = null;
 
-  constructor(private counselorDetail: CounselorDetail, private staticValues: StaticValuesService) {}
+  constructor(private counselorDetail: CounselorDetail, private staticValues: StaticValuesService) { }
 
   ngOnInit(): void {
     this.isCorporate = this.getParamValueQueryString('corporate') === 'true';
+    this.counselorDetail.setCorporate(this.isCorporate);
     if (this.isCorporate) {
       this.header = 'Corporate';
       this.loadCounselorIdentityList();

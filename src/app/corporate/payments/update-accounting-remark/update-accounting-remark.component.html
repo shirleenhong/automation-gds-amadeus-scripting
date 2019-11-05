@@ -147,7 +147,9 @@
             placeholder="MM/YY" [(ngModel)]="accountingRemark.expDate" CCDateExpMask formControlName="expDate" />
         </div>
       </div>
-    </div> -->
+    </div> --> <!-- (change)="cancelAll($event.target.checked)"  -->
+  
+
 
     <div *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'" class="form-group  row">
       <div class="col-sm-4">
@@ -159,17 +161,41 @@
           name="supplierConfirmatioNo" required AlphaNumericMask />
       </div>
     </div>
+<div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">
 
+    <div class="row form-group">
+        <div class="col-4"> </div>
+        <div class="col-8 emphasize">
+          <input type="checkbox" name="cancelAll" formControlName="cancelAll" id="cancelAll" (change)="cancelAll($event.target.checked)"/> 
+          
+          Cancel All Segments
+        </div>
+      </div>
+  
+  
+      <div class="row form-group">
+        <div class="col-4">Segments:</div>
+        <div class="col-8">
+          <label>
+            <div formArrayName="segments"
+              *ngFor="let name of this.matrixAccountingForm.controls.segments['controls']; let i = index">
+              <input type="checkbox" [formControlName]="i" (change)="onCheckChange()">
+              {{segments[i].name}}
+            </div>
+          </label>
+        </div>
+      </div>
+  </div>
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
-        <div class="">Base Amount:</div>
+        <div class="">Base Amount<span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span> :</div>
         <input type="text" class="form-control" id="baseAmount" [(ngModel)]="accountingRemark.baseAmount" maxlength="10"
           formControlName="baseAmount" name="baseAmount" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
-        <div class="">GST:</div>
+        <div class="">GST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemark.gst"
           maxlength="8" formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
       </div>
@@ -178,13 +204,13 @@
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
-        <div class="">HST:</div>
+        <div class="">HST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemark.hst"
           maxlength="8" formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
-        <div class="">QST:</div>
+        <div class="">QST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemark.qst"
           maxlength="8" formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
       </div>
@@ -193,19 +219,78 @@
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
-        <div class="">Other Tax:</div>
+        <div class="">Other Tax <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
           [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
           placeholder="00.00" AmountMask />
       </div>
 
       <div class="col" *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'">
-        <div class="">Commission:</div>
+        <div class="">Commission <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"></span>:</div>
         <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
           [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
           maxlength="8" AmountMask required />
       </div>
     </div>
+
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">
+        <div class="form-group  row">
+          <div class="col-sm-4"></div>
+          <div class="col">
+            <div class="">Base Amount Refund:</div>
+            <input type="text" class="form-control" id="baseAmountRefund" [(ngModel)]="accountingRemark.baseAmountRefund" maxlength="10"
+              formControlName="baseAmountRefund" name="baseAmountRefund" required placeholder="00.00" AmountMask />
+          </div>
+    
+          <div class="col">
+            <div class="">GST Tax Refund:</div>
+            <input type="text" class="form-control" id="gstRefund" [(ngModel)]="accountingRemark.gstRefund"
+              maxlength="8" formControlName="gstRefund" name="gstRefund" required placeholder="00.00" AmountMask />
+          </div>
+        </div>
+    
+        <div class="form-group  row">
+          <div class="col-sm-4"></div>
+          <div class="col">
+            <div class="">HST Tax Refund:</div>
+            <input type="text" class="form-control" id="hstRefund" [(ngModel)]="accountingRemark.hstRefund" maxlength="10"
+              formControlName="hstRefund" name="hstRefund" required placeholder="00.00" AmountMask />
+          </div>
+    
+          <div class="col">
+            <div class="">QST Tax Refund:</div>
+            <input type="text" class="form-control" id="qstRefund" [(ngModel)]="accountingRemark.qstRefund"
+              maxlength="8" formControlName="qstRefund" name="qstRefund" required placeholder="00.00" AmountMask />
+          </div>
+        </div>
+    
+        <div class="form-group  row">
+          <div class="col-sm-4"></div>
+          <div class="col">
+            <div class="">Other Tax Refund:</div>
+            <input type="text" class="form-control" id="otherTaxRefund" [(ngModel)]="accountingRemark.otherTaxRefund" maxlength="10"
+              formControlName="otherTaxRefund" name="otherTaxRefund" required placeholder="00.00" AmountMask />
+          </div>    
+          <div class="col">
+            <div class="">Record Locator</div>
+            <input type="text" class="form-control" id="recordLocator" [(ngModel)]="accountingRemark.recordLocator" maxlength="10"
+              formControlName="recordLocator" name="recordLocator" required />
+          </div>   
+        </div>
+        <div class="form-group  row">
+            <div class="col-sm-4"></div>
+            <div class="col">
+              <div class="">Commision Refund:</div>
+              <input type="text" class="form-control" id="commisionRefund" [(ngModel)]="accountingRemark.commisionRefund" maxlength="10"
+                formControlName="commisionRefund" name="commisionRefund" required placeholder="00.00" AmountMask />
+            </div>    
+            <div class="col">
+              <div class="">OID Orig Ticket Issue</div>
+              <input type="text" class="form-control" id="oidOrigTicketIssue" [(ngModel)]="accountingRemark.oidOrigTicketIssue" maxlength="10"
+                formControlName="oidOrigTicketIssue" name="oidOrigTicketIssue" required />
+            </div>   
+          </div>
+      </div>
 
     <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'">
       <div class="form-group  row">
@@ -249,11 +334,33 @@
       <div class="col-sm-4">{{ ticketNumber }}</div>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="tktLine" formControlName="tktLine"
-          [(ngModel)]="accountingRemark.tktLine" name="tktLine" NumberOnlyMask 
-          maxlength="10" />
+          [(ngModel)]="accountingRemark.tktLine" name="tktLine" NumberOnlyMask maxlength="10" />
       </div>
     </div>
-
+  <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">   
+      <div class="form-group  row">
+          <div class="col-sm-4">Additional Details</div>
+          <div class="col-sm-8">
+              <textarea type="text" class="form-control" id="additionalInfo" formControlName="additionalNotes1"
+              [(ngModel)]="accountingRemark.additionalNotes1"
+               name="additionalNotes1" maxlength="40"></textarea>
+          </div>
+      </div>
+      <div class="form-group  row">
+          <div class="col-sm-4">Notes</div>
+          <div class="col-sm-8">
+              <textarea type="text" class="form-control" id="additionalNotes2" formControlName="additionalNotes2"
+              [(ngModel)]="accountingRemark.additionalNotes2"
+               name="additionalNotes2" maxlength="40"></textarea>
+          </div>
+      </div>
+    <div  class="form-group  row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-8 noteText" >        
+        *If Client paid by Cheque, you must complete a Cheque Requisition.<br>A Cheque Requisition for Commission Recall may also be necessary.
+      </div>
+    </div>
+  </div>
 
     <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE'" class="form-group row">
       <div class="col-sm-4">Original Ticket Number:</div>
@@ -323,6 +430,9 @@
             <input type="text" class="form-control" formControlName="gdsFare" id="gdsFare"
               [(ngModel)]="accountingRemark.gdsFare" formControlName="gdsFare" placeholder="0" step="1"
               pattern="[0-9]*" />
+            <p class="text-muted">
+              Please manually calculate your Lowest GDS Fare.  Base Fare Only, do not include Tax or Cents.
+            </p>
           </div>
         </div>
       </div>

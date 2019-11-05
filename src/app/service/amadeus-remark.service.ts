@@ -466,7 +466,7 @@ export class AmadeusRemarkService {
       originDestinationDetails,
       dataElementsMaster
     };
-    console.log(JSON.stringify(remarkElements));
+    console.log('request' + JSON.stringify(remarkElements));
     await smartScriptSession.requestService('ws.addMultiElement_v14.1', remarkElements).then(
       async () => {
         this.responseMessage = 'Remarks Updated';
@@ -515,6 +515,7 @@ export class AmadeusRemarkService {
     smartScriptSession.send('ER');
     smartScriptSession.send('ER');
     smartScriptSession.send('RT');
+    this.amadeusQueueService.queuePNR();
     this.amadeusQueueService.newQueueCollection();
   }
 }

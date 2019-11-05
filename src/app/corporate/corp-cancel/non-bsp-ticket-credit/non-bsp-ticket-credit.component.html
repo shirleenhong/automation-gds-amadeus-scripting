@@ -1,0 +1,93 @@
+<div class="form-group" [formGroup]="nonBspForm" style="padding:10px;">
+  <div class="row">
+    <div class="col-3">Office ID :</div>
+    <div class="col-3"><input type="text" class="form-control" name="officeId" formControlName="officeId" id="officeId" readonly /></div>
+  </div>
+  <div class="row" *ngIf="!hasU14()">
+    <div class="col-3">Ticket Number :</div>
+    <div class="col-3"><input type="text" class="form-control" name="ticketNum" formControlName="ticketNum" id="ticketNum" /></div>
+  </div>
+  <div *ngIf="hasU14()">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col">
+        Are you charging re-credit fee?
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      &nbsp; &nbsp;
+      <div class="w-10"></div>
+      <div class="w-10">
+        <label class="control control-radio ">
+          <input type="radio" name="isReCredit" formControlName="isReCredit" id="isReCredit" value="Y" />Yes &nbsp;&nbsp;
+          <div class="control_indicator"></div>
+        </label>
+      </div>
+      <div class="w-20">
+        <label class="control control-radio ">
+          <input type="radio" name="isReCredit" formControlName="isReCredit" id="isReCredit" value="N" /> No
+          <div class="control_indicator"></div>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-3" *ngIf="nonBspForm.get('isReCredit').value === 'N'">
+        <select class="form-control" formControlName="partialFull" name="partialFull" id="partialFull">
+          <option value="partial">Partial Re-Credit</option>
+          <option value="full">Full Re-Credit</option>
+        </select>
+      </div>
+    </div>
+    <div *ngIf="nonBspForm.get('isReCredit').value === 'N'">
+      <div class="row">
+        <div class="col-3">Vendor Name:</div>
+        <div class="col-3"><input type="text" class="form-control" name="vendor" formControlName="vendor" id="vendor" /></div>
+      </div>
+      <div class="row">
+        <div class="col-3">Counserlor First Name:</div>
+        <div class="col-3"><input type="text" class="form-control" name="firstName" formControlName="firstName" id="firstName" /></div>
+      </div>
+      <div class="row">
+        <div class="col-3">Counserlor Last Name:</div>
+        <div class="col-3"><input type="text" class="form-control" name="lastName" formControlName="lastName" id="lastName" /></div>
+      </div>
+
+      <div *ngIf="nonBspForm.get('partialFull').value != 'full'">
+        <div class="row">
+          <div class="col-3">Base Amount :</div>
+          <div class="col-3">
+            <input type="text" class="form-control" name="baseAmount" formControlName="baseAmount" id="baseAmount" AmountMask />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">GST:</div>
+          <div class="col-3"><input type="text" class="form-control" name="gst" formControlName="gst" id="gst" AmountMask /></div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">TAX:</div>
+          <div class="col-3"><input type="text" class="form-control" name="tax" formControlName="tax" id="tax" AmountMask /></div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">Commission:</div>
+          <div class="col-3">
+            <input type="text" class="form-control" name="commission" formControlName="commission" id="tax" AmountMask />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">Optional Free Flow Line 1:</div>
+          <div class="col-4"><input type="text" class="form-control" name="freeFlow1" formControlName="freeFlow1" id="freeFlow1" /></div>
+        </div>
+        <div class="row">
+          <div class="col-3">Optional Free Flow Line 2:</div>
+          <div class="col-4"><input type="text" class="form-control" name="freeFlow2" formControlName="freeFlow2" id="freeFlow2" /></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

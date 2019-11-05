@@ -36,6 +36,12 @@ import { VisaPassportRemarkService } from '../service/visa-passport-remark.servi
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { SegmentService } from '../service/segment.service';
 import { SendInvoiceItineraryComponent } from './send-invoice-itinerary/send-invoice-itinerary.component';
+import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
+import { CfRemarkModel } from '../models/pnr/cf-remark.model';
+import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
+import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
+import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
+
 
 @Component({
   selector: 'app-corporate',
@@ -53,6 +59,7 @@ export class CorporateComponent implements OnInit {
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
   segment = [];
+  cfLine: CfRemarkModel;
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -65,11 +72,11 @@ export class CorporateComponent implements OnInit {
   @ViewChild(PassiveSegmentsComponent)
   @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
+  @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
 
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: AmadeusRemarkService,
@@ -87,7 +94,8 @@ export class CorporateComponent implements OnInit {
     private ofcRemarkService: OfcRemarkService,
     private visaPassportService: VisaPassportRemarkService,
     private segmentService: SegmentService,
-    private amadeusRemarkService: AmadeusRemarkService
+    private amadeusRemarkService: AmadeusRemarkService,
+    private corpCancelRemarkService: CorpCancelRemarkService
   ) {
     this.initData();
     this.getPnrService();
@@ -109,6 +117,7 @@ export class CorporateComponent implements OnInit {
   async getPnrService() {
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
+    this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
   }
 
@@ -238,7 +247,6 @@ export class CorporateComponent implements OnInit {
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
-
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
@@ -255,6 +263,24 @@ export class CorporateComponent implements OnInit {
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
     });
+
+    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined) {
+      if (
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
+      ) {
+        const forDeletion = new Array<string>();
+        this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
+          forDeletion.push(element.lineNo);
+        });
+        await this.rms.deleteSegments(forDeletion).then(async () => {
+          await this.getPnr();
+          await this.rms.getMatchcedPlaceholderValues();
+        });
+      }
+    }
+
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
@@ -331,6 +357,87 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+  async cancelPnr() {
+    if (!this.cancelComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+
+    this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+    const osiCollection = new Array<RemarkGroup>();
+    const cancel = this.cancelComponent.cancelSegmentComponent;
+    const getSelected = cancel.submit();
+
+    // if (getSelected.length >= 1) {
+    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+    this.corpRemarkService.BuildRemarks(osiCollection);
+    await this.corpRemarkService.cancelOSIRemarks().then(
+      async () => {
+        this.getPnr();
+        await this.addCancelRemarksRemarks(cancel, getSelected);
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
+  async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {
+    this.segmentService.queueCancel(cancel.cancelForm, this.cfLine);
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
+    const forDeletion = new Array<string>();
+    const commandList = new Array<string>();
+
+    getSelected.forEach((element) => {
+      forDeletion.push(element.lineNo);
+    });
+    await this.rms.deleteSegments(forDeletion).then(async () => {
+      await this.getPnr();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
+    if (getSelected.length === this.segment.length) {
+      remarkCollection.push(this.segmentService.cancelMisSegment());
+    }
+
+    remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
+        remarkList.push(remModel);
+      });
+      if (rem.passiveSegments) {
+        rem.passiveSegments.forEach((pasModel) => {
+          passiveSegmentList.push(pasModel);
+        });
+      }
+    });
+
+
+    const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
+    if (nonBspTicket) {
+      nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
+      nonBspTicket.commands.forEach((c) => commandList.push(c));
+    }
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+        this.workflow = '';
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+      }
+    );
+  }
+
   back() {
     this.workflow = '';
     this.cleanupRemarkService.revertDelete();
@@ -351,10 +458,32 @@ export class CorporateComponent implements OnInit {
   public async cancelSegment() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
-      this.workflow = 'cancel';
-      this.segment = this.pnrService.getSegmentList();
-      this.setControl();
+      if (this.checkHasPowerHotel()) {
+        this.showMessage(
+          'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script',
+          MessageType.Default,
+          'Hotel(s) booked via Power Hotel',
+          'CancelHotel'
+        );
+      } else {
+        // this.showLoading('Loading PNR and Data', 'initData');
+        // await this.rms.getMatchcedPlaceholderValues();
+        this.workflow = 'cancel';
+        this.segment = this.pnrService.getSegmentList();
+        this.setControl();
+        // this.closePopup();
+      }
     }
+  }
+
+  checkHasPowerHotel() {
+    const segmentDetails = this.pnrService.getSegmentList();
+    for (const seg of segmentDetails) {
+      if (seg.segmentType === 'HTL') {
+        return true;
+      }
+    }
+    return false;
   }
 
   setControl() {

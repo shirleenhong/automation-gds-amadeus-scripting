@@ -6,8 +6,8 @@ import { PassiveSegmentsModel } from 'src/app/models/pnr/passive-segments.model'
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { CounselorDetail } from 'src/app/globals/counselor-identity';
 // import { validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
-
 
 declare var smartScriptSession: any;
 
@@ -30,6 +30,7 @@ export class UpdateSegmentComponent implements OnInit {
   @ViewChild('tourTmpl') tourTmpl: TemplateRef<any>;
   @ViewChild('limoTmpl') limoTmpl: TemplateRef<any>;
   @ViewChild('hotelTmpl') hotelTmpl: TemplateRef<any>;
+  isCorporate = false;
   segmentList: Array<PassiveSegmentsModel> = [];
   isAddNew: boolean;
   mealPlanList: Array<SelectItem>;
@@ -165,8 +166,10 @@ export class UpdateSegmentComponent implements OnInit {
     public modalRef: BsModalRef,
     private ddbService: DDBService,
     private fb: FormBuilder,
-    private util: UtilHelper
+    private util: UtilHelper,
+    private counselorDetail: CounselorDetail
   ) {
+    this.isCorporate = this.counselorDetail.isCorporate;
     this.passiveSegments = new PassiveSegmentsModel();
     // this.supplierCodeList ;//= this.ddbService.getSupplierCode();
     this.segmentForm = fb.group({
@@ -243,13 +246,15 @@ export class UpdateSegmentComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'Air', itemValue: 'AIR' },
       { itemText: 'Cruise', itemValue: 'SEA' },
-      { itemText: 'Insurance', itemValue: 'INS' },
-      { itemText: 'Tour', itemValue: 'TOR' },
       { itemText: 'Car', itemValue: 'CAR' },
       { itemText: 'Limo', itemValue: 'LIM' },
       { itemText: 'Hotel', itemValue: 'HTL' },
       { itemText: 'Rail', itemValue: 'TRN' }
     ];
+    if (!this.isCorporate) {
+      this.segmentTypeList.push({ itemText: 'Insurance', itemValue: 'INS' });
+      this.segmentTypeList.push({ itemText: 'Tour', itemValue: 'TOR' });
+    }
   }
 
   loadStateRoom() {
@@ -609,7 +614,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() { }
+  pickUpLocChange() {}
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;

@@ -30,7 +30,20 @@
       </div>
     </div>
 
-    <div class="row form-group">
+    <!-- <div *ngIf="!preCancel" class="row form-group"> -->
+    <div *ngIf="isVoid" class="row form-group">
+      <div class="col-4">Void Option: </div>
+      <div class="col-8">
+        <select id="voidOption" class="form-control" formControlName="voidOption" name="voidOption"
+          (change)="changeVoidOption($event.target.value)">
+          <option *ngFor="let item of voidList" [value]="item.itemValue">
+            {{item.itemText}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="!isVoid" class="row form-group">
       <div class="col-4">Select Cancel Follow Up Option: </div>
       <div class="col-8">
         <select id="followUpOption" class="form-control" formControlName="followUpOption" name="followUpOption"
@@ -71,7 +84,8 @@
       </div>
     </div>
 
-    <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund'">
+    <!-- <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !preCancel"> -->
+    <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !isVoid">
       <div *ngIf="!isAC" class="row form-group">
         <div class="col-4">AC Cancel Check: </div>
         <div class="col-8">

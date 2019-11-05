@@ -26,7 +26,7 @@ export class InvoiceRemarkService {
     });
 
     this.remGroup.cryptics.push('RT' + this.pnrService.recordLocator());
-    return { remgroup: this.remGroup, invSent: invSent };
+    return { remgroup: this.remGroup, invSent };
   }
 
   public setItineraryOnlyRemarks() {

@@ -39,6 +39,8 @@ import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
+import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
+
 
 @Component({
   selector: 'app-corporate',
@@ -73,7 +75,6 @@ export class CorporateComponent implements OnInit {
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    // private ddbService: DDBService, // TEMP: Comment-out due to errors not needed on US11134
     private modalService: BsModalService,
     private paymentRemarkService: PaymentRemarkService,
     private corpRemarkService: AmadeusRemarkService,
@@ -91,7 +92,8 @@ export class CorporateComponent implements OnInit {
     private ofcRemarkService: OfcRemarkService,
     private visaPassportService: VisaPassportRemarkService,
     private segmentService: SegmentService,
-    private amadeusRemarkService: AmadeusRemarkService
+    private amadeusRemarkService: AmadeusRemarkService,
+    private corpCancelRemarkService: CorpCancelRemarkService
   ) {
     this.initData();
     this.getPnrService();
@@ -389,6 +391,7 @@ export class CorporateComponent implements OnInit {
     const remarkList = new Array<RemarkModel>();
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const forDeletion = new Array<string>();
+    const commandList = new Array<string>();
 
     getSelected.forEach((element) => {
       forDeletion.push(element.lineNo);
@@ -400,6 +403,7 @@ export class CorporateComponent implements OnInit {
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
+
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
@@ -412,7 +416,14 @@ export class CorporateComponent implements OnInit {
       }
     });
 
-    await this.rms.submitToPnr(remarkList, null, null, passiveSegmentList).then(
+
+    const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
+    if (nonBspTicket) {
+      nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
+      nonBspTicket.commands.forEach((c) => commandList.push(c));
+    }
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

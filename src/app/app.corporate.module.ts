@@ -36,6 +36,7 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
 import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
 import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
+import { NonBspTicketCreditComponent } from './corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.compone
     DocumentPnrComponent,
     EscRemarksComponent,
     AddContactComponent,
-    CorpCancelComponent
+    CorpCancelComponent,
+    NonBspTicketCreditComponent
   ],
   imports: [
     BrowserModule,

@@ -892,14 +892,18 @@ export class SegmentService {
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
         if (hotellook) {
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'withHotel', null, '/HTL SEGMENT INCLUDED IN CANCEL');
+                const pArray = ['CancelDate', 'CancelHotel'];
+                const pValueArray = [dateToday, 'HTL'];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
             } else {
                 remText = dateToday + '/HTL SEGMENT INCLUDED IN CANCEL';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }
         } else {
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'noHotel', null, '/NO HTL SEGMENT INCLUDED IN CANCEL');
+                const pArray = ['CancelDate', 'CancelHotel'];
+                const pValueArray = [dateToday, 'NO HTL'];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
             } else {
                 remText = dateToday + '/NO HTL SEGMENT INCLUDED IN CANCEL';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
@@ -910,7 +914,9 @@ export class SegmentService {
         if ((this.pnrService.getSegmentList().length === segmentselected.length && !this.isCorporate) ||
             (this.isCorporate && this.pnrService.getSegmentList().length === 0)) {
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'allSegment', null, '/CANCELLED/CXLD SEG-ALL');
+                const pArray = ['CancelDate', 'CancelLineNo'];
+                const pValueArray = [dateToday, 'ALL'];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
                 this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'fullCancel', null, '*FULLCXL**');
             } else {
                 remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
@@ -934,7 +940,9 @@ export class SegmentService {
             const preCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG-PRE') === -1);
             if (prevCancel && preCancel) {
                 if (this.isCorporate) {
-                    this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'preCancel', null, '/CANCELLED/CXLD SEG-PRE');
+                    const pArray = ['CancelDate', 'CancelLineNo'];
+                    const pValueArray = [dateToday, 'PRE'];
+                    this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
                 } else {
                     remText = dateToday + '/CANCELLED/CXLD SEG-PRE';
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));

@@ -407,7 +407,7 @@ export class PaymentRemarkService {
       Diners = '118000'
     }
     let fop = '';
-    if (CardType[matrix.bankAccount]) {
+    if (CardType[matrix.vendorCode] === matrix.bankAccount) {
       fop = 'CC' + matrix.vendorCode + matrix.ccNo + '/-EXP-' + matrix.expDate.replace('/', '');
     } else {
       fop = matrix.bankAccount === '109000' ? 'DB' : matrix.bankAccount === '227000' ? 'GC-' + matrix.gcNumber : matrix.modePayment;

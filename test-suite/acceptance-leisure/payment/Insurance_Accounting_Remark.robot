@@ -6,10 +6,11 @@ Resource          ../../resources/common/global_resources.robot
 Verify That Insurance Accounting Remark Is Correct
     [Tags]    us8870    US9253
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1SIN27DEC-/TYP-INS/SUN-ABC INSURANCE/SUC-ZZ/SC-YVR/SD-27DEC/ST-1800/EC-YVR/ED-28DEC/ET-0800/CF-12345    RM*CF/-S1A0000000N    APE-test@email.com
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RU1AHK1YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1SIN27DEC-/TYP-INS/SUN-ABC INSURANCE/SUC-ZZ/SC-YVR/SD-27DEC/ST-1800/EC-YVR/ED-28DEC/ET-0800/CF-12345    RM*CF/-SIA0000000N    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Routing And Destination Fields
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
@@ -54,7 +55,7 @@ Verify That Insurance Accounting Remark Is Correct
     Select Accounting Remark Type    Apay Accounting Remark
     Enter Matrix Accounting Description    SEAT COSTS
     Enter Supplier Confirmation Number    14433
-    Select Matrix Form Of Payment    RBC Points
+    Add CC As Form Of Payment    AX    371449635398431    1222
     Enter Base Amount    150.23
     Enter GST Tax Amount    2.05
     Enter HST Tax Amount    3.98
@@ -64,8 +65,8 @@ Verify That Insurance Accounting Remark Is Correct
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-PFS/-LK-MAC1/-AMT-150.23/-PT-3.98RC/-PT-2.05XG/-PT-4.54XQ    True
-    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CK/-MP-ALL/-BKN-14433/S4    True
-    Verify Specific Remark Is Written In The PNR    RIR PAID SEAT COSTS CF-14433 CAD150.23 PLUS 10.57 TAX ON CK/S4    True
+    Verify Specific Remark Is Written In The PNR    RM *MAC/-LK-MAC1/-FOP-CCAX371449635398431/-EXP-1222/-MP-ALL/-BKN-14433/S4    True
+    Verify Specific Remark Is Written In The PNR    RIR PAID SEAT COSTS CF-14433 CAD150.23 PLUS 10.57 TAX ON AX/S4    True
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

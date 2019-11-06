@@ -332,7 +332,6 @@ export class PaymentRemarkService {
   }
 
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
-    debugger;
     if (accountingRemarks.length > 0) {
       let airline = 'AC';
       let fareType = '';

@@ -1,0 +1,19 @@
+<div [formGroup]="genericElementGroup" class="btn-group genericbox form-group " dropdown [insideClick]="true">
+    <button id="button-basic" dropdownToggle type="button" class="genericButton float-right dropdown-toggle" role="menu"
+      aria-controls="dropdown-config">
+      <input type="text" class="form-control" #segment formControlName="genericElement" readonly /> <span
+        class="caret"></span>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-config">
+      <li role="menuitem" *ngFor="let item of genericList">
+          <div class="dropdown-item" *ngIf = "item.lineNo === 'All' || item.lineNo === 'None'">
+              <input type="checkbox" [value]="item.lineNo" (change) = 'updateValue()' [checked] = 'item.isChecked' (click) = 'getSelected(item)'/>
+              {{item.freeText}}
+            </div>
+        <div class="dropdown-item" *ngIf = "item.lineNo !== 'All' && item.lineNo !== 'None'">
+          <input type="checkbox" [value]="item.lineNo" (change) = 'updateValue()' [checked] = 'item.isChecked' (click) = 'getSelected(item)'/>
+          {{item.lineNo + ' ' + item.freeText}}
+        </div>
+      </li>
+    </ul>
+  </div>

@@ -90,7 +90,8 @@ Verify Accounting Remarks Are Deleted
 Verify Accounting Remarks Are Written For FOP Cheque For Multiple Passengers
     [Tags]    us7538
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM    RMP/CITIZENSHIP-CA
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
+    ...    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -144,6 +145,7 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
     Enter Credit Card Number    4444333322221111
     Click Save Button
     Click Submit To PNR
+    Sleep    5
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-LEISURE-AMADEUS/-AMT-200.75
@@ -159,7 +161,8 @@ Verify Accounting Remarks Are Written For FOP Credit Card For Multiple Passenger
 Verify Accounting Remarks Are Written For RBC Redemption For Multiple Passengers
     [Tags]    us7537
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-Test@email.com    RMP/CITIZENSHIP-CA
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS U21074 Y 28NOV BCNBSL GK3/ 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-Test@email.com
+    ...    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

@@ -996,22 +996,22 @@ export class SegmentService {
             remText = '';
             switch (cancel.value.reasonACCancel) {
                 case '4':
-                    remText = 'AC Refund Waiver Code - AC24HRRULE';
+                    remText = 'AC24HRRULE';
                     break;
                 case '5':
-                    remText = 'AC Refund Waiver Code - ACDUEDEATH' + cancel.value.relationship;
+                    remText = 'ACDUEDEATH' + cancel.value.relationship;
                     break;
                 case '6':
-                    remText = 'AC Refund Waiver Code - ACFLTIRROP' + cancel.value.acFlightNo;
+                    remText = 'ACFLTIRROP' + cancel.value.acFlightNo;
                     break;
                 case '9':
-                    remText = 'AC Refund Waiver Code - ACUSKEDCHG' + cancel.value.acFlightNo;
+                    remText = 'ACUSKEDCHG' + cancel.value.acFlightNo;
                     break;
                 case '10':
-                    remText = 'AC Refund Waiver Code - ACUDELAY02' + cancel.value.acFlightNo;
+                    remText = 'ACUDELAY02' + cancel.value.acFlightNo;
                     break;
                 case '11':
-                    remText = 'AC Refund Waiver Code - ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
+                    remText = 'ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
                     break;
                 default:
                     break;

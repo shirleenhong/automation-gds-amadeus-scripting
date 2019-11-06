@@ -17,6 +17,7 @@ import { VisaPassportComponent } from './shared/visa-passport/visa-passport.comp
 import { SegmentsComponent } from './passive-segments/segments/segments.component';
 import { PassiveSegmentsComponent } from './passive-segments/passive-segments.component';
 import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itinerary.component';
+import { GenericSelectComponent } from './shared/generic-select/generic-select.component';
 import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.component';
 
 @NgModule({
@@ -33,6 +34,7 @@ import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.c
     SegmentsComponent,
     PassiveSegmentsComponent,
     ItineraryComponent,
+    GenericSelectComponent,
     CancelSegmentComponent
   ],
   imports: [
@@ -61,6 +63,7 @@ import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.c
     SegmentsComponent,
     PassiveSegmentsComponent,
     ItineraryComponent,
+    GenericSelectComponent,
     CancelSegmentComponent
   ]
 })

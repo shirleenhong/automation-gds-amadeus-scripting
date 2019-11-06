@@ -108,6 +108,7 @@ Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR IF CHANGES ARE MADE ENROUTE PLEASE ENSURE YOUR/S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE./S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR PLEASE CALL VIA RAIL AT 1-888-842-7245 TO RECONFIRM YOUR/S${segment_number}    True
+    Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TO RECONFIRM YOUR/S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR TRAIN DEPARTURE/ARRIVAL TIMES./S${segment_number}
     #french
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS/S${segment_number}    True
@@ -191,3 +192,10 @@ Verify Pop-Up Warning Is Displayed
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
     Set Focus To Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     Sleep    2
+
+Add CC As Form Of Payment
+    [Arguments]   ${cc_vendor_code}    ${credit_card_number}   ${exp_date}
+    Select Matrix Form Of Payment    Credit Card
+    Select Credit Card Vendor Code    ${cc_vendor_code}
+    Enter Credit Card Number    ${credit_card_number}
+    Enter Credit Card Expiration Date    ${exp_date}

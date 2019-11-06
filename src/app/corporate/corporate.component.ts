@@ -264,7 +264,8 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
     });
 
-    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined) {
+    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined
+      && this.paymentsComponent.accountingRemark.accountingRemarks.length > 0) {
       if (
         this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
         this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||

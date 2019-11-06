@@ -8,7 +8,7 @@ Add New Command Page
 
 Close CA Migration Window
     Unselect Frame
-    Sleep    5
+    Sleep    8
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
     Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
 

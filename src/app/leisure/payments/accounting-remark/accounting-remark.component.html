@@ -29,7 +29,8 @@
       <td>
         <i class="fas fa-edit" (click)="updateItem(r)" *ngIf="r.supplierCodeName !== 'A22'"></i>
         &nbsp;&nbsp;&nbsp;<i class=" fas fa-trash-alt" (click)="deleteItem(r)"></i>
-        &nbsp;&nbsp;&nbsp;<i class="far fa-copy" (click)="copyItem(r)" *ngIf="r.accountingTypeRemark === '1'"></i>
+        &nbsp;&nbsp;&nbsp;<i class="far fa-copy" (click)="copyItem(r)"
+          *ngIf="r.accountingTypeRemark === '1' || r.accountingTypeRemark === 'NAE'"></i>
       </td>
     </tr>
   </tbody>

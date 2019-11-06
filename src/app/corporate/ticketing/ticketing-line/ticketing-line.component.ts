@@ -77,7 +77,7 @@ export class TicketingLineComponent implements OnInit {
    * Presets the extracted office ID to the OID field.
    */
   private loadOid(): void {
-    const extractedOid = this.extractOidFromBookRemark();
+    const extractedOid = this.pnrService.extractOidFromBookRemark();
     this.ticketForm.get('officeId').setValue(extractedOid);
     this.oidDisplay = extractedOid;
   }
@@ -85,24 +85,6 @@ export class TicketingLineComponent implements OnInit {
   /**
    * Extracts office ID from remarks.
    */
-  private extractOidFromBookRemark(): string {
-    // const remarks = this.pnrService.getRemarksFromGDSByRegex(/BOOK-/g);
-    const BOOK_REMARK_PREFIX = 'BOOK-';
-    const TKT_PREFIX = 'TKT-';
-
-    const remarks = this.pnrService.getRemarkText(BOOK_REMARK_PREFIX);
-    let oid = null;
-
-    const remarkSplitted: Array<string> = remarks.split('/');
-    for (const ctrRemarkSplit of remarkSplitted) {
-      if (ctrRemarkSplit.match(TKT_PREFIX)) {
-        oid = ctrRemarkSplit.replace(TKT_PREFIX, '');
-        break;
-      }
-    }
-
-    return oid;
-  }
 
   private loadDefaultDate() {
     const dateToday = this.DATE_PIPE.transform(new Date(), 'yyyy-MM-dd');

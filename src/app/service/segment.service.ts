@@ -799,6 +799,7 @@ export class SegmentService {
     }
 
     osiCancelRemarks(cancel: any) {
+        this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Cancel OSI';
@@ -855,10 +856,12 @@ export class SegmentService {
         if (nuRemarks !== '0') {
             rmGroup.deleteRemarkByIds.push(nuRemarks);
         }
+
         return rmGroup;
     }
 
     buildCancelRemarks(cancel: any, segmentselected: any) {
+        this.corpRemarks = [];
         this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
         const rmGroup = new RemarkGroup();
@@ -889,23 +892,31 @@ export class SegmentService {
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
         if (hotellook) {
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'withHotel', null, '/HTL SEGMENT INCLUDED IN CANCEL');
+                const pArray = ['CancelDate', 'CancelHotel'];
+                const pValueArray = [dateToday, 'HTL'];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
             } else {
                 remText = dateToday + '/HTL SEGMENT INCLUDED IN CANCEL';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }
         } else {
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'noHotel', null, '/NO HTL SEGMENT INCLUDED IN CANCEL');
+                const pArray = ['CancelDate', 'CancelHotel'];
+                const pValueArray = [dateToday, 'NO HTL'];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
             } else {
                 remText = dateToday + '/NO HTL SEGMENT INCLUDED IN CANCEL';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }
         }
 
-        if (this.pnrService.getSegmentList().length === segmentselected.length) {
+
+        if ((this.pnrService.getSegmentList().length === segmentselected.length && !this.isCorporate) ||
+            (this.isCorporate && this.pnrService.getSegmentList().length === 0)) {
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'allSegment', null, '/CANCELLED/CXLD SEG-ALL');
+                const pArray = ['CancelDate', 'CancelLineNo'];
+                const pValueArray = [dateToday, 'ALL'];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
                 this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'fullCancel', null, '*FULLCXL**');
             } else {
                 remText = dateToday + '/CANCELLED/CXLD SEG-ALL';
@@ -929,13 +940,17 @@ export class SegmentService {
             const preCancel = this.pnrService.getRemarksFromGDS().find(x => x.remarkText.indexOf('/CXLD SEG-PRE') === -1);
             if (prevCancel && preCancel) {
                 if (this.isCorporate) {
-                    this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'preCancel', null, '/CANCELLED/CXLD SEG-PRE');
+                    const pArray = ['CancelDate', 'CancelLineNo'];
+                    const pValueArray = [dateToday, 'PRE'];
+                    this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
                 } else {
                     remText = dateToday + '/CANCELLED/CXLD SEG-PRE';
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                 }
             }
         }
+
+
 
         if (cancel.value.airlineNo || (cancel.value.acFlightNo && cancel.value.reasonACCancel === '6')) {
             let affectedairline = '';
@@ -979,35 +994,34 @@ export class SegmentService {
             remText = '';
             switch (cancel.value.reasonACCancel) {
                 case '4':
-                    remText = 'AC Refund Waiver Code - AC24HRRULE';
+                    remText = 'AC24HRRULE';
                     break;
                 case '5':
-                    remText = 'AC Refund Waiver Code - ACDUEDEATH' + cancel.value.relationship;
+                    remText = 'ACDUEDEATH' + cancel.value.relationship;
                     break;
                 case '6':
-                    remText = 'AC Refund Waiver Code - ACFLTIRROP' + cancel.value.acFlightNo;
+                    remText = 'ACFLTIRROP' + cancel.value.acFlightNo;
                     break;
                 case '9':
-                    remText = 'AC Refund Waiver Code - ACUSKEDCHG' + cancel.value.acFlightNo;
+                    remText = 'ACUSKEDCHG' + cancel.value.acFlightNo;
                     break;
                 case '10':
-                    remText = 'AC Refund Waiver Code - ACUDELAY02' + cancel.value.acFlightNo;
+                    remText = 'ACUDELAY02' + cancel.value.acFlightNo;
                     break;
                 case '11':
-                    remText = 'AC Refund Waiver Code - ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
+                    remText = 'ACCAL2DUTY' + cancel.value.acCancelMonth + cancel.value.acCancelYear;
                     break;
                 default:
                     break;
             }
-        }
-        if (remText) {
-            if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelReasonAC'], [remText], null, null, null, null);
-            } else {
-                rmGroup.remarks.push(this.remarkHelper.getRemark('AC Refund Waiver Code - ' + remText, 'RM', 'X'));
+            if (remText) {
+                if (this.isCorporate) {
+                    this.assignCorpPlaceholders(['CancelReasonAC'], [remText], null, null, null, null);
+                } else {
+                    rmGroup.remarks.push(this.remarkHelper.getRemark('AC Refund Waiver Code - ' + remText, 'RM', 'X'));
+                }
             }
         }
-
 
         segmentselected.forEach(element => {
             rmGroup.deleteSegmentByIds.push(element.lineNo);
@@ -1024,6 +1038,16 @@ export class SegmentService {
         this.writeCorpRirRemarks();
         return rmGroup;
     }
+
+    // getDeletedSegments(segmentselected) {
+    //     const rmGroup = new RemarkGroup();
+    //     rmGroup.group = 'Cancel';
+    //     rmGroup.remarks = new Array<RemarkModel>();
+    //     segmentselected.forEach(element => {
+    //         rmGroup.deleteSegmentByIds.push(element.lineNo);
+    //     });
+    //     return rmGroup;
+    // }
 
     cancelMisSegment() {
         const misSegment = new Array<PassiveSegmentModel>();

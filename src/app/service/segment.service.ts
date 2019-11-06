@@ -881,8 +881,10 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        remText = dateToday + '/' + cancel.value.desc1;
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        if (cancel.value.desc1) {
+            remText = dateToday + '/' + cancel.value.desc1;
+            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        }
 
         if (cancel.value.desc2) {
             remText = dateToday + '/' + cancel.value.desc2;

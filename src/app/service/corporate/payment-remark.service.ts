@@ -24,7 +24,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) {}
+  ) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -91,8 +91,12 @@ export class PaymentRemarkService {
 
       airlineCodeRemark.set('TotalCost', account.baseAmount);
 
-      const segmentrelate: string[] = [];
+      let segmentrelate: string[] = [];
       this.getRemarkSegmentAssociation(account, segmentrelate);
+      if (account.accountingTypeRemark === 'ACPR') {
+        const { segmentAssoc } = this.GetSegmentAssociation(account);
+        segmentrelate = segmentAssoc;
+      }
       // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
 
       this.writeTicketingLine(
@@ -328,16 +332,18 @@ export class PaymentRemarkService {
   }
 
   moveProfile(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     if (accountingRemarks.length > 0) {
-      const airline = 'AC';
+      let airline = 'AC';
       let fareType = '';
       if (accountingRemarks[0].accountingTypeRemark === 'ACPP') {
         fareType = this.getFareType(accountingRemarks[0].fareType);
       }
       if (accountingRemarks[0].accountingTypeRemark === 'ACPR') {
-        if (accountingRemarks[0].airlineCorporatePass.airlineCode === 'AC') {
-          fareType = accountingRemarks[0].fareType;
-        }
+        // if (accountingRemarks[0].airlineCorporatePass.airlineCode === 'AC') {
+        airline = accountingRemarks[0].airlineCorporatePass.airlineCode;
+        fareType = accountingRemarks[0].fareType;
+        // }
       }
       if (fareType !== '') {
         return 'PBN/YTOWL210N/' + airline + ' PASS ' + fareType + '/*';

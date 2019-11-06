@@ -252,8 +252,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         accRemark === 'ACPP' || accRemark === 'ACPPC'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
-          ? (this.accountingRemark.supplierCodeName = 'WJP')
-          : (this.accountingRemark.supplierCodeName = 'PTP');
+            ? (this.accountingRemark.supplierCodeName = 'WJP')
+            : (this.accountingRemark.supplierCodeName = 'PTP');
 
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
@@ -493,13 +493,24 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { airline: 'WN', supplierCode: 'SOA' }
     ];
 
+    const acAirlineSupplierList: Array<any> = [
+      { airline: 'AC', supplierCode: 'ACJ' },
+      { airline: 'WS', supplierCode: 'WJP' },
+      { airline: 'PD', supplierCode: 'PTP' },
+      { airline: '4N', supplierCode: 'A5P' },
+      { airline: '8P', supplierCode: 'PSI' }
+    ];
+
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
       const segmentDetails = this.pnrService.getSegmentList();
       segmentDetails.forEach((segments) => {
         segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {
-            const look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            let look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            if (this.accountingRemark.accountingTypeRemark === 'ACPR') {
+              look = acAirlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            }
             if (look && (supplierCode === '' || supplierCode === look.supplierCode) && segments.segmentType === 'AIR') {
               supplierCode = look.supplierCode;
             } else {
@@ -677,7 +688,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         checkSegment.push(textLine);
       }
     });
-    debugger;
     this.accountingRemark.segments = checkSegment;
     //return checkSegment;
   }

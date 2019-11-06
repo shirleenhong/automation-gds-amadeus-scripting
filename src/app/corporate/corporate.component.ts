@@ -402,9 +402,8 @@ export class CorporateComponent implements OnInit {
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
-
+    remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    remarkCollection.push(this.segmentService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);
@@ -415,15 +414,12 @@ export class CorporateComponent implements OnInit {
         });
       }
     });
-
-
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
-
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

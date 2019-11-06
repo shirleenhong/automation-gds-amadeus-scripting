@@ -677,7 +677,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         checkSegment.push(textLine);
       }
     });
-    debugger;
     this.accountingRemark.segments = checkSegment;
     //return checkSegment;
   }

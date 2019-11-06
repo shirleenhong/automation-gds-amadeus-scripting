@@ -30,19 +30,24 @@
 
     <!-- <div *ngIf="!preCancel" class="row form-group"> -->
     <div *ngIf="isVoid" class="row form-group">
-      <div class="col-4">Void Option: </div>
+      <div class="col-4">Void Option:</div>
       <div class="col-8">
-        <select id="voidOption" class="form-control" formControlName="voidOption" name="voidOption"
-          (change)="changeVoidOption($event.target.value)">
+        <select
+          id="voidOption"
+          class="form-control"
+          formControlName="voidOption"
+          name="voidOption"
+          (change)="changeVoidOption($event.target.value)"
+        >
           <option *ngFor="let item of voidList" [value]="item.itemValue">
-            {{item.itemText}}
+            {{ item.itemText }}
           </option>
         </select>
       </div>
     </div>
 
     <div *ngIf="!isVoid" class="row form-group">
-      <div class="col-4">Select Cancel Follow Up Option: </div>
+      <div class="col-4">Select Cancel Follow Up Option:</div>
       <div class="col-8">
         <select
           id="followUpOption"
@@ -57,7 +62,7 @@
         </select>
       </div>
     </div>
-    <div *ngIf="f.voidOption.value === 'Void Non BSP' || (f.voidOption.value === 'Void BSP' && isVoided) ">
+    <div *ngIf="f.followUpOption.value === 'Void Non BSP' || (f.followUpOption.value === 'Void BSP' && isVoided)">
       <div class="row form-group">
         <div class="col-4"></div>
         <div class="col-4">
@@ -71,63 +76,69 @@
       </div>
     </div>
 
-    <div *ngIf="f.voidOption.value === 'Void BSP'">
-        <div class="row form-group" *ngIf="!isVoided">
-            <div class="col-2"></div>
-            <div class="col-8" style="color: red">Please process void in graphical first then relaunch Cancel/BSP ticket - Void</div>
-         </div>
+    <div *ngIf="f.followUpOption.value === 'Void BSP'">
+      <div class="row form-group" *ngIf="!isVoided">
+        <div class="col-4"></div>
+        <div class="col-8" style="color: red">Please void in graphical first then reprocess cancel BSP ticket-void</div>
+      </div>
 
-         <div *ngIf="isBSP && isVoided">
-            <div class="row form-group">
-              <div class="col-4">Reuse credit card authorization on voided ticket?</div>
-              <div class="col-4">
-                <div class="">Yes/No?</div>
-                <select class="form-control" name="reuseCC" formControlName="reuseCC" id="reuseCC" required>
-                  <option value=""></option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
-              <div class="col-4">
-                <div class="">Authorization:</div>
-                <input type="text" class="form-control" id="authorization" required formControlName="authorization" name="authorization" />
-              </div>
-            </div>
-          </div>
-    </div>
-
-      <div *ngIf="isNonBSP">
+      <div *ngIf="isBSP && isVoided">
         <div class="row form-group">
-          <div class="col-4">Select reverse item:</div>
+          <div class="col-4">Reuse credit card authorization on voided ticket?</div>
           <div class="col-4">
-            <select autofocus id="reverseItem" class="form-control" formControlName="reverseItem" name="reverseItem" required>
-              <option *ngFor="let item of reverseItemList" [value]="item.itemValue">
-                {{ item.itemText }}
-              </option>
+            <div class="">Yes/No?</div>
+            <select class="form-control" name="reuseCC" formControlName="reuseCC" id="reuseCC">
+              <option value=""></option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
             </select>
           </div>
-        </div>
-
-        <div class="row form-group">
-          <div class="col-4">Other Details:</div>
           <div class="col-4">
-            <div class="">Reason 1:</div>
-            <input type="text" class="form-control" id="otherDetails1" formControlName="otherDetails1" name="otherDetails1" maxlength="30" />
-          </div>
-          <div class="col-4">
-            <div class="">Reason 2:</div>
-            <input
-              type="text"
-              maxlength="30"
-              class="form-control"
-              id="otherDetails2"
-              formControlName="otherDetails2"
-              name="otherDetails2"
-            />
+            <div class="">Authorization:</div>
+            <input type="text" required class="form-control" id="authorization" formControlName="authorization" name="authorization" />
           </div>
         </div>
       </div>
-    <div *ngIf="f.voidOption.value !== 'Void BSP' && f.voidOption.value !== 'Void Non BSP'">
+
+      <div *ngIf="isBSP && isVoided">
+        <div class="row form-group">
+          <div class="col-4">Select [vRsn] option:</div>
+          <div class="col-4">
+            <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
+              <option value=""></option>
+              <option value="PASSENGER">Passenger</option>
+              <option value="AGENCY">Agency</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isNonBSP">
+      <div class="row form-group">
+        <div class="col-4">Select reverse item:</div>
+        <div class="col-4">
+          <select autofocus id="reverseItem" class="form-control" formControlName="reverseItem" name="reverseItem">
+            <option *ngFor="let item of reverseItemList" [value]="item.itemValue">
+              {{ item.itemText }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-4">Other Details:</div>
+        <div class="col-4">
+          <div class="">Reason 1:</div>
+          <input type="text" class="form-control" id="otherDetails1" formControlName="otherDetails1" name="otherDetails1" maxlength="30" />
+        </div>
+        <div class="col-4">
+          <div class="">Reason 2:</div>
+          <input type="text" maxlength="30" class="form-control" id="otherDetails2" formControlName="otherDetails2" name="otherDetails2" />
+        </div>
+      </div>
+    </div>
+    <div *ngIf="f.followUpOption.value !== 'Void BSP' && f.followUpOption.value !== 'Void Non BSP'">
       <div class="row form-group">
         <div class="col-4"></div>
         <div class="col-8 note">
@@ -157,7 +168,15 @@
     </div>
 
     <!-- <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !preCancel"> -->
-    <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && f.voidOption.value !== 'Void BSP' && f.voidOption.value !== 'Void Non BSP' && !isVoid">
+    <div
+      *ngIf="
+        f.followUpOption.value !== 'Keep Ticket' &&
+        f.followUpOption.value !== 'Non BSP Refund' &&
+        f.followUpOption.value !== 'Void BSP' &&
+        f.followUpOption.value !== 'Void Non BSP' &&
+        !isVoid
+      "
+    >
       <div *ngIf="!isAC" class="row form-group">
         <div class="col-4">AC Cancel Check:</div>
         <div class="col-8">
@@ -384,4 +403,5 @@
       </div>
     </div>
   </div>
+  <input type="hidden" class="form-control" id="ticketNumber" formControlName="ticketNumber" name="ticketNumber" />
 </form>

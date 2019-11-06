@@ -31,6 +31,7 @@ export class GenericSelectComponent implements OnInit {
   @Input() genericList;
   @Output() passDataParent: EventEmitter<any> = new EventEmitter<any>();
   onTouched: any = () => { };
+  validateFn: any = () => { };
   onChange: any = () => { };
   ngOnInit() {
   }
@@ -38,6 +39,9 @@ export class GenericSelectComponent implements OnInit {
     this.val = val;
     this.onChange(val);
     this.onTouched();
+  }
+  get value() {
+    return this.val;
   }
   writeValue(obj: any): void {
     this.genericElementGroup.get('genericElement').setValue(obj);
@@ -48,6 +52,13 @@ export class GenericSelectComponent implements OnInit {
   }
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.genericElementGroup.get('genericElement').disable();
+    } else {
+      this.genericElementGroup.get('genericElement').enable();
+    }
   }
   updateValue() {
     const selectedEle = [];
@@ -71,6 +82,9 @@ export class GenericSelectComponent implements OnInit {
     for (const ele of this.genericList) {
       ele.isChecked = true;
     }
+  }
+  validate(c: FormControl) {
+    return this.validateFn(c);
   }
   getSelected(data: any) {
     this.passDataParent.emit(data);

@@ -35,6 +35,7 @@ export class ResendInvoiceComponent implements OnInit {
   invoiceGroup: FormGroup;
   ngOnInit() {
     this.invoiceFormGroup = new FormGroup({
+      segmentNo: new FormControl('', []),
       invoiceNo: new FormControl('', [Validators.required]),
       eTicketNo: new FormControl('', [Validators.required]),
       feesAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
@@ -237,7 +238,7 @@ export class ResendInvoiceComponent implements OnInit {
     return false;
   }
   async generateInvoice() {
-    const invCommand = 'INV/ZX/S' + this.selectedElementsUI.selectedSegments + 'RT';
+    const invCommand = 'INV/ZX/S' + this.selectedElementsUI.selectedSegments + '/RT';
     await this.invoiceRmkService.sendINVCommand(invCommand);
     const rtfRes = await this.invoiceRmkService.sendRTFCommand();
     const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);

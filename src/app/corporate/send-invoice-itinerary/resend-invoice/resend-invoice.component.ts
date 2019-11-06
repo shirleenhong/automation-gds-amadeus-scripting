@@ -37,8 +37,8 @@ export class ResendInvoiceComponent implements OnInit {
     this.invoiceFormGroup = new FormGroup({
       invoiceNo: new FormControl('', [Validators.required]),
       eTicketNo: new FormControl('', [Validators.required]),
-      feesAccountingNo: new FormControl('', [Validators.required]),
-      nonBspAccountingNo: new FormControl('', [Validators.required]),
+      feesAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      nonBspAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
       emailAddresses: new FormArray([this.createFormGroup()]),
     });
     this.resendInvoiceProcess();

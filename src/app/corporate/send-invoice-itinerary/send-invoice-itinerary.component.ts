@@ -15,7 +15,7 @@ export class SendInvoiceItineraryComponent implements OnInit {
   }
   checkValid() {
     this.utilHelper.validateAllFields(this.resendInvoiceComponent.invoiceFormGroup);
-    if (this.resendInvoiceComponent.invoiceFormGroup.touched && !this.resendInvoiceComponent.invoiceFormGroup.valid) {
+    if (!this.resendInvoiceComponent.invoiceFormGroup.valid) {
       return false;
     }
     return true;

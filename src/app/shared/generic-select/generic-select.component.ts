@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -19,7 +19,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, NG_VALIDATORS, NG_VALU
     /// { provide: BsDropdownConfig, useValue: { autoClose: false } }
   ]
 })
-export class GenericSelectComponent implements OnInit, OnChanges {
+export class GenericSelectComponent implements OnInit {
   genericElementGroup: FormGroup;
   constructor(fb: FormBuilder) {
     this.genericElementGroup = fb.group({
@@ -27,16 +27,12 @@ export class GenericSelectComponent implements OnInit, OnChanges {
     });
   }
   val = '';
-  
   elementSelected = [];
   @Input() genericList;
   @Output() passDataParent: EventEmitter<any> = new EventEmitter<any>();
   onTouched: any = () => { };
   onChange: any = () => { };
   ngOnInit() {
-  }
-  ngOnChanges() {
-    // this.updateValue()
   }
   set value(val) {
     this.val = val;
@@ -46,6 +42,9 @@ export class GenericSelectComponent implements OnInit, OnChanges {
   writeValue(obj: any): void {
     this.genericElementGroup.get('genericElement').setValue(obj);
     this.val = obj;
+  }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
   }
   registerOnTouched(fn: any): void {
     this.onTouched = fn;

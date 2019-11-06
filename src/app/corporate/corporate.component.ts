@@ -35,6 +35,7 @@ import { CounselorDetail } from '../globals/counselor-identity';
 import { VisaPassportRemarkService } from '../service/visa-passport-remark.service';
 import { PassiveSegmentsComponent } from '../passive-segments/passive-segments.component';
 import { SegmentService } from '../service/segment.service';
+import { SendInvoiceItineraryComponent } from './send-invoice-itinerary/send-invoice-itinerary.component';
 import { CorpCancelComponent } from './corp-cancel/corp-cancel.component';
 import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
@@ -69,6 +70,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
   @ViewChild(PassiveSegmentsComponent)
+  @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
 
@@ -512,7 +514,7 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-
+    
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
@@ -565,6 +567,49 @@ export class CorporateComponent implements OnInit {
       },
       (error) => {
         console.log(JSON.stringify(error));
+      }
+    );
+  }
+  async sendInvoice() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'sendInvoice';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async ReSendInvoice() {
+    if (!this.sendInvoiceItineraryComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Sending Invoice...');
+    const resendCompData = this.sendInvoiceItineraryComponent.resendInvoiceComponent;
+    this.invoiceRemarkService.addEmailRemarks(resendCompData.invoiceFormGroup);
+    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(resendCompData.selectedElementsUI,
+      resendCompData.invoiceList);
+    this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
+    this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
+    this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);
+    const commandList = ['QE/YTOWL210E/66C1'];
+    await this.rms.submitToPnr(null, deletedInvoiceLines, commandList).then(
+      () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
       }
     );
   }

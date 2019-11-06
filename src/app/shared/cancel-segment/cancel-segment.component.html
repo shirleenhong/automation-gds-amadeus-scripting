@@ -85,7 +85,8 @@
     </div>
 
     <!-- <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !preCancel"> -->
-    <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !isVoid">
+    <div
+      *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && f.followUpOption.value !== 'BSPKT' && !isVoid">
       <div *ngIf="!isAC" class="row form-group">
         <div class="col-4">AC Cancel Check: </div>
         <div class="col-8">

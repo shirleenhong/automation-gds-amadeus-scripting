@@ -32,15 +32,39 @@ export class TicketRemarkService {
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper,
     private amdeusQueue: AmadeusQueueService
-  ) {}
+  ) { }
+  /**
+   * Method to add Tktline for BSP and NonBsp Cancel
+   */
+  public cancelTicketRemark(): RemarkGroup {
+    const datePipe = new DatePipe('en-US');
+    const ticketRemark = new TicketModel();
+    ticketRemark.oid = this.pnrService.extractOidFromBookRemark();
+    ticketRemark.tktDate = datePipe.transform(Date.now(), 'ddMMM');
+    ticketRemark.pnrOnHold = false;
+    ticketRemark.tkLine = 'CXL';
+    return this.writeTicketRemark(ticketRemark);
+  }
 
   /**
    * Method that cleansup existing TK remark, then invokes another method to write new.
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
-  public submitTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
+  public submitTicketRemark(ticketRemark: TicketModel, fg?: FormGroup): RemarkGroup {
     this.cleanupTicketRemark();
     return this.writeTicketRemark(ticketRemark, fg);
+  }
+
+  async deleteTicketingLine() {
+    const linesToDelete: Array<number> = new Array();
+
+    const existingTkLineNum = this.pnrService.getTkLineNumber();
+    if (existingTkLineNum >= 0) {
+      linesToDelete.push(existingTkLineNum);
+    }
+    if (linesToDelete.length > 0) {
+      smartScriptSession.send('XE' + linesToDelete.join(','));
+    }
   }
 
   /**
@@ -73,10 +97,10 @@ export class TicketRemarkService {
    * @param ticketRemark The ticket data from screen.
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
-  private writeTicketRemark(ticketRemark: TicketModel, fg: FormGroup): RemarkGroup {
+  private writeTicketRemark(ticketRemark: TicketModel, fg?: FormGroup): RemarkGroup {
     const remGroup = new RemarkGroup();
     let pnrOnhold = ticketRemark.pnrOnHold;
-    if (fg.get('noApproval').value === false) {
+    if (fg && fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);
       if (this.approvalRuleService.getTicketApproval(index).length > 0) {
         pnrOnhold = true;
@@ -89,10 +113,12 @@ export class TicketRemarkService {
       ticketRemark.oid +
       '/Q8C1' +
       this.appendTkLine(pnrOnhold, ticketRemark.tkLine);
-
     remGroup.cryptics.push(remark);
 
-    this.writeOnHoldRemark(ticketRemark.pnrOnHold);
+    if (fg) {
+      this.writeOnHoldRemark(ticketRemark.pnrOnHold);
+    }
+
 
     return remGroup;
   }

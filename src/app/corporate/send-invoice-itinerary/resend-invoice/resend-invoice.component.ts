@@ -63,6 +63,7 @@ export class ResendInvoiceComponent implements OnInit {
       };
       this.invoiceList.push(selectAllObj);
       this.addInvoicesToList(fiElements);
+      this.invoiceFormGroup.get('segmentNo').clearValidators();
     } else {
       await this.invoiceProcess();
     }
@@ -76,6 +77,7 @@ export class ResendInvoiceComponent implements OnInit {
     if (invoiceElements.length > 0) {
       this.showInvoiceList = true;
       this.addInvoiceFromGDS(invoiceElements);
+      this.invoiceFormGroup.get('segmentNo').clearValidators();
     } else {
       this.showSegments = true;
     }

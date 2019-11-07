@@ -9,7 +9,9 @@ Resource          payment.robot
 Resource          ticketing.robot
 Resource          reporting.robot
 Resource          remarks.robot
+Resource          cancel_segments.robot
 Resource          queues.robot
+Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
@@ -17,6 +19,7 @@ ${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::s
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
 ${button_cancel_segments}    //button[contains(text(), 'Cancel Segments')]
+${button_cancel_segment}    //button[@class='cancelsegment']
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
@@ -43,6 +46,7 @@ ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
 @{add_segment_pages}    Passive Segment    Add Passive Segment
+@{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
@@ -84,11 +88,14 @@ Click Full Wrap
     [Teardown]    Take Screenshot
     
 Click Cancel Segments
+    Sleep    5
     Wait Until Page Contains Element    ${button_cancel_segments}     180
-    Click Element     ${button_cancel_segments}
+    Click Element At Coordinates    ${button_cancel_segments}    0    0
     Wait Until Element Is Visible    ${input_requestor}     30
-    Set Test Variable    ${current_page}    Full Wrap PNR
+    Set Test Variable    ${current_page}    Cancel Segments
     Set Test Variable    ${pnr_submitted}   no
+    Set Test Variable    ${non_bsp_ticket_credit_complete}    no
+    Set Test Variable    ${cancel_segments_complete}    no
 
 Click Itinerary And Queue
     Wait Until Page Contains Element   ${button_full_wrap}    180 
@@ -149,6 +156,16 @@ Click Submit To PNR
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${pnr_submitted}    yes
     
+Click Cancel Segment Button 
+   Wait Until Page Contains Element    ${button_cancel_segment}     10
+   Scroll Element Into View    ${button_cancel_segment}
+   Click Element    ${button_cancel_segment}
+   Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+   Wait Until Element Is Visible    ${button_full_wrap}    180
+   Set Test Variable    ${current_page}     CWT Corporate
+   Sleep    5
+   Close CA Corporate Test
+    
 Click Back To Main Menu
     Wait Until Element Is Visible    ${button_main_menu}
     Click Element    ${button_main_menu}
@@ -203,9 +220,11 @@ Navigate To Page ${destination_page}
      ${to_add_segment}    Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${destination_page}
      ${to_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${destination_page}
      ${to_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${destination_page}
+     ${to_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${destination_page}
      Set Test Variable    ${to_add_segment}    
      Set Test Variable    ${to_full_wrap}
      Set Test Variable    ${to_itinerary_and_queue}
+     Set Test Variable    ${to_cancel_segments}
      : FOR     ${i}    IN RANGE   1    2
      \    ${i}    Evaluate    ${i} + 1
      \    Run Keyword If    "${current_page}" == "Amadeus"     Open CA Corporate Test
@@ -214,6 +233,7 @@ Navigate To Page ${destination_page}
      \    Run Keyword If    "${to_add_segment}" == "True"    Navigate From Add Segment    ${destination_page}
      \    Run Keyword If    "${to_full_wrap}" == "True"    Navigate From Full Wrap    ${destination_page}
      \    Run Keyword If    "${to_itinerary_and_queue}" == "True"    Navigate From Itinerary And Queue    ${destination_page}
+     \    Run Keyword If    "${to_cancel_segments}" == "True"    Navigate From Cancel Segments    ${destination_page}
      \    Run Keyword If    "${current_page}" == "Cryptic Display" and "${destination_page}" != "Cryptic Display"     Switch To Command Page
      \    Run Keyword If    "${current_page}" == "Add Accounting Line" and "${destination_page}" == "Fees"    Click Fees Panel
      \    Exit For Loop If    "${current_page}" == "${destination_page}" 
@@ -224,8 +244,13 @@ Navigate From Corp
      Run Keyword If    "${to_add_segment}" == "True"    Click Add Segment From Main Menu
      ...    ELSE IF    "${to_full_wrap}" == "True"    Click Full Wrap
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
-     ...    ELSE IF    "${destination_page}" == "Cancel Segments"    Click Cancel Segments
+     ...    ELSE IF    "${to_cancel_segments}" == "True"    Click Cancel Segments
      ...    ELSE    Close CA Corporate Test
+
+Navigate From Cancel Segments
+    [Arguments]    ${destination_page}
+    Run Keyword If    "${destination_page}" == "Cancel Segments"    Click Cancel Segments Tab     
+    ...    ELSE IF    "${destination_page}" == "NonBSP Ticket Credit"    Click NonBSP Ticket Credit Tab
 
 Navigate From Add Segment
     [Arguments]    ${destination_page}
@@ -336,9 +361,14 @@ Finish PNR
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}
-    ...    ELSE IF    "${pnr_submitted}" == "no" and "${current_page}" == "Cancel Segments"       Click Submit To PNR    ${close_corporate_test}    ${queueing}
-    ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}  
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${current_page}" == "Cancel Segments"       Fill Up Required And Cancel Segments
+    ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
+
+Fill Up Required And Cancel Segments
+     Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
+     Run Keyword If     "${non_bsp_ticket_credit_complete}" == "no"    Fill Up NonBSP Ticket Credit With Default Values
+     Click Cancel Segment Button
     
 Submit To PNR
     [Arguments]    ${close_corporate_test}=yes    ${queueing}=no 
@@ -536,6 +566,7 @@ Verify Remarks Are Not Found In The PNR
     
 Complete The PNR With Default Values
     Sleep    5
+    Enter Cryptic Command    RFCWTTEST
+    Enter Cryptic Command    ER
+    Enter Cryptic Command    ER
     Enter Cryptic Command    RT
-    Navigate To Page Reporting Remarks
-    Submit To PNR    close_corporate_test=no

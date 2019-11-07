@@ -374,6 +374,7 @@ export class CorporateComponent implements OnInit {
     const getSelected = cancel.submit();
 
     // if (getSelected.length >= 1) {
+    debugger;
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.corpRemarkService.BuildRemarks(osiCollection);
     await this.corpRemarkService.cancelOSIRemarks().then(
@@ -394,6 +395,16 @@ export class CorporateComponent implements OnInit {
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
+
+    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
+      cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
+      await this.ticketRemarkService.deleteTicketingLine().then(async () => {
+        const canceltktl = this.ticketRemarkService.cancelTicketRemark();
+        if (canceltktl) {
+          canceltktl.cryptics.forEach((c) => commandList.push(c));
+        }
+      });
+    }
 
     getSelected.forEach((element) => {
       forDeletion.push(element.lineNo);
@@ -422,6 +433,7 @@ export class CorporateComponent implements OnInit {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
+
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;

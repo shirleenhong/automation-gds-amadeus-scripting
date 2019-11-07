@@ -992,6 +992,7 @@ export class SegmentService {
             }
         }
 
+        debugger;
         if (cancel.value.reasonACCancel) {
             remText = '';
             switch (cancel.value.reasonACCancel) {

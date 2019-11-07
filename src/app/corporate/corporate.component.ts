@@ -395,6 +395,16 @@ export class CorporateComponent implements OnInit {
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
 
+    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
+      cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
+      await this.ticketRemarkService.deleteTicketingLine().then(async () => {
+        const canceltktl = this.ticketRemarkService.cancelTicketRemark();
+        if (canceltktl) {
+          canceltktl.cryptics.forEach((c) => commandList.push(c));
+        }
+      });
+    }
+
     getSelected.forEach((element) => {
       forDeletion.push(element.lineNo);
     });
@@ -417,11 +427,14 @@ export class CorporateComponent implements OnInit {
         });
       }
     });
+
+    this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
+
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;
@@ -510,7 +523,7 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-    
+
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;

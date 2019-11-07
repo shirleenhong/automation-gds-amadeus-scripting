@@ -18,7 +18,7 @@ export class CorpCancelRemarkService {
     private remarkHelper: RemarkHelper,
     private queService: AmadeusQueueService,
     private pnrService: PnrService
-  ) {}
+  ) { }
 
   WriteNonBspTicketCredit(group: FormGroup) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
@@ -134,6 +134,27 @@ export class CorpCancelRemarkService {
     rem.relatedSegments = segmentrelate;
     return rem;
   }
+
+  writeAquaTouchlessRemark(cancel: any) {
+    if (cancel.value.followUpOption === 'BSPKT' ||
+      cancel.value.followUpOption === 'NONBSPKT') {
+      const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
+      const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
+      let value = '';
+      if (bbExist) {
+        if (remarkText !== '') {
+          const regex = /(?<BB>\d(.*))/g;
+          const match = regex.exec(remarkText);
+          regex.lastIndex = 0;
+          if (match !== null) {
+            value = match[0];
+            this.createRemarks(['MatrixLineBB'], [value]);
+          }
+        }
+      }
+    }
+  }
+
 
   private queueNonBspTicketCredit() {
     this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));

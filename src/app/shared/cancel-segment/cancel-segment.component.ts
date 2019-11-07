@@ -5,6 +5,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
+import { TicketModel } from 'src/app/models/pnr/ticket.model';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
 // import { MessageComponent } from '../message/message.component';
@@ -41,6 +42,7 @@ export class CancelSegmentComponent implements OnInit {
   preCancel = false;
   isCorporate = false;
   isVoid = false;
+  cancelTkModel = new TicketModel();
   // modalRef: BsModalRef;
   isBSP = false;
   isNonBSP = false;
@@ -192,14 +194,23 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE', itemValue: '5' }
     ];
 
-    this.followUpOptionList = [
-      { itemText: '', itemValue: '' },
-      { itemText: 'BSP Queue for Refund', itemValue: 'BSP Queue' },
-      { itemText: 'Non BSP Refund Recall Commission Request', itemValue: 'Non BSP Refund' },
-      { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' },
-      { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
-      { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' }
-    ];
+    if (this.isCorporate) {
+      this.followUpOptionList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'BSP Queue for Refund', itemValue: 'BSP Queue' },
+        { itemText: 'BSP Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'BSPKT' },
+        { itemText: 'Non BSP Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'NONBSPKT' },
+        { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
+        { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' }
+      ];
+    } else {
+      this.followUpOptionList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'BSP Queue for Refund', itemValue: 'BSP Queue' },
+        { itemText: 'Non BSP Refund Recall Commission Request', itemValue: 'Non BSP Refund' },
+        { itemText: 'Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'Keep Ticket' }
+      ];
+    }
 
     this.voidList = [
       { itemText: '', itemValue: '' },

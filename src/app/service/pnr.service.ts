@@ -1621,4 +1621,24 @@ export class PnrService {
         }
         return val;
     }
+
+    getTktNumber(): string {
+        let ticket: string;
+        if (this.pnrObj.faElements.length > 0) {
+            for (const fa of this.pnrObj.faElements) {
+                if (fa.freeFlowText.split('/')[1].substr(1, 1) === 'V') {
+                  ticket = fa.freeFlowText.split('/')[0].split(' ')[1];
+                } else { return ''; }
+            }
+            return ticket;
+        }
+    }
+
+    getBookingInfo(): string {
+        if (this.pnrObj.tkElements.length > 0) {
+           if (this.pnrObj.tkElements[0].ticketingOfficeID === 'YYCWL2102') {
+               return 'PASSENGER';
+           } else { return ''; }
+        }
+    }
 }

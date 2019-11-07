@@ -231,11 +231,9 @@ export class SegmentService {
                     remarks.set(element.placeholder[i], element.placeholdervalue[i]);
                 }
             }
-
             if (element.condition) {
                 condition.set(element.condition, element.conditionValue);
             }
-
             this.rms.createPlaceholderValues(remarks, condition, element.segment, null, element.staticText);
         });
     }
@@ -881,8 +879,10 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        remText = dateToday + '/' + cancel.value.desc1;
-        rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        if (cancel.value.desc1) {
+            remText = dateToday + '/' + cancel.value.desc1;
+            rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+        }
 
         if (cancel.value.desc2) {
             remText = dateToday + '/' + cancel.value.desc2;

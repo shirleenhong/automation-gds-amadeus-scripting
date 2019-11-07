@@ -374,7 +374,6 @@ export class CorporateComponent implements OnInit {
     const getSelected = cancel.submit();
 
     // if (getSelected.length >= 1) {
-    debugger;
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.corpRemarkService.BuildRemarks(osiCollection);
     await this.corpRemarkService.cancelOSIRemarks().then(
@@ -428,6 +427,8 @@ export class CorporateComponent implements OnInit {
         });
       }
     });
+
+    this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
@@ -522,7 +523,7 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-    
+
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;

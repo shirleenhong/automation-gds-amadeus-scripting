@@ -6,6 +6,8 @@ import { EscRemarksComponent } from 'src/app/corporate/corp-remarks/esc-remarks/
 import { DatePipe } from '@angular/common';
 import { AddContactComponent } from '../../corporate/corp-remarks/add-contact/add-contact.component';
 import { FormArray, FormGroup } from '@angular/forms';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 declare var smartScriptSession: any;
 
 @Injectable({
@@ -14,7 +16,9 @@ declare var smartScriptSession: any;
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
-  constructor(private pnrService: PnrService, private rms: RemarksManagerService) {}
+  constructor(private pnrService: PnrService,
+              private queService: AmadeusQueueService,
+              private rms: RemarksManagerService) { }
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -103,6 +107,9 @@ export class InvoiceRemarkService {
     const tempRTTNRes = await smartScriptSession.send(command);
     return await smartScriptSession.getFullCryptic(tempRTTNRes.Response);
   }
+  async sendRFCommand(command) {
+    return await smartScriptSession.send(command);
+  }
   addETicketRemarks(selectedUIElements, eTicketsList) {
     const selectedETickets = selectedUIElements.selectedETickets;
     if (selectedETickets === 'All') {
@@ -143,15 +150,17 @@ export class InvoiceRemarkService {
     for (const line of selectedFeeLines) {
       for (const rmk of feeRemarks) {
         const feeMap = new Map<string, string>();
+        let segAssociations = [];
+        if (rmk.associations) {
+          segAssociations = this.getSegmentAssociations(rmk.associations);
+        }
         if (line === rmk.ticketline && rmk.remarkText.indexOf('FEE/-') > -1) {
           rmk.remarkText = rmk.remarkText.replace('FEE/-', '').trim();
           feeMap.set('FeesPlaceholder', rmk.remarkText);
-          const segAssociations = this.getSegmentAssociations(rmk.associations);
           this.rms.createPlaceholderValues(feeMap, null, segAssociations);
         } else if (line === rmk.ticketline && rmk.remarkText.indexOf('SFC/-') > -1) {
           rmk.remarkText = rmk.remarkText.replace('SFC/-', '').trim();
           feeMap.set('SfcPlaceholder', rmk.remarkText);
-          const segAssociations = this.getSegmentAssociations(rmk.associations);
           this.rms.createPlaceholderValues(feeMap, null, segAssociations);
         }
       }
@@ -159,8 +168,8 @@ export class InvoiceRemarkService {
   }
   getSegmentAssociations(associations) {
     const segAssociations = [];
-    for(const assc of associations) {
-      if(assc.segmentType === 'ST') {
+    for (const assc of associations) {
+      if (assc.segmentType === 'ST') {
         segAssociations.push(assc.tatooNumber);
       }
     }
@@ -174,11 +183,15 @@ export class InvoiceRemarkService {
         if (line === rmk.nonBspLineNum) {
           rmk.nonBspRmk = rmk.nonBspRmk.replace('MAC/-', '').trim();
           nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk);
-          const segAssociations = this.getSegmentAssociations(rmk.associations);
+          let segAssociations = [];
+          if (rmk.associations) {
+            segAssociations = this.getSegmentAssociations(rmk.associations);
+          }
           this.rms.createPlaceholderValues(nonBspMap, null, segAssociations);
         }
       }
     }
+    this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 66, 1));
   }
   getDeletedInvoiceLines(selectedUIElements, invoiceList) {
     const deletedInvoices = new Array<string>();

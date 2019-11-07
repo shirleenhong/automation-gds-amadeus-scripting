@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
 import { DDBService } from 'src/app/service/ddb.service';
+import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-select.component';
 @Component({
   selector: 'app-resend-invoice',
   templateUrl: './resend-invoice.component.html',
@@ -33,13 +34,14 @@ export class ResendInvoiceComponent implements OnInit {
   add = true;
   listEmail: Array<string>;
   invoiceGroup: FormGroup;
+  @ViewChild(SegmentSelectComponent) segementSelectComponent: SegmentSelectComponent;
   ngOnInit() {
     this.invoiceFormGroup = new FormGroup({
-      segmentNo: new FormControl('', []),
-      invoiceNo: new FormControl('', [Validators.required]),
-      eTicketNo: new FormControl('', [Validators.required]),
-      feesAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      nonBspAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      segmentNo: new FormControl('', [Validators.required]),
+      invoiceNo: new FormControl('', []),
+      eTicketNo: new FormControl('', []),
+      feesAccountingNo: new FormControl('', []),
+      nonBspAccountingNo: new FormControl('', []),
       emailAddresses: new FormArray([this.createFormGroup()]),
     });
     this.resendInvoiceProcess();
@@ -67,6 +69,7 @@ export class ResendInvoiceComponent implements OnInit {
   }
   async invoiceProcess() {
     const invCommand = 'INV/ZX/RT';
+    await this.invoiceRmkService.sendRFCommand('RFCWTSCRIPT');
     await this.invoiceRmkService.sendINVCommand(invCommand);
     const rtfRes = await this.invoiceRmkService.sendRTFCommand();
     const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);
@@ -238,7 +241,9 @@ export class ResendInvoiceComponent implements OnInit {
     return false;
   }
   async generateInvoice() {
-    const invCommand = 'INV/ZX/S' + this.selectedElementsUI.selectedSegments + '/RT';
+    this.invoiceFormGroup.controls.segmentNo.setValue(this.segementSelectComponent.segmentGroup.controls.segment.value);
+    await this.invoiceRmkService.sendRFCommand('RFCWTSCRIPT');
+    const invCommand = 'INV/ZX/S' + this.invoiceFormGroup.controls.segmentNo.value + '/RT';
     await this.invoiceRmkService.sendINVCommand(invCommand);
     const rtfRes = await this.invoiceRmkService.sendRTFCommand();
     const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);

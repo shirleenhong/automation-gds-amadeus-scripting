@@ -1424,30 +1424,17 @@ export class PnrService {
         return false;
     }
 
-    getTicketedSegments(): string[] {
-        const segmentTatooNumbers = [];
+    getVoidedTicketedSegments() {
+        const ticketList = [];
         for (const ticketed of this.pnrObj.faElements) {
-            const s = [];
-            ticketed.fullNode.referenceForDataElement.reference.forEach(ref => {
-                if (ref.qualifier === 'ST') {
-                    s.push(ref.number);
-                }
-            });
-            segmentTatooNumbers.push(s);
+            ticketList.push({
+                // tslint:disable-next-line: max-line-length
+                freeFlowText: ticketed.freeFlowText.split('/')[0] + ' / ' + ticketed.freeFlowText.split('/')[1] + ' / ' + ticketed.freeFlowText.split('/')[2],
+                tatooNo: ticketed.tatooNumber,
+                segmentReference: ticketed.fullNode.referenceForDataElement
+              });
         }
-        const segmentLines = [];
-        segmentTatooNumbers.forEach(tatoos => {
-            const s = [];
-            tatoos.forEach(tatoo => {
-                const segment = this.segments.filter(seg => seg.tatooNo === tatoo);
-                if (segment && segment.length > 0) {
-                    s.push(segment[0].lineNo);
-                }
-            });
-            segmentLines.push(s.join(','));
-        });
-
-        return segmentLines;
+        return ticketList;
     }
 
 

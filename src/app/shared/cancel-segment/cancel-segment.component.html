@@ -62,7 +62,7 @@
         </select>
       </div>
     </div>
-    <div *ngIf="f.followUpOption.value === 'Void Non BSP' || (f.followUpOption.value === 'Void BSP' && isVoided)">
+    <div *ngIf="f.followUpOption.value === 'Void Non BSP' || f.followUpOption.value === 'Void BSP'">
       <div class="row form-group">
         <div class="col-4"></div>
         <div class="col-4">
@@ -77,12 +77,27 @@
     </div>
 
     <div *ngIf="f.followUpOption.value === 'Void BSP'">
-      <div class="row form-group" *ngIf="!isVoided">
-        <div class="col-4"></div>
-        <div class="col-8" style="color: red">Please void in graphical first then reprocess cancel BSP ticket-void</div>
+      <div class="row form-group">
+        <div class="col-4">Select Voided Tickets:</div>
+        <div class="col-8">
+          <label>
+            <div formArrayName="ticketVoidList" *ngFor="let name of this.cancelForm.controls.ticketVoidList['controls']; let i = index">
+              <input type="checkbox" [formControlName]="i" (change)="checkTicket(i, ticketVoidList[i].freeFlowText)" />
+              {{ ticketVoidList[i].freeFlowText }}
+            </div>
+          </label>
+        </div>
       </div>
-
-      <div *ngIf="isBSP && isVoided">
+        <div class="row form-group" *ngIf="hasUnvoided">
+            <div class="col-4"></div>
+            <div class="col-8">
+              <label style="color: red">
+                   Please void selected ticket(s) in graphical first
+              </label>
+            </div>
+        </div>
+      <input type="hidden" class="form-control" id="ticketList" formControlName="ticketList" name="ticketList" />
+      <div *ngIf="isBSP">
         <div class="row form-group">
           <div class="col-4">Reuse credit card authorization on voided ticket?</div>
           <div class="col-4">
@@ -95,21 +110,19 @@
           </div>
           <div class="col-4">
             <div class="">Authorization:</div>
-            <input type="text" required class="form-control" id="authorization" formControlName="authorization" name="authorization" />
+            <input type="text" class="form-control" id="authorization" formControlName="authorization" name="authorization" />
           </div>
         </div>
       </div>
 
-      <div *ngIf="isBSP && isVoided">
-        <div class="row form-group">
-          <div class="col-4">Select [vRsn] option:</div>
-          <div class="col-4">
-            <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
-              <option value=""></option>
-              <option value="PASSENGER">Passenger</option>
-              <option value="AGENCY">Agency</option>
-            </select>
-          </div>
+      <div class="row form-group">
+        <div class="col-4">Select vRsn option:</div>
+        <div class="col-4">
+          <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
+            <option value=""></option>
+            <option value="PASSENGER">Passenger</option>
+            <option value="AGENCY">Agency</option>
+          </select>
         </div>
       </div>
     </div>
@@ -403,5 +416,4 @@
       </div>
     </div>
   </div>
-  <input type="hidden" class="form-control" id="ticketNumber" formControlName="ticketNumber" name="ticketNumber" />
 </form>

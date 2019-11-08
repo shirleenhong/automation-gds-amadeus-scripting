@@ -1635,6 +1635,20 @@ export class PnrService {
         return val;
     }
 
+    getVoidedTicketedSegments() {
+        const ticketList = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            ticketList.push({
+                // tslint:disable-next-line: max-line-length
+                freeFlowText: ticketed.freeFlowText.split('/')[0] + ' / ' + ticketed.freeFlowText.split('/')[1] + ' / ' + ticketed.freeFlowText.split('/')[2],
+                tatooNo: ticketed.tatooNumber,
+                segmentReference: ticketed.fullNode.referenceForDataElement
+              });
+        }
+        return ticketList;
+    }
+
+
     getTktNumber(): string {
         let ticket: string;
         if (this.pnrObj.faElements.length > 0) {

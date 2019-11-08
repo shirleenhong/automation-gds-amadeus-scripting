@@ -11,6 +11,7 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          cancel_segments.robot
 Resource          queues.robot
+Resource          invoice.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
@@ -245,6 +246,7 @@ Navigate From Corp
      ...    ELSE IF    "${to_full_wrap}" == "True"    Click Full Wrap
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE IF    "${to_cancel_segments}" == "True"    Click Cancel Segments
+     ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments
@@ -566,7 +568,15 @@ Verify Remarks Are Not Found In The PNR
     
 Complete The PNR With Default Values
     Sleep    5
-    Enter Cryptic Command    RFCWTTEST
-    Enter Cryptic Command    ER
-    Enter Cryptic Command    ER
     Enter Cryptic Command    RT
+    Navigate To Page Reporting Remarks
+    Submit To PNR    close_corporate_test=no  
+
+Click Send Invoice
+    Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
+    Click Element     ${button_send_invoice_itinerary} 
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Send Invoice/Itinerary
+    Set Test Variable    ${pnr_submitted}   no

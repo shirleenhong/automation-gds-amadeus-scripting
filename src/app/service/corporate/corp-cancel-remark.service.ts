@@ -45,10 +45,10 @@ export class CorpCancelRemarkService {
           );
           this.createRemarks(['Commission'], [group.get('commission').value]);
           if (group.get('freeFlow1').value) {
-            remarkList.push(this.remarkHelper.createRemark(group.get('freeFlow1').value, 'RM', 'X'));
+            remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow1').value, 'RM', 'X'));
           }
           if (group.get('freeFlow2').value) {
-            remarkList.push(this.remarkHelper.createRemark(group.get('freeFlow2').value, 'RM', 'X'));
+            remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow2').value, 'RM', 'X'));
           }
         }
         return { remarks: remarkList, commands: [] };

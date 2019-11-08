@@ -182,9 +182,9 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Written In The PNR    /TKT NBR-112233 CPNS-7654321
     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
     Verify Specific Remark Is Not Written In The PNR    /THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL
-    # Close Cryptic Display Window
-    # Logout To Amadeus Sell Connect
-    # [Teardown]    Close Browser
+    Close Cryptic Display Window
+    Logout To Amadeus Sell Connect
+    [Teardown]    Close Browser
 
 Verify That RMX Cancel Remarks For AC And UA Are Written
     [Tags]    us8214    us8882    us10965

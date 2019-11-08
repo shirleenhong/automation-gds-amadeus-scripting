@@ -82,7 +82,26 @@
     </div>
   </div>
 </div>
-
+<div *ngIf="workflow === 'sendInvoice'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i> Send Invoice and Itinerary
+        <span class="cwt-logo"></span>
+      </div>
+      <app-send-invoice-itinerary></app-send-invoice-itinerary>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click) = "ReSendInvoice()">
+        Send Invoice
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
 
 <div *ngIf="workflow === 'segment'">
   <accordion>
@@ -143,7 +162,7 @@
       </button>
     </div>
     <div>
-      <button class="leisureButton btnMenu">
+      <button class="leisureButton btnMenu" (click) = 'sendInvoice()'>
         Send Invoice/Itinerary
       </button>
     </div>

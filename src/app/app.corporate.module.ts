@@ -34,8 +34,11 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
+import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
+import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
 import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
 import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
+import { NonBspTicketCreditComponent } from './corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 
 @NgModule({
   declarations: [
@@ -69,8 +72,11 @@ import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.compone
     QueueComponent,
     DocumentPnrComponent,
     EscRemarksComponent,
+    SendInvoiceItineraryComponent,
+    ResendInvoiceComponent,
     AddContactComponent,
-    CorpCancelComponent
+    CorpCancelComponent,
+    NonBspTicketCreditComponent
   ],
   imports: [
     BrowserModule,

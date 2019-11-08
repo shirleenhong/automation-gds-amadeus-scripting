@@ -48,6 +48,7 @@ Click Back To Main Menu
 
 Click Itinerary And Queue
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Itinerary and Queue')]
+    Sleep    5
     Click Element    xpath=//button[contains(text(), 'Itinerary and Queue')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), ' Send Itinerary and Queue')]    30
 

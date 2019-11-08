@@ -3,7 +3,6 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Library           pyautogui
 Resource          base.robot
 Resource          ../../resources/common/api-utilities.txt
 
@@ -45,6 +44,19 @@ ${input_consultantNo}    css=#consultantNo
 ${edit_order}    xpath=//tr[1]//i[@class='fas fa-edit']
 ${list_description}    css=#descriptionapay
 ${input_otherCostDesc}    css=#otherDescription
+${list_airlineCorporatePass}     //select[@id='airlineCorporatePassSelection']
+${input_baseAmount_refund}    css=#baseAmountRefund
+${input_gst_refund}    css=#gstRefund
+${input_hst_refund}    css=#hstRefund
+${input_qst_refund}    css=#qstRefund
+${input_othTax_refund}    css=#otherTaxRefund
+${input_commission_refund}    css=#commisionRefund
+${input_oid_origtkt}    css=#oidOrigTicketIssue
+${input_cancell_all}    css=#cancelAll
+${div_segments_array}    //div[@formarrayname='segments']
+${input_segment_checkbox}    //input[@type='checkbox']
+${input_note1}    css=#additionalNotes1
+${input_note2}    css=#additionalNotes2
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -675,43 +687,194 @@ Select Airline Corporate Pass Redemption
 
 Add Airline Corporate Pass Redemption And Verify Default Amount Values
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Value     1
     Select Itinerary Segments   2   3   4
     Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Take Screenshot
+    Set Test Variable    ${ticketing_details}    yes
+    
+Select Airline Corporate Pass By Value
+    [Arguments]    ${index_value}
+    Wait Until Page Contains Element   ${list_airlineCorporatePass}    5
+    Select From List By Value     ${list_airlineCorporatePass}     ${index_value}
+
+Select Airline Corporate Pass By Label
+    [Arguments]    @{labels}
+    Wait Until Page Contains Element   ${list_airlineCorporatePass}    5
+    : FOR    ${label}   IN     @{labels}
+    \    Select From List By Label     ${list_airlineCorporatePass}     ${label}    
     
 Add Airline Corporate Pass Redemption And Verify Default Amount Values For ZZB
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Label    AC/TRANSTEST.LAT/1238903456789
     Select Itinerary Segments   2   3
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Enter 123 In Lowest GDS Fare Field
+    Take Screenshot
     
 Add Airline Corporate Pass Redemption And Verify Default Amount Values For 92Z
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414
     Select Itinerary Segments   2
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Enter 2134 In Lowest GDS Fare Field
+    Take Screenshot
     
 Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVQ
     Select Airline Corporate Pass Redemption
-    Select Itinerary Segments   2
+    Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414
+    Select Itinerary Segments   2    4
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
+    Enter 2134 In Lowest GDS Fare Field
+    Take Screenshot
     Click Save Button
     Select Airline Corporate Pass Redemption
-    Select Itinerary Segments   2
+    Select Airline Corporate Pass By Label    WS/TRANSCONTL.LAT/0140831475422
+    Select Itinerary Segments   3
     Enter Value    ${input_supplier_confirmationNo}    1212321234
     Enter Value    ${input_tktnumber}    9812356781
+    Enter 2311 In Lowest GDS Fare Field
+    Take Screenshot
     Click Save Button
     
-Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVF
+Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Select Airline Corporate Pass Redemption
+    Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414 
     Select Itinerary Segments   2   3
-	Enter Value   lowest GDS fare field  2134
     Enter Value    ${input_supplier_confirmationNo}    0987654321
+    Enter 2134 In Lowest GDS Fare Field
+    Take Screenshot
     Click Save Button
-    Select Airline Corporate Pass Redemption
-    Select Itinerary Segments   4   5
-	Enter Value   lowest GDS fare field  2311
-    Enter Value    ${input_supplier_confirmationNo}    1212321234
+    #Select Airline Corporate Pass Redemption
+    #Select Airline Corporate Pass By Label    WS/TRANSTEST.LAT/1238903456789
+    #Select Itinerary Segments   4   5
+    #Enter Value    ${input_supplier_confirmationNo}    1212321234
+    #Enter 2311 In Lowest GDS Fare Field
+    #Click Save Button
+    #Take Screenshot
+    
+#-----Pass Cancel
+Add Ticketing Amount Details With Fee
+    [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${comm_amt}=${EMPTY}    ${oth_tax}=${EMPTY}
+    Enter Value    ${input_baseamount}    ${base_amt}
+    Enter Value    ${input_gsttax}    ${gst_tax}
+    Enter Value    ${input_hsttax}    ${hst_tax}
+    Enter Value    ${input_qsttax}    ${qst_tax}
+    Enter Value    ${input_othtax}    ${oth_tax}
+    Enter Value    ${input_commission}    ${comm_amt}
+    
+Add Ticketing Amount Details With Refund
+    [Arguments]    ${base_amt}=${EMPTY}    ${gst_refundtax}=${EMPTY}    ${hst_refundtax}=${EMPTY}    ${qst_refundtax}=${EMPTY}    ${oth_refundtax}=${EMPTY}    ${tkt_number}=${EMPTY}
+    Enter Value    ${input_baseAmount_refund}    ${base_amt}
+    Enter Value    ${input_gst_refund}    ${gst_refundtax}
+    Enter Value    ${input_hst_refund}    ${hst_refundtax}
+    Enter Value    ${input_qst_refund}    ${qst_refundtax}
+    Enter Value    ${input_othTax_refund}    ${oth_refundtax}
+    Enter Value    ${input_tktnumber}    ${tkt_number}
+    
+Cancel Existing Airline AC Pass And Select ${type_of_fare} And Add Fee For All Segment   
+    Set Test Variable    ${type_of_fare}
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase Cancellation
+    Enter Value    ${input_supplier_confirmationNo}    879111
+    Select Checkbox    ${input_cancell_all}    
+    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
+    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50    0928374
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       ${type_of_fare}
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Enter Value    ${input_commission_refund}    20.00
+    Enter Value    ${input_oid_origtkt}    YTOWL220N
+    Enter Value    ${input_note1}    Cancel AC With Refund And Fee
     Click Save Button
+    Finish PNR
+    Take Screenshot
+    
+Cancel Existing Airline WS Pass And Select ${type_of_fare} And Add Fee For All Segment   
+    Set Test Variable    ${type_of_fare}
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase Cancellation
+    Enter Value    ${input_supplier_confirmationNo}    879111
+    Select Checkbox    ${input_cancell_all}    
+    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
+    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50    0928374
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       ${type_of_fare}
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Enter Value    ${input_commission_refund}    20.00
+    Enter Value    ${input_oid_origtkt}    YTOWL220N
+    Enter Value    ${input_note1}    Cancel WS With Refund And Fee
+    Click Save Button
+    Finish PNR
+    Take Screenshot
+    
+Cancel Existing Airline PD Pass And Select ${type_of_fare} And Add Fee For Selected Segments
+    Set Test Variable    ${acounting_type}    
+    Set Test Variable    ${type_of_fare}
+    Select From List By Label    ${list_accounting_type}    ${acounting_type}
+    Enter Value    ${input_supplier_confirmationNo}    89988
+    Select Checkbox    ${div_segments_array}${open_bracket}1${close_bracket}${input_segment_checkbox}
+    Select Checkbox    ${div_segments_array}${open_bracket}3${close_bracket}${input_segment_checkbox}
+    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
+    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       ${type_of_fare}
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Enter Value    ${input_commission_refund}    20.00
+    Enter Value    ${input_oid_origtkt}    YTOWL220N
+    Enter Value    ${input_note1}    Cancel PD With Refund And Fee
+    Click Save Button
+    Finish PNR
+    Take Screenshot
+    
+Cancel Existing Airline 8P Pass And Select ${type_of_fare} And Add Fee For Selected Segments
+    Set Test Variable    ${acounting_type}    
+    Set Test Variable    ${type_of_fare}
+    Select From List By Label    ${list_accounting_type}    ${acounting_type}
+    Enter Value    ${input_supplier_confirmationNo}    89988
+    Select Checkbox    ${div_segments_array}${open_bracket}1${close_bracket}${input_segment_checkbox}
+    Select Checkbox    ${div_segments_array}${open_bracket}3${close_bracket}${input_segment_checkbox}
+    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
+    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50
+    Enter Value    ${input_departurecity}    YVR        
+    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Select From List By Label    ${list_faretype}       ${type_of_fare}
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Enter Value    ${input_commission_refund}    20.00
+    Enter Value    ${input_oid_origtkt}    YTOWL220N
+    Enter Value    ${input_note1}    Cancel 8P With Refund And Fee
+    Click Save Button
+    Finish PNR
+    Take Screenshot
+    
+Verify Itinerary Remarks For ${airline_code} Cancellation Fee Of ${fee_amount} And Base Amount Of ${base_amount_refund}
+    Set Test Variable    ${airline_code}  
+    Set Test Variable    ${fee_amount}
+    Set Test Variable    ${base_amount_refund}
+    Verify Specific Remark Is Written In The PNR    RIR THE PRICE FOR THIS ITINERARY IS ${base_amount_refund} INCLUDING TAXES    
+    Verify Specific Remark Is Written In The PNR    RIR ${airline_code} PASS PNR CANCELLED PER PASSENGER REQUEST    
+    Verify Specific Remark Is Written In The PNR    RIR CANCELLATION FEE OF CAD${fee_amount} PLUS TAX HAS BEEN CHARGED TO    
+    Verify Specific Remark Is Written In The PNR    RIR THE TRAVELLERS CREDIT CARD.
+    
+Verify Cancellation Ticketing Remarks For ${airline_code} And Segment ${segment_no} Are Written In The PNR
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S${segment_no}
+    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-${base_amt}/TX1-${gst_tax}XG/TX2-${hst_tax}RC/TX3-${qst_tax}XQ/TX4-${oth_tax}XT/COMM-${comm_amt}/S${segment_no}
+    
+Verify RMX Remarks Are Written In The PNR
+    Get Record Locator Value
+    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG – NONBSP ${actual_record_locator}  REFUND-${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX NONBSP-${actual_supplier_code} – ISSUE OID-YTOWL220N
+    Verify Specific Remark Is Written In The PNR    RMX REFUND BASE-${base_amt}  GST-${gst_refundtax}  HST-${hst_refundtax}  QST-${qst_refundtax}  OTH TAX-${oth_refundtax}
+    Verify Specific Remark Is Written In The PNR    RMX REFUND COMMISSION [refund_Comm]
+    Verify Specific Remark Is Written In The PNR    RMX Cancel ${actual_supplier_code} With Refund And Fee
+    
+Add Pacific Coastal Pass Segment For Individual Pass Purchase
+    Enter Cryptic Command    SS8P123Q04JUNYYZYYZGK1/07000800/8P44JJ
+    Finish PNR
+    Take Screenshot    
     

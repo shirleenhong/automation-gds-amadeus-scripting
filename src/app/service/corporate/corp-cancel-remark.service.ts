@@ -51,7 +51,7 @@ export class CorpCancelRemarkService {
             remarkList.push(this.remarkHelper.createRemark(group.get('freeFlow2').value, 'RM', 'X'));
           }
         }
-        return { remarks: remarkList, commands: ['BT'] };
+        return { remarks: remarkList, commands: [] };
       }
     } else {
       this.createRemarks(['CurrentDate', 'DocTicketNum'], [curDate, group.get('ticketNum').value]);
@@ -213,7 +213,7 @@ export class CorpCancelRemarkService {
         );
       }
       this.queueNonBspTicket();
-      return { remarks: remarkList, commands: ['BT'] };
+      return { remarks: remarkList, commands: [] };
     }
   }
 }

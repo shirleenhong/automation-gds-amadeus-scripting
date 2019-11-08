@@ -437,12 +437,12 @@ export class CorporateComponent implements OnInit {
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
-    const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
-
-
-    if (nonBspTicket) {
-      nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
-      nonBspTicket.commands.forEach((c) => commandList.push(c));
+    if (cancel.nonBspTicketCreditComponent) {
+      const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(cancel.nonBspTicketCreditComponent.nonBspForm);
+      if (nonBspTicket) {
+        nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
+        nonBspTicket.commands.forEach((c) => commandList.push(c));
+      }
     }
 
     if (cancel.bspRefundComponent) {
@@ -455,9 +455,9 @@ export class CorporateComponent implements OnInit {
         refundTicket.commands.forEach((c) => commandList.push(c));
       }
     }
+    this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 
-   
-    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

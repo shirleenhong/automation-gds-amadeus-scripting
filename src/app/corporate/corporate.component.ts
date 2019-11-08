@@ -442,11 +442,13 @@ export class CorporateComponent implements OnInit {
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
 
+
     if (refundTicket) {
       refundTicket.remarks.forEach((rem) => remarkList.push(rem));
       refundTicket.commands.forEach((c) => commandList.push(c));
     }
-    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+
+    await this.rms.submitToPnr(remarkList, null, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -500,7 +502,7 @@ export class CorporateComponent implements OnInit {
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
-      if (seg.segmentType === 'HTL') {
+      if (seg.segmentType === 'HHL') {
         return true;
       }
     }
@@ -621,8 +623,7 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
     this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
     this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);
-    const commandList = ['QE/YTOWL210E/66C1'];
-    await this.rms.submitToPnr(null, deletedInvoiceLines, commandList).then(
+    await this.rms.submitToPnr(null, deletedInvoiceLines).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';

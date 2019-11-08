@@ -106,6 +106,7 @@ export class CancelSegmentComponent implements OnInit {
     // this.codeShareGroup = this.formBuilder.group({
     //   tickets: this.formBuilder.array([this.createFormGroup()])
     // });
+    this.isCorporate = this.counselorDetail.getIsCorporate();
     this.loadStaticValue();
     this.getSegmentTatooValue();
     this.addCheckboxes();

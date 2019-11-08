@@ -749,13 +749,6 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Enter 2134 In Lowest GDS Fare Field
     Take Screenshot
     Click Save Button
-    #Select Airline Corporate Pass Redemption
-    #Select Airline Corporate Pass By Label    WS/TRANSTEST.LAT/1238903456789
-    #Select Itinerary Segments   4   5
-    #Enter Value    ${input_supplier_confirmationNo}    1212321234
-    #Enter 2311 In Lowest GDS Fare Field
-    #Click Save Button
-    #Take Screenshot
     
 #-----Pass Cancel
 Add Ticketing Amount Details With Fee

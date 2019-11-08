@@ -231,11 +231,9 @@ export class SegmentService {
                     remarks.set(element.placeholder[i], element.placeholdervalue[i]);
                 }
             }
-
             if (element.condition) {
                 condition.set(element.condition, element.conditionValue);
             }
-
             this.rms.createPlaceholderValues(remarks, condition, element.segment, null, element.staticText);
         });
     }
@@ -989,6 +987,11 @@ export class SegmentService {
                     remText = dateToday + '/TKT NBR-' + ticket + ' CPNS-' + coupon;
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                 }
+            }
+            if (cancel.value.followUpOption.value === 'BSP Queue') {
+                const pArray = ['CurrentDate', 'DocTicketNum'];
+                const pValueArray = [dateToday, ticket];
+                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
             }
         }
 

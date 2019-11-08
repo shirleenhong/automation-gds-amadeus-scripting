@@ -1,0 +1,92 @@
+<div class="form-group" [formGroup]="refundForm">
+  <div class="row" *ngIf="false">
+    <div class="col-3">Office ID :</div>
+    <div class="col-3">
+      <input type="text" class="form-control" name="officeId" formControlName="officeId" id="officeId" readonly />
+    </div>
+  </div>
+
+  <div class="row" *ngIf="refundType === 'bsp'">
+    <div class="col-4">Ticket Number(s) :</div>
+    <div class="col">
+      <div class="row">
+        <div class="col-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ticket#</div>
+        <div class="col">Coupon</div>
+      </div>
+      <div formArrayName="tickets" *ngFor="let item of this.refundForm.get('tickets')['controls']; let i = index">
+        <div [formGroupName]="i" class="row">
+          <div class="col-4">
+            <input type="checkbox" name="checked" id="checked" formControlName="checked" /> &nbsp;{{ item.get('ticketNum').value }}
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" name="coupon" id="coupon" formControlName="coupon" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="refundType === 'nonbsp'">
+    <div class="row">
+      <div class="col-4">Refund Type:</div>
+      <div class="col-3">
+        <select class="form-control" formControlName="partialFull" name="partialFull" id="partialFull">
+          <option value="partial">Partial Refund</option>
+          <option value="full">Full Refund</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-4">Supplier Name:</div>
+      <div class="col-3">
+        <input type="text" class="form-control" name="supplier" formControlName="supplier" id="supplier" maxlength="15" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">Invoice Number:</div>
+      <div class="col-3"><input type="text" class="form-control" name="invoice" formControlName="invoice" id="invoice" /></div>
+    </div>
+
+    <div class="row">
+      <div class="col-4">Refund Amount :</div>
+      <div class="col-3">
+        <input type="text" class="form-control" name="refundAmount" formControlName="refundAmount" id="refundAmount" AmountMask />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">Commission Amount:</div>
+      <div class="col-3">
+        <input type="text" class="form-control" name="commission" formControlName="commission" id="tax" AmountMask />
+      </div>
+    </div>
+
+    <div *ngIf="refundForm.get('partialFull').value != 'full'">
+      <div class="row">
+        <div class="col-4">Base Amount :</div>
+        <div class="col-3">
+          <input type="text" class="form-control" name="baseAmount" formControlName="baseAmount" id="baseAmount" AmountMask />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-4">GST:</div>
+        <div class="col-3"><input type="text" class="form-control" name="gst" formControlName="gst" id="gst" AmountMask /></div>
+      </div>
+
+      <div class="row">
+        <div class="col-4">Other TAX:</div>
+        <div class="col-3"><input type="text" class="form-control" name="tax" formControlName="tax" id="tax" AmountMask /></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-4">Optional Free Flow Line 1:</div>
+      <div class="col-4"><input type="text" class="form-control" name="freeFlow1" formControlName="freeFlow1" id="freeFlow1" /></div>
+    </div>
+    <div class="row">
+      <div class="col-4">Optional Free Flow Line 2:</div>
+      <div class="col-4"><input type="text" class="form-control" name="freeFlow2" formControlName="freeFlow2" id="freeFlow2" /></div>
+    </div>
+  </div>
+</div>

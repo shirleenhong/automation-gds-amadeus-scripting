@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RemarksManagerService } from './remarks-manager.service';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
@@ -34,25 +34,29 @@ export class CorpCancelRemarkService {
         this.createRemarks(
           ['PartialFull', 'CurrentDate'],
           [group.get('partialFull').value === 'full' ? 'FULL' : 'PART', curDate],
-          'ATTN ACCTNG - NONBSP'
+          'RECREDIT'
         );
 
         if (group.get('partialFull').value !== 'full') {
-          this.createRemarks(['BaseAmt', 'Gst', 'Tax'], [group.get('baseAmount').value, group.get('gst').value, group.get('tax').value]);
+          this.createRemarks(
+            ['BaseAmt', 'Gst', 'Tax'],
+            [group.get('baseAmount').value, group.get('gst').value, group.get('tax').value],
+            'RECREDIT'
+          );
           this.createRemarks(['Commission'], [group.get('commission').value]);
           if (group.get('freeFlow1').value) {
-            remarkList.push(this.remarkHelper.createRemark(group.get('freeFlow1').value, 'RM', 'X'));
+            remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow1').value, 'RM', 'X'));
           }
           if (group.get('freeFlow2').value) {
-            remarkList.push(this.remarkHelper.createRemark(group.get('freeFlow2').value, 'RM', 'X'));
+            remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow2').value, 'RM', 'X'));
           }
         }
-        return { remarks: remarkList, commands: ['BT'] };
+        return { remarks: remarkList, commands: [] };
       }
     } else {
       this.createRemarks(['CurrentDate', 'DocTicketNum'], [curDate, group.get('ticketNum').value]);
     }
-    this.queueNonBspTicketCredit();
+    this.queueNonBspTicket();
     return null;
   }
 
@@ -71,11 +75,19 @@ export class CorpCancelRemarkService {
         remarkSet.set('Auth', cancel.value.authorization);
         this.remarksManager.createPlaceholderValues(remarkSet, null, null);
       }
-      remarkSet = new Map<string, string>();
-      if (cancel.value.ticketNumber) {
-        remarkSet.set('VTkt', cancel.value.ticketNumber);
-        this.remarksManager.createPlaceholderValues(remarkSet, null, null);
+
+      let ctr: number = 0;
+      for (const tickets of cancel.value.ticketVoidList) {
+        if (tickets) {
+          let tkt: string;
+          remarkSet = new Map<string, string>();
+          tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1];
+          remarkSet.set('VTkt', tkt);
+          this.remarksManager.createPlaceholderValues(remarkSet, null, null);
+        }
+        ctr = ctr + 1;
       }
+
       remarkSet = new Map<string, string>();
       remarkSet.set('VoidDate', dateToday);
       if (cancel.value.cFirstInitial.trim !== '' && cancel.value.cLastName.trim !== '') {
@@ -135,7 +147,27 @@ export class CorpCancelRemarkService {
     return rem;
   }
 
-  private queueNonBspTicketCredit() {
+  writeAquaTouchlessRemark(cancel: any) {
+    if (cancel.value.followUpOption === 'BSPKT' || cancel.value.followUpOption === 'NONBSPKT') {
+      const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
+      const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
+      let value = '';
+      if (bbExist) {
+        if (remarkText !== '') {
+          const regex = /(?<BB>\d(.*))/g;
+          const match = regex.exec(remarkText);
+          regex.lastIndex = 0;
+          if (match !== null) {
+            value = match[0];
+            this.createRemarks(['MatrixLineBB'], [value]);
+          }
+        }
+      }
+      this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 70, 1));
+    }
+  }
+
+  private queueNonBspTicket() {
     this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
     this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 60, 1));
   }
@@ -146,5 +178,50 @@ export class CorpCancelRemarkService {
       map.set(key, values[i]);
     });
     this.remarksManager.createPlaceholderValues(map, null, null, null, statictext);
+  }
+
+  WriteTicketRefund(group: FormGroup, refundType: string) {
+    const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
+    const remarkList = new Array<RemarkModel>();
+
+    if (refundType === 'bsp') {
+      const arr = group.controls.tickets as FormArray;
+      for (let i = 0; i < arr.length; i++) {
+        const t = arr.at(i);
+        this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
+        this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum').value, t.get('coupon').value]);
+      }
+
+      this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
+      return { remarks: remarkList, commands: ['TKTL' + curDate + '/' + group.get('officeId').value + '/Q8C1-CXL'] };
+    } else {
+      this.createRemarks(['VendorName', 'BackOfficeAgentIdentifier'], [group.get('supplier').value, group.get('officeId').value]);
+      this.createRemarks(['PartialFull', 'CurrentDate'], [group.get('partialFull').value === 'full' ? 'FULL' : 'PART', curDate], 'REFUND');
+      if (group.get('freeFlow1').value) {
+        remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow1').value, 'RM', 'X'));
+      }
+      if (group.get('freeFlow2').value) {
+        remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow2').value, 'RM', 'X'));
+      }
+      let invoice = group.get('invoice').value;
+      if (invoice && invoice.trim() !== '') {
+        invoice = '- ORIG INV' + group.get('invoice').value;
+      }
+      const refundAmt = group.get('refundAmount').value;
+      if (refundAmt && Number(refundAmt) > 0) {
+        this.createRemarks(['RefundAmount', 'Commission', 'InvoiceNumber'], [refundAmt, group.get('commission').value, invoice]);
+      } else {
+        this.createRemarks(['Commission', 'InvoiceNumber'], [group.get('commission').value, invoice]);
+      }
+      if (group.get('partialFull').value !== 'full') {
+        this.createRemarks(
+          ['BaseAmt', 'Gst', 'Tax'],
+          [group.get('baseAmount').value, group.get('gst').value, group.get('tax').value],
+          'REFUND'
+        );
+      }
+      this.queueNonBspTicket();
+      return { remarks: remarkList, commands: [] };
+    }
   }
 }

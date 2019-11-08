@@ -43,10 +43,12 @@ export class UtilHelper {
 
   enableDisableControls(form: FormGroup, controls: string[], enable: boolean) {
     controls.forEach((element) => {
-      if (enable) {
-        form.get(element).enable();
-      } else {
-        form.get(element).disable();
+      if (form.get(element)) {
+        if (enable) {
+          form.get(element).enable();
+        } else {
+          form.get(element).disable();
+        }
       }
     });
   }

@@ -608,8 +608,7 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
     this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
     this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);
-    const commandList = ['QE/YTOWL210E/66C1'];
-    await this.rms.submitToPnr(null, deletedInvoiceLines, commandList).then(
+    await this.rms.submitToPnr(null, deletedInvoiceLines).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';

@@ -151,7 +151,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.segments.map((_o, i) => {
       const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.matrixAccountingForm.controls.segments as FormArray).push(control);
-    });
+    });    
+    this.onCheckChange();
   }
 
   showFareType() {
@@ -689,6 +690,5 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       }
     });
     this.accountingRemark.segments = checkSegment;
-    //return checkSegment;
   }
 }

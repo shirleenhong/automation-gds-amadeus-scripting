@@ -226,7 +226,7 @@ export class InvoiceRemarkService {
     };
     const ticketRegex = /TKT[0-9]{1,2}/g;
     const ticketMatch = freeFlowText.match(ticketRegex);
-    if(ticketMatch && ticketMatch[0]) {
+    if (ticketMatch && ticketMatch[0]) {
       feeObj.freeText = ticketMatch[0];
       feeObj.lineNo = ticketMatch[0].replace('TKT', '').trim();
     }

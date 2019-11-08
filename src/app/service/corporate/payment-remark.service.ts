@@ -24,7 +24,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) { }
+  ) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -216,7 +216,7 @@ export class PaymentRemarkService {
         account.accountingTypeRemark === 'ACPPC' ||
         account.accountingTypeRemark === 'WCPPC' ||
         account.accountingTypeRemark === 'PCPPC'
-      ) {        
+      ) {
         const cancelSegmentrelate: string[] = [];
         account.segments.forEach((element) => {
           cancelSegmentrelate.push(element.lineNo);
@@ -302,7 +302,6 @@ export class PaymentRemarkService {
         travellerCreditCardCondition.set('CACancelRemark', 'true');
         this.remarksManager.createPlaceholderValues(null, travellerCreditCardCondition, null, null, 'THE TRAVELLERS CREDIT CARD.');
 
-        // debugger;
         // const u14 = this.pnrService.getRemarkText('U14/-');
         // if (u14.indexOf(airline + 'PASS') > -1) {
         const passCancelledRemark = new Map<string, string>();

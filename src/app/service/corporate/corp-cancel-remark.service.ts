@@ -18,7 +18,7 @@ export class CorpCancelRemarkService {
     private remarkHelper: RemarkHelper,
     private queService: AmadeusQueueService,
     private pnrService: PnrService
-  ) { }
+  ) {}
 
   WriteNonBspTicketCredit(group: FormGroup) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
@@ -34,7 +34,7 @@ export class CorpCancelRemarkService {
         this.createRemarks(
           ['PartialFull', 'CurrentDate'],
           [group.get('partialFull').value === 'full' ? 'FULL' : 'PART', curDate],
-          'ATTN ACCTNG - NONBSP'
+          'RECREDIT'
         );
 
         if (group.get('partialFull').value !== 'full') {

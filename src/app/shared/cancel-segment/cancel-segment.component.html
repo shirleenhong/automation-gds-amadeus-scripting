@@ -166,14 +166,7 @@
 
     <!-- <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !preCancel"> -->
     <div *ngIf="
-        f.followUpOption.value !== 'Keep Ticket' &&
-        f.followUpOption.value !== 'Non BSP Refund' &&
-        f.followUpOption.value !== 'Void BSP' &&
-        f.followUpOption.value !== 'Void Non BSP' &&
-        f.followUpOption.value !== 'BSPKT' &&
-        f.followUpOption.value !== 'NONBSPKT'
-        !isVoid
-      ">
+        f.followUpOption.value === 'BSP Queue' !isVoid">
       <div *ngIf="!isAC" class="row form-group">
         <div class="col-4">AC Cancel Check:</div>
         <div class="col-8">
@@ -206,18 +199,7 @@
               <div class="col-3">AC Ticket Number:</div>
               <div class="col-3">Passenger Name Number:</div>
             </div>
-            <!-- <div class="col-sm-4"></div>
-            <div class="col-4">
-              <div class="">AC Ticket Number:</div>
-              <input type="text" class="form-control" id="acTicketNo" formControlName="acTicketNo" name="acTicketNo"
-                (change)="acTicketChange($event.target.value)" NumberOnlyMask />
-            </div>
-
-            <div class="col-4">
-              <div class="">Passenger Name Number:</div>
-              <input type="text" class="form-control" id="acpassengerNo" formControlName="acpassengerNo"
-                name="acpassengerNo" />
-            </div> -->
+           
             <div formArrayName="actickets"
               *ngFor="let item of this.cancelForm.get('actickets')['controls']; let i = index">
               <div [formGroupName]="i" class="form-group row">
@@ -362,6 +344,10 @@
         </div>
       </div>
     </div>
+    <div *ngIf="(f.followUpOption.value === 'BSPREFUND' || f.followUpOption.value === 'NONBSPREFUND')" >
+        <app-bsp-refund  [refundType]="(f.followUpOption.value === 'BSPREFUND' ? 'bsp' : 'nonbsp')"></app-bsp-refund>
+      </div>
   </div>
+ 
   <input type="hidden" class="form-control" id="ticketNumber" formControlName="ticketNumber" name="ticketNumber" />
 </form>

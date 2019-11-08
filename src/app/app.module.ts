@@ -15,4 +15,4 @@ import { MyCommonModule } from './my-common.module';
   exports: [],
   entryComponents: []
 })
-export class AppModule { }
+export class AppModule {}

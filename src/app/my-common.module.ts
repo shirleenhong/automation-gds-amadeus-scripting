@@ -19,6 +19,7 @@ import { PassiveSegmentsComponent } from './passive-segments/passive-segments.co
 import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itinerary.component';
 import { GenericSelectComponent } from './shared/generic-select/generic-select.component';
 import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.component';
+import { BspRefundComponent } from './corporate/corp-cancel/bsp-refund/bsp-refund.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.c
     PassiveSegmentsComponent,
     ItineraryComponent,
     GenericSelectComponent,
-    CancelSegmentComponent
+    CancelSegmentComponent,
+    BspRefundComponent
   ],
   imports: [
     CommonModule,
@@ -67,4 +69,4 @@ import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.c
     CancelSegmentComponent
   ]
 })
-export class MyCommonModule { }
+export class MyCommonModule {}

@@ -20,6 +20,7 @@ import { ItineraryComponent } from './leisure/itinerary-and-queue/itinerary/itin
 import { GenericSelectComponent } from './shared/generic-select/generic-select.component';
 import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.component';
 import { BspRefundComponent } from './corporate/corp-cancel/bsp-refund/bsp-refund.component';
+import { NonBspTicketCreditComponent } from './corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { BspRefundComponent } from './corporate/corp-cancel/bsp-refund/bsp-refun
     ItineraryComponent,
     GenericSelectComponent,
     CancelSegmentComponent,
-    BspRefundComponent
+    BspRefundComponent,
+    NonBspTicketCreditComponent
   ],
   imports: [
     CommonModule,

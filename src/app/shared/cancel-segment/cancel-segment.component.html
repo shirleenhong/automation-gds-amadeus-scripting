@@ -347,10 +347,13 @@
         </div>
       </div>
     </div>
-
-    <div *ngIf="(f.followUpOption.value === 'BSPREFUND' || f.followUpOption.value === 'NONBSPREFUND')">
-      <app-bsp-refund [refundType]="(f.followUpOption.value === 'BSPREFUND' ? 'bsp' : 'nonbsp')"></app-bsp-refund>
-    </div>
+    <div *ngIf="(f.followUpOption.value === 'BSPREFUND' || f.followUpOption.value === 'NONBSPREFUND')" >
+        <app-bsp-refund  [refundType]="(f.followUpOption.value === 'BSPREFUND' ? 'bsp' : 'nonbsp')"></app-bsp-refund>
+      </div>
+      <div *ngIf="(f.followUpOption.value === 'NONBSPRECREDIT')" >
+          <app-non-bsp-ticket-credit ></app-non-bsp-ticket-credit>
+        </div>
+      
   </div>
 
   <input type="hidden" class="form-control" id="ticketNumber" formControlName="ticketNumber" name="ticketNumber" />

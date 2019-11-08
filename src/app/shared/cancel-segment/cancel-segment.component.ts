@@ -7,6 +7,7 @@ import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
+import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
 // import { MessageComponent } from '../message/message.component';
@@ -18,7 +19,7 @@ import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp
 })
 export class CancelSegmentComponent implements OnInit {
   @ViewChild(BspRefundComponent) bspRefundComponent: BspRefundComponent;
-
+  @ViewChild(NonBspTicketCreditComponent) nonBspTicketCreditComponent: NonBspTicketCreditComponent;
   cancelForm: FormGroup;
   reasonAcList: Array<SelectItem>;
   followUpOptionList: Array<SelectItem>;
@@ -175,6 +176,13 @@ export class CancelSegmentComponent implements OnInit {
         }
       }
     }
+    if (this.f.followUpOption.value === 'NONBSPRECREDIT') {
+      this.utilHelper.validateAllFields(this.nonBspTicketCreditComponent.nonBspForm);
+      if (!this.nonBspTicketCreditComponent.nonBspForm.valid) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -216,6 +224,7 @@ export class CancelSegmentComponent implements OnInit {
         { itemText: 'BSP Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'BSPKT' },
         { itemText: 'Non BSP Keep Ticket for Future Travel/Cancel Segments Only', itemValue: 'NONBSPKT' },
         { itemText: 'Non BSP Ticket Refund', itemValue: 'NONBSPREFUND' },
+        { itemText: 'Non BSP Ticket Recredit', itemValue: 'NONBSPRECREDIT' },
         { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
         { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' }
       ];
@@ -580,6 +589,7 @@ export class CancelSegmentComponent implements OnInit {
       case '4':
       case '5':
         this.enableFormControls(['airlineNo'], false);
+        break;
       default:
         this.enableFormControls(['uasegNo', 'uaPassengerNo'], true);
         break;
@@ -739,7 +749,17 @@ export class CancelSegmentComponent implements OnInit {
         break;
       default:
         this.enableFormControls(
-          ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+          [
+            'acFlightNo',
+            'relationship',
+            'reasonACCancel',
+            'reasonACCancel',
+            'reasonUACancel',
+            'uasegNo',
+            'uaPassengerNo',
+            'tickets',
+            'authorization'
+          ],
           true
         );
         break;

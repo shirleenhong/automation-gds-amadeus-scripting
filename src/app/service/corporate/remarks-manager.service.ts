@@ -16,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -168,16 +168,14 @@ export class RemarksManagerService {
     additionalRemarks?: Array<RemarkModel>,
     additionalRemarksToBeDeleted?: Array<string>,
     commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>,
-    requestor?: string
+    passiveSegment?: Array<PassiveSegmentModel>
   ) {
     await this.sendPnrToAmadeus(
       await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues),
       additionalRemarks,
       additionalRemarksToBeDeleted,
       commandList,
-      passiveSegment,
-      requestor
+      passiveSegment
     );
   }
 
@@ -198,8 +196,7 @@ export class RemarksManagerService {
     additionalRemarks?: Array<RemarkModel>,
     additionalRemarksToBeDeleted?: Array<string>,
     commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>,
-    requestor?: string
+    passiveSegment?: Array<PassiveSegmentModel>
   ) {
     console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
@@ -234,10 +231,8 @@ export class RemarksManagerService {
       if (commandList) {
         await this.sendSSRCommands(commandList, 0);
       }
-      if (!requestor) {
-        requestor = 'CWTSCRIPT';
-      }
-      this.endPnr(requestor);
+
+      this.endPnr();
       this.refreshPnr();
     });
   }
@@ -256,8 +251,8 @@ export class RemarksManagerService {
     });
   }
 
-  async endPnr(requestor) {
-    await smartScriptSession.send('RF' + requestor);
+  async endPnr() {
+    await smartScriptSession.send('RF' + this.receiveFrom);
     await smartScriptSession.send('ER');
   }
 
@@ -284,7 +279,6 @@ export class RemarksManagerService {
                 deleteResponse += ',' + add;
                 isAdded = true;
               }
-
             }
           });
       });

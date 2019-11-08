@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, forwardRef, Output, EventEmitter} from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-generic-select',
@@ -23,7 +23,7 @@ export class GenericSelectComponent implements OnInit {
   genericElementGroup: FormGroup;
   constructor(fb: FormBuilder) {
     this.genericElementGroup = fb.group({
-      genericElement: new FormControl('', [Validators.required])
+      genericElement: new FormControl('', [])
     });
   }
   val = '';

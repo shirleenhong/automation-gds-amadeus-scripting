@@ -166,7 +166,7 @@
 
     <!-- <div *ngIf="f.followUpOption.value !== 'Keep Ticket' && f.followUpOption.value !== 'Non BSP Refund' && !preCancel"> -->
     <div *ngIf="
-        f.followUpOption.value === 'BSP Queue' !isVoid">
+        (f.followUpOption.value === 'BSP Queue' || f.followUpOption.value === '') && !isVoid">
       <div *ngIf="!isAC" class="row form-group">
         <div class="col-4">AC Cancel Check:</div>
         <div class="col-8">
@@ -322,7 +322,9 @@
     </div>
 
     <div *ngIf="
-      (f.followUpOption.value === 'BSP Queue' || f.followUpOption.value === 'NONBSPKT') && !isVoid">
+      (f.followUpOption.value === 'BSP Queue' || 
+      f.followUpOption.value === '' 
+      || f.followUpOption.value === 'NONBSPKT') && !isVoid">
       <div class="row form-group">
         <div class="col-sm-4"></div>
         <div class="col-3">Ticket Number:</div>

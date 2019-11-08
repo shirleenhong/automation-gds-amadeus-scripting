@@ -439,22 +439,24 @@ export class CorporateComponent implements OnInit {
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
 
-    // const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
-    //   cancel.bspRefundComponent.refundForm,
-    //   cancel.bspRefundComponent.refundType
-    // );
 
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
 
+    if (cancel.bspRefundComponent) {
+      const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
+        cancel.bspRefundComponent.refundForm,
+        cancel.bspRefundComponent.refundType
+      );
+      if (refundTicket) {
+        refundTicket.remarks.forEach((rem) => remarkList.push(rem));
+        refundTicket.commands.forEach((c) => commandList.push(c));
+      }
+    }
 
-    // if (refundTicket) {
-    //   refundTicket.remarks.forEach((rem) => remarkList.push(rem));
-    //   refundTicket.commands.forEach((c) => commandList.push(c));
-    // }
-
+   
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;

@@ -279,6 +279,12 @@ export class RemarksManagerService {
                 deleteResponse += ',' + add;
                 isAdded = true;
               }
+            } else {
+              if (xe !== add && !isAdded) {
+                deleteResponse += ',' + add;
+                isAdded = true;
+              }
+
             }
           });
       });

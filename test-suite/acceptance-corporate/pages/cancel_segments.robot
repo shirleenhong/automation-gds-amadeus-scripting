@@ -5,7 +5,7 @@ Resource          base.robot
 ${input_requestor}    css=#requestor
 ${input_notes1}     css=#desc1
 ${input_notes2}     css=#desc2
-${list_followUup}    css=#followUpOption
+${list_followUp}    css=#followUpOption
 ${checkbox_cancelAll}    css=#cancelAll
 ${list_acCancelCheck}    css=#cancelProcess
 ${checkbox_segment_start}    //input[@type='checkbox' and @ng-reflect-name='
@@ -22,6 +22,18 @@ ${list_acpassengerNo}    css=#acpassengerNo
 ${tab_CancelSegments}    //span[contains(text(), 'Cancel Segments')]
 ${tab_nonBspTicketCredit}     //span[contains(text(), 'NonBSP Ticket Credit')]
 ${input_ticketNum}    css=#ticketNum
+${input_recredit_yes}    //input[@id="isReCredit"][@value='Y']/following-sibling::div[@class='control_indicator']
+${input_recredit_no}    //input[@id="isReCredit"][@value='N']/following-sibling::div[@class='control_indicator']
+${select_recredit}    //select[@id='partialFull']
+${input_vendorName}    //input[@id='vendor']
+${input_counselorName}    //input[@id='firstName']
+${input_counselorSurname}    //input[@id='lastName']
+${input_baseAmount}    //input[@id='baseAmount']
+${input_gst}    //input[@id='gst']
+${input_tax}    //input[@id='tax']
+${input_commission}    //input[@name='commission']
+${input_tixCred_freeFlow1}    //input[@id='freeFlow1']
+${input_tixCred_freeFlow2}    //input[@id='freeFlow2']
 
 *** Keywords ***
 Fill Up Cancel Segment With Default Values
@@ -76,6 +88,11 @@ Verify Expected Cancellation Remarks Are Written
     Run Keyword If    "${reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
     ...      Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL NR DUE TO IROP OR SKD CHG
     Verify Expected Remarks Are Written In The PNR
+
+Verify NonBSP Ticket Credit from Supplier Remark For PNRs With No U*14
+    Assign Current Date
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567890/${current_date}
     
 Cancel Segment ${segment} Using Cryptic Command
     Enter Cryptic Command    XE${segment}
@@ -121,6 +138,38 @@ Cancel AC Segment With Reason ${reason}
     Select AC Reason For Cancel: ${reason}
     Take Screenshot
     Set Test Variable    ${cancel_segments_complete}    yes
+    
+Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Full
+    Cancel All Segments
+    Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
+    Wait Until Element Is Visible    ${input_recredit_no}    10
+    Click Element    ${input_recredit_no}
+    Select From List By Label    ${select_recredit}    Full Re-Credit
+    Wait Until Element Is Visible    ${input_vendorName}    10
+    Enter Value    ${input_vendorName}    ACY
+    Enter Value    ${input_counselorName}    P
+    Enter Value    ${input_counselorSurname}    FISHER
+    Take Screenshot
+    # Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
+    
+Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Partial
+    Cancel All Segments
+    Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
+    Wait Until Element Is Visible    ${input_recredit_no}    10
+    Click Element    ${input_recredit_no}
+    Select From List By Label    ${select_recredit}    Partial Re-Credit
+    Wait Until Element Is Visible    ${input_vendorName}    10
+    Enter Value    ${input_vendorName}    PFS
+    Enter Value    ${input_counselorName}    J
+    Enter Value    ${input_counselorSurname}    ROBINSON
+    Enter Value    ${input_baseAmount}    123.45
+    Enter Value    ${input_gst}    6.70
+    Enter Value    ${input_tax}    8.90
+    Enter Value    ${input_commission}    0.12
+    Enter Value    ${input_tixCred_freeFlow1}    THIS IS A SAMPLE
+    Enter Value    ${input_tixCred_freeFlow2}    OF A FREE FLOW TEXT
+    Take Screenshot
+    # Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
 
 Select AC Reason For Cancel: ${reason}
     Log    ${reason.upper()}
@@ -178,7 +227,35 @@ Click Cancel Segments Tab
     Click Element    ${tab_CancelSegments}        
     Set Test Variable    ${current_page}    Cancel Segments
     
-Fill Up NonBSP Ticket Credit With Default Values
-    Navigate To Page NonBSP Ticket Credit
+Fill Up NonBSP Ticket Credit With Default Values For PNRs With No U*14
+    Cancel All Segments
+    Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
+    Wait Until Element Is Visible    ${list_followUp}    10
     Enter Value    ${input_ticketNum}    1234567890
-    Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
+    # Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
+    
+Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When There Is No Re-credit Fee and Re-credit is Full
+    Assign Current Date
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG - NONBSP FULL RECREDIT - ${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX . NONBSP..ACY - ISSUE OID YTOWL2106
+    Verify Specific Remark Is Written In The PNR    RMX . ${current_date}/ FISHER P.
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
+    [Teardown]    Take Screenshot
+    
+Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When There Is No Re-credit Fee and Re-credit is Partial
+    Assign Current Date
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG - NONBSP PART RECREDIT - ${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX . NONBSP..ACY - ISSUE OID YTOWL2106
+    Verify Specific Remark Is Written In The PNR    RMX . RECREDIT BASE AMOUNT 123.45 GST 6.70 TAX 8.90
+    Verify Specific Remark Is Written In The PNR    RMX . RECREDIT COMMISSION 0.12
+    Verify Specific Remark Is Written In The PNR    RMX . THIS IS A SAMPLE
+    Verify Specific Remark Is Written In The PNR    RMX . OF A FREE FLOW TEXT
+    Verify Specific Remark Is Written In The PNR    RMX . ${current_date}/ ROBINSON J.
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
+    [Teardown]    Take Screenshot

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RemarksManagerService } from './remarks-manager.service';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
@@ -18,7 +18,7 @@ export class CorpCancelRemarkService {
     private remarkHelper: RemarkHelper,
     private queService: AmadeusQueueService,
     private pnrService: PnrService
-  ) { }
+  ) {}
 
   WriteNonBspTicketCredit(group: FormGroup) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
@@ -38,7 +38,11 @@ export class CorpCancelRemarkService {
         );
 
         if (group.get('partialFull').value !== 'full') {
-          this.createRemarks(['BaseAmt', 'Gst', 'Tax'], [group.get('baseAmount').value, group.get('gst').value, group.get('tax').value]);
+          this.createRemarks(
+            ['BaseAmt', 'Gst', 'Tax'],
+            [group.get('baseAmount').value, group.get('gst').value, group.get('tax').value],
+            'RECREDIT'
+          );
           this.createRemarks(['Commission'], [group.get('commission').value]);
           if (group.get('freeFlow1').value) {
             remarkList.push(this.remarkHelper.createRemark(group.get('freeFlow1').value, 'RM', 'X'));
@@ -52,7 +56,7 @@ export class CorpCancelRemarkService {
     } else {
       this.createRemarks(['CurrentDate', 'DocTicketNum'], [curDate, group.get('ticketNum').value]);
     }
-    this.queueNonBspTicketCredit();
+    this.queueNonBspTicket();
     return null;
   }
 
@@ -136,8 +140,7 @@ export class CorpCancelRemarkService {
   }
 
   writeAquaTouchlessRemark(cancel: any) {
-    if (cancel.value.followUpOption === 'BSPKT' ||
-      cancel.value.followUpOption === 'NONBSPKT') {
+    if (cancel.value.followUpOption === 'BSPKT' || cancel.value.followUpOption === 'NONBSPKT') {
       const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
       const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
       let value = '';
@@ -155,8 +158,7 @@ export class CorpCancelRemarkService {
     }
   }
 
-
-  private queueNonBspTicketCredit() {
+  private queueNonBspTicket() {
     this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
     this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 60, 1));
   }
@@ -167,5 +169,50 @@ export class CorpCancelRemarkService {
       map.set(key, values[i]);
     });
     this.remarksManager.createPlaceholderValues(map, null, null, null, statictext);
+  }
+
+  WriteTicketRefund(group: FormGroup, refundType: string) {
+    const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
+    const remarkList = new Array<RemarkModel>();
+
+    if (refundType === 'bsp') {
+      const arr = group.controls.tickets as FormArray;
+      for (let i = 0; i < arr.length; i++) {
+        const t = arr.at(i);
+        this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
+        this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum').value, t.get('coupon').value]);
+      }
+
+      this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
+      return { remarks: remarkList, commands: ['TKTL' + curDate + '/' + group.get('officeId').value + '/Q8C1-CXL'] };
+    } else {
+      this.createRemarks(['VendorName', 'BackOfficeAgentIdentifier'], [group.get('supplier').value, group.get('officeId').value]);
+      this.createRemarks(['PartialFull', 'CurrentDate'], [group.get('partialFull').value === 'full' ? 'FULL' : 'PART', curDate], 'REFUND');
+      if (group.get('freeFlow1').value) {
+        remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow1').value, 'RM', 'X'));
+      }
+      if (group.get('freeFlow2').value) {
+        remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow2').value, 'RM', 'X'));
+      }
+      let invoice = group.get('invoice').value;
+      if (invoice && invoice.trim() !== '') {
+        invoice = '- ORIG INV' + group.get('invoice').value;
+      }
+      const refundAmt = group.get('refundAmount').value;
+      if (refundAmt && Number(refundAmt) > 0) {
+        this.createRemarks(['RefundAmount', 'Commission', 'InvoiceNumber'], [refundAmt, group.get('commission').value, invoice]);
+      } else {
+        this.createRemarks(['Commission', 'InvoiceNumber'], [group.get('commission').value, invoice]);
+      }
+      if (group.get('partialFull').value !== 'full') {
+        this.createRemarks(
+          ['BaseAmt', 'Gst', 'Tax'],
+          [group.get('baseAmount').value, group.get('gst').value, group.get('tax').value],
+          'REFUND'
+        );
+      }
+      this.queueNonBspTicket();
+      return { remarks: remarkList, commands: ['BT'] };
+    }
   }
 }

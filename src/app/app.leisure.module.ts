@@ -43,7 +43,6 @@ import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks
 import { MyCommonModule } from './my-common.module';
 import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-ticket-fop.component';
 
-
 @NgModule({
   declarations: [
     LeisureComponent,
@@ -100,9 +99,7 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     // ,{ provide: TourPackageRemarksService }
   ],
   bootstrap: [],
-  exports: [
-    LeisureComponent
-  ],
+  exports: [LeisureComponent],
   entryComponents: [
     UpdateMatrixReceiptComponent,
     UpdateAccountingRemarkComponent,
@@ -114,4 +111,4 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     UpdateLeisureFeeComponent
   ]
 })
-export class AppLeisureModule { }
+export class AppLeisureModule {}

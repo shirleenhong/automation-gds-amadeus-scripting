@@ -69,7 +69,8 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
   @ViewChild(PassiveSegmentsComponent)
-  @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
+  @ViewChild(SendInvoiceItineraryComponent)
+  sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
 
@@ -263,8 +264,10 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
     });
 
-    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined
-      && this.paymentsComponent.accountingRemark.accountingRemarks.length > 0) {
+    if (
+      this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
+      this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
+    ) {
       if (
         this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
         this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
@@ -395,8 +398,7 @@ export class CorporateComponent implements OnInit {
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
 
-    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
-      cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
+    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' || cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
       await this.ticketRemarkService.deleteTicketingLine().then(async () => {
         const canceltktl = this.ticketRemarkService.cancelTicketRemark();
         if (canceltktl) {
@@ -430,9 +432,20 @@ export class CorporateComponent implements OnInit {
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
+    const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
+      cancel.bspRefundComponent.refundForm,
+      cancel.bspRefundComponent.refundType
+    );
+
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
       nonBspTicket.commands.forEach((c) => commandList.push(c));
+    }
+
+
+    if (refundTicket) {
+      refundTicket.remarks.forEach((rem) => remarkList.push(rem));
+      refundTicket.commands.forEach((c) => commandList.push(c));
     }
 
     await this.rms.submitToPnr(remarkList, null, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
@@ -603,8 +616,10 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Sending Invoice...');
     const resendCompData = this.sendInvoiceItineraryComponent.resendInvoiceComponent;
     this.invoiceRemarkService.addEmailRemarks(resendCompData.invoiceFormGroup);
-    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(resendCompData.selectedElementsUI,
-      resendCompData.invoiceList);
+    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(
+      resendCompData.selectedElementsUI,
+      resendCompData.invoiceList
+    );
     this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
     this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
     this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);

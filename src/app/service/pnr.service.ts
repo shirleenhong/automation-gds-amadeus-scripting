@@ -1424,6 +1424,19 @@ export class PnrService {
         return false;
     }
 
+    getTicketedNumbers() {
+        const tickets = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            const regex = new RegExp('[0-9]{3}-[0-9]+');
+            const match = regex.exec(ticketed.freeFlowText);
+            regex.lastIndex = 0;
+            if (match !== null) {
+                tickets.push(match[0]);
+            }
+        }
+        return tickets;
+    }
+
     getTicketedSegments(): string[] {
         const segmentTatooNumbers = [];
         for (const ticketed of this.pnrObj.faElements) {

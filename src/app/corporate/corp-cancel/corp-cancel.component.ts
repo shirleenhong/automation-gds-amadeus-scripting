@@ -18,14 +18,15 @@ export class CorpCancelComponent implements OnInit {
   ngOnInit(): void {}
 
   checkValid() {
-    this.utilHelper.validateAllFields(this.cancelSegmentComponent.cancelForm);
-    if (!this.cancelSegmentComponent.cancelForm.valid) {
+    if (!this.cancelSegmentComponent.checkValid()) {
       return false;
     }
+
     this.utilHelper.validateAllFields(this.nonBspTicketCreditComponent.nonBspForm);
     if (!this.nonBspTicketCreditComponent.nonBspForm.valid) {
       return false;
     }
+
     return true;
   }
 }

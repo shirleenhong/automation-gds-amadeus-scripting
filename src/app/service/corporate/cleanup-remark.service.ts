@@ -20,7 +20,6 @@ export class CleanUpRemarkService {
   }
 
   markIdForDeletion() {
-    // tslint:disable-next-line: no-debugger
     const remarks = Array<string>();
     remarks.push('TKT'); // TKT
     remarks.push('SPLIT'); // RMT SPLIT

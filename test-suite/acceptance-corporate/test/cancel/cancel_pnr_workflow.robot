@@ -1,89 +1,195 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
-Resource          ../../pages/remarks.robot
 Resource          ../../pages/base.robot
-Resource          ../../../resources/common/api-utilities.txt
 #Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    cancel_pnr_workflow
-${input_requestor}    css=#requestor
-${input_notes1}     css=#desc1
-${input_notes2}     css=#desc2
-${list_followUup}    css=#followUpOption
-${checkbox_cancelAll}    css=#cancelAll
-${list_acCancelCheck}    css=#cancelProcess
 
 *** Test Cases ***
 Verify That PNR Will Be Cancelled When There Are No Segments And Is Not Booked Via Concur
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Cancellation, No Segments
+    Create PNR With Active Air Segments For Cancellation, No Segments
     Complete The PNR With Default Values
+    Cancel Segment 2 Using Cryptic Command
     Fill Up Cancel Segment With Default Values
     Verify Expected Cancellation Remarks Are Written
     
 Verify That PNR Will Be Cancelled When There Are No Segments And Is Booked Via Concur
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Cancellation, No Segments, Booked Via Concur
+    Create PNR With Active Air Segments For Cancellation, No Segments, Booked Via Concur
     Complete The PNR With Default Values
+    Cancel Segment 2 Using Cryptic Command                                                                                                                                                        
     Verify Cancel Segment Fields Are Defaulted For PNRs Booked Via Concur
     Verify Expected Cancellation Remarks Are Written
 
 Verify That FullCxl Will Be Written When All Segments Are Cancelled
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Passive Air Segments For Cancellation, Mix Segments
+    Create PNR With Active Air Segments For Cancellation, Mix Segments
     Complete The PNR With Default Values
     Cancel All Segments
     Verify Expected Cancellation Remarks Are Written
+    
+Verify That FullCxl Will Not Be Written When Only Selected Segments Are Cancelled
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, Multiple Air Segments
+    Complete The PNR With Default Values
+    Cancel Segments 2,3 Via UI
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Passive UA Segments Are Cancelled When Reason Is Voluntary Cancel
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, UA Air Segments
+    Complete The PNR With Default Values
+    Cancel UA Segment With Reason Voluntary Cancel
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Passive UA Segments Are Cancelled When Reason Is UA Flight Not Ticketed
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, UA Air Segments
+    Complete The PNR With Default Values
+    Cancel UA Segment With Reason UA Flight Not Ticketed Yet
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active UA Segments Are Cancelled When Reason Is 24 Hours Refund
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, UA Air Segments, 24 Hours Refund
+    Complete The PNR With Default Values
+    Cancel UA Segment With Reason 24 Hours Refund
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active UA Segments Are Cancelled When Reason Is Non Refundable Ticket Cancelled Due To IROP
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, UA Air Segments, Non Refundable Ticket Cancelled Due To IROP
+    Complete The PNR With Default Values
+    Cancel UA Segment With Reason Non Refundable Ticket Cancelled Due To IROP
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active UA Segments Are Cancelled When Reason Is Non Refundable Ticket Cancelled Due To Schedule Change
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, UA Air Segments, Non Refundable Ticket Cancelled Due To Schedule Change
+    Complete The PNR With Default Values
+    Cancel UA Segment With Reason Non Refundable Ticket Cancelled Due To Schedule Change
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Name Correction NCC With OAL
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Name Correction NCC With OAL
+    Verify Expected Cancellation Remarks Are Written
 
-*** Keywords ***
-Fill Up Cancel Segment With Default Values
-    Navigate To Page Cancel Segments
-    Set Test Variable    ${requestor}    Chuck Velasquez
-    Set Test Variable    ${note1}    THIS IS A FREE FLOW TEXT 1
-    Set Test Variable    ${note2}    THIS IS A FREE FLOW TEXT 2
-    Set Test Variable   ${cancel_all}    no
-    Enter Value    ${input_requestor}    ${requestor}
-    Enter Value    ${input_notes1}    ${note1}
-    Enter Value    ${input_notes2}    ${note2}
-    [Teardown]    Take Screenshot
+Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Name Correction NCC Legal Name with OAL
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Name Correction NCC Legal Name with OAL
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Duplicate Tickets
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Duplicate Tickets
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Voluntary Cancel
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments, Voluntary / Not Ticketed
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Voluntary Cancel
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is AC Flight Not Ticketed Yet
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments, Voluntary / Not Ticketed
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason AC Flight Not Ticketed Yet
+    Verify Expected Cancellation Remarks Are Written
 
-Cancel All Segments
-    Navigate To Page Cancel Segments
-    Set Test Variable    ${requestor}    Chuck Velasquez
-    Set Test Variable    ${note1}    THIS IS A FREE FLOW TEXT 1
-    Set Test Variable    ${note2}    THIS IS A FREE FLOW TEXT 2
-    Enter Value    ${input_requestor}    ${requestor}
-    Enter Value    ${input_notes1}    ${note1}
-    Enter Value    ${input_notes2}    ${note2}
-    Click Element     ${checkbox_cancelAll}
-    Set Test Variable   ${cancel_all}    yes
-    [Teardown]    Take Screenshot
+Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is 24 Hours Refund
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments, 24 Hour Refund
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason 24 Hours Refund
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active AC Segments Are Cancelled When Reason Is Death of Pax or Travelling Companion
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, AC Air Segments, Death of Pax or Travelling Companion
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Death of Pax or Travelling Companion
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active AC Segments Are Cancelled When Reason Is IRROP: Will Refund Process due IRROP
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, AC Air Segments, IRROP: Will Refund Process due IRROP
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason IRROP: Will Refund Process due IRROP
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active AC Segments Are Cancelled When Reason Is Unacceptable Schedule Change
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, AC Air Segments, Unacceptable Schedule Change
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Unacceptable Schedule Change
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active AC Segments Are Cancelled When Reason Is Unacceptable Delay Greater than 2 Hrs
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, AC Air Segments, Unacceptable Delay Greater than 2Hrs
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Unacceptable Delay Greater than 2 Hrs
+    Verify Expected Cancellation Remarks Are Written
+    
+Verify That PNRs With Active AC Segments Are Cancelled When Reason Is Jury/Military Duty
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR With Active Air Segments For Cancellation, AC Air Segments, Jury/Military Duty
+    Complete The PNR With Default Values
+    Cancel AC Segment With Reason Jury/Military Duty
+    Verify Expected Cancellation Remarks Are Written
 
-Verify Cancel Segment Fields Are Defaulted For PNRs Booked Via Concur
-    Navigate To Page Cancel Segments
-    Run Keyword And Continue On Failure     Page Should Contain     PAX CXLD PNR VIA OBT
-    Set Test Variable    ${requestor}    PAX
-    Set Test Variable    ${note1}    PAX CXLD PNR VIA OBT
-    Set Test Variable    ${note2}    ${EMPTY}
-    [Teardown]    Take Screenshot
+Verify That PNRs With Power Hotel Segments Are Not Cancelled When These Segments Have Not Been Cancelled In Power Hotel
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR For Cancellation, Power Hotel Segment
+    Complete The PNR With Default Values
+    Verify Agent Is Unable To Cancel Segments Due To Existing Power Hotel Segment 
     
-Verify Expected Cancellation Remarks Are Written
-    Assign Current Date
-    Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL REQUESTED BY ${requestor}
-    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${note1}
-    Run Keyword If    "${note2}" != "${EMPTY}"     Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${note2}
-    Run Keyword If   "${cancel_all}" == "yes"     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**${current_date}
-    
-    
-        
-    
+Verify That PNRs With Power Hotel Segments Are Cancelled When These Segments Have Been Cancelled In Power Hotel
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR For Cancellation, Hotel Segment
+    Complete The PNR With Default Values
+    Cancel All Segments   
+    Verify Expected Cancellation Remarks Are Written
+
+Verify That PNR With Voided Ticket And Is Booked Via Concur Will Be Cancelled    
+    [TAGS]    us10041
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR For Cancellation, Booked Via Concur With Void REMARK
+    Complete The PNR With Default Values
+    Cancel All Segments   
+    Verify Expected Cancellation Remarks Are Written    
+
+

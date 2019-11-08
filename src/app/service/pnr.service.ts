@@ -1635,7 +1635,7 @@ export class PnrService {
         return val;
     }
 
-    getVoidedTicketedSegments() {
+    getTicketList() {
         const ticketList = [];
         for (const ticketed of this.pnrObj.faElements) {
             ticketList.push({

@@ -340,7 +340,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   loadTicketList() {
-    this.ticketVoidList = this.pnrService.getVoidedTicketedSegments();
+    this.ticketVoidList = this.pnrService.getTicketList();
   }
 
   getPassengers() {

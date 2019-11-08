@@ -75,11 +75,19 @@ export class CorpCancelRemarkService {
         remarkSet.set('Auth', cancel.value.authorization);
         this.remarksManager.createPlaceholderValues(remarkSet, null, null);
       }
-      remarkSet = new Map<string, string>();
-      if (cancel.value.ticketNumber) {
-        remarkSet.set('VTkt', cancel.value.ticketNumber);
-        this.remarksManager.createPlaceholderValues(remarkSet, null, null);
+
+      let ctr: number = 0;
+      for (const tickets of cancel.value.ticketVoidList) {
+        if (tickets) {
+          let tkt: string;
+          remarkSet = new Map<string, string>();
+          tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1];
+          remarkSet.set('VTkt', tkt);
+          this.remarksManager.createPlaceholderValues(remarkSet, null, null);
+        }
+        ctr = ctr + 1;
       }
+
       remarkSet = new Map<string, string>();
       remarkSet.set('VoidDate', dateToday);
       if (cancel.value.cFirstInitial.trim !== '' && cancel.value.cLastName.trim !== '') {

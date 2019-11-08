@@ -53,28 +53,43 @@
         </select>
       </div>
     </div>
-    <div *ngIf="f.followUpOption.value === 'Void Non BSP' || (f.followUpOption.value === 'Void BSP' && isVoided)">
+    <div *ngIf="f.followUpOption.value === 'Void Non BSP' || f.followUpOption.value === 'Void BSP'">
       <div class="row form-group">
         <div class="col-4"></div>
-        <div class="col-4">
+        <div class="col-3">
           <div class="">Counselor First Initial:</div>
-          <input type="text" maxlength="1" class="form-control" id="cFirstInitial" formControlName="cFirstInitial"
+          <input type="text" maxlength="1" class="form-control" id="cFirstInitial" formControlName="cFirstInitial" pattern="[a-zA-Z]*"
             name="cFirstInitial" />
         </div>
-        <div class="col-4">
+        <div class="col-5">
           <div class="">Counselor Last Name:</div>
-          <input type="text" class="form-control" id="cLastName" formControlName="cLastName" name="cLastName" />
+          <input type="text" class="form-control" id="cLastName" formControlName="cLastName" name="cLastName" pattern="[a-zA-Z]*" />
         </div>
       </div>
     </div>
 
     <div *ngIf="f.followUpOption.value === 'Void BSP'">
-      <div class="row form-group" *ngIf="!isVoided">
-        <div class="col-4"></div>
-        <div class="col-8" style="color: red">Please void in graphical first then reprocess cancel BSP ticket-void</div>
+      <div class="row form-group">
+        <div class="col-4">Select Voided Tickets:</div>
+        <div class="col-8">
+          <label>
+            <div formArrayName="ticketVoidList" *ngFor="let name of this.cancelForm.controls.ticketVoidList['controls']; let i = index">
+              <input type="checkbox" [formControlName]="i" (change)="checkTicket(i, ticketVoidList[i].freeFlowText)" />
+              {{ ticketVoidList[i].freeFlowText }}
+            </div>
+          </label>
+        </div>
       </div>
-
-      <div *ngIf="isBSP && isVoided">
+        <div class="row form-group" *ngIf="hasUnvoided">
+            <div class="col-4"></div>
+            <div class="col-8">
+              <label style="color: red">
+                   Please void selected ticket(s) in graphical first
+              </label>
+            </div>
+        </div>
+      <input type="hidden" class="form-control" id="ticketList" formControlName="ticketList" name="ticketList" />
+      <div *ngIf="isBSP">
         <div class="row form-group">
           <div class="col-4">Reuse credit card authorization on voided ticket?</div>
           <div class="col-4">
@@ -93,16 +108,14 @@
         </div>
       </div>
 
-      <div *ngIf="isBSP && isVoided">
-        <div class="row form-group">
-          <div class="col-4">Select [vRsn] option:</div>
-          <div class="col-4">
-            <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
-              <option value=""></option>
-              <option value="PASSENGER">Passenger</option>
-              <option value="AGENCY">Agency</option>
-            </select>
-          </div>
+      <div class="row form-group">
+        <div class="col-4">Select vRsn option:</div>
+        <div class="col-4">
+          <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
+            <option value=""></option>
+            <option value="PASSENGER">Passenger</option>
+            <option value="AGENCY">Agency</option>
+          </select>
         </div>
       </div>
     </div>
@@ -110,7 +123,7 @@
     <div *ngIf="isNonBSP">
       <div class="row form-group">
         <div class="col-4">Select reverse item:</div>
-        <div class="col-4">
+        <div class="col-3">
           <select autofocus id="reverseItem" class="form-control" formControlName="reverseItem" name="reverseItem">
             <option *ngFor="let item of reverseItemList" [value]="item.itemValue">
               {{ item.itemText }}
@@ -357,6 +370,4 @@
         </div>
       
   </div>
-
-  <input type="hidden" class="form-control" id="ticketNumber" formControlName="ticketNumber" name="ticketNumber" />
 </form>

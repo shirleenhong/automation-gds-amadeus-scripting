@@ -268,14 +268,16 @@ export class RemarksManagerService {
   private combineForDeleteItems(deleteResponse: string, additional: string[]): string {
     if (additional) {
       additional.forEach((add) => {
+        let isAdded = false;
         deleteResponse
           .replace('XE', '')
           .split(',')
           .forEach((xe) => {
             if (xe.indexOf('-') >= 0) {
               const x = xe.split('-');
-              if (!(parseInt(x[0], null) >= parseInt(add, null) && parseInt(xe[1], null) <= parseInt(add, null))) {
+              if (!(parseInt(x[0], null) >= parseInt(add, null) && parseInt(xe[1], null) <= parseInt(add, null)) && !isAdded) {
                 deleteResponse += ',' + add;
+                isAdded = true;
               }
             }
           });

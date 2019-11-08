@@ -16,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -168,14 +168,16 @@ export class RemarksManagerService {
     additionalRemarks?: Array<RemarkModel>,
     additionalRemarksToBeDeleted?: Array<string>,
     commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>
+    passiveSegment?: Array<PassiveSegmentModel>,
+    requestor?: string
   ) {
     await this.sendPnrToAmadeus(
       await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues),
       additionalRemarks,
       additionalRemarksToBeDeleted,
       commandList,
-      passiveSegment
+      passiveSegment,
+      requestor
     );
   }
 
@@ -196,7 +198,8 @@ export class RemarksManagerService {
     additionalRemarks?: Array<RemarkModel>,
     additionalRemarksToBeDeleted?: Array<string>,
     commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>
+    passiveSegment?: Array<PassiveSegmentModel>,
+    requestor?: string
   ) {
     console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
@@ -231,7 +234,10 @@ export class RemarksManagerService {
       if (commandList) {
         await this.sendSSRCommands(commandList, 0);
       }
-      this.endPnr();
+      if (!requestor) {
+        requestor = 'CWTSCRIPT';
+      }
+      this.endPnr(requestor);
       this.refreshPnr();
     });
   }
@@ -250,8 +256,8 @@ export class RemarksManagerService {
     });
   }
 
-  async endPnr() {
-    await smartScriptSession.send('RF' + this.receiveFrom);
+  async endPnr(requestor) {
+    await smartScriptSession.send('RF' + requestor);
     await smartScriptSession.send('ER');
   }
 

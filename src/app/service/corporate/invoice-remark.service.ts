@@ -14,7 +14,7 @@ declare var smartScriptSession: any;
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
-  constructor(private pnrService: PnrService, private rms: RemarksManagerService) {}
+  constructor(private pnrService: PnrService, private rms: RemarksManagerService) { }
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -159,8 +159,8 @@ export class InvoiceRemarkService {
   }
   getSegmentAssociations(associations) {
     const segAssociations = [];
-    for(const assc of associations) {
-      if(assc.segmentType === 'ST') {
+    for (const assc of associations) {
+      if (assc.segmentType === 'ST') {
         segAssociations.push(assc.tatooNumber);
       }
     }
@@ -213,7 +213,7 @@ export class InvoiceRemarkService {
     };
     const ticketRegex = /TKT[0-9]{1,2}/g;
     const ticketMatch = freeFlowText.match(ticketRegex);
-    if(ticketMatch && ticketMatch[0]) {
+    if (ticketMatch && ticketMatch[0]) {
       feeObj.freeText = ticketMatch[0];
       feeObj.lineNo = ticketMatch[0].replace('TKT', '').trim();
     }

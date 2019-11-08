@@ -435,7 +435,7 @@ export class CorporateComponent implements OnInit {
       nonBspTicket.commands.forEach((c) => commandList.push(c));
     }
 
-    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+    await this.rms.submitToPnr(remarkList, null, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -489,7 +489,7 @@ export class CorporateComponent implements OnInit {
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
-      if (seg.segmentType === 'HTL') {
+      if (seg.segmentType === 'HHL') {
         return true;
       }
     }

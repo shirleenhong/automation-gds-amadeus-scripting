@@ -102,6 +102,7 @@ export class CancelSegmentComponent implements OnInit {
     // this.codeShareGroup = this.formBuilder.group({
     //   tickets: this.formBuilder.array([this.createFormGroup()])
     // });
+    this.isCorporate = this.counselorDetail.getIsCorporate();
     this.loadStaticValue();
     this.getSegmentTatooValue();
     this.addCheckboxes();
@@ -136,7 +137,6 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   private checkCorpPreCancel() {
-    this.isCorporate = this.counselorDetail.getIsCorporate();
     const eba = this.pnrService.getRemarkText('EB/-EBA');
     const cxl = this.pnrService.getRemarkText('CB/CXL/PNR');
     if (this.isCorporate && eba && cxl) {

@@ -199,7 +199,7 @@
               <div class="col-3">AC Ticket Number:</div>
               <div class="col-3">Passenger Name Number:</div>
             </div>
-           
+
             <div formArrayName="actickets"
               *ngFor="let item of this.cancelForm.get('actickets')['controls']; let i = index">
               <div [formGroupName]="i" class="form-group row">
@@ -319,7 +319,10 @@
           <div class="">Ex. Single flight AC4519, Multiple flights AC4519/AC1234/AC5678</div>
         </div>
       </div>
+    </div>
 
+    <div *ngIf="
+      (f.followUpOption.value === 'BSP Queue' || f.followUpOption.value === 'NONBSPKT') && !isVoid">
       <div class="row form-group">
         <div class="col-sm-4"></div>
         <div class="col-3">Ticket Number:</div>
@@ -344,10 +347,11 @@
         </div>
       </div>
     </div>
-    <div *ngIf="(f.followUpOption.value === 'BSPREFUND' || f.followUpOption.value === 'NONBSPREFUND')" >
-        <app-bsp-refund  [refundType]="(f.followUpOption.value === 'BSPREFUND' ? 'bsp' : 'nonbsp')"></app-bsp-refund>
-      </div>
+
+    <div *ngIf="(f.followUpOption.value === 'BSPREFUND' || f.followUpOption.value === 'NONBSPREFUND')">
+      <app-bsp-refund [refundType]="(f.followUpOption.value === 'BSPREFUND' ? 'bsp' : 'nonbsp')"></app-bsp-refund>
+    </div>
   </div>
- 
+
   <input type="hidden" class="form-control" id="ticketNumber" formControlName="ticketNumber" name="ticketNumber" />
 </form>

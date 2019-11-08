@@ -55,16 +55,13 @@ export class TicketRemarkService {
     return this.writeTicketRemark(ticketRemark, fg);
   }
 
-  async deleteTicketingLine() {
-    const linesToDelete: Array<number> = new Array();
-
+  public deleteTicketingLine() {
+    const remGroup = new RemarkGroup();
     const existingTkLineNum = this.pnrService.getTkLineNumber();
     if (existingTkLineNum >= 0) {
-      linesToDelete.push(existingTkLineNum);
+      remGroup.deleteRemarkByIds.push(existingTkLineNum.toString());
     }
-    if (linesToDelete.length > 0) {
-      smartScriptSession.send('XE' + linesToDelete.join(','));
-    }
+    return remGroup;
   }
 
   /**

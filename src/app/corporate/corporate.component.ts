@@ -395,25 +395,26 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     const passiveSegmentList = new Array<PassiveSegmentModel>();
+    const deleteSegments = new Array<string>();
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
 
-    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' || cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
-      await this.ticketRemarkService.deleteTicketingLine().then(async () => {
-        const canceltktl = this.ticketRemarkService.cancelTicketRemark();
-        if (canceltktl) {
-          canceltktl.cryptics.forEach((c) => commandList.push(c));
-        }
-      });
-    }
-
     getSelected.forEach((element) => {
-      forDeletion.push(element.lineNo);
+      deleteSegments.push(element.lineNo);
     });
-    await this.rms.deleteSegments(forDeletion).then(async () => {
+    await this.rms.deleteSegments(deleteSegments).then(async () => {
       await this.getPnr();
       await this.rms.getMatchcedPlaceholderValues();
     });
+
+    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' || cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
+      const canceltktl = this.ticketRemarkService.cancelTicketRemark();
+      if (canceltktl) {
+        canceltktl.cryptics.forEach((c) => commandList.push(c));
+      }
+      remarkCollection.push(this.ticketRemarkService.deleteTicketingLine());
+    }
+
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
@@ -428,14 +429,20 @@ export class CorporateComponent implements OnInit {
           passiveSegmentList.push(pasModel);
         });
       }
+      if (rem.deleteRemarkByIds) {
+        rem.deleteRemarkByIds.forEach((del) => {
+          forDeletion.push(del);
+        });
+      }
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
-    const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
-      cancel.bspRefundComponent.refundForm,
-      cancel.bspRefundComponent.refundType
-    );
+
+    // const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
+    //   cancel.bspRefundComponent.refundForm,
+    //   cancel.bspRefundComponent.refundType
+    // );
 
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
@@ -443,12 +450,12 @@ export class CorporateComponent implements OnInit {
     }
 
 
-    if (refundTicket) {
-      refundTicket.remarks.forEach((rem) => remarkList.push(rem));
-      refundTicket.commands.forEach((c) => commandList.push(c));
-    }
+    // if (refundTicket) {
+    //   refundTicket.remarks.forEach((rem) => remarkList.push(rem));
+    //   refundTicket.commands.forEach((c) => commandList.push(c));
+    // }
 
-    await this.rms.submitToPnr(remarkList, null, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList, cancel.cancelForm.value.requestor).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

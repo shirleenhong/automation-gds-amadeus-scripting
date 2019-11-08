@@ -734,6 +734,9 @@ export class CancelSegmentComponent implements OnInit {
         this.enableFormControls(['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'], false);
         this.checkAcTicketPassenger(this.cancelForm.controls.reasonACCancel.value);
         break;
+      case 'NONBSPKT':
+        this.enableFormControls(['tickets'], false);
+        break;
       default:
         this.enableFormControls(
           ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],

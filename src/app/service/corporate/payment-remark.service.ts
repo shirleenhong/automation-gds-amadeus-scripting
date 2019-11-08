@@ -114,8 +114,8 @@ export class PaymentRemarkService {
 
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
-        paymentRemark.set('PassName', account.passPurchase);
-        paymentRemark.set('FareType', account.fareType);
+        paymentRemark.set('PassName', account.airlineCorporatePass.name);
+        paymentRemark.set('FareType', account.airlineCorporatePass.fareType);
         airlineCodeRemark.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         airlineCodeInvoice.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         airlineCodeInvoice.set('PassNumber', account.airlineCorporatePass.number.toString());
@@ -132,7 +132,7 @@ export class PaymentRemarkService {
 
         confNbrRem.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         redemptionRemark.set('PassName', 'Airline Corporate');
-        passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
+        passNameRedemptionRemark.set('PassNameRedemption', account.airlineCorporatePass.name);
 
         // US10574: Airline Corporate Pass Redemption
         const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
@@ -216,7 +216,7 @@ export class PaymentRemarkService {
         account.accountingTypeRemark === 'ACPPC' ||
         account.accountingTypeRemark === 'WCPPC' ||
         account.accountingTypeRemark === 'PCPPC'
-      ) {        
+      ) {
         const cancelSegmentrelate: string[] = [];
         account.segments.forEach((element) => {
           cancelSegmentrelate.push(element.lineNo);

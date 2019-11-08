@@ -56,14 +56,14 @@
     <div *ngIf="f.followUpOption.value === 'Void Non BSP' || f.followUpOption.value === 'Void BSP'">
       <div class="row form-group">
         <div class="col-4"></div>
-        <div class="col-4">
+        <div class="col-3">
           <div class="">Counselor First Initial:</div>
-          <input type="text" maxlength="1" class="form-control" id="cFirstInitial" formControlName="cFirstInitial"
+          <input type="text" maxlength="1" class="form-control" id="cFirstInitial" formControlName="cFirstInitial" pattern="[a-zA-Z]*"
             name="cFirstInitial" />
         </div>
-        <div class="col-4">
+        <div class="col-5">
           <div class="">Counselor Last Name:</div>
-          <input type="text" class="form-control" id="cLastName" formControlName="cLastName" name="cLastName" />
+          <input type="text" class="form-control" id="cLastName" formControlName="cLastName" name="cLastName" pattern="[a-zA-Z]*" />
         </div>
       </div>
     </div>
@@ -123,7 +123,7 @@
     <div *ngIf="isNonBSP">
       <div class="row form-group">
         <div class="col-4">Select reverse item:</div>
-        <div class="col-4">
+        <div class="col-3">
           <select autofocus id="reverseItem" class="form-control" formControlName="reverseItem" name="reverseItem">
             <option *ngFor="let item of reverseItemList" [value]="item.itemValue">
               {{ item.itemText }}

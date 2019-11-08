@@ -50,7 +50,9 @@ export class CancelSegmentComponent implements OnInit {
   // modalRef: BsModalRef;
   isBSP = false;
   isNonBSP = false;
-  isVoided = false;
+  ticketVoidList = [];
+  hasUnvoided = false;
+  ticketArray = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -94,7 +96,9 @@ export class CancelSegmentComponent implements OnInit {
       otherDetails2: new FormControl('', []),
       voidOption: new FormControl('', []),
       ticketNumber: new FormControl('', []),
-      vRsnOption: new FormControl('', [])
+      vRsnOption: new FormControl('', []),
+      ticketList: new FormControl('', []),
+      ticketVoidList: new FormArray([])
     });
     // this.showMessage();
     // this.checkHasPowerHotel();
@@ -115,6 +119,8 @@ export class CancelSegmentComponent implements OnInit {
     this.getPassengers();
     this.checkCorpPreCancel();
     this.checkVoid();
+    this.loadTicketList();
+    this.addTicketList();
   }
 
   private onChanges(): void {
@@ -138,6 +144,38 @@ export class CancelSegmentComponent implements OnInit {
     this.segments.map((_o, i) => {
       const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.cancelForm.controls.segments as FormArray).push(control);
+    });
+  }
+
+  private addTicketList() {
+    this.cancelForm.controls.ticketList.setValue(this.ticketVoidList);
+    this.ticketVoidList.map((_o) => {
+      const control = new FormControl(false);
+      (this.cancelForm.controls.ticketVoidList as FormArray).push(control);
+    });
+  }
+
+  checkTicket(item, freeFlowText) {
+    const checked = this.cancelForm.controls.ticketVoidList.value[item];
+    if (checked && freeFlowText.split('/')[1].substr(2, 1) === 'V') {
+      this.ticketArray[item] = true;
+    } else if (checked && freeFlowText.split('/')[1].substr(2, 1) !== 'V') {
+      this.ticketArray[item] = false;
+    } else {
+      this.ticketArray[item] = true;
+    }
+
+    this.hasUnvoided = false;
+    this.ticketArray.forEach((x) => {
+      if (x === false) {
+        this.hasUnvoided = true;
+        this.cancelForm.controls.authorization.setValue('');
+        this.enableFormControls(['requestor'], true);
+        this.cancelForm.controls.requestor.setValue('');
+      } else {
+        this.hasUnvoided = false;
+        this.enableFormControls(['requestor'], false);
+      }
     });
   }
 
@@ -297,13 +335,12 @@ export class CancelSegmentComponent implements OnInit {
           tatooNo: element.tatooNo
         };
         this.segments.push(details);
-
-        // if (this.checkVoided(details)) {
-        //   this.segmentsVoided.push(details);
-        // }
       }
     });
-    // return segments;
+  }
+
+  loadTicketList() {
+    this.ticketVoidList = this.pnrService.getVoidedTicketedSegments();
   }
 
   getPassengers() {
@@ -719,26 +756,14 @@ export class CancelSegmentComponent implements OnInit {
           ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
           true
         );
-
-        if (this.pnrService.getTktNumber() !== '') {
-          this.isVoided = true;
-          this.cancelForm.controls.ticketNumber.setValue(this.pnrService.getTktNumber());
-          this.enableFormControls(['requestor', 'desc1', 'desc2'], false);
-          this.cancelForm.controls.vRsnOption.setValue(this.pnrService.getBookingInfo());
-        } else {
-          this.isVoided = false;
-          this.enableFormControls(['requestor', 'desc1', 'desc2'], true);
-        }
         break;
       case 'Void Non BSP':
         this.isBSP = false;
         this.isNonBSP = true;
-        this.enableFormControls(['requestor', 'desc1', 'desc2', 'followUpOption'], false);
         this.enableFormControls(
           ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
           true
         );
-
         break;
       case 'BSP Queue':
         this.enableFormControls(['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'tickets'], false);

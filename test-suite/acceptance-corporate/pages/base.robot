@@ -361,15 +361,16 @@ Finish PNR
     [Arguments]     ${close_corporate_test}=yes     ${queueing}=no
     ${in_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
+    ${in_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}
-    ...    ELSE IF    "${pnr_submitted}" == "no" and "${current_page}" == "Cancel Segments"       Fill Up Required And Cancel Segments
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"       Fill Up Required And Cancel Segments
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
 
 Fill Up Required And Cancel Segments
      Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
-     Run Keyword If     "${non_bsp_ticket_credit_complete}" == "no"    Fill Up NonBSP Ticket Credit With Default Values
+     #Run Keyword If     "${non_bsp_ticket_credit_complete}" == "no"    Fill Up NonBSP Ticket Credit With Default Values
      Click Cancel Segment Button
     
 Submit To PNR
@@ -464,7 +465,16 @@ Get Expected Remark Values From Json
     \    ${exists}     Run Keyword And Return Status      Get Json Value As String    ${json_file_object}    $.['${client_data}'].ExpectedRemark${i}
     \    ${expected_remark}     Run Keyword If    "${exists}" == "True"     Get Json Value As String    ${json_file_object}    $.['${client_data}'].ExpectedRemark${i}
     \    Set Test Variable    ${expected_remark_${i}}     ${expected_remark}
-    \    Exit For Loop If    "${exists}" == "False" or "${expected_remark_${i}}" == "None" 
+    \    Exit For Loop If    "${exists}" == "False" or "${expected_remark_${i}}" == "None"\
+
+Get Historical Remark Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    : FOR    ${i}    IN RANGE    0     99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Get Json Value As String    ${json_file_object}    $.['${client_data}'].HistoricalRemark${i}
+    \    ${historical_remark}     Run Keyword If    "${exists}" == "True"     Get Json Value As String    ${json_file_object}    $.['${client_data}'].HistoricalRemark${i}
+    \    Set Test Variable    ${historical_remark_${i}}     ${historical_remark}
+    \    Exit For Loop If    "${exists}" == "False" or "${historical_remark_${i}}" == "None"  
 
 Get Unexpected Remark Values From Json
     [Arguments]    ${json_file_object}     ${client_data}
@@ -482,6 +492,7 @@ Get Test Data From Json
     Get Air Segment Values From Json     ${json_file_object}    ${client_data}
     Get Other Remark Values From Json     ${json_file_object}    ${client_data}
     Get Expected Approval Values From Json    ${json_file_object}    ${client_data}
+    Get Historical Remark Values From Json    ${json_file_object}    ${client_data}
     ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
     ${num_htl_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumHotelSegments
     Set Test variable    ${num_car_segments}
@@ -549,7 +560,7 @@ Verify Expected Remarks Are Written In The PNR
     \    ${i}    Evaluate    ${i} + 1
     \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${expected_remark_${i}}
     \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}
-    \    Exit For Loop If    "${exists}" == "False"
+    \    Exit For Loop If    "${exists}" == "False"    
    
 Verify Unexpected Remarks Are Not Written In The PNR
     : FOR    ${i}    IN RANGE   0    99
@@ -568,9 +579,15 @@ Verify Remarks Are Not Found In The PNR
     
 Complete The PNR With Default Values
     Sleep    5
-    Enter Cryptic Command    RT
-    Navigate To Page Reporting Remarks
-    Submit To PNR    close_corporate_test=no  
+    Enter Cryptic Command    RFCWTTEST
+    Enter Cryptic Command    ER
+    Enter Cryptic Command    ER
+    Enter Cryptic Command    RT  
+    
+Verify Element Contains Text
+    [Arguments]    ${element}    ${text}
+    ${value}    Get Value    ${element}
+    Run Keyword And Continue On Failure    Should Be Equal As Strings    ${value}    ${text}
 
 Click Send Invoice
     Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180

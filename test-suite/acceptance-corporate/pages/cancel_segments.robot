@@ -22,6 +22,8 @@ ${list_acpassengerNo}    css=#acpassengerNo
 ${tab_CancelSegments}    //span[contains(text(), 'Cancel Segments')]
 ${tab_nonBspTicketCredit}     //span[contains(text(), 'NonBSP Ticket Credit')]
 ${input_ticketNum}    css=#ticketNum
+${text_warningMessage}   //div[@class='col message']
+${list_voidOption}    //select[@id='voidOption']
 
 *** Keywords ***
 Fill Up Cancel Segment With Default Values
@@ -33,6 +35,8 @@ Fill Up Cancel Segment With Default Values
     Enter Value    ${input_notes1}    ${note1}
     Enter Value    ${input_notes2}    ${note2}
     Set Test Variable    ${cancel_segments_complete}    yes
+    Set Test Variable    ${cancel_all}    yes
+    Set Test Variable    ${actual_reason}    ${EMPTY}
     [Teardown]    Take Screenshot
 
 Cancel All Segments
@@ -46,12 +50,8 @@ Cancel All Segments
     Click Element     ${checkbox_cancelAll}
     Set Test Variable   ${cancel_all}    yes
     Set Test Variable    ${cancel_segments_complete}    yes
+    Set Test Variable    ${actual_reason}    ${EMPTY}
     [Teardown]    Take Screenshot
-
-Verify Element Contains Text
-    [Arguments]    ${element}    ${text}
-    ${value}    Get Value    ${element}
-    Run Keyword And Continue On Failure    Should Be Equal As Strings    ${value}    ${text}
 
 Verify Cancel Segment Fields Are Defaulted For PNRs Booked Via Concur
     Navigate To Page Cancel Segments
@@ -63,19 +63,46 @@ Verify Cancel Segment Fields Are Defaulted For PNRs Booked Via Concur
     Click Element     ${checkbox_cancelAll}
     Set Test Variable   ${cancel_all}    yes
     Set Test Variable    ${cancel_segments_complete}    yes
+    Set Test Variable    ${actual_reason}    ${EMPTY}
+    [Teardown]    Take Screenshot
+    
+Verify Cancel Segment Fields Are Defaulted For PNRs Voided And Booked Via Concur
+    Navigate To Page Cancel Segments
+    Select From List By Value    ${list_voidOption}    VoidComplete
+    Sleep    2
+    Take Screenshot
+    Verify Element Contains Text    ${input_requestor}    PAX Cancelled BSP PNR on OBT
+    Set Test Variable    ${requestor}    PAX Cancelled BSP PNR on OBT
+    Set Test Variable    ${note1}    PAX Cancelled BSP PNR on OBT
+    Set Test Variable    ${note2}    THIS IS A FREE FLOW TEXT 2
+    Enter Value    ${input_notes2}    ${note2}
+    Click Element     ${checkbox_cancelAll}
+    Set Test Variable   ${cancel_all}    yes
+    Set Test Variable    ${cancel_segments_complete}    yes
+    Set Test Variable    ${actual_reason}    ${EMPTY}
     [Teardown]    Take Screenshot
     
 Verify Expected Cancellation Remarks Are Written
     Assign Current Date
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL REQUESTED BY ${requestor.upper()}
-    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${note1}
-    Run Keyword If    "${note2}" != "${EMPTY}"     Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${note2}
+    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${note1.upper()}
+    Run Keyword If    "${note2}" != "${EMPTY}"     Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${note2.upper()}
     Run Keyword If   "${cancel_all}" == "yes"     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**${current_date}    
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
-    Run Keyword If    "${reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
+    Run Keyword If    "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
     ...      Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL NR DUE TO IROP OR SKD CHG
     Verify Expected Remarks Are Written In The PNR
+    Verify Historical Remarks Are Written In The PNR
+    
+Verify Historical Remarks Are Written In The PNR
+    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${historical_remark_1}
+    Run Keyword If    "${exists}" == "True"    Get Booking File History
+    : FOR    ${i}    IN RANGE   0    99
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${historical_remark_${i}}
+    \    Run Keyword If    "${exists}" == "True" and "${historical_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${historical_remark_${i}}
+    \    Exit For Loop If    "${exists}" == "False"
     
 Cancel Segment ${segment} Using Cryptic Command
     Enter Cryptic Command    XE${segment}
@@ -91,6 +118,8 @@ Cancel Segments ${segments} Via UI
     Enter Value    ${input_notes1}    ${note1}
     Enter Value    ${input_notes2}    ${note2}
     Set Test Variable   ${cancel_all}    no
+    Set Test Variable    ${actual_reason}    ${EMPTY}
+    Set Test Variable    ${cancel_segments_complete}    yes
     Take Screenshot
     
 Tick Checkbox For Segments ${segments}
@@ -103,7 +132,6 @@ Cancel UA Segment With Reason ${reason}
     Cancel All Segments
     Select UA Reason For Cancel: ${reason}
     Take Screenshot
-    Set Test Variable    ${cancel_segments_complete}    yes
 
 Select UA Reason For Cancel: ${reason}
     ${reason_value}    Set Variable If     "${reason.upper()}" == "24 HOURS REFUND"    1
@@ -114,13 +142,12 @@ Select UA Reason For Cancel: ${reason}
     Select From List By Value    ${list_reasonUACancel}     ${reason_value}
     Run Keyword If    "${reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
     ...    Enter Value    ${input_airlineNo}    1074
-    Set Test Variable    ${reason}    
+    Set Test Variable    ${actual_reason}    ${reason}    
 
 Cancel AC Segment With Reason ${reason}
     Cancel All Segments
     Select AC Reason For Cancel: ${reason}
     Take Screenshot
-    Set Test Variable    ${cancel_segments_complete}    yes
 
 Select AC Reason For Cancel: ${reason}
     Log    ${reason.upper()}
@@ -143,7 +170,7 @@ Select AC Reason For Cancel: ${reason}
     Run Keyword If    ${reason_value} == 11    Enter Value     ${input_acCancelYear}    20
     Run Keyword If    ${reason_value} == 1 or ${reason_value} == 2 or ${reason_value} == 3     Input AC Ticket Number: 1234567890
     Run Keyword If    ${reason_value} == 1 or ${reason_value} == 2 or ${reason_value} == 3     Select From List By Value     ${list_acpassengerNo}    1
-    Set Test Variable    ${reason}
+    Set Test Variable    ${actual_reason}    ${reason}
 
 Input AC Ticket Number: ${ticket_number}
     Wait Until Element Is Visible    ${input_acTicketNo}
@@ -165,8 +192,10 @@ Verify Agent Is Unable To Cancel Segments Due To Existing Power Hotel Segment
     Navigate To Page CWT Corporate
     Wait Until Page Contains Element    ${button_cancel_segments}     180
     Click Element At Coordinates    ${button_cancel_segments}    0    0
-    Wait Until Page Contains Element   ${warning_message}    30
+    Click Element At Coordinates    ${button_cancel_segments}    0    0
+    Wait Until Page Contains Element   ${text_warningMessage}    30
     Run Keyword And Continue On Failure    Page Should Contain    Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script
+    Take Screenshot
     
 Click NonBSP Ticket Credit Tab
     Wait Until Element Is Visible    ${tab_nonBspTicketCredit}    30

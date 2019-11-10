@@ -28,10 +28,13 @@ ${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${icon_air}       css=.bookingTool.FS
 ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
+${tab_booking_file_history}    //span[contains(text(), 'Booking File History')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
+${popUp_pnr_history}   //div[@class='cmdPopupContent']
 ${button_cryptic}    css=.showInCommandPage
 ${button_graphical}    css=.showInGraphicMode
 ${close_cryptic_display}    css=#e4retrievePNR_cdPopup_id > .ydlg-close
+${close_booking_file_history}    //div[@class='btnCmdPageCLose']
 ${response_simultaneous}    //pre[@id='responseCommand']//code[contains(text(), 'SIMULTANEOUS CHANGES TO PNR')]
 ${overlay_loader}    //div[@class='uicLoaderOverlay uicLo-loading'] 
 ${text_record_locator}     //div[contains(text(), 'Record Locator')]
@@ -79,7 +82,7 @@ Open CA Corporate Test
     Click Element    ${menu_corp_test}
     Wait Until Element Is Visible    ${header_corp_test}    60
     Wait Until Element Is Visible    ${window_corp_test}    60
-    Sleep    10
+    Sleep    30
     Select Frame    ${window_corp_test}
     Set Test Variable    ${current_page}    CWT Corporate
     Set Test Variable    ${pnr_submitted}    no
@@ -134,7 +137,7 @@ Get PNR Details
     Wait Until Element Is Enabled    ${icon_air}    30
     Wait Until Element Is Visible    ${tab_cryptic_display}    60
     Sleep    2
-    Press Key    ${tab_cryptic_display}    \\32
+    Press Keys    ${tab_cryptic_display}    \\32
     Wait Until Page Contains Element    ${popUp_pnr_display}    60
     Wait Until Element Is Not Visible    ${overlay_loader}    10
     Sleep    1
@@ -143,6 +146,21 @@ Get PNR Details
     Set Test Variable    ${pnr_details}    ${pnr_details}
     Close Cryptic Display
     [Teardown]    Take Screenshot
+    
+Get Booking File History
+    Wait Until Element Is Not Visible    ${overlay_loader}    10
+    Wait Until Element Is Enabled    ${icon_air}    30
+    Wait Until Element Is Visible    ${tab_booking_file_history}    60
+    Sleep    2
+    Press Keys    ${tab_booking_file_history}    \\32
+    Wait Until Page Contains Element    ${popUp_pnr_history}    60
+    Wait Until Element Is Not Visible    ${overlay_loader}    10
+    Sleep    1
+    ${pnr_details}    Get Text    ${popUp_pnr_history}
+    Log    ${pnr_details}
+    Set Test Variable    ${pnr_details}
+    Take Screenshot
+    Click Element    ${close_booking_file_history}
 
 Switch To Command Page
     Wait Until Page Contains Element    ${button_cryptic}    60
@@ -488,6 +506,7 @@ Create PNR With Passive Air Segments For ${client_data}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     
 Create PNR With Active Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}

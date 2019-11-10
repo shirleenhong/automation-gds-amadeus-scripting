@@ -36,6 +36,7 @@ Click BSP Reporting Tab
     Wait Until Element Is Visible    ${tab_bsp}    30
     Click Element    ${tab_bsp}
     Set Test Variable    ${current_page}    BSP Reporting
+    Wait Until Element Is Visible    ${fare_row_number}${open_bracket}1${close_bracket}${list_reason_code}    20
 
 Click Non BSP Reporting Tab
     Wait Until Element Is Visible    ${tab_nonBsp}    30
@@ -392,3 +393,9 @@ Populate Destination Code Fields For ${tst_no} TST
 Verify Destination Code Remarks Are Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
+    
+Select Reason Code ${reason_code_value} For TST${tst_number}
+    Navigate To Page BSP Reporting
+    Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
+    Sleep    2
+    Take Screenshot

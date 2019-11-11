@@ -33,7 +33,7 @@ ${input_counselorSurname}    //input[@id='lastName']
 ${input_baseAmount}    //input[@id='baseAmount']
 ${input_gst}    //input[@id='gst']
 ${input_tax}    //input[@id='tax']
-${input_commission}    //input[@name='commission']
+${input_commission_ticketCredit}    //input[@name='commission']
 ${input_tixCred_freeFlow1}    //input[@id='freeFlow1']
 ${input_tixCred_freeFlow2}    //input[@id='freeFlow2']
 
@@ -178,7 +178,6 @@ Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Full
     Enter Value    ${input_counselorName}    P
     Enter Value    ${input_counselorSurname}    FISHER
     Take Screenshot
-    # Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
     
 Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Partial
     Cancel All Segments
@@ -193,11 +192,10 @@ Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Part
     Enter Value    ${input_baseAmount}    123.45
     Enter Value    ${input_gst}    6.70
     Enter Value    ${input_tax}    8.90
-    Enter Value    ${input_commission}    0.12
+    Enter Value    ${input_commission_ticketCredit}    0.12
     Enter Value    ${input_tixCred_freeFlow1}    THIS IS A SAMPLE
     Enter Value    ${input_tixCred_freeFlow2}    OF A FREE FLOW TEXT
     Take Screenshot
-    # Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
 
 Select AC Reason For Cancel: ${reason}
     Log    ${reason.upper()}

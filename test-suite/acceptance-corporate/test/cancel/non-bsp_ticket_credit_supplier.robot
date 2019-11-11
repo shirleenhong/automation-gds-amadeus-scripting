@@ -1,7 +1,7 @@
 *** Settings ***
 Force Tags        corp
 Resource          ../../pages/base.robot
-# Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    cancel_nonbsp_ticketCredit

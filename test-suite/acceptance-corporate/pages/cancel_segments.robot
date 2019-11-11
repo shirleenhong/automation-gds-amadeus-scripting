@@ -249,7 +249,7 @@ Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When Th
     Assign Current Date
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG - NONBSP PART RECREDIT - ${current_date}
-    Verify Specific Remark Is Written In The PNR    RMX . NONBSP..ACY - ISSUE OID YTOWL2106
+    Verify Specific Remark Is Written In The PNR    RMX . NONBSP..PFS - ISSUE OID YTOWL2106
     Verify Specific Remark Is Written In The PNR    RMX . RECREDIT BASE AMOUNT 123.45 GST 6.70 TAX 8.90
     Verify Specific Remark Is Written In The PNR    RMX . RECREDIT COMMISSION 0.12
     Verify Specific Remark Is Written In The PNR    RMX . THIS IS A SAMPLE

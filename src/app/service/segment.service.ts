@@ -988,7 +988,7 @@ export class SegmentService {
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
                 }
             }
-            if (cancel.value.followUpOption.value === 'BSP Queue') {
+            if (cancel.value.followUpOption === 'NONBSPKT') {
                 const pArray = ['CurrentDate', 'DocTicketNum'];
                 const pValueArray = [dateToday, ticket];
                 this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);

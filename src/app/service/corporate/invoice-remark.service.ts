@@ -263,25 +263,41 @@ export class InvoiceRemarkService {
     }
     return invoiceObj;
   }
-  getAllTickets(response) {
+
+  // getAllTickets(response) {
+  //   debugger;
+  //   const eTickets = [];
+  //   const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
+  //   const match = response.match(resregex);
+  //   if (match) {
+  //     const ticketTypeRegex = /[A-Z]{4}/g;
+  //     const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
+  //     for (const matchEle of match) {
+  //       const typeMatch = matchEle.match(ticketTypeRegex);
+  //       if (typeMatch && typeMatch[0].indexOf('ET') > -1 && ) {
+  //         const ticketNumMatch = matchEle.match(ticketNumRegex);
+  //         if (ticketNumMatch && ticketNumMatch[0]) {
+  //           eTickets.push(ticketNumMatch[0].replace('-', '').trim());
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return eTickets;
+  // }
+
+  getAllTickets() {
     const eTickets = [];
-    const resregex = /AF\/FA[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
-    const match = response.match(resregex);
-    if (match) {
-      const ticketTypeRegex = /[A-Z]{4}/g;
-      const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
-      for (const matchEle of match) {
-        const typeMatch = matchEle.match(ticketTypeRegex);
-        if (typeMatch && typeMatch[0].indexOf('ET') > -1) {
-          const ticketNumMatch = matchEle.match(ticketNumRegex);
-          if (ticketNumMatch && ticketNumMatch[0]) {
-            eTickets.push(ticketNumMatch[0].replace('-', '').trim());
-          }
-        }
+    for (const ticketed of this.pnrService.pnrObj.faElements) {
+      const regex = new RegExp('[0-9]{3}-[0-9]+');
+      const match = regex.exec(ticketed.freeFlowText);
+      regex.lastIndex = 0;
+      if (match !== null && ticketed.freeFlowText.indexOf('/EVAC/') === -1) {
+        eTickets.push(match[0]);
       }
     }
     return eTickets;
   }
+
   getFeeDetails(rmElement) {
     const feeLineObj = {
       ticketline: '',

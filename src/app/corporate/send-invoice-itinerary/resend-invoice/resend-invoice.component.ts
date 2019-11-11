@@ -12,9 +12,9 @@ import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-se
 export class ResendInvoiceComponent implements OnInit {
   invoiceFormGroup: FormGroup;
   constructor(private pnrService: PnrService,
-              private invoiceRmkService: InvoiceRemarkService,
-              private formBuilder: FormBuilder,
-              private ddbService: DDBService) { }
+    private invoiceRmkService: InvoiceRemarkService,
+    private formBuilder: FormBuilder,
+    private ddbService: DDBService) { }
   showSegments = false;
   showInvoiceList = false;
   selectedElementsUI = {
@@ -83,9 +83,9 @@ export class ResendInvoiceComponent implements OnInit {
     }
   }
   async getAllETickets() {
-    const rttnCmd = 'RTTN/H';
-    const rttnResponse = await this.invoiceRmkService.sendINVCommand(rttnCmd);
-    const eTickets = this.invoiceRmkService.getAllTickets(rttnResponse);
+    // const rttnCmd = 'RTTN/H';
+    // const rttnResponse = await this.invoiceRmkService.sendINVCommand(rttnCmd);
+    const eTickets = this.invoiceRmkService.getAllTickets();
     this.makeETicketsListUI(eTickets);
     console.log(eTickets);
   }
@@ -97,8 +97,8 @@ export class ResendInvoiceComponent implements OnInit {
     };
     this.invoiceList.push(selectAllObj);
     for (const ele of invoiceElements) {
-        const invoiceObj = this.invoiceRmkService.getInvoiceDetails(ele);
-        this.invoiceList.push(invoiceObj);
+      const invoiceObj = this.invoiceRmkService.getInvoiceDetails(ele);
+      this.invoiceList.push(invoiceObj);
     }
   }
   addInvoicesToList(fiElements) {
@@ -162,7 +162,7 @@ export class ResendInvoiceComponent implements OnInit {
     const rmElements = this.pnrService.pnrObj.rmElements;
     for (const rmElement of rmElements) {
       if (rmElement.category === 'F' && rmElement.freeFlowText.indexOf('TKT') > -1) {
-        if(!this.checkFeePresent(rmElement.freeFlowText)) {
+        if (!this.checkFeePresent(rmElement.freeFlowText)) {
           const feeObj = this.invoiceRmkService.getFeeDetailsUI(rmElement.freeFlowText);
           this.feeAccountingList.push(feeObj);
         }
@@ -338,7 +338,7 @@ export class ResendInvoiceComponent implements OnInit {
   private checkForAllSelectionTickets() {
     let isAllSelected = true;
     this.eTicketsList.forEach((ele, index) => {
-      if (index !== 0  && index !== this.eTicketsList.length - 1 && !ele.isChecked) {
+      if (index !== 0 && index !== this.eTicketsList.length - 1 && !ele.isChecked) {
         isAllSelected = false;
       }
     });

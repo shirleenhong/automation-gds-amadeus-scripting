@@ -410,7 +410,9 @@ export class CancelSegmentComponent implements OnInit {
         }
         if (look.airlineCode === 'UA') {
           this.isUA = true;
-          this.enableFormControls(['reasonUACancel'], false);
+          if (this.f.followUpOption.value !== 'NONBSPKT') {
+            this.enableFormControls(['reasonUACancel'], false);
+          }
           if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
             // this.cancelForm.controls['reasonUACancel'].setValue('');
             this.cancelForm.controls.uasegNo.setValue('');
@@ -487,7 +489,9 @@ export class CancelSegmentComponent implements OnInit {
       }
       if (this.segments.length === 1 && this.segments[0].airlineCode === 'UA') {
         this.isUA = true;
-        this.enableFormControls(['reasonUACancel'], false);
+        if (this.f.followUpOption.value !== 'NONBSPKT') {
+          this.enableFormControls(['reasonUACancel'], false);
+        }
       }
       if (this.segments[0].airlineCode !== 'AC' && this.segments[0].airlineCode !== 'UA') {
         this.isOthers = true;
@@ -770,6 +774,7 @@ export class CancelSegmentComponent implements OnInit {
         this.checkAcTicketPassenger(this.cancelForm.controls.reasonACCancel.value);
         break;
       case 'NONBSPKT':
+        this.enableFormControls(['reasonUACancel'], true);
         this.enableFormControls(['tickets'], false);
         break;
       default:

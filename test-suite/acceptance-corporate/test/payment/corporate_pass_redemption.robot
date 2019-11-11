@@ -1,14 +1,8 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/payment.robot
-#Test Teardown    Close All Browsers
+Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    corporate_pass_redemption

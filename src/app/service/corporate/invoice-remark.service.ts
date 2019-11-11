@@ -130,9 +130,11 @@ export class InvoiceRemarkService {
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {
         const ticketNum = this.getTicketNum(selectedEle, eTicketsList);
-        const ticketMap = new Map<string, string>();
-        ticketMap.set('TicketNum', ticketNum);
-        this.rms.createPlaceholderValues(ticketMap);
+        if (ticketNum !== '') {
+          const ticketMap = new Map<string, string>();
+          ticketMap.set('TicketNum', ticketNum);
+          this.rms.createPlaceholderValues(ticketMap);
+        }
       }
     }
   }

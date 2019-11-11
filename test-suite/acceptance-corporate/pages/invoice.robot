@@ -23,10 +23,10 @@ ${checkbox_select}    //input[@type='checkbox']
 Add Multiple Email Address
     [Arguments]    @{email_address}
     Set Test Variable    ${div_index}    1
+    Click Element    ${button_emailAdd}
     :FOR    ${email_address}    IN    @{email_address}
     \    Click Element    ${form_email}${open_bracket}${div_index}${close_bracket}${input_email} 
     \    Enter Value    ${form_email}${open_bracket}${div_index}${close_bracket}${input_email}    ${email_address} 
-    \    Click Element    ${button_emailAdd}
     \    ${div_index}    Evaluate  ${div_index} + 1
     
 Get Invoice And E-tickets Remarks From PNR
@@ -52,6 +52,8 @@ Get E-Eticket Remarks From PNR
     ${eticket[2]}   Fetch From Left    ${eticket[2]}    /ETAC
     ${eticket[1]}    Replace String     ${eticket[1]}    -    ${EMPTY}
     ${eticket[2]}    Replace String     ${eticket[2]}    -    ${EMPTY}
+    ${eticket[1]}    Strip String    ${eticket[1]}
+    ${eticket[2]}    Strip String     ${eticket[2]}    
     Set Test Variable   ${eticket[1]}
     Set Test Variable   ${eticket[2]}
 
@@ -91,10 +93,17 @@ Select Non-BSP Accounting Lines From The List
     \    Click Element    ${list_nonBsp_accounting}${open_bracket}${nonBsp_number}${close_bracket}${checkbox_select}
     Click Element    ${input_nonBsp_accounting} 
     
+Complete The PNR In Corporate Scripts
+    Sleep    5
+    Enter Cryptic Command    RT
+    Navigate To Page Reporting Remarks
+    Submit To PNR    close_corporate_test=no  
+    
 Complete PNR And Send Cryptic For Invoice
-    Complete The PNR With Default Values
+    Complete The PNR In Corporate Scripts
     Sleep    5
     Close CA Corporate Test
+    Sleep    2
     Ticket TST1
     Ticket TST2
     Send Invoice Cryptic Command    RT    RFCWTPTEST    INV/ZX
@@ -102,11 +111,21 @@ Complete PNR And Send Cryptic For Invoice
     Get Invoice And E-tickets Remarks From PNR
     
 Complete PNR Without Sending Cryptic For Invoice
-    Complete The PNR With Default Values
+    Complete The PNR In Corporate Scripts
     Close CA Corporate Test
-    Get Record Locator Value
+    Sleep    2
     Ticket TST1
     Ticket TST2
+    
+Complete PNR In Amadeus Send Cryptic For Invoice
+    Enter Cryptic Command     RFCWTPTEST
+    Enter Cryptic Command     ER
+    Enter Cryptic Command     ER
+    Sleep    2
+    Ticket TST1
+    Ticket TST2
+    Send Invoice Cryptic Command    RT    RFCWTPTEST    INV/ZX
+    Enter Cryptic Command    RT${actual_record_locator}
     Get Invoice And E-tickets Remarks From PNR
  
 Send Invoice Cryptic Command
@@ -133,6 +152,12 @@ Select Invoice And E-Tickets To Resend And Add Email
     Take Screenshot
     Click Send Invoice Button
 
+Verify If Corporate Script Send INV Cryptic Automatically
+    Navigate To Page Send Invoice/Itinerary
+    Sleep   3
+    Close CA Corporate Test
+    Get Invoice And E-tickets Remarks From PNR
+    
 Select All Invoice And All E-tickets To Resend And Add Multiple Emails
     Navigate To Page Send Invoice/Itinerary
     Select Invoices From The List    1
@@ -141,9 +166,9 @@ Select All Invoice And All E-tickets To Resend And Add Multiple Emails
     Take Screenshot
     Click Send Invoice Button
 
-Select All Invoices And No E-tickets And Add Email
+Select Invoice And No E-tickets And Add Email
     Navigate To Page Send Invoice/Itinerary
-    Select Invoices From The List    1
+    Select Invoices From The List    2
     Select E-Tickets To ReSend    4
     Enter Value    ${input_email}     InvoiceTest@email.com
     Take Screenshot
@@ -152,12 +177,14 @@ Select All Invoices And No E-tickets And Add Email
 Select Fee Accounting Lines 
     Navigate To Page Send Invoice/Itinerary
     Select Fee Accounting Lines From The List    1    2
+    Enter Value    ${input_email}     InvoiceTest@email.com
     Take Screenshot
     Click Send Invoice Button
     
 Select Non-BSP Accounting Lines 
     Navigate To Page Send Invoice/Itinerary
     Select Non-BSP Accounting Lines From The List    1    2
+    Enter Value    ${input_email}     InvoiceTest@email.com
     Take Screenshot
     Click Send Invoice Button
 
@@ -165,10 +192,12 @@ Select All Fees and Non-BSP Accounting Lines
     Navigate To Page Send Invoice/Itinerary
     Select Fee Accounting Lines From The List    1    2
     Select Non-BSP Accounting Lines From The List    1    2
+    Enter Value    ${input_email}     InvoiceTest@email.com
     Take Screenshot
     Click Send Invoice Button
     
 Select Invoices, E-Tickets, Fee, And Non-BSP Accounting Lines
+    Navigate To Page Send Invoice/Itinerary
     Select Invoices From The List    1
     Select E-Tickets To ReSend    1
     Select Fee Accounting Lines From The List    1
@@ -209,13 +238,13 @@ Verify That Invoice Remark Is Deleted, RMZ Ticket Is Written And Email Is Update
 Verify That Accounting Remarks Are Written
     Switch To Graphic Mode
     Get PNR Details
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     Verify Unexpected Remarks Are Not Written In The PNR
     
 Verify That All Selected Invoices, Tickets, Fess, Non-BSP And Email Added Are Written
     Switch To Graphic Mode
     Get PNR Details
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     Verify Unexpected Remarks Are Not Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMZ SPCL-TKT-${eticket[1]}  
     Verify Specific Remark Is Written In The PNR    RMZ SPCL-TKT-${eticket[2]} 
@@ -226,7 +255,17 @@ Verify That PNR Is Correctly Queued
     Open Command Page
     Enter Cryptic Command    RTQ 
     Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}066${SPACE}${SPACE}${SPACE}${SPACE}001    
-    
+
+Verify New MAC Remarks Are Written
+    Verify Specific Remark Is Written In The PNR     RM *MAC/-SUP-ACY/-LK-MAC1/-AMT-300.00/-PT-13.00RC/-PT-100
+    Verify Specific Remark Is Written In The PNR     .00XT/CD-00.00
+    Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0820/-TK-
+    Verify Specific Remark Is Written In The PNR     2211333555/-MP-ALL/-BKN-CON1234567/S2
+    Verify Specific Remark Is Written In The PNR     RM *MAC/-SUP-A22/-LK-MAC2/-AMT-150.00/-PT-10.00RC/-PT-20.
+    Verify Specific Remark Is Written In The PNR     00XT/S2
+    Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0820/-TK-
+    Verify Specific Remark Is Written In The PNR     2211333555/-MP-ALL/-BKN-CON1234567/S2
+     
     
 
 

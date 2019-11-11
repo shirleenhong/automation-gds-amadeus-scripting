@@ -76,7 +76,7 @@ export class CorpCancelRemarkService {
         this.remarksManager.createPlaceholderValues(remarkSet, null, null);
       }
 
-      let ctr: number = 0;
+      let ctr = 0;
       for (const tickets of cancel.value.ticketVoidList) {
         if (tickets) {
           let tkt: string;
@@ -129,8 +129,7 @@ export class CorpCancelRemarkService {
         OID = this.pnrService.pnrObj.tkElements[0].ticketingOfficeID;
       }
     }
-    // this.queService.addQueueCollection(new QueuePlaceModel(OID, 41, 85));
-    this.queService.addQueueCollection(new QueuePlaceModel(OID, 41, 98));
+    this.queService.addQueueCollection(new QueuePlaceModel(OID, 60, 1));
     return rmGroup;
   }
 

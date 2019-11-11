@@ -17,8 +17,8 @@ export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
   constructor(private pnrService: PnrService,
-              private queService: AmadeusQueueService,
-              private rms: RemarksManagerService) { }
+    private queService: AmadeusQueueService,
+    private rms: RemarksManagerService) { }
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -124,8 +124,8 @@ export class InvoiceRemarkService {
     } else if (selectedETickets === 'None') {
       // create placeholder for no ticket
       const ticketMap = new Map<string, string>();
-      ticketMap.set('TicketNum', '0');
-      this.rms.createPlaceholderValues(ticketMap);
+      ticketMap.set('EticketNone', 'true');
+      this.rms.createPlaceholderValues(null, ticketMap, null, null, 'SPCL-TKT0');
     } else {
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {
@@ -184,7 +184,7 @@ export class InvoiceRemarkService {
         const nonBspMap = new Map<string, string>();
         if (line === rmk.nonBspLineNum) {
           rmk.nonBspRmk = rmk.nonBspRmk.replace('MAC/-', '').trim();
-          nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk);
+          nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk.replace('RM*', ''));
           let segAssociations = [];
           if (rmk.associations) {
             segAssociations = this.getSegmentAssociations(rmk.associations);

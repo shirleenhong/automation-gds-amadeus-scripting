@@ -130,9 +130,11 @@ export class InvoiceRemarkService {
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {
         const ticketNum = this.getTicketNum(selectedEle, eTicketsList);
-        const ticketMap = new Map<string, string>();
-        ticketMap.set('TicketNum', ticketNum);
-        this.rms.createPlaceholderValues(ticketMap);
+        if (ticketNum !== '') {
+          const ticketMap = new Map<string, string>();
+          ticketMap.set('TicketNum', ticketNum);
+          this.rms.createPlaceholderValues(ticketMap);
+        }
       }
     }
   }
@@ -263,7 +265,7 @@ export class InvoiceRemarkService {
   }
   getAllTickets(response) {
     const eTickets = [];
-    const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
+    const resregex = /AF\/FA[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
     const match = response.match(resregex);
     if (match) {
       const ticketTypeRegex = /[A-Z]{4}/g;

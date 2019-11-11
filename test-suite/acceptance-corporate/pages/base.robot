@@ -556,11 +556,12 @@ Get Air Segment Values From Json
     \    ${i}    Evaluate    ${i} + 1
 
 Verify Expected Remarks Are Written In The PNR
+    [Arguments]    ${multi_line_remark}=False
     : FOR    ${i}    IN RANGE   0    99
     \    ${i}    Evaluate    ${i} + 1
     \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${expected_remark_${i}}
-    \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}
-    \    Exit For Loop If    "${exists}" == "False"    
+    \    Run Keyword If    "${exists}" == "True" and "${expected_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${expected_remark_${i}}    ${multi_line_remark}
+    \    Exit For Loop If    "${exists}" == "False"
    
 Verify Unexpected Remarks Are Not Written In The PNR
     : FOR    ${i}    IN RANGE   0    99

@@ -1,7 +1,7 @@
 *** Settings ***
 Force Tags        corp
 Resource          ../../pages/base.robot
-#Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    cancel_pnr_workflow
@@ -84,7 +84,7 @@ Verify That PNRs With Active UA Segments Are Cancelled When Reason Is Non Refund
 Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Name Correction NCC With OAL
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Passive Air Segments For Cancellation, AC Air Segments
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments, Name Correction NCC With OAL
     Complete The PNR With Default Values
     Cancel AC Segment With Reason Name Correction NCC With OAL
     Verify Expected Cancellation Remarks Are Written
@@ -92,7 +92,7 @@ Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Name Corr
 Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Name Correction NCC Legal Name with OAL
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Passive Air Segments For Cancellation, AC Air Segments
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments, Name Correction NCC Legal Name with OAL
     Complete The PNR With Default Values
     Cancel AC Segment With Reason Name Correction NCC Legal Name with OAL
     Verify Expected Cancellation Remarks Are Written
@@ -100,7 +100,7 @@ Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Name Corr
 Verify That PNRs With Passive AC Segments Are Cancelled When Reason Is Duplicate Tickets
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Passive Air Segments For Cancellation, AC Air Segments
+    Create PNR With Passive Air Segments For Cancellation, AC Air Segments, Duplicate Tickets
     Complete The PNR With Default Values
     Cancel AC Segment With Reason Duplicate Tickets
     Verify Expected Cancellation Remarks Are Written
@@ -170,7 +170,7 @@ Verify That PNRs With Active AC Segments Are Cancelled When Reason Is Jury/Milit
     Verify Expected Cancellation Remarks Are Written
 
 Verify That PNRs With Power Hotel Segments Are Not Cancelled When These Segments Have Not Been Cancelled In Power Hotel
-    [TAGS]    us10041
+    [TAGS]    us10041    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Cancellation, Power Hotel Segment
     Complete The PNR With Default Values
@@ -187,9 +187,8 @@ Verify That PNRs With Power Hotel Segments Are Cancelled When These Segments Hav
 Verify That PNR With Voided Ticket And Is Booked Via Concur Will Be Cancelled    
     [TAGS]    us10041
     Login To Amadeus Sell Connect Acceptance
-    Create PNR For Cancellation, Booked Via Concur With Void REMARK
+    Create PNR With Passive Air Segments For Cancellation, Booked Via Concur With Void REMARK
     Complete The PNR With Default Values
-    Cancel All Segments   
+    Cancel Segment 2 Using Cryptic Command
+    Verify Cancel Segment Fields Are Defaulted For PNRs Voided And Booked Via Concur
     Verify Expected Cancellation Remarks Are Written    
-
-

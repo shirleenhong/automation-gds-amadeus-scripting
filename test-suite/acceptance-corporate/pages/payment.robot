@@ -153,7 +153,7 @@ Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Take Screenshot
 
-Add APAY Ticketing Details For Single Segment
+Add APAY Ticketing Details For Single Segment - Other Costs
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2
@@ -174,6 +174,15 @@ Press A Key X Times
     \    Keydown     ${key}
     \    Keyup     ${key}
     \    ${i}    Evaluate    ${i} + 1
+
+Add APAY Ticketing Details For Single Segment
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    APAY
+    Select Itinerary Segments    2
+    Enter Value    ${list_description}    SEAT COSTS
+    Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
+    Take Screenshot
     
 Add APAY Ticketing Details For Multiple Segments
     Navigate To Page Add Accounting Line

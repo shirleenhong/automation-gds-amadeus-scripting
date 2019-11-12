@@ -57,7 +57,7 @@ Verify That APAY Ticketing Remarks Are Written For Single Segment
     Move Single Passenger And Add Passive Segment For APAY With Airline Code WS
     Enter FOP Credit Card Remark
     Enter EB Remark For APAY
-    Add APAY Ticketing Details For Single Segment
+    Add APAY Ticketing Details For Single Segment - Other Costs
     Verify That Supplier Code Default Value Is Correct For Other Type Of APAY
     Click Save Button
     Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR

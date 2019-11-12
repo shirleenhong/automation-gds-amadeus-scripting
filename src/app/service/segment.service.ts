@@ -202,7 +202,7 @@ export class SegmentService {
                 }
 
                 if (segmentrem.segmentType === 'CAR' && pnrSegment.segmentType === 'CAR') {
-                    this.rirCar(pnrSegment, segmentrem, rmGroup);
+                    this.rirCar(pnrSegment, segmentrem, rmGroup, isCorp);
                 }
 
                 if (segmentrem.segmentType === 'HTL' && pnrSegment.segmentType === 'HTL') {
@@ -320,19 +320,23 @@ export class SegmentService {
         });
     }
 
-    private rirCar(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup) {
+    private rirCar(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, isCorp: boolean) {
         const optionalCarRemarks = [{ include: segmentrem.specialRequest, description: '' },
         { include: segmentrem.specialEquipment, description: '' },
-        { include: segmentrem.pickupOffAddress, description: 'Pick Up-' },
-        { include: segmentrem.dropOffAddress, description: 'Drop off-' },
-        { include: segmentrem.dropOffFee, description: 'Drop Fee-' }];
+        { include: segmentrem.pickupOffAddress, description: 'Pick Up-', pName: 'PickupOffAddress' },
+        { include: segmentrem.dropOffAddress, description: 'Drop off-', pName: 'DropOffAddress' },
+        { include: segmentrem.dropOffFee, description: 'Drop Fee-', pName: 'DropOffFee' }];
 
         const optionalcdid = [{ include: segmentrem.cdNumber, description: 'CD-' },
         { include: segmentrem.idNumber, description: 'ID-' }];
 
         optionalCarRemarks.forEach(c => {
             if (c.include) {
-                rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                if (isCorp && c.description) {
+                    this.assignCorpPlaceholders([c.pName], [c.include], null, null, pnrSegment.tatooNo, null);
+                } else {
+                    rmGroup.remarks.push(this.getRemarksModel(c.description + c.include, 'RI', 'R', pnrSegment.tatooNo));
+                }
             }
         });
 
@@ -348,8 +352,14 @@ export class SegmentService {
         }
 
         if (segmentrem.frequentFlierNumber && segmentrem.frequentflightNumber) {
-            rmGroup.remarks.push(this.getRemarksModel('Airline FF-' +
-                segmentrem.frequentFlierNumber + segmentrem.frequentflightNumber, 'RI', 'R', pnrSegment.tatooNo));
+            if (isCorp) {
+                this.assignCorpPlaceholders(['FrequentFlierNumber', 'FrequentflightNumber'],
+                    [segmentrem.frequentFlierNumber, segmentrem.frequentflightNumber], null, null, pnrSegment.tatooNo, null);
+            } else {
+                rmGroup.remarks.push(this.getRemarksModel('Airline FF-' +
+                    segmentrem.frequentFlierNumber + segmentrem.frequentflightNumber, 'RI', 'R', pnrSegment.tatooNo));
+            }
+
         }
     }
 

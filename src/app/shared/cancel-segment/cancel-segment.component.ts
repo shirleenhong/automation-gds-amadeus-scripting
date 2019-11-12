@@ -6,6 +6,8 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 import { validateSegmentNumbers, validatePassengerNumbers } from 'src/app/shared/validators/leisure.validators';
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
+import { ReasonCodeTypeEnum } from '../../enums/reason-code-types';
+import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
 // import { MessageComponent } from '../message/message.component';
@@ -47,13 +49,17 @@ export class CancelSegmentComponent implements OnInit {
   isBSP = false;
   isNonBSP = false;
   isVoided = false;
+  showEBDetails: boolean;
+  ebCList: any;
+  ebRList: { itemValue: string; itemText: string; }[];
 
   constructor(
     private formBuilder: FormBuilder,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private counselorDetail: CounselorDetail
-  ) {
+    private counselorDetail: CounselorDetail,
+    private ddbService: DDBService
+   ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
@@ -90,7 +96,12 @@ export class CancelSegmentComponent implements OnInit {
       otherDetails2: new FormControl('', []),
       voidOption: new FormControl('', []),
       ticketNumber: new FormControl('', []),
-      vRsnOption: new FormControl('', [])
+      vRsnOption: new FormControl('', []),
+      ebR: new FormControl('', [Validators.required]),
+      ebT: new FormControl('', [Validators.required]),
+      ebN: new FormControl('GI', [Validators.required]),
+      ebC: new FormControl('', [Validators.required])
+
     });
     // this.showMessage();
     // this.checkHasPowerHotel();
@@ -109,6 +120,7 @@ export class CancelSegmentComponent implements OnInit {
     this.getPassengers();
     this.checkCorpPreCancel();
     this.checkVoid();
+    this.checkEbRemark();
   }
 
   private onChanges(): void {
@@ -249,6 +261,27 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
+    this.ebCList = [{ itemValue: 'A', itemText: 'Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
+    { itemValue: 'C', itemText: 'Car - add or change car, segment not confirmed, direct bill, etc.' },
+    { itemValue: 'D', itemText: 'Customized Data - missing invalid name statement, profile info, email address, etc.' },
+    { itemValue: 'E', itemText: 'Exchange ticket' },
+    { itemValue: 'F', itemText: 'Fare - contract fare incorrect, lower fare found, split ticket' },
+    { itemValue: 'H', itemText: 'Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
+    { itemValue: 'I', itemText: 'Instant purchase carrier' },
+    { itemValue: 'L', itemText: 'Limo - add or change a limo which will generate an invoice' },
+    { itemValue: 'M', itemText: 'Credit card - change fop or declined credit card' },
+    { itemValue: 'N', itemText: 'Lack of automation by SBT or mid office (touchless fee when applicable)' },
+    { itemValue: 'R', itemText: 'Rail - add or change rail which will generate an invoice' },
+    { itemValue: 'S', itemText: 'Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
+    { itemValue: 'T', itemText: 'International assistance' },
+    { itemValue: 'U', itemText: 'Upgrades - if new ticket or invoice is generated' }
+    ];
+    // this.ebCList = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.TouchReason], 'en-GB', 1);
+    console.log(this.ebCList);
+    this.ebRList = [
+          {itemValue:'AM', itemText:  'AM'},
+          {itemValue:'CT', itemText:  'CT'},
+    ]
   }
 
   get f() {
@@ -739,4 +772,40 @@ export class CancelSegmentComponent implements OnInit {
       this.enableFormControls(['airlineNo'], false);
     }
   }
+  checkEbRemark() {
+    this.showEBDetails = false;
+    let ebData = this.pnrService.getRemarkText("EB/");
+    console.log(ebData);
+    if (ebData) {
+      ebData = ebData.split("/");
+      if (ebData.length === 3) {
+        this.populateEBFields(ebData);
+      }
+    }
+   
+  }
+  async populateEBFields(eb) {
+    let ebR = eb[1].substr(0, 2);
+    let ebT = eb[1].substr(2, 1);
+    let ebN = eb[2].substr(0, 2);
+    let ebC = eb[2].substr(2, 1);
+
+    this.showEBDetails = ebR && ebT && ebN && ebC ? true : false;
+    if (this.showEBDetails) {
+      let ebrValues = this.ebRList.map((seat) => seat.itemValue);
+      
+      if (ebrValues.indexOf(ebR) > -1) {
+        this.cancelForm.controls.ebR.setValue(ebR);
+      }
+      for (const c of this.ebCList) {
+        if (c.itemValue == ebC) {
+          this.cancelForm.controls.ebC.setValue(ebC);
+        }
+      }
+      this.cancelForm.controls.ebT.setValue(ebT);
+      this.cancelForm.controls.ebN.setValue(ebN);
+    }
+  }
+
+
 }

@@ -72,6 +72,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
+  @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -358,15 +359,15 @@ export class CorporateComponent implements OnInit {
   }
 
   async cancelPnr() {
-    if (!this.cancelComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
-      return;
-    }
+    // if (!this.cancelComponent.checkValid()) {
+    //   const modalRef = this.modalService.show(MessageComponent, {
+    //     backdrop: 'static'
+    //   });
+    //   modalRef.content.modalRef = modalRef;
+    //   modalRef.content.title = 'Invalid Inputs';
+    //   modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+    //   return;
+    // }
 
     this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
     const osiCollection = new Array<RemarkGroup>();
@@ -376,6 +377,7 @@ export class CorporateComponent implements OnInit {
     // if (getSelected.length >= 1) {
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.corpRemarkService.BuildRemarks(osiCollection);
+    
     await this.corpRemarkService.cancelOSIRemarks().then(
       async () => {
         this.getPnr();
@@ -429,6 +431,9 @@ export class CorporateComponent implements OnInit {
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
+    if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
+      this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
+    }
     const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
     if (nonBspTicket) {
       nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));

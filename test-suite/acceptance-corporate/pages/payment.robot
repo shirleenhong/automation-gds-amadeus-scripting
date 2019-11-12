@@ -224,7 +224,7 @@ Add Ticketing Amount Details With Other Tax
     Enter Value    ${input_gst_tax}    ${gst_tax}
     Enter Value    ${input_hst_tax}    ${hst_tax}
     Enter Value    ${input_qst_tax}    ${qst_tax}    
-    # Enter Value    ${input_othtax}   ${oth_tax}
+    Enter Value    ${input_othtax}   ${oth_tax}
     Set Test Variable    ${base_amt}
     Set Test Variable    ${gst_tax}
     Set Test Variable    ${hst_tax}

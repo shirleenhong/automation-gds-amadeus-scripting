@@ -190,9 +190,19 @@ export class CorpCancelRemarkService {
         this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
         this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum').value, t.get('coupon').value]);
       }
-
       this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
-      return { remarks: remarkList, commands: ['TKTL' + curDate + '/' + group.get('officeId').value + '/Q8C1-CXL'] };
+      let bb = this.pnrService.getRemarkText('AQUA UPDATED THE BB FROM');
+      if (bb !== '') {
+        bb = bb.substr(bb.length - 6);
+      }
+      const bb2 = this.pnrService.getRemarkText('BB/-').replace('BB/-', '');
+
+      if (bb !== '' && bb2 !== '' && bb !== bb2) {
+        remarkList.push(this.remarkHelper.createRemark('BB/-' + bb, 'RM', '*'));
+        return { SendTicket: true, remarks: remarkList, forDelete: this.pnrService.getRemarkLineNumber('BB/-') };
+      } else {
+        return { SendTicket: true };
+      }
     } else {
       this.createRemarks(['VendorName', 'BackOfficeAgentIdentifier'], [group.get('supplier').value, group.get('officeId').value]);
       this.createRemarks(['PartialFull', 'CurrentDate'], [group.get('partialFull').value === 'full' ? 'FULL' : 'PART', curDate], 'REFUND');

@@ -292,7 +292,7 @@ export class InvoiceRemarkService {
       const match = regex.exec(ticketed.freeFlowText);
       regex.lastIndex = 0;
       if (match !== null && ticketed.freeFlowText.indexOf('/EVAC/') === -1) {
-        eTickets.push(match[0]);
+        eTickets.push(match[0].replace('-', '').trim());
       }
     }
     return eTickets;

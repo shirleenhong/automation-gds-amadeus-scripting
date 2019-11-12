@@ -68,9 +68,9 @@ export class CorporateComponent implements OnInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
-  @ViewChild(PassiveSegmentsComponent)
   @ViewChild(SendInvoiceItineraryComponent)
   sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
+  @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
 

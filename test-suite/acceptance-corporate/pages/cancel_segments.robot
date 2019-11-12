@@ -27,7 +27,7 @@ ${list_voidOption}    //select[@id='voidOption']
 ${input_recredit_yes}    //input[@id="isReCredit"][@value='Y']/following-sibling::div[@class='control_indicator']
 ${input_recredit_no}    //input[@id="isReCredit"][@value='N']/following-sibling::div[@class='control_indicator']
 ${select_recredit}    //select[@id='partialFull']
-${input_vendorName}    //input[@id='vendor']
+${input_vendorName_ticketCredit}    //input[@id='vendor']
 ${input_counselorName}    //input[@id='firstName']
 ${input_counselorSurname}    //input[@id='lastName']
 ${input_baseAmount}    //input[@id='baseAmount']
@@ -178,8 +178,8 @@ Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Full
     Wait Until Element Is Visible    ${input_recredit_no}    10
     Click Element    ${input_recredit_no}
     Select From List By Label    ${select_recredit}    Full Re-Credit
-    Wait Until Element Is Visible    ${input_vendorName}    10
-    Enter Value    ${input_vendorName}    ACY
+    Wait Until Element Is Visible    ${input_vendorName_ticketCredit}    10
+    Enter Value    ${input_vendorName_ticketCredit}    ACY
     Enter Value    ${input_counselorName}    P
     Enter Value    ${input_counselorSurname}    FISHER
     Take Screenshot
@@ -190,8 +190,8 @@ Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Part
     Wait Until Element Is Visible    ${input_recredit_no}    10
     Click Element    ${input_recredit_no}
     Select From List By Label    ${select_recredit}    Partial Re-Credit
-    Wait Until Element Is Visible    ${input_vendorName}    10
-    Enter Value    ${input_vendorName}    PFS
+    Wait Until Element Is Visible    ${input_vendorName_ticketCredit}    10
+    Enter Value    ${input_vendorName_ticketCredit}    PFS
     Enter Value    ${input_counselorName}    J
     Enter Value    ${input_counselorSurname}    ROBINSON
     Enter Value    ${input_baseAmount}    123.45

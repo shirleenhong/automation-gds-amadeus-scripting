@@ -245,7 +245,7 @@ export class UpdateSegmentComponent implements OnInit {
     this.segmentTypeList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Air', itemValue: 'AIR' },
-      { itemText: 'Cruise', itemValue: 'SEA' },
+      { itemText: 'Tour', itemValue: 'TOR' },
       { itemText: 'Car', itemValue: 'CAR' },
       { itemText: 'Limo', itemValue: 'LIM' },
       { itemText: 'Hotel', itemValue: 'HTL' },
@@ -253,7 +253,7 @@ export class UpdateSegmentComponent implements OnInit {
     ];
     if (!this.isCorporate) {
       this.segmentTypeList.push({ itemText: 'Insurance', itemValue: 'INS' });
-      this.segmentTypeList.push({ itemText: 'Tour', itemValue: 'TOR' });
+      this.segmentTypeList.push({ itemText: 'Cruise', itemValue: 'SEA' });
     }
   }
 

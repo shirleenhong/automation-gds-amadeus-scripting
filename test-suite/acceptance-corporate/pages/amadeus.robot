@@ -588,4 +588,12 @@ Emulate To Leisure On Demand OID
     Click Element    ${button_command_page}
     Wait Until Page Contains Element    ${input_commandText}    180
     Set Test Variable    ${current_page}    Amadeus
-    
+
+Get ${number_of_segment} Air Segments In The PNR
+    Set Test Variable    ${number_of_segment}
+    :FOR     ${i}    IN RANGE     0     ${number_of_segment}
+    \    ${i}    Evaluate   ${i} + 1
+    \    Log    ${airline_code_${i}} HK1
+    \    ${active_air}    Get Lines Containing String    ${pnr_details}    ${air_seg_route_${i}}
+    \    ${active_air}    Fetch from Left   ${active_air}    HK1
+    \    Set Test Variable    ${active_air_${i}}    ${active_air}     

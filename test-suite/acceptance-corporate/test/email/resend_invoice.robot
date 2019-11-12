@@ -75,7 +75,6 @@ Verify That Invoice, E-Tickets, Fee, And Non-BSP Accounting Lines Are Resent And
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select Invoices, E-Tickets, Fee, And Non-BSP Accounting Lines
     Verify That All Selected Invoices, Tickets, Fess, Non-BSP And Email Added Are Written
-    Verify New MAC Remarks Are Written
     Verify That PNR Is Correctly Queued
     
     

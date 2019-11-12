@@ -37,6 +37,11 @@ ${input_commission_ticketCredit}    //input[@name='commission']
 ${input_tixCred_freeFlow1}    //input[@id='freeFlow1']
 ${input_tixCred_freeFlow2}    //input[@id='freeFlow2']
 
+${input_futureTicket_start}    //div[@ng-reflect-name='
+${input_ticket_futureTicket_end}    ']//input[@formcontrolname='ticket']
+${input_coupon_futureTicket_end}    ']//input[@formcontrolname='coupon']
+${i_add_futureTicket_end}    ']//i[@id='add']
+
 *** Keywords ***
 Fill Up Cancel Segment With Default Values
     Navigate To Page Cancel Segments
@@ -260,7 +265,6 @@ Fill Up NonBSP Ticket Credit With Default Values For PNRs With No U*14
     Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
     Wait Until Element Is Visible    ${list_followUp}    10
     Enter Value    ${input_ticketNum}    1234567890
-    # Set Test Variable    ${non_bsp_ticket_credit_complete}    yes
     
 Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When There Is No Re-credit Fee and Re-credit is Full
     Assign Current Date
@@ -286,4 +290,69 @@ Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When Th
     Open Command Page
     Enter Cryptic Command    RTQ
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
+    [Teardown]    Take Screenshot
+    
+Fill Up BSP Ticket Keep For Future Travel
+    Cancel All Segments
+    Wait Until Element Is Visible    ${list_followUp}    30
+    Select From List By Label    ${list_followUp}    BSP Keep Ticket for Future Travel/Cancel Segments Only
+    Take Screenshot
+    
+Verify BSP Ticket Keep For Future Travel Remarks
+    Assign Current Date
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
+    Verify Specific Remark Is Written In The PNR    RM AQUA CHG-RM*BB/-123456
+    Verify Specific Remark Is Written In The PNR    RM *BB/-123456
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
+    [Teardown]    Take Screenshot
+    
+Fill Up Non-BSP Ticket Keep For Future Travel With ${number_of} Ticket/s And Coupon/s
+    Cancel All Segments
+    Wait Until Element Is Visible    ${list_followUp}    30
+    Select From List By Label    ${list_followUp}    Non BSP Keep Ticket for Future Travel/Cancel Segments Only
+    Enter ${number_of} Ticket And Coupon Numbers
+    [Teardown]    Take Screenshot
+    
+Enter ${number} Ticket And Coupon Numbers
+    ${limit}    Evaluate    ${number} - 1
+    : FOR    ${index}    IN RANGE    0    ${number}
+    \    Enter Value    ${input_futureTicket_start}${index}${input_ticket_futureTicket_end}    123456789${index}
+    \    Enter Value    ${input_futureTicket_start}${index}${input_coupon_futureTicket_end}    987654321${index}
+    \    Run Keyword If    ${index} != ${limit}    Click Element     ${input_futureTicket_start}${index}${i_add_futureTicket_end}
+    \    ${index}    Evaluate   ${index} + 1
+    Take Screenshot
+    
+Verify Non-BSP Ticket Keep For Future Travel When RM Aqua Remark and RM BB Remark Are Not The Same
+    Assign Current Date
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
+    Verify Specific Remark Is Written In The PNR    RM AQUA CHG-RM*BB/-123456
+    Verify Specific Remark Is Written In The PNR    RM *BB/-123456
+    Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567890/${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567891/${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567892/${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567893/${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/TKT NBR-1234567890 CPNS-9876543210
+    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/TKT NBR-1234567891 CPNS-9876543211
+    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/TKT NBR-1234567892 CPNS-9876543212
+    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/TKT NBR-1234567893 CPNS-9876543213
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
+    [Teardown]    Take Screenshot
+    
+Verify Non-BSP Ticket Keep For Future Travel When RM Aqua Remark and RM BB Remark Are The Same
+    Assign Current Date
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
+    Verify Specific Remark Is Written In The PNR    RM AQUA CHG-RM*BB/-123456
+    Verify Specific Remark Is Written In The PNR    RM *BB/-123456
+    Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567890/${current_date}
+    Verify Specific Remark Is Written In The PNR    RMX ${current_date}/TKT NBR-1234567890 CPNS-9876543210
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
     [Teardown]    Take Screenshot

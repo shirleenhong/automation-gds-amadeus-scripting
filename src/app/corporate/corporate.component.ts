@@ -487,12 +487,6 @@ export class CorporateComponent implements OnInit {
     if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
       this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
     }
-    const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
-    if (nonBspTicket) {
-      nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
-      nonBspTicket.commands.forEach((c) => commandList.push(c));
-    }
-
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(

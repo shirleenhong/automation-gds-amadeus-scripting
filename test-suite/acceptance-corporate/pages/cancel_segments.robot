@@ -36,11 +36,14 @@ ${input_tax}    //input[@id='tax']
 ${input_commission_ticketCredit}    //input[@name='commission']
 ${input_tixCred_freeFlow1}    //input[@id='freeFlow1']
 ${input_tixCred_freeFlow2}    //input[@id='freeFlow2']
-
 ${input_futureTicket_start}    //div[@ng-reflect-name='
 ${input_ticket_futureTicket_end}    ']//input[@formcontrolname='ticket']
 ${input_coupon_futureTicket_end}    ']//input[@formcontrolname='coupon']
 ${i_add_futureTicket_end}    ']//i[@id='add']
+${list_agent_assisted}     css=#onlinePNR
+${input_tool_identifier}    css=#onlinePNR
+${input_online_format}     css=#onlinePNR
+${list_touch_reason}     css=#onlinePNR
 
 *** Keywords ***
 Fill Up Cancel Segment With Default Values
@@ -356,3 +359,14 @@ Verify Non-BSP Ticket Keep For Future Travel When RM Aqua Remark and RM BB Remar
     Enter Cryptic Command    RTQ
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
     [Teardown]    Take Screenshot
+    
+That Online Touch Reason Fields Are Not Displayed
+    Navigate To Page Cancel Segments
+    Page Should Not Contain Element    ${list_agent_assisted}
+    Page Should Not Contain Element    ${input_tool_identifier} 
+    Page Should Not Contain Element    ${input_online_format} 
+    Page Should Not Contain Element    ${list_touch_reason} 
+    
+Verify EB Remark Written In The PNR
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR

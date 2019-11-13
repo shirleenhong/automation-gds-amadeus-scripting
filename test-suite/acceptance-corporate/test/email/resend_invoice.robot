@@ -1,11 +1,7 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
 Resource          ../../pages/base.robot
-Test Teardown    Close All Browsers
+Test Teardown     Close All Browsers
 
 *** Variables ***
 ${test_file_name}    resend_invoice

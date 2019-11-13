@@ -151,7 +151,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.segments.map((_o, i) => {
       const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.matrixAccountingForm.controls.segments as FormArray).push(control);
-    });    
+    });
     this.onCheckChange();
   }
 
@@ -253,8 +253,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         accRemark === 'ACPP' || accRemark === 'ACPPC'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
-            ? (this.accountingRemark.supplierCodeName = 'WJP')
-            : (this.accountingRemark.supplierCodeName = 'PTP');
+          ? (this.accountingRemark.supplierCodeName = 'WJP')
+          : (this.accountingRemark.supplierCodeName = 'PTP');
 
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
@@ -269,7 +269,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.gst = '';
         }
 
-        this.enableFormControls(['fareType'], accRemark !== 'ACPP' || accRemark !== 'ACPPC');
+        this.enableFormControls(['fareType'], accRemark !== 'ACPP' && accRemark === 'ACPPC');
         break;
       case 'ACPR':
         this.configureACPRControls();

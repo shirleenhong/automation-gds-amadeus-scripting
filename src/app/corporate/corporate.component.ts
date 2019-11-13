@@ -69,7 +69,8 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
   @ViewChild(PassiveSegmentsComponent)
-  @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
+  @ViewChild(SendInvoiceItineraryComponent)
+  sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
 
@@ -247,6 +248,9 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
+    const forDeletion = new Array<string>();
+    const remarkCollection = new Array<RemarkGroup>();
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
@@ -263,17 +267,30 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
     });
 
-    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined
-      && this.paymentsComponent.accountingRemark.accountingRemarks.length > 0) {
-      if (
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
-      ) {
-        const forDeletion = new Array<string>();
+    debugger;
+    if (
+      this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
+      this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
+    ) {
+      if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
         this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
           forDeletion.push(element.lineNo);
         });
+
+        if (this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.length === this.pnrService.getSegmentList().length) {
+          remarkCollection.push(
+            this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks)
+          );
+        }
+
+        remarkCollection.forEach((rem) => {
+          if (rem.passiveSegments) {
+            rem.passiveSegments.forEach((pasModel) => {
+              passiveSegmentList.push(pasModel);
+            });
+          }
+        });
+
         await this.rms.deleteSegments(forDeletion).then(async () => {
           await this.getPnr();
           await this.rms.getMatchcedPlaceholderValues();
@@ -342,8 +359,8 @@ export class CorporateComponent implements OnInit {
         )
       )
     );
-
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+    debugger;
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
       async () => {
         this.isPnrLoaded = false;
         this.workflow = '';
@@ -395,8 +412,7 @@ export class CorporateComponent implements OnInit {
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
 
-    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
-      cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
+    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' || cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
       await this.ticketRemarkService.deleteTicketingLine().then(async () => {
         const canceltktl = this.ticketRemarkService.cancelTicketRemark();
         if (canceltktl) {
@@ -603,8 +619,10 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Sending Invoice...');
     const resendCompData = this.sendInvoiceItineraryComponent.resendInvoiceComponent;
     this.invoiceRemarkService.addEmailRemarks(resendCompData.invoiceFormGroup);
-    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(resendCompData.selectedElementsUI,
-      resendCompData.invoiceList);
+    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(
+      resendCompData.selectedElementsUI,
+      resendCompData.invoiceList
+    );
     this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
     this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
     this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);

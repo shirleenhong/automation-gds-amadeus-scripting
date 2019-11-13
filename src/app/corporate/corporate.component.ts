@@ -73,6 +73,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
+  @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -483,7 +484,9 @@ export class CorporateComponent implements OnInit {
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
-
+    if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
+      this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
+    }
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(

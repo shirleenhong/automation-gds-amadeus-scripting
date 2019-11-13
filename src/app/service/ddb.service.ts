@@ -198,13 +198,11 @@ export class DDBService implements OnInit {
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
     this.reasonCodeList = [];
-    await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
-      (response) => {
-        response.ReasonCodeItems.forEach((reasonJson) => {
-          this.reasonCodeList.push(new ReasonCode(reasonJson));
-        });
-      }
-    );
+    await this.getRequest(common.reasonCodesService + '?&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then((response) => {
+      response.ReasonCodeItems.forEach((reasonJson) => {
+        this.reasonCodeList.push(new ReasonCode(reasonJson));
+      });
+    });
   }
 
   getReasonCodeByTypeId(ids: number[], language: string, productID: number): Array<ReasonCode> {

@@ -432,9 +432,6 @@ export class CorporateComponent implements OnInit {
       if (refundTicket) {
         if (refundTicket.SendTicket) {
           sendTkt = true;
-          if (refundTicket.forDelete) {
-            forDeletion.push(refundTicket.forDelete.toString());
-          }
         }
         if (refundTicket.remarks) {
           refundTicket.remarks.forEach((rem) => remarkList.push(rem));

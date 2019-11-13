@@ -4,10 +4,7 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Resource          ../../pages/amadeus.robot
-Resource          ../../pages/remarks.robot
 Resource          ../../pages/base.robot
-Resource          ../../../resources/common/api-utilities.txt
 Test Teardown    Close All Browsers
 
 *** Variables ***

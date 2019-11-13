@@ -1424,6 +1424,19 @@ export class PnrService {
         return false;
     }
 
+    getTicketedNumbers() {
+        const tickets = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            const regex = new RegExp('[0-9]{3}-[0-9]+');
+            const match = regex.exec(ticketed.freeFlowText);
+            regex.lastIndex = 0;
+            if (match !== null) {
+                tickets.push(match[0]);
+            }
+        }
+        return tickets;
+    }
+
     getTicketedSegments(): string[] {
         const segmentTatooNumbers = [];
         for (const ticketed of this.pnrObj.faElements) {
@@ -1621,6 +1634,20 @@ export class PnrService {
         }
         return val;
     }
+
+    getTicketList() {
+        const ticketList = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            ticketList.push({
+                // tslint:disable-next-line: max-line-length
+                freeFlowText: ticketed.freeFlowText.split('/')[0] + ' / ' + ticketed.freeFlowText.split('/')[1] + ' / ' + ticketed.freeFlowText.split('/')[2],
+                tatooNo: ticketed.tatooNumber,
+                segmentReference: ticketed.fullNode.referenceForDataElement
+              });
+        }
+        return ticketList;
+    }
+
 
     getTktNumber(): string {
         let ticket: string;

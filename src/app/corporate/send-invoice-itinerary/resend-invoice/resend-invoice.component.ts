@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
 import { DDBService } from 'src/app/service/ddb.service';
+import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-select.component';
 @Component({
   selector: 'app-resend-invoice',
   templateUrl: './resend-invoice.component.html',
@@ -11,9 +12,9 @@ import { DDBService } from 'src/app/service/ddb.service';
 export class ResendInvoiceComponent implements OnInit {
   invoiceFormGroup: FormGroup;
   constructor(private pnrService: PnrService,
-              private invoiceRmkService: InvoiceRemarkService,
-              private formBuilder: FormBuilder,
-              private ddbService: DDBService) { }
+    private invoiceRmkService: InvoiceRemarkService,
+    private formBuilder: FormBuilder,
+    private ddbService: DDBService) { }
   showSegments = false;
   showInvoiceList = false;
   selectedElementsUI = {
@@ -33,13 +34,14 @@ export class ResendInvoiceComponent implements OnInit {
   add = true;
   listEmail: Array<string>;
   invoiceGroup: FormGroup;
+  @ViewChild(SegmentSelectComponent) segementSelectComponent: SegmentSelectComponent;
   ngOnInit() {
     this.invoiceFormGroup = new FormGroup({
-      segmentNo: new FormControl('', []),
-      invoiceNo: new FormControl('', [Validators.required]),
-      eTicketNo: new FormControl('', [Validators.required]),
-      feesAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
-      nonBspAccountingNo: new FormControl('', [Validators.required, Validators.pattern('[0-9]+(,[0-9]+)*')]),
+      segmentNo: new FormControl('', [Validators.required]),
+      invoiceNo: new FormControl('', []),
+      eTicketNo: new FormControl('', []),
+      feesAccountingNo: new FormControl('', []),
+      nonBspAccountingNo: new FormControl('', []),
       emailAddresses: new FormArray([this.createFormGroup()]),
     });
     this.resendInvoiceProcess();
@@ -61,26 +63,29 @@ export class ResendInvoiceComponent implements OnInit {
       };
       this.invoiceList.push(selectAllObj);
       this.addInvoicesToList(fiElements);
+      this.invoiceFormGroup.get('segmentNo').clearValidators();
     } else {
       await this.invoiceProcess();
     }
   }
   async invoiceProcess() {
     const invCommand = 'INV/ZX/RT';
+    await this.invoiceRmkService.sendRFCommand('RFCWTSCRIPT');
     await this.invoiceRmkService.sendINVCommand(invCommand);
     const rtfRes = await this.invoiceRmkService.sendRTFCommand();
     const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);
     if (invoiceElements.length > 0) {
       this.showInvoiceList = true;
       this.addInvoiceFromGDS(invoiceElements);
+      this.invoiceFormGroup.get('segmentNo').clearValidators();
     } else {
       this.showSegments = true;
     }
   }
   async getAllETickets() {
-    const rttnCmd = 'RTTN/H';
-    const rttnResponse = await this.invoiceRmkService.sendINVCommand(rttnCmd);
-    const eTickets = this.invoiceRmkService.getAllTickets(rttnResponse);
+    // const rttnCmd = 'RTTN/H';
+    // const rttnResponse = await this.invoiceRmkService.sendINVCommand(rttnCmd);
+    const eTickets = this.invoiceRmkService.getAllTickets();
     this.makeETicketsListUI(eTickets);
     console.log(eTickets);
   }
@@ -92,8 +97,8 @@ export class ResendInvoiceComponent implements OnInit {
     };
     this.invoiceList.push(selectAllObj);
     for (const ele of invoiceElements) {
-        const invoiceObj = this.invoiceRmkService.getInvoiceDetails(ele);
-        this.invoiceList.push(invoiceObj);
+      const invoiceObj = this.invoiceRmkService.getInvoiceDetails(ele);
+      this.invoiceList.push(invoiceObj);
     }
   }
   addInvoicesToList(fiElements) {
@@ -157,7 +162,7 @@ export class ResendInvoiceComponent implements OnInit {
     const rmElements = this.pnrService.pnrObj.rmElements;
     for (const rmElement of rmElements) {
       if (rmElement.category === 'F' && rmElement.freeFlowText.indexOf('TKT') > -1) {
-        if(!this.checkFeePresent(rmElement.freeFlowText)) {
+        if (!this.checkFeePresent(rmElement.freeFlowText)) {
           const feeObj = this.invoiceRmkService.getFeeDetailsUI(rmElement.freeFlowText);
           this.feeAccountingList.push(feeObj);
         }
@@ -238,7 +243,9 @@ export class ResendInvoiceComponent implements OnInit {
     return false;
   }
   async generateInvoice() {
-    const invCommand = 'INV/ZX/S' + this.selectedElementsUI.selectedSegments + '/RT';
+    this.invoiceFormGroup.controls.segmentNo.setValue(this.segementSelectComponent.segmentGroup.controls.segment.value);
+    await this.invoiceRmkService.sendRFCommand('RFCWTSCRIPT');
+    const invCommand = 'INV/ZX/S' + this.invoiceFormGroup.controls.segmentNo.value + '/RT';
     await this.invoiceRmkService.sendINVCommand(invCommand);
     const rtfRes = await this.invoiceRmkService.sendRTFCommand();
     const invoiceElements = this.invoiceRmkService.getInvoiceElements(rtfRes);
@@ -331,7 +338,7 @@ export class ResendInvoiceComponent implements OnInit {
   private checkForAllSelectionTickets() {
     let isAllSelected = true;
     this.eTicketsList.forEach((ele, index) => {
-      if (index !== 0  && index !== this.eTicketsList.length - 1 && !ele.isChecked) {
+      if (index !== 0 && index !== this.eTicketsList.length - 1 && !ele.isChecked) {
         isAllSelected = false;
       }
     });

@@ -24,7 +24,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) { }
+  ) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -114,8 +114,8 @@ export class PaymentRemarkService {
 
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
-        paymentRemark.set('PassName', account.passPurchase);
-        paymentRemark.set('FareType', account.fareType);
+        paymentRemark.set('PassName', account.airlineCorporatePass.name);
+        paymentRemark.set('FareType', account.airlineCorporatePass.fareType);
         airlineCodeRemark.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         airlineCodeInvoice.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         airlineCodeInvoice.set('PassNumber', account.airlineCorporatePass.number.toString());
@@ -132,7 +132,7 @@ export class PaymentRemarkService {
 
         confNbrRem.set('AirlineCode', account.airlineCorporatePass.airlineCode);
         redemptionRemark.set('PassName', 'Airline Corporate');
-        passNameRedemptionRemark.set('PassNameRedemption', 'Airline Corporate');
+        passNameRedemptionRemark.set('PassNameRedemption', account.airlineCorporatePass.name);
 
         // US10574: Airline Corporate Pass Redemption
         const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
@@ -290,9 +290,9 @@ export class PaymentRemarkService {
         priceForRemark.set('CATotalPrice', totalPrice.toString());
         this.remarksManager.createPlaceholderValues(priceForRemark, null, null);
 
-        const passCancelledRemark = new Map<string, string>();
-        passCancelledRemark.set('CancelAirlineCode', airline);
-        this.remarksManager.createPlaceholderValues(passCancelledRemark, null, null);
+        const passCancelledAirlineRemark = new Map<string, string>();
+        passCancelledAirlineRemark.set('CancelAirlineCode', airline);
+        this.remarksManager.createPlaceholderValues(passCancelledAirlineRemark);
 
         const cancelFeeRemark = new Map<string, string>();
         cancelFeeRemark.set('CancelFee', account.baseAmountRefund);
@@ -302,10 +302,24 @@ export class PaymentRemarkService {
         travellerCreditCardCondition.set('CACancelRemark', 'true');
         this.remarksManager.createPlaceholderValues(null, travellerCreditCardCondition, null, null, 'THE TRAVELLERS CREDIT CARD.');
 
-        // to do check if U14 exist
+        // const u14 = this.pnrService.getRemarkText('U14/-');
+        // if (u14.indexOf(airline + 'PASS') > -1) {
+        const passCancelledRemark = new Map<string, string>();
+        passCancelledRemark.set('CancelAirlineCodePassChg', airline);
+        this.remarksManager.createPlaceholderValues(passCancelledRemark);
+        // }
       }
     });
   }
+
+  // writeRMGPassCancelledRemark(airline: string) {
+  //   const u14 = this.pnrService.getRemarkText('U14/-');
+  //   if (u14.indexOf(airline + 'PASS') > -1) {
+  //     const passCancelledRemark = new Map<string, string>();
+  //     passCancelledRemark.set('CancelAirlineCodePassChg', airline);
+  //     this.remarksManager.createPlaceholderValues(passCancelledRemark);
+  //   }
+  // }
 
   getFareType(fareType: string) {
     if (fareType.includes('FLEX')) {

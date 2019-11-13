@@ -4,7 +4,6 @@ Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
 Resource          base.robot
-Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment']
@@ -55,8 +54,9 @@ ${input_oid_origtkt}    css=#oidOrigTicketIssue
 ${input_cancell_all}    css=#cancelAll
 ${div_segments_array}    //div[@formarrayname='segments']
 ${input_segment_checkbox}    //input[@type='checkbox']
-${input_note1}    css=#additionalNotes1
-${input_note2}    css=#additionalNotes2
+${input_additional_info}    css=#additionalInfo
+${input_notes}    css=#additionalNotes2
+${input_record_locator}    css=#recordLocator
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -127,7 +127,6 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Set Test Variable    ${fare_type}    FLEX
     [TEARDOWN]    Take Screenshot
     
-# For Non-BSP Airline and APAY #  
 Add Non-BSP Ticketing Details For Segment ${segment_no} 
     Navigate To Page Add Accounting Line
     Wait Until Element Is Visible    ${list_accounting_type}    30
@@ -146,6 +145,11 @@ Add Non-BSP Ticketing Details For Multiple Segments
     Add Ticketing Amount Details With Other Tax And Commission     750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
+    
+Add Non-BSP Ticketing Details Per Segment
+    Add Non-BSP Ticketing Details For Segment 2
+    Click Save Button
+    Add Non-BSP Ticketing Details For Segment 3
 
 Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
     Navigate To Page Add Accounting Line
@@ -155,7 +159,7 @@ Add Non-BSP Ticketing Details Without Ticket Number For Segment ${segment_no}
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Take Screenshot
 
-Add APAY Ticketing Details For Single Segment
+Add APAY Ticketing Details For Single Segment - Other Costs
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    APAY
     Select Itinerary Segments    2
@@ -176,6 +180,16 @@ Press A Key X Times
     \    Keydown     ${key}
     \    Keyup     ${key}
     \    ${i}    Evaluate    ${i} + 1
+
+Add APAY Ticketing Details For Single Segment
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    APAY
+    Select Itinerary Segments    2
+    Enter Value    ${list_description}    SEAT COSTS
+    Add Ticketing Amount Details With Other Tax    750.00    1.00    2.00    3.00    4.00
+    Enter Value    ${input_tktnumber}    1234567890
+    Take Screenshot
+    Click Save Button
     
 Add APAY Ticketing Details For Multiple Segments
     Navigate To Page Add Accounting Line
@@ -209,7 +223,6 @@ Add Non-BSP and APAY Ticketing Detals For Multiple Segments
     Add Ticketing Amount Details With Other Tax    1234.34    10.09    11.01    12.00    13.00
     Enter Value    ${input_tktnumber}    3210987654
     Take Screenshot
-# For Non-BSP Airline and APAY # 
 
 Add Ticketing Amount Details With Other Tax
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${oth_tax}=${EMPTY}
@@ -218,6 +231,11 @@ Add Ticketing Amount Details With Other Tax
     Enter Value    ${input_hst_tax}    ${hst_tax}
     Enter Value    ${input_qst_tax}    ${qst_tax}    
     Enter Value    ${input_othtax}   ${oth_tax}
+    Set Test Variable    ${base_amt}
+    Set Test Variable    ${gst_tax}
+    Set Test Variable    ${hst_tax}
+    Set Test Variable    ${qst_tax}
+    Set Test Variable    ${oth_tax}
     
 Add Ticketing Amount Details With Commission
     [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${comm_amt}=${EMPTY}
@@ -257,8 +275,7 @@ Click Update Button
     Wait Until Element Is Visible    ${edit_order}    30
     Click Element    ${edit_order}
     [Teardown]    Take Screenshot
-
-# Verification For Non-BSP Airline and APAY #     
+ 
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
@@ -293,7 +310,6 @@ Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
 Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-CGO/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2    True
-    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 1234567890/S2
     Verify Specific Remark Is Written In The PNR    RIR PAID TEST DESCRIPTION CF-1234567890 CAD750.00 PLUS 6.00TAX ON VI/S2    True
     Verify Specific Remark Is Written In The PNR    RM *EB/-AMA/-GIS
     Verify Specific Remark Is Not Written In The PNR    RM *EB/-EBA 
@@ -302,7 +318,6 @@ Verify That Ticketing Remarks For APAY With Single Segment Are Written In The PN
 Verify That Ticketing Remarks For APAY With Multiple Segments Are Written In The PNR
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VN-PFS/BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/S2-3    True
-    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 1234567890/S2-3
     Verify Specific Remark Is Written In The PNR    RIR PAID SEAT COSTS CF-1234567890 CAD750.00 PLUS 6.00TAX ON VI/S2-3    True
     Verify Specific Remark Is Not Written In The PNR    RMF LCC-${airline_code}*GRAND TOTAL CAD 760.00
     
@@ -313,16 +328,12 @@ Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Wr
     Verify Specific Remark Is Written In The PNR    RMF LCC-UA*GRAND TOTAL CAD 760.00
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     Verify Specific Remark Is Written In The PNR    RMT TKT2-VN-CGO/BA-1230.00/TX1-11.00XG/TX2-12.00RC/TX3-13.00XQ/TX4-14.00XT/S3    True
-    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 9876543210/S3
     Verify Specific Remark Is Written In The PNR    RIR PAID FREIGHT COSTS CF-9876543210 CAD1230.00 PLUS 36.00TAX ON VI/S3    True
     Verify Specific Remark Is Written In The PNR    RMT TKT3-VN-CGO/BA-1234.34/TX1-10.09XG/TX2-11.01RC/TX3-12.00XQ/TX4-13.00XT/S4    True
-    # Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 3210987654/S4
     Verify Specific Remark Is Written In The PNR    RIR PAID BAGGAGE FEES CF-3210987654 CAD1234.34 PLUS 33.10TAX ON VI/S4    True
     Verify Specific Remark Is Written In The PNR    RM *EB/-AMA/-GIS
     Verify Specific Remark Is Not Written In The PNR    RM *EB/-EBA 
-# Verification For Non-BSP Airline and APAY # 
 
-#-----For Payment Keywords-------#  
 Add Matrix Accounting Remark For Air Canada Pass Purchase 
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
@@ -515,13 +526,11 @@ Verify Specific RIR Remarks In French Are Removed From PNR
     Verify Specific Remark Is Not Written In The PNR    RIR **VEILLEZ NE PAS INSCRIRE** CES COUTS PUISQU ILS NE PARAITRONT PAS /S2
     Verify Specific Remark Is Not Written In The PNR    RIR SUR VOTRE RELEVE DE CARTE DE CREDIT./S2
     
-#-----Verification For PassPurchase-----#
 Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    AC 123 Q ${current_date}
     Verify Specific Remark Is Written In The PNR    YVRYVR GK1 0700 0800 ${current_date} 879111   True
     
-
 Verify Passive Segment Are Written For Westjet Pass Purchase PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    WS 123 Q ${current_date} 
@@ -749,132 +758,118 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Enter 2134 In Lowest GDS Fare Field
     Take Screenshot
     Click Save Button
-    #Select Airline Corporate Pass Redemption
-    #Select Airline Corporate Pass By Label    WS/TRANSTEST.LAT/1238903456789
-    #Select Itinerary Segments   4   5
-    #Enter Value    ${input_supplier_confirmationNo}    1212321234
-    #Enter 2311 In Lowest GDS Fare Field
-    #Click Save Button
-    #Take Screenshot
     
-#-----Pass Cancel
-Add Ticketing Amount Details With Fee
-    [Arguments]    ${base_amt}=${EMPTY}    ${gst_tax}=${EMPTY}    ${hst_tax}=${EMPTY}    ${qst_tax}=${EMPTY}    ${comm_amt}=${EMPTY}    ${oth_tax}=${EMPTY}
-    Enter Value    ${input_baseamount}    ${base_amt}
-    Enter Value    ${input_gsttax}    ${gst_tax}
-    Enter Value    ${input_hsttax}    ${hst_tax}
-    Enter Value    ${input_qsttax}    ${qst_tax}
-    Enter Value    ${input_othtax}    ${oth_tax}
-    Enter Value    ${input_commission}    ${comm_amt}
-    
-Add Ticketing Amount Details With Refund
-    [Arguments]    ${base_amt}=${EMPTY}    ${gst_refundtax}=${EMPTY}    ${hst_refundtax}=${EMPTY}    ${qst_refundtax}=${EMPTY}    ${oth_refundtax}=${EMPTY}    ${tkt_number}=${EMPTY}
-    Enter Value    ${input_baseAmount_refund}    ${base_amt}
-    Enter Value    ${input_gst_refund}    ${gst_refundtax}
-    Enter Value    ${input_hst_refund}    ${hst_refundtax}
-    Enter Value    ${input_qst_refund}    ${qst_refundtax}
+Add Ticketing Amount Details With Refund	
+    [Arguments]    ${refund_base_amt}=${EMPTY}    ${gst_refundtax}=${EMPTY}    ${hst_refundtax}=${EMPTY}    ${qst_refundtax}=${EMPTY}    ${oth_refundtax}=${EMPTY}    ${commission_refund}=${EMPTY} 
+    Enter Value    ${input_baseAmount_refund}    ${refund_base_amt}	
+    Enter Value    ${input_gst_refund}    ${gst_refundtax}	
+    Enter Value    ${input_hst_refund}    ${hst_refundtax}	
+    Enter Value    ${input_qst_refund}    ${qst_refundtax}	
     Enter Value    ${input_othTax_refund}    ${oth_refundtax}
-    Enter Value    ${input_tktnumber}    ${tkt_number}
-    
-Cancel Existing Airline AC Pass And Select ${type_of_fare} And Add Fee For All Segment   
-    Set Test Variable    ${type_of_fare}
-    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase Cancellation
-    Enter Value    ${input_supplier_confirmationNo}    879111
-    Select Checkbox    ${input_cancell_all}    
-    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
-    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50    0928374
-    Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
-    Select From List By Label    ${list_faretype}       ${type_of_fare}
-    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
-    Enter Value    ${input_commission_refund}    20.00
-    Enter Value    ${input_oid_origtkt}    YTOWL220N
-    Enter Value    ${input_note1}    Cancel AC With Refund And Fee
-    Click Save Button
-    Finish PNR
+    Enter Value    ${input_commission_refund}     ${commission_refund}
+    Set Test Variable    ${refund_base_amt}	
+    Set Test Variable    ${gst_refundtax}	
+    Set Test Variable     ${hst_refundtax}	
+    Set Test Variable     ${qst_refundtax}	
+    Set Test Variable     ${oth_refundtax}
+    Set Test Variable     ${commission_refund}
+
+Cancel ${segment} Air Segments And Add Airline Pass Cancellation Remarks ${with_ticket} Ticket Number
+    Set Test Variable    ${segment}
+    Set Test Variable    ${with_ticket}
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}     Air Canada Individual Pass Purchase with Cancellation	
+    Enter Value    ${input_supplier_confirmationNo}    879111	
+    Run Keyword If    "${with_ticket}" == "Without"    Enter Value    ${input_suppliercode}    ABC
+    Run Keyword If    "${segment}" == "All"    Select Checkbox    ${input_cancell_all}    ELSE       Select Checkbox    ${div_segments_array}${open_bracket}1${close_bracket}${input_segment_checkbox}  	
     Take Screenshot
-    
-Cancel Existing Airline WS Pass And Select ${type_of_fare} And Add Fee For All Segment   
-    Set Test Variable    ${type_of_fare}
-    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase Cancellation
-    Enter Value    ${input_supplier_confirmationNo}    879111
-    Select Checkbox    ${input_cancell_all}    
-    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
-    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50    0928374
-    Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
-    Select From List By Label    ${list_faretype}       ${type_of_fare}
-    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
-    Enter Value    ${input_commission_refund}    20.00
+    # Add Ticketing Amount Details With Other Tax    100.00   18.20    6.00    2.21   1.00	
+    Add Ticketing Amount Details With Other Tax    100.00   18.20    6.00    2.21
+    Add Ticketing Amount Details With Refund    89.00    10.00    1.00    10.12    2.50   20.00 
+    Enter Value    ${input_record_locator}    ABC123		
     Enter Value    ${input_oid_origtkt}    YTOWL220N
-    Enter Value    ${input_note1}    Cancel WS With Refund And Fee
-    Click Save Button
-    Finish PNR
+    Enter Value    ${input_additional_info}    Cancel With Refund And Fee
+    Enter Value    ${input_notes}    Airline Pass Cancellation Notes
+    Run Keyword If    "${with_ticket}" == "With"    Enter Value    ${input_tktnumber}    0928374
+    Run Keyword If    "${with_ticket}" == "With"    Set Test Variable    ${input_tktnumber}
+    Set Test Variable    ${input_record_locator}
+    Set Test Variable    ${input_oid_origtkt}
     Take Screenshot
-    
-Cancel Existing Airline PD Pass And Select ${type_of_fare} And Add Fee For Selected Segments
-    Set Test Variable    ${acounting_type}    
-    Set Test Variable    ${type_of_fare}
-    Select From List By Label    ${list_accounting_type}    ${acounting_type}
-    Enter Value    ${input_supplier_confirmationNo}    89988
-    Select Checkbox    ${div_segments_array}${open_bracket}1${close_bracket}${input_segment_checkbox}
-    Select Checkbox    ${div_segments_array}${open_bracket}3${close_bracket}${input_segment_checkbox}
-    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
-    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50
-    Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
-    Select From List By Label    ${list_faretype}       ${type_of_fare}
-    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Submit To PNR
+
+Cancel Air Segments And Add Airline Pass Cancellation Remarks Without Optional Values
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}     Air Canada Individual Pass Purchase with Cancellation	
+    Enter Value    ${input_supplier_confirmationNo}    879111	
+    Select Checkbox    ${input_cancell_all}
+    Enter Value    ${input_baseamount}    100.00
+    Enter Value    ${input_baseAmount_refund}    90.00
     Enter Value    ${input_commission_refund}    20.00
+    Enter Value    ${input_record_locator}    ABC123		
     Enter Value    ${input_oid_origtkt}    YTOWL220N
-    Enter Value    ${input_note1}    Cancel PD With Refund And Fee
-    Click Save Button
-    Finish PNR
+    Enter Value    ${input_tktnumber}    0928374
+    Set Test Variable    ${input_record_locator}
+    Set Test Variable    ${input_oid_origtkt}
     Take Screenshot
+    Submit To PNR
     
-Cancel Existing Airline 8P Pass And Select ${type_of_fare} And Add Fee For Selected Segments
-    Set Test Variable    ${acounting_type}    
-    Set Test Variable    ${type_of_fare}
-    Select From List By Label    ${list_accounting_type}    ${acounting_type}
-    Enter Value    ${input_supplier_confirmationNo}    89988
-    Select Checkbox    ${div_segments_array}${open_bracket}1${close_bracket}${input_segment_checkbox}
-    Select Checkbox    ${div_segments_array}${open_bracket}3${close_bracket}${input_segment_checkbox}
-    Add Ticketing Amount Details With Fee    25.01    18.20    6.00    2.21    2.00    1.00
-    Add Ticketing Amount Details With Refund      890.00    101.00    71.00    10.12    2.50
-    Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
-    Select From List By Label    ${list_faretype}       ${type_of_fare}
-    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
-    Enter Value    ${input_commission_refund}    20.00
-    Enter Value    ${input_oid_origtkt}    YTOWL220N
-    Enter Value    ${input_note1}    Cancel 8P With Refund And Fee
-    Click Save Button
-    Finish PNR
-    Take Screenshot
+Complete PNR and Get Air Segments In The PNR
+    Complete The PNR With Default Values
+    Switch To Graphic Mode
+    Get PNR Details
+    Get 2 Air Segments In The PNR
     
-Verify Itinerary Remarks For ${airline_code} Cancellation Fee Of ${fee_amount} And Base Amount Of ${base_amount_refund}
-    Set Test Variable    ${airline_code}  
-    Set Test Variable    ${fee_amount}
-    Set Test Variable    ${base_amount_refund}
-    Verify Specific Remark Is Written In The PNR    RIR THE PRICE FOR THIS ITINERARY IS ${base_amount_refund} INCLUDING TAXES    
-    Verify Specific Remark Is Written In The PNR    RIR ${airline_code} PASS PNR CANCELLED PER PASSENGER REQUEST    
-    Verify Specific Remark Is Written In The PNR    RIR CANCELLATION FEE OF CAD${fee_amount} PLUS TAX HAS BEEN CHARGED TO    
+Verify Itinerary Remarks For Airline Cancellation Fee And Total Amount
+    Verify Specific Remark Is Written In The PNR    RIR AC PASS CANCELLATION /CF-${input_record_locator}/S2		
+    Verify Specific Remark Is Written In The PNR    RIR THE PRICE FOR THIS ITINERARY IS 127.41 INCLUDING TAXES    	
+    Verify Specific Remark Is Written In The PNR    RIR AC PASS PNR CANCELLED PER PASSENGER REQUEST.    	
+    Verify Specific Remark Is Written In The PNR    RIR CANCELLATION FEE OF CAD${base_amt} PLUS TAX HAS BEEN CHARGED TO    	
     Verify Specific Remark Is Written In The PNR    RIR THE TRAVELLERS CREDIT CARD.
+
+Verify TKT AND PE Remarks Written In The PNR ${with_ticket} Ticket Number
+    Run Keyword If    "${with_ticket}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${input_tktnumber}/VN-ACJ/S2    ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN//VN-ABC/S2	
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-${base_amt}/TX1-${gst_tax}XG/TX2-${hst_tax}RC/TX3-${qst_tax}XQ/TX4-${oth_tax}XT/COMM-0.00/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-AC*GRAND TOTAL CAD 127.41
     
-Verify Cancellation Ticketing Remarks For ${airline_code} And Segment ${segment_no} Are Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S${segment_no}
-    Verify Specific Remark Is Written In The PNR    RMT/TKT1-BA-${base_amt}/TX1-${gst_tax}XG/TX2-${hst_tax}RC/TX3-${qst_tax}XQ/TX4-${oth_tax}XT/COMM-${comm_amt}/S${segment_no}
+Verify RMX Remarks With Optional Values Are Written In The PNR
+    Assign Current Date   		
+    Verify Specific Remark Is Written In The PNR    RMX **********************************************
+    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG SPA NONBSP ${input_record_locator} REFUND-${current_date}	
+    Verify Specific Remark Is Written In The PNR    RMX NONBSP-ACJ SPA ISSUE OID-YTOWL220N	
+    Verify Specific Remark Is Written In The PNR    RMX REFUND BASE-${refund_base_amt} GST-${gst_refundtax} HST-${hst_refundtax} QST-${qst_refundtax} OTH TAX-${oth_refundtax}	
+    Verify Specific Remark Is Written In The PNR    RMX REFUND COMMISSION ${commission_refund}
+    Verify Specific Remark Is Written In The PNR    RMX CANCEL WITH REFUND AND FEE
+    Verify Specific Remark Is Written In The PNR    RMX AIRLINE PASS CANCELLATION NOTES
     
-Verify RMX Remarks Are Written In The PNR
-    Get Record Locator Value
-    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG – NONBSP ${actual_record_locator}  REFUND-${current_date}
-    Verify Specific Remark Is Written In The PNR    RMX NONBSP-${actual_supplier_code} – ISSUE OID-YTOWL220N
-    Verify Specific Remark Is Written In The PNR    RMX REFUND BASE-${base_amt}  GST-${gst_refundtax}  HST-${hst_refundtax}  QST-${qst_refundtax}  OTH TAX-${oth_refundtax}
-    Verify Specific Remark Is Written In The PNR    RMX REFUND COMMISSION [refund_Comm]
-    Verify Specific Remark Is Written In The PNR    RMX Cancel ${actual_supplier_code} With Refund And Fee
+Verify RMX, PE, AND TKT Remarks Without Optional Values Are Written In The PNR
+    Assign Current Date   		
+    Verify Specific Remark Is Written In The PNR    RMX **********************************************
+    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG SPA NONBSP ${input_record_locator} REFUND-${current_date}	
+    Verify Specific Remark Is Written In The PNR    RMX NONBSP-ACJ SPA ISSUE OID-YTOWL220N	
+    Verify Specific Remark Is Written In The PNR    RMX REFUND BASE-${refund_base_amt} GST-0.00 HST-0.00 QST-0.00 OTH TAX-0.00	
+    Verify Specific Remark Is Written In The PNR    RMX REFUND COMMISSION ${commission_refund}
+    Verify Specific Remark Is Written In The PNR    RMX CANCEL WITH REFUND AND FEE
+    Verify Specific Remark Is Written In The PNR    RMX AIRLINE PASS CANCELLATION NOTES
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${input_tktnumber}/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-${base_amt}/TX1-0.00XG/TX2-0.00RC/TX3-0.00XQ/TX4-0.00XT/COMM-0.00/S2
+    Verify Specific Remark Is Written In The PNR    RMF LCC-AC*GRAND TOTAL CAD 100.00
+
+Verify Dummy ${airline_code} Air Segment For Airline Pass Cancellation
+    Set Test Variable    ${airline_code}
+    Verify Specific Remark Is Written In The PNR    ${airline_code} 123 Q ${current_date}
+    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date} ${input_record_locator}    True
     
-Add Pacific Coastal Pass Segment For Individual Pass Purchase
-    Enter Cryptic Command    SS8P123Q04JUNYYZYYZGK1/07000800/8P44JJ
-    Finish PNR
-    Take Screenshot    
+Verify That ${number_of_segment} Air Segments Are Deleted In The PNR
+    Set Test Variable    ${number_of_segment}
+    :FOR     ${i}    IN RANGE     0     ${number_of_segment}
+    \    ${i}    Evaluate   ${i} + 1
+    \    Verify Specific Remark Is Not Written In The PNR    ${active_air_${i}}
+  
+Verify That TKT, PE, And Itinerary Remarks ${with_ticket} Ticket Number Are Written In The PNR
+    Verify TKT AND PE Remarks Written In The PNR ${with_ticket} Ticket Number
+    Verify Itinerary Remarks For Airline Cancellation Fee And Total Amount
+    Verify RMX Remarks With Optional Values Are Written In The PNR
+    
+Verify RMG Remark Is Written
+    Verify Specific Remark Is Written In The PNR    RMG ACPASSCHG
     

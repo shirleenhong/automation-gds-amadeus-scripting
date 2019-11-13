@@ -38,7 +38,6 @@ import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerar
 import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
 import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
 import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
-import { NonBspTicketCreditComponent } from './corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 
 @NgModule({
   declarations: [
@@ -75,8 +74,7 @@ import { NonBspTicketCreditComponent } from './corporate/corp-cancel/non-bsp-tic
     SendInvoiceItineraryComponent,
     ResendInvoiceComponent,
     AddContactComponent,
-    CorpCancelComponent,
-    NonBspTicketCreditComponent
+    CorpCancelComponent
   ],
   imports: [
     BrowserModule,

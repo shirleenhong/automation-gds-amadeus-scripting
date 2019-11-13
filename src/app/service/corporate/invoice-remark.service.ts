@@ -6,6 +6,8 @@ import { EscRemarksComponent } from 'src/app/corporate/corp-remarks/esc-remarks/
 import { DatePipe } from '@angular/common';
 import { AddContactComponent } from '../../corporate/corp-remarks/add-contact/add-contact.component';
 import { FormArray, FormGroup } from '@angular/forms';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 declare var smartScriptSession: any;
 
 @Injectable({
@@ -14,7 +16,9 @@ declare var smartScriptSession: any;
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
-  constructor(private pnrService: PnrService, private rms: RemarksManagerService) {}
+  constructor(private pnrService: PnrService,
+    private queService: AmadeusQueueService,
+    private rms: RemarksManagerService) { }
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -103,6 +107,9 @@ export class InvoiceRemarkService {
     const tempRTTNRes = await smartScriptSession.send(command);
     return await smartScriptSession.getFullCryptic(tempRTTNRes.Response);
   }
+  async sendRFCommand(command) {
+    return await smartScriptSession.send(command);
+  }
   addETicketRemarks(selectedUIElements, eTicketsList) {
     const selectedETickets = selectedUIElements.selectedETickets;
     if (selectedETickets === 'All') {
@@ -117,15 +124,17 @@ export class InvoiceRemarkService {
     } else if (selectedETickets === 'None') {
       // create placeholder for no ticket
       const ticketMap = new Map<string, string>();
-      ticketMap.set('TicketNum', '0');
-      this.rms.createPlaceholderValues(ticketMap);
+      ticketMap.set('EticketNone', 'true');
+      this.rms.createPlaceholderValues(null, ticketMap, null, null, 'SPCL-TKT0');
     } else {
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {
         const ticketNum = this.getTicketNum(selectedEle, eTicketsList);
-        const ticketMap = new Map<string, string>();
-        ticketMap.set('TicketNum', ticketNum);
-        this.rms.createPlaceholderValues(ticketMap);
+        if (ticketNum !== '') {
+          const ticketMap = new Map<string, string>();
+          ticketMap.set('TicketNum', ticketNum);
+          this.rms.createPlaceholderValues(ticketMap);
+        }
       }
     }
   }
@@ -143,15 +152,17 @@ export class InvoiceRemarkService {
     for (const line of selectedFeeLines) {
       for (const rmk of feeRemarks) {
         const feeMap = new Map<string, string>();
+        let segAssociations = [];
+        if (rmk.associations) {
+          segAssociations = this.getSegmentAssociations(rmk.associations);
+        }
         if (line === rmk.ticketline && rmk.remarkText.indexOf('FEE/-') > -1) {
           rmk.remarkText = rmk.remarkText.replace('FEE/-', '').trim();
           feeMap.set('FeesPlaceholder', rmk.remarkText);
-          const segAssociations = this.getSegmentAssociations(rmk.associations);
           this.rms.createPlaceholderValues(feeMap, null, segAssociations);
         } else if (line === rmk.ticketline && rmk.remarkText.indexOf('SFC/-') > -1) {
           rmk.remarkText = rmk.remarkText.replace('SFC/-', '').trim();
           feeMap.set('SfcPlaceholder', rmk.remarkText);
-          const segAssociations = this.getSegmentAssociations(rmk.associations);
           this.rms.createPlaceholderValues(feeMap, null, segAssociations);
         }
       }
@@ -159,8 +170,8 @@ export class InvoiceRemarkService {
   }
   getSegmentAssociations(associations) {
     const segAssociations = [];
-    for(const assc of associations) {
-      if(assc.segmentType === 'ST') {
+    for (const assc of associations) {
+      if (assc.segmentType === 'ST') {
         segAssociations.push(assc.tatooNumber);
       }
     }
@@ -173,12 +184,16 @@ export class InvoiceRemarkService {
         const nonBspMap = new Map<string, string>();
         if (line === rmk.nonBspLineNum) {
           rmk.nonBspRmk = rmk.nonBspRmk.replace('MAC/-', '').trim();
-          nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk);
-          const segAssociations = this.getSegmentAssociations(rmk.associations);
+          nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk.replace('RM*', ''));
+          let segAssociations = [];
+          if (rmk.associations) {
+            segAssociations = this.getSegmentAssociations(rmk.associations);
+          }
           this.rms.createPlaceholderValues(nonBspMap, null, segAssociations);
         }
       }
     }
+    this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 66, 1));
   }
   getDeletedInvoiceLines(selectedUIElements, invoiceList) {
     const deletedInvoices = new Array<string>();
@@ -213,7 +228,7 @@ export class InvoiceRemarkService {
     };
     const ticketRegex = /TKT[0-9]{1,2}/g;
     const ticketMatch = freeFlowText.match(ticketRegex);
-    if(ticketMatch && ticketMatch[0]) {
+    if (ticketMatch && ticketMatch[0]) {
       feeObj.freeText = ticketMatch[0];
       feeObj.lineNo = ticketMatch[0].replace('TKT', '').trim();
     }
@@ -248,25 +263,41 @@ export class InvoiceRemarkService {
     }
     return invoiceObj;
   }
-  getAllTickets(response) {
+
+  // getAllTickets(response) {
+  //   debugger;
+  //   const eTickets = [];
+  //   const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
+  //   const match = response.match(resregex);
+  //   if (match) {
+  //     const ticketTypeRegex = /[A-Z]{4}/g;
+  //     const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
+  //     for (const matchEle of match) {
+  //       const typeMatch = matchEle.match(ticketTypeRegex);
+  //       if (typeMatch && typeMatch[0].indexOf('ET') > -1 && ) {
+  //         const ticketNumMatch = matchEle.match(ticketNumRegex);
+  //         if (ticketNumMatch && ticketNumMatch[0]) {
+  //           eTickets.push(ticketNumMatch[0].replace('-', '').trim());
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return eTickets;
+  // }
+
+  getAllTickets() {
     const eTickets = [];
-    const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
-    const match = response.match(resregex);
-    if (match) {
-      const ticketTypeRegex = /[A-Z]{4}/g;
-      const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
-      for (const matchEle of match) {
-        const typeMatch = matchEle.match(ticketTypeRegex);
-        if (typeMatch && typeMatch[0].indexOf('ET') > -1) {
-          const ticketNumMatch = matchEle.match(ticketNumRegex);
-          if (ticketNumMatch && ticketNumMatch[0]) {
-            eTickets.push(ticketNumMatch[0].replace('-', '').trim());
-          }
-        }
+    for (const ticketed of this.pnrService.pnrObj.faElements) {
+      const regex = new RegExp('[0-9]{3}-[0-9]+');
+      const match = regex.exec(ticketed.freeFlowText);
+      regex.lastIndex = 0;
+      if (match !== null && ticketed.freeFlowText.indexOf('/EVAC/') === -1) {
+        eTickets.push(match[0].replace('-', '').trim());
       }
     }
     return eTickets;
   }
+
   getFeeDetails(rmElement) {
     const feeLineObj = {
       ticketline: '',

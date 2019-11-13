@@ -1,0 +1,53 @@
+<div [formGroup]="hotelSegments" class="form-group">
+ 
+   
+      <div class="row">
+      
+  
+        <div class="col-2" style="width:12%;text-align:left;padding-left:30px">
+          Select
+        </div>
+  
+        <div class="col-2" style="width:12%;text-align:left;padding-left:25px">
+          Check-In Date
+        </div>
+  
+        <div class="col-2" style="width:12%;text-align:left;padding-left:20px">
+          Check-In Month
+        </div>
+        <div class="col-2" style="width:12%;text-align:left;padding-left:15px">
+          Hotel Savings
+        </div>
+        <div class="col-3" style="width:12%;text-align:left;padding-left:10px">
+          Chain Code
+        </div>
+      </div>
+      <div formArrayName="hotels" *ngFor="let item of this.hotelSegments.get('hotels')['controls']" class="col">
+        <div  class="row">
+          <div class="" style="width:3%;padding-left:10px">
+            <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)" />
+          </div>
+  
+          <div class="col-2" style="width:12%;text-align:left">
+            <input formControlName="checkInDate" type="text" class="form-control"  />
+          </div>
+  
+          <div class="col-2" style="width:12%;text-align:left">
+            <input formControlName="checkInMonth" type="text" class="form-control"  />
+          </div>
+  
+          <div class="col-3" style="width:12%;text-align:left">
+            <select autofocus id="hotelSavingsCode" class="form-control" formControlName="hotelSavingsCode" name="hotelSavingsCode">
+              <option [ngValue]="null"></option>
+              
+            </select>
+          </div>
+          <div class="col-2" style="width:12%;text-align:left">
+            <input formControlName="chainCode" type="text" class="form-control"  />
+          </div>
+          
+        </div>
+      </div>
+  
+  </div>
+  

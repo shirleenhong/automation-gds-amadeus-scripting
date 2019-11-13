@@ -6,6 +6,7 @@ import { AquaTicketingComponent } from '../ticketing/aqua-ticketing/aqua-ticketi
 import { MatrixReportingComponent } from './matrix-reporting/matrix-reporting.component';
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
 import { ReportingRemarksComponent } from './reporting-remarks/reporting-remarks.component';
+import { PnrService } from '../../service/pnr.service';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -18,15 +19,19 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(ReportingRemarksComponent) reportingRemarksComponent: ReportingRemarksComponent;
   hasTst: boolean;
-
+  showHotelsTab: boolean;
   @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
 
-  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef) {}
+  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef , private pnrService: PnrService) {}
 
   ngOnInit() {
     this.hasTst = true;
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
+    let segments = this.pnrService.getSegmentList();
+    segments = segments.filter(function (x) { if (x.segmentType === 'HTL') { return x; } })
+    this.showHotelsTab = segments.length > 0 ? true : false;
+    
   }
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;

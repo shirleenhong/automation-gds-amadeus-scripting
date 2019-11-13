@@ -24,7 +24,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) { }
+  ) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -72,7 +72,6 @@ export class PaymentRemarkService {
           cancelSegmentrelate.push(look.tatooNo);
         }
 
-
         this.writeTicketingLine(
           account.tkMacLine.toString(),
           account.baseAmount,
@@ -86,14 +85,16 @@ export class PaymentRemarkService {
           account.tktLine
         );
 
-        const airlineCodeRemark = new Map<string, string>();
-        airlineCodeRemark.set('AirlineCode', airline);
-        airlineCodeRemark.set('TotalCost', account.baseAmount);
-        this.remarksManager.createPlaceholderValues(airlineCodeRemark, null);
+        if (account.tktLine !== '') {
+          const ticketAmountRemarks = new Map<string, string>();
+          ticketAmountRemarks.set('TktRemarkNbr', account.tktLine);
+          ticketAmountRemarks.set('SupplierCode', account.supplierCodeName);
+          this.remarksManager.createEmptyPlaceHolderValue(['TktRemarkNbr', 'SupplierCode']);
+        }
 
         const passCancellationRemark = new Map<string, string>();
         passCancellationRemark.set('AirlineCode', airline);
-        passCancellationRemark.set('WebLocator', account.supplierCodeName);
+        passCancellationRemark.set('WebLocator', account.supplierConfirmatioNo);
         this.remarksManager.createPlaceholderValues(passCancellationRemark, null, cancelSegmentrelate);
 
         // TKT%TktRemarkNbr%-VEN/TK-%TktNbr%/VN-%SupplierCode%
@@ -118,8 +119,8 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(null, refundStart, null, null, '**********************************************');
 
         const webLocatorRemark = new Map<string, string>();
-        webLocatorRemark.set('WebLocator', account.supplierCodeName);
-        webLocatorRemark.set('CurrentDateY', formatDate(Date.now(), 'ddMMyy', 'en').toString());
+        webLocatorRemark.set('WebLocator', account.supplierConfirmatioNo);
+        webLocatorRemark.set('CurrentDateY', formatDate(Date.now(), 'ddMMM', 'en').toString());
         this.remarksManager.createPlaceholderValues(webLocatorRemark, null, null);
 
         const nonBspRemark = new Map<string, string>();
@@ -158,6 +159,11 @@ export class PaymentRemarkService {
           parseFloat(account.otherTaxRefund);
         priceForRemark.set('CATotalPrice', this.decPipe.transform(totalPrice, '1.2-2').replace(',', ''));
         this.remarksManager.createPlaceholderValues(priceForRemark, null, null);
+
+        const airlineCodeRemark = new Map<string, string>();
+        airlineCodeRemark.set('AirlineCode', airline);
+        airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalPrice, '1.2-2').replace(',', ''));
+        this.remarksManager.createPlaceholderValues(airlineCodeRemark, null);
 
         const passCancelledRemark = new Map<string, string>();
         passCancelledRemark.set('CancelAirlineCode', airline);
@@ -343,100 +349,6 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(redemptionRemark, null, segmentrelate);
       }
       this.remarksManager.createPlaceholderValues(confNbrRem, null, segmentrelate);
-
-      // tslint:disable-next-line: max-line-length
-      // if (
-      //   account.accountingTypeRemark === 'ACPPC' ||
-      //   account.accountingTypeRemark === 'WCPPC' ||
-      //   account.accountingTypeRemark === 'PCPPC'
-      // ) {
-      //   const cancelSegmentrelate: string[] = [];
-      //   account.segments.forEach((element) => {
-      //     cancelSegmentrelate.push(element.lineNo);
-      //   });
-
-      //   const passCancellationRemark = new Map<string, string>();
-      //   passCancellationRemark.set('AirlineCode', airline);
-      //   passCancellationRemark.set('WebLocator', account.recordLocator);
-      //   this.remarksManager.createPlaceholderValues(passCancellationRemark, null, cancelSegmentrelate);
-
-      //   // TKT%TktRemarkNbr%-VEN/TK-%TktNbr%/VN-%SupplierCode%
-      //   const tktWebTicket = new Map<string, string>();
-      //   tktWebTicket.set('TktRemarkNbr', account.tkMacLine.toString());
-      //   tktWebTicket.set('TktNbr', account.tktLine);
-      //   tktWebTicket.set('SupplierCode', account.supplierCodeName);
-      //   this.remarksManager.createPlaceholderValues(tktWebTicket, null, cancelSegmentrelate);
-
-      //   // TKT%TktRemarkNbr%-BA-%CancelFee%/TX1-%CancelGst%XG/TX2-%CancelHst%RC/TX3-%CancelQst%XQ/TX4-%CancelOthTax%XT/COMM-0.00'
-      //   const cancelFeeTktRemark = new Map<string, string>();
-      //   cancelFeeTktRemark.set('TktRemarkNbr', account.tkMacLine.toString());
-      //   cancelFeeTktRemark.set('CancelFee', account.baseAmountRefund);
-      //   cancelFeeTktRemark.set('CancelGst', account.gstRefund);
-      //   cancelFeeTktRemark.set('CancelHst', account.hstRefund);
-      //   cancelFeeTktRemark.set('CancelQst', account.qstRefund);
-      //   cancelFeeTktRemark.set('CancelOthTax', account.otherTaxRefund);
-      //   this.remarksManager.createPlaceholderValues(cancelFeeTktRemark, null, cancelSegmentrelate);
-
-      //   const refundStart = new Map<string, string>();
-      //   refundStart.set('CARefundStart', 'true');
-      //   this.remarksManager.createPlaceholderValues(null, refundStart, null, null, '**********************************************');
-
-      //   const webLocatorRemark = new Map<string, string>();
-      //   webLocatorRemark.set('WebLocator', account.recordLocator);
-      //   webLocatorRemark.set('CurrentDateY', formatDate(Date.now(), 'ddMMyy', 'en').toString());
-      //   this.remarksManager.createPlaceholderValues(webLocatorRemark, null, null);
-
-      //   const nonBspRemark = new Map<string, string>();
-      //   nonBspRemark.set('SupplierCode', account.supplierCodeName);
-      //   nonBspRemark.set('OrgOid', account.oidOrigTicketIssue);
-      //   this.remarksManager.createPlaceholderValues(nonBspRemark, null, null);
-
-      //   const refundBaseRemark = new Map<string, string>();
-      //   refundBaseRemark.set('CancelFee', account.baseAmountRefund);
-      //   refundBaseRemark.set('CancelGst', account.gstRefund);
-      //   refundBaseRemark.set('CancelHst', account.hstRefund);
-      //   refundBaseRemark.set('CancelQst', account.qstRefund);
-      //   refundBaseRemark.set('CancelOthTax', account.otherTaxRefund);
-      //   refundBaseRemark.set('CaRefundCommision', account.commisionRefund);
-      //   this.remarksManager.createPlaceholderValues(refundBaseRemark, null, null);
-
-      //   const notes1 = new Map<string, string>();
-      //   notes1.set('CaAmadeusNotes1', account.additionalNotes1);
-      //   this.remarksManager.createPlaceholderValues(notes1, null, null);
-
-      //   const notes2 = new Map<string, string>();
-      //   notes2.set('CaAmadeusNotes2', account.additionalNotes2);
-      //   this.remarksManager.createPlaceholderValues(notes2, null, null);
-
-      //   const refundEnd = new Map<string, string>();
-      //   refundEnd.set('CARefundEnd', 'true');
-      //   this.remarksManager.createPlaceholderValues(null, refundEnd, null, null, '**********************************************');
-
-      //   const priceForRemark = new Map<string, string>();
-      //   // tslint:disable-next-line: max-line-length
-      //   const totalPrice =
-      //     parseFloat(account.baseAmountRefund) +
-      //     parseFloat(account.gstRefund) +
-      //     parseFloat(account.hstRefund) +
-      //     parseFloat(account.qstRefund) +
-      //     parseFloat(account.otherTaxRefund);
-      //   priceForRemark.set('CATotalPrice', totalPrice.toString());
-      //   this.remarksManager.createPlaceholderValues(priceForRemark, null, null);
-
-      //   const passCancelledRemark = new Map<string, string>();
-      //   passCancelledRemark.set('CancelAirlineCode', airline);
-      //   this.remarksManager.createPlaceholderValues(passCancelledRemark, null, null);
-
-      //   const cancelFeeRemark = new Map<string, string>();
-      //   cancelFeeRemark.set('CancelFee', account.baseAmountRefund);
-      //   this.remarksManager.createPlaceholderValues(cancelFeeRemark, null, null);
-
-      //   const travellerCreditCardCondition = new Map<string, string>();
-      //   travellerCreditCardCondition.set('CACancelRemark', 'true');
-      //   this.remarksManager.createPlaceholderValues(null, travellerCreditCardCondition, null, null, 'THE TRAVELLERS CREDIT CARD.');
-
-      //   // to do check if U14 exist
-      // }
     });
   }
 
@@ -779,7 +691,7 @@ export class PaymentRemarkService {
           const passive = new PassiveSegmentModel();
           if (account.accountingTypeRemark === 'ACPPC') {
             passive.startPoint = 'YYZ';
-            passive.endPoint = 'YZG';
+            passive.endPoint = 'YYZ';
           } else {
             passive.startPoint = account.departureCity;
             passive.endPoint = account.departureCity;

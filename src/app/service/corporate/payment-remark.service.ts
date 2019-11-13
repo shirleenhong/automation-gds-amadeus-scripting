@@ -24,7 +24,7 @@ export class PaymentRemarkService {
     private pnrService: PnrService,
     private rms: RemarksManagerService,
     private ddbService: DDBService
-  ) {}
+  ) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -64,11 +64,14 @@ export class PaymentRemarkService {
           airline = 'PD';
         }
 
-        debugger;
         const cancelSegmentrelate: string[] = [];
-        account.segments.forEach((element) => {
-          cancelSegmentrelate.push(element.lineNo);
-        });
+        const segmentDetails = this.pnrService.getSegmentList();
+
+        const look = segmentDetails.find((x) => x.controlNumber === account.supplierConfirmatioNo);
+        if (look) {
+          cancelSegmentrelate.push(look.tatooNo);
+        }
+
 
         this.writeTicketingLine(
           account.tkMacLine.toString(),
@@ -76,8 +79,8 @@ export class PaymentRemarkService {
           account.gst,
           account.hst,
           account.qst,
-          '0.00',
-          account.commisionWithoutTax,
+          account.otherTax,
+          '0',
           cancelSegmentrelate,
           account.supplierCodeName,
           account.tktLine
@@ -735,8 +738,22 @@ export class PaymentRemarkService {
     return { uniqueairlineCode, segmentAssoc };
   }
 
+  deleteSegmentForPassPurchase(accounting: MatrixAccountingModel[]) {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'Accounting Remark';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.passiveSegments = [];
+    accounting.forEach((account) => {
+      if (account.accountingTypeRemark === 'ACPPC') {
+        account.segments.forEach((element) => {
+          remGroup.deleteRemarkByIds.push(element.lineNo);
+        });
+      }
+    });
+    return remGroup;
+  }
+
   addSegmentForPassPurchase(accounting: MatrixAccountingModel[]) {
-    debugger;
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
@@ -748,7 +765,7 @@ export class PaymentRemarkService {
         const air = this.pnrService
           .getSegmentList()
           .find((x) => x.segmentType === 'AIR' && x.controlNumber === account.supplierConfirmatioNo);
-        debugger;
+
         if (account.accountingTypeRemark === 'ACPPC') {
           airline = this.getAirlineBySupplierCode(account.supplierCodeName);
         } else {
@@ -760,8 +777,14 @@ export class PaymentRemarkService {
           const datePipe = new DatePipe('en-US');
           // add dummy segment
           const passive = new PassiveSegmentModel();
-          passive.startPoint = account.departureCity;
-          passive.endPoint = account.departureCity;
+          if (account.accountingTypeRemark === 'ACPPC') {
+            passive.startPoint = 'YYZ';
+            passive.endPoint = 'YZG';
+          } else {
+            passive.startPoint = account.departureCity;
+            passive.endPoint = account.departureCity;
+          }
+
           passive.startDate = datePipe.transform(new Date(), 'ddMMyy');
           passive.vendor = airline;
           passive.startTime = '0700';
@@ -779,7 +802,6 @@ export class PaymentRemarkService {
         }
       });
     }
-    debugger;
     return remGroup;
   }
 

@@ -242,7 +242,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
     this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
-    debugger;
+
     switch (accRemark) {
       case 'ACPPC':
         this.accountingRemark.supplierCodeName = '';
@@ -258,8 +258,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         accRemark === 'ACPP'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
-          ? (this.accountingRemark.supplierCodeName = 'WJP')
-          : (this.accountingRemark.supplierCodeName = 'PTP');
+            ? (this.accountingRemark.supplierCodeName = 'WJP')
+            : (this.accountingRemark.supplierCodeName = 'PTP');
 
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
@@ -681,7 +681,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   onCheckChange() {
     // Filter out the unselected ids
-    debugger;
     const checkSegment = [];
     let airlineCode = '';
     let counter = 0;

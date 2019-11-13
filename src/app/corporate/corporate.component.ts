@@ -55,6 +55,7 @@ export class CorporateComponent implements OnInit {
   workflow = '';
   cancelEnabled = true;
   validModel = new ValidateModel();
+  itinValidModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
   segment = [];
@@ -555,8 +556,17 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  CheckValidItinModel() {
+    debugger;
+    this.itinValidModel.isSubmitted = true;
+    this.itinValidModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
+    return this.itinValidModel.isTicketingAllValid();
+  }
+
   async SendItineraryAndQueue() {
-    if (!this.itineraryqueueComponent.checkValid()) {
+    debugger;
+    // if (!this.itineraryqueueComponent.checkValid()) {
+    if (!this.CheckValidItinModel()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
       });

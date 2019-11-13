@@ -65,15 +65,15 @@ Click Reporting Remarks Tab
 
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
-    Enter Value    ${fare_row_number}[${tst_number}]${input_full_fare}    ${full_fare_value}
+    Enter Value    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${input_full_fare}    ${full_fare_value}
 
 Enter Low Fare
     [Arguments]    ${low_fare_value}    ${tst_number}=1
-    Enter Value    ${fare_row_number}[${tst_number}]${input_low_fare}    ${low_fare_value}
+    Enter Value    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${input_low_fare}    ${low_fare_value}
 
 Select Reason Code
     [Arguments]    ${reason_code_value}    ${tst_number}=1
-    Select From List By Label    ${fare_row_number}[${tst_number}]${list_reason_code}    ${reason_code_value}
+    Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
 
 Add Client Reporting Values For Single BSP Segment
     Navigate To Page BSP Reporting
@@ -88,7 +88,7 @@ Add Client Reporting Values For Single BSP Segment
 
 Add Client Reporting Values For Multiple BSP Segment
     Navigate To Page BSP Reporting
-    Wait Until Page Contains Element    ${tab_clientReporting}[3]${checkbox_clientReporting}    60
+    Wait Until Page Contains Element    ${tab_clientReporting}${open_bracket}3${close_bracket}${checkbox_clientReporting}    60
     Select Client Reporting Fields To Be Written    1    2    3
     Enter Full Fare    4000.50
     Enter Low Fare    300.00
@@ -103,7 +103,7 @@ Add Client Reporting Values For Multiple BSP Segment
 
 Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
     Navigate To Page BSP Reporting
-    Wait Until Page Contains Element    ${tab_clientReporting}[2]${checkbox_clientReporting}    60
+    Wait Until Page Contains Element    ${tab_clientReporting}${open_bracket}2${close_bracket}${checkbox_clientReporting}    60
     Select Client Reporting Fields To Be Written    1    2
     Enter Full Fare    12000.50
     Enter Low Fare    1300.00
@@ -273,7 +273,7 @@ Verify CN And NUC Remark Are Updated Correctly For PNR With Hotel and Invoice Re
     Verify Specific Remark Is Written In The PNR    RM *NUC
     
 Click Add Waiver Button ${button_no}
-    Click Element    ${form_segments}[${button_no}]${button_addWaiver}
+    Click Element    ${form_segments}${open_bracket}${button_no}${close_bracket}${button_addWaiver}
     Wait Until Page Contains Element    ${list_waivers}     30
 
 Select Waivers Code Option For Single Ticket

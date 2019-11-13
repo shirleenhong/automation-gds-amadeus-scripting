@@ -36,11 +36,20 @@ ${input_tax}    //input[@id='tax']
 ${input_commission_ticketCredit}    //input[@name='commission']
 ${input_tixCred_freeFlow1}    //input[@id='freeFlow1']
 ${input_tixCred_freeFlow2}    //input[@id='freeFlow2']
-
 ${input_futureTicket_start}    //div[@ng-reflect-name='
 ${input_ticket_futureTicket_end}    ']//input[@formcontrolname='ticket']
 ${input_coupon_futureTicket_end}    ']//input[@formcontrolname='coupon']
 ${i_add_futureTicket_end}    ']//i[@id='add']
+${input_cFirstInitial}     //input[@id='cFirstInitial']
+${input_cLastName}    //input[@id='cLastName']
+${checkbox_ticketVoidList}    //div[@formarrayname='ticketVoidList']//input
+${list_reuseCC}    //select[@id='reuseCC']
+${input_authorization}    //input[@id='authorization']
+${list_vRsnOption}     //select[@id='vRsnOption']
+${list_reverseItem}    //select[@id='reverseItem']
+${input_otherDetails1}    //input[@id='otherDetails1']
+${input_otherDetails2}    //input[@id='otherDetails2']
+${text_voidWarningMessage}    //label[@style='color: red']
 
 *** Keywords ***
 Fill Up Cancel Segment With Default Values
@@ -249,11 +258,6 @@ Verify Agent Is Unable To Cancel Segments Due To Existing Power Hotel Segment
     Wait Until Page Contains Element   ${text_warningMessage}    30
     Run Keyword And Continue On Failure    Page Should Contain    Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script
     Take Screenshot
-    
-Click NonBSP Ticket Credit Tab
-    Wait Until Element Is Visible    ${tab_nonBspTicketCredit}    30
-    Click Element    ${tab_nonBspTicketCredit}        
-    Set Test Variable    ${current_page}    NonBSP Ticket Credit
     
 Click Cancel Segments Tab
     Wait Until Element Is Visible    ${tab_CancelSegments}    30

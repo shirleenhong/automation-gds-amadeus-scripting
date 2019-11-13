@@ -93,7 +93,7 @@ export class PaymentRemarkService {
 
         const passCancellationRemark = new Map<string, string>();
         passCancellationRemark.set('AirlineCode', airline);
-        passCancellationRemark.set('WebLocator', account.recordLocator);
+        passCancellationRemark.set('WebLocator', account.supplierCodeName);
         this.remarksManager.createPlaceholderValues(passCancellationRemark, null, cancelSegmentrelate);
 
         // TKT%TktRemarkNbr%-VEN/TK-%TktNbr%/VN-%SupplierCode%
@@ -118,7 +118,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(null, refundStart, null, null, '**********************************************');
 
         const webLocatorRemark = new Map<string, string>();
-        webLocatorRemark.set('WebLocator', account.recordLocator);
+        webLocatorRemark.set('WebLocator', account.supplierCodeName);
         webLocatorRemark.set('CurrentDateY', formatDate(Date.now(), 'ddMMyy', 'en').toString());
         this.remarksManager.createPlaceholderValues(webLocatorRemark, null, null);
 

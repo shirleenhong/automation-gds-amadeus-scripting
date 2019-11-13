@@ -371,23 +371,31 @@ export class CorporateComponent implements OnInit {
       return;
     }
 
-    this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+    // this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
     const osiCollection = new Array<RemarkGroup>();
     const cancel = this.cancelComponent.cancelSegmentComponent;
     const getSelected = cancel.submit();
 
-    // if (getSelected.length >= 1) {
-    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-    this.corpRemarkService.BuildRemarks(osiCollection);
-    await this.corpRemarkService.cancelOSIRemarks().then(
-      async () => {
-        this.getPnr();
-        await this.addCancelRemarksRemarks(cancel, getSelected);
-      },
-      (error) => {
-        console.log(JSON.stringify(error));
-      }
-    );
+    if (!(cancel.cancelForm.controls.followUpOption.value === 'Void BSP' && cancel.hasUnvoided)) {
+      this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+      // if (getSelected.length >= 1) {
+      osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+      this.corpRemarkService.BuildRemarks(osiCollection);
+      await this.corpRemarkService.cancelOSIRemarks().then(
+        async () => {
+          this.getPnr();
+          await this.addCancelRemarksRemarks(cancel, getSelected);
+        },
+        (error) => {
+          console.log(JSON.stringify(error));
+        }
+      );
+    } else {
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
+      this.closePopup();
+    }
   }
 
   async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {

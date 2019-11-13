@@ -12,6 +12,7 @@ Resource          remarks.robot
 Resource          cancel_segments.robot
 Resource          queues.robot
 Resource          invoice.robot
+Resource          add_segment.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***

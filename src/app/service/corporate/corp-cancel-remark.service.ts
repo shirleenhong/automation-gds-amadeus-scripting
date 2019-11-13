@@ -178,6 +178,15 @@ export class CorpCancelRemarkService {
     });
     this.remarksManager.createPlaceholderValues(map, null, null, null, statictext);
   }
+   sendEBRemarks(cancelForm:FormGroup) {
+     const map = new Map<string, string>();
+     map.set('TouchCode', cancelForm.controls.ebR.value);
+     map.set('BookingToolCode', cancelForm.controls.ebT.value);
+     map.set('ReasonType', cancelForm.controls.ebN.value);
+     map.set('ReasonCode', cancelForm.controls.ebC.value);
+     this.remarksManager.createPlaceholderValues(map);
+  } 
+
 
   WriteTicketRefund(group: FormGroup, refundType: string) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');

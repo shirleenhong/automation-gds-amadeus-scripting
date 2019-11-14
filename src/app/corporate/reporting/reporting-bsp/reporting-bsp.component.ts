@@ -126,11 +126,7 @@ export class ReportingBSPComponent implements OnInit {
 
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
-        this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1).then((reasons) => {
-          this.reasonCodes[currentIndex] = reasons;
-        });
-
-        // this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
+        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
         group.get('reasonCodeText').setValue('E');
       }
 
@@ -217,21 +213,15 @@ export class ReportingBSPComponent implements OnInit {
     }
   }
 
-  async changeReasonCodes(group: FormGroup, indx: number) {
+  changeReasonCodes(group: FormGroup, indx: number) {
     if (indx >= 0) {
       const lowFare = group.get('lowFareText').value;
       const chargeFare = group.get('chargeFare').value;
 
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
-        // this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1);
-        await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1).then((reasons) => {
-          this.reasonCodes[indx] = reasons;
-        });
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1);
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
-        await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1).then((reasons) => {
-          this.reasonCodes[indx] = reasons;
-        });
-        // this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
       }
 
       group.get('reasonCodeText').setValue(null);

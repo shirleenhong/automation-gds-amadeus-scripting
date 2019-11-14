@@ -210,8 +210,6 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
-        // await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
-
         await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {

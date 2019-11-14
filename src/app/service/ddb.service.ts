@@ -209,20 +209,12 @@ export class DDBService implements OnInit {
     return reasons;
   }
 
-  async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
+  getReasonCodeByTypeId(ids: number[], productID: number): ReasonCode[] {
     this.reasonCodeList = [];
     for (const id of ids) {
-      await this.getRequest(
-        common.reasonCodesService +
-          '?TripTypeId=1&ClientSubUnitGuid=' +
-          this.pnrService.getClientSubUnit() +
-          '&ProductId=' +
-          productID +
-          '&ReasonCodeTypeId=' +
-          id
-      ).then((response) => {
-        response.ReasonCodeItems.forEach((reasonJson) => {
-          this.reasonCodeList.push(new ReasonCode(reasonJson));
+      this.getReasonCodes(this.pnrService.getClientSubUnit(), '&ProductId=' + productID + '&ReasonCodeTypeId=' + id).then((response) => {
+        response.forEach((reason) => {
+          this.reasonCodeList.push(reason);
         });
       });
     }

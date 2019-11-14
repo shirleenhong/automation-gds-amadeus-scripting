@@ -25,7 +25,7 @@ export class CarSavingsCodeComponent implements OnInit {
     this.carSavingsCodeGroup = this.fb.group({
       carSavings: this.fb.array([])
     });
-    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 3);
+    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 3);
     console.log(this.ddbService.reasonCodeList);
     this.carSavingsCode();
   }
@@ -75,8 +75,8 @@ export class CarSavingsCodeComponent implements OnInit {
   // }
   checkChange(group) {
     if (group.get('chkIncluded').value === true) {
-      // this.addValidation(group, 'carReasonCode');
-      // this.utilHelper.validateAllFields(group);
+      this.addValidation(group, 'carReasonCode');
+      this.utilHelper.validateAllFields(group);
     } else {
       this.removeValidation(group, 'carReasonCode');
     }

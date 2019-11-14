@@ -344,8 +344,8 @@ Add Multiple Passive Rail Segment For FR PNR
     Enter Value    ${input_class_service}    CL12345
     Enter Value    ${input_from_station}    From Station Test
     Enter Value    ${input_arrival_station}    Arrival Station Test
-    Enter Value    ${input_car_number}    C123
-    Enter Value    ${input_seat_number}    S123
+    Enter Value    ${input_car_number}    C456
+    Enter Value    ${input_seat_number}    S654
     Enter Value    ${input_departure_city}    YUL
     Input Text    ${input_departure_date}    01102020
     Input Text    ${input_arrival_date}    01112020
@@ -359,7 +359,7 @@ Add Multiple Passive Rail Segment For FR PNR
     Click Add Passive Segment Button
     Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Rail
-    Enter Value    ${input_train_number}    TR245
+    Enter Value    ${input_train_number}    TR254
     Enter Value    ${input_class_service}    CL22222
     Enter Value    ${input_from_station}    2nd From Station
     Enter Value    ${input_arrival_station}    2nd Arrival Station
@@ -389,12 +389,12 @@ Verify Passive Rail Segment And RIR Added In The PNR For EN
 Verify Passive Rail Segment And RIR Added In The PNR For FR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S2
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR254 CLASS-CL22222/S3
-    Verify Specific Remark Is Written In The PNR    RIR CAR-C123/S3
+    Verify Specific Remark Is Written In The PNR    RIR SEAT NUMBER-S123/S3
     Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR    2
     Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    3    FR
 

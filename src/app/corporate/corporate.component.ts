@@ -249,8 +249,10 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
+    accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
@@ -269,11 +271,7 @@ export class CorporateComponent implements OnInit {
       this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
       this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
     ) {
-      if (
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
-      ) {
+      if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
         const forDeletion = new Array<string>();
         this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
           forDeletion.push(element.lineNo);
@@ -346,8 +344,7 @@ export class CorporateComponent implements OnInit {
         )
       )
     );
-
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
       async () => {
         this.isPnrLoaded = false;
         this.workflow = '';

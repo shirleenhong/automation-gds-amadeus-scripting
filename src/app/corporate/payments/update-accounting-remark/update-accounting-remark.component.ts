@@ -255,6 +255,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('hst').updateValueAndValidity();
         this.matrixAccountingForm.controls.qst.clearValidators();
         this.matrixAccountingForm.get('qst').updateValueAndValidity();
+        this.matrixAccountingForm.controls.otherTax.clearValidators();
+        this.matrixAccountingForm.get('otherTax').updateValueAndValidity();
         this.onCheckChange();
         break;
       case 'ACPP':
@@ -271,6 +273,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('gst').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('hst').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('qst').setValidators([Validators.required, Validators.maxLength(8)]);
+        this.matrixAccountingForm.get('otherTax').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();

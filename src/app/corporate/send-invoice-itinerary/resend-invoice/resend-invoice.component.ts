@@ -11,10 +11,12 @@ import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-se
 })
 export class ResendInvoiceComponent implements OnInit {
   invoiceFormGroup: FormGroup;
-  constructor(private pnrService: PnrService,
+  constructor(
+    private pnrService: PnrService,
     private invoiceRmkService: InvoiceRemarkService,
     private formBuilder: FormBuilder,
-    private ddbService: DDBService) { }
+    private ddbService: DDBService
+  ) {}
   showSegments = false;
   showInvoiceList = false;
   selectedElementsUI = {
@@ -42,7 +44,7 @@ export class ResendInvoiceComponent implements OnInit {
       eTicketNo: new FormControl('', []),
       feesAccountingNo: new FormControl('', []),
       nonBspAccountingNo: new FormControl('', []),
-      emailAddresses: new FormArray([this.createFormGroup()]),
+      emailAddresses: new FormArray([this.createFormGroup()])
     });
     this.resendInvoiceProcess();
   }
@@ -121,8 +123,10 @@ export class ResendInvoiceComponent implements OnInit {
   }
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
-      emailAddress: new FormControl('',
-        [Validators.required, Validators.pattern('^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[A-Z0-9.-]+?\\.[A-Z]{2,3}$')])
+      emailAddress: new FormControl('', [
+        Validators.required,
+        Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+?\\.[A-Z]{2,3,4,5}$")
+      ])
     });
     return group;
   }
@@ -181,7 +185,7 @@ export class ResendInvoiceComponent implements OnInit {
           nonBspLineNum: '',
           nonBspRmk: '',
           associations: []
-        }
+        };
         const supplierRegex = /MAC\/-SUP-[-A-Z, 0-9]{1,}/g;
         const supplierMatch = rmEle.freeFlowText.match(supplierRegex);
         if (supplierMatch && supplierMatch[0]) {

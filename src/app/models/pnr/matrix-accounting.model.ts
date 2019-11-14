@@ -52,7 +52,7 @@ export class MatrixAccountingModel {
   otherTaxRefund: string;
   commisionRefund: string;
   oidOrigTicketIssue: string;
-  recordLocator: string;
+  // recordLocator: string;
   segments: any;
   additionalNotes1: string;
   additionalNotes2: string;

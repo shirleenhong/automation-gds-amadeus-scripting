@@ -9,6 +9,8 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 import { BehaviorSubject } from 'rxjs';
 import { DDBService } from '../ddb.service';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,8 @@ export class PaymentRemarkService {
     private remarksManager: RemarksManagerService,
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    private ddbService: DDBService
+    private ddbService: DDBService,
+    private queService: AmadeusQueueService
   ) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
@@ -71,19 +74,6 @@ export class PaymentRemarkService {
         if (look) {
           cancelSegmentrelate.push(look.tatooNo);
         }
-
-        this.writeTicketingLine(
-          account.tkMacLine.toString(),
-          account.baseAmount,
-          account.gst,
-          account.hst,
-          account.qst,
-          account.otherTax,
-          '0',
-          cancelSegmentrelate,
-          account.supplierCodeName,
-          account.tktLine
-        );
 
         if (account.tktLine !== '') {
           const ticketAmountRemarks = new Map<string, string>();
@@ -134,8 +124,11 @@ export class PaymentRemarkService {
         refundBaseRemark.set('CancelHst', account.hstRefund);
         refundBaseRemark.set('CancelQst', account.qstRefund);
         refundBaseRemark.set('CancelOthTax', account.otherTaxRefund);
-        refundBaseRemark.set('CaRefundCommision', account.commisionRefund);
         this.remarksManager.createPlaceholderValues(refundBaseRemark, null, null);
+
+        const refundBaseCommisionRemark = new Map<string, string>();
+        refundBaseCommisionRemark.set('CaRefundCommision', account.commisionRefund);
+        this.remarksManager.createPlaceholderValues(refundBaseCommisionRemark, null, null);
 
         const notes1 = new Map<string, string>();
         notes1.set('CaAmadeusNotes1', account.additionalNotes1);
@@ -150,9 +143,12 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(null, refundEnd, null, null, '**********************************************');
 
         const priceForRemark = new Map<string, string>();
+
+        //     Add all costs entered above to create new variable [new_Price].
+        //     [cancel_Fee]+[cancel_Gst]+[cancel_Hst]+[cancel_Qst]+[cancel_Othtax]=[new_Price]
         // tslint:disable-next-line: max-line-length
         const totalPrice =
-          parseFloat(account.baseAmountRefund) +
+          parseFloat(account.baseAmount) +
           parseFloat(account.gstRefund) +
           parseFloat(account.hstRefund) +
           parseFloat(account.qstRefund) +
@@ -170,7 +166,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(passCancelledRemark, null, null);
 
         const cancelFeeRemark = new Map<string, string>();
-        cancelFeeRemark.set('CancelFee', account.baseAmountRefund);
+        cancelFeeRemark.set('CancelFee', account.baseAmount);
         this.remarksManager.createPlaceholderValues(cancelFeeRemark, null, null);
 
         const travellerCreditCardCondition = new Map<string, string>();
@@ -183,6 +179,9 @@ export class PaymentRemarkService {
           u14Remark.set('CancelAirlineCodePassChg', airline);
           this.remarksManager.createPlaceholderValues(u14Remark, null, null);
         }
+       
+        this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
+        this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 70, 1));
       }
     });
   }

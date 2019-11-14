@@ -18,7 +18,6 @@ Verify U63 Is Written For Single Ticket With Single Codes
     Verify That Waivers Code Is Written In The PNR
     Delete Fare and Itinerary
     
-    
 Verify U63 Is Written For Single Ticket With Multiple Codes
     [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
@@ -26,8 +25,7 @@ Verify U63 Is Written For Single Ticket With Multiple Codes
     Select Multiple Waiver Code Options For Single Ticket
     Verify That Multiple Waiver Codes Are Written In The PNR For Single Ticket
     Delete Fare and Itinerary
-    
- 
+
 Verify U63 Is Written For Multiple Tickets With Multiple Codes  
     [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
@@ -35,13 +33,11 @@ Verify U63 Is Written For Multiple Tickets With Multiple Codes
     Select Multiple Waiver Code Options For Multiple Tickets
     Verify That Multiple Waiver Codes Are Written In The PNR For Multiple Tickets
     Delete Fare and Itinerary
-    
-    
+        
 Verify U63 Is Written For Multiple Tickets With Multiple Codes That Has Values
     [Tags]    us12284
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Select Multiple Waiver Code Options With Values For Multiple Tickets
     Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multiple Tickets
-    Delete Fare and Itinerary
-    
+    Delete Fare and Itinerary   

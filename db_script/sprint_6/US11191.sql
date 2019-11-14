@@ -40,10 +40,10 @@ VALUES
 VALUES
     (@PNROutputItemID + 1, 0, null, 1, 'X', 'ATTN ACCTNG - NONBSP %PartialFull% REFUND  - %CurrentDate%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),   
     (@PNROutputItemID + 2, 0, null, 1, 'X', '.  REFUND BASE AMOUNT %BaseAmt% GST %Gst% TAX %Tax%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
-    (@PNROutputItemID + 3, 0, null, 1, 'X', '.  REFUND %RefundAmount% - COMMISSION %Commission% - ORIG INV %InvoiceNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),    
-	(@PNROutputItemID + 4, 0, null, 1, 'X', '.  REFUND COMMISSION %Commission% - ORIG INV %InvoiceNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),    
+    (@PNROutputItemID + 3, 0, null, 1, 'X', '.  REFUND %RefundAmount% - COMMISSION %Commission% %InvoiceNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),    
+	(@PNROutputItemID + 4, 0, null, 1, 'X', '.  REFUND COMMISSION %Commission% %InvoiceNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),    
 	(@PNROutputItemID + 5, 0, null, 1, 'X', 'REFUND PROCESSED %TicketNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
-	(@PNROutputItemID + 6, 0, null, 1, 'Z', 'TKT NBR - %TicketNumber% CPNS %CouponNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL)
+	(@PNROutputItemID + 6, 0, null, 1, 'X', 'TKT NBR - %TicketNumber% CPNS %CouponNumber%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL)
     
 
 

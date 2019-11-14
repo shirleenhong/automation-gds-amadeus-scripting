@@ -12,6 +12,7 @@ Resource          remarks.robot
 Resource          cancel_segments.robot
 Resource          queues.robot
 Resource          invoice.robot
+Resource          add_segment.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
@@ -366,7 +367,7 @@ Finish PNR
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"    Fill Up Required And Cancel Segments
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
-    Run Keyword If    "${status}" == "False"    Run Keywords        Switch To Graphic Mode    Get PNR Details
+    Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
 
 Fill Up Required And Cancel Segments
      Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
@@ -598,3 +599,25 @@ Click Send Invoice
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    Send Invoice/Itinerary
     Set Test Variable    ${pnr_submitted}   no
+    
+Complete PNR and Ticket TST${tst_no}
+    #Navigate To Page Reporting Remarks
+    #Finish PNR    no
+    #Close CA Corporate Test
+    Enter Cryptic Command    RFCWTTEST
+    Enter Cryptic Command    ER
+    Enter Cryptic Command    ER
+    Enter Cryptic Command    RT      
+    Get Record Locator Value
+    Enter Cryptic Command     TTP/T${tst_no}
+    Retrive Current PNR
+    Get Ticket Number
+
+Get Ticket Number
+    Switch To Graphic Mode
+    Get PNR Details
+    ${ticket_line}    Get Lines Containing String     ${pnr_details}    FA PAX
+    ${ticket_num}    Fetch From Right    ${ticket_line}    FA PAX${SPACE}
+    ${ticket_num}    Fetch From Left    ${ticket_num}    /
+    Set Test Variable   ${ticket_num}
+    Switch To Command Page

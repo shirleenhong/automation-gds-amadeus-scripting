@@ -126,7 +126,7 @@ export class ReportingBSPComponent implements OnInit {
 
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
-        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
+        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
         group.get('reasonCodeText').setValue('E');
       }
 
@@ -219,9 +219,9 @@ export class ReportingBSPComponent implements OnInit {
       const chargeFare = group.get('chargeFare').value;
 
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 'en-GB', 1);
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1);
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
+        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
       }
 
       group.get('reasonCodeText').setValue(null);

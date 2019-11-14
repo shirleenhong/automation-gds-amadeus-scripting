@@ -178,6 +178,15 @@ export class CorpCancelRemarkService {
     });
     this.remarksManager.createPlaceholderValues(map, null, null, null, statictext);
   }
+   sendEBRemarks(cancelForm:FormGroup) {
+     const map = new Map<string, string>();
+     map.set('TouchCode', cancelForm.controls.ebR.value);
+     map.set('BookingToolCode', cancelForm.controls.ebT.value);
+     map.set('ReasonType', cancelForm.controls.ebN.value);
+     map.set('ReasonCode', cancelForm.controls.ebC.value);
+     this.remarksManager.createPlaceholderValues(map);
+  } 
+
 
   WriteTicketRefund(group: FormGroup, refundType: string) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
@@ -190,9 +199,16 @@ export class CorpCancelRemarkService {
         this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
         this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum').value, t.get('coupon').value]);
       }
-
       this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
-      return { remarks: remarkList, commands: ['TKTL' + curDate + '/' + group.get('officeId').value + '/Q8C1-CXL'] };
+      let bb = this.pnrService.getRemarkText('AQUA UPDATED THE BB FROM');
+      if (bb !== '') {
+        bb = bb.substr(bb.length - 6);
+      }
+      const bb2 = this.pnrService.getRemarkText('BB/-').replace('BB/-', '');
+      if (bb !== '' && bb2 !== '' && bb !== bb2) {
+        this.createRemarks(['MatrixLineBB'], [bb]);
+      }
+      return { SendTicket: true };
     } else {
       this.createRemarks(['VendorName', 'BackOfficeAgentIdentifier'], [group.get('supplier').value, group.get('officeId').value]);
       this.createRemarks(['PartialFull', 'CurrentDate'], [group.get('partialFull').value === 'full' ? 'FULL' : 'PART', curDate], 'REFUND');
@@ -204,7 +220,7 @@ export class CorpCancelRemarkService {
       }
       let invoice = group.get('invoice').value;
       if (invoice && invoice.trim() !== '') {
-        invoice = '- ORIG INV' + group.get('invoice').value;
+        invoice = '- ORIG INV ' + group.get('invoice').value;
       }
       const refundAmt = group.get('refundAmount').value;
       if (refundAmt && Number(refundAmt) > 0) {

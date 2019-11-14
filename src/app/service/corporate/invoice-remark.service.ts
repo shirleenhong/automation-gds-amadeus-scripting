@@ -17,8 +17,8 @@ export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
   constructor(private pnrService: PnrService,
-              private queService: AmadeusQueueService,
-              private rms: RemarksManagerService) { }
+    private queService: AmadeusQueueService,
+    private rms: RemarksManagerService) { }
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -124,15 +124,17 @@ export class InvoiceRemarkService {
     } else if (selectedETickets === 'None') {
       // create placeholder for no ticket
       const ticketMap = new Map<string, string>();
-      ticketMap.set('TicketNum', '0');
-      this.rms.createPlaceholderValues(ticketMap);
+      ticketMap.set('EticketNone', 'true');
+      this.rms.createPlaceholderValues(null, ticketMap, null, null, 'SPCL-TKT0');
     } else {
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {
         const ticketNum = this.getTicketNum(selectedEle, eTicketsList);
-        const ticketMap = new Map<string, string>();
-        ticketMap.set('TicketNum', ticketNum);
-        this.rms.createPlaceholderValues(ticketMap);
+        if (ticketNum !== '') {
+          const ticketMap = new Map<string, string>();
+          ticketMap.set('TicketNum', ticketNum);
+          this.rms.createPlaceholderValues(ticketMap);
+        }
       }
     }
   }
@@ -182,7 +184,7 @@ export class InvoiceRemarkService {
         const nonBspMap = new Map<string, string>();
         if (line === rmk.nonBspLineNum) {
           rmk.nonBspRmk = rmk.nonBspRmk.replace('MAC/-', '').trim();
-          nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk);
+          nonBspMap.set('MacLinePlaceholder', rmk.nonBspRmk.replace('RM*', ''));
           let segAssociations = [];
           if (rmk.associations) {
             segAssociations = this.getSegmentAssociations(rmk.associations);
@@ -261,25 +263,41 @@ export class InvoiceRemarkService {
     }
     return invoiceObj;
   }
-  getAllTickets(response) {
+
+  // getAllTickets(response) {
+  //   debugger;
+  //   const eTickets = [];
+  //   const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
+  //   const match = response.match(resregex);
+  //   if (match) {
+  //     const ticketTypeRegex = /[A-Z]{4}/g;
+  //     const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
+  //     for (const matchEle of match) {
+  //       const typeMatch = matchEle.match(ticketTypeRegex);
+  //       if (typeMatch && typeMatch[0].indexOf('ET') > -1 && ) {
+  //         const ticketNumMatch = matchEle.match(ticketNumRegex);
+  //         if (ticketNumMatch && ticketNumMatch[0]) {
+  //           eTickets.push(ticketNumMatch[0].replace('-', '').trim());
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return eTickets;
+  // }
+
+  getAllTickets() {
     const eTickets = [];
-    const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
-    const match = response.match(resregex);
-    if (match) {
-      const ticketTypeRegex = /[A-Z]{4}/g;
-      const ticketNumRegex = /[0-9-]{4}[0-9]{10}/g;
-      for (const matchEle of match) {
-        const typeMatch = matchEle.match(ticketTypeRegex);
-        if (typeMatch && typeMatch[0].indexOf('ET') > -1) {
-          const ticketNumMatch = matchEle.match(ticketNumRegex);
-          if (ticketNumMatch && ticketNumMatch[0]) {
-            eTickets.push(ticketNumMatch[0].replace('-', '').trim());
-          }
-        }
+    for (const ticketed of this.pnrService.pnrObj.faElements) {
+      const regex = new RegExp('[0-9]{3}-[0-9]+');
+      const match = regex.exec(ticketed.freeFlowText);
+      regex.lastIndex = 0;
+      if (match !== null && ticketed.freeFlowText.indexOf('/EVAC/') === -1) {
+        eTickets.push(match[0].replace('-', '').trim());
       }
     }
     return eTickets;
   }
+
   getFeeDetails(rmElement) {
     const feeLineObj = {
       ticketline: '',

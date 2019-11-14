@@ -68,11 +68,12 @@ export class CorporateComponent implements OnInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
-  @ViewChild(PassiveSegmentsComponent)
   @ViewChild(SendInvoiceItineraryComponent)
   sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
+  @ViewChild(PassiveSegmentsComponent)
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
+  @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -209,7 +210,6 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
-        await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
@@ -248,8 +248,10 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
+    accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
@@ -268,11 +270,7 @@ export class CorporateComponent implements OnInit {
       this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
       this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
     ) {
-      if (
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
-      ) {
+      if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
         const forDeletion = new Array<string>();
         this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
           forDeletion.push(element.lineNo);
@@ -347,8 +345,7 @@ export class CorporateComponent implements OnInit {
         )
       )
     );
-
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
       async () => {
         this.isPnrLoaded = false;
         this.workflow = '';
@@ -373,23 +370,31 @@ export class CorporateComponent implements OnInit {
       return;
     }
 
-    this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+    // this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
     const osiCollection = new Array<RemarkGroup>();
     const cancel = this.cancelComponent.cancelSegmentComponent;
     const getSelected = cancel.submit();
 
-    // if (getSelected.length >= 1) {
-    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-    this.corpRemarkService.BuildRemarks(osiCollection);
-    await this.corpRemarkService.cancelOSIRemarks().then(
-      async () => {
-        this.getPnr();
-        await this.addCancelRemarksRemarks(cancel, getSelected);
-      },
-      (error) => {
-        console.log(JSON.stringify(error));
-      }
-    );
+    if (!(cancel.cancelForm.controls.followUpOption.value === 'Void BSP' && cancel.hasUnvoided)) {
+      this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+      // if (getSelected.length >= 1) {
+      osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+      this.corpRemarkService.BuildRemarks(osiCollection);
+      await this.corpRemarkService.cancelOSIRemarks().then(
+        async () => {
+          this.getPnr();
+          await this.addCancelRemarksRemarks(cancel, getSelected);
+        },
+        (error) => {
+          console.log(JSON.stringify(error));
+        }
+      );
+    } else {
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
+      this.closePopup();
+    }
   }
 
   async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {
@@ -400,6 +405,7 @@ export class CorporateComponent implements OnInit {
     const deleteSegments = new Array<string>();
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
+    let sendTkt = false;
 
     getSelected.forEach((element) => {
       deleteSegments.push(element.lineNo);
@@ -409,10 +415,44 @@ export class CorporateComponent implements OnInit {
       await this.rms.getMatchcedPlaceholderValues();
     });
 
-    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' || cancel.cancelForm.controls.followUpOption.value === 'BSPKT') {
+    if (cancel.nonBspTicketCreditComponent) {
+      const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(cancel.nonBspTicketCreditComponent.nonBspForm);
+      if (nonBspTicket) {
+        nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
+        nonBspTicket.commands.forEach((c) => commandList.push(c));
+      }
+    }
+
+    if (cancel.bspRefundComponent) {
+      const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
+        cancel.bspRefundComponent.refundForm,
+        cancel.bspRefundComponent.refundType
+      );
+      if (refundTicket) {
+        if (refundTicket.SendTicket) {
+          sendTkt = true;
+        }
+        if (refundTicket.remarks) {
+          refundTicket.remarks.forEach((rem) => remarkList.push(rem));
+        }
+        if (refundTicket.commands) {
+          refundTicket.commands.forEach((c) => commandList.push(c));
+        }
+      }
+    }
+
+    if (
+      cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
+      cancel.cancelForm.controls.followUpOption.value === 'BSPKT' ||
+      sendTkt
+    ) {
       const canceltktl = this.ticketRemarkService.cancelTicketRemark();
       if (canceltktl) {
         canceltktl.cryptics.forEach((c) => commandList.push(c));
+
+        if (this.pnrService.getTkLineNumber() && canceltktl.cryptics.length > 0) {
+          forDeletion.push(this.pnrService.getTkLineNumber().toString());
+        }
       }
       remarkCollection.push(this.ticketRemarkService.deleteTicketingLine());
     }
@@ -439,23 +479,8 @@ export class CorporateComponent implements OnInit {
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
-    if (cancel.nonBspTicketCreditComponent) {
-      const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(cancel.nonBspTicketCreditComponent.nonBspForm);
-      if (nonBspTicket) {
-        nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
-        nonBspTicket.commands.forEach((c) => commandList.push(c));
-      }
-    }
-
-    if (cancel.bspRefundComponent) {
-      const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
-        cancel.bspRefundComponent.refundForm,
-        cancel.bspRefundComponent.refundType
-      );
-      if (refundTicket) {
-        refundTicket.remarks.forEach((rem) => remarkList.push(rem));
-        refundTicket.commands.forEach((c) => commandList.push(c));
-      }
+    if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
+      this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
     }
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 

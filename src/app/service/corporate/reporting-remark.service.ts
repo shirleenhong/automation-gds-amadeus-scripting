@@ -9,6 +9,7 @@ import { ReportingViewModel } from 'src/app/models/reporting-view.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting-remarks/reporting-remarks.component';
+import { CarSavingsCodeComponent } from 'src/app/corporate/reporting/car-savings-code/car-savings-code.component';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,11 @@ export class ReportingRemarkService {
     const items = bspGroup.get('fares') as FormArray;
     this.writeHighLowFare(items, false);
   }
-
+  writeCarSavingsRemarks(carSavings: CarSavingsCodeComponent) {
+    const carSavingsGroup: FormGroup = carSavings.carSavingsCodeGroup;
+    const items = carSavingsGroup.get('carSavings') as FormArray;
+    this.writeCarSavings(items);
+  }
   WriteNonBspRemarks(nrbc: ReportingNonbspComponent) {
     const nbspGroup: FormGroup = nrbc.nonBspGroup;
     const items = nbspGroup.get('nonbsp') as FormArray;
@@ -50,7 +55,17 @@ export class ReportingRemarkService {
       }
     }
   }
-
+  private writeCarSavings(items: any) {
+    for (const group of items.controls) {
+      if (group.get('chkIncluded').value === true) {
+        const carSavingsMap = new Map<string, string>();
+        carSavingsMap.set('CarFarePickUpDate', group.get('date').value);
+        carSavingsMap.set('CarPickUpCity', group.get('city').value);
+        carSavingsMap.set('CarFareSavingsCode', '');
+        this.remarksManager.createPlaceholderValues(carSavingsMap);
+      }
+    }
+  }
   getRemarkSegmentAssociation(segments: string[]): string[] {
     const segmentrelate: string[] = [];
     const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);

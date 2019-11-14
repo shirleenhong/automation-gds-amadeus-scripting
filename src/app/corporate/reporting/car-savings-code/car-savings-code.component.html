@@ -1,0 +1,41 @@
+<div [formGroup] = "carSavingsCodeGroup" class="form-group">
+    <br />
+    <div class="row">
+      <div class="col-1" style="width:3%"></div>
+      <div class="col-2" style="width: 12%; text-align: left; padding-left: 28px;">
+        Segment
+      </div>
+      <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
+        Pick-up Date
+      </div>
+      <div class="col-3" style="width: 12%; text-align: left; padding-left: 18px;">
+        Pick-up City
+      </div>
+      <div class="col-3">
+        Reason Code
+      </div>
+    </div>
+    <div formArrayName = 'carSavings' *ngFor = "let item of this.carSavingsCodeGroup.get('carSavings')['controls']; let i = index" class="col">
+      <div [formGroupName] = "i" class="row">
+        <div class="col-1" style="width:3%;padding-left:10px">
+          <input type="checkbox" name="chkIncluded" formControlName = "chkIncluded" id="formControlName" (change) = "checkChange(item)">
+        </div>
+        <div class="col-2" style="width:12%;text-align:left">
+          <input formControlName = "segment" type="text" class="form-control" readonly>
+        </div>
+        <div class="col-3" style="width:12%;text-align:left">
+          <input formControlName = "date" type="text" class="form-control" readonly>
+        </div>
+        <div class="col-3" style="width:12%;text-align:left">
+          <input formControlName = "city" type="text" class="form-control" readonly>
+        </div>
+        <div class="col-3" style="width:12%;text-align:left">
+          <select autofocus id = "carReasonCode" formControlName = "carReasonCode" name="carReasonCode"></select>
+          <option [ngValue] = "null"></option>
+          <option *ngFor="let reason of reasonCodes[i]" [value]="reason.reasonCode">{{
+            reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
+          }}</option>
+        </div>
+      </div>
+    </div>
+</div>

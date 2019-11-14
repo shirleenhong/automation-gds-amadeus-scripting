@@ -367,14 +367,14 @@
         <div class="col-4">Touch Reason Code:</div>
         <div class="col-4">
           <select id="ebR" class="form-control" formControlName="ebR"
-            name="ebR">
+            name="ebR" >
             <option *ngFor="let item of ebRList" [value]="item.itemValue">
               {{ item.itemText }}
             </option>
           </select>
         </div>
         <div class="col-2">
-          <input type="text" formControlName="ebT" class="form-control" maxlength="1" />
+          <input type="text" formControlName="ebT" class="form-control" maxlength="1"  />
         </div>
         <div class="col-2">
           <input type="text" formControlName="ebN" class="form-control" maxlength="2" />
@@ -384,7 +384,7 @@
         <div class="col-4"></div>
         <div class="col-8">
           <select id="ebC" class="form-control" formControlName="ebC"
-          name="ebR">
+          name="ebR" >
           <option *ngFor="let item of ebCList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>

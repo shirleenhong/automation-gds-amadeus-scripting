@@ -8,6 +8,7 @@ import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
+//import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
 // import { MessageComponent } from '../message/message.component';
@@ -62,7 +63,7 @@ export class CancelSegmentComponent implements OnInit {
     private formBuilder: FormBuilder,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private counselorDetail: CounselorDetail,
+    private counselorDetail: CounselorDetail
    ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
@@ -108,6 +109,10 @@ export class CancelSegmentComponent implements OnInit {
       ticketList: new FormControl('', []),
       ticketVoidList: new FormArray([])
     });
+    this.cancelForm.get('ebR').disable();
+    this.cancelForm.get('ebT').disable();
+    this.cancelForm.get('ebN').disable();
+    this.cancelForm.get('ebC').disable();
     // this.showMessage();
     // this.checkHasPowerHotel();
     // this.checkCorpPreCancel();
@@ -336,7 +341,8 @@ export class CancelSegmentComponent implements OnInit {
     { itemValue: 'T', itemText: 'T - International assistance' },
     { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
     ];
-    // this.ebCList = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.TouchReason], 'en-GB', 1);
+   // this.ebCList = this.ddbService.getReasonCodeByTypeId([42], 'en-GB', 8);
+   // console.log(this.ebCList);
     this.ebRList = [
           {itemValue:'AM', itemText:  'AM- Full Service Agent Assisted'},
           {itemValue:'CT', itemText:  'CT- Online Agent Assisted'},
@@ -862,6 +868,7 @@ export class CancelSegmentComponent implements OnInit {
       }
     }
    
+   
   }
   async populateEBFields(eb) {
     let ebR = eb[1].substr(0, 2);
@@ -883,7 +890,12 @@ export class CancelSegmentComponent implements OnInit {
       }
       this.cancelForm.controls.ebT.setValue(ebT);
       this.cancelForm.controls.ebN.setValue(ebN);
+      this.cancelForm.get('ebR').enable();
+      this.cancelForm.get('ebT').enable();
+      this.cancelForm.get('ebN').enable();
+      this.cancelForm.get('ebC').enable();
     }
+   
   }
 
 

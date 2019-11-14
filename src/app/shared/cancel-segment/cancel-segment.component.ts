@@ -8,7 +8,7 @@ import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
-//import { DDBService } from '../../service/ddb.service';
+// import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
 // import { MessageComponent } from '../message/message.component';
@@ -54,7 +54,7 @@ export class CancelSegmentComponent implements OnInit {
   isVoided = false;
   showEBDetails: boolean;
   ebCList: any;
-  ebRList: { itemValue: string; itemText: string; }[];
+  ebRList: { itemValue: string; itemText: string }[];
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
@@ -326,27 +326,28 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
-    this.ebCList = [{ itemValue: 'A', itemText: 'A - Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
-    { itemValue: 'C', itemText: 'C - Car - add or change car, segment not confirmed, direct bill, etc.' },
-    { itemValue: 'D', itemText: 'D - Customized Data - missing invalid name statement, profile info, email address, etc.' },
-    { itemValue: 'E', itemText: 'E - Exchange ticket' },
-    { itemValue: 'F', itemText: 'F - Fare - contract fare incorrect, lower fare found, split ticket' },
-    { itemValue: 'H', itemText: 'H - Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
-    { itemValue: 'I', itemText: 'I - Instant purchase carrier' },
-    { itemValue: 'L', itemText: 'L - Limo - add or change a limo which will generate an invoice' },
-    { itemValue: 'M', itemText: 'M - Credit card - change fop or declined credit card' },
-    { itemValue: 'N', itemText: 'N - Lack of automation by SBT or mid office (touchless fee when applicable)' },
-    { itemValue: 'R', itemText: 'R - Rail - add or change rail which will generate an invoice' },
-    { itemValue: 'S', itemText: 'S - Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
-    { itemValue: 'T', itemText: 'T - International assistance' },
-    { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
+    this.ebCList = [
+      { itemValue: 'A', itemText: 'A - Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
+      { itemValue: 'C', itemText: 'C - Car - add or change car, segment not confirmed, direct bill, etc.' },
+      { itemValue: 'D', itemText: 'D - Customized Data - missing invalid name statement, profile info, email address, etc.' },
+      { itemValue: 'E', itemText: 'E - Exchange ticket' },
+      { itemValue: 'F', itemText: 'F - Fare - contract fare incorrect, lower fare found, split ticket' },
+      { itemValue: 'H', itemText: 'H - Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
+      { itemValue: 'I', itemText: 'I - Instant purchase carrier' },
+      { itemValue: 'L', itemText: 'L - Limo - add or change a limo which will generate an invoice' },
+      { itemValue: 'M', itemText: 'M - Credit card - change fop or declined credit card' },
+      { itemValue: 'N', itemText: 'N - Lack of automation by SBT or mid office (touchless fee when applicable)' },
+      { itemValue: 'R', itemText: 'R - Rail - add or change rail which will generate an invoice' },
+      { itemValue: 'S', itemText: 'S - Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
+      { itemValue: 'T', itemText: 'T - International assistance' },
+      { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
     ];
    // this.ebCList = this.ddbService.getReasonCodeByTypeId([42], 'en-GB', 8);
    // console.log(this.ebCList);
     this.ebRList = [
-          {itemValue:'AM', itemText:  'AM- Full Service Agent Assisted'},
-          {itemValue:'CT', itemText:  'CT- Online Agent Assisted'},
-    ]
+      { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
+      { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
+    ];
   }
 
   get f() {
@@ -859,32 +860,32 @@ export class CancelSegmentComponent implements OnInit {
   }
   checkEbRemark() {
     this.showEBDetails = false;
-    let ebData = this.pnrService.getRemarkText("EB/");
+    let ebData = this.pnrService.getRemarkText('EB/');
     console.log(ebData);
     if (ebData) {
-      ebData = ebData.split("/");
+      ebData = ebData.split('/');
       if (ebData.length === 3) {
         this.populateEBFields(ebData);
       }
     }
-   
-   
+
+
   }
   async populateEBFields(eb) {
-    let ebR = eb[1].substr(0, 2);
-    let ebT = eb[1].substr(2, 1);
-    let ebN = eb[2].substr(0, 2);
-    let ebC = eb[2].substr(2, 1);
+    const ebR = eb[1].substr(0, 2);
+    const ebT = eb[1].substr(2, 1);
+    const ebN = eb[2].substr(0, 2);
+    const ebC = eb[2].substr(2, 1);
 
     this.showEBDetails = ebR && ebT && ebN && ebC ? true : false;
     if (this.showEBDetails) {
-      let ebrValues = this.ebRList.map((seat) => seat.itemValue);
-      
+      const ebrValues = this.ebRList.map((seat) => seat.itemValue);
+
       if (ebrValues.indexOf(ebR) > -1) {
         this.cancelForm.controls.ebR.setValue(ebR);
       }
       for (const c of this.ebCList) {
-        if (c.itemValue == ebC) {
+        if (c.itemValue === ebC) {
           this.cancelForm.controls.ebC.setValue(ebC);
         }
       }
@@ -895,8 +896,6 @@ export class CancelSegmentComponent implements OnInit {
       this.cancelForm.get('ebN').enable();
       this.cancelForm.get('ebC').enable();
     }
-   
+
   }
-
-
 }

@@ -123,10 +123,7 @@ export class ResendInvoiceComponent implements OnInit {
   }
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
-      emailAddress: new FormControl('', [
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+?\\.[A-Z]{2,3,4,5}$")
-      ])
+      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')])
     });
     return group;
   }

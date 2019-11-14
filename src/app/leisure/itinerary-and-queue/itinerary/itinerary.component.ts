@@ -73,11 +73,7 @@ export class ItineraryComponent implements OnInit {
 
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
-      emailAddress: new FormControl(
-        '',
-        // tslint:disable-next-line: quotemark
-        [Validators.required, Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+?\\.[A-Z]{2,3,4,5}$")]
-      )
+      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')])
     });
 
     return group;
@@ -165,14 +161,12 @@ export class ItineraryComponent implements OnInit {
     const arr = this.itineraryForm.get('emailAddresses') as FormArray;
     if (this.itineraryForm.get('sendItinerary').value) {
       for (const c of arr.controls) {
-        c.get('emailAddress').setValidators([Validators.required, Validators.pattern('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')]);
-        c.get('emailAddress').updateValueAndValidity();
+        c.get('emailAddress').setValidators([Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')]);
       }
     } else {
       for (const c of arr.controls) {
         c.get('emailAddress').clearValidators();
-        c.get('emailAddress').setValidators([Validators.pattern('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')]);
-        c.get('emailAddress').updateValueAndValidity();
+        c.get('emailAddress').setValidators([Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')]);
       }
     }
   }

@@ -28,7 +28,8 @@ export class ReportingBSPComponent implements OnInit {
   isDomesticFlight = true;
   thresholdAmount = 0;
   hasTst = true;
-
+  realisedSavingList = [];
+  missedSavingList = [];
   // tslint:disable-next-line:max-line-length
   constructor(
     private fb: FormBuilder,
@@ -38,7 +39,14 @@ export class ReportingBSPComponent implements OnInit {
     private valueChagneListener: ValueChangeListener
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1).then((response) => {
+      this.realisedSavingList = response;
+    });
+    await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1).then((response) => {
+      this.missedSavingList = response;
+    });
+
     this.isDoneLoading = false;
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
@@ -126,7 +134,7 @@ export class ReportingBSPComponent implements OnInit {
 
     if (isExchange) {
       if (this.reasonCodes.length > 0) {
-        this.reasonCodes[currentIndex] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
+        this.reasonCodes[currentIndex] = this.missedSavingList;
         group.get('reasonCodeText').setValue('E');
       }
 
@@ -219,9 +227,9 @@ export class ReportingBSPComponent implements OnInit {
       const chargeFare = group.get('chargeFare').value;
 
       if (parseFloat(lowFare) === parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1);
+        this.reasonCodes[indx] = this.realisedSavingList;
       } else if (parseFloat(lowFare) < parseFloat(chargeFare)) {
-        this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 1);
+        this.reasonCodes[indx] = this.missedSavingList;
       }
 
       group.get('reasonCodeText').setValue(null);

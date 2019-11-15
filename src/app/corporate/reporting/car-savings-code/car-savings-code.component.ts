@@ -28,7 +28,6 @@ export class CarSavingsCodeComponent implements OnInit {
       this.carReasonCodes = response;
       this.carSavingsCode();
     });
-    // this.carSavingsCode();
   }
   createCarSavingsGroup(segmentNo: string, pickUpDate: string,
                         pickUpCity: string, reasonCode: string): FormGroup {
@@ -39,21 +38,6 @@ export class CarSavingsCodeComponent implements OnInit {
       chkIncluded: new FormControl(''),
       carReasonCode: new FormControl(reasonCode)
     });
-    // group.get('carReasonCode').valueChanges.subscribe((val) => {
-    //   if (!val) {
-    //     return;
-    //   }
-    //   const arr = this.carSavingsCodeGroup.get('carSavings') as FormArray;
-    //   const reasons = [];
-    //   for (const control of arr.controls) {
-    //     if (control.get('carReasonCode').value) {
-    //       reasons.push(control.get('carReasonCode').value);
-    //     }
-    //     if (reasons.length > 0) {
-    //       this.valueChangeListener.reasonCodeChange(reasons);
-    //     }
-    //   }
-    // });
     group.get('segment').setValue(segmentNo);
     group.get('date').setValue(pickUpDate);
     group.get('city').setValue(pickUpCity);

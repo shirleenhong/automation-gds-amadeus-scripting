@@ -36,6 +36,7 @@ import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/docu
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
 import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
 import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
+import { CarSavingsCodeComponent } from './corporate/reporting/car-savings-code/car-savings-code.component';
 import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
 
 @NgModule({
@@ -72,6 +73,7 @@ import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerar
     EscRemarksComponent,
     AddContactComponent,
     CorpCancelComponent,
+    CarSavingsCodeComponent,
     SendInvoiceItineraryComponent
   ],
   imports: [

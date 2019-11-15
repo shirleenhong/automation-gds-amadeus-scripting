@@ -554,6 +554,7 @@ export class PnrService {
             arrivalDate = elem.dropoffDate;
             controlNumber = elem.confirmationNumber;
             elemStatus = elem.status;
+            elemcitycode = elem.fullNode.travelProduct.boardpointDetail.cityCode;
             elemText = elem.carType[0] + ' ' + elem.carCompanyCode + ' ' +
                 elemStatus + elem.quantity + ' ' + elem.location + ' ' +
                 this.formatDate(elem.pickupDate);

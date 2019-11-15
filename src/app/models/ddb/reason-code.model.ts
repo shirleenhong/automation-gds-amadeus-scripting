@@ -23,7 +23,6 @@ export class ReasonCode {
     this.reasonCode = json.ReasonCode;
     this.reasonCodeGroupId = json.ReasonCodeGroupId;
     this.reasonCodeTypeId = json.ReasonCodeTypeId;
-
     this.displayOrder = json.DisplayOrder;
     this.productId = json.ProductId;
     this.awaitingApprovalFlag = json.AwaitingApprovalFlag;

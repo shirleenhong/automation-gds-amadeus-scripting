@@ -296,7 +296,8 @@ export class CorporateComponent implements OnInit {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     }
     if (this.reportingComponent.carSavingsCodeComponent !== undefined) {
-      this.reportingRemarkService.writeCarSavingsRemarks(this.reportingComponent.carSavingsCodeComponent);
+      this.reportingRemarkService.writeCarSavingsRemarks(this.reportingComponent.carSavingsCodeComponent,
+        this.reportingComponent.carSavingsCodeComponent.reAddRemarks);
     }
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);

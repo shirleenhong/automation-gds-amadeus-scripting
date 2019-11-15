@@ -6,7 +6,6 @@ import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
 import { DDBService } from 'src/app/service/ddb.service';
-import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-car-savings-code',
@@ -16,10 +15,10 @@ import { ValueChangeListener } from 'src/app/service/value-change-listener.servi
 export class CarSavingsCodeComponent implements OnInit {
   carSavingsCodeGroup: FormGroup;
   deleteRemarks = [];
+  reAddRemarks = [];
   carReasonCodes: Array<ReasonCode> = [];
   constructor(private fb: FormBuilder, private pnrService: PnrService,
-              private utilHelper: UtilHelper, private ddbService: DDBService,
-              private valueChangeListener: ValueChangeListener) { }
+              private utilHelper: UtilHelper, private ddbService: DDBService) { }
 
   async ngOnInit() {
     this.carSavingsCodeGroup = this.fb.group({
@@ -27,8 +26,9 @@ export class CarSavingsCodeComponent implements OnInit {
     });
     await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 3).then((response) => {
       this.carReasonCodes = response;
+      this.carSavingsCode();
     });
-    this.carSavingsCode();
+    // this.carSavingsCode();
   }
   createCarSavingsGroup(segmentNo: string, pickUpDate: string,
                         pickUpCity: string, reasonCode: string): FormGroup {
@@ -39,25 +39,25 @@ export class CarSavingsCodeComponent implements OnInit {
       chkIncluded: new FormControl(''),
       carReasonCode: new FormControl(reasonCode)
     });
-    group.get('carReasonCode').valueChanges.subscribe((val) => {
-      if (!val) {
-        return;
-      }
-      const arr = this.carSavingsCodeGroup.get('carSavings') as FormArray;
-      const reasons = [];
-      for (const control of arr.controls) {
-        if (control.get('carReasonCode').value) {
-          reasons.push(control.get('carReasonCode').value);
-        }
-        if (reasons.length > 0) {
-          this.valueChangeListener.reasonCodeChange(reasons);
-        }
-      }
-    });
+    // group.get('carReasonCode').valueChanges.subscribe((val) => {
+    //   if (!val) {
+    //     return;
+    //   }
+    //   const arr = this.carSavingsCodeGroup.get('carSavings') as FormArray;
+    //   const reasons = [];
+    //   for (const control of arr.controls) {
+    //     if (control.get('carReasonCode').value) {
+    //       reasons.push(control.get('carReasonCode').value);
+    //     }
+    //     if (reasons.length > 0) {
+    //       this.valueChangeListener.reasonCodeChange(reasons);
+    //     }
+    //   }
+    // });
     group.get('segment').setValue(segmentNo);
     group.get('date').setValue(pickUpDate);
     group.get('city').setValue(pickUpCity);
-    group.get('carReasonCode').setValue('');
+    group.get('carReasonCode').setValue(reasonCode);
     return group;
   }
   checkChange(group) {
@@ -110,10 +110,12 @@ export class CarSavingsCodeComponent implements OnInit {
       pickUpDate: '',
       pickUpCity: '',
       lineNo: '',
-      tatooNo: ''
+      tatooNo: '',
+      reasonCode: ''
     };
     const dateRegex = /[0-9]{2}[A-Z]{3}/g;
     const cityRegex = /[A-Z]{3}/g;
+    const reasonCodeRegex = /-SV-[A-Z 0-9]{1}/g;
     let freeText = rmEle.freeFlowText.replace('CS', '');
     const dateMatch = freeText.match(dateRegex);
     if (dateMatch && dateMatch[0]) {
@@ -122,6 +124,10 @@ export class CarSavingsCodeComponent implements OnInit {
       const cityMatch = freeText.match(cityRegex);
       if (cityMatch && cityMatch[0]) {
         carRmkObj.pickUpCity = cityMatch[0];
+      }
+      const reasonCodeMatch = freeText.match(reasonCodeRegex);
+      if (reasonCodeMatch && reasonCodeMatch[0]) {
+        carRmkObj.reasonCode = reasonCodeMatch[0].replace('-SV-', '').trim();
       }
     }
     carRmkObj.lineNo = rmEle.elementNumber;
@@ -161,6 +167,12 @@ export class CarSavingsCodeComponent implements OnInit {
       date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
       for (const rmk of carRemarks) {
         if (date === rmk.pickUpDate && rmk.pickUpCity === seg.cityCode) {
+          const reAddObj = {
+            date: rmk.pickUpDate,
+            city: rmk.pickUpCity,
+            reasonCode: rmk.reasonCode
+          };
+          this.reAddRemarks.push(reAddObj);
           matches = true;
         }
       }

@@ -122,6 +122,27 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 're-invoice'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i>&nbsp; Re-send Invoice and Itinerary
+        <span class="cwt-logo"></span>
+      </div>
+      <app-resend-invoice></app-resend-invoice>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="ReSendInvoice()">
+        Send Invoice
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
 <div class="loaderBody" *ngIf="isPnrLoaded && workflow === ''">
   <div class="loader" *ngIf="errorPnrMsg == ''">
     <div>Leisure <span class="cwt-logo"></span></div>
@@ -138,6 +159,11 @@
     <div *ngIf="invoiceEnabled">
       <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
         Itinerary and Queue
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="reSendInvoice()">
+        Re-send Invoice/Itinerary
       </button>
     </div>
     <div>

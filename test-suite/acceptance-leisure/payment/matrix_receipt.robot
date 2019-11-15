@@ -42,7 +42,7 @@ Verify Accounting Remarks Are Updated For Single Passenger
     Switch To Graphic Mode
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-${passenger_name}/-AMT-${amount}
-    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CK/-LK-T/-BA-108000/-GL-124000
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-FOP-CK/-LK-T/-BA-106000/-GL-124000
     Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RM-${description}/-GC-${gc_number}
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect

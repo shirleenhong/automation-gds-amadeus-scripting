@@ -258,6 +258,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.controls.otherTax.clearValidators();
         this.matrixAccountingForm.get('otherTax').updateValueAndValidity();
         this.onCheckChange();
+
         break;
       case 'ACPP':
       case 'WCPP':
@@ -417,6 +418,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       console.log('supCode: ' + this.accountingRemark.supplierCodeName);
     }
+    this.matrixAccountingForm.get('tktLine').markAsTouched({ onlySelf: true });
+    this.matrixAccountingForm.get('tktLine').updateValueAndValidity({ onlySelf: true, emitEvent: true });
   }
 
   getAirlineCode(segmentno) {
@@ -559,6 +562,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(() => {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       switch (this.accountingRemark.accountingTypeRemark) {
+        case 'ACPPC':
+          this.setMandatoryTicket(['ACJ', 'WJP', 'PTP'], false);
+          break;
         case 'ACPP':
         case 'WCPP':
         case 'PCPP':

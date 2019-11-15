@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
+
 import { DDBService } from 'src/app/service/ddb.service';
 import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-select.component';
+import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
 @Component({
   selector: 'app-resend-invoice',
   templateUrl: './resend-invoice.component.html',

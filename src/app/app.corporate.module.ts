@@ -34,11 +34,10 @@ import { QueueMinderComponent } from './corporate/queue/queue-minder/queue-minde
 import { QueueComponent } from './corporate/queue/queue.component';
 import { DocumentPnrComponent } from './corporate/corp-remarks/document-pnr/document-pnr.component';
 import { EscRemarksComponent } from './corporate/corp-remarks/esc-remarks/esc-remarks.component';
-import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
-import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
 import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-contact.component';
 import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
 import { CarSavingsCodeComponent } from './corporate/reporting/car-savings-code/car-savings-code.component';
+import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
 
 @NgModule({
   declarations: [
@@ -72,11 +71,10 @@ import { CarSavingsCodeComponent } from './corporate/reporting/car-savings-code/
     QueueComponent,
     DocumentPnrComponent,
     EscRemarksComponent,
-    SendInvoiceItineraryComponent,
-    ResendInvoiceComponent,
     AddContactComponent,
     CorpCancelComponent,
-    CarSavingsCodeComponent
+    CarSavingsCodeComponent,
+    SendInvoiceItineraryComponent
   ],
   imports: [
     BrowserModule,

@@ -8,6 +8,7 @@ import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
+import { DDBService } from '../../service/ddb.service';
 // import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
@@ -53,18 +54,19 @@ export class CancelSegmentComponent implements OnInit {
   isNonBSP = false;
   isVoided = false;
   showEBDetails: boolean;
-  ebCList: any;
   ebRList: { itemValue: string; itemText: string }[];
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
+  ebCList: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private counselorDetail: CounselorDetail
-   ) {
+    private counselorDetail: CounselorDetail,
+    private ddbService: DDBService
+  ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
@@ -119,13 +121,13 @@ export class CancelSegmentComponent implements OnInit {
     this.onChanges();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.isCorporate = this.counselorDetail.getIsCorporate();
     // this.codeShareGroup = this.formBuilder.group({
     //   tickets: this.formBuilder.array([this.createFormGroup()])
     // });
     this.isCorporate = this.counselorDetail.getIsCorporate();
-    this.loadStaticValue();
+    await this.loadStaticValue();
     this.getSegmentTatooValue();
     this.addCheckboxes();
     this.checkFirstSegment();
@@ -238,7 +240,8 @@ export class CancelSegmentComponent implements OnInit {
     return true;
   }
 
-  loadStaticValue() {
+  async loadStaticValue() {
+    const self = this;
     this.reasonAcList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '4' },
@@ -326,24 +329,10 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
-    this.ebCList = [
-      { itemValue: 'A', itemText: 'A - Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
-      { itemValue: 'C', itemText: 'C - Car - add or change car, segment not confirmed, direct bill, etc.' },
-      { itemValue: 'D', itemText: 'D - Customized Data - missing invalid name statement, profile info, email address, etc.' },
-      { itemValue: 'E', itemText: 'E - Exchange ticket' },
-      { itemValue: 'F', itemText: 'F - Fare - contract fare incorrect, lower fare found, split ticket' },
-      { itemValue: 'H', itemText: 'H - Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
-      { itemValue: 'I', itemText: 'I - Instant purchase carrier' },
-      { itemValue: 'L', itemText: 'L - Limo - add or change a limo which will generate an invoice' },
-      { itemValue: 'M', itemText: 'M - Credit card - change fop or declined credit card' },
-      { itemValue: 'N', itemText: 'N - Lack of automation by SBT or mid office (touchless fee when applicable)' },
-      { itemValue: 'R', itemText: 'R - Rail - add or change rail which will generate an invoice' },
-      { itemValue: 'S', itemText: 'S - Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
-      { itemValue: 'T', itemText: 'T - International assistance' },
-      { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
-    ];
-   // this.ebCList = this.ddbService.getReasonCodeByTypeId([42], 'en-GB', 8);
-   // console.log(this.ebCList);
+
+    await this.ddbService.getReasonCodeByTypeId([1], 1).then((x) => {
+      self.ebCList = x;
+    });
     this.ebRList = [
       { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
       { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
@@ -861,15 +850,12 @@ export class CancelSegmentComponent implements OnInit {
   checkEbRemark() {
     this.showEBDetails = false;
     let ebData = this.pnrService.getRemarkText('EB/');
-    console.log(ebData);
     if (ebData) {
       ebData = ebData.split('/');
       if (ebData.length === 3) {
         this.populateEBFields(ebData);
       }
     }
-
-
   }
   async populateEBFields(eb) {
     const ebR = eb[1].substr(0, 2);
@@ -884,8 +870,9 @@ export class CancelSegmentComponent implements OnInit {
       if (ebrValues.indexOf(ebR) > -1) {
         this.cancelForm.controls.ebR.setValue(ebR);
       }
+
       for (const c of this.ebCList) {
-        if (c.itemValue === ebC) {
+        if (c.reasonCode === ebC) {
           this.cancelForm.controls.ebC.setValue(ebC);
         }
       }
@@ -896,6 +883,5 @@ export class CancelSegmentComponent implements OnInit {
       this.cancelForm.get('ebN').enable();
       this.cancelForm.get('ebC').enable();
     }
-
   }
 }

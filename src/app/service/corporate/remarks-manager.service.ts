@@ -252,6 +252,9 @@ export class RemarksManagerService {
   }
 
   async endPnr() {
+    if (this.receiveFrom === '') {
+      this.receiveFrom = 'CWTSCRIPT';
+    }
     await smartScriptSession.send('RF' + this.receiveFrom);
     await smartScriptSession.send('ER');
   }

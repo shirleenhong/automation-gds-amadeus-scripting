@@ -10,12 +10,19 @@ export class ReasonCode {
   versionNumber: number;
   travelerFacingFlag: boolean;
 
+  getDescription(language: string) {
+    let desc = this.reasonCodeProductTypeDescriptions.get(language);
+    if (!desc || desc === undefined) {
+      desc = '';
+    }
+    return desc;
+  }
+
   constructor(json: any) {
     this.reasonCodeItemId = json.ReasonCodeItemId;
     this.reasonCode = json.ReasonCode;
     this.reasonCodeGroupId = json.ReasonCodeGroupId;
     this.reasonCodeTypeId = json.ReasonCodeTypeId;
-    // this.reasonCodeProductTypeDescriptions= json. Map<string, string>;
     this.displayOrder = json.DisplayOrder;
     this.productId = json.ProductId;
     this.awaitingApprovalFlag = json.AwaitingApprovalFlag;
@@ -27,12 +34,5 @@ export class ReasonCode {
         this.reasonCodeProductTypeDescriptions.set(key, json.ReasonCodeProductTypeDescriptions[key]);
       });
     }
-  }
-  getDescription(language: string) {
-    let desc = this.reasonCodeProductTypeDescriptions.get(language);
-    if (!desc || desc === undefined) {
-      desc = '';
-    }
-    return desc;
   }
 }

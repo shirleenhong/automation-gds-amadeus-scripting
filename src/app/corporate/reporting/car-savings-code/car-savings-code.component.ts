@@ -16,17 +16,18 @@ import { ValueChangeListener } from 'src/app/service/value-change-listener.servi
 export class CarSavingsCodeComponent implements OnInit {
   carSavingsCodeGroup: FormGroup;
   deleteRemarks = [];
-  reasonCodes: Array<ReasonCode> = [];
+  carReasonCodes: Array<ReasonCode> = [];
   constructor(private fb: FormBuilder, private pnrService: PnrService,
               private utilHelper: UtilHelper, private ddbService: DDBService,
               private valueChangeListener: ValueChangeListener) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.carSavingsCodeGroup = this.fb.group({
       carSavings: this.fb.array([])
     });
-    this.reasonCodes = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 3);
-    console.log(this.ddbService.reasonCodeList);
+    await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 3).then((response) => {
+      this.carReasonCodes = response;
+    });
     this.carSavingsCode();
   }
   createCarSavingsGroup(segmentNo: string, pickUpDate: string,
@@ -39,13 +40,13 @@ export class CarSavingsCodeComponent implements OnInit {
       carReasonCode: new FormControl(reasonCode)
     });
     group.get('carReasonCode').valueChanges.subscribe((val) => {
-      if(!val) {
+      if (!val) {
         return;
       }
       const arr = this.carSavingsCodeGroup.get('carSavings') as FormArray;
       const reasons = [];
-      for(const control of arr.controls) {
-        if(control.get('carReasonCode').value) {
+      for (const control of arr.controls) {
+        if (control.get('carReasonCode').value) {
           reasons.push(control.get('carReasonCode').value);
         }
         if (reasons.length > 0) {
@@ -57,22 +58,8 @@ export class CarSavingsCodeComponent implements OnInit {
     group.get('date').setValue(pickUpDate);
     group.get('city').setValue(pickUpCity);
     group.get('carReasonCode').setValue('');
-    // this.changeReasonCodes(group, currentIndex);
-    // if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
-    //   reasonCode =
-    //     this.reasonCodes[currentIndex][0].reasonCode +
-    //     ' : ' +
-    //     this.reasonCodes[currentIndex][0].reasonCodeProductTypeDescriptions.get('en-GB');
-    //   group.get('carReasonCode').setValue(reasonCode);
-    // }
     return group;
   }
-  // changeReasonCodes(group: FormGroup, indx: number) {
-  //   if (indx >= 0) {
-  //     this.reasonCodes[indx] = this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Missed], 'en-GB', 1);
-  //   }
-  //   group.get('reasonCodeText').setValue(null);
-  // }
   checkChange(group) {
     if (group.get('chkIncluded').value === true) {
       this.addValidation(group, 'carReasonCode');
@@ -143,14 +130,14 @@ export class CarSavingsCodeComponent implements OnInit {
   }
   addPassiveCarSegments(carSegments) {
     const passiveCarSegments = carSegments.filter((seg) =>
-         seg.isPassive === true
+      seg.isPassive === true
     );
     for (const seg of passiveCarSegments) {
-        const segDate = this.getDateFromSegment(seg.deptdate);
-        const tempDate = new Date(segDate);
-        const date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
-        this.addSegments(date, seg);
-      }
+      const segDate = this.getDateFromSegment(seg.deptdate);
+      const tempDate = new Date(segDate);
+      const date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
+      this.addSegments(date, seg);
+    }
   }
   getDateFromSegment(date) {
     const day = date.substring(0, 2);
@@ -169,10 +156,10 @@ export class CarSavingsCodeComponent implements OnInit {
     for (const seg of activeCarSegments) {
       let matches = false;
       let date = '';
+      const segDate = this.getDateFromSegment(seg.departureDate);
+      const tempDate = new Date(segDate);
+      date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
       for (const rmk of carRemarks) {
-        const segDate = this.getDateFromSegment(seg.departureDate);
-        const tempDate = new Date(segDate);
-        date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
         if (date === rmk.pickUpDate && rmk.pickUpCity === seg.cityCode) {
           matches = true;
         }

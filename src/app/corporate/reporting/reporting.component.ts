@@ -51,7 +51,10 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (!this.reportingRemarksComponent.reportingForm.valid) {
       return false;
     }
-
+    this.utilHelper.validateAllFields(this.carSavingsCodeComponent.carSavingsCodeGroup);
+    if (!this.carSavingsCodeComponent.carSavingsCodeGroup.valid) {
+      return false;
+    }
     return true;
   }
 }

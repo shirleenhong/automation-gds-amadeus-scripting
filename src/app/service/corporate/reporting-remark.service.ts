@@ -61,7 +61,8 @@ export class ReportingRemarkService {
         const carSavingsMap = new Map<string, string>();
         carSavingsMap.set('CarFarePickUpDate', group.get('date').value);
         carSavingsMap.set('CarPickUpCity', group.get('city').value);
-        carSavingsMap.set('CarFareSavingsCode', '');
+        const output = group.get('carReasonCode').value.split(':');
+        carSavingsMap.set('CarFareSavingsCode', output[0].trim());
         this.remarksManager.createPlaceholderValues(carSavingsMap);
       }
     }

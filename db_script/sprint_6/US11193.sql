@@ -35,7 +35,11 @@ VALUES
     ( '%CounselorFirstName%', '(.*)', @CreationTimestamp, @CreationUserIdentifier, 1 ),
     ( '%CounselorLastName%', '(.*)', @CreationTimestamp, @CreationUserIdentifier, 1 ),
     ( '%DocTicketNum%', '(.*)', @CreationTimestamp, @CreationUserIdentifier, 1 ),
-	 ( '%PartialFull%', '(PART|FULL)', @CreationTimestamp, @CreationUserIdentifier, 1 )
+	( '%PartialFull%', '(PART|FULL)', @CreationTimestamp, @CreationUserIdentifier, 1 ),
+	( '%TouchCode%', '([A-Z0-9]{2})', @CreationTimestamp, @CreationUserIdentifier, 1 ),
+	( '%BookingToolCode%', '([A-Z0-9]{1})', @CreationTimestamp, @CreationUserIdentifier, 1 ),
+	( '%ReasonType%', '([A-Z0-9]{2})', @CreationTimestamp, @CreationUserIdentifier, 1 ),
+	( '%ReasonCode%', '([A-Z0-9]{1})', @CreationTimestamp, @CreationUserIdentifier, 1 )
 
 
 	INSERT INTO [dbo].[PNROutputItem]
@@ -45,8 +49,9 @@ VALUES
     (@PNROutputItemID + 2, 0, null, 1, 'X', '.  NONBSP..%VendorName% - ISSUE OID %BackOfficeAgentIdentifier%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
     (@PNROutputItemID + 3, 0, null, 1, 'X', '.  RECREDIT BASE AMOUNT %BaseAmt% GST %Gst% TAX %Tax%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
     (@PNROutputItemID + 4, 0, null, 1, 'X', '.  RECREDIT COMMISSION %Commission%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
-    (@PNROutputItemID + 5, 0, null, 1, 'X', '.  %CurrentDate%/ %CounselorLastName% %CounselorFirstName%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
-    (@PNROutputItemID + 6, 0, null, 1, 'X', 'DOCUBANK/TKT %DocTicketNum%/%CurrentDate%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL)
+    (@PNROutputItemID + 5, 0, null, 1, 'X', '.  %CurrentDate%/ %CounselorLastName% %CounselorFirstName%.', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
+    (@PNROutputItemID + 6, 0, null, 1, 'X', 'DOCUBANK/TKT %DocTicketNum%/%CurrentDate%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL),
+	 (@PNROutputItemID + 7, 3, null, 1, 'X', 'EB/%TouchCode%%BookingToolCode%/%ReasonType%%ReasonCode%', @CreationTimestamp, @CreationUserIdentifier, 1, 'en-GB', NULL)
 
 
 	INSERT INTO PNROutputGroupPNROutputItem
@@ -57,7 +62,8 @@ VALUES
     (@PNROutputGroupID, @PNROutputItemID + 3, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1),
     (@PNROutputGroupID, @PNROutputItemID + 4, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1),
     (@PNROutputGroupID, @PNROutputItemID + 5, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1),
-    (@PNROutputGroupID, @PNROutputItemID + 6, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1)
+    (@PNROutputGroupID, @PNROutputItemID + 6, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1),
+	(@PNROutputGroupID, @PNROutputItemID + 7, 0, @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1)
 
 	--rollback tran
 	COMMIT TRAN

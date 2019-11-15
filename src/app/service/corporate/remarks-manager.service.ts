@@ -231,6 +231,7 @@ export class RemarksManagerService {
       if (commandList) {
         await this.sendSSRCommands(commandList, 0);
       }
+
       this.endPnr();
       this.refreshPnr();
     });
@@ -260,23 +261,44 @@ export class RemarksManagerService {
   }
 
   private combineForDeleteItems(deleteResponse: string, additional: string[]): string {
+    // remove duplicate
+
     if (additional) {
+      const dash = [];
+      const ids = [];
+
+      deleteResponse
+        .replace('XE', '')
+        .split(',')
+        .forEach((xe) => {
+          if (xe.indexOf('-') >= 0) {
+            dash.push(xe);
+          } else {
+            ids.push(xe);
+          }
+        });
+
+      // filter items not found in existing ids
+      additional = additional.filter((a) => ids.indexOf(a) === -1);
+      // filter dupplicate
+      additional = additional.filter((v, i) => additional.indexOf(v) === i);
+
       additional.forEach((add) => {
-        deleteResponse
-          .replace('XE', '')
-          .split(',')
-          .forEach((xe) => {
-            if (xe.indexOf('-') >= 0) {
-              const x = xe.split('-');
-              if (!(parseInt(x[0], null) >= parseInt(add, null) && parseInt(xe[1], null) <= parseInt(add, null))) {
-                deleteResponse += ',' + add;
-              }
-            }
-          });
+        let isAdd = true;
+        dash.forEach((d) => {
+          const x = d.split('-');
+          if (parseInt(add, null) >= parseInt(x[0], null) && parseInt(add, null) <= parseInt(x[1], null) && isAdd) {
+            isAdd = false;
+          }
+        });
+        if (isAdd) {
+          deleteResponse += ',' + add;
+        }
       });
     }
     return deleteResponse;
   }
+
   async sendSSRCommands(cmds, index) {
     const self = this;
     if (!(index === cmds.length)) {

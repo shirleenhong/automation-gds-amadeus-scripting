@@ -76,7 +76,7 @@ export class AddContactComponent implements OnInit {
     const valuesArr = [];
     for (const sr of ssrElements) {
       const freeFlowText = sr.freeFlowText;
-      const reg = /([A-Z\s]{1,})\s(\/)([A-Z]{2}[0-9]{1,})(.)\s([A-Z-.\s]{1,})/g;
+      const reg = /([A-Z]{1,})(\/)([A-Z]{2}[0-9]{1,})(.)([A-Z-.]{1,})/g;
       const matchedGroups = reg.exec(freeFlowText);
       const association = this.getPaxAssociations(sr.associations);
       const ssr =

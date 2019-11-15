@@ -53,16 +53,18 @@ Verify That Car And Hotel Only PNRs For Client Viavi Do Not Go Thru Approval Pro
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Viavi With RM*FS/-L Remark Do Not Go Thru Approval Process
-    [Tags]    us13271    full_regression
+    [Tags]    us13271    us15596    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client VIAVI Air Only, With RM*FS/-L Remark
+    Select Reason Code L : Lowest Fare Accepted For TST1
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     
 Verify That Air Only PNRs For Client Viavi With RM*FS/-7 Remark Do Not Go Thru Approval Process
-    [Tags]    us13271
+    [Tags]    us13271    us15596
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Client VIAVI Air Only, With RM*FS/-7 Remark
+    Select Reason Code 7 : Low fare within policy threshold For TST1
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     

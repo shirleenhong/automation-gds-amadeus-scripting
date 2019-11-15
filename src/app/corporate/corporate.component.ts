@@ -42,7 +42,6 @@ import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 
-
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -56,6 +55,7 @@ export class CorporateComponent implements OnInit {
   workflow = '';
   cancelEnabled = true;
   validModel = new ValidateModel();
+  itinValidModel = new ValidateModel();
   dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   migrationOBTDates: Array<string>;
   segment = [];
@@ -69,10 +69,12 @@ export class CorporateComponent implements OnInit {
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(CorpRemarksComponent) corpRemarksComponent: CorpRemarksComponent;
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
+  @ViewChild(SendInvoiceItineraryComponent)
+  sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   @ViewChild(PassiveSegmentsComponent)
-  @ViewChild(SendInvoiceItineraryComponent) sendInvoiceItineraryComponent: SendInvoiceItineraryComponent;
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
+  @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -209,7 +211,6 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
-        await this.ddbService.getReasonCodes(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
@@ -248,8 +249,10 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
+    accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
@@ -264,13 +267,11 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
     });
 
-    if (this.paymentsComponent.accountingRemark.accountingRemarks !== undefined
-      && this.paymentsComponent.accountingRemark.accountingRemarks.length > 0) {
-      if (
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'WCPPC' ||
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'PCPPC'
-      ) {
+    if (
+      this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
+      this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
+    ) {
+      if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
         const forDeletion = new Array<string>();
         this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
           forDeletion.push(element.lineNo);
@@ -343,8 +344,7 @@ export class CorporateComponent implements OnInit {
         )
       )
     );
-
-    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList).then(
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
       async () => {
         this.isPnrLoaded = false;
         this.workflow = '';
@@ -369,23 +369,31 @@ export class CorporateComponent implements OnInit {
       return;
     }
 
-    this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+    // this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
     const osiCollection = new Array<RemarkGroup>();
     const cancel = this.cancelComponent.cancelSegmentComponent;
     const getSelected = cancel.submit();
 
-    // if (getSelected.length >= 1) {
-    osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
-    this.corpRemarkService.BuildRemarks(osiCollection);
-    await this.corpRemarkService.cancelOSIRemarks().then(
-      async () => {
-        this.getPnr();
-        await this.addCancelRemarksRemarks(cancel, getSelected);
-      },
-      (error) => {
-        console.log(JSON.stringify(error));
-      }
-    );
+    if (!(cancel.cancelForm.controls.followUpOption.value === 'Void BSP' && cancel.hasUnvoided)) {
+      this.showLoading('Applying cancellation to PNR...', 'CancelPnr');
+      // if (getSelected.length >= 1) {
+      osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
+      this.corpRemarkService.BuildRemarks(osiCollection);
+      await this.corpRemarkService.cancelOSIRemarks().then(
+        async () => {
+          this.getPnr();
+          await this.addCancelRemarksRemarks(cancel, getSelected);
+        },
+        (error) => {
+          console.log(JSON.stringify(error));
+        }
+      );
+    } else {
+      this.isPnrLoaded = false;
+      this.getPnr();
+      this.workflow = '';
+      this.closePopup();
+    }
   }
 
   async addCancelRemarksRemarks(cancel: CancelSegmentComponent, getSelected: any[]) {
@@ -393,20 +401,65 @@ export class CorporateComponent implements OnInit {
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = new Array<RemarkModel>();
     const passiveSegmentList = new Array<PassiveSegmentModel>();
+    const deleteSegments = new Array<string>();
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
+    let sendTkt = false;
 
     getSelected.forEach((element) => {
-      forDeletion.push(element.lineNo);
+      deleteSegments.push(element.lineNo);
     });
-    await this.rms.deleteSegments(forDeletion).then(async () => {
+    await this.rms.deleteSegments(deleteSegments).then(async () => {
       await this.getPnr();
       await this.rms.getMatchcedPlaceholderValues();
     });
+
+    if (cancel.nonBspTicketCreditComponent) {
+      const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(cancel.nonBspTicketCreditComponent.nonBspForm);
+      if (nonBspTicket) {
+        nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
+        nonBspTicket.commands.forEach((c) => commandList.push(c));
+      }
+    }
+
+    if (cancel.bspRefundComponent) {
+      const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
+        cancel.bspRefundComponent.refundForm,
+        cancel.bspRefundComponent.refundType
+      );
+      if (refundTicket) {
+        if (refundTicket.SendTicket) {
+          sendTkt = true;
+        }
+        if (refundTicket.remarks) {
+          refundTicket.remarks.forEach((rem) => remarkList.push(rem));
+        }
+        if (refundTicket.commands) {
+          refundTicket.commands.forEach((c) => commandList.push(c));
+        }
+      }
+    }
+
+    if (
+      cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
+      cancel.cancelForm.controls.followUpOption.value === 'BSPKT' ||
+      sendTkt
+    ) {
+      const canceltktl = this.ticketRemarkService.cancelTicketRemark();
+      if (canceltktl) {
+        canceltktl.cryptics.forEach((c) => commandList.push(c));
+
+        if (this.pnrService.getTkLineNumber() && canceltktl.cryptics.length > 0) {
+          forDeletion.push(this.pnrService.getTkLineNumber().toString());
+        }
+      }
+      remarkCollection.push(this.ticketRemarkService.deleteTicketingLine());
+    }
+
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());
     }
-
+    remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
@@ -417,16 +470,20 @@ export class CorporateComponent implements OnInit {
           passiveSegmentList.push(pasModel);
         });
       }
+      if (rem.deleteRemarkByIds) {
+        rem.deleteRemarkByIds.forEach((del) => {
+          forDeletion.push(del);
+        });
+      }
     });
 
-
-    const nonBspTicket = this.corpCancelRemarkService.WriteNonBspTicketCredit(this.cancelComponent.nonBspTicketCreditComponent.nonBspForm);
-    if (nonBspTicket) {
-      nonBspTicket.remarks.forEach((rem) => remarkList.push(rem));
-      nonBspTicket.commands.forEach((c) => commandList.push(c));
+    this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
+    if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
+      this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
     }
-    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+    this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();
@@ -480,7 +537,7 @@ export class CorporateComponent implements OnInit {
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
-      if (seg.segmentType === 'HTL') {
+      if (seg.segmentType === 'HHL') {
         return true;
       }
     }
@@ -495,8 +552,15 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  CheckValidItinModel() {
+    this.itinValidModel.isSubmitted = true;
+    this.itinValidModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
+    return this.itinValidModel.isItineraryValid;
+  }
+
   async SendItineraryAndQueue() {
-    if (!this.itineraryqueueComponent.checkValid()) {
+    // if (!this.itineraryqueueComponent.checkValid()) {
+    if (!this.CheckValidItinModel()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
       });
@@ -514,7 +578,7 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-    
+
     await this.rms.submitToPnr().then(
       () => {
         this.isPnrLoaded = false;
@@ -594,13 +658,14 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Sending Invoice...');
     const resendCompData = this.sendInvoiceItineraryComponent.resendInvoiceComponent;
     this.invoiceRemarkService.addEmailRemarks(resendCompData.invoiceFormGroup);
-    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(resendCompData.selectedElementsUI,
-      resendCompData.invoiceList);
+    const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(
+      resendCompData.selectedElementsUI,
+      resendCompData.invoiceList
+    );
     this.invoiceRemarkService.addETicketRemarks(resendCompData.selectedElementsUI, resendCompData.eTicketsList);
     this.invoiceRemarkService.addFeeLinesRemarks(resendCompData.selectedElementsUI, resendCompData.feeRemarks);
     this.invoiceRemarkService.addNonBspRemarks(resendCompData.selectedElementsUI, resendCompData.nonBspRemarks);
-    const commandList = ['QE/YTOWL210E/66C1'];
-    await this.rms.submitToPnr(null, deletedInvoiceLines, commandList).then(
+    await this.rms.submitToPnr(null, deletedInvoiceLines).then(
       () => {
         this.isPnrLoaded = false;
         this.workflow = '';

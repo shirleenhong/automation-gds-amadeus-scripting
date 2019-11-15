@@ -152,6 +152,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       const control = new FormControl(i === 0 && forchecking); // if first item set to true, else false
       (this.matrixAccountingForm.controls.segments as FormArray).push(control);
     });
+    this.onCheckChange();
   }
 
   showFareType() {
@@ -186,9 +187,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'Airline Corporate Pass Redemption', itemValue: 'ACPR' },
       { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
       { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
-      { itemText: 'Air Canada Individual Pass Purchase with Cancellation', itemValue: 'ACPPC' },
-      { itemText: 'Westjet Individual Pass Purchase with Cancellation', itemValue: 'WCPPC' },
-      { itemText: 'Porter Individual Pass Purchase with Cancellation', itemValue: 'PCPPC' },
+      { itemText: 'Airline Pass Cancellation with a Cancellation Fee', itemValue: 'ACPPC' },
+      // { itemText: 'Westjet Individual Pass Purchase with Cancellation', itemValue: 'WCPPC' },
+      // { itemText: 'Porter Individual Pass Purchase with Cancellation', itemValue: 'PCPPC' },
       { itemText: 'Non BSP Exchange', itemValue: 'NONBSPEXCHANGE' },
       { itemText: 'Non BSP Airline', itemValue: 'NONBSP' },
       { itemText: 'APAY', itemValue: 'APAY' }
@@ -242,25 +243,44 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
     this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
+
     switch (accRemark) {
-      case 'ACPP':
       case 'ACPPC':
+        this.accountingRemark.supplierCodeName = '';
+        this.enableFormControls(['otherTax'], false);
+        this.enableFormControls(['commisionWithoutTax'], true);
+        this.matrixAccountingForm.controls.gst.clearValidators();
+        this.matrixAccountingForm.get('gst').updateValueAndValidity();
+        this.matrixAccountingForm.controls.hst.clearValidators();
+        this.matrixAccountingForm.get('hst').updateValueAndValidity();
+        this.matrixAccountingForm.controls.qst.clearValidators();
+        this.matrixAccountingForm.get('qst').updateValueAndValidity();
+        this.matrixAccountingForm.controls.otherTax.clearValidators();
+        this.matrixAccountingForm.get('otherTax').updateValueAndValidity();
+        this.onCheckChange();
+        break;
+      case 'ACPP':
       case 'WCPP':
       case 'WCPPC':
       case 'PCPPC':
       case 'PCPP':
-        accRemark === 'ACPP' || accRemark === 'ACPPC'
+        accRemark === 'ACPP'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
           ? (this.accountingRemark.supplierCodeName = 'WJP')
           : (this.accountingRemark.supplierCodeName = 'PTP');
 
+        this.matrixAccountingForm.get('gst').setValidators([Validators.required, Validators.maxLength(8)]);
+        this.matrixAccountingForm.get('hst').setValidators([Validators.required, Validators.maxLength(8)]);
+        this.matrixAccountingForm.get('qst').setValidators([Validators.required, Validators.maxLength(8)]);
+        this.matrixAccountingForm.get('otherTax').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
         this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
         this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
-
+        // this.enableFormControls(['otherTax'], false);
+        // this.enableFormControls(['commisionWithoutTax'], true);
         if (this.isAddNew) {
           this.accountingRemark.qst = '';
           this.accountingRemark.baseAmount = '';
@@ -268,7 +288,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.gst = '';
         }
 
-        this.enableFormControls(['fareType'], accRemark !== 'ACPP' || accRemark !== 'ACPPC');
+        this.enableFormControls(['fareType'], accRemark !== 'ACPP' && accRemark === 'ACPPC');
         break;
       case 'ACPR':
         this.configureACPRControls();
@@ -493,13 +513,24 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { airline: 'WN', supplierCode: 'SOA' }
     ];
 
+    const acAirlineSupplierList: Array<any> = [
+      { airline: 'AC', supplierCode: 'ACJ' },
+      { airline: 'WS', supplierCode: 'WJP' },
+      { airline: 'PD', supplierCode: 'PTP' },
+      { airline: '4N', supplierCode: 'A5P' },
+      { airline: '8P', supplierCode: 'PSI' }
+    ];
+
     if (this.matrixAccountingForm.controls.segmentNo.value) {
       segmentNos = this.matrixAccountingForm.controls.segmentNo.value.split(',');
       const segmentDetails = this.pnrService.getSegmentList();
       segmentDetails.forEach((segments) => {
         segmentNos.forEach((segment) => {
           if (segment === segments.lineNo) {
-            const look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            let look = airlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            if (this.accountingRemark.accountingTypeRemark === 'ACPR') {
+              look = acAirlineSupplierList.find((x) => segments.airlineCode === x.airline);
+            }
             if (look && (supplierCode === '' || supplierCode === look.supplierCode) && segments.segmentType === 'AIR') {
               supplierCode = look.supplierCode;
             } else {
@@ -664,6 +695,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   onCheckChange() {
     // Filter out the unselected ids
     const checkSegment = [];
+    let airlineCode = '';
+    let counter = 0;
     const selectedPreferences = this.matrixAccountingForm.value.segments
       .map((checked, index) => (checked ? this.segments[index].id : null))
       .filter((value) => value !== null);
@@ -675,10 +708,24 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           segmentType: look.segmentType
         };
         checkSegment.push(textLine);
+        if (counter === 0) {
+          airlineCode = look.airlineCode;
+        }
+        if (airlineCode !== look.airlineCode) {
+          airlineCode = '';
+        }
       }
+      counter = counter + 1;
     });
-    debugger;
     this.accountingRemark.segments = checkSegment;
-    //return checkSegment;
+    if (airlineCode === 'AC') {
+      this.accountingRemark.supplierCodeName = 'ACJ';
+    } else if (airlineCode === 'WS') {
+      this.accountingRemark.supplierCodeName = 'WJP';
+    } else if (airlineCode === 'PD') {
+      this.accountingRemark.supplierCodeName = 'PTP';
+    } else {
+      this.accountingRemark.supplierCodeName = '';
+    }
   }
 }

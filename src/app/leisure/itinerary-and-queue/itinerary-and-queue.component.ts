@@ -9,20 +9,16 @@ import { UtilHelper } from '../../helper/util.helper';
   styleUrls: ['./itinerary-and-queue.component.scss']
 })
 export class ItineraryAndQueueComponent implements OnInit {
-
   @ViewChild(QueueComponent) queueComponent: QueueComponent;
   @ViewChild(ItineraryComponent) itineraryComponent: ItineraryComponent;
 
-  constructor(private utilHelper: UtilHelper) { }
+  constructor(private utilHelper: UtilHelper) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   checkValid() {
     this.utilHelper.validateAllFields(this.queueComponent.queueForm);
-    if (
-      !this.queueComponent.queueForm.valid
-    ) {
+    if (!this.queueComponent.queueForm.valid) {
       return false;
     }
 

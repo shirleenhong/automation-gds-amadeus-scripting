@@ -331,27 +331,10 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
-    // this.ebCList = [
-    //   { itemValue: 'A', itemText: 'A - Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
-    //   { itemValue: 'C', itemText: 'C - Car - add or change car, segment not confirmed, direct bill, etc.' },
-    //   { itemValue: 'D', itemText: 'D - Customized Data - missing invalid name statement, profile info, email address, etc.' },
-    //   { itemValue: 'E', itemText: 'E - Exchange ticket' },
-    //   { itemValue: 'F', itemText: 'F - Fare - contract fare incorrect, lower fare found, split ticket' },
-    //   { itemValue: 'H', itemText: 'H - Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
-    //   { itemValue: 'I', itemText: 'I - Instant purchase carrier' },
-    //   { itemValue: 'L', itemText: 'L - Limo - add or change a limo which will generate an invoice' },
-    //   { itemValue: 'M', itemText: 'M - Credit card - change fop or declined credit card' },
-    //   { itemValue: 'N', itemText: 'N - Lack of automation by SBT or mid office (touchless fee when applicable)' },
-    //   { itemValue: 'R', itemText: 'R - Rail - add or change rail which will generate an invoice' },
-    //   { itemValue: 'S', itemText: 'S - Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
-    //   { itemValue: 'T', itemText: 'T - International assistance' },
-    //   { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
-    // ];
-   // this.ebCList = this.ddbService.getReasonCodeByTypeId([11, 42], 8).;
+   
     await this.ddbService.getReasonCodeByTypeId([1], 1).then(function (x) {
       self.ebCList = x;
    })
-    console.log(this.ebCList);
     this.ebRList = [
       { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
       { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
@@ -869,7 +852,6 @@ export class CancelSegmentComponent implements OnInit {
   checkEbRemark() {
     this.showEBDetails = false;
     let ebData = this.pnrService.getRemarkText('EB/');
-    console.log(ebData);
     if (ebData) {
       ebData = ebData.split('/');
       if (ebData.length === 3) {

@@ -383,12 +383,21 @@
       <div class="form-group row">
         <div class="col-4"></div>
         <div class="col-8">
-          <select id="ebC" class="form-control" formControlName="ebC"
+          <!-- <select id="ebC" class="form-control" formControlName="ebC"
           name="ebR" >
           <option *ngFor="let item of ebCList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
-        </select>
+        </select> -->
+
+        <select autofocus id="ebC" class="form-control" formControlName="ebC" name="ebC">
+            <option [ngValue] = "null"></option>
+            <option *ngFor="let reason of ebCList" [value]="reason.reasonCode">{{
+              reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescriptions.get('en-GB')
+            }}</option>
+          </select>
+
+
         </div>
       </div>
     </div>

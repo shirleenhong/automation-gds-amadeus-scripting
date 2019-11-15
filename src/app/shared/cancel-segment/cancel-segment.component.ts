@@ -8,6 +8,8 @@ import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
+import { DDBService } from '../../service/ddb.service';
+import { ReasonCode } from '../../models/ddb/reason-code.model';
 // import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
@@ -53,17 +55,19 @@ export class CancelSegmentComponent implements OnInit {
   isNonBSP = false;
   isVoided = false;
   showEBDetails: boolean;
-  ebCList: any;
+  //ebCList: any;
   ebRList: { itemValue: string; itemText: string }[];
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
+  ebCList :Promise<ReasonCode[]>  ;
 
   constructor(
     private formBuilder: FormBuilder,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private counselorDetail: CounselorDetail
+    private counselorDetail: CounselorDetail,
+    private ddbService: DDBService
    ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
@@ -238,7 +242,7 @@ export class CancelSegmentComponent implements OnInit {
     return true;
   }
 
-  loadStaticValue() {
+  async loadStaticValue() {
     this.reasonAcList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '4' },
@@ -326,24 +330,24 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
-    this.ebCList = [
-      { itemValue: 'A', itemText: 'A - Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
-      { itemValue: 'C', itemText: 'C - Car - add or change car, segment not confirmed, direct bill, etc.' },
-      { itemValue: 'D', itemText: 'D - Customized Data - missing invalid name statement, profile info, email address, etc.' },
-      { itemValue: 'E', itemText: 'E - Exchange ticket' },
-      { itemValue: 'F', itemText: 'F - Fare - contract fare incorrect, lower fare found, split ticket' },
-      { itemValue: 'H', itemText: 'H - Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
-      { itemValue: 'I', itemText: 'I - Instant purchase carrier' },
-      { itemValue: 'L', itemText: 'L - Limo - add or change a limo which will generate an invoice' },
-      { itemValue: 'M', itemText: 'M - Credit card - change fop or declined credit card' },
-      { itemValue: 'N', itemText: 'N - Lack of automation by SBT or mid office (touchless fee when applicable)' },
-      { itemValue: 'R', itemText: 'R - Rail - add or change rail which will generate an invoice' },
-      { itemValue: 'S', itemText: 'S - Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
-      { itemValue: 'T', itemText: 'T - International assistance' },
-      { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
-    ];
-   // this.ebCList = this.ddbService.getReasonCodeByTypeId([42], 'en-GB', 8);
-   // console.log(this.ebCList);
+    // this.ebCList = [
+    //   { itemValue: 'A', itemText: 'A - Air - add a flight segment which results in new ticket, segment not confirmed, etc.' },
+    //   { itemValue: 'C', itemText: 'C - Car - add or change car, segment not confirmed, direct bill, etc.' },
+    //   { itemValue: 'D', itemText: 'D - Customized Data - missing invalid name statement, profile info, email address, etc.' },
+    //   { itemValue: 'E', itemText: 'E - Exchange ticket' },
+    //   { itemValue: 'F', itemText: 'F - Fare - contract fare incorrect, lower fare found, split ticket' },
+    //   { itemValue: 'H', itemText: 'H - Hotel - add or change hotel, segment not confirmed, direct bill, etc.' },
+    //   { itemValue: 'I', itemText: 'I - Instant purchase carrier' },
+    //   { itemValue: 'L', itemText: 'L - Limo - add or change a limo which will generate an invoice' },
+    //   { itemValue: 'M', itemText: 'M - Credit card - change fop or declined credit card' },
+    //   { itemValue: 'N', itemText: 'N - Lack of automation by SBT or mid office (touchless fee when applicable)' },
+    //   { itemValue: 'R', itemText: 'R - Rail - add or change rail which will generate an invoice' },
+    //   { itemValue: 'S', itemText: 'S - Special requests - seats, meals, remarks new ticket or invoice is not generated.' },
+    //   { itemValue: 'T', itemText: 'T - International assistance' },
+    //   { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
+    // ];
+    this.ebCList =   this.ddbService.getReasonCodeByTypeId([11,42], 8);
+    console.log(this.ebCList);
     this.ebRList = [
       { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
       { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }

@@ -209,14 +209,16 @@ export class DDBService implements OnInit {
     return reasons;
   }
 
-  getReasonCodeByTypeId(ids: number[], productID: number): ReasonCode[] {
+  async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
     this.reasonCodeList = [];
     for (const id of ids) {
-      this.getReasonCodes(this.pnrService.getClientSubUnit(), '&ProductId=' + productID + '&ReasonCodeTypeId=' + id).then((response) => {
-        response.forEach((reason) => {
-          this.reasonCodeList.push(reason);
-        });
-      });
+      await this.getReasonCodes(this.pnrService.getClientSubUnit(), '&ProductId=' + productID + '&ReasonCodeTypeId=' + id).then(
+        (response) => {
+          response.forEach((reason) => {
+            this.reasonCodeList.push(reason);
+          });
+        }
+      );
     }
     return this.reasonCodeList;
   }

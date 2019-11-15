@@ -20,16 +20,17 @@ export class ItineraryAndQueueComponent implements OnInit {
   ngOnInit() {}
 
   checkValid() {
+    this.utilHelper.validateAllFields(this.queueComponent.queueForm);
     if (!this.queueComponent.queueForm.valid) {
       return false;
     }
     this.utilHelper.validateAllFields(this.itineraryComponent.itineraryForm);
-    if (this.itineraryComponent.itineraryForm.touched && !this.itineraryComponent.itineraryForm.valid) {
+    if (!this.itineraryComponent.itineraryForm.valid) {
       return false;
     }
 
     this.utilHelper.validateAllFields(this.ticketingLineComponent.ticketForm);
-    if (this.ticketingLineComponent.ticketForm.touched && !this.ticketingLineComponent.ticketForm.valid) {
+    if (!this.ticketingLineComponent.ticketForm.get('verifyAck').value && !this.ticketingLineComponent.ticketForm.valid) {
       return false;
     }
 

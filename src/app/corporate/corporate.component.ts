@@ -553,14 +553,12 @@ export class CorporateComponent implements OnInit {
   }
 
   CheckValidItinModel() {
-    debugger;
     this.itinValidModel.isSubmitted = true;
     this.itinValidModel.isItineraryValid = this.itineraryqueueComponent.checkValid();
-    return this.itinValidModel.isTicketingAllValid();
+    return this.itinValidModel.isItineraryValid;
   }
 
   async SendItineraryAndQueue() {
-    debugger;
     // if (!this.itineraryqueueComponent.checkValid()) {
     if (!this.CheckValidItinModel()) {
       const modalRef = this.modalService.show(MessageComponent, {

@@ -60,7 +60,7 @@ export class CancelSegmentComponent implements OnInit {
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
-  ebCList :Promise<ReasonCode[]>  ;
+  ebCList :any  ;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -123,13 +123,13 @@ export class CancelSegmentComponent implements OnInit {
     this.onChanges();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.isCorporate = this.counselorDetail.getIsCorporate();
     // this.codeShareGroup = this.formBuilder.group({
     //   tickets: this.formBuilder.array([this.createFormGroup()])
     // });
     this.isCorporate = this.counselorDetail.getIsCorporate();
-    this.loadStaticValue();
+    await this.loadStaticValue();
     this.getSegmentTatooValue();
     this.addCheckboxes();
     this.checkFirstSegment();
@@ -243,6 +243,7 @@ export class CancelSegmentComponent implements OnInit {
   }
 
   async loadStaticValue() {
+    const self = this;
     this.reasonAcList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '4' },
@@ -346,7 +347,10 @@ export class CancelSegmentComponent implements OnInit {
     //   { itemValue: 'T', itemText: 'T - International assistance' },
     //   { itemValue: 'U', itemText: 'U- Upgrades - if new ticket or invoice is generated' }
     // ];
-    this.ebCList =   this.ddbService.getReasonCodeByTypeId([11,42], 8);
+   // this.ebCList = this.ddbService.getReasonCodeByTypeId([11, 42], 8).;
+    await this.ddbService.getReasonCodeByTypeId([1], 1).then(function (x) {
+      self.ebCList = x;
+   })
     console.log(this.ebCList);
     this.ebRList = [
       { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
@@ -888,8 +892,9 @@ export class CancelSegmentComponent implements OnInit {
       if (ebrValues.indexOf(ebR) > -1) {
         this.cancelForm.controls.ebR.setValue(ebR);
       }
+    
       for (const c of this.ebCList) {
-        if (c.itemValue === ebC) {
+        if (c.reasonCode === ebC) {
           this.cancelForm.controls.ebC.setValue(ebC);
         }
       }

@@ -209,20 +209,6 @@ export class DDBService implements OnInit {
     return reasons;
   }
 
-  // async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
-  //   this.reasonCodeList = [];
-  //   for (const id of ids) {
-  //     await this.getReasonCodes(
-  //       this.pnrService.getClientSubUnit(),
-  //       '&LanguageCode=en-GB&ProductId=' + productID + '&ReasonCodeTypeId=' + id
-  //     ).then((response) => {
-  //       response.forEach((reason) => {
-  //         this.reasonCodeList.push(reason);
-  //       });
-  //     });
-  //   }
-  //   return this.reasonCodeList;
-  // }
   async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
     const reasonCodeList = [];
     for (const id of ids) {

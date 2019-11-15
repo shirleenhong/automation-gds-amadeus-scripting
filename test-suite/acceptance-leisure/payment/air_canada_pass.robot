@@ -122,7 +122,7 @@ Verify That Multiple Air Canada Pass Redemption RIR And Accounting Remarks Are W
 Verify That Air Canada Pass Purchase Accounting, RIR Remarks, And Passive Segment Are Written In The PNR
     [Tags]    us7873
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RM*CF/-RBM000000N    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RM*CF/-RBM000000N    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

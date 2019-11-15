@@ -6,8 +6,8 @@ Resource          ../../resources/common/global_resources.robot
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruise Segment, FOP is Check, and Province is Quebec
     [Tags]    us7648    us9429    us10878    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    RU1AHK3YYZ12NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12NOV/ST-0900/EC-YQB/ED-13NOV/ET-1800/PS-X    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RM*CF/-RBM0000000N
-    ...    APE-test@email.com    RU1AHK3SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    RU1AHK3YYZ12OCT-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-12OCT/ST-0900/EC-YQB/ED-13OCT/ET-1800/PS-X    HU1AHK3YXE23OCT-24OCT/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RM*CF/-RBM0000000N
+    ...    APE-test@email.com    RU1AHK3SIN21OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -37,7 +37,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
     Click Payment Tab    Leisure Fee
     Click Update Button    1
     Select Segment Association    Hotel Segment
-    Select Segment Number    5 HTL 1A HK3 YXE 23Nov
+    Select Segment Number    5 HTL 1A HK3 YXE 23Oct
     Enter Amount    1000.00
     Select Leisure Fee Form of Payment    Credit Card
     Select Credit Card Vendor Code    VI- Visa
@@ -61,7 +61,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Tour/Cruis
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Segment, FOP is Credit Card, and Province is Outside of Canada
     [Tags]    us7648    us9429    us10878    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS UA1074 Y 20NOV YYZYUL GK2 / 11551440 / ABCDEFG    CU1AHK2YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24NOV/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    RM*CF/-RBM000000N    RU1AHK2SIN25NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS UA1074 Y 20OCT YYZYUL GK2 / 11551440 / ABCDEFG    CU1AHK2YQM23OCT-24OCTCCMR/SUC-EP/SUN-EUROPCAR/SD-23OCT/ST-1700/ED-24OCT/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    RM*CF/-RBM000000N    RU1AHK2SIN25OCT-CWT RETENTION SEGMENT
     ...    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
@@ -92,7 +92,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Seg
     Click Payment Tab    Leisure Fee
     Click Update Button    1
     Select Segment Association    Car Segment
-    Select Segment Number    4 CAR 1A HK2 YQM 23Nov
+    Select Segment Number    4 CAR 1A HK2 YQM 23Oct
     Enter Amount    1000.00
     Select Leisure Fee Form of Payment    Cheque
     Select Traveler Province    Prince Edward Island
@@ -114,8 +114,8 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Ticket Seg
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segment, FOP is Check, and Province is New Brunswick
     [Tags]    us7648    us9429    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    CU1AHK1YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    CU1AHK1YQM23DEC-24DECCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    SS AC1074 Y 20NOV YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM0000000N    APE-12345
-    ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    CU1AHK1YQM13OCT-14OCTCCMR/SUC-EP/SUN-EUROPCAR/SD-13OCT/ST-1700/ED-14OCT/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    CU1AHK1YQM23OCT-24OCTCCMR/SUC-EP/SUN-EUROPCAR/SD-23OCT/ST-1700/ED-24OCT/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    SS AC1074 Y 20OCT YYZYUL GK1 / 11551440 / ABCDEFG    RM*CF/-RBM0000000N    APE-12345
+    ...    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -123,7 +123,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
     Click Payment Tab    Leisure Fee
     Click Add Leisure Fee Collection Button
     Select Segment Association    Car Segment
-    Select Segment Number    4 CAR 1A HK1 YQM 23Nov
+    Select Segment Number    4 CAR 1A HK1 YQM 23OCT
     Enter Amount    100.00
     Select Leisure Fee Form of Payment    Cheque
     Select Traveler Province    New Brunswick
@@ -167,8 +167,8 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Car Segmen
 Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segment, FOP is Credit Card, and Province is Saskatchewan
     [Tags]    us7648    us9429    us10977
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N    APE-12345
-    ...    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    HU1AHK1YXE23OCT-24OCT/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25OCT-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25OCT/ST-0900/EC-YQB/ED-26OCT/ET-1800/PS-X    RM*CF/-RBM0000000N    APE-12345
+    ...    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -176,7 +176,7 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segm
     Click Payment Tab    Leisure Fee
     Click Add Leisure Fee Collection Button
     Select Segment Association    Hotel Segment
-    Select Segment Number    3 HTL 1A HK1 YXE 23Nov
+    Select Segment Number    3 HTL 1A HK1 YXE 23OCT
     Enter Amount    100.00
     Select Leisure Fee Form of Payment    Credit Card
     Select Credit Card Vendor Code    VI- Visa
@@ -222,8 +222,8 @@ Verify that the Leisure Fee Remark is Correct if Selected Fee Type is Hotel Segm
 Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     [Tags]    us7648    us9429    us10878
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    HU1AHK3YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RU1AHK3YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N
-    ...    APE-12345    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/test    HU1AHK3YXE23OCT-24OCT/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1-3    RU1AHK3YYZ25OCT-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25OCT/ST-0900/EC-YQB/ED-26OCT/ET-1800/PS-X    RM*CF/-RBM0000000N
+    ...    APE-12345    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -239,7 +239,7 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
     Click Save Button
     Click Add Leisure Fee Collection Button
     Select Segment Association    Hotel Segment
-    Select Segment Number    5 HTL 1A HK3 YXE 23Nov
+    Select Segment Number    5 HTL 1A HK3 YXE 23OCT
     Enter Amount    541.00
     Select Leisure Fee Form of Payment    Credit Card
     Select Credit Card Vendor Code    VI- Visa
@@ -264,8 +264,8 @@ Verify Multiple Leisure Fee Remarks With Tax Exemption Are Written In The PNR
 Verify Multiple Leisure Fee Remarks Without Tax Exemption Are Written In The PNR
     [Tags]    us7648    us9429    us10878
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Leisure/test    CU1AHK1YQM23NOV-24NOVCCMR/SUC-EP/SUN-EUROPCAR/SD-23NOV/ST-1700/ED-24nov/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    HU1AHK1YXE23NOV-24NOV/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25NOV-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25NOV/ST-0900/EC-YQB/ED-26NOV/ET-1800/PS-X    RM*CF/-RBM0000000N
-    ...    APE-12345    RU1AHK2SIN21NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Leisure/test    CU1AHK1YQM23OCT-24OCTCCMR/SUC-EP/SUN-EUROPCAR/SD-23OCT/ST-1700/ED-24OCT/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-123456    HU1AHK1YXE23OCT-24OCT/PARK INN SASKATOON,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/P1    RU1AHK1YYZ25OCT-/TYP-TOR/SUC-ZZ/SC-YYZ/SD-25OCT/ST-0900/EC-YQB/ED-26OCT/ET-1800/PS-X    RM*CF/-RBM0000000N
+    ...    APE-12345    RU1AHK2SIN21OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

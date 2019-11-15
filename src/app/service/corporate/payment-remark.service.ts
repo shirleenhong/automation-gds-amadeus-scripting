@@ -38,7 +38,7 @@ export class PaymentRemarkService {
           x.accountingTypeRemark === 'ACPP' ||
           x.accountingTypeRemark === 'ACPR' ||
           x.accountingTypeRemark === 'WCPP' ||
-          x.accountingTypeRemark === 'PCPP'     
+          x.accountingTypeRemark === 'PCPP'
       )
     );
 
@@ -88,6 +88,9 @@ export class PaymentRemarkService {
         }
         if (account.otherTaxRefund === undefined) {
           account.otherTaxRefund = '0.00';
+        }
+        if (account.otherTax === undefined) {
+          account.otherTax = '0.00';
         }
 
         const cancelSegmentrelate: string[] = [];
@@ -154,21 +157,22 @@ export class PaymentRemarkService {
         refundBaseCommisionRemark.set('CaRefundCommision', account.commisionRefund);
         this.remarksManager.createPlaceholderValues(refundBaseCommisionRemark, null, null);
 
-        const notes1 = new Map<string, string>();
-        notes1.set('CaAmadeusNotes1', account.additionalNotes1);
-        this.remarksManager.createPlaceholderValues(notes1, null, null);
-
-        const notes2 = new Map<string, string>();
-        notes2.set('CaAmadeusNotes2', account.additionalNotes2);
-        this.remarksManager.createPlaceholderValues(notes2, null, null);
-
+        if (account.additionalNotes1) {
+          const notes1 = new Map<string, string>();
+          notes1.set('CaAmadeusNotes1', account.additionalNotes1);
+          this.remarksManager.createPlaceholderValues(notes1, null, null);
+        }
+        if (account.additionalNotes2) {
+          const notes2 = new Map<string, string>();
+          notes2.set('CaAmadeusNotes2', account.additionalNotes2);
+          this.remarksManager.createPlaceholderValues(notes2, null, null);
+        }
         const refundEnd = new Map<string, string>();
         refundEnd.set('CARefundEnd', 'true');
         this.remarksManager.createPlaceholderValues(null, refundEnd, null, null, '**********************************************');
 
         const priceForRemark = new Map<string, string>();
-        
-        // tslint:disable-next-line: max-line-length
+
         const totalPrice =
           parseFloat(account.baseAmount) +
           parseFloat(account.gst) +
@@ -194,7 +198,7 @@ export class PaymentRemarkService {
         const travellerCreditCardCondition = new Map<string, string>();
         travellerCreditCardCondition.set('CACancelRemark', 'true');
         this.remarksManager.createPlaceholderValues(null, travellerCreditCardCondition, null, null, 'THE TRAVELLERS CREDIT CARD.');
-        
+
         if (this.pnrService.getRemarkText('U14/-' + airline + 'PASS') !== '') {
           const u14Remark = new Map<string, string>();
           u14Remark.set('CancelAirlineCodePassChg', airline);
@@ -212,6 +216,13 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(highFareRemark, null, cancelSegmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, cancelSegmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, cancelSegmentrelate);
+
+        const originalTicketRemarks = new Map<string, string>();
+        originalTicketRemarks.set('NoOriginalTicket', 'true');
+        this.remarksManager.createPlaceholderValues(originalTicketRemarks, null, null);
+        const consultantNoRemarkStatic = new Map<string, string>();
+        consultantNoRemarkStatic.set('IsNuc', 'true');
+        this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
 
         this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
         this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 70, 1));
@@ -696,6 +707,7 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
+
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {

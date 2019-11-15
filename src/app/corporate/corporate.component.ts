@@ -265,23 +265,24 @@ export class CorporateComponent implements OnInit {
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
+      await this.rms.getMatchcedPlaceholderValues();
     });
 
-    if (
-      this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
-      this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
-    ) {
-      if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
-        const forDeletion = new Array<string>();
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
-          forDeletion.push(element.lineNo);
-        });
-        await this.rms.deleteSegments(forDeletion).then(async () => {
-          await this.getPnr();
-          await this.rms.getMatchcedPlaceholderValues();
-        });
-      }
-    }
+    // if (
+    //   this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
+    //   this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
+    // ) {
+    //   if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
+    //     const forDeletion = new Array<string>();
+    //     this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
+    //       forDeletion.push(element.lineNo);
+    //     });
+    //     await this.rms.deleteSegments(forDeletion).then(async () => {
+    //       await this.getPnr();
+    //       await this.rms.getMatchcedPlaceholderValues();
+    //     });
+    //   }
+    // }
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
 

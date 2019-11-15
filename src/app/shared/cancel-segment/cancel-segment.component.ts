@@ -9,7 +9,6 @@ import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 import { DDBService } from '../../service/ddb.service';
-import { ReasonCode } from '../../models/ddb/reason-code.model';
 // import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
@@ -55,12 +54,11 @@ export class CancelSegmentComponent implements OnInit {
   isNonBSP = false;
   isVoided = false;
   showEBDetails: boolean;
-  //ebCList: any;
   ebRList: { itemValue: string; itemText: string }[];
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
-  ebCList :any  ;
+  ebCList: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -68,7 +66,7 @@ export class CancelSegmentComponent implements OnInit {
     private utilHelper: UtilHelper,
     private counselorDetail: CounselorDetail,
     private ddbService: DDBService
-   ) {
+  ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
       segments: new FormArray([]),
@@ -331,10 +329,10 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
-   
-    await this.ddbService.getReasonCodeByTypeId([1], 1).then(function (x) {
+
+    await this.ddbService.getReasonCodeByTypeId([1], 1).then((x) => {
       self.ebCList = x;
-   })
+    });
     this.ebRList = [
       { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
       { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
@@ -858,8 +856,6 @@ export class CancelSegmentComponent implements OnInit {
         this.populateEBFields(ebData);
       }
     }
-
-
   }
   async populateEBFields(eb) {
     const ebR = eb[1].substr(0, 2);
@@ -874,7 +870,7 @@ export class CancelSegmentComponent implements OnInit {
       if (ebrValues.indexOf(ebR) > -1) {
         this.cancelForm.controls.ebR.setValue(ebR);
       }
-    
+
       for (const c of this.ebCList) {
         if (c.reasonCode === ebC) {
           this.cancelForm.controls.ebC.setValue(ebC);
@@ -887,6 +883,5 @@ export class CancelSegmentComponent implements OnInit {
       this.cancelForm.get('ebN').enable();
       this.cancelForm.get('ebC').enable();
     }
-
   }
 }

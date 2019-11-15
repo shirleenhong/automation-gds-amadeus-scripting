@@ -117,6 +117,7 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
+    this.dataError.hasError = false;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();

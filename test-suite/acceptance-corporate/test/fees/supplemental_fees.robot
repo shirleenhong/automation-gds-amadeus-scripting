@@ -9,7 +9,7 @@ Resource          ../../pages/base.robot
 Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/fees.robot
-Test Teardown    Close All Browsers
+# Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify OBT PNR Added Remarks For Supplemental Fees

@@ -1,14 +1,8 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/payment.robot
-#Test Teardown    Close All Browsers
+Resource          ../../../resources/common/api-utilities.txt
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    corporate_pass_redemption
@@ -56,5 +50,4 @@ Verify Remarks Are Written When Airline Corporate Pass Redemption Is Added With 
     Add Airline Corporate Pass Redemption And Verify Default Amount Values
     Add APAY Ticketing Details For Multiple Segments
     Verify Airline Corporate Pass Remarks Are Written In The PNR
-
     

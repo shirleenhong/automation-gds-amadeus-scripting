@@ -109,6 +109,32 @@
       </div>
     </div>
 
+
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'">
+
+      <div class="row form-group">
+          <div class="col-4"> </div>
+          <div class="col-8 emphasize">
+            <input type="checkbox" name="cancelAll" formControlName="cancelAll" id="cancelAll" (change)="cancelAll($event.target.checked)"/>   
+            Cancel All Segments
+          </div>
+        </div>
+    
+    
+        <div class="row form-group">
+          <div class="col-4">Segments:</div>
+          <div class="col-8">
+            <label>
+              <div formArrayName="segments"
+                *ngFor="let name of this.matrixAccountingForm.controls.segments['controls']; let i = index">
+                <input type="checkbox" [formControlName]="i" (change)="onCheckChange()">
+                {{segments[i].name}}
+              </div>
+            </label>
+          </div>
+        </div>
+    </div>
+
     <div class="form-group row">
       <div class="col-sm-4">Supplier Code:</div>
       <div class="col-sm-8">
@@ -161,41 +187,17 @@
           name="supplierConfirmatioNo" required AlphaNumericMask />
       </div>
     </div>
-<div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">
 
-    <div class="row form-group">
-        <div class="col-4"> </div>
-        <div class="col-8 emphasize">
-          <input type="checkbox" name="cancelAll" formControlName="cancelAll" id="cancelAll" (change)="cancelAll($event.target.checked)"/> 
-          
-          Cancel All Segments
-        </div>
-      </div>
-  
-  
-      <div class="row form-group">
-        <div class="col-4">Segments:</div>
-        <div class="col-8">
-          <label>
-            <div formArrayName="segments"
-              *ngFor="let name of this.matrixAccountingForm.controls.segments['controls']; let i = index">
-              <input type="checkbox" [formControlName]="i" (change)="onCheckChange()">
-              {{segments[i].name}}
-            </div>
-          </label>
-        </div>
-      </div>
-  </div>
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
-        <div class="">Base Amount<span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span> :</div>
+        <div class="">Base Amount<span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"> On Fee</span> :</div>
         <input type="text" class="form-control" id="baseAmount" [(ngModel)]="accountingRemark.baseAmount" maxlength="10"
           formControlName="baseAmount" name="baseAmount" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
-        <div class="">GST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
+        <div class="">GST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="gst" formControlName="gst" [(ngModel)]="accountingRemark.gst"
           maxlength="8" formControlName="gst" name="gst" required placeholder="00.00" AmountMask />
       </div>
@@ -204,13 +206,13 @@
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col">
-        <div class="">HST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
+        <div class="">HST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="hst" formControlName="hst" [(ngModel)]="accountingRemark.hst"
           maxlength="8" formControlName="hst" name="hst" required placeholder="00.00" AmountMask />
       </div>
 
       <div class="col">
-        <div class="">QST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
+        <div class="">QST <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="qst" formControlName="qst" [(ngModel)]="accountingRemark.qst"
           maxlength="8" formControlName="qst" name="qst" required placeholder="00.00" AmountMask />
       </div>
@@ -219,21 +221,21 @@
     <div class="form-group  row">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
-        <div class="">Other Tax <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"> On Fee</span>:</div>
+        <div class="">Other Tax <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"> On Fee</span>:</div>
         <input type="text" class="form-control" id="otherTax" formControlName="otherTax"
           [(ngModel)]="accountingRemark.otherTax" formControlName="otherTax" name="otherTax" required maxlength="8"
           placeholder="00.00" AmountMask />
       </div>
 
       <div class="col" *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'">
-        <div class="">Commission <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'"></span>:</div>
+        <div class="">Commission <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"></span>:</div>
         <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
           [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
           maxlength="8" AmountMask required />
       </div>
     </div>
 
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'">
         <div class="form-group  row">
           <div class="col-sm-4"></div>
           <div class="col">
@@ -245,7 +247,7 @@
           <div class="col">
             <div class="">GST Tax Refund:</div>
             <input type="text" class="form-control" id="gstRefund" [(ngModel)]="accountingRemark.gstRefund"
-              maxlength="8" formControlName="gstRefund" name="gstRefund" required placeholder="00.00" AmountMask />
+              maxlength="8" formControlName="gstRefund" name="gstRefund" placeholder="00.00" AmountMask />
           </div>
         </div>
     
@@ -254,13 +256,13 @@
           <div class="col">
             <div class="">HST Tax Refund:</div>
             <input type="text" class="form-control" id="hstRefund" [(ngModel)]="accountingRemark.hstRefund" maxlength="10"
-              formControlName="hstRefund" name="hstRefund" required placeholder="00.00" AmountMask />
+              formControlName="hstRefund" name="hstRefund" placeholder="00.00" AmountMask />
           </div>
     
           <div class="col">
             <div class="">QST Tax Refund:</div>
             <input type="text" class="form-control" id="qstRefund" [(ngModel)]="accountingRemark.qstRefund"
-              maxlength="8" formControlName="qstRefund" name="qstRefund" required placeholder="00.00" AmountMask />
+              maxlength="8" formControlName="qstRefund" name="qstRefund" placeholder="00.00" AmountMask />
           </div>
         </div>
     
@@ -269,12 +271,15 @@
           <div class="col">
             <div class="">Other Tax Refund:</div>
             <input type="text" class="form-control" id="otherTaxRefund" [(ngModel)]="accountingRemark.otherTaxRefund" maxlength="10"
-              formControlName="otherTaxRefund" name="otherTaxRefund" required placeholder="00.00" AmountMask />
+              formControlName="otherTaxRefund" name="otherTaxRefund" placeholder="00.00" AmountMask />
           </div>    
           <div class="col">
-            <div class="">Record Locator</div>
-            <input type="text" class="form-control" id="recordLocator" [(ngModel)]="accountingRemark.recordLocator" maxlength="10"
-              formControlName="recordLocator" name="recordLocator" required />
+            <div class="">
+              <!-- Record Locator -->
+
+            </div>
+            <!-- <input type="text" class="form-control" id="recordLocator" [(ngModel)]="accountingRemark.recordLocator" maxlength="10"
+              formControlName="recordLocator" name="recordLocator" required /> -->
           </div>   
         </div>
         <div class="form-group  row">
@@ -337,7 +342,7 @@
           [(ngModel)]="accountingRemark.tktLine" name="tktLine" NumberOnlyMask maxlength="10" />
       </div>
     </div>
-  <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC' || accountingRemark.accountingTypeRemark === 'WCPPC' || accountingRemark.accountingTypeRemark === 'PCPPC'">   
+  <div *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'">   
       <div class="form-group  row">
           <div class="col-sm-4">Additional Details</div>
           <div class="col-sm-8">

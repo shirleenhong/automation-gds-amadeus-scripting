@@ -37,7 +37,7 @@ BEGIN TRY
 									VALUES( '%confNbr%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 )
 													
 		INSERT INTO [dbo].[PNROutputItem]	([PNROutputItemId],[PNROutputRemarkTypeCode],[PNROutputBindingTypeCode], [PNROutputUpdateTypeCode],[GDSRemarkQualifier],[RemarkFormat],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber],[PNROutputItemDefaultLanguageCode],[PNROutputItemXMLFormat])
-									VALUES	(@PNROutputItemId + 1,1,'S',1,'','AIRLINE LOCATOR NUMBER – %confNbr%', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL)
+									VALUES	(@PNROutputItemId + 1,1,'S',1,'','AIRLINE LOCATOR NUMBER - %confNbr%', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL)
 										          
 		INSERT INTO [dbo].[PNROutputGroupPNROutputItem]	([PNROutputGroupId],[PNROutputItemId],[SequenceNumber],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber],[DataStandardizationVersion],[LayoutVersion])     
 									VALUES	(@InvoiceGroup, @PNROutputItemId + 1,0,@CreationTimestamp,@CreationUserIdentifier,1,'1','1')

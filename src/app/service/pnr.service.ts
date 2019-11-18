@@ -1407,7 +1407,10 @@ export class PnrService {
     }
 
     getUnticketedTst() {
-        const tstLen = this.tstObj.length;
+        let tstLen = this.tstObj.length;
+        if (!tstLen) {
+            tstLen = 1;
+        }
         let ticketed = 0;
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;
@@ -1422,6 +1425,19 @@ export class PnrService {
             return true;
         }
         return false;
+    }
+
+    getTicketedNumbers() {
+        const tickets = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            const regex = new RegExp('[0-9]{3}-[0-9]+');
+            const match = regex.exec(ticketed.freeFlowText);
+            regex.lastIndex = 0;
+            if (match !== null) {
+                tickets.push(match[0]);
+            }
+        }
+        return tickets;
     }
 
     getTicketedSegments(): string[] {
@@ -1620,5 +1636,39 @@ export class PnrService {
             val = element.fullNode.otherDataFreetext.longFreetext.substr(2, 2);
         }
         return val;
+    }
+
+    getTicketList() {
+        const ticketList = [];
+        for (const ticketed of this.pnrObj.faElements) {
+            ticketList.push({
+                // tslint:disable-next-line: max-line-length
+                freeFlowText: ticketed.freeFlowText.split('/')[0] + ' / ' + ticketed.freeFlowText.split('/')[1] + ' / ' + ticketed.freeFlowText.split('/')[2],
+                tatooNo: ticketed.tatooNumber,
+                segmentReference: ticketed.fullNode.referenceForDataElement
+              });
+        }
+        return ticketList;
+    }
+
+
+    getTktNumber(): string {
+        let ticket: string;
+        if (this.pnrObj.faElements.length > 0) {
+            for (const fa of this.pnrObj.faElements) {
+                if (fa.freeFlowText.split('/')[1].substr(1, 1) === 'V') {
+                  ticket = fa.freeFlowText.split('/')[0].split(' ')[1];
+                } else { return ''; }
+            }
+            return ticket;
+        }
+    }
+
+    getBookingInfo(): string {
+        if (this.pnrObj.tkElements.length > 0) {
+           if (this.pnrObj.tkElements[0].ticketingOfficeID === 'YYCWL2102') {
+               return 'PASSENGER';
+           } else { return ''; }
+        }
     }
 }

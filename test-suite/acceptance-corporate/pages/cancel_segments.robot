@@ -62,10 +62,10 @@ ${input_gst}    //input[@id='gst']
 ${input_otherTax}    //input[@formcontrolname='tax']
 ${input_freeFlow1}    //input[@id='freeFlow1']
 ${input_freeFlow2}    //input[@id='freeFlow2']
-${list_agent_assisted}     css=#onlinePNR
-${input_tool_identifier}    css=#onlinePNR
-${input_online_format}     css=#onlinePNR
-${list_touch_reason}     css=#onlinePNR
+${list_agent_assisted}     css=#ebR
+${input_tool_identifier}    //input[@formcontrolname='ebT']
+${input_online_format}     //input[@formcontrolname='ebN']
+${list_touch_reason}     css=#ebC
 
 
 *** Keywords ***
@@ -429,7 +429,7 @@ Cancel Segments For Non BSP Ticket ${refund_type} Refund
     Run Keyword If    "${refund_type}" == "Partial"    Enter Value    ${input_otherTax}    ${other_tax}
     Enter Value    ${input_freeFlow1}    ${free_flow_1}
     Enter Value    ${input_freeFlow2}    ${free_flow_2}
-    Take Screenshot
+    v
     
 Verify Non BSP ${refund_type} Refund Remarks Are Written In The PNR
     Finish PNR    queueing=yes
@@ -444,12 +444,37 @@ Verify Non BSP ${refund_type} Refund Remarks Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMX . ${free_flow_2}
     Verify Cancelled For Non BSP Refund PNR IS Queued Correctly    
 
-Verify That Online Touch Reason Fields Are Not Displayed
+Verify Online Fields And Update Agent Assisted And Touch Reason Codes
+    Fill Up Cancel Segment With Default Values
+    Verify Online Touch Reason Fields Are Populated With Correct Values    CT    A    GI    C
+    Update Agent Assisted And Touch Reason Code    AM    S
+    
+Verify Online Touch Reason Fields Are Populated With Correct Values
+    [Arguments]    ${expected_agent_assisted}    ${expected_input_tool_identifier}    ${expected_online_format}    ${expected_touch_reason}
     Navigate To Page Cancel Segments
+    ${actual_agent_assisted}     Get Value    ${list_agent_assisted}
+    ${actual_input_tool_identifier}     Get Value    ${input_tool_identifier}
+    ${actual_online_format}     Get Value    ${input_online_format}
+    ${actual_touch_reason}     Get Value    ${list_touch_reason}
+    Should Be Equal    ${actual_agent_assisted}    ${expected_agent_assisted}  
+    Should Be Equal    ${actual_input_tool_identifier}    ${expected_input_tool_identifier}
+    Should Be Equal    ${actual_online_format}    ${expected_online_format}  
+    Should Be Equal    ${actual_touch_reason}    ${expected_touch_reason}
+    Take Screenshot
+
+Update Agent Assisted And Touch Reason Code
+    [Arguments]   ${agent_assisted}    ${touch_reason}
+    Select From List By Value    ${list_agent_assisted}    ${agent_assisted} 
+    Select From List By Value    ${list_touch_reason}    ${touch_reason}
+    Take Screenshot
+
+Verify That Online Touch Reason Fields Are Not Displayed
+    Fill Up Cancel Segment With Default Values
     Page Should Not Contain Element    ${list_agent_assisted}
     Page Should Not Contain Element    ${input_tool_identifier} 
     Page Should Not Contain Element    ${input_online_format} 
-    Page Should Not Contain Element    ${list_touch_reason} 
+    Page Should Not Contain Element    ${list_touch_reason}
+    Take Screenshot
     
 Verify EB Remark Written In The PNR
     Finish PNR

@@ -372,7 +372,7 @@ Add Insurance Reporting Remarks
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
-    Select Did Client Accept Insurance    No
+    Select Insurance Liability Waiver    Traveller Declined to Purchase
     Select Insurance Declined Reason    All Inclusive or Premium
     Enter Insurance Declined Reason    Testing Insurance Decline reason
 

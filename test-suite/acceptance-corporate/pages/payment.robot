@@ -846,7 +846,7 @@ Verify RMX Remarks With Optional Values Are Written In The PNR
 Verify Dummy ${airline_code} Air Segment For Airline Pass Cancellation
     Set Test Variable    ${airline_code}
     Verify Specific Remark Is Written In The PNR    ${airline_code} 123 Q ${current_date}
-    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date} ABC123    True
+    Run Keyword If    '${airline_code}' != 'WS'    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date} ABC123    True    ELSE    Verify Specific Remark Is Written In The PNR    YYZYYZ GK1 0700 0800 ${current_date} E ABC123    True
     
 Verify RMX, PE, AND TKT Remarks Without Optional Values Are Written In The PNR
     Finish PNR

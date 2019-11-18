@@ -16,9 +16,7 @@ declare var smartScriptSession: any;
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
-  constructor(private pnrService: PnrService,
-    private queService: AmadeusQueueService,
-    private rms: RemarksManagerService) { }
+  constructor(private pnrService: PnrService, private queService: AmadeusQueueService, private rms: RemarksManagerService) {}
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -224,7 +222,7 @@ export class InvoiceRemarkService {
     const feeObj = {
       lineNo: '',
       freeText: '',
-      isChecked: false,
+      isChecked: false
     };
     const ticketRegex = /TKT[0-9]{1,2}/g;
     const ticketMatch = freeFlowText.match(ticketRegex);

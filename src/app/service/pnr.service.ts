@@ -554,6 +554,7 @@ export class PnrService {
             arrivalDate = elem.dropoffDate;
             controlNumber = elem.confirmationNumber;
             elemStatus = elem.status;
+            elemcitycode = elem.fullNode.travelProduct.boardpointDetail.cityCode;
             elemText = elem.carType[0] + ' ' + elem.carCompanyCode + ' ' +
                 elemStatus + elem.quantity + ' ' + elem.location + ' ' +
                 this.formatDate(elem.pickupDate);
@@ -1407,7 +1408,10 @@ export class PnrService {
     }
 
     getUnticketedTst() {
-        const tstLen = this.tstObj.length;
+        let tstLen = this.tstObj.length;
+        if (!tstLen) {
+            tstLen = 1;
+        }
         let ticketed = 0;
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
             const segmentName = tst.elementManagementData.segmentName;

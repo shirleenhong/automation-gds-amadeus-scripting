@@ -59,7 +59,23 @@ ${select_meal_plan}    css=#mealPlan
 ${input_passenger}    xpath=//input[@formcontrolname='passenger']
 ${start_passenger}    //div[@class='dropdown-item']//input[@value='
 ${end_passenger}     ']
-
+${select_car_type}    css=#carType
+${select_pickup_location}    css=#pickupLoc
+${select_pickup_address}    css=#pickupOffAddress
+${select_dropoff_location}    css=#dropOffLoc
+${select_dropoff_address}    css=#dropOffAddress
+${input_rental_cost}    css=#rentalCost
+${input_rate_booked}    css=#rateBooked
+${input_currency_type}    css=#tourCurrencyType
+${select_duration}    css=#duration
+${input_milage}    css=#mileage
+${input_dropOff_fee}    css=#dropOffFee
+${input_car_cdNumber}    css=#cdNumber
+${input_car_idNumber}    css=#idNumber
+${input_car_airlineCode}    css=#frequentFlierNumber
+${input_car_freqFlyerNumber}    css=#frequentflightNumber
+${select_special_equipment}    css=#specialEquipment
+${input_car_special_request}    css=#specialRequest
 
 *** Keywords ***
 Add And Verify Air Segment for Non ZZ Details In The PNR
@@ -344,8 +360,8 @@ Add Multiple Passive Rail Segment For FR PNR
     Enter Value    ${input_class_service}    CL12345
     Enter Value    ${input_from_station}    From Station Test
     Enter Value    ${input_arrival_station}    Arrival Station Test
-    Enter Value    ${input_car_number}    C123
-    Enter Value    ${input_seat_number}    S123
+    Enter Value    ${input_car_number}    C456
+    Enter Value    ${input_seat_number}    S654
     Enter Value    ${input_departure_city}    YUL
     Input Text    ${input_departure_date}    01102020
     Input Text    ${input_arrival_date}    01112020
@@ -359,7 +375,7 @@ Add Multiple Passive Rail Segment For FR PNR
     Click Add Passive Segment Button
     Wait Until Element Is Visible    ${select_segment_type}
     Select From List By Label    ${select_segment_type}    Rail
-    Enter Value    ${input_train_number}    TR245
+    Enter Value    ${input_train_number}    TR254
     Enter Value    ${input_class_service}    CL22222
     Enter Value    ${input_from_station}    2nd From Station
     Enter Value    ${input_arrival_station}    2nd Arrival Station
@@ -389,12 +405,12 @@ Verify Passive Rail Segment And RIR Added In The PNR For EN
 Verify Passive Rail Segment And RIR Added In The PNR For FR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S2
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15JAN-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR254 CLASS-CL22222/S3
-    Verify Specific Remark Is Written In The PNR    RIR CAR-C123/S3
+    Verify Specific Remark Is Written In The PNR    RIR SEAT NUMBER-S123/S3
     Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR    2
     Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    3    FR
 
@@ -441,3 +457,154 @@ Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR/S${segment_number}    True
     Run Keyword If    "${language}" == "FR"    Verify Specific Remark Is Written In The PNR    RIR RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN./S${segment_number}    True
 
+Add Passive Car Segment ${with_optional} Optional Values
+    Navigate To Page Add Passive Segment
+    Select From List By Label    ${select_segment_type}    Car
+    Enter Value    ${input_departure_city}    YYT
+    Press Keys    ${input_departure_city}    TAB
+	Enter Value    ${input_destination_city}    YEG
+    Press Keys    ${input_destination_city}    TAB
+	Click Element    ${input_vendor_code}
+    Enter Value    ${input_vendor_code}    ET
+    Sleep  2
+    Press Keys    ${input_vendor_code}    TAB
+	Input Text    ${input_confirmationNo}    conf555555
+    Press Keys    ${input_confirmationNo}    TAB
+	Select From List By Label    ${select_car_type}    PCAR - NISSAN MAXIMA OR SIMILAR
+	Select From List By Label    ${select_pickup_location}    OFF AIRPORT
+    Press Keys    ${select_pickup_location}    TAB
+    Wait Until Element Is Visible    ${select_pickup_address}    10
+	Select From List By Label    ${select_pickup_address}    YYTC54 - 79 KENMOUNT ROAD A1B3P8 ST
+	Select From List By Label    ${select_dropoff_location}    AIRPORT
+    Press Key    ${select_dropoff_location}    TAB
+	Input Text    ${input_departure_date}    01222020
+	Input Text    ${input_arrival_date}    01232020
+	Enter Value    ${input_departure_time}    1100AM
+	Enter Value    ${input_arrival_time}    0200AM
+	Enter Value    ${input_rental_cost}    210.55
+	Enter Value    ${input_rate_booked}    100.00
+	Enter Value    ${input_currency_type}    USD
+	Select From List By Label  ${select_duration}    WEEKLY
+	Enter Value    ${input_milage}    UNL
+    Press Key    ${input_milage}    \\09
+    Run Keyword If    "${with_optional}" == "With"    Enter Value    ${input_dropOff_fee}    212
+    Run Keyword If    "${with_optional}" == "With"    Enter Value    ${input_car_cdNumber}    CD123456
+    Run Keyword If    "${with_optional}" == "With"    Enter Value    ${input_car_idNumber}    ID789123
+    Run Keyword If    "${with_optional}" == "With"    Enter Value    ${input_car_airlineCode}    AC
+    Run Keyword If    "${with_optional}" == "With"    Enter Value    ${input_car_freqFlyerNumber}    987654321
+    Run Keyword If    "${with_optional}" == "With"    Select From List By Label    ${select_special_equipment}    HCL-Hand Controls on left
+    Run Keyword If    "${with_optional}" == "With"    Enter Value    ${input_car_special_request}    Special Request Testing
+    Click Add Passive Save Button 
+    Click Add Segment to PNR    yes
+    Set Test Variable    ${with_optional}
+    
+Verify Passive Car Segment And RIR Remarks Are Written In The PNR
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555    True
+    Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S2
+    Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR DROP FEE-212.00/S2
+    Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S2
+    Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR AIRLINE FF-AC987654321/S2
+    Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S2
+    Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S2
+    Run Keyword If    "${with_optional}" == "Without"    Verify Specific Remark Is Written In The PNR    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S2
+    Run Keyword If    "${with_optional}" == "Without"    Verify Specific Remark Is Not Written In The PNR    RIR DROP FEE-212.00/S2
+    Run Keyword If    "${with_optional}" == "Without"    Verify Specific Remark Is Not Written In The PNR    RIR CD-CD123456 ID-ID789123/S2
+    Run Keyword If    "${with_optional}" == "Without"    Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF-AC987654321/S2
+    Run Keyword If    "${with_optional}" == "Without"    Verify Specific Remark Is Not Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S2
+    Run Keyword If    "${with_optional}" == "Without"    Verify Specific Remark Is Not Written In The PNR    RIR SPECIAL REQUEST TESTING/S2
+
+Add Multiple Passive Car Segment
+    Navigate To Page Add Passive Segment
+    Select From List By Label    ${select_segment_type}    Car
+    Enter Value    ${input_departure_city}    YYT
+    Press Keys    ${input_departure_city}    TAB
+	Enter Value    ${input_destination_city}    YEG
+    Press Keys    ${input_destination_city}    TAB
+	Click Element    ${input_vendor_code}
+    Enter Value    ${input_vendor_code}    ET
+    Sleep  2
+    Press Keys    ${input_vendor_code}    TAB
+	Input Text    ${input_confirmationNo}    conf555555
+    Press Keys    ${input_confirmationNo}    TAB
+	Select From List By Label    ${select_car_type}    PCAR - NISSAN MAXIMA OR SIMILAR
+	Select From List By Label    ${select_pickup_location}    OFF AIRPORT
+    Press Keys    ${select_pickup_location}    TAB
+    Wait Until Element Is Visible    ${select_pickup_address}    10
+	Select From List By Label    ${select_pickup_address}    YYTC54 - 79 KENMOUNT ROAD A1B3P8 ST
+	Select From List By Label    ${select_dropoff_location}    AIRPORT
+    Press Key    ${select_dropoff_location}    TAB
+	Input Text    ${input_departure_date}    01222020
+	Input Text    ${input_arrival_date}    01232020
+	Enter Value    ${input_departure_time}    1100AM
+	Enter Value    ${input_arrival_time}    0200AM
+	Enter Value    ${input_rental_cost}    210.55
+	Enter Value    ${input_rate_booked}    100.00
+	Enter Value    ${input_currency_type}    USD
+	Select From List By Label  ${select_duration}    WEEKLY
+	Enter Value    ${input_milage}    UNL
+    Press Key    ${input_milage}    \\09
+    Enter Value    ${input_dropOff_fee}    212
+    Enter Value    ${input_car_cdNumber}    CD123456
+    Enter Value    ${input_car_idNumber}    ID789123
+    Enter Value    ${input_car_airlineCode}    AC
+    Enter Value    ${input_car_freqFlyerNumber}    987654321
+    Select From List By Label    ${select_special_equipment}    HCL-Hand Controls on left
+    Enter Value    ${input_car_special_request}    Special Request Testing
+    Click Add Passive Save Button
+    Navigate To Page Add Passive Segment
+    Select From List By Label    ${select_segment_type}    Car
+    Enter Value    ${input_departure_city}    YUL
+    Press Keys    ${input_departure_city}    TAB
+	Enter Value    ${input_destination_city}    YYZ
+    Press Keys    ${input_destination_city}    TAB
+	Click Element    ${input_vendor_code}
+    Enter Value    ${input_vendor_code}    ZL
+    Sleep  2
+    Press Keys    ${input_vendor_code}    TAB
+	Input Text    ${input_confirmationNo}    conf12345
+    Press Keys    ${input_confirmationNo}    TAB
+	Select From List By Label    ${select_car_type}    FFAR - FORD EXPEDITION OR SIMILAR
+	Select From List By Label    ${select_pickup_location}    AIRPORT
+    Press Keys    ${select_pickup_location}    TAB
+	Select From List By Label    ${select_dropoff_location}    AIRPORT
+    Press Key    ${select_dropoff_location}    TAB
+	Input Text    ${input_departure_date}    01102020
+	Input Text    ${input_arrival_date}    01152020
+	Enter Value    ${input_departure_time}    0715AM
+	Enter Value    ${input_arrival_time}    0530PM
+	Enter Value    ${input_rental_cost}    221.10
+	Enter Value    ${input_rate_booked}    201.23
+	Enter Value    ${input_currency_type}    USD
+	Select From List By Label  ${select_duration}    WEEKEND
+	Enter Value    ${input_milage}    200F
+    Press Key    ${input_milage}    \\09
+    Enter Value    ${input_dropOff_fee}    111.22
+    Enter Value    ${input_car_cdNumber}    CD221B12
+    Enter Value    ${input_car_idNumber}    789123ID
+    Enter Value    ${input_car_special_request}    Special Request From HPF
+    Click Add Passive Save Button
+    Take Screenshot
+
+Verify Multiple Passive Car Segment And RIR Remarks Are Written In The PNR
+    Click Add Segment to PNR    yes
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555/P1    True
+    Verify Specific Remark Is Written In The PNR    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S4
+    Verify Specific Remark Is Written In The PNR    RIR DROP FEE-212.00/S4
+    Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S4
+    Verify Specific Remark Is Written In The PNR    RIR AIRLINE FF-AC987654321/S4
+    Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S4
+    Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S4
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YUL 10JAN-15JAN FFAR/BS-67843263/SUC-ZL/SUN-NATIONAL/SD-10JAN/ST-0715/ED-15JAN/ET-1730/TTL-221.10USD/DUR-WEEKEND/MI-200FKM FREE/URA-201.23USD/CF-CONF12345/P1    True
+    Verify Specific Remark Is Written In The PNR    RIR DROP FEE-111.22/S3
+    Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST FROM HPF/S3
+    Verify Specific Remark Is Written In The PNR    RIR CD-CD221B12 ID-789123ID/S3
+    Verify Specific Remark Is Not Written In The PNR    RIR AIRLINE FF-AC987654321/S3
+    Verify Specific Remark Is Not Written In The PNR    RIR CD-CD123456 ID-ID789123/S3
+    Verify Specific Remark Is Not Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S3
+    Verify Specific Remark Is Not Written In The PNR    RIR SPECIAL REQUEST TESTING/S3
+    Verify Specific Remark Is Not Written In The PNR    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S3
+    

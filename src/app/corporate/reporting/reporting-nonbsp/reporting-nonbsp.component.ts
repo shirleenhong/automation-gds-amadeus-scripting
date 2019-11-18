@@ -22,7 +22,6 @@ export class ReportingNonbspComponent implements OnInit {
     this.nonBspGroup = this.fb.group({
       nonbsp: this.fb.array([])
     });
-
     this.valueChagneListener.accountingRemarkChange.subscribe((accRemarks) => {
       this.nonBspInformation = accRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP');
       this.drawControlsForNonBsp();
@@ -49,7 +48,6 @@ export class ReportingNonbspComponent implements OnInit {
       this.valueChagneListener.reasonCodeChange(['L']);
     });
   }
-
   createFormGroup(segmentNo: string, highFare: string, lowFare: string, reasonCode: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),

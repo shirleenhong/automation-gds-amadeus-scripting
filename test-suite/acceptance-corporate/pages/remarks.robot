@@ -107,7 +107,7 @@ Click Add Seat
     Set Test Variable    ${ticketing_details_complete}    no
     
 Populate Document PNR 
-    Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
+    Enter Value    ${row_documentPNR}${open_bracket}1${close_bracket}${input_document}    Testing Document PNR Remark
 
 Click Add Remark Button ${button_no}
     Click Element   ${row_documentPNR}[${button_no}]${button_addRemark}
@@ -117,7 +117,7 @@ Populate Multiple Document PNR
     Set Test Variable   ${document_index}    0
     : FOR    ${document_values}    IN    @{document_values}
     \    ${document_index}    Evaluate    ${document_index} + 1
-    \    Enter Value    ${row_documentPNR}[${document_index}]${input_document}    ${document_values}  
+    \    Enter Value    ${row_documentPNR}${open_bracket}${document_index}${close_bracket}${input_document}    ${document_values}  
     \    Click Add Remark Button ${document_index}
     \    Set Test Variable   ${document_index}
     \    Exit For Loop If  "${document_index}" == "4"    
@@ -129,7 +129,7 @@ Verify That Multiple Document PNR Can Be Added
 
 Verify That Single Document PNR Can Be Added
     Navigate To Page Document PNR
-    Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
+    Enter Value    ${row_documentPNR}${open_bracket}1${close_bracket}${input_document}    Testing Document PNR Remark
     Take Screenshot
     
 Verify That Document PNR Remarks Are Written In The PNR

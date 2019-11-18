@@ -24,6 +24,7 @@ ${input_approverName}     //div[@formarrayname='additionalValues'][1]//input[@id
 ${input_totalCost}     //div[@formarrayname='additionalValues'][2]//input[@id='textValue']
 ${text_Danger}    //div[@class='col text-danger']
 ${checkbox_ignoreApproval}    css=#noApproval
+${tab_tktlUpdate}    //span[contains(text(), 'TKTL Update for Aqua Ticketing')]
 
 *** Keywords ***
 Select Primary Approval Reason: ${primary_reason}
@@ -61,6 +62,12 @@ Click Ticketing Instructions Tab
     Click Element At Coordinates    ${tab_tktInstructions}    0    0
     Wait Until Page Contains Element    ${tab_tktInstruction}    30
     Set Test Variable    ${current_page}    Ticketing Instructions
+    
+Click TKTL Update For Aqua Ticketing Tab
+    Wait Until Element Is Visible   ${tab_tktlUpdate}    30
+    Click Element At Coordinates    ${tab_tktlUpdate}    0    0
+    Wait Until Page Contains Element    ${input_ticketingDate}     30
+    Set Test Variable    ${current_page}    TKTL Update For Aqua Ticketing
     
 Click Ticketing Line Tab
     Wait Until Element Is Visible   ${tab_tktLine}    30
@@ -117,8 +124,16 @@ Fill Up Ticketing Panel With Default Values
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
     
-Fill Up Ticketing Panel With PNR ON HOLD
-    Navigate To Page Ticketing Line
+Fill Up TKTL Update With Default Values
+    ${is_ticketing_displayed}    Run Keyword And Return Status    Should Be Equal    ${current_page}    TKTL Update For Aqua Ticketing   
+    Run Keyword If    "${is_ticketing_displayed}" == "False"    Navigate To Page TKTL Update For Aqua Ticketing   
+    Select Checkbox    ${checkbox_verifyTicket}
+    Set Test Variable    ${ticketing_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Fill Up ${tktl_panel} Panel With PNR ON HOLD
+    Run Keyword If    "${tktl_panel}" == "Ticketing"    Navigate To Page Ticketing Line
+    ...    ELSE IF    "${tktl_panel}" == "Update Tktl"    Navigate To Page TKTL Update For Aqua Ticketing
     Select Checkbox    ${checkbox_onHold}
     Select Checkbox    ${checkbox_verifyTicket}
     Set Test Variable    ${ticketing_complete}    yes
@@ -135,10 +150,11 @@ Verify Ticketing Panel Dropdown For ${selected_aqua_tkLine}
     Run Keyword And Continue On Failure    Should Be Equal    ${actual_aqua_tkLine}    ${selected_aqua_tkLine}
     [Teardown]    Take Screenshot
 
-Fill Up Ticketing Panel For ${selected_aqua_tkLine}
-    Navigate To Page Ticketing Line
+Fill Up ${tktl_panel} Panel For ${selected_aqua_tkLine}
+    Run Keyword If    "${tktl_panel}" == "Ticketing"    Navigate To Page Ticketing Line
+    ...    ELSE IF    "${tktl_panel}" == "Update Tktl"    Navigate To Page TKTL Update For Aqua Ticketing
     Assign Current Date
-    Enter Value    ${input_ticketingDate}    01312020
+    Enter Value    ${input_ticketingDate}    05052020
     Run Keyword If    "${selected_aqua_tkLine}" == "ISSUE E-TICKET OR NON BSP TICKET"    Select From List By Label    ${dropdown_tkLine}    ISSUE E-TICKET OR NON BSP TICKET
     Run Keyword If    "${selected_aqua_tkLine}" == "INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY"    Select From List By Label    ${dropdown_tkLine}    INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY
     Run Keyword If    "${selected_aqua_tkLine}" == "CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE"    Select From List By Label    ${dropdown_tkLine}    CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
@@ -150,29 +166,30 @@ Fill Up Ticketing Panel For ${selected_aqua_tkLine}
     
 Verify That Aqua TK Line Is Written Correctly For PNR On Hold
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    /YTOWL2106/Q8C1-ONHOLD
+    ${tktl_line}    Get Lines Containing String    ${pnr_details}    TK TL
+    Run Keyword And Continue On Failure    Should Contain    ${tktl_line}    /YTOWL2106/Q8C1-ONHOLD
     Verify Specific Remark Is Written In The PNR    RIR ONHOLD:AWAITING APPROVAL
     
 Verify That Aqua TK Line Is Written Correctly For Fee Only
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    TK TL31JAN/YTOWL2106/Q8C1-FEE
+    Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1-FEE
     
 Verify That Aqua TK Line Is Written Correctly For Cancelled PNR
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    TK TL31JAN/YTOWL2106/Q8C1-CXL
+    Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1-CXL
 
 Verify That Aqua TK Line Is Written Correctly For Changed PNR Without Billed Service Fee
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    TK TL31JAN/YTOWL2106/Q8C1-CHG
+    Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1-CHG
     
 Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    TK TL31JAN/YTOWL2106/Q8C1
+    Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1
     
 Verify That Aqua TK Line Is Written Correctly For Updated TK Line
-    Submit To PNR    
-    Get PNR Details
-    Verify Specific Remark Is Written In The PNR    /YTOWL2106/Q8C1-ONHOLD
+    Finish PNR
+    ${tktl_line}    Get Lines Containing String    ${pnr_details}    TK TL
+    Run Keyword And Continue On Failure    Should Contain    ${tktl_line}    /YTOWL2106/Q8C1-ONHOLD
     Verify Specific Remark Is Written In The PNR    RIR ONHOLD:AWAITING APPROVAL
     
 Verify Aqua Ticketing Instructions Remark Are Written For Hotel Only Segments

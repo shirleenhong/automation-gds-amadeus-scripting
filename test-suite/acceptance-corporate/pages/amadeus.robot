@@ -477,25 +477,34 @@ Add ${number_of_segments} Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+
+Add ${number_of_segments} Active Hotel Segments
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    HA MSP ${test_date_${i}}-1
+    \    Enter Cryptic Command    HA1
+    \    Enter Cryptic Command    HP1
+    \    Enter Cryptic Command    HS/G-CCVI4444333322221111EXP1219
     
 Add ${number_of_segments} Limo Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345          
+    \    Enter Cryptic Command    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345          
     
 Add ${number_of_segments} Car Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       
+    \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       
 
 Add ${number_of_segments} Rail Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Enter Cryptic Command    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
@@ -536,6 +545,15 @@ Create PNR For ${client_data}
     Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Sleep     5
+    
+Create PNR With Active Hotel Segments For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Active Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Sleep     5
 

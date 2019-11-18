@@ -9,6 +9,8 @@ import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 import { DDBService } from '../../service/ddb.service';
+import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
+import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 // import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
@@ -58,7 +60,7 @@ export class CancelSegmentComponent implements OnInit {
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
-  ebCList: any;
+  ebCList: Array<ReasonCode> = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -330,7 +332,7 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
     ];
 
-    await this.ddbService.getReasonCodeByTypeId([1], 1).then((x) => {
+    await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.TouchReason], 8).then((x) => {
       self.ebCList = x;
     });
     this.ebRList = [
@@ -858,6 +860,10 @@ export class CancelSegmentComponent implements OnInit {
     }
   }
   async populateEBFields(eb) {
+    if (!this.isCorporate) {
+      this.showEBDetails = false;
+      return;
+    }
     const ebR = eb[1].substr(0, 2);
     const ebT = eb[1].substr(2, 1);
     const ebN = eb[2].substr(0, 2);

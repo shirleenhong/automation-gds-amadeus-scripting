@@ -218,7 +218,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, cancelSegmentrelate);
 
         const originalTicketRemarks = new Map<string, string>();
-        originalTicketRemarks.set('NoOriginalTicket', 'true');
+        originalTicketRemarks.set('OriginalTicketNumber', account.tktLine);
         this.remarksManager.createPlaceholderValues(originalTicketRemarks, null, null);
         const consultantNoRemarkStatic = new Map<string, string>();
         consultantNoRemarkStatic.set('IsNuc', 'true');
@@ -462,6 +462,9 @@ export class PaymentRemarkService {
   }
 
   writeTicketingLine(tktNo, baseAmount, gst, hst, qst, otherTax, comm, segmentrelate, supplierCodeName, tktline?) {
+    if (comm === undefined) {
+      comm = '0.00';
+    }
     const ticketAmountRemarks = new Map<string, string>();
     ticketAmountRemarks.set('TktRemarkNbr', tktNo.toString());
     ticketAmountRemarks.set('BaseAmt', this.decPipe.transform(baseAmount, '1.2-2').replace(',', ''));

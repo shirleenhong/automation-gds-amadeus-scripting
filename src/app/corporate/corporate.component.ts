@@ -262,7 +262,6 @@ export class CorporateComponent implements OnInit {
       )
     );
     accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
-
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
@@ -299,8 +298,10 @@ export class CorporateComponent implements OnInit {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     }
     if (this.reportingComponent.carSavingsCodeComponent !== undefined) {
-      this.reportingRemarkService.writeCarSavingsRemarks(this.reportingComponent.carSavingsCodeComponent,
-        this.reportingComponent.carSavingsCodeComponent.reAddRemarks);
+      this.reportingRemarkService.writeCarSavingsRemarks(
+        this.reportingComponent.carSavingsCodeComponent,
+        this.reportingComponent.carSavingsCodeComponent.reAddRemarks
+      );
     }
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
@@ -583,6 +584,19 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
+
+    const accRemarks = new Array<RemarkGroup>();
+    accRemarks.push(
+      this.ticketRemarkService.submitTicketRemark(
+        this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
+        this.itineraryqueueComponent.ticketingLineComponent.approvalForm
+      )
+    );
+    this.corpRemarkService.BuildRemarks(accRemarks);
+    await this.corpRemarkService.SubmitRemarks().then(async () => {
+      await this.getPnrService();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
 
     await this.rms.submitToPnr().then(
       () => {

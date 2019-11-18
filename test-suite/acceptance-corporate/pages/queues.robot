@@ -94,6 +94,7 @@ Fill Up OFC Documentation And Queue With Default Values
     Navigate To Page OFC Documentation And Queue
     Select From List By Label    ${select_ticketType}     Non-BSP/Vendor Ticket
     Set Test Variable    ${ofc_documentation_complete}     yes
+    Take Screenshot
     
 Select ${ticket_type} That Is ${is_issued_by} OSC And ${to_queue} In OFC Documentation And Queue
     Select Counselor Identity: OFC
@@ -102,6 +103,7 @@ Select ${ticket_type} That Is ${is_issued_by} OSC And ${to_queue} In OFC Documen
     Run Keyword If    "${is_issued_by}" == "Issued By"    Click Element At Coordinates    ${input_isOscTravel_yes}    0    0
     Run Keyword If    "${to_queue}" == "Queue"    Click Element At Coordinates    ${input_isOscQueue_yes}    0    0
     Set Test Variable    ${ofc_documentation_complete}     yes
+    Take Screenshot
 
 Populate Personal Queue and Select ${team_queue} Team Queue
 	Navigate To Page Follow-Up Queue

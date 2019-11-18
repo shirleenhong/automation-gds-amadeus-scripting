@@ -97,11 +97,14 @@ Fill Up OFC Documentation And Queue With Default Values
     Take Screenshot
     
 Select ${ticket_type} That Is ${is_issued_by} OSC And ${to_queue} In OFC Documentation And Queue
+    Log    "${is_issued_by}"
+    Log    "${to_queue}"
+    ${queue}     Set Variable If    "${to_queue}" == "Queue"    1    0
     Select Counselor Identity: OFC
     Navigate To Page OFC Documentation And Queue
     Select From List By Label    ${select_ticketType}     ${ticket_type}
     Run Keyword If    "${is_issued_by}" == "Issued By"    Click Element At Coordinates    ${input_isOscTravel_yes}    0    0
-    Run Keyword If    "${to_queue}" == "Queue"    Click Element At Coordinates    ${input_isOscQueue_yes}    0    0
+    Run Keyword If    ${queue} == 1    Click Element At Coordinates    ${input_isOscQueue_yes}    0    0
     Set Test Variable    ${ofc_documentation_complete}     yes
     Take Screenshot
 
@@ -181,8 +184,8 @@ Verify PNR Is ${is_queued} To OSC
     ${in_graphic}    Run Keyword And Return Status     Element Should Be Visible   ${button_cryptic}
     Run Keyword If   "${in_graphic}" == "True"     Open Command Page
     Enter Cryptic Command    RTQ 
-    Run Keyword If    "${is_queued}" == "Queued"    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
-    ...   ELSE IF    "${is_queued}" == "Not Queued"    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}000
+    Run Keyword If    "${is_queued}" == "Queued"    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096
+    ...   ELSE IF    "${is_queued}" == "Not Queued"    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096
     
 Verify Correct Personal Queue
     [Arguments]   ${leisure_on_demand}=no
@@ -247,6 +250,7 @@ Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${
     Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
     Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
     Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
     
 Add CWT Itinerary Details For All Emails, In ${language} Language And For ${transcation} Transaction Type
@@ -255,6 +259,7 @@ Add CWT Itinerary Details For All Emails, In ${language} Language And For ${tran
     Select Emails In CWT Itinerary    TEST@EMAIL.COM    TEST_ARR@EMAIL.COM    TEST_CTC@EMAIL.COM
     Select From List By Label    ${list_language}    ${language}
     Select From List By Label    ${list_transaction_type}    ${transcation}
+    Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
     
 Update Services And Test Remarks

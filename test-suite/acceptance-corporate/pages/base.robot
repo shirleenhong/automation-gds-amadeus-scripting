@@ -56,7 +56,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
-${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S
+${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 
 *** Keywords ***
 Enter Value
@@ -106,6 +106,8 @@ Click Itinerary And Queue
     Wait Until Element Is Visible    ${select_transaction}      30
     Set Test Variable    ${current_page}    Follow-Up Queue S
     Set Test Variable    ${pnr_submitted}    no
+    Set Test Variable    ${ticketing_complete}    no
+    Set Test Variable    ${cwt_itin_complete}    no
     [Teardown]    Take Screenshot  
     
 Click Send Itinerary And Queue
@@ -118,6 +120,7 @@ Click Send Itinerary And Queue
     Set Test Variable    ${current_page}     CWT Corporate
     Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+    
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
@@ -352,6 +355,7 @@ Navigate From Itinerary And Queue
     Run Keyword If    "${in_itinerary_and_queue}" == "False"    Click Itinerary And Queue Panel
     Run Keyword If    "${destination_page}" == "Follow-Up Queue S"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "CWT Itinerary"    Click CWT Itinerary Tab
+    ...    ELSE IF    "${destination_page}" == "TKTL Update For Aqua Ticketing"    Click TKTL Update For Aqua Ticketing Tab
        
 Click Itinerary And Queue Panel
     Wait Until Element Is Visible    ${panel_itinerary_and_queue}    60
@@ -364,10 +368,16 @@ Finish PNR
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     ${in_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
-    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Send Itinerary And Queue    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"    Fill Up Required And Cancel Segments
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
+
+Send Itinerary And Queue
+    [Arguments]    ${close_corporate_test}    ${queueing}
+    Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
+    Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
+    Click Submit To PNR    ${close_corporate_test}    ${queueing}
 
 Fill Up Required And Cancel Segments
      Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
@@ -621,3 +631,8 @@ Get Ticket Number
     ${ticket_num}    Fetch From Left    ${ticket_num}    /
     Set Test Variable   ${ticket_num}
     Switch To Command Page
+
+Complete The PNR In Full Wrap
+    Navigate To Page Reporting Remarks
+    Finish PNR
+    

@@ -790,9 +790,9 @@ Cancel ${segment} Air Segments And Add Airline Pass Cancellation Remarks With Ti
     Take Screenshot
     Add Ticketing Amount Details With Refund    89.00    10.00    1.00    10.12    2.50   20.00 	
     Enter Value    ${input_oid_origtkt}    YTOWL220N
+    Enter Value    ${input_tktnumber}    0912345678
     Enter Value    ${input_additional_info}    Cancel With Refund And Fee
     Enter Value    ${input_notes}    Airline Pass Cancellation Notes
-    Enter Value    ${input_tktnumber}    0928374
     ${actual_suppliercode}    Get Value     ${input_suppliercode}
     Set Test Variable    ${actual_suppliercode}
     Take Screenshot
@@ -806,14 +806,14 @@ Cancel Air Segments And Add Airline Pass Cancellation Remarks Without Optional V
     Enter Value    ${input_baseAmount_refund}    90.00
     Enter Value    ${input_commission_refund}    20.00	
     Enter Value    ${input_oid_origtkt}    YTOWL220N
-    Enter Value    ${input_tktnumber}    0928374
+    Enter Value    ${input_tktnumber}    0912345678
     Take Screenshot
     
-Complete PNR and Get Air Segments In The PNR
+Complete PNR and Get ${number_of_segments} Air Segments In The PNR
     Complete The PNR With Default Values
     Switch To Graphic Mode
     Get PNR Details
-    Get 2 Air Segments In The PNR
+    Get ${number_of_segments} Air Segments In The PNR
     Switch To Command Page
   
 Verify That ${number_of_segment} Air Segments Are Deleted In The PNR
@@ -825,11 +825,12 @@ Verify That ${number_of_segment} Air Segments Are Deleted In The PNR
 Verify That RMX, TKT, PE, And Itinerary Remarks Are Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
+    Verify Unexpected Remarks Are Not Written In The PNR
     Verify TKT Remarks Written In The PNR
     Verify RMX Remarks With Optional Values Are Written In The PNR
 
 Verify TKT Remarks Written In The PNR
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-0928374/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-0912345678/VN-${actual_suppliercode}/S2
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-${base_amt}/TX1-${gst_tax}XG/TX2-${hst_tax}RC/TX3-${qst_tax}XQ/TX4-${oth_tax}XT/COMM-0.00/S2    True
       
 Verify RMX Remarks With Optional Values Are Written In The PNR
@@ -850,20 +851,16 @@ Verify Dummy ${airline_code} Air Segment For Airline Pass Cancellation
 Verify RMX, PE, AND TKT Remarks Without Optional Values Are Written In The PNR
     Finish PNR
     Assign Current Date
-    Verify Expected Remarks Are Written In The PNR   		
+    Verify Expected Remarks Are Written In The PNR
+    Verify Unexpected Remarks Are Not Written In The PNR  		
     Verify Specific Remark Is Written In The PNR    RMX **********************************************
     Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG-NONBSP ABC123 REFUND-${current_date}	
     Verify Specific Remark Is Written In The PNR    RMX NONBSP-ACJ-ISSUE OID-YTOWL220N	
     Verify Specific Remark Is Written In The PNR    RMX REFUND BASE-90.00 GST-0.00 HST-0.00 QST-0.00 OTH TAX-0.00    True	
     Verify Specific Remark Is Written In The PNR    RMX REFUND COMMISSION 20.00
-    Verify Specific Remark Is Written In The PNR    RMX CANCEL WITH REFUND AND FEE
-    Verify Specific Remark Is Written In The PNR    RMX AIRLINE PASS CANCELLATION NOTES
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-0928374/VN-ACJ/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-0912345678/VN-ACJ/S2
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-100.00/TX1-0.00XG/TX2-0.00RC/TX3-0.00XQ/TX4-0.00XT/COMM-0.00/S2    True
     Verify Specific Remark Is Written In The PNR    RMF LCC-AC*GRAND TOTAL CAD 100.00
-
-Verify RMG Remark Is Written
-    Verify Specific Remark Is Written In The PNR    RMG ACPASSCHG
     
 Verify PNR Is Queued To Correct Queue Placement For Airline Cancel Pass
     Open Command Page

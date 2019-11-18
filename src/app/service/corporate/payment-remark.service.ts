@@ -218,7 +218,7 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, cancelSegmentrelate);
 
         const originalTicketRemarks = new Map<string, string>();
-        originalTicketRemarks.set('NoOriginalTicket', 'true');
+        originalTicketRemarks.set('OriginalTicketNumber', account.tktLine);
         this.remarksManager.createPlaceholderValues(originalTicketRemarks, null, null);
         const consultantNoRemarkStatic = new Map<string, string>();
         consultantNoRemarkStatic.set('IsNuc', 'true');

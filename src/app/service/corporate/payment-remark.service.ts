@@ -882,12 +882,16 @@ export class PaymentRemarkService {
         let glCode: string;
         remarkSet.set('PAXLastName', x.paxName.split('-')[1]);
         remarkSet.set('PAXFirstName', x.paxName.split('-')[0]);
-        remarkSet.set('TotalCost', x.cost);
+        if (x.cost) {
+          remarkSet.set('TotalCost', x.cost);
+        }
         this.remarksManager.createPlaceholderValues(remarkSet);
 
         remarkSet = new Map<string, string>();
         remarkSet.set('CCVendor', x.ccVendor);
-        remarkSet.set('CCNo', x.ccNumber);
+        if (x.ccNumber) {
+          remarkSet.set('CCNo', x.ccNumber);
+        }
         remarkSet.set('CCExp', x.ccExp);
         if (x.ccVendor === 'VI') {
           glCode = '115000';
@@ -900,7 +904,9 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(remarkSet);
 
         remarkSet = new Map<string, string>();
-        remarkSet.set('GlCode', glCode);
+        if (glCode) {
+          remarkSet.set('GlCode', glCode);
+        }
         this.remarksManager.createPlaceholderValues(remarkSet);
       }
     });

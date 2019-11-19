@@ -54,11 +54,9 @@ ${checkbox_refund_ticket}    //input[@id='checked']
 ${input_refund_coupon}     //input[@id='coupon']
 ${list_partialFull}    //select[@id='partialFull']
 ${input_supplier}    //input[@id='supplier']
-${input_invoice}   //input[@id='invoice']
+${input_cancel_invoice}   //input[@id='invoice']
 ${input_refundAmount}    //input[@id='refundAmount']
 ${input_commission}    //input[@formcontrolname='commission']
-${input_baseAmount}    //input[@id='baseAmount']
-${input_gst}    //input[@id='gst']
 ${input_otherTax}    //input[@formcontrolname='tax']
 ${input_freeFlow1}    //input[@id='freeFlow1']
 ${input_freeFlow2}    //input[@id='freeFlow2']
@@ -421,7 +419,7 @@ Cancel Segments For Non BSP Ticket ${refund_type} Refund
     Set Test Variable    ${free_flow_1}     FULL REFUND FREEFLOW 1
     Set Test Variable    ${free_flow_2}     FULL REFUND FREEFLOW 2
     Enter Value    ${input_supplier}    ${supplier}
-    Enter Value    ${input_invoice}    ${invoice}
+    Enter Value    ${input_cancel_invoice}    ${invoice}
     Run Keyword If    "${refund_type}" == "Full"    Enter Value    ${input_refundAmount}    ${refund_amount}
     Enter Value    ${input_commission}    ${commission}
     Run Keyword If    "${refund_type}" == "Partial"    Enter Value    ${input_baseAmount}    ${base_amount}

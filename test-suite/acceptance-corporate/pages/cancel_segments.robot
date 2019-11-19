@@ -429,7 +429,7 @@ Cancel Segments For Non BSP Ticket ${refund_type} Refund
     Run Keyword If    "${refund_type}" == "Partial"    Enter Value    ${input_otherTax}    ${other_tax}
     Enter Value    ${input_freeFlow1}    ${free_flow_1}
     Enter Value    ${input_freeFlow2}    ${free_flow_2}
-    v
+    Take Screenshot
     
 Verify Non BSP ${refund_type} Refund Remarks Are Written In The PNR
     Finish PNR    queueing=yes

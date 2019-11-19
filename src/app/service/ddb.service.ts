@@ -214,7 +214,7 @@ export class DDBService implements OnInit {
   async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
     const reasonCodeList = [];
     for (const id of ids) {
-      await this.getReasonCodes(
+      await this.getReasonCodeByClientSubUnit(
         this.pnrService.getClientSubUnit(),
         '&LanguageCode=en-GB&ProductId=' + productID + '&ReasonCodeTypeId=' + id
       ).then((response) => {
@@ -229,9 +229,19 @@ export class DDBService implements OnInit {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
   // }
 
-  // async getReasonCodeByClientSubUnit(clientSubUnitId: string) {
-  //   return await this.getRequest(common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId));
-  // }
+  async getReasonCodeByClientSubUnit(clientSubUnitId: string, otherParam: string) {
+    const reasons = [];
+    await this.getRequest(
+      common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1' + otherParam
+    ).then((response) => {
+      if (response.ReasonCodeItems) {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          reasons.push(new ReasonCode(reasonJson));
+        });
+      }
+    });
+    return reasons;
+  }
 
   // async getReasonCodeByProductIdAndTypeId(productId: string, reasonCodeTypeId: string) {
   //   return await this.getRequest(

@@ -393,7 +393,7 @@
         <select autofocus id="ebC" class="form-control" formControlName="ebC" name="ebC">
             <option [ngValue] = "null"></option>
             <option *ngFor="let reason of ebCList" [value]="reason.reasonCode">{{
-              reason.reasonCode + ' : ' + reason.getDescription('en-GB')
+              reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescription
             }}</option>
           </select>
 

@@ -78,7 +78,7 @@ export class ReportingBSPComponent implements OnInit {
   getReasonCodeValue(code, index): string {
     const reasonText = this.reasonCodes[index]
       .filter((x) => x.reasonCode === code)
-      .map((x) => x.reasonCode + ' : ' + x.getDescription('en-GB'));
+      .map((x) => x.reasonCode + ' : ' + x.reasonCodeProductTypeDescription);
 
     if (reasonText.length >= 0) {
       return reasonText[0];
@@ -146,7 +146,8 @@ export class ReportingBSPComponent implements OnInit {
     } else {
       this.changeReasonCodes(group, currentIndex);
       if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
-        reasonCode = this.reasonCodes[currentIndex][0].reasonCode + ' : ' + this.reasonCodes[currentIndex][0].getDescription('en-GB');
+        reasonCode =
+          this.reasonCodes[currentIndex][0].reasonCode + ' : ' + this.reasonCodes[currentIndex][0].reasonCodeProductTypeDescription;
         group.get('reasonCodeText').setValue(reasonCode);
       }
     }

@@ -50,7 +50,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
-@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
+@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
@@ -322,6 +322,7 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
+    ...    ELSE IF    "${destination_page}" == "Car Savings Code"    Click Car Savings Code Tab
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
@@ -506,7 +507,7 @@ Get Test Data From Json
     Get Historical Remark Values From Json    ${json_file_object}    ${client_data}
     ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
     ${num_htl_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumHotelSegments
-    Set Test variable    ${num_car_segments}
+    Get Car Segment Values From Json    ${json_file_object}    ${client_data}
     Set Test variable    ${num_htl_segments}
     
 Get Passenger Info From Json
@@ -564,6 +565,17 @@ Get Air Segment Values From Json
     \    Set Test Variable    ${air_seg_route_${i}}    ${air_seg_route}
     \    Set Test Variable    ${airline_code_${i}}    ${airline_code}
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
+    \    ${i}    Evaluate    ${i} + 1
+    
+Get Car Segment Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
+    Set Test variable    ${num_car_segments}
+    : FOR     ${i}    IN RANGE    1    int(${num_car_segments}+1)
+    \    ${exists}     Run Keyword And Return Status      Get Json Value As String    ${json_file_object}    $.['${client_data}'].CarPickUpCity${i}
+    \    ${car_pickup_city}    Run Keyword If    "${exists}" == "True"    Get Json Value As String    ${json_file_object}    $.['${client_data}'].CarPickUpCity${i}
+    \    ${car_pickup_city}    Set Variable If     "${exists}" == "True"    ${car_pickup_city}    YUL    
+    \    Set Test Variable    ${car_pickup_city${i}}    ${car_pickup_city}
     \    ${i}    Evaluate    ${i} + 1
 
 Verify Expected Remarks Are Written In The PNR

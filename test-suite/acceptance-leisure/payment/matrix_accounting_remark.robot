@@ -543,7 +543,7 @@ Verify That Matrix Accounting Remark And UDID Is Written For Limo Accounting Rem
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Segment    4
-    Create Matrix Accounting Remark    NO    Limo Accounting Remark    ACJ    ABC4567891EFG4567890    Credit Card    VI
+    Create Matrix Accounting Remark    NO    Limo Accounting Remark    ACJ    ABC456    Credit Card    VI
     ...    4444333322221111    0323
     Enter Base Amount    100.75
     Enter GST Tax Amount    2.00

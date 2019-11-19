@@ -50,6 +50,7 @@ Verify That "Reason for Travel" In FS Remark Is "2" If the CF Line Is Not RBM an
     Click Panel    Reporting
     Select Routing Code    Caribbean and Bermuda
     Enter Destination Code    YYZ
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
@@ -71,6 +72,7 @@ Verify That "Reason for Travel" In FS Remark Is "1" If the CF Line Is Not RBM an
     Click Panel    Reporting
     Select Routing Code    Australia/New Zealand/Islands of the Pacific incl. Hawaii excl. Guam
     Enter Destination Code    YYZ
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable

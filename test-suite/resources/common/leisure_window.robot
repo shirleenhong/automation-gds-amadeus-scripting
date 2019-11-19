@@ -5,6 +5,7 @@ Resource          common_library.robot
 Click Panel
     [Arguments]    ${panel_name}
     Wait Until Element Is Visible    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]    60
+    Run Keyword If    '${panel_name}' == 'Reporting'    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), 'Payment')]    ELSE    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
     Click Element    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
     [Teardown]    Take Screenshot
 

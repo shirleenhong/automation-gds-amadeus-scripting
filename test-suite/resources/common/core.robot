@@ -7,9 +7,11 @@ Add New Command Page
     Wait Until Page Contains Element    css=.cmdPromptDiv > textArea    180
 
 Close CA Migration Window
+    Wait Until Element Is Not Visible    xpath=//div[@class='uicLoaderOverlay uicLo-loading']     60
     Unselect Frame
-    Sleep    8
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
+    Sleep    5
+    Wait Until Element Is Not Visible    xpath=//div[@class='uicLoaderOverlay uicLo-loading']     60
     Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
 
 Close Cryptic Display Window

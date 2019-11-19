@@ -1133,6 +1133,7 @@ export class SegmentService {
             const segments = this.pnrService.getSegmentList();
             for (const fg of model.remarkList) {
                 const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
+                remark.relatedSegments = [];
                 const s = model.segmentNo.split(',');
                 s.forEach(x => {
                     const tat = segments.find(z => z.lineNo === x);

@@ -201,9 +201,11 @@ export class DDBService implements OnInit {
     const reasons = [];
     await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
       (response) => {
-        response.ReasonCodeItems.forEach((reasonJson) => {
-          reasons.push(new ReasonCode(reasonJson));
-        });
+        if (response.ReasonCodeItems) {
+          response.ReasonCodeItems.forEach((reasonJson) => {
+            reasons.push(new ReasonCode(reasonJson));
+          });
+        }
       }
     );
     return reasons;

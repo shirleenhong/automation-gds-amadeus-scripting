@@ -17,8 +17,7 @@ export class CarSavingsCodeComponent implements OnInit {
   deleteRemarks = [];
   reAddRemarks = [];
   carReasonCodes: Array<ReasonCode> = [];
-  constructor(private fb: FormBuilder, private pnrService: PnrService,
-              private utilHelper: UtilHelper, private ddbService: DDBService) { }
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper, private ddbService: DDBService) {}
 
   async ngOnInit() {
     this.carSavingsCodeGroup = this.fb.group({
@@ -29,8 +28,7 @@ export class CarSavingsCodeComponent implements OnInit {
       this.carSavingsCode();
     });
   }
-  createCarSavingsGroup(segmentNo: string, pickUpDate: string,
-                        pickUpCity: string, reasonCode: string): FormGroup {
+  createCarSavingsGroup(segmentNo: string, pickUpDate: string, pickUpCity: string, reasonCode: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       date: new FormControl(pickUpDate),
@@ -66,17 +64,26 @@ export class CarSavingsCodeComponent implements OnInit {
     const allSegments = this.pnrService.getSegmentList();
     const allCarSegments = this.getCarSegments(allSegments);
     const allCarRemarks = this.getCarRemarks();
-    this.addPassiveCarSegments(allCarSegments);
-    this.addActiveCarSegments(allCarRemarks, allCarSegments);
+    //this.addPassiveCarSegments(allCarSegments);
+    this.addCarSegments(allCarRemarks, allCarSegments);
     this.deleteRemarks = this.getDeletedRemarks(allCarRemarks, allCarSegments);
   }
   getCarSegments(allSegments) {
-    const carSegments = [];
+    let carSegments = [];
     for (const seg of allSegments) {
       if (seg.segmentType === 'CAR' || seg.segmentType === 'CCR') {
         carSegments.push(seg);
       }
     }
+    carSegments = carSegments.sort((a, b) => {
+      if (parseInt(a.lineNo, null) < parseInt(b.lineNo, null)) {
+        return -1;
+      } else if (parseInt(a.lineNo, null) > parseInt(b.lineNo, null)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
     return carSegments;
   }
   getCarRemarks() {
@@ -118,17 +125,17 @@ export class CarSavingsCodeComponent implements OnInit {
     carRmkObj.tatooNo = rmEle.tatooNumber;
     return carRmkObj;
   }
-  addPassiveCarSegments(carSegments) {
-    const passiveCarSegments = carSegments.filter((seg) =>
-      seg.isPassive === true
-    );
-    for (const seg of passiveCarSegments) {
-      const segDate = this.getDateFromSegment(seg.deptdate);
-      const tempDate = new Date(segDate);
-      const date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
-      this.addSegments(date, seg);
-    }
-  }
+  // addPassiveCarSegments(carSegments) {
+  //   const passiveCarSegments = carSegments.filter((seg) =>
+  //     seg.isPassive === true
+  //   );
+  //   for (const seg of passiveCarSegments) {
+  //     const segDate = this.getDateFromSegment(seg.deptdate);
+  //     const tempDate = new Date(segDate);
+  //     const date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
+  //     this.addSegments(date, seg);
+  //   }
+  // }
   getDateFromSegment(date) {
     const day = date.substring(0, 2);
     const month = date.substring(2, 4);
@@ -139,14 +146,14 @@ export class CarSavingsCodeComponent implements OnInit {
     const items = this.carSavingsCodeGroup.get('carSavings') as FormArray;
     items.push(this.createCarSavingsGroup(segment.lineNo, date, segment.cityCode, ''));
   }
-  addActiveCarSegments(carRemarks, carSegments) {
-    const activeCarSegments = carSegments.filter((seg) =>
-      seg.isPassive === false
-    );
-    for (const seg of activeCarSegments) {
+  addCarSegments(carRemarks, carSegments) {
+    // const activeCarSegments = carSegments.filter((seg) =>
+    //   seg.isPassive === false
+    // );
+    for (const seg of carSegments) {
       let matches = false;
-      let date = '';
-      const segDate = this.getDateFromSegment(seg.departureDate);
+      let date = seg.isPassive ? seg.deptdate : seg.departureDate;
+      const segDate = this.getDateFromSegment(date);
       const tempDate = new Date(segDate);
       date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
       for (const rmk of carRemarks) {

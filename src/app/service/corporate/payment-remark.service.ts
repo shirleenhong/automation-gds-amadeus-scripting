@@ -887,7 +887,7 @@ export class PaymentRemarkService {
 
         remarkSet = new Map<string, string>();
         remarkSet.set('CCVendor', x.ccVendor);
-        remarkSet.set('CCNo', x.ccNo);
+        remarkSet.set('CCNo', x.ccNumber);
         remarkSet.set('CCExp', x.ccExp);
         if (x.ccVendor === 'VI') {
           glCode = '115000';

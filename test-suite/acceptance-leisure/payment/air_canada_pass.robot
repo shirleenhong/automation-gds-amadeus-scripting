@@ -173,7 +173,6 @@ Verify That Air Canada Pass Purchase Accounting, RIR Remarks, And Passive Segmen
     Select Fare Type    PREMIUM ECONOMY
     Click Save Button
     Click Submit To PNR
-    Sleep    2
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-ACJ/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-CD-0.00/P2    True
@@ -222,6 +221,9 @@ Verify That Air Canada Pass Purchase Accounting And RIR Remarks Are Deleted
     Click Payment Tab    Matrix Accounting Remark
     Click Payment Delete Button    1
     Confirm Delete
+    Click Update Button    1
+    Enter Credit Card Number    4444333322221111
+    Click Save Button
     Click Submit To PNR
     Close CA Migration Window
     Open Cryptic Display Window

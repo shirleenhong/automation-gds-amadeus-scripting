@@ -81,7 +81,7 @@ Enter Last Four Digit VI
 
 Click Payment Tab
     [Arguments]    ${payment_tab}
-    Wait Until Element Is Visible   xpath=//span[contains(text(), '${payment_tab}')]    60
+    Wait Until Element Is Visible    xpath=//span[contains(text(), '${payment_tab}')]    60
     Set Focus To Element    xpath=//span[contains(text(), '${payment_tab}')]
     Click Element    xpath=//span[contains(text(), '${payment_tab}')]
 
@@ -110,7 +110,9 @@ Select Credit Card Vendor Code
     [Arguments]    ${cc_vendor_code}
     Wait Until Page Contains Element    css=#vendorCode    30
     Click Element    css=#vendorCode
+    Sleep    2
     Click Element    xpath=//option[contains(text(),'${cc_vendor_code}')]
+    Comment    Select From List By Value    css=#vendorCode    ${cc_vendor_code}
     Set Suite Variable    ${cc_vendor_code}
 
 Enter Reason for No Association Fees
@@ -122,7 +124,7 @@ Enter Reason for No Association Fees
     [Teardown]    Take Screenshot
 
 Click Add Accounting Line Button
-    Scroll Element Into View      xpath=//button[contains(text(), 'Add Accounting Line')]
+    Scroll Element Into View    xpath=//button[contains(text(), 'Add Accounting Line')]
     Click Element    xpath=//button[contains(text(), 'Add Accounting Line')]
 
 Enter Matrix Accounting Description

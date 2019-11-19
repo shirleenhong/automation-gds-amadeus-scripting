@@ -14,7 +14,7 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     ...    Codeshare
     [Tags]    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMP/CITIZENSHIP-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK1SIN21SEP-CWT RETENTION SEGMENT    RMP/CITIZENSHIP-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Add Passive Air Segment
@@ -166,7 +166,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     ...    CWT Itinerary
     [Tags]    sanity    prod    not_ready
     Login to Amadeus Production
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21NOV-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
     Open CA Migration Prod
     Click Add Segment Main Menu
     Sleep    5
@@ -242,9 +242,9 @@ Verify RMX Cancel Remarks Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
     Verify Specific Remark Is Written In The PNR    /TKT NBR-1234512 CPNS-9825252
     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
-    Verify Specific Remark Is Not Written In The PNR    AC1234 Y 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ARL1234
-    Verify Specific Remark Is Not Written In The PNR    MIS 1A HK1 YYZ 03JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03JAN/ST-0900/EC-YYZ/ED-13JAN/ET-0900/CF-CWT123456789    True
-    Verify Specific Remark Is Not Written In The PNR    CAR 1A HK1 YYZ 13JAN-13JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13JAN/ST-0100/ED-13JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
+    Verify Specific Remark Is Not Written In The PNR    AC1234 Y 02OCT 5 YULCDG GK1 \ 1530 1715 \ 03OCT \ \ \ \ ARL1234
+    Verify Specific Remark Is Not Written In The PNR    MIS 1A HK1 YYZ 03OCT-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03OCT/ST-0900/EC-YYZ/ED-13OCT/ET-0900/CF-CWT123456789    True
+    Verify Specific Remark Is Not Written In The PNR    CAR 1A HK1 YYZ 13OCT-13OCT CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13OCT/ST-0100/ED-13OCT/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
     Verify Specific Remark Is Not Written In The PNR    RIR SPECIAL REQUEST TESTING/S5
     Verify Specific Remark Is Not Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S5
     Verify Specific Remark Is Not Written In The PNR    RIR CD-CD123456 ID-ID789123/S5
@@ -262,8 +262,8 @@ Add Passive Air Segment
     Enter Airline Code    AC
     Enter Flight Number    1234
     Enter Class Of Service    Y
-    Enter Departure Date    01022020
-    Enter Arrival Date    01032020
+    Enter Departure Date    10022020
+    Enter Arrival Date    10032020
     Enter Departure City    YUL
     Enter Destination City    CDG
     Enter Departure Time    0330PM
@@ -278,8 +278,8 @@ Add Passive Tour Segment
     Enter Vendor Name    TEST VENDOR
     Enter Vendor Code    ABC
     Enter Confirmation Number    CN12345678
-    Enter Departure Date    01142020
-    Enter Arrival Date    01202020
+    Enter Departure Date    10142020
+    Enter Arrival Date    10202020
     Enter Departure City    CDG
     Enter Destination City    AMS
     Enter Departure Time    0100PM
@@ -296,8 +296,8 @@ Add Passive Hotel Segment
     Select Segment Type    Hotel
     Enter Hotel Chain Code    HI
     Enter Hotel City Code    AMS
-    Enter Departure Date    01202020
-    Enter Arrival Date    01222020
+    Enter Departure Date    10202020
+    Enter Arrival Date    10222020
     Enter Policy Number    12hrs
     Enter Hotel Nightly Rate    100.55
     Enter Hotel Rate Type    Test Rate type
@@ -314,8 +314,8 @@ Add Passive Hotel Segment
 Add Passive Insurance Segment
     Click Add Segment Main Menu
     Select Segment Type    Insurance
-    Enter Departure Date    01032020
-    Enter Arrival Date    01132020
+    Enter Departure Date    10032020
+    Enter Arrival Date    10132020
     Enter Departure City    YYZ
     Enter Policy Number    123456789
     Enter Type Of Insurance Purchased    Testing Insurance Purchased
@@ -333,7 +333,7 @@ Add Passive Car Segment
     Select Pickup Location    AIRPORT
     Select Drop Off Location    OFF AIRPORT
     Select Drop Off Address    YTOC74 - 161 BAY ST UNITE C80 M5J2S1 TORONTO
-    Enter Departure Date    01132020
+    Enter Departure Date    10132020
     Enter Departure Time    0100AM
     Enter Arrival Time    0200PM
     Enter Rental Cost    123.50
@@ -395,9 +395,9 @@ Add Air Canada Pass Redemption Remarks
     Sleep    3
 
 Verify Air, Tour, And Hotel Passive Segments Are Added In the PNR
-    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ${airline_recloc}
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 CDG 14JAN-/TYP-TOR/SUN-TEST VENDOR TOUR NAME TEST/SUC-ABC/SC-CDG/SD-14JAN/ST-1300/EC-AMS/ED-20JAN/ET-1200/CF-CN12345678    True
-    Verify Specific Remark Is Written In The PNR    HTL 1A HK1 AMS 20JAN-22JAN/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12312414,TWIN ROOM,RATE:TEST RATE TYPE CAD100.55/NIGHT,SI-HOTEL ADDITIONAL INFO    True
+    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 5 YULCDG GK1 \ 1530 1715 \ 03OCT \ \ \ \ ${airline_recloc}
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 CDG 14OCT-/TYP-TOR/SUN-TEST VENDOR TOUR NAME TEST/SUC-ABC/SC-CDG/SD-14OCT/ST-1300/EC-AMS/ED-20OCT/ET-1200/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    HTL 1A HK1 AMS 20OCT-22OCT/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12312414,TWIN ROOM,RATE:TEST RATE TYPE CAD100.55/NIGHT,SI-HOTEL ADDITIONAL INFO    True
     Verify Specific Remark Is Written In The PNR    RIR TRPL ALL INCLUSIVE 8 NTS/S4
 
 Verify That Hotel RIR Remarks Are Written
@@ -484,9 +484,9 @@ Verify ITC Package Costs Remarks Are Written
     Verify Specific Remark Is Not Written In The PNR    INFANT
 
 Verify Air, Insurance, And Car Passive Segments Are Added In the PNR
-    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 YULCDG GK1 \ 1530 1715 \ 03JAN \ \ \ \ ${airline_recloc}
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 03JAN-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03JAN/ST-0900/EC-YYZ/ED-13JAN/ET-0900/CF-CWT${policy_number}    True
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYZ 13JAN-13JAN CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13JAN/ST-0100/ED-13JAN/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
+    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 4 YULCDG GK1 \ 1530 1715 \ 03OCT \ \ \ \ ${airline_recloc}
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 03OCT-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03OCT/ST-0900/EC-YYZ/ED-13OCT/ET-0900/CF-CWT${policy_number}    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYZ 13OCT-13OCT CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13OCT/ST-0100/ED-13OCT/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S5
     Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S5
     Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S5

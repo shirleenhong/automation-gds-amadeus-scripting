@@ -38,6 +38,7 @@ import { AddContactComponent } from './corporate/corp-remarks/add-contact/add-co
 import { CorpCancelComponent } from './corporate/corp-cancel/corp-cancel.component';
 import { CarSavingsCodeComponent } from './corporate/reporting/car-savings-code/car-savings-code.component';
 import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
+import { NonAcceptanceComponent } from './corporate/payments/non-acceptance/non-acceptance.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerar
     AddContactComponent,
     CorpCancelComponent,
     CarSavingsCodeComponent,
-    SendInvoiceItineraryComponent
+    SendInvoiceItineraryComponent,
+    NonAcceptanceComponent
   ],
   imports: [
     BrowserModule,

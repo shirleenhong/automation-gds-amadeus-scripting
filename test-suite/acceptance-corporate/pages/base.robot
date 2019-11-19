@@ -93,7 +93,7 @@ Click Cancel Segments
     Sleep    5
     Wait Until Page Contains Element    ${button_cancel_segments}     180
     Click Element At Coordinates    ${button_cancel_segments}    0    0
-    Wait Until Element Is Visible    ${input_requestor}     30
+    Wait Until Element Is Visible    ${input_requestor}     120
     Set Test Variable    ${current_page}    Cancel Segments
     Set Test Variable    ${pnr_submitted}   no
     Set Test Variable    ${non_bsp_ticket_credit_complete}    no

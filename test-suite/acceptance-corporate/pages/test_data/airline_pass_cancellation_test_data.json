@@ -47,7 +47,7 @@
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-AC*GRAND TOTAL CAD 127.41",
 		"ExpectedRemark10": "RM *NUC",
-		"ExpectedRemark11": "RM *NE/-EX-Y/OTK-0912345678",
+		"ExpectedRemark11": "RM *NE/-EX-Y/-OTK-0912345678",
 		"UnexpectedRemark1": "RMG ACPASSCHG"
 	},
 	"Airline Pass Cancellation On Other Airline": {
@@ -98,7 +98,7 @@
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-WS*GRAND TOTAL CAD 127.41",
 		"ExpectedRemark10": "RM *NUC",
-		"ExpectedRemark11": "RM *NE/-EX-Y/OTK-0912345678",
+		"ExpectedRemark11": "RM *NE/-EX-Y/-OTK-0912345678",
 		"UnexpectedRemark1": "RMG ACPASSCHG"
 	},
 	"Airline Pass Cancellation With Passive Air": {
@@ -149,7 +149,7 @@
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-AC*GRAND TOTAL CAD 100.00",
 		"ExpectedRemark10": "RM *NUC",
-		"ExpectedRemark11": "RM *NE/-EX-Y/OTK-0912345678",
+		"ExpectedRemark11": "RM *NE/-EX-Y/-OTK-0912345678",
 		"UnexpectedRemark1": "RMG ACPASSCHG"
 	},
 	"Airline Pass Cancellation With RM*14": {
@@ -201,7 +201,7 @@
 		"ExpectedRemark9": "RMF LCC-AC*GRAND TOTAL CAD 127.41",
 		"ExpectedRemark10": "RMG ACPASSCHG",
 		"ExpectedRemark11": "RM *NUC",
-		"ExpectedRemark12": "RM *NE/-EX-Y/OTK-0912345678",
+		"ExpectedRemark12": "RM *NE/-EX-Y/-OTK-0912345678",
 		"UnexpectedRemark1": null
 	}
 }

@@ -38,7 +38,7 @@ ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
 ${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
 ${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
-${button_send_invoice_itinerary}    //button[contains(text(), 'Send Invoice/Itinerary')]
+${button_send_invoice_itinerary}    //button[contains(text(), 'Re-send Invoice/Itinerary')]
 ${open_bracket}     [
 ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]

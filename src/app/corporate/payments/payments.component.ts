@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AccountingRemarkComponent } from './accounting-remark/accounting-remark.component';
 import { NonAcceptanceComponent } from './non-acceptance/non-acceptance.component';
 import { PnrService } from '../../service/pnr.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-payments',
@@ -12,14 +13,20 @@ export class PaymentsComponent implements OnInit {
   @ViewChild(AccountingRemarkComponent) accountingRemark: AccountingRemarkComponent;
   @ViewChild(NonAcceptanceComponent) nonAcceptance: NonAcceptanceComponent;
   hasAirTst = false;
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
     this.checkUnticketedAirSegments();
   }
 
   checkValid() {
-    return true;
+    debugger;
+    this.utilHelper.validateAllFields(this.nonAcceptance.nonAcceptanceForm);
+    if (!this.nonAcceptance.nonAcceptanceForm.valid) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   checkUnticketedAirSegments() {

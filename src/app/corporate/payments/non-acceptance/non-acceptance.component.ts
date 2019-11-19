@@ -2,9 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { StaticValuesService } from '../../../service/static-values.services';
-import { validateCreditCard } from 'src/app/shared/validators/leisure.validators';
+// import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
+// import { validateCreditCard } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-non-acceptance',
@@ -39,7 +40,6 @@ export class NonAcceptanceComponent implements OnInit {
       tst: new FormControl('', [Validators.pattern('[0-9]+(,[0-9]+)*')]),
       segments: this.fb.array(this.createArray())
     });
-
     this.vendorCodeList = this.ddbService.getCcVendorCodeList();
   }
 
@@ -49,7 +49,7 @@ export class NonAcceptanceComponent implements OnInit {
       if (fg) {
         const frm = this.fb.group({
           ccVendor: new FormControl(''),
-          ccNo: new FormControl('', [Validators.required, validateCreditCard('ccVendor')])
+          ccNo: new FormControl('')
         });
         frmArray.push(frm);
       }
@@ -99,16 +99,6 @@ export class NonAcceptanceComponent implements OnInit {
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
-  }
-
-  isPnrTypeOnly(passiveType: string): boolean {
-    const passiveSegments = this.pnrService.getSegmentList().filter((passiveSegment) => passiveSegment.passive === passiveType);
-
-    if (passiveSegments.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   setDisabledState?(isDisabled: boolean): void {

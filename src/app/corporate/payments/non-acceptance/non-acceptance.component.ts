@@ -5,6 +5,7 @@ import { StaticValuesService } from '../../../service/static-values.services';
 // import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
+import { validateExpDate, validateCreditCard } from 'src/app/shared/validators/leisure.validators';
 // import { validateCreditCard } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
@@ -48,8 +49,8 @@ export class NonAcceptanceComponent implements OnInit {
     for (const fg in this.unticketedSegments) {
       if (fg) {
         const frm = this.fb.group({
-          ccVendor: new FormControl(''),
-          ccNo: new FormControl('')
+          ccVendor: new FormControl(this.unticketedSegments[fg].ccVendor),
+          ccNo: new FormControl('', [validateCreditCard('ccVendor')]).disable
         });
         frmArray.push(frm);
       }
@@ -80,13 +81,16 @@ export class NonAcceptanceComponent implements OnInit {
     let items: any;
     // tslint:disable-next-line: no-string-literal
     items = this.nonAcceptanceForm.get('segments')['controls'];
-
     if (isChecked) {
       this.tstSelected.push(newVal);
       items[i].controls.ccNo.enable();
+      items[i].controls.ccNo.setValidators([Validators.required, validateCreditCard('ccVendor')]);
+      items[i].controls.ccNo.updateValueAndValidity();
     } else {
       this.tstSelected.splice(this.tstSelected.indexOf(newVal), 1);
       items[i].controls.ccNo.disable();
+      items[i].controls.ccNo.clearValidators();
+      items[i].controls.ccNo.updateValueAndValidity();
     }
 
     this.value = this.tstSelected.join(',');

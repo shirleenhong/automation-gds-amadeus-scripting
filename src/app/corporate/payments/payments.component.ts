@@ -26,7 +26,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   checkValid() {
-    if (!this.nonAcceptance === undefined) {
+    if (this.nonAcceptance !== undefined) {
       this.utilHelper.validateAllFields(this.nonAcceptance.nonAcceptanceForm);
       if (!this.nonAcceptance.nonAcceptanceForm.valid) {
         return false;

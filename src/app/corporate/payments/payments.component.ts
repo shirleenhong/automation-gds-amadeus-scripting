@@ -12,17 +12,27 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 export class PaymentsComponent implements OnInit {
   @ViewChild(AccountingRemarkComponent) accountingRemark: AccountingRemarkComponent;
   @ViewChild(NonAcceptanceComponent) nonAcceptance: NonAcceptanceComponent;
-  hasAirTst = false;
+  hasUnticketed = false;
+  hasFop = false;
   constructor(private pnrService: PnrService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
     this.checkUnticketedAirSegments();
+    if (this.pnrService.getFopElements() !== '') {
+      this.hasFop = true;
+    } else {
+      this.hasFop = false;
+    }
   }
 
   checkValid() {
-    this.utilHelper.validateAllFields(this.nonAcceptance.nonAcceptanceForm);
-    if (!this.nonAcceptance.nonAcceptanceForm.valid) {
-      return false;
+    if (!this.nonAcceptance === undefined) {
+      this.utilHelper.validateAllFields(this.nonAcceptance.nonAcceptanceForm);
+      if (!this.nonAcceptance.nonAcceptanceForm.valid) {
+        return false;
+      } else {
+        return true;
+      }
     } else {
       return true;
     }
@@ -31,7 +41,6 @@ export class PaymentsComponent implements OnInit {
   checkUnticketedAirSegments() {
     const allAir = this.pnrService.pnrObj.allAirSegments;
     const unticketedSegments = [];
-    const tstObj = this.pnrService.tstObj;
     const ticketedSegments = [];
 
     for (const tst of this.pnrService.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
@@ -60,17 +69,9 @@ export class PaymentsComponent implements OnInit {
     });
 
     if (unticketedSegments.length > 0) {
-      if (tstObj.length === 0) {
-        this.hasAirTst = false;
-      } else if (tstObj.length > 0) {
-        this.hasAirTst = true;
-      } else {
-        let x: any;
-        x = tstObj;
-        if (x.segmentInformation.length > 0) {
-          this.hasAirTst = true;
-        }
-      }
+      this.hasUnticketed = true;
+    } else {
+      this.hasUnticketed = false;
     }
   }
 }

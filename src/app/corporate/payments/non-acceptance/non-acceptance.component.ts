@@ -295,10 +295,23 @@ export class NonAcceptanceComponent implements OnInit {
       if (x.associations.length > 0) {
         if (x.associations[0].tatooNumber === segment) {
           fop = x.fullNode.otherDataFreetext.longFreetext.split(' ')[1].substr(2, 2);
+          return fop;
         }
       }
     });
-    return fop;
+
+    if (fop === '') {
+      for (const fp of this.pnrService.pnrObj.fpElements) {
+        if (fop) {
+          if (fp.fullNode.otherDataFreetext.longFreetext.indexOf(fop) > -1) {
+            return fp.fullNode.otherDataFreetext.longFreetext;
+          }
+        } else {
+          return fp.fullNode.otherDataFreetext.longFreetext;
+        }
+      }
+    }
+    return '';
   }
 
   getFare(segment: any) {

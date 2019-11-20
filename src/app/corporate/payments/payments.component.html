@@ -2,7 +2,7 @@
   <tab heading="Non-BSP Processing" id="tab2">
     <app-accounting-remark></app-accounting-remark>
   </tab>
-  <tab heading="Corporate Receipt" id="tab3" *ngIf="hasAirTst">
+  <tab heading="Corporate Receipt" id="tab3" *ngIf="hasUnticketed && hasFop">
     <app-non-acceptance></app-non-acceptance>
   </tab>
 </tabset>

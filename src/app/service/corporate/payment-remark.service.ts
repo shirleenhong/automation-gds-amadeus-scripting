@@ -12,7 +12,6 @@ import { DDBService } from '../ddb.service';
 import { AmadeusQueueService } from '../amadeus-queue.service';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { NonAcceptanceComponent } from 'src/app/corporate/payments/non-acceptance/non-acceptance.component';
-import { FormArray } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'

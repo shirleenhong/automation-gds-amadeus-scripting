@@ -252,6 +252,9 @@ export class RemarksManagerService {
   }
 
   async endPnr() {
+    if (this.receiveFrom === '') {
+      this.receiveFrom = 'CWTSCRIPT';
+    }
     await smartScriptSession.send('RF' + this.receiveFrom);
     await smartScriptSession.send('ER');
   }
@@ -261,30 +264,44 @@ export class RemarksManagerService {
   }
 
   private combineForDeleteItems(deleteResponse: string, additional: string[]): string {
+    // remove duplicate
+
     if (additional) {
+      const dash = [];
+      const ids = [];
+
+      deleteResponse
+        .replace('XE', '')
+        .split(',')
+        .forEach((xe) => {
+          if (xe.indexOf('-') >= 0) {
+            dash.push(xe);
+          } else {
+            ids.push(xe);
+          }
+        });
+
+      // filter items not found in existing ids
+      additional = additional.filter((a) => ids.indexOf(a) === -1);
+      // filter dupplicate
+      additional = additional.filter((v, i) => additional.indexOf(v) === i);
+
       additional.forEach((add) => {
-        let isAdded = false;
-        deleteResponse
-          .replace('XE', '')
-          .split(',')
-          .forEach((xe) => {
-            if (xe.indexOf('-') >= 0) {
-              const x = xe.split('-');
-              if (!(parseInt(x[0], null) >= parseInt(add, null) && parseInt(xe[1], null) <= parseInt(add, null)) && !isAdded) {
-                deleteResponse += ',' + add;
-                isAdded = true;
-              }
-            } else {
-              if (xe !== add && !isAdded) {
-                deleteResponse += ',' + add;
-                isAdded = true;
-              }
-            }
-          });
+        let isAdd = true;
+        dash.forEach((d) => {
+          const x = d.split('-');
+          if (parseInt(add, null) >= parseInt(x[0], null) && parseInt(add, null) <= parseInt(x[1], null) && isAdd) {
+            isAdd = false;
+          }
+        });
+        if (isAdd) {
+          deleteResponse += ',' + add;
+        }
       });
     }
     return deleteResponse;
   }
+
   async sendSSRCommands(cmds, index) {
     const self = this;
     if (!(index === cmds.length)) {

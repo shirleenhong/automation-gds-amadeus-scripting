@@ -8,6 +8,10 @@ import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
+import { DDBService } from '../../service/ddb.service';
+import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
+import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
+// import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 // import { MessageType } from '../message/MessageType';
 // import { MessageComponent } from '../message/message.component';
@@ -50,15 +54,20 @@ export class CancelSegmentComponent implements OnInit {
   // modalRef: BsModalRef;
   isBSP = false;
   isNonBSP = false;
+  isVoided = false;
+  showEBDetails: boolean;
+  ebRList: { itemValue: string; itemText: string }[];
   ticketVoidList = [];
   hasUnvoided = false;
   ticketArray = [];
+  ebCList: Array<ReasonCode> = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
-    private counselorDetail: CounselorDetail
+    private counselorDetail: CounselorDetail,
+    private ddbService: DDBService
   ) {
     // private counselorDetail: CounselorDetail, private modalService: BsModalService) {
     this.cancelForm = new FormGroup({
@@ -97,28 +106,37 @@ export class CancelSegmentComponent implements OnInit {
       voidOption: new FormControl('', []),
       ticketNumber: new FormControl('', []),
       vRsnOption: new FormControl('', []),
+      ebR: new FormControl('', [Validators.required]),
+      ebT: new FormControl('', [Validators.required]),
+      ebN: new FormControl('GI', [Validators.required]),
+      ebC: new FormControl('', [Validators.required]),
       ticketList: new FormControl('', []),
       ticketVoidList: new FormArray([])
     });
+    this.cancelForm.get('ebR').disable();
+    this.cancelForm.get('ebT').disable();
+    this.cancelForm.get('ebN').disable();
+    this.cancelForm.get('ebC').disable();
     // this.showMessage();
     // this.checkHasPowerHotel();
     // this.checkCorpPreCancel();
     this.onChanges();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.isCorporate = this.counselorDetail.getIsCorporate();
     // this.codeShareGroup = this.formBuilder.group({
     //   tickets: this.formBuilder.array([this.createFormGroup()])
     // });
     this.isCorporate = this.counselorDetail.getIsCorporate();
-    this.loadStaticValue();
+    await this.loadStaticValue();
     this.getSegmentTatooValue();
     this.addCheckboxes();
     this.checkFirstSegment();
     this.getPassengers();
     this.checkCorpPreCancel();
     this.checkVoid();
+    this.checkEbRemark();
     this.loadTicketList();
     this.addTicketList();
   }
@@ -224,7 +242,8 @@ export class CancelSegmentComponent implements OnInit {
     return true;
   }
 
-  loadStaticValue() {
+  async loadStaticValue() {
+    const self = this;
     this.reasonAcList = [
       { itemText: '', itemValue: '' },
       { itemText: '24 HOURS REFUND', itemValue: '4' },
@@ -311,6 +330,14 @@ export class CancelSegmentComponent implements OnInit {
       { itemText: 'Reverse All Items', itemValue: 'REVERSE MATRIX ALL ITEMS' },
       { itemText: 'Reverse Fee only', itemValue: 'FEE ONLY' },
       { itemText: 'Reverse Document', itemValue: 'DOCUMENT ONLY' }
+    ];
+
+    await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.TouchReason], 8).then((x) => {
+      self.ebCList = x;
+    });
+    this.ebRList = [
+      { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
+      { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
     ];
   }
 
@@ -820,6 +847,47 @@ export class CancelSegmentComponent implements OnInit {
 
     if (nonAcValue !== 'NONE') {
       this.enableFormControls(['airlineNo'], false);
+    }
+  }
+  checkEbRemark() {
+    this.showEBDetails = false;
+    let ebData = this.pnrService.getRemarkText('EB/');
+    if (ebData) {
+      ebData = ebData.split('/');
+      if (ebData.length === 3) {
+        this.populateEBFields(ebData);
+      }
+    }
+  }
+  async populateEBFields(eb) {
+    if (!this.isCorporate) {
+      this.showEBDetails = false;
+      return;
+    }
+    const ebR = eb[1].substr(0, 2);
+    const ebT = eb[1].substr(2, 1);
+    const ebN = eb[2].substr(0, 2);
+    const ebC = eb[2].substr(2, 1);
+
+    this.showEBDetails = ebR && ebT && ebN && ebC ? true : false;
+    if (this.showEBDetails) {
+      const ebrValues = this.ebRList.map((seat) => seat.itemValue);
+
+      if (ebrValues.indexOf(ebR) > -1) {
+        this.cancelForm.controls.ebR.setValue(ebR);
+      }
+
+      for (const c of this.ebCList) {
+        if (c.reasonCode === ebC) {
+          this.cancelForm.controls.ebC.setValue(ebC);
+        }
+      }
+      this.cancelForm.controls.ebT.setValue(ebT);
+      this.cancelForm.controls.ebN.setValue(ebN);
+      this.cancelForm.get('ebR').enable();
+      this.cancelForm.get('ebT').enable();
+      this.cancelForm.get('ebN').enable();
+      this.cancelForm.get('ebC').enable();
     }
   }
 }

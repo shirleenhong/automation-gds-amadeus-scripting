@@ -7,6 +7,7 @@ import { MatrixReportingComponent } from './matrix-reporting/matrix-reporting.co
 import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.component';
 import { ReportingRemarksComponent } from './reporting-remarks/reporting-remarks.component';
 import { PnrService } from '../../service/pnr.service';
+import { CarSavingsCodeComponent } from './car-savings-code/car-savings-code.component';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -18,6 +19,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;
   @ViewChild(MatrixReportingComponent) matrixReportingComponent: MatrixReportingComponent;
   @ViewChild(ReportingRemarksComponent) reportingRemarksComponent: ReportingRemarksComponent;
+  @ViewChild(CarSavingsCodeComponent) carSavingsCodeComponent: CarSavingsCodeComponent;
   hasTst: boolean;
   showHotelsTab: boolean;
   @Input() reportingRemarksView: any;
@@ -54,7 +56,10 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (!this.reportingRemarksComponent.reportingForm.valid) {
       return false;
     }
-
+    this.utilHelper.validateAllFields(this.carSavingsCodeComponent.carSavingsCodeGroup);
+    if (!this.carSavingsCodeComponent.carSavingsCodeGroup.valid) {
+      return false;
+    }
     return true;
   }
 }

@@ -200,8 +200,8 @@ Select Invoices, E-Tickets, Fee, And Non-BSP Accounting Lines
     Navigate To Page Send Invoice/Itinerary
     Select Invoices From The List    1
     Select E-Tickets To ReSend    1
-    Select Fee Accounting Lines From The List    1
-    Select Non-BSP Accounting Lines From The List    1
+    Select Fee Accounting Lines From The List    1    2
+    Select Non-BSP Accounting Lines From The List    1    2
     Enter Value    ${input_email}     InvoiceTest@email.com
     Take Screenshot
     Click Send Invoice Button
@@ -240,6 +240,7 @@ Verify That Accounting Remarks Are Written
     Get PNR Details
     Verify Expected Remarks Are Written In The PNR    True
     Verify Unexpected Remarks Are Not Written In The PNR
+    Verify Specific Remark Is Not Written In The PNR    RMZ SPCL-TKT
     
 Verify That All Selected Invoices, Tickets, Fess, Non-BSP And Email Added Are Written
     Switch To Graphic Mode
@@ -250,7 +251,8 @@ Verify That All Selected Invoices, Tickets, Fess, Non-BSP And Email Added Are Wr
     Verify Specific Remark Is Written In The PNR    RMZ SPCL-TKT-${eticket[2]} 
     Verify Specific Remark Is Written In The PNR    ${inv_remarks[1]}   
     Verify Specific Remark Is Written In The PNR    ${inv_remarks[2]}
-
+    Verify New MAC Remarks Are Written
+    
 Verify That PNR Is Correctly Queued
     Open Command Page
     Enter Cryptic Command    RTQ 
@@ -259,11 +261,11 @@ Verify That PNR Is Correctly Queued
 Verify New MAC Remarks Are Written
     Verify Specific Remark Is Written In The PNR     RM *MAC/-SUP-ACY/-LK-MAC1/-AMT-300.00/-PT-13.00RC/-PT-100
     Verify Specific Remark Is Written In The PNR     .00XT/CD-00.00
-    Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC1/-FOP-CCVI4444333322221111/-EXP-0820/-TK-
+    Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0820/-TK-
     Verify Specific Remark Is Written In The PNR     2211333555/-MP-ALL/-BKN-CON1234567/S2
     Verify Specific Remark Is Written In The PNR     RM *MAC/-SUP-A22/-LK-MAC2/-AMT-150.00/-PT-10.00RC/-PT-20.
     Verify Specific Remark Is Written In The PNR     00XT/S2
-    Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC2/-FOP-CCVI4444333322221111/-EXP-0820/-TK-
+    Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC2/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0820/-TK-
     Verify Specific Remark Is Written In The PNR     2211333555/-MP-ALL/-BKN-CON1234567/S2
      
     

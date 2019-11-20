@@ -30,6 +30,10 @@ ${input_waiver}    css=#waiver
 ${input_waiverAmount}    css=#waiverText
 ${form_segments}    //tbody[@formarrayname='segments']
 ${input_destination}    //input[@id='destinationList']
+${input_car_savings_code_start}    //div[@ng-reflect-name='
+${input_carSavings_checkBox_end}    ']//input[@name='chkIncluded']
+${select_carSavings_reasonCode_end}    ']//select[@name='carReasonCode']
+${tab_car_savings_code}    //span[contains(text(), 'Car Savings Code')]
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -63,17 +67,23 @@ Click Reporting Remarks Tab
     Wait Until Page Contains Element    ${list_routing_code}    30
     Set Test Variable    ${current_page}    Reporting Remarks
 
+Click Car Savings Code Tab
+    Wait Until Element Is Visible    ${tab_car_savings_code}    30
+    Click Element    ${tab_car_savings_code}
+    Wait Until Element Is Visible    ${input_car_savings_code_start}0${input_carSavings_checkBox_end}    30
+    Set Test Variable    ${current_page}    Car Savings Code
+    
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
-    Enter Value    ${fare_row_number}[${tst_number}]${input_full_fare}    ${full_fare_value}
+    Enter Value    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${input_full_fare}    ${full_fare_value}
 
 Enter Low Fare
     [Arguments]    ${low_fare_value}    ${tst_number}=1
-    Enter Value    ${fare_row_number}[${tst_number}]${input_low_fare}    ${low_fare_value}
+    Enter Value    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${input_low_fare}    ${low_fare_value}
 
 Select Reason Code
     [Arguments]    ${reason_code_value}    ${tst_number}=1
-    Select From List By Label    ${fare_row_number}[${tst_number}]${list_reason_code}    ${reason_code_value}
+    Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
 
 Add Client Reporting Values For Single BSP Segment
     Navigate To Page BSP Reporting
@@ -88,7 +98,7 @@ Add Client Reporting Values For Single BSP Segment
 
 Add Client Reporting Values For Multiple BSP Segment
     Navigate To Page BSP Reporting
-    Wait Until Page Contains Element    ${tab_clientReporting}[3]${checkbox_clientReporting}    60
+    Wait Until Page Contains Element    ${tab_clientReporting}${open_bracket}3${close_bracket}${checkbox_clientReporting}    60
     Select Client Reporting Fields To Be Written    1    2    3
     Enter Full Fare    4000.50
     Enter Low Fare    300.00
@@ -103,7 +113,7 @@ Add Client Reporting Values For Multiple BSP Segment
 
 Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
     Navigate To Page BSP Reporting
-    Wait Until Page Contains Element    ${tab_clientReporting}[2]${checkbox_clientReporting}    60
+    Wait Until Page Contains Element    ${tab_clientReporting}${open_bracket}2${close_bracket}${checkbox_clientReporting}    60
     Select Client Reporting Fields To Be Written    1    2
     Enter Full Fare    12000.50
     Enter Low Fare    1300.00
@@ -273,7 +283,7 @@ Verify CN And NUC Remark Are Updated Correctly For PNR With Hotel and Invoice Re
     Verify Specific Remark Is Written In The PNR    RM *NUC
     
 Click Add Waiver Button ${button_no}
-    Click Element    ${form_segments}[${button_no}]${button_addWaiver}
+    Click Element    ${form_segments}${open_bracket}${button_no}${close_bracket}${button_addWaiver}
     Wait Until Page Contains Element    ${list_waivers}     30
 
 Select Waivers Code Option For Single Ticket
@@ -399,3 +409,52 @@ Select Reason Code ${reason_code_value} For TST${tst_number}
     Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
     Sleep    2
     Take Screenshot
+    
+Add Car Savings Code For ${number_of} Segments
+    Navigate to Page Car Savings Code
+    Add ${number_of} Car Savings Code
+    Take Screenshot
+    
+Add ${number} Car Savings Code
+    ${limit}    Evaluate    ${number} - 1
+    : FOR    ${index}    IN RANGE    0    ${number}
+    \    Click Element    ${input_car_savings_code_start}${index}${input_carSavings_checkBox_end}
+    \    Run Keyword If    ${index} == 0    Select From List By Label     ${input_car_savings_code_start}${index}${select_carSavings_reasonCode_end}    I : Sold out
+    \    Run Keyword If    ${index} == 1    Select From List By Label     ${input_car_savings_code_start}${index}${select_carSavings_reasonCode_end}    C : Preferred size not available
+    \    Run Keyword If    ${index} == 2    Select From List By Label     ${input_car_savings_code_start}${index}${select_carSavings_reasonCode_end}    R : Preferred supplier not in city
+    \    Run Keyword If    ${index} == 3    Select From List By Label     ${input_car_savings_code_start}${index}${select_carSavings_reasonCode_end}    W : CWT negotiated rate accepted
+    \    Run Keyword If    ${index} == 4    Select From List By Label     ${input_car_savings_code_start}${index}${select_carSavings_reasonCode_end}    X : Booked company preferred car
+    \    ${index}    Evaluate   ${index} + 1
+    Take Screenshot
+    
+Verify Car Savings Code Remark For Single Passive Car Segments
+    Finish PNR
+    Assign Current Date
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}FRA/-SV-I
+    Verify Specific Remark Is Not Written In The PNR    RM *CS22MAYFRA/-SV-C
+
+Verify Car Savings Code Remark For Multiple Passive Car Segments
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}FRA/-SV-I
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}FRA/-SV-C
+    Verify Specific Remark Is Not Written In The PNR    RM *CS23DECPEK/-SV-W
+    
+Verify Car Savings Code Remark For Single Active Car Segments
+    Finish PNR
+    Assign Current Date
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YUL/-SV-I
+    
+Verify Car Savings Code Remark For Multiple Active Car Segments
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}LHR/-SV-I
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}CDG/-SV-C
+    
+Verify Car Savings Code Remark For Active And Passive Car Segments
+    Finish PNR
+    Assign Current Date
+    Verify Specific Remark Is Written In The PNR    RM *CS21FEBPEK/-SV-I
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-C
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}YYZ/-SV-R
+    Verify Specific Remark Is Not Written In The PNR    RM *CS23NOVPEK/-SV-X
+    Verify Specific Remark Is Not Written In The PNR    RM *CS14DECMEL/-SV-Y
+    

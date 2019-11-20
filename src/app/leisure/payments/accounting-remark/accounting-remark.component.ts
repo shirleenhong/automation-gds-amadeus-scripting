@@ -34,7 +34,7 @@ export class AccountingRemarkComponent implements OnInit {
     private pnrService: PnrService,
     private fb: FormBuilder,
     private utilHelper: UtilHelper
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.accountingRemarks = this.pnrService.getAccountingRemarks();
@@ -181,6 +181,7 @@ export class AccountingRemarkComponent implements OnInit {
     this.modalRef.content.accountingRemark.status = 'ADDED';
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     this.modalRef.content.FormOfPaymentChange(r.fop);
+    this.modalRef.content.accountingRemark.originalTktLine = '';
     this.modalRef.content.loadData();
   }
 

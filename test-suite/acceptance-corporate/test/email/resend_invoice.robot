@@ -1,11 +1,7 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
 Resource          ../../pages/base.robot
-Test Teardown    Close All Browsers
+Test Teardown     Close All Browsers
 
 *** Variables ***
 ${test_file_name}    resend_invoice
@@ -75,7 +71,6 @@ Verify That Invoice, E-Tickets, Fee, And Non-BSP Accounting Lines Are Resent And
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select Invoices, E-Tickets, Fee, And Non-BSP Accounting Lines
     Verify That All Selected Invoices, Tickets, Fess, Non-BSP And Email Added Are Written
-    Verify New MAC Remarks Are Written
     Verify That PNR Is Correctly Queued
     
     

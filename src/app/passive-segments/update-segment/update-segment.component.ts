@@ -614,7 +614,7 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() {}
+  pickUpLocChange() { }
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;
@@ -916,13 +916,14 @@ export class UpdateSegmentComponent implements OnInit {
       }
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
+      this.segmentForm.get('pickupOffAddress').enable();
       if (this.commandCache.loadPickupOffAddr === command || vendor === undefined) {
         return;
       }
       this.pickupOffAddrList = [];
       this.getOffAddress(this.pickupOffAddrList, command);
       this.commandCache.loadPickupOffAddr = command;
-      this.segmentForm.get('pickupOffAddress').enable();
+
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
       this.defaultTravelDateTime();
@@ -946,6 +947,7 @@ export class UpdateSegmentComponent implements OnInit {
       if (city.length < 3) {
         return;
       }
+      this.segmentForm.get('dropOffAddress').enable();
       const vendor = this.passiveSegments.vendorCode;
       const command = 'CL' + vendor + city;
       if (this.commandCache.loadDropOffAddr === command || vendor === undefined) {
@@ -954,7 +956,7 @@ export class UpdateSegmentComponent implements OnInit {
       this.dropOffAddrList = [];
       this.getOffAddress(this.dropOffAddrList, command);
       this.commandCache.loadDropOffAddr = command;
-      this.segmentForm.get('dropOffAddress').enable();
+
     } else {
       this.segmentForm.get('dropOffAddress').disable();
       this.defaultTravelDateTime();

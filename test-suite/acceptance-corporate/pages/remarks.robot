@@ -14,7 +14,7 @@ ${tab_visaAndPassport}     css=#visaPassportTab-link
 ${list_segment}    //ul[@id='dropdown-basic']
 ${button_close}    //button[contains(text(), 'Close')]
 ${tab_Seats}    //span[contains(text(), 'Seat')]
-${tab_ird_remarks}    //span[contains(text(), 'IRD Remarks')]
+${tab_ird_remarks}    //span[contains(text(), 'IRD Savings Accepted')]
 ${row_ird_status}    //tbody[@formarrayname='irdItems']
 ${select_ird_status}    //select[@id="irdStatus"]
 ${select_low_savingStatus}    //select[@id="lowSavingStatus"]
@@ -66,8 +66,8 @@ Click ESC Remarks Tab
    Set Test Variable    ${current_page}    ESC Remarks
     
 Click IRD Remarks Tab
-    Wait Until Element Is Visible    ${tab_irdRemarks}    30
-    Click Element    ${tab_irdRemarks}
+    Wait Until Element Is Visible    ${tab_ird_remarks}    30
+    Click Element    ${tab_ird_remarks}
     Set Test Variable    ${current_page}    IRD Remarks
 
 Click Document PNR Tab
@@ -107,17 +107,17 @@ Click Add Seat
     Set Test Variable    ${ticketing_details_complete}    no
     
 Populate Document PNR 
-    Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
+    Enter Value    ${row_documentPNR}${open_bracket}1${close_bracket}${input_document}    Testing Document PNR Remark
 
 Click Add Remark Button ${button_no}
-    Click Element   ${row_documentPNR}[${button_no}]${button_addRemark}
+    Click Element   ${row_documentPNR}${open_bracket}${button_no}${close_bracket}${button_addRemark}
     
 Populate Multiple Document PNR
     [Arguments]    @{document_values}
     Set Test Variable   ${document_index}    0
     : FOR    ${document_values}    IN    @{document_values}
     \    ${document_index}    Evaluate    ${document_index} + 1
-    \    Enter Value    ${row_documentPNR}[${document_index}]${input_document}    ${document_values}  
+    \    Enter Value    ${row_documentPNR}${open_bracket}${document_index}${close_bracket}${input_document}    ${document_values}  
     \    Click Add Remark Button ${document_index}
     \    Set Test Variable   ${document_index}
     \    Exit For Loop If  "${document_index}" == "4"    
@@ -129,7 +129,7 @@ Verify That Multiple Document PNR Can Be Added
 
 Verify That Single Document PNR Can Be Added
     Navigate To Page Document PNR
-    Enter Value    ${row_documentPNR}[1]${input_document}    Testing Document PNR Remark
+    Enter Value    ${row_documentPNR}${open_bracket}1${close_bracket}${input_document}    Testing Document PNR Remark
     Take Screenshot
     
 Verify That Document PNR Remarks Are Written In The PNR
@@ -141,12 +141,12 @@ Verify That Document PNR Remarks Are Written In The PNR
 Verify IRD Status Default Value Is Correct For ${ird_default_status} For Multi Segment
     Set Test Variable    ${ird_default_status}    
     ${actual_ird_status}    Get Element Attribute    ${select_ird_status}    ng-reflect-value
-    Run Keyword If    "${label_ird_savings_value}" == "0.00"    Should Contain    ${row_ird_status}[1]${select_ird_status}    NO LFO
+    Run Keyword If    "${label_ird_savings_value}" == "0.00"    Should Contain    ${row_ird_status}${open_bracket}1${close_bracket}${select_ird_status}    NO LFO
     
 Verify IRD Status Default Value Is Correct For ${ird_default_status} For Single Segment
     Set Test Variable    ${ird_default_status}    
     ${actual_ird_status}    Get Element Attribute    ${select_ird_status}    ng-reflect-value
-    Run Keyword If    "${label_ird_savings_value}" == "20.00"    Should Contain    ${row_ird_status}[3]${select_ird_status}    ACCEPTEDCP
+    Run Keyword If    "${label_ird_savings_value}" == "20.00"    Should Contain    ${row_ird_status}${open_bracket}3${close_bracket}${select_ird_status}    ACCEPTEDCP
 
 Select ${ird_status} As IRD Status With Value For Savings
     Set Test Variable    ${ird_status}    
@@ -173,7 +173,7 @@ Select Status For IRD
     \    ${status}    Run Keyword And Return Status    Element Should Be Enabled    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}
     \    Log    ${status}
     \    Run Keyword If    "${status}" == "True"    Select From List By Label    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}    ${ird_status}
-    \    #Select From List By Label    ${row_ird_status}[${statusfield_index}]${select_ird_status}    ${ird_status}
+    \    #Select From List By Label    ${row_ird_status}${open_bracket}${statusfield_index}${close_bracket}${select_ird_status}    ${ird_status}
     \    ${statusfield_index}    Evaluate    ${statusfield_index} + 1
     Take Screenshot
     
@@ -188,7 +188,7 @@ IRD Status
 
 Select IRD Status With Single Pricing And Segment In The PNR
     Wait Until Element Is Visible    ${row_ird_status} 
-    Select From List By Label    ${row_ird_status}[1]${select_low_savingStatus}    ACCEPTEDLFO
+    Select From List By Label    ${row_ird_status}${open_bracket}1${close_bracket}${select_low_savingStatus}    ACCEPTEDLFO
 
 Verify If IRD Status Are Written Correctly For Single Segment In The PNR
     Navigate To Page IRD Remarks

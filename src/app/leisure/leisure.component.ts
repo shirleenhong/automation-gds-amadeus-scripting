@@ -27,6 +27,7 @@ import { common } from '../../environments/common';
 import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { OtherRemarksService } from '../service/leisure/other-remarks.service';
 import { AmadeusRemarkService } from '../service/amadeus-remark.service';
+import { ResendInvoiceComponent } from '../corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
 
 @Component({
   selector: 'app-leisure',
@@ -59,6 +60,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(MatrixInvoiceComponent) invoiceComponent: MatrixInvoiceComponent;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(CancelComponent) cancelComponent: CancelComponent;
+  @ViewChild(ResendInvoiceComponent) resendInvoiceComponent: ResendInvoiceComponent;
 
   errorPnrMsg = '';
   eventSubscribe = false;
@@ -543,6 +545,13 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
+  public async reSendInvoice() {
+    if (this.isPnrLoaded) {
+      await this.getPnrService();
+      this.workflow = 're-invoice';
+    }
+  }
+
   public async sendItineraryAndQueue() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
@@ -598,5 +607,33 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     //     this.SendInvoiceItinerary();
     //   }
     // });
+  }
+
+  async ReSendInvoice() {
+    const remarkCollection = new Array<RemarkGroup>();
+    if (!this.resendInvoiceComponent.invoiceFormGroup.valid) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading({ msg: 'Sending Invoice...' }); 
+    remarkCollection.push(this.invoiceService.getResendInvoice(this.resendInvoiceComponent));
+
+    this.leisureRemarkService.BuildRemarks(remarkCollection);
+    this.leisureRemarkService.SubmitRemarks().then(
+      () => {
+        this.isPnrLoaded = false;
+        this.getPnr();
+        this.workflow = '';
+      },
+      (error) => {
+        this.showMessage({ msg: 'Error while sending Itinerary and Queueing', type: MessageType.Error });
+        console.log(JSON.stringify(error));
+      }
+    );
   }
 }

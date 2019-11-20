@@ -31,6 +31,11 @@ Click Cancel Segment
     Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Back To Main Menu')]    30
 
+Click Re-Send Invoice And Itinerary
+    Sleep    5
+    Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
+    Wait Until Element Is Visible    xpath=//button[contains(text(), ' Re-send Invoice/Itinerary ')]    30
+
 Confirm Delete
     Set Focus To Element    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]
     Click Button    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]

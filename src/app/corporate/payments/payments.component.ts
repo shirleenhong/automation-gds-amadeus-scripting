@@ -20,7 +20,6 @@ export class PaymentsComponent implements OnInit {
   }
 
   checkValid() {
-    debugger;
     this.utilHelper.validateAllFields(this.nonAcceptance.nonAcceptanceForm);
     if (!this.nonAcceptance.nonAcceptanceForm.valid) {
       return false;

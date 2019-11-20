@@ -75,13 +75,13 @@ export class NonAcceptanceComponent implements OnInit {
   updateValue(val: any, i: any) {
     const newVal = val.currentTarget.value;
     const isChecked = val.currentTarget.checked;
-
     let items: any;
     // tslint:disable-next-line: no-string-literal
     items = this.nonAcceptanceForm.get('segments')['controls'];
     if (isChecked) {
       this.tstSelected.push(newVal);
       items[i].controls.ccNo.enable();
+      items[i].controls.ccNo.markAsDirty();
       items[i].controls.ccNo.setValidators([Validators.required, validateCreditCard('ccVendor')]);
       items[i].controls.ccNo.updateValueAndValidity();
     } else {
@@ -332,15 +332,21 @@ export class NonAcceptanceComponent implements OnInit {
   getCCNo(segment: any) {
     let ccNo: string;
     let ccLength: number;
-    this.pnrService.pnrObj.fpElements.forEach((x) => {
-      if (x.associations !== null && x.associations.length > 0 && x.associations[0].tatooNumber === segment) {
-        ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
-        ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(8, ccLength);
-      } else {
+
+    if (segment !== '') {
+      this.pnrService.pnrObj.fpElements.forEach((x) => {
+        if (x.associations !== null && x.associations.length > 0 && x.associations[0].tatooNumber === segment) {
+          ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
+          ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(8, ccLength);
+        }
+      });
+    } else {
+      this.pnrService.pnrObj.fpElements.forEach((x) => {
         ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
         ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(4, ccLength);
-      }
-    });
+      });
+    }
+
     return ccNo;
   }
 

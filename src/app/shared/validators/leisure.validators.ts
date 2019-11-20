@@ -52,7 +52,6 @@ export function validateCreditCard(vendorControlName): ValidatorFn {
     if (currentControl.parent === undefined) {
       return { no_value: true };
     }
-    debugger;
     const vendor = currentControl.parent.get(vendorControlName).value;
     //  let response = null;
     let pat = '';

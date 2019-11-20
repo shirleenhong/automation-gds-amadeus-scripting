@@ -886,13 +886,17 @@ export class PaymentRemarkService {
           remarkSet.set('TotalCost', x.cost);
         }
         this.remarksManager.createPlaceholderValues(remarkSet);
-
         remarkSet = new Map<string, string>();
         remarkSet.set('CCVendor', x.ccVendor);
         if (x.ccNumber) {
-          remarkSet.set('CCNo', x.ccNumber);
+          let ccN: string;
+          // tslint:disable-next-line: no-string-literal
+          const look = nonAcceptance.nonAcceptanceForm.controls['segments'].value;
+          // tslint:disable-next-line: no-string-literal
+          ccN = look.find((i) => i.ccVendor === x.ccVendor)['ccNo'];
+          remarkSet.set('CCNo', ccN);
+          remarkSet.set('CCExp', x.ccExp);
         }
-        remarkSet.set('CCExp', x.ccExp);
         if (x.ccVendor === 'VI') {
           glCode = '115000';
         } else if (x.ccVendor === 'CA') {
@@ -902,7 +906,6 @@ export class PaymentRemarkService {
         }
         remarkSet.set('GlCode', glCode);
         this.remarksManager.createPlaceholderValues(remarkSet);
-
         remarkSet = new Map<string, string>();
         if (glCode) {
           remarkSet.set('GlCode', glCode);

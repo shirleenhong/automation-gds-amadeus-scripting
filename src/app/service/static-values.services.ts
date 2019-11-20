@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -470,5 +471,38 @@ export class StaticValuesService {
             { itemText: 'WORLD TRAVEL-MIDDLE EAST/INDIAWORLD ME INDIA', itemValue: 'MIDDLE EAST/INDIAWORLD ME INDIA' },
             { itemText: 'WORLD TRAVEL-WORLDWIDE', itemValue: 'WORLDWIDE' }
         ];
+    }
+
+    getAirlineVendor(airportCode: string, vendorCode: string) {
+       let airportList = [];
+       airportList = [
+        { itemText: 'AI', itemValue: 'AX,VI,CA' },
+        { itemText: '2K', itemValue: 'VI,CA' },
+        { itemText: 'KM', itemValue: 'AX' },
+        { itemText: 'PW', itemValue: 'AX' },
+        { itemText: 'AH', itemValue: 'AX' },
+        { itemText: 'OM', itemValue: 'AX' },
+        { itemText: 'S3', itemValue: 'AX,VI,CA' },
+        { itemText: 'VN', itemValue: 'AX' },
+        { itemText: 'T4', itemValue: 'AX,VI,CA' },
+        { itemText: '3U', itemValue: 'AX' },
+        { itemText: 'PY', itemValue: 'VI' },
+        { itemText: 'QV', itemValue: 'AX' },
+        { itemText: 'BP', itemValue: 'AX' },
+        { itemText: 'WB', itemValue: 'AX' },
+        { itemText: 'PC', itemValue: 'AX' },
+        { itemText: 'GL', itemValue: 'AX' },
+        { itemText: 'ML', itemValue: 'AX,VI,CA' },
+        { itemText: 'W3', itemValue: 'AX,VI,CA' },
+        { itemText: 'UT', itemValue: 'AX' },
+        { itemText: 'GA', itemValue: 'AX' },
+        { itemText: 'G3', itemValue: 'AX' },
+        { itemText: 'AF', itemValue: 'VI, CA' },
+        { itemText: 'AC', itemValue: 'VI, CA' }
+    ];
+       if (environment.production) {
+         airportList.splice(23, 1);
+       }
+       return airportList.findIndex((x) => x.itemText === airportCode && x.itemValue.includes(vendorCode)) ;
     }
 }

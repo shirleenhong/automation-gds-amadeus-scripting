@@ -2,11 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { StaticValuesService } from '../../../service/static-values.services';
-// import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { SelectItem } from 'src/app/models/select-item.model';
-import { validateExpDate, validateCreditCard } from 'src/app/shared/validators/leisure.validators';
-// import { validateCreditCard } from 'src/app/shared/validators/leisure.validators';
+import { validateCreditCard } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-non-acceptance',

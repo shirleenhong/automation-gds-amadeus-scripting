@@ -151,7 +151,6 @@ export class NonAcceptanceComponent implements OnInit {
     const tstObj = this.pnrService.tstObj;
     const ticketedSegments = [];
 
-    debugger;
     for (const tst of this.pnrService.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
       const segmentName = tst.elementManagementData.segmentName;
       if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {

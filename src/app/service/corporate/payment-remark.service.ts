@@ -876,39 +876,39 @@ export class PaymentRemarkService {
   }
 
   writeCorporateReceiptRemarks(nonAcceptance: NonAcceptanceComponent) {
-    nonAcceptance.unticketedSegments.forEach((x) => {
-      if (nonAcceptance.tstSelected.includes(x.tstNumber)) {
-        let remarkSet = new Map<string, string>();
-        let glCode: string;
-        remarkSet.set('PAXLastName', x.paxName.split('-')[1]);
-        remarkSet.set('PAXFirstName', x.paxName.split('-')[0]);
-        if (x.cost) {
-          remarkSet.set('TotalCost', x.cost);
-        }
-        this.remarksManager.createPlaceholderValues(remarkSet);
-
-        remarkSet = new Map<string, string>();
-        remarkSet.set('CCVendor', x.ccVendor);
-        if (x.ccNumber) {
-          remarkSet.set('CCNo', x.ccNumber);
-        }
-        remarkSet.set('CCExp', x.ccExp);
-        if (x.ccVendor === 'VI') {
-          glCode = '115000';
-        } else if (x.ccVendor === 'CA') {
-          glCode = '116000';
-        } else if (x.ccVendor === 'AX') {
-          glCode = '117000';
-        }
-        remarkSet.set('GlCode', glCode);
-        this.remarksManager.createPlaceholderValues(remarkSet);
-
-        remarkSet = new Map<string, string>();
-        if (glCode) {
+    if (!nonAcceptance.unticketedSegments === undefined) {
+      nonAcceptance.unticketedSegments.forEach((x) => {
+        if (nonAcceptance.tstSelected.includes(x.tstNumber)) {
+          let remarkSet = new Map<string, string>();
+          let glCode: string;
+          remarkSet.set('PAXLastName', x.paxName.split('-')[1]);
+          remarkSet.set('PAXFirstName', x.paxName.split('-')[0]);
+          if (x.cost) {
+            remarkSet.set('TotalCost', x.cost);
+          }
+          this.remarksManager.createPlaceholderValues(remarkSet);
+          remarkSet = new Map<string, string>();
+          remarkSet.set('CCVendor', x.ccVendor);
+          if (x.ccNumber) {
+            remarkSet.set('CCNo', x.ccNumber);
+          }
+          remarkSet.set('CCExp', x.ccExp);
+          if (x.ccVendor === 'VI') {
+            glCode = '115000';
+          } else if (x.ccVendor === 'CA') {
+            glCode = '116000';
+          } else if (x.ccVendor === 'AX') {
+            glCode = '117000';
+          }
           remarkSet.set('GlCode', glCode);
+          this.remarksManager.createPlaceholderValues(remarkSet);
+          remarkSet = new Map<string, string>();
+          if (glCode) {
+            remarkSet.set('GlCode', glCode);
+          }
+          this.remarksManager.createPlaceholderValues(remarkSet);
         }
-        this.remarksManager.createPlaceholderValues(remarkSet);
-      }
-    });
+      });
+    }
   }
 }

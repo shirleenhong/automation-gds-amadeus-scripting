@@ -285,7 +285,7 @@ export class CorporateComponent implements OnInit {
     // }
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
-    if (this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
+    if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
 

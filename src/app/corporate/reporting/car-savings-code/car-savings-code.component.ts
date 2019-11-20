@@ -64,7 +64,6 @@ export class CarSavingsCodeComponent implements OnInit {
     const allSegments = this.pnrService.getSegmentList();
     const allCarSegments = this.getCarSegments(allSegments);
     const allCarRemarks = this.getCarRemarks();
-    //this.addPassiveCarSegments(allCarSegments);
     this.addCarSegments(allCarRemarks, allCarSegments);
     this.deleteRemarks = this.getDeletedRemarks(allCarRemarks, allCarSegments);
   }

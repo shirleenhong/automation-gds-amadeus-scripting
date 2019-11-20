@@ -52,6 +52,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Select Routing Code    Asia incl. India
     Enter Destination Code    YUL
     Enter Company Name    Umbrella Corp
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Enter Reason for No Association Fees    Not applicable
@@ -97,6 +98,7 @@ Verify That The Leisure UDID Remarks Are Written and Updated Correctly If CF Rem
     Click Panel    Reporting
     Select Routing Code    Canada and St. Pierre et Miquelon
     Enter Destination Code    YYT
+    Select Insurance Liability Waiver    All Inclusive or Premium Protection Insurance
     Click Panel    Payment
     Click Payment Tab    Leisure Fee
     Click Add Leisure Fee Collection Button

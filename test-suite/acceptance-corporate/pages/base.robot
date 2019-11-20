@@ -38,7 +38,7 @@ ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
 ${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
 ${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
-${button_send_invoice_itinerary}    //button[contains(text(), 'Send Invoice/Itinerary')]
+${button_send_invoice_itinerary}    //button[contains(text(), 'Re-send Invoice/Itinerary')]
 ${open_bracket}     [
 ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
@@ -50,13 +50,13 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
-@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks
+@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
-${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S
+${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 
 *** Keywords ***
 Enter Value
@@ -93,7 +93,7 @@ Click Cancel Segments
     Sleep    5
     Wait Until Page Contains Element    ${button_cancel_segments}     180
     Click Element At Coordinates    ${button_cancel_segments}    0    0
-    Wait Until Element Is Visible    ${input_requestor}     30
+    Wait Until Element Is Visible    ${input_requestor}     120
     Set Test Variable    ${current_page}    Cancel Segments
     Set Test Variable    ${pnr_submitted}   no
     Set Test Variable    ${non_bsp_ticket_credit_complete}    no
@@ -106,6 +106,8 @@ Click Itinerary And Queue
     Wait Until Element Is Visible    ${select_transaction}      30
     Set Test Variable    ${current_page}    Follow-Up Queue S
     Set Test Variable    ${pnr_submitted}    no
+    Set Test Variable    ${ticketing_complete}    no
+    Set Test Variable    ${cwt_itin_complete}    no
     [Teardown]    Take Screenshot  
     
 Click Send Itinerary And Queue
@@ -118,6 +120,7 @@ Click Send Itinerary And Queue
     Set Test Variable    ${current_page}     CWT Corporate
     Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+    
 
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
@@ -319,6 +322,7 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Matrix Reporting"    Click Matrix Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
+    ...    ELSE IF    "${destination_page}" == "Car Savings Code"    Click Car Savings Code Tab
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
@@ -352,6 +356,7 @@ Navigate From Itinerary And Queue
     Run Keyword If    "${in_itinerary_and_queue}" == "False"    Click Itinerary And Queue Panel
     Run Keyword If    "${destination_page}" == "Follow-Up Queue S"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "CWT Itinerary"    Click CWT Itinerary Tab
+    ...    ELSE IF    "${destination_page}" == "TKTL Update For Aqua Ticketing"    Click TKTL Update For Aqua Ticketing Tab
        
 Click Itinerary And Queue Panel
     Wait Until Element Is Visible    ${panel_itinerary_and_queue}    60
@@ -364,10 +369,16 @@ Finish PNR
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     ${in_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
-    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Click Submit To PNR    ${close_corporate_test}    ${queueing}
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Send Itinerary And Queue    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"    Fill Up Required And Cancel Segments
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
+
+Send Itinerary And Queue
+    [Arguments]    ${close_corporate_test}    ${queueing}
+    Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
+    Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
+    Click Submit To PNR    ${close_corporate_test}    ${queueing}
 
 Fill Up Required And Cancel Segments
      Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
@@ -496,7 +507,7 @@ Get Test Data From Json
     Get Historical Remark Values From Json    ${json_file_object}    ${client_data}
     ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
     ${num_htl_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumHotelSegments
-    Set Test variable    ${num_car_segments}
+    Get Car Segment Values From Json    ${json_file_object}    ${client_data}
     Set Test variable    ${num_htl_segments}
     
 Get Passenger Info From Json
@@ -554,6 +565,17 @@ Get Air Segment Values From Json
     \    Set Test Variable    ${air_seg_route_${i}}    ${air_seg_route}
     \    Set Test Variable    ${airline_code_${i}}    ${airline_code}
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
+    \    ${i}    Evaluate    ${i} + 1
+    
+Get Car Segment Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
+    Set Test variable    ${num_car_segments}
+    : FOR     ${i}    IN RANGE    1    int(${num_car_segments}+1)
+    \    ${exists}     Run Keyword And Return Status      Get Json Value As String    ${json_file_object}    $.['${client_data}'].CarPickUpCity${i}
+    \    ${car_pickup_city}    Run Keyword If    "${exists}" == "True"    Get Json Value As String    ${json_file_object}    $.['${client_data}'].CarPickUpCity${i}
+    \    ${car_pickup_city}    Set Variable If     "${exists}" == "True"    ${car_pickup_city}    YUL    
+    \    Set Test Variable    ${car_pickup_city${i}}    ${car_pickup_city}
     \    ${i}    Evaluate    ${i} + 1
 
 Verify Expected Remarks Are Written In The PNR
@@ -621,3 +643,8 @@ Get Ticket Number
     ${ticket_num}    Fetch From Left    ${ticket_num}    /
     Set Test Variable   ${ticket_num}
     Switch To Command Page
+
+Complete The PNR In Full Wrap
+    Navigate To Page Reporting Remarks
+    Finish PNR
+    

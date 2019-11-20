@@ -9,6 +9,8 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { PnrService } from '../pnr.service';
 import { BehaviorSubject } from 'rxjs';
 import { DDBService } from '../ddb.service';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,8 @@ export class PaymentRemarkService {
     private remarksManager: RemarksManagerService,
     private pnrService: PnrService,
     private rms: RemarksManagerService,
-    private ddbService: DDBService
+    private ddbService: DDBService,
+    private queService: AmadeusQueueService
   ) {}
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
@@ -35,10 +38,7 @@ export class PaymentRemarkService {
           x.accountingTypeRemark === 'ACPP' ||
           x.accountingTypeRemark === 'ACPR' ||
           x.accountingTypeRemark === 'WCPP' ||
-          x.accountingTypeRemark === 'PCPP' // ||
-        // x.accountingTypeRemark === 'ACPPC' ||
-        // x.accountingTypeRemark === 'WCPPC' ||
-        // x.accountingTypeRemark === 'PCPPC'
+          x.accountingTypeRemark === 'PCPP'
       )
     );
 
@@ -64,6 +64,35 @@ export class PaymentRemarkService {
           airline = 'PD';
         }
 
+        if (account.gst === undefined) {
+          account.gst = '0.00';
+        }
+        if (account.qst === undefined) {
+          account.qst = '0.00';
+        }
+        if (account.hst === undefined) {
+          account.hst = '0.00';
+        }
+        if (account.otherTax === undefined) {
+          account.otherTax = '0.00';
+        }
+
+        if (account.gstRefund === undefined) {
+          account.gstRefund = '0.00';
+        }
+        if (account.qstRefund === undefined) {
+          account.qstRefund = '0.00';
+        }
+        if (account.hstRefund === undefined) {
+          account.hstRefund = '0.00';
+        }
+        if (account.otherTaxRefund === undefined) {
+          account.otherTaxRefund = '0.00';
+        }
+        if (account.otherTax === undefined) {
+          account.otherTax = '0.00';
+        }
+
         const cancelSegmentrelate: string[] = [];
         const segmentDetails = this.pnrService.getSegmentList();
 
@@ -71,19 +100,6 @@ export class PaymentRemarkService {
         if (look) {
           cancelSegmentrelate.push(look.tatooNo);
         }
-
-        this.writeTicketingLine(
-          account.tkMacLine.toString(),
-          account.baseAmount,
-          account.gst,
-          account.hst,
-          account.qst,
-          account.otherTax,
-          '0',
-          cancelSegmentrelate,
-          account.supplierCodeName,
-          account.tktLine
-        );
 
         if (account.tktLine !== '') {
           const ticketAmountRemarks = new Map<string, string>();
@@ -107,11 +123,11 @@ export class PaymentRemarkService {
         // TKT%TktRemarkNbr%-BA-%CancelFee%/TX1-%CancelGst%XG/TX2-%CancelHst%RC/TX3-%CancelQst%XQ/TX4-%CancelOthTax%XT/COMM-0.00'
         const cancelFeeTktRemark = new Map<string, string>();
         cancelFeeTktRemark.set('TktRemarkNbr', account.tkMacLine.toString());
-        cancelFeeTktRemark.set('CancelFee', account.baseAmountRefund);
-        cancelFeeTktRemark.set('CancelGst', account.gstRefund);
-        cancelFeeTktRemark.set('CancelHst', account.hstRefund);
-        cancelFeeTktRemark.set('CancelQst', account.qstRefund);
-        cancelFeeTktRemark.set('CancelOthTax', account.otherTaxRefund);
+        cancelFeeTktRemark.set('CancelFee', account.baseAmount);
+        cancelFeeTktRemark.set('CancelGst', account.gst);
+        cancelFeeTktRemark.set('CancelHst', account.hst);
+        cancelFeeTktRemark.set('CancelQst', account.qst);
+        cancelFeeTktRemark.set('CancelOthTax', account.otherTax);
         this.remarksManager.createPlaceholderValues(cancelFeeTktRemark, null, cancelSegmentrelate);
 
         const refundStart = new Map<string, string>();
@@ -128,35 +144,41 @@ export class PaymentRemarkService {
         nonBspRemark.set('OrgOid', account.oidOrigTicketIssue);
         this.remarksManager.createPlaceholderValues(nonBspRemark, null, null);
 
+        // RMX/REFUND BASE-[refund_Base]  GST-[refund_GST]  HST-[refund_Hst]  QST-[refund_Qst]  OTH TAX-[refund_Othtax]
         const refundBaseRemark = new Map<string, string>();
         refundBaseRemark.set('CancelFee', account.baseAmountRefund);
         refundBaseRemark.set('CancelGst', account.gstRefund);
         refundBaseRemark.set('CancelHst', account.hstRefund);
         refundBaseRemark.set('CancelQst', account.qstRefund);
         refundBaseRemark.set('CancelOthTax', account.otherTaxRefund);
-        refundBaseRemark.set('CaRefundCommision', account.commisionRefund);
         this.remarksManager.createPlaceholderValues(refundBaseRemark, null, null);
 
-        const notes1 = new Map<string, string>();
-        notes1.set('CaAmadeusNotes1', account.additionalNotes1);
-        this.remarksManager.createPlaceholderValues(notes1, null, null);
+        const refundBaseCommisionRemark = new Map<string, string>();
+        refundBaseCommisionRemark.set('CaRefundCommision', account.commisionRefund);
+        this.remarksManager.createPlaceholderValues(refundBaseCommisionRemark, null, null);
 
-        const notes2 = new Map<string, string>();
-        notes2.set('CaAmadeusNotes2', account.additionalNotes2);
-        this.remarksManager.createPlaceholderValues(notes2, null, null);
-
+        if (account.additionalNotes1) {
+          const notes1 = new Map<string, string>();
+          notes1.set('CaAmadeusNotes1', account.additionalNotes1);
+          this.remarksManager.createPlaceholderValues(notes1, null, null);
+        }
+        if (account.additionalNotes2) {
+          const notes2 = new Map<string, string>();
+          notes2.set('CaAmadeusNotes2', account.additionalNotes2);
+          this.remarksManager.createPlaceholderValues(notes2, null, null);
+        }
         const refundEnd = new Map<string, string>();
         refundEnd.set('CARefundEnd', 'true');
         this.remarksManager.createPlaceholderValues(null, refundEnd, null, null, '**********************************************');
 
         const priceForRemark = new Map<string, string>();
-        // tslint:disable-next-line: max-line-length
+
         const totalPrice =
-          parseFloat(account.baseAmountRefund) +
-          parseFloat(account.gstRefund) +
-          parseFloat(account.hstRefund) +
-          parseFloat(account.qstRefund) +
-          parseFloat(account.otherTaxRefund);
+          parseFloat(account.baseAmount) +
+          parseFloat(account.gst) +
+          parseFloat(account.hst) +
+          parseFloat(account.qst) +
+          parseFloat(account.otherTax);
         priceForRemark.set('CATotalPrice', this.decPipe.transform(totalPrice, '1.2-2').replace(',', ''));
         this.remarksManager.createPlaceholderValues(priceForRemark, null, null);
 
@@ -170,19 +192,40 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(passCancelledRemark, null, null);
 
         const cancelFeeRemark = new Map<string, string>();
-        cancelFeeRemark.set('CancelFee', account.baseAmountRefund);
+        cancelFeeRemark.set('CancelFee', account.baseAmount);
         this.remarksManager.createPlaceholderValues(cancelFeeRemark, null, null);
 
         const travellerCreditCardCondition = new Map<string, string>();
         travellerCreditCardCondition.set('CACancelRemark', 'true');
         this.remarksManager.createPlaceholderValues(null, travellerCreditCardCondition, null, null, 'THE TRAVELLERS CREDIT CARD.');
 
-        // to do check if U14 exist
         if (this.pnrService.getRemarkText('U14/-' + airline + 'PASS') !== '') {
           const u14Remark = new Map<string, string>();
           u14Remark.set('CancelAirlineCodePassChg', airline);
           this.remarksManager.createPlaceholderValues(u14Remark, null, null);
         }
+
+        const highFareRemark = new Map<string, string>();
+        const lowFareRemark = new Map<string, string>();
+        const airReasonCodeRemark = new Map<string, string>();
+
+        highFareRemark.set('CAAirHighFare', this.decPipe.transform(totalPrice, '1.2-2').replace(',', ''));
+        lowFareRemark.set('CAAirLowFare', this.decPipe.transform(totalPrice, '1.2-2').replace(',', ''));
+        airReasonCodeRemark.set('CAAirRealisedSavingCode', 'E');
+
+        this.remarksManager.createPlaceholderValues(highFareRemark, null, cancelSegmentrelate);
+        this.remarksManager.createPlaceholderValues(lowFareRemark, null, cancelSegmentrelate);
+        this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, cancelSegmentrelate);
+
+        const originalTicketRemarks = new Map<string, string>();
+        originalTicketRemarks.set('OriginalTicketNumber', account.tktLine);
+        this.remarksManager.createPlaceholderValues(originalTicketRemarks, null, null);
+        const consultantNoRemarkStatic = new Map<string, string>();
+        consultantNoRemarkStatic.set('IsNuc', 'true');
+        this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
+
+        this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
+        this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 70, 1));
       }
     });
   }
@@ -419,6 +462,9 @@ export class PaymentRemarkService {
   }
 
   writeTicketingLine(tktNo, baseAmount, gst, hst, qst, otherTax, comm, segmentrelate, supplierCodeName, tktline?) {
+    if (comm === undefined) {
+      comm = '0.00';
+    }
     const ticketAmountRemarks = new Map<string, string>();
     ticketAmountRemarks.set('TktRemarkNbr', tktNo.toString());
     ticketAmountRemarks.set('BaseAmt', this.decPipe.transform(baseAmount, '1.2-2').replace(',', ''));
@@ -664,6 +710,7 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
+
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {

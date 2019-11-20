@@ -5,6 +5,7 @@ Resource          common_library.robot
 Click Panel
     [Arguments]    ${panel_name}
     Wait Until Element Is Visible    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]    60
+    Run Keyword If    '${panel_name}' == 'Reporting'    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), 'Payment')]    ELSE    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
     Click Element    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
     [Teardown]    Take Screenshot
 
@@ -29,6 +30,11 @@ Click Cancel Segment
     Sleep    5
     Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Back To Main Menu')]    30
+
+Click Re-Send Invoice And Itinerary
+    Sleep    5
+    Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
+    Wait Until Element Is Visible    xpath=//button[contains(text(), ' Re-send Invoice/Itinerary ')]    30
 
 Confirm Delete
     Set Focus To Element    xpath=//div[@class='modal-footer']//button[contains(text(),'Yes')]

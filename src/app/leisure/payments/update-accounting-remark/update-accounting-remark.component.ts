@@ -522,6 +522,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.initializeCopy();
     this.matrixAccountingForm.controls.passengerNo.patchValue('');
     this.matrixAccountingForm.controls.tktLine.patchValue('');
+
     if (copyFields === 'fare') {
       this.matrixAccountingForm.controls.vendorCode.patchValue('');
       this.matrixAccountingForm.controls.fop.patchValue('');

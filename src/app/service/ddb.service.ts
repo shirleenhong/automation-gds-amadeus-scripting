@@ -8,6 +8,7 @@ import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-missed-saving-threshold.model';
 import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
 import { ApprovalItem } from '../models/ddb/approval.model';
+import { PnrService } from './pnr.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class DDBService implements OnInit {
 
   ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService, private pnrService: PnrService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -197,30 +198,50 @@ export class DDBService implements OnInit {
   }
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
-    this.reasonCodeList = [];
-    await this.getRequest(common.reasonCodesService + '?&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then((response) => {
-      response.ReasonCodeItems.forEach((reasonJson) => {
-        this.reasonCodeList.push(new ReasonCode(reasonJson));
-      });
-    });
+    const reasons = [];
+    await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
+      (response) => {
+        if (response.ReasonCodeItems) {
+          response.ReasonCodeItems.forEach((reasonJson) => {
+            reasons.push(new ReasonCode(reasonJson));
+          });
+        }
+      }
+    );
+    return reasons;
   }
 
-  getReasonCodeByTypeId(ids: number[], language: string, productID: number): Array<ReasonCode> {
-    // const reasonCode = new  ReasonCode(any);
-    // reasonCode.productId = 1;
-    // reasonCode.reasonCode = '';
-    // this.reasonCodeList.push(reasonCode);
-    return this.reasonCodeList.filter(
-      (e) => ids.indexOf(e.reasonCodeTypeId) >= 0 && e.reasonCodeProductTypeDescriptions.get(language) && e.productId === productID
-    );
+  async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
+    const reasonCodeList = [];
+    for (const id of ids) {
+      await this.getReasonCodeByClientSubUnit(
+        this.pnrService.getClientSubUnit(),
+        '&LanguageCode=en-GB&ProductId=' + productID + '&ReasonCodeTypeId=' + id
+      ).then((response) => {
+        response.forEach((reason) => {
+          reasonCodeList.push(reason);
+        });
+      });
+    }
+    return reasonCodeList;
   }
   // getReasonCodeByTypeId(integer[]) {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
   // }
 
-  // async getReasonCodeByClientSubUnit(clientSubUnitId: string) {
-  //   return await this.getRequest(common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId));
-  // }
+  async getReasonCodeByClientSubUnit(clientSubUnitId: string, otherParam: string) {
+    const reasons = [];
+    await this.getRequest(
+      common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1' + otherParam
+    ).then((response) => {
+      if (response.ReasonCodeItems) {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          reasons.push(new ReasonCode(reasonJson));
+        });
+      }
+    });
+    return reasons;
+  }
 
   // async getReasonCodeByProductIdAndTypeId(productId: string, reasonCodeTypeId: string) {
   //   return await this.getRequest(

@@ -255,7 +255,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('hst').updateValueAndValidity();
         this.matrixAccountingForm.controls.qst.clearValidators();
         this.matrixAccountingForm.get('qst').updateValueAndValidity();
+        this.matrixAccountingForm.controls.otherTax.clearValidators();
+        this.matrixAccountingForm.get('otherTax').updateValueAndValidity();
         this.onCheckChange();
+
         break;
       case 'ACPP':
       case 'WCPP':
@@ -271,6 +274,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('gst').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('hst').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('qst').setValidators([Validators.required, Validators.maxLength(8)]);
+        this.matrixAccountingForm.get('otherTax').setValidators([Validators.required, Validators.maxLength(8)]);
         this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
         this.enableFormControls(['departureCity', 'passPurchase'], false);
         this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
@@ -414,6 +418,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       console.log('supCode: ' + this.accountingRemark.supplierCodeName);
     }
+    this.matrixAccountingForm.get('tktLine').markAsTouched({ onlySelf: true });
+    this.matrixAccountingForm.get('tktLine').updateValueAndValidity({ onlySelf: true, emitEvent: true });
   }
 
   getAirlineCode(segmentno) {
@@ -556,6 +562,9 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierCodeName').valueChanges.subscribe(() => {
       this.matrixAccountingForm.controls.tktLine.clearValidators();
       switch (this.accountingRemark.accountingTypeRemark) {
+        case 'ACPPC':
+          this.setMandatoryTicket(['ACJ', 'WJP', 'PTP'], false);
+          break;
         case 'ACPP':
         case 'WCPP':
         case 'PCPP':

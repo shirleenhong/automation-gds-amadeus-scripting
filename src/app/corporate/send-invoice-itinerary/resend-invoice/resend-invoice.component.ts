@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
+
 import { DDBService } from 'src/app/service/ddb.service';
 import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-select.component';
+import { InvoiceRemarkService } from 'src/app/service/corporate/invoice-remark.service';
 @Component({
   selector: 'app-resend-invoice',
   templateUrl: './resend-invoice.component.html',
@@ -11,10 +12,12 @@ import { SegmentSelectComponent } from 'src/app/shared/segment-select/segment-se
 })
 export class ResendInvoiceComponent implements OnInit {
   invoiceFormGroup: FormGroup;
-  constructor(private pnrService: PnrService,
+  constructor(
+    private pnrService: PnrService,
     private invoiceRmkService: InvoiceRemarkService,
     private formBuilder: FormBuilder,
-    private ddbService: DDBService) { }
+    private ddbService: DDBService
+  ) {}
   showSegments = false;
   showInvoiceList = false;
   selectedElementsUI = {
@@ -42,7 +45,7 @@ export class ResendInvoiceComponent implements OnInit {
       eTicketNo: new FormControl('', []),
       feesAccountingNo: new FormControl('', []),
       nonBspAccountingNo: new FormControl('', []),
-      emailAddresses: new FormArray([this.createFormGroup()]),
+      emailAddresses: new FormArray([this.createFormGroup()])
     });
     this.resendInvoiceProcess();
   }
@@ -121,8 +124,7 @@ export class ResendInvoiceComponent implements OnInit {
   }
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
-      emailAddress: new FormControl('',
-        [Validators.required, Validators.pattern('^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[A-Z0-9.-]+?\\.[A-Z]{2,3}$')])
+      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')])
     });
     return group;
   }
@@ -181,7 +183,7 @@ export class ResendInvoiceComponent implements OnInit {
           nonBspLineNum: '',
           nonBspRmk: '',
           associations: []
-        }
+        };
         const supplierRegex = /MAC\/-SUP-[-A-Z, 0-9]{1,}/g;
         const supplierMatch = rmEle.freeFlowText.match(supplierRegex);
         if (supplierMatch && supplierMatch[0]) {

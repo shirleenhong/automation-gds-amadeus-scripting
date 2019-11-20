@@ -290,28 +290,19 @@ export class NonAcceptanceComponent implements OnInit {
   }
 
   getFop(segment: any) {
-    let fop: string;
+    let fop = '';
     this.pnrService.pnrObj.fpElements.forEach((x) => {
-      if (x.associations.length > 0) {
+      if (x.associations !== null && x.associations.length > 0) {
         if (x.associations[0].tatooNumber === segment) {
           fop = x.fullNode.otherDataFreetext.longFreetext.split(' ')[1].substr(2, 2);
-          return fop;
+        }
+      } else {
+        for (const fp of this.pnrService.pnrObj.fpElements) {
+          fop = fp.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(2, 2);
         }
       }
     });
-
-    if (fop === '') {
-      for (const fp of this.pnrService.pnrObj.fpElements) {
-        if (fop) {
-          if (fp.fullNode.otherDataFreetext.longFreetext.indexOf(fop) > -1) {
-            return fp.fullNode.otherDataFreetext.longFreetext;
-          }
-        } else {
-          return fp.fullNode.otherDataFreetext.longFreetext;
-        }
-      }
-    }
-    return '';
+    return fop;
   }
 
   getFare(segment: any) {
@@ -325,11 +316,13 @@ export class NonAcceptanceComponent implements OnInit {
   }
 
   getCCExp(segment: any) {
-    let exp: string;
+    let exp = '';
     this.pnrService.pnrObj.fpElements.forEach((x) => {
-      if (x.associations.length > 0) {
-        if (x.associations[0].tatooNumber === segment) {
-          exp = x.fullNode.otherDataFreetext.longFreetext.split('/')[1];
+      if (x.associations !== null && x.associations.length > 0 && x.associations[0].tatooNumber === segment) {
+        exp = x.fullNode.otherDataFreetext.longFreetext.split('/')[1];
+      } else {
+        for (const fp of this.pnrService.pnrObj.fpElements) {
+          exp = fp.fullNode.otherDataFreetext.longFreetext.split('/')[1];
         }
       }
     });
@@ -340,11 +333,12 @@ export class NonAcceptanceComponent implements OnInit {
     let ccNo: string;
     let ccLength: number;
     this.pnrService.pnrObj.fpElements.forEach((x) => {
-      if (x.associations.length > 0) {
-        if (x.associations[0].tatooNumber === segment) {
-          ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
-          ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(8, ccLength);
-        }
+      if (x.associations !== null && x.associations.length > 0 && x.associations[0].tatooNumber === segment) {
+        ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
+        ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(8, ccLength);
+      } else {
+        ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
+        ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(4, ccLength);
       }
     });
     return ccNo;

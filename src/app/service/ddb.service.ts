@@ -201,7 +201,7 @@ export class DDBService implements OnInit {
     const reasons = [];
     await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
       (response) => {
-        if (response.ReasonCodeItems) {
+        if (response && response.ReasonCodeItems) {
           response.ReasonCodeItems.forEach((reasonJson) => {
             reasons.push(new ReasonCode(reasonJson));
           });
@@ -234,7 +234,7 @@ export class DDBService implements OnInit {
     await this.getRequest(
       common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1' + otherParam
     ).then((response) => {
-      if (response.ReasonCodeItems) {
+      if (response && response.ReasonCodeItems) {
         response.ReasonCodeItems.forEach((reasonJson) => {
           reasons.push(new ReasonCode(reasonJson));
         });

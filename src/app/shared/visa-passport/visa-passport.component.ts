@@ -266,7 +266,6 @@ export class VisaPassportComponent implements OnInit {
       } else {
         excludeCity = '';
       }
-
       for (let i = 1; i < originDestination.length; i++) {
         if (originDestination[i].destination !== excludeCity) {
           if (countryList.findIndex((x) => x.country === originDestination[i].destination) === -1) {
@@ -299,8 +298,15 @@ export class VisaPassportComponent implements OnInit {
           } else {
             let index: number;
             index = countryList.findIndex((x) => x.country === originDestination[i].origin);
-            countryList[index].segmentLine = countryList[index].segmentLine + ',' + originDestination[i].segmentLine;
-            countryList[index].tatooNumber = countryList[index].tatooNumber + ',' + originDestination[i].tatooNumber;
+            countryList[index].segmentLine = this.checkDuplicates(
+              countryList[index].segmentLine.split(','),
+              originDestination[i].segmentLine
+            );
+
+            countryList[index].tatooNumber = this.checkDuplicates(
+              countryList[index].tatooNumber.split(','),
+              originDestination[i].tatooNumber
+            );
           }
         }
       }
@@ -322,6 +328,17 @@ export class VisaPassportComponent implements OnInit {
       });
       this.changedOriginDestination();
     }
+  }
+
+  checkDuplicates(valueList: string[], value: string) {
+    if (valueList.lastIndexOf(value) === -1) {
+      valueList.push(value);
+    }
+    return valueList.sort(this.sortNumber).join(',');
+  }
+
+  sortNumber(a, b) {
+    return a - b;
   }
 
   getVisaChecked(destination: string): boolean {

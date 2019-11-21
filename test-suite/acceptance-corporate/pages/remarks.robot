@@ -246,7 +246,7 @@ Fill Up Visa And Passport Fields With Default Values
     [Teardown]    Run Keywords    Take Screenshot    Collapse Remarks Panel
     
 Tick Advisory Sent Checkbox
-    Click Element    ${checkbox_advisorySent}
+    Click Element At Coordinates    ${checkbox_advisorySent}    0    0
     Wait Until Element Is Visible    ${input_citizenship}    
     
 Tick Visa Checkbox For Segments ${segments}

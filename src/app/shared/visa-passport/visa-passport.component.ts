@@ -34,7 +34,7 @@ export class VisaPassportComponent implements OnInit {
     private ddbService: DDBService,
     private pnrService: PnrService,
     private visaService: VisaPassportRemarkService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.visaPassportView = new VisaPassportModel();
@@ -80,11 +80,11 @@ export class VisaPassportComponent implements OnInit {
       })
       .then(
         // tslint:disable-next-line: only-arrow-functions
-        function (data) {
+        function(data) {
           console.log(data);
         },
         // tslint:disable-next-line: only-arrow-functions
-        function (error) {
+        function(error) {
           console.log(error);
         }
       );
@@ -136,6 +136,7 @@ export class VisaPassportComponent implements OnInit {
   hasInternationalFlights() {
     // let firstDepDate = new Date();
     // let firstLoop = true;
+    debugger;
     let cityCountry: string;
     if (this.pnrService.isPNRLoaded) {
       const destinations = Array<string>();
@@ -181,6 +182,7 @@ export class VisaPassportComponent implements OnInit {
   }
 
   async getVisaTrips() {
+    debugger;
     const originDestination = [
       {
         origin: '',
@@ -248,10 +250,10 @@ export class VisaPassportComponent implements OnInit {
       for (let i = 1; i < originDestination.length; i++) {
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
-          '/' +
-          originDestination[i].departuredate.substr(0, 2) +
-          '/' +
-          originDestination[i].departuredate.substr(4, 2)
+            '/' +
+            originDestination[i].departuredate.substr(0, 2) +
+            '/' +
+            originDestination[i].departuredate.substr(4, 2)
         );
         if (convertedDate.toDateString() === firstDepDate.toDateString()) {
           mainOrigin = originDestination[i].origin;
@@ -285,6 +287,27 @@ export class VisaPassportComponent implements OnInit {
           }
         }
       }
+
+      for (let i = 1; i < originDestination.length; i++) {
+        if (originDestination[i].origin !== excludeCity) {
+          if (countryList.findIndex((x) => x.country === originDestination[i].origin) === -1) {
+            countryList.push({
+              country: originDestination[i].origin,
+              passport: true,
+              visa: this.getVisaChecked(originDestination[i].origin),
+              tatooNumber: originDestination[i].tatooNumber,
+              segmentLine: originDestination[i].segmentLine
+            });
+          } else {
+            let index: number;
+            index = countryList.findIndex((x) => x.country === originDestination[i].origin);
+            countryList[index].segmentLine = countryList[index].segmentLine + ',' + originDestination[i].segmentLine;
+            countryList[index].tatooNumber = countryList[index].tatooNumber + ',' + originDestination[i].tatooNumber;
+          }
+        }
+      }
+
+      debugger;
       countryList.splice(0, 1);
       this.segments = countryList;
 

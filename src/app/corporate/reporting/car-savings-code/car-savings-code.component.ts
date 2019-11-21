@@ -4,7 +4,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { formatDate } from '@angular/common';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
+import { ReasonCodeTypeEnum } from '../../../enums/reason-code.enum';
 import { DDBService } from 'src/app/service/ddb.service';
 
 @Component({
@@ -17,8 +17,7 @@ export class CarSavingsCodeComponent implements OnInit {
   deleteRemarks = [];
   reAddRemarks = [];
   carReasonCodes: Array<ReasonCode> = [];
-  constructor(private fb: FormBuilder, private pnrService: PnrService,
-              private utilHelper: UtilHelper, private ddbService: DDBService) { }
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper, private ddbService: DDBService) {}
 
   async ngOnInit() {
     this.carSavingsCodeGroup = this.fb.group({
@@ -29,8 +28,7 @@ export class CarSavingsCodeComponent implements OnInit {
       this.carSavingsCode();
     });
   }
-  createCarSavingsGroup(segmentNo: string, pickUpDate: string,
-                        pickUpCity: string, reasonCode: string): FormGroup {
+  createCarSavingsGroup(segmentNo: string, pickUpDate: string, pickUpCity: string, reasonCode: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       date: new FormControl(pickUpDate),
@@ -119,9 +117,7 @@ export class CarSavingsCodeComponent implements OnInit {
     return carRmkObj;
   }
   addPassiveCarSegments(carSegments) {
-    const passiveCarSegments = carSegments.filter((seg) =>
-      seg.isPassive === true
-    );
+    const passiveCarSegments = carSegments.filter((seg) => seg.isPassive === true);
     for (const seg of passiveCarSegments) {
       const segDate = this.getDateFromSegment(seg.deptdate);
       const tempDate = new Date(segDate);
@@ -140,9 +136,7 @@ export class CarSavingsCodeComponent implements OnInit {
     items.push(this.createCarSavingsGroup(segment.lineNo, date, segment.cityCode, ''));
   }
   addActiveCarSegments(carRemarks, carSegments) {
-    const activeCarSegments = carSegments.filter((seg) =>
-      seg.isPassive === false
-    );
+    const activeCarSegments = carSegments.filter((seg) => seg.isPassive === false);
     for (const seg of activeCarSegments) {
       let matches = false;
       let date = '';

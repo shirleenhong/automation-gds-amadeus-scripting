@@ -4,7 +4,7 @@ import { PnrService } from '../pnr.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RulesReader {
+export class RulesReaderService {
   businessEntities = new Map<string, string>();
   format = [
     { type: 'RM', category: 'A', regex: /(?<PNR_A>.*)$/g },
@@ -38,21 +38,32 @@ export class RulesReader {
   constructor(private pnrService: PnrService) {}
 
   public readPnr() {
+    let remarks;
     this.format.forEach((f) => {
       switch (f.type) {
         case 'RM':
-          const remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
+          remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
           remarks.forEach((rm) => {
-            const match = f.regex.exec(rm.freeFlowText);
-            Object.keys(match.groups).forEach((key) => {
-              if (this.businessEntities.has(key)) {
-                this.businessEntities.set(key, this.businessEntities.get(key) + match.groups[key]);
-              } else {
-                this.businessEntities.set(key, match.groups[key]);
-              }
-            });
+            this.setMatchEntity(f.regex, rm.freeFlowText);
           });
           break;
+        case 'RI':
+          remarks = this.pnrService.pnrObj.ri.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
+          remarks.forEach((rm) => {
+            this.setMatchEntity(f.regex, rm.freeFlowText);
+          });
+          break;
+      }
+    });
+  }
+
+  private setMatchEntity(regex, text) {
+    const match = regex.exec(text);
+    Object.keys(match.groups).forEach((key) => {
+      if (this.businessEntities.has(key)) {
+        this.businessEntities.set(key, this.businessEntities.get(key) + match.groups[key]);
+      } else {
+        this.businessEntities.set(key, match.groups[key]);
       }
     });
   }

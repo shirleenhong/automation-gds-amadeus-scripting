@@ -9,7 +9,6 @@ import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-mi
 import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
 import { ApprovalItem } from '../models/ddb/approval.model';
 import { PnrService } from './pnr.service';
-import { BusinessRule } from '../models/business-rules/business-rule.model';
 import { BusinessRuleList } from '../models/business-rules/business-rule-list.model';
 
 @Injectable({

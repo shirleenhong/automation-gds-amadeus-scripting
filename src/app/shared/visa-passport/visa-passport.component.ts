@@ -136,7 +136,6 @@ export class VisaPassportComponent implements OnInit {
   hasInternationalFlights() {
     // let firstDepDate = new Date();
     // let firstLoop = true;
-    debugger;
     let cityCountry: string;
     if (this.pnrService.isPNRLoaded) {
       const destinations = Array<string>();
@@ -182,7 +181,6 @@ export class VisaPassportComponent implements OnInit {
   }
 
   async getVisaTrips() {
-    debugger;
     const originDestination = [
       {
         origin: '',
@@ -307,7 +305,6 @@ export class VisaPassportComponent implements OnInit {
         }
       }
 
-      debugger;
       countryList.splice(0, 1);
       this.segments = countryList;
 

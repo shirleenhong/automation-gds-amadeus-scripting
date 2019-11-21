@@ -879,7 +879,6 @@ export class PaymentRemarkService {
     let rln = 1;
     nonAcceptance.unticketedSegments.forEach((x) => {
       if (nonAcceptance.tstSelected.includes(x.tstNumber)) {
-        debugger;
         let remarkSet = new Map<string, string>();
         let glCode: string;
         remarkSet.set('PAXLastName', x.paxName.split('-')[1]);
@@ -920,15 +919,13 @@ export class PaymentRemarkService {
 
         remarkSet = new Map<string, string>();
         remarkSet.set('CCVendor', x.ccVendor);
+
+        let ccN = '';
         if (x.ccNumber) {
-          let ccN: string;
           // tslint:disable-next-line: no-string-literal
           const look = nonAcceptance.nonAcceptanceForm.controls['segments'].value;
-          // tslint:disable-next-line: no-string-literal
-          ccN = look.find((i) => i.ccVendor === x.ccVendor)['ccNo'];
-          remarkSet.set('CCNo', ccN);
+          ccN = look[look.findIndex((z) => z.ccVendor === x.ccVendor)].ccNo;
         }
-        remarkSet.set('CCExp', x.ccExp);
         if (x.ccVendor === 'VI') {
           glCode = '115000';
         } else if (x.ccVendor === 'CA') {
@@ -936,8 +933,11 @@ export class PaymentRemarkService {
         } else if (x.ccVendor === 'AX') {
           glCode = '117000';
         }
+
+        remarkSet.set('CCExp', x.ccExp);
         remarkSet.set('RlnNo', rln.toString());
         remarkSet.set('GlCode', glCode);
+        remarkSet.set('CCNo', ccN.toString());
         this.remarksManager.createPlaceholderValues(remarkSet);
 
         remarkSet = new Map<string, string>();

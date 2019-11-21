@@ -339,14 +339,13 @@ export class NonAcceptanceComponent implements OnInit {
           ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
           ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(8, ccLength);
         }
-      });
-    } else {
-      this.pnrService.pnrObj.fpElements.forEach((x) => {
-        ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
-        ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(4, ccLength);
+
+        if (x.associations == null) {
+          ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
+          ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(4, ccLength);
+        }
       });
     }
-
     return ccNo;
   }
 

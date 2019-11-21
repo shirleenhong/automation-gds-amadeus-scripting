@@ -506,6 +506,7 @@ export class PnrService {
         let airType = '';
         let segType = type;
         let passiveType = '';
+        let hotelChainCode = '';
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -583,6 +584,7 @@ export class PnrService {
                 flongtext = elem.hotelName;
                 // passiveType = 'TYP-HHL';
             }
+            hotelChainCode = elem.chainCode ? elem.chainCode : '';
         }
 
         if (type === 'MIS') {
@@ -611,8 +613,9 @@ export class PnrService {
             controlNumber,
             airType,
             passive: passiveType,
-            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
-            passengerNo: this.getPassengerAssocNumbers(elem.associations)
+            isPassive: (segType === 'CAR' || type === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
+            passengerNo: this.getPassengerAssocNumbers(elem.associations),
+            hotelChainCode:hotelChainCode
         };
         this.segments.push(segment);
     }

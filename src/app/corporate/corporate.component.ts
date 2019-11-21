@@ -306,6 +306,13 @@ export class CorporateComponent implements OnInit {
         this.reportingComponent.carSavingsCodeComponent.reAddRemarks
       );
     }
+
+    if (this.reportingComponent.hotelSegmentsComponent !== undefined) {
+      this.reportingRemarkService.writeHotelSavingsRemarks(
+        this.reportingComponent.hotelSegmentsComponent,
+        this.reportingComponent.hotelSegmentsComponent.reAddRemarks
+      );
+    }
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }

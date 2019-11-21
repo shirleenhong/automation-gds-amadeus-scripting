@@ -21,32 +21,32 @@
           />
           <b>TST {{ item.tstNumber }}</b>
           : {{ item.airline }} does not accept {{ item.ccVendor }} for payment. Matrix can re-bill the ticket cost to {{ item.ccVendor }}.
-        </div>
-        <div style="padding-left: 65px">
-          <div class="form-group  row">
-            <div class="col-sm-2">
-              <input
-                type="text"
-                class="form-control"
-                id="ccVendor"
-                maxlength="2"
-                formControlName="ccVendor"
-                name="ccVendor"
-                value="{{ item.ccVendor }}"
-                disabled
-              />
-            </div>
-            <div class="col-sm-6">
-              <input
-                type="text"
-                class="form-control"
-                id="ccNo"
-                maxlength="16"
-                formControlName="ccNo"
-                name="ccNo"
-                value="{{ item.ccNumber }}"
-                disabled
-              />
+          <div style="padding-left: 65px">
+            <div class="form-group  row">
+              <div class="col-sm-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ccVendor"
+                  maxlength="2"
+                  formControlName="ccVendor"
+                  name="ccVendor"
+                  value="{{ item.ccVendor }}"
+                  disabled
+                />
+              </div>
+              <div class="col-sm-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ccNo"
+                  maxlength="16"
+                  formControlName="ccNo"
+                  name="ccNo"
+                  value="{{ item.ccNumber }}"
+                  disabled
+                />
+              </div>
             </div>
           </div>
         </div>

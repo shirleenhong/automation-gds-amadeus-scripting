@@ -155,7 +155,7 @@ Verify PNR Is Queued To Correct ${queue_type} Queue
     
 
 Verify PNR Is Queued To Correct ${queue_type} Queue For Standalone
-    Click Submit To PNR   queueing=yes
+    Send Itinerary And Queue    queueing=yes
     Enter Cryptic Command    RTQ 
     Run Keyword If  "${queue_type}" == "Team Queue"  Verify Correct Team Queue
     Run Keyword If  "${queue_type}" == "Transaction Type"  Verify Correct Transaction Type Queue
@@ -232,13 +232,13 @@ Verify PNR Is Queued To Correct Queue Placement
     Finish PNR   queueing=yes
     Open Command Page
     Enter Cryptic Command    RTQ 
-    Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000
+    Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}050${SPACE}${SPACE}${SPACE}${SPACE}000
 
 Verify PNR Is Queued To Correct Multiple Queue Placement
     Finish PNR   queueing=yes
     Open Command Page
     Enter Cryptic Command    RTQ 
-    Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000
+    Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}050${SPACE}${SPACE}${SPACE}${SPACE}000
     Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}010${SPACE}${SPACE}${SPACE}${SPACE}000
     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}001
     

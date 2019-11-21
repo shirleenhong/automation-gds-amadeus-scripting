@@ -375,7 +375,7 @@ Finish PNR
     Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
 
 Send Itinerary And Queue
-    [Arguments]    ${close_corporate_test}    ${queueing}
+    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
     Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
     Click Submit To PNR    ${close_corporate_test}    ${queueing}

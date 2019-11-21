@@ -28,7 +28,7 @@ ${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${icon_air}       css=.bookingTool.FS
 ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
-${tab_booking_file_history}    //span[contains(text(), 'Booking File History')]
+${tab_booking_file_history}    //span[contains(text(), 'Booking file history')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
 ${popUp_pnr_history}   //div[@class='cmdPopupContent']
 ${button_cryptic}    css=.showInCommandPage

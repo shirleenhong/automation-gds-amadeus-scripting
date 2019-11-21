@@ -8,6 +8,7 @@ import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.co
 import { ReportingRemarksComponent } from './reporting-remarks/reporting-remarks.component';
 import { PnrService } from '../../service/pnr.service';
 import { CarSavingsCodeComponent } from './car-savings-code/car-savings-code.component';
+import {HotelSegmentsComponent} from './hotel-segments/hotel-segments.component'
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -24,6 +25,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   showHotelsTab: boolean;
   @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
+  @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
 
   constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef , private pnrService: PnrService) {}
 
@@ -59,6 +61,12 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     this.utilHelper.validateAllFields(this.carSavingsCodeComponent.carSavingsCodeGroup);
     if (!this.carSavingsCodeComponent.carSavingsCodeGroup.valid) {
       return false;
+    }
+    if (this.hotelSegmentsComponent!==undefined) {
+      this.utilHelper.validateAllFields(this.hotelSegmentsComponent.hotelSegments);
+      if (!this.hotelSegmentsComponent.hotelSegments.valid) {
+        return false;
+      }
     }
     return true;
   }

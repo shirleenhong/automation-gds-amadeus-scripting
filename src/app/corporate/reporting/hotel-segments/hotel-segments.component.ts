@@ -102,7 +102,6 @@ export class HotelSegmentsComponent implements OnInit {
     hotelRmkObj.chainCode = cc ? cc[0].substr(cc[0].length-2,2) : "";
     hotelRmkObj.lineNo = rmEle.elementNumber;
     hotelRmkObj.tatooNo = rmEle.tatooNumber;
-    debugger;
     return hotelRmkObj;
   }
   checkHotelSegments(hotelRemarks,hotelSegments) {

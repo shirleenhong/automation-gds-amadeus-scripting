@@ -15,4 +15,10 @@
   <tab heading="Waivers / Favors" id="waiverFavorsTab" tabOrder="5">
     <app-waivers></app-waivers>
   </tab>
+  <tab heading="Hotel Savings Code" id="hotelSegmentsTab" tabOrder="6" *ngIf="showHotelsTab">
+     <app-hotel-segments></app-hotel-segments>
+     </tab>
+  <tab heading = "Car Savings Code" id = "carSavingsCode" tabOrder = "7">
+    <app-car-savings-code></app-car-savings-code>
+  </tab>
 </tabset>

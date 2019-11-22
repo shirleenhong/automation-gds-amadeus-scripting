@@ -78,7 +78,7 @@ ${select_special_equipment}    css=#specialEquipment
 ${input_car_special_request}    css=#specialRequest
 
 *** Keywords ***
-Add And Verify Air Segment for Non ZZ Details In The PNR
+Add Air Segment for Non ZZ Details In The PNR
     Navigate To Page Add Passive Segment
     Wait Until Element Is Visible    ${select_segment_type}     30
     Select From List By Label    ${select_segment_type}    Air
@@ -95,19 +95,20 @@ Add And Verify Air Segment for Non ZZ Details In The PNR
     Take Screenshot    
     Click Add Passive Save Button
     Sleep    3
-    Click Add Segment to PNR    
-    Close CA Corporate Test
-    Switch To Graphic Mode
-    Get PNR Details
+
+Verify Air Segment for Non ZZ Details In The PNR
+    Click Add Segment to PNR    yes
+    Sleep    3
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    AC8901 Y 02JAN
     Verify Specific Remark Is Written In The PNR    YULCDG GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL1234
     
-Add And Verify Air Segment for ZZ In The PNR
+Add Air Segment for ZZ In The PNR
     Navigate To Page Add Passive Segment
     Wait Until Element Is Visible    ${select_segment_type}     30
     Select From List By Label    ${select_segment_type}    Air
     Enter Value    ${input_airline_code}    ZZ
-    Input Text    ${input_zz_airline}    AC
+    Input Text    ${input_zz_airline}    Air Canada
     Enter Value    ${input_flight_number}    8888
     Enter Value    ${input_class_service}    Y
     Enter Value    ${input_departure_city}    ZZZ
@@ -122,15 +123,16 @@ Add And Verify Air Segment for ZZ In The PNR
     Take Screenshot    
     Click Add Passive Save Button
     Sleep    3
-    Click Add Segment to PNR    
-    Close CA Corporate Test
-    Switch To Graphic Mode
-    Get PNR Details
+    
+Verify Air Segment for ZZ In The PNR
+    Click Add Segment to PNR    yes
+    Sleep    3
+    Finish PNR
     Verify Specific Remark Is Written In The PNR    ZZ8888 Y 02JAN
     Verify Specific Remark Is Written In The PNR    ZZZZZZ GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL76
-    Verify Specific Remark Is Written In The PNR    RIR FLIGHT IS CONFIRMED WITH ZZ/S2    
+    Verify Specific Remark Is Written In The PNR    RIR FLIGHT IS CONFIRMED WITH AIR CANADA/S2    
     Verify Specific Remark Is Written In The PNR    RIR DEPARTURE CITY IS ZZZ/S2
-    Verify Specific Remark Is Written In The PNR    RIR ARRIVAL CITY IS ZZZ/S2        
+    Verify Specific Remark Is Written In The PNR    RIR ARRIVAL CITY IS ZZZ/S2   
     
 Click Add Passive Save Button
     Wait Until Element Is Visible    ${button_save_passive}    60

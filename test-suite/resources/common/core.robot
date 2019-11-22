@@ -7,9 +7,11 @@ Add New Command Page
     Wait Until Page Contains Element    css=.cmdPromptDiv > textArea    180
 
 Close CA Migration Window
+    Wait Until Element Is Not Visible    xpath=//div[@class='uicLoaderOverlay uicLo-loading']    60
     Unselect Frame
-    Sleep    8
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
+    Sleep    5
+    Wait Until Element Is Not Visible    xpath=//div[@class='uicLoaderOverlay uicLo-loading']    60
     Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
 
 Close Cryptic Display Window
@@ -128,3 +130,68 @@ Close CA Migration Prod
     Sleep    5
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]    50
     Click Element    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada')]/following-sibling::span//span[@class='xWidget xICNstd']
+
+Create ${num_of_test_dates} Test Dates
+    ${tdate}    Get Current Date
+    ${tdate}    Add Time To Date    ${tdate}    180 days
+    Set Test Variable    ${add_to_date}    3 days
+    : FOR    ${i}    IN RANGE    0    ${num_of_test_dates}
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${test_date}    Add Time To Date    ${tdate}    ${add_to_date}
+    \    Set Test Variable    ${tdate}    ${test_date}
+    \    ${day}    Convert Date    ${test_date}    %d
+    \    ${month}    Convert Month To MMM    ${test_date}
+    \    Set Test Variable    ${test_date_${i}}    ${day}${month}
+    \    Set Test Variable    ${tdate}    ${test_date}
+
+Convert Month To MMM
+    [Arguments]    ${date}
+    ${month}    Convert Date    ${date}    %m
+    ${month}    Run Keyword If    "${month}" == "01"    Set Variable    JAN
+    ...    ELSE IF    "${month}" == "02"    Set Variable    FEB
+    ...    ELSE IF    "${month}" == "03"    Set Variable    MAR
+    ...    ELSE IF    "${month}" == "04"    Set Variable    APR
+    ...    ELSE IF    "${month}" == "05"    Set Variable    MAY
+    ...    ELSE IF    "${month}" == "06"    Set Variable    JUN
+    ...    ELSE IF    "${month}" == "07"    Set Variable    JUL
+    ...    ELSE IF    "${month}" == "08"    Set Variable    AUG
+    ...    ELSE IF    "${month}" == "09"    Set Variable    SEP
+    ...    ELSE IF    "${month}" == "10"    Set Variable    OCT
+    ...    ELSE IF    "${month}" == "11"    Set Variable    NOV
+    ...    ELSE IF    "${month}" == "12"    Set Variable    DEC
+    Log    ${month}
+    [Return]    ${month}
+
+Ticket TST${tst_no}
+    Enter GDS Command    RFCWTTEST
+    Enter GDS Command    ER
+    Sleep    4
+    Get Record Locator Value
+    Enter GDS Command    TTP/T${tst_no}
+    Sleep    8
+    Enter GDS Command    RT${actual_record_locator}
+    Set Test Variable    ${ticketed_tst}    ${tst_no}
+
+Get Record Locator Value
+    Switch To Graphic Mode
+    Wait Until Element Is Visible    xpath=//div[contains(text(), 'Record Locator')]    30
+    ${actual_record_locator}    Get Text    xpath=//div[contains(text(), 'Record Locator')]
+    ${actual_record_locator}    Fetch From Right    ${actual_record_locator}    :${SPACE}
+    Set Test Variable    ${actual_record_locator}
+    Log    ${actual_record_locator}
+    Switch To Command Page
+
+Get PNR Details
+    Wait Until Element Is Not Visible    //div[@class='uicLoaderOverlay uicLo-loading']    10
+    Wait Until Element Is Enabled    css=.bookingTool.FS    30
+    Wait Until Element Is Visible    //button[contains(@id, 'crypticDisplay')]    60
+    Sleep    2
+    Press Keys    //button[contains(@id, 'crypticDisplay')]    \\32
+    Wait Until Page Contains Element    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]    60
+    Wait Until Element Is Not Visible    //div[@class='uicLoaderOverlay uicLo-loading']    10
+    Sleep    1
+    ${pnr_details}    Get Text    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
+    Log    ${pnr_details}
+    Set Test Variable    ${pnr_details}    ${pnr_details}
+    Close Cryptic Display
+    [Teardown]    Take Screenshot

@@ -1,0 +1,59 @@
+<div class="form-group" [formGroup]="nonAcceptanceForm" style="padding-left: 20px; padding-top: 10px;">
+  <div *ngIf="hasAirTst">
+    <span class="p1">
+      <label>&#8594; Select item(s) for Matrix Change Ticket Cost from Check to Credit Card </label> <br />
+      &#8594; For selected item(s), Consultant must update TST with FOP CHECK. Aqua cannot issue this ticket using Split Ticketing. <br />
+      &nbsp; &nbsp; You must send each ticket separately to Aqua for the correct billing process for each ticket. <br />
+      &#8594; Ensure correct credit card number is provided for each selected item <br />
+    </span>
+  </div>
+  <br />
+  <div *ngIf="hasAirTst" class="col-12">
+    <div formArrayName="segments" *ngFor="let item of unticketedSegments; let i = index">
+      <div class="row" [formGroupName]="i">
+        <div *ngIf="check(item.airline, item.ccVendor)">
+          <input
+            type="checkbox"
+            (change)="updateValue($event, i)"
+            [value]="item.tstNumber"
+            [checked]="val.split(',').indexOf(item.tstNumber) >= 0"
+            style="margin-right: 10px;"
+          />
+          <b>TST {{ item.tstNumber }}</b>
+          : {{ item.airline }} does not accept {{ item.ccVendor }} for payment. Matrix can re-bill the ticket cost to {{ item.ccVendor }}.
+          <div style="padding-left: 65px">
+            <div class="form-group  row">
+              <div class="col-sm-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ccVendor"
+                  maxlength="2"
+                  formControlName="ccVendor"
+                  name="ccVendor"
+                  value="{{ item.ccVendor }}"
+                  disabled
+                />
+              </div>
+              <div class="col-sm-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ccNo"
+                  maxlength="16"
+                  formControlName="ccNo"
+                  name="ccNo"
+                  value="{{ item.ccNumber }}"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!hasAirTst && hasAirSegment" class="row form-group">
+    <div class="col-sm-6"><b>* No unticketed segments found on the PNR *</b></div>
+  </div>
+</div>

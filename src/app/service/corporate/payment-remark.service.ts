@@ -11,6 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DDBService } from '../ddb.service';
 import { AmadeusQueueService } from '../amadeus-queue.service';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { NonAcceptanceComponent } from 'src/app/corporate/payments/non-acceptance/non-acceptance.component';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,7 @@ export class PaymentRemarkService {
           x.accountingTypeRemark === 'ACPP' ||
           x.accountingTypeRemark === 'ACPR' ||
           x.accountingTypeRemark === 'WCPP' ||
-          x.accountingTypeRemark === 'PCPP'     
+          x.accountingTypeRemark === 'PCPP'
       )
     );
 
@@ -88,6 +89,9 @@ export class PaymentRemarkService {
         }
         if (account.otherTaxRefund === undefined) {
           account.otherTaxRefund = '0.00';
+        }
+        if (account.otherTax === undefined) {
+          account.otherTax = '0.00';
         }
 
         const cancelSegmentrelate: string[] = [];
@@ -154,21 +158,22 @@ export class PaymentRemarkService {
         refundBaseCommisionRemark.set('CaRefundCommision', account.commisionRefund);
         this.remarksManager.createPlaceholderValues(refundBaseCommisionRemark, null, null);
 
-        const notes1 = new Map<string, string>();
-        notes1.set('CaAmadeusNotes1', account.additionalNotes1);
-        this.remarksManager.createPlaceholderValues(notes1, null, null);
-
-        const notes2 = new Map<string, string>();
-        notes2.set('CaAmadeusNotes2', account.additionalNotes2);
-        this.remarksManager.createPlaceholderValues(notes2, null, null);
-
+        if (account.additionalNotes1) {
+          const notes1 = new Map<string, string>();
+          notes1.set('CaAmadeusNotes1', account.additionalNotes1);
+          this.remarksManager.createPlaceholderValues(notes1, null, null);
+        }
+        if (account.additionalNotes2) {
+          const notes2 = new Map<string, string>();
+          notes2.set('CaAmadeusNotes2', account.additionalNotes2);
+          this.remarksManager.createPlaceholderValues(notes2, null, null);
+        }
         const refundEnd = new Map<string, string>();
         refundEnd.set('CARefundEnd', 'true');
         this.remarksManager.createPlaceholderValues(null, refundEnd, null, null, '**********************************************');
 
         const priceForRemark = new Map<string, string>();
-        
-        // tslint:disable-next-line: max-line-length
+
         const totalPrice =
           parseFloat(account.baseAmount) +
           parseFloat(account.gst) +
@@ -194,7 +199,7 @@ export class PaymentRemarkService {
         const travellerCreditCardCondition = new Map<string, string>();
         travellerCreditCardCondition.set('CACancelRemark', 'true');
         this.remarksManager.createPlaceholderValues(null, travellerCreditCardCondition, null, null, 'THE TRAVELLERS CREDIT CARD.');
-        
+
         if (this.pnrService.getRemarkText('U14/-' + airline + 'PASS') !== '') {
           const u14Remark = new Map<string, string>();
           u14Remark.set('CancelAirlineCodePassChg', airline);
@@ -212,6 +217,13 @@ export class PaymentRemarkService {
         this.remarksManager.createPlaceholderValues(highFareRemark, null, cancelSegmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, cancelSegmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, cancelSegmentrelate);
+
+        const originalTicketRemarks = new Map<string, string>();
+        originalTicketRemarks.set('OriginalTicketNumber', account.tktLine);
+        this.remarksManager.createPlaceholderValues(originalTicketRemarks, null, null);
+        const consultantNoRemarkStatic = new Map<string, string>();
+        consultantNoRemarkStatic.set('IsNuc', 'true');
+        this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
 
         this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
         this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 70, 1));
@@ -451,6 +463,9 @@ export class PaymentRemarkService {
   }
 
   writeTicketingLine(tktNo, baseAmount, gst, hst, qst, otherTax, comm, segmentrelate, supplierCodeName, tktline?) {
+    if (comm === undefined) {
+      comm = '0.00';
+    }
     const ticketAmountRemarks = new Map<string, string>();
     ticketAmountRemarks.set('TktRemarkNbr', tktNo.toString());
     ticketAmountRemarks.set('BaseAmt', this.decPipe.transform(baseAmount, '1.2-2').replace(',', ''));
@@ -696,6 +711,7 @@ export class PaymentRemarkService {
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
+
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {
@@ -855,6 +871,80 @@ export class PaymentRemarkService {
         tktRoute.set('TktRoute', route);
         this.remarksManager.createPlaceholderValues(tktRoute);
         idx++;
+      }
+    });
+  }
+
+  writeCorporateReceiptRemarks(nonAcceptance: NonAcceptanceComponent) {
+    let rln = 1;
+    nonAcceptance.unticketedSegments.forEach((x) => {
+      if (nonAcceptance.tstSelected.includes(x.tstNumber)) {
+        let remarkSet = new Map<string, string>();
+        let glCode: string;
+        remarkSet.set('PAXLastName', x.paxName.split('-')[1]);
+
+        if (x.paxName.split('-')[0].includes('MR')) {
+          remarkSet.set(
+            'PAXFirstName',
+            x.paxName
+              .split('-')[0]
+              .replace('MR', '')
+              .trim()
+          );
+        } else if (x.paxName.split('-')[0].includes('MS')) {
+          remarkSet.set(
+            'PAXFirstName',
+            x.paxName
+              .split('-')[0]
+              .replace('MS', '')
+              .trim()
+          );
+        } else if (x.paxName.split('-')[0].includes('MRS')) {
+          remarkSet.set(
+            'PAXFirstName',
+            x.paxName
+              .split('-')[0]
+              .replace('MRS', '')
+              .trim()
+          );
+        } else {
+          remarkSet.set('PAXFirstName', x.paxName.split('-')[0]);
+        }
+
+        if (x.cost) {
+          remarkSet.set('TotalCost', x.cost);
+        }
+        remarkSet.set('RlnNo', rln.toString());
+        this.remarksManager.createPlaceholderValues(remarkSet);
+
+        remarkSet = new Map<string, string>();
+        remarkSet.set('CCVendor', x.ccVendor);
+
+        let ccN = '';
+        if (x.ccNumber) {
+          // tslint:disable-next-line: no-string-literal
+          const look = nonAcceptance.nonAcceptanceForm.controls['segments'].value;
+          ccN = look[look.findIndex((z) => z.ccVendor === x.ccVendor)].ccNo;
+        }
+        if (x.ccVendor === 'VI') {
+          glCode = '115000';
+        } else if (x.ccVendor === 'CA') {
+          glCode = '116000';
+        } else if (x.ccVendor === 'AX') {
+          glCode = '117000';
+        }
+
+        remarkSet.set('CCExp', x.ccExp);
+        remarkSet.set('RlnNo', rln.toString());
+        remarkSet.set('GlCode', glCode);
+        remarkSet.set('CCNo', ccN.toString());
+        this.remarksManager.createPlaceholderValues(remarkSet);
+
+        remarkSet = new Map<string, string>();
+        remarkSet.set('RlnNo', rln.toString());
+        this.remarksManager.createPlaceholderValues(remarkSet);
+
+        rln += 1;
       }
     });
   }

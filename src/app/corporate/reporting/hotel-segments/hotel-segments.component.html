@@ -1,24 +1,25 @@
+    <!-- <br>
     <form [formGroup]="hotelSegments" class="form-group" >
       <div class="documentContainer">
         <table>
           <tr>
-            <td class="column-header" style="width: 4%;">
-              Select
+            <td class="column-header" style="width: 4%;font-weight: normal;">
+             
             </td>
     
-            <td class="column-header" style="width: 14%;text-align: center">
+            <td class="column-header" style="width: 14%;text-align: center;font-weight: normal;">
              Segment
             </td>
     
-            <td class="column-header" style="width: 14%;padding-right: 10px;">
+            <td class="column-header" style="width: 14%;padding-right: 10px;font-weight: normal;">
               Check-In Date
             </td>
     
-            <td class="column-header" style="width : 10%;padding-left: 20px">
+            <td class="column-header" style="width : 10%;padding-left: 20px;font-weight: normal;">
               Chain Code
             </td>
     
-            <td class="column-header" style="text-align: center;width: 18%">
+            <td class="column-header" style="text-align: center;width: 18%;font-weight: normal;">
               Hotel Savings
             </td>
           </tr>
@@ -29,21 +30,21 @@
             <table style="width:100%">
               <tr>
                 <td style="width: 4%">
-                   <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" />
+                   <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)"/>
                 </td>
     
                 <td style="width: 12%">
-                  <input formControlName="segment"  style="width:90%" type="text" class="form-control" readonly />
+                  <input formControlName="segment"  style="width:60%" type="text" class="form-control" readonly />
                 </td>
     
                 <td style="width: 12%">
-                  <input style="width:90%" formControlName="checkInDate" type="text" class="form-control" maxlength="5" required />
+                  <input style="width:95%" formControlName="checkInDate" type="text" class="form-control" maxlength="5" readonly />
                 </td>
                 <td style="width: 12%">
-                    <input formControlName="chainCode" type="text" class="form-control" style="width: 90%;"  />
+                    <input formControlName="chainCode" type="text" class="form-control" style="width: 95%;"   />
                 </td>
                 <td style="width: 12%">
-                      <select style="width: 90%;" autofocus id="hotelSavingsCode" class="form-control" formControlName="hotelSavingsCode" name="hotelSavingsCode">
+                      <select style="width: 95%;" autofocus id="hotelSavingsCode" class="form-control" formControlName="hotelSavingsCode" name="hotelSavingsCode">
                           <option [ngValue]="null"></option>
                           <option *ngFor="let reason of hotelSavingsCodes" [value]="reason.reasonCode">{{
                             reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescription
@@ -58,4 +59,48 @@
         </div>
       </div>
     </form>
-    
+     -->
+
+     <div [formGroup]="hotelSegments" class="form-group">
+        <br />
+        <div class="row">
+          <div class="col-1" style="width:3%"></div>
+          <div class="col-2" style="width: 12%; text-align: left; padding-left: 28px;">
+            Segment
+          </div>
+          <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
+              Check-In Date
+          </div>
+          <div class="col-3" style="width: 12%; text-align: left; padding-left: 18px;">
+              Chain Code
+          </div>
+          <div class="col-3">
+             Reason Code
+          </div>
+        </div>
+        <div formArrayName="hotels" name="hotels" *ngFor="let item of this.hotelSegments.get('hotels')['controls']; let i = index" class="col">
+          <div [formGroupName]="i" class="row">
+            <div class="col-1" style="width:3%;padding-left:10px">
+                <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)"/>
+            </div>
+            <div class="col-2" style="width:12%;text-align:left">
+                <input formControlName="segment" type="text" class="form-control" readonly />
+            </div>
+            <div class="col-3" style="width:12%;text-align:left">
+                <input  formControlName="checkInDate" type="text" class="form-control" maxlength="5" readonly />
+            </div>
+            <div class="col-3" style="width:12%;text-align:left">
+                <input formControlName="chainCode" type="text" class="form-control" />
+            </div>
+            <div class="col-3" style="width:12%;text-align:left">
+                <select  autofocus id="hotelSavingsCode" class="form-control" formControlName="hotelSavingsCode" name="hotelSavingsCode">
+                    <option [ngValue]="null"></option>
+                    <option *ngFor="let reason of hotelSavingsCodes" [value]="reason.reasonCode">{{
+                      reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescription
+                    }}</option>
+                  </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      

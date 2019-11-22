@@ -620,7 +620,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
       modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
       return;
     }
-    this.showLoading({ msg: 'Sending Invoice...' }); 
+    this.showLoading({ msg: 'Sending Invoice...' });
     remarkCollection.push(this.invoiceService.getResendInvoice(this.resendInvoiceComponent));
 
     this.leisureRemarkService.BuildRemarks(remarkCollection);

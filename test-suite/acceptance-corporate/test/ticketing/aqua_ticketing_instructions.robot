@@ -10,7 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../../resources/common/api-utilities.txt
-#Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    aqua_tkt_instruction
@@ -103,3 +103,4 @@ Verify That Aqua Ticketing Instructions Remark Are Written For Hotel And Car Onl
     Add 1 Car Segments
     Select All Unticketed Hotel Segment
     Verify Aqua Ticketing Instructions Remark Are Written For Hotel Only Segments
+    

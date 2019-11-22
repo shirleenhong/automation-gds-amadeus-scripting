@@ -10,6 +10,7 @@ import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting-remarks/reporting-remarks.component';
 import { CarSavingsCodeComponent } from 'src/app/corporate/reporting/car-savings-code/car-savings-code.component';
+import {HotelSegmentsComponent} from 'src/app/corporate/reporting/hotel-segments/hotel-segments.component';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,11 @@ export class ReportingRemarkService {
     const carSavingsGroup: FormGroup = carSavings.carSavingsCodeGroup;
     const items = carSavingsGroup.get('carSavings') as FormArray;
     this.writeCarSavings(items, reAddRemarks);
+  }
+  writeHotelSavingsRemarks(hotelSavings: HotelSegmentsComponent, reAddRemarks) {
+    const carSavingsGroup: FormGroup = hotelSavings.hotelSegments;
+    const items = carSavingsGroup.get('hotels') as FormArray;
+    this.writeHotelSavings(items, reAddRemarks);
   }
   WriteNonBspRemarks(nrbc: ReportingNonbspComponent) {
     const nbspGroup: FormGroup = nrbc.nonBspGroup;
@@ -72,6 +78,40 @@ export class ReportingRemarkService {
       carRemarksMap.set('CarPickUpCity', rmk.city);
       carRemarksMap.set('CarFareSavingsCode', rmk.reasonCode);
       this.remarksManager.createPlaceholderValues(carRemarksMap);
+    }
+  }
+  writeHotelSavings(items: any, reAddRemarks) {
+    for (const group of items.controls) {
+      if (group.get('chkIncluded').value === true) {
+        const hotels = new Map<string, string>();
+        hotels.set('HotelDate', group.get('checkInDate').value);
+        if (group.get('hotelSavingsCode').value) {
+          const output = group.get('hotelSavingsCode').value.split(':');
+          hotels.set('HotelSavings', output[0].trim());
+        }
+        if (group.get('chainCode').value) {
+          hotels.set('ChainCode', '/-CHN-' + group.get('chainCode').value);
+        }
+        else {
+          hotels.set('ChainCode', '');
+        }
+        this.remarksManager.createPlaceholderValues(hotels);
+      }
+    }
+    for (const rem of reAddRemarks) {
+      const reAddHotelRemark = new Map<string, string>();
+      reAddHotelRemark.set('HotelDate', rem.date);
+      if (rem.savingsCode) {
+        reAddHotelRemark.set('HotelSavings',rem.savingsCode);
+      }
+      if (rem.chainCode) {
+        reAddHotelRemark.set('ChainCode', '/-CHN-' + rem.chainCode);
+      }
+      else {
+        reAddHotelRemark.set('ChainCode', '');
+      }
+      this.remarksManager.createPlaceholderValues(reAddHotelRemark);
+
     }
   }
   getRemarkSegmentAssociation(segments: string[]): string[] {
@@ -232,4 +272,12 @@ export class ReportingRemarkService {
       }
     }
   }
+  writeEBRemarks(touchReasonForm: FormGroup) {
+    const map = new Map<string, string>();
+    map.set('TouchCode', touchReasonForm.controls.ebR.value);
+    map.set('BookingToolCode', touchReasonForm.controls.ebT.value);
+    map.set('ReasonType', touchReasonForm.controls.ebN.value);
+    map.set('ReasonCode', touchReasonForm.controls.ebC.value);
+    this.remarksManager.createPlaceholderValues(map);
+ }
 }

@@ -40,7 +40,7 @@ export class ResendInvoiceComponent implements OnInit {
   @ViewChild(SegmentSelectComponent) segementSelectComponent: SegmentSelectComponent;
   ngOnInit() {
     this.invoiceFormGroup = new FormGroup({
-      segmentNo: new FormControl('', [Validators.required]),
+      segmentNo: new FormControl('', []),
       invoiceNo: new FormControl('', []),
       eTicketNo: new FormControl('', []),
       feesAccountingNo: new FormControl('', []),
@@ -68,8 +68,10 @@ export class ResendInvoiceComponent implements OnInit {
       this.addInvoicesToList(fiElements);
       this.invoiceFormGroup.get('segmentNo').clearValidators();
     } else {
+      this.invoiceFormGroup.get('segmentNo').setValidators([Validators.required]);
       await this.invoiceProcess();
     }
+    this.invoiceFormGroup.get('segmentNo').updateValueAndValidity();
   }
   async invoiceProcess() {
     const invCommand = 'INV/ZX/RT';
@@ -82,8 +84,10 @@ export class ResendInvoiceComponent implements OnInit {
       this.addInvoiceFromGDS(invoiceElements);
       this.invoiceFormGroup.get('segmentNo').clearValidators();
     } else {
+      this.invoiceFormGroup.get('segmentNo').setValidators([Validators.required]);
       this.showSegments = true;
     }
+    this.invoiceFormGroup.get('segmentNo').updateValueAndValidity();
   }
   async getAllETickets() {
     // const rttnCmd = 'RTTN/H';

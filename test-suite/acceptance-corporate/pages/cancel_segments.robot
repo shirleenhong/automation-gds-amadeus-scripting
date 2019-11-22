@@ -56,7 +56,7 @@ ${list_partialFull}    //select[@id='partialFull']
 ${input_supplier}    //input[@id='supplier']
 ${input_cancel_invoice}   //input[@id='invoice']
 ${input_refundAmount}    //input[@id='refundAmount']
-${input_commission}    //input[@formcontrolname='commission']
+${input_commission_ticketRefund}    //input[@formcontrolname='commission']
 ${input_otherTax}    //input[@formcontrolname='tax']
 ${input_freeFlow1}    //input[@id='freeFlow1']
 ${input_freeFlow2}    //input[@id='freeFlow2']
@@ -421,7 +421,7 @@ Cancel Segments For Non BSP Ticket ${refund_type} Refund
     Enter Value    ${input_supplier}    ${supplier}
     Enter Value    ${input_cancel_invoice}    ${invoice}
     Run Keyword If    "${refund_type}" == "Full"    Enter Value    ${input_refundAmount}    ${refund_amount}
-    Enter Value    ${input_commission}    ${commission}
+    Enter Value    ${input_commission_ticketRefund}    ${commission}
     Run Keyword If    "${refund_type}" == "Partial"    Enter Value    ${input_baseAmount}    ${base_amount}
     Run Keyword If    "${refund_type}" == "Partial"    Enter Value    ${input_gst}    ${gst}
     Run Keyword If    "${refund_type}" == "Partial"    Enter Value    ${input_otherTax}    ${other_tax}
@@ -435,8 +435,8 @@ Verify Non BSP ${refund_type} Refund Remarks Are Written In The PNR
     Run Keyword If    "${refund_type}" == "Full"    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG - NONBSP FULL REFUND - ${current_date}
     ...    ELSE IF    "${refund_type}" == "Partial"    Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG - NONBSP PART REFUND - ${current_date}
     Verify Specific Remark Is Written In The PNR    RMX . NONBSP..${supplier} - ISSUE OID YTOWL2106 
-    Run Keyword If    "${refund_type}" == "Full"    Verify Specific Remark Is Written In The PNR    RMX . REFUND ${refund_amount} - COMMISSION ${commission} - ORIG INV${invoice}
-    ...    ELSE IF    "${refund_type}" == "Partial"    Verify Specific Remark Is Written In The PNR    RMX . REFUND COMMISSION ${commission} - ORIG INV${invoice}
+    Run Keyword If    "${refund_type}" == "Full"    Verify Specific Remark Is Written In The PNR    RMX . REFUND ${refund_amount} - COMMISSION ${commission} - ORIG INV ${invoice}
+    ...    ELSE IF    "${refund_type}" == "Partial"    Verify Specific Remark Is Written In The PNR    RMX . REFUND COMMISSION ${commission} - ORIG INV ${invoice}
     Run Keyword If    "${refund_type}" == "Partial"    Verify Specific Remark Is Written In The PNR    RMX . REFUND BASE AMOUNT ${base_amount} GST ${gst} TAX ${other_tax}      
     Verify Specific Remark Is Written In The PNR    RMX . ${free_flow_1}
     Verify Specific Remark Is Written In The PNR    RMX . ${free_flow_2}

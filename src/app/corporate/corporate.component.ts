@@ -285,6 +285,9 @@ export class CorporateComponent implements OnInit {
     // }
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
+      this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
+    }
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
@@ -303,6 +306,13 @@ export class CorporateComponent implements OnInit {
         this.reportingComponent.carSavingsCodeComponent.reAddRemarks
       );
     }
+
+    if (this.reportingComponent.hotelSegmentsComponent !== undefined) {
+      this.reportingRemarkService.writeHotelSavingsRemarks(
+        this.reportingComponent.hotelSegmentsComponent,
+        this.reportingComponent.hotelSegmentsComponent.reAddRemarks
+      );
+    }
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
@@ -311,6 +321,7 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
+    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.reportingForm);
 
     this.invoiceRemarkService.sendU70Remarks();
 
@@ -484,9 +495,9 @@ export class CorporateComponent implements OnInit {
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
-    if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
-      this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
-    }
+    // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
+    //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
+    // }
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(

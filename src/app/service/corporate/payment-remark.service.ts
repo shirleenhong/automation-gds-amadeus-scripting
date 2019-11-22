@@ -11,6 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DDBService } from '../ddb.service';
 import { AmadeusQueueService } from '../amadeus-queue.service';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { NonAcceptanceComponent } from 'src/app/corporate/payments/non-acceptance/non-acceptance.component';
 
 @Injectable({
   providedIn: 'root'
@@ -870,6 +871,80 @@ export class PaymentRemarkService {
         tktRoute.set('TktRoute', route);
         this.remarksManager.createPlaceholderValues(tktRoute);
         idx++;
+      }
+    });
+  }
+
+  writeCorporateReceiptRemarks(nonAcceptance: NonAcceptanceComponent) {
+    let rln = 1;
+    nonAcceptance.unticketedSegments.forEach((x) => {
+      if (nonAcceptance.tstSelected.includes(x.tstNumber)) {
+        let remarkSet = new Map<string, string>();
+        let glCode: string;
+        remarkSet.set('PAXLastName', x.paxName.split('-')[1]);
+
+        if (x.paxName.split('-')[0].includes('MR')) {
+          remarkSet.set(
+            'PAXFirstName',
+            x.paxName
+              .split('-')[0]
+              .replace('MR', '')
+              .trim()
+          );
+        } else if (x.paxName.split('-')[0].includes('MS')) {
+          remarkSet.set(
+            'PAXFirstName',
+            x.paxName
+              .split('-')[0]
+              .replace('MS', '')
+              .trim()
+          );
+        } else if (x.paxName.split('-')[0].includes('MRS')) {
+          remarkSet.set(
+            'PAXFirstName',
+            x.paxName
+              .split('-')[0]
+              .replace('MRS', '')
+              .trim()
+          );
+        } else {
+          remarkSet.set('PAXFirstName', x.paxName.split('-')[0]);
+        }
+
+        if (x.cost) {
+          remarkSet.set('TotalCost', x.cost);
+        }
+        remarkSet.set('RlnNo', rln.toString());
+        this.remarksManager.createPlaceholderValues(remarkSet);
+
+        remarkSet = new Map<string, string>();
+        remarkSet.set('CCVendor', x.ccVendor);
+
+        let ccN = '';
+        if (x.ccNumber) {
+          // tslint:disable-next-line: no-string-literal
+          const look = nonAcceptance.nonAcceptanceForm.controls['segments'].value;
+          ccN = look[look.findIndex((z) => z.ccVendor === x.ccVendor)].ccNo;
+        }
+        if (x.ccVendor === 'VI') {
+          glCode = '115000';
+        } else if (x.ccVendor === 'CA') {
+          glCode = '116000';
+        } else if (x.ccVendor === 'AX') {
+          glCode = '117000';
+        }
+
+        remarkSet.set('CCExp', x.ccExp);
+        remarkSet.set('RlnNo', rln.toString());
+        remarkSet.set('GlCode', glCode);
+        remarkSet.set('CCNo', ccN.toString());
+        this.remarksManager.createPlaceholderValues(remarkSet);
+
+        remarkSet = new Map<string, string>();
+        remarkSet.set('RlnNo', rln.toString());
+        this.remarksManager.createPlaceholderValues(remarkSet);
+
+        rln += 1;
       }
     });
   }

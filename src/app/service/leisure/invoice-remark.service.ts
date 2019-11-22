@@ -111,6 +111,7 @@ export class InvoiceRemarkService {
     remGroup.group = 'Resend Invoice';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.deleteRemarkByIds = [];
+    this.pnrService.getRemarkLineNumbers('CONF*SEND TO MAIL', 'RM').forEach((d) => remGroup.deleteRemarkByIds.push(d));
 
     /// ---> addEmailRemarks
     const arr = frmGroup.get('emailAddresses') as FormArray;
@@ -142,7 +143,7 @@ export class InvoiceRemarkService {
         }
       }
     } else if (selectedETickets === 'None') {
-      this.remGroup.remarks.push(this.remarkHelper.createRemark('SPCL-TKT0', 'RM', 'Z'));
+      remGroup.remarks.push(this.remarkHelper.createRemark('SPCL-TKT0', 'RM', 'Z'));
     } else {
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {

@@ -1411,25 +1411,23 @@ export class PnrService {
     }
 
     getUnticketedTst() {
-        let tstLen = this.tstObj.length;
-        if (!tstLen) {
-            tstLen = 1;
-        }
-        let ticketed = 0;
-        for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
-            const segmentName = tst.elementManagementData.segmentName;
-            if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-                if (tst.referenceForDataElement) {
-                    ticketed++;
-                }
-            }
-        }
-
-        if (ticketed < tstLen) {
-            return true;
-        }
-        return false;
-    }
+        let unticketed = [];
+        if (!this.tstObj.length) {
+             unticketed.push(this.tstObj);
+         } else {
+             unticketed =  this.tstObj.filter(t => this.checkPaxRefDetails(t.paxSegReference.refDetails));
+         }
+        return unticketed.length > 0;
+     }
+ 
+     checkPaxRefDetails(refDetails) {
+         if (refDetails.length === undefined) {
+             return refDetails.refQualifier !== 'PT';
+         } else {
+             return refDetails.filter(x => x.refQualifier !== 'PT').length >0;
+         }
+     }
+ 
 
     getTicketedNumbers() {
         const tickets = [];

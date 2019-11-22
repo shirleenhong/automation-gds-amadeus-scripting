@@ -4,6 +4,7 @@ import { BusinessRuleList } from 'src/app/models/business-rules/business-rule-li
 import { PnrService } from '../pnr.service';
 import { RulesLogicService } from './rule-logic.service';
 import { RulesReaderService } from './rules-reader.service';
+import { BusinessRule } from 'src/app/models/business-rules/business-rule.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RulesEngineService {
   businessRuleList: BusinessRuleList;
   businessEntities: Map<string, string>;
+  validBusinessRules: BusinessRule[];
   constructor(
     private ddb: DDBService,
     private pnrService: PnrService,
@@ -18,7 +20,13 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService
   ) {}
 
-  public async loadRules() {
+  public initializeRulesEngine() {
+    this.loadRules();
+    this.loadBusinessEntityFromPnr();
+    this.validBusinessRules = this.getLogicValidRuleList();
+  }
+
+  async loadRules() {
     await this.ddb.getClientDefinedBusinessRules(this.pnrService.getClientSubUnit(), '1' + this.pnrService.cfLine.cfa).then((rules) => {
       this.businessRuleList = rules;
     });

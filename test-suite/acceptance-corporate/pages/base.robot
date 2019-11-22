@@ -49,7 +49,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
-@{payment_pages}    Payment    Non BSP Processing    Add Accounting Line
+@{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
@@ -312,6 +312,7 @@ Navigate From Payment
     ${in_payment}    Run Keyword And Return Status    Should Contain     ${payment_pages}    ${current_page}
     Run Keyword If    "${in_payment}" == "False"    Click Payment Panel
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
+    Run Keyword If    "${destination_page}" == "Corporate Receipt"    Click Corporate Receipt Tab    
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -512,7 +513,7 @@ Get Test Data From Json
     
 Get Passenger Info From Json
     [Arguments]    ${json_file_object}     ${client_data}
-    ${psngr_1}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PassengerName1
+    Get Passenger Name Values From Json    ${json_file_object}    ${client_data}
     ${cfa}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].Client
     ${udid50}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].Udid50
     ${udid25}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].Udid25
@@ -567,6 +568,14 @@ Get Air Segment Values From Json
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
     \    ${i}    Evaluate    ${i} + 1
     
+Get Passenger Name Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    : FOR    ${i}    IN RANGE    1   99
+    \    ${exists}    Run Keyword And Return Status     Get Json Value As String    ${json_file_object}    $.['${client_data}'].PassengerName${i}
+    \    ${psngr}     Run Keyword If    "${exists}" == "True"    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PassengerName${i}
+    \    Set Test Variable    ${psngr_${i}}    ${psngr}
+    \    Exit For Loop If    "${exists}" == "False"
+
 Get Car Segment Values From Json
     [Arguments]    ${json_file_object}     ${client_data}
     ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments

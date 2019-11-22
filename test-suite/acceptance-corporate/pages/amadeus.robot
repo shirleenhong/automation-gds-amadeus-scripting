@@ -43,6 +43,8 @@ ${text_area_command}    //div[@class='crypticContainer']
 ${button_officeId}   css=#office-id-button
 ${popUp_oid}    css=#ngb-popover-0 
 ${oid_YTOWL2101}    //a[contains(text(), 'YTOWL2101')]
+${tst_line}    //table[@class='tstTsmView line']//tr
+${tst_row}    //td[@class='price textwrap']
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -494,6 +496,14 @@ Add ${number_of_segments} Limo Segments
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345          
+
+Add Passenger Names
+    :FOR    ${i}     IN RANGE    1    99
+    \    ${exists}    Run Keyword And Return Status     Should Not Be Empty     ${psngr_${i}} 
+    \    Exit For Loop If    not ${exists}
+    \    Run Keyword If    ${exists}    Enter Cryptic Command    NM1${psngr_${i}}
+    \    ${passenger_no}    Set Variable    ${i}
+    Set Test Variable    ${passenger_no}
     
 Add ${number_of_segments} Car Segments
     Create ${number_of_segments} Test Dates
@@ -510,7 +520,8 @@ Add ${number_of_segments} Rail Segments
 Create PNR With Passive Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
@@ -520,7 +531,8 @@ Create PNR With Passive Air Segments For ${client_data}
 Create PNR With Active Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
@@ -531,7 +543,8 @@ Create PNR With Active Air Segments For ${client_data}
     
 Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
@@ -543,7 +556,8 @@ Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_da
 Create PNR For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
@@ -552,7 +566,8 @@ Create PNR For ${client_data}
 Create PNR With Active Hotel Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Active Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
@@ -561,7 +576,8 @@ Create PNR With Active Hotel Segments For ${client_data}
 Create PNR With Active Car Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Book ${num_car_segments} Active Car Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Sleep     5
@@ -595,7 +611,7 @@ Book ${numberOfAir} Active Air Segments
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
-    \    Enter Cryptic Command    SS1Y1
+    \    Enter Cryptic Command    SS${passenger_no}Y1
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
       
 Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
@@ -641,3 +657,17 @@ Get ${number_of_segment} Air Segments In The PNR
 
 Add Passive Car Segment On ${city_code} From ${pickup_date} To ${return_date}
     Move Profile to GDS    CU1AHK1${city_code}${pickup_date}-${return_date}PCAR/SUC-ET/SUN-ENTERPRISE/SD-10MAR/ST-1600/ED-15MAR/ET-1500/TTL-140.00USD/DUR-WEEKLY/MI-70KM FREE/CF-123336
+    
+Get Fare For ${no_of_tst} TST
+    Switch To Graphic Mode
+    Set Test Variable    ${tst_row_no}    0
+    Set Test Variable    ${i}    0
+    Wait Until Element Is Visible    ${tst_row}    60    
+    :FOR    ${no_of_tst}    IN RANGE    0    ${no_of_tst}
+    \    ${tst_row_no}    Evaluate    ${tst_row_no} + 3
+    \    ${tst}   Get Text    ${tst_line}${open_bracket}${tst_row_no}${close_bracket}${tst_row}
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${tst}    Fetch From Left    ${tst}    CAD
+    \    ${tst}    Strip String    ${tst}
+    \    Set Test Variable    ${tst_${i}}    ${tst} 
+    Switch To Command Page

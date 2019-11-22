@@ -56,6 +56,11 @@ ${div_segments_array}    //div[@formarrayname='segments']
 ${input_segment_checkbox}    //input[@type='checkbox']
 ${input_additional_info}    css=#additionalInfo
 ${input_notes}    css=#additionalNotes2
+${tab_corporate_receipt}    //span[contains(text(), 'Corporate Receipt')]
+${label_corporate_receipt}    //label[contains(text(), 'Select item(s) for Matrix Change Ticket Cost')]
+${checkbox_start}    //input[@value='
+${checkbox_end}    ']
+${input_credit_card}    //input[@id='ccNo']
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -126,7 +131,7 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number And
     Set Test Variable    ${fare_type}    FLEX
     [TEARDOWN]    Take Screenshot
     
-Add Non-BSP Ticketing Details For Segment ${segment_no} 
+Add Non-BSP Ticketing Details For Segment ${segment_no}
     Navigate To Page Add Accounting Line
     Wait Until Element Is Visible    ${list_accounting_type}    30
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
@@ -200,7 +205,7 @@ Add APAY Ticketing Details For Multiple Segments
     Take Screenshot
    
 Add Non-BSP and APAY Ticketing Detals For Multiple Segments
-    Add Non-BSP Ticketing Details For Segment 2 
+    Add Non-BSP Ticketing Details For Segment 2
     Enter Value    ${input_suppliercode}    AEO
     Click Save Button
     Navigate To Page Add Accounting Line
@@ -333,7 +338,7 @@ Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Wr
     Verify Specific Remark Is Written In The PNR    RM *EB/-AMA/-GIS
     Verify Specific Remark Is Not Written In The PNR    RM *EB/-EBA 
 
-Add Matrix Accounting Remark For Air Canada Pass Purchase 
+Add Matrix Accounting Remark For Air Canada Pass Purchase
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
     Enter Value    ${input_supplier_confirmationNo}    879111
@@ -453,7 +458,7 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Run Keyword If    "${airline_code}" == "Other Type Of APAY"   Should Contain    ${actual_supplier_code}    CGO
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
-    Finish PNR 
+    Finish PNR
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
@@ -462,7 +467,7 @@ Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticke
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1000.00/TX1-100.00XG/TX2-10.00RC/TX3-1.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number And Penalty Amount Are Written In The PNR
-    Finish PNR 
+    Finish PNR
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2
@@ -471,7 +476,7 @@ Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticke
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1010.00/TX1-101.00XG/TX2-11.00RC/TX3-2.00XQ/TX4-0.10XT/COMM-0.10/S2    True
     
 Verify Multiple Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
-    Finish PNR 
+    Finish PNR
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y/-OTK-${orig_tkt_number}
     ...    ELSE    Verify Specific Remark Is Written In The PNR    RM *NE/-EX-Y
     Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${tkt_number}/VN-${actual_supplier_code}/S2-3
@@ -689,6 +694,12 @@ Navigate To Add Accounting Line
     Click Element    ${button_addaccountingline} 
     Set Test Variable    ${current_page}    Add Accounting Line
     Set Test Variable    ${ticketing_details_complete}    no
+    
+Click Corporate Receipt Tab
+    Wait Until Element Is Visible    ${tab_corporate_receipt}    30
+    Click Element    ${tab_corporate_receipt}
+    Wait Until Element Is Visible    ${label_corporate_receipt}    30
+    Set Test Variable    ${current_page}    Corporate Receipt
 
 Verify Airline Corporate Pass Remarks Are Written In The PNR
     Finish PNR
@@ -764,7 +775,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Take Screenshot
     Click Save Button
     
-Add Ticketing Amount Details With Refund	
+Add Ticketing Amount Details With Refund
     [Arguments]    ${refund_base_amt}=${EMPTY}    ${gst_refundtax}=${EMPTY}    ${hst_refundtax}=${EMPTY}    ${qst_refundtax}=${EMPTY}    ${oth_refundtax}=${EMPTY}    ${commission_refund}=${EMPTY} 
     Enter Value    ${input_baseAmount_refund}    ${refund_base_amt}	
     Enter Value    ${input_gst_refund}    ${gst_refundtax}	
@@ -834,7 +845,7 @@ Verify TKT Remarks Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-${base_amt}/TX1-${gst_tax}XG/TX2-${hst_tax}RC/TX3-${qst_tax}XQ/TX4-${oth_tax}XT/COMM-0.00/S2    True
       
 Verify RMX Remarks With Optional Values Are Written In The PNR
-    Assign Current Date   		
+    Assign Current Date
     Verify Specific Remark Is Written In The PNR    RMX **********************************************
     Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG-NONBSP ABC123 REFUND-${current_date}	
     Verify Specific Remark Is Written In The PNR    RMX NONBSP-${actual_suppliercode}-ISSUE OID-YTOWL220N	
@@ -852,7 +863,7 @@ Verify RMX, PE, AND TKT Remarks Without Optional Values Are Written In The PNR
     Finish PNR
     Assign Current Date
     Verify Expected Remarks Are Written In The PNR
-    Verify Unexpected Remarks Are Not Written In The PNR  		
+    Verify Unexpected Remarks Are Not Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMX **********************************************
     Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG-NONBSP ABC123 REFUND-${current_date}	
     Verify Specific Remark Is Written In The PNR    RMX NONBSP-ACJ-ISSUE OID-YTOWL220N	
@@ -867,5 +878,102 @@ Verify PNR Is Queued To Correct Queue Placement For Airline Cancel Pass
     Enter Cryptic Command    RTQ 
     Element Should Contain    ${text_area_command}   YTOWL210O${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}098
     Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}001
+   
+Select ${number_of_tst} TST For Corporate Script For ${cc_vendor_code}
+    Set Test Variable    ${number_of_tst}
+    Set Test Variable    ${cc_vendor_code}
+    Get Fare For ${number_of_tst} TST 
+    Navigate to Page Corporate Receipt
+    Select TST Checkbox    ${number_of_tst}
+    Run Keyword If    '${number_of_tst}' != '1'    Enter Multiple CC Number For ${cc_vendor_code}    ELSE    Enter CC Number For ${cc_vendor_code} For TST 1
+    Take Screenshot
+
+Select TST Checkbox
+    [Arguments]    ${number_of_tst}    
+    :FOR    ${tst_no}    IN RANGE     0     ${number_of_tst}
+    \    ${tst_no}    Evaluate    ${tst_no} + 1
+    \    Set Test Variable    ${tst_value}    ${tst_no} 
+    \    Select Checkbox    ${checkbox_start}${tst_value}${checkbox_end}
+    Take Screenshot
+
+Enter Multiple CC Number For ${cc_vendor_code}
+    :FOR    ${tst_no}    IN RANGE     0     ${number_of_tst}
+    \    ${tst_no}    Evaluate    ${tst_no} + 1
+    \    Enter CC Number For ${cc_vendor_code} For TST ${tst_no}
+    Take Screenshot
+
+Select And Re-Enter Values On TST For Different Credit Cards
+    Get Fare For 4 TST 
+    Select 2 TST For Corporate Script For CA
+    Select The Next 2 For VI
+    Take Screenshot
+    
+Select The Next ${number_of_tst} For ${cc_vendor_code}
+    Set Test Variable    ${tst_no}    ${number_of_tst}
+    :FOR    ${number_of_tst}    IN RANGE     0     ${number_of_tst}
+    \    ${number_of_tst}    Evaluate    ${number_of_tst} + 1
+    \    ${tst_no}    Evaluate    ${tst_no} + 1
+    \    Set Test Variable    ${tst_value}    ${tst_no} 
+    \    Select Checkbox    ${checkbox_start}${tst_value}${checkbox_end}
+    \    Enter CC Number For ${cc_vendor_code} For TST ${tst_value}
+
+Enter CC Number For ${cc_vendor_code} For TST ${tst_no}
+    Run Keyword If    '${cc_vendor_code}' == 'VI'    Enter Value    ${div_segments_array}${open_bracket}${tst_no}${close_bracket}${input_credit_card}    4444333322221111
+    Run Keyword If    '${cc_vendor_code}' == 'CA'    Enter Value    ${div_segments_array}${open_bracket}${tst_no}${close_bracket}${input_credit_card}    5555555555554444
+    Run Keyword If    '${cc_vendor_code}' == 'AX'    Enter Value    ${div_segments_array}${open_bracket}${tst_no}${close_bracket}${input_credit_card}    371449635398431
+
+Add FOP For Each Segment
+    Enter Cryptic Command    FPCCCA5555555555554444/1221/S2    
+    Enter Cryptic Command    FPCCAX371449635398431/1221/S3
+    Take Screenshot
+
+Add FOP And Store Fares For Segment
+    Enter Cryptic Command    FXP/S4/P1
+    Enter Cryptic Command    FXP/S4/P2
+    Enter Cryptic Command    FPCCCA5555555555554444/1221/S3
+    Enter Cryptic Command    FPCCVI4444333322221111/1221/S4
+    Take Screenshot
+    
+Verify That Only 1 TST Is Displayed
+    Page Should Not Contain Element    ${checkbox_start}2${checkbox_end}
+    Page Should Not Contain Element    ${div_segments_array}${open_bracket}2${close_bracket}${input_credit_card}
+    Take Screenshot
+
+Verify Matrix Receipt Remark Is Written For Single TST
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-CORPORATE-AMADEUS/-AMT-${tst_1}
+    Verify Expected Remarks Are Written In The PNR     True
+    
+Verify Matrix Receipt Remark Is Written For Multiple TSTs
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-CORPORATE-AMADEUS/-AMT-${tst_1}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-2/-RF-CORPORATE-AMADEUS/-AMT-${tst_2}
+    Verify Expected Remarks Are Written In The PNR     True
+
+Verify Matrix Receipt Remark Is Written For Multiple Passengers And TSTs
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-1/-RF-CORPORATE-AMADEUS/-AMT-${tst_1}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-2/-RF-TEST-AMADEUS/-AMT-${tst_2}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-3/-RF-CORPORATE-AMADEUS/-AMT-${tst_3}
+    Verify Specific Remark Is Written In The PNR    RM *REC/-RLN-4/-RF-TEST-AMADEUS/-AMT-${tst_4}
+    Verify Expected Remarks Are Written In The PNR     True
+   
+Verify Matrix Receipt Remark Is Not Written
+    Finish PNR
+    Verify Unexpected Remarks Are Not Written In The PNR 
+  
+Verify That Corporate Receipt Is Not Displayed
+    Navigate To Page Payment
+    Page Should Not Contain Element    ${tab_corporate_receipt}
+    Page Should Not Contain Element    ${checkbox_start}1${checkbox_end}
+    Take Screenshot 
+
+Ticket The TST And Verify That Corporate Receipt Is Not Displayed
+    Ticket TST1
+    Verify That Corporate Receipt Is Not Displayed
+    
+
+
+
     
     

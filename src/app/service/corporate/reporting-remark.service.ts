@@ -232,4 +232,12 @@ export class ReportingRemarkService {
       }
     }
   }
+  writeEBRemarks(touchReasonForm: FormGroup) {
+    const map = new Map<string, string>();
+    map.set('TouchCode', touchReasonForm.controls.ebR.value);
+    map.set('BookingToolCode', touchReasonForm.controls.ebT.value);
+    map.set('ReasonType', touchReasonForm.controls.ebN.value);
+    map.set('ReasonCode', touchReasonForm.controls.ebC.value);
+    this.remarksManager.createPlaceholderValues(map);
+ }
 }

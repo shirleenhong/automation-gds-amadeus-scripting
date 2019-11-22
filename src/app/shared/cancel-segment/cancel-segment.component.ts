@@ -106,17 +106,9 @@ export class CancelSegmentComponent implements OnInit {
       voidOption: new FormControl('', []),
       ticketNumber: new FormControl('', []),
       vRsnOption: new FormControl('', []),
-      ebR: new FormControl('', [Validators.required]),
-      ebT: new FormControl('', [Validators.required]),
-      ebN: new FormControl('GI', [Validators.required]),
-      ebC: new FormControl('', [Validators.required]),
       ticketList: new FormControl('', []),
       ticketVoidList: new FormArray([])
     });
-    this.cancelForm.get('ebR').disable();
-    this.cancelForm.get('ebT').disable();
-    this.cancelForm.get('ebN').disable();
-    this.cancelForm.get('ebC').disable();
     // this.showMessage();
     // this.checkHasPowerHotel();
     // this.checkCorpPreCancel();
@@ -136,7 +128,6 @@ export class CancelSegmentComponent implements OnInit {
     this.getPassengers();
     this.checkCorpPreCancel();
     this.checkVoid();
-    this.checkEbRemark();
     this.loadTicketList();
     this.addTicketList();
   }
@@ -847,47 +838,6 @@ export class CancelSegmentComponent implements OnInit {
 
     if (nonAcValue !== 'NONE') {
       this.enableFormControls(['airlineNo'], false);
-    }
-  }
-  checkEbRemark() {
-    this.showEBDetails = false;
-    let ebData = this.pnrService.getRemarkText('EB/');
-    if (ebData) {
-      ebData = ebData.split('/');
-      if (ebData.length === 3) {
-        this.populateEBFields(ebData);
-      }
-    }
-  }
-  async populateEBFields(eb) {
-    if (!this.isCorporate) {
-      this.showEBDetails = false;
-      return;
-    }
-    const ebR = eb[1].substr(0, 2);
-    const ebT = eb[1].substr(2, 1);
-    const ebN = eb[2].substr(0, 2);
-    const ebC = eb[2].substr(2, 1);
-
-    this.showEBDetails = ebR && ebT && ebN && ebC ? true : false;
-    if (this.showEBDetails) {
-      const ebrValues = this.ebRList.map((seat) => seat.itemValue);
-
-      if (ebrValues.indexOf(ebR) > -1) {
-        this.cancelForm.controls.ebR.setValue(ebR);
-      }
-
-      for (const c of this.ebCList) {
-        if (c.reasonCode === ebC) {
-          this.cancelForm.controls.ebC.setValue(ebC);
-        }
-      }
-      this.cancelForm.controls.ebT.setValue(ebT);
-      this.cancelForm.controls.ebN.setValue(ebN);
-      this.cancelForm.get('ebR').enable();
-      this.cancelForm.get('ebT').enable();
-      this.cancelForm.get('ebN').enable();
-      this.cancelForm.get('ebC').enable();
     }
   }
 }

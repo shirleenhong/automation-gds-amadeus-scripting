@@ -19,7 +19,7 @@ Verify That EB Remark Is Retained For Online PNR
     [Tags]    us11196
     Create PNR With Active Air Segments For Online PNR With No Changes
     Complete The PNR With Default Values 
-    Fill Up Cancel Segment With Default Values
+    Navigate To Page Reporting Remarks
     Verify EB Remark Written In The PNR
     
 Verify That Online Touch Reason Fields Are Not Displayed When PNR Has No EB Remark

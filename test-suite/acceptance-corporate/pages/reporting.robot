@@ -34,6 +34,10 @@ ${input_car_savings_code_start}    //div[@ng-reflect-name='
 ${input_carSavings_checkBox_end}    ']//input[@name='chkIncluded']
 ${select_carSavings_reasonCode_end}    ']//select[@name='carReasonCode']
 ${tab_car_savings_code}    //span[contains(text(), 'Car Savings Code')]
+${list_agent_assisted}     css=#ebR
+${input_tool_identifier}    //input[@formcontrolname='ebT']
+${input_online_format}     //input[@formcontrolname='ebN']
+${list_touch_reason}     css=#ebC
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -457,4 +461,39 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
     Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}YYZ/-SV-R
     Verify Specific Remark Is Not Written In The PNR    RM *CS23NOVPEK/-SV-X
     Verify Specific Remark Is Not Written In The PNR    RM *CS14DECMEL/-SV-Y
+
+Verify Online Fields And Update Agent Assisted And Touch Reason Codes
+    Navigate To Page Reporting Remarks
+    Verify Online Touch Reason Fields Are Populated With Correct Values    CT    A    GI    C
+    Update Agent Assisted And Touch Reason Code    AM    S
     
+Verify Online Touch Reason Fields Are Populated With Correct Values
+    [Arguments]    ${expected_agent_assisted}    ${expected_input_tool_identifier}    ${expected_online_format}    ${expected_touch_reason}
+    ${actual_agent_assisted}     Get Value    ${list_agent_assisted}
+    ${actual_input_tool_identifier}     Get Value    ${input_tool_identifier}
+    ${actual_online_format}     Get Value    ${input_online_format}
+    ${actual_touch_reason}     Get Value    ${list_touch_reason}
+    Should Be Equal    ${actual_agent_assisted}    ${expected_agent_assisted}  
+    Should Be Equal    ${actual_input_tool_identifier}    ${expected_input_tool_identifier}
+    Should Be Equal    ${actual_online_format}    ${expected_online_format}  
+    Should Be Equal    ${actual_touch_reason}    ${expected_touch_reason}
+    Take Screenshot
+
+Update Agent Assisted And Touch Reason Code
+    [Arguments]   ${agent_assisted}    ${touch_reason}
+    Select From List By Value    ${list_agent_assisted}    ${agent_assisted} 
+    Select From List By Value    ${list_touch_reason}    ${touch_reason}
+    Sleep    2
+    Take Screenshot
+
+Verify That Online Touch Reason Fields Are Not Displayed
+    Navigate To Page Reporting Remarks
+    Page Should Not Contain Element    ${list_agent_assisted}
+    Page Should Not Contain Element    ${input_tool_identifier} 
+    Page Should Not Contain Element    ${input_online_format} 
+    Page Should Not Contain Element    ${list_touch_reason}
+    Take Screenshot
+    
+Verify EB Remark Written In The PNR
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR

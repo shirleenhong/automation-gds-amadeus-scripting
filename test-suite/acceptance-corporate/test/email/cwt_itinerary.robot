@@ -35,7 +35,7 @@ Verify That CWT Itinerary Remarks Are Updated When Remarks Are Deleted/Updated
     [Tags]    us9901
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For CWT Itinerary, With Existing RIR Remarks
-    #Complete The PNR With Default Values
+    Complete The PNR With Default Values
     Add CWT Itinerary Details For All Emails, In French Language And For Invoice Transaction Type
     Update Services And Test Remarks
     Verify Remarks Are Added Correctly In The PNR

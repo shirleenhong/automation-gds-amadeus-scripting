@@ -17,18 +17,18 @@ export class VisaPassportRemarkService {
   isEnabled: boolean;
   corpRemarks = [];
 
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private rms: RemarksManagerService, ) { }
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private rms: RemarksManagerService) {}
 
-  private writeCorpAdvisory() {
-    if (!this.corpRemarks.find(x => x.placeholder === 'CountryVisaRequires')) {
+  private writeCorpAdvisory() {    
+    if (!this.corpRemarks.find((x) => x.placeholder === 'CountryVisaRequires')) {
       this.rms.createEmptyPlaceHolderValue(['CountryVisaRequires'], null, '- A VALID PASSPORT IS REQUIRED');
     }
 
-    if (!this.corpRemarks.find(x => x.placeholder === 'CountryVisaPassportRequires')) {
+    if (!this.corpRemarks.find((x) => x.placeholder === 'CountryVisaPassportRequires')) {
       this.rms.createEmptyPlaceHolderValue(['CountryVisaPassportRequires'], null, '- A VALID PASSPORT AND VISA ARE REQUIRED');
     }
 
-    this.corpRemarks.forEach(element => {
+    this.corpRemarks.forEach((element) => {
       const remarks = new Map<string, string>();
       if (element.placeholder) {
         remarks.set(element.placeholder, element.placeholdervalue);
@@ -90,14 +90,21 @@ export class VisaPassportRemarkService {
       const passportName = remarkText.substr(0, remarkText.indexOf('VALID') - 1);
       if (passportName !== this.formGroup.controls.passportName.value.toUpperCase()) {
         if (isCorp) {
-          this.corpRemarks.push(
-            { placeholder: 'PassportName', placeholdervalue: this.formGroup.controls.passportName.value, condition: null, segment: null });
+          this.corpRemarks.push({
+            placeholder: 'PassportName',
+            placeholdervalue: this.formGroup.controls.passportName.value,
+            condition: null,
+            segment: null
+          });
         } else {
           const search = 'ADVISED ' + remarkText;
           this.remarkGroup.deleteRemarkByIds.push(this.pnrService.getRemarkLineNumber(search));
           this.remarkGroup.remarks.push(
             this.remarkHelper.createRemark(
-              'ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED', 'RM', '')
+              'ADVISED ' + this.formGroup.controls.passportName.value + ' VALID PASSPORT IS REQUIRED',
+              'RM',
+              ''
+            )
           );
         }
       }
@@ -105,8 +112,13 @@ export class VisaPassportRemarkService {
 
     if (this.pnrService.getRemarkText('INTERNATIONAL TRAVEL ADVISORY SENT') === '') {
       if (isCorp) {
-        this.corpRemarks.push(
-          { placeholder: null, placeholdervalue: null, condition: 'InternationalTravelSent', conditionvalue: 'true', segment: null });
+        this.corpRemarks.push({
+          placeholder: null,
+          placeholdervalue: null,
+          condition: 'InternationalTravelSent',
+          conditionvalue: 'true',
+          segment: null
+        });
       } else {
         this.remarkGroup.remarks.push(this.remarkHelper.createRemark('INTERNATIONAL TRAVEL ADVISORY SENT', 'RM', ''));
       }
@@ -125,7 +137,7 @@ export class VisaPassportRemarkService {
     });
   }
 
-  AddSegments(corp?: boolean): void {
+  AddSegments(corp?: boolean): void {    
     this.formGroup.controls.segments.value.forEach((x) => {
       if (!x.visa) {
         const segments = x.tatooNumber;
@@ -139,7 +151,14 @@ export class VisaPassportRemarkService {
         if (corp) {
           this.corpRemarks.push(
             // tslint:disable-next-line:max-line-length
-            { placeholder: 'CountryVisaRequires', placeholdervalue: x.country.toUpperCase(), condition: null, conditionvalue: null, segment: rm.relatedSegments });
+            {
+              placeholder: 'CountryVisaRequires',
+              placeholdervalue: x.country.toUpperCase(),
+              condition: null,
+              conditionvalue: null,
+              segment: rm.relatedSegments
+            }
+          );
         } else {
           this.remarkGroup.remarks.push(rm);
         }
@@ -155,7 +174,14 @@ export class VisaPassportRemarkService {
         if (corp) {
           this.corpRemarks.push(
             // tslint:disable-next-line:max-line-length
-            { placeholder: 'CountryVisaPassportRequires', placeholdervalue: x.country.toUpperCase(), condition: null, conditionvalue: null, segment: rm.relatedSegments });
+            {
+              placeholder: 'CountryVisaPassportRequires',
+              placeholdervalue: x.country.toUpperCase(),
+              condition: null,
+              conditionvalue: null,
+              segment: rm.relatedSegments
+            }
+          );
         } else {
           this.remarkGroup.remarks.push(rm);
         }

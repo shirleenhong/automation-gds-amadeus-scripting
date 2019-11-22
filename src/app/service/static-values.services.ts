@@ -497,11 +497,10 @@ export class StaticValuesService {
         { itemText: 'UT', itemValue: 'AX' },
         { itemText: 'GA', itemValue: 'AX' },
         { itemText: 'G3', itemValue: 'AX' },
-        { itemText: 'AF', itemValue: 'VI, CA' },
-        { itemText: 'AC', itemValue: 'VI, CA' }
+        { itemText: 'AF', itemValue: 'VI, CA' }
     ];
        if (environment.production) {
-         airportList.splice(23, 1);
+         airportList.splice(21, 1);
        }
        return airportList.findIndex((x) => x.itemText === airportCode && x.itemValue.includes(vendorCode)) ;
     }

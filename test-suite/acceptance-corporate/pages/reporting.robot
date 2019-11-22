@@ -38,6 +38,14 @@ ${list_agent_assisted}     css=#ebR
 ${input_tool_identifier}    //input[@formcontrolname='ebT']
 ${input_online_format}     //input[@formcontrolname='ebN']
 ${list_touch_reason}     css=#ebC
+${tab_hotelSavingsCode}    css=#hotelSegmentsTab-link
+${list_hotelSavings}    ]//select[@formcontrolname='hotelSavingsCode']
+${row_hotels}    //div[@formarrayname='hotels'][
+${checkbox_hotelSegment}    ]//input[@id='chkIncluded']
+${input_hotelSegNum}    ]//input[@formcontrolname='segment']
+${input_checkInDate}    ]//input[@formcontrolname='checkInDate']
+${input_chainCode}    ]//input[@formcontrolname='chainCode']
+
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -76,6 +84,11 @@ Click Car Savings Code Tab
     Click Element    ${tab_car_savings_code}
     Wait Until Element Is Visible    ${input_car_savings_code_start}0${input_carSavings_checkBox_end}    30
     Set Test Variable    ${current_page}    Car Savings Code
+    
+Click Hotel Savings Code Tab
+    Wait Until Element Is Visible    ${tab_hotelSavingsCode}    30
+    Click Element    ${tab_hotelSavingsCode}
+    Set Test Variable    ${current_page}    Hotel Savings Code    
     
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
@@ -497,3 +510,56 @@ Verify That Online Touch Reason Fields Are Not Displayed
 Verify EB Remark Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
+    
+Fill Up Hotel Savings Code With Value ${hotel_savings_code}
+    Navigate To Page Hotel Savings Code
+    @{codes}     Split String     ${hotel_savings_code}    ,
+    ${i}    Set Variable    1    
+    : FOR    ${code}    IN    @{codes}
+    \    Click Element    ${row_hotels}${i}${checkbox_hotelSegment}
+    \    ${date}    Get Value    ${row_hotels}${i}${input_checkInDate}
+    \    Run Keyword And Continue On Failure    Should Be Equal    ${date}    ${test_date_${i}}
+    \    ${chain_code}    Get Value    ${row_hotels}${i}${input_chainCode}
+    \    Run Keyword If    "${chain_code}" == "${EMPTY}"    Enter Value    ${row_hotels}${i}${input_chainCode}    1A
+    \    ${chain_code}    Set Variable If    "${chain_code}" == "${EMPTY}"    1A    ${chain_code}
+    \    Set Test Variable    ${chain_code_${i}}    ${chain_code}
+    \    Select From List By Value    ${row_hotels}${i}${list_hotelSavings}    ${code}
+    \    Set Test Variable    ${hotel_savings_code_${i}}    ${code}
+    \    ${i}    Evaluate    ${i} + 1
+    Take Screenshot
+
+Fill Up Hotel Savings Code Without Value
+     Navigate To Page Hotel Savings Code
+    ${i}    Set Variable    1    
+    : FOR    ${i}    IN RANGE    1     9
+    \    Click Element    ${row_hotels}${i}${checkbox_hotelSegment}
+    \    ${date}    Get Value    ${row_hotels}${i}${input_checkInDate}
+    \    Run Keyword And Continue On Failure    Should Be Equal    ${date}    ${test_date_${i}}
+    \    ${chain_code}    Get Value    ${row_hotels}${i}${input_chainCode}
+    \    Run Keyword If    "${chain_code}" == "${EMPTY}"    Enter Value    ${row_hotels}${i}${input_chainCode}    1A
+    \    ${chain_code}    Set Variable If    "${chain_code}" == "${EMPTY}"    1A    ${chain_code}
+    \    Set Test Variable    ${chain_code_${i}}    ${chain_code}
+    \    ${next}    Evaluate    ${i} + 1
+    \    ${exists}    Run Keyword And Return Status   Element Should Be Visible     ${row_hotels}${next}${checkbox_hotelSegment}
+    \    Exit For Loop If    not ${exists}
+    Take Screenshot
+
+Verify Hotel Savings Remark Is Written In The PNR
+    Finish PNR
+   : FOR    ${i}    IN RANGE    1      10
+   \    ${status}    Run Keyword And Return Status    Should Not Be Empty     ${hotel_savings_code_${i}}
+   \    Run Keyword If    ${status}    Verify Specific Remark Is Written In The PNR    RM *HS${test_date_${i}}/-SV-${hotel_savings_code_${i}}/-CHN-${chain_code_${i}}
+   \    ${i}    Evaluate    ${i} + 1
+   \    Exit For Loop If   not ${status} 
+   Verify Unexpected Remarks Are Not Written In The PNR
+   Cancel PNR
+    
+Verify HS Remark Is Written Without Savings Code
+    Finish PNR
+    : FOR    ${i}    IN RANGE    1      10
+    \    ${status}    Run Keyword And Return Status    Should Not Be Empty     ${chain_code_${i}}
+    \    Run Keyword If    ${status}    Verify Specific Remark Is Written In The PNR    RM *HS${test_date_${i}}/-CHN-${chain_code_${i}}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Exit For Loop If   not ${status} 
+    Verify Unexpected Remarks Are Not Written In The PNR
+    Cancel PNR

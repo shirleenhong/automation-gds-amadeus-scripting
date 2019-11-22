@@ -462,11 +462,11 @@ Create PNR With ${number_of_segments} Car Segments
     
 Create PNR With ${number_of_segments} Hotel Segments
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
-    Add ${number_of_segments} Hotel Segments
+    Add ${number_of_segments} Passive Hotel Segments
 
 Create PNR With ${number_of_segments} Hotel Segment/s With Invoice
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
-    Add ${number_of_segments} Hotel Segments
+    Add ${number_of_segments} Passive Hotel Segments
     Move Profile to GDS    RFCWTTEST    ER
     Sleep    4
     Get Record Locator Value
@@ -501,17 +501,17 @@ Create PNR With 4 TSTs For Airline Code ${airline_code}
     Set Test Variable    ${route_code_4}    TRANS
     Handle Smart Tool PopUp
     
-Add ${number_of_segments} Hotel Segments
+Add ${number_of_segments} Passive Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
 
-Add ${number_of_segments} Active Hotel Segments
+Add ${number_of_segments} Active Hotel Segments In ${city_code}
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    HA MSP ${test_date_${i}}-1
+    \    Enter Cryptic Command    HA ${city_code} ${test_date_${i}}-1
     \    Enter Cryptic Command    HA1
     \    Enter Cryptic Command    HP1
     \    Enter Cryptic Command    HS/G-CCVI4444333322221111EXP1219
@@ -549,7 +549,7 @@ Create PNR With Passive Air Segments For ${client_data}
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
-    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Handle Smart Tool PopUp
     Take Screenshot
@@ -561,7 +561,7 @@ Create PNR With Active Air Segments For ${client_data}
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
-    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Enter Cryptic Command    RT
     Handle Smart Tool PopUp
@@ -573,7 +573,7 @@ Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_da
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
-    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Enter Cryptic Command    RT
     Handle Smart Tool PopUp
@@ -585,18 +585,18 @@ Create PNR For ${client_data}
     Add Passenger Names
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
-    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Handle Smart Tool PopUp
     Take Screenshot
     
-Create PNR With Active Hotel Segments For ${client_data}
+Create PNR With Active Hotel Segments In ${city_code} For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
     Add Passenger Names
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
-    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Active Hotel Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Active Hotel Segments In ${city_code}
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Handle Smart Tool PopUp
     Take Screenshot
@@ -703,3 +703,10 @@ Get Fare For ${no_of_tst} TST
     \    ${tst}    Strip String    ${tst}
     \    Set Test Variable    ${tst_${i}}    ${tst} 
     Switch To Command Page
+
+Cancel PNR
+    Switch To Command Page
+    Enter Cryptic Command    XI
+    Enter Cryptic Command    RFCWTTEST
+    Enter Cryptic Command    ER
+    Enter Cryptic Command    ER

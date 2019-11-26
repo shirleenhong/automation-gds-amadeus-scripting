@@ -46,7 +46,9 @@
 		"ExpectedRemark7": "RM *LP/-127.41/S2",
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-AC*GRAND TOTAL CAD 127.41",
-		"UnexpectedRemark1": null
+		"ExpectedRemark10": "RM *NUC",
+		"ExpectedRemark11": "RM *NE/-EX-Y/-OTK-0912345678",
+		"UnexpectedRemark1": "RMG ACPASSCHG"
 	},
 	"Airline Pass Cancellation On Other Airline": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -95,7 +97,9 @@
 		"ExpectedRemark7": "RM *LP/-127.41/S2",
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-WS*GRAND TOTAL CAD 127.41",
-		"UnexpectedRemark1": null
+		"ExpectedRemark10": "RM *NUC",
+		"ExpectedRemark11": "RM *NE/-EX-Y/-OTK-0912345678",
+		"UnexpectedRemark1": "RMG ACPASSCHG"
 	},
 	"Airline Pass Cancellation With Passive Air": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -144,7 +148,9 @@
 		"ExpectedRemark7": "RM *LP/-100.00/S2",
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-AC*GRAND TOTAL CAD 100.00",
-		"UnexpectedRemark1": null
+		"ExpectedRemark10": "RM *NUC",
+		"ExpectedRemark11": "RM *NE/-EX-Y/-OTK-0912345678",
+		"UnexpectedRemark1": "RMG ACPASSCHG"
 	},
 	"Airline Pass Cancellation With RM*14": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -155,13 +161,13 @@
 		"FormOfPayment": "CASH",
 		"Client": "AAA",
 		"Udid50": "GENERAL-CA-S",
-		"NumAirSegments": "2",
+		"NumAirSegments": "1",
 		"AirSegmentRoute1": "YULYYC",
-		"AirSegmentRoute2": "YYCYUL",
+		"AirSegmentRoute2": null,
 		"AirSegmentRoute3": null,
 		"AirSegmentRoute4": null,
 		"AirlineCode1": "AC",
-		"AirlineCode2": "AC",
+		"AirlineCode2": null,
 		"AirlineCode3": null,
 		"AirlineCode4": null,
 		"PriceCommand1": "FXP",
@@ -194,6 +200,8 @@
 		"ExpectedRemark8": "RM *FS/-E/S2",
 		"ExpectedRemark9": "RMF LCC-AC*GRAND TOTAL CAD 127.41",
 		"ExpectedRemark10": "RMG ACPASSCHG",
+		"ExpectedRemark11": "RM *NUC",
+		"ExpectedRemark12": "RM *NE/-EX-Y/-OTK-0912345678",
 		"UnexpectedRemark1": null
 	}
 }

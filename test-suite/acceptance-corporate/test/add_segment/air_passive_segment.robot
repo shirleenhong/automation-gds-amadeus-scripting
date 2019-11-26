@@ -20,11 +20,13 @@ Verify Corp Passive Air Segment Is Added In the PNR For Non ZZ Details
     [Tags]    us9883
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger
-    Add And Verify Air Segment for Non ZZ Details In The PNR
+    Add Air Segment for Non ZZ Details In The PNR
+    Verify Air Segment for Non ZZ Details In The PNR
     
 Verify Corp Passive Air Segment Is Added In the PNR For ZZ Details
     [Tags]    us9883
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger
-    Add And Verify Air Segment for ZZ In The PNR
+    Add Air Segment for ZZ In The PNR
+    Verify Air Segment for ZZ In The PNR
     

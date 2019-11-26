@@ -6,7 +6,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify Codeshare Remark Is Written In The PNR
     [Tags]    us8269
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS U21074 Y 28NOV YYZORD GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-12345    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS U21074 Y 28OCT YYZORD GK1 / 11551440 / ABCDEFG    RM*CF/-RBM000000N    APE-12345    RU1AHK1SIN2OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -36,8 +36,8 @@ Verify Codeshare Remark Is Written In The PNR
 Verify Multiple Codeshare Remarks Are Written In The PNR
     [Tags]    us8269    sanity
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10DEC YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYUL GK1 / 11551440 / 1234567    SS AC1074 Y 18DEC YULYYZ GK1 / 11551440 / ABCD123    SS AC1074 Y 22DEC YYZYYT GK1 / 11551440 / ABCD464    RM*CF/-RBM000000N
-    ...    APE-12345    RU1AHK1SIN2NOV-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS AF1074 Y 10OCT YYZORD GK1 / 11551440 / ABCDEFG    SS U21075 Y 15OCT ORDYUL GK1 / 11551440 / 1234567    SS AC1074 Y 18OCT YULYYZ GK1 / 11551440 / ABCD123    SS AC1074 Y 22OCT YYZYYT GK1 / 11551440 / ABCD464    RM*CF/-RBM000000N
+    ...    APE-12345    RU1AHK1SIN3OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

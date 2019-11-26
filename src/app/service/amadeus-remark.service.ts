@@ -390,7 +390,13 @@ export class AmadeusRemarkService {
   deleteRemarks() {
     const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds).join(',');
     if (filteredIds !== '') {
-      smartScriptSession.send('XE' + filteredIds);
+      smartScriptSession.send('XE' + filteredIds).then(async (response) => {
+        console.log('XE' + filteredIds + ' = ' + response);
+        if (response.Response.indexOf('ENTRY NOT PROCESSED-PARALLEL') >= 0) {
+          await smartScriptSession.send('IR');
+          this.deleteRemarks();
+        }
+      });
     }
   }
 

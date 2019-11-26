@@ -19,7 +19,6 @@ import { MessageType } from '../shared/message/MessageType';
 import { AmadeusRemarkService } from '../service/amadeus-remark.service';
 import { FeesComponent } from './fees/fees.component';
 import { FeesRemarkService } from '../service/corporate/fees-remarks.service';
-import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { MatrixReportingComponent } from '../corporate/reporting/matrix-reporting/matrix-reporting.component';
 import { CorpRemarksComponent } from './corp-remarks/corp-remarks.component';
 import { CorpRemarksService } from '../service/corporate/corp-remarks.service';
@@ -41,6 +40,7 @@ import { CfRemarkModel } from '../models/pnr/cf-remark.model';
 import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.component';
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
+import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 
 @Component({
   selector: 'app-corporate',
@@ -117,6 +117,7 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
+    this.dataError.hasError = false;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
@@ -261,29 +262,32 @@ export class CorporateComponent implements OnInit {
       )
     );
     accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
-
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
+      await this.rms.getMatchcedPlaceholderValues();
     });
 
-    if (
-      this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
-      this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
-    ) {
-      if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
-        const forDeletion = new Array<string>();
-        this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
-          forDeletion.push(element.lineNo);
-        });
-        await this.rms.deleteSegments(forDeletion).then(async () => {
-          await this.getPnr();
-          await this.rms.getMatchcedPlaceholderValues();
-        });
-      }
-    }
+    // if (
+    //   this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
+    //   this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
+    // ) {
+    //   if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
+    //     const forDeletion = new Array<string>();
+    //     this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
+    //       forDeletion.push(element.lineNo);
+    //     });
+    //     await this.rms.deleteSegments(forDeletion).then(async () => {
+    //       await this.getPnr();
+    //       await this.rms.getMatchcedPlaceholderValues();
+    //     });
+    //   }
+    // }
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
+      this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
+    }
 
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
@@ -296,7 +300,19 @@ export class CorporateComponent implements OnInit {
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
       this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
     }
+    if (this.reportingComponent.carSavingsCodeComponent !== undefined) {
+      this.reportingRemarkService.writeCarSavingsRemarks(
+        this.reportingComponent.carSavingsCodeComponent,
+        this.reportingComponent.carSavingsCodeComponent.reAddRemarks
+      );
+    }
 
+    if (this.reportingComponent.hotelSegmentsComponent !== undefined) {
+      this.reportingRemarkService.writeHotelSavingsRemarks(
+        this.reportingComponent.hotelSegmentsComponent,
+        this.reportingComponent.hotelSegmentsComponent.reAddRemarks
+      );
+    }
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
@@ -305,6 +321,7 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
+    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.reportingForm);
 
     this.invoiceRemarkService.sendU70Remarks();
 
@@ -478,9 +495,9 @@ export class CorporateComponent implements OnInit {
     });
 
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
-    if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
-      this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
-    }
+    // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
+    //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
+    // }
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
 
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
@@ -578,6 +595,19 @@ export class CorporateComponent implements OnInit {
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
+
+    const accRemarks = new Array<RemarkGroup>();
+    accRemarks.push(
+      this.ticketRemarkService.submitTicketRemark(
+        this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
+        this.itineraryqueueComponent.ticketingLineComponent.approvalForm
+      )
+    );
+    this.corpRemarkService.BuildRemarks(accRemarks);
+    await this.corpRemarkService.SubmitRemarks().then(async () => {
+      await this.getPnrService();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
 
     await this.rms.submitToPnr().then(
       () => {

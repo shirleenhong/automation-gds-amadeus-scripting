@@ -506,6 +506,7 @@ export class PnrService {
         let airType = '';
         let segType = type;
         let passiveType = '';
+        let hotelChainCode = '';
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -554,6 +555,7 @@ export class PnrService {
             arrivalDate = elem.dropoffDate;
             controlNumber = elem.confirmationNumber;
             elemStatus = elem.status;
+            elemcitycode = elem.fullNode.travelProduct.boardpointDetail.cityCode;
             elemText = elem.carType[0] + ' ' + elem.carCompanyCode + ' ' +
                 elemStatus + elem.quantity + ' ' + elem.location + ' ' +
                 this.formatDate(elem.pickupDate);
@@ -582,6 +584,7 @@ export class PnrService {
                 flongtext = elem.hotelName;
                 // passiveType = 'TYP-HHL';
             }
+            hotelChainCode = elem.chainCode ? elem.chainCode : '';
         }
 
         if (type === 'MIS') {
@@ -610,8 +613,9 @@ export class PnrService {
             controlNumber,
             airType,
             passive: passiveType,
-            isPassive: (segType === 'CAR' || segType === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
-            passengerNo: this.getPassengerAssocNumbers(elem.associations)
+            isPassive: (segType === 'CAR' || type === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
+            passengerNo: this.getPassengerAssocNumbers(elem.associations),
+            hotelChainCode:hotelChainCode
         };
         this.segments.push(segment);
     }
@@ -1407,25 +1411,23 @@ export class PnrService {
     }
 
     getUnticketedTst() {
-        let tstLen = this.tstObj.length;
-        if (!tstLen) {
-            tstLen = 1;
-        }
-        let ticketed = 0;
-        for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
-            const segmentName = tst.elementManagementData.segmentName;
-            if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
-                if (tst.referenceForDataElement) {
-                    ticketed++;
-                }
-            }
-        }
-
-        if (ticketed < tstLen) {
-            return true;
-        }
-        return false;
-    }
+        let unticketed = [];
+        if (!this.tstObj.length) {
+             unticketed.push(this.tstObj);
+         } else {
+             unticketed =  this.tstObj.filter(t => this.checkPaxRefDetails(t.paxSegReference.refDetails));
+         }
+        return unticketed.length > 0;
+     }
+ 
+     checkPaxRefDetails(refDetails) {
+         if (refDetails.length === undefined) {
+             return refDetails.refQualifier !== 'PT';
+         } else {
+             return refDetails.filter(x => x.refQualifier !== 'PT').length >0;
+         }
+     }
+ 
 
     getTicketedNumbers() {
         const tickets = [];
@@ -1671,4 +1673,219 @@ export class PnrService {
            } else { return ''; }
         }
     }
+
+    getUnticketedCorpReceipts(): any[] {
+        const allAir = this.pnrObj.allAirSegments;
+        const tstData = [];
+        const unticketedSegments = [];
+        const tstObj = this.tstObj;
+        const ticketedSegments = [];
+        for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
+          const segmentName = tst.elementManagementData.segmentName;
+          if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
+            if (tst.referenceForDataElement !== undefined) {
+              if (tst.referenceForDataElement.reference.length > 1) {
+                tst.referenceForDataElement.reference.forEach((ref) => {
+                  if (ref.qualifier === 'ST') {
+                    ticketedSegments.push(ref.number);
+                  }
+                });
+              } else {
+                if (tst.referenceForDataElement.reference.qualifier === 'ST') {
+                  ticketedSegments.push(tst.referenceForDataElement.reference.number);
+                }
+              }
+            }
+          }
+        }
+        allAir.forEach((x) => {
+          if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
+            unticketedSegments.push(x.tatooNumber);
+          }
+        });
+        if (unticketedSegments.length > 0) {
+          if (tstObj.length === 0) {
+          } else if (tstObj.length > 0) {
+            tstObj.forEach((x) => {
+              if (x.segmentInformation.length > 0) {
+                const segmentRef = [];
+                const segmentTatoo = [];
+                x.segmentInformation.forEach((p) => {
+                  if (p.segmentReference !== undefined) {
+                    segmentRef.push(this.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
+                    segmentTatoo.push(p.segmentReference.refDetails.refNumber);
+                  }
+                });
+                if (segmentTatoo.length > 0) {
+                  segmentTatoo.forEach((element) => {
+                    if (unticketedSegments.includes(element)) {
+                      tstData.push({
+                        tstNumber: x.fareReference.uniqueReference,
+                        segmentNumber: segmentRef,
+                        tatooNumber: segmentTatoo,
+                        airline: x.validatingCarrier.carrierInformation.carrierCode,
+                        ccVendor: this.getFop(segmentTatoo),
+                        ccExp: this.getCCExp(segmentTatoo),
+                        ccNumber: this.getCCNo(segmentTatoo),
+                        paxName: this.getTstPassenger(x.paxSegReference.refDetails.refNumber),
+                        cost: this.getFare(x)
+                      });
+                    }
+                  });
+                } else {
+                  if (unticketedSegments.includes(x.segmentReference.refDetails.refNumber)) {
+                    tstData.push({
+                      tstNumber: x.fareReference.uniqueReference,
+                      segmentNumber: segmentRef,
+                      tatooNumber: segmentTatoo,
+                      airline: x.validatingCarrier.carrierInformation.carrierCode,
+                      ccVendor: this.getFop(segmentTatoo),
+                      ccExp: this.getCCExp(segmentTatoo),
+                      ccNumber: this.getCCNo(segmentTatoo),
+                      paxName: this.getTstPassenger(x.paxSegReference.refDetails.refNumber),
+                      cost: this.getFare(x)
+                    });
+                  }
+                }
+              } else {
+                if (unticketedSegments.find((p) => x.segmentInformation.segmentReference.refDetails.refNumber === p)) {
+                  if (!ticketedSegments.includes(x.segmentInformation.segmentReference.refDetails.refNumber)) {
+                    tstData.push({
+                      tstNumber: x.fareReference.uniqueReference,
+                      segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                      tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber,
+                      airline: x.validatingCarrier.carrierInformation.carrierCode,
+                      ccVendor: this.getFop(x.segmentInformation.segmentReference.refDetails.refNumber),
+                      ccExp: this.getCCExp(x.segmentInformation.segmentReference.refDetails.refNumber),
+                      ccNumber: this.getCCNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                      paxName: this.getTstPassenger(x.paxSegReference.refDetails.refNumber),
+                      cost: this.getFare(x)
+                    });
+                  }
+                }
+              }
+            });
+          } else {
+            let x: any;
+            x = tstObj;
+            if (x.segmentInformation.length > 0) {
+              const segmentRef = [];
+              const segmentTatoo = [];
+              x.segmentInformation.forEach((p) => {
+                if (p.segmentReference !== undefined) {
+                  segmentRef.push(this.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
+                  segmentTatoo.push(p.segmentReference.refDetails.refNumber);
+                }
+              });
+              tstData.push({
+                tstNumber: x.fareReference.uniqueReference,
+                segmentNumber: segmentRef,
+                tatooNumber: segmentTatoo,
+                airline: x.validatingCarrier.carrierInformation.carrierCode,
+                ccVendor: this.getFop(segmentTatoo),
+                ccExp: this.getCCExp(segmentTatoo),
+                ccNumber: this.getCCNo(segmentTatoo),
+                paxName: this.getTstPassenger(x.paxSegReference.refDetails.refNumber),
+                cost: this.getFare(x)
+              });
+            } else {
+              tstData.push({
+                tstNumber: x.fareReference.uniqueReference,
+                segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber,
+                airline: x.validatingCarrier.carrierInformation.carrierCode,
+                ccVendor: this.getFop(x.segmentInformation.segmentReference.refDetails.refNumber),
+                ccExp: this.getCCExp(x.segmentInformation.segmentReference.refDetails.refNumber),
+                ccNumber: this.getCCNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                paxName: this.getTstPassenger(x.paxSegReference.refDetails.refNumber),
+                cost: this.getFare(x)
+              });
+            }
+          }
+        }
+        if (tstData.length > 0) {
+          return tstData;
+        }
+      }
+
+      getSegmentLineNo(tatooNumber: string): string {
+        const tatoos: string[] = [];
+        tatooNumber.split(',').forEach((e) => {
+          tatoos.push(e);
+        });
+        let segments = '';
+        const seg = this.getSegmentList().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
+        seg.forEach((s) => {
+          if (segments === '') {
+            segments = s.lineNo;
+          } else {
+            segments = segments + ',' + s.lineNo;
+          }
+        });
+        return segments;
+      }
+
+      getFop(segment: any) {
+        let fop = '';
+        this.pnrObj.fpElements.forEach((x) => {
+          if (x.associations !== null && x.associations.length > 0) {
+            if (x.associations[0].tatooNumber === segment) {
+              fop = x.fullNode.otherDataFreetext.longFreetext.split(' ')[1].substr(2, 2);
+            }
+          } else {
+            for (const fp of this.pnrObj.fpElements) {
+              fop = fp.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(2, 2);
+            }
+          }
+        });
+        return fop;
+      }
+      getFare(segment: any) {
+        let fare: string;
+        segment.fareDataInformation.fareDataSupInformation.forEach((x) => {
+          if (x.fareDataQualifier === 'TFT') {
+            fare = x.fareAmount;
+          }
+        });
+        return fare;
+      }
+      getCCExp(segment: any) {
+        let exp = '';
+        this.pnrObj.fpElements.forEach((x) => {
+          if (x.associations !== null && x.associations.length > 0 && x.associations[0].tatooNumber === segment) {
+            exp = x.fullNode.otherDataFreetext.longFreetext.split('/')[1];
+          } else {
+            for (const fp of this.pnrObj.fpElements) {
+              exp = fp.fullNode.otherDataFreetext.longFreetext.split('/')[1];
+            }
+          }
+        });
+        return exp;
+      }
+      getCCNo(segment: any) {
+        let ccNo: string;
+        let ccLength: number;
+        if (segment !== '') {
+          this.pnrObj.fpElements.forEach((x) => {
+            if (x.associations !== null && x.associations.length > 0 && x.associations[0].tatooNumber === segment) {
+              ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
+              ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(8, ccLength);
+            }
+            if (x.associations == null) {
+              ccLength = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].length;
+              ccNo = x.fullNode.otherDataFreetext.longFreetext.split('/')[0].substr(4, ccLength);
+            }
+          });
+        }
+        return ccNo;
+      }
+      getTstPassenger(tstNumber: any): string {
+        let name: string;
+        this.pnrObj.nameElements.forEach((x) => {
+          if (x.fullNode.elementManagementPassenger.reference.number === tstNumber) {
+            name = x.firstName + '-' + x.lastName;
+          }
+        });
+        return name;
+      }
 }

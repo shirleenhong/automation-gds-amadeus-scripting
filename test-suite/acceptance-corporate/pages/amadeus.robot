@@ -28,7 +28,7 @@ ${popUp_sign_out}    //div[contains(text(),'Sign out')]
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${icon_air}       css=.bookingTool.FS
 ${tab_cryptic_display}    //button[contains(@id, 'crypticDisplay')]
-${tab_booking_file_history}    //span[contains(text(), 'Booking File History')]
+${tab_booking_file_history}    //span[contains(text(), 'Booking file history')]
 ${popUp_pnr_display}    //div[@class='crypticPanel'][contains(@id,'epnrRetrieves')]
 ${popUp_pnr_history}   //div[@class='cmdPopupContent']
 ${button_cryptic}    css=.showInCommandPage
@@ -43,6 +43,10 @@ ${text_area_command}    //div[@class='crypticContainer']
 ${button_officeId}   css=#office-id-button
 ${popUp_oid}    css=#ngb-popover-0 
 ${oid_YTOWL2101}    //a[contains(text(), 'YTOWL2101')]
+${tst_line}    //table[@class='tstTsmView line']//tr
+${tst_row}    //td[@class='price textwrap']
+${button_closeSmartTool}    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']
+
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -245,60 +249,73 @@ Create Multiple TKT Exchange PNR In The GDS
 
 Move Single Passenger
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    APE-test@email.com    RM*CF/-VB70000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C   RM*CN/-CN1
+    Handle Smart Tool PopUp
 
 Move Single Passenger For OBT
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    APE-test@email.com    RM*CF/-VB70000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C 
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    APE-test@email.com    RM*CF/-VB70000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*EB/-EBA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C
+    Handle Smart Tool PopUp 
 
 Move Multiple Passenger
     Move Profile to GDS    NM1Juarez/Rose Ms    NM1De Guzman/Cyril Mr    APE-test@email.com    RM*CF/-AAA0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177
+    Handle Smart Tool PopUp
 
 Move Single Passenger And Add Single BSP Segment With TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-CN1
     Add Single BSP Segment And Store Fare
+    Handle Smart Tool PopUp
 
 Move Single Passenger And Add Single BSP Segment With IFC CN Number And TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-IFC
     Add Single BSP Segment And Store Fare
     Move Profile to GDS    RT
+    Handle Smart Tool PopUp
 
 Move Single Passenger And Add Multiple BSP Segment With TSTs
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
     Add Multiple BSP Segment And Store Fare
+    Handle Smart Tool PopUp
 	
 Move Single Passenger And Add Multiple BSP Segments With Single TST
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
     Add Multiple BSP Segments And Store Single Fare
+    Handle Smart Tool PopUp
     
 Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
     Add Multiple BSP Segment And Store Multiple Fares
+    Handle Smart Tool PopUp
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    TKOK     RM*CF/-VB70000000C
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
+    Handle Smart Tool PopUp
     
 Move Single Passenger And Add Passive Segment For APAY With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK     RM*CF/-VB70000000C
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
+    Handle Smart Tool PopUp
 
 Move Single Passenger For Specific Client And Add Passive Segment With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-ZZB0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
+    Handle Smart Tool PopUp
 
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-VB70000000C        TKOK
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
+    Handle Smart Tool PopUp
 
 Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-AAA0000000C
     Add Multiple Passive Air Segments In The GDS With Different Airline Codes
+    Handle Smart Tool PopUp
 
 Enter FOP Credit Card Remark
     Move Profile to GDS    FPCCVI4444333322221111/1029
@@ -319,14 +336,17 @@ Handle Simultaneous Changes To PNR
 
 Move Single Passenger For EN
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+    Handle Smart Tool PopUp
     
 Move Single Passenger For FR
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RMZ/LANGUAGE-FR-CA    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
+    Handle Smart Tool PopUp
 
 Create ${num_of_test_dates} Test Dates
     ${tdate}    Get Current Date
     ${tdate}    Add Time To Date    ${tdate}    180 days
     Set Test Variable    ${add_to_date}    3 days
+    ${num_of_test_dates}    Evaluate    ${num_of_test_dates} + 1
     : FOR    ${i}    IN RANGE    0    ${num_of_test_dates}
     \    ${i}    Evaluate    ${i} + 1
     \    ${test_date}    Add Time To Date    ${tdate}    ${add_to_date}
@@ -369,6 +389,7 @@ Create And Ticket PNR With Airline Code ${airline_code}
     Move Profile to GDS     RT${actual_record_locator}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    TRANS
+    Handle Smart Tool PopUp
     
 Create And Ticket 2nd TST With Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
@@ -382,6 +403,7 @@ Create And Ticket 2nd TST With Airline Code ${airline_code}
     Move Profile to GDS     RT${actual_record_locator}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    TRANS
+    Handle Smart Tool PopUp
     
 Ticket TST${tst_no}
     Enter Cryptic Command    RFCWTTEST
@@ -389,6 +411,7 @@ Ticket TST${tst_no}
     Sleep    4
     Get Record Locator Value
     Enter Cryptic Command    TTP/T${tst_no}
+    Take Screenshot
     Sleep    4
     Enter Cryptic Command    RT${actual_record_locator}
     Set Test Variable    ${ticketed_tst}    ${tst_no}
@@ -409,6 +432,7 @@ Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
     Set Test Variable    ${route_code_2}    INTL
     Set Test Variable    ${route_code_3}    INTL
     Set Test Variable    ${route_code_4}    INTL
+    Handle Smart Tool PopUp
     
 Create PNR With 1 TST And Ticket For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH    
@@ -422,6 +446,7 @@ Create PNR With 1 TST And Ticket For Airline Code ${airline_code}
     Move Profile to GDS     RT${actual_record_locator}
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    DOM
+    Handle Smart Tool PopUp
     
 Retrive Current PNR 
     Wait Until Element Is Visible    ${label_command_page}    180
@@ -458,6 +483,8 @@ Create PNR With One TST For Airline Code ${airline_code}
     Sleep    4
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code}    TRANS
+    Take Screenshot
+    Handle Smart Tool PopUp
 
 Create PNR With 4 TSTs For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
@@ -472,79 +499,138 @@ Create PNR With 4 TSTs For Airline Code ${airline_code}
     Set Test Variable    ${route_code_2}    INTL
     Set Test Variable    ${route_code_3}    INTL
     Set Test Variable    ${route_code_4}    TRANS
+    Handle Smart Tool PopUp
     
 Add ${number_of_segments} Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+
+Add ${number_of_segments} Active Hotel Segments
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    HA MSP ${test_date_${i}}-1
+    \    Enter Cryptic Command    HA1
+    \    Enter Cryptic Command    HP1
+    \    Enter Cryptic Command    HS/G-CCVI4444333322221111EXP1219
     
 Add ${number_of_segments} Limo Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345          
+    \    Enter Cryptic Command    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345          
+
+Add Passenger Names
+    :FOR    ${i}     IN RANGE    1    99
+    \    ${exists}    Run Keyword And Return Status     Should Not Be Empty     ${psngr_${i}} 
+    \    Exit For Loop If    not ${exists}
+    \    Run Keyword If    ${exists}    Enter Cryptic Command    NM1${psngr_${i}}
+    \    ${passenger_no}    Set Variable    ${i}
+    Set Test Variable    ${passenger_no}
     
 Add ${number_of_segments} Car Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       
+    \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       
 
 Add ${number_of_segments} Rail Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Move Profile to GDS    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Enter Cryptic Command    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     
 Create PNR With Passive Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
-    Sleep    5
+    Handle Smart Tool PopUp
+    Take Screenshot
     
 Create PNR With Active Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
-    Sleep     5
     Enter Cryptic Command    RT
+    Handle Smart Tool PopUp
     Take Screenshot
     
 Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
-    Sleep     5
     Enter Cryptic Command    RT
+    Handle Smart Tool PopUp
     Take Screenshot
     
 Create PNR For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates
-    Move Profile to GDS    NM1${psngr_1}    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Hotel Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Handle Smart Tool PopUp
+    Take Screenshot
+    
+Create PNR With Active Hotel Segments For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Active Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Handle Smart Tool PopUp
+    Take Screenshot
+
+Create PNR With Active Car Segments For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
+    Run Keyword If    "${num_car_segments}" != "0"    Book ${num_car_segments} Active Car Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Sleep     5
+    Enter Cryptic Command    RT
+    Take Screenshot
 
 Enter Cryptic Command
     [Arguments]    ${gds_command}
     Input Text    ${input_commandText}     ${gds_command}
     Sleep    0.1
     Press Key    ${input_commandText}    \\13
-    Wait Until Element Is Not Visible    ${icon_processing}    20
+    Wait Until Element Is Not Visible    ${icon_processing}    30
+
+Book ${num_car_segments} Active Car Segments
+    Create ${num_car_segments} Test Dates
+    : FOR    ${i}    IN RANGE   1   int(${num_car_segments}+1)
+    \    ${nxt}       Evaluate    ${i} + 1
+    \    Enter Cryptic Command    CA${car_pickup_city${i}}${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
+    \    Enter Cryptic Command    CA${car_pickup_city${i}}${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
+    \    Enter Cryptic Command    CS1
+    \    ${i}    Evaluate    ${i} + 1
+
+Handle Smart Tool PopUp
+    ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    ${button_closeSmartTool}    20
+    Run Keyword If    ${exists}    Click Element    ${button_closeSmartTool} 
     
 Book ${numberOfAir} Passive Air Segments
     Create ${numberOfAir} Test Dates
@@ -557,7 +643,7 @@ Book ${numberOfAir} Active Air Segments
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
-    \    Enter Cryptic Command    SS1Y1
+    \    Enter Cryptic Command    SS${passenger_no}Y1
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
       
 Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
@@ -600,3 +686,20 @@ Get ${number_of_segment} Air Segments In The PNR
     \    ${active_air}    Get Lines Containing String    ${pnr_details}    ${air_seg_route_${i}}
     \    ${active_air}    Fetch from Left   ${active_air}    HK1
     \    Set Test Variable    ${active_air_${i}}    ${active_air}     
+
+Add Passive Car Segment On ${city_code} From ${pickup_date} To ${return_date}
+    Move Profile to GDS    CU1AHK1${city_code}${pickup_date}-${return_date}PCAR/SUC-ET/SUN-ENTERPRISE/SD-10MAR/ST-1600/ED-15MAR/ET-1500/TTL-140.00USD/DUR-WEEKLY/MI-70KM FREE/CF-123336
+    
+Get Fare For ${no_of_tst} TST
+    Switch To Graphic Mode
+    Set Test Variable    ${tst_row_no}    0
+    Set Test Variable    ${i}    0
+    Wait Until Element Is Visible    ${tst_row}    60    
+    :FOR    ${no_of_tst}    IN RANGE    0    ${no_of_tst}
+    \    ${tst_row_no}    Evaluate    ${tst_row_no} + 3
+    \    ${tst}   Get Text    ${tst_line}${open_bracket}${tst_row_no}${close_bracket}${tst_row}
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${tst}    Fetch From Left    ${tst}    CAD
+    \    ${tst}    Strip String    ${tst}
+    \    Set Test Variable    ${tst_${i}}    ${tst} 
+    Switch To Command Page

@@ -201,34 +201,47 @@ export class DDBService implements OnInit {
     const reasons = [];
     await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
       (response) => {
-        response.ReasonCodeItems.forEach((reasonJson) => {
-          reasons.push(new ReasonCode(reasonJson));
-        });
+        if (response && response.ReasonCodeItems) {
+          response.ReasonCodeItems.forEach((reasonJson) => {
+            reasons.push(new ReasonCode(reasonJson));
+          });
+        }
       }
     );
     return reasons;
   }
 
   async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
-    this.reasonCodeList = [];
+    const reasonCodeList = [];
     for (const id of ids) {
-      await this.getReasonCodes(this.pnrService.getClientSubUnit(), '&ProductId=' + productID + '&ReasonCodeTypeId=' + id).then(
-        (response) => {
-          response.forEach((reason) => {
-            this.reasonCodeList.push(reason);
-          });
-        }
-      );
+      await this.getReasonCodeByClientSubUnit(
+        this.pnrService.getClientSubUnit(),
+        '&LanguageCode=en-GB&ProductId=' + productID + '&ReasonCodeTypeId=' + id
+      ).then((response) => {
+        response.forEach((reason) => {
+          reasonCodeList.push(reason);
+        });
+      });
     }
-    return this.reasonCodeList;
+    return reasonCodeList;
   }
   // getReasonCodeByTypeId(integer[]) {
   //   //return await this.getRequest(common.reasonCodesService + '?ClientSubUnitGuid=' + clientSubUnitId + otherParamString);
   // }
 
-  // async getReasonCodeByClientSubUnit(clientSubUnitId: string) {
-  //   return await this.getRequest(common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId));
-  // }
+  async getReasonCodeByClientSubUnit(clientSubUnitId: string, otherParam: string) {
+    const reasons = [];
+    await this.getRequest(
+      common.reasonCodesByClientSubUnitService.replace('{ClientSubUnitGuid}', clientSubUnitId) + '?TripTypeId=1' + otherParam
+    ).then((response) => {
+      if (response && response.ReasonCodeItems) {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          reasons.push(new ReasonCode(reasonJson));
+        });
+      }
+    });
+    return reasons;
+  }
 
   // async getReasonCodeByProductIdAndTypeId(productId: string, reasonCodeTypeId: string) {
   //   return await this.getRequest(

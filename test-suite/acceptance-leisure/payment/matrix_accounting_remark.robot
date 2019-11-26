@@ -76,8 +76,8 @@ Verify That Matrix Accounting Remark Is Updated For Tour Accounting Remark Type
 Verify That Matrix Accounting Remark Is Written For Cruise Accounting Remark Type
     [Tags]    us7747    us8001    us9850    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 10NOV YYZORD GK3 / 11551440 / ABCDEFG    RU1AHK3KEL21NOV-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-12NOV/ST-1800OSL/ED-13NOV/ET-0800/CF-12345    RM*CF/-RBM0000000N
-    ...    RU1AHK1SIN23NOV-CWT RETENTION SEGMENT    APE-Test@email.com
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 10OCT YYZORD GK3 / 11551440 / ABCDEFG    RU1AHK3KEL21OCT-/TYP-SEA/SUN-STENA LINE/SUC-ZZ/SC-KEL/SD-12OCT/ST-1800OSL/ED-13OCT/ET-0800/CF-12345    RM*CF/-RBM0000000N
+    ...    RU1AHK1SIN23OCT-CWT RETENTION SEGMENT    APE-Test@email.com
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Payment
@@ -191,7 +191,7 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for Non-APAY
 Verify That Matrix Accounting Remark Is Written For Rail Accounting Remark Type
     [Tags]    us7747    us9850    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    RU1AHK3BRU12NOV-/TYP-TRN/SUN-NS/SUC-YY/SC-BEBMI/SD-12NOV/ST-1010/EC-DEFRH/ED-12NOV/ET-1320/CF-12345    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    RU1AHK3BRU12OCT-/TYP-TRN/SUN-NS/SUC-YY/SC-BEBMI/SD-12OCT/ST-1010/EC-DEFRH/ED-12OCT/ET-1320/CF-12345    RM*CF/-RBM000000N
     ...    APE-12345
     Open CA Migration Window
     Click Wrap PNR
@@ -543,7 +543,7 @@ Verify That Matrix Accounting Remark And UDID Is Written For Limo Accounting Rem
     Click Payment Tab    Matrix Accounting Remark
     Click Add Accounting Line Button
     Select Segment    4
-    Create Matrix Accounting Remark    NO    Limo Accounting Remark    ACJ    ABC4567891EFG4567890    Credit Card    VI
+    Create Matrix Accounting Remark    NO    Limo Accounting Remark    ACJ    ABC456    Credit Card    VI
     ...    4444333322221111    0323
     Enter Base Amount    100.75
     Enter GST Tax Amount    2.00

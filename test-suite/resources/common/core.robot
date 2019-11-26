@@ -57,6 +57,7 @@ Open CA Migration Window
     Sleep    10
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
+    Handle Smart Tool PopUp
 
 Open Cryptic Display Window
     Wait Until Element Is Enabled    css=.bookingTool.FS    30
@@ -195,3 +196,7 @@ Get PNR Details
     Set Test Variable    ${pnr_details}    ${pnr_details}
     Close Cryptic Display
     [Teardown]    Take Screenshot
+
+Handle Smart Tool PopUp
+    ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']    20
+    Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd'] 

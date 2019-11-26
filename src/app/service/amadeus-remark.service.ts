@@ -401,42 +401,47 @@ export class AmadeusRemarkService {
   }
 
   sortArrayForDelete(arr) {
-    const dl = arr.sort((a, b) => {
+    arr = arr.sort((a, b) => {
       return Number(a.toString().split('-')[0]) - Number(b.toString().split('-')[0]);
     });
-    // return dl;
-    const newArr = [];
-    let tmp = '';
-    let tmpIndx = 0;
-    for (let i = 0; i < dl.length; i++) {
-      tmp = '';
-      tmpIndx = 0;
-      for (let j = i + 1; j < dl.length; j++) {
-        if (dl[j - 1].indexOf('-') >= 0 || dl[j].indexOf('-') >= 0) {
-          break;
-        }
+    // filter dupplicate
+    arr = arr.filter((v, i) => arr.indexOf(v) === i);
 
-        if (Number(dl[j - 1]) + 1 === Number(dl[j])) {
-          tmp = dl[j];
-          tmpIndx = j;
-        } else {
+    const exists = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+      for (let j = arr.length - 2; j >= 0; j--) {
+        if (this.isExistNumber(arr[i], arr[j])) {
+          if (arr[j].split(',').length === 1) {
+            exists.push(arr[j]);
+          } else {
+            exists.push(arr[i]);
+          }
+          i--;
           break;
         }
-      }
-      if (tmp === '') {
-        if (i > 0 && dl[i - 1].indexOf('-') > 0) {
-          if (Number(dl[i - 1].split('-')[1]) < Number(dl[i])) {
-            newArr.push(dl[i]);
-          }
-        } else {
-          newArr.push(dl[i]);
-        }
-      } else {
-        newArr.push(dl[i] + '-' + tmp);
-        i = tmpIndx;
       }
     }
-    return newArr;
+    return arr.filter((x) => exists.indexOf(x) === -1);
+  }
+
+  isExistNumber(num1, num2) {
+    const n1 = num1.split('-');
+    const n2 = num2.split('-');
+    if (n1.length > 1) {
+      for (const n of n2) {
+        if (this.isExistInRange(n1[0], n1[1], n)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  isExistInRange(from, to, num) {
+    if (Number(num) >= Number(from) && Number(num) <= Number(to)) {
+      return true;
+    }
+    return false;
   }
 
   async sendRemarks(requestor?: string, endPnr?: boolean) {

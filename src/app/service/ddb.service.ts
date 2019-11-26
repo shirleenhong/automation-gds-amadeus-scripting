@@ -9,6 +9,7 @@ import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-mi
 import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
 import { ApprovalItem } from '../models/ddb/approval.model';
 import { PnrService } from './pnr.service';
+import { BusinessRuleList } from '../models/business-rules/business-rule-list.model';
 
 @Injectable({
   providedIn: 'root'
@@ -443,5 +444,20 @@ export class DDBService implements OnInit {
     } catch (error) {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
     }
+  }
+
+  async getClientDefinedBusinessRules(clientAccountNumber: string, clientSubUnitGuid: string) {
+    let rules: BusinessRuleList;
+    await this.getRequest(
+      common.businessRules +
+        '?ClientAccountNumber=' +
+        clientAccountNumber +
+        '&ClientSubUnitGuid=' +
+        clientSubUnitGuid +
+        '&SourceSystemCode=CA1'
+    ).then((response) => {
+      rules = new BusinessRuleList(response.rules);
+    });
+    return rules;
   }
 }

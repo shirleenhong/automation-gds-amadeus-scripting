@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
 import { DDBService } from '../ddb.service';
 
-import { SegmentTypeEnum } from 'src/app/enums/segment-type';
+import { SegmentTypeEnum } from 'src/app/enums/segment.enum';
 import { ApprovalItem } from 'src/app/models/ddb/approval.model';
 
 @Injectable({

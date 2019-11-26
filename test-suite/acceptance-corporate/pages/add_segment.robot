@@ -30,7 +30,7 @@ ${input_arrival_time}    css=#arrivalTime
 ${input_airline_recloc}    css=#airlineRecloc
 ${button_save_passive}    xpath=//button[contains(text(), 'Save')]
 ${button_add_segment_toPNR}    xpath=//button[contains(text(),'Add Segments To PNR')]
-${input_chain_code}    css=#chainCode
+${input_chain_code_passive}    css=#chainCode
 ${input_policyNo}    css=#policyNo
 ${input_nightly_rate}    css=#nightlyRate
 ${input_rate_type}    css=#rateType
@@ -142,7 +142,7 @@ Click Add Passive Save Button
 Add Passive Hotel Segment ${with_optional} Values On Optional Fields
     Navigate To Page Add Passive Segment
     Select From List By Label    ${select_segment_type}    Hotel
-    Enter Value    ${input_chain_code}    HI
+    Enter Value    ${input_chain_code_passive}    HI
     Enter Value    ${input_departure_city}    YYZ
     Input Text    ${input_departure_date}    02102020
     Input Text     ${input_arrival_date}    02132020
@@ -183,7 +183,7 @@ Get Hotel Details
 Add Passive Hotel Segment ${with_optional} Hotel Details Input
     Navigate To Page Add Passive Segment
     Select From List By Label    ${select_segment_type}    Hotel
-    Enter Value    ${input_chain_code}    AC
+    Enter Value    ${input_chain_code_passive}    AC
     Enter Value    ${input_departure_city}    YYZ
     Input Text    ${input_departure_date}    02102020
     Input Text     ${input_arrival_date}    02132020

@@ -4,7 +4,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { formatDate } from '@angular/common';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { ReasonCodeTypeEnum } from '../../../enums/reason-code-types';
+import { ReasonCodeTypeEnum } from '../../../enums/reason-code.enum';
 import { DDBService } from 'src/app/service/ddb.service';
 
 @Component({
@@ -124,17 +124,7 @@ export class CarSavingsCodeComponent implements OnInit {
     carRmkObj.tatooNo = rmEle.tatooNumber;
     return carRmkObj;
   }
-  // addPassiveCarSegments(carSegments) {
-  //   const passiveCarSegments = carSegments.filter((seg) =>
-  //     seg.isPassive === true
-  //   );
-  //   for (const seg of passiveCarSegments) {
-  //     const segDate = this.getDateFromSegment(seg.deptdate);
-  //     const tempDate = new Date(segDate);
-  //     const date = formatDate(tempDate, 'ddMMM', 'en-US').toUpperCase();
-  //     this.addSegments(date, seg);
-  //   }
-  // }
+
   getDateFromSegment(date) {
     const day = date.substring(0, 2);
     const month = date.substring(2, 4);
@@ -146,9 +136,6 @@ export class CarSavingsCodeComponent implements OnInit {
     items.push(this.createCarSavingsGroup(segment.lineNo, date, segment.cityCode, ''));
   }
   addCarSegments(carRemarks, carSegments) {
-    // const activeCarSegments = carSegments.filter((seg) =>
-    //   seg.isPassive === false
-    // );
     for (const seg of carSegments) {
       let matches = false;
       let date = seg.isPassive ? seg.deptdate : seg.departureDate;

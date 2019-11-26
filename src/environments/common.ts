@@ -30,5 +30,6 @@ export const common = {
   matchedPlacholderValueService: '/service/ap/remarks-manager/api/matched-placeholder-values',
   pnrAmadeusRequestService: '/service/ap/remarks-manager/api/pnr-amadeus-request',
   matrixSupplierService: '/service/repo/powerbaseaws/Matrix/Supplier',
+  businessRules: '/service/repo/powerbaseaws/BusinessRules',
   LeisureVersionNumber: '19.11.3'
 };

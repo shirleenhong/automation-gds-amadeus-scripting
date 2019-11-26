@@ -444,4 +444,15 @@ export class DDBService implements OnInit {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
     }
   }
+
+  getClientDefinedBusinessRules(clientSubUnitGuid: string, clientAccountNumber: string) {
+    return this.getRequest(
+      common.businessRules +
+        '?ClientAccountNumber=' +
+        clientAccountNumber +
+        '&ClientSubUnitGuid=' +
+        clientSubUnitGuid +
+        '&SourceSystemCode=CA1'
+    );
+  }
 }

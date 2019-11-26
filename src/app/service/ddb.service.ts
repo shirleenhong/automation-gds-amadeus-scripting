@@ -9,7 +9,6 @@ import { PolicyAirMissedSavingThreshold } from 'src/app/models/ddb/policy-air-mi
 import { ClientFeeItem } from '../models/ddb/client-fee-item.model';
 import { ApprovalItem } from '../models/ddb/approval.model';
 import { PnrService } from './pnr.service';
-import { BusinessRuleList } from '../models/business-rules/business-rule-list.model';
 
 @Injectable({
   providedIn: 'root'
@@ -446,18 +445,14 @@ export class DDBService implements OnInit {
     }
   }
 
-  async getClientDefinedBusinessRules(clientAccountNumber: string, clientSubUnitGuid: string) {
-    let rules: BusinessRuleList;
-    await this.getRequest(
+  getClientDefinedBusinessRules(clientSubUnitGuid: string, clientAccountNumber: string) {
+    return this.getRequest(
       common.businessRules +
         '?ClientAccountNumber=' +
         clientAccountNumber +
         '&ClientSubUnitGuid=' +
         clientSubUnitGuid +
         '&SourceSystemCode=CA1'
-    ).then((response) => {
-      rules = new BusinessRuleList(response.rules);
-    });
-    return rules;
+    );
   }
 }

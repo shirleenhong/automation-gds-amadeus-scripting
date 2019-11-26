@@ -32,7 +32,6 @@ export class RulesLogicService {
         return false;
       }
     }
-
-    return ruleLogics.length > 0;
+    return true;
   }
 }

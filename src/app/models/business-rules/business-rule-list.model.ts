@@ -5,8 +5,8 @@ export class BusinessRuleList {
 
   constructor(jsonArr) {
     if (jsonArr) {
-      jsonArr.array.forEach((json) => {
-        this.businessRules.push(json);
+      jsonArr.forEach((json) => {
+        this.businessRules.push(new BusinessRule(json));
       });
     }
   }

@@ -40,19 +40,23 @@ export class RulesReaderService {
   public readPnr() {
     let remarks;
     this.format.forEach((f) => {
-      switch (f.type) {
-        case 'RM':
-          remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
-          remarks.forEach((rm) => {
-            this.setMatchEntity(f.regex, rm.freeFlowText);
-          });
-          break;
-        case 'RI':
-          remarks = this.pnrService.pnrObj.ri.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
-          remarks.forEach((rm) => {
-            this.setMatchEntity(f.regex, rm.freeFlowText);
-          });
-          break;
+      try {
+        switch (f.type) {
+          case 'RM':
+            remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
+            remarks.forEach((rm) => {
+              this.setMatchEntity(f.regex, rm.freeFlowText);
+            });
+            break;
+          case 'RI':
+            remarks = this.pnrService.pnrObj.ri.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
+            remarks.forEach((rm) => {
+              this.setMatchEntity(f.regex, rm.freeFlowText);
+            });
+            break;
+        }
+      } catch (ex) {
+        console.log(ex);
       }
     });
   }
@@ -61,7 +65,7 @@ export class RulesReaderService {
     const match = regex.exec(text);
     Object.keys(match.groups).forEach((key) => {
       if (this.businessEntities.has(key)) {
-        this.businessEntities.set(key, this.businessEntities.get(key) + match.groups[key]);
+        this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + match.groups[key]);
       } else {
         this.businessEntities.set(key, match.groups[key]);
       }

@@ -41,6 +41,7 @@ import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
+import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 
 @Component({
   selector: 'app-corporate',
@@ -97,7 +98,8 @@ export class CorporateComponent implements OnInit {
     private visaPassportService: VisaPassportRemarkService,
     private segmentService: SegmentService,
     private amadeusRemarkService: AmadeusRemarkService,
-    private corpCancelRemarkService: CorpCancelRemarkService
+    private corpCancelRemarkService: CorpCancelRemarkService,
+    private rulesEngine: RulesEngineService
   ) {
     this.initData();
     this.getPnrService();
@@ -206,6 +208,7 @@ export class CorporateComponent implements OnInit {
       this.workflow = 'error';
     } else {
       try {
+        await this.rulesEngine.initializeRulesEngine();
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');

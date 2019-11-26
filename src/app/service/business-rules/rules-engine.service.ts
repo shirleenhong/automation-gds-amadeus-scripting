@@ -20,16 +20,20 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService
   ) {}
 
-  public initializeRulesEngine() {
-    this.loadRules();
-    this.loadBusinessEntityFromPnr();
+  public async initializeRulesEngine() {
+    await this.loadRules();
+    await this.loadBusinessEntityFromPnr();
     this.validBusinessRules = this.getLogicValidRuleList();
   }
 
   async loadRules() {
-    await this.ddb.getClientDefinedBusinessRules(this.pnrService.getClientSubUnit(), '1' + this.pnrService.cfLine.cfa).then((rules) => {
-      this.businessRuleList = rules;
-    });
+    await this.ddb
+      .getClientDefinedBusinessRules(this.pnrService.getClientSubUnit(), '1' + this.pnrService.getCFLine().cfa)
+      .then((response) => {
+        if (response && response.BusinessRulesResponses) {
+          this.businessRuleList = new BusinessRuleList(response.BusinessRulesResponses);
+        }
+      });
   }
 
   loadBusinessEntityFromPnr() {

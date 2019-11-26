@@ -36,6 +36,10 @@ export class RulesEngineService {
       });
   }
 
+  hasValidRule() {
+    return this.validBusinessRules && this.validBusinessRules.length > 0;
+  }
+
   loadBusinessEntityFromPnr() {
     this.ruleReaderService.readPnr();
     this.businessEntities = this.ruleReaderService.businessEntities;

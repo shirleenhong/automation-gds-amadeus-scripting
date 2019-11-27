@@ -1,6 +1,7 @@
 *** Settings ***
 Force Tags        corp
 Resource          ../../pages/base.robot
+Test Setup        Login To Amadeus Sell Connect Acceptance
 Test Teardown     Close All Browsers
 
 *** Variables ***
@@ -9,7 +10,6 @@ ${test_file_name}    resend_invoice
 *** Test Cases ***
 Verify That List Of E-Ticket Invoices And Emails Are Displayed And Selected E-Ticket And Email Are Written
     [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Resend Selected Eticket Invoices
     Complete PNR And Send Cryptic For Invoice
     Select Invoice And E-Tickets To Resend And Add Email
@@ -17,8 +17,7 @@ Verify That List Of E-Ticket Invoices And Emails Are Displayed And Selected E-Ti
     Verify That PNR Is Correctly Queued
 
 Verify That List Of E-Ticket Invoice Are Displayed And All E-Tickets When Selected Are Written
-    [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance   
+    [Tags]    us12476   
     Create PNR With Active Air Segments For Resend Selected Eticket Invoices With Multiple Emails
     Complete PNR Without Sending Cryptic For Invoice
     Verify If Corporate Script Send INV Cryptic Automatically
@@ -27,8 +26,7 @@ Verify That List Of E-Ticket Invoice Are Displayed And All E-Tickets When Select
     Verify That PNR Is Correctly Queued
     
 Verify That List Of E-Ticket Invoice Are Displayed And Correct Remark Is Written When No E-Tickets Are Selected
-    [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance   
+    [Tags]    us12476   
     Create PNR With Active Air Segments For Resend Selected Eticket Invoices
     Complete PNR And Send Cryptic For Invoice
     Select Invoice And No E-tickets And Add Email
@@ -37,7 +35,6 @@ Verify That List Of E-Ticket Invoice Are Displayed And Correct Remark Is Written
 
 Verify That List Of Fee Accounting Lines Are Displayed And RM Remarks Are Written
     [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Resending Of Invoice With Fee Accounting Lines
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select Fee Accounting Lines 
@@ -46,7 +43,6 @@ Verify That List Of Fee Accounting Lines Are Displayed And RM Remarks Are Writte
     
 Verify That List Of Non-BSP Accounting Lines Are Displayed And RM Remarks Are Written
     [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Resending Of Invoice With Non-BSP Accounting Lines
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select Non-BSP Accounting Lines
@@ -56,7 +52,6 @@ Verify That List Of Non-BSP Accounting Lines Are Displayed And RM Remarks Are Wr
     
 Verify That List Of Fee And Non-BSP Accounting Lines Are Displayed And RM Remarks Are Written
     [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Resending Of Invoice With Fee And Non-BSP Accounting Lines
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select All Fees and Non-BSP Accounting Lines
@@ -66,7 +61,6 @@ Verify That List Of Fee And Non-BSP Accounting Lines Are Displayed And RM Remark
 
 Verify That Invoice, E-Tickets, Fee, And Non-BSP Accounting Lines Are Resent And Email Address Is Updated
     [Tags]    us12476
-    Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Resending Of Invoice With Fee And Non-BSP Accounting Lines
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select Invoices, E-Tickets, Fee, And Non-BSP Accounting Lines

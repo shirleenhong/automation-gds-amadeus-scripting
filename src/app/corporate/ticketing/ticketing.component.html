@@ -1,9 +1,11 @@
 <tabset id="ticketingTab">
-    <tab heading="Ticketing Line" id="ticketingLine">
-        <app-ticketing-line></app-ticketing-line>
-    </tab>
-    <tab heading="Ticketing Instruction" id="ticketingInstruction">
-        <app-aqua-ticketing>
-        </app-aqua-ticketing>
-    </tab>
+  <tab heading="Ticketing Line" id="ticketingLine">
+    <app-ticketing-line></app-ticketing-line>
+  </tab>
+  <tab heading="Ticketing Instruction" id="ticketingInstruction">
+    <app-aqua-ticketing> </app-aqua-ticketing>
+  </tab>
+  <tab heading="Rules" id="rules" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'TICKETING')">
+    <app-container></app-container>
+  </tab>
 </tabset>

@@ -4,6 +4,8 @@ import { NonAcceptanceComponent } from './non-acceptance/non-acceptance.componen
 import { PnrService } from '../../service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { StaticValuesService } from '../../service/static-values.services';
+import { ContainerComponent } from '../business-rules/container/container.component';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 
 @Component({
   selector: 'app-payments',
@@ -13,10 +15,17 @@ import { StaticValuesService } from '../../service/static-values.services';
 export class PaymentsComponent implements OnInit {
   @ViewChild(AccountingRemarkComponent) accountingRemark: AccountingRemarkComponent;
   @ViewChild(NonAcceptanceComponent) nonAcceptance: NonAcceptanceComponent;
+  @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+
   hasValidUnticketed = false;
   hasFop = false;
   tstData = [];
-  constructor(private pnrService: PnrService, private utilHelper: UtilHelper, private staticService: StaticValuesService) {}
+  constructor(
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper,
+    private staticService: StaticValuesService,
+    private rulesEngineService: RulesEngineService
+  ) {}
 
   ngOnInit() {
     this.tstData = this.pnrService.getUnticketedCorpReceipts();
@@ -56,5 +65,11 @@ export class PaymentsComponent implements OnInit {
     } else {
       return true;
     }
+  }
+
+  hasRules(entityName: string, resultValue: string) {
+    console.log(name);
+
+    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

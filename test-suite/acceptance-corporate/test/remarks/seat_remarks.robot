@@ -31,7 +31,7 @@ Verify Seat Remarks Are Written Corretly In The PNR For Multiple Segment Selecti
     Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     
 Verify Seat Remarks Are Written Corretly In The PNR For Single Segment Selection In FR Language
-    [Tags]    us11820
+    [Tags]    us11820    de2793    expect_to_fail
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Corporate, With Seat Remarks For Single Segment For FR
     Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade

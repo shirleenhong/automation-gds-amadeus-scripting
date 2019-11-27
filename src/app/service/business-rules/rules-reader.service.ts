@@ -32,7 +32,8 @@ export class RulesReaderService {
     { type: 'RM', category: 'X', regex: /(?<PNR_X>.*)$/g },
     { type: 'RM', category: 'Y', regex: /(?<PNR_Y>.*)$/g },
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
-    { type: 'RM', category: '*', regex: /U50\/-(?<PNR_UDID50>.*)$/g }
+    { type: 'RM', category: '*', regex: /U50\/-(?<PNR_UDID50>.*)$/g },
+    { type: 'RM', category: '*', regex: /U55\/-(?<PNR_UDID55>.*)$/g }
   ];
 
   constructor(private pnrService: PnrService) {}

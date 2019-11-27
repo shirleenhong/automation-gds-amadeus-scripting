@@ -326,7 +326,6 @@ export class CorporateComponent implements OnInit {
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
 
-
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
@@ -349,6 +348,7 @@ export class CorporateComponent implements OnInit {
     }
 
     remarkCollection.push(this.ruleWriter.getAddRemarksRuleResult());
+    remarkCollection.push(this.ruleWriter.getDeleteRemarksRuleResult());
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
 
     await this.rms.SendCommand(
@@ -372,8 +372,12 @@ export class CorporateComponent implements OnInit {
     );
   }
 
-  private getStaticModelRemarks(remarkCollection: RemarkGroup[], remarkList: RemarkModel[],
-    passiveSegmentList: PassiveSegmentModel[], forDeleteRemarks: string[]) {
+  private getStaticModelRemarks(
+    remarkCollection: RemarkGroup[],
+    remarkList: RemarkModel[],
+    passiveSegmentList: PassiveSegmentModel[],
+    forDeleteRemarks: string[]
+  ) {
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
         remarkList.push(remModel);

@@ -96,27 +96,31 @@ Open CA Corporate Test
     Set Test Variable     ${actual_counselor_identity}    ${EMPTY}
 
 Add Single BSP Segment And Store Fare
-    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    FXP
+    Create 1 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YYZORD/AAC    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
 
 Add Multiple BSP Segment And Store Fare
-    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YYZORD/AAC    SS1Y1    AN${test_date_2}ORDYUL/AAC    SS1Y1    FXP
     ...    AN30JANYULCDG/AAF    SS1Y1    FXP/S4    AN10FEBCDGLHR/AAF    SS1Y1    FXP/S5
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
     
 Add Multiple BSP Segment And Store Multiple Fares
-    @{gds_commands}    Create List    AN10JANYYZCDG/AAF    SS1Y1    AN20JANCDGLHR/AAF    SS1Y1    AN20JANLHRCDG/AAF
-    ...    SS1Y1    AN10FEBCDGYUL/AAC    SS1Y1    AN10FEBYULCDG/AAC    SS1Y1    FXP/S3,5-6    FXP/S2,4
+    Create 5 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YYZCDG/AAF    SS1Y1    AN${test_date_2}CDGLHR/AAF    SS1Y1    AN${test_date_2}LHRCDG/AAF
+    ...    SS1Y1    AN${test_date_3}CDGYUL/AAC    SS1Y1    AN${test_date_3}YULCDG/AAC    SS1Y1    FXP/S3,5-6    FXP/S2,4
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
 
 Add Multiple BSP Segments And Store Single Fare
-    @{gds_commands}    Create List    AN10JANYYZORD/AAC    SS1Y1    AN20JANORDYUL/AAC    SS1Y1    FXP
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YYZORD/AAC    SS1Y1    AN${test_date_2}ORDYUL/AAC    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}

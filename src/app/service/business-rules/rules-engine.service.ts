@@ -52,7 +52,6 @@ export class RulesEngineService {
   }
 
   checkRuleResultExist(entityName: string, ruleValue: string) {
-    debugger;
     let hasRule = false;
 
     // for (const rule of this.validBusinessRules) {

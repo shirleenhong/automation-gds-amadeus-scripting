@@ -55,9 +55,9 @@ Open CA Migration Window
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Sleep    10
+    Handle Smart Tool PopUp
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
-    Handle Smart Tool PopUp
 
 Open Cryptic Display Window
     Wait Until Element Is Enabled    css=.bookingTool.FS    30

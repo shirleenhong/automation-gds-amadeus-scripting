@@ -46,4 +46,26 @@ export class RulesEngineService {
       this.ruleLogicService.isRuleLogicValid(rule.ruleLogic, this.businessEntities)
     );
   }
+
+  checkRuleResultExist(entityName: string, ruleValue: string) {
+    debugger;
+    let hasRule = false;
+
+    // for (const rule of this.validBusinessRules) {
+    //   for (const res of rule) {
+    //     if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
+    //       hasRule = true;
+    //     }
+    //   }
+    // }
+    // tslint:disable-next-line: no-shadowed-variable
+    this.validBusinessRules.forEach((rule) => {
+      rule.ruleResult.forEach((res) => {
+        if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
+          hasRule = true;
+        }
+      });
+    });
+    return hasRule;
+  }
 }

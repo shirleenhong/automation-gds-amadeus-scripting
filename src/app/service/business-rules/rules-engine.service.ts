@@ -18,7 +18,7 @@ export class RulesEngineService {
     private pnrService: PnrService,
     private ruleLogicService: RulesLogicService,
     private ruleReaderService: RulesReaderService
-  ) {}
+  ) { }
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -70,5 +70,18 @@ export class RulesEngineService {
       });
     });
     return hasRule;
+  }
+
+  getSpecificRulesValue(entityName: string) {
+    const resultItems = [];
+    this.validBusinessRules.forEach((bRule) => {
+      bRule.ruleResult.forEach((result) => {
+        if (result.businessEntityName === entityName) {
+          resultItems.push(result.resultItemValue);
+        }
+      });
+    });
+
+    return resultItems;
   }
 }

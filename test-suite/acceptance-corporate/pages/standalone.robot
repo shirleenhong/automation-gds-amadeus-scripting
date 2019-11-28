@@ -19,6 +19,7 @@ ${form_email}    //div[@formarrayname='emailAddresses']
 ${button_emailAdd}    //div[@formarrayname='emailAddresses']//i[@id='add']
 ${checkbox_select}    //input[@type='checkbox']
 
+
 *** Keywords ***
 Add Multiple Email Address
     [Arguments]    @{email_address}
@@ -59,7 +60,7 @@ Get E-Eticket Remarks From PNR
 
 Select Invoices From The List
     [Arguments]    @{invoice_number}
-    Wait Until Element Is Visible    ${input_invoice}    
+    Wait Until Element Is Visible    ${input_invoice}    30    
     Click Element    ${input_invoice}
     Wait Until Element Is Visible    ${list_invoice}    30
     :FOR    ${invoice_number}    IN    @{invoice_number}
@@ -68,7 +69,7 @@ Select Invoices From The List
     
 Select E-Tickets To ReSend
     [Arguments]    @{eticket_number}
-    Wait Until Element Is Visible    ${input_eticket}    
+    Wait Until Element Is Visible    ${input_eticket}     30   
     Click Element    ${input_eticket} 
     Wait Until Element Is Visible    ${list_eticket}    30
     :FOR    ${eticket_number}    IN    @{eticket_number}
@@ -77,7 +78,7 @@ Select E-Tickets To ReSend
     
 Select Fee Accounting Lines From The List
     [Arguments]    @{fee_number}
-    Wait Until Element Is Visible    ${input_fees}    
+    Wait Until Element Is Visible    ${input_fees}    30
     Click Element    ${input_fees} 
     Wait Until Element Is Visible    ${list_fees}     30
     :FOR    ${fee_number}    IN    @{fee_number}
@@ -86,7 +87,7 @@ Select Fee Accounting Lines From The List
     
 Select Non-BSP Accounting Lines From The List
     [Arguments]    @{nonBsp_number}
-    Wait Until Element Is Visible    ${input_nonBsp_accounting}    
+    Wait Until Element Is Visible    ${input_nonBsp_accounting}    30   
     Click Element    ${input_nonBsp_accounting} 
     Wait Until Element Is Visible    ${list_nonBsp_accounting}     30
     :FOR    ${nonBsp_number}    IN    @{nonBsp_number}
@@ -268,9 +269,3 @@ Verify New MAC Remarks Are Written
     Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC2/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0820/-TK-
     Verify Specific Remark Is Written In The PNR     2211333555/-MP-ALL/-BKN-CON1234567/S2
      
-    
-
-
-
-
-

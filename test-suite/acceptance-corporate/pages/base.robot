@@ -11,7 +11,7 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          cancel_segments.robot
 Resource          queues.robot
-Resource          invoice.robot
+Resource          standalone.robot
 Resource          add_segment.robot
 Resource          ../../resources/common/api-utilities.txt
 
@@ -46,7 +46,7 @@ ${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Se
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
@@ -252,6 +252,7 @@ Navigate From Corp
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE IF    "${to_cancel_segments}" == "True"    Click Cancel Segments
      ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
+     ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments
@@ -263,7 +264,7 @@ Navigate From Add Segment
     [Arguments]    ${destination_page}
     ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${current_page}
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
-    
+
 Click Add Passive Segment Button
 	Wait Until Element Is Visible     ${button_add_passive_segment}    30
 	Click Element At Coordinates    ${button_add_passive_segment}   0   0
@@ -658,4 +659,13 @@ Get Ticket Number
 Complete The PNR In Full Wrap
     Navigate To Page Reporting Remarks
     Finish PNR
+
+Click IRD Rate Request
+    # Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
+    # Click Element     ${button_send_invoice_itinerary} 
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    IRD Rate Request
+    Set Test Variable    ${pnr_submitted}   no
     

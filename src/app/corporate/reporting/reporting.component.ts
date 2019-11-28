@@ -8,7 +8,9 @@ import { WaiversComponent } from 'src/app/corporate/reporting/waivers/waivers.co
 import { ReportingRemarksComponent } from './reporting-remarks/reporting-remarks.component';
 import { PnrService } from '../../service/pnr.service';
 import { CarSavingsCodeComponent } from './car-savings-code/car-savings-code.component';
-import {HotelSegmentsComponent} from './hotel-segments/hotel-segments.component'
+import { HotelSegmentsComponent } from './hotel-segments/hotel-segments.component';
+import { ContainerComponent } from '../business-rules/container/container.component';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -26,16 +28,27 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
+  @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
-  constructor(private utilHelper: UtilHelper, private cdr: ChangeDetectorRef , private pnrService: PnrService) {}
+  components = [];
+
+  constructor(
+    private utilHelper: UtilHelper,
+    private cdr: ChangeDetectorRef,
+    private pnrService: PnrService,
+    private rulesEngineService: RulesEngineService
+  ) {}
 
   ngOnInit() {
     this.hasTst = true;
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
     let segments = this.pnrService.getSegmentList();
-    segments = segments.filter(function (x) { if (x.segmentType === 'HTL') { return x; } })
+    segments = segments.filter(function(x) {
+      if (x.segmentType === 'HTL') {
+        return x;
+      }
+    });
     this.showHotelsTab = segments.length > 0 ? true : false;
-    
   }
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;
@@ -62,12 +75,18 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (!this.carSavingsCodeComponent.carSavingsCodeGroup.valid) {
       return false;
     }
-    if (this.hotelSegmentsComponent!==undefined) {
+    if (this.hotelSegmentsComponent !== undefined) {
       this.utilHelper.validateAllFields(this.hotelSegmentsComponent.hotelSegments);
       if (!this.hotelSegmentsComponent.hotelSegments.valid) {
         return false;
       }
     }
     return true;
+  }
+
+  hasRules(entityName: string, resultValue: string) {
+    console.log(name);
+
+    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

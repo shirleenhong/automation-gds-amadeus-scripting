@@ -10,18 +10,14 @@ import { PnrService } from '../pnr.service';
 })
 export class RuleWriterService {
   additionaRemarks = [];
-  constructor(private res: RulesEngineService, private remarkHelper: RemarkHelper, private pnrService: PnrService) {}
+  constructor(private res: RulesEngineService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
   public getAddRemarksRuleResult() {
-    const clientDefinedResult = this.res.validBusinessRules;
-    clientDefinedResult.forEach((bRule) => {
-      bRule.ruleResult.forEach((result) => {
-        if (result.businessEntityName === 'PNR_ADD_Remark') {
-          this.formatRemarkRuleResult(result.resultItemValue);
-        }
-      });
+    const resultItems = this.res.getSpecificRulesValue('PNR_ADD_Remark');
+    resultItems.forEach(element => {
+      this.formatRemarkRuleResult(element.resultItemValue);
     });
     return this.writeRuleRemarks();
   }

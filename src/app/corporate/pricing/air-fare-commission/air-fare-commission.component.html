@@ -1,0 +1,25 @@
+<div [formGroup]="airFareCommissionFormGroup" class="form-group">
+  <br />
+  <div class="row">
+    <div class="col-1" style="width:3%"></div>
+    <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
+      Segments
+    </div>
+    <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
+      Commission
+    </div>
+  </div>
+  <div formArrayName="airFares" *ngFor="let item of this.airFareCommissionFormGroup.get('airFares')['controls']; let i = index"
+    class="col">
+    <div [formGroupName]="i" class="row">
+      <div class="col-1" style="width:3%;padding-left:10px">
+        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="formControlName" />
+      </div>
+      <div class="col-3" style="width:12%;text-align:left">
+        <input formControlName="segments" type="text" class="form-control" readonly />
+      </div>
+      <div class="col-3" style="width:12%;text-align:left">
+        <input formControlName="commission" type="text" class="form-control"/>
+      </div>
+    </div>
+  </div>

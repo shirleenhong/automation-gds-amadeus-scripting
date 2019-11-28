@@ -387,14 +387,15 @@ export class AmadeusRemarkService {
     }
   }
 
-  deleteRemarks() {
+  async deleteRemarks() {
     const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds).join(',');
     if (filteredIds !== '') {
-      smartScriptSession.send('XE' + filteredIds).then(async (response) => {
+      await smartScriptSession.send('XE' + filteredIds).then(async (response) => {
         console.log('XE' + filteredIds + ' = ' + response);
         if (response.Response.indexOf('ENTRY NOT PROCESSED-PARALLEL') >= 0) {
-          await smartScriptSession.send('IR');
-          this.deleteRemarks();
+          await smartScriptSession.send('IR').then(() => {
+            smartScriptSession.send('XE' + filteredIds);
+          });
         }
       });
     }
@@ -406,35 +407,21 @@ export class AmadeusRemarkService {
     });
     // filter dupplicate
     arr = arr.filter((v, i) => arr.indexOf(v) === i);
-
     const exists = [];
-    for (let i = arr.length - 1; i >= 0; i--) {
-      for (let j = arr.length - 2; j >= 0; j--) {
-        if (this.isExistNumber(arr[i], arr[j])) {
-          if (arr[j].split(',').length === 1) {
-            exists.push(arr[j]);
-          } else {
-            exists.push(arr[i]);
-          }
-          i--;
-          break;
-        }
-      }
-    }
-    return arr.filter((x) => exists.indexOf(x) === -1);
-  }
+    const dash = arr.filter((x) => x.indexOf('-') >= 0);
+    const de = arr.filter((x) => x.indexOf('-') === -1);
 
-  isExistNumber(num1, num2) {
-    const n1 = num1.split('-');
-    const n2 = num2.split('-');
-    if (n1.length > 1) {
-      for (const n of n2) {
-        if (this.isExistInRange(n1[0], n1[1], n)) {
-          return true;
+    // remove items on range
+    dash.forEach((d) => {
+      const n = d.split('-');
+      de.forEach((xe) => {
+        if (this.isExistInRange(n[0], n[1], xe)) {
+          exists.push(xe);
         }
-      }
-    }
-    return false;
+      });
+    });
+
+    return arr.filter((x) => exists.indexOf(x) === -1);
   }
 
   isExistInRange(from, to, num) {

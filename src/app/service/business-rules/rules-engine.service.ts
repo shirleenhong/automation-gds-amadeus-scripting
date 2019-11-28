@@ -5,6 +5,7 @@ import { PnrService } from '../pnr.service';
 import { RulesLogicService } from './rule-logic.service';
 import { RulesReaderService } from './rules-reader.service';
 import { BusinessRule } from 'src/app/models/business-rules/business-rule.model';
+import { BusinessRulesFormData } from 'src/app/models/business-rules/ui-business-rules.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class RulesEngineService {
     private pnrService: PnrService,
     private ruleLogicService: RulesLogicService,
     private ruleReaderService: RulesReaderService
-  ) { }
+  ) {}
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -74,14 +75,15 @@ export class RulesEngineService {
 
   getSpecificRulesValue(entityName: string) {
     const resultItems = [];
+    const formData = [];
     this.validBusinessRules.forEach((bRule) => {
       bRule.ruleResult.forEach((result) => {
         if (result.businessEntityName === entityName) {
           resultItems.push(result.resultItemValue);
+          formData.push(new BusinessRulesFormData(result.resultItemValue));
         }
       });
     });
-
-    return resultItems;
+    return { resultItems, formData };
   }
 }

@@ -32,29 +32,39 @@ export class RulesReaderService {
     { type: 'RM', category: 'X', regex: /(?<PNR_X>.*)$/g },
     { type: 'RM', category: 'Y', regex: /(?<PNR_Y>.*)$/g },
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
-    { type: 'RM', category: '*', regex: /U50\/-(?<PNR_UDID50>.*)$/g },
-    { type: 'RM', category: '*', regex: /U55\/-(?<PNR_UDID55>.*)$/g }
+    { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g }
   ];
 
   constructor(private pnrService: PnrService) {}
 
   public readPnr() {
-    let remarks;
+    this.parseRemarks();
+  }
+
+  private setMatchEntity(regex, text) {
+    const regexp = new RegExp(regex);
+    const match = regexp.exec(text);
+    Object.keys(match.groups).forEach((key) => {
+      if (this.businessEntities.has(key)) {
+        this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + match.groups[key]);
+      } else {
+        this.businessEntities.set(key, match.groups[key]);
+      }
+    });
+  }
+
+  private parseRemarks() {
     this.format.forEach((f) => {
       try {
         switch (f.type) {
           case 'RM':
-            remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
-            remarks.forEach((rm) => {
-              this.setMatchEntity(f.regex, rm.freeFlowText);
-            });
+            this.extractRemarks(this.pnrService.pnrObj.rmElements, f.category, f.regex);
             break;
           case 'RI':
-            remarks = this.pnrService.pnrObj.ri.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
-            remarks.forEach((rm) => {
-              this.setMatchEntity(f.regex, rm.freeFlowText);
-            });
+            this.extractRemarks(this.pnrService.pnrObj.ri, f.category, f.regex);
             break;
+          case 'UDID':
+            this.parseUdid(f);
         }
       } catch (ex) {
         console.log(ex);
@@ -62,14 +72,30 @@ export class RulesReaderService {
     });
   }
 
-  private setMatchEntity(regex, text) {
-    const match = regex.exec(text);
-    Object.keys(match.groups).forEach((key) => {
-      if (this.businessEntities.has(key)) {
-        this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + match.groups[key]);
-      } else {
-        this.businessEntities.set(key, match.groups[key]);
+  parseUdid(f) {
+    const remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
+    remarks.forEach((rm) => {
+      const regexp = new RegExp(f.regex);
+      const match = regexp.exec(rm.freeFlowText);
+      if (match.groups) {
+        const num = match.groups.PNR_UDID;
+        const val = match.groups.PNR_UDID_value;
+        const key = 'PNR_UDID' + num;
+        if (this.businessEntities.get(key) !== val) {
+          if (this.businessEntities.has(key)) {
+            this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + val);
+          } else {
+            this.businessEntities.set(key, val);
+          }
+        }
       }
+    });
+  }
+
+  private extractRemarks(remarksList, category, regex) {
+    const remarks = remarksList.filter((x) => x.category === category && x.freeFlowText.match(regex));
+    remarks.forEach((rm) => {
+      this.setMatchEntity(regex, rm.freeFlowText);
     });
   }
 }

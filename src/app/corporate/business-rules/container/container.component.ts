@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-//import { FormGroup } from '@angular/forms';
 
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 import { BusinessRulesFormData } from 'src/app/models/business-rules/ui-business-rules.model';
@@ -13,7 +12,7 @@ import { BusinessRulesFormData } from 'src/app/models/business-rules/ui-business
 export class ContainerComponent implements OnInit {
   containerForm: FormGroup;
   formTemplateData: BusinessRulesFormData[];
-  //formTemplateData: any;
+
   constructor(private res: RulesEngineService) {}
 
   ngOnInit() {
@@ -23,8 +22,7 @@ export class ContainerComponent implements OnInit {
   private createRuleForm() {
     const formGroup = {};
     this.formTemplateData = this.res.getSpecificRulesValue('UI_ADD_CONTROL').formData;
-    //this.formTemplateData = JSON.stringify(this.formTemplateData);
-    // debugger;
+
     this.formTemplateData.forEach((formControl) => {
       formGroup[formControl.controlName] = new FormControl('');
     });

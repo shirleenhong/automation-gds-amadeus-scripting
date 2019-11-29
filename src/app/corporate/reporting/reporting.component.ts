@@ -43,7 +43,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     this.hasTst = true;
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
     let segments = this.pnrService.getSegmentList();
-    segments = segments.filter(function(x) {
+    segments = segments.filter((x) => {
       if (x.segmentType === 'HTL') {
         return x;
       }

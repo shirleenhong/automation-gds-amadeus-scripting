@@ -52,6 +52,18 @@
           <label [for]="input.controlName"> {{ option.optionName }}</label>
         </div>
       </ng-template>
+
+      <div class="col-4">
+        <ng-template [ngSwitchCase]="'checkbox'">
+          <div class="col-3">
+            <label [for]="input.controlName"> {{ input.controlName }}</label>
+          </div>
+          <div *ngFor="let option of input.options" class="form-group row">
+            <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName" />
+            <label [for]="input.controlName"> {{ option.optionName }}</label>
+          </div>
+        </ng-template>
+      </div>
     </ng-container>
   </ng-template>
 </form>

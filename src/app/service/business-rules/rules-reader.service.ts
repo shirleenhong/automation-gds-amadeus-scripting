@@ -38,6 +38,7 @@ export class RulesReaderService {
   constructor(private pnrService: PnrService) {}
 
   public readPnr() {
+    this.businessEntities = new Map<string, string>();
     this.parseRemarks();
   }
 

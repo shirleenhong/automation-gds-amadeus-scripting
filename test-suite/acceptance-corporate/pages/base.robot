@@ -11,7 +11,7 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          cancel_segments.robot
 Resource          queues.robot
-Resource          invoice.robot
+Resource          standalone.robot
 Resource          add_segment.robot
 Resource          ../../resources/common/api-utilities.txt
 
@@ -46,11 +46,11 @@ ${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Se
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
-@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code
+@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
@@ -198,8 +198,10 @@ Assign Current Date
     ${current_month}     Convert Date     ${current_date}    %m
     ${current_year}     Convert Date     ${current_date}    %y
     ${current_time}     Convert Date     ${current_date}    %H:%M
+    ${current_time_plus}    Add Time To Time    ${current_time}     00:01
     ${month}     Convert Month To MMM    ${current_date}
-    Set Test Variable    ${current_time}    
+    Set Test Variable    ${current_time}
+    Set Test Variable    ${current_time_plus}    
     Set Test Variable    ${current_date}   ${current_day}${month}
     Set Test Variable    ${current_day}
     Set Test Variable    ${current_month}
@@ -211,13 +213,12 @@ Assign Current Date
 Convert Month To MMM
     [Arguments]     ${date}
     ${month}    Convert Date    ${date}    %m
-    ${month}    Run Keyword If     "${month}" == "01"     Set Variable    JAN    ELSE IF    "${month}" == "02"    Set Variable    FEB     
-    ...    ELSE IF    "${month}" == "03"    Set Variable    MAR     ELSE IF    "${month}" == "04"    Set Variable    APR     
-    ...    ELSE IF    "${month}" == "05"    Set Variable    MAY     ELSE IF    "${month}" == "06"    Set Variable    JUN
-    ...    ELSE IF    "${month}" == "07"    Set Variable    JUL     ELSE IF    "${month}" == "08"    Set Variable    AUG     
-    ...    ELSE IF    "${month}" == "09"    Set Variable    SEP     ELSE IF    "${month}" == "10"    Set Variable    OCT
-    ...    ELSE IF    "${month}" == "11"    Set Variable    NOV     ELSE IF    "${month}" == "12"    Set Variable    DEC
-    Log    ${month}
+    ${month}    Set Variable If     "${month}" == "01"     JAN    "${month}" == "02"    FEB
+    ...    "${month}" == "03"    MAR    "${month}" == "04"    APR
+    ...    "${month}" == "05"    MAY    "${month}" == "06"    JUN
+    ...    "${month}" == "07"    JUL    "${month}" == "08"    AUG
+    ...    "${month}" == "09"    SEP    "${month}" == "10"    OCT
+    ...    "${month}" == "11"    NOV    "${month}" == "12"    DEC
     [Return]     ${month}
 
 Navigate To Page ${destination_page}
@@ -251,6 +252,7 @@ Navigate From Corp
      ...    ELSE IF    "${to_itinerary_and_queue}" == "True"    Click Itinerary And Queue
      ...    ELSE IF    "${to_cancel_segments}" == "True"    Click Cancel Segments
      ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
+     ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments
@@ -262,7 +264,7 @@ Navigate From Add Segment
     [Arguments]    ${destination_page}
     ${in_add_segment}     Run Keyword And Return Status    Should Contain    ${add_segment_pages}    ${current_page}
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
-    
+
 Click Add Passive Segment Button
 	Wait Until Element Is Visible     ${button_add_passive_segment}    30
 	Click Element At Coordinates    ${button_add_passive_segment}   0   0
@@ -324,6 +326,7 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Reporting Remarks"    Click Reporting Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Car Savings Code"    Click Car Savings Code Tab
+    ...    ELSE IF    "${destination_page}" == "Hotel Savings Code"    Click Hotel Savings Code Tab
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
@@ -656,4 +659,13 @@ Get Ticket Number
 Complete The PNR In Full Wrap
     Navigate To Page Reporting Remarks
     Finish PNR
+
+Click IRD Rate Request
+    # Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
+    # Click Element     ${button_send_invoice_itinerary} 
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    IRD Rate Request
+    Set Test Variable    ${pnr_submitted}   no
     

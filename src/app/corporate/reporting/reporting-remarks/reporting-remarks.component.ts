@@ -5,8 +5,9 @@ import { DDBService } from 'src/app/service/ddb.service';
 import { FormControl, Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { ReportingViewModel } from 'src/app/models/reporting-view.model';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
-import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
+
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
+import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code.enum';
 
 @Component({
   selector: 'app-reporting-remarks',
@@ -26,8 +27,12 @@ export class ReportingRemarksComponent implements OnInit {
   ebRList: { itemValue: string; itemText: string }[];
 
   @Input() reportingRemarksView = new ReportingViewModel();
-  constructor(private pnrService: PnrService, private ddbService: DDBService, private fb: FormBuilder,
-              private counselorDetail: CounselorDetail) {
+  constructor(
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private fb: FormBuilder,
+    private counselorDetail: CounselorDetail
+  ) {
     this.destinations = pnrService.getAirDestinations();
   }
   async loadData(): Promise<void> {}
@@ -38,7 +43,7 @@ export class ReportingRemarksComponent implements OnInit {
       ebR: new FormControl('', [Validators.required]),
       ebT: new FormControl('', [Validators.required]),
       ebN: new FormControl('GI', [Validators.required]),
-      ebC: new FormControl('', [Validators.required]),
+      ebC: new FormControl('', [Validators.required])
     });
     this.reportingForm.get('ebR').disable();
     this.reportingForm.get('ebT').disable();
@@ -172,5 +177,4 @@ export class ReportingRemarksComponent implements OnInit {
       { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
     ];
   }
-
 }

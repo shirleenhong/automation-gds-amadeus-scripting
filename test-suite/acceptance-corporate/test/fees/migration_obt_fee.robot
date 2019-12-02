@@ -48,7 +48,7 @@ Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
     [Tags]    us9402
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
-    Add 2 Hotel Segments
+    Add 2 Passive Hotel Segments
     Open CA Corporate Test
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Hotel Only

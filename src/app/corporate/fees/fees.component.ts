@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SupplementalFeesComponent } from './supplemental-fees/supplemental-fees.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { ContainerComponent } from '../business-rules/container/container.component';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 
 @Component({
   selector: 'app-fees',
@@ -9,7 +11,9 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 })
 export class FeesComponent implements OnInit {
   @ViewChild(SupplementalFeesComponent) supplemeentalFees: SupplementalFeesComponent;
-  constructor(private utilHelper: UtilHelper) {}
+  @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+
+  constructor(private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
 
   ngOnInit() {}
 
@@ -20,5 +24,11 @@ export class FeesComponent implements OnInit {
     }
 
     return true;
+  }
+
+  hasRules(entityName: string, resultValue: string) {
+    console.log(name);
+
+    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

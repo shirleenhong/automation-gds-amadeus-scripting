@@ -17,7 +17,7 @@ export class InvoiceRemarkService {
   formGroup: FormGroup;
   remGroup: RemarkGroup;
 
-  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private queService: AmadeusQueueService) {}
+  constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private queService: AmadeusQueueService) { }
 
   public async GetMatrixInvoice(fg: FormGroup) {
     this.remGroup = new RemarkGroup();
@@ -181,8 +181,21 @@ export class InvoiceRemarkService {
         }
       }
     }
-    this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 66, 1));
+
+    this.deleteRmzRemarks(remGroup);
+    this.queService.addQueueCollection(new QueuePlaceModel('PARWL2877', 62));
     return remGroup;
+  }
+
+  deleteRmzRemarks(rmGroup: RemarkGroup) {
+    const rirRemark = 'SPCL-TKT(?<tkt>(.*))';
+    const regx = new RegExp(rirRemark);
+    const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
+    if (rems.length > 0) {
+      rems.forEach((r) => {
+        rmGroup.deleteRemarkByIds.push(r.lineNo);
+      });
+    }
   }
 
   getSegmentAssociations(associations) {

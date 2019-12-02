@@ -387,56 +387,48 @@ export class AmadeusRemarkService {
     }
   }
 
-  deleteRemarks() {
+  async deleteRemarks() {
     const filteredIds = this.sortArrayForDelete(this.deleteRemarksByIds).join(',');
     if (filteredIds !== '') {
-      smartScriptSession.send('XE' + filteredIds).then(async (response) => {
+      await smartScriptSession.send('XE' + filteredIds).then(async (response) => {
         console.log('XE' + filteredIds + ' = ' + response);
         if (response.Response.indexOf('ENTRY NOT PROCESSED-PARALLEL') >= 0) {
-          await smartScriptSession.send('IR');
-          this.deleteRemarks();
+          await smartScriptSession.send('IR').then(() => {
+            smartScriptSession.send('XE' + filteredIds);
+          });
         }
       });
     }
   }
 
   sortArrayForDelete(arr) {
-    const dl = arr.sort((a, b) => {
+    arr = arr.sort((a, b) => {
       return Number(a.toString().split('-')[0]) - Number(b.toString().split('-')[0]);
     });
-    // return dl;
-    const newArr = [];
-    let tmp = '';
-    let tmpIndx = 0;
-    for (let i = 0; i < dl.length; i++) {
-      tmp = '';
-      tmpIndx = 0;
-      for (let j = i + 1; j < dl.length; j++) {
-        if (dl[j - 1].indexOf('-') >= 0 || dl[j].indexOf('-') >= 0) {
-          break;
-        }
+    // filter dupplicate
+    arr = arr.filter((v, i) => arr.indexOf(v) === i);
+    const exists = [];
+    const dash = arr.filter((x) => x.indexOf('-') >= 0);
+    const de = arr.filter((x) => x.indexOf('-') === -1);
 
-        if (Number(dl[j - 1]) + 1 === Number(dl[j])) {
-          tmp = dl[j];
-          tmpIndx = j;
-        } else {
-          break;
+    // remove items on range
+    dash.forEach((d) => {
+      const n = d.split('-');
+      de.forEach((xe) => {
+        if (this.isExistInRange(n[0], n[1], xe)) {
+          exists.push(xe);
         }
-      }
-      if (tmp === '') {
-        if (i > 0 && dl[i - 1].indexOf('-') > 0) {
-          if (Number(dl[i - 1].split('-')[1]) < Number(dl[i])) {
-            newArr.push(dl[i]);
-          }
-        } else {
-          newArr.push(dl[i]);
-        }
-      } else {
-        newArr.push(dl[i] + '-' + tmp);
-        i = tmpIndx;
-      }
+      });
+    });
+
+    return arr.filter((x) => exists.indexOf(x) === -1);
+  }
+
+  isExistInRange(from, to, num) {
+    if (Number(num) >= Number(from) && Number(num) <= Number(to)) {
+      return true;
     }
-    return newArr;
+    return false;
   }
 
   async sendRemarks(requestor?: string, endPnr?: boolean) {

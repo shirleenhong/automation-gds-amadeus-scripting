@@ -166,7 +166,7 @@ Verify That Passive Segments, Insurance Accounting remarks, Air Canada Passs, An
     ...    CWT Itinerary
     [Tags]    sanity    prod    not_ready
     Login to Amadeus Production
-    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    RM*CF/-CVC000000N    APE-Test@email.com    RU1AHK1SIN1OCT-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-US    RMP/CITIZENSHIP-CA
     Open CA Migration Prod
     Click Add Segment Main Menu
     Sleep    5
@@ -484,7 +484,7 @@ Verify ITC Package Costs Remarks Are Written
     Verify Specific Remark Is Not Written In The PNR    INFANT
 
 Verify Air, Insurance, And Car Passive Segments Are Added In the PNR
-    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 4 YULCDG GK1 \ 1530 1715 \ 03OCT \ \ \ \ ${airline_recloc}
+    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 5 YULCDG GK1 \ 1530 1715 \ 03OCT \ \ \ \ ${airline_recloc}
     Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 03OCT-/TYP-INS/SUN-MANULIFE INSURANCE/SUC-MLF/SC-YYZ/SD-03OCT/ST-0900/EC-YYZ/ED-13OCT/ET-0900/CF-CWT${policy_number}    True
     Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYZ 13OCT-13OCT CFAR/BS-67843263/SUC-AL/SUN-ALAMO/SD-13OCT/ST-0100/ED-13OCT/ET-1400/TTL-123.50CAD/DUR-DAILY/MI-200FKM FREE/URA-210.75CAD/CF-CONF1234    True
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S5

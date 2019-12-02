@@ -9,7 +9,7 @@ import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { BspRefundComponent } from 'src/app/corporate/corp-cancel/bsp-refund/bsp-refund.component';
 import { NonBspTicketCreditComponent } from 'src/app/corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 import { DDBService } from '../../service/ddb.service';
-import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code-types';
+import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code.enum';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 // import { DDBService } from '../../service/ddb.service';
 // import { BsModalRef, BsModalService } from 'ngx-bootstrap';

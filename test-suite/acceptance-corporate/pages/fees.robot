@@ -284,7 +284,7 @@ Verify That Multiple Supplemental Fees Are Written In The PNR
 Book Multiple Segments With Air Car Rail And Hotel
     Add Canada Domestic Segment And Store Multiple Fare
     Add 1 Rail Segments
-    Add 1 Hotel Segments
+    Add 1 Passive Hotel Segments
     Add 1 Car Segments
     
 Verify Correct OBT Fee Remark Are Written In The PNR For Multiple Segment

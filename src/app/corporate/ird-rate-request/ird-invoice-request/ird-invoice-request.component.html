@@ -74,7 +74,7 @@
                     <div class="col-sm-3">Stop {{i+1}}</div>
                     <div class="col-sm-2"> <input class="form-control" type="text" name="stops" id="stops" formControlName="stops"></div>
                 
-                <div  class="col-sm-2" *ngIf = "i<=2" (click)="addStops()">
+                <div  class="col-sm-1.5" *ngIf = "i<=2" (click)="addStops()">
                         <i class="fas fa-plus-circle" id="add"></i>
                         Add
                       </div>
@@ -120,7 +120,7 @@
                     <div class="col-sm-3">Comment{{i+1}}</div>
                     <div class="col-sm-4"> <input class="form-control" type="text" name="comments" id="comments" formControlName="comments" maxlength="40"></div>
                 
-                <div  class="col-sm-2" *ngIf = "i<=6" (click)="addItem()">
+                <div  class="col-sm-1.5" *ngIf = "i<=6" (click)="addItem()">
                         <i class="fas fa-plus-circle" id="add"></i>
                         Add
                       </div>

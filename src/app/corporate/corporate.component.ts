@@ -405,7 +405,8 @@ export class CorporateComponent implements OnInit {
         console.log(JSON.stringify(error));
         this.workflow = '';
       }
-    ); 
+    );
+  }
   private getStaticModelRemarks(
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],

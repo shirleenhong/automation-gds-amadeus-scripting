@@ -50,6 +50,7 @@ export class ValidateModel {
     this.setCssClass();
     return (
       this.isPaymentValid && this.isReportingValid && this.isTicketingValid && this.isFeesValid && this.isRemarkValid && this.isQueueValid
+      && this.isPricingValid
     );
   }
 

@@ -13,6 +13,7 @@ import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { FormGroup, FormArray } from '@angular/forms';
 import { AmadeusQueueService } from '../amadeus-queue.service';
+import { PricingService } from './pricing.service';
 
 declare var smartScriptSession: any;
 
@@ -31,7 +32,8 @@ export class TicketRemarkService {
     private ddbService: DDBService,
     private approvalRuleService: ApprovalRuleService,
     private remarkHelper: RemarkHelper,
-    private amdeusQueue: AmadeusQueueService
+    private amdeusQueue: AmadeusQueueService,
+    private pricingService: PricingService
   ) { }
   /**
    * Method to add Tktline for BSP and NonBsp Cancel
@@ -72,6 +74,7 @@ export class TicketRemarkService {
 
     const existingTkLineNum = this.pnrService.getTkLineNumber();
     const existingFSLineNum = this.pnrService.getFSLineNumber();
+    const fmLineNumbers = this.pricingService.toDeleteFmLines;
     if (existingTkLineNum >= 0) {
       linesToDelete.push(existingTkLineNum);
 
@@ -80,10 +83,13 @@ export class TicketRemarkService {
         linesToDelete.push(existingRirLineNum);
       }
     }
+    // to delete FM lines from the PNR
+    for (const fmLine of fmLineNumbers) {
+      linesToDelete.push(fmLine);
+    }
     if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
       linesToDelete.push(existingFSLineNum);
     }
-
     if (linesToDelete.length > 0) {
       smartScriptSession.send('XE' + linesToDelete.join(','));
     }

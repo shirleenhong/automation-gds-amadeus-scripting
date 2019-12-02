@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
-import { FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-air-fare-commission',
@@ -8,8 +9,10 @@ import { FormBuilder, FormControl, FormArray } from '@angular/forms';
   styleUrls: ['./air-fare-commission.component.scss']
 })
 export class AirFareCommissionComponent implements OnInit {
-
-  constructor(private pnrService: PnrService, private fb: FormBuilder) { }
+  airFares = [];
+  newFmElements = [];
+  isGenericFmPresent = false;
+  constructor(private pnrService: PnrService, private fb: FormBuilder, private utilHelper: UtilHelper) { }
   airFareCommissionFormGroup = this.fb.group({
     airFares: this.fb.array([])
   });
@@ -17,22 +20,30 @@ export class AirFareCommissionComponent implements OnInit {
     this.checkForFMElements();
   }
   checkForFMElements() {
-    const airFares = [];
     const airFareObj = {
       segments: '',
       newCommission: '',
       oldCommission: '',
+      segTatooNumbers: ''
     };
     const fmElements = this.pnrService.pnrObj.fmElements;
-    const formFmElements = this.formFMElements(fmElements);
+    this.newFmElements = this.formFMElements(fmElements);
     // const unticketedTst = this.pnrService.getUnticketedTst();
     const tstData = this.pnrService.getUnticketedCorpReceipts();
+    // const exchTatooNum = this.getExchangeTatooNumbers();
     if (tstData.length > 0) {
       for (const tst of tstData) {
         const airfareObject = JSON.parse(JSON.stringify(airFareObj));
+        for (const fmEle of this.newFmElements) {
+          if (fmEle.segments.toString().trim() === tst.segmentNumber.toString().trim()) {
+            airfareObject.oldCommission = fmEle.commission;
+            break;
+          }
+        }
         airfareObject.segments = tst.segmentNumber.toString();
-        airFares.push(airfareObject);
-        this.addAirFares(airfareObject.segments, '');
+        airfareObject.segTatooNumbers = tst.tatooNumber.toString();
+        this.airFares.push(airfareObject);
+        this.addAirFares(airfareObject.segments, airfareObject.oldCommission);
       }
     }
     console.log(tstData);
@@ -45,6 +56,37 @@ export class AirFareCommissionComponent implements OnInit {
     //   }
     // }
     // console.log(fmElements);
+  }
+  getExchangeTatooNumbers() {
+    const exchangeTatooNumbers = [];
+    for(const fo of this.pnrService.pnrObj.foElements) {
+      const tatooNums = [];
+      for(const assoc of fo.associations) {
+        if(assoc.segmentType === 'ST') {
+          tatooNums.push(assoc.tatooNumber);
+        }
+      }
+      exchangeTatooNumbers.push(tatooNums);
+    }
+    return exchangeTatooNumbers;
+  }
+  checkChange(group) {
+    if (group.get('chkIncluded').value === true) {
+      this.addValidation(group, 'commission');
+      this.utilHelper.validateAllFields(group);
+    } else {
+      this.removeValidation(group, 'commission');
+    }
+  }
+  addValidation(group: any, controlName: string) {
+    const control = group.get(controlName);
+    control.setValidators([Validators.required, Validators.pattern(/[0-9]{1,3}[.]{1}[0-9]{1,2}A|[0-9]{1,3}A|[0-9]{1,2}/)]);
+    control.updateValueAndValidity();
+  }
+  removeValidation(group: any, controlName: string) {
+    const control = group.get(controlName);
+    control.setValidators(null);
+    control.updateValueAndValidity();
   }
   createAirfareGroup(segment, commission) {
     const formGroup = this.fb.group({
@@ -66,16 +108,23 @@ export class AirFareCommissionComponent implements OnInit {
       isPresent: false,
       commission: '',
       segments: [],
+      lineNo: '',
+      tatooNum: ''
     };
     for (const fmEle of fmElements) {
       const fmObject = JSON.parse(JSON.stringify(fmObj));
       const commission = fmEle.commission;
-      const commRegex = /[0-9]{1,3}[.]{1}[0-9]{1,2}A|[0-9]{1,2}/g;
+      const commRegex = /[0-9]{1,3}[.]{1}[0-9]{1,2}A|[0-9]{1,3}A|[0-9]{1,2}/g;
       const match = commission.match(commRegex);
       if (match && match[0]) {
         fmObject.commission = match[0];
       }
       fmObject.segments = this.getSegments(fmEle.associations);
+      if(fmObject.segments.length === 0) {
+        this.isGenericFmPresent = true;
+      }
+      fmObject.lineNo = fmEle.elementNumber;
+      fmObj.tatooNum = fmEle.tatooNumber;
       updatedFmElements.push(fmObject);
     }
     return updatedFmElements;

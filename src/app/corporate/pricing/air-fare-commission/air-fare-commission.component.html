@@ -13,7 +13,7 @@
     class="col">
     <div [formGroupName]="i" class="row">
       <div class="col-1" style="width:3%;padding-left:10px">
-        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="formControlName" />
+        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="formControlName" (change)="checkChange(item)"/>
       </div>
       <div class="col-3" style="width:12%;text-align:left">
         <input formControlName="segments" type="text" class="form-control" readonly />

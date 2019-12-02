@@ -145,6 +145,27 @@
     </div>
   </div>
 </div>
+<div *ngIf="workflow === 'irdRateRequest'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i> IRD Rate Request
+        <i [ngClass]="itinValidModel.ticketingValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-ird-rate-request></app-ird-rate-request>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="sendIrdRateParameters()">
+        Submit
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
 
 <div *ngIf="workflow === ''" class="loaderBody">
   <div class="loader">
@@ -176,6 +197,11 @@
     <div>
       <button class="leisureButton btnMenu" (click)="cancelSegment()">
         Cancel Segments
+      </button>
+    </div>
+    <div *ngIf="showIrdRequestButton">
+      <button class="leisureButton btnMenu" (click)="irdRateRequest()">
+        IRD Rate Request
       </button>
     </div>
   </div>

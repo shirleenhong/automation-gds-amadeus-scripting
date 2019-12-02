@@ -510,3 +510,7 @@ input[type='date']::-webkit-inner-spin-button {
   float: left !important;
   margin-top: 15px !important;
 }
+.travelTicketGroup input.ng-invalid.ng-touched {
+  border-color: #ff4c6a;
+  background-color: rgba(253, 255, 133, 0.507);
+}

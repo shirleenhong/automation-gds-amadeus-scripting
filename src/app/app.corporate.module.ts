@@ -40,6 +40,8 @@ import {HotelSegmentsComponent} from './corporate/reporting/hotel-segments/hotel
 import { CarSavingsCodeComponent } from './corporate/reporting/car-savings-code/car-savings-code.component';
 import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerary/send-invoice-itinerary.component';
 import { NonAcceptanceComponent } from './corporate/payments/non-acceptance/non-acceptance.component';
+import { IrdRateRequestComponent } from './corporate/ird-rate-request/ird-rate-request.component';
+import { IrdInvoiceRequestComponent } from './corporate/ird-rate-request/ird-invoice-request/ird-invoice-request.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +80,10 @@ import { NonAcceptanceComponent } from './corporate/payments/non-acceptance/non-
     HotelSegmentsComponent,
     CarSavingsCodeComponent,
     SendInvoiceItineraryComponent,
-    NonAcceptanceComponent
+    NonAcceptanceComponent,
+    IrdRateRequestComponent,
+    IrdInvoiceRequestComponent
+
   ],
   imports: [
     BrowserModule,

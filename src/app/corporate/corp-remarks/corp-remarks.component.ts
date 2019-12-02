@@ -8,6 +8,8 @@ import { EscRemarksComponent } from './esc-remarks/esc-remarks.component';
 import { VisaPassportComponent } from 'src/app/shared/visa-passport/visa-passport.component';
 import { PnrService } from '../../service/pnr.service';
 import { AddContactComponent } from './add-contact/add-contact.component';
+import { ContainerComponent } from '../business-rules/container/container.component';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 
 @Component({
   selector: 'app-corp-remarks',
@@ -22,12 +24,19 @@ export class CorpRemarksComponent implements OnInit {
   @ViewChild(AddContactComponent) addContactComponent: AddContactComponent;
   @ViewChild(VisaPassportComponent)
   viewPassportComponent: VisaPassportComponent;
+  @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+
   getPassiveSegments = [];
   isOfc = false;
   isEsc: boolean;
   isPassive: any;
 
-  constructor(private utilHelper: UtilHelper, private counselorDetail: CounselorDetail, private pnrService: PnrService) {}
+  constructor(
+    private utilHelper: UtilHelper,
+    private counselorDetail: CounselorDetail,
+    private pnrService: PnrService,
+    private rulesEngineService: RulesEngineService
+  ) {}
 
   ngOnInit() {
     this.counselorDetail.identityOnChange.subscribe((x) => {
@@ -81,5 +90,11 @@ export class CorpRemarksComponent implements OnInit {
     }
 
     return true;
+  }
+
+  hasRules(entityName: string, resultValue: string) {
+    console.log(name);
+
+    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

@@ -19,4 +19,8 @@
   <tab heading="Emergency Contact" id="emergencyContact" tabOrder="4" *ngIf="!isPassive">
     <app-add-contact></app-add-contact>
   </tab>
+
+  <tab heading="Rules" id="rules" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'REMARKS')">
+    <app-container></app-container>
+  </tab>
 </tabset>

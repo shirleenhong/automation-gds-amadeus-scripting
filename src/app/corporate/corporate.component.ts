@@ -43,6 +43,8 @@ import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
+import { RulesEngineService } from '../service/business-rules/rules-engine.service';
+import { RuleWriterService } from '../service/business-rules/rule-writer.service';
 
 @Component({
   selector: 'app-corporate',
@@ -101,7 +103,9 @@ export class CorporateComponent implements OnInit {
     private segmentService: SegmentService,
     private amadeusRemarkService: AmadeusRemarkService,
     private corpCancelRemarkService: CorpCancelRemarkService,
-    private pricingService: PricingService
+    private pricingService: PricingService,
+    private rulesEngine: RulesEngineService,
+    private ruleWriter: RuleWriterService
   ) {
     this.initData();
     this.getPnrService();
@@ -211,6 +215,7 @@ export class CorporateComponent implements OnInit {
       this.workflow = 'error';
     } else {
       try {
+        await this.rulesEngine.initializeRulesEngine();
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');
@@ -259,6 +264,8 @@ export class CorporateComponent implements OnInit {
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
+    const remarkCollection = new Array<RemarkGroup>();
+
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
@@ -274,22 +281,6 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
       await this.rms.getMatchcedPlaceholderValues();
     });
-
-    // if (
-    //   this.paymentsComponent.accountingRemark.accountingRemarks !== undefined &&
-    //   this.paymentsComponent.accountingRemark.accountingRemarks.length > 0
-    // ) {
-    //   if (this.paymentsComponent.accountingRemark.accountingRemarks[0].accountingTypeRemark === 'ACPPC') {
-    //     const forDeletion = new Array<string>();
-    //     this.paymentsComponent.accountingRemark.accountingRemarks[0].segments.forEach((element) => {
-    //       forDeletion.push(element.lineNo);
-    //     });
-    //     await this.rms.deleteSegments(forDeletion).then(async () => {
-    //       await this.getPnr();
-    //       await this.rms.getMatchcedPlaceholderValues();
-    //     });
-    //   }
-    // }
 
     this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
@@ -338,8 +329,10 @@ export class CorporateComponent implements OnInit {
     this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
     this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager
+
     remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
+
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
 
@@ -361,6 +354,10 @@ export class CorporateComponent implements OnInit {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
     }
 
+    remarkCollection.push(this.ruleWriter.getAddRemarksRuleResult());
+    remarkCollection.push(this.ruleWriter.getDeleteRemarksRuleResult());
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
+
     await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
         this.paymentsComponent.accountingRemark.accountingRemarks.filter(
@@ -380,6 +377,29 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
+  }
+
+  private getStaticModelRemarks(
+    remarkCollection: RemarkGroup[],
+    remarkList: RemarkModel[],
+    passiveSegmentList: PassiveSegmentModel[],
+    forDeleteRemarks: string[]
+  ) {
+    remarkCollection.forEach((rem) => {
+      rem.remarks.forEach((remModel) => {
+        remarkList.push(remModel);
+      });
+      if (rem.passiveSegments) {
+        rem.passiveSegments.forEach((pasModel) => {
+          passiveSegmentList.push(pasModel);
+        });
+      }
+      if (rem.deleteRemarkByIds) {
+        rem.deleteRemarkByIds.forEach((del) => {
+          forDeleteRemarks.push(del);
+        });
+      }
+    });
   }
 
   async cancelPnr() {
@@ -485,22 +505,7 @@ export class CorporateComponent implements OnInit {
     }
     remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    remarkCollection.forEach((rem) => {
-      rem.remarks.forEach((remModel) => {
-        remarkList.push(remModel);
-      });
-      if (rem.passiveSegments) {
-        rem.passiveSegments.forEach((pasModel) => {
-          passiveSegmentList.push(pasModel);
-        });
-      }
-      if (rem.deleteRemarkByIds) {
-        rem.deleteRemarkByIds.forEach((del) => {
-          forDeletion.push(del);
-        });
-      }
-    });
-
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion);
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
     //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);

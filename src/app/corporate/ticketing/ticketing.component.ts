@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AquaTicketingComponent } from './aqua-ticketing/aqua-ticketing.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { TicketingLineComponent } from './ticketing-line/ticketing-line.component';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { ContainerComponent } from '../business-rules/container/container.component';
 
 @Component({
   selector: 'app-ticketing',
@@ -11,8 +13,9 @@ import { TicketingLineComponent } from './ticketing-line/ticketing-line.componen
 export class TicketingComponent implements OnInit {
   @ViewChild(AquaTicketingComponent) aquaTicketingComponent: AquaTicketingComponent;
   @ViewChild(TicketingLineComponent) ticketlineComponent: TicketingLineComponent;
+  @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
-  constructor(private utilHelper: UtilHelper) {}
+  constructor(private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
 
   ngOnInit() {}
 
@@ -36,4 +39,11 @@ export class TicketingComponent implements OnInit {
 
     return true;
   }
+
+  hasRules(entityName: string, resultValue: string) {
+    console.log(name);
+
+    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
+  }
+  sssssssss;
 }

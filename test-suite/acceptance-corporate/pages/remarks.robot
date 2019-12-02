@@ -224,17 +224,19 @@ Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     Select From List By Label    ${select_segment_number}    2
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
-    Click Element   ${input_seat_select6}    
+    Click Element   ${input_seat_select6}
+    Take Screenshot    
     Click Save Button In Seats
     Click Element    ${button_add_seat}
     Wait Until Element Is Visible    ${input_seat_select3}
     Select From List By Label    ${select_segment_number}    3
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
-    Click Element   ${input_seat_select6}    
+    Click Element   ${input_seat_select6}
+    Take Screenshot    
     Click Save Button In Seats
     Finish PNR
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     
 Fill Up Visa And Passport Fields With Default Values
     Navigate To Page Visa And Passport
@@ -259,6 +261,7 @@ Fill Up Visa And Passport With ${citizenship} Citizenship, Advised To ${advisee}
     Tick Advisory Sent Checkbox
     Enter Value    ${input_citizenship}    ${citizenship}
     Enter Value    ${input_adviseTo}     ${advisee}
+    Set Test Variable    ${visa_complete}    yes
     [Teardown]    Take Screenshot
     
 Fill Up Visa And Passport With ${citizenship} Citizenship, Advised To ${advisee} And Select Visa For Segment/s ${segments}
@@ -290,9 +293,18 @@ Verify That ESC Remarks Tab Is Not Displayed
 Verify ESC Remarks Are Written Correctly In The PNR
    Assign Current Date
    Finish PNR
-   Run Keyword If    "${is_esc_read}" == "yes"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT READ ESC REMARKS/${current_time}/${current_date}
-   Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    RME ESC AGENT DID NOT HAVE TIME TO READ ESC
-   Run Keyword If    "${is_esc_read}" == "no"     Verify Specific Remark Is Written In The PNR    REMARKS/${current_time}/${current_date}
+   Run Keyword If    "${is_esc_read}" == "yes"     Verify Agent Read ESC Remarks Are Written In The PNR
+    Run Keyword If    "${is_esc_read}" == "no"     Verify Agent Did Not Read ESC Remarks Are Written In The PNR
+
+Verify Agent Read ESC Remarks Are Written In The PNR
+    ${in_current_time}    Run Keyword And Return Status     Verify Specific Remark Is Written In The PNR    RME ESC AGENT READ ESC REMARKS/${current_time}/${current_date}
+    ${in_current_time_plus}    Run Keyword And Return Status     Verify Specific Remark Is Written In The PNR    RME ESC AGENT READ ESC REMARKS/${current_time_plus}/${current_date}
+    Should Be True    ${in_current_time} or ${in_current_time_plus}
+
+Verify Agent Did Not Read ESC Remarks Are Written In The PNR
+    ${in_current_time}    Run Keyword And Return Status     Verify Specific Remark Is Written In The PNR    RME ESC AGENT DID NOT HAVE TIME TO READ ESC REMARKS/${current_time}/${current_date}    True
+    ${in_current_time_plus}    Run Keyword And Return Status     Verify Specific Remark Is Written In The PNR    RME ESC AGENT DID NOT HAVE TIME TO READ ESC REMARKS/${current_time_plus}/${current_date}    True
+    Should Be True    ${in_current_time} or ${in_current_time_plus}    
 
 Verify ESC Remarks Are Not Written In The PNR
    Finish PNR

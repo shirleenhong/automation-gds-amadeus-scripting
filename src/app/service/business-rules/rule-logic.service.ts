@@ -10,17 +10,21 @@ export class RulesLogicService {
     let entity = businessEntityList.get(logic.businessEntityName);
     if (!entity) {
       entity = '';
+    } else {
+      entity = entity.toUpperCase();
     }
-
+    const logicValue = logic.logicItemValue.toUpperCase();
     switch (logic.relationalOperatorId) {
       case RuleLogicEnum.IS:
-        return entity === logic.logicItemValue;
+        return entity === logicValue;
       case RuleLogicEnum.CONTAINS:
-        return entity.indexOf(logic.logicItemValue) >= 0;
+        return entity.indexOf(logicValue) >= 0;
       case RuleLogicEnum.IS_NOT:
-        return entity === logic.logicItemValue;
+        return entity !== logicValue;
       case RuleLogicEnum.NOT_IN:
-        break;
+        return logicValue.split('|').indexOf(entity) === -1;
+      case RuleLogicEnum.IN:
+        return logicValue.split('|').indexOf(entity) >= 0;
     }
     return false;
   }
@@ -32,7 +36,6 @@ export class RulesLogicService {
         return false;
       }
     }
-
-    return ruleLogics.length > 0;
+    return true;
   }
 }

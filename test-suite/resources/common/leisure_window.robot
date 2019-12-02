@@ -5,13 +5,14 @@ Resource          common_library.robot
 Click Panel
     [Arguments]    ${panel_name}
     Wait Until Element Is Visible    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]    60
-    Run Keyword If    '${panel_name}' == 'Reporting'    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), 'Payment')]    ELSE    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
+    Run Keyword If    '${panel_name}' == 'Reporting'    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), 'Payment')]
+    ...    ELSE    Scroll Element Into View    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
     Click Element    xpath=//div[@class='panel-title']//div[contains(text(), '${panel_name}')]
     [Teardown]    Take Screenshot
 
 Click Submit To PNR
     Scroll Element Into View    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
-    Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    60
     Sleep    5
     Click Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
     Sleep    10
@@ -53,7 +54,7 @@ Click Back To Main Menu
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    30
 
 Click Itinerary And Queue
-    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Itinerary and Queue')]
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Itinerary and Queue')]    60
     Sleep    5
     Click Element    xpath=//button[contains(text(), 'Itinerary and Queue')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), ' Send Itinerary and Queue')]    30

@@ -10,7 +10,7 @@ Resource          ../../pages/payment.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/ticketing.robot
 Resource          ../../pages/add_segment.robot
-# Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify Hotel Segment and RIR Remarks Are Written If Hotel Chain Code and Airport Code added in the UI is Valid

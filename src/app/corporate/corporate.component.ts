@@ -274,7 +274,6 @@ export class CorporateComponent implements OnInit {
         this.ticketingComponent.ticketlineComponent.approvalForm
       )
     );
-    
     accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {

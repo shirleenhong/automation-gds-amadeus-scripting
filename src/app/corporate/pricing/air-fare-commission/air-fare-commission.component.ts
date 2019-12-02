@@ -28,9 +28,7 @@ export class AirFareCommissionComponent implements OnInit {
     };
     const fmElements = this.pnrService.pnrObj.fmElements;
     this.newFmElements = this.formFMElements(fmElements);
-    // const unticketedTst = this.pnrService.getUnticketedTst();
     const tstData = this.pnrService.getUnticketedCorpReceipts();
-    // const exchTatooNum = this.getExchangeTatooNumbers();
     if (tstData.length > 0) {
       for (const tst of tstData) {
         const airfareObject = JSON.parse(JSON.stringify(airFareObj));
@@ -46,23 +44,13 @@ export class AirFareCommissionComponent implements OnInit {
         this.addAirFares(airfareObject.segments, airfareObject.oldCommission);
       }
     }
-    console.log(tstData);
-    // for(const fmEle of fmElements) {
-    //   let commission = fmEle.commission;
-    //   const commRegex = /[0-9]{1,3}[.]{1}[0-9]{1,2}A|[0-9]{1,2}/g;
-    //   const match = commission.match(commRegex);
-    //   if(match && match[0]) {
-    //     this.addAirFares('', match[0]);
-    //   }
-    // }
-    // console.log(fmElements);
   }
   getExchangeTatooNumbers() {
     const exchangeTatooNumbers = [];
-    for(const fo of this.pnrService.pnrObj.foElements) {
+    for (const fo of this.pnrService.pnrObj.foElements) {
       const tatooNums = [];
-      for(const assoc of fo.associations) {
-        if(assoc.segmentType === 'ST') {
+      for (const assoc of fo.associations) {
+        if (assoc.segmentType === 'ST') {
           tatooNums.push(assoc.tatooNumber);
         }
       }
@@ -120,7 +108,7 @@ export class AirFareCommissionComponent implements OnInit {
         fmObject.commission = match[0];
       }
       fmObject.segments = this.getSegments(fmEle.associations);
-      if(fmObject.segments.length === 0) {
+      if (fmObject.segments.length === 0) {
         this.isGenericFmPresent = true;
       }
       fmObject.lineNo = fmEle.elementNumber;

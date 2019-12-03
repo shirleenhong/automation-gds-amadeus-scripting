@@ -17,6 +17,14 @@ export class BusinessRule {
   tripTypeId: number;
   tripTypeName: string;
 
+  getResultEntityValue(entityName) {
+    const results = this.ruleResult.filter((x) => x.businessEntityName === entityName);
+    if (results.length > 0) {
+      return results[0].resultItemValue;
+    }
+    return '';
+  }
+
   constructor(jsonObj) {
     if (jsonObj) {
       this.categoryName = jsonObj.CategoryName;

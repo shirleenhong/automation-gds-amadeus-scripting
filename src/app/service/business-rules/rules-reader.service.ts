@@ -33,14 +33,14 @@ export class RulesReaderService {
     { type: 'RM', category: 'Y', regex: /(?<PNR_Y>.*)$/g },
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
     { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g },
-    { type: 'RM', category: '*', regex: /CFA\/-(?<PNR_CFA>[A-Z0-9]{3})/g }
+    { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g }
   ];
 
   constructor(private pnrService: PnrService) {}
 
-  public readPnr() {
+  public async readPnr() {
     this.businessEntities = new Map<string, string>();
-    this.parseRemarks();
+    await this.parseRemarks();
   }
 
   private setMatchEntity(regex, text) {
@@ -95,7 +95,8 @@ export class RulesReaderService {
   }
 
   private extractRemarks(remarksList, category, regex) {
-    const remarks = remarksList.filter((x) => x.category === category && x.freeFlowText.match(regex));
+    const regexp = new RegExp(regex);
+    const remarks = remarksList.filter((x) => x.category === category && regexp.test(x.freeFlowText));
     remarks.forEach((rm) => {
       this.setMatchEntity(regex, rm.freeFlowText);
     });

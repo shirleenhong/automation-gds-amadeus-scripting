@@ -42,6 +42,8 @@ import { SendInvoiceItineraryComponent } from './corporate/send-invoice-itinerar
 import { NonAcceptanceComponent } from './corporate/payments/non-acceptance/non-acceptance.component';
 import { IrdRateRequestComponent } from './corporate/ird-rate-request/ird-rate-request.component';
 import { IrdInvoiceRequestComponent } from './corporate/ird-rate-request/ird-invoice-request/ird-invoice-request.component';
+import { PricingComponent } from './corporate/pricing/pricing.component';
+import { AirFareCommissionComponent } from './corporate/pricing/air-fare-commission/air-fare-commission.component';
 import { ContainerComponent } from './corporate/business-rules/container/container.component';
 
 @NgModule({
@@ -84,6 +86,8 @@ import { ContainerComponent } from './corporate/business-rules/container/contain
     NonAcceptanceComponent,
     IrdRateRequestComponent,
     IrdInvoiceRequestComponent,
+    PricingComponent,
+    AirFareCommissionComponent,
     ContainerComponent
   ],
   imports: [

@@ -42,6 +42,8 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.component';
+import { PricingComponent } from './pricing/pricing.component';
+import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { RuleWriterService } from '../service/business-rules/rule-writer.service';
 
@@ -80,6 +82,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
+  @ViewChild(PricingComponent) pricingComponent: PricingComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -103,6 +106,7 @@ export class CorporateComponent implements OnInit {
     private segmentService: SegmentService,
     private amadeusRemarkService: AmadeusRemarkService,
     private corpCancelRemarkService: CorpCancelRemarkService,
+    private pricingService: PricingService,
     private rulesEngine: RulesEngineService,
     private ruleWriter: RuleWriterService
   ) {
@@ -181,6 +185,7 @@ export class CorporateComponent implements OnInit {
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
     this.validModel.isQueueValid = this.queueComponent.checkValid();
+    this.validModel.isPricingValid = this.pricingComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 
@@ -268,6 +273,7 @@ export class CorporateComponent implements OnInit {
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
+    accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
     const remarkCollection = new Array<RemarkGroup>();
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));

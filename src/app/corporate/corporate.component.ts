@@ -41,6 +41,7 @@ import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
+import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
@@ -64,6 +65,7 @@ export class CorporateComponent implements OnInit {
   migrationOBTDates: Array<string>;
   segment = [];
   cfLine: CfRemarkModel;
+  showIrdRequestButton = false;
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -79,6 +81,7 @@ export class CorporateComponent implements OnInit {
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
+  @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
   @ViewChild(PricingComponent) pricingComponent: PricingComponent;
 
   constructor(
@@ -109,12 +112,15 @@ export class CorporateComponent implements OnInit {
   ) {
     this.initData();
     this.getPnrService();
+   
   }
 
   async ngOnInit(): Promise<void> {
     if (this.modalRef) {
       this.modalRef.hide();
     }
+   
+   
   }
 
   async getPnr() {
@@ -122,6 +128,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.amadeusQueueService.queuePNR();
     this.amadeusQueueService.newQueueCollection();
+   
   }
 
   async getPnrService() {
@@ -130,6 +137,9 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    if (this.pnrService.pnrObj.header.recordLocator && (this.pnrService.tstObj || this.pnrService.tstObj.length>0)) {
+      this.showIrdRequestButton = true;
+    }
   }
 
   initData() {
@@ -334,7 +344,6 @@ export class CorporateComponent implements OnInit {
 
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
@@ -347,7 +356,6 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
-
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
@@ -378,6 +386,33 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+  async sendIrdRateParameters() {
+    if (!this.irdRateRequestComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Updating PNR...', 'SubmitToPnr');
+    let remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.commentsForm);
+    this.invoiceRemarkService.writeIrdRateRequestRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
+    this.invoiceRemarkService.addTravelTicketingQueue(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
+    await this.rms.submitToPnr(remarkList, [], [], []).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
   private getStaticModelRemarks(
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
@@ -541,7 +576,7 @@ export class CorporateComponent implements OnInit {
     }
   }
 
-  public async cancelSegment() {
+  public async cancelSegment() { 
     if (this.isPnrLoaded) {
       await this.getPnrService();
       if (this.checkHasPowerHotel()) {
@@ -559,6 +594,19 @@ export class CorporateComponent implements OnInit {
         this.setControl();
         // this.closePopup();
       }
+    }
+  }
+
+  async irdRateRequest() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'irdRateRequest';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
     }
   }
 

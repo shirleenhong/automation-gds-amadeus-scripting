@@ -1,0 +1,135 @@
+<form [formGroup]="irdRequestForm">
+    <div class="irdRateRequestContainer">
+
+        <div class="row form-group">
+            <div class="col-3"></div>
+        </div>
+        <div class="form-group  row">
+            <div class="col-sm-3">Consultant's Data </div>
+            <div class="col-sm-3">Name</div>
+            <div class="col-sm-2">CN Number</div>
+            <div class="col-sm-2">Office Id</div>
+            <!-- <div class="col-sm-3">Agent Queue & Category</div> -->
+        </div>
+
+        <div class="form-group  row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3">
+                <input class="form-control" type="text" name="name" id="name" formControlName="name" maxlength="25">
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control" type="text" name="cnNumber" id="cnNumber" formControlName="cnNumber">
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control" type="text" name="officeId" id="officeId" formControlName="officeId">
+            </div>
+            <!-- <div class="col-sm-2">
+                    <input class="form-control" type="text" name="queue" id="queue" formControlName="queue">
+                </div> -->
+        </div>
+
+        <div class="form-group  row">
+            <div class="col-sm-3"></div>
+           
+            <div class="col-sm-3">Fare Request</div>
+            <div class="col-sm-3">Agent Queue & Category</div>
+        </div>
+        <div class="form-group  row">
+            <div class="col-sm-3"></div>
+            
+            <div class="col-sm-3">
+                 <!-- <input class="form-control" type="text" name="fareRequest" id="fareRequest" formControlName="fareRequest">  -->
+
+            <input type="text" class="form-control" formControlName="fareRequest" id="fareRequest" list="fareRequestData" [(ngModel)]="fareRequest"
+                AllCapsMask (change)="fareRequestChanged($event.target.value)" required />
+            <datalist id="fareRequestData">
+                <option *ngFor="let item of fareRequestList" [value]="item.itemValue">{{ item.itemValue }} </option>
+            </datalist>
+            </div>
+            <div class="col-sm-2">
+                    <input class="form-control" type="text" name="queue" id="queue" formControlName="queue">
+                </div>
+        </div>
+        <br>
+        <div class="form-group  row">
+            <div class="col-sm-3">Flexibility : </div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="airFlexibility" id="airFlexibility" formControlName="airFlexibility">Air</div>
+        </div>
+        <div class="form-group  row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="dateFlexibility" id="dateFlexibility" formControlName="dateFlexibility">Date</div>
+        </div>
+        <div class="form-group  row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="scheduleFlexibility" id="scheduleFlexibility" formControlName="scheduleFlexibility">Schedule</div>
+        </div>
+        <br>
+      
+        <div formArrayName="stops" name="stops" *ngFor="let item of this.irdRequestForm.get('stops')['controls']; let i = index" class="col" style="padding-left: 0px">
+                <div [formGroupName]="i">
+                    <div class="row form-group">
+                    <div class="col-sm-3">Stop {{i+1}}</div>
+                    <div class="col-sm-2"> <input class="form-control" type="text" name="stops" id="stops" formControlName="stops"></div>
+                
+                <div  class="col-sm-1.5" *ngIf = "i<=2" (click)="addStops()">
+                        <i class="fas fa-plus-circle" id="add"></i>
+                        Add
+                      </div>
+                      <div class="col-sm-2"  *ngIf = "i>0" (click)="removeInputField(i,'stops')">
+                            <i class="fas fa-minus-circle" id="remove"></i>
+                            Remove
+                          </div>
+                    </div>
+            </div>
+        </div>
+
+<br>
+        <div class="form-group row">
+                        <div class="col-sm-3">
+                                Is Travel/Ticketing within 24 hours? 
+                        </div>
+                        <div class="w-10" style="margin-left: 10px">
+                          <label class="control control-radio isESCRead">
+                            <input type="radio" name="isTravel" class="travelTicketGroup" formControlName="isTravel" id="isTravel" value="Y" />Yes &nbsp;&nbsp;
+                            <div class="control_indicator"></div>
+                          </label>
+                        </div>
+                        <div class="w-20">
+                          <label class="control control-radio isESCRead">
+                            <input type="radio" name="isTravel" formControlName="isTravel" id="isTravel" value="N" class="travelTicketGroup" /> No
+                            <div class="control_indicator"></div>
+                          </label>
+                        </div>
+                    
+
+        </div>
+        
+
+
+
+    </div>
+</form>
+
+<form [formGroup]="commentsForm" class="form-group">
+        <div formArrayName="comments" name="comments" *ngFor="let item of this.commentsForm.get('comments')['controls']; let i = index" class="col" style="padding-left: 0px">
+                <div [formGroupName]="i">
+                    <div class="row form-group">
+                    <div class="col-sm-3">Comment{{i+1}}</div>
+                    <div class="col-sm-4"> <input class="form-control" type="text" name="comments" id="comments" formControlName="comments" maxlength="40"></div>
+                
+                <div  class="col-sm-1.5" *ngIf = "i<=6" (click)="addItem()">
+                        <i class="fas fa-plus-circle" id="add"></i>
+                        Add
+                      </div>
+
+                      <div class="col-sm-2" *ngIf = "i>0" (click)="removeInputField(i,'comments')">
+                            <i class="fas fa-minus-circle" id="remove"></i>
+                            Remove
+                          </div>
+                    </div>
+            </div>
+        </div>
+</form> 

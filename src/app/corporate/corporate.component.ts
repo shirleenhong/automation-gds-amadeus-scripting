@@ -46,7 +46,7 @@ import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { RuleWriterService } from '../service/business-rules/rule-writer.service';
-
+declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -137,7 +137,8 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
-    if (this.pnrService.pnrObj.header.recordLocator && (this.pnrService.tstObj || this.pnrService.tstObj.length>0)) {
+    const tst = smartScriptUtils.normalize(this.pnrService.tstObj);;
+    if (this.pnrService.pnrObj.header.recordLocator && tst.length>0) {
       this.showIrdRequestButton = true;
     }
   }

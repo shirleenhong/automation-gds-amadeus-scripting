@@ -319,25 +319,30 @@ export class InvoiceRemarkService {
     const map1 = new Map<string, string>();
     map1.set('ConsultantName', irdForm.controls.name.value);
     map1.set('CNNumber', irdForm.controls.cnNumber.value);
+    this.rms.createEmptyPlaceHolderValue(['ConsultantName', 'CNNumber']);
     this.rms.createPlaceholderValues(map1);
     const map2 = new Map<string, string>();
     map2.set('IrdDate',irdForm.controls.date.value );
     map2.set('ConsultantOid', irdForm.controls.officeId.value);
-    map2.set('IrdQueue',irdForm.controls.queue.value);
+    map2.set('IrdRateQueue',irdForm.controls.queue.value);
     map2.set('CFANumber', irdForm.controls.cfa.value);
+    this.rms.createEmptyPlaceHolderValue(['IrdDate', 'ConsultantOid','IrdRateQueue','CFANumber']);
     this.rms.createPlaceholderValues(map2);
     const map3 = new Map<string, string>();
     map3.set('FareRequest', irdForm.controls.fareRequest.value);
+    this.rms.createEmptyPlaceHolderValue(['FareRequest']);
     this.rms.createPlaceholderValues(map3);
     const map4 = new Map<string, string>();
-    map4.set('AirFlexibility', irdForm.controls.airFlexibility.value ? "Y" :"N");
+    map4.set('AirFlexibility', irdForm.controls.airFlexibility.value ? "Y" : "N");
+    this.rms.createEmptyPlaceHolderValue(['AirFlexibility']);
     this.rms.createPlaceholderValues(map4);
     const map5 = new Map<string, string>();
-    map5.set('DateFlexibilty', irdForm.controls.dateFlexibility.value ? "Y" :"N");
+    map5.set('DateFlexibilty', irdForm.controls.dateFlexibility.value ? "Y" : "N");
+    this.rms.createEmptyPlaceHolderValue(['DateFlexibilty']);
     this.rms.createPlaceholderValues(map5);
     const map6 = new Map<string, string>();
     map6.set('ScheduleFlexibility', irdForm.controls.scheduleFlexibility.value ? "Y" :"N");
-   
+    this.rms.createEmptyPlaceHolderValue(['ScheduleFlexibility']);
     this.rms.createPlaceholderValues(map6);
     const map7 = new Map<string, string>();
     const arr = irdForm.get('stops') as FormArray;
@@ -348,7 +353,14 @@ export class InvoiceRemarkService {
     }
     if (stopValue) {
       map7.set('Stops', stopValue);
+      this.rms.createEmptyPlaceHolderValue(['Stops']);
       this.rms.createPlaceholderValues(map7);
+    }
+    const map8 = new Map<string, string>();
+    if (irdForm.controls.fareRequest.value) {
+      map8.set('TravelQueue', irdForm.controls.fareRequest.value === 'Y' ? '40C250' : '40C240');
+      this.rms.createEmptyPlaceHolderValue(['TravelQueue']);
+      this.rms.createPlaceholderValues(map8);
     }
   }
 

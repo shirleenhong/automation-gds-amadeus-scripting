@@ -18,7 +18,7 @@
                 <input class="form-control" type="text" name="name" id="name" formControlName="name" maxlength="25">
             </div>
             <div class="col-sm-2">
-                <input class="form-control" type="text" name="cnNumber" id="cnNumber" formControlName="cnNumber">
+                <input class="form-control" type="text" name="cnNumber" id="cnNumber" formControlName="cnNumber" maxlength="3">
             </div>
             <div class="col-sm-2">
                 <input class="form-control" type="text" name="officeId" id="officeId" formControlName="officeId">
@@ -41,13 +41,13 @@
                  <!-- <input class="form-control" type="text" name="fareRequest" id="fareRequest" formControlName="fareRequest">  -->
 
             <input type="text" class="form-control" formControlName="fareRequest" id="fareRequest" list="fareRequestData" [(ngModel)]="fareRequest"
-                AllCapsMask (change)="fareRequestChanged($event.target.value)" required />
+                AllCapsMask (change)="fareRequestChanged($event.target.value)" required maxlength="40" />
             <datalist id="fareRequestData">
                 <option *ngFor="let item of fareRequestList" [value]="item.itemValue">{{ item.itemValue }} </option>
             </datalist>
             </div>
             <div class="col-sm-2">
-                    <input class="form-control" type="text" name="queue" id="queue" formControlName="queue">
+                    <input class="form-control" type="text" name="queue" id="queue" formControlName="queue" maxlength="7">
                 </div>
         </div>
         <br>
@@ -72,7 +72,7 @@
                 <div [formGroupName]="i">
                     <div class="row form-group">
                     <div class="col-sm-3">Stop {{i+1}}</div>
-                    <div class="col-sm-2"> <input class="form-control" type="text" name="stops" id="stops" formControlName="stops"></div>
+                    <div class="col-sm-2"> <input class="form-control" type="text" name="stops" id="stops" formControlName="stops" maxlength="3" AlphaMask></div>
                 
                 <div  class="col-sm-1.5" *ngIf = "i<=2" (click)="addStops()">
                         <i class="fas fa-plus-circle" id="add"></i>

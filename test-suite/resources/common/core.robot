@@ -27,6 +27,7 @@ Enter GDS Command
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    css=.cmdPromptDiv > textArea    ${gds_command}
     \    Press Key    css=.cmdPromptDiv > textArea    \\13
+    \    Wait Until Element Is Not Visible    //div[@class='processing']    30
 
 Enter Office ID
     [Arguments]    ${office_id}
@@ -91,7 +92,7 @@ Login To Amadeus Sell Connect
     Wait Until Element Is Not Visible    css=#logi_confirmButton .xButtonDisabled    30
     Click Element    css=#logi_confirmButton .xButton
     Handle Force Login Window
-    Wait Until Element Is Visible    css=.uicTaskbarText    30
+    Wait Until Element Is Visible    css=.uicTaskbarText    60
     Handle Accept Cookie Panel
     Add New Command Page
 
@@ -199,4 +200,4 @@ Get PNR Details
 
 Handle Smart Tool PopUp
     ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']    20
-    Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd'] 
+    Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']

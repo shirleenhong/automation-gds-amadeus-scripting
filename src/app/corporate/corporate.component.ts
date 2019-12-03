@@ -569,6 +569,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     try {
       await this.rms.getMatchcedPlaceholderValues();
+      await this.rulesEngine.initializeRulesEngine();
       this.workflow = 'sendQueue';
       this.closePopup();
     } catch (e) {
@@ -728,6 +729,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     try {
       await this.rms.getMatchcedPlaceholderValues();
+      await this.rulesEngine.initializeRulesEngine();
       this.workflow = 'sendInvoice';
       this.closePopup();
     } catch (e) {

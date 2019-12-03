@@ -41,8 +41,8 @@ export class RulesEngineService {
     return this.validBusinessRules && this.validBusinessRules.length > 0;
   }
 
-  loadBusinessEntityFromPnr() {
-    this.ruleReaderService.readPnr();
+  async loadBusinessEntityFromPnr() {
+    await this.ruleReaderService.readPnr();
     this.businessEntities = this.ruleReaderService.businessEntities;
   }
 
@@ -50,6 +50,19 @@ export class RulesEngineService {
     return this.businessRuleList.businessRules.filter((rule) =>
       this.ruleLogicService.isRuleLogicValid(rule.ruleLogic, this.businessEntities)
     );
+  }
+
+  /// get entity value first instance
+  getRuleResultValue(entityName: string) {
+    if (this.validBusinessRules) {
+      const result = this.validBusinessRules.filter(
+        (x) => x.ruleResult && x.ruleResult.filter((res) => res.businessEntityName === entityName).length > 0
+      );
+      if (result.length > 0) {
+        return result[0].getResultEntityValue(entityName);
+      }
+    }
+    return null;
   }
 
   checkRuleResultExist(entityName: string, ruleValue: string) {

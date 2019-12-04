@@ -46,6 +46,7 @@ ${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Se
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
+${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
@@ -57,6 +58,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
+@{ird_pages}    IRD Rate Request
 
 *** Keywords ***
 Enter Value
@@ -372,9 +374,11 @@ Finish PNR
     ${in_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     ${in_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${current_page}
+    ${in_ird}    Run Keyword And Return Status    Should Contain    ${ird_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Send Itinerary And Queue    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"    Fill Up Required And Cancel Segments
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_ird}" == "True"    Submit IRD Request
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
 
@@ -661,11 +665,23 @@ Complete The PNR In Full Wrap
     Finish PNR
 
 Click IRD Rate Request
-    # Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
-    # Click Element     ${button_send_invoice_itinerary} 
+    Wait Until Page Contains Element    ${button_ird_rate_request}      180
+    Click Element     ${button_ird_rate_request} 
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    IRD Rate Request
     Set Test Variable    ${pnr_submitted}   no
+    
+Submit IRD Request
+    [Arguments]    ${close_corporate_test}=yes
+    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Scroll Element Into View     ${button_submit_pnr}
+    Click Button    ${button_submit_pnr}
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    Set Test Variable    ${current_page}     CWT Corporate 
+    Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+    
+    
     

@@ -41,8 +41,8 @@ export class RulesEngineService {
     return this.validBusinessRules && this.validBusinessRules.length > 0;
   }
 
-  loadBusinessEntityFromPnr() {
-    this.ruleReaderService.readPnr();
+  async loadBusinessEntityFromPnr() {
+    await this.ruleReaderService.readPnr();
     this.businessEntities = this.ruleReaderService.businessEntities;
   }
 
@@ -50,6 +50,10 @@ export class RulesEngineService {
     return this.businessRuleList.businessRules.filter((rule) =>
       this.ruleLogicService.isRuleLogicValid(rule.ruleLogic, this.businessEntities)
     );
+  }
+
+  getRuleWithEntities(_enities: string[]) {
+    return this.validBusinessRules.filter((x) => x.hasResultEntities(_enities));
   }
 
   checkRuleResultExist(entityName: string, ruleValue: string) {

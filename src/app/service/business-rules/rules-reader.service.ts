@@ -39,9 +39,9 @@ export class RulesReaderService {
 
   constructor(private pnrService: PnrService, private ddbService: DDBService) { }
 
-  public readPnr() {
+  public async readPnr() {
     this.businessEntities = new Map<string, string>();
-    this.parseRemarks();
+    await this.parseRemarks();
     this.checkRouteCode();
   }
 
@@ -97,7 +97,8 @@ export class RulesReaderService {
   }
 
   private extractRemarks(remarksList, category, regex) {
-    const remarks = remarksList.filter((x) => x.category === category && x.freeFlowText.match(regex));
+    const regexp = new RegExp(regex);
+    const remarks = remarksList.filter((x) => x.category === category && regexp.test(x.freeFlowText));
     remarks.forEach((rm) => {
       this.setMatchEntity(regex, rm.freeFlowText);
     });

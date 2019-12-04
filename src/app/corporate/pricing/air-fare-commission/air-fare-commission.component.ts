@@ -11,6 +11,7 @@ import { UtilHelper } from 'src/app/helper/util.helper';
 export class AirFareCommissionComponent implements OnInit {
   airFares = [];
   newFmElements = [];
+  commissionTypes = ['Percentage', 'Dollar Amount'];
   isGenericFmPresent = false;
   constructor(private pnrService: PnrService, private fb: FormBuilder, private utilHelper: UtilHelper) { }
   airFareCommissionFormGroup = this.fb.group({
@@ -28,7 +29,17 @@ export class AirFareCommissionComponent implements OnInit {
     };
     const fmElements = this.pnrService.pnrObj.fmElements;
     this.newFmElements = this.formFMElements(fmElements);
-    const tstData = this.pnrService.getUnticketedCorpReceipts();
+    const tstData = this.getUnticketedTst();
+    for (const newFmEle of this.newFmElements) {
+      if (newFmEle.segments[0] === '') {
+        const airfareObject = JSON.parse(JSON.stringify(airFareObj));
+        airfareObject.oldCommission = newFmEle.commission;
+        airfareObject.segments = '';
+        this.airFares.push(airfareObject);
+        this.addAirFares(airfareObject.segments, airfareObject.oldCommission);
+        break;
+      }
+    }
     if (tstData.length > 0) {
       for (const tst of tstData) {
         const airfareObject = JSON.parse(JSON.stringify(airFareObj));
@@ -58,12 +69,79 @@ export class AirFareCommissionComponent implements OnInit {
     }
     return exchangeTatooNumbers;
   }
+  getUnticketedTst() {
+    const tsts = this.pnrService.getUnticketedCorpReceipts();
+    const tstData = [];
+    const tstMap = new Map<string, boolean>();
+    for (const tst of tsts) {
+      if (!tstMap.get(tst.tstNumber)) {
+        tstData.push(tst);
+        tstMap.set(tst.tstNumber, true);
+      }
+    }
+    return tstData;
+  }
   checkChange(group) {
     if (group.get('chkIncluded').value === true) {
       this.addValidation(group, 'commission');
       this.utilHelper.validateAllFields(group);
+      this.disableFMLines(group);
     } else {
       this.removeValidation(group, 'commission');
+      this.enableFmLines(group);
+    }
+  }
+  disableFMLines(group) {
+    const fmLines = this.airFareCommissionFormGroup.get('airFares') as FormArray;
+    if (group.get('segments').value === '') {
+      for (const fmLine of fmLines.controls) {
+        if (fmLine.get('segments').value !== '') {
+          fmLine.get('chkIncluded').disable();
+          fmLine.get('segments').disable();
+          fmLine.get('commissionType').disable();
+          fmLine.get('commission').disable();
+        }
+      }
+    } else {
+      for (const fmLine of fmLines.controls) {
+         if (fmLine.get('segments').value === '') {
+          fmLine.get('chkIncluded').disable();
+          fmLine.get('segments').disable();
+          fmLine.get('commissionType').disable();
+          fmLine.get('commission').disable();
+        }
+      }
+    }
+  }
+  enableFmLines(group) {
+    const fmLines = this.airFareCommissionFormGroup.get('airFares') as FormArray;
+    if (group.get('segments').value === '') {
+      for (const fmLine of fmLines.controls) {
+        if (fmLine.get('segments').value !== '') {
+          fmLine.get('chkIncluded').enable();
+          fmLine.get('segments').enable();
+          fmLine.get('commissionType').enable();
+          fmLine.get('commission').enable();
+        }
+      }
+    } else {
+      let isAllUnchecked = true;
+      for (const fmLine of fmLines.controls) {
+        if (fmLine.get('segments').value !== '' && fmLine.get('chkIncluded').value === true) {
+          isAllUnchecked = false;
+          break;
+        }
+      }
+      if (isAllUnchecked) {
+        for (const fmLine of fmLines.controls) {
+          if (fmLine.get('segments').value === '') {
+           fmLine.get('chkIncluded').enable();
+           fmLine.get('segments').enable();
+           fmLine.get('commissionType').enable();
+           fmLine.get('commission').enable();
+         }
+       }
+      }
     }
   }
   addValidation(group: any, controlName: string) {
@@ -80,6 +158,7 @@ export class AirFareCommissionComponent implements OnInit {
     const formGroup = this.fb.group({
       chkIncluded: new FormControl(''),
       segments: new FormControl(segment),
+      commissionType: new FormControl(''),
       commission: new FormControl(commission)
     });
     formGroup.get('segments').setValue(segment);
@@ -108,7 +187,7 @@ export class AirFareCommissionComponent implements OnInit {
         fmObject.commission = match[0];
       }
       fmObject.segments = this.getSegments(fmEle.associations);
-      if (fmObject.segments.length === 0) {
+      if (fmObject.segments[0] === '') {
         this.isGenericFmPresent = true;
       }
       fmObject.lineNo = fmEle.elementNumber;
@@ -131,6 +210,8 @@ export class AirFareCommissionComponent implements OnInit {
           }
         }
       }
+    } else {
+      segments.push('');
     }
     return segments;
   }

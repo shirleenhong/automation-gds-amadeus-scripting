@@ -6,6 +6,9 @@
       Segments
     </div>
     <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
+      Commission Type
+    </div>
+    <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
       Commission
     </div>
   </div>
@@ -17,6 +20,13 @@
       </div>
       <div class="col-3" style="width:12%;text-align:left">
         <input formControlName="segments" type="text" class="form-control" readonly />
+      </div>
+      <div class="col-3" style="width:12%;text-align:left">
+        <select id = "commissionType" formControlName = "commissionType" class="form-control" name="commissionType">
+          <option *ngFor = "let type of commissionTypes" [value] = "type">
+            {{type}}
+          </option>
+        </select>
       </div>
       <div class="col-3" style="width:12%;text-align:left">
         <input formControlName="commission" type="text" class="form-control"/>

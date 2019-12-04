@@ -25,6 +25,10 @@ export class BusinessRule {
     return '';
   }
 
+  hasResultEntities(entities: string[]) {
+    return this.ruleResult.filter((x) => entities.indexOf(x.businessEntityName) >= 0).length >= entities.length;
+  }
+
   constructor(jsonObj) {
     if (jsonObj) {
       this.categoryName = jsonObj.CategoryName;

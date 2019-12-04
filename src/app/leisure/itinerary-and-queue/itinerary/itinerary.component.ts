@@ -53,20 +53,29 @@ export class ItineraryComponent implements OnInit {
     this.readServiceFromPnr();
     this.loadTransactionType();
     this.readDefaultLanguage();
+    this.loadRulesEngine();
+  }
+
+  loadRulesEngine() {
     if (this.counselorDetail.isCorporate) {
-      const allowedEmail = this.rulesEngine.getRuleResultValue('UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY');
-      if (allowedEmail) {
-        this.itineraryForm.get('emailAddresses').valueChanges.subscribe(() => {
-          if (this.itineraryForm.get('emailAddresses').value.length >= Number(allowedEmail)) {
+      const rules = this.rulesEngine.getRuleWithEntities(['UI_DISPLAY_CONTAINER', 'UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY']);
+      rules.forEach((rule) => {
+        if (rule.getResultEntityValue('UI_DISPLAY_CONTAINER') === 'Send Itinerary') {
+          const allowedEmail = rule.getResultEntityValue('UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY');
+          if (allowedEmail) {
+            this.itineraryForm.get('emailAddresses').valueChanges.subscribe(() => {
+              if (this.itineraryForm.get('emailAddresses').value.length >= Number(allowedEmail)) {
+                this.add = false;
+              }
+            });
+          }
+          if (Number(allowedEmail) === 1) {
             this.add = false;
           }
-        });
-      }
-      if (Number(allowedEmail) === 1) {
-        this.add = false;
-      }
-      this.displayMessage = this.rulesEngine.getRuleResultValue('UI_DISPLAY_MESSAGE');
-      this.displayMessage = this.displayMessage.replace('\\t\\n', '<BR>');
+          const msg = rule.getResultEntityValue('UI_DISPLAY_MESSAGE').replace('\\t\\n', '<BR>');
+          this.displayMessage += msg + '<BR>';
+        }
+      });
     }
   }
 

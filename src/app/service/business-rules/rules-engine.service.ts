@@ -52,17 +52,8 @@ export class RulesEngineService {
     );
   }
 
-  /// get entity value first instance
-  getRuleResultValue(entityName: string) {
-    if (this.validBusinessRules) {
-      const result = this.validBusinessRules.filter(
-        (x) => x.ruleResult && x.ruleResult.filter((res) => res.businessEntityName === entityName).length > 0
-      );
-      if (result.length > 0) {
-        return result[0].getResultEntityValue(entityName);
-      }
-    }
-    return null;
+  getRuleWithEntities(_enities: string[]) {
+    return this.validBusinessRules.filter((x) => x.hasResultEntities(_enities));
   }
 
   checkRuleResultExist(entityName: string, ruleValue: string) {

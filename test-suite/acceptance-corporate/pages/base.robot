@@ -384,13 +384,13 @@ Finish PNR
 
 Send Itinerary And Queue
     [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
+    Scroll Element Into View    ${panel_queue}
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
     Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
     Click Submit To PNR    ${close_corporate_test}    ${queueing}
 
 Fill Up Required And Cancel Segments
      Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
-     # Run Keyword If     "${non_bsp_ticket_credit_complete}" == "no"    Fill Up NonBSP Ticket Credit With Default Values
      Click Cancel Segment Button
     
 Submit To PNR

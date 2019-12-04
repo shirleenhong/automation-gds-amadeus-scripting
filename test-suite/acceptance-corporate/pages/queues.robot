@@ -37,6 +37,7 @@ ${div_tickets}    //div[@ng-reflect-name='tickets']
 ${div_offers}     //div[@ng-reflect-name='offers']
 ${tab_cwt_itinerary}    //a[@id='tab2-link']
 ${option_email}    //option[@ng-reflect-value='
+${div_label_ornge}    //div[@class='col displayMsg']//p[@_ngcontent-c17]
 
 *** Keywords ***
 Click OFC Documentation And Queue Tab
@@ -356,3 +357,13 @@ Delete Offer Remark
     : FOR     ${index}    IN RANGE    1    ${num_of_element}
     \    ${matches}    Run Keyword And Return Status    Element Should Contain     ${div_offers}${open_bracket}${index}${close_bracket}${input_offer}    ${offer_remark}
     \    Run Keyword If    "${matches}" == "True"    Click Element    ${div_offers}${open_bracket}${index}${close_bracket}${button_remove}
+
+Verify CWT Itinerary UI For Client Ornge
+    Navigate To Page CWT Itinerary
+    Wait Until Element Is Visible    ${div_label_ornge}    20
+    Element Should Not Be Visible    ${div_email_addresses}${button_add}
+    ${ornge_label}    Get Text    ${div_label_ornge}
+    ${new_ornge_label}    Replace String    ${ornge_label}    \n    ${EMPTY}
+    Should Be Equal    ${new_ornge_label}    ORNGE REQUIRES THE TRAVELLER'S E-MAIL ONLY.Travel Arranger’s will automatically receive an email from AQUA
+    Log    Expected: ${new_ornge_label}
+    Log    Actual: ORNGE REQUIRES THE TRAVELLER'S E-MAIL ONLY.Travel Arranger’s will automatically receive an email from AQUA

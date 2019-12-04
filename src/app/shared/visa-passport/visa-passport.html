@@ -25,7 +25,7 @@
     </div>
 
     <div class="row form-group">
-      <div class="col-8">
+      <div class="col-8 advisory">
         <span class="p1">1. Advice Verbal Visa and Passport Information to client. <br>
           2. International Travel advisory must be sent to traveler / travel arranger <br>
           3. Click on [Go to e-Traveladvisories] to send email to traveler (if not yet sent) <br></span>
@@ -33,7 +33,9 @@
     </div><br>
 
     <div *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'VISA AND PASSPORT')" class="row form-group">
-      <app-container [containerFilter]="'VISA AND PASSPORT'"></app-container>
+      <div class="col-8 advisory">
+        <app-container [containerFilter]="'VISA AND PASSPORT'"></app-container>
+      </div>
     </div><br>
 
     <div *ngIf="this.advisoryClicked === true || hasAdvisoryLine() || f.senttraveladvicory.value">

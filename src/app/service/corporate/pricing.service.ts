@@ -31,14 +31,19 @@ export class PricingService {
       if (group.get('chkIncluded').value === true) {
         for (const airFare of airfareComponent.airFares) {
           if (group.get('segments').value === airFare.segments) {
-            rmGroup.cryptics.push(this.addFMElement(group, airFare));
-            const fmLineNum = this.getDeletedFmLine(airFare.segments, airfareComponent.newFmElements);
-            if (fmLineNum !== '') {
-              this.toDeleteFmLines.push(fmLineNum);
+            if (group.get('segments').value === '') {
+              rmGroup.cryptics.push(this.addFMElement(group, airFare));
+            } else {
+              rmGroup.cryptics.push(this.addFMElement(group, airFare));
+              const fmLineNum = this.getDeletedFmLine(airFare.segments, airfareComponent.newFmElements);
+              if (fmLineNum !== '') {
+                this.toDeleteFmLines.push(fmLineNum);
+              }
             }
             break;
           }
         }
+        // isFMSelectedUI = group.get('segments').value === '' ? false : true;
         isFMSelectedUI = true;
       }
     }
@@ -63,7 +68,7 @@ export class PricingService {
   getGenericFmLine(fmElements) {
     let lineNo = '';
     for (const fmEle of fmElements) {
-      if (fmEle.segments.length === 0) {
+      if (fmEle.segments[0] === '') {
         lineNo = fmEle.lineNo;
         break;
       }
@@ -71,13 +76,23 @@ export class PricingService {
     return lineNo;
   }
   addFMElement(group, airFare) {
+    let commission = group.get('commission').value;
+    if (group.get('commissionType').value === 'Dollar Amount') {
+      commission += 'A';
+    } else {
+      commission = commission.indexOf('A') > -1 ? commission.replace('A', '') : commission;
+    }
     let rmkText = '';
     if (airFare.oldCommission === '') {
-      rmkText = group.get('commission').value + '/';
+      rmkText = commission;
     } else {
-      rmkText = group.get('commission').value + '/XO/' + airFare.oldCommission + '/';
+      rmkText = commission + '/XO/' + airFare.oldCommission;
     }
-    return 'FM ' + rmkText + 'S' + airFare.segments;
+    return this.formFmCommand(rmkText, airFare.segments);
+  }
+  formFmCommand(rmkText, segments) {
+    const tempFmCommand = 'FM' + rmkText;
+    return segments === '' ? tempFmCommand : tempFmCommand + '/S' + segments;
   }
   getRemark(remarkText, remarkType, relatedSegments) {
     const rem = new RemarkModel();

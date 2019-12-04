@@ -18,6 +18,21 @@ ${input_email}    //input[@id='emailAddress']
 ${form_email}    //div[@formarrayname='emailAddresses']
 ${button_emailAdd}    //div[@formarrayname='emailAddresses']//i[@id='add']
 ${checkbox_select}    //input[@type='checkbox']
+${input_consultant_name}    css=#name
+${input_consultant_number}    css=#cnNumber
+${input_consultant_oid}    css=#officeId
+${input_agent_queue}     css=#queue
+${input_fare_request}    css=#fareRequest
+${checkbox_air}    css=#airFlexibility
+${checkbox_date}    css=#dateFlexibility
+${checkbox_schedule}    css=#scheduleFlexibility
+${input_stopver}    //input[@id='stops']
+${input_comments}    //input[@id='comments']
+${button_add}    //i[@id='add']
+${row_stopver}    //div[@formarrayname='stops']
+${row_comments}    //div[@formarrayname='comments']
+${input_isTravel_yes}     //input[@id='isTravel'][@value='Y']
+${input_isTravel_no}     //input[@id='isTravel'][@value='N']
 
 
 *** Keywords ***
@@ -269,3 +284,103 @@ Verify New MAC Remarks Are Written
     Verify Specific Remark Is Written In The PNR     RM *MAC/-LK-MAC2/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0820/-TK-
     Verify Specific Remark Is Written In The PNR     2211333555/-MP-ALL/-BKN-CON1234567/S2
      
+Populate IRD Rate Request Mandatory And Optional Fields
+    Navigate To Page IRD Rate Request
+    Enter Value    ${input_consultant_name}     Consultant Name
+    Enter Value    ${input_consultant_number}    AB1
+    Enter Value    ${input_consultant_oid}     YTOWL2107
+    Enter Value    ${input_fare_request}    F Class
+    Verify Agent Queue And Category Default Value
+    Select Checkbox    ${checkbox_air}
+    Select Checkbox    ${checkbox_date}
+    Select Checkbox    ${checkbox_schedule}
+    Add Stopovers    CDG
+    Select Yes On Is Travel Within 24 Hours
+    Enter Value    ${input_comments}    This is test comment
+    Take Screenshot
+
+Populate IRD Rate Request Mandatory Fields Only
+    Set Test Variable    ${actual_agent_queue}    51C200
+    Navigate To Page IRD Rate Request
+    Enter Value    ${input_consultant_name}     Consultant Name
+    Enter Value    ${input_consultant_number}    AB1
+    Enter Value    ${input_consultant_oid}     YTOWL2107
+    Enter Value    ${input_fare_request}    J Class
+    Enter Value    ${input_agent_queue}     ${actual_agent_queue}
+    Select No On Is Travel Within 24 Hours
+    Take Screenshot
+
+Populate IRD Rate Request With Multiple Stopovers
+    Navigate To Page IRD Rate Request
+    Enter Value    ${input_consultant_name}     Consultant Name
+    Enter Value    ${input_consultant_number}    AB1
+    Enter Value    ${input_consultant_oid}     YTOWL2107
+    Enter Value    ${input_fare_request}    F Class
+    Verify Agent Queue And Category Default Value
+    Select Checkbox    ${checkbox_air}
+    Select Checkbox    ${checkbox_schedule}
+    Add Stopovers    CDG    LHR    BCN    AMS
+    Select Yes On Is Travel Within 24 Hours
+    Enter Value    ${input_comments}    This is test comment
+    Take Screenshot
+    
+Populate IRD Rate Request With Multiple Comments
+    Navigate To Page IRD Rate Request
+    Enter Value    ${input_consultant_name}     Consultant Name
+    Enter Value    ${input_consultant_number}    AB1
+    Enter Value    ${input_consultant_oid}     YTOWL2107
+    Enter Value    ${input_fare_request}    F Class
+    Verify Agent Queue And Category Default Value
+    Select Checkbox    ${checkbox_air}
+    Select Checkbox    ${checkbox_date}
+    Select No On Is Travel Within 24 Hours
+    Add Comments    This is test comment1    This is test comment2    This is test comment3    This is test comment4    This is test comment5    This is test comment6    This is test comment7    This is test comment8
+    Take Screenshot
+    
+Select ${is_travel_value} On Is Travel Within 24 Hours
+    Run Keyword If    '${is_travel_value}' == 'Yes'    Click Element At Coordinates   ${input_isTravel_yes}    0     0    ELSE      Click Element At Coordinates   ${input_isTravel_no}    0    0
+
+Add Stopovers
+    [Arguments]    @{stopovers_codes}
+    Set Test Variable    ${index}    0
+    : FOR    ${stopovers_codes}    IN    @{stopovers_codes}
+    \    ${index}    Evaluate    ${index} + 1 
+    \    Run Keyword If    '${index}' != '1'    Click Add Stopover
+    \    Enter Value    ${row_stopver}${open_bracket}${index}${close_bracket}${input_stopver}    ${stopovers_codes}
+
+Add Comments
+    [Arguments]    @{comments}
+    Set Test Variable    ${index}    0
+    : FOR    ${comments}    IN    @{comments}
+    \    ${index}    Evaluate    ${index} + 1 
+    \    Run Keyword If    '${index}' != '1'    Click Add Comment
+    \    Enter Value    ${row_comments}${open_bracket}${index}${close_bracket}${input_comments}    ${comments}
+
+Click Add Stopover
+    Click Element    ${row_stopver}${open_bracket}1${close_bracket}${button_add}
+    
+Click Add Comment
+    Click Element    ${row_comments}${open_bracket}1${close_bracket}${button_add}
+  
+Verify Agent Queue And Category Default Value
+    ${actual_agent_queue}    Get Value    ${input_agent_queue}
+    Should Be Equal    ${actual_agent_queue}    50C231
+    Set Test Variable    ${actual_agent_queue}
+    
+Verify IRD Rate Request Remarks Are Written
+    Finish PNR
+    Assign Current Date
+    Verify Expected Remarks Are Written In The PNR
+    Verify Unexpected Remarks Are Not Written In The PNR
+    Verify Specific Remark Is Written In The PNR    RMF DATE-${current_date} OID-YTOWL2107 AGENT QUEUE/CATEGORY - ${actual_agent_queue} CFA-AAA    True
+    
+Verify That PNR Is Queued When Travel Is ${travel_time} 24 Hrs
+    Open Command Page
+    Enter Cryptic Command    RTQ 
+    # Run Keyword If    '${travel_time}' == 'Within'    Element Should Contain    ${text_area_command}    YTOWL210N${SPACE}${SPACE}${SPACE}${SPACE}040${SPACE}${SPACE}${SPACE}${SPACE}250
+    # ...    ELSE    Element Should Contain    ${text_area_command}    YTOWL210N${SPACE}${SPACE}${SPACE}${SPACE}040${SPACE}${SPACE}${SPACE}${SPACE}240
+    Element Should Contain    ${text_area_command}    YTOWL210N${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}000
+
+Verify That IRD Rate Request Is Not Displayed On the Main Menu
+    Open CA Corporate Test
+    Page Should Not Contain Element    ${input_agent_queue} 

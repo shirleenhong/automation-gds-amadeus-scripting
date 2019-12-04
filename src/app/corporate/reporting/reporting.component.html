@@ -23,6 +23,6 @@
   </tab>
 
   <tab heading="Rules" id="rules" tabOrder="8" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'REPORTING')">
-    <app-container></app-container>
+    <app-container [containerFilter]="'REPORTING'"></app-container>
   </tab>
 </tabset>

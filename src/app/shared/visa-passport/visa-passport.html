@@ -16,9 +16,10 @@
       <div class="col-5">
       </div>
       <div class="col-6"> <input type="checkbox" name="senttraveladvicory" formControlName="senttraveladvicory"
-          id="senttraveladvicory" (change)="showsenttraveladvicory($event.target.checked)" [(ngModel)]="isInternationalTravelAdvisorySent" />
+          id="senttraveladvicory" (change)="showsenttraveladvicory($event.target.checked)"
+          [(ngModel)]="isInternationalTravelAdvisorySent" />
         <span [ngClass]="{ 'text-danger': isInternational && !isInternationalTravelAdvisorySent && !advisoryClicked }">
-            International Travel Advisory Already Sent
+          International Travel Advisory Already Sent
         </span>
       </div>
     </div>
@@ -29,6 +30,10 @@
           2. International Travel advisory must be sent to traveler / travel arranger <br>
           3. Click on [Go to e-Traveladvisories] to send email to traveler (if not yet sent) <br></span>
       </div>
+    </div><br>
+
+    <div *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'VISA AND PASSPORT')" class="row form-group">
+      <app-container [containerFilter]="'VISA AND PASSPORT'"></app-container>
     </div><br>
 
     <div *ngIf="this.advisoryClicked === true || hasAdvisoryLine() || f.senttraveladvicory.value">

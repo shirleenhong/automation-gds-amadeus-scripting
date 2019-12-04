@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
+import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,14 +34,15 @@ export class RulesReaderService {
     { type: 'RM', category: 'Y', regex: /(?<PNR_Y>.*)$/g },
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
     { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g },
-    { type: 'RM', category: '*', regex: /CFA\/-(?<PNR_CFA>[A-Z0-9]{3})/g }
+    { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g }
   ];
 
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService) { }
 
   public readPnr() {
     this.businessEntities = new Map<string, string>();
     this.parseRemarks();
+    this.checkRouteCode();
   }
 
   private setMatchEntity(regex, text) {
@@ -99,5 +101,12 @@ export class RulesReaderService {
     remarks.forEach((rm) => {
       this.setMatchEntity(regex, rm.freeFlowText);
     });
+  }
+
+  private checkRouteCode() {
+    const route = this.ddbService.isPnrTransBorder() ? 'TRANSBORDER' : this.ddbService.isPnrDomestic() ? 'DOMESTIC' : 'INTERNATIONAL';
+    if (route) {
+      this.businessEntities.set('PNR_AIR_SEGMENT_ROUTE_CODE', route);
+    }
   }
 }

@@ -1,10 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { DDBService } from 'src/app/service/ddb.service';
 // import { VisaPassportModel } from '../../models/visa-passport-view.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { VisaPassportRemarkService } from 'src/app/service/visa-passport-remark.service';
 import { VisaPassportModel } from 'src/app/models/visa-passport-view.model';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { ContainerComponent } from 'src/app/corporate/business-rules/container/container.component';
+
 declare var smartScriptSession: any;
 
 @Component({
@@ -28,13 +31,15 @@ export class VisaPassportComponent implements OnInit {
   isInternational = false;
 
   isInternationalTravelAdvisorySent = false;
+  @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
   constructor(
     private fb: FormBuilder,
     private ddbService: DDBService,
     private pnrService: PnrService,
-    private visaService: VisaPassportRemarkService
-  ) {}
+    private visaService: VisaPassportRemarkService,
+    private rulesEngineService: RulesEngineService
+  ) { }
 
   ngOnInit() {
     this.visaPassportView = new VisaPassportModel();
@@ -80,11 +85,11 @@ export class VisaPassportComponent implements OnInit {
       })
       .then(
         // tslint:disable-next-line: only-arrow-functions
-        function(data) {
+        function (data) {
           console.log(data);
         },
         // tslint:disable-next-line: only-arrow-functions
-        function(error) {
+        function (error) {
           console.log(error);
         }
       );
@@ -248,10 +253,10 @@ export class VisaPassportComponent implements OnInit {
       for (let i = 1; i < originDestination.length; i++) {
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
-            '/' +
-            originDestination[i].departuredate.substr(0, 2) +
-            '/' +
-            originDestination[i].departuredate.substr(4, 2)
+          '/' +
+          originDestination[i].departuredate.substr(0, 2) +
+          '/' +
+          originDestination[i].departuredate.substr(4, 2)
         );
         if (convertedDate.toDateString() === firstDepDate.toDateString()) {
           mainOrigin = originDestination[i].origin;
@@ -362,5 +367,11 @@ export class VisaPassportComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  hasRules(entityName: string, resultValue: string) {
+    console.log(name);
+
+    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

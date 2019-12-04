@@ -205,12 +205,13 @@ export class ItineraryComponent implements OnInit {
   }
 
   addItems(type) {
+    const maxRows = 11;
     let items;
     switch (type) {
       case 'email':
         items = this.itineraryForm.controls.emailAddresses as FormArray;
         items.push(this.createFormGroup());
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.add = true;
           this.remove = true;
         } else {
@@ -220,7 +221,7 @@ export class ItineraryComponent implements OnInit {
       case 'service':
         items = this.itineraryForm.controls.services as FormArray;
         items.push(this.createServiceFormGroup('SERVICE'));
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.addservice = true;
           this.removeservice = true;
         } else {
@@ -230,7 +231,7 @@ export class ItineraryComponent implements OnInit {
       case 'ticket':
         items = this.itineraryForm.controls.tickets as FormArray;
         items.push(this.createServiceFormGroup('TICKET'));
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.addticket = true;
           this.removeticket = true;
         } else {
@@ -240,7 +241,7 @@ export class ItineraryComponent implements OnInit {
       case 'offer':
         items = this.itineraryForm.controls.offers as FormArray;
         items.push(this.createServiceFormGroup('OFFER'));
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.addoffer = true;
           this.removeoffer = true;
         } else {

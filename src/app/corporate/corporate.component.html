@@ -49,13 +49,13 @@
       </div>
       <app-ticketing></app-ticketing>
     </accordion-group>
-    <accordion-group [panelClass] = "'customClass'">
-        <div accordion-heading>
-            <i class="fas fa-ticket-alt"></i> Pricing
-            <i [ngClass]="validModel.pricingValidCss"></i>
-            <span class="cwt-logo"></span>
-          </div>
-          <app-pricing></app-pricing>
+    <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <i class="fas fa-ticket-alt"></i> Pricing
+        <i [ngClass]="validModel.pricingValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-pricing></app-pricing>
     </accordion-group>
   </accordion>
 
@@ -185,7 +185,7 @@
   </div>
 </div>
 
-<div *ngIf="workflow === ''" class="loaderBody">
+<div *ngIf="isPnrLoaded && workflow === ''" class="loaderBody">
   <div class="loader">
     <div>
       Corporate

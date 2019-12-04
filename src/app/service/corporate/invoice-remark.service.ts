@@ -348,7 +348,7 @@ export class InvoiceRemarkService {
     const arr = irdForm.get('stops') as FormArray;
     let stopValue = '';
     for (const c of arr.controls) {
-      stopValue = stopValue + c.get('stops').value + (c==arr.controls[arr.controls.length-1] ? '': '*');
+      stopValue = stopValue + c.get('stops').value + (c==arr.controls[arr.controls.length-1] ? '': ' * ');
       
     }
     if (stopValue) {
@@ -357,8 +357,8 @@ export class InvoiceRemarkService {
       this.rms.createPlaceholderValues(map7);
     }
     const map8 = new Map<string, string>();
-    if (irdForm.controls.fareRequest.value) {
-      map8.set('TravelQueue', irdForm.controls.fareRequest.value === 'Y' ? '40C250' : '40C240');
+    if (irdForm.controls.isTravel.value) {
+      map8.set('TravelQueue', irdForm.controls.isTravel.value === 'Y' ? '40C250' : '40C240');
       this.rms.createEmptyPlaceHolderValue(['TravelQueue']);
       this.rms.createPlaceholderValues(map8);
     }

@@ -19,7 +19,7 @@ export class RulesEngineService {
     private pnrService: PnrService,
     private ruleLogicService: RulesLogicService,
     private ruleReaderService: RulesReaderService
-  ) {}
+  ) { }
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -76,6 +76,22 @@ export class RulesEngineService {
     });
     return hasRule;
   }
+
+  getAddControlRuleValues(container: string) {
+    const formData = [];
+    this.validBusinessRules.forEach((bRule) => {
+      const look = bRule.ruleResult.find((x) => x.businessEntityName === 'UI_DISPLAY_CONTAINER' && x.resultItemValue === container);
+      if (look) {
+        bRule.ruleResult.forEach((result) => {
+          if (result.businessEntityName === 'UI_ADD_CONTROL') {
+            formData.push(new BusinessRulesFormData(result.resultItemValue));
+          }
+        });
+      }
+    });
+    return { formData };
+  }
+
 
   getSpecificRulesValue(entityName: string) {
     const resultItems = [];

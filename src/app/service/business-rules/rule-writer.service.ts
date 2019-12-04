@@ -10,7 +10,7 @@ import { PnrService } from '../pnr.service';
 })
 export class RuleWriterService {
   additionaRemarks = [];
-  constructor(private res: RulesEngineService, private remarkHelper: RemarkHelper, private pnrService: PnrService) {}
+  constructor(private res: RulesEngineService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */

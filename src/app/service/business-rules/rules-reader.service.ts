@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
+import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,11 +37,12 @@ export class RulesReaderService {
     { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g }
   ];
 
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService) { }
 
   public async readPnr() {
     this.businessEntities = new Map<string, string>();
     await this.parseRemarks();
+    this.checkRouteCode();
   }
 
   private setMatchEntity(regex, text) {
@@ -100,5 +102,12 @@ export class RulesReaderService {
     remarks.forEach((rm) => {
       this.setMatchEntity(regex, rm.freeFlowText);
     });
+  }
+
+  private checkRouteCode() {
+    const route = this.ddbService.isPnrTransBorder() ? 'TRANSBORDER' : this.ddbService.isPnrDomestic() ? 'DOMESTIC' : 'INTERNATIONAL';
+    if (route) {
+      this.businessEntities.set('PNR_AIR_SEGMENT_ROUTE_CODE', route);
+    }
   }
 }

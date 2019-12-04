@@ -112,15 +112,15 @@ export class CorporateComponent implements OnInit {
   ) {
     this.initData();
     this.getPnrService();
-   
+
   }
 
   async ngOnInit(): Promise<void> {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-   
-   
+
+
   }
 
   async getPnr() {
@@ -128,7 +128,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.amadeusQueueService.queuePNR();
     this.amadeusQueueService.newQueueCollection();
-   
+
   }
 
   async getPnrService() {
@@ -226,7 +226,6 @@ export class CorporateComponent implements OnInit {
       this.workflow = 'error';
     } else {
       try {
-        await this.rulesEngine.initializeRulesEngine();
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');
@@ -238,6 +237,7 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
+        await this.rulesEngine.initializeRulesEngine();
       } catch (e) {
         console.log(e);
       }
@@ -578,7 +578,7 @@ export class CorporateComponent implements OnInit {
     }
   }
 
-  public async cancelSegment() { 
+  public async cancelSegment() {
     if (this.isPnrLoaded) {
       await this.getPnrService();
       if (this.checkHasPowerHotel()) {

@@ -21,6 +21,6 @@
   </tab>
 
   <tab heading="Rules" id="rules" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'REMARKS')">
-    <app-container></app-container>
+    <app-container [containerFilter]="'REMARKS'"></app-container>
   </tab>
 </tabset>

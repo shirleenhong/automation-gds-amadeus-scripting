@@ -37,7 +37,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private pnrService: PnrService,
     private rulesEngineService: RulesEngineService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.hasTst = true;

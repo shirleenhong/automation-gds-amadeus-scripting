@@ -38,13 +38,14 @@ export class RulesReaderService {
     { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g }
   ];
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService) { }
+  constructor(private pnrService: PnrService, private ddbService: DDBService) {}
 
   public async readPnr() {
     this.businessEntities = new Map<string, string>();
     await this.parseRemarks();
     this.checkRouteCode();
     this.parseAirSegments();
+    this.parseAirlineCodes();
     this.getArrivaltime();
   }
 
@@ -122,12 +123,24 @@ export class RulesReaderService {
     this.businessEntities.set('PNR_AIR_SEGMENT_AIRPORT_CODE', codes.join(','));
   }
 
+  private parseAirlineCodes() {
+    const codes = [];
+    if (this.pnrService.segments !== undefined && this.pnrService.segments.length > 0) {
+      this.pnrService.segments.forEach((x) => {
+        if (x.segmentType === 'AIR' && !codes.includes(x.airlineCode)) {
+          codes.push(x.airlineCode);
+        }
+      });
+    }
+    this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join(','));
+  }
+
   private getArrivaltime() {
     const segment = this.pnrService.getSegmentList();
     const keyarr = 'PNR_AIR_SEGMENT_ARR_TIME';
     const keydept = 'PNR_AIR_SEGMENT_DEPT_TIME';
     if (segment) {
-      segment.forEach(element => {
+      segment.forEach((element) => {
         if (element.arrivalStation === 'CCS' || element.cityCode === 'CCS') {
           this.AssignKeyValue(keyarr, element.arrivalTime);
           this.AssignKeyValue(keydept, element.departureTime);

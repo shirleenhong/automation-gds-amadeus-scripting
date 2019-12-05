@@ -7,5 +7,9 @@ export enum RuleLogicEnum {
   IN = 6,
   NOT_IN = 7,
   MAY_CONTAIN = 10,
-  MAY_NOT_CONTAIN = 11
+  MAY_NOT_CONTAIN = 11,
+  GREATER_THAN_EQUAL = 12,
+  LESS_THAN_EQUAL = 13,
+  BETWEEN = 16,
+  NOT_BETWEEN = 17
 }

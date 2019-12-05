@@ -18,7 +18,7 @@ declare var smartScriptSession: any;
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
-  constructor(private pnrService: PnrService, private queService: AmadeusQueueService, private rms: RemarksManagerService, private remarkHelper: RemarkHelper) {}
+  constructor(private pnrService: PnrService, private queService: AmadeusQueueService, private rms: RemarksManagerService, private remarkHelper: RemarkHelper) { }
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -322,11 +322,11 @@ export class InvoiceRemarkService {
     this.rms.createEmptyPlaceHolderValue(['ConsultantName', 'CNNumber']);
     this.rms.createPlaceholderValues(map1);
     const map2 = new Map<string, string>();
-    map2.set('IrdDate',irdForm.controls.date.value );
+    map2.set('IrdDate', irdForm.controls.date.value);
     map2.set('ConsultantOid', irdForm.controls.officeId.value);
-    map2.set('IrdRateQueue',irdForm.controls.queue.value);
+    map2.set('IrdRateQueue', irdForm.controls.queue.value);
     map2.set('CFANumber', irdForm.controls.cfa.value);
-    this.rms.createEmptyPlaceHolderValue(['IrdDate', 'ConsultantOid','IrdRateQueue','CFANumber']);
+    this.rms.createEmptyPlaceHolderValue(['IrdDate', 'ConsultantOid', 'IrdRateQueue', 'CFANumber']);
     this.rms.createPlaceholderValues(map2);
     const map3 = new Map<string, string>();
     map3.set('FareRequest', irdForm.controls.fareRequest.value);
@@ -341,15 +341,15 @@ export class InvoiceRemarkService {
     this.rms.createEmptyPlaceHolderValue(['DateFlexibilty']);
     this.rms.createPlaceholderValues(map5);
     const map6 = new Map<string, string>();
-    map6.set('ScheduleFlexibility', irdForm.controls.scheduleFlexibility.value ? "Y" :"N");
+    map6.set('ScheduleFlexibility', irdForm.controls.scheduleFlexibility.value ? "Y" : "N");
     this.rms.createEmptyPlaceHolderValue(['ScheduleFlexibility']);
     this.rms.createPlaceholderValues(map6);
     const map7 = new Map<string, string>();
     const arr = irdForm.get('stops') as FormArray;
     let stopValue = '';
     for (const c of arr.controls) {
-      stopValue = stopValue + c.get('stops').value + (c==arr.controls[arr.controls.length-1] ? '': ' * ');
-      
+      stopValue = stopValue + c.get('stops').value + (c == arr.controls[arr.controls.length - 1] ? '' : ' * ');
+
     }
     if (stopValue) {
       map7.set('Stops', stopValue);
@@ -364,7 +364,7 @@ export class InvoiceRemarkService {
     }
   }
 
-  buildIrdCommentsRemarks(comments:FormGroup) {
+  buildIrdCommentsRemarks(comments: FormGroup) {
     let remText = '';
     const remarkList = new Array<RemarkModel>();
 
@@ -378,17 +378,17 @@ export class InvoiceRemarkService {
     return remarkList;
   }
 
-  addTravelTicketingQueue(form:FormGroup) {
+  addTravelTicketingQueue(form: FormGroup) {
     const isTravel = form.controls.isTravel.value;
-   
+
     if (isTravel === 'Y') {
       this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 250));
     }
     if (isTravel === 'N') {
-    
+
 
       this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 240));
     }
-  
+
   }
 }

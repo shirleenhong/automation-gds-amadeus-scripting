@@ -120,11 +120,17 @@ export class CorporateComponent implements OnInit {
 
   showRule() {
     // get rule
+
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
       this.workflow = '';
       this.showMessage(
-        this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message'),
+        this.rulesEngine
+          .getSpecificRuleResultItemValue('UI_Popup_Message')
+          .replace('{', '<')
+          .replace('{', '<')
+          .replace('}', '>')
+          .replace('}', '>'),
         MessageType.Default,
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
         'Loading'

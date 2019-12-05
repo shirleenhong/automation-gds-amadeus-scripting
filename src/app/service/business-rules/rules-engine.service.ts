@@ -70,13 +70,16 @@ export class RulesEngineService {
 
   checkRuleResultExist(entityName: string, ruleValue: string) {
     let hasRule = false;
-    this.validBusinessRules.forEach((rule) => {
-      rule.ruleResult.forEach((res) => {
-        if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
-          hasRule = true;
-        }
+
+    if (this.validBusinessRules !== undefined) {
+      this.validBusinessRules.forEach((rule) => {
+        rule.ruleResult.forEach((res) => {
+          if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
+            hasRule = true;
+          }
+        });
       });
-    });
+    }
     return hasRule;
   }
 

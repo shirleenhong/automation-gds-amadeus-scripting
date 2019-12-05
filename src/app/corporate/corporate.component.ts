@@ -125,12 +125,7 @@ export class CorporateComponent implements OnInit {
     if (isMarriottPopUP) {
       this.workflow = '';
       this.showMessage(
-        this.rulesEngine
-          .getSpecificRuleResultItemValue('UI_Popup_Message')
-          .replace('{', '<')
-          .replace('{', '<')
-          .replace('}', '>')
-          .replace('}', '>'),
+        this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message').replace(/{br}/g, '<br>'),
         MessageType.Default,
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
         'Loading'

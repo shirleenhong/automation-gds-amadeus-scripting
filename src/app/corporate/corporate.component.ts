@@ -45,7 +45,6 @@ import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.com
 import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
-import { RuleWriterService } from '../service/business-rules/rule-writer.service';
 declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
@@ -107,12 +106,10 @@ export class CorporateComponent implements OnInit {
     private amadeusRemarkService: AmadeusRemarkService,
     private corpCancelRemarkService: CorpCancelRemarkService,
     private pricingService: PricingService,
-    private rulesEngine: RulesEngineService,
-    private ruleWriter: RuleWriterService
+    private rulesEngine: RulesEngineService
   ) {
     this.initData();
     this.getPnrService();
-
   }
 
   async ngOnInit(): Promise<void> {
@@ -150,7 +147,6 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.amadeusQueueService.queuePNR();
     this.amadeusQueueService.newQueueCollection();
-
   }
 
   async getPnrService() {
@@ -159,7 +155,7 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
-    const tst = smartScriptUtils.normalize(this.pnrService.tstObj);;
+    const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
@@ -284,6 +280,10 @@ export class CorporateComponent implements OnInit {
   }
 
   public async SubmitToPNR() {
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
+
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -298,7 +298,6 @@ export class CorporateComponent implements OnInit {
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
-    const remarkCollection = new Array<RemarkGroup>();
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
@@ -385,8 +384,8 @@ export class CorporateComponent implements OnInit {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
     }
 
-    remarkCollection.push(this.ruleWriter.getAddRemarksRuleResult());
-    remarkCollection.push(this.ruleWriter.getDeleteRemarksRuleResult());
+    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
 
     await this.rms.SendCommand(
@@ -421,7 +420,9 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
-    let remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.commentsForm);
+    let remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(
+      this.irdRateRequestComponent.irdInvoiceRequestComponent.commentsForm
+    );
     this.invoiceRemarkService.writeIrdRateRequestRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
     this.invoiceRemarkService.addTravelTicketingQueue(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
     await this.rms.submitToPnr(remarkList, [], [], []).then(

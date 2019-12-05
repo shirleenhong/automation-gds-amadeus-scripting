@@ -18,7 +18,12 @@ declare var smartScriptSession: any;
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
 
-  constructor(private pnrService: PnrService, private queService: AmadeusQueueService, private rms: RemarksManagerService, private remarkHelper: RemarkHelper) { }
+  constructor(
+    private pnrService: PnrService,
+    private queService: AmadeusQueueService,
+    private rms: RemarksManagerService,
+    private remarkHelper: RemarkHelper
+  ) {}
   sendU70Remarks(): any {
     if (this.checkAquaComplianceRemarks()) {
       console.log('send u70 remark');
@@ -265,7 +270,7 @@ export class InvoiceRemarkService {
   }
 
   // getAllTickets(response) {
-  //   debugger;
+  //
   //   const eTickets = [];
   //   const resregex = /[A-Z]{2}\/{1}[A-Z]{2}[ 0-9-]{4}[-]{1}[0-9]{10}\/{1}[A-Z]{4}/g;
   //   const match = response.match(resregex);
@@ -333,23 +338,22 @@ export class InvoiceRemarkService {
     this.rms.createEmptyPlaceHolderValue(['FareRequest']);
     this.rms.createPlaceholderValues(map3);
     const map4 = new Map<string, string>();
-    map4.set('AirFlexibility', irdForm.controls.airFlexibility.value ? "Y" : "N");
+    map4.set('AirFlexibility', irdForm.controls.airFlexibility.value ? 'Y' : 'N');
     this.rms.createEmptyPlaceHolderValue(['AirFlexibility']);
     this.rms.createPlaceholderValues(map4);
     const map5 = new Map<string, string>();
-    map5.set('DateFlexibilty', irdForm.controls.dateFlexibility.value ? "Y" : "N");
+    map5.set('DateFlexibilty', irdForm.controls.dateFlexibility.value ? 'Y' : 'N');
     this.rms.createEmptyPlaceHolderValue(['DateFlexibilty']);
     this.rms.createPlaceholderValues(map5);
     const map6 = new Map<string, string>();
-    map6.set('ScheduleFlexibility', irdForm.controls.scheduleFlexibility.value ? "Y" : "N");
+    map6.set('ScheduleFlexibility', irdForm.controls.scheduleFlexibility.value ? 'Y' : 'N');
     this.rms.createEmptyPlaceHolderValue(['ScheduleFlexibility']);
     this.rms.createPlaceholderValues(map6);
     const map7 = new Map<string, string>();
     const arr = irdForm.get('stops') as FormArray;
     let stopValue = '';
     for (const c of arr.controls) {
-      stopValue = stopValue + c.get('stops').value + (c == arr.controls[arr.controls.length - 1] ? '' : ' * ');
-
+      stopValue = stopValue + c.get('stops').value + (c === arr.controls[arr.controls.length - 1] ? '' : ' * ');
     }
     if (stopValue) {
       map7.set('Stops', stopValue);
@@ -385,10 +389,7 @@ export class InvoiceRemarkService {
       this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 250));
     }
     if (isTravel === 'N') {
-
-
       this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 240));
     }
-
   }
 }

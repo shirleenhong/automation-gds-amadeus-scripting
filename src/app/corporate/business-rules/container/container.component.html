@@ -1,9 +1,9 @@
 <div class="container">
-  <form [formGroup]="containerForm" class="form-group" style="padding:5px;">
+  <form [formGroup]="containerForm" class="form-group">
     <ng-template ngFor let-input [ngForOf]="formTemplateData">
       <ng-container [ngSwitch]="input.controlType">
         <ng-template [ngSwitchCase]="'labelmessage'">
-          <div [innerHTML]=input.controlName class="row">
+          <div [innerHTML]="input.controlName" class="row">
             <!-- <div class="col-8">
             {{ input.controlName }}
           </div> -->
@@ -13,12 +13,18 @@
         <ng-template [ngSwitchCase]="'text'">
           <div class="row">
             <div class="col-3">
-              <label [for]="input.controlName"> {{ input.controlName }}</label>
+              <label [for]="input.controlName"> {{ input.label }}</label>
             </div>
             <div class="col-4">
-              <input class="form-control" [formControlName]="input.controlName" [type]="input.controlType"
-                [name]="input.controlName" [required]="input.validators.required"
-                [minlength]="input.validators.minlength" [maxlength]="input.validators.maxlength" />
+              <input
+                class="form-control"
+                [formControlName]="input.controlName"
+                [type]="input.controlType"
+                [name]="input.controlName"
+                [required]="input.validators.required"
+                [minlength]="input.validators.minlength"
+                [maxlength]="input.validators.maxlength"
+              />
             </div>
           </div>
         </ng-template>
@@ -26,11 +32,16 @@
         <ng-template [ngSwitchCase]="'select'">
           <div class="row">
             <div class="col-3">
-              <label [for]="input.controlName"> {{ input.controlName }}</label>
+              <label [for]="input.controlName"> {{ input.label }}</label>
             </div>
             <div class="col-4">
-              <select class="form-control" [formControlName]="input.controlName" [name]="input.controlName"
-                [id]="input.controlName" [required]="input.validators.required">
+              <select
+                class="form-control"
+                [formControlName]="input.controlName"
+                [name]="input.controlName"
+                [id]="input.controlName"
+                [required]="input.validators.required"
+              >
                 <option value="">{{ input.placeholder }}</option>
                 <option *ngFor="let option of input.options" [value]="option.value">{{ option.optionName }}</option>
               </select>
@@ -39,10 +50,29 @@
         </ng-template>
 
         <ng-template [ngSwitchCase]="'radio'">
-          <div *ngFor="let option of input.options" class="form-group row">
-            <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName"
-              [value]="option.value" [required]="input.validators.required" />
-            <label [for]="input.controlName"> {{ option.optionName }}</label>
+          <div class="row">
+            <div class="col-3">
+              <label [for]="input.controlName"> {{ input.label }}</label>
+            </div>
+            <div class="col-4">
+              <table>
+                <tr>
+                  <td *ngFor="let option of input.options" class="">
+                    <label class="control control-radio ">
+                      <input
+                        type="radio"
+                        [formControlName]="input.controlName"
+                        [type]="input.controlType"
+                        [name]="input.controlName"
+                        [value]="option.value"
+                        [required]="input.validators.required"
+                      />{{ option.name }} &nbsp;&nbsp;
+                      <div class="control_indicator"></div>
+                    </label>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
         </ng-template>
 
@@ -53,7 +83,7 @@
             </div>
             <div *ngFor="let option of input.options" class="form-group row">
               <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName" />
-              <label [for]="input.controlName"> {{ option.optionName }}</label>
+              <label [for]="input.controlName"> {{ option.name }}</label>
             </div>
           </ng-template>
         </div>

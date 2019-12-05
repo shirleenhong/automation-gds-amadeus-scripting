@@ -14,7 +14,7 @@ export class ContainerComponent implements OnInit {
   formTemplateData: BusinessRulesFormData[];
   @Input() containerFilter: string;
 
-  constructor(private res: RulesEngineService) { }
+  constructor(private res: RulesEngineService) {}
 
   ngOnInit() {
     this.createRuleForm();
@@ -23,12 +23,21 @@ export class ContainerComponent implements OnInit {
   private createRuleForm() {
     if (this.containerFilter) {
       const formGroup = {};
-      this.formTemplateData = this.res.getAddControlRuleValues(this.containerFilter).formData;
+      this.formTemplateData = this.res.getRuleFormData(this.containerFilter);
 
       this.formTemplateData.forEach((formControl) => {
         formGroup[formControl.controlName] = new FormControl('');
       });
       this.containerForm = new FormGroup(formGroup);
+      this.subscribeChange();
     }
+  }
+
+  subscribeChange() {
+    this.formTemplateData.forEach((control) => {
+      this.containerForm.get(control.controlName).valueChanges.subscribe((c) => {
+        this.res.setFormUIEntityValue('UI_FORM_' + control.controlName, c);
+      });
+    });
   }
 }

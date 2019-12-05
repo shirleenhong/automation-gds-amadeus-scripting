@@ -1,11 +1,12 @@
 export class BusinessRulesFormData {
   controlName: string;
   controlType: string;
+  label: string;
   valueType?: string;
   currentValue?: string;
   placeholder?: string;
   options?: Array<{
-    optionName: string;
+    name: string;
     value: string;
   }>;
   validators?: {
@@ -17,7 +18,12 @@ export class BusinessRulesFormData {
   constructor(json: any) {
     try {
       const jsonObj = JSON.parse(json);
-      this.controlName = jsonObj.label;
+      this.label = jsonObj.label;
+      this.controlName = jsonObj.name;
+      if (!this.controlName) {
+        this.controlName = this.label;
+      }
+
       this.controlType = jsonObj.type;
 
       if (jsonObj.options) {

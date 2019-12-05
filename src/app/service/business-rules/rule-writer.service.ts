@@ -1,31 +1,25 @@
 import { Injectable } from '@angular/core';
-import { RulesEngineService } from './rules-engine.service';
+
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { PnrService } from '../pnr.service';
+import { ControlConditionModel } from 'src/app/models/business-rules/control-condition.model';
+import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
+import { WriteConditionModel } from 'src/app/models/business-rules/write-condition.model';
+import { RulesReaderService } from './rules-reader.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RuleWriterService {
   additionaRemarks = [];
-  constructor(private res: RulesEngineService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
+
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
-  public getAddRemarksRuleResult() {
-    const resultItems = this.res.getSpecificRulesValue('PNR_ADD_Remark').resultItems;
-    resultItems.forEach((element) => {
-      this.formatRemarkRuleResult(element.resultItemValue);
-    });
-    return this.writeRuleRemarks();
-  }
 
-  /**
-   * format rule value to get remark information
-   * @param resultText
-   */
   private formatRemarkRuleResult(resultText: string) {
     const type = resultText.substr(0, 2);
     const cat = resultText.substr(2, 1);
@@ -36,7 +30,7 @@ export class RuleWriterService {
   /**
    * building remarkGroup and model
    */
-  private writeRuleRemarks() {
+  public writeRuleRemarks() {
     const remGroup = new RemarkGroup();
     remGroup.group = 'RuleRemarks';
     remGroup.remarks = new Array<RemarkModel>();
@@ -46,23 +40,53 @@ export class RuleWriterService {
     return remGroup;
   }
 
-  public getDeleteRemarksRuleResult() {
+  public getDeleteRemarksRuleResult(resultItems) {
     const remGroup = new RemarkGroup();
     remGroup.group = 'RuleDeleteRemark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
-    const clientDefinedResult = this.res.validBusinessRules;
-    clientDefinedResult.forEach((bRule) => {
-      bRule.ruleResult.forEach((result) => {
-        if (result.businessEntityName === 'PNR_DELETE_Remark') {
-          let lineNo = '';
-          lineNo = this.pnrService.getRemarkLineNumber(result.resultItemValue);
-          if (lineNo !== '') {
-            remGroup.deleteRemarkByIds.push(lineNo);
-          }
-        }
-      });
+
+    resultItems.forEach((element) => {
+      const lineNo = this.pnrService.getRemarkLineNumber(element.resultItemValue);
+      if (lineNo !== '') {
+        remGroup.deleteRemarkByIds.push(lineNo);
+      }
     });
+
     return remGroup;
+  }
+
+  getPnrAddRemark(resultItems) {
+    resultItems.forEach((element) => {
+      this.formatRemarkRuleResult(element.resultItemValue);
+    });
+  }
+
+  getWriteRemarkWithCondition(resultItems) {
+    resultItems.forEach((element) => {
+      const writeCondition = new WriteConditionModel(element);
+      if (writeCondition.conditions.filter((con) => this.checkControlValid(con)).length === writeCondition.conditions.length) {
+        writeCondition.remarks.forEach((rem) => {
+          this.formatRemarkRuleResult(rem);
+        });
+      }
+    });
+  }
+
+  checkControlValid(condition: ControlConditionModel) {
+    const logicValue = condition.value.toLowerCase();
+    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName).toLowerCase();
+    switch (RuleLogicEnum[condition.operator]) {
+      case RuleLogicEnum.IS:
+        return entity === logicValue;
+      case RuleLogicEnum.CONTAINS:
+        return entity.indexOf(logicValue) >= 0;
+      case RuleLogicEnum.IS_NOT:
+        return entity !== logicValue;
+      case RuleLogicEnum.NOT_IN:
+        return logicValue.split('|').indexOf(entity) === -1;
+      case RuleLogicEnum.IN:
+        return logicValue.split('|').indexOf(entity) >= 0;
+    }
   }
 }

@@ -38,7 +38,7 @@ Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Air Se
     Login To Amadeus Sell Connect Acceptance
     Create PNR With One TST For Airline Code AC
     Add 1 Limo Segments
-    Add 1 Hotel Segments
+    Add 1 Passive Hotel Segments
     Add 1 Car Segments
     Select Unticketed TST 1
     Verify Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment 2,6 Only
@@ -48,7 +48,7 @@ Verify That Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air 
     Login To Amadeus Sell Connect Acceptance
     Create PNR With 1 TST And Ticket For Airline Code AC
     Add 1 Limo Segments
-    Add 1 Hotel Segments
+    Add 1 Passive Hotel Segments
     Add 1 Car Segments
     Verify Message No Unticketed Air Segment Is Displayed
     Verify Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segments, Limo, Hotel And Car Segments

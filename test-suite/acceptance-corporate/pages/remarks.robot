@@ -359,3 +359,11 @@ Click Emergency Contact Tab
     Wait Until Element Is Visible    ${tab_emergency_contact}    30
     Click Element    ${tab_emergency_contact}    
     Set Test Variable    ${current_page}    Emergency Contact
+    
+Verify Dana International Advisory Is Displayed
+    Navigate to Page Visa And Passport
+    ${content_advisory}    Get Text    ${text_advisory}
+    ${content_advisory}    Replace String     ${content_advisory}    \n     ${SPACE}
+    Take Screenshot   
+    Run Keyword And Continue On Failure     Should Contain    ${content_advisory}    Please advise the traveller of the below information. ${SPACE}This information will also be added to the traveller's itinerary by AQUA.Consult with dana immigration administrator-michelle gossett 419-824-5488 Michelle.Gossett@dana.com - secondary contact-dee trevino manager expatriate and domestic relocation 734-629-1150/ Dee.Trevino@dana.com for guidance and direction to confirm acceptable business visitor activities. Please consult your human resources manager for information on the local visa service provider in your region to assist with securing your business visa.
+    

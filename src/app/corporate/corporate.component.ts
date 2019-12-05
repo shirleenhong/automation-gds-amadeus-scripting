@@ -119,8 +119,30 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
+  }
 
+  showRule() {
+    // get rule
+    const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
+    if (isMarriottPopUP) {
+      this.workflow = '';
+      this.showMessage(
+        this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message'),
+        MessageType.Default,
+        this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
+        'Loading'
+      );
+    }
+  }
 
+  hasAirportCode(airportCode: string) {
+    let hasAC = false;
+    this.pnrService.segments.forEach((segment) => {
+      if (segment.airportCode === airportCode) {
+        hasAC = true;
+      }
+    });
+    return hasAC;
   }
 
   async getPnr() {
@@ -138,7 +160,7 @@ export class CorporateComponent implements OnInit {
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);;
-    if (this.pnrService.pnrObj.header.recordLocator && tst.length>0) {
+    if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
   }
@@ -191,8 +213,8 @@ export class CorporateComponent implements OnInit {
   }
 
   public async wrapPnr() {
-    await this.loadPnrData();
     this.workflow = 'wrap';
+    await this.loadPnrData();
   }
 
   public async AddSegment() {
@@ -244,6 +266,7 @@ export class CorporateComponent implements OnInit {
     }
     this.closePopup();
     this.checkHasDataLoadError();
+    this.showRule();
   }
 
   checkHasDataLoadError() {

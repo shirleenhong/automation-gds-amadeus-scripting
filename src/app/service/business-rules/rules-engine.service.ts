@@ -58,15 +58,6 @@ export class RulesEngineService {
 
   checkRuleResultExist(entityName: string, ruleValue: string) {
     let hasRule = false;
-
-    // for (const rule of this.validBusinessRules) {
-    //   for (const res of rule) {
-    //     if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
-    //       hasRule = true;
-    //     }
-    //   }
-    // }
-    // tslint:disable-next-line: no-shadowed-variable
     this.validBusinessRules.forEach((rule) => {
       rule.ruleResult.forEach((res) => {
         if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
@@ -92,6 +83,18 @@ export class RulesEngineService {
     return { formData };
   }
 
+
+  getSpecificRuleResultItemValue(entityName: string) {
+    let value = '';
+    this.validBusinessRules.forEach((bRule) => {
+      bRule.ruleResult.forEach((result) => {
+        if (result.businessEntityName === entityName) {
+          value = result.resultItemValue;
+        }
+      });
+    });
+    return value;
+  }
 
   getSpecificRulesValue(entityName: string) {
     const resultItems = [];

@@ -6,6 +6,7 @@ import { DDBService } from '../ddb.service';
   providedIn: 'root'
 })
 export class RulesReaderService {
+  // businessEntities = new Map<string, string>();
   businessEntities = new Map<string, string>();
   format = [
     { type: 'RM', category: 'A', regex: /(?<PNR_A>.*)$/g },
@@ -43,6 +44,8 @@ export class RulesReaderService {
     this.businessEntities = new Map<string, string>();
     await this.parseRemarks();
     this.checkRouteCode();
+    this.parseAirSegments();
+    this.getArrivaltime();
   }
 
   private setMatchEntity(regex, text) {
@@ -108,6 +111,36 @@ export class RulesReaderService {
     const route = this.ddbService.isPnrTransBorder() ? 'TRANSBORDER' : this.ddbService.isPnrDomestic() ? 'DOMESTIC' : 'INTERNATIONAL';
     if (route) {
       this.businessEntities.set('PNR_AIR_SEGMENT_ROUTE_CODE', route);
+    }
+  }
+
+  private parseAirSegments() {
+    const codes = [];
+    this.ddbService.airTravelPortInformation.forEach((element) => {
+      codes.push(element.travelPortCode);
+    });
+    this.businessEntities.set('PNR_AIR_SEGMENT_AIRPORT_CODE', codes.join(','));
+  }
+
+  private getArrivaltime() {
+    const segment = this.pnrService.getSegmentList();
+    const keyarr = 'PNR_AIR_SEGMENT_ARR_TIME';
+    const keydept = 'PNR_AIR_SEGMENT_DEPT_TIME';
+    if (segment) {
+      segment.forEach(element => {
+        if (element.arrivalStation === 'CCS' || element.cityCode === 'CCS') {
+          this.AssignKeyValue(keyarr, element.arrivalTime);
+          this.AssignKeyValue(keydept, element.departureTime);
+        }
+      });
+    }
+  }
+
+  private AssignKeyValue(key, value) {
+    if (this.businessEntities.has(key)) {
+      this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + value);
+    } else {
+      this.businessEntities.set(key, value);
     }
   }
 }

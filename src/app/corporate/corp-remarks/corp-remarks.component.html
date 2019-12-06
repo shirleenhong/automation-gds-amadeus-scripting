@@ -20,7 +20,7 @@
     <app-add-contact></app-add-contact>
   </tab>
 
-  <tab heading="Rules" id="rules" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'REMARKS')">
+  <tab heading="Rules" id="rules" *ngIf="hasRules">
     <app-container [containerFilter]="'REMARKS'"></app-container>
   </tab>
 </tabset>

@@ -29,7 +29,7 @@ export class VisaPassportComponent implements OnInit {
   citizenship: string;
   passportName: string;
   isInternational = false;
-
+  hasRules = false;
   isInternationalTravelAdvisorySent = false;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
@@ -39,9 +39,10 @@ export class VisaPassportComponent implements OnInit {
     private pnrService: PnrService,
     private visaService: VisaPassportRemarkService,
     private rulesEngineService: RulesEngineService
-  ) { }
+  ) {}
 
   ngOnInit() {
+    this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'VISA AND PASSPORT');
     this.visaPassportView = new VisaPassportModel();
     this.visaPassportFormGroup = new FormGroup({
       originDestination: new FormControl('', []),
@@ -85,11 +86,11 @@ export class VisaPassportComponent implements OnInit {
       })
       .then(
         // tslint:disable-next-line: only-arrow-functions
-        function (data) {
+        function(data) {
           console.log(data);
         },
         // tslint:disable-next-line: only-arrow-functions
-        function (error) {
+        function(error) {
           console.log(error);
         }
       );
@@ -253,10 +254,10 @@ export class VisaPassportComponent implements OnInit {
       for (let i = 1; i < originDestination.length; i++) {
         convertedDate = new Date(
           originDestination[i].departuredate.substr(2, 2) +
-          '/' +
-          originDestination[i].departuredate.substr(0, 2) +
-          '/' +
-          originDestination[i].departuredate.substr(4, 2)
+            '/' +
+            originDestination[i].departuredate.substr(0, 2) +
+            '/' +
+            originDestination[i].departuredate.substr(4, 2)
         );
         if (convertedDate.toDateString() === firstDepDate.toDateString()) {
           mainOrigin = originDestination[i].origin;
@@ -367,11 +368,5 @@ export class VisaPassportComponent implements OnInit {
     } else {
       return false;
     }
-  }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

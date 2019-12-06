@@ -1,9 +1,10 @@
-<div *ngIf="!isInternational" class="mx-auto"><br>
+<div *ngIf="!isInternational" class="mx-auto">
+  <br />
   <span class="p3">* No International Destinations Found in Itinerary *</span>
 </div>
 <div *ngIf="isInternational">
   <form [formGroup]="visaPassportFormGroup" class="col">
-    <br>
+    <br />
     <div class="row form-group">
       <div class="col-5">
         <b>International Travel Advisory Request</b>
@@ -13,11 +14,16 @@
       </div>
     </div>
     <div class="row form-group">
-      <div class="col-5">
-      </div>
-      <div class="col-6"> <input type="checkbox" name="senttraveladvicory" formControlName="senttraveladvicory"
-          id="senttraveladvicory" (change)="showsenttraveladvicory($event.target.checked)"
-          [(ngModel)]="isInternationalTravelAdvisorySent" />
+      <div class="col-5"></div>
+      <div class="col-6">
+        <input
+          type="checkbox"
+          name="senttraveladvicory"
+          formControlName="senttraveladvicory"
+          id="senttraveladvicory"
+          (change)="showsenttraveladvicory($event.target.checked)"
+          [(ngModel)]="isInternationalTravelAdvisorySent"
+        />
         <span [ngClass]="{ 'text-danger': isInternational && !isInternationalTravelAdvisorySent && !advisoryClicked }">
           International Travel Advisory Already Sent
         </span>
@@ -26,17 +32,21 @@
 
     <div class="row form-group">
       <div class="col-8 advisory">
-        <span class="p1">1. Advice Verbal Visa and Passport Information to client. <br>
-          2. International Travel advisory must be sent to traveler / travel arranger <br>
-          3. Click on [Go to e-Traveladvisories] to send email to traveler (if not yet sent) <br></span>
+        <span class="p1"
+          >1. Advice Verbal Visa and Passport Information to client. <br />
+          2. International Travel advisory must be sent to traveler / travel arranger <br />
+          3. Click on [Go to e-Traveladvisories] to send email to traveler (if not yet sent) <br
+        /></span>
       </div>
-    </div><br>
+    </div>
+    <br />
 
-    <div *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'VISA AND PASSPORT')" class="row form-group">
+    <div *ngIf="hasRules" class="row form-group">
       <div class="col-8 advisory">
         <app-container [containerFilter]="'VISA AND PASSPORT'"></app-container>
       </div>
-    </div><br>
+    </div>
+    <br />
 
     <div *ngIf="this.advisoryClicked === true || hasAdvisoryLine() || f.senttraveladvicory.value">
       <div class="row form-group">
@@ -50,9 +60,17 @@
           Client Country Citizenship:
         </div>
         <div class="col-3">
-          <input [(ngModel)]="visaPassportView.citizenship" type="text" class="form-control"
-            formControlName="citizenship" name="citizenship" maxlength="35" id="citizenship" placeholder="e.g. Canada"
-            [ngClass]="{ 'is-invalid': f.citizenship.touched && f.citizenship.invalid }" />
+          <input
+            [(ngModel)]="visaPassportView.citizenship"
+            type="text"
+            class="form-control"
+            formControlName="citizenship"
+            name="citizenship"
+            maxlength="35"
+            id="citizenship"
+            placeholder="e.g. Canada"
+            [ngClass]="{ 'is-invalid': f.citizenship.touched && f.citizenship.invalid }"
+          />
         </div>
       </div>
 
@@ -61,11 +79,21 @@
           Who did you advise of these requirements?
         </div>
         <div class="col-3">
-          <input type="text" class="form-control" formControlName="passportName" maxlength="35" id="passportName"
-            name="passportName" placeholder="e.g. John" required [(ngModel)]="visaPassportView.passportName"
-            [ngClass]="{ 'is-invalid': f.passportName.touched && f.passportName.invalid }" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="passportName"
+            maxlength="35"
+            id="passportName"
+            name="passportName"
+            placeholder="e.g. John"
+            required
+            [(ngModel)]="visaPassportView.passportName"
+            [ngClass]="{ 'is-invalid': f.passportName.touched && f.passportName.invalid }"
+          />
         </div>
-      </div><br>
+      </div>
+      <br />
 
       <div *ngIf="isInternational">
         <div class="row form-group">
@@ -83,27 +111,31 @@
           </div>
         </div>
 
-        <div formArrayName="segments"
-          *ngFor="let item of this.visaPassportFormGroup.get('segments').controls; let i = index;">
+        <div formArrayName="segments" *ngFor="let item of this.visaPassportFormGroup.get('segments').controls; let i = index;">
           <div class="row" [formGroupName]="i">
             <div class="col-2">
-              <input type="text" class="form-control" formControlName="country" id="country" placeholder="country"
-                disabled>
+              <input type="text" class="form-control" formControlName="country" id="country" placeholder="country" disabled />
             </div>
             <div class="col-3">
-              <input type="text" class="form-control" required id="segmentLine" placeholder="segmentLine"
-                formControlName="segmentLine" disabled>
+              <input
+                type="text"
+                class="form-control"
+                required
+                id="segmentLine"
+                placeholder="segmentLine"
+                formControlName="segmentLine"
+                disabled
+              />
             </div>
             <div class="col-2">
-              <input type="checkbox" class="check-control" formControlName="passport">
+              <input type="checkbox" class="check-control" formControlName="passport" />
             </div>
             <div class="col-2">
-              <input type="checkbox" class="check-control" formControlName="visa">
+              <input type="checkbox" class="check-control" formControlName="visa" />
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </form>
 </div>

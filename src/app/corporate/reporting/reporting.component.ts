@@ -29,7 +29,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
-
+  hasRules = false;
   components = [];
 
   constructor(
@@ -37,9 +37,10 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private pnrService: PnrService,
     private rulesEngineService: RulesEngineService
-  ) { }
+  ) {}
 
   ngOnInit() {
+    this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
     this.hasTst = true;
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
     let segments = this.pnrService.getSegmentList();
@@ -82,11 +83,5 @@ export class ReportingComponent implements OnInit, AfterViewInit {
       }
     }
     return true;
-  }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

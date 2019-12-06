@@ -30,6 +30,7 @@ export class CorpRemarksComponent implements OnInit {
   isOfc = false;
   isEsc: boolean;
   isPassive: any;
+  hasRules = false;
 
   constructor(
     private utilHelper: UtilHelper,
@@ -43,6 +44,7 @@ export class CorpRemarksComponent implements OnInit {
       this.isEsc = x === 'ESC';
     });
     this.isPassive = this.checkIfPassiveSegmentPresent();
+    this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REMARKS');
   }
   checkValid() {
     if (this.irdRemarks !== undefined) {
@@ -90,11 +92,5 @@ export class CorpRemarksComponent implements OnInit {
     }
 
     return true;
-  }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

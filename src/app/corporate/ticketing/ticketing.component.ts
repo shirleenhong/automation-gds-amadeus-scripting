@@ -41,12 +41,4 @@ export class TicketingComponent implements OnInit {
 
     return true;
   }
-<<<<<<< Updated upstream
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
-  }
-=======
->>>>>>> Stashed changes
 }

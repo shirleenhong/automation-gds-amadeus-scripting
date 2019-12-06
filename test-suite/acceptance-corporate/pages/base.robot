@@ -47,6 +47,8 @@ ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 ${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
+${window_marriot_policy}    //div[contains(text(), 'MARRIOTT POLICY VIOLATION')]
+${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
@@ -583,11 +585,18 @@ Get Air Segment Values From Json
     \    ${air_seg_route}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].AirSegmentRoute${i}
     \    ${airline_code}    Get Json Value As String   ${json_file_object}    $.['${client_data}'].AirlineCode${i}
     \    ${price_cmd}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PriceCommand${i}
+    \    Assign Seat Select Value    ${json_file_object}    ${client_data}    ${i}
     \    Set Test Variable    ${air_seg_route_${i}}    ${air_seg_route}
-    \    Set Test Variable    ${airline_code_${i}}    ${airline_code}
+    \    Set Test Variable    ${airline_code_${i}}    ${airline_code} 
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
-    \    ${i}    Evaluate    ${i} + 1
     
+Assign Seat Select Value
+    [Arguments]    ${json_file_object}    ${client_data}    ${index}
+    ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatSelect${index}
+    ${seat}    Run Keyword If    ${exists}     Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatSelect${index}
+    ...    ELSE    Set Variable    1
+    Set Test Variable    ${seat_${index}}    ${seat}
+
 Get Passenger Name Values From Json
     [Arguments]    ${json_file_object}     ${client_data}
     : FOR    ${i}    IN RANGE    1   99
@@ -696,5 +705,25 @@ Submit IRD Request
     Set Test Variable    ${current_page}     CWT Corporate 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     
+Verify If Marriott Policy Violation Message Is Present In The UI
+    Open CA Corporate Test 
+    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Click Element    ${button_full_wrap}
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${window_marriot_policy}    30
+    Take Screenshot
+    Click Element    ${button_close_marriot_policy}
+    Close CA Corporate Test
     
-    
+Verify If Marriott Policy Violation Message Is Not Present In The UI
+    Open CA Corporate Test 
+    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Click Element    ${button_full_wrap}
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Not Visible    ${window_marriot_policy}    30
+    Wait Until Element Is Not Visible    ${button_close_marriot_policy}
+    Take Screenshot
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Close CA Corporate Test

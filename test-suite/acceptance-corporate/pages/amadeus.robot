@@ -569,6 +569,30 @@ Create PNR With Passive Air Segments For ${client_data}
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Handle Smart Tool PopUp
     Take Screenshot
+
+Create PNR With Passive Air Segments That Departs And Arrives From 6:00PM-6:00AM For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments That Departs And Arrives From 6:00PM-6:00AM
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Handle Smart Tool PopUp
+    Take Screenshot
+    
+Create PNR With Passive Air Segments That Departs From 6:00PM-6:00AM For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Passive Air Segments That Departs From 6:00PM-6:00AM
+    Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
+    Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
+    Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Handle Smart Tool PopUp
+    Take Screenshot
     
 Create PNR With Active Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
@@ -653,21 +677,34 @@ Book ${numberOfAir} Passive Air Segments
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 11551440 / ABCDEFG
+
+Book ${numberOfAir} Passive Air Segments That Departs And Arrives From 6:00PM-6:00AM
+    Create ${numberOfAir} Test Dates
+    : FOR    ${i}    IN RANGE   0   ${numberOfAir}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 02340436 / ABFGCDE
+  
+Book ${numberOfAir} Passive Air Segments That Departs From 6:00PM-6:00AM
+    Create ${numberOfAir} Test Dates
+    : FOR    ${i}    IN RANGE   0   ${numberOfAir}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 05590923 / EFGABCD
         
 Book ${numberOfAir} Active Air Segments
     Create ${numberOfAir} Test Dates
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
-    \    Enter Cryptic Command    SS${passenger_no}Y1
-    \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
+    \    Enter Cryptic Command    SS${passenger_no}Y${seat_${i}}
+    \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}
+    # \    ${passenger_no}    
       
 Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
     Create ${numberOfAir} Test Dates For Booking Less Than ${no_of_days} days
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
-    \    Enter Cryptic Command    SS1Y1
+    \    Enter Cryptic Command    SS1Y${seat_${i}}
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
     
 Add Other Remarks

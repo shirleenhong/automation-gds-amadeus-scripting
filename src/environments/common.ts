@@ -31,5 +31,5 @@ export const common = {
   pnrAmadeusRequestService: '/service/ap/remarks-manager/api/pnr-amadeus-request',
   matrixSupplierService: '/service/repo/powerbaseaws/Matrix/Supplier',
   businessRules: '/service/repo/powerbaseaws/BusinessRules',
-  LeisureVersionNumber: '19.11.4'
+  LeisureVersionNumber: '19.12.1'
 };

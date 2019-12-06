@@ -9,6 +9,7 @@ import { TicketModel } from 'src/app/models/pnr/ticket.model';
 import { ApprovalRuleService } from 'src/app/service/corporate/approval-rule.service';
 import { ApprovalItem } from 'src/app/models/ddb/approval.model';
 import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 
 @Component({
   selector: 'app-ticketing-line',
@@ -22,7 +23,9 @@ export class TicketingLineComponent implements OnInit {
   ticketForm: FormGroup;
   tkList: Array<SelectItem> = null;
   hasApproval = false;
+  hasRuleApproval = false;
   approvalForm: FormGroup;
+  ruleForm: FormGroup;
   primaryReasonList: Array<ApprovalItem> = [];
   secondaryReasonList: Array<ApprovalItem> = [];
   additionalReasonList: Array<ApprovalItem> = [];
@@ -31,7 +34,8 @@ export class TicketingLineComponent implements OnInit {
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
     private approvalRuleService: ApprovalRuleService,
-    private valueChangeListener: ValueChangeListener
+    private valueChangeListener: ValueChangeListener,
+    private ruleEngine: RulesEngineService
   ) {
     this.ticketForm = new FormGroup({
       officeId: new FormControl('', [Validators.required]),
@@ -71,6 +75,9 @@ export class TicketingLineComponent implements OnInit {
     });
     this.noApprovalChecked(!this.hasApproval);
     this.disableApprovalControls();
+    if (this.hasApproval) {
+      this.hasRuleApproval = this.ruleEngine.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'APPROVAL');
+    }
   }
 
   /**

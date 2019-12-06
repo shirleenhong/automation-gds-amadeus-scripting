@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { CounselorDetail } from 'src/app/globals/counselor-identity';
+import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 
 @Component({
   selector: 'app-itinerary',
@@ -24,8 +26,15 @@ export class ItineraryComponent implements OnInit {
   transactionTypeList: Array<SelectItem>;
   // itineraryRemarks: ItineraryModel;
   listRemark: Array<string>;
+  displayMessage = '';
 
-  constructor(private formBuilder: FormBuilder, private pnrService: PnrService, private utilHelper: UtilHelper) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private pnrService: PnrService,
+    private utilHelper: UtilHelper,
+    private counselorDetail: CounselorDetail,
+    private rulesEngine: RulesEngineService
+  ) {
     this.itineraryForm = new FormGroup({
       emailAddresses: new FormArray([this.createFormGroup()]),
       // sendItinerary: new FormControl('', []),
@@ -44,6 +53,30 @@ export class ItineraryComponent implements OnInit {
     this.readServiceFromPnr();
     this.loadTransactionType();
     this.readDefaultLanguage();
+    this.loadRulesEngine();
+  }
+
+  loadRulesEngine() {
+    if (this.counselorDetail.isCorporate) {
+      const rules = this.rulesEngine.getRuleWithEntities(['UI_DISPLAY_CONTAINER', 'UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY']);
+      rules.forEach((rule) => {
+        if (rule.getResultEntityValue('UI_DISPLAY_CONTAINER') === 'Send Itinerary') {
+          const allowedEmail = rule.getResultEntityValue('UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY');
+          if (allowedEmail) {
+            this.itineraryForm.get('emailAddresses').valueChanges.subscribe(() => {
+              if (this.itineraryForm.get('emailAddresses').value.length >= Number(allowedEmail)) {
+                this.add = false;
+              }
+            });
+          }
+          if (Number(allowedEmail) === 1) {
+            this.add = false;
+          }
+          const msg = rule.getResultEntityValue('UI_DISPLAY_MESSAGE').replace('\\t\\n', '<BR>');
+          this.displayMessage += msg + '<BR>';
+        }
+      });
+    }
   }
 
   loadLanguageRemarks() {
@@ -172,12 +205,13 @@ export class ItineraryComponent implements OnInit {
   }
 
   addItems(type) {
+    const maxRows = 11;
     let items;
     switch (type) {
       case 'email':
         items = this.itineraryForm.controls.emailAddresses as FormArray;
         items.push(this.createFormGroup());
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.add = true;
           this.remove = true;
         } else {
@@ -187,7 +221,7 @@ export class ItineraryComponent implements OnInit {
       case 'service':
         items = this.itineraryForm.controls.services as FormArray;
         items.push(this.createServiceFormGroup('SERVICE'));
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.addservice = true;
           this.removeservice = true;
         } else {
@@ -197,7 +231,7 @@ export class ItineraryComponent implements OnInit {
       case 'ticket':
         items = this.itineraryForm.controls.tickets as FormArray;
         items.push(this.createServiceFormGroup('TICKET'));
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.addticket = true;
           this.removeticket = true;
         } else {
@@ -207,7 +241,7 @@ export class ItineraryComponent implements OnInit {
       case 'offer':
         items = this.itineraryForm.controls.offers as FormArray;
         items.push(this.createServiceFormGroup('OFFER'));
-        if (items.length < 6) {
+        if (items.length < maxRows) {
           this.addoffer = true;
           this.removeoffer = true;
         } else {

@@ -27,6 +27,7 @@ Enter GDS Command
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    css=.cmdPromptDiv > textArea    ${gds_command}
     \    Press Key    css=.cmdPromptDiv > textArea    \\13
+    \    Wait Until Element Is Not Visible    //div[@class='processing']    30
 
 Enter Office ID
     [Arguments]    ${office_id}
@@ -49,13 +50,13 @@ Handle Force Login Window
     Run Keyword If    ${is_force_sigin}    Click Element    xpath=//span[contains(text(),'Force Sign In')]
 
 Open CA Migration Window
+    Handle Smart Tool PopUp
     Wait Until Element Is Visible    css=#emenu_menuSection_desktop_menu_data_idscript    30
     Click Element    css=#emenu_menuSection_desktop_menu_data_idscript
     Click Element    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Sleep    10
-    Handle Smart Tool PopUp
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
 
@@ -91,7 +92,7 @@ Login To Amadeus Sell Connect
     Wait Until Element Is Not Visible    css=#logi_confirmButton .xButtonDisabled    30
     Click Element    css=#logi_confirmButton .xButton
     Handle Force Login Window
-    Wait Until Element Is Visible    css=.uicTaskbarText    30
+    Wait Until Element Is Visible    css=.uicTaskbarText    60
     Handle Accept Cookie Panel
     Add New Command Page
 
@@ -199,4 +200,4 @@ Get PNR Details
 
 Handle Smart Tool PopUp
     ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']    20
-    Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd'] 
+    Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']

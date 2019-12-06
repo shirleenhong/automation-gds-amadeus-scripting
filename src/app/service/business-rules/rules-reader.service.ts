@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
+import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RulesReaderService {
+  // businessEntities = new Map<string, string>();
   businessEntities = new Map<string, string>();
   format = [
     { type: 'RM', category: 'A', regex: /(?<PNR_A>.*)$/g },
@@ -32,14 +34,19 @@ export class RulesReaderService {
     { type: 'RM', category: 'X', regex: /(?<PNR_X>.*)$/g },
     { type: 'RM', category: 'Y', regex: /(?<PNR_Y>.*)$/g },
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
-    { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g }
+    { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g },
+    { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g }
   ];
 
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService) {}
 
-  public readPnr() {
+  public async readPnr() {
     this.businessEntities = new Map<string, string>();
-    this.parseRemarks();
+    await this.parseRemarks();
+    this.checkRouteCode();
+    this.parseAirSegments();
+    this.parseAirlineCodes();
+    this.getArrivaltime();
   }
 
   private setMatchEntity(regex, text) {
@@ -94,9 +101,59 @@ export class RulesReaderService {
   }
 
   private extractRemarks(remarksList, category, regex) {
-    const remarks = remarksList.filter((x) => x.category === category && x.freeFlowText.match(regex));
+    const regexp = new RegExp(regex);
+    const remarks = remarksList.filter((x) => x.category === category && regexp.test(x.freeFlowText));
     remarks.forEach((rm) => {
       this.setMatchEntity(regex, rm.freeFlowText);
     });
+  }
+
+  private checkRouteCode() {
+    const route = this.ddbService.isPnrTransBorder() ? 'TRANSBORDER' : this.ddbService.isPnrDomestic() ? 'DOMESTIC' : 'INTERNATIONAL';
+    if (route) {
+      this.businessEntities.set('PNR_AIR_SEGMENT_ROUTE_CODE', route);
+    }
+  }
+
+  private parseAirSegments() {
+    const codes = [];
+    this.ddbService.airTravelPortInformation.forEach((element) => {
+      codes.push(element.travelPortCode);
+    });
+    this.businessEntities.set('PNR_AIR_SEGMENT_AIRPORT_CODE', codes.join(','));
+  }
+
+  private parseAirlineCodes() {
+    const codes = [];
+    if (this.pnrService.segments !== undefined && this.pnrService.segments.length > 0) {
+      this.pnrService.segments.forEach((x) => {
+        if (x.segmentType === 'AIR' && !codes.includes(x.airlineCode)) {
+          codes.push(x.airlineCode);
+        }
+      });
+    }
+    this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join(','));
+  }
+
+  private getArrivaltime() {
+    const segment = this.pnrService.getSegmentList();
+    const keyarr = 'PNR_AIR_SEGMENT_ARR_TIME';
+    const keydept = 'PNR_AIR_SEGMENT_DEPT_TIME';
+    if (segment) {
+      segment.forEach((element) => {
+        if (element.arrivalStation === 'CCS' || element.cityCode === 'CCS') {
+          this.AssignKeyValue(keyarr, element.arrivalTime);
+          this.AssignKeyValue(keydept, element.departureTime);
+        }
+      });
+    }
+  }
+
+  private AssignKeyValue(key, value) {
+    if (this.businessEntities.has(key)) {
+      this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + value);
+    } else {
+      this.businessEntities.set(key, value);
+    }
   }
 }

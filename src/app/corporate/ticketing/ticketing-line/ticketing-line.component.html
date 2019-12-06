@@ -122,5 +122,9 @@
         </div>
       </div>
     </form>
+
+    <tab *ngIf="hasRuleApproval">
+      <app-container [containerFilter]="'APPROVAL'"></app-container>
+    </tab>
   </div>
 </div>

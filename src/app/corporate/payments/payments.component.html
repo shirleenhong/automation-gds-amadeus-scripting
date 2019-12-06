@@ -5,7 +5,7 @@
   <tab heading="Corporate Receipt" id="tab3" *ngIf="hasValidUnticketed && hasFop">
     <app-non-acceptance></app-non-acceptance>
   </tab>
-  <tab heading="Rules" id="rules" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'PAYMENT')">
+  <tab heading="Rules" id="rules" *ngIf="hasRule">
     <app-container></app-container>
   </tab>
 </tabset>

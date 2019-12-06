@@ -41,9 +41,11 @@ import { CancelSegmentComponent } from '../shared/cancel-segment/cancel-segment.
 import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
+import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.component';
+import { PricingComponent } from './pricing/pricing.component';
+import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
-import { RuleWriterService } from '../service/business-rules/rule-writer.service';
-
+declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -62,6 +64,7 @@ export class CorporateComponent implements OnInit {
   migrationOBTDates: Array<string>;
   segment = [];
   cfLine: CfRemarkModel;
+  showIrdRequestButton = false;
 
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -77,6 +80,8 @@ export class CorporateComponent implements OnInit {
   passiveSegmentsComponent: PassiveSegmentsComponent;
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
+  @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
+  @ViewChild(PricingComponent) pricingComponent: PricingComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -100,8 +105,8 @@ export class CorporateComponent implements OnInit {
     private segmentService: SegmentService,
     private amadeusRemarkService: AmadeusRemarkService,
     private corpCancelRemarkService: CorpCancelRemarkService,
-    private rulesEngine: RulesEngineService,
-    private ruleWriter: RuleWriterService
+    private pricingService: PricingService,
+    private rulesEngine: RulesEngineService
   ) {
     this.initData();
     this.getPnrService();
@@ -111,6 +116,31 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
+  }
+
+  showRule() {
+    // get rule
+
+    const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
+    if (isMarriottPopUP) {
+      this.workflow = '';
+      this.showMessage(
+        this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message').replace(/{br}/g, '<br>'),
+        MessageType.Default,
+        this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
+        'Loading'
+      );
+    }
+  }
+
+  hasAirportCode(airportCode: string) {
+    let hasAC = false;
+    this.pnrService.segments.forEach((segment) => {
+      if (segment.airportCode === airportCode) {
+        hasAC = true;
+      }
+    });
+    return hasAC;
   }
 
   async getPnr() {
@@ -126,6 +156,10 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
+    if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
+      this.showIrdRequestButton = true;
+    }
   }
 
   initData() {
@@ -171,12 +205,13 @@ export class CorporateComponent implements OnInit {
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     this.validModel.isFeesValid = this.feesComponent.checkValid();
     this.validModel.isQueueValid = this.queueComponent.checkValid();
+    this.validModel.isPricingValid = this.pricingComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 
   public async wrapPnr() {
-    await this.loadPnrData();
     this.workflow = 'wrap';
+    await this.loadPnrData();
   }
 
   public async AddSegment() {
@@ -210,7 +245,6 @@ export class CorporateComponent implements OnInit {
       this.workflow = 'error';
     } else {
       try {
-        await this.rulesEngine.initializeRulesEngine();
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');
@@ -222,12 +256,14 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
+        await this.rulesEngine.initializeRulesEngine();
       } catch (e) {
         console.log(e);
       }
     }
     this.closePopup();
     this.checkHasDataLoadError();
+    this.showRule();
   }
 
   checkHasDataLoadError() {
@@ -245,6 +281,10 @@ export class CorporateComponent implements OnInit {
   }
 
   public async SubmitToPNR() {
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
+
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -258,7 +298,7 @@ export class CorporateComponent implements OnInit {
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
-    const remarkCollection = new Array<RemarkGroup>();
+    accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
@@ -328,7 +368,6 @@ export class CorporateComponent implements OnInit {
 
     const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
     this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
-
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
@@ -341,14 +380,13 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
-
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
     }
 
-    remarkCollection.push(this.ruleWriter.getAddRemarksRuleResult());
-    remarkCollection.push(this.ruleWriter.getDeleteRemarksRuleResult());
+    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
 
     await this.rms.SendCommand(
@@ -372,6 +410,35 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+  async sendIrdRateParameters() {
+    if (!this.irdRateRequestComponent.checkValid()) {
+      const modalRef = this.modalService.show(MessageComponent, {
+        backdrop: 'static'
+      });
+      modalRef.content.modalRef = modalRef;
+      modalRef.content.title = 'Invalid Inputs';
+      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      return;
+    }
+    this.showLoading('Updating PNR...', 'SubmitToPnr');
+    let remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(
+      this.irdRateRequestComponent.irdInvoiceRequestComponent.commentsForm
+    );
+    this.invoiceRemarkService.writeIrdRateRequestRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
+    this.invoiceRemarkService.addTravelTicketingQueue(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
+    await this.rms.submitToPnr(remarkList, [], [], []).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
   private getStaticModelRemarks(
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
@@ -528,6 +595,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     try {
       await this.rms.getMatchcedPlaceholderValues();
+      await this.rulesEngine.initializeRulesEngine();
       this.workflow = 'sendQueue';
       this.closePopup();
     } catch (e) {
@@ -553,6 +621,19 @@ export class CorporateComponent implements OnInit {
         this.setControl();
         // this.closePopup();
       }
+    }
+  }
+
+  async irdRateRequest() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'irdRateRequest';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -674,6 +755,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     try {
       await this.rms.getMatchcedPlaceholderValues();
+      await this.rulesEngine.initializeRulesEngine();
       this.workflow = 'sendInvoice';
       this.closePopup();
     } catch (e) {

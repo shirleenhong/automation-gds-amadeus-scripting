@@ -6,6 +6,8 @@ import { RulesLogicService } from './rule-logic.service';
 import { RulesReaderService } from './rules-reader.service';
 import { BusinessRule } from 'src/app/models/business-rules/business-rule.model';
 import { BusinessRulesFormData } from 'src/app/models/business-rules/ui-business-rules.model';
+import { RuleUiService } from './rule-ui.service';
+import { RuleWriterService } from './rule-writer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,9 @@ export class RulesEngineService {
     private ddb: DDBService,
     private pnrService: PnrService,
     private ruleLogicService: RulesLogicService,
-    private ruleReaderService: RulesReaderService
+    private ruleReaderService: RulesReaderService,
+    private ruleUiService: RuleUiService,
+    private ruleWriter: RuleWriterService
   ) {}
 
   public async initializeRulesEngine() {
@@ -41,8 +45,16 @@ export class RulesEngineService {
     return this.validBusinessRules && this.validBusinessRules.length > 0;
   }
 
-  loadBusinessEntityFromPnr() {
-    this.ruleReaderService.readPnr();
+  getRuleUiForm(containerName) {
+    return this.ruleUiService.generateForm(this.getRuleFormData(containerName));
+  }
+
+  getRuleUiFormHtml(containerName) {
+    return this.ruleUiService.generateFormHtml(this.getRuleFormData(containerName));
+  }
+
+  async loadBusinessEntityFromPnr() {
+    await this.ruleReaderService.readPnr();
     this.businessEntities = this.ruleReaderService.businessEntities;
   }
 
@@ -52,25 +64,50 @@ export class RulesEngineService {
     );
   }
 
+  getRuleWithEntities(_enities: string[]) {
+    return this.validBusinessRules.filter((x) => x.hasResultEntities(_enities));
+  }
+
   checkRuleResultExist(entityName: string, ruleValue: string) {
     let hasRule = false;
 
-    // for (const rule of this.validBusinessRules) {
-    //   for (const res of rule) {
-    //     if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
-    //       hasRule = true;
-    //     }
-    //   }
-    // }
-    // tslint:disable-next-line: no-shadowed-variable
-    this.validBusinessRules.forEach((rule) => {
-      rule.ruleResult.forEach((res) => {
-        if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
-          hasRule = true;
+    if (this.validBusinessRules !== undefined) {
+      this.validBusinessRules.forEach((rule) => {
+        rule.ruleResult.forEach((res) => {
+          if (res.businessEntityName === entityName && res.resultItemValue === ruleValue) {
+            hasRule = true;
+          }
+        });
+      });
+    }
+    return hasRule;
+  }
+
+  getRuleFormData(container: string): BusinessRulesFormData[] {
+    const formData = [];
+    this.validBusinessRules.forEach((bRule) => {
+      const look = bRule.ruleResult.find((x) => x.businessEntityName === 'UI_DISPLAY_CONTAINER' && x.resultItemValue === container);
+      if (look) {
+        bRule.ruleResult.forEach((result) => {
+          if (result.businessEntityName === 'UI_ADD_CONTROL') {
+            formData.push(new BusinessRulesFormData(result.resultItemValue));
+          }
+        });
+      }
+    });
+    return formData;
+  }
+
+  getSpecificRuleResultItemValue(entityName: string) {
+    let value = '';
+    this.validBusinessRules.forEach((bRule) => {
+      bRule.ruleResult.forEach((result) => {
+        if (result.businessEntityName === entityName) {
+          value = result.resultItemValue;
         }
       });
     });
-    return hasRule;
+    return value;
   }
 
   getSpecificRulesValue(entityName: string) {
@@ -85,5 +122,23 @@ export class RulesEngineService {
       });
     });
     return { resultItems, formData };
+  }
+
+  setFormUIEntityValue(entity, value) {
+    this.businessEntities.set(entity, value);
+  }
+
+  getRuleWriteRemarks() {
+    let resulttItems = this.getSpecificRulesValue('PNR_ADD_Remark').resultItems;
+    this.ruleWriter.getPnrAddRemark(resulttItems);
+    resulttItems = this.getSpecificRulesValue('WRITE_REMARK_WITH_CONDTION').resultItems;
+    this.ruleWriter.getWriteRemarkWithCondition(resulttItems);
+    return this.ruleWriter.writeRuleRemarks();
+  }
+
+  getRuleDeleteRemarks() {
+    const resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
+
+    return this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
   }
 }

@@ -22,7 +22,7 @@
     <app-car-savings-code></app-car-savings-code>
   </tab>
 
-  <tab heading="Rules" id="rules" tabOrder="8" *ngIf="hasRules('UI_DISPLAY_CONTAINER', 'REPORTING')">
-    <app-container></app-container>
+  <tab heading="Rules" id="rules" tabOrder="8" *ngIf="hasRules">
+    <app-container [containerFilter]="'REPORTING'"></app-container>
   </tab>
 </tabset>

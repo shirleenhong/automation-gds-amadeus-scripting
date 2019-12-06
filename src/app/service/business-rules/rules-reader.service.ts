@@ -125,9 +125,9 @@ export class RulesReaderService {
 
   private parseAirlineCodes() {
     const codes = [];
-    if (this.pnrService.segments !== undefined && this.pnrService.segments.length > 0) {
-      this.pnrService.segments.forEach((x) => {
-        if (x.segmentType === 'AIR' && !codes.includes(x.airlineCode)) {
+    if (this.pnrService.pnrObj.airSegments !== undefined && this.pnrService.pnrObj.airSegments.length > 0) {
+      this.pnrService.pnrObj.airSegments.forEach((x) => {
+        if (!codes.includes(x.airlineCode)) {
           codes.push(x.airlineCode);
         }
       });

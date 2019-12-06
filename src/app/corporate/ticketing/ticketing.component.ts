@@ -42,8 +42,6 @@ export class TicketingComponent implements OnInit {
 
   hasRules(entityName: string, resultValue: string) {
     console.log(name);
-
     return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
-  sssssssss;
 }

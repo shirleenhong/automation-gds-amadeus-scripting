@@ -7,7 +7,6 @@ import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
 })
 export class RulesLogicService {
   isLogicValid(logic: RuleLogic, businessEntityList: Map<string, string>) {
-
     let entities = [];
     let ruleLogic = false;
     const entityName = businessEntityList.get(logic.businessEntityName);
@@ -39,7 +38,17 @@ export class RulesLogicService {
           ruleLogic = logicValue.split('|').indexOf(entity) === -1;
           break;
         case RuleLogicEnum.IN:
-          ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
+          if (entity.includes(',')) {
+            ruleLogic = false;
+            const entityList = entity.split(',');
+            entityList.forEach((element) => {
+              if (logicValue.split('|').indexOf(element) >= 0) {
+                ruleLogic = true;
+              }
+            });
+          } else {
+            ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
+          }
           break;
         case RuleLogicEnum.GREATER_THAN_EQUAL:
           ruleLogic = logicValue >= entity;
@@ -57,7 +66,6 @@ export class RulesLogicService {
       if (ruleLogic) {
         return ruleLogic;
       }
-
     }
     return ruleLogic;
   }

@@ -615,7 +615,7 @@ export class PnrService {
             passive: passiveType,
             isPassive: (segType === 'CAR' || type === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
             passengerNo: this.getPassengerAssocNumbers(elem.associations),
-            hotelChainCode:hotelChainCode
+            hotelChainCode
         };
         this.segments.push(segment);
     }
@@ -1412,22 +1412,25 @@ export class PnrService {
 
     getUnticketedTst() {
         let unticketed = [];
-        if (!this.tstObj.length) {
+        if (!this.tstObj) {
+            return false;
+        }
+        if (  !this.tstObj.length) {
              unticketed.push(this.tstObj);
          } else {
              unticketed =  this.tstObj.filter(t => this.checkPaxRefDetails(t.paxSegReference.refDetails));
          }
         return unticketed.length > 0;
      }
- 
+
      checkPaxRefDetails(refDetails) {
          if (refDetails.length === undefined) {
              return refDetails.refQualifier !== 'PT';
          } else {
-             return refDetails.filter(x => x.refQualifier !== 'PT').length >0;
+             return refDetails.filter(x => x.refQualifier !== 'PT').length > 0;
          }
      }
- 
+
 
     getTicketedNumbers() {
         const tickets = [];
@@ -1680,6 +1683,8 @@ export class PnrService {
         const unticketedSegments = [];
         const tstObj = this.tstObj;
         const ticketedSegments = [];
+
+        if (this.pnrObj.fullNode !== null) {
         for (const tst of this.pnrObj.fullNode.response.model.output.response.dataElementsMaster.dataElementsIndiv) {
           const segmentName = tst.elementManagementData.segmentName;
           if (segmentName === 'FA' || segmentName === 'FHA' || segmentName === 'FHE') {
@@ -1698,6 +1703,7 @@ export class PnrService {
             }
           }
         }
+    }
         allAir.forEach((x) => {
           if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
             unticketedSegments.push(x.tatooNumber);

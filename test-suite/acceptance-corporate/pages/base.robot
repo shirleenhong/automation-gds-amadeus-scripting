@@ -15,6 +15,7 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          ../../resources/common/api-utilities.txt
 
+
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::span[@class='xDialog_close xDialog_std_close']

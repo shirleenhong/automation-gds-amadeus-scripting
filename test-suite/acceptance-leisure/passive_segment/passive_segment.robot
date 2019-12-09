@@ -233,7 +233,7 @@ Verify Passive Limo Segment Is Added In the PNR For EN Language
 Verify Passive Limo Segment Is Added In the PNR For FR Language
     [Tags]    us8720
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21FEB-CWT RETENTION SEGMENT    RMZ/LANGUAGE-FR-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN1DEC-CWT RETENTION SEGMENT    RMZ/LANGUAGE-FR-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button
@@ -246,7 +246,7 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
     Enter Limo Pickup Location    Address Home
     Enter Limo Transfer To Location    Pearson Airport
     Enter Limo Pickup City    YYZ
-    Enter Limo Pickup Date    11292019
+    Enter Limo Pickup Date    10292020
     Enter Limo Pickup Time    1215AM
     Enter Limo Rate    26.98
     Select Limo Rate Type    Flat Rate
@@ -263,7 +263,7 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
     Enter Limo Phone Number    4445343
     Enter Limo Transfer To Location    Hotel Location
     Enter Limo Pickup City    YCO
-    Enter Limo Pickup Date    12302019
+    Enter Limo Pickup Date    10302020
     Enter Limo Pickup Time    1032PM
     Enter Limo Rate    24.34
     Select Limo Rate Type    Flat Rate
@@ -276,8 +276,8 @@ Verify Passive Limo Segment Is Added In the PNR For FR Language
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 29NOV-/TYP-LIM/SUN-LIMOUSINE INC/SUC-SWG/STP-PEARSON AIRPORT/SD-29NOV/ST-0015/EC-YYZ/ED-29NOV/ET-0015/CF-890ASD    True
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YCO 30DEC-/TYP-LIM/SUN-LIMO 2 GO/SUC-ASD/STP-HOTEL LOCATION/SD-30DEC/ST-2232/EC-YCO/ED-30DEC/ET-2232/CF-1234QWE    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 29OCT-/TYP-LIM/SUN-LIMOUSINE INC/SUC-SWG/STP-PEARSON AIRPORT/SD-29OCT/ST-0015/EC-YYZ/ED-29OCT/ET-0015/CF-890ASD    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YCO 30OCT-/TYP-LIM/SUN-LIMO 2 GO/SUC-ASD/STP-HOTEL LOCATION/SD-30OCT/ST-2232/EC-YCO/ED-30OCT/ET-2232/CF-1234QWE    True
     Verify Specific Remark Is Written In The PNR    RIR PHONE 6543210/S3
     Verify Specific Remark Is Written In The PNR    RIR DE ADDRESS HOME CUEILLETTE A-00:15/S3
     Verify Specific Remark Is Written In The PNR    RIR A PEARSON AIRPORT/S3

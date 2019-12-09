@@ -6,8 +6,8 @@ Resource          ../../resources/common/global_resources.robot
 Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     [Tags]    us7747    us8001    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS UA1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
-    ...    RU1AHK1SIN21DEC-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12-/TYP-TOR/SUC-ZZ/SC-sin/SD-12/ST-0900/EC-sin/ED-12/ET-1800/PS-X    SS UA1074 Y 20 YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
+    ...    RU1AHK1SIN21-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Payment
@@ -191,7 +191,7 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for Non-APAY
 Verify That Matrix Accounting Remark Is Written For Rail Accounting Remark Type
     [Tags]    us7747    us9850    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    RU1AHK3BRU12OCT-/TYP-TRN/SUN-NS/SUC-YY/SC-BEBMI/SD-12OCT/ST-1010/EC-DEFRH/ED-12OCT/ET-1320/CF-12345    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    RU1AHK3BRU12OCT-/TYP-TRN/SUN-NS/SUC-YY/SC-BEBMI/SD-12OCT/ST-1010/EC-DEFRH/ED-12OCT/ET-1320/CF-12345    RM*CF/-RBM000000N
     ...    APE-12345
     Open CA Migration Window
     Click Wrap PNR
@@ -224,7 +224,7 @@ Verify That Matrix Accounting Remark Is Written For Rail Accounting Remark Type
 Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark Type
     [Tags]    us7747    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS UA1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    SS UA1074 Y 20OCT YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25OCT YULYVR GK3 / 11551440 / 1234567
     ...    RM*CF/-RBM000000N    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
@@ -255,8 +255,8 @@ Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark
 Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark Type With Other Supplier Code
     [Tags]    us7747    us9850    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    RU1AHK2SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS UA1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N
-    ...    RU1AHK2SIN27DEC-CWT RETENTION SEGMENT    APE-test@email.com
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20OCT YYZYUL GK2 / 11551440 / ABCDEFG    RU1AHK2SIN23OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    SS UA1075 Y 25OCT YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N
+    ...    RU1AHK2SIN27OCT-CWT RETENTION SEGMENT    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -287,7 +287,7 @@ Verify That Matrix Accounting Remark Is Written For NonBSP Air Accounting Remark
 Verify That APAY Matrix Accounting Remark Is Written For Seat Costs Accounting Remark Type
     [Tags]    us7761    us9850    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 20OCT YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25OCT YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
     ...    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
@@ -340,7 +340,7 @@ Verify That APAY Matrix Accounting Remark Is Updated For Seat Costs Accounting R
 Verify That APAY Matrix Accounting Remark Is Written For Maple Leaf Accounting Remark Type
     [Tags]    us7761    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    SS UA1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N    RU1AHK1SIN26DEC-CWT RETENTION SEGMENT
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20OCT YYZYUL GK2 / 11551440 / ABCDEFG    SS UA1075 Y 25OCT YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N    RU1AHK1SIN26OCT-CWT RETENTION SEGMENT
     ...    APE-test@email.com
     Open CA Migration Window
     Click Wrap PNR
@@ -446,7 +446,7 @@ Verify That Matrix Accounting Remarks UDIDs are Deleted in The PNR for APAY
 Verify That APAY Matrix Accounting Remark Is Written For Other Costs Accounting Remark Type
     [Tags]    us7761    us9850    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20DEC YYZYUL GK2 / 11551440 / ABCDEFG    SS UA1075 Y 25DEC YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20OCT YYZYUL GK2 / 11551440 / ABCDEFG    SS UA1075 Y 25OCT YULYVR GK2 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -476,8 +476,8 @@ Verify That APAY Matrix Accounting Remark Is Written For Other Costs Accounting 
 Verify That APAY Matrix Accounting Remark Is Written For Food Costs Accounting Remark Type
     [Tags]    us7761
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N
-    ...    RU1AHK1SIN19DEC-CWT RETENTION SEGMENT    APE-123123
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS UA1074 Y 20OCT YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    SS AC1075 Y 25OCT YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N
+    ...    RU1AHK1SIN19OCT-CWT RETENTION SEGMENT    APE-123123
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -506,7 +506,7 @@ Verify That APAY Matrix Accounting Remark Is Written For Food Costs Accounting R
 Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Accounting Remark Type
     [Tags]    us7761
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    SS UA1074 Y 20DEC YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AC1075 Y 25DEC YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-123123
+    Enter GDS Command    NM1Lastname/Firstname Mr    SS UA1074 Y 20OCT YYZYUL GK1 / 11551440 / ABCDEFG    RU1AHK1SIN23OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    SS AC1075 Y 25OCT YULYVR GK1 / 11551440 / 1234567    RM*CF/-RBM000000N    APE-123123
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -535,8 +535,8 @@ Verify That APAY Matrix Accounting Remark Is Written For Pet Transportation Acco
 Verify That Matrix Accounting Remark And UDID Is Written For Limo Accounting Remark When Supplier Is ACJ
     [Tags]    us7991    us8001
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12DEC-/TYP-TOR/SUC-ZZ/SC-sin/SD-12dec/ST-0900/EC-sin/ED-12dec/ET-1800/PS-X    SS AF1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
-    ...    RU1AHK1SIN21DEC-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    SS AF1074 Y 20OCT YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
+    ...    RU1AHK1SIN21OCT-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
     Click Panel    Payment
@@ -593,7 +593,7 @@ Verify That Matrix Accounting Remark And UDID 14 Are Not Duplicated On Update
 Verify That Warning Is Displayed When Updating Matrix Accounting Remark
     [Tags]    de2086
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 20OCT YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25OCT YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
     ...    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR
@@ -718,7 +718,7 @@ Verify That Warning Is Displayed When Updating Matrix Accounting Remark
 Verify That Warning Is Displayed When Deleting Matrix Accounting Remark
     [Tags]    de2086
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 20DEC YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25DEC YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    SS UA1074 Y 20OCT YYZYUL GK3 / 11551440 / ABCDEFG    SS UA1075 Y 25 YULYVR GK3 / 11551440 / 1234567    RM*CF/-RBM000000N
     ...    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR

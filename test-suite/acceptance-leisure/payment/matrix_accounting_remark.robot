@@ -6,7 +6,7 @@ Resource          ../../resources/common/global_resources.robot
 Verify That Matrix Accounting Remark Is Written For Tour Accounting Remark Type
     [Tags]    us7747    us8001    us10877
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12-/TYP-TOR/SUC-ZZ/SC-sin/SD-12/ST-0900/EC-sin/ED-12/ET-1800/PS-X    SS UA1074 Y 20 YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
+    Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1POLO/LISA Mrs    RU1AHK3SIN12OCT-/TYP-TOR/SUC-ZZ/SC-sin/SD-12OCT/ST-0900/EC-sin/ED-12OCT/ET-1800/PS-X    SS UA1074 Y 20 YYZYUL GK3 / 11551440 / ABCDEFG    RM*CF/-RBM000000N
     ...    RU1AHK1SIN21-CWT RETENTION SEGMENT    APE-TEST@EMAIL.COM
     Open CA Migration Window
     Click Wrap PNR

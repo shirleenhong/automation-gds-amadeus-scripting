@@ -1,13 +1,24 @@
 <form [formGroup]="itineraryForm">
   <div class="itineraryContainer">
-
-    <div formArrayName="emailAddresses"
-      *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
+    <div class="row" *ngIf="displayMessage !== ''">
+      <div class="col-sm-3"></div>
+      <div class="col displayMsg">
+          <p [innerHTML]="displayMessage" ></p>
+      </div>
+    </div>
+    <div formArrayName="emailAddresses" *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
       <div [formGroupName]="i" class="form-group row">
-        <div class="col-sm-4">Email Address {{ i + 1 }}:</div>
+        <div class="col-sm-3">Email Address {{ i + 1 }}:</div>
         <div class="col-4">
-          <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" list="dynamicEmail"
-            AllCapsMask formControlName="emailAddress" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="emailAddress"
+            id="emailAddress"
+            list="dynamicEmail"
+            AllCapsMask
+            formControlName="emailAddress"
+          />
           <datalist id="dynamicEmail">
             <option *ngFor="let item of listEmail" [value]="item">{{ item }} </option>
           </datalist>
@@ -23,7 +34,7 @@
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4">Language:</div>
+      <div class="col-sm-3">Language:</div>
       <div class="col-sm-4">
         <select autofocus id="language" class="form-control" formControlName="language" name="language">
           <option *ngFor="let item of languageList" [value]="item.itemValue">
@@ -34,10 +45,9 @@
     </div>
 
     <div class="form-group  row">
-      <div class="col-sm-4">Type of Transanction:</div>
+      <div class="col-sm-3">Type of Transanction:</div>
       <div class="col-sm-4">
-        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction"
-          name="typeTransaction">
+        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction" name="typeTransaction">
           <option *ngFor="let item of transactionTypeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
@@ -47,16 +57,23 @@
 
     <div *ngIf="f.typeTransaction.value === 'itinerary' || f.typeTransaction.value === 'invoice'">
       <div class="row form-group">
-        <div class="col-sm-4"></div>
+        <div class="col-sm-3"></div>
         <div class="note col-sm-4">Services:</div>
       </div>
 
       <div formArrayName="services" *ngFor="let item of this.itineraryForm.get('services')['controls']; let i = index">
         <div [formGroupName]="i" class="form-group row">
-          <div class="col-sm-4"></div>
+          <div class="col-sm-3"></div>
           <div class="col-4">
-            <input type="text" class="form-control" formControlName="service" id="service" AllCapsMask
-              formControlName="service" maxlength="65" />
+            <input
+              type="text"
+              class="form-control"
+              formControlName="service"
+              id="service"
+              AllCapsMask
+              formControlName="service"
+              maxlength="65"
+            />
           </div>
           <div *ngIf="removeservice" class="">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'service')"> </i>
@@ -69,19 +86,26 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-sm-4"></div>
+        <div class="col-sm-3"></div>
         <div class="col-sm-6">Remarks Appear at top of Invoice in RED.</div>
       </div>
       <div class="row form-group">
-        <div class="col-sm-4"></div>
+        <div class="col-sm-3"></div>
         <div class="col-sm-4 note">Tickets:</div>
       </div>
       <div formArrayName="tickets" *ngFor="let item of this.itineraryForm.get('tickets')['controls']; let i = index">
         <div [formGroupName]="i" class="form-group row">
-          <div class="col-sm-4"></div>
+          <div class="col-sm-3"></div>
           <div class="col-4">
-            <input type="text" class="form-control" formControlName="ticket" id="ticket" AllCapsMask
-              formControlName="ticket" maxlength="65" />
+            <input
+              type="text"
+              class="form-control"
+              formControlName="ticket"
+              id="ticket"
+              AllCapsMask
+              formControlName="ticket"
+              maxlength="65"
+            />
           </div>
           <div *ngIf="removeticket">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'ticket')"> </i>
@@ -96,19 +120,18 @@
 
     <div *ngIf="f.typeTransaction.value === 'itinerary'">
       <div class="row form-group">
-        <div class="col-sm-4"></div>
+        <div class="col-sm-3"></div>
         <div class="col-sm-6">Remarks Appear at top of Invoice in RED.</div>
       </div>
       <div class="row form-group">
-        <div class="col-sm-4"></div>
+        <div class="col-sm-3"></div>
         <div class="col-sm-4 note">Offers:</div>
       </div>
       <div formArrayName="offers" *ngFor="let item of this.itineraryForm.get('offers')['controls']; let i = index">
         <div [formGroupName]="i" class="form-group row">
-          <div class="col-sm-4"></div>
+          <div class="col-sm-3"></div>
           <div class="col-4">
-            <input type="text" class="form-control" formControlName="offer" id="offer" AllCapsMask
-              formControlName="offer" maxlength="65" />
+            <input type="text" class="form-control" formControlName="offer" id="offer" AllCapsMask formControlName="offer" maxlength="65" />
           </div>
           <span *ngIf="removeoffer" class="">
             <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'offer')"> </i>

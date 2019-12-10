@@ -16,8 +16,10 @@ export class TicketingComponent implements OnInit {
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
   constructor(private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
-
-  ngOnInit() {}
+  hasRules = false;
+  ngOnInit() {
+    this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'TICKETING');
+  }
 
   checkValid() {
     if (this.aquaTicketingComponent !== undefined) {
@@ -39,11 +41,4 @@ export class TicketingComponent implements OnInit {
 
     return true;
   }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
-  }
-  sssssssss;
 }

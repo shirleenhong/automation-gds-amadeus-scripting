@@ -7,26 +7,67 @@ import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
 })
 export class RulesLogicService {
   isLogicValid(logic: RuleLogic, businessEntityList: Map<string, string>) {
-    let entity = businessEntityList.get(logic.businessEntityName);
-    if (!entity) {
-      entity = '';
+    let entities = [];
+    let ruleLogic = false;
+    const entityName = businessEntityList.get(logic.businessEntityName);
+
+    if (entityName) {
+      entities = entityName.split('\n');
     } else {
-      entity = entity.toUpperCase();
+      return ruleLogic;
     }
-    const logicValue = logic.logicItemValue.toUpperCase();
-    switch (logic.relationalOperatorId) {
-      case RuleLogicEnum.IS:
-        return entity === logicValue;
-      case RuleLogicEnum.CONTAINS:
-        return entity.indexOf(logicValue) >= 0;
-      case RuleLogicEnum.IS_NOT:
-        return entity !== logicValue;
-      case RuleLogicEnum.NOT_IN:
-        return logicValue.split('|').indexOf(entity) === -1;
-      case RuleLogicEnum.IN:
-        return logicValue.split('|').indexOf(entity) >= 0;
+
+    for (let entity of entities) {
+      if (!entity) {
+        entity = '';
+      } else {
+        entity = entity.toUpperCase();
+      }
+      const logicValue = logic.logicItemValue.toUpperCase();
+      switch (logic.relationalOperatorId) {
+        case RuleLogicEnum.IS:
+          ruleLogic = entity === logicValue;
+          break;
+        case RuleLogicEnum.CONTAINS:
+          ruleLogic = entity.indexOf(logicValue) >= 0;
+          break;
+        case RuleLogicEnum.IS_NOT:
+          ruleLogic = entity !== logicValue;
+          break;
+        case RuleLogicEnum.NOT_IN:
+          ruleLogic = logicValue.split('|').indexOf(entity) === -1;
+          break;
+        case RuleLogicEnum.IN:
+          if (entity.includes(',')) {
+            ruleLogic = false;
+            const entityList = entity.split(',');
+            entityList.forEach((element) => {
+              if (logicValue.split('|').indexOf(element) >= 0) {
+                ruleLogic = true;
+              }
+            });
+          } else {
+            ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
+          }
+          break;
+        case RuleLogicEnum.GREATER_THAN_EQUAL:
+          ruleLogic = logicValue >= entity;
+          break;
+        case RuleLogicEnum.LESS_THAN_EQUAL:
+          ruleLogic = entity <= logicValue;
+          break;
+        case RuleLogicEnum.NOT_BETWEEN:
+          const rulelogic = logicValue.split('|');
+          if (rulelogic && rulelogic.length > 1) {
+            ruleLogic = !(rulelogic[0] <= entity && entity <= rulelogic[1]);
+          }
+          break;
+      }
+      if (ruleLogic) {
+        return ruleLogic;
+      }
     }
-    return false;
+    return ruleLogic;
   }
 
   isRuleLogicValid(ruleLogics: RuleLogic[], businessEntityList: Map<string, string>) {

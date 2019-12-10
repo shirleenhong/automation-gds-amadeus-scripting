@@ -18,11 +18,13 @@ export class QueueComponent implements OnInit {
   @ViewChild(OfcDocumentationComponent) ofcDocumentation: OfcDocumentationComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
+  hasRules = false;
   isEsc = false;
   isOfc = false;
   constructor(private counselorDetail: CounselorDetail, private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
 
   ngOnInit() {
+    this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'QUEUE');
     this.counselorDetail.identityOnChange.subscribe((x) => {
       this.isEsc = x === 'ESC';
       this.isOfc = x === 'OFC';
@@ -37,11 +39,5 @@ export class QueueComponent implements OnInit {
       }
     }
     return true;
-  }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

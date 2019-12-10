@@ -12,23 +12,18 @@ import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.
 export class FeesComponent implements OnInit {
   @ViewChild(SupplementalFeesComponent) supplemeentalFees: SupplementalFeesComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
-
+  hasRules = false;
   constructor(private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'FEES');
+  }
 
   checkValid() {
     this.utilHelper.validateAllFields(this.supplemeentalFees.ticketedForm);
     if (!this.supplemeentalFees.ticketedForm.valid && !this.supplemeentalFees.ticketedForm.disabled) {
       return false;
     }
-
     return true;
-  }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

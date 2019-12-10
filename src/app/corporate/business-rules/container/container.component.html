@@ -1,33 +1,93 @@
-<form [formGroup]="containerForm">
-  <ng-template ngFor let-input [ngForOf]="formTemplateData">
-    <ng-container [ngSwitch]="input.controlType">
-      <ng-template [ngSwitchCase]="'text'">
-        <div class="form-group">
-          <label [for]="input.controlName"> {{ input.controlName }}</label>
-          <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName"
-            [required]="input.validators.required" [minlength]="input.validators.minlength"
-            [maxlength]="input.validators.maxlength" />
-        </div>
-      </ng-template>
+<div class="container">
+  <form [formGroup]="containerForm" class="form-group">
+    <ng-template ngFor let-input [ngForOf]="formTemplateData">
+      <ng-container [ngSwitch]="input.controlType">
+        <ng-template [ngSwitchCase]="'labelmessage'">
+          <div [innerHTML]="input.controlName" class="row">
+            <!-- <div class="col-8">
+            {{ input.controlName }}
+          </div> -->
+          </div>
+        </ng-template>
 
-      <ng-template [ngSwitchCase]="'select'">
-        <div class="form-group">
-          <label [for]="input.controlName"> {{ input.controlName }}</label>
-          <select [formControlName]="input.controlName" [name]="input.controlName" [id]="input.controlName"
-            [required]="input.validators.required">
-            <option value="">{{ input.placeholder }}</option>
-            <option *ngFor="let option of input.options" [value]="option.value">{{ option.optionName }}</option>
-          </select>
-        </div>
-      </ng-template>
+        <ng-template [ngSwitchCase]="'text'">
+          <div class="row">
+            <div class="col-3">
+              <label [for]="input.controlName"> {{ input.label }}</label>
+            </div>
+            <div class="col-4">
+              <input
+                class="form-control"
+                [formControlName]="input.controlName"
+                [type]="input.controlType"
+                [name]="input.controlName"
+                [required]="input.validators.required"
+                [minlength]="input.validators.minlength"
+                [maxlength]="input.validators.maxlength"
+              />
+            </div>
+          </div>
+        </ng-template>
 
-      <ng-template [ngSwitchCase]="'radio'">
-        <div *ngFor="let option of input.options" class="form-group row">
-          <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName"
-            [value]="option.value" [required]="input.validators.required" />
-          <label [for]="input.controlName"> {{ option.optionName }}</label>
+        <ng-template [ngSwitchCase]="'select'">
+          <div class="row">
+            <div class="col-3">
+              <label [for]="input.controlName"> {{ input.label }}</label>
+            </div>
+            <div class="col-4">
+              <select
+                class="form-control"
+                [formControlName]="input.controlName"
+                [name]="input.controlName"
+                [id]="input.controlName"
+                [required]="input.validators.required"
+              >
+                <option value="">{{ input.placeholder }}</option>
+                <option *ngFor="let option of input.options" [value]="option.value">{{ option.optionName }}</option>
+              </select>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'radio'">
+          <div class="row">
+            <div class="col-3">
+              <label [for]="input.controlName"> {{ input.label }}</label>
+            </div>
+            <div class="col-4">
+              <table>
+                <tr>
+                  <td *ngFor="let option of input.options" class="">
+                    <label class="control control-radio ">
+                      <input
+                        type="radio"
+                        [formControlName]="input.controlName"
+                        [type]="input.controlType"
+                        [name]="input.controlName"
+                        [value]="option.value"
+                        [required]="input.validators.required"
+                      />{{ option.name }} &nbsp;&nbsp;
+                      <div class="control_indicator"></div>
+                    </label>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="col-4">
+          <ng-template [ngSwitchCase]="'checkbox'">
+            <div class="col-3">
+              <label [for]="input.controlName"> {{ input.controlName }}</label>
+            </div>
+            <div *ngFor="let option of input.options" class="form-group row">
+              <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName" />
+              <label [for]="input.controlName"> {{ option.name }}</label>
+            </div>
+          </ng-template>
         </div>
-      </ng-template>
-    </ng-container>
-  </ng-template>
-</form>
+      </ng-container>
+    </ng-template>
+  </form>
+</div>

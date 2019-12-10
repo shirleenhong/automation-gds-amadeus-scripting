@@ -4,15 +4,15 @@ Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
 Library           DateTime
+Resource          add_segment.robot
 Resource          amadeus.robot
+Resource          cancel_segments.robot
+Resource          invoice.robot
 Resource          payment.robot
-Resource          ticketing.robot
+Resource          pricing.robot
+Resource          queues.robot
 Resource          reporting.robot
 Resource          remarks.robot
-Resource          cancel_segments.robot
-Resource          queues.robot
-Resource          standalone.robot
-Resource          add_segment.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
@@ -46,17 +46,20 @@ ${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Se
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
+${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 @{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
+@{pricing_pages}     Pricing    Airfare Commission
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
-@{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
+@{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
+@{ird_pages}    IRD Rate Request
 
 *** Keywords ***
 Enter Value
@@ -139,7 +142,11 @@ Click Payment Panel
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Payment
-    [Teardown]    Take Screenshot
+    
+Click Pricing Panel
+    Wait Until Element Is Visible    ${panel_airfareCommission}    30
+    Click Element    ${panel_airfareCommission}
+    Set Test Variable    ${current_page}    Airfare Commission
     
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
@@ -198,7 +205,7 @@ Assign Current Date
     ${current_month}     Convert Date     ${current_date}    %m
     ${current_year}     Convert Date     ${current_date}    %y
     ${current_time}     Convert Date     ${current_date}    %H:%M
-    ${current_time_plus}    Add Time To Time    ${current_time}     00:01
+    ${current_time_plus}    Add Time To Date    ${current_date}     1 minute    %H:%M    yes    
     ${month}     Convert Month To MMM    ${current_date}
     Set Test Variable    ${current_time}
     Set Test Variable    ${current_time_plus}    
@@ -289,6 +296,7 @@ Collapse Open Panel
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     ${to_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${destination_page}
+    ${to_pricing}    Run Keyword And Return Status    Should Contain    ${pricing_pages}    ${destination_page}
     ${to_reporting}    Run Keyword And Return Status    Should Contain    ${reporting_pages}    ${destination_page}
     ${to_remarks}    Run Keyword And Return Status    Should Contain    ${remarks_pages}    ${destination_page}
     ${to_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${destination_page}
@@ -301,12 +309,13 @@ Navigate From Full Wrap
     Set Test Variable    ${to_queue}
     Set Test Variable    ${to_ticketing}
     Collapse Open Panel
-    Run Keyword If    "${to_payment}" == "True"    Navigate From Payment    ${destination_page}    
-    ...    ELSE IF    "${to_reporting}" == "True"    Navigate From Reporting    ${destination_page}
-    ...    ELSE IF    "${to_remarks}" == "True"   Navigate From Remarks    ${destination_page}
-    ...    ELSE IF    "${to_fees}" == "True"    Click Fees Panel
-    ...    ELSE IF    "${to_queue}" == "True"    Navigate From Queue    ${destination_page}
-    ...    ELSE IF    "${to_ticketing}" == "True"       Navigate From Ticketing    ${destination_page}
+    Run Keyword If    ${to_payment}    Navigate From Payment    ${destination_page}
+    ...    ELSE IF    ${to_pricing}    Navigate From Pricing    ${destination_page}
+    ...    ELSE IF    ${to_reporting}    Navigate From Reporting    ${destination_page}
+    ...    ELSE IF    ${to_remarks}   Navigate From Remarks    ${destination_page}
+    ...    ELSE IF    ${to_fees}    Click Fees Panel
+    ...    ELSE IF    ${to_queue}    Navigate From Queue    ${destination_page}
+    ...    ELSE IF    ${to_ticketing}       Navigate From Ticketing    ${destination_page}
     ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
@@ -315,6 +324,12 @@ Navigate From Payment
     Run Keyword If    "${in_payment}" == "False"    Click Payment Panel
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
     Run Keyword If    "${destination_page}" == "Corporate Receipt"    Click Corporate Receipt Tab    
+
+Navigate From Pricing
+    [Arguments]    ${destination_page}
+    ${in_pricing}    Run Keyword And Return Status     Should Contain     ${pricing_pages}    ${current_page}
+    Run Keyword If    not ${in_pricing}    Click Pricing Panel
+    Run Keyword If    "${destination_page}" == "Airfare Commission"     Click Airfare Commission Tab        
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -372,21 +387,23 @@ Finish PNR
     ${in_full_wrap}    Run Keyword And Return Status    Should Contain    ${full_wrap_pages}    ${current_page}
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     ${in_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${current_page}
+    ${in_ird}    Run Keyword And Return Status    Should Contain    ${ird_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Send Itinerary And Queue    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"    Fill Up Required And Cancel Segments
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_ird}" == "True"    Submit IRD Request
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
 
 Send Itinerary And Queue
     [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
+    Scroll Element Into View    ${panel_queue}
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
     Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
     Click Submit To PNR    ${close_corporate_test}    ${queueing}
 
 Fill Up Required And Cancel Segments
      Run Keyword If     "${cancel_segments_complete}" == "no"    Cancel All Segments
-     # Run Keyword If     "${non_bsp_ticket_credit_complete}" == "no"    Fill Up NonBSP Ticket Credit With Default Values
      Click Cancel Segment Button
     
 Submit To PNR
@@ -661,11 +678,23 @@ Complete The PNR In Full Wrap
     Finish PNR
 
 Click IRD Rate Request
-    # Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
-    # Click Element     ${button_send_invoice_itinerary} 
+    Wait Until Page Contains Element    ${button_ird_rate_request}      180
+    Click Element     ${button_ird_rate_request} 
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    IRD Rate Request
     Set Test Variable    ${pnr_submitted}   no
+    
+Submit IRD Request
+    [Arguments]    ${close_corporate_test}=yes
+    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Scroll Element Into View     ${button_submit_pnr}
+    Click Button    ${button_submit_pnr}
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    Set Test Variable    ${current_page}     CWT Corporate 
+    Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
+    
+    
     

@@ -20,6 +20,7 @@ export class PaymentsComponent implements OnInit {
   hasValidUnticketed = false;
   hasFop = false;
   tstData = [];
+  hasRule = false;
   constructor(
     private pnrService: PnrService,
     private utilHelper: UtilHelper,
@@ -29,7 +30,7 @@ export class PaymentsComponent implements OnInit {
 
   ngOnInit() {
     this.tstData = this.pnrService.getUnticketedCorpReceipts();
-
+    this.hasRule = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'PAYMENT');
     if (this.pnrService.getFopElements() !== '') {
       this.hasFop = true;
     } else {
@@ -65,11 +66,5 @@ export class PaymentsComponent implements OnInit {
     } else {
       return true;
     }
-  }
-
-  hasRules(entityName: string, resultValue: string) {
-    console.log(name);
-
-    return this.rulesEngineService.checkRuleResultExist(entityName, resultValue);
   }
 }

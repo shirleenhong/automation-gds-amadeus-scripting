@@ -43,7 +43,7 @@
                 [required]="input.validators.required"
               >
                 <option value="">{{ input.placeholder }}</option>
-                <option *ngFor="let option of input.options" [value]="option.value">{{ option.optionName }}</option>
+                <option *ngFor="let option of input.options" [value]="option.value">{{ option.name }}</option>
               </select>
             </div>
           </div>

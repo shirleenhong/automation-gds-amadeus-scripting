@@ -159,8 +159,7 @@ WHERE BusinessEntityName='PNR_ADD_Remark');
 VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Reasonforbookingwithin14days","controlName":"bookReason","required":"true","options":[{"name":"","value":""},{"name":"ATDLOCATIONEMERGENCY","value":"ATDLOCATIONEMERGENCY"},{"optionName":"CLIENTFACINGMEETING","optionValue":"CLIENTFACINGMEETING"},{"optionName":"FORGOTTOBOOKTRAVEL","optionValue":"FORGOTTOBOOKTRAVEL"},{"optionName":"MANAGERPREAPPROVAL","optionValue":"MANAGERPREAPPROVAL"},{"optionName":"TRAVELSERVICESAUTHORIZEDBOOKING","optionValue":"TRAVELSERVICESAUTHORIZEDBOOKING"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-    ,
+    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Reason for booking within 14 days","controlName":"bookReason","required":"true","options":[{"name":"ATD LOCATION EMERGENCY","value":"ATD LOCATION EMERGENCY"},{"optionName":"CLIENT FACING MEETING","optionValue":"CLIENT FACING MEETING"},{"optionName":"FORGOT TO BOOK TRAVEL","optionValue":"FORGOT TO BOOK TRAVEL"},{"optionName":"MANAGER PRE APPROVAL","optionValue":"MANAGER PRE APPROVAL"},{"optionName":"TRAVEL SERVICES AUTHORIZED BOOKING","optionValue":"TRAVEL SERVICES AUTHORIZED BOOKING"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_bookReason]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
@@ -170,7 +169,7 @@ SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
     INSERT INTO dbo.ClientDefinedRuleGroupResult
     (ClientDefinedRuleResultItemId, ClientDefinedRuleGroupId, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 values
-    (@resultitemid +  1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    (@resultitemid + 1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 2, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	

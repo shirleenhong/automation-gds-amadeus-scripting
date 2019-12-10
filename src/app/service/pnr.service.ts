@@ -198,8 +198,8 @@ export class PnrService {
     getFIElementText(searchText: string) {
         if (this.isPNRLoaded) {
             for (const fi of this.pnrObj.fiElements) {
-                if (fi.fullNode.otherDataFreetext.indexOf(searchText) === 0) {
-                    return fi.fullNode.otherDataFreetext;
+                if (fi.fullNode.otherDataFreetext.longFreetext.indexOf(searchText) === 0) {
+                    return fi.fullNode.otherDataFreetext.longFreetext;
                 }
             }
         }

@@ -32,7 +32,7 @@ Verify That CN and NUC Remark Should Be Written and/or Updated In The PNR For OF
     Verify CN And NUC Remark Are Written Correctly For PNR With IFC CN Number Remark
     
 Verify That CN and NUC Remark Should Be Written and/or Updated In The PNR For OFC Agents With Hotel Changed PNR
-    [Tags]    us10550    de2808    expect_to_fail
+    [Tags]    us10550    de2808
     Login To Amadeus Sell Connect Acceptance
     Create PNR With 1 Hotel Segment/s With Invoice
     Select Counselor Identity: OFC

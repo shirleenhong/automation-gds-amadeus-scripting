@@ -150,4 +150,9 @@ export class ItineraryRemarkService implements OnInit {
       this.rms.createPlaceholderValues(null, aquaRmkConditions, null, null, 'EMAIL ADD-NO');
     }
   }
+  addAquaOverrideRmk() {
+    const aquaOverrideCondition = new Map<string, string>();
+    aquaOverrideCondition.set('AirAutoInvoice', 'true');
+    this.rms.createPlaceholderValues(null, aquaOverrideCondition, null, null, 'AUTOMAIL-NO');
+  }
 }

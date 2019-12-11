@@ -380,6 +380,13 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
+    if (!this.queueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
+    }
+    if (!this.queueComponent.itineraryComponent.itineraryForm.dirty) {
+      /// check for Queue to Aqua condition as well
+      this.itineraryService.addAquaOverrideRmk();
+    }
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);

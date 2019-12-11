@@ -380,7 +380,8 @@ export class CorporateComponent implements OnInit {
     if (!this.queueComponent.itineraryComponent.itineraryForm.pristine) {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
-    if (!this.queueComponent.itineraryComponent.itineraryForm.dirty) {
+    this.itineraryService.addAquaQueue();
+    if (!this.queueComponent.itineraryComponent.itineraryForm.touched) {
       /// check for Queue to Aqua condition as well
       this.itineraryService.addAquaOverrideRmk();
     }

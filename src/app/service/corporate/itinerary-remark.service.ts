@@ -155,4 +155,7 @@ export class ItineraryRemarkService implements OnInit {
     aquaOverrideCondition.set('AirAutoInvoice', 'true');
     this.rms.createPlaceholderValues(null, aquaOverrideCondition, null, null, 'AUTOMAIL-NO');
   }
+  addAquaQueue() {
+    this.amadeusQueue.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', 'C1'));
+  }
 }

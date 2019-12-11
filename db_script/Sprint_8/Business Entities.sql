@@ -24,7 +24,10 @@ VALUES
     ('UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY', 'Send Itinerary - Allowed number of Email Address', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
     ('UI_DISPLAY_MESSAGE', 'Display Specific Message', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
     ('PNR_WRITE_REMARK_WITH_CONDTION', 'CA - Write remarks with condition', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
-    ('PNR_AIR_SEGMENT_AIRLINE_CODE', 'Reads the Air Segment Airline Code from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1)
+    ('PNR_AIR_SEGMENT_AIRLINE_CODE', 'Reads the Air Segment Airline Code from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
+    ('PNR_COUNT_DEPARTURE_DATE_FROM_TODAY', 'Reads the and count the days of Departure Date from todays date', @CreationTimeStamp, 'Amadeus CA Migration - US15240', 1, 0, 1),
+    ('PNR_SEGMENT_TYPES_IN_PNR', 'Reads all the segment types in the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US15240', 1, 0, 1),
+    ('PNR_EB', 'Reads the PNR EB remark', @CreationTimeStamp, 'Amadeus CA Migration - US15240', 1, 0, 1)
 
 		          
         COMMIT TRAN

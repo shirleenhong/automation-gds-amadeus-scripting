@@ -97,6 +97,38 @@ SELECT @NOTCONTAINS = ClientDefinedRuleRelationalOperatorid
 FROM ClientDefinedRuleRelationalOperator
 where RelationalOperatorName = 'NOT CONTAINS'
 
+DECLARE @IN as int
+DECLARE @NOTIN as int
+SELECT @NOTIN = ClientDefinedRuleRelationalOperatorid
+FROM ClientDefinedRuleRelationalOperator
+where RelationalOperatorName = 'NOT IN'
+
+SELECT @IN = ClientDefinedRuleRelationalOperatorid
+FROM ClientDefinedRuleRelationalOperator
+where RelationalOperatorName = 'IN'
+
+
+
+DECLARE @GreaterThanEqual as int
+DECLARE @LessThanEqual as int 
+DECLARE @LessThan as int 
+DECLARE @GreaterThan as int
+
+SELECT @GreaterThanEqual = ClientDefinedRuleRelationalOperatorid
+FROM ClientDefinedRuleRelationalOperator
+where RelationalOperatorName = '>='
+
+SELECT @LessThanEqual = ClientDefinedRuleRelationalOperatorid
+FROM ClientDefinedRuleRelationalOperator
+where RelationalOperatorName = '<='
+
+SELECT @LessThan= ClientDefinedRuleRelationalOperatorid
+FROM ClientDefinedRuleRelationalOperator
+where RelationalOperatorName = '<'
+
+SELECT @GreaterThan= ClientDefinedRuleRelationalOperatorid
+FROM ClientDefinedRuleRelationalOperator
+where RelationalOperatorName = '>'
 
 --ClientDefinedRuleGroupTrigger
 INSERT INTO dbo.ClientDefinedRuleGroupTrigger
@@ -104,31 +136,61 @@ INSERT INTO dbo.ClientDefinedRuleGroupTrigger
 VALUES
     ( @CDRGId, @CORP_LOAD_FULLWRAP, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
+
+DECLARE  @bid2 as int 
+DECLARE  @bid3 as int 
+DECLARE  @bid4 as int
+DECLARE  @bid5 as int 
+DECLARE  @bid6 as int 
+DECLARE  @bid7 as int
+
+
+
+
 --ClientDefinedRuleLogicItem
 SET @bid=null; 
 SELECT @bid=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_CF';  SET @logicitemid = null; 
+WHERE BusinessEntityName='PNR_CF';  
 
-SELECT @logicitemid = ClientDefinedRuleLogicItemid
-FROM ClientDefinedRuleLogicItem
-WHERE ClientDefinedRuleBusinessEntityId = @bid and ClientDefinedRuleRelationalOperatorId = @IS
-    and ClientDefinedRuleLogicItemValue = @CFA;
+SET @bid2=null; 
+SELECT @bid2=ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_COUNT_DEPARTURE_DATE_FROM_TODAY';
 
-IF (isnull(@logicitemid,0) = 0 )  
-BEGIN
+SET @bid3=null; 
+SELECT @bid3=ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_UDID50';  
+
+SET @bid4=null; 
+SELECT @bid4=ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_SEGMENT_TYPES_IN_PNR';  
+
+
+SET @logicitemid = null; 
+
+
     INSERT INTO dbo.ClientDefinedRuleLogicItem
-        ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
-    VALUES
-        ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
-    SET @logicitemid = SCOPE_IDENTITY()
-END
+    ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
+VALUES
+    ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid2, @LessThanEqual, '21', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid3, @NOTCONTAINS, 'VIP', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid4, @IN, 'AIR|RAIL', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+  
+    SET @logicitemid = SCOPE_IDENTITY() -4
+
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic
     (ClientDefinedRuleLogicItemId, ClientDefinedRuleGroupId, LogicSequenceNumber, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
-SELECT @logicitemid, @CDRGId, isnull(MAx(LogicSequenceNumber),0) + 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1
-FROM ClientDefinedRuleGroupLogic
-where ClientDefinedRuleGroupId = @CDRGId;
+values
+    (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    (@logicitemid + 2, @CDRGId, 2 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    (@logicitemid + 3, @CDRGId, 3 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    (@logicitemid + 4, @CDRGId, 4 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+
 
 
 --ClientDefinedRuleResultItem
@@ -137,20 +199,19 @@ where ClientDefinedRuleGroupId = @CDRGId;
 --FROM ClientDefinedRuleBusinessEntity
 --WHERE BusinessEntityName='UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY'; 
 
-DECLARE  @bid2 int 
+
 SELECT @bid2= ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='UI_DISPLAY_CONTAINER'; 
 
-DECLARE  @bid3 int 
+
 SELECT @bid3= ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='UI_ADD_CONTROL'; 
 
-
-DECLARE  @bid4 as int = (select ClientDefinedRuleBusinessEntityID
+SELECT @bid4 =  ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_ADD_Remark'); 
+WHERE BusinessEntityName='PNR_ADD_Remark'; 
 
 
  
@@ -159,7 +220,7 @@ WHERE BusinessEntityName='PNR_ADD_Remark');
 VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Reason for booking within 14 days","controlName":"bookReason","required":"false","options":[{"name":"ATD LOCATION EMERGENCY","value":"ATD LOCATION EMERGENCY"},{"name":"CLIENT FACING MEETING","value":"CLIENT FACING MEETING"},{"name":"FORGOT TO BOOK TRAVEL","value":"FORGOT TO BOOK TRAVEL"},{"name":"MANAGER PRE APPROVAL","value":"MANAGER PRE APPROVAL"},{"name":"TRAVEL SERVICES AUTHORIZED BOOKING","value":"TRAVEL SERVICES AUTHORIZED BOOKING"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Reason for booking within 14 days","name":"bookReason","required":"false","options":[{"name":"ATD LOCATION EMERGENCY","value":"ATD LOCATION EMERGENCY"},{"name":"CLIENT FACING MEETING","value":"CLIENT FACING MEETING"},{"name":"FORGOT TO BOOK TRAVEL","value":"FORGOT TO BOOK TRAVEL"},{"name":"MANAGER PRE APPROVAL","value":"MANAGER PRE APPROVAL"},{"name":"TRAVEL SERVICES AUTHORIZED BOOKING","value":"TRAVEL SERVICES AUTHORIZED BOOKING"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_bookReason]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 

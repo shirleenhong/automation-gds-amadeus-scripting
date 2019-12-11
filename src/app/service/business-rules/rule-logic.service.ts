@@ -12,9 +12,10 @@ export class RulesLogicService {
     const entityName = businessEntityList.get(logic.businessEntityName);
 
     if (entityName) {
-      entities = entityName.split('\n');
+      entities = entityName.toString().split('\n');
     } else {
-      return ruleLogic;
+      // return true if the logic is negative
+      return [RuleLogicEnum.IS_NOT, RuleLogicEnum.NOT_CONTAINS, RuleLogicEnum.NOT_IN].indexOf(logic.relationalOperatorId) >= 0;
     }
 
     for (let entity of entities) {
@@ -31,6 +32,9 @@ export class RulesLogicService {
         case RuleLogicEnum.CONTAINS:
           ruleLogic = entity.indexOf(logicValue) >= 0;
           break;
+        case RuleLogicEnum.NOT_CONTAINS:
+          ruleLogic = entity.indexOf(logicValue) === -1;
+          break;
         case RuleLogicEnum.IS_NOT:
           ruleLogic = entity !== logicValue;
           break;
@@ -38,23 +42,13 @@ export class RulesLogicService {
           ruleLogic = logicValue.split('|').indexOf(entity) === -1;
           break;
         case RuleLogicEnum.IN:
-          if (entity.includes(',')) {
-            ruleLogic = false;
-            const entityList = entity.split(',');
-            entityList.forEach((element) => {
-              if (logicValue.split('|').indexOf(element) >= 0) {
-                ruleLogic = true;
-              }
-            });
-          } else {
-            ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
-          }
+          ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
           break;
         case RuleLogicEnum.GREATER_THAN_EQUAL:
-          ruleLogic = logicValue >= entity;
+          ruleLogic = Number(logicValue) >= Number(entity);
           break;
         case RuleLogicEnum.LESS_THAN_EQUAL:
-          ruleLogic = entity <= logicValue;
+          ruleLogic = Number(entity) <= Number(logicValue);
           break;
         case RuleLogicEnum.NOT_BETWEEN:
           const rulelogic = logicValue.split('|');

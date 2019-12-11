@@ -21,10 +21,12 @@ export class RuleWriterService {
    */
 
   private formatRemarkRuleResult(resultText: string) {
-    const type = resultText.substr(0, 2);
-    const cat = resultText.substr(2, 1);
-    const txt = resultText.substr(3, resultText.length - 3);
-    this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+    if (resultText) {
+      const type = resultText.substr(0, 2);
+      const cat = resultText.substr(2, 1);
+      const txt = resultText.substr(3, resultText.length - 3);
+      this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+    }
   }
 
   /**
@@ -56,9 +58,17 @@ export class RuleWriterService {
     return remGroup;
   }
 
-  getPnrAddRemark(resultItems) {
+  getPnrAddRemark(resultItems) {    
     resultItems.forEach((element) => {
-      this.formatRemarkRuleResult(element.resultItemValue);
+        const regEx = (/(\[(?:\[??[^\[]*?\]))/g) ;            
+        element.match(regEx).forEach(result => {       
+          const key = result.replace('[','').replace(']','');
+          const val = this.ruleReader.getEntityValue(key)
+          if (val) {
+          element = element.replace(result, val);
+          }
+        });
+      this.formatRemarkRuleResult(element);
     });
   }
 
@@ -75,18 +85,21 @@ export class RuleWriterService {
 
   checkControlValid(condition: ControlConditionModel) {
     const logicValue = condition.value.toLowerCase();
-    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName).toLowerCase();
-    switch (RuleLogicEnum[condition.operator]) {
-      case RuleLogicEnum.IS:
-        return entity === logicValue;
-      case RuleLogicEnum.CONTAINS:
-        return entity.indexOf(logicValue) >= 0;
-      case RuleLogicEnum.IS_NOT:
-        return entity !== logicValue;
-      case RuleLogicEnum.NOT_IN:
-        return logicValue.split('|').indexOf(entity) === -1;
-      case RuleLogicEnum.IN:
-        return logicValue.split('|').indexOf(entity) >= 0;
+    let entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName);
+    if (entity) {
+      entity = entity.toLowerCase();
+      switch (RuleLogicEnum[condition.operator]) {
+        case RuleLogicEnum.IS:
+          return entity === logicValue;
+        case RuleLogicEnum.CONTAINS:
+          return entity.indexOf(logicValue) >= 0;
+        case RuleLogicEnum.IS_NOT:
+          return entity !== logicValue;
+        case RuleLogicEnum.NOT_IN:
+          return logicValue.split('|').indexOf(entity) === -1;
+        case RuleLogicEnum.IN:
+          return logicValue.split('|').indexOf(entity) >= 0;
+      }
     }
   }
 }

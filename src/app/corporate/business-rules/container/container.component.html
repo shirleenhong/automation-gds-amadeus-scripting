@@ -32,7 +32,7 @@
         <ng-template [ngSwitchCase]="'select'">
           <div class="row">
             <div class="col-3">
-              <label [for]="input.controlName"> {{ input.label }}</label>
+              <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
             <div class="col-4">
               <select
@@ -43,7 +43,7 @@
                 [required]="input.validators.required"
               >
                 <option value="">{{ input.placeholder }}</option>
-                <option *ngFor="let option of input.options" [value]="option.value">{{ option.optionName }}</option>
+                <option *ngFor="let option of input.options" [value]="option.value">{{ option.name }}</option>
               </select>
             </div>
           </div>
@@ -52,7 +52,7 @@
         <ng-template [ngSwitchCase]="'radio'">
           <div class="row">
             <div class="col-3">
-              <label [for]="input.controlName"> {{ input.label }}</label>
+              <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
             <div class="col-4">
               <table>
@@ -79,7 +79,7 @@
         <div class="col-4">
           <ng-template [ngSwitchCase]="'checkbox'">
             <div class="col-3">
-              <label [for]="input.controlName"> {{ input.controlName }}</label>
+              <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
             <div *ngFor="let option of input.options" class="form-group row">
               <input [formControlName]="input.controlName" [type]="input.controlType" [name]="input.controlName" />

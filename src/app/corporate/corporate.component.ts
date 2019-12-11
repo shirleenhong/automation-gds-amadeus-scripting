@@ -282,9 +282,6 @@ export class CorporateComponent implements OnInit {
 
   public async SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
-    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
-
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'

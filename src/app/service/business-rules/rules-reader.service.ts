@@ -80,6 +80,10 @@ export class RulesReaderService {
     });
   }
 
+  public getEntityValue(entity){
+      return  this.businessEntities.get(entity);
+  }
+
   parseUdid(f) {
     const remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
     remarks.forEach((rm) => {
@@ -134,6 +138,8 @@ export class RulesReaderService {
     }
     this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join(','));
   }
+
+
 
   private getArrivaltime() {
     const segment = this.pnrService.getSegmentList();

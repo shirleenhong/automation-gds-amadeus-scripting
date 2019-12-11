@@ -25,7 +25,7 @@ ${button_addRemark}    //i[@id='add']
 ${input_document}    //input[@formcontrolname='documentation']
 ${select_seat_Type}    //select[@name='seatType']
 ${select_segment_number}    //select[@formcontrolname='segment']
-${input_seat_number}    //input[@name='seatNumber']
+${input_seat_no}    //input[@name='seatNumber']
 ${input_seat_select1}    //input[@name='check1']
 ${input_seat_select2}    //input[@name='check2']
 ${input_seat_select3}    //input[@name='check3']
@@ -212,7 +212,7 @@ Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
     Click Element    ${input_seat_select2}
     Select From List By Label    ${select_seat_Type}    WINDOW
     Click Element    ${input_seat_select5}
-    Enter Value    ${input_seat_number}    2D
+    Enter Value    ${input_seat_no}    2D
     Take Screenshot    
     Click Save Button In Seats
     Finish PNR

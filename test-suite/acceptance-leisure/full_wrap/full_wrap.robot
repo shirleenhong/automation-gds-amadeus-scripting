@@ -35,6 +35,10 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Click Payment Tab    Leisure Fee
     Add Leisure Fee Collection
     Sleep    3
+    Click Panel    Remarks
+    Click Remarks Tab    Visa and Passport
+    Select International Travel
+    Enter Passport Name    Passport Name
     Click Panel    Reporting
     Select Routing Code    Europe-incl. Morocco/Tunisia/Algeria/Greenland
     Enter Destination Code    CDG
@@ -47,17 +51,13 @@ Verify That Passive Segments, Accounting remarks, UDIDs, And ITC Remarks Are Wri
     Enter Hotel Name    HOLIDAY INN AMSTERDAM
     Select Reservation For Business Travel    YES
     Select Hotel Reservation Booked    YES
-    Click Panel    Remarks
-    Click Remarks Tab    Visa and Passport
-    Select International Travel
-    Enter Passport Name    Passport Name
     Click Remarks Tab    Codeshare
     Select Segment From The List    1    3
     Enter Check-in At Details    1    Codeshare Testing
     Click Remarks Tab    Packages
     Add ITC Package Costs
     Click Submit To PNR
-    Sleep    3
+    Sleep    5
     Close CA Migration Window
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM *MAC/-SUP-${supplier_code}/-LK-MAC1/-AMT-${base_amount}/-PT-${hst_tax}RC/-PT-${gst_tax}XG/-PT-${qst_tax}XQ/-PT-${other_tax}XT/-CD-${commission_with_tax}    True

@@ -52,4 +52,30 @@ export class UtilHelper {
       }
     });
   }
+
+  convertSegmentDate(_date: string) {
+    const day = _date.substr(0, 2);
+    const month = _date.substr(2, 2);
+    const year = _date.substr(4, 2);
+
+    return new Date(
+      month +
+        '/' +
+        day +
+        '/' +
+        new Date(Date.now())
+          .getFullYear()
+          .toString()
+          .substr(0, 2) +
+        year
+    );
+  }
+
+  dateDiffInDays(dt1: Date, dt2: Date) {
+    const days = Math.floor(
+      (Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) /
+        (1000 * 60 * 60 * 24)
+    );
+    return days;
+  }
 }

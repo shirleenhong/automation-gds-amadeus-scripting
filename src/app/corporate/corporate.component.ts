@@ -210,8 +210,8 @@ export class CorporateComponent implements OnInit {
   }
 
   public async wrapPnr() {
-    this.workflow = 'wrap';
     await this.loadPnrData();
+    this.workflow = 'wrap';
   }
 
   public async AddSegment() {
@@ -282,9 +282,6 @@ export class CorporateComponent implements OnInit {
 
   public async SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
-    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
-    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
-
     if (!this.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
         backdrop: 'static'
@@ -421,7 +418,7 @@ export class CorporateComponent implements OnInit {
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
-    let remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(
+    const remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(
       this.irdRateRequestComponent.irdInvoiceRequestComponent.commentsForm
     );
     this.invoiceRemarkService.writeIrdRateRequestRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);

@@ -402,9 +402,9 @@ export class PaymentRemarkService {
   processOtherPaymentRemarks(matrix: MatrixReceiptModel, remarkList: Array<RemarkModel>) {
     enum CardType {
       VI = '115000',
-      AC = '116000',
-      AMEX = '117000',
-      Diners = '118000'
+      CA = '116000',
+      AX = '117000',
+      DC = '118000'
     }
     let fop = '';
     if (CardType[matrix.vendorCode] === matrix.bankAccount) {

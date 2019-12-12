@@ -99,7 +99,7 @@ Verify Package Costs UDID Remarks Are Written In the PNR
     Verify Specific Remark Is Written In The PNR    RM *U42/-${tour_commission_amount}
     Verify Specific Remark Is Written In The PNR    RM *U41/-${balance_due_amt}
 
-Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR
+Verify Rail RIR Remarks For VIR Supplier Are Written In the PNR
     [Arguments]    ${segment_number}    ${language}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR FOR VIA RAIL TRAVEL PLEASE CHECK IN AT TRAIN STATION/S${segment_number}
     Run Keyword If    "${language}" == "EN"    Verify Specific Remark Is Written In The PNR    RIR AT LEAST 45 MINUTES PRIOR TO DEPARTURE./S${segment_number}

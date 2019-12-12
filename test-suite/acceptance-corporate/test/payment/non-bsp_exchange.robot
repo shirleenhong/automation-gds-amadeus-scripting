@@ -8,7 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/payment.robot
-Test Teardown    Close All Browsers
+# Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That Ticketing Instruction Remarks Are Written Correctly When Original Ticket Number And New Ticket Number Are Not Provided
@@ -88,7 +88,7 @@ Verify That RM*U14 Remark Is Updated With Lowest GDS Fare Value For Specific Cli
     Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For MO
     
 Verify That Specific RIR Remarks In English Are Removed From PNR
-    [Tags]    us11134
+    [Tags]    us11134    de2929    open_defect
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Passive Segment With Airline Code WS
     Enter RIR Remarks In English

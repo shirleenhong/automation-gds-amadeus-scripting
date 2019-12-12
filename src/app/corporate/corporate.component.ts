@@ -264,6 +264,7 @@ export class CorporateComponent implements OnInit {
     this.closePopup();
     this.checkHasDataLoadError();
     this.showRule();
+    debugger;
   }
 
   checkHasDataLoadError() {

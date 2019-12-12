@@ -47,6 +47,7 @@ export class RulesReaderService {
     this.parseAirSegments();
     this.parseAirlineCodes();
     this.getArrivaltime();
+    this.parseCarSegments();
   }
 
   private setMatchEntity(regex, text) {
@@ -155,5 +156,23 @@ export class RulesReaderService {
     } else {
       this.businessEntities.set(key, value);
     }
+  }
+
+  parseCarSegments() {
+    debugger;
+    const codes = [];
+    const segmentTypes = [];
+
+    const segment = this.pnrService.getSegmentList();
+    if (segment) {
+      segment.forEach((element) => {
+        if (element.segmentType === 'CAR') {
+          codes.push(element.vendorCode);
+          segmentTypes.push(element.passive);
+        }
+      });
+    }
+    this.businessEntities.set('PNR_CAR_SEGMENT_VENDOR_CODE', codes.join('|'));
+    this.businessEntities.set('PNR_CAR_SEGMENT_TYPE', segmentTypes.join(','));
   }
 }

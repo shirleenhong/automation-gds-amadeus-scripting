@@ -58,7 +58,11 @@ export class RuleWriterService {
 
   getPnrAddRemark(resultItems) {
     resultItems.forEach((element) => {
-      this.formatRemarkRuleResult(element.resultItemValue);
+      if (element.resultItemValue.includes('[PNR_Segment]') !== -1) {
+        this.formatRemarkRuleResult(element.resultItemValue.replace('[PNR_Segment]', ''));
+      } else {
+        this.formatRemarkRuleResult(element.resultItemValue);
+      }
     });
   }
 
@@ -71,6 +75,53 @@ export class RuleWriterService {
         });
       }
     });
+  }
+
+  getWriteRemarkWithSegmentRelate(resultItems) {
+    debugger;
+    const segment = this.pnrService.getSegmentList();
+    if (segment) {
+      segment.forEach((seg) => {
+        if (seg.segmentType === 'CAR') {
+          resultItems.forEach((res) => {
+            const writeCondition = new WriteConditionModel(res);
+
+            writeCondition.conditions.forEach((con) => {
+              con.controlName = seg.vendorCode;
+            });
+
+            if (writeCondition.conditions.filter((con) => this.checkPnrValueValid(con)).length === writeCondition.conditions.length) {
+              writeCondition.remarks.forEach((rem) => {
+                this.formatRemarkRuleResult(rem);
+              });
+            }
+            // const conditionModel = new ControlConditionModel(res);
+            // conditionModel.value = seg.vendorCode;
+            // if (this.checkControlValid(conditionModel)) {
+            //   this.formatRemarkRuleResult(conditionModel.value);
+            // }
+          });
+        }
+      });
+    }
+  }
+
+  checkPnrValueValid(condition: ControlConditionModel) {
+    debugger;
+    const logicValue = condition.value.toLowerCase();
+    const entity = this.ruleReader.businessEntities.get(condition.controlName).toLowerCase();
+    switch (RuleLogicEnum[condition.operator]) {
+      case RuleLogicEnum.IS:
+        return entity === logicValue;
+      case RuleLogicEnum.CONTAINS:
+        return entity.indexOf(logicValue) >= 0;
+      case RuleLogicEnum.IS_NOT:
+        return entity !== logicValue;
+      case RuleLogicEnum.NOT_IN:
+        return logicValue.split('|').indexOf(entity) === -1;
+      case RuleLogicEnum.IN:
+        return logicValue.split('|').indexOf(entity) >= 0;
+    }
   }
 
   checkControlValid(condition: ControlConditionModel) {

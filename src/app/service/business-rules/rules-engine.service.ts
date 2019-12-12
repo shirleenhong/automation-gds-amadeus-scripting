@@ -29,6 +29,7 @@ export class RulesEngineService {
     await this.loadRules();
     await this.loadBusinessEntityFromPnr();
     this.validBusinessRules = this.getLogicValidRuleList();
+    debugger;
   }
 
   async loadRules() {
@@ -116,7 +117,7 @@ export class RulesEngineService {
     this.validBusinessRules.forEach((bRule) => {
       bRule.ruleResult.forEach((result) => {
         if (result.businessEntityName === entityName) {
-          resultItems.push(result.resultItemValue);
+          resultItems.push(result);
           formData.push(new BusinessRulesFormData(result.resultItemValue));
         }
       });
@@ -133,6 +134,9 @@ export class RulesEngineService {
     this.ruleWriter.getPnrAddRemark(resulttItems);
     resulttItems = this.getSpecificRulesValue('WRITE_REMARK_WITH_CONDTION').resultItems;
     this.ruleWriter.getWriteRemarkWithCondition(resulttItems);
+    debugger;
+    resulttItems = this.getSpecificRulesValue('WRITE_REMARK_WITH_SEGMENT_RELATE').resultItems;
+    this.ruleWriter.getWriteRemarkWithSegmentRelate(resulttItems);
     return this.ruleWriter.writeRuleRemarks();
   }
 

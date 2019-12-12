@@ -19,10 +19,7 @@ export class BusinessRulesFormData {
     try {
       const jsonObj = JSON.parse(json);
       this.label = jsonObj.label;
-      this.controlName = jsonObj.name;
-      if (!this.controlName) {
-        this.controlName = this.label;
-      }
+      this.controlName = jsonObj.name;   
 
       this.controlType = jsonObj.type;
 

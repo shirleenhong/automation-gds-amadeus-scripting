@@ -88,7 +88,7 @@ Verify That RM*U14 Remark Is Updated With Lowest GDS Fare Value For Specific Cli
     Verify RM*U14 Remark Is Updated With Lowest GDS Fare Value For MO
     
 Verify That Specific RIR Remarks In English Are Removed From PNR
-    [Tags]    us11134
+    [Tags]    us11134    de2929    open_defect
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Passive Segment With Airline Code WS
     Enter RIR Remarks In English

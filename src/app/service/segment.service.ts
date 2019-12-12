@@ -158,7 +158,7 @@ export class SegmentService {
         rmGroup.group = 'RIR remark';
         rmGroup.remarks = new Array<RemarkModel>();
         let amk = 0;
-        let vib = 0;
+        let vir = 0;
         let itinLanguage = this.pnrService.getItineraryLanguage();
         itinLanguage = itinLanguage.substr(0, 2);
 
@@ -181,10 +181,10 @@ export class SegmentService {
                         if (segmentrem.vendorCode === 'AMK') {
                             amk = amk + 1;
                         }
-                        if (segmentrem.vendorCode === 'VIB') {
-                            vib = vib + 1;
+                        if (segmentrem.vendorCode === 'VIR') {
+                            vir = vir + 1;
                         }
-                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vib, itinLanguage, isCorp);
+                        this.rirTrain(pnrSegment, segmentrem, rmGroup, amk, vir, itinLanguage, isCorp);
                     }
                     if (segmentrem.segmentType === 'LIM') {
                         this.rirLimo(pnrSegment, segmentrem, rmGroup, itinLanguage);
@@ -415,7 +415,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vib: number, itinLanguage: string, isCorp: boolean) {
+        amk: number, vir: number, itinLanguage: string, isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             if (isCorp) {
@@ -443,7 +443,7 @@ export class SegmentService {
                 (carseat, 'RI', 'R', pnrSegment.tatooNo));
         }
 
-        if (vib === 1 && segmentrem.vendorCode === 'VIB' && !this.pnrService.IsExistAmkVib('vib')) {
+        if (vir === 1 && segmentrem.vendorCode === 'VIR' && !this.pnrService.IsExistAmkVib('vir')) {
             let segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', itinLanguage);
             if (isCorp) {
                 segRemarks = this.translations.getRemarkGroup('VibRemarksSegment', 'EN');

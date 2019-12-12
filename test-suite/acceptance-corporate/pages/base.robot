@@ -7,7 +7,7 @@ Library           DateTime
 Resource          add_segment.robot
 Resource          amadeus.robot
 Resource          cancel_segments.robot
-Resource          invoice.robot
+Resource          standalone.robot
 Resource          payment.robot
 Resource          pricing.robot
 Resource          queues.robot

@@ -8,7 +8,7 @@ Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
 Resource          ../../pages/reporting.robot
 Resource          ../../pages/payment.robot
-# Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That Ticketing Instruction Remarks Are Written Correctly When Original Ticket Number And New Ticket Number Are Not Provided

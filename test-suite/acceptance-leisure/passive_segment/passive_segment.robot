@@ -334,8 +334,7 @@ Verify Passive Rail Segments Are Added In The PNR
     Enter Arrival Date    10162020
     Enter Departure Time    1200PM
     Enter Arrival Time    0500PM
-    Enter Vendor Name    VIB remarks
-    Enter Vendor Code    vib
+    Enter Vendor Code    VIR
     Enter Confirmation Number    Conf12345
     Click Add Passive Save Button
     Click Add Segments To PNR
@@ -345,10 +344,10 @@ Verify Passive Rail Segments Are Added In The PNR
     Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10OCT-/TYP-TRN/SUN-SUPPLIER NAME TEST/SUC-AAA/SC-FROM STATION TEST/SD-10OCT/ST-0200/EC-ARRIVAL STATION TEST/ED-11OCT/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S3
     Verify Specific Remark Is Written In The PNR    RIR CAR-C123 SEAT NUMBER-S123/S3
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15OCT-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15OCT/ST-1200/EC-2ND ARRIVAL STATION/ED-16OCT/ET-1700/CF-CONF12345    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15OCT-/TYP-TRN/SUN-VIA RAIL WEB/SUC-VIR/SC-2ND FROM STATION/SD-15OCT/ST-1200/EC-2ND ARRIVAL STATION/ED-16OCT/ET-1700/CF-CONF12345    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR254 CLASS-CL22222/S4
     Verify Specific Remark Is Written In The PNR    RIR SEAT NUMBER-S123/S4
-    Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    4    EN
+    Verify Rail RIR Remarks For VIR Supplier Are Written In the PNR    4    EN
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -387,8 +386,7 @@ Verify Passive Rail Segments Are Added In The PNR For FR
     Enter Arrival Date    10162020
     Enter Departure Time    1200PM
     Enter Arrival Time    0500PM
-    Enter Vendor Name    VIB remarks
-    Enter Vendor Code    vib
+    Enter Vendor Code    VIR
     Enter Confirmation Number    Conf12345
     Click Add Passive Save Button
     Click Add Segments To PNR
@@ -398,11 +396,11 @@ Verify Passive Rail Segments Are Added In The PNR For FR
     Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YUL 10OCT-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10OCT/ST-0200/EC-ARRIVAL STATION TEST/ED-11OCT/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S4
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S4
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 15OCT-/TYP-TRN/SUN-VIB REMARKS/SUC-VIB/SC-2ND FROM STATION/SD-15OCT/ST-1200/EC-2ND ARRIVAL STATION/ED-16OCT/ET-1700/CF-CONF12345    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK2 YYZ 15OCT-/TYP-TRN/SUN-VIA RAIL WEB/SUC-VIR/SC-2ND FROM STATION/SD-15OCT/ST-1200/EC-2ND ARRIVAL STATION/ED-16OCT/ET-1700/CF-CONF12345    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR254 CLASS-CL22222/S5
     Verify Specific Remark Is Written In The PNR    RIR CAR-C123/S5
     Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR    4
-    Verify Rail RIR Remarks For VIB Supplier Are Written In the PNR    5    FR
+    Verify Rail RIR Remarks For VIR Supplier Are Written In the PNR    5    FR
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

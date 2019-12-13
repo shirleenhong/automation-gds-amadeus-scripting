@@ -240,6 +240,7 @@ Create Exchange NE Remark
    Move Profile to GDS    RM*NE/-EX-Y    TKOK
 
 Create Exchange PNR In The GDS
+    Create 1 Test Dates
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
     ...    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR${test_date_1}20/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}

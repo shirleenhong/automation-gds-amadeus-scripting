@@ -470,8 +470,8 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
     Finish PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    RM *CS21FEBPEK/-SV-I
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-C
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}YYZ/-SV-R
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YYZ/-SV-C
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}CDG/-SV-R
     Verify Specific Remark Is Not Written In The PNR    RM *CS23NOVPEK/-SV-X
     Verify Specific Remark Is Not Written In The PNR    RM *CS14DECMEL/-SV-Y
 

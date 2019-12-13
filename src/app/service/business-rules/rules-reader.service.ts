@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
 import { DDBService } from '../ddb.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,11 @@ export class RulesReaderService {
     { type: 'RM', category: 'Y', regex: /(?<PNR_Y>.*)$/g },
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
     { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g },
-    { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g }
+    { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g },
+    { type: 'RM', category: '*', regex: /EB\/(?<PNR_EB>.*)/g }
   ];
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   public async readPnr() {
     this.businessEntities = new Map<string, string>();
@@ -47,6 +49,8 @@ export class RulesReaderService {
     this.parseAirSegments();
     this.parseAirlineCodes();
     this.getArrivaltime();
+    this.getDepartureDateFromTodayCount();
+    this.getSegmentTypes();
   }
 
   private setMatchEntity(regex, text) {
@@ -80,6 +84,10 @@ export class RulesReaderService {
     });
   }
 
+  public getEntityValue(entity) {
+    return this.businessEntities.get(entity);
+  }
+
   parseUdid(f) {
     const remarks = this.pnrService.pnrObj.rmElements.filter((x) => x.category === f.category && x.freeFlowText.match(f.regex));
     remarks.forEach((rm) => {
@@ -98,6 +106,18 @@ export class RulesReaderService {
         }
       }
     });
+  }
+
+  private getDepartureDateFromTodayCount() {
+    const segment = this.pnrService.segments;
+    if (segment.length > 0) {
+      let depDate = segment[0].departureDate;
+      if (!depDate) {
+        depDate = segment[0].depDate;
+      }
+      const days = this.utilHelper.dateDiffInDays(new Date(), this.utilHelper.convertSegmentDate(depDate));
+      this.assignKeyValue('PNR_COUNT_DEPARTURE_DATE_FROM_TODAY', days);
+    }
   }
 
   private extractRemarks(remarksList, category, regex) {
@@ -120,19 +140,19 @@ export class RulesReaderService {
     this.ddbService.airTravelPortInformation.forEach((element) => {
       codes.push(element.travelPortCode);
     });
-    this.businessEntities.set('PNR_AIR_SEGMENT_AIRPORT_CODE', codes.join(','));
+    this.businessEntities.set('PNR_AIR_SEGMENT_AIRPORT_CODE', codes.join('\n'));
   }
 
   private parseAirlineCodes() {
     const codes = [];
-    if (this.pnrService.segments !== undefined && this.pnrService.segments.length > 0) {
-      this.pnrService.segments.forEach((x) => {
-        if (x.segmentType === 'AIR' && !codes.includes(x.airlineCode)) {
+    if (this.pnrService.pnrObj.airSegments !== undefined && this.pnrService.pnrObj.airSegments.length > 0) {
+      this.pnrService.pnrObj.airSegments.forEach((x) => {
+        if (!codes.includes(x.airlineCode)) {
           codes.push(x.airlineCode);
         }
       });
     }
-    this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join(','));
+    this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join('\n'));
   }
 
   private getArrivaltime() {
@@ -142,18 +162,24 @@ export class RulesReaderService {
     if (segment) {
       segment.forEach((element) => {
         if (element.arrivalStation === 'CCS' || element.cityCode === 'CCS') {
-          this.AssignKeyValue(keyarr, element.arrivalTime);
-          this.AssignKeyValue(keydept, element.departureTime);
+          this.assignKeyValue(keyarr, element.arrivalTime);
+          this.assignKeyValue(keydept, element.departureTime);
         }
       });
     }
   }
 
-  private AssignKeyValue(key, value) {
+  private assignKeyValue(key, value) {
     if (this.businessEntities.has(key)) {
       this.businessEntities.set(key, this.businessEntities.get(key) + '\n' + value);
     } else {
       this.businessEntities.set(key, value);
     }
+  }
+
+  private getSegmentTypes() {
+    let segmentsTypes = this.pnrService.segments.map((x) => x.segmentType);
+    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.id === thing.id) === i);
+    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.join('\n'));
   }
 }

@@ -25,7 +25,9 @@ export class RuleWriterService {
       const type = resultText.substr(0, 2);
       const cat = resultText.substr(2, 1);
       const txt = resultText.substr(3, resultText.length - 3);
-      this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+      if ((txt.indexOf('UI_FORM') === -1)) {
+        this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+      }
     }
   }
 
@@ -49,7 +51,7 @@ export class RuleWriterService {
     remGroup.passiveSegments = [];
 
     resultItems.forEach((element) => {
-      const lineNo = this.pnrService.getRemarkLineNumber(element.resultItemValue);
+      const lineNo = this.pnrService.getRemarkLineNumber(element);
       if (lineNo !== '') {
         remGroup.deleteRemarkByIds.push(lineNo);
       }

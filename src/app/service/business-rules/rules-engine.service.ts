@@ -84,7 +84,6 @@ export class RulesEngineService {
   }
 
   getRuleFormData(container: string): BusinessRulesFormData[] {
-    debugger;
     const formData = [];
     this.validBusinessRules.forEach((bRule) => {
       const look = bRule.ruleResult.find((x) => x.businessEntityName === 'UI_DISPLAY_CONTAINER' && x.resultItemValue === container);
@@ -106,9 +105,11 @@ export class RulesEngineService {
 
   checkUiIteration(uiConditions) {
     let iteration = 1;
-    const look = uiConditions.find((x) => x.controlName.indexOf('TSTSEGMENT') > 0);
-    if (look) {
-      iteration = this.pnrService.tstObj.length;
+    if (uiConditions) {
+      const look = uiConditions.find((x) => x.controlName.indexOf('TSTSEGMENT') > 0);
+      if (look) {
+        iteration = this.pnrService.tstObj.length;
+      }
     }
     return iteration;
   }
@@ -154,7 +155,6 @@ export class RulesEngineService {
 
   getRuleDeleteRemarks() {
     const resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
-
     return this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
   }
 }

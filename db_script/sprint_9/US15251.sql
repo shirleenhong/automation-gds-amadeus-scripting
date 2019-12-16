@@ -160,6 +160,9 @@ FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='PNR_ADD_Remark'); 
 
 
+DECLARE  @bid5 as int = (select ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_DELETE_Remark'); 
  
     INSERT INTO dbo.ClientDefinedRuleResultItem
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
@@ -168,13 +171,16 @@ VALUES
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid3, '{"type":"select","label":"Why First/Bus Booked","name":"whyBooked","required":"false","options":[{"name":"Core Team Bus Class Approved","value":"Core Team Bus Class Approved","defaultValue":"VIP on Approved List","defaultControl":"whoApproved","dependentControlRequired":"true"},{"name":"Only class available lowest fare accepted","value":"Only class available lowest fare accepted"},{"name":"Approved to travel Bus class","value":"Approved to travel Bus class"},{"name":"Complimentary upgrade","value":"Complimentary upgrade"},{"name":"Upgrade certificate used","value":"Upgrade certificate used"},{"name":"Traveling with approved VIP","value":"Traveling with approved VIP"},{"name":"Business class lower than premium economy","value":"Business class lower than premium economy"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid3, '{"type":"text","label":"Who approved First/Bus booked?","name":"whoApproved","required":"false","maxlength":"50","minlength":"1","valuetype":"AlphaNumericMask","conditions":[{"controlName":"[UI_FORM_whyBooked]","logic":"IS_NOT","value":""}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid3, '{"type":"select","label":"NonRef/Ref Fare Type","name":"fareTye","required":"true","options":[{"name":"Core Team Bus Class Approved","value":"Core Team Bus Class Approved"},{"name":"REF-Refundable","value":"REF"},{"name":"NON-NonRefundable","value":"NON"},{"name":"OT-Car/Hotel Bookings Only","value":"OT"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid3, '{"type":"select","label":"NonRef/Ref Fare Type","name":"fareType","required":"true","options":[{"name":"REF-Refundable","value":"REF"},{"name":"NON-NonRefundable","value":"NON"},{"name":"OT-Car/Hotel Bookings Only","value":"OT"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid4, 'RM* U6/-[UI_FORM_whyBooked]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid4, 'RM* U4/-[UI_FORM_whoApproved]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U19/-[UI_FORM_fareTye]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	( @CDRGRoupName, @bid4, 'RM* U19/-[UI_FORM_fareTye]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, 'U6/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, 'U4/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, 'U19/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
-SET @resultitemid = SCOPE_IDENTITY() - 7; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 10; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -186,7 +192,10 @@ values
 	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 6, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 8, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 9, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 10, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit

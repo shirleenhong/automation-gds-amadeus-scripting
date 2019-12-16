@@ -15,18 +15,21 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
 
-  private formatRemarkRuleResult(resultText: string) {
+  private formatRemarkRuleResult(resultText: string, lineNo?) {
     if (resultText) {
       const type = resultText.substr(0, 2);
       const cat = resultText.substr(2, 1);
       const txt = resultText.substr(3, resultText.length - 3);
-      if ((txt.indexOf('UI_FORM') === -1)) {
+      if (txt.indexOf('UI_FORM') === -1) {
         this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+      }
+      if (lineNo !== undefined) {
+        this.additionaRemarks.push({ remarktype: type, category: cat, text: txt, segmentAssoc: lineNo });
       }
     }
   }
@@ -39,7 +42,7 @@ export class RuleWriterService {
     remGroup.group = 'RuleRemarks';
     remGroup.remarks = new Array<RemarkModel>();
     this.additionaRemarks.forEach((element) => {
-      remGroup.remarks.push(this.remarkHelper.createRemark(element.text, element.remarktype, element.category));
+      remGroup.remarks.push(this.remarkHelper.createRemark(element.text, element.remarktype, element.category, element.segmentAssoc));
     });
     return remGroup;
   }
@@ -62,10 +65,10 @@ export class RuleWriterService {
 
   getPnrAddRemark(resultItems) {
     resultItems.forEach((element) => {
-      const regEx = (/(\[(?:\[??[^\[]*?\]))/g);
-      element.match(regEx).forEach(result => {
+      const regEx = /(\[(?:\[??[^\[]*?\]))/g;
+      element.match(regEx).forEach((result) => {
         const key = result.replace('[', '').replace(']', '');
-        const val = this.ruleReader.getEntityValue(key)
+        const val = this.ruleReader.getEntityValue(key);
         if (val) {
           element = element.replace(result, val);
         }
@@ -83,6 +86,52 @@ export class RuleWriterService {
         });
       }
     });
+  }
+
+  getWriteRemarkWithSegmentRelate(resultItems) {
+    const relatedSegments: string[] = [];
+    const remarks: string[] = [];
+    const segment = this.pnrService.getSegmentList();
+    if (segment) {
+      segment.forEach((seg) => {
+        if (seg.segmentType === 'CAR') {
+          resultItems.forEach((res) => {
+            const writeCondition = new WriteConditionModel(res.resultItemValue);
+
+            writeCondition.conditions.forEach((con) => {
+              con.controlName = seg.vendorCode;
+            });
+
+            if (writeCondition.conditions.filter((con) => this.checkPnrValueValid(con)).length === writeCondition.conditions.length) {
+              writeCondition.remarks.forEach((rem) => {
+                relatedSegments.push(seg.tatooNo);
+                remarks.push(rem);
+              });
+            }
+          });
+        }
+      });
+      remarks.forEach((rem) => {
+        this.formatRemarkRuleResult(rem.replace('/S[PNR_Segment]', ''), relatedSegments);
+      });
+    }
+  }
+
+  checkPnrValueValid(condition: ControlConditionModel) {
+    const logicValue = condition.value.toLowerCase();
+    const entity = condition.controlName.toLowerCase();
+    switch (RuleLogicEnum[condition.operator.replace(' ', '_')]) {
+      case RuleLogicEnum.IS:
+        return entity === logicValue;
+      case RuleLogicEnum.CONTAINS:
+        return entity.indexOf(logicValue) >= 0;
+      case RuleLogicEnum.IS_NOT:
+        return entity !== logicValue;
+      case RuleLogicEnum.NOT_IN:
+        return logicValue.split('|').indexOf(entity) === -1;
+      case RuleLogicEnum.IN:
+        return logicValue.split('|').indexOf(entity) >= 0;
+    }
   }
 
   checkControlValid(condition: ControlConditionModel) {

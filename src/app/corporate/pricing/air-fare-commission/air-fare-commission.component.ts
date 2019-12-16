@@ -74,15 +74,18 @@ export class AirFareCommissionComponent implements OnInit {
     const tstData = [];
     const tstMap = new Map<string, boolean>();
     if (tsts) {
-      for (const tst of tsts) {
-        if (!tstMap.get(tst.tstNumber)) {
-          tstData.push(tst);
-          tstMap.set(tst.tstNumber, true);
+      if (tsts !== undefined) {
+        for (const tst of tsts) {
+          if (!tstMap.get(tst.tstNumber)) {
+            tstData.push(tst);
+            tstMap.set(tst.tstNumber, true);
+          }
         }
       }
+      return tstData;
     }
-    return tstData;
   }
+
   checkChange(group) {
     if (group.get('chkIncluded').value === true) {
       this.addValidation(group, 'commission');

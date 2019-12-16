@@ -10,7 +10,6 @@ export class RulesLogicService {
     let entities = [];
     let ruleLogic = false;
     const entityName = businessEntityList.get(logic.businessEntityName);
-
     if (entityName) {
       entities = entityName.toString().split('\n');
     } else {

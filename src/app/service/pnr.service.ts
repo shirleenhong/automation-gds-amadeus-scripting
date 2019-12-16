@@ -489,6 +489,7 @@ export class PnrService {
     }
 
     private getSegmentDetails(elem: any, type: string) {
+        
         let elemText = '';
         let elemStatus = '';
         let elemairlineCode = '';
@@ -507,6 +508,7 @@ export class PnrService {
         let segType = type;
         let passiveType = '';
         let hotelChainCode = '';
+        let elemVendorCode ='';
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -577,6 +579,7 @@ export class PnrService {
             elemdepdate = fullnodetemp.product.depDate;
             arrivalDate = fullnodetemp.product.arrDate;
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
+            elemVendorCode = elem.fullNode.travelProduct.companyDetail.identification;
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
                 // passiveType = flongtext.substr(2, 7);
@@ -615,7 +618,8 @@ export class PnrService {
             passive: passiveType,
             isPassive: (segType === 'CAR' || type === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
             passengerNo: this.getPassengerAssocNumbers(elem.associations),
-            hotelChainCode
+            hotelChainCode,
+            vendorCode : elemVendorCode
         };
         this.segments.push(segment);
     }

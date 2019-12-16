@@ -28,7 +28,6 @@ export class MatrixReportingComponent implements OnInit {
     this.isMatrixPnr = this.IsSegmentExchange() || this.IsContainsThisRemark('CN/-IFC') || this.IsContainsFIRemark('PAX 0000000000 INV');
     this.subscribeOnOfcEscDropdown();
   }
-
   // tslint:disable-next-line: use-life-cycle-interface
   ngAfterViewInit() {
     if (this.isMatrixPnr) {

@@ -45,7 +45,10 @@ ${checkbox_hotelSegment}    ]//input[@id='chkIncluded']
 ${input_hotelSegNum}    ]//input[@formcontrolname='segment']
 ${input_checkInDate}    ]//input[@formcontrolname='checkInDate']
 ${input_chainCode}    ]//input[@formcontrolname='chainCode']
-
+${tab_udid}    //span[contains(text(), 'UDID')]
+${list_ul_whyFirstBooked}    //select[@id='whyBooked']
+${input_ul_whoFirstBooked}    //input[@name='whoApproved']
+${list_ul_fareType}    //select[@id='fareType']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -89,6 +92,11 @@ Click Hotel Savings Code Tab
     Wait Until Element Is Visible    ${tab_hotelSavingsCode}    30
     Click Element    ${tab_hotelSavingsCode}
     Set Test Variable    ${current_page}    Hotel Savings Code    
+    
+Click UDID Tab
+    Wait Until Element Is Visible    ${tab_udid}    30
+    Click Element    ${tab_udid}
+    Set Test Variable    ${current_page}    UDID    
     
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
@@ -563,3 +571,33 @@ Verify HS Remark Is Written Without Savings Code
     \    Exit For Loop If   not ${status} 
     Verify Unexpected Remarks Are Not Written In The PNR
     Cancel PNR
+    
+Add Values For UL Client When Why First/Bus Booked Is ${why_first_booked}
+    Navigate To Page UDID
+    Wait Until Element Is Visible    ${list_ul_whyFirstBooked}    10
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Select From List By Label    ${list_ul_whyFirstBooked}    Core Team Bus Class Approved
+    ...    ELSE    Select From List By Label    ${list_ul_whyFirstBooked}    ${why_first_booked}
+    Take Screenshot
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Wait Until Element Is Visible    ${input_ul_whoFirstBooked}    5
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Enter Value    ${input_ul_whoFirstBooked}    Phryne Fisher
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Select From List By Label    ${list_ul_fareType}    NON-NonRefundable
+    ...    ELSE    Select From List By Label    ${list_ul_fareType}    REF-Refundable
+    Set Test Variable    ${why_first_booked}
+    Take Screenshot
+    
+Verify UDID 4, 6, and 19 Are Written In The PNR For Client UL
+    Finish PNR
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Verify UL Client UDID Remarks For Core Team Bus Class Approved
+    ...    ELSE    Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus Class Approved
+    
+Verify UL Client UDID Remarks For Core Team Bus Class Approved
+    Verify Specific Remark Is Written In The PNR    RM *U6/-CORE TEAM BUS CLASS APPROVED
+    Verify Specific Remark Is Written In The PNR    RM *U4/-PHRYNE FISHER
+    Verify Specific Remark Is Written In The PNR    RM *U19/-NON
+    Take Screenshot    
+    
+Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus Class Approved
+    Verify Specific Remark Is Written In The PNR    RM *U6/-COMPLIMENTAY UPGRADE
+    Verify Specific Remark Is Written In The PNR    RM *U19/-REF
+    Verify Specific Remark Is Not Written In The PNR    RM *U4/-
+    Take Screenshot

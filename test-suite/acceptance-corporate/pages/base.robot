@@ -55,7 +55,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
 @{pricing_pages}     Pricing    Airfare Commission
-@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code
+@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
@@ -345,6 +345,7 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Car Savings Code"    Click Car Savings Code Tab
     ...    ELSE IF    "${destination_page}" == "Hotel Savings Code"    Click Hotel Savings Code Tab
+    ...    ELSE IF    "${destination_page}" == "UDID"    Click UDID Tab
 
 Navigate From Remarks
     [Arguments]    ${destination_page}

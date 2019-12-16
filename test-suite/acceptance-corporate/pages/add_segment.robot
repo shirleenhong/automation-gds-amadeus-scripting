@@ -499,7 +499,7 @@ Add Passive Car Segment ${with_optional} Optional Values
     Click Add Passive Save Button 
     Click Add Segment to PNR    yes
     Set Test Variable    ${with_optional}
-    
+
 Verify Passive Car Segment And RIR Remarks Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details

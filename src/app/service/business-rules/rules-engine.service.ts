@@ -23,7 +23,7 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService,
     private ruleUiService: RuleUiService,
     private ruleWriter: RuleWriterService
-  ) {}
+  ) { }
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -90,13 +90,30 @@ export class RulesEngineService {
       if (look) {
         bRule.ruleResult.forEach((result) => {
           if (result.businessEntityName === 'UI_ADD_CONTROL') {
-            formData.push(new BusinessRulesFormData(result.resultItemValue));
+            const rules = new BusinessRulesFormData(result.resultItemValue);
+            const ite = this.checkUiIteration(rules.conditions);
+            for (let i = 1; i <= ite; i++) {
+              formData.push(rules);
+            }
           }
         });
       }
     });
     return formData;
   }
+
+
+  checkUiIteration(uiConditions) {
+    let iteration = 1;
+    if (uiConditions) {
+      const look = uiConditions.find((x) => x.controlName.indexOf('TSTSEGMENT') > 0);
+      if (look) {
+        iteration = this.pnrService.tstObj.length;
+      }
+    }
+    return iteration;
+  }
+
 
   getSpecificRuleResultItemValue(entityName: string) {
     let value = '';
@@ -138,7 +155,6 @@ export class RulesEngineService {
 
   getRuleDeleteRemarks() {
     const resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
-
     return this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
   }
 }

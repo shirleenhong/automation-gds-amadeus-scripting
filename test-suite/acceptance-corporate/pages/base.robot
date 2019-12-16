@@ -566,6 +566,9 @@ Get Expected Approval Values From Json
     ${queue_approval}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToApproval
     ${onhold_rmk}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].OnHoldRmk
     ${queue_tkt}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToTkt
+    ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].ToUpgrade
+    ${to_upgrade}    Run Keyword If    ${exists}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].ToUpgrade
+    ...    ELSE    Set Variable    ${EMPTY}
     Get Expected Remark Values From Json    ${json_file_object}     ${client_data}
     Get Unexpected Remark Values From Json    ${json_file_object}     ${client_data}
     Set Test Variable    ${with_ui}
@@ -578,6 +581,7 @@ Get Expected Approval Values From Json
     Set Test Variable    ${queue_approval}
     Set Test Variable    ${onhold_rmk}
     Set Test Variable    ${queue_tkt}
+    Set Test Variable    ${to_upgrade}
 
 Get Air Segment Values From Json
     [Arguments]    ${json_file_object}     ${client_data}
@@ -684,7 +688,7 @@ Get Ticket Number
     Set Test Variable   ${ticket_num}
     Switch To Command Page
 
-Complete The PNR In Full Wrap
+	Complete The PNR In Full Wrap
     Navigate To Page Reporting Remarks
     Finish PNR
 

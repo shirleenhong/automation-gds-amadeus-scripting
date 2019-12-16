@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -25,7 +25,9 @@ export class RuleWriterService {
       const type = resultText.substr(0, 2);
       const cat = resultText.substr(2, 1);
       const txt = resultText.substr(3, resultText.length - 3);
-      this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+      if ((txt.indexOf('UI_FORM') === -1)) {
+        this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+      }
     }
   }
 
@@ -49,7 +51,7 @@ export class RuleWriterService {
     remGroup.passiveSegments = [];
 
     resultItems.forEach((element) => {
-      const lineNo = this.pnrService.getRemarkLineNumber(element.resultItemValue);
+      const lineNo = this.pnrService.getRemarkLineNumber(element);
       if (lineNo !== '') {
         remGroup.deleteRemarkByIds.push(lineNo);
       }
@@ -58,16 +60,16 @@ export class RuleWriterService {
     return remGroup;
   }
 
-  getPnrAddRemark(resultItems) {    
+  getPnrAddRemark(resultItems) {
     resultItems.forEach((element) => {
-        const regEx = (/(\[(?:\[??[^\[]*?\]))/g) ;            
-        element.match(regEx).forEach(result => {       
-          const key = result.replace('[','').replace(']','');
-          const val = this.ruleReader.getEntityValue(key)
-          if (val) {
+      const regEx = (/(\[(?:\[??[^\[]*?\]))/g);
+      element.match(regEx).forEach(result => {
+        const key = result.replace('[', '').replace(']', '');
+        const val = this.ruleReader.getEntityValue(key)
+        if (val) {
           element = element.replace(result, val);
-          }
-        });
+        }
+      });
       this.formatRemarkRuleResult(element);
     });
   }

@@ -759,8 +759,10 @@ Get Fare For ${no_of_tst} TST
     Switch To Command Page
 
 Cancel PNR
-    Switch To Command Page
+    Run Keyword If    "${current_page}" != "Amadeus"    Switch To Command Page
     Enter Cryptic Command    XI
     Enter Cryptic Command    RFCWTTEST
     Enter Cryptic Command    ER
     Enter Cryptic Command    ER
+    Enter Cryptic Command    IG
+    

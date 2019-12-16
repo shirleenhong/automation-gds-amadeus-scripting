@@ -25,6 +25,8 @@ ${input_totalCost}     //div[@formarrayname='additionalValues'][2]//input[@id='t
 ${text_Danger}    //div[@class='col text-danger']
 ${checkbox_ignoreApproval}    css=#noApproval
 ${tab_tktlUpdate}    //span[contains(text(), 'TKTL Update for Aqua Ticketing')]
+${option_upgrade_yes}    //input[@ng-reflect-name='isUpgrade' and @ng-reflect-value='Yes']
+${option_upgrade_no}    //input[@ng-reflect-name='isUpgrade' and @ng-reflect-value='No']
 
 *** Keywords ***
 Select Primary Approval Reason: ${primary_reason}
@@ -52,6 +54,8 @@ Fill Up Approval Reason Fields
     Run Keyword If    "${approver_name}" != "None"    Enter Value    ${input_approverName}    ${approver_name}
     Run Keyword If    "${total_cost}" != "None"    Enter Value    ${input_totalCost}    ${total_cost}  
     Run Keyword If    "${addtl_message}" != "None"    Verify Warning Message Is Displayed     ${addtl_message}
+    Run Keyword If    "${to_upgrade}" != "${EMPTY}"   Click Element At Coordinates    ${option_upgrade_${to_upgrade.lower()}}    0    0
+    Run Keyword If    "${to_upgrade}" == "${EMPTY}"   Element Should Not Be Visible    ${option_upgrade_yes}
     
 Verify Warning Message Is Displayed
     [Arguments]    ${warning_message}
@@ -358,6 +362,7 @@ Verify PNR Approval Is Processed Correctly
     Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1
+    Verify Unexpected Remarks Are Not Written In The PNR
 
 Verify PNR Is Queued For Approval
     Open Command Page

@@ -687,8 +687,8 @@ Get Ticket Number
     ${ticket_num}    Fetch From Left    ${ticket_num}    /
     Set Test Variable   ${ticket_num}
     Switch To Command Page
-
-	Complete The PNR In Full Wrap
+    
+Complete The PNR In Full Wrap
     Navigate To Page Reporting Remarks
     Finish PNR
 

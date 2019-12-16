@@ -26,7 +26,6 @@ export class BusinessRulesFormData {
 
   constructor(json: any) {
     try {
-      debugger;
       const jsonObj = JSON.parse(json);
       this.label = jsonObj.label;
       this.controlName = jsonObj.name;

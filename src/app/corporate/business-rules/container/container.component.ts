@@ -55,7 +55,7 @@ export class ContainerComponent implements OnInit {
               comparison = this.containerForm.get(match.groups.conditionvalue).value;
               break;
             case 'UI_DEFAULT':
-              
+
               break;
           }
         }
@@ -78,7 +78,6 @@ export class ContainerComponent implements OnInit {
   }
 
   applyCondition(selectedValue, options) {
-    debugger;
     options.forEach(opt => {
       if (opt.value === selectedValue && opt.defaultControl) {
         this.containerForm.get(opt.defaultControl).setValue(opt.defaultValue);

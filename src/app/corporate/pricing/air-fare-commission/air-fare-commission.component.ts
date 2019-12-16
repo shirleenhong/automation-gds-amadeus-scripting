@@ -73,10 +73,12 @@ export class AirFareCommissionComponent implements OnInit {
     const tsts = this.pnrService.getUnticketedCorpReceipts();
     const tstData = [];
     const tstMap = new Map<string, boolean>();
-    for (const tst of tsts) {
-      if (!tstMap.get(tst.tstNumber)) {
-        tstData.push(tst);
-        tstMap.set(tst.tstNumber, true);
+    if (tsts) {
+      for (const tst of tsts) {
+        if (!tstMap.get(tst.tstNumber)) {
+          tstData.push(tst);
+          tstMap.set(tst.tstNumber, true);
+        }
       }
     }
     return tstData;

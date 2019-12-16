@@ -4,10 +4,7 @@ Library           String
 Library           SeleniumLibrary
 Library           Collections
 Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/payment.robot
-Resource          ../../pages/reporting.robot
 Test Setup        Login To Amadeus Sell Connect Acceptance
 # Test Teardown    Close All Browsers
 
@@ -16,12 +13,16 @@ ${test_file_name}    cdr_process_per_tkt
 
 *** Test Cases ***
 Verify That UDID 6 And UDID 4 Remark Should Be Written In The PNR For OY3/OV1/LH1 Client When UDID 6 Selected Is "Core Team Bus Class Approved"
-    [Tags]    us15251    not_ready
+    [Tags]    us15251
     Create PNR With Active Air Segments For Client OY3, Select Core Team Bus Class Approved
+    Add Values For UL Client When Why First/Bus Booked Is Core Team Bus Class Approved
+    Verify UDID 4, 6, and 19 Are Written In The PNR For Client UL
     
-Verify That UDID 6 And UDID 9 Remark Should Be Written In The PNR For OY3/OV1/LH1 Client
+Verify That UDID 6 And UDID 19 Remark Should Be Written In The PNR For OY3/OV1/LH1 Client
     [Tags]    us15251    not_ready
-    Create PNR With Active Air Segments For Client OY3, Select Any Except Core Team Bus Class Approved
+    Create PNR With Active Air Segments For Client LH1, Select Any Except Core Team Bus Class Approved
+    Add Values For UL Client When Why First/Bus Booked Is Complimentary upgrade
+    Verify UDID 4, 6, and 19 Are Written In The PNR For Client UL
     
 Verify That UDID 3 Remark Should Be Written In The PNR For SGE Client When There's A Single Air Segment Booked And Ticketed In The PNR
     [Tags]    us15251    not_ready

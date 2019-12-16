@@ -44,7 +44,7 @@
 		"ExpectedRemark3": "RM*U9/-Ref",
 		"UnexpectedRemark1": null
 	},
-	"Client OY3, Select Any Except Core Team Bus Class Approved": {
+	"Client LH1, Select Any Except Core Team Bus Class Approved": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -528,7 +528,7 @@
 		"ConsultantNo": "CN1",
 		"TicketingLine": "TKOK",
 		"FormOfPayment": "CASH",
-		"Client": "EJ5",
+		"Client": "W7B",
 		"Udid50": "GUEST",
 		"NumAirSegments": "1",
 		"AirSegmentRoute1": "YULYYZ",

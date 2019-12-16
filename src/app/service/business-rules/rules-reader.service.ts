@@ -114,7 +114,7 @@ export class RulesReaderService {
     if (segment.length > 0) {
       let depDate = segment[0].departureDate;
       if (!depDate) {
-        depDate = segment[0].depDate;
+        depDate = segment[0].deptdate;
       }
       const days = this.utilHelper.dateDiffInDays(new Date(), this.utilHelper.convertSegmentDate(depDate));
       this.assignKeyValue('PNR_COUNT_DEPARTURE_DATE_FROM_TODAY', days);
@@ -185,7 +185,6 @@ export class RulesReaderService {
   }
 
   parseCarSegments() {
-    debugger;
     const codes = [];
     const segmentTypes = [];
 

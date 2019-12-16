@@ -20,12 +20,13 @@ export class RuleWriterService {
    * This get the business Rules - adding remark rule from rule Engine Service
    */
 
-  private formatRemarkRuleResult(resultText: string) {
+  private formatRemarkRuleResult(resultText: string, lineNo?) {
     if (resultText) {
       const type = resultText.substr(0, 2);
       const cat = resultText.substr(2, 1);
       const txt = resultText.substr(3, resultText.length - 3);
-      this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
+
+      this.additionaRemarks.push({ remarktype: type, category: cat, text: txt, segmentAssoc: lineNo });
     }
   }
 
@@ -37,7 +38,7 @@ export class RuleWriterService {
     remGroup.group = 'RuleRemarks';
     remGroup.remarks = new Array<RemarkModel>();
     this.additionaRemarks.forEach((element) => {
-      remGroup.remarks.push(this.remarkHelper.createRemark(element.text, element.remarktype, element.category));
+      remGroup.remarks.push(this.remarkHelper.createRemark(element.text, element.remarktype, element.category, element.segmentAssoc));
     });
     return remGroup;
   }
@@ -84,13 +85,14 @@ export class RuleWriterService {
   }
 
   getWriteRemarkWithSegmentRelate(resultItems) {
-    debugger;
+    const relatedSegments: string[] = [];
+    const remarks: string[] = [];
     const segment = this.pnrService.getSegmentList();
     if (segment) {
       segment.forEach((seg) => {
         if (seg.segmentType === 'CAR') {
           resultItems.forEach((res) => {
-            const writeCondition = new WriteConditionModel(res);
+            const writeCondition = new WriteConditionModel(res.resultItemValue);
 
             writeCondition.conditions.forEach((con) => {
               con.controlName = seg.vendorCode;
@@ -98,25 +100,23 @@ export class RuleWriterService {
 
             if (writeCondition.conditions.filter((con) => this.checkPnrValueValid(con)).length === writeCondition.conditions.length) {
               writeCondition.remarks.forEach((rem) => {
-                this.formatRemarkRuleResult(rem);
+                relatedSegments.push(seg.tatooNo);
+                remarks.push(rem);
               });
             }
-            // const conditionModel = new ControlConditionModel(res);
-            // conditionModel.value = seg.vendorCode;
-            // if (this.checkControlValid(conditionModel)) {
-            //   this.formatRemarkRuleResult(conditionModel.value);
-            // }
           });
         }
+      });
+      remarks.forEach((rem) => {
+        this.formatRemarkRuleResult(rem.replace('/S[PNR_Segment]', ''), relatedSegments);
       });
     }
   }
 
   checkPnrValueValid(condition: ControlConditionModel) {
-    debugger;
     const logicValue = condition.value.toLowerCase();
-    const entity = this.ruleReader.businessEntities.get(condition.controlName).toLowerCase();
-    switch (RuleLogicEnum[condition.operator]) {
+    const entity = condition.controlName.toLowerCase();
+    switch (RuleLogicEnum[condition.operator.replace(' ', '_')]) {
       case RuleLogicEnum.IS:
         return entity === logicValue;
       case RuleLogicEnum.CONTAINS:

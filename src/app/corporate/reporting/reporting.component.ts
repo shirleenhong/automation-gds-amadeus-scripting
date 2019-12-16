@@ -37,7 +37,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private pnrService: PnrService,
     private rulesEngineService: RulesEngineService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
@@ -79,6 +79,13 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (this.hotelSegmentsComponent !== undefined) {
       this.utilHelper.validateAllFields(this.hotelSegmentsComponent.hotelSegments);
       if (!this.hotelSegmentsComponent.hotelSegments.valid) {
+        return false;
+      }
+    }
+
+    if (this.containerComponent) {
+      this.utilHelper.validateAllFields(this.containerComponent.containerForm);
+      if (!this.containerComponent.containerForm.valid) {
         return false;
       }
     }

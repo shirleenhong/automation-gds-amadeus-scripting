@@ -3,7 +3,6 @@ import { ControlConditionModel } from './control-condition.model';
 export class WriteConditionModel {
   conditions = [];
   remarks = [];
-
   constructor(json: any) {
     try {
       const jsonObj = JSON.parse(json);

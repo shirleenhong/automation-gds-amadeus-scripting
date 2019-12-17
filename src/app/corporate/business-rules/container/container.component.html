@@ -30,16 +30,9 @@
               <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
             <div class="col-4">
-              <input
-                list="dynamicList"
-                class="form-control"
-                [formControlName]="input.controlName"
-                type="text"
-                [name]="input.controlName"
-                [required]="input.validators.required"
-                [minlength]="input.validators.minlength"
-                [maxlength]="input.validators.maxlength"
-              />
+              <input list="dynamicList" class="form-control" [formControlName]="input.controlName" type="text"
+                [name]="input.controlName" [required]="input.validators.required"
+                [minlength]="input.validators.minlength" [maxlength]="input.validators.maxlength" />
               <datalist id="dynamicList">
                 <option *ngFor="let option of input.options" [value]="option.value">{{ option.name }}</option>
               </datalist>

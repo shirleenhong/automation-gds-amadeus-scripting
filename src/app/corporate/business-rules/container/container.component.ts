@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 import { BusinessRulesFormData } from 'src/app/models/business-rules/ui-business-rules.model';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-container',
@@ -14,7 +15,7 @@ export class ContainerComponent implements OnInit {
   formTemplateData: BusinessRulesFormData[];
   @Input() containerFilter: string;
 
-  constructor(private res: RulesEngineService) { }
+  constructor(private res: RulesEngineService, private pnrService: PnrService) { }
 
   ngOnInit() {
     this.createRuleForm();
@@ -44,6 +45,7 @@ export class ContainerComponent implements OnInit {
   hasShowCondition(conditions) {
     // return true;
     // console.log(conditions);
+    let result = true;
     if (conditions) {
       for (const cond of conditions) {
         let comparison = '';
@@ -53,13 +55,22 @@ export class ContainerComponent implements OnInit {
           switch (match.groups.conditionName) {
             case 'UI_FORM':
               comparison = this.containerForm.get(match.groups.conditionvalue).value;
+              result = this.isConditionValid(comparison, cond.logic, cond.value);
               break;
-            case 'UI_DEFAULT':
-
-              break;
+            // case 'UI_DEFAULT':
+            // debugger;
+            // if (match.groups.conditionvalue === 'TSTSEGMENTTYPE') {
+            //   comparison = this.getSegmentType(name);
+            //   const segtype = this.isConditionValid(comparison, cond.logic, cond.value);
+            //   if (segtype) {
+            //     this.containerForm.get(name).setValue(cond.result);
+            //   }
+            // }
+            // result = true;
+            // break;
           }
         }
-        const result = this.isConditionValid(comparison, cond.logic, cond.value);
+
         if (!result) {
           return false;
         }
@@ -68,10 +79,26 @@ export class ContainerComponent implements OnInit {
     return true;
   }
 
+  getSegmentType(name) {
+    const segmenttype = [];
+    const regex = /(.*)_((?<tstNo>(.*)))/g;
+    const match = regex.exec(name);
+    if (match !== null) {
+      const tst = this.pnrService.tstObj;
+      tst[match.groups.tstNo].segmentInformation.segDetails.segmentDetail.forEach(seg => {
+        segmenttype.push(seg.identification);
+      });
+      return segmenttype.join('|');
+      // const look = tst.find((x) => x);
+    }
+  }
+
   isConditionValid(comparison, operator, value) {
     switch (operator) {
       case 'IS_NOT':
         return comparison !== value;
+      case 'NOT_IN':
+        return comparison.split('|').indexOf(value) === -1;
       default:
         return false;
     }

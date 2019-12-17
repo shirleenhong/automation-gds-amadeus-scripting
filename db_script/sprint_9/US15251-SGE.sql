@@ -154,18 +154,21 @@ DECLARE  @bid4 as int = (select ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='PNR_ADD_Remark'); 
 
-
+DECLARE  @bid5 as int = (select ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_DELETE_Remark'); 
  
     INSERT INTO dbo.ClientDefinedRuleResultItem
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{"type":"text","label":"Airline Code","name":"airlineCode","required":"true","maxlength":"2","minlength":"2","valuetype":"AlphaMask","conditions":[{"controlName":"[UI_DEFAULT_TSTSEGMENT]","logic":"NOT_IN","value":"AIR","result":"XX"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U3/-[UI_FORM_airlineCode]/[PNR_Segment]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    ( @CDRGRoupName, @bid3, '{"type":"text","label":"Airline Code","name":"airlineCode_[TSTSEGMENT]","required":"true","maxlength":"2","minlength":"2","valuetype":"AlphaMask","conditions":[{"controlName":"[UI_DEFAULT_TSTSEGMENTTYPE]","logic":"NOT_IN","value":"AIR","result":"XX"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'RM* U3/-[UI_FORM_airlineCode_TSTSEGMENT]/[TST_SEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, 'U3/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
     
 
-SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 4; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -173,7 +176,8 @@ SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
 values
     (@resultitemid + 1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 2, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit

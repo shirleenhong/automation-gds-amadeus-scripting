@@ -90,11 +90,9 @@ export class RulesEngineService {
       if (look) {
         bRule.ruleResult.forEach((result) => {
           if (result.businessEntityName === 'UI_ADD_CONTROL') {
-            const rules = new BusinessRulesFormData(result.resultItemValue);
-            const ite = this.checkUiIteration(rules.conditions);
-            for (let i = 1; i <= ite; i++) {
-              formData.push(rules);
-            }
+            const origRules = new BusinessRulesFormData(result.resultItemValue);
+            const ite = this.checkUiIteration(origRules.controlName);
+            this.buildFormData(ite, result, formData);
           }
         });
       }
@@ -103,15 +101,20 @@ export class RulesEngineService {
   }
 
 
-  checkUiIteration(uiConditions) {
-    let iteration = 1;
-    if (uiConditions) {
-      const look = uiConditions.find((x) => x.controlName.indexOf('TSTSEGMENT') > 0);
-      if (look) {
-        iteration = this.pnrService.tstObj.length;
-      }
+  private buildFormData(ite, result, formData) {
+    for (let i = 1; i <= ite; i++) {
+      const rules = new BusinessRulesFormData(result.resultItemValue);
+      rules.label = (rules && rules.controlName.indexOf('TSTSEGMENT') > -1) ?
+        rules.label + 'TST ' + i.toString() : rules.label;
+      rules.controlName = (rules && rules.controlName.indexOf('TSTSEGMENT') > -1) ?
+        rules.controlName.replace('[TSTSEGMENT]', i.toString()) : rules.controlName;
+      formData.push(rules);
     }
-    return iteration;
+  }
+
+  checkUiIteration(uiControName) {
+    const tsts = this.pnrService.getTstLength();
+    return (uiControName && uiControName.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
   }
 
 
@@ -133,7 +136,7 @@ export class RulesEngineService {
     this.validBusinessRules.forEach((bRule) => {
       bRule.ruleResult.forEach((result) => {
         if (result.businessEntityName === entityName) {
-          resultItems.push(result);
+          resultItems.push(result.resultItemValue);
           formData.push(new BusinessRulesFormData(result.resultItemValue));
         }
       });

@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -26,9 +26,9 @@ export class RuleWriterService {
       const cat = resultText.substr(2, 1);
       const txt = resultText.substr(3, resultText.length - 3);
       if (txt.indexOf('UI_FORM') === -1) {
-        this.additionaRemarks.push({ remarktype: type, category: cat, text: txt });
-      }
-      if (lineNo !== undefined) {
+        if (!lineNo) {
+          lineNo = [];
+        }
         this.additionaRemarks.push({ remarktype: type, category: cat, text: txt, segmentAssoc: lineNo });
       }
     }
@@ -64,17 +64,43 @@ export class RuleWriterService {
   }
 
   getPnrAddRemark(resultItems) {
+    let isUI = false;
     resultItems.forEach((element) => {
-      const regEx = /(\[(?:\[??[^\[]*?\]))/g;
-      element.match(regEx).forEach((result) => {
+      const regEx = (/(\[(?:\[??[^\[]*?\]))/g);
+      element.match(regEx).forEach(result => {
         const key = result.replace('[', '').replace(']', '');
-        const val = this.ruleReader.getEntityValue(key);
-        if (val) {
-          element = element.replace(result, val);
-        }
+        (isUI = this.getUIValues(key, element, result, isUI));
       });
-      this.formatRemarkRuleResult(element);
+      if (!isUI) {
+        this.formatRemarkRuleResult(element);
+      }
     });
+  }
+
+  private removeTstSegment(element) {
+    let remark = element;
+    if (element.indexOf('/[TST_SEGMENT]') > -1) {
+      remark = element.replace('/[TST_SEGMENT]', '');
+      return { remark, hastst: true };
+    }
+    return { remark, hastst: false };
+  }
+
+  private getUIValues(key: any, element: any, result: any, isUI: boolean) {
+    const tsts = this.pnrService.getTstLength();
+    const iteration = (key.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
+    for (let i = 1; i <= iteration; i++) {
+      key = key.replace('TSTSEGMENT', i.toString());
+      const val = this.ruleReader.getEntityValue(key);
+      if (val) {
+        element = element.replace(result, val);
+        isUI = true;
+        const { remark, hastst } = this.removeTstSegment(element);
+        const testSegment = hastst ? this.writeRemarkPerTst(i) : '';
+        this.formatRemarkRuleResult(remark, testSegment);
+      }
+    }
+    return isUI;
   }
 
   getWriteRemarkWithCondition(resultItems) {
@@ -86,6 +112,11 @@ export class RuleWriterService {
         });
       }
     });
+  }
+
+  writeRemarkPerTst(tstNo) {
+    const segmentNo = this.pnrService.getTstSegment(this.pnrService.tstObj[tstNo - 1]);
+    return segmentNo;
   }
 
   getWriteRemarkWithSegmentRelate(resultItems) {

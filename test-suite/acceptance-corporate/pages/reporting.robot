@@ -597,7 +597,7 @@ Verify UL Client UDID Remarks For Core Team Bus Class Approved
     Take Screenshot    
     
 Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus Class Approved
-    Verify Specific Remark Is Written In The PNR    RM *U6/-COMPLIMENTAY UPGRADE
+    Verify Specific Remark Is Written In The PNR    RM *U6/-COMPLIMENTARY UPGRADE
     Verify Specific Remark Is Written In The PNR    RM *U19/-REF
     Verify Specific Remark Is Not Written In The PNR    RM *U4/-
     Take Screenshot

@@ -489,7 +489,7 @@ export class PnrService {
     }
 
     private getSegmentDetails(elem: any, type: string) {
-        
+
         let elemText = '';
         let elemStatus = '';
         let elemairlineCode = '';
@@ -508,7 +508,7 @@ export class PnrService {
         let segType = type;
         let passiveType = '';
         let hotelChainCode = '';
-        let elemVendorCode ='';
+        let elemVendorCode = '';
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -619,7 +619,7 @@ export class PnrService {
             isPassive: (segType === 'CAR' || type === 'HTL' || (segType === 'AIR' && elemStatus === 'GK')),
             passengerNo: this.getPassengerAssocNumbers(elem.associations),
             hotelChainCode,
-            vendorCode : elemVendorCode
+            vendorCode: elemVendorCode
         };
         this.segments.push(segment);
     }
@@ -1897,5 +1897,29 @@ export class PnrService {
             }
         });
         return name;
+    }
+
+    getTstLength() {
+        let tstslength = 0;
+        if (this.tstObj) {
+            if (this.tstObj.length) {
+                tstslength = this.tstObj.length;
+            } else {
+                tstslength = 1;
+            }
+        }
+        return tstslength;
+    }
+
+    getTstSegment(tst: any) {
+        const segments = [];
+        if (tst.segmentInformation.length === undefined) {
+            segments.push(tst.segmentInformation.segmentReference.refDetails.refNumber);
+        } else {
+            tst.segmentInformation.forEach((s) => {
+                segments.push(s.segmentReference.refDetails.refNumber);
+            });
+        }
+        return segments;
     }
 }

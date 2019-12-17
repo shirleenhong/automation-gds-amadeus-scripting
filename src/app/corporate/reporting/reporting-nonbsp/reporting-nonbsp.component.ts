@@ -6,6 +6,7 @@ import { DecimalPipe } from '@angular/common';
 import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 import { DDBService } from '../../../service/ddb.service';
 import { ServicingOptionEnums } from '../../../enums/servicing-options.enum';
+import { UtilHelper } from 'src/app/helper/util.helper';
 declare var smartScriptSession: any;
 
 @Component({
@@ -19,8 +20,14 @@ export class ReportingNonbspComponent implements OnInit {
   nonBspReasonList: Array<SelectItem>;
   decPipe = new DecimalPipe('en-US');
   highFareSO: any;
+  fareList: string[] = [];
 
-  constructor(private fb: FormBuilder, private valueChagneListener: ValueChangeListener, private ddbService: DDBService) {}
+  constructor(
+    private fb: FormBuilder,
+    private valueChagneListener: ValueChangeListener,
+    private ddbService: DDBService,
+    private utilHelper: UtilHelper
+  ) {}
 
   ngOnInit() {
     this.nonBspGroup = this.fb.group({
@@ -52,18 +59,20 @@ export class ReportingNonbspComponent implements OnInit {
         }
       });
       if (!isAdded) {
-        items.push(this.createFormGroup(element.segmentNo, highFare, '', 'L'));
+        items.push(this.createFormGroup(element.segmentNo, highFare, 'L'));
+        this.utilHelper.validateAllFields(this.nonBspGroup);
+        this.nonBspGroup.updateValueAndValidity();
       }
       isAdded = false;
       this.valueChagneListener.reasonCodeChange(['L']);
     });
   }
 
-  createFormGroup(segmentNo: string, highFare: any, lowFare: string, reasonCode: string): FormGroup {
+  createFormGroup(segmentNo: string, highFare: any, reasonCode: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       highFareText: new FormControl(highFare, [Validators.required]),
-      lowFareText: new FormControl(lowFare, [Validators.required]),
+      lowFareText: new FormControl(null, [Validators.required]),
       reasonCodeText: new FormControl(reasonCode, [Validators.required]),
       chkIncluded: new FormControl('')
     });
@@ -77,29 +86,31 @@ export class ReportingNonbspComponent implements OnInit {
 
   async getHighFare(command: string) {
     let value = '';
-    await smartScriptSession.send(command).then((res) => {
-      const regex = /TOTALS (.*)/g;
-      const match = regex.exec(res.Response);
+    if (this.fareList === undefined || !this.fareList.includes(command)) {
+      this.fareList.push(command);
 
-      // regex.lastIndex = 0;
-      if (match !== null) {
-        const temp = match[0].split('    ');
-        if (temp[3] !== undefined) {
-          value = temp[3].trim();
-          return value.trim();
-        }
-      } else {
-        const regex2 = /[^][A-Z]{3}(\s+)(?<amount>(\d+(\.\d{2})))[\n\r]/g;
-        const match2 = regex2.exec(res.Response);
-        if (match2 !== null) {
-          if (match2.groups !== undefined && match2.groups.amount !== undefined) {
-            value = match2.groups.amount;
+      await smartScriptSession.send(command).then((res) => {
+        const regex = /TOTALS (.*)/g;
+        const match = regex.exec(res.Response);
+        if (match !== null) {
+          const temp = match[0].split('    ');
+          if (temp[3] !== undefined) {
+            value = temp[3].trim();
             return value.trim();
           }
+        } else {
+          const regex2 = /[^][A-Z]{3}(\s+)(?<amount>(\d+(\.\d{2})))[\n\r]/g;
+          const match2 = regex2.exec(res.Response);
+          if (match2 !== null) {
+            if (match2.groups !== undefined && match2.groups.amount !== undefined) {
+              value = match2.groups.amount;
+              return value.trim();
+            }
+          }
         }
-      }
-    });
-    return value;
+      });
+      return value;
+    }
   }
 
   insertSegment(command, segmentLineNo): string {

@@ -20,7 +20,11 @@ export class ReportingNonbspComponent implements OnInit {
   nonBspReasonList: Array<SelectItem>;
   decPipe = new DecimalPipe('en-US');
   highFareSO: any;
+  lowFareDom: any;
+  lowFareInt: any;
+  isDomesticFlight = true;
   fareList: string[] = [];
+  processed = false;
 
   constructor(
     private fb: FormBuilder,
@@ -36,8 +40,11 @@ export class ReportingNonbspComponent implements OnInit {
     this.getServicingOptionValuesFares();
     this.valueChagneListener.accountingRemarkChange.subscribe((accRemarks) => {
       this.nonBspInformation = accRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP');
-      this.drawControlsForNonBsp();
+      if (!this.processed) {
+        this.drawControlsForNonBsp();
+      }
     });
+    this.isDomesticFlight = this.ddbService.isPnrDomestic();
   }
 
   async drawControlsForNonBsp() {
@@ -51,28 +58,33 @@ export class ReportingNonbspComponent implements OnInit {
       items.removeAt(0);
     }
     this.nonBspInformation.forEach(async (element) => {
-      const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo)); // FXA/S
+      let lowFare: any;
       let isAdded = false;
+      const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo));
+      if (this.isDomesticFlight) {
+        lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, element.segmentNo));
+      } else {
+        lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
+      }
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
           isAdded = true;
         }
       });
       if (!isAdded) {
-        items.push(this.createFormGroup(element.segmentNo, highFare, 'L'));
+        items.push(this.createFormGroup(element.segmentNo, highFare, lowFare, 'L'));
         this.utilHelper.validateAllFields(this.nonBspGroup);
         this.nonBspGroup.updateValueAndValidity();
+        this.fareList.push(element.segmentNo);
       }
-      isAdded = false;
-      this.valueChagneListener.reasonCodeChange(['L']);
     });
   }
 
-  createFormGroup(segmentNo: string, highFare: any, reasonCode: string): FormGroup {
+  createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       highFareText: new FormControl(highFare, [Validators.required]),
-      lowFareText: new FormControl(null, [Validators.required]),
+      lowFareText: new FormControl(lowFare, [Validators.required]),
       reasonCodeText: new FormControl(reasonCode, [Validators.required]),
       chkIncluded: new FormControl('')
     });
@@ -82,35 +94,49 @@ export class ReportingNonbspComponent implements OnInit {
 
   getServicingOptionValuesFares() {
     this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
+    this.lowFareDom = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Domestic_Calculation);
+    this.lowFareInt = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_Calculation);
   }
 
   async getHighFare(command: string) {
     let value = '';
-    if (this.fareList === undefined || !this.fareList.includes(command)) {
-      this.fareList.push(command);
-
-      await smartScriptSession.send(command).then((res) => {
-        const regex = /TOTALS (.*)/g;
-        const match = regex.exec(res.Response);
-        if (match !== null) {
-          const temp = match[0].split('    ');
-          if (temp[3] !== undefined) {
-            value = temp[3].trim();
+    await smartScriptSession.send(command).then((res) => {
+      const regex = /TOTALS (.*)/g;
+      const match = regex.exec(res.Response);
+      if (match !== null) {
+        const temp = match[0].split('    ');
+        if (temp[3] !== undefined) {
+          value = temp[3].trim();
+          return value.trim();
+        }
+      } else {
+        const regex2 = /[^][A-Z]{3}(\s+)(?<amount>(\d+(\.\d{2})))[\n\r]/g;
+        const match2 = regex2.exec(res.Response);
+        if (match2 !== null) {
+          if (match2.groups !== undefined && match2.groups.amount !== undefined) {
+            value = match2.groups.amount;
             return value.trim();
           }
-        } else {
-          const regex2 = /[^][A-Z]{3}(\s+)(?<amount>(\d+(\.\d{2})))[\n\r]/g;
-          const match2 = regex2.exec(res.Response);
-          if (match2 !== null) {
-            if (match2.groups !== undefined && match2.groups.amount !== undefined) {
-              value = match2.groups.amount;
-              return value.trim();
-            }
-          }
         }
-      });
-      return value;
-    }
+      }
+    });
+    return value;
+  }
+
+  async getLowFare(command: string) {
+    let value = '';
+    await smartScriptSession.send(command).then((res) => {
+      const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
+      const match = regex.exec(res.Response);
+      regex.lastIndex = 0;
+      if (match !== null) {
+        if (match.groups !== undefined && match.groups.from !== undefined) {
+          value = match.groups.from;
+          return value;
+        }
+      }
+    });
+    return value;
   }
 
   insertSegment(command, segmentLineNo): string {

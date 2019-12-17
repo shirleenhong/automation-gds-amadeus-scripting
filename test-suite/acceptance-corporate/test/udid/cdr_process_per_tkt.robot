@@ -19,7 +19,7 @@ Verify That UDID 6 And UDID 4 Remark Should Be Written In The PNR For OY3/OV1/LH
     Verify UDID 4, 6, and 19 Are Written In The PNR For Client UL
     
 Verify That UDID 6 And UDID 19 Remark Should Be Written In The PNR For OY3/OV1/LH1 Client
-    [Tags]    us15251    not_ready
+    [Tags]    us15251
     Create PNR With Active Air Segments For Client LH1, Select Any Except Core Team Bus Class Approved
     Add Values For UL Client When Why First/Bus Booked Is Complimentary upgrade
     Verify UDID 4, 6, and 19 Are Written In The PNR For Client UL

@@ -89,11 +89,13 @@ export class RuleWriterService {
   private getUIValues(key: any, element: any, result: any, isUI: boolean) {
     const tsts = this.pnrService.getTstLength();
     const iteration = (key.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
+    const origkey = key;
+    const origelement = element;
     for (let i = 1; i <= iteration; i++) {
-      key = key.replace('TSTSEGMENT', i.toString());
+      key = origkey.replace('TSTSEGMENT', i.toString());
       const val = this.ruleReader.getEntityValue(key);
       if (val) {
-        element = element.replace(result, val);
+        element = origelement.replace(result, val);
         isUI = true;
         const { remark, hastst } = this.removeTstSegment(element);
         const testSegment = hastst ? this.writeRemarkPerTst(i) : '';

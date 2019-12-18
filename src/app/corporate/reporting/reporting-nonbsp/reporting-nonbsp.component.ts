@@ -146,4 +146,19 @@ export class ReportingNonbspComponent implements OnInit {
       return command + '/S' + segmentLineNo;
     }
   }
+
+  changeFare(group: FormGroup, indx: number) {
+    if (indx >= 0) {
+      const lowFare = group.get('lowFareText');
+      const highFare = group.get('highFareText');
+
+      debugger;
+      if (Number(lowFare.value) > Number(highFare.value)) {
+        lowFare.setErrors({ incorrect: true });
+      } else {
+        lowFare.setErrors(null);
+        lowFare.updateValueAndValidity();
+      }
+    }
+  }
 }

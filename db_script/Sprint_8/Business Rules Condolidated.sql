@@ -124,9 +124,9 @@ VALUES
 	('PNR_COUNT_DEPARTURE_DATE_FROM_TODAY', 'Reads the and count the days of Departure Date from todays date', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
 	('PNR_SEGMENT_TYPES_IN_PNR', 'Reads all the segment types in the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
 	('PNR_EB', 'Reads the PNR EB remark', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
-	('WRITE_REMARK_WITH_SEGMENT_RELATE', 'CA - Write remarks with segment relate', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_WRITE_REMARK_WITH_SEGMENT_RELATE', 'CA - Write remarks with segment relate', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
 	('PNR_DELETE_REMARK_THAT_CONTAINS', 'CA - Delete remarks that contains', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1)
-	
+
 	PRINT 'END Script Amadeus CA Migration - US15949'
 	---------------------------
 	

@@ -48,6 +48,7 @@ export class PaymentRemarkService {
     this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'));
     this.writeAquaTicketingRemarks(accList.filter((x) => x.accountingTypeRemark === 'NONBSP'));
     this.writeCancelRemarks(accList.filter((x) => x.accountingTypeRemark === 'ACPPC'));
+    accountingComponents.accountingRemarks.length = 0;
   }
 
   writeCancelRemarks(accountingRemarks: MatrixAccountingModel[]) {

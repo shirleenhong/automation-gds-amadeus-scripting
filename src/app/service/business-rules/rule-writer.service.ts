@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -66,10 +66,10 @@ export class RuleWriterService {
   getPnrAddRemark(resultItems) {
     let isUI = false;
     resultItems.forEach((element) => {
-      const regEx = (/(\[(?:\[??[^\[]*?\]))/g);
-      element.match(regEx).forEach(result => {
+      const regEx = /(\[(?:\[??[^\[]*?\]))/g;
+      element.match(regEx).forEach((result) => {
         const key = result.replace('[', '').replace(']', '');
-        (isUI = this.getUIValues(key, element, result, isUI));
+        isUI = this.getUIValues(key, element, result, isUI);
       });
       if (!isUI) {
         this.formatRemarkRuleResult(element);
@@ -88,7 +88,7 @@ export class RuleWriterService {
 
   private getUIValues(key: any, element: any, result: any, isUI: boolean) {
     const tsts = this.pnrService.getTstLength();
-    const iteration = (key.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
+    const iteration = key.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
     for (let i = 1; i <= iteration; i++) {
       key = key.replace('TSTSEGMENT', i.toString());
       const val = this.ruleReader.getEntityValue(key);
@@ -120,30 +120,29 @@ export class RuleWriterService {
   }
 
   getWriteRemarkWithSegmentRelate(resultItems) {
-    const relatedSegments: string[] = [];
+    let relatedSegments: string[] = [];
     const remarks: string[] = [];
     const segment = this.pnrService.getSegmentList();
     if (segment) {
       segment.forEach((seg) => {
         resultItems.forEach((res) => {
-          const writeCondition = new WriteConditionModel(res.resultItemValue);
+          const writeCondition = new WriteConditionModel(res);
 
           writeCondition.conditions.forEach((con) => {
             if (seg.segmentType === con.segmentType) {
               con.propertyValue = seg[con.propertyName];
             }
           });
-
           if (writeCondition.conditions.filter((con) => this.checkPnrValueValid(con)).length === writeCondition.conditions.length) {
             writeCondition.remarks.forEach((rem) => {
+              relatedSegments = [];
               relatedSegments.push(seg.tatooNo);
               remarks.push(rem);
+
+              this.formatRemarkRuleResult(rem.replace('/S[PNR_Segment]', ''), relatedSegments);
             });
           }
         });
-      });
-      remarks.forEach((rem) => {
-        this.formatRemarkRuleResult(rem.replace('/S[PNR_Segment]', ''), relatedSegments);
       });
     }
   }

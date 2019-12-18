@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -66,10 +66,10 @@ export class RuleWriterService {
   getPnrAddRemark(resultItems) {
     let isUI = false;
     resultItems.forEach((element) => {
-      const regEx = (/(\[(?:\[??[^\[]*?\]))/g);
-      element.match(regEx).forEach(result => {
+      const regEx = /(\[(?:\[??[^\[]*?\]))/g;
+      element.match(regEx).forEach((result) => {
         const key = result.replace('[', '').replace(']', '');
-        (isUI = this.getUIValues(key, element, result, isUI));
+        isUI = this.getUIValues(key, element, result, isUI);
       });
       if (!isUI) {
         this.formatRemarkRuleResult(element);
@@ -122,57 +122,49 @@ export class RuleWriterService {
   }
 
   getWriteRemarkWithSegmentRelate(resultItems) {
-    const relatedSegments: string[] = [];
+    let relatedSegments: string[] = [];
     const remarks: string[] = [];
     const segment = this.pnrService.getSegmentList();
     if (segment) {
       segment.forEach((seg) => {
-        if (seg.segmentType === 'CAR') {
-          resultItems.forEach((res) => {
-            const writeCondition = new WriteConditionModel(res.resultItemValue);
+        resultItems.forEach((res) => {
+          const writeCondition = new WriteConditionModel(res);
 
-            writeCondition.conditions.forEach((con) => {
-              con.controlName = seg.vendorCode;
-            });
-
-            if (writeCondition.conditions.filter((con) => this.checkPnrValueValid(con)).length === writeCondition.conditions.length) {
-              writeCondition.remarks.forEach((rem) => {
-                relatedSegments.push(seg.tatooNo);
-                remarks.push(rem);
-              });
+          writeCondition.conditions.forEach((con) => {
+            if (seg.segmentType === con.segmentType) {
+              con.propertyValue = seg[con.propertyName];
             }
           });
-        }
-      });
-      remarks.forEach((rem) => {
-        this.formatRemarkRuleResult(rem.replace('/S[PNR_Segment]', ''), relatedSegments);
+          if (writeCondition.conditions.filter((con) => this.checkPnrValueValid(con)).length === writeCondition.conditions.length) {
+            writeCondition.remarks.forEach((rem) => {
+              relatedSegments = [];
+              relatedSegments.push(seg.tatooNo);
+              remarks.push(rem);
+
+              this.formatRemarkRuleResult(rem.replace('/S[PNR_Segment]', ''), relatedSegments);
+            });
+          }
+        });
       });
     }
   }
 
   checkPnrValueValid(condition: ControlConditionModel) {
     const logicValue = condition.value.toLowerCase();
-    const entity = condition.controlName.toLowerCase();
-    switch (RuleLogicEnum[condition.operator.replace(' ', '_')]) {
-      case RuleLogicEnum.IS:
-        return entity === logicValue;
-      case RuleLogicEnum.CONTAINS:
-        return entity.indexOf(logicValue) >= 0;
-      case RuleLogicEnum.IS_NOT:
-        return entity !== logicValue;
-      case RuleLogicEnum.NOT_IN:
-        return logicValue.split('|').indexOf(entity) === -1;
-      case RuleLogicEnum.IN:
-        return logicValue.split('|').indexOf(entity) >= 0;
-    }
+    const entity = condition.propertyValue.toLowerCase();
+    return this.checkEntity(entity, logicValue, condition.operator);
   }
 
   checkControlValid(condition: ControlConditionModel) {
     const logicValue = condition.value.toLowerCase();
-    let entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName);
+    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName);
+    return this.checkEntity(entity, logicValue, condition.operator);
+  }
+
+  checkEntity(entity, logicValue, operator: string) {
     if (entity) {
       entity = entity.toLowerCase();
-      switch (RuleLogicEnum[condition.operator]) {
+      switch (RuleLogicEnum[operator]) {
         case RuleLogicEnum.IS:
           return entity === logicValue;
         case RuleLogicEnum.CONTAINS:

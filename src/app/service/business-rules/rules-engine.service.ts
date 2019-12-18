@@ -23,7 +23,7 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService,
     private ruleUiService: RuleUiService,
     private ruleWriter: RuleWriterService
-  ) { }
+  ) {}
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -100,23 +100,20 @@ export class RulesEngineService {
     return formData;
   }
 
-
   private buildFormData(ite, result, formData) {
     for (let i = 1; i <= ite; i++) {
       const rules = new BusinessRulesFormData(result.resultItemValue);
-      rules.label = (rules && rules.controlName.indexOf('TSTSEGMENT') > -1) ?
-        rules.label + 'TST ' + i.toString() : rules.label;
-      rules.controlName = (rules && rules.controlName.indexOf('TSTSEGMENT') > -1) ?
-        rules.controlName.replace('[TSTSEGMENT]', i.toString()) : rules.controlName;
+      rules.label = rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.label + 'TST ' + i.toString() : rules.label;
+      rules.controlName =
+        rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.controlName.replace('[TSTSEGMENT]', i.toString()) : rules.controlName;
       formData.push(rules);
     }
   }
 
   checkUiIteration(uiControName) {
     const tsts = this.pnrService.getTstLength();
-    return (uiControName && uiControName.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
+    return uiControName && uiControName.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
   }
-
 
   getSpecificRuleResultItemValue(entityName: string) {
     let value = '';
@@ -151,9 +148,9 @@ export class RulesEngineService {
   getRuleWriteRemarks() {
     let resulttItems = this.getSpecificRulesValue('PNR_ADD_Remark').resultItems;
     this.ruleWriter.getPnrAddRemark(resulttItems);
-    resulttItems = this.getSpecificRulesValue('WRITE_REMARK_WITH_CONDTION').resultItems;
+    resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_CONDTION').resultItems;
     this.ruleWriter.getWriteRemarkWithCondition(resulttItems);
-    resulttItems = this.getSpecificRulesValue('WRITE_REMARK_WITH_SEGMENT_RELATE').resultItems;
+    resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_SEGMENT_RELATE').resultItems;
     this.ruleWriter.getWriteRemarkWithSegmentRelate(resulttItems);
     return this.ruleWriter.writeRuleRemarks();
   }

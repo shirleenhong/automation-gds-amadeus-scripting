@@ -1902,7 +1902,7 @@ export class PnrService {
     getTstLength() {
         let tstslength = 0;
         if (this.tstObj) {
-            if (this.tstObj.length) {
+            if (this.tstObj.length || this.tstObj.length === 0) {
                 tstslength = this.tstObj.length;
             } else {
                 tstslength = 1;

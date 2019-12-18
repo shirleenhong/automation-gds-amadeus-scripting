@@ -7,6 +7,8 @@ import { ValueChangeListener } from 'src/app/service/value-change-listener.servi
 import { DDBService } from '../../../service/ddb.service';
 import { ServicingOptionEnums } from '../../../enums/servicing-options.enum';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { AmountPipe } from '../../../pipes/amount.pipe';
+
 declare var smartScriptSession: any;
 
 @Component({
@@ -25,6 +27,7 @@ export class ReportingNonbspComponent implements OnInit {
   isDomesticFlight = true;
   fareList: string[] = [];
   processed = false;
+  amountPipe = new AmountPipe();
 
   constructor(
     private fb: FormBuilder,
@@ -152,9 +155,17 @@ export class ReportingNonbspComponent implements OnInit {
       const lowFare = group.get('lowFareText');
       const highFare = group.get('highFareText');
 
-      debugger;
+      if (lowFare !== undefined) {
+        lowFare.setValue(this.decPipe.transform(parseFloat(lowFare.value), '1.2-2').replace(',', ''));
+      }
+      if (highFare !== undefined) {
+        highFare.setValue(this.decPipe.transform(parseFloat(highFare.value), '1.2-2').replace(',', ''));
+      }
+
       if (Number(lowFare.value) > Number(highFare.value)) {
         lowFare.setErrors({ incorrect: true });
+        this.utilHelper.validateAllFields(this.nonBspGroup);
+        this.nonBspGroup.updateValueAndValidity();
       } else {
         lowFare.setErrors(null);
         lowFare.updateValueAndValidity();

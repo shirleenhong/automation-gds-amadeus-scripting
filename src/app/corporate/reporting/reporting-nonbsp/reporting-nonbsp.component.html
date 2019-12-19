@@ -8,11 +8,11 @@
 
       <div class="col-2">
         Full Fare
-        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" required AmountMask />
+        <input formControlName="highFareText" type="text" class="form-control" maxlength="55" required (change)="changeFare(item, i)" />
       </div>
       <div class="col-2">
         Low Fare
-        <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" required AmountMask />
+        <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" required (change)="changeFare(item, i)" />
       </div>
       <div class="col-3">
         Reason Code

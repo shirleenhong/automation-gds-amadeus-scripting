@@ -667,16 +667,15 @@ Click Send Invoice
     Set Test Variable    ${pnr_submitted}   no
     
 Complete PNR and Ticket TST${tst_no}
-    #Navigate To Page Reporting Remarks
-    #Finish PNR    no
-    #Close CA Corporate Test
+    Set Test Variable    ${tst_no}
     Enter Cryptic Command    RFCWTTEST
     Enter Cryptic Command    ER
     Enter Cryptic Command    ER
     Enter Cryptic Command    RT      
     Get Record Locator Value
     Enter Cryptic Command     TTP/T${tst_no}
-    Retrive Current PNR
+    Handle E-ticket Error
+    Retrieve Current PNR 
     Get Ticket Number
 
 Get Ticket Number

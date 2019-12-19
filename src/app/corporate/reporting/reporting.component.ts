@@ -10,6 +10,7 @@ import { PnrService } from '../../service/pnr.service';
 import { CarSavingsCodeComponent } from './car-savings-code/car-savings-code.component';
 import { HotelSegmentsComponent } from './hotel-segments/hotel-segments.component';
 import { ContainerComponent } from '../business-rules/container/container.component';
+import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 @Component({
   selector: 'app-reporting',
@@ -29,6 +30,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+  @ViewChild(AccountingRemarkComponent) accountingComponent: AccountingRemarkComponent;
   hasRules = false;
   components = [];
 
@@ -37,7 +39,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private pnrService: PnrService,
     private rulesEngineService: RulesEngineService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
@@ -65,7 +67,10 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     }
     this.utilHelper.validateAllFields(this.reportingNonbspComponent.nonBspGroup);
     if (!this.reportingNonbspComponent.nonBspGroup.valid) {
+      this.reportingNonbspComponent.processed = false;
       return false;
+    } else {
+      this.reportingNonbspComponent.processed = true;
     }
 
     this.utilHelper.validateAllFields(this.reportingRemarksComponent.reportingForm);

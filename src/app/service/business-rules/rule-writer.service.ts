@@ -133,7 +133,6 @@ export class RuleWriterService {
       segment.forEach((seg) => {
         resultItems.forEach((res) => {
           const writeCondition = new WriteConditionModel(res);
-
           writeCondition.conditions.forEach((con) => {
             if (seg.segmentType === con.segmentType) {
               con.propertyValue = seg[con.propertyName];

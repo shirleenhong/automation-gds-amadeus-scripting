@@ -488,8 +488,7 @@ export class PnrService {
         return tdate;
     }
 
-    private getSegmentDetails(elem: any, type: string) {
-
+    private getSegmentDetails(elem: any, type: string) {        
         let elemText = '';
         let elemStatus = '';
         let elemairlineCode = '';
@@ -560,7 +559,8 @@ export class PnrService {
             elemcitycode = elem.fullNode.travelProduct.boardpointDetail.cityCode;
             elemText = elem.carType[0] + ' ' + elem.carCompanyCode + ' ' +
                 elemStatus + elem.quantity + ' ' + elem.location + ' ' +
-                this.formatDate(elem.pickupDate);
+                this.formatDate(elem.pickupDate);                
+            elemVendorCode = elem.fullNode.travelProduct.companyDetail.identification;
 
         } else {
             const fullnodetemp = elem.fullNode.travelProduct;
@@ -578,8 +578,8 @@ export class PnrService {
             elemStatus = elem.fullNode.relatedProduct.status;
             elemdepdate = fullnodetemp.product.depDate;
             arrivalDate = fullnodetemp.product.arrDate;
-            elemcitycode = fullnodetemp.boardpointDetail.cityCode;
-            elemVendorCode = elem.fullNode.travelProduct.companyDetail.identification;
+            elemcitycode = fullnodetemp.boardpointDetail.cityCode;            
+            elemVendorCode =this.getVendorCodeForPassiveCar(  elem.fullNode.itineraryFreetext.longFreetext);
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
                 // passiveType = flongtext.substr(2, 7);
@@ -622,6 +622,17 @@ export class PnrService {
             vendorCode: elemVendorCode
         };
         this.segments.push(segment);
+    }
+
+    private getVendorCodeForPassiveCar(longFreeText) {        
+        let vendorCode = '';
+        const vendorRegex = /(?<=SUC-)[a-zA-Z]{2}/g;
+        const match = longFreeText.match(vendorRegex);
+        if (match && match[0]) {
+            vendorCode = match[0];
+        }
+
+        return vendorCode;
     }
 
     private getLastDate(airdate: any, lastDeptDate: Date) {

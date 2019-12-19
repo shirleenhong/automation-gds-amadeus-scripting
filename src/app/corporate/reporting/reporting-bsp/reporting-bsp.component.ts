@@ -338,8 +338,8 @@ export class ReportingBSPComponent implements OnInit {
   async getLowFare(command: string) {
     let value = '';
     await smartScriptSession.send(command).then((res) => {
-      const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
-      const match = regex.exec(res.Response);
+      let regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
+      let match = regex.exec(res.Response);
       regex.lastIndex = 0;
       if (!match) {
         regex = /RECOMMENDATIONS IN GROUP 1\([A-Z]{3} (?<from>(.*))\)/g;

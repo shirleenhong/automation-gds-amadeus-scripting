@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -54,9 +54,11 @@ export class RuleWriterService {
     remGroup.passiveSegments = [];
 
     resultItems.forEach((element) => {
-      const lineNo = this.pnrService.getRemarkLineNumber(element);
-      if (lineNo !== '') {
-        remGroup.deleteRemarkByIds.push(lineNo);
+      const lineNos = this.pnrService.getRemarkLineNumbers(element);
+      if (lineNos) {
+        lineNos.forEach(lineNo => {
+          remGroup.deleteRemarkByIds.push(lineNo);
+        });
       }
     });
 

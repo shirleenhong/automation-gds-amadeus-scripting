@@ -117,7 +117,11 @@ export class RuleWriterService {
   }
 
   writeRemarkPerTst(tstNo) {
-    const segmentNo = this.pnrService.getTstSegment(this.pnrService.tstObj[tstNo - 1]);
+    let tst = this.pnrService.tstObj;
+    if (this.pnrService.tstObj.length) {
+      tst = this.pnrService.tstObj[tstNo - 1];
+    }
+    const segmentNo = this.pnrService.getTstSegment(tst);
     return segmentNo;
   }
 

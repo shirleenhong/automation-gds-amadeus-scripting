@@ -10,52 +10,67 @@
   </div>
   <div *ngIf="isDoneLoading">
     <div class="row">
-      <div class="" style="width:3%"></div>
+      <div class="" style="width:10%"></div>
 
-      <div class="col-2" style="width:12%;text-align:left;padding-left:30px">
+      <div class="header" style="width:10%;">
         Segment
       </div>
 
-      <div class="col-2" style="width:12%;text-align:left;padding-left:25px">
+      <div class="header" style="width:12%;">
         Charge Fare
       </div>
 
-      <div class="col-2" style="width:12%;text-align:left;padding-left:20px">
+      <div class="header" style="width:12%;">
         Full Fare
       </div>
-      <div class="col-2" style="width:12%;text-align:left;padding-left:15px">
+      <div class="header" style="width:12%;">
         Low Fare
       </div>
-      <div class="col-3" style="width:12%;text-align:left;padding-left:10px">
+      <div class="header" style="width:18%;">
         Reason Code
       </div>
+      <div *ngIf="isLilly" class="header" style="width:22%">
+        Calculation Option For Lilly
+      </div>
+
     </div>
     <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
       <div [formGroupName]="i" class="row">
-        <div class="" style="width:3%;padding-left:10px">
-          <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)" />
+        <div style="width:5%;padding-left:15px">
+          <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded"
+            (change)="checkChange(item)" />
         </div>
 
-        <div class="col-2" style="width:12%;text-align:left">
+        <div class="colfare">
           <input formControlName="segment" type="text" class="form-control" readonly />
         </div>
 
-        <div class="col-2" style="width:12%;text-align:left">
+        <div class="colfare">
           <input formControlName="chargeFare" type="text" class="form-control" readonly />
         </div>
 
-        <div class="col-2" style="width:12%;text-align:left">
-          <input formControlName="highFareText" type="text" class="form-control" maxlength="55" (change)="validateFares(item)" />
+        <div class="colfare">
+          <input formControlName="highFareText" type="text" class="form-control" maxlength="55"
+            (change)="validateFares(item)" />
         </div>
-        <div class="col-2" style="width:12%;text-align:left">
-          <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
+        <div class="colfare">
+          <input formControlName="lowFareText" type="text" class="form-control" maxlength="55"
+            (change)="changeReasonCodes(item, i)" />
         </div>
-        <div class="col-3" style="width:12%;text-align:left">
-          <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText" name="reasonCodeText">
+        <div class="dropdown">
+          <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText"
+            name="reasonCodeText">
             <option [ngValue]="null"></option>
             <option *ngFor="let reason of reasonCodes[i]" [value]="reason.reasonCode">{{
               reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescription
             }}</option>
+          </select>
+        </div>
+        <div *ngIf="isLilly" class="dropdown">
+          <select class="form-control " id="lowFareOption" formControlName="lowFareOption" name="lowFareOption"
+            (change)="checkLowFareOption($event.target.value, item, i)">
+            <option *ngFor="let lfOption of lowFareOptionList" [value]="lfOption.itemValue"> {{ lfOption.itemText }}
+            </option>
           </select>
         </div>
       </div>

@@ -47,7 +47,7 @@ export class ReportingNonbspComponent implements OnInit {
         this.drawControlsForNonBsp();
       }
     });
-    this.isDomesticFlight = this.ddbService.isPnrDomestic();
+    // this.isDomesticFlight = this.ddbService.isPnrDomestic();
   }
 
   async drawControlsForNonBsp() {
@@ -64,11 +64,12 @@ export class ReportingNonbspComponent implements OnInit {
       let lowFare: any;
       let isAdded = false;
       const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo));
-      if (this.isDomesticFlight) {
-        lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, element.segmentNo));
-      } else {
-        lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
-      }
+      // if (this.isDomesticFlight) {
+      //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, element.segmentNo));
+      // } else {
+      //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
+      // }
+      lowFare = '';
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
           isAdded = true;

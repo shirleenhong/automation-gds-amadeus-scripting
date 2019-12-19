@@ -1917,7 +1917,9 @@ export class PnrService {
             segments.push(tst.segmentInformation.segmentReference.refDetails.refNumber);
         } else {
             tst.segmentInformation.forEach((s) => {
-                segments.push(s.segmentReference.refDetails.refNumber);
+                if (s.segmentReference) {
+                    segments.push(s.segmentReference.refDetails.refNumber);
+                }
             });
         }
         return segments;

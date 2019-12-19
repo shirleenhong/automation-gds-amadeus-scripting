@@ -338,9 +338,14 @@ export class ReportingBSPComponent implements OnInit {
   async getLowFare(command: string) {
     let value = '';
     await smartScriptSession.send(command).then((res) => {
-      const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
-      const match = regex.exec(res.Response);
+      let regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
+      let match = regex.exec(res.Response);
       regex.lastIndex = 0;
+      if (!match) {
+        regex = /RECOMMENDATIONS IN GROUP 1\([A-Z]{3} (?<from>(.*))\)/g;
+        match = regex.exec(res.Response);
+        regex.lastIndex = 0;
+      }
       if (match !== null) {
         if (match.groups !== undefined && match.groups.from !== undefined) {
           value = match.groups.from;
@@ -437,7 +442,7 @@ export class ReportingBSPComponent implements OnInit {
     this.isDoneLoading = false;
     const tstLen = this.pnrService.getTstLength();
     const command = this.getLilyCommand(option);
-    if (tstLen > 0) {
+    if (tstLen > 1) {
       lfare = await this.getLowFareLilly(this.pnrService.tstObj[index], index, command, option);
     } else {
       lfare = await this.getLowFareLilly(this.pnrService.tstObj, 0, command, option);

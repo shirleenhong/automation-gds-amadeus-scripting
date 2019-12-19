@@ -263,7 +263,7 @@ export class CorporateComponent implements OnInit {
     }
     this.closePopup();
     this.checkHasDataLoadError();
-    this.showRule();    
+    this.showRule();
   }
 
   checkHasDataLoadError() {
@@ -685,6 +685,10 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
+    this.itineraryService.addAquaQueue();
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.touched) {
+      this.itineraryService.addAquaOverrideRmk();
+    }
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(

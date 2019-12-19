@@ -101,6 +101,16 @@ export class PnrService {
         return false;
     }
 
+    isLilly() {
+        if (!this.cfLine) {
+            this.cfLine = this.getCFLine();
+        }
+        if (this.cfLine.cfa === 'PX1' || this.cfLine.cfa === 'ZX4') {
+            return true;
+        }
+        return false;
+    }
+
     getPCC(): void {
         smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
             this.PCC = x.ACTIVE_OFFICE_ID;

@@ -41,7 +41,8 @@
 		"ExpectedRemark5": "RIR *TICKET**THIS IS ALSO A TEST",
 		"ExpectedRemark6": "RIR *TICKET**FOR ADDING TICKETS REMARK",
 		"UnexpectedRemark1": "RMZ CONF*LANG:EN",
-		"UnexpectedRemark2": "RMT TKT1-DOM"
+		"UnexpectedRemark2": "RMT TKT1-DOM",
+		"UnexpectedRemark3": "RMQ AUTOMAIL-NO"
 		
 	},
 	"CWT Itinerary, Domestic Flight": {
@@ -88,7 +89,8 @@
 		"ExpectedRemark7": "RIR *TICKET**FOR ADDING TICKETS REMARK",
 		"ExpectedRemark8": "RIR *OFFER**THIS ONE IS FOR",
 		"ExpectedRemark9": "RIR *OFFER**ADDING OFFER REMARKS",
-		"UnexpectedRemark1": "RMT TKT1-DOM"
+		"UnexpectedRemark1": "RMT TKT1-DOM",
+		"UnexpectedRemark2": "RMQ AUTOMAIL-NO"
 	},
 	"CWT Itinerary, With Existing RIR Remarks": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -144,7 +146,8 @@
 		"UnexpectedRemark2": "RIR *SERVICE**ADDING SERVICES REMARK*",
 		"UnexpectedRemark3": "RIR *TICKET**THIS IS ALSO A TEST*",
 		"UnexpectedRemark4": "RIR *TICKET**FOR ADDING TICKETS REMARK*",
-		"UnexpectedRemark5": "RMT TKT1-INTL"
+		"UnexpectedRemark5": "RMT TKT1-INTL",
+		"UnexpectedRemark6": "RMQ AUTOMAIL-NO"
 	},
 	"CWT Itinerary, Transborder Flight": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -190,6 +193,51 @@
 		"ExpectedRemark7": "RIR *TICKET**FOR ADDING TICKETS REMARK",
 		"ExpectedRemark8": "RIR *OFFER**THIS ONE IS FOR",
 		"ExpectedRemark9": "RIR *OFFER**ADDING OFFER REMARKS",
-		"UnexpectedRemark1": "RMT TKT1-TRANS"
+		"UnexpectedRemark1": "RMT TKT1-TRANS",
+		"UnexpectedRemark2": "RMQ AUTOMAIL-NO"
+	},
+	"CWT Itinerary Aqua Override With Active Air": {
+		"PassengerName1": "CORPORATE/AMADEUS MR",
+		"Udid25": "FA177",
+		"Email": "test@email.com",
+		"ConsultantNo": "CN1",
+		"TicketingLine": "TKOK",
+		"FormOfPayment": "CASH",
+		"Client": "AAA",
+		"Udid50": "GENERAL-CA-S",
+		"NumAirSegments": "1",
+		"AirSegmentRoute1": "YYTYYZ",
+		"AirSegmentRoute2": null,
+		"AirSegmentRoute3": null,
+		"AirSegmentRoute4": null,
+		"AirlineCode1": "AC",
+		"AirlineCode2": null,
+		"AirlineCode3": null,
+		"AirlineCode4": null,
+		"PriceCommand1": null,
+		"PriceCommand2": null,
+		"PriceCommand3": null,
+		"PriceCommand4": null,
+		"NumCarSegments": "0",
+		"NumHotelSegments": "0",
+		"OtherRemarks1": null,
+		"OtherRemarks2": null,
+		"OtherRemarks3": null,
+		"OtherRemarks4": null,
+		"WithUI": "No",
+		"IgnoreApproval": "No",
+		"PrimaryApprovalReason": null,
+		"SecondaryApprovalReason": null,
+		"ApproverName": null,
+		"TotalCost": null,
+		"AdditionalMessage": null,
+		"QueueToApproval": "No",
+		"OnHoldRmk": "No",
+		"QueueToTkt": "No",
+		"ExpectedRemark1": "RMQ AUTOMAIL-NO",
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
+		"ExpectedRemark4": null,
+		"UnexpectedRemark1": null
 	}
 }

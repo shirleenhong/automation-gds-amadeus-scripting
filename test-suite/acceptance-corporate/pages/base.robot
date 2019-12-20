@@ -58,7 +58,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
-@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
+@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
@@ -372,6 +372,7 @@ Navigate From Queue
     Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
+    ...    ELSE IF    "${destination_page}" == "CWT Itinerary Tab"    Click CWT Itinerary Tab In Full Wrap
     
 Navigate From Itinerary And Queue
     [Arguments]    ${destination_page}
@@ -403,7 +404,7 @@ Send Itinerary And Queue
     [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
     Scroll Element Into View    ${panel_queue}
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
-    Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
+    # Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
     Click Submit To PNR    ${close_corporate_test}    ${queueing}
 
 Fill Up Required And Cancel Segments

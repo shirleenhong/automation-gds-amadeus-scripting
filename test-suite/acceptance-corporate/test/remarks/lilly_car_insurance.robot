@@ -52,14 +52,14 @@ ${test_file_name}    lilly_car_insurance
     Complete PNR and Verify Car Insurance Remarks Are Not Written In the PNR
     Delete Fare and Itinerary
 
-[PX1] Verify That Car Insurance Remarks Are Not Written For PNR With Active Car With ET Vendor Code
+[PX1] Verify That Car Insurance Remarks Are Not Written For PNR With Passive Car With ET Vendor Code
     [Tags]    us15246    not_ready
-    Create PNR With Passive Air Segments For Client Lilly With CF PX1 With Unexpected Remark
+    Create PNR With Passive Air Segments For Client Lilly With Air And Car With CF PX1 With Unexpected Remark
     Add 1 Passive Car Segments With ET
     Complete PNR and Verify Car Insurance Remarks Are Not Written In the PNR
     Delete Fare and Itinerary
     
-[ZX4] Verify That Car Insurance Remarks Are Not Written For PNR With Active Car With SX Vendor Code
+[ZX4] Verify That Car Insurance Remarks Are Not Written For PNR With Passive Car With SX Vendor Code
     [Tags]    us15246    not_ready
     Create PNR With Passive Air Segments For Client Lilly With CF ZX4 With Unexpected Remark
     Add 1 Passive Car Segments With SX
@@ -68,7 +68,7 @@ ${test_file_name}    lilly_car_insurance
     
 [ZX4] Verify That Car Insurance Remarks Are Not Written For PNR With Active Car With EP Vendor Code
     [Tags]    us15246    not_ready
-    Create PNR With Passive Air Segments For Client Lilly With CF ZX4 With Unexpected Remark
+    Create PNR For Client Lilly With CF ZX4 With Unexpected Remark
     Book 1 Active Car Segments With EP
     Complete PNR and Verify Car Insurance Remarks Are Not Written In the PNR
     Delete Fare and Itinerary
@@ -84,7 +84,7 @@ ${test_file_name}    lilly_car_insurance
 Complete PNR And Verify Car Insurance Remarks Are Written In The PNR
     Navigate To Page Reporting Remarks
     Finish PNR
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR   True
     Switch To Command Page
     
 Complete PNR and Verify Car Insurance Remarks Are Not Written In the PNR
@@ -101,12 +101,13 @@ Book ${num_car_segments} Active Car Segments With ${vendor_code}
     \    Enter Cryptic Command    CA${vendor_code}YYZ${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
     \    Enter Cryptic Command    CS1
     \    ${i}    Evaluate    ${i} + 1
+    Take Screenshot
 
 Add ${number_of_segments} Passive Car Segments With ${vendor_code}
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-${vendor_code}/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1
-
+    Take Screenshot
 
  

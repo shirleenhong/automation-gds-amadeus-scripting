@@ -282,7 +282,7 @@ export class PaymentRemarkService {
         segmentrelate = segmentAssoc;
       }
       // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-
+      //debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -537,7 +537,7 @@ export class PaymentRemarkService {
         totalHst += parseFloat(account.penaltyHst);
         totalQst += parseFloat(account.penaltyQst);
       }
-
+      //debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         totalBaseAmount,
@@ -607,6 +607,7 @@ export class PaymentRemarkService {
       const itiRemarks = new Map<string, string>();
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
       if (account.accountingTypeRemark === 'NONBSP') {
+        //debugger;
         this.writeTicketingLine(
           account.tkMacLine.toString(),
           account.baseAmount,

@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -54,9 +54,11 @@ export class RuleWriterService {
     remGroup.passiveSegments = [];
 
     resultItems.forEach((element) => {
-      const lineNo = this.pnrService.getRemarkLineNumber(element);
-      if (lineNo !== '') {
-        remGroup.deleteRemarkByIds.push(lineNo);
+      const lineNos = this.pnrService.getRemarkLineNumbers(element);
+      if (lineNos) {
+        lineNos.forEach(lineNo => {
+          remGroup.deleteRemarkByIds.push(lineNo);
+        });
       }
     });
 
@@ -117,7 +119,11 @@ export class RuleWriterService {
   }
 
   writeRemarkPerTst(tstNo) {
-    const segmentNo = this.pnrService.getTstSegment(this.pnrService.tstObj[tstNo - 1]);
+    let tst = this.pnrService.tstObj;
+    if (this.pnrService.tstObj.length) {
+      tst = this.pnrService.tstObj[tstNo - 1];
+    }
+    const segmentNo = this.pnrService.getTstSegment(tst);
     return segmentNo;
   }
 
@@ -129,7 +135,6 @@ export class RuleWriterService {
       segment.forEach((seg) => {
         resultItems.forEach((res) => {
           const writeCondition = new WriteConditionModel(res);
-
           writeCondition.conditions.forEach((con) => {
             if (seg.segmentType === con.segmentType) {
               con.propertyValue = seg[con.propertyName];

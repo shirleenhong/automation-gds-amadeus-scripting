@@ -187,11 +187,10 @@ export class RulesReaderService {
   parseCarSegments() {
     const codes = [];
     const segmentTypes = [];
-
     const segment = this.pnrService.getSegmentList();
     if (segment) {
       segment.forEach((element) => {
-        if (element.segmentType === 'CAR') {
+        if (element.segmentType === 'CAR' || element.segmentType === 'CCR') {
           codes.push(element.vendorCode);
           segmentTypes.push(element.passive);
         }

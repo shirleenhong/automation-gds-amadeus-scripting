@@ -38,6 +38,7 @@ ${div_offers}     //div[@ng-reflect-name='offers']
 ${tab_cwt_itinerary}    //a[@id='tab2-link']
 ${option_email}    //option[@ng-reflect-value='
 ${div_label_ornge}    //div[@class='col displayMsg']//p[@_ngcontent-c17]
+${tab_cwt_itin}    css=#CWTItin-link
 
 *** Keywords ***
 Click OFC Documentation And Queue Tab
@@ -367,3 +368,27 @@ Verify CWT Itinerary UI For Client Ornge
     Should Be Equal    ${new_ornge_label}    ORNGE REQUIRES THE TRAVELLER'S E-MAIL ONLY.Travel Arranger’s will automatically receive an email from AQUA
     Log    Expected: ${new_ornge_label}
     Log    Actual: ORNGE REQUIRES THE TRAVELLER'S E-MAIL ONLY.Travel Arranger’s will automatically receive an email from AQUA
+    
+Verify PNR Is Queud To Aqua Queue
+    Switch To Command Page
+    Enter Cryptic Command    RTQ 
+    Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
+    Take Screenshot
+    
+Click CWT Itinerary Tab In Full Wrap
+    Wait Until Element Is Visible    ${tab_cwt_itin}    30
+    Click Element At Coordinates    ${tab_cwt_itin}    0    0
+    Wait Until Element Is Visible    ${list_email_address}    30    
+    Set Test Variable    ${current_page}     CWT Itinerary Tab
+    
+Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type In Full Wrap
+    Navigate To Page CWT Itinerary Tab
+    Select Emails In CWT Itinerary    ${email}
+    Select From List By Label    ${list_language}    ${language}
+    Select From List By Label    ${list_transaction_type}    ${transaction}
+    Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
+    Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
+    Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    Set Test Variable    ${cwt_itin_complete}    yes
+    [Teardown]    Take Screenshot
+  

@@ -630,13 +630,13 @@ Book ${numberOfAir} Multiple Passive Air Segments For ${airline_code}
     Set Test Variable    ${numberOfAir}
     Set Test Variable    ${airline_code}
     Create ${numberOfAir} Test Dates
-    Enter Cryptic Command    SS ${airline_code}3514 Y ${test_date_1} YYZYUL GK1 / 11551440 / ABCDEFG
+    Enter Cryptic Command    SS ${airline_code}3518 Y ${test_date_1} YYZYUL GK1 / 11551440 / ABCDEFG
     Enter Cryptic Command    SS ${airline_code}3513 Y ${test_date_2} YULYYZ GK1 / 11551440 / ABCDEFG
     Take Screenshot
     
 Book 4 Multiple Passive Air Segments For Different Airline Codes
     Create 4 Test Dates
-    Enter Cryptic Command    SS WS3514 Y ${test_date_1} YYZYUL GK1 / 11551440 / ABCDEFG
+    Enter Cryptic Command    SS WS3518 Y ${test_date_1} YYZYUL GK1 / 11551440 / ABCDEFG
     Enter Cryptic Command    SS WS3513 Y ${test_date_2} YULYYZ GK1 / 11551440 / ABCDEFG
     Enter Cryptic Command    SS AC7562 Y ${test_date_3} YYZYUL GK1 / 11551440 / ABCDEFG
     Enter Cryptic Command    SS AC7561 Y ${test_date_4} YULYYZ GK1 / 11551440 / ABCDEFG
@@ -663,12 +663,11 @@ Verify Item 2 Of Client Reporting Fields
     ${actual_low_fare2}   Get Value     ${div_nonBsp}${open_bracket}2${close_bracket}${input_low_fare}
     Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number2}    4,5 
     Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare2}    760.00    
-    Run Keyword And Continue On Failure    Should Be Equal    ${actual_full_fare2}    ${EMPTY}
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare2}    ${EMPTY}
     Take Screenshot
-    ${actual_low_fare2}    Evaluate    ${actual_full_fare2}  - 10
+    ${actual_low_fare2}    Evaluate    ${actual_full_fare2} - 10
     ${actual_low_fare2}    Convert to String    ${actual_low_fare2}    
-    Enter Value    ${input_low_fare}    ${actual_full_fare2} 
-    ${actual_low_fare}    Get Value    ${actual_low_fare2}     
+    Enter Value    ${div_nonBsp}${open_bracket}2${close_bracket}${input_low_fare}    ${actual_low_fare2}     
     Set Test Variable    ${actual_full_fare2} 
     Set Test Variable    ${actual_low_fare2}
     Take Screenshot

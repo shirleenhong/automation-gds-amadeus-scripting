@@ -51,6 +51,8 @@ ${input_ul_whoFirstBooked}    //input[@name='whoApproved']
 ${list_ul_fareType}    //select[@id='fareType']
 ${input_segment_number}    //input[@formcontrolname='segment']
 ${div_nonBsp}    //div[@formarrayname='nonbsp']
+${div_fares}    ///div[@formarrayname='fares']
+${select_lowFareOption}    //select[@formcontrolname='lowFareOption']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -643,7 +645,7 @@ Book 4 Multiple Passive Air Segments For Different Airline Codes
 Add Multiple Non-BSP Ticketing Details For Multiple Segments
     Add Non-BSP Ticketing Details For Multiple Segments
     Click Save Button
-     Navigate To Page Add Accounting Line
+    Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
     Select Itinerary Segments    4    5
     Enter Value    ${input_supplier_confirmationNo}    54321
@@ -679,3 +681,50 @@ Verify That Multiple Non-BSP Client Reporting Remarks Are Written In The PNR For
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare2}/S4-5
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare2}/S4-5
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S4-5
+    
+Add Client Reporting Values For Single TST BSP Segment For Lily
+    Navigate To Page BSP Reporting
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30
+    Select Client Reporting Fields To Be Written    1
+    Select From List By Label    ${select_lowFareOption}    CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP
+    Wait Until Element Is Visible    ${input_low_fare}    30
+    ${actual_full_fare}    Get Value    ${input_full_fare}
+    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted
+    Set Test Variable    ${actual_full_fare}
+    Set Test Variable    ${actual_low_fare}
+    Take Screenshot
+    
+Add Client Reporting Values For Multi TST BSP Segment For Lily
+    Navigate To Page BSP Reporting
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30
+    Select Client Reporting Fields To Be Written    1
+    Select From List By Label    ${select_lowFareOption}    CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP
+    Wait Until Element Is Visible    ${input_low_fare}    30   
+    ${actual_full_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}$${input_full_fare}
+    ${actual_low_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}$${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30
+    Select Client Reporting Fields To Be Written    2
+    Select From List By Label    ${select_lowFareOption}    CLIENT IF BKD ON CONNECTING FLIGHTS-OFFER CONNECTIONS IN LP
+    Wait Until Element Is Visible    ${input_low_fare}    30
+    ${actual_full_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}$${input_full_fare}
+    ${actual_low_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted
+    Set Test Variable    ${actual_full_fare}
+    Set Test Variable    ${actual_low_fare}
+    Set Test Variable    ${actual_full_fare2}
+    Set Test Variable    ${actual_low_fare2}
+    Take Screenshot
+    
+Verify That Single BSP Client Reporting Remarks Are Written In The PNR For Single TST
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
+    Verify Specific Remark Is Written In The PNR    RM *FS/-A/S2
+    
+Verify That Single BSP Client Reporting Remarks Are Written In The PNR For Multiple TST
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare2}/S3
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare2}/S3
+    Verify Specific Remark Is Written In The PNR    RM *FS/-A/S3

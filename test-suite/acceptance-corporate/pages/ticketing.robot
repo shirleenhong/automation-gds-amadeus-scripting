@@ -125,6 +125,8 @@ Fill Up Ticketing Panel With Default Values
     ${is_ticketing_displayed}    Run Keyword And Return Status    Element Should Be Visible    ${tab_tktLine}        
     Run Keyword If    "${is_ticketing_displayed}" == "True"    Click Ticketing Line Tab   ELSE    Navigate To Page Ticketing Line   
     Select Checkbox    ${checkbox_verifyTicket}
+    ${exists}    Run Keyword And Return Status    Element Should Be Visible    ${checkbox_ignoreApproval}
+    Run Keyword If    ${exists}    Click Element    ${checkbox_ignoreApproval}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
     

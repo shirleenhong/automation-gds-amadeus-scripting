@@ -53,6 +53,12 @@ ${input_segment_number}    //input[@formcontrolname='segment']
 ${div_nonBsp}    //div[@formarrayname='nonbsp']
 ${div_fares}    ///div[@formarrayname='fares']
 ${select_lowFareOption}    //select[@formcontrolname='lowFareOption']
+${input_sge_airlineCode_start}    //input[@name='airlineCode_
+${input_ej5_coachFare_start}    //input[@name='coachFare_
+${input_nz7_yupFare_start}    //input[@name='yupFare_
+${input_w7b_lowestCoach_start}    //input[@name='lowestCoach_
+${input_w7b_approverName_start}    //input[@name='approver_
+${input_cdrPerTkt_ui_end}    ']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -727,3 +733,47 @@ Verify That Single BSP Client Reporting Remarks Are Written In The PNR For Multi
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare2}/S3
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare2}/S3
     Verify Specific Remark Is Written In The PNR    RM *FS/-A/S3
+
+Enter ${number} Airline Code/s For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_sge_airlineCode_start}${index}${input_cdrPerTkt_ui_end}    A${index}
+    Take Screenshot
+    
+Enter ${number} Coach Fare For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_ej5_coachFare_start}${index}${input_cdrPerTkt_ui_end}    221.0${index}
+    Take Screenshot
+    
+Enter ${number} YUP Fare For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_nz7_yupFare_start}${index}${input_cdrPerTkt_ui_end}    168.0${index}
+    Take Screenshot
+    
+Enter ${number} Lowest Coach Fare And Approver Name For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_w7b_lowestCoach_start}${index}${input_cdrPerTkt_ui_end}    131.9${index}
+    \    Enter Value    ${input_w7b_approverName_start}${index}${input_cdrPerTkt_ui_end}    Approver Name${index}
+    Take Screenshot
+    
+Verify That The UDID ${udid_num} Remark Is Written In The PNR For ${client} With ${single_multiple} Active Air Segments
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR
+    
+Verify That UI Should Not Appear For Client ${client_code} When There Is No TSTs
+    Navigate To Page UDID
+    Run Keyword If    "${client_code}" == "SGE"    Wait Until Element Is Not Visible    ${input_sge_airlineCode_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "EJ5"    Wait Until Element Is Not Visible    ${input_ej5_coachFare_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "NZ7"    Wait Until Element Is Not Visible    ${input_nz7_yupFare_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "W7B"    Wait Until Element Is Not Visible    ${input_w7b_lowestCoach_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "W7B"    Wait Until Element Is Not Visible    ${input_w7b_approverName_start}1${input_cdrPerTkt_ui_end}    5
+    Close CA Corporate Test
+    Logout To Amadeus Sell Connect
+    

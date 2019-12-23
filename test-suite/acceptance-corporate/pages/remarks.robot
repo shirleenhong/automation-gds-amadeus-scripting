@@ -378,5 +378,33 @@ Create Multi Ticket and Exchange the PNR
     Ticket TS2
     Add Non-BSP Ticketing Details For Multiple Segments
     #Select from Corp New UI    
+
+Complete PNR And Verify Car Insurance Remarks Are Written In The PNR
+    Navigate To Page Reporting Remarks
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR   True
+    Switch To Command Page
     
+Complete PNR and Verify Car Insurance Remarks Are Not Written In the PNR
+    Navigate To Page Reporting Remarks
+    Finish PNR
+    Verify Unexpected Remarks Are Not Written In The PNR
+    Switch To Command Page
+
+Book ${num_car_segments} Active Car Segments With ${vendor_code}
+    Create ${num_car_segments} Test Dates
+    : FOR    ${i}    IN RANGE   1   int(${num_car_segments}+1)
+    \    ${nxt}       Evaluate    ${i} + 1
+    \    Enter Cryptic Command    CA${vendor_code}YYZ${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
+    \    Enter Cryptic Command    CA${vendor_code}YYZ${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
+    \    Enter Cryptic Command    CS1
+    \    ${i}    Evaluate    ${i} + 1
+    Take Screenshot
+
+Add ${number_of_segments} Passive Car Segments With ${vendor_code}
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-${vendor_code}/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1
+    Take Screenshot
     

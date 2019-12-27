@@ -233,7 +233,6 @@ export class PaymentRemarkService {
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
-    debugger;
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
       const airlineCodeRemark = new Map<string, string>();
@@ -296,7 +295,6 @@ export class PaymentRemarkService {
         account.supplierCodeName,
         account.tktLine
       );
-      debugger;
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
         paymentRemark.set('PassName', account.airlineCorporatePass.name);
@@ -541,8 +539,7 @@ export class PaymentRemarkService {
         totalGst += parseFloat(account.penaltyGst);
         totalHst += parseFloat(account.penaltyHst);
         totalQst += parseFloat(account.penaltyQst);
-      }
-      debugger;
+      }      
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         totalBaseAmount,
@@ -559,7 +556,7 @@ export class PaymentRemarkService {
       const totalCost =
         totalBaseAmount + totalGst + totalHst + totalQst + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
 
-      debugger;
+      ;
       const airlineCorporatePassCondition = new Map<string, string>();
       airlineCorporatePassCondition.set('AirlineCorporatePass', 'false');
       const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
@@ -729,9 +726,7 @@ export class PaymentRemarkService {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.passiveSegments = [];
-
-    debugger;
+    remGroup.passiveSegments = [];    
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {

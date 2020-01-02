@@ -146,8 +146,10 @@ export class PricingService {
             break;
         }
         if (group.get('airline').value !== 'AC') {
-          endorse = endorse + group.get('scFlight').value + '/' + group.get('scDate').value;
-          rmaremark = rmaremark + group.get('scFlight').value + '/' + group.get('scDate').value;
+          const datePipe2 = new DatePipe('en-US');
+          const scdate = datePipe2.transform(group.get('scDate').value, 'ddMMM');
+          endorse = endorse + group.get('scFlight').value + '/' + scdate;
+          rmaremark = rmaremark + group.get('scFlight').value + '/' + scdate;
         }
       }
 

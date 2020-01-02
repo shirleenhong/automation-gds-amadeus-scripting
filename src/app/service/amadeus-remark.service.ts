@@ -15,6 +15,7 @@ declare var smartScriptSession: any;
 export class AmadeusRemarkService {
   remarksElement: Array<any>;
   crypticCommands = Array<string>();
+  updateCommands = Array<string>();
   deleteRemarksByIds = Array<string>();
   deleteSegmentByIds = Array<string>();
   passiveSegmentElement: Array<any>;
@@ -24,12 +25,14 @@ export class AmadeusRemarkService {
   constructor(private pnrService: PnrService, private amadeusQueueService: AmadeusQueueService) {
     this.deleteRemarksByIds = new Array<string>();
     this.crypticCommands = new Array<string>();
+    this.updateCommands = new Array<string>();
     this.remarksElement = new Array<any>();
   }
 
   clear() {
     this.deleteRemarksByIds = [];
     this.crypticCommands = [];
+    this.updateCommands = [];
     this.remarksElement = [];
     this.deleteSegmentByIds = [];
     this.passiveSegmentElement = [];
@@ -41,6 +44,7 @@ export class AmadeusRemarkService {
     this.deleteRemarksByIds = Array<string>();
     this.deleteSegmentByIds = Array<string>();
     this.crypticCommands = new Array<string>();
+    this.updateCommands = new Array<string>();
 
     remarkGroups.forEach((group) => {
       if (group !== undefined && group.group !== '') {
@@ -57,6 +61,12 @@ export class AmadeusRemarkService {
             if (!this.deleteRemarksByIds.find((z) => z === c)) {
               this.deleteRemarksByIds.push(c);
             }
+          });
+        }
+
+        if (group.updateCommands != null && group.updateCommands.length > 0) {
+          group.updateCommands.forEach((c) => {
+            this.updateCommands.push(c);
           });
         }
 
@@ -381,6 +391,13 @@ export class AmadeusRemarkService {
     });
   }
 
+  sendUpdate() {
+    this.updateCommands.forEach((command) => {
+      smartScriptSession.send(command);
+    });
+  }
+
+
   deleteSegments() {
     if (this.deleteSegmentByIds.length >= 1) {
       smartScriptSession.send('XE' + this.deleteSegmentByIds.join(','));
@@ -492,6 +509,7 @@ export class AmadeusRemarkService {
   }
 
   async SubmitRemarks(requestor?: string, endPnr: boolean = true) {
+    await this.sendUpdate();
     this.deleteRemarks();
     this.deleteSegments();
     await this.sendCryptics();

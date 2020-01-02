@@ -6,6 +6,8 @@ import { MatrixReceiptModel } from '../models/pnr/matrix-receipt.model';
 import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
+import { ExchangeTicketModel } from '../models/pnr/exchange-ticket.model';
+
 
 
 
@@ -498,7 +500,7 @@ export class PnrService {
         return tdate;
     }
 
-    private getSegmentDetails(elem: any, type: string) {        
+    private getSegmentDetails(elem: any, type: string) {
         let elemText = '';
         let elemStatus = '';
         let elemairlineCode = '';
@@ -569,7 +571,7 @@ export class PnrService {
             elemcitycode = elem.fullNode.travelProduct.boardpointDetail.cityCode;
             elemText = elem.carType[0] + ' ' + elem.carCompanyCode + ' ' +
                 elemStatus + elem.quantity + ' ' + elem.location + ' ' +
-                this.formatDate(elem.pickupDate);                
+                this.formatDate(elem.pickupDate);
             elemVendorCode = elem.fullNode.travelProduct.companyDetail.identification;
 
         } else {
@@ -588,8 +590,8 @@ export class PnrService {
             elemStatus = elem.fullNode.relatedProduct.status;
             elemdepdate = fullnodetemp.product.depDate;
             arrivalDate = fullnodetemp.product.arrDate;
-            elemcitycode = fullnodetemp.boardpointDetail.cityCode;            
-            elemVendorCode =this.getVendorCodeForPassiveCar(  elem.fullNode.itineraryFreetext.longFreetext);
+            elemcitycode = fullnodetemp.boardpointDetail.cityCode;
+            elemVendorCode = this.getVendorCodeForPassiveCar(elem.fullNode.itineraryFreetext.longFreetext);
             if (type !== 'HHL') {
                 flongtext = elem.fullNode.itineraryFreetext.longFreetext;
                 // passiveType = flongtext.substr(2, 7);
@@ -634,7 +636,7 @@ export class PnrService {
         this.segments.push(segment);
     }
 
-    private getVendorCodeForPassiveCar(longFreeText) {        
+    private getVendorCodeForPassiveCar(longFreeText) {
         let vendorCode = '';
         const vendorRegex = /(?<=SUC-)[a-zA-Z]{2}/g;
         const match = longFreeText.match(vendorRegex);
@@ -1944,5 +1946,41 @@ export class PnrService {
             });
         }
         return segments;
+    }
+
+    getExchangeList() {
+        const exchangeList = [];
+        let index = 0;
+        for (const fo of this.pnrObj.foElements) {
+            const model = new ExchangeTicketModel();
+            index = index + 1;
+            model.exchangeNo = index;
+            for (const assoc of fo.associations) {
+                if (assoc.segmentType === 'ST') {
+                    model.segmentAssociation.push(assoc.tatooNumber.toString());
+                }
+                if (assoc.segmentType === 'PT') {
+                    model.passengerAssociation.push(assoc.tatooNumber);
+                }
+            }
+            model.lineNumber = fo.elementNumber;
+            model.tatooNumber = fo.tatooNumber;
+            exchangeList.push(model);
+        }
+        return exchangeList;
+    }
+
+    getFEList() {
+        const feList = [];
+        for (const fe of this.pnrObj.feElements) {
+            const segmentAssociation = [];
+            for (const assoc of fe.associations) {
+                if (assoc.segmentType === 'ST') {
+                    segmentAssociation.push(assoc.tatooNumber.toString());
+                }
+            }
+            feList.push({ lineNo: fe.elementNumber, segments: segmentAssociation });
+        }
+        return feList;
     }
 }

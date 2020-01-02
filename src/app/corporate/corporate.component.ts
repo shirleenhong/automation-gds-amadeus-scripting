@@ -296,6 +296,10 @@ export class CorporateComponent implements OnInit {
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
+    if (this.pricingComponent.exchangeEndorsementsComponent) {
+      accRemarks.push(this.pricingService.getExchangeEndorsement(this.pricingComponent.exchangeEndorsementsComponent));
+    }
+
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));

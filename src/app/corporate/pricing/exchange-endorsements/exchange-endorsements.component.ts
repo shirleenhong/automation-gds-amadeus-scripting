@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from '../../../service/pnr.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 
 @Component({
@@ -9,22 +9,134 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./exchange-endorsements.component.scss']
 })
 export class ExchangeEndorsementsComponent implements OnInit {
-    exchangeAirlines: { itemText: string; itemValue: string; }[];
-    exchangeSegments: string[];
-    exchangeEndorsementsForm = this.fb.group({});
-    constructor(private pnrService: PnrService, private fb: FormBuilder){}
+  isShowSC = true;
+  uaExchangeList: { itemText: string; itemValue: string; }[];
+  exchangeEndorsementsForm = this.fb.group({
+    exchangeTickets: this.fb.array([])
+  });
+
+  constructor(private pnrService: PnrService, private fb: FormBuilder) { }
+
   ngOnInit() {
-      this.loadStaticValues();
-      this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
-     }
-    loadStaticValues() {
-        this.exchangeAirlines = [
-            { itemText: 'Air Canada Schedule Change', itemValue: 'airCanada' },
-            { itemText: 'Austrian Airlines Involuntary Schedule Change', itemValue: 'ausAirlines' },
-            { itemText: 'Brussels Airlines Involuntary Schedule Change', itemValue: 'brusAirlines' },
-            { itemText: 'Lufthansa Airlines Involuntary Schedule Change', itemValue: 'lufthAirlines' },
-            { itemText: 'United Airlines Waiver Code Required for Schedule Change/IRROP/Market Withdrawal', itemValue: 'unitedAirlines' }
-          ];
+    this.loadStaticValues();
+    this.checkForexchangeTickets();
+  }
+
+  loadStaticValues() {
+    this.uaExchangeList = [
+      { itemText: 'UASKEDCHG-SCHEDULE CHANGE', itemValue: 'UASKEDCHG' },
+      { itemText: 'UAIRROPS DELAY-FLTS IMPACTED BY IRREGULAR OPERATIONS', itemValue: 'UAIRROPSDELAY' },
+      { itemText: 'UAIRROPS CANCEL-FLTS IMPACTED BY IRREGULAR OPERATIONS', itemValue: 'UAIRROPSCANCEL' },
+      { itemText: 'UAMKW-MARKET WITHDRAWAL', itemValue: 'UAMKW' },
+      { itemText: 'OASKEDCHG-OTHER AIRLINE SCHEDULE CHANGE', itemValue: 'OASKEDCHG' }
+    ];
+  }
+
+  checkForexchangeTickets() {
+    const exhange = this.pnrService.getExchangeList();
+    const segments = this.pnrService.getSegmentList();
+    const feList = this.pnrService.getFEList();
+
+    exhange.forEach(tkt => {
+      let airline = '';
+      let lineNo = '';
+      tkt.segmentAssociation.forEach(segmentassoc => {
+        const look = segments.find((x) => x.tatooNo === segmentassoc);
+        airline = look.airlineCode;
+      });
+
+      tkt.segmentAssociation.forEach(segmentassoc => {
+        const look = feList.find((x) => x.segments.indexOf(segmentassoc) > -1);
+        lineNo = look.lineNo;
+      });
+
+      this.addExchangeList(tkt.exchangeNo, airline, lineNo);
+    });
+  }
+
+  addExchangeList(tktNo, airline, lineNo) {
+    const items = this.exchangeEndorsementsForm.get('exchangeTickets') as FormArray;
+    items.push(this.createEndorsementGroup(tktNo, airline, lineNo));
+  }
+
+  createEndorsementGroup(ticketNo, airline, lineNo) {
+    const serviceFund = new Map<string, string>();
+
+    const formGroup = this.fb.group({
+      // chkIncluded: new FormControl(''),
+      lineNo: new FormControl(lineNo),
+      ticketNo: new FormControl(ticketNo),
+      airline: new FormControl(airline),
+      endorsementlabel: new FormControl(),
+      uaEndorsement: new FormControl(),
+      exchangeEndorsement: new FormControl(),
+      uaList: new FormControl(),
+      exchangeServiceFund: new FormControl(),
+      exchangeServiceValue: new FormControl(),
+      scFlight: new FormControl(),
+      scDate: new FormControl()
+    });
+    formGroup.get('ticketNo').setValue(ticketNo);
+    formGroup.get('airline').setValue(airline);
+    this.getServiceFund(serviceFund);
+    this.assignEndorsementText(formGroup, airline, serviceFund);
+    return formGroup;
+  }
+
+  private getServiceFund(serviceFund: Map<string, string>) {
+    for (const rm of this.pnrService.pnrObj.rmElements) {
+      const regex = /SERVICE FUNDS-(?<airline>([A-Z]{2}))-(?<fundNo>(.*))/g;
+      const match = regex.exec(rm.freeFlowText);
+      if (match !== null) {
+        if (!serviceFund.has(match.groups.airline)) {
+          serviceFund.set(match.groups.airline, match.groups.fundNo);
+        }
+      }
+    }
+  }
+
+  private assignEndorsementText(formGroup, airline, serviceFund) {
+    let airlineEndorsement = '';
+    let airlineServiceFund = '';
+    switch (airline) {
+      case 'AC':
+        airlineEndorsement = 'Air Canada Schedule Change';
+        airlineServiceFund = serviceFund.get('AC');
+        formGroup.get('scDate').disable();
+        formGroup.get('scFlight').disable();
+        break;
+      case 'OS':
+        airlineEndorsement = 'Austrian Airlines Involuntary Schedule Change';
+        airlineServiceFund = serviceFund.get('OS');
+        break;
+      case 'SN':
+        airlineEndorsement = 'Brussels Airlines Involuntary Schedule Change';
+        airlineServiceFund = serviceFund.get('SN');
+        break;
+      case 'LH':
+        airlineEndorsement = 'Lufthansa Airlines Involuntary Schedule Change';
+        airlineServiceFund = serviceFund.get('LH');
+        break;
     }
 
+    formGroup.get('endorsementlabel').setValue(airlineEndorsement);
+    formGroup.get('exchangeServiceValue').setValue(airlineServiceFund);
+    if (!serviceFund.has(airline)) {
+      formGroup.get('exchangeServiceFund').disable();
+      formGroup.get('exchangeServiceValue').disable();
+    }
+
+  }
+
+  showSC(group) {
+    if (group.get('uaEndorsement').value === 'UAMKW') {
+      group.get('scDate').setValue('');
+      group.get('scFlight').setValue('');
+      group.get('scDate').disable();
+      group.get('scFlight').disable();
+    } else {
+      group.get('scDate').enable();
+      group.get('scFlight').enable();
+    }
+  }
 }

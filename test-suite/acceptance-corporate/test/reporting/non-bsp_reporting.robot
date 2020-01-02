@@ -2,7 +2,7 @@
 Force Tags       corp
 Resource         ../../pages/base.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance
-# Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    non_bsp_reporting
@@ -44,7 +44,7 @@ Verify That Updated Reporting Values Are Written For Multiple Non-BSP Segments
     Verify High Fare Calculation For 1 Segment Is Sent
     
 Verify That Accounting Remark Is Written Correctly For Non BSP Exchange
-    [Tags]    us13616    us16563
+    [Tags]    us13616
     Move Single Passenger And Add Passive Segment With Airline Code PD
     Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Verify That Supplier Code Default Value Is Correct For PD

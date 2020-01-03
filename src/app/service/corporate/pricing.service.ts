@@ -189,9 +189,15 @@ export class PricingService {
       }
 
       if (group.get('exchangeServiceFund').value === true && group.get('exchangeServiceValue').value) {
+        let rem = '';
         endorse = endorse + group.get('exchangeServiceValue').value;
+        if (group.get('airline').value !== 'UA') {
+          rem = group.get('airline').value + ' SVC FUND USED/CODE-' + group.get('exchangeServiceValue').value;
+        } else {
+          rem = group.get('airline').value + ' SVC FUND USED/WAIVER-' + group.get('exchangeServiceValue').value;
+        }
         rmGroup.remarks.push(this.remarkHelper.createRemark
-          (group.get('airline').value + ' SVC FUND USED/CODE-' + group.get('exchangeServiceValue').value, 'RM', 'A'));
+          (rem, 'RM', 'A'));
       }
       rmGroup.remarks.push(this.remarkHelper.createRemark(rmaremark, 'RM', 'A'));
       rmGroup.updateCommands.push(group.get('lineNo').value + '//' + endorse);

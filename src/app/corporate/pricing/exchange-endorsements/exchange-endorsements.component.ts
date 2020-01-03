@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PnrService } from '../../../service/pnr.service';
-import { FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 
 
 @Component({
@@ -121,11 +121,11 @@ export class ExchangeEndorsementsComponent implements OnInit {
 
     formGroup.get('endorsementlabel').setValue(airlineEndorsement);
     formGroup.get('exchangeServiceValue').setValue(airlineServiceFund);
+    formGroup.get('exchangeServiceValue').disable();
+
     if (!serviceFund.has(airline)) {
       formGroup.get('exchangeServiceFund').disable();
-      formGroup.get('exchangeServiceValue').disable();
     }
-
   }
 
   showSC(group) {
@@ -137,6 +137,17 @@ export class ExchangeEndorsementsComponent implements OnInit {
     } else {
       group.get('scDate').enable();
       group.get('scFlight').enable();
+    }
+  }
+
+  checkServiceChange(group) {
+    if (group.get('exchangeServiceFund').value === true) {
+      if (group.get('airline').value === 'UA') {
+        group.get('exchangeServiceValue').enable('');
+        group.get('exchangeServiceValue').setValidators([Validators.required]);
+      }
+    } else {
+      group.get('exchangeServiceValue').disable();
     }
   }
 }

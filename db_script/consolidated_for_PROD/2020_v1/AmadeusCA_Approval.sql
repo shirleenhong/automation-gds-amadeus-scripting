@@ -1,5 +1,5 @@
 
-USE Desktop_PROD
+USE Desktop_Sandbox_Pilot
 GO
 
 BEGIN TRAN
@@ -16,8 +16,9 @@ BEGIN TRAN
         
 		SET @CreationUserIdentifier     ='Amadeus CA Migration - US13271'
         SET @ApprovalGroupId	=(SELECT MAX(ApprovalGroupId) FROM ApprovalGroup)
-		SET @ApprovalGroupApprovalTypeId =(SELECT MAX(ApprovalGroupApprovalTypeId) FROM ApprovalGroupApprovalType)
-		SET @ApprovalGroupApprovalTypeItemId =(SELECT MAX(ApprovalGroupApprovalTypeItemId) FROM ApprovalGroupApprovalTypeItem)
+		SET @ApprovalGroupApprovalTypeId =0--(SELECT MAX(ApprovalGroupApprovalTypeId) FROM ApprovalGroupApprovalType)
+
+		SET @ApprovalGroupApprovalTypeItemId =0--(SELECT MAX(ApprovalGroupApprovalTypeItemId) FROM ApprovalGroupApprovalTypeItem)
               
 		-- Rollback
 		-- delete from [ApprovalGroupClientSubUnit] where approvalGroupID = 2145 
@@ -948,34 +949,45 @@ BEGIN CATCH
 
 	ROLLBACK TRAN
 
-	DECLARE @ErrorMessage NVARCHAR(4000);
-	SELECT @ErrorMessage=ERROR_MESSAGE()
-	RAISERROR(@ErrorMessage, 10, 1);
-
-END CATCH
-
-
-
-
-
-
-
-		---------------------------------------
-        -- END US13271
-        ---------------------------------------
-		COMMIT TRAN
-
-	END TRY
-	
-BEGIN CATCH
-
 	ROLLBACK TRAN
 
-	DECLARE @ErrorMessage NVARCHAR(4000);
-	SELECT @ErrorMessage=ERROR_MESSAGE()
-	RAISERROR(@ErrorMessage, 10, 1);
+	PRINT 'ERROR OCCURRED! Rolled back transactions if there are any:' 
+    PRINT ERROR_NUMBER() 
+       PRINT 'Error Severity: ' 
+    PRINT ERROR_SEVERITY() 
+       PRINT 'Error State: ' 
+    PRINT ERROR_STATE() 
+       PRINT 'Error Procedure: ' 
+    PRINT ERROR_PROCEDURE() 
+       PRINT 'Error Line: ' 
+    PRINT ERROR_LINE() 
+       PRINT 'Error Message: ' 
+    PRINT ERROR_MESSAGE(); 
 
 END CATCH
+
+
+
+
+
+
+
+--		---------------------------------------
+--        -- END US13271
+--        ---------------------------------------
+--		COMMIT TRAN
+
+--	END TRY
+	
+--BEGIN CATCH
+
+--	ROLLBACK TRAN
+
+--	DECLARE @ErrorMessage NVARCHAR(4000);
+--	SELECT @ErrorMessage=ERROR_MESSAGE()
+--	RAISERROR(@ErrorMessage, 10, 1);
+
+--END CATCH
 
 
 

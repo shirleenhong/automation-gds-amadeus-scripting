@@ -53,11 +53,14 @@
                         required />
                 </td>
                 <td style="padding-right: 0px;">
-                    <input type="checkbox" formControlName="exchangeServiceFund" name="exchangeServiceFund" />
+                    <input type="checkbox" formControlName="exchangeServiceFund" name="exchangeServiceFund"
+                        (change)="checkServiceChange(item)" />
                 </td>
                 <td style="padding-left: 0px;">
-                    <input formControlName="exchangeServiceValue" type="text" class="form-control"
-                        [readonly]="item.value.airline !== 'UA'" />
+                    <!-- <input formControlName="exchangeServiceValue" type="text" class="form-control"
+                        [readonly]="item.value.airline !== 'UA'" /> -->
+
+                    <input formControlName="exchangeServiceValue" type="text" class="form-control" required />
                 </td>
             </tr>
         </tbody>

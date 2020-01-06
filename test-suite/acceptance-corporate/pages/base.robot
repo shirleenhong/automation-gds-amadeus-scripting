@@ -18,7 +18,7 @@ Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
-${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
+${button_close}    //span[contains(text(),'CWT Corp ${env}')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
 ${button_cancel_segments}    //button[contains(text(), 'Cancel Segments')]

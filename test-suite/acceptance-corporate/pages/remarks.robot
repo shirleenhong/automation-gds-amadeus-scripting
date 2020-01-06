@@ -5,6 +5,7 @@ Library           Collections
 Library           Screenshot
 Resource          base.robot
 Resource          amadeus.robot
+Resource          payment.robot
 
 *** Variables ***
 ${button_add_seat}    //button[contains(text(), 'Add Seat Remarks')]
@@ -366,4 +367,44 @@ Verify Dana International Advisory Is Displayed
     ${content_advisory}    Replace String     ${content_advisory}    \n     ${SPACE}
     Take Screenshot   
     Run Keyword And Continue On Failure     Should Contain    ${content_advisory}    Please advise the traveller of the below information. ${SPACE}This information will also be added to the traveller's itinerary by AQUA.Consult with dana immigration administrator-michelle gossett 419-824-5488 Michelle.Gossett@dana.com - secondary contact-dee trevino manager expatriate and domestic relocation 734-629-1150/ Dee.Trevino@dana.com for guidance and direction to confirm acceptable business visitor activities. Please consult your human resources manager for information on the local visa service provider in your region to assist with securing your business visa.
+    
+Create Single Ticket and Exchange the PNR base on ${tst_no}
+    Ticket TST${tst_no}
+    Create Exchange PNR In The GDS
+    #Select from Corp New UI
+    
+Create Multi Ticket and Exchange the PNR
+    Ticket TST1
+    Ticket TST2
+    Create Multiple TKT Exchange PNR In The GDS
+    #Select from Corp New UI    
+
+Complete PNR And Verify Car Insurance Remarks Are Written In The PNR
+    Navigate To Page Reporting Remarks
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR   True
+    Switch To Command Page
+    
+Complete PNR and Verify Car Insurance Remarks Are Not Written In the PNR
+    Navigate To Page Reporting Remarks
+    Finish PNR
+    Verify Unexpected Remarks Are Not Written In The PNR
+    Switch To Command Page
+
+Book ${num_car_segments} Active Car Segments With ${vendor_code}
+    Create ${num_car_segments} Test Dates
+    : FOR    ${i}    IN RANGE   1   int(${num_car_segments}+1)
+    \    ${nxt}       Evaluate    ${i} + 1
+    \    Enter Cryptic Command    CA${vendor_code}YYZ${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
+    \    Enter Cryptic Command    CA${vendor_code}YYZ${test_date_${i}}-${test_date_${nxt}}/ARR-0900-1800
+    \    Enter Cryptic Command    CS1
+    \    ${i}    Evaluate    ${i} + 1
+    Take Screenshot
+
+Add ${number_of_segments} Passive Car Segments With ${vendor_code}
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-${vendor_code}/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1
+    Take Screenshot
     

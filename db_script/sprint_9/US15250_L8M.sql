@@ -218,14 +218,12 @@ WHERE BusinessEntityName='PNR_ADD_Remark';
     INSERT INTO dbo.ClientDefinedRuleResultItem
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
-
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid3, '{"type":"select","label":"Reason for booking within 14 days","name":"bookReason","required":"false","options":[{"name":"ATD LOCATION EMERGENCY","value":"ATD LOCATION EMERGENCY"},{"name":"CLIENT FACING MEETING","value":"CLIENT FACING MEETING"},{"name":"FORGOT TO BOOK TRAVEL","value":"FORGOT TO BOOK TRAVEL"},{"name":"MANAGER PRE APPROVAL","value":"MANAGER PRE APPROVAL"},{"name":"TRAVEL SERVICES AUTHORIZED BOOKING","value":"TRAVEL SERVICES AUTHORIZED BOOKING"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_bookReason]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
 SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
-
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
     (ClientDefinedRuleResultItemId, ClientDefinedRuleGroupId, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)

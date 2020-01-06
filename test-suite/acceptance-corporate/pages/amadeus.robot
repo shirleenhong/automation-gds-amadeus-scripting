@@ -240,6 +240,7 @@ Create Exchange NE Remark
    Move Profile to GDS    RM*NE/-EX-Y    TKOK
 
 Create Exchange PNR In The GDS
+    Create 1 Test Dates
     @{gds_commands}    Create List    RT    RFCWTPTEST    ER    ER    TTK/EXCH/S2
     ...    TTK/T1/RCAD200.00/XCAD20.00YR/TCAD120.00    FHA 057-1346629127    FO057-1346629127E1PAR${test_date_1}20/00002634/057-1346629127E1/S2
     : FOR    ${gds_command}    IN    @{gds_commands}
@@ -343,7 +344,7 @@ Enter RIR Remarks In French
 Handle Simultaneous Changes To PNR
     Sleep   3
     ${status}    Run Keyword And Return Status    Page Should Contain Element     ${response_simultaneous}
-    Run keyword If    '${status}' == 'TRUE'    Delete Fare and Itinerary
+    Run keyword If    '${status}' == 'True'    Delete Fare and Itinerary
 
 Move Single Passenger For EN
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
@@ -438,7 +439,7 @@ Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
     Move Profile to GDS    TTP/T4
     Set Test Variable    ${ticketed_tst}    1
     Sleep    4
-    Retrive Current PNR
+    Retrieve Current PNR 
     Set Test Variable    ${airline_code}
     Set Test Variable    ${route_code_1}    INTL
     Set Test Variable    ${route_code_2}    INTL
@@ -462,7 +463,7 @@ Create PNR With 1 TST And Ticket For Airline Code ${airline_code}
     Handle Smart Tool PopUp
     Take Screenshot
     
-Retrive Current PNR 
+Retrieve Current PNR 
     Wait Until Element Is Visible    ${label_command_page}    180
     Enter Cryptic Command    RT${actual_record_locator}
     
@@ -758,8 +759,15 @@ Get Fare For ${no_of_tst} TST
     Switch To Command Page
 
 Cancel PNR
-    Switch To Command Page
+    Run Keyword If    "${current_page}" != "Amadeus"    Switch To Command Page
     Enter Cryptic Command    XI
     Enter Cryptic Command    RFCWTTEST
     Enter Cryptic Command    ER
     Enter Cryptic Command    ER
+    Enter Cryptic Command    IG
+
+Handle E-ticket Error
+    Sleep   3
+    Retrieve Current PNR 
+    ${status}    Run Keyword And Return Status    Element Should Contain    ${text_area_command}    ETKT DISALLOWED
+    Run keyword If    '${status}' == 'True'    Enter Cryptic Command     TTP/T${tst_no}

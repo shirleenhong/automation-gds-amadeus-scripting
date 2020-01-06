@@ -150,4 +150,12 @@ export class ItineraryRemarkService implements OnInit {
       this.rms.createPlaceholderValues(null, aquaRmkConditions, null, null, 'EMAIL ADD-NO');
     }
   }
+  addAquaOverrideRmk() {
+    const aquaOverrideCondition = new Map<string, string>();
+    aquaOverrideCondition.set('AirAutoInvoice', 'False');
+    this.rms.createPlaceholderValues(null, aquaOverrideCondition, null, null, 'AUTOMAIL-NO');
+  }
+  addAquaQueue() {
+    this.amadeusQueue.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', 'C1'));
+  }
 }

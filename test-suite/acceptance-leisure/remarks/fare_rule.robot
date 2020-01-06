@@ -91,7 +91,7 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Non-Refundable %
     [Tags]    us8128
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    SS U21074 Y 10OCT YYZORD GK2 / 11551440 / ABCDEFG    SS AF1075 Y 15OCT ORDYYT GK2 / 01301240 / 1234567    SS AC1074 Y 18OCT YYTMSP GK2 / 12551140 / ABCD123    RM*CF/-RBM000000N
-    ...    APE-12345    RU1AHK1SIN2JAN-CWT RETENTION SEGMENT
+    ...    APE-12345    RU1AHK1SIN30OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields
@@ -118,7 +118,7 @@ Verify That Multiple Fare Rule Can Be Added In the PNR
     [Tags]    us8128
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    SS U21074 Y 10OCT YYZORD GK2 / 11551440 / ABCDEFG    SS AF1075 Y 15OCT ORDYYT GK2 / 01301240 / 1234567    SS AC1074 Y 18OCT YYTMSP GK2 / 12551140 / ABCD123    RM*CF/-RBM000000N
-    ...    APE12345    TKOK    RU1AHK1SIN2JAN-CWT RETENTION SEGMENT
+    ...    APE12345    TKOK    RU1AHK1SIN30OCT-CWT RETENTION SEGMENT
     Open CA Migration Window
     Click Wrap PNR
     Populate Reporting Required Fields

@@ -15,6 +15,7 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          ../../resources/common/api-utilities.txt
 
+
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[contains(text(),'CWT Corp Test')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
@@ -53,11 +54,11 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
-@{pricing_pages}     Pricing    Airfare Commission
-@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code
+@{pricing_pages}     Pricing    Airfare Commission    Exchange Endorsements
+@{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
-@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement
+@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
@@ -146,9 +147,9 @@ Click Payment Panel
     Set Test Variable    ${current_page}    Payment
     
 Click Pricing Panel
-    Wait Until Element Is Visible    ${panel_airfareCommission}    30
-    Click Element    ${panel_airfareCommission}
-    Set Test Variable    ${current_page}    Airfare Commission
+    Wait Until Element Is Visible    ${panel_pricing}    30
+    Click Element    ${panel_pricing}
+    Set Test Variable    ${current_page}    Pricing
     
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
@@ -331,7 +332,8 @@ Navigate From Pricing
     [Arguments]    ${destination_page}
     ${in_pricing}    Run Keyword And Return Status     Should Contain     ${pricing_pages}    ${current_page}
     Run Keyword If    not ${in_pricing}    Click Pricing Panel
-    Run Keyword If    "${destination_page}" == "Airfare Commission"     Click Airfare Commission Tab        
+    Run Keyword If    "${destination_page}" == "Airfare Commission"     Click Airfare Commission Tab   
+    Run Keyword If    "${destination_page}" == "Exchange Endorsements"    Click Exchange Endorsements Tab     
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -344,6 +346,7 @@ Navigate From Reporting
     ...    ELSE IF    "${destination_page}" == "Waivers"    Click Waivers Reporting Tab
     ...    ELSE IF    "${destination_page}" == "Car Savings Code"    Click Car Savings Code Tab
     ...    ELSE IF    "${destination_page}" == "Hotel Savings Code"    Click Hotel Savings Code Tab
+    ...    ELSE IF    "${destination_page}" == "UDID"    Click UDID Tab
 
 Navigate From Remarks
     [Arguments]    ${destination_page}
@@ -370,6 +373,7 @@ Navigate From Queue
     Run Keyword If    "${destination_page}" == "Follow-Up Queue"    Click Follow-Up Queue Tab
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
+    ...    ELSE IF    "${destination_page}" == "CWT Itinerary Tab"    Click CWT Itinerary Tab In Full Wrap
     
 Navigate From Itinerary And Queue
     [Arguments]    ${destination_page}
@@ -401,7 +405,7 @@ Send Itinerary And Queue
     [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
     Scroll Element Into View    ${panel_queue}
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up TKTL Update With Default Values
-    Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
+    # Run Keyword If    "${cwt_itin_complete}" == "no"     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type
     Click Submit To PNR    ${close_corporate_test}    ${queueing}
 
 Fill Up Required And Cancel Segments
@@ -564,6 +568,9 @@ Get Expected Approval Values From Json
     ${queue_approval}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToApproval
     ${onhold_rmk}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].OnHoldRmk
     ${queue_tkt}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].QueueToTkt
+    ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].ToUpgrade
+    ${to_upgrade}    Run Keyword If    ${exists}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].ToUpgrade
+    ...    ELSE    Set Variable    ${EMPTY}
     Get Expected Remark Values From Json    ${json_file_object}     ${client_data}
     Get Unexpected Remark Values From Json    ${json_file_object}     ${client_data}
     Set Test Variable    ${with_ui}
@@ -576,6 +583,7 @@ Get Expected Approval Values From Json
     Set Test Variable    ${queue_approval}
     Set Test Variable    ${onhold_rmk}
     Set Test Variable    ${queue_tkt}
+    Set Test Variable    ${to_upgrade}
 
 Get Air Segment Values From Json
     [Arguments]    ${json_file_object}     ${client_data}
@@ -661,16 +669,15 @@ Click Send Invoice
     Set Test Variable    ${pnr_submitted}   no
     
 Complete PNR and Ticket TST${tst_no}
-    #Navigate To Page Reporting Remarks
-    #Finish PNR    no
-    #Close CA Corporate Test
+    Set Test Variable    ${tst_no}
     Enter Cryptic Command    RFCWTTEST
     Enter Cryptic Command    ER
     Enter Cryptic Command    ER
     Enter Cryptic Command    RT      
     Get Record Locator Value
     Enter Cryptic Command     TTP/T${tst_no}
-    Retrive Current PNR
+    Handle E-ticket Error
+    Retrieve Current PNR 
     Get Ticket Number
 
 Get Ticket Number
@@ -681,7 +688,7 @@ Get Ticket Number
     ${ticket_num}    Fetch From Left    ${ticket_num}    /
     Set Test Variable   ${ticket_num}
     Switch To Command Page
-
+    
 Complete The PNR In Full Wrap
     Navigate To Page Reporting Remarks
     Finish PNR
@@ -727,3 +734,9 @@ Verify If Marriott Policy Violation Message Is Not Present In The UI
     Take Screenshot
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Close CA Corporate Test
+    
+Enter Date Value
+    [Arguments]    ${element}    ${month}    ${day}    ${year}
+    Press Keys    ${element}    ARROW_LEFT
+    Press Keys    none    ARROW_LEFT
+    Press Keys    none    ${day}    ${month}    ${year}

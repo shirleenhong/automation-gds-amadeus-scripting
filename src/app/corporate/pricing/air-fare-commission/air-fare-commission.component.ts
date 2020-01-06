@@ -13,7 +13,7 @@ export class AirFareCommissionComponent implements OnInit {
   newFmElements = [];
   commissionTypes = ['Percentage', 'Dollar Amount'];
   isGenericFmPresent = false;
-  constructor(private pnrService: PnrService, private fb: FormBuilder, private utilHelper: UtilHelper) { }
+  constructor(private pnrService: PnrService, private fb: FormBuilder, private utilHelper: UtilHelper) {}
   airFareCommissionFormGroup = this.fb.group({
     airFares: this.fb.array([])
   });
@@ -73,14 +73,19 @@ export class AirFareCommissionComponent implements OnInit {
     const tsts = this.pnrService.getUnticketedCorpReceipts();
     const tstData = [];
     const tstMap = new Map<string, boolean>();
-    for (const tst of tsts) {
-      if (!tstMap.get(tst.tstNumber)) {
-        tstData.push(tst);
-        tstMap.set(tst.tstNumber, true);
+    if (tsts) {
+      if (tsts !== undefined) {
+        for (const tst of tsts) {
+          if (!tstMap.get(tst.tstNumber)) {
+            tstData.push(tst);
+            tstMap.set(tst.tstNumber, true);
+          }
+        }
       }
+      return tstData;
     }
-    return tstData;
   }
+
   checkChange(group) {
     if (group.get('chkIncluded').value === true) {
       this.addValidation(group, 'commission');
@@ -104,7 +109,7 @@ export class AirFareCommissionComponent implements OnInit {
       }
     } else {
       for (const fmLine of fmLines.controls) {
-         if (fmLine.get('segments').value === '') {
+        if (fmLine.get('segments').value === '') {
           fmLine.get('chkIncluded').disable();
           fmLine.get('segments').disable();
           fmLine.get('commissionType').disable();
@@ -135,12 +140,12 @@ export class AirFareCommissionComponent implements OnInit {
       if (isAllUnchecked) {
         for (const fmLine of fmLines.controls) {
           if (fmLine.get('segments').value === '') {
-           fmLine.get('chkIncluded').enable();
-           fmLine.get('segments').enable();
-           fmLine.get('commissionType').enable();
-           fmLine.get('commission').enable();
-         }
-       }
+            fmLine.get('chkIncluded').enable();
+            fmLine.get('segments').enable();
+            fmLine.get('commissionType').enable();
+            fmLine.get('commission').enable();
+          }
+        }
       }
     }
   }
@@ -215,5 +220,4 @@ export class AirFareCommissionComponent implements OnInit {
     }
     return segments;
   }
-
 }

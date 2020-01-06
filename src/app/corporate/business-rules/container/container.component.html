@@ -9,22 +9,33 @@
           </div> -->
           </div>
         </ng-template>
-
         <ng-template [ngSwitchCase]="'text'">
-          <div class="row">
+          <div class="row" *ngIf="hasShowCondition(input.conditions)">
             <div class="col-3">
-              <label [for]="input.controlName"> {{ input.label }}</label>
+              <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
             <div class="col-4">
-              <input
-                class="form-control"
-                [formControlName]="input.controlName"
-                [type]="input.controlType"
-                [name]="input.controlName"
-                [required]="input.validators.required"
-                [minlength]="input.validators.minlength"
-                [maxlength]="input.validators.maxlength"
-              />
+              <!-- test:
+              {{input.valueType}} -->
+              <input class="form-control" [formControlName]="input.controlName" [type]="input.controlType"
+                [name]="input.controlName" [required]="input.validators.required"
+                [minlength]="input.validators.minlength" [maxlength]="input.validators.maxlength" input.valueType />
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'input-select'">
+          <div class="row">
+            <div class="col-3">
+              <label [for]="input.controlName"> {{ input.label }}:</label>
+            </div>
+            <div class="col-4">
+              <input list="dynamicList" class="form-control" [formControlName]="input.controlName" type="text"
+                [name]="input.controlName" [required]="input.validators.required"
+                [minlength]="input.validators.minlength" [maxlength]="input.validators.maxlength" />
+              <datalist id="dynamicList">
+                <option *ngFor="let option of input.options" [value]="option.value">{{ option.name }}</option>
+              </datalist>
             </div>
           </div>
         </ng-template>
@@ -35,13 +46,9 @@
               <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
             <div class="col-4">
-              <select
-                class="form-control"
-                [formControlName]="input.controlName"
-                [name]="input.controlName"
-                [id]="input.controlName"
-                [required]="input.validators.required"
-              >
+              <select class="form-control" [formControlName]="input.controlName" [name]="input.controlName"
+                [id]="input.controlName" [required]="input.validators.required"
+                (change)="applyCondition($event.target.value, input.options)">
                 <option value="">{{ input.placeholder }}</option>
                 <option *ngFor="let option of input.options" [value]="option.value">{{ option.name }}</option>
               </select>
@@ -59,14 +66,9 @@
                 <tr>
                   <td *ngFor="let option of input.options" class="">
                     <label class="control control-radio ">
-                      <input
-                        type="radio"
-                        [formControlName]="input.controlName"
-                        [type]="input.controlType"
-                        [name]="input.controlName"
-                        [value]="option.value"
-                        [required]="input.validators.required"
-                      />{{ option.name }} &nbsp;&nbsp;
+                      <input type="radio" [formControlName]="input.controlName" [type]="input.controlType"
+                        [name]="input.controlName" [value]="option.value"
+                        [required]="input.validators.required" />{{ option.name }} &nbsp;&nbsp;
                       <div class="control_indicator"></div>
                     </label>
                   </td>

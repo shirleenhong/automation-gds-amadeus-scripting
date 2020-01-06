@@ -90,12 +90,29 @@ export class RulesEngineService {
       if (look) {
         bRule.ruleResult.forEach((result) => {
           if (result.businessEntityName === 'UI_ADD_CONTROL') {
-            formData.push(new BusinessRulesFormData(result.resultItemValue));
+            const origRules = new BusinessRulesFormData(result.resultItemValue);
+            const ite = this.checkUiIteration(origRules.controlName);
+            this.buildFormData(ite, result, formData);
           }
         });
       }
     });
     return formData;
+  }
+
+  private buildFormData(ite, result, formData) {
+    for (let i = 1; i <= ite; i++) {
+      const rules = new BusinessRulesFormData(result.resultItemValue);
+      rules.label = rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.label + 'TST ' + i.toString() : rules.label;
+      rules.controlName =
+        rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.controlName.replace('[TSTSEGMENT]', i.toString()) : rules.controlName;
+      formData.push(rules);
+    }
+  }
+
+  checkUiIteration(uiControName) {
+    const tsts = this.pnrService.getTstLength();
+    return uiControName && uiControName.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
   }
 
   getSpecificRuleResultItemValue(entityName: string) {
@@ -131,14 +148,15 @@ export class RulesEngineService {
   getRuleWriteRemarks() {
     let resulttItems = this.getSpecificRulesValue('PNR_ADD_Remark').resultItems;
     this.ruleWriter.getPnrAddRemark(resulttItems);
-    resulttItems = this.getSpecificRulesValue('WRITE_REMARK_WITH_CONDTION').resultItems;
+    resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_CONDTION').resultItems;
     this.ruleWriter.getWriteRemarkWithCondition(resulttItems);
+    resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_SEGMENT_RELATE').resultItems;
+    this.ruleWriter.getWriteRemarkWithSegmentRelate(resulttItems);
     return this.ruleWriter.writeRuleRemarks();
   }
 
   getRuleDeleteRemarks() {
     const resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
-
     return this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
   }
 }

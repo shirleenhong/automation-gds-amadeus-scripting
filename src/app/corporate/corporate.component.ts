@@ -296,6 +296,10 @@ export class CorporateComponent implements OnInit {
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
+    if (this.pricingComponent.exchangeEndorsementsComponent) {
+      accRemarks.push(this.pricingService.getExchangeEndorsement(this.pricingComponent.exchangeEndorsementsComponent));
+    }
+
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
@@ -316,7 +320,6 @@ export class CorporateComponent implements OnInit {
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
-
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
@@ -376,6 +379,13 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addItineraryQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
+    }
+    if (!this.queueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.queueComponent.itineraryComponent.itineraryForm);
+    }
+    this.itineraryService.addAquaQueue();
+    if (!this.queueComponent.itineraryComponent.itineraryForm.touched) {
+      this.itineraryService.addAquaOverrideRmk();
     }
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
@@ -679,6 +689,10 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
+    this.itineraryService.addAquaQueue();
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.touched) {
+      this.itineraryService.addAquaOverrideRmk();
+    }
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(

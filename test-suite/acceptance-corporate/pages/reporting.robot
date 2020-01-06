@@ -45,7 +45,20 @@ ${checkbox_hotelSegment}    ]//input[@id='chkIncluded']
 ${input_hotelSegNum}    ]//input[@formcontrolname='segment']
 ${input_checkInDate}    ]//input[@formcontrolname='checkInDate']
 ${input_chainCode}    ]//input[@formcontrolname='chainCode']
-
+${tab_udid}    //span[contains(text(), 'UDID')]
+${list_ul_whyFirstBooked}    //select[@id='whyBooked']
+${input_ul_whoFirstBooked}    //input[@name='whoApproved']
+${list_ul_fareType}    //select[@id='fareType']
+${input_segment_number}    //input[@formcontrolname='segment']
+${div_nonBsp}    //div[@formarrayname='nonbsp']
+${div_fares}    ///div[@formarrayname='fares']
+${select_lowFareOption}    //select[@formcontrolname='lowFareOption']
+${input_sge_airlineCode_start}    //input[@name='airlineCode_
+${input_ej5_coachFare_start}    //input[@name='coachFare_
+${input_nz7_yupFare_start}    //input[@name='yupFare_
+${input_w7b_lowestCoach_start}    //input[@name='lowestCoach_
+${input_w7b_approverName_start}    //input[@name='approver_
+${input_cdrPerTkt_ui_end}    ']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -89,6 +102,11 @@ Click Hotel Savings Code Tab
     Wait Until Element Is Visible    ${tab_hotelSavingsCode}    30
     Click Element    ${tab_hotelSavingsCode}
     Set Test Variable    ${current_page}    Hotel Savings Code    
+    
+Click UDID Tab
+    Wait Until Element Is Visible    ${tab_udid}    30
+    Click Element    ${tab_udid}
+    Set Test Variable    ${current_page}    UDID    
     
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
@@ -186,17 +204,26 @@ Verify Client Reporting Fields For Exchange PNR
     Select Client Reporting Fields To Be Written    1
     Take Screenshot
 
-Verify Client Reporting Fields For Non-BSP
+Verify Client Reporting Fields For Non-BSP For ${segment_number} Segment
+    Click Save Button
     Navigate To Page Non BSP Reporting
+    ${actual_segment_number}    Get Value    ${input_segment_number} 
     ${actual_full_fare}    Get Value    ${input_full_fare}
     ${actual_low_fare}    Get Value    ${input_low_fare}
-    ${actual_reason_code}    Get Value    ${list_reason_code}
-    Run Keyword And Continue On Failure    Should Be Equal    ${actual_full_fare}    760.00
-    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    760.00
-    Run Keyword And Continue On Failure    Should Be Equal    ${actual_reason_code}    L
+    Run Keyword If    '${segment_number}' == 'Single'     Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2    ELSE   Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2,3 
+    Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare}    760.00    
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${EMPTY}
+    Take Screenshot
+    ${actual_low_fare}    Evaluate    ${actual_full_fare} - 10
+    ${actual_low_fare}    Convert to String    ${actual_low_fare}    
+    Enter Value    ${input_low_fare}    ${actual_low_fare}
+    ${actual_low_fare}    Get Value    ${input_low_fare}     
+    Set Test Variable    ${actual_full_fare}
+    Set Test Variable    ${actual_low_fare} 
     Take Screenshot
 
 Update Client Reporting Values For Non-BSP
+    Click Save Button
     Navigate To Page Non BSP Reporting
     Enter Value    ${input_nonBsp_fullFare}    1123.50
     Enter Value    ${input_nonBsp_lowFare}    300.00
@@ -211,14 +238,14 @@ Select Client Reporting Fields To Be Written
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single Segment
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *FF/-760.00/S2
-    Verify Specific Remark Is Written In The PNR    RM *LP/-760.00/S2
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *FF/-760.00/S2-3
-    Verify Specific Remark Is Written In The PNR    RM *LP/-760.00/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
 
 Verify That Updated Non-BSP Client Reporting Remarks Are Written In The PNR
@@ -470,8 +497,8 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
     Finish PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    RM *CS21FEBPEK/-SV-I
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-C
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}YYZ/-SV-R
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YYZ/-SV-C
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}CDG/-SV-R
     Verify Specific Remark Is Not Written In The PNR    RM *CS23NOVPEK/-SV-X
     Verify Specific Remark Is Not Written In The PNR    RM *CS14DECMEL/-SV-Y
 
@@ -563,3 +590,190 @@ Verify HS Remark Is Written Without Savings Code
     \    Exit For Loop If   not ${status} 
     Verify Unexpected Remarks Are Not Written In The PNR
     Cancel PNR
+    
+Add Values For UL Client When Why First/Bus Booked Is ${why_first_booked}
+    Navigate To Page UDID
+    Wait Until Element Is Visible    ${list_ul_whyFirstBooked}    10
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Select From List By Label    ${list_ul_whyFirstBooked}    Core Team Bus Class Approved
+    ...    ELSE    Select From List By Label    ${list_ul_whyFirstBooked}    ${why_first_booked}
+    Take Screenshot
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Wait Until Element Is Visible    ${input_ul_whoFirstBooked}    5
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Enter Value    ${input_ul_whoFirstBooked}    Phryne Fisher
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Select From List By Label    ${list_ul_fareType}    NON-NonRefundable
+    ...    ELSE    Select From List By Label    ${list_ul_fareType}    REF-Refundable
+    Set Test Variable    ${why_first_booked}
+    Take Screenshot
+    
+Verify UDID 4, 6, and 19 Are Written In The PNR For Client UL
+    Finish PNR
+    Run Keyword If    "${why_first_booked}" == "Core Team Bus Class Approved"    Verify UL Client UDID Remarks For Core Team Bus Class Approved
+    ...    ELSE    Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus Class Approved
+    
+Verify UL Client UDID Remarks For Core Team Bus Class Approved
+    Verify Specific Remark Is Written In The PNR    RM *U6/-CORE TEAM BUS CLASS APPROVED
+    Verify Specific Remark Is Written In The PNR    RM *U4/-PHRYNE FISHER
+    Verify Specific Remark Is Written In The PNR    RM *U19/-NON
+    Take Screenshot    
+    
+Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus Class Approved
+    Verify Specific Remark Is Written In The PNR    RM *U6/-COMPLIMENTARY UPGRADE
+    Verify Specific Remark Is Written In The PNR    RM *U19/-REF
+    Verify Specific Remark Is Not Written In The PNR    RM *U4/-
+    Take Screenshot
+
+Verify High Fare Calculation For ${number_of_segment} Segment Is Sent
+    Switch To Command Page
+    Enter Cryptic Command    RT
+    Run Keyword If    '${number_of_segment}' == '1'    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R/S2    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R/S2,3
+
+Book ${numberOfAir} Passive Air Segments For ${airline_code} With Flight Number ${flight_number} And Route ${route_code}
+    Create ${numberOfAir} Test Dates
+    : FOR    ${i}    IN RANGE   0   ${numberOfAir}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Enter Cryptic Command    SS ${airline_code}${flight_number} Y ${test_date_${i}} ${route_code} GK1 / 11551440 / ABCDEFG
+ 
+Book ${numberOfAir} Multiple Passive Air Segments For ${airline_code}
+    Set Test Variable    ${numberOfAir}
+    Set Test Variable    ${airline_code}
+    Create ${numberOfAir} Test Dates
+    Enter Cryptic Command    SS ${airline_code}3518 Y ${test_date_1} YYZYUL GK1 / 11551440 / ABCDEFG
+    Enter Cryptic Command    SS ${airline_code}3513 Y ${test_date_2} YULYYZ GK1 / 11551440 / ABCDEFG
+    Take Screenshot
+    
+Book 4 Multiple Passive Air Segments For Different Airline Codes
+    Create 4 Test Dates
+    Enter Cryptic Command    SS WS3518 Y ${test_date_1} YYZYUL GK1 / 11551440 / ABCDEFG
+    Enter Cryptic Command    SS WS3513 Y ${test_date_2} YULYYZ GK1 / 11551440 / ABCDEFG
+    Enter Cryptic Command    SS AC7562 Y ${test_date_3} YYZYUL GK1 / 11551440 / ABCDEFG
+    Enter Cryptic Command    SS AC7561 Y ${test_date_4} YULYYZ GK1 / 11551440 / ABCDEFG
+    Take Screenshot
+    
+Add Multiple Non-BSP Ticketing Details For Multiple Segments
+    Add Non-BSP Ticketing Details For Multiple Segments
+    Click Save Button
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Non BSP Airline
+    Select Itinerary Segments    4    5
+    Enter Value    ${input_supplier_confirmationNo}    54321
+    Add Ticketing Amount Details With Other Tax And Commission     1000.00    1.00    2.00    3.00    4.00     5.00
+    Enter Value    ${input_tktnumber}    0987654321
+    Take Screenshot
+
+Verify Client Reporting Fields For Multiple Non-BSP Accounting
+    Verify Client Reporting Fields For Non-BSP For Multiple Segment
+    Verify Item 2 Of Client Reporting Fields
+    
+Verify Item 2 Of Client Reporting Fields
+    ${actual_segment_number2}    Get Value    ${div_nonBsp}${open_bracket}2${close_bracket}${input_segment_number} 
+    ${actual_full_fare2}    Get Value     ${div_nonBsp}${open_bracket}2${close_bracket}${input_full_fare}
+    ${actual_low_fare2}   Get Value     ${div_nonBsp}${open_bracket}2${close_bracket}${input_low_fare}
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number2}    4,5 
+    Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare2}    760.00    
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare2}    ${EMPTY}
+    Take Screenshot
+    ${actual_low_fare2}    Evaluate    ${actual_full_fare2} - 10
+    ${actual_low_fare2}    Convert to String    ${actual_low_fare2}    
+    Enter Value    ${div_nonBsp}${open_bracket}2${close_bracket}${input_low_fare}    ${actual_low_fare2}     
+    Set Test Variable    ${actual_full_fare2} 
+    Set Test Variable    ${actual_low_fare2}
+    Take Screenshot
+    
+Verify That Multiple Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare2}/S4-5
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare2}/S4-5
+    Verify Specific Remark Is Written In The PNR    RM *FS/-L/S4-5
+    
+Add Client Reporting Values For Single TST BSP Segment For Lily
+    Navigate To Page BSP Reporting
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30
+    Select Client Reporting Fields To Be Written    1
+    Select From List By Label    ${select_lowFareOption}    CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP
+    Wait Until Element Is Visible    ${input_low_fare}    30
+    ${actual_full_fare}    Get Value    ${input_full_fare}
+    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted
+    Set Test Variable    ${actual_full_fare}
+    Set Test Variable    ${actual_low_fare}
+    Take Screenshot
+    
+Add Client Reporting Values For Multi TST BSP Segment For Lily
+    Navigate To Page BSP Reporting
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30
+    Select Client Reporting Fields To Be Written    1
+    Select From List By Label    ${select_lowFareOption}    CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP
+    Wait Until Element Is Visible    ${input_low_fare}    30   
+    ${actual_full_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}$${input_full_fare}
+    ${actual_low_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}$${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted
+    Wait Until Page Contains Element    ${checkbox_clientReporting}    30
+    Select Client Reporting Fields To Be Written    2
+    Select From List By Label    ${select_lowFareOption}    CLIENT IF BKD ON CONNECTING FLIGHTS-OFFER CONNECTIONS IN LP
+    Wait Until Element Is Visible    ${input_low_fare}    30
+    ${actual_full_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}$${input_full_fare}
+    ${actual_low_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted
+    Set Test Variable    ${actual_full_fare}
+    Set Test Variable    ${actual_low_fare}
+    Set Test Variable    ${actual_full_fare2}
+    Set Test Variable    ${actual_low_fare2}
+    Take Screenshot
+    
+Verify That Single BSP Client Reporting Remarks Are Written In The PNR For Single TST
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
+    Verify Specific Remark Is Written In The PNR    RM *FS/-A/S2
+    
+Verify That Single BSP Client Reporting Remarks Are Written In The PNR For Multiple TST
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare2}/S3
+    Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare2}/S3
+    Verify Specific Remark Is Written In The PNR    RM *FS/-A/S3
+
+Enter ${number} Airline Code/s For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_sge_airlineCode_start}${index}${input_cdrPerTkt_ui_end}    A${index}
+    Take Screenshot
+    
+Enter ${number} Coach Fare For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_ej5_coachFare_start}${index}${input_cdrPerTkt_ui_end}    221.0${index}
+    Take Screenshot
+    
+Enter ${number} YUP Fare For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_nz7_yupFare_start}${index}${input_cdrPerTkt_ui_end}    168.0${index}
+    Take Screenshot
+    
+Enter ${number} Lowest Coach Fare And Approver Name For CDR per TKT
+    Navigate To Page UDID
+    ${limit}    Evaluate    ${number} + 1
+    : FOR    ${index}    IN RANGE    1    ${limit}
+    \    Enter Value    ${input_w7b_lowestCoach_start}${index}${input_cdrPerTkt_ui_end}    131.9${index}
+    \    Enter Value    ${input_w7b_approverName_start}${index}${input_cdrPerTkt_ui_end}    Approver Name${index}
+    Take Screenshot
+    
+Verify That The UDID ${udid_num} Remark Is Written In The PNR For ${client} With ${single_multiple} Active Air Segments
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR
+    
+Verify That UI Should Not Appear For Client ${client_code} When There Is No TSTs
+    Navigate To Page UDID
+    Run Keyword If    "${client_code}" == "SGE"    Wait Until Element Is Not Visible    ${input_sge_airlineCode_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "EJ5"    Wait Until Element Is Not Visible    ${input_ej5_coachFare_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "NZ7"    Wait Until Element Is Not Visible    ${input_nz7_yupFare_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "W7B"    Wait Until Element Is Not Visible    ${input_w7b_lowestCoach_start}1${input_cdrPerTkt_ui_end}    5
+    Run Keyword If    "${client_code}" == "W7B"    Wait Until Element Is Not Visible    ${input_w7b_approverName_start}1${input_cdrPerTkt_ui_end}    5
+    Close CA Corporate Test
+    Logout To Amadeus Sell Connect
+    

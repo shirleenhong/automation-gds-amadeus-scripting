@@ -8,7 +8,8 @@ Resource          base.robot
 *** Variables ***
 ${panel_pricing}    //div[@class='panel-title']//div[contains(text(), 'Pricing')]
 ${tab_airfareCommission}    //span[contains(text(), 'Airline Commission')]
-${div_segment_line}     //div[@formarrayname='airFares'][${checkbox_segment}    ]//input[@name='chkIncluded']
+${div_segment_line}     //div[@formarrayname='airFares'][
+${checkbox_segment}    ]//input[@name='chkIncluded']
 ${input_segment}    ]//input[@formcontrolname='segments']
 ${input_commission}    ]//input[@formcontrolname='commission']
 ${list_commissionType}    ]//select[@id='commissionType']

@@ -370,13 +370,13 @@ Verify Dana International Advisory Is Displayed
     
 Create Single Ticket and Exchange the PNR base on ${tst_no}
     Ticket TST${tst_no}
-    Add Non-BSP Ticketing Details For Segment 2
+    Create Exchange PNR In The GDS
     #Select from Corp New UI
     
 Create Multi Ticket and Exchange the PNR
-    Ticket TS1
-    Ticket TS2
-    Add Non-BSP Ticketing Details For Multiple Segments
+    Ticket TST1
+    Ticket TST2
+    Create Multiple TKT Exchange PNR In The GDS
     #Select from Corp New UI    
 
 Complete PNR And Verify Car Insurance Remarks Are Written In The PNR

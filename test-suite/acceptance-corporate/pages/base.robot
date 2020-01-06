@@ -54,7 +54,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
-@{pricing_pages}     Pricing    Airfare Commission
+@{pricing_pages}     Pricing    Airfare Commission    Exchange Endorsements
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
 @{fees_pages}    Fees
@@ -147,9 +147,9 @@ Click Payment Panel
     Set Test Variable    ${current_page}    Payment
     
 Click Pricing Panel
-    Wait Until Element Is Visible    ${panel_airfareCommission}    30
-    Click Element    ${panel_airfareCommission}
-    Set Test Variable    ${current_page}    Airfare Commission
+    Wait Until Element Is Visible    ${panel_pricing}    30
+    Click Element    ${panel_pricing}
+    Set Test Variable    ${current_page}    Pricing
     
 Collapse Payment Panel
     Wait Until Element Is Visible    ${panel_payment}    60
@@ -332,7 +332,8 @@ Navigate From Pricing
     [Arguments]    ${destination_page}
     ${in_pricing}    Run Keyword And Return Status     Should Contain     ${pricing_pages}    ${current_page}
     Run Keyword If    not ${in_pricing}    Click Pricing Panel
-    Run Keyword If    "${destination_page}" == "Airfare Commission"     Click Airfare Commission Tab        
+    Run Keyword If    "${destination_page}" == "Airfare Commission"     Click Airfare Commission Tab   
+    Run Keyword If    "${destination_page}" == "Exchange Endorsements"    Click Exchange Endorsements Tab     
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -733,3 +734,9 @@ Verify If Marriott Policy Violation Message Is Not Present In The UI
     Take Screenshot
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Close CA Corporate Test
+    
+Enter Date Value
+    [Arguments]    ${element}    ${month}    ${day}    ${year}
+    Press Keys    ${element}    ARROW_LEFT
+    Press Keys    none    ARROW_LEFT
+    Press Keys    none    ${day}    ${month}    ${year}

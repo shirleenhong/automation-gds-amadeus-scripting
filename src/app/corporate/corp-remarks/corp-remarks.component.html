@@ -23,4 +23,8 @@
   <tab heading="Rules" id="rules" *ngIf="hasRules">
     <app-container [containerFilter]="'REMARKS'"></app-container>
   </tab>
+
+  <tab heading="Associated Remarks">
+    <app-associated-remarks></app-associated-remarks>
+  </tab>
 </tabset>

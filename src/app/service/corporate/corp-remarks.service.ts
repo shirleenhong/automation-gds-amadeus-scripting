@@ -17,7 +17,7 @@ export class CorpRemarksService {
     private pms: PnrService,
     private rms: RemarksManagerService,
     private remarkHelper: RemarkHelper
-  ) {}
+  ) { }
 
   /**
    * US11820: Write or prepare the seats for the PNR

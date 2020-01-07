@@ -39,7 +39,7 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { CancelComponent } from './leisure/cancel/cancel.component';
 import { RefundComponent } from './leisure/cancel/refund/refund.component';
 // import { CancelSegmentComponent } from './shared/cancel-segment/cancel-segment.component';
-import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
+// import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 import { MyCommonModule } from './my-common.module';
 import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-ticket-fop.component';
 
@@ -78,7 +78,7 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     QueueComponent,
     CancelComponent,
     RefundComponent,
-    AssociatedRemarksComponent,
+    // AssociatedRemarksComponent,
     BspTicketFopComponent
   ],
   imports: [
@@ -111,4 +111,4 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     UpdateLeisureFeeComponent
   ]
 })
-export class AppLeisureModule {}
+export class AppLeisureModule { }

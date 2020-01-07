@@ -1,5 +1,9 @@
 <div [formGroup]="airFareCommissionFormGroup" class="form-group">
-  <br />
+  <div class="row">
+    <div class="col-12" style="margin: 10px;">
+      *Verify Applicable Commission using Google Favourites link to ACE Sharepoint Site
+    </div>
+  </div>
   <div class="row">
     <div class="col-1" style="width:3%"></div>
     <div class="col-3" style="width: 12%; text-align: left; padding-left: 25px;">
@@ -12,24 +16,24 @@
       Commission
     </div>
   </div>
-  <div formArrayName="airFares" *ngFor="let item of this.airFareCommissionFormGroup.get('airFares')['controls']; let i = index"
-    class="col">
+  <div formArrayName="airFares" *ngFor="let item of this.airFareCommissionFormGroup.get('airFares')['controls']; let i = index" class="col">
     <div [formGroupName]="i" class="row">
       <div class="col-1" style="width:3%;padding-left:10px">
-        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="formControlName" (change)="checkChange(item)"/>
+        <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="formControlName" (change)="checkChange(item)" />
       </div>
       <div class="col-3" style="width:12%;text-align:left">
         <input formControlName="segments" type="text" class="form-control" readonly />
       </div>
       <div class="col-3" style="width:12%;text-align:left">
-        <select id = "commissionType" formControlName = "commissionType" class="form-control" name="commissionType">
-          <option *ngFor = "let type of commissionTypes" [value] = "type">
-            {{type}}
+        <select id="commissionType" formControlName="commissionType" class="form-control" name="commissionType">
+          <option *ngFor="let type of commissionTypes" [value]="type">
+            {{ type }}
           </option>
         </select>
       </div>
       <div class="col-3" style="width:12%;text-align:left">
-        <input formControlName="commission" type="text" class="form-control"/>
+        <input formControlName="commission" type="text" class="form-control" />
       </div>
     </div>
   </div>
+</div>

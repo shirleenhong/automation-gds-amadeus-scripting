@@ -486,7 +486,7 @@ Verify Car Savings Code Remark For Multiple Passive Car Segments
 Verify Car Savings Code Remark For Single Active Car Segments
     Finish PNR
     Assign Current Date
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YUL/-SV-I
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-I
     
 Verify Car Savings Code Remark For Multiple Active Car Segments
     Finish PNR

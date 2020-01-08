@@ -20,6 +20,10 @@
     <app-add-contact></app-add-contact>
   </tab>
 
+  <tab heading="Fare Rule">
+    <app-fare-rule-segment></app-fare-rule-segment>
+  </tab>
+
   <tab heading="Rules" id="rules" *ngIf="hasRules">
     <app-container [containerFilter]="'REMARKS'"></app-container>
   </tab>

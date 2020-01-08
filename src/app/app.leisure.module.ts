@@ -27,8 +27,6 @@ import { CodeshareComponent } from './leisure/remarks/codeshare/codeshare.compon
 // import { VisaPassportComponent } from './shared/visa-passport/visa-passport.component';
 import { MatrixInvoiceComponent } from './leisure/invoice/matrix-invoice.component';
 import { PassengerSelectComponent } from './shared/passenger-select/passenger-select.component';
-import { FareRuleSegmentComponent } from './leisure/remarks/fare-rule-segment/fare-rule-segment.component';
-import { UpdateFareRuleSegmentComponent } from './leisure/remarks/update-fare-rule-segment/update-fare-rule-segment.component';
 import { RbcPointsRedemptionComponent } from './leisure/remarks/rbc-points-redemption/rbc-points-redemption.component';
 import { UpdateRbcPointsRedemptionComponent } from './leisure/remarks/update-rbc-points-redemption/update-rbc-points-redemption.component';
 import { UpdateLeisureFeeComponent } from './leisure/payments/update-leisure-fee/update-leisure-fee.component';
@@ -67,8 +65,8 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     LoadingComponent,
     // VisaPassportComponent,
     CodeshareComponent,
-    FareRuleSegmentComponent,
-    UpdateFareRuleSegmentComponent,
+    // FareRuleSegmentComponent,
+    // UpdateFareRuleSegmentComponent,
     MatrixInvoiceComponent,
     PassengerSelectComponent,
     RbcPointsRedemptionComponent,
@@ -106,7 +104,7 @@ import { BspTicketFopComponent } from './leisure/payments/bsp-ticket-fop/bsp-tic
     UpdateSegmentComponent,
     MessageComponent,
     LoadingComponent,
-    UpdateFareRuleSegmentComponent,
+    // UpdateFareRuleSegmentComponent,
     UpdateRbcPointsRedemptionComponent,
     UpdateLeisureFeeComponent
   ]

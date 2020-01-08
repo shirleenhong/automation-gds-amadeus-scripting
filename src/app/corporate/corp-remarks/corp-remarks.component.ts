@@ -10,6 +10,8 @@ import { PnrService } from '../../service/pnr.service';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { AssociatedRemarksComponent } from 'src/app/leisure/remarks/associated-remarks/associated-remarks.component';
+import { FareRuleSegmentComponent } from 'src/app/leisure/remarks/fare-rule-segment/fare-rule-segment.component';
 
 @Component({
   selector: 'app-corp-remarks',
@@ -25,6 +27,10 @@ export class CorpRemarksComponent implements OnInit {
   @ViewChild(VisaPassportComponent)
   viewPassportComponent: VisaPassportComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+  @ViewChild(AssociatedRemarksComponent)
+  associatedRemarksComponent: AssociatedRemarksComponent;
+  @ViewChild(FareRuleSegmentComponent)
+  fareRuleSegmentComponent: FareRuleSegmentComponent;
 
   getPassiveSegments = [];
   isOfc = false;
@@ -37,7 +43,7 @@ export class CorpRemarksComponent implements OnInit {
     private counselorDetail: CounselorDetail,
     private pnrService: PnrService,
     private rulesEngineService: RulesEngineService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.counselorDetail.identityOnChange.subscribe((x) => {

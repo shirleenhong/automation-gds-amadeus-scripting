@@ -28,6 +28,7 @@ import { MatrixAccountingModel } from '../models/pnr/matrix-accounting.model';
 import { OtherRemarksService } from '../service/leisure/other-remarks.service';
 import { AmadeusRemarkService } from '../service/amadeus-remark.service';
 import { ResendInvoiceComponent } from '../corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
+import { CommonRemarkService } from '../service/common-remark.service';
 
 @Component({
   selector: 'app-leisure',
@@ -78,7 +79,8 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     private modalService: BsModalService,
     private invoiceService: InvoiceRemarkService,
     private itineraryService: ItineraryRemarkService,
-    private otherService: OtherRemarksService
+    private otherService: OtherRemarksService,
+    private commonRemarkService: CommonRemarkService
   ) {
     this.getPnr();
     this.initData();
@@ -88,7 +90,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     // Subscribe to event from child Component
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   async getPnr() {
     this.errorPnrMsg = '';
@@ -241,7 +243,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     const leisureFee = this.paymentComponent.leisureFee;
     remarkCollection.push(this.paymentRemarkService.GetLeisureFeeRemarks(leisureFee, this.cfLine.cfa));
     remarkCollection.push(
-      this.packageRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
+      this.commonRemarkService.buildAssociatedRemarks(this.remarkComponent.associatedRemarksComponent.associatedRemarksForm)
     );
 
     remarkCollection.push(this.paymentRemarkService.addBspTicketFop(this.paymentComponent.bspTicketFop));
@@ -367,7 +369,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
     osiCollection.push(this.segmentService.osiCancelRemarks(cancel.cancelForm));
     this.leisureRemarkService.BuildRemarks(osiCollection);
     await this.leisureRemarkService.cancelOSIRemarks().then(
-      () => {},
+      () => { },
       (error) => {
         console.log(JSON.stringify(error));
       }

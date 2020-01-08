@@ -26,9 +26,9 @@ export class DDBService implements OnInit {
   approvalList = Array<ApprovalItem>();
   airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService, private pnrService: PnrService) {}
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService, private pnrService: PnrService) { }
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -310,6 +310,20 @@ export class DDBService implements OnInit {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  async getAirlineSupplierCodes(code, type) {
+    this.supplierCodes = [];
+    let airlineName = '';
+    await this.getRequest(common.airSupplierCodes + code).then((x) => {
+      x.SupplierList.forEach((s) => {
+        if (s.ProductName.toUpperCase() === type) {
+          airlineName = s.SupplierName;
+        }
+      });
+    });
+
+    return airlineName;
+  }
+
   async getAllMatrixSupplierCodes() {
     this.supplierCodes = [];
     await this.getRequest(common.matrixSupplierService + '?MatrixCompanyId=01').then((x) => {
@@ -448,11 +462,11 @@ export class DDBService implements OnInit {
   getClientDefinedBusinessRules(clientSubUnitGuid: string, clientAccountNumber: string) {
     return this.getRequest(
       common.businessRules +
-        '?ClientAccountNumber=' +
-        clientAccountNumber +
-        '&ClientSubUnitGuid=' +
-        clientSubUnitGuid +
-        '&SourceSystemCode=CA1'
+      '?ClientAccountNumber=' +
+      clientAccountNumber +
+      '&ClientSubUnitGuid=' +
+      clientSubUnitGuid +
+      '&SourceSystemCode=CA1'
     );
   }
 }

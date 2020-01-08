@@ -23,6 +23,9 @@ import { BspRefundComponent } from './corporate/corp-cancel/bsp-refund/bsp-refun
 import { NonBspTicketCreditComponent } from './corporate/corp-cancel/non-bsp-ticket-credit/non-bsp-ticket-credit.component';
 import { ResendInvoiceComponent } from './corporate/send-invoice-itinerary/resend-invoice/resend-invoice.component';
 import { ContainerComponent } from './corporate/business-rules/container/container.component';
+import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
+import { FareRuleSegmentComponent } from './leisure/remarks/fare-rule-segment/fare-rule-segment.component';
+import { UpdateFareRuleSegmentComponent } from './leisure/remarks/update-fare-rule-segment/update-fare-rule-segment.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,10 @@ import { ContainerComponent } from './corporate/business-rules/container/contain
     BspRefundComponent,
     NonBspTicketCreditComponent,
     ResendInvoiceComponent,
-    ContainerComponent
+    ContainerComponent,
+    AssociatedRemarksComponent,
+    FareRuleSegmentComponent,
+    UpdateFareRuleSegmentComponent,
   ],
   imports: [
     CommonModule,
@@ -74,8 +80,12 @@ import { ContainerComponent } from './corporate/business-rules/container/contain
     GenericSelectComponent,
     CancelSegmentComponent,
     ResendInvoiceComponent,
-    ContainerComponent
-
-  ]
+    ContainerComponent,
+    AssociatedRemarksComponent,
+    FareRuleSegmentComponent,
+    UpdateFareRuleSegmentComponent
+  ],
+  entryComponents: [
+    UpdateFareRuleSegmentComponent]
 })
 export class MyCommonModule { }

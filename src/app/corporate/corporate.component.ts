@@ -45,6 +45,7 @@ import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.com
 import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
+import { CommonRemarkService } from '../service/common-remark.service';
 declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
@@ -106,7 +107,8 @@ export class CorporateComponent implements OnInit {
     private amadeusRemarkService: AmadeusRemarkService,
     private corpCancelRemarkService: CorpCancelRemarkService,
     private pricingService: PricingService,
-    private rulesEngine: RulesEngineService
+    private rulesEngine: RulesEngineService,
+    private commonRemarkService: CommonRemarkService
   ) {
     this.initData();
     this.getPnrService();
@@ -394,6 +396,11 @@ export class CorporateComponent implements OnInit {
 
     remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
+    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks));
+    remarkCollection.push(
+      this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
+    );
+
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
 
     await this.rms.SendCommand(

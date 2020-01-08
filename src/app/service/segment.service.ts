@@ -13,6 +13,7 @@ import { TranslationService } from './translation.service';
 import { AmadeusQueueService } from './amadeus-queue.service';
 import { RemarksManagerService } from './corporate/remarks-manager.service';
 import { CounselorDetail } from '../globals/counselor-identity';
+import { DDBService } from './ddb.service';
 
 declare var smartScriptSession: any;
 @Injectable({
@@ -33,7 +34,7 @@ export class SegmentService {
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
-        private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService,
+        private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService, private ddbService: DDBService,
         private counselorDetail: CounselorDetail) { }
 
 
@@ -1088,11 +1089,15 @@ export class SegmentService {
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();
-        fareRuleModels.forEach(model => {
+        fareRuleModels.forEach(async model => {
             if (model.fareRuleType !== '') {
                 smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '*');
                 rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
             } else {
+                const airlineName = await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR');
+                if (airlineName) {
+                    rmGroup.remarks.push(this.remarkHelper.createRemark(airlineName + ' FARE INFORMATION', 'RI', 'R'));
+                }
 
                 if (model.isTicketNonRefundable) {
                     rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));

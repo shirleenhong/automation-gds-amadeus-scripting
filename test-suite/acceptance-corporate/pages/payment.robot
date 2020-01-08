@@ -61,6 +61,7 @@ ${label_corporate_receipt}    //label[contains(text(), 'Select item(s) for Matri
 ${checkbox_start}    //input[@value='
 ${checkbox_end}    ']
 ${input_credit_card}    //input[@id='ccNo']
+${select_segment}    //app-segment-select[@id='segmentNo']//input[@formcontrolname='segment']
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -267,12 +268,12 @@ Add Penalty Amount Details
 
 Select Itinerary Segments
     [Arguments]    @{segment_number}
-    Wait Until Element Is Visible    ${input_segment}    30
-    Click Button    ${input_segment}
+    Wait Until Element Is Visible    ${select_segment}    30
+    Click Button    ${select_segment}
     Wait Until Element Is Visible    ${list_segment}    30
     :FOR    ${segment_number}    IN    @{segment_number}
-    \    Click Element    ${list_segment}//input[@value='${segment_number}']
-    Click Element    ${input_segment}
+    \    Click Element    ${list_segment}${open_bracket}1${close_bracket}${checkbox_start}${segment_number}${checkbox_end}
+    Click Element    ${select_segment}
     [Teardown]    Take Screenshot
  
 Click Update Button

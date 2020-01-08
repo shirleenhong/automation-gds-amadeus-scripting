@@ -160,7 +160,7 @@ Select Supplemental Fees For All TSTs
     Select Multiple Supplemental Fee   1   2
 
 Move Single Passenger For Fees
-    Move Profile to GDS     NM1Juarez/Rose Ms    APE-test@email.com    RMP/CITIZENSHIP-CA    RM\*U25/-14:36E50F    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    FPCASH    RM*CN/-CN1    TKOK
+    Move Profile to GDS     NM1Juarez/Rose Ms    APE-test@email.com    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    FPCASH    RM*CN/-CN1    TKOK
         
 Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Move Single Passenger For Fees

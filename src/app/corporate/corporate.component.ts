@@ -46,6 +46,7 @@ import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
+
 declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
@@ -302,7 +303,6 @@ export class CorporateComponent implements OnInit {
       accRemarks.push(this.pricingService.getExchangeEndorsement(this.pricingComponent.exchangeEndorsementsComponent));
     }
 
-
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(
@@ -354,7 +354,8 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
-    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.reportingForm);
+
+    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.obtComponent);
 
     this.invoiceRemarkService.sendU70Remarks();
 
@@ -396,8 +397,9 @@ export class CorporateComponent implements OnInit {
 
     remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
-    remarkCollection.push(await this.segmentService.writeOptionalFareRule
-      (this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks));
+    remarkCollection.push(
+      await this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks)
+    );
     remarkCollection.push(
       this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
     );
@@ -454,6 +456,7 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
+
   private getStaticModelRemarks(
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
@@ -636,6 +639,18 @@ export class CorporateComponent implements OnInit {
         this.setControl();
         // this.closePopup();
       }
+    }
+  }
+
+  public async aquaFees() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'aquaFees';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
     }
   }
 

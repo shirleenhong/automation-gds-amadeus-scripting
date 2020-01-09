@@ -28,7 +28,7 @@ export class PaymentRemarkService {
     private rms: RemarksManagerService,
     private ddbService: DDBService,
     private queService: AmadeusQueueService
-  ) {}
+  ) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -233,6 +233,7 @@ export class PaymentRemarkService {
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
       const airlineCodeRemark = new Map<string, string>();
@@ -539,7 +540,7 @@ export class PaymentRemarkService {
         totalGst += parseFloat(account.penaltyGst);
         totalHst += parseFloat(account.penaltyHst);
         totalQst += parseFloat(account.penaltyQst);
-      }      
+      }
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         totalBaseAmount,
@@ -613,6 +614,7 @@ export class PaymentRemarkService {
   }
 
   writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
+    debugger;
     const totalcostlist = [];
     let hasApay: boolean;
     hasApay = false;
@@ -726,7 +728,7 @@ export class PaymentRemarkService {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.passiveSegments = [];    
+    remGroup.passiveSegments = [];
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {

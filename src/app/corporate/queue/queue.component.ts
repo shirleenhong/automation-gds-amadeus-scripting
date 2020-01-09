@@ -6,6 +6,7 @@ import { OfcDocumentationComponent } from './ofc-documentation/ofc-documentation
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { ItineraryComponent } from 'src/app/leisure/itinerary-and-queue/itinerary/itinerary.component';
 
 @Component({
   selector: 'app-queue',
@@ -17,6 +18,7 @@ export class QueueComponent implements OnInit {
   @ViewChild(ItineraryInvoiceQueue) itineraryInvoiceQueue: ItineraryInvoiceQueue;
   @ViewChild(OfcDocumentationComponent) ofcDocumentation: OfcDocumentationComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+  @ViewChild(ItineraryComponent) itineraryComponent: ItineraryComponent;
 
   hasRules = false;
   isEsc = false;
@@ -37,6 +39,10 @@ export class QueueComponent implements OnInit {
       if (!this.ofcDocumentation.ofcDocForm.valid) {
         return false;
       }
+    }
+    this.utilHelper.validateAllFields(this.itineraryComponent.itineraryForm);
+    if (this.itineraryComponent.itineraryForm.touched && !this.itineraryComponent.itineraryForm.valid) {
+      return false;
     }
     return true;
   }

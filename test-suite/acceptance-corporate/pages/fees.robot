@@ -169,6 +169,7 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Add CFA Remark    RM*CF/-NRD0000000C
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Sleep    4
+    Create 2 Test Dates
     Create Multiple TKT Exchange PNR In The GDS
     
 Move Single Passenger With Multiple Segment For Transborder With TSTs
@@ -177,6 +178,7 @@ Move Single Passenger With Multiple Segment For Transborder With TSTs
     Add CFA Remark    RM*CF/-RH60000000C
     Add FS And Commission Line In The PNR    FS02    FM10.00    TKOK10JAN    RFCWTPTEST    ER
     Sleep    4
+    Create 2 Test Dates
     Create Multiple TKT Exchange PNR In The GDS
        
 Move Single Passenger With Single Segment For International With Non Exchange Ticket

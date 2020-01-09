@@ -61,6 +61,7 @@ ${label_corporate_receipt}    //label[contains(text(), 'Select item(s) for Matri
 ${checkbox_start}    //input[@value='
 ${checkbox_end}    ']
 ${input_credit_card}    //input[@id='ccNo']
+${select_segment}    //app-segment-select[@id='segmentNo']//input[@formcontrolname='segment']
 
 *** Keywords ***    
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
@@ -140,7 +141,7 @@ Add Non-BSP Ticketing Details For Segment ${segment_no}
     Add Ticketing Amount Details With Other Tax And Commission    750.00    1.00    2.00    3.00    4.00     5.00
     Enter Value    ${input_tktnumber}    1234567890
     Take Screenshot
-    
+     
 Add Non-BSP Ticketing Details For Multiple Segments
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Airline
@@ -267,12 +268,12 @@ Add Penalty Amount Details
 
 Select Itinerary Segments
     [Arguments]    @{segment_number}
-    Wait Until Element Is Visible    ${input_segment}    30
-    Click Button    ${input_segment}
+    Wait Until Element Is Visible    ${select_segment}    30
+    Click Button    ${select_segment}
     Wait Until Element Is Visible    ${list_segment}    30
     :FOR    ${segment_number}    IN    @{segment_number}
-    \    Click Element    ${list_segment}//input[@value='${segment_number}']
-    Click Element    ${input_segment}
+    \    Click Element    ${list_segment}${open_bracket}1${close_bracket}${checkbox_start}${segment_number}${checkbox_end}
+    Click Element    ${select_segment}
     [Teardown]    Take Screenshot
  
 Click Update Button
@@ -281,6 +282,7 @@ Click Update Button
     [Teardown]    Take Screenshot
  
 Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The PNR
+    Update Client Reporting Values For Non-BSP
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-ACY/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
@@ -288,6 +290,7 @@ Verify That Ticketing Remarks For Non-BSP With Single Segment Are Written In The
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In The PNR
+    Update Client Reporting Values For Non-BSP
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2-3 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2-3    True
@@ -295,6 +298,7 @@ Verify That Ticketing Remarks For Non-BSP With Multiple Segments Are Written In 
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2-3
    
 Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR
+    Update Client Reporting Values For Non-BSP
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-C5A/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True

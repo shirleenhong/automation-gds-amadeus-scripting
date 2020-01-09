@@ -10,6 +10,7 @@ import { PnrService } from '../../service/pnr.service';
 import { CarSavingsCodeComponent } from './car-savings-code/car-savings-code.component';
 import { HotelSegmentsComponent } from './hotel-segments/hotel-segments.component';
 import { ContainerComponent } from '../business-rules/container/container.component';
+import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 @Component({
   selector: 'app-reporting',
@@ -29,6 +30,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
+  @ViewChild(AccountingRemarkComponent) accountingComponent: AccountingRemarkComponent;
   hasRules = false;
   components = [];
 
@@ -65,7 +67,10 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     }
     this.utilHelper.validateAllFields(this.reportingNonbspComponent.nonBspGroup);
     if (!this.reportingNonbspComponent.nonBspGroup.valid) {
+      this.reportingNonbspComponent.processed = false;
       return false;
+    } else {
+      this.reportingNonbspComponent.processed = true;
     }
 
     this.utilHelper.validateAllFields(this.reportingRemarksComponent.reportingForm);
@@ -79,6 +84,13 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (this.hotelSegmentsComponent !== undefined) {
       this.utilHelper.validateAllFields(this.hotelSegmentsComponent.hotelSegments);
       if (!this.hotelSegmentsComponent.hotelSegments.valid) {
+        return false;
+      }
+    }
+
+    if (this.containerComponent) {
+      this.utilHelper.validateAllFields(this.containerComponent.containerForm);
+      if (!this.containerComponent.containerForm.valid) {
         return false;
       }
     }

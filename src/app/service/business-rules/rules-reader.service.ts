@@ -51,6 +51,7 @@ export class RulesReaderService {
     this.getArrivaltime();
     this.getDepartureDateFromTodayCount();
     this.getSegmentTypes();
+    this.parseCarSegments();
   }
 
   private setMatchEntity(regex, text) {
@@ -113,7 +114,7 @@ export class RulesReaderService {
     if (segment.length > 0) {
       let depDate = segment[0].departureDate;
       if (!depDate) {
-        depDate = segment[0].depDate;
+        depDate = segment[0].deptdate;
       }
       const days = this.utilHelper.dateDiffInDays(new Date(), this.utilHelper.convertSegmentDate(depDate));
       this.assignKeyValue('PNR_COUNT_DEPARTURE_DATE_FROM_TODAY', days);
@@ -181,5 +182,21 @@ export class RulesReaderService {
     let segmentsTypes = this.pnrService.segments.map((x) => x.segmentType);
     segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.id === thing.id) === i);
     this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.join('\n'));
+  }
+
+  parseCarSegments() {
+    const codes = [];
+    const segmentTypes = [];
+    const segment = this.pnrService.getSegmentList();
+    if (segment) {
+      segment.forEach((element) => {
+        if (element.segmentType === 'CAR' || element.segmentType === 'CCR') {
+          codes.push(element.vendorCode);
+          segmentTypes.push(element.passive);
+        }
+      });
+    }
+    this.businessEntities.set('PNR_CAR_SEGMENT_VENDOR_CODE', codes.join('|'));
+    this.businessEntities.set('PNR_CAR_SEGMENT_TYPE', segmentTypes.join(','));
   }
 }

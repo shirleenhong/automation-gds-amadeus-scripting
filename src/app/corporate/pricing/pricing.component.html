@@ -2,4 +2,7 @@
   <tab heading="Airline Commission" id="airlineCommission" tabOrder="1">
     <app-air-fare-commission></app-air-fare-commission>
   </tab>
+  <tab *ngIf="isShowExTab" heading="Exchange Endorsements" id="exchangeEndorsements" tabOrder="2">
+    <app-exchange-endorsements></app-exchange-endorsements>
+  </tab>
 </tabset>

@@ -14,14 +14,14 @@ Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify Passive Rail Segments Are Added In The PNR For EN
-    [Tags]    us9882
+    [Tags]    us9882    US16562
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For EN
     Add Multiple Passive Rail Segment For EN PNR
     Verify Passive Rail Segment And RIR Added In The PNR For EN
     
 Verify Passive Rail Segments Are Added In The PNR For FR
-    [Tags]    us9882
+    [Tags]    us9882    US16562
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For FR
     Add Multiple Passive Rail Segment For FR PNR

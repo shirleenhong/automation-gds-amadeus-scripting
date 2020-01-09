@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
 import { BusinessRulesFormData } from 'src/app/models/business-rules/ui-business-rules.model';
+import { PnrService } from 'src/app/service/pnr.service';
 
 @Component({
   selector: 'app-container',
@@ -14,7 +15,7 @@ export class ContainerComponent implements OnInit {
   formTemplateData: BusinessRulesFormData[];
   @Input() containerFilter: string;
 
-  constructor(private res: RulesEngineService) {}
+  constructor(private res: RulesEngineService, private pnrService: PnrService) { }
 
   ngOnInit() {
     this.createRuleForm();
@@ -40,4 +41,83 @@ export class ContainerComponent implements OnInit {
       });
     });
   }
+
+  hasShowCondition(conditions) {
+    // return true;
+    // console.log(conditions);
+    let result = true;
+    if (conditions) {
+      for (const cond of conditions) {
+        let comparison = '';
+        const regex = /(\[(?<conditionName>(.*)_(.*))_(?<conditionvalue>(.*))\])/g;
+        const match = regex.exec(cond.controlName);
+        if (match !== null) {
+          switch (match.groups.conditionName) {
+            case 'UI_FORM':
+              comparison = this.containerForm.get(match.groups.conditionvalue).value;
+              result = this.isConditionValid(comparison, cond.logic, cond.value);
+              break;
+            // case 'UI_DEFAULT':
+            // debugger;
+            // if (match.groups.conditionvalue === 'TSTSEGMENTTYPE') {
+            //   comparison = this.getSegmentType(name);
+            //   const segtype = this.isConditionValid(comparison, cond.logic, cond.value);
+            //   if (segtype) {
+            //     this.containerForm.get(name).setValue(cond.result);
+            //   }
+            // }
+            // result = true;
+            // break;
+          }
+        }
+
+        if (!result) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  getSegmentType(name) {
+    const segmenttype = [];
+    const regex = /(.*)_((?<tstNo>(.*)))/g;
+    const match = regex.exec(name);
+    if (match !== null) {
+      const tst = this.pnrService.tstObj;
+      tst[match.groups.tstNo].segmentInformation.segDetails.segmentDetail.forEach(seg => {
+        segmenttype.push(seg.identification);
+      });
+      return segmenttype.join('|');
+      // const look = tst.find((x) => x);
+    }
+  }
+
+  isConditionValid(comparison, operator, value) {
+    switch (operator) {
+      case 'IS_NOT':
+        return comparison !== value;
+      case 'NOT_IN':
+        return comparison.split('|').indexOf(value) === -1;
+      default:
+        return false;
+    }
+  }
+
+  applyCondition(selectedValue, options) {
+    options.forEach(opt => {
+      if (opt.value === selectedValue && opt.defaultControl) {
+        this.containerForm.get(opt.defaultControl).setValue(opt.defaultValue);
+        this.containerForm.get(opt.defaultControl).setValidators([Validators.required]);
+      } else {
+        this.containerForm.get(opt.defaultControl).setValue('');
+        this.containerForm.get(opt.defaultControl).clearValidators();
+        this.containerForm.get(opt.defaultControl).updateValueAndValidity();
+      }
+    });
+  }
+
+  // getTSTSegment(){
+
+  // }
 }

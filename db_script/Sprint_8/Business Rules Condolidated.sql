@@ -109,16 +109,23 @@ VALUES
     INSERT INTO [dbo].[ClientDefinedRuleBusinessEntity]
 	([BusinessEntityName],[BusinessEntityDescription],[CreationTimeStamp],[CreationUserIdentifier],[VersionNumber],[IsLogic],[IsResult])
 VALUES
-	('UI_DISPLAY_CONTAINER', 'Display the Container in Specific Menu', @CreationTimeStamp, 'Amadeus CA Migration - US15949', 1, 0, 1),
-	('UI_ADD_CONTROL', 'Add dynamic control in container form', @CreationTimeStamp, 'Amadeus CA Migration - US15949', 1, 0, 1),
-	('PNR_AIR_SEGMENT_AIRPORT_CODE', 'Reads the Air Segment Airport Code field from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US15949', 1, 1, 0),
-	('PNR_AIR_SEGMENT_DEPT_TIME', 'Reads the Air Segment Departure Time field from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US15949', 1, 1, 0),
-	('PNR_AIR_SEGMENT_ARR_TIME', 'Reads the Air Segment Arrival Time field from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US15949', 1, 1, 0),
-	('PNR_AIR_SEGMENT_ROUTE_CODE', 'Reads the Air Segment Route Code field from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US15949', 1, 1, 0),
-	('UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY', 'Send Itinerary - Allowed number of Email Address', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
-	('UI_DISPLAY_MESSAGE', 'Display Specific Message', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
-	('PNR_WRITE_REMARK_WITH_CONDTION', 'CA - Write remarks with condition', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 0, 1),
-	('PNR_AIR_SEGMENT_AIRLINE_CODE', 'Reads the Air Segment Airline Code from the PNR', @CreationTimeStamp, 'Amadeus CA Migration - US16315', 1, 1, 0)
+	('UI_DISPLAY_CONTAINER', 'Display the Container in Specific Menu', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('UI_ADD_CONTROL', 'Add dynamic control in container form', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_AIR_SEGMENT_AIRPORT_CODE', 'Reads the Air Segment Airport Code field from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('PNR_AIR_SEGMENT_DEPT_TIME', 'Reads the Air Segment Departure Time field from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('PNR_AIR_SEGMENT_ARR_TIME', 'Reads the Air Segment Arrival Time field from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('PNR_AIR_SEGMENT_ROUTE_CODE', 'Reads the Air Segment Route Code field from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY', 'Send Itinerary - Allowed number of Email Address', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('UI_DISPLAY_MESSAGE', 'Display Specific Message', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_WRITE_REMARK_WITH_CONDTION', 'CA - Write remarks with condition', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_AIR_SEGMENT_AIRLINE_CODE', 'Reads the Air Segment Airline Code from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('PNR_CAR_SEGMENT_VENDOR_CODE', 'Reads the Car Segment Vendor Code from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('PNR_CAR_SEGMENT_TYPE', 'Reads the Car Segment Type from the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 0),
+	('PNR_COUNT_DEPARTURE_DATE_FROM_TODAY', 'Reads the and count the days of Departure Date from todays date', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_SEGMENT_TYPES_IN_PNR', 'Reads all the segment types in the PNR', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_EB', 'Reads the PNR EB remark', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_WRITE_REMARK_WITH_SEGMENT_RELATE', 'CA - Write remarks with segment relate', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1),
+	('PNR_DELETE_REMARK_THAT_CONTAINS', 'CA - Delete remarks that contains', @CreationTimeStamp, @CreationUserIdentifier, 1, 0, 1)
 
 	PRINT 'END Script Amadeus CA Migration - US15949'
 	---------------------------

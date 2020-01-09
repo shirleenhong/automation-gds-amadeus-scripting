@@ -25,7 +25,7 @@ export class ItineraryAndQueueComponent implements OnInit {
       return false;
     }
     this.utilHelper.validateAllFields(this.itineraryComponent.itineraryForm);
-    if (!this.itineraryComponent.itineraryForm.valid) {
+    if (this.itineraryComponent.itineraryForm.touched && !this.itineraryComponent.itineraryForm.valid) {
       return false;
     }
 

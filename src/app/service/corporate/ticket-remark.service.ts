@@ -15,7 +15,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { AmadeusQueueService } from '../amadeus-queue.service';
 import { PricingService } from './pricing.service';
 
-declare var smartScriptSession: any;
+// declare var smartScriptSession: any;
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,11 @@ export class TicketRemarkService {
     ticketRemark.tktDate = datePipe.transform(Date.now(), 'ddMMM');
     ticketRemark.pnrOnHold = false;
     ticketRemark.tkLine = 'CXL';
-    return this.writeTicketRemark(ticketRemark);
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'Ticketing';
+    remGroup.cryptics = new Array<string>();
+    remGroup.deleteRemarkByIds = new Array<string>();
+    return this.writeTicketRemark(ticketRemark, remGroup);
   }
 
   /**
@@ -53,8 +57,13 @@ export class TicketRemarkService {
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
   public submitTicketRemark(ticketRemark: TicketModel, fg?: FormGroup): RemarkGroup {
-    this.cleanupTicketRemark();
-    return this.writeTicketRemark(ticketRemark, fg);
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'Ticketing';
+    remGroup.cryptics = new Array<string>();
+    remGroup.deleteRemarkByIds = new Array<string>();
+    this.cleanupTicketRemark(remGroup);
+    this.writeTicketRemark(ticketRemark, remGroup, fg);
+    return remGroup;
   }
 
   public deleteTicketingLine() {
@@ -69,30 +78,34 @@ export class TicketRemarkService {
   /**
    * Cleans up existing TK remark (as well as RIR if on hold).
    */
-  private cleanupTicketRemark(): void {
-    const linesToDelete: Array<number> = new Array();
+  private cleanupTicketRemark(remGroup: RemarkGroup): void {
+    // const linesToDelete: Array<number> = new Array();
 
     const existingTkLineNum = this.pnrService.getTkLineNumber();
     const existingFSLineNum = this.pnrService.getFSLineNumber();
     const fmLineNumbers = this.pricingService.toDeleteFmLines;
     if (existingTkLineNum >= 0) {
-      linesToDelete.push(existingTkLineNum);
+      remGroup.deleteRemarkByIds.push(existingTkLineNum.toString());
+      // linesToDelete.push(existingTkLineNum);
 
       const existingRirLineNum = this.pnrService.getRIRLineNumber(this.ONHOLD_KEYWORD);
       if (existingRirLineNum && existingRirLineNum >= 0) {
-        linesToDelete.push(existingRirLineNum);
+        remGroup.deleteRemarkByIds.push(existingRirLineNum.toString());
+        // linesToDelete.push(existingRirLineNum);
       }
     }
     // to delete FM lines from the PNR
     for (const fmLine of fmLineNumbers) {
-      linesToDelete.push(fmLine);
+      remGroup.deleteRemarkByIds.push(fmLine.toString());
+      // linesToDelete.push(fmLine);
     }
     if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
-      linesToDelete.push(existingFSLineNum);
+      remGroup.deleteRemarkByIds.push(existingFSLineNum.toString());
+      // linesToDelete.push(existingFSLineNum);
     }
-    if (linesToDelete.length > 0) {
-      smartScriptSession.send('XE' + linesToDelete.join(','));
-    }
+    // if (linesToDelete.length > 0) {
+    //   smartScriptSession.send('XE' + linesToDelete.join(','));
+    // }
   }
 
   /**
@@ -100,8 +113,8 @@ export class TicketRemarkService {
    * @param ticketRemark The ticket data from screen.
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
-  private writeTicketRemark(ticketRemark: TicketModel, fg?: FormGroup): RemarkGroup {
-    const remGroup = new RemarkGroup();
+  private writeTicketRemark(ticketRemark: TicketModel, remGroup: RemarkGroup, fg?: FormGroup): RemarkGroup {
+    // const remGroup = new RemarkGroup();
     let pnrOnhold = ticketRemark.pnrOnHold;
     if (fg && fg.get('noApproval').value === false) {
       const index = this.getApprovalIndex(fg);

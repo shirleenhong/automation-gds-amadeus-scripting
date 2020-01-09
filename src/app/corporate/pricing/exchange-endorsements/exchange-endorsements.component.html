@@ -1,0 +1,68 @@
+<div [formGroup]="exchangeEndorsementsForm" class="form-group" style="margin-top:10px;padding-left: 10px">
+    <table class="exchangeEndorsementsTable">
+        <tr>
+            <th width="50px">
+                <div class="">Ticket Number</div>
+            </th>
+            <th width="50px">
+                <div class="">Airline Code</div>
+            </th>
+            <th width="150px">
+                <div class="cl">Exchange Endorsement</div>
+            </th>
+            <th width="150px">
+                <div class="cl">Original Flight Number Pertaining to Schedule Change</div>
+            </th>
+            <th width="150px">
+                <div class="cl">Original Flight Date Pertaining to Schedule Change</div>
+            </th>
+            <th COLSPAN=2 width="150px">
+                <div class="cl">Are you utilizing Service Funds on this Exchange ticket?</div>
+            </th>
+        </tr>
+
+        <tbody formArrayName="exchangeTickets"
+            *ngFor="let item of this.exchangeEndorsementsForm.get('exchangeTickets')['controls']; let i = index">
+            <tr [formGroupName]="i">
+                <td width="30px">
+                    <label>{{ item.value.ticketNo }}</label>
+                </td>
+
+                <td width="30px">
+                    <label>{{ item.value.airline }}</label>
+                </td>
+                <td width="70px">
+                    <div *ngIf="item.value.airline !== 'UA'">
+                        <input type="checkbox" formControlName="exchangeEndorsement" name="exchangeEndorsement" />
+                        <label>{{ item.value.endorsementlabel }}</label>
+                    </div>
+                    <div *ngIf="item.value.airline === 'UA'">
+                        <select id="uaEndorsement" formControlName="uaEndorsement" class="form-control"
+                            name="uaEndorsement" (change)="showSC(item)">
+                            <option *ngFor=" let type of uaExchangeList" [value]="type.itemValue">
+                                {{type.itemText}}
+                            </option>
+                        </select>
+                    </div>
+                </td>
+                <td width="30px">
+                    <input formControlName="scFlight" type="text" class="form-control" required />
+                </td>
+                <td width="30px">
+                    <input type="date" id="scDate" name="scDate" class="form-control" formControlName="scDate"
+                        required />
+                </td>
+                <td style="padding-right: 0px;">
+                    <input type="checkbox" formControlName="exchangeServiceFund" name="exchangeServiceFund"
+                        (change)="checkServiceChange(item)" />
+                </td>
+                <td style="padding-left: 0px;">
+                    <!-- <input formControlName="exchangeServiceValue" type="text" class="form-control"
+                        [readonly]="item.value.airline !== 'UA'" /> -->
+
+                    <input formControlName="exchangeServiceValue" type="text" class="form-control" required />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

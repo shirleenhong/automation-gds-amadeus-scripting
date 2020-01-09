@@ -7,6 +7,7 @@ import { ReasonCodeTypeEnum } from '../../../enums/reason-code.enum';
 import { ReasonCode } from '../../../models/ddb/reason-code.model';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
+import { SelectItem } from 'src/app/models/select-item.model';
 
 declare var smartScriptSession: any;
 
@@ -26,10 +27,16 @@ export class ReportingBSPComponent implements OnInit {
   lowFareDom: any;
   lowFareInt: any;
   isDomesticFlight = true;
+  isTransborder = false;
   thresholdAmount = 0;
   hasTst = true;
   realisedSavingList = [];
   missedSavingList = [];
+  lillyLowFareDirect = new Map<number, string>();
+  lillyLowFareConnecting = new Map<number, string>();
+  commonLowFare = new Map<number, string>();
+  lowFareOptionList: Array<SelectItem>;
+  isLilly = false;
   // tslint:disable-next-line:max-line-length
   constructor(
     private fb: FormBuilder,
@@ -37,7 +44,7 @@ export class ReportingBSPComponent implements OnInit {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private valueChagneListener: ValueChangeListener
-  ) {}
+  ) { }
 
   async ngOnInit() {
     await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1).then((response) => {
@@ -51,11 +58,15 @@ export class ReportingBSPComponent implements OnInit {
     this.bspGroup = this.fb.group({
       fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
     });
+
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
+    this.isTransborder = this.ddbService.isPnrTransBorder();
     this.thresholdAmount = this.getThresHoldAmount();
     this.removeFares(0); // this is a workaround to remove the first item
     this.getServicingOptionValuesFares();
     this.getTstDetails();
+    this.GetLillyLowFareOptions();
+    this.isLilly = this.pnrService.isLilly();
   }
 
   removeFares(i) {
@@ -103,7 +114,8 @@ export class ReportingBSPComponent implements OnInit {
       reasonCodeText: new FormControl(reasonCode),
       chargeFare: new FormControl(chargeFare),
       chkIncluded: new FormControl(''),
-      isExchange: new FormControl(isExchange)
+      isExchange: new FormControl(isExchange),
+      lowFareOption: new FormControl('')
     });
 
     group.get('reasonCodeText').valueChanges.subscribe((val) => {
@@ -198,6 +210,10 @@ export class ReportingBSPComponent implements OnInit {
       lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, segmentLineNo)); // FXD/S
     } else {
       lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, segmentLineNo)); // FXD/S
+    }
+
+    if (!this.commonLowFare.has(index)) {
+      this.commonLowFare.set(index, lowFare);
     }
 
     const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
@@ -322,9 +338,14 @@ export class ReportingBSPComponent implements OnInit {
   async getLowFare(command: string) {
     let value = '';
     await smartScriptSession.send(command).then((res) => {
-      const regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
-      const match = regex.exec(res.Response);
+      let regex = /RECOMMENDATIONS RETURNED FROM [A-Z]{3} (?<from>(.*)) TO (?<to>(.*))/g;
+      let match = regex.exec(res.Response);
       regex.lastIndex = 0;
+      if (!match) {
+        regex = /RECOMMENDATIONS IN GROUP 1\([A-Z]{3} (?<from>(.*))\)/g;
+        match = regex.exec(res.Response);
+        regex.lastIndex = 0;
+      }
       if (match !== null) {
         if (match.groups !== undefined && match.groups.from !== undefined) {
           value = match.groups.from;
@@ -377,6 +398,75 @@ export class ReportingBSPComponent implements OnInit {
     } else {
       highFare.setErrors(null);
       highFare.updateValueAndValidity();
+    }
+  }
+
+  GetLillyLowFareOptions() {
+    this.lowFareOptionList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP', itemValue: 'DIRECTFLIGHT' },
+      { itemText: 'CLIENT IF BKD ON CONNECTING FLIGHTS-OFFER CONNECTIONS IN LP', itemValue: 'CONNECTINGFLIGHT' }
+    ];
+  }
+
+  async getLowFareLilly(tst: any, i: number, command: any, option: string) {
+    let lfare = '0.00';
+    const segmentsInFare = this.getSegment(tst);
+    const segmentLineNo = this.getSegmentLineNo(segmentsInFare);
+
+    switch (option) {
+      case 'DIRECTFLIGHT':
+        if (this.lillyLowFareDirect.has(i)) {
+          lfare = this.lillyLowFareDirect.get(i);
+        } else {
+          lfare = await this.getLowFare(this.insertSegment(command.ServiceOptionItemValue, segmentLineNo)); // FXD/S
+          this.lillyLowFareDirect.set(i, lfare);
+        }
+        break;
+      case 'CONNECTINGFLIGHT':
+        if (this.lillyLowFareConnecting.has(i)) {
+          lfare = this.lillyLowFareConnecting.get(i);
+        } else {
+          lfare = await this.getLowFare(this.insertSegment(command.ServiceOptionItemValue, segmentLineNo)); // FXD/S
+          this.lillyLowFareConnecting.set(i, lfare);
+        }
+        break;
+      default:
+        lfare = this.commonLowFare.get(i + 1);
+    }
+    return lfare;
+  }
+
+  async checkLowFareOption(option: any, group: FormGroup, index: number) {
+    let lfare = '';
+    this.isDoneLoading = false;
+    const tstLen = this.pnrService.getTstLength();
+    const command = this.getLilyCommand(option);
+    if (tstLen > 1) {
+      lfare = await this.getLowFareLilly(this.pnrService.tstObj[index], index, command, option);
+    } else {
+      lfare = await this.getLowFareLilly(this.pnrService.tstObj, 0, command, option);
+    }
+    group.get('lowFareText').patchValue(lfare);
+    this.isDoneLoading = true;
+  }
+
+  getLilyCommand(flightConfirmed) {
+    switch (flightConfirmed) {
+      case 'DIRECTFLIGHT':
+        if (this.isDomesticFlight || this.isTransborder) {
+          return this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Domestic_DirectFlight_Calculation);
+        } else {
+          return this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Internationl_DirectFlight_Calculation);
+        }
+        break;
+      case 'CONNECTINGFLIGHT':
+        if (this.isDomesticFlight || this.isTransborder) {
+          return this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Domestic_ConnectingFlight_Calculation);
+        } else {
+          return this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_ConnectingFlight_Calculation);
+        }
+        break;
     }
   }
 }

@@ -48,6 +48,7 @@ export class PaymentRemarkService {
     this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'));
     this.writeAquaTicketingRemarks(accList.filter((x) => x.accountingTypeRemark === 'NONBSP'));
     this.writeCancelRemarks(accList.filter((x) => x.accountingTypeRemark === 'ACPPC'));
+    accountingComponents.accountingRemarks.length = 0;
   }
 
   writeCancelRemarks(accountingRemarks: MatrixAccountingModel[]) {
@@ -281,7 +282,7 @@ export class PaymentRemarkService {
         segmentrelate = segmentAssoc;
       }
       // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-
+      // debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -294,7 +295,6 @@ export class PaymentRemarkService {
         account.supplierCodeName,
         account.tktLine
       );
-
       // US10574: Airline Corporate Pass Redemption
       if (account.accountingTypeRemark === 'ACPR') {
         paymentRemark.set('PassName', account.airlineCorporatePass.name);
@@ -323,6 +323,10 @@ export class PaymentRemarkService {
         // const tattooNumbers = ['2'];
         // const tattooNumbers = null;
         airlineCorporatePassCondition.set('AirlineCorporatePass', 'true');
+        // if (account.accountingTypeRemark === 'NONBSPEXCHANGE') {
+        //   airlineCorporatePassCondition.set('AirlineCorporatePass', 'false');
+        // }
+
         this.remarksManager.createPlaceholderValues(
           null,
           airlineCorporatePassCondition,
@@ -535,8 +539,7 @@ export class PaymentRemarkService {
         totalGst += parseFloat(account.penaltyGst);
         totalHst += parseFloat(account.penaltyHst);
         totalQst += parseFloat(account.penaltyQst);
-      }
-
+      }      
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         totalBaseAmount,
@@ -552,6 +555,18 @@ export class PaymentRemarkService {
 
       const totalCost =
         totalBaseAmount + totalGst + totalHst + totalQst + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
+
+      ;
+      const airlineCorporatePassCondition = new Map<string, string>();
+      airlineCorporatePassCondition.set('AirlineCorporatePass', 'false');
+      const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
+      this.remarksManager.createPlaceholderValues(
+        null,
+        airlineCorporatePassCondition,
+        tattooNumbers,
+        null,
+        'THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE'
+      );
 
       airlineCodeRemark.set('AirlineCode', uniqueairlineCode);
       airlineCodeRemark.set('TotalCost', this.decPipe.transform(totalCost, '1.2-2').replace(',', ''));
@@ -606,6 +621,7 @@ export class PaymentRemarkService {
       const itiRemarks = new Map<string, string>();
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
       if (account.accountingTypeRemark === 'NONBSP') {
+        // debugger;
         this.writeTicketingLine(
           account.tkMacLine.toString(),
           account.baseAmount,
@@ -710,16 +726,34 @@ export class PaymentRemarkService {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.passiveSegments = [];
-
+    remGroup.passiveSegments = [];    
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {
           remGroup.deleteRemarkByIds.push(element.lineNo);
         });
       }
+
+      if (account.accountingTypeRemark === 'NONBSPEXCHANGE') {
+        remGroup.deleteRemarkByIds.push(this.getRemarkNumbers('THE AIRLINE TICKET CHARGE ON THIS ITINERARY/INVOICE'));
+        remGroup.deleteRemarkByIds.push(this.getRemarkNumbers('IS FOR INTERNAL COST RE-ALLOCATION PURPOSES ONLY.'));
+        remGroup.deleteRemarkByIds.push(this.getRemarkNumbers('**PLEASE DO NOT EXPENSE** THIS CHARGE AS IT WILL NOT APPEAR'));
+        remGroup.deleteRemarkByIds.push(this.getRemarkNumbers('ON YOUR CREDIT CARD STATEMENT.'));
+      }
     });
+
     return remGroup;
+  }
+
+  getRemarkNumbers(searchText: string) {
+    const lineNos: any = new Array<string>();
+    for (const ri of this.pnrService.pnrObj.rirElements) {
+      const text = ri.fullNode.miscellaneousRemarks.remarks.freetext;
+      if (text.indexOf(searchText) === 0) {
+        lineNos.push(ri.elementNumber);
+      }
+    }
+    return lineNos;
   }
 
   addSegmentForPassPurchase(accounting: MatrixAccountingModel[]) {

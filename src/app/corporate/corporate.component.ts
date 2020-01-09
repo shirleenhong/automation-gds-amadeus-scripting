@@ -45,6 +45,8 @@ import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.com
 import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
+import { CommonRemarkService } from '../service/common-remark.service';
+
 declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
@@ -106,7 +108,8 @@ export class CorporateComponent implements OnInit {
     private amadeusRemarkService: AmadeusRemarkService,
     private corpCancelRemarkService: CorpCancelRemarkService,
     private pricingService: PricingService,
-    private rulesEngine: RulesEngineService
+    private rulesEngine: RulesEngineService,
+    private commonRemarkService: CommonRemarkService
   ) {
     this.initData();
     this.getPnrService();
@@ -296,6 +299,9 @@ export class CorporateComponent implements OnInit {
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
     accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
+    if (this.pricingComponent.exchangeEndorsementsComponent) {
+      accRemarks.push(this.pricingService.getExchangeEndorsement(this.pricingComponent.exchangeEndorsementsComponent));
+    }
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
@@ -316,7 +322,6 @@ export class CorporateComponent implements OnInit {
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
-
     this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
@@ -349,7 +354,8 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
-    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.reportingForm);
+
+    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.obtComponent);
 
     this.invoiceRemarkService.sendU70Remarks();
 
@@ -377,6 +383,13 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addTeamQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
       this.itineraryService.addPersonalQueue(this.queueComponent.itineraryInvoiceQueue.queueForm);
     }
+    if (!this.queueComponent.itineraryComponent.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.queueComponent.itineraryComponent.itineraryForm);
+    }
+    this.itineraryService.addAquaQueue();
+    if (!this.queueComponent.itineraryComponent.itineraryForm.touched) {
+      this.itineraryService.addAquaOverrideRmk();
+    }
     let commandList = [];
     if (!this.corpRemarksComponent.isPassive) {
       commandList = this.invoiceRemarkService.getSSRCommandsForContact(this.corpRemarksComponent.addContactComponent);
@@ -384,6 +397,13 @@ export class CorporateComponent implements OnInit {
 
     remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
+    remarkCollection.push(
+      await this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks)
+    );
+    remarkCollection.push(
+      this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
+    );
+
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
 
     await this.rms.SendCommand(
@@ -436,6 +456,7 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
+
   private getStaticModelRemarks(
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
@@ -621,6 +642,18 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  public async aquaFees() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'aquaFees';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async irdRateRequest() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
@@ -679,6 +712,10 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
+    this.itineraryService.addAquaQueue();
+    if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.touched) {
+      this.itineraryService.addAquaOverrideRmk();
+    }
     const accRemarks = new Array<RemarkGroup>();
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(

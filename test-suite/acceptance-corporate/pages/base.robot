@@ -56,7 +56,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
 @{pricing_pages}     Pricing    Airfare Commission    Exchange Endorsements
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
-@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact    Fare Rule    Associated Remarks
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
@@ -358,6 +358,8 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
     ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Emergency Contact"    Click Emergency Contact Tab
+    ...    ELSE IF    "${destination_page}" == "Fare Rule"    Click Fare Rule Tab
+    ...    ELSE IF    "${destination_page}" == "Associated Remarks"    Click Associated Remarks Tab
 
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -470,6 +472,7 @@ Click Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Remarks
+    Take Screenshot    
     
 Collapse Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60

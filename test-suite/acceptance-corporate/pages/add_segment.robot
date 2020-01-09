@@ -87,8 +87,8 @@ Add Air Segment for Non ZZ Details In The PNR
     Enter Value    ${input_class_service}    Y
     Enter Value    ${input_departure_city}    YUL
     Enter Value    ${input_destination_city}    CDG  
-    Input Text    ${input_departure_date}    01022020
-    Input Text    ${input_arrival_date}    01032020
+    Input Text    ${input_departure_date}    01022021
+    Input Text    ${input_arrival_date}    01032021
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_airline_recloc}    ARL1234
@@ -115,8 +115,8 @@ Add Air Segment for ZZ In The PNR
     Input Text    ${input_zzz_departure}    ZZZ
     Enter Value    ${input_destination_city}    ZZZ
     Input Text    ${input_zzz_arrival}    ZZZ
-    Input Text    ${input_departure_date}    01022020
-    Input Text    ${input_arrival_date}    01032020
+    Input Text    ${input_departure_date}    01022021
+    Input Text    ${input_arrival_date}    01032021
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_airline_recloc}    ARL76
@@ -144,8 +144,8 @@ Add Passive Hotel Segment ${with_optional} Values On Optional Fields
     Select From List By Label    ${select_segment_type}    Hotel
     Enter Value    ${input_chain_code_passive}    HI
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    02102020
-    Input Text     ${input_arrival_date}    02132020
+    Input Text    ${input_departure_date}    02102021
+    Input Text     ${input_arrival_date}    02132021
     Enter Value    ${input_policyNo}    24HRS
     Enter Value    ${input_nightly_rate}     100.00   
     Enter Value    ${input_rate_type}     hotel
@@ -185,8 +185,8 @@ Add Passive Hotel Segment ${with_optional} Hotel Details Input
     Select From List By Label    ${select_segment_type}    Hotel
     Enter Value    ${input_chain_code_passive}    AC
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    02102020
-    Input Text     ${input_arrival_date}    02132020
+    Input Text    ${input_departure_date}    02102021
+    Input Text     ${input_arrival_date}    02132021
     Enter Value    ${input_policyNo}    24HRS
     Enter Value    ${input_nightly_rate}     100.00   
     Enter Value    ${input_rate_type}     hotel
@@ -260,8 +260,8 @@ Add Multiple Passive Tour Segments
     Enter Value    ${input_confirmationNo}     cf12345678
     Enter Value    ${input_departure_city}    YUL
     Enter Value    ${input_destination_city}    CDG  
-    Input Text    ${input_departure_date}    04022020
-    Input Text    ${input_arrival_date}    04032020
+    Input Text    ${input_departure_date}    04022021
+    Input Text    ${input_arrival_date}    04032021
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_tour_name}     Tour Name Test
@@ -275,8 +275,8 @@ Add Multiple Passive Tour Segments
     Enter Value    ${input_confirmationNo}     cf98765432
     Enter Value    ${input_departure_city}    CDG
     Enter Value    ${input_destination_city}    LHR  
-    Input Text    ${input_departure_date}    04102020
-    Input Text    ${input_arrival_date}    04132020
+    Input Text    ${input_departure_date}    04102021
+    Input Text    ${input_arrival_date}    04132021
     Enter Value    ${input_departure_time}    1230PM
     Enter Value    ${input_arrival_time}    1115PM
     Enter Value    ${input_tour_name}     2nd Tour
@@ -326,8 +326,8 @@ Add Multiple Passive Rail Segment For EN PNR
     Enter Value    ${input_car_number}    C123
     Enter Value    ${input_seat_number}    S123
     Enter Value    ${input_departure_city}    YUL
-    Input Text    ${input_departure_date}    01102020
-    Input Text    ${input_arrival_date}    01112020
+    Input Text    ${input_departure_date}    01102021
+    Input Text    ${input_arrival_date}    01112021
     Enter Value    ${input_departure_time}    0200AM
     Enter Value    ${input_arrival_time}    0500AM
     Enter Value    ${input_vendor_code}    AAA
@@ -345,8 +345,8 @@ Add Multiple Passive Rail Segment For EN PNR
     Enter Value    ${input_arrival_station}    2nd Arrival Station
     Enter Value    ${input_seat_number}    S123
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    01152020
-    Input Text    ${input_arrival_date}    01162020
+    Input Text    ${input_departure_date}    01152021
+    Input Text    ${input_arrival_date}    01162021
     Enter Value    ${input_departure_time}    1200PM
     Enter Value    ${input_arrival_time}    0500PM
     Enter Value    ${input_vendor_code}    VIR
@@ -365,8 +365,8 @@ Add Multiple Passive Rail Segment For FR PNR
     Enter Value    ${input_car_number}    C456
     Enter Value    ${input_seat_number}    S654
     Enter Value    ${input_departure_city}    YUL
-    Input Text    ${input_departure_date}    01102020
-    Input Text    ${input_arrival_date}    01112020
+    Input Text    ${input_departure_date}    01102021
+    Input Text    ${input_arrival_date}    01112021
     Enter Value    ${input_departure_time}    0200AM
     Enter Value    ${input_arrival_time}    0500AM
     Enter Value    ${input_vendor_code}    AMK
@@ -383,8 +383,8 @@ Add Multiple Passive Rail Segment For FR PNR
     Enter Value    ${input_arrival_station}    2nd Arrival Station
     Enter Value    ${input_seat_number}    S123
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    01152020
-    Input Text    ${input_arrival_date}    01162020
+    Input Text    ${input_departure_date}    01152021
+    Input Text    ${input_arrival_date}    01162021
     Enter Value    ${input_departure_time}    1200PM
     Enter Value    ${input_arrival_time}    0500PM
     Enter Value    ${input_vendor_code}    VIR
@@ -479,8 +479,8 @@ Add Passive Car Segment ${with_optional} Optional Values
 	Select From List By Label    ${select_pickup_address}    YYTC54 - 79 KENMOUNT ROAD A1B3P8 ST
 	Select From List By Label    ${select_dropoff_location}    AIRPORT
     Press Key    ${select_dropoff_location}    TAB
-	Input Text    ${input_departure_date}    01222020
-	Input Text    ${input_arrival_date}    01232020
+	Input Text    ${input_departure_date}    01222021
+	Input Text    ${input_arrival_date}    01232021
 	Enter Value    ${input_departure_time}    1100AM
 	Enter Value    ${input_arrival_time}    0200AM
 	Enter Value    ${input_rental_cost}    210.55
@@ -537,8 +537,8 @@ Add Multiple Passive Car Segment
 	Select From List By Label    ${select_pickup_address}    YYTC54 - 79 KENMOUNT ROAD A1B3P8 ST
 	Select From List By Label    ${select_dropoff_location}    AIRPORT
     Press Key    ${select_dropoff_location}    TAB
-	Input Text    ${input_departure_date}    01222020
-	Input Text    ${input_arrival_date}    01232020
+	Input Text    ${input_departure_date}    01222021
+	Input Text    ${input_arrival_date}    01232021
 	Enter Value    ${input_departure_time}    1100AM
 	Enter Value    ${input_arrival_time}    0200AM
 	Enter Value    ${input_rental_cost}    210.55
@@ -572,8 +572,8 @@ Add Multiple Passive Car Segment
     Press Keys    ${select_pickup_location}    TAB
 	Select From List By Label    ${select_dropoff_location}    AIRPORT
     Press Key    ${select_dropoff_location}    TAB
-	Input Text    ${input_departure_date}    01102020
-	Input Text    ${input_arrival_date}    01152020
+	Input Text    ${input_departure_date}    01102021
+	Input Text    ${input_arrival_date}    01152021
 	Enter Value    ${input_departure_time}    0715AM
 	Enter Value    ${input_arrival_time}    0530PM
 	Enter Value    ${input_rental_cost}    221.10

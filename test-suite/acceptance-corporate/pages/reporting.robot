@@ -51,7 +51,7 @@ ${input_ul_whoFirstBooked}    //input[@name='whoApproved']
 ${list_ul_fareType}    //select[@id='fareType']
 ${input_segment_number}    //input[@formcontrolname='segment']
 ${div_nonBsp}    //div[@formarrayname='nonbsp']
-${div_fares}    ///div[@formarrayname='fares']
+${div_fares}    //div[@formarrayname='fares']
 ${select_lowFareOption}    //select[@formcontrolname='lowFareOption']
 ${input_sge_airlineCode_start}    //input[@name='airlineCode_
 ${input_ej5_coachFare_start}    //input[@name='coachFare_
@@ -86,7 +86,7 @@ Click Waivers Reporting Tab
     Set Test Variable    ${current_page}    Waivers
 
 Click Reporting Remarks Tab
-    Scroll Element Into View     ${tab_reportingRemarks}
+    Scroll Element Into View     ${panel_payment}
     Wait Until Element Is Visible    ${tab_reportingRemarks}    30
     Click Element    ${tab_reportingRemarks}
     Wait Until Page Contains Element    ${list_routing_code}    30
@@ -486,7 +486,7 @@ Verify Car Savings Code Remark For Multiple Passive Car Segments
 Verify Car Savings Code Remark For Single Active Car Segments
     Finish PNR
     Assign Current Date
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YUL/-SV-I
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-I
     
 Verify Car Savings Code Remark For Multiple Active Car Segments
     Finish PNR
@@ -704,18 +704,18 @@ Add Client Reporting Values For Multi TST BSP Segment For Lily
     Navigate To Page BSP Reporting
     Wait Until Page Contains Element    ${checkbox_clientReporting}    30
     Select Client Reporting Fields To Be Written    1
-    Select From List By Label    ${select_lowFareOption}    CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP
+    Select From List By Label    ${div_fares}${open_bracket}1${close_bracket}${select_lowFareOption}    CLIENT IS BKD ON DIRECT FLIGHTS-DO NOT OFFER CONNECTIONS IN LP
     Wait Until Element Is Visible    ${input_low_fare}    30   
-    ${actual_full_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}$${input_full_fare}
-    ${actual_low_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}$${input_low_fare}
-    Select Reason Code    A : Lowest Fare Accepted
+    ${actual_full_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}${input_full_fare}
+    ${actual_low_fare}    Get Value    ${div_fares}${open_bracket}1${close_bracket}${input_low_fare}
+    Select Reason Code    A : Lowest Fare Accepted    1
     Wait Until Page Contains Element    ${checkbox_clientReporting}    30
     Select Client Reporting Fields To Be Written    2
-    Select From List By Label    ${select_lowFareOption}    CLIENT IF BKD ON CONNECTING FLIGHTS-OFFER CONNECTIONS IN LP
+    Select From List By Label    ${div_fares}${open_bracket}1${close_bracket}${select_lowFareOption}    CLIENT IF BKD ON CONNECTING FLIGHTS-OFFER CONNECTIONS IN LP
     Wait Until Element Is Visible    ${input_low_fare}    30
-    ${actual_full_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}$${input_full_fare}
+    ${actual_full_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}${input_full_fare}
     ${actual_low_fare2}    Get Value    ${div_fares}${open_bracket}2${close_bracket}${input_low_fare}
-    Select Reason Code    A : Lowest Fare Accepted
+    Select Reason Code    A : Lowest Fare Accepted    2
     Set Test Variable    ${actual_full_fare}
     Set Test Variable    ${actual_low_fare}
     Set Test Variable    ${actual_full_fare2}

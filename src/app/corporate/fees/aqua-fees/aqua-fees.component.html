@@ -1,0 +1,32 @@
+<div *ngIf="!hasPFS">
+  <app-obt></app-obt>
+</div>
+
+<form [formGroup]="aquaFeeForm" class="form-group" style="margin-left: 25px;">
+  <div class="row form-group ">
+    <div class="col-4">Fee Type:</div>
+    <div class="col-4" *ngIf="segmentList.length > 0">Segment:</div>
+  </div>
+  <div class="row form-group ">
+    <div class="col-4">
+      <select id="feeType" class="form-control" formControlName="feeType" name="feeType" (change)="selectFeeType($event.target.value)">
+        <option value="A"> AIR FEES </option>
+        <option value="C"> CAR ONLY FEES </option>
+        <option value="H"> HOTEL ONLY FEES </option>
+        <option value="L"> LIMO ONLY FEES </option>
+        <option value="R"> RAIL FEES </option>
+        <option value="S"> SUPPLEMENTAL FEES </option>
+      </select>
+    </div>
+    <div class="col-4" *ngIf="segmentList.length > 0">
+      <!-- <select id="segments" class="form-control" formControlName="segments" name="segments">
+        <option *ngFor="let item of segmentList" [value]="item.itemValue">
+          {{ item.itemText }}
+        </option></select
+      > -->
+      <app-generic-select [genericList]="segmentList" formControlName="segments" name="segments" id="segments">
+        <!-- </app-generic-select>  (passDataParent) = 'checkSelectedInvoice($event)'> -->
+      </app-generic-select>
+    </div>
+  </div>
+</form>

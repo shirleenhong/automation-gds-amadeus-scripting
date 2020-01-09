@@ -13,13 +13,9 @@ export class ItineraryRemarkService implements OnInit {
   destination = [];
   leisureOnDemandOID: any = '';
 
-  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService,
-              private rms: RemarksManagerService) {
-  }
+  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) {}
 
-  async ngOnInit() {
-
-  }
+  async ngOnInit() {}
   addPersonalQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
@@ -151,9 +147,10 @@ export class ItineraryRemarkService implements OnInit {
     }
   }
   addAquaOverrideRmk() {
-    const aquaOverrideCondition = new Map<string, string>();
-    aquaOverrideCondition.set('AirAutoInvoice', 'False');
-    this.rms.createPlaceholderValues(null, aquaOverrideCondition, null, null, 'AUTOMAIL-NO');
+    const enableAutoMail = new Map<string, string>();
+    enableAutoMail.set('EnableAutoMail', 'NO');
+    this.rms.createEmptyPlaceHolderValue(['EnableAutoMail'], null, 'AUTOMAIL-');
+    this.rms.createPlaceholderValues(enableAutoMail, null, null, null, 'AUTOMAIL-');
   }
   addAquaQueue() {
     this.amadeusQueue.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', 'C1'));

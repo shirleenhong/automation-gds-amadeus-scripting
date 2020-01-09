@@ -20,7 +20,7 @@ ${button_command_page}    css=#etoolbar_toolbarSection_newcommandpagebtn_id
 ${input_commandText}    css=.cmdPromptDiv > textArea
 ${label_command_page}    //span[contains(@class, 'title cryptic')]
 ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
-${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp Test"]
+${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp ${env}"]
 ${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
 ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus/?corporate')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
@@ -265,12 +265,12 @@ Move Multiple Passenger
     Handle Smart Tool PopUp
 
 Move Single Passenger And Add Single BSP Segment With TST
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-CN1
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-CN1
     Add Single BSP Segment And Store Fare
     Handle Smart Tool PopUp
 
 Move Single Passenger And Add Single BSP Segment With IFC CN Number And TST
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-VB70000000C    RM*CN/-IFC
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-C    RM*CF/-AAA0000000C    RM*CN/-IFC
     Add Single BSP Segment And Store Fare
     Move Profile to GDS    RT
     Handle Smart Tool PopUp

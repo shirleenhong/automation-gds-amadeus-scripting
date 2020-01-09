@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -30,11 +30,10 @@ export class GenericSelectComponent implements OnInit {
   elementSelected = [];
   @Input() genericList;
   @Output() passDataParent: EventEmitter<any> = new EventEmitter<any>();
-  onTouched: any = () => { };
-  validateFn: any = () => { };
-  onChange: any = () => { };
-  ngOnInit() {
-  }
+  onTouched: any = () => {};
+  validateFn: any = () => {};
+  onChange: any = () => {};
+  ngOnInit() {}
   set value(val) {
     this.val = val;
     this.onChange(val);
@@ -72,11 +71,12 @@ export class GenericSelectComponent implements OnInit {
         }
       }
     }
-    const value = selectedEle.join(',');
-    this.genericElementGroup.get('genericElement').setValue(value);
+    const val = selectedEle.join(',');
+    this.value = val;
+    this.genericElementGroup.get('genericElement').setValue(val);
   }
   elementChecked(item) {
-    return (this.val ? this.val.split(',').indexOf(item.lineNo) >= 0 : false);
+    return this.val ? this.val.split(',').indexOf(item.lineNo) >= 0 : false;
   }
   selectedAll() {
     for (const ele of this.genericList) {
@@ -87,6 +87,13 @@ export class GenericSelectComponent implements OnInit {
     return this.validateFn(c);
   }
   getSelected(data: any) {
+    data.isChecked = !data.isChecked;
+    this.updateValue();
+    // const val = this.genericList
+    //   .filter((x) => x.isChecked)
+    //   .map((x) => x.lineNo)
+    //   .join(',');
+    // this.genericElementGroup.get('genericElement').setValue(val);
     this.passDataParent.emit(data);
   }
 }

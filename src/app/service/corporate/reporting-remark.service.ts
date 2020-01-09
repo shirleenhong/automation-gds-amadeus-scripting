@@ -10,7 +10,8 @@ import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting-remarks/reporting-remarks.component';
 import { CarSavingsCodeComponent } from 'src/app/corporate/reporting/car-savings-code/car-savings-code.component';
-import {HotelSegmentsComponent} from 'src/app/corporate/reporting/hotel-segments/hotel-segments.component';
+import { HotelSegmentsComponent } from 'src/app/corporate/reporting/hotel-segments/hotel-segments.component';
+import { ObtComponent } from 'src/app/corporate/reporting/obt/obt.component';
 
 @Injectable({
   providedIn: 'root'
@@ -91,8 +92,7 @@ export class ReportingRemarkService {
         }
         if (group.get('chainCode').value) {
           hotels.set('ChainCode', '/-CHN-' + group.get('chainCode').value);
-        }
-        else {
+        } else {
           hotels.set('ChainCode', '');
         }
         this.remarksManager.createPlaceholderValues(hotels);
@@ -102,16 +102,14 @@ export class ReportingRemarkService {
       const reAddHotelRemark = new Map<string, string>();
       reAddHotelRemark.set('HotelDate', rem.date);
       if (rem.savingsCode) {
-        reAddHotelRemark.set('HotelSavings',rem.savingsCode);
+        reAddHotelRemark.set('HotelSavings', rem.savingsCode);
       }
       if (rem.chainCode) {
         reAddHotelRemark.set('ChainCode', '/-CHN-' + rem.chainCode);
-      }
-      else {
+      } else {
         reAddHotelRemark.set('ChainCode', '');
       }
       this.remarksManager.createPlaceholderValues(reAddHotelRemark);
-
     }
   }
   getRemarkSegmentAssociation(segments: string[]): string[] {
@@ -272,12 +270,15 @@ export class ReportingRemarkService {
       }
     }
   }
-  writeEBRemarks(touchReasonForm: FormGroup) {
-    const map = new Map<string, string>();
-    map.set('TouchCode', touchReasonForm.controls.ebR.value);
-    map.set('BookingToolCode', touchReasonForm.controls.ebT.value);
-    map.set('ReasonType', touchReasonForm.controls.ebN.value);
-    map.set('ReasonCode', touchReasonForm.controls.ebC.value);
-    this.remarksManager.createPlaceholderValues(map);
- }
+  writeEBRemarks(obtComponent: ObtComponent) {
+    if (obtComponent.showEBDetails) {
+      const touchReasonForm = obtComponent.obtForm;
+      const map = new Map<string, string>();
+      map.set('TouchCode', touchReasonForm.controls.ebR.value);
+      map.set('BookingToolCode', touchReasonForm.controls.ebT.value);
+      map.set('ReasonType', touchReasonForm.controls.ebN.value);
+      map.set('ReasonCode', touchReasonForm.controls.ebC.value);
+      this.remarksManager.createPlaceholderValues(map);
+    }
+  }
 }

@@ -185,6 +185,38 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 'error'" class="loaderBody">
+  <div class="loader">
+    <div>
+      <button class="leisureButton btnMenu" (click)="initData()">
+        Reload
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="workflow === 'aquaFees'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i> Aqua Fees
+        <i [ngClass]="itinValidModel.ticketingValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-aqua-fees></app-aqua-fees>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="sendIrdRateParameters()">
+        Submit to PNR
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="isPnrLoaded && workflow === ''" class="loaderBody">
   <div class="loader">
     <div>
@@ -217,6 +249,12 @@
         Cancel Segments
       </button>
     </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="aquaFees()">
+        Aqua Fees
+      </button>
+    </div>
+
     <div *ngIf="showIrdRequestButton">
       <button class="leisureButton btnMenu" (click)="irdRateRequest()">
         IRD Rate Request
@@ -225,15 +263,6 @@
   </div>
 </div>
 
-<div *ngIf="workflow === 'error'" class="loaderBody">
-  <div class="loader">
-    <div>
-      <button class="leisureButton btnMenu" (click)="initData()">
-        Reload
-      </button>
-    </div>
-  </div>
-</div>
 <div *ngIf="dataError.hasError">
   <alert type="warning" dismissible="true">
     <div *ngIf="dataError.matching">Unable to Match PNR from PNR Layout</div>

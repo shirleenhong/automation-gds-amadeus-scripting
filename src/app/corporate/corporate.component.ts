@@ -396,7 +396,8 @@ export class CorporateComponent implements OnInit {
 
     remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
-    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks));
+    remarkCollection.push(await this.segmentService.writeOptionalFareRule
+      (this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks));
     remarkCollection.push(
       this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
     );

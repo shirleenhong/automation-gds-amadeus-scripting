@@ -205,7 +205,7 @@ export class LeisureComponent implements OnInit, AfterViewInit, AfterViewChecked
 
     remarkCollection.push(this.paymentRemarkService.GetAccountingUdids(this.paymentComponent.accountingRemark));
     remarkCollection.push(this.visaPassportService.GetRemarks(this.remarkComponent.viewPassportComponent.visaPassportFormGroup));
-    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
+    remarkCollection.push(await this.segmentService.writeOptionalFareRule(this.remarkComponent.fareRuleSegmentComponent.fareRuleRemarks));
     remarkCollection.push(this.otherService.writeConceirgeRemarks());
     remarkCollection.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingView));
     if (!this.pnrService.hasAmendMISRetentionLine()) {

@@ -1084,73 +1084,71 @@ export class SegmentService {
         return passGroup;
     }
 
-
-    writeOptionalFareRule(fareRuleModels: any) {
+    async writeOptionalFareRule(fareRuleModels: any) {
         const rmGroup = new RemarkGroup();
         rmGroup.group = 'Fare Rule';
         rmGroup.remarks = new Array<RemarkModel>();
-        fareRuleModels.forEach(async model => {
-            if (model.fareRuleType !== '') {
-                smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '*');
-                rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
-            } else {
-                const airlineName = await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR');
-                if (airlineName) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark(airlineName + ' FARE INFORMATION', 'RI', 'R'));
-                }
-
-                if (model.isTicketNonRefundable) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
-                }
-
-                if (model.isTicketMinMax) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.',
-                        'RI', 'R'));
-                }
-
-                if (model.isTicketNonRef) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
-                }
-
-                if (model.ticketAmount && model.currencyType) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
-                        model.currencyType + ' NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
-                        'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
-                }
-
-                if (model.nonRefundable) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
-                        + ' PERCENT NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A',
-                        'RI', 'R'));
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
-                }
-
-                if (model.minChangeFee) {
-                    rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
-                        + ' ' + (model.currencyType), 'RI', 'R'));
-                }
-            }
-
-            const segments = this.pnrService.getSegmentList();
-            for (const fg of model.remarkList) {
-                const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
-                remark.relatedSegments = [];
-                const s = model.segmentNo.split(',');
-                s.forEach(x => {
-                    const tat = segments.find(z => z.lineNo === x);
-                    if (tat) {
-                        remark.relatedSegments.push(tat.tatooNo);
-                    }
-                });
-                rmGroup.remarks.push(remark);
-            }
-        });
-
+        await this.writeFareRules(fareRuleModels, rmGroup);
         return rmGroup;
+    }
+
+    async writeFareRules(fareRuleModels: any, rmGroup: RemarkGroup) {
+        for (const model of fareRuleModels) {
+            // const airlineName = await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR');
+            await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR').then((airlineName) => {
+                if (model.fareRuleType !== '') {
+                    smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                    rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
+                } else {
+                    if (airlineName) {
+                        rmGroup.remarks.push(this.remarkHelper.createRemark(airlineName + ' FARE INFORMATION', 'RI', 'R'));
+                    }
+                    if (model.isTicketNonRefundable) {
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
+                    }
+                    if (model.isTicketMinMax) {
+                        // tslint:disable-next-line:max-line-length
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 'RI', 'R'));
+                    }
+                    if (model.isTicketNonRef) {
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
+                    }
+                    if (model.ticketAmount && model.currencyType) {
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.ticketAmount + ' ' +
+                            model.currencyType + ' NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                        rmGroup.remarks.push
+                            (this.remarkHelper.createRemark('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                    }
+                    if (model.nonRefundable) {
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('YOUR TICKET IS ' + model.nonRefundable
+                            + ' PERCENT NON-REFUNDABLE IF CANCELLED.', 'RI', 'R'));
+                        rmGroup.remarks.push(this.remarkHelper.createRemark
+                            ('SOME CHANGES ARE ALLOWED UNDER RESTRICTIVE CONDITIONS FOR A', 'RI', 'R'));
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('CHANGE FEE AND/OR POSSIBLE INCREASE IN FARE.', 'RI', 'R'));
+                    }
+                    if (model.minChangeFee) {
+                        rmGroup.remarks.push(this.remarkHelper.createRemark('THE MINIMUM CHANGE FEE IS ' + model.minChangeFee
+                            + ' ' + (model.currencyType), 'RI', 'R'));
+                    }
+                }
+                const segments = this.pnrService.getSegmentList();
+                for (const fg of model.remarkList) {
+                    const remark = this.remarkHelper.createRemark(fg, 'RI', 'R');
+                    remark.relatedSegments = [];
+                    const s = model.segmentNo.split(',');
+                    s.forEach(x => {
+                        const tat = segments.find(z => z.lineNo === x);
+                        if (tat) {
+                            remark.relatedSegments.push(tat.tatooNo);
+                        }
+                    });
+                    rmGroup.remarks.push(remark);
+                }
+            });
+        }
+
     }
 
     writeRefundRemarks(refund: FormGroup) {

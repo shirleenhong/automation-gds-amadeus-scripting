@@ -5,7 +5,7 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { PnrService } from '../pnr.service';
 import { ControlConditionModel } from 'src/app/models/business-rules/control-condition.model';
-import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
+// import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
 import { WriteConditionModel } from 'src/app/models/business-rules/write-condition.model';
 import { RulesReaderService } from './rules-reader.service';
 
@@ -169,16 +169,16 @@ export class RuleWriterService {
   checkEntity(entity, logicValue, operator: string) {
     if (entity) {
       entity = entity.toLowerCase();
-      switch (RuleLogicEnum[operator]) {
-        case RuleLogicEnum.IS:
+      switch (operator) {
+        case 'IS':
           return entity === logicValue;
-        case RuleLogicEnum.CONTAINS:
+        case 'CONTAINS':
           return entity.indexOf(logicValue) >= 0;
-        case RuleLogicEnum.IS_NOT:
+        case 'IS NOT':
           return entity !== logicValue;
-        case RuleLogicEnum.NOT_IN:
+        case 'NOT IN':
           return logicValue.split('|').indexOf(entity) === -1;
-        case RuleLogicEnum.IN:
+        case 'IN':
           return logicValue.split('|').indexOf(entity) >= 0;
       }
     }

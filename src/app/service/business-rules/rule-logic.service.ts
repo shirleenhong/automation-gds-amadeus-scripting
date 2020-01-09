@@ -49,7 +49,7 @@ export class RulesLogicService {
         case '<=':
           ruleLogic = Number(entity) <= Number(logicValue);
           break;
-        case 'BETWEEN':
+        case 'NOT BETWEEN':
           const rulelogic = logicValue.split('|');
           if (rulelogic && rulelogic.length > 1) {
             ruleLogic = !(rulelogic[0] <= entity && entity <= rulelogic[1]);

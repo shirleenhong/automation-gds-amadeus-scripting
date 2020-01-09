@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RuleLogic } from 'src/app/models/business-rules/rule-logic.model';
-import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
+// import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class RulesLogicService {
       entities = entityName.toString().split('\n');
     } else {
       // return true if the logic is negative
-      return [RuleLogicEnum.IS_NOT, RuleLogicEnum.NOT_CONTAINS, RuleLogicEnum.NOT_IN].indexOf(logic.relationalOperatorId) >= 0;
+      return ['IS NOT', 'NOT CONTAINS', 'NOT IN'].indexOf(logic.relationalOperatorName) >= 0;
     }
 
     for (let entity of entities) {
@@ -24,32 +24,32 @@ export class RulesLogicService {
         entity = entity.toUpperCase();
       }
       const logicValue = logic.logicItemValue.toUpperCase();
-      switch (logic.relationalOperatorId) {
-        case RuleLogicEnum.IS:
+      switch (logic.relationalOperatorName) {
+        case 'IS':
           ruleLogic = entity === logicValue;
           break;
-        case RuleLogicEnum.CONTAINS:
+        case 'CONTAINS':
           ruleLogic = entity.indexOf(logicValue) >= 0;
           break;
-        case RuleLogicEnum.NOT_CONTAINS:
+        case 'NOT CONTAINS':
           ruleLogic = entity.indexOf(logicValue) === -1;
           break;
-        case RuleLogicEnum.IS_NOT:
+        case 'IS NOT':
           ruleLogic = entity !== logicValue;
           break;
-        case RuleLogicEnum.NOT_IN:
+        case 'NOT IN':
           ruleLogic = logicValue.split('|').indexOf(entity) === -1;
           break;
-        case RuleLogicEnum.IN:
+        case 'IN':
           ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
           break;
-        case RuleLogicEnum.GREATER_THAN_EQUAL:
+        case '>=':
           ruleLogic = Number(logicValue) >= Number(entity);
           break;
-        case RuleLogicEnum.LESS_THAN_EQUAL:
+        case '<=':
           ruleLogic = Number(entity) <= Number(logicValue);
           break;
-        case RuleLogicEnum.NOT_BETWEEN:
+        case 'BETWEEN':
           const rulelogic = logicValue.split('|');
           if (rulelogic && rulelogic.length > 1) {
             ruleLogic = !(rulelogic[0] <= entity && entity <= rulelogic[1]);

@@ -115,19 +115,19 @@ export class FeesRemarkService {
       } else {
         route = 'TD';
       }
-      return feeType + route;
     } else if (ebRemark.indexOf('EB/EB') >= 0) {
       if (feeType === 'A' || feeType === 'R') {
         route = 'TE';
-      } else if (feeType === 'C' && feeType === 'H') {
+      } else if (feeType === 'C' || feeType === 'H') {
         route = 'BE';
       }
     } else if (ebRemark.indexOf('EB/AM') >= 0) {
       if (feeType === 'A' || feeType === 'R') {
         route = 'TA';
-      } else if (feeType === 'C' && feeType === 'H') {
+      } else if (feeType === 'C' || feeType === 'H') {
         route = 'BA';
       }
     }
+    return feeType + route;
   }
 }

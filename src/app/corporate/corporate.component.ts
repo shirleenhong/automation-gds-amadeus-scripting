@@ -46,6 +46,7 @@ import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
+import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -84,6 +85,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
   @ViewChild(PricingComponent) pricingComponent: PricingComponent;
+  @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -618,6 +620,38 @@ export class CorporateComponent implements OnInit {
       this.closePopup();
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async sendAquaFees() {
+    if (this.isPnrLoaded) {
+      // if (!this.sendInvoiceItineraryComponent.checkValid()) {
+      //   const modalRef = this.modalService.show(MessageComponent, {
+      //     backdrop: 'static'
+      //   });
+      //   modalRef.content.modalRef = modalRef;
+      //   modalRef.content.title = 'Invalid Inputs';
+      //   modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      //   return;
+      // }
+      this.showLoading('Sending Aqua Fees...');
+      if (this.aquaFeesComponent.obtComponent) {
+        this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);
+      }
+      this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+
+      await this.rms.submitToPnr(null, null).then(
+        () => {
+          this.isPnrLoaded = false;
+          this.workflow = '';
+          this.getPnr();
+          this.closePopup();
+        },
+        (error) => {
+          console.log(JSON.stringify(error));
+          this.workflow = '';
+        }
+      );
     }
   }
 

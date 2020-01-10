@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
+import { ObtComponent } from '../../reporting/obt/obt.component';
+import { DDBService } from 'src/app/service/ddb.service';
 
 @Component({
   selector: 'app-aqua-fees',
@@ -11,11 +13,18 @@ export class AquaFeesComponent implements OnInit {
   aquaFeeForm: FormGroup;
   segmentList: Array<any>;
   hasPFS = false;
-  constructor(private pnrService: PnrService) {}
+  showAquaFee = false;
+  @ViewChild(ObtComponent) obtComponent: ObtComponent;
+  constructor(private pnrService: PnrService, private ddbService: DDBService) {}
 
   ngOnInit() {
     this.segmentList = new Array<any>();
     this.hasPFS = this.pnrService.getRemarkLineNumber('MAC/-SUP-PFS') !== '';
+    this.aquaFeeForm = new FormGroup({
+      feeType: new FormControl('', [Validators.required]),
+      segments: new FormControl('')
+    });
+    this.checkValidForAquaFee();
   }
 
   selectFeeType(val) {
@@ -49,5 +58,10 @@ export class AquaFeesComponent implements OnInit {
           this.segmentList.push(selectAllObj);
         });
     }
+  }
+  async checkValidForAquaFee() {
+    const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
+    const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+    this.showAquaFee = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
   }
 }

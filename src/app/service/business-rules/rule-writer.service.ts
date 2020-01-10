@@ -174,9 +174,9 @@ export class RuleWriterService {
           return entity === logicValue;
         case 'CONTAINS':
           return entity.indexOf(logicValue) >= 0;
-        case 'IS NOT':
+        case 'IS_NOT':
           return entity !== logicValue;
-        case 'NOT IN':
+        case 'NOT_IN':
           return logicValue.split('|').indexOf(entity) === -1;
         case 'IN':
           return logicValue.split('|').indexOf(entity) >= 0;

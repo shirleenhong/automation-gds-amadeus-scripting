@@ -26,9 +26,9 @@ export class DDBService implements OnInit {
   approvalList = Array<ApprovalItem>();
   airMissedSavingPolicyThresholds = Array<PolicyAirMissedSavingThreshold>();
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService, private pnrService: PnrService) { }
+  constructor(private httpClient: HttpClient, private staticValues: StaticValuesService, private pnrService: PnrService) {}
 
   async getToken() {
     if (this.isTokenExpired) {
@@ -213,6 +213,9 @@ export class DDBService implements OnInit {
 
   async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
     const reasonCodeList = [];
+    if (productID === undefined) {
+      productID = 8; // ALL
+    }
     for (const id of ids) {
       await this.getReasonCodeByClientSubUnit(
         this.pnrService.getClientSubUnit(),
@@ -462,11 +465,11 @@ export class DDBService implements OnInit {
   getClientDefinedBusinessRules(clientSubUnitGuid: string, clientAccountNumber: string) {
     return this.getRequest(
       common.businessRules +
-      '?ClientAccountNumber=' +
-      clientAccountNumber +
-      '&ClientSubUnitGuid=' +
-      clientSubUnitGuid +
-      '&SourceSystemCode=CA1'
+        '?ClientAccountNumber=' +
+        clientAccountNumber +
+        '&ClientSubUnitGuid=' +
+        clientSubUnitGuid +
+        '&SourceSystemCode=CA1'
     );
   }
 }

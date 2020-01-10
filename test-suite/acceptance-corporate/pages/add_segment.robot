@@ -144,8 +144,8 @@ Add Passive Hotel Segment ${with_optional} Values On Optional Fields
     Select From List By Label    ${select_segment_type}    Hotel
     Enter Value    ${input_chain_code_passive}    HI
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    02102021
-    Input Text     ${input_arrival_date}    02132021
+    Input Text    ${input_departure_date}    10102020
+    Input Text     ${input_arrival_date}    10132020
     Enter Value    ${input_policyNo}    24HRS
     Enter Value    ${input_nightly_rate}     100.00   
     Enter Value    ${input_rate_type}     hotel
@@ -185,8 +185,8 @@ Add Passive Hotel Segment ${with_optional} Hotel Details Input
     Select From List By Label    ${select_segment_type}    Hotel
     Enter Value    ${input_chain_code_passive}    AC
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    02102021
-    Input Text     ${input_arrival_date}    02132021
+    Input Text    ${input_departure_date}    10102020
+    Input Text     ${input_arrival_date}    10132020
     Enter Value    ${input_policyNo}    24HRS
     Enter Value    ${input_nightly_rate}     100.00   
     Enter Value    ${input_rate_type}     hotel
@@ -220,8 +220,8 @@ Verify Hotel Segment And RIR Remarks Are Written In The PNR
     Verify Hotel Mandatory Matrix Remark Is Written In The PNR
 
 Verify Hotel Passive Segment Is Written
-    Run Keyword If    "${with_optional}" == "With"     Verify Specific Remark Is Written In The PNR    HTL 1A HK1 YYZ 10FEB-13FEB/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12345678,DOUBLE ROOM,RATE:HOTEL CAD100.00/NIGHT,SI-HOTEL ADDITIONAL INFO    True
-    ...  ELSE    Verify Specific Remark Is Written In The PNR    HTL 1A HK1 YYZ 10FEB-13FEB/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12345678,RATE:HOTEL CAD100.00/NIGHT    True
+    Run Keyword If    "${with_optional}" == "With"     Verify Specific Remark Is Written In The PNR    HTL 1A HK1 YYZ 10OCT-13OCT/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12345678,DOUBLE ROOM,RATE:HOTEL CAD100.00/NIGHT,SI-HOTEL ADDITIONAL INFO    True
+    ...  ELSE    Verify Specific Remark Is Written In The PNR    HTL 1A HK1 YYZ 10OCT-13OCT/${hotel_city},${hotel_name} ,TEL-${hotel_phone} ,FAX-${hotel_fax},CF:CF12345678,RATE:HOTEL CAD100.00/NIGHT    True
 
 Verify Hotel Passive RIR Remarks Are Written
     Verify Specific Remark Is Written In The PNR    RIR ADDRESS-${hotel_address}/S2   
@@ -233,7 +233,7 @@ Verify Hotel Passive RIR Remarks Are Written
     Run Keyword If    "${with_optional}" == "With"     Verify Specific Remark Is Written In The PNR    RIR ADDITONAL INFORMATION - HOTEL ADDITIONAL INFO/S2
 
 Verify Hotel Mandatory Matrix Remark Is Written In The PNR   
-    Run Keyword If    "${is_manual_entered}" == "no"    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-HI    ELSE    Verify Specific Remark Is Written In The PNR    RM *HS10FEB/-CHN-AC
+    Run Keyword If    "${is_manual_entered}" == "no"    Verify Specific Remark Is Written In The PNR    RM *HS10OCT/-CHN-HI    ELSE    Verify Specific Remark Is Written In The PNR    RM *HS10OCT/-CHN-AC
 	
 Add Passive Tour Segment ${with_optional} Optional Values
     Navigate To Page Add Passive Segment
@@ -242,8 +242,8 @@ Add Passive Tour Segment ${with_optional} Optional Values
     Enter Value    ${input_confirmationNo}     cf12345678
     Enter Value    ${input_departure_city}    YUL
     Enter Value    ${input_destination_city}    CDG  
-    Input Text    ${input_departure_date}    04022020
-    Input Text    ${input_arrival_date}    04032020
+    Input Text    ${input_departure_date}    10022020
+    Input Text    ${input_arrival_date}    10032020
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_tour_name}     Tour Name Test
@@ -260,8 +260,8 @@ Add Multiple Passive Tour Segments
     Enter Value    ${input_confirmationNo}     cf12345678
     Enter Value    ${input_departure_city}    YUL
     Enter Value    ${input_destination_city}    CDG  
-    Input Text    ${input_departure_date}    04022021
-    Input Text    ${input_arrival_date}    04032021
+    Input Text    ${input_departure_date}    10022020
+    Input Text    ${input_arrival_date}    10032020
     Enter Value    ${input_departure_time}    0330PM
     Enter Value    ${input_arrival_time}    0515PM
     Enter Value    ${input_tour_name}     Tour Name Test
@@ -275,8 +275,8 @@ Add Multiple Passive Tour Segments
     Enter Value    ${input_confirmationNo}     cf98765432
     Enter Value    ${input_departure_city}    CDG
     Enter Value    ${input_destination_city}    LHR  
-    Input Text    ${input_departure_date}    04102021
-    Input Text    ${input_arrival_date}    04132021
+    Input Text    ${input_departure_date}    10102020
+    Input Text    ${input_arrival_date}    10132020
     Enter Value    ${input_departure_time}    1230PM
     Enter Value    ${input_arrival_time}    1115PM
     Enter Value    ${input_tour_name}     2nd Tour
@@ -297,7 +297,7 @@ Select Passenger
 Verify Passive Tour Segment And RIR Remarks Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 YUL 02APR-/TYP-TOR/SUN-ADAMS & BUTLER TOUR NAME TEST/SUC-AB6/SC-YUL/SD-02APR/ST-1530/EC-CDG/ED-03APR/ET-1715/CF-CF12345678    True
+    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 YUL 02OCT-/TYP-TOR/SUN-ADAMS & BUTLER TOUR NAME TEST/SUC-AB6/SC-YUL/SD-02OCT/ST-1530/EC-CDG/ED-03OCT/ET-1715/CF-CF12345678    True
     Run Keyword If    "${with_optional}" == "With"   Verify Passive Tour RIR Remarks Is Written In The PNR     RIR DBLB ALL INCLUSIVE 1 NTS/S2   ELSE    Verify Passive Tour RIR Remarks Is Written In The PNR     RIR 1 NTS/S2
     
 Verify Passive Tour Segment Is Added In The PNR
@@ -312,8 +312,8 @@ Verify Passive Tour RIR Remarks Is Written In The PNR
 Verify Multiple Passive Tour Segment And RIR Remarks Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details  
-    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 YUL 02APR-/TYP-TOR/SUN-ADAMS & BUTLER TOUR NAME TEST/SUC-AB6/SC-YUL/SD-02APR/ST-1530/EC-CDG/ED-03APR/ET-1715/CF-CF12345678/P1    True
-    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 CDG 10APR-/TYP-TOR/SUN-ABERCROMBIE & KENT 2ND TOUR/SUC-AO2/SC-CDG/SD-10APR/ST-1230/EC-LHR/ED-13APR/ET-2315/CF-CF98765432/P2    True 
+    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 YUL 02OCT-/TYP-TOR/SUN-ADAMS & BUTLER TOUR NAME TEST/SUC-AB6/SC-YUL/SD-02OCT/ST-1530/EC-CDG/ED-03OCT/ET-1715/CF-CF12345678/P1    True
+    Verify Passive Tour Segment Is Added In The PNR    MIS 1A HK1 CDG 10OCT-/TYP-TOR/SUN-ABERCROMBIE & KENT 2ND TOUR/SUC-AO2/SC-CDG/SD-10OCT/ST-1230/EC-LHR/ED-13OCT/ET-2315/CF-CF98765432/P2    True 
     Verify Passive Tour RIR Remarks Is Written In The PNR     RIR DBLB ALL INCLUSIVE 1 NTS/S3     RIR TRPL AMERICAN PLAN 3 NTS/S4
 
 Add Multiple Passive Rail Segment For EN PNR
@@ -326,8 +326,8 @@ Add Multiple Passive Rail Segment For EN PNR
     Enter Value    ${input_car_number}    C123
     Enter Value    ${input_seat_number}    S123
     Enter Value    ${input_departure_city}    YUL
-    Input Text    ${input_departure_date}    01102021
-    Input Text    ${input_arrival_date}    01112021
+    Input Text    ${input_departure_date}    10102020
+    Input Text    ${input_arrival_date}    10112020
     Enter Value    ${input_departure_time}    0200AM
     Enter Value    ${input_arrival_time}    0500AM
     Enter Value    ${input_vendor_code}    AAA
@@ -345,8 +345,8 @@ Add Multiple Passive Rail Segment For EN PNR
     Enter Value    ${input_arrival_station}    2nd Arrival Station
     Enter Value    ${input_seat_number}    S123
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    01152021
-    Input Text    ${input_arrival_date}    01162021
+    Input Text    ${input_departure_date}    10152020
+    Input Text    ${input_arrival_date}    10162020
     Enter Value    ${input_departure_time}    1200PM
     Enter Value    ${input_arrival_time}    0500PM
     Enter Value    ${input_vendor_code}    VIR
@@ -365,8 +365,8 @@ Add Multiple Passive Rail Segment For FR PNR
     Enter Value    ${input_car_number}    C456
     Enter Value    ${input_seat_number}    S654
     Enter Value    ${input_departure_city}    YUL
-    Input Text    ${input_departure_date}    01102021
-    Input Text    ${input_arrival_date}    01112021
+    Input Text    ${input_departure_date}    10102020
+    Input Text    ${input_arrival_date}    10112020
     Enter Value    ${input_departure_time}    0200AM
     Enter Value    ${input_arrival_time}    0500AM
     Enter Value    ${input_vendor_code}    AMK
@@ -383,8 +383,8 @@ Add Multiple Passive Rail Segment For FR PNR
     Enter Value    ${input_arrival_station}    2nd Arrival Station
     Enter Value    ${input_seat_number}    S123
     Enter Value    ${input_departure_city}    YYZ
-    Input Text    ${input_departure_date}    01152021
-    Input Text    ${input_arrival_date}    01162021
+    Input Text    ${input_departure_date}    10152020
+    Input Text    ${input_arrival_date}    10162020
     Enter Value    ${input_departure_time}    1200PM
     Enter Value    ${input_arrival_time}    0500PM
     Enter Value    ${input_vendor_code}    VIR
@@ -396,10 +396,10 @@ Add Multiple Passive Rail Segment For FR PNR
 Verify Passive Rail Segment And RIR Added In The PNR For EN
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10JAN-/TYP-TRN/SUN-SUPPLIER NAME TEST/SUC-AAA/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10OCT-/TYP-TRN/SUN-SUPPLIER NAME TEST/SUC-AAA/SC-FROM STATION TEST/SD-10OCT/ST-0200/EC-ARRIVAL STATION TEST/ED-11OCT/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C123 SEAT NUMBER-S123/S2
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15JAN-/TYP-TRN/SUN-VIR REMARKS/SUC-VIR/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15OCT-/TYP-TRN/SUN-VIR REMARKS/SUC-VIR/SC-2ND FROM STATION/SD-15OCT/ST-1200/EC-2ND ARRIVAL STATION/ED-16OCT/ET-1700/CF-CONF12345    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR245 CLASS-CL22222/S3
     Verify Specific Remark Is Written In The PNR    RIR SEAT NUMBER-S123/S3
     Verify Rail RIR Remarks For VIR Supplier Are Written In the PNR    3    EN
@@ -407,10 +407,10 @@ Verify Passive Rail Segment And RIR Added In The PNR For EN
 Verify Passive Rail Segment And RIR Added In The PNR For FR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10JAN-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10JAN/ST-0200/EC-ARRIVAL STATION TEST/ED-11JAN/ET-0500/CF-CN12345678    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YUL 10OCT-/TYP-TRN/SUN-AMTRAK/SUC-AMK/SC-FROM STATION TEST/SD-10OCT/ST-0200/EC-ARRIVAL STATION TEST/ED-11OCT/ET-0500/CF-CN12345678    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR123 CLASS-CL12345/S2
     Verify Specific Remark Is Written In The PNR    RIR CAR-C456 SEAT NUMBER-S654/S2
-    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15JAN-/TYP-TRN/SUN-VIR REMARKS/SUC-VIR/SC-2ND FROM STATION/SD-15JAN/ST-1200/EC-2ND ARRIVAL STATION/ED-16JAN/ET-1700/CF-CONF12345    True
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ 15OCT-/TYP-TRN/SUN-VIR REMARKS/SUC-VIR/SC-2ND FROM STATION/SD-15OCT/ST-1200/EC-2ND ARRIVAL STATION/ED-16OCT/ET-1700/CF-CONF12345    True
     Verify Specific Remark Is Written In The PNR    RIR TRAIN NUMBER-TR254 CLASS-CL22222/S3
     Verify Specific Remark Is Written In The PNR    RIR SEAT NUMBER-S123/S3
     Verify Rail RIR Remarks For AMK Supplier Are Written In the PNR    2
@@ -479,8 +479,8 @@ Add Passive Car Segment ${with_optional} Optional Values
 	Select From List By Label    ${select_pickup_address}    YYTC54 - 79 KENMOUNT ROAD A1B3P8 ST
 	Select From List By Label    ${select_dropoff_location}    AIRPORT
     Press Key    ${select_dropoff_location}    TAB
-	Input Text    ${input_departure_date}    01222021
-	Input Text    ${input_arrival_date}    01232021
+	Input Text    ${input_departure_date}    10222020
+	Input Text    ${input_arrival_date}    10232020
 	Enter Value    ${input_departure_time}    1100AM
 	Enter Value    ${input_arrival_time}    0200AM
 	Enter Value    ${input_rental_cost}    210.55
@@ -503,7 +503,7 @@ Add Passive Car Segment ${with_optional} Optional Values
 Verify Passive Car Segment And RIR Remarks Are Written In The PNR
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22OCT-23OCT PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22OCT/ST-1100/ED-23OCT/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555    True
     Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S2
     Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR DROP FEE-212.00/S2
     Run Keyword If    "${with_optional}" == "With"    Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S2
@@ -537,8 +537,8 @@ Add Multiple Passive Car Segment
 	Select From List By Label    ${select_pickup_address}    YYTC54 - 79 KENMOUNT ROAD A1B3P8 ST
 	Select From List By Label    ${select_dropoff_location}    AIRPORT
     Press Key    ${select_dropoff_location}    TAB
-	Input Text    ${input_departure_date}    01222021
-	Input Text    ${input_arrival_date}    01232021
+	Input Text    ${input_departure_date}    10222020
+	Input Text    ${input_arrival_date}    10232020
 	Enter Value    ${input_departure_time}    1100AM
 	Enter Value    ${input_arrival_time}    0200AM
 	Enter Value    ${input_rental_cost}    210.55
@@ -572,8 +572,8 @@ Add Multiple Passive Car Segment
     Press Keys    ${select_pickup_location}    TAB
 	Select From List By Label    ${select_dropoff_location}    AIRPORT
     Press Key    ${select_dropoff_location}    TAB
-	Input Text    ${input_departure_date}    01102021
-	Input Text    ${input_arrival_date}    01152021
+	Input Text    ${input_departure_date}    10102020
+	Input Text    ${input_arrival_date}    10152020
 	Enter Value    ${input_departure_time}    0715AM
 	Enter Value    ${input_arrival_time}    0530PM
 	Enter Value    ${input_rental_cost}    221.10
@@ -593,14 +593,14 @@ Verify Multiple Passive Car Segment And RIR Remarks Are Written In The PNR
     Click Add Segment to PNR    yes
     Switch To Graphic Mode
     Get PNR Details
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22JAN-23JAN PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22JAN/ST-1100/ED-23JAN/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555/P1    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YYT 22OCT-23OCT PCAR/BS-67843263/SUC-ET/SUN-ENTERPRISE/SD-22OCT/ST-1100/ED-23OCT/ET-0200/TTL-210.55USD/DUR-WEEKLY/MI-UNLKM/URA-100.00USD/CF-CONF555555/P1    True
     Verify Specific Remark Is Written In The PNR    RIR PICK UP-79 KENMOUNT ROAD A1B3P8 ST/S4
     Verify Specific Remark Is Written In The PNR    RIR DROP FEE-212.00/S4
     Verify Specific Remark Is Written In The PNR    RIR CD-CD123456 ID-ID789123/S4
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE FF-AC987654321/S4
     Verify Specific Remark Is Written In The PNR    RIR HCL-HAND CONTROLS ON LEFT/S4
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST TESTING/S4
-    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YUL 10JAN-15JAN FFAR/BS-67843263/SUC-ZL/SUN-NATIONAL/SD-10JAN/ST-0715/ED-15JAN/ET-1730/TTL-221.10USD/DUR-WEEKEND/MI-200FKM FREE/URA-201.23USD/CF-CONF12345/P1    True
+    Verify Specific Remark Is Written In The PNR    CAR 1A HK1 YUL 10OCT-15OCT FFAR/BS-67843263/SUC-ZL/SUN-NATIONAL/SD-10OCT/ST-0715/ED-15OCT/ET-1730/TTL-221.10USD/DUR-WEEKEND/MI-200FKM FREE/URA-201.23USD/CF-CONF12345/P1    True
     Verify Specific Remark Is Written In The PNR    RIR DROP FEE-111.22/S3
     Verify Specific Remark Is Written In The PNR    RIR SPECIAL REQUEST FROM HPF/S3
     Verify Specific Remark Is Written In The PNR    RIR CD-CD221B12 ID-789123ID/S3

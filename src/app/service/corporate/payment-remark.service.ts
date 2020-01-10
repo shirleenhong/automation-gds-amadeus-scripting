@@ -233,7 +233,6 @@ export class PaymentRemarkService {
   }
 
   writePassPurchase(accountingRemarks: MatrixAccountingModel[]) {
-    debugger;
     accountingRemarks.forEach((account) => {
       const paymentRemark = new Map<string, string>();
       const airlineCodeRemark = new Map<string, string>();
@@ -614,7 +613,6 @@ export class PaymentRemarkService {
   }
 
   writeNonBspApay(accountingRemarks: MatrixAccountingModel[]) {
-    debugger;
     const totalcostlist = [];
     let hasApay: boolean;
     hasApay = false;

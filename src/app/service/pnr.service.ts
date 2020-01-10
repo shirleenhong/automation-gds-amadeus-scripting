@@ -591,14 +591,22 @@ export class PnrService {
             elemdepdate = fullnodetemp.product.depDate;
             arrivalDate = fullnodetemp.product.arrDate;
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
-            elemVendorCode = this.getVendorCodeForPassiveCar(elem.fullNode.itineraryFreetext.longFreetext);
+            let longText = '';
+            if (elem.fullNode.itineraryFreetext) {
+            longText = elem.fullNode.itineraryFreetext.longFreetext;
+            } else if (this.pnrObj.miscSegments.fullNode) {
+
+            longText = this.pnrObj.miscSegments.fullNode.itineraryFreetext.longFreetext;
+            }
+            elemVendorCode = this.getVendorCodeForPassiveCar(longText);
             if (type !== 'HHL') {
-                flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+                flongtext = longText;
                 // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
                 // passiveType = 'TYP-HHL';
             }
+
             hotelChainCode = elem.chainCode ? elem.chainCode : '';
         }
 

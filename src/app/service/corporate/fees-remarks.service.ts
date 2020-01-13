@@ -105,7 +105,7 @@ export class FeesRemarkService {
   }
 
   private getFeeCode(feeType) {
-    const ebRemark = this.pnrService.getRemarkText('EB/');
+    const ebRemark = this.pnrService.getRemarkText('EB/-');
     let route = '';
     if (ebRemark === '') {
       if (this.ddbService.isPnrTransBorder()) {
@@ -115,13 +115,13 @@ export class FeesRemarkService {
       } else {
         route = 'TD';
       }
-    } else if (ebRemark.indexOf('EB/EB') >= 0) {
+    } else if (ebRemark.indexOf('EB/-EB') >= 0) {
       if (feeType === 'A' || feeType === 'R') {
         route = 'TE';
       } else if (feeType === 'C' || feeType === 'H') {
         route = 'BE';
       }
-    } else if (ebRemark.indexOf('EB/AM') >= 0) {
+    } else if (ebRemark.indexOf('EB/-AM') >= 0) {
       if (feeType === 'A' || feeType === 'R') {
         route = 'TA';
       } else if (feeType === 'C' || feeType === 'H') {

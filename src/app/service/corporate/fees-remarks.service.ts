@@ -94,6 +94,13 @@ export class FeesRemarkService {
     if (this.pnrService.getRemarkLineNumbers('MAC/-SUP-PFS').length !== 1) {
       this.remarksManager.createEmptyPlaceHolderValue(['MacLinePlaceholder'], null, 'MAC');
     }
+
+    /// DELETE REMARKS
+    this.remarksManager.createEmptyPlaceHolderValue([], null, 'NUC');
+    this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue'], null, 'OVERRIDE');
+    this.remarksManager.createEmptyPlaceHolderValue(['FeesPlaceholder'], null, 'FEE');
+    this.remarksManager.createEmptyPlaceHolderValue(['SfcPlaceholder'], null, 'SFC');
+
     const feeType = comp.aquaFeeForm.get('feeType').value;
 
     const feeCode = this.getFeeCode(feeType);
@@ -107,7 +114,10 @@ export class FeesRemarkService {
   private getFeeCode(feeType) {
     const ebRemark = this.pnrService.getRemarkText('EB/-');
     let route = '';
-    if (ebRemark === '') {
+
+    if (feeType === 'L') {
+      route = 'BD';
+    } else if (ebRemark === '') {
       if (this.ddbService.isPnrTransBorder()) {
         route = 'TB';
       } else if (this.ddbService.isPnrDomestic()) {

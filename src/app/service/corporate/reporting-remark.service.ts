@@ -271,8 +271,8 @@ export class ReportingRemarkService {
     }
   }
   writeEBRemarks(obtComponent: ObtComponent) {
-    if (obtComponent.showEBDetails) {
-      const touchReasonForm = obtComponent.obtForm;
+    const touchReasonForm = obtComponent.obtForm;
+    if (obtComponent.showEBDetails && touchReasonForm.controls.ebR.value) {
       const map = new Map<string, string>();
       map.set('TouchLevel', touchReasonForm.controls.ebR.value);
       map.set('OBTVendorCode', touchReasonForm.controls.ebT.value);

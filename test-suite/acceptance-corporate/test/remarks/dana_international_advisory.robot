@@ -11,7 +11,7 @@ ${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSP
 
 *** Test Cases ***
 Verify Verbiage In Visa And Passport When CFA Is QR2 And Flight Is International
-    [tags]    us15241
+    [tags]    us15241    sanity_test    not_ready
     Create PNR With Active Air Segments For Client Dana, International Flight 
     Verify Dana International Advisory Is Displayed
     

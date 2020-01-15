@@ -21,7 +21,7 @@ ${test_file_name}    exchanges_service_funds
 
 *** Test Cases ***
 Verify that Correct Remarks Are Written In the PNR For AC Exchange And Service Funds PNR
-    [Tags]    us14227
+    [Tags]    us14227    sanity_test
     Create PNR With Active Air Segments For Client Air Canada, with Exchange Single Ticket
     Create Single Ticket and Exchange the PNR base on 1
     Fill Up Exhange Endorsements For Airline Code AC

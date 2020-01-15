@@ -16,7 +16,7 @@ ${test_file_name}    cwt_itinerary
 
 *** Test Cases ***
 Verify That CWT Itinerary Remarks Are Written When There Are No Air Passive Segment
-    [Tags]    us9901    us15240    us15702
+    [Tags]    us9901    us15240    us15702    sanity_test
     Create PNR For CWT Itinerary, Hotel And Car Only
     Complete The PNR With Default Values
     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type

@@ -3,7 +3,7 @@ Force Tags        corp
 Library           String
 Resource          ../../pages/base.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance
-Test Teardown    Close All Browsers   
+#Test Teardown    Close All Browsers   
 
 *** Variables ***
 ${test_file_name}    cdr_per_pnr
@@ -41,6 +41,22 @@ ${list_bookingAdvance}    //select[@name='bookAdvance']
 ${input_approverInfo}    //input[@name='approverInfo']
 ${list_advanceBooking}    css=#advanceBooking
 ${list_booking_within_14d}    css=#bookReason
+${input_amei}    css=#amei
+${list_whyLessThanDays}    //select[@name='whyLessThanDays']
+${list_authorizer}    //select[@name='authorizer']
+${list_noHotelReason}    //select[@name='noHotelReason']
+${input_exceptionApprover}     //input[@name='exceptionApprover']
+${input_businessClassApproval}    //input[@name='businessClassApproval']
+${input_authorizationNo}    //input[@name='authorizationNo']
+${list_businessClassApprover}    //select[@name='businessClassApprover']
+${list_bookedLessFourteen}     //select[@name='bookedLessFourteen']
+${input_moxieId}    //input[@name='moxieId']
+${input_destinationUdid}    //input[@name='destinationUdid']
+${input_approvelEmail}    //input[@name='approvelEmail']
+${list_advanceDaysReason}     //select[@name='advanceDaysReason']
+${input_authorizer}    //input[@name='authorizer']
+${input_btaReasonUsage}    //input[@name='btaReasonUsage']
+${input_employeeId}    //input[@name='employeeId']
 
 *** Test Cases ***
 Verify UDID Remarks Are Added For Client Alstom
@@ -60,6 +76,18 @@ Verify UDID Remarks Are Not Added For Client American Tire Distributer When U50 
     Create PNR With Active Air Segments For American Tire Distributers, U50 Is VIP
     Complete The PNR In Full Wrap
     Verify Remarks Are Not Found In The PNR
+    
+Verify UDID Remarks Are Added For Client Aramark When Reason Is Booked Greater Than 14 Days
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Aramark, Booked Greater Than 14 Days
+    Select Reason Why Booked Less Than 14 Days: Booked greater than 14days
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client Arcelormittal
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Arcelormittal
+    Fill Up UDID Values For Client Arcelormittal
+    Verify Remarks Are Added Correctly In The PNR
 
 Verify UDID Remarks Are Added For Client Bacardi
     [Tags]    us15251
@@ -80,7 +108,7 @@ Verify UDID Remarks Are Added For Client Bimbo With CFA F3O
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client Bimbo With CFA F1Y
-    [Tags]    us15251
+    [Tags]    us15251    sanity_test
     Create PNR With Active Air Segments For Bimbo With CFA F1Y
     Select Advance Booking Value: CT - Conference/Training
     Verify Remarks Are Added Correctly In The PNR
@@ -145,18 +173,30 @@ Verify UDID Remarks Are Added For Client Fujitsu
     Select Reason No Hotel Booked: Hotel Sold Out
     Verify Remarks Are Added Correctly In The PNR
     
-Verify UDID Remarks Are Added For Gemalto
-    [Tags]    us15251
-    Create PNR With Active Air Segments For Gemalto
-    Input Value In Approver Info: Chuck Velasquez
-    Verify Remarks Are Added Correctly In The PNR
-    
 Verify UDID Remarks Are Not Added For Client Fujitsu When Hotel Segment Is Present
     [Tags]    us15251
     Create PNR With Active Air Segments For Fujitsu With Hotel Segment
     Complete The PNR In Full Wrap
     Verify Remarks Are Not Found In The PNR
     
+Verify UDID Remarks Are Added For Gemalto
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Gemalto
+    Input Value In Approver Info: Chuck Velasquez
+    Verify Remarks Are Added Correctly In The PNR
+
+Verify UDID Remarks Are Added For Client Gilead
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Gilead
+    Fill Up Udid Fielads For Client Gilead
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client Gilead With Hotel Segment
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Gilead With Hotel Segment
+    Enter Unique Traveler ID: KWV115
+    Verify Remarks Are Added Correctly In The PNR
+
 Verify UDID Remarks Are Added For Hasbro When There Are Air Segments
     [Tags]    us15251
     Create PNR With Active Air Segments For Hasbro
@@ -181,10 +221,10 @@ Verify UDID Remarks Are Added For Client Johns Manville
     Select Reason Not Booked 14 Days Advance: Senior Leadership Request
     Verify Remarks Are Added Correctly In The PNR
     
-Verify UDID Remarks Are Added For Ontario Teachers
+Verify UDID Remarks Are Added For Client Juniper
     [Tags]    us15251
-    Create PNR With Active Air Segments For Ontario Teachers
-    Fill Up UDID Fields With Default Values For Ontario Teachers
+    Create PNR With Active Air Segments For Juniper
+    Fill Up UDID Fields For Client Juniper
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client New Avon
@@ -204,11 +244,29 @@ Verify UDID Remarks Are Added For Client Nikon Optical
     Create PNR With Active Air Segments For Nikon Optical
     Select Reason Not Booked 14 Days In Advance: Interview/Applicant
     Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client Northland Power
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Northland Power
+    Enter Spend Authorization Number: AAA0123
+    Verify Remarks Are Added Correctly In The PNR
 
 Verify UDID Remarks Are Added For Client Nvent
     [Tags]    us15251
     Create PNR With Active Air Segments For Nvent
     Enter Business Class Approver Name: Chuck Velasquez
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Ontario Teachers
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Ontario Teachers
+    Fill Up UDID Fields With Default Values For Ontario Teachers
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client PENTAIR
+    [Tags]    us15251
+    Create PNR With Active Air Segments For PENTAIR
+    Select Business Class Approver: Pending business class approval e-mail
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client Philip Morris International
@@ -229,6 +287,12 @@ Verify UDID Remarks Are Not Added For Client PostMedia When Airline Code Is Not 
     Complete The PNR In Full Wrap
     Verify Remarks Are Not Found In The PNR
     
+Verify UDID Remarks Are Added For Client Purdue Pharma
+    [Tags]    us15251
+    Create PNR With Active Air Segments Less Than 14 Days For Purdue Pharma
+    Fill Up UDID Fields For Client Purdue Pharma
+    Verify Remarks Are Added Correctly In The PNR
+    
 Verify UDID Remarks Are Added For Ribbon Communications When No Hotel Is Booked
     [Tags]    us15251
     Create PNR With Active Air Segments For Ribbon Communications, No Hotel Booked
@@ -245,6 +309,24 @@ Verify UDID Remarks Are Added For Client Rodan & Fields
     [Tags]    us15251
     Create PNR With Active Air Segments For Rodan & Fields
     Select Book Less Than 14 Days Value: Medical/Health/Physical
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client Senvion
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Senvion
+    Fill Up UDID Fields For Client Senvion
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client Smith & Nephew
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Smith & Nephew
+    Fill Up UDID Fields For Client Smith & Nephew
+    Verify Remarks Are Added Correctly In The PNR
+    
+Verify UDID Remarks Are Added For Client Steelcase
+    [Tags]    us15251
+    Create PNR With Active Air Segments For Steelcase
+    Fill Up UDID Fields For Client Steelcase
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client Sunovion
@@ -266,13 +348,13 @@ Verify UDID Remarks Are Added For Client Viavi
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Wolverine
-    [Tags]    us15251
+    [Tags]    us15251    sanity_test
     Create PNR With Active Air Segments For Wolverine
     Enter No Hotel Booked Value: Booked by a meeting site
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client Woodbridge When Booking Is Less Than 21 Days
-    [Tags]    us15251
+    [Tags]    us15251    sanity_test    prod_sanity_test
     Create PNR With Active Air Segments Less Than 21 Days For Woodbridge
     Select Value For Why Not Booked 21 Days In Advance: Forgot failed to pre-plan and book trip
     Verify Remarks Are Added Correctly In The PNR
@@ -301,7 +383,7 @@ Select Reason Not Booked 14 Days Advance: ${reason}
     Select From List By Label    ${list_notBooked14dayAdvance}    ${reason}
     Take Screenshot
 
-Select Reason For Not Booking 14 Days In Advance: ${reason} 
+Select Reason For Not Booking 14 Days In Advance: ${reason}
     Navigate To Page UDID
     Select From List By Label    ${list_reasonNotBook14Days}    ${reason}
     Take Screenshot
@@ -314,7 +396,7 @@ Select Guest Type: ${guest_type}
 Select Book Less Than 14 Days Value: ${value}
     Navigate To Page UDID
     Select From List By Label    ${list_bookLessThan14Days}    ${value}
-    Take Screenshot 
+    Take Screenshot
     
 Fill Up UDID Fields For Client Sunovion
     Navigate To Page UDID
@@ -326,7 +408,7 @@ Fill Up UDID Fields For Client Sunovion
 Select Booked Less Than 14 Days Advance Value: ${reason}
     Navigate To Page UDID
     Select From List By Label    ${list_notBooked14dayInAdvance}    ${reason}
-    Take Screenshot 
+    Take Screenshot
     
 Fill Up UDID Fields For Client Nexans
     Navigate To Page UDID
@@ -405,7 +487,7 @@ Fill Up UDID Fields With Default Values For Ontario Teachers
     Enter Value    ${input_btaApproval}    A0123
     Enter Value    ${input_lowestGdsFare}    100.00
     Select From List By Label    ${list_passTracker}    PASS PURCHASE PNR - Approval received from Judy Simpson
-    Take Screenshot    
+    Take Screenshot
 
 Select Advance Booking Reason: ${reason}
     Navigate To Page UDID
@@ -417,12 +499,12 @@ Input Value In Approver Info: ${name}
     Enter Value    ${input_approverInfo}    ${name}
     Take Screenshot
     
-Select No Hotel Booked Value: ${value} 
+Select No Hotel Booked Value: ${value}
     Navigate To Page UDID
     Select From List By Label    ${list_noHotel}    ${value}
     Take Screenshot
     
-Enter Approver Name For International Travel: ${name} 
+Enter Approver Name For International Travel: ${name}
     Navigate To Page UDID
     Enter Value    ${input_approverName}    ${name}
     Take Screenshot
@@ -437,3 +519,65 @@ Select Reason For Booking Within 14 Days: ${reason}
     Select From List By Label    ${list_booking_within_14d}    ${reason}
     Take Screenshot
     
+Fill Up UDID Values For Client Arcelormittal
+    Navigate To Page UDID
+    Select From List By Label    ${list_authorizer}    SEAN DONNELLY
+    Take Screenshot
+    
+Select Reason Why Booked Less Than 14 Days: ${reason}
+    Navigate To Page UDID
+    Select From List By Label   ${list_whyLessThanDays}    ${reason}
+    Take Screenshot
+    
+Fill Up Udid Fielads For Client Gilead
+    Navigate To Page UDID
+    Select From List By Label   ${list_noHotelReason}    Booked Own Hotel
+    Enter Value    ${input_uniqueTravelerId}    TVL444
+    Enter Value    ${input_exceptionApprover}     CHUCK VELASQUEZ
+    Take Screenshot
+    
+Enter Unique Traveler ID: ${id}
+    Navigate To Page UDID
+    Enter Value    ${input_uniqueTravelerId}    ${id}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Juniper
+    Navigate To Page UDID
+    Enter Value    ${input_businessClassApproval}    CHUCK VELASQUEZ
+    Select From List By Label    ${list_noHotel}    One-way trip
+    Take Screenshot
+    
+Enter Spend Authorization Number: ${auth_no}
+    Navigate To Page UDID
+    Enter Value    ${input_authorizationNo}    ${auth_no}
+    Take Screenshot
+    
+Select Business Class Approver: ${approver}
+    Navigate To Page UDID
+    Select From List By Label    ${list_businessClassApprover}    ${approver}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Purdue Pharma
+    Navigate To Page UDID
+    Select From List By Label    ${list_bookedLessFourteen}    Site Visit
+    Enter Value   ${input_moxieId}    98765
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Senvion
+    Navigate To Page UDID
+    Enter Value    ${input_destinationUdid}    America
+    Enter Value    ${input_approvelEmail}    mgr@email.com
+    Select From List By Label    ${list_advanceDaysReason}    Initial travel request not apprvd by mgr on time
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Smith & Nephew
+    Navigate To Page UDID
+    Select From List By Label    ${list_noHotel}    C - Separate PNR with CWT
+    Enter Value    ${input_authorizer}    CHUCK VELASQUEZ
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Steelcase
+    Navigate To Page UDID
+    Enter Value    ${input_btaReasonUsage}    CV
+    Enter Value    ${input_employeeId}    123456789
+    Take Screenshot

@@ -44,14 +44,14 @@ ${input_esc_read_yes}    //input[@id='isESCRead' and @ng-reflect-value='Y']
 ${input_esc_read_no}    //input[@id='isESCRead' and @ng-reflect-value='N']
 ${tab_emergency_contact}    css=#emergencyContact-link
 ${button_add_emergency_contact}    //button[@class='leisureBtnSubmit addContactButton']
-${input_ec_name}    //input[@ng-reflect-name='name']
-${input_ec_country_code}    //input[@ng-reflect-name='countryCode']
-${input_ec_phone}    //input[@ng-reflect-name='phone']
-${input_ec_free_flow_text}    //input[@ng-reflect-name='freeFlowText']
-${list_ec_passengers}    //select[@ng-reflect-name='passengers']
+${input_ec_name}    //input[@formcontrolname='name']
+${input_ec_country_code}    //input[@formcontrolname='countryCode']
+${input_ec_phone}    //input[@formcontrolname='phone']
+${input_ec_free_flow_text}    //input[@formcontrolname='freeFlowText']
+${list_ec_passengers}    //select[@formcontrolname='passengers']
 ${button_add}    //i[@id='add']
 ${button_remove}    //i[@id='remove']
-${div_ec_row}    //tab[@id='emergencyContact']//div[@ng-reflect-name='items']
+${div_ec_row}    //tab[@id='emergencyContact']//div[@formarrayname='items']
 
 *** Keywords ***
 Click Seats Tab
@@ -406,5 +406,10 @@ Add ${number_of_segments} Passive Car Segments With ${vendor_code}
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-${vendor_code}/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1
+    Take Screenshot
+    
+Verify Dana International Advisory Is Not Displayed
+    Navigate to Page Visa And Passport
+    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
     Take Screenshot
     

@@ -1,4 +1,3 @@
-use [Desktop_Test]
 BEGIN TRAN
 BEGIN TRY
 DECLARE @CreationUserIdentifier nvarchar(200)
@@ -39,29 +38,18 @@ DECLARE @IS AS int
 declare @ISNOT as int
 declare @CONTAINS as int
 declare @NOTCONTAINS as int
-DECLARE @CFA as varchar(5) = 'L5K'
-set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250'
-set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 1'
-PRINT 'START ' + @CDRGRoupName 
-set @ClientSubUnitGuid = '14:3A7532'
+DECLARE @CFA as varchar(5) = '1UP'
+set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250_2'
+set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 2'
+
+set @ClientSubUnitGuid = 'A:FA177'
 set @TravellerTypeGuid = ''
 set @ClientAccountGuid=''
 set @SourceSystemCode = 'CA1'
 set @ClientTopUnitGuid = ''
 SELECT @NextGroupSequenceNumber =1 --- isnull(max(GroupSequenceNumber)+1,1) FROM ClientDefinedRuleGroup WHERE CreationUserIdentifier = @CreationUserIdentifier
 
---DELETE FROM ClientDefinedRuleGroupResult where clientDefinedRuleGroupId = 15808
---CreationUserIdentifier like '%L5K%'
---select * from  ClientDefinedRuleGroup where CreationUserIdentifier like '%L5K%'
 
---select * from ClientDefinedRuleGroupTrigger where  clientDefinedRuleGroupId = 15808
---DELETE FROM ClientDefinedRuleGroupTrigger where clientDefinedRuleGroupId = 15808
-
---select * from ClientDefinedRuleGroupLogic where  clientDefinedRuleGroupId = 15808
---DELETE FROM ClientDefinedRuleGroupLogic where clientDefinedRuleGroupId = 15808
-
---select * from ClientDefinedRuleGroupClientSubUnit where  clientDefinedRuleGroupId = 15808
---DELETE FROM ClientDefinedRuleGroupClientSubUnit where clientDefinedRuleGroupId = 15808
 
 ---- ROLLBACK
 DELETE FROM ClientDefinedRuleGroupResult where CreationUserIdentifier= @CreationUserIdentifier
@@ -188,19 +176,17 @@ SET @logicitemid = null;
     ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
     ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    --( @CDRGRoupName, @bid2, @LessThanEqual, '7', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),    
-    (@CDRGRoupName, @bid4, @CONTAINS, 'AIR', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+    ( @CDRGRoupName, @bid4, @IN, 'AIR', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
   
-    SET @logicitemid = SCOPE_IDENTITY() - 2
+    SET @logicitemid = SCOPE_IDENTITY() -2
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic
     (ClientDefinedRuleLogicItemId, ClientDefinedRuleGroupId, LogicSequenceNumber, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 values
     (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@logicitemid + 2, @CDRGId, 2 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-  -- (@logicitemid + 3, @CDRGId, 3 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
-    
+    (@logicitemid + 2, @CDRGId, 2 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+		   
 
 
 
@@ -231,14 +217,14 @@ WHERE BusinessEntityName='PNR_ADD_Remark';
 VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Why booked less than 14 days","name":"whyLessThanDays","required":"false","options":[{"name":"Booked greater than 14days","value":"17/-Booked greater than 14days"},{"name":"Candidate/Interview travel","value":"18/-Candidate/Interview travel"},{"name":"Critical operations issue","value":"19/-Critical operations issue"},{"name":"Critical supplier issue","value":"20/-Critical supplier issue"},{"name":"Customer provided short notice","value":"21/-Customer provided short notice"},{"name":"Meeting/Event changed or short notice","value":"22/-Meeting/Event changed or short notice"},{"name":"Personal/Physical/Medical issue","value":"23/-Personal/Physical/Medical issue"},{"name":"Requested by manager","value":"24/-Requested by manager"},{"name":"Weather-related change","value":"17/-Weather-related change"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	--( @CDRGRoupName, @bid3, '{ "type": "text", "label": "Ordered By", "name": "orderBy", "maxLength": "35", "required": "false" }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, 'RM* U[UI_FORM_whyLessThanDays]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	--( @CDRGRoupName, @bid4, 'RM* U30/-[UI_FORM_orderBy]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    ( @CDRGRoupName, @bid3, '{"type":"text","label":"Declined Airline","name":"declinedAirline","maxLength":"2","required":"false"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid4, 'RM* U10/-[UI_FORM_declinedAirline]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid3, '{"type":"text","label":"Pretrip approval number","name":"preTripNumber","maxLength":"20","required":"false"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_preTripNumber]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
 
-SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 5; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -247,16 +233,14 @@ values
     (@resultitemid + 1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 2, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	--(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
- --  ( @resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit
     (ClientDefinedRuleGroupId, ClientSubUnitGuid, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
-VALUES  ( @CDRGId, 'A:FA177 ', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+VALUES( @CDRGId, @ClientSubUnitGuid, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
- Select * from ClientDefinedRuleResultItem where CreationUserIdentifier = @CreationUserIdentifier 
- Select * from ClientDefinedRuleGroupResult where CreationUserIdentifier = @CreationUserIdentifier 
+-- Select * from ClientDefinedRuleResultItem where CreationUserIdentifier = @CreationUserIdentifier 
+-- Select * from ClientDefinedRuleGroupResult where CreationUserIdentifier = @CreationUserIdentifier 
 
 SELECT @CDRGID, @CDRGRoupName , @resultitemid
 
@@ -268,3 +252,9 @@ DECLARE @ErrorMessage NVARCHAR(4000);
 SELECT @ErrorMessage=ERROR_MESSAGE()
 RAISERROR(@ErrorMessage, 10, 1);
 END CATCH
+
+
+
+
+
+

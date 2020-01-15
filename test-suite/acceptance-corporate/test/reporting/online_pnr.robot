@@ -2,7 +2,7 @@
 Force Tags        corp
 Resource          ../../pages/base.robot
 Test Setup        Login To Amadeus Sell Connect Acceptance
-# Test Teardown     Close All Browsers
+Test Teardown     Close All Browsers
 
 *** Variables ***
 ${test_file_name}    online_pnr

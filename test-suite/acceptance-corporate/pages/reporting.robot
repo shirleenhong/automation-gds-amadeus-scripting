@@ -777,3 +777,6 @@ Verify That UI Should Not Appear For Client ${client_code} When There Is No TSTs
     Close CA Corporate Test
     Logout To Amadeus Sell Connect
     
+Verify That The Remarks For Diving Plongeon Canada Are Updated Correctly
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR

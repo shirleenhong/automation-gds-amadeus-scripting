@@ -50,7 +50,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 ${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 ${window_marriot_policy}    //div[contains(text(), 'MARRIOTT POLICY VIOLATION')]
 ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees  
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
@@ -63,6 +63,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
+${button_aqua_fees}    //button[contains(text(), 'Aqua Fees')]
 
 *** Keywords ***
 Enter Value
@@ -127,7 +128,6 @@ Click Send Itinerary And Queue
     Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     
-
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
     Scroll Element Into View     ${panel_payment}
@@ -263,6 +263,7 @@ Navigate From Corp
      ...    ELSE IF    "${to_cancel_segments}" == "True"    Click Cancel Segments
      ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
      ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
+     ...    ELSE IF    "${destination_page}" == "Aqua Fees"     Click Aqua Fees
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments
@@ -743,3 +744,11 @@ Enter Date Value
     Press Keys    ${element}    ARROW_LEFT
     Press Keys    none    ARROW_LEFT
     Press Keys    none    ${day}    ${month}    ${year}
+    
+Click Aqua Fees
+    Wait Until Page Contains Element    ${button_aqua_fees}      180
+    Click Element     ${button_aqua_fees} 
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Aqua Fees

@@ -217,6 +217,10 @@ SELECT @bid4 =  ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='PNR_ADD_Remark'; 
 
+SELECT @bid5 =  ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_WRITE_REMARK_WITH_CONDTION'; 
+
 
  
     INSERT INTO dbo.ClientDefinedRuleResultItem
@@ -229,11 +233,15 @@ VALUES
 	( @CDRGRoupName, @bid3, '{"type":"select","label":"Company Code","name":"companyCode","required":"true","options":[{"name":"O999","value":"O999"},{"name":"W999","value":"W999"},{"name":"E999","value":"E999"},{"name":"C999","value":"C999"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid4, 'RM* U11/-[UI_FORM_reasonNotBooking]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_lowGdsFare]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U16/-[UI_FORM_companyCode]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	( @CDRGRoupName, @bid4, 'RM* U16/-[UI_FORM_companyCode]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, '{"conditions":[{"controlName":"companyCode","propertyName":"","operator":"IS","value":"O999","segmentType":""}],"remarks":["RM*U9/-OTHER"]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, '{"conditions":[{"controlName":"companyCode","propertyName":"","operator":"IS","value":"W999","segmentType":""}],"remarks":["RM*U9/-WHOLESALE"]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, '{"conditions":[{"controlName":"companyCode","propertyName":"","operator":"IS","value":"E999","segmentType":""}],"remarks":["RM*U9/-EMPIRE"]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, '{"conditions":[{"controlName":"companyCode","propertyName":"","operator":"IS","value":"C999","segmentType":""}],"remarks":["RM*U9/-CROMBIE"]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
 
-SET @resultitemid = SCOPE_IDENTITY() - 7; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 11; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -245,7 +253,11 @@ values
 	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 6, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 8, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 9, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 10, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 11, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 	
 

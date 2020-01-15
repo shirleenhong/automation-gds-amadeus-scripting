@@ -39,7 +39,7 @@ DECLARE @IS AS int
 declare @ISNOT as int
 declare @CONTAINS as int
 declare @NOTCONTAINS as int
-DECLARE @CFA as varchar(5) = 'M1Y|M7B|NFM|NFQ|LLX|L7T|XMX'
+DECLARE @CFA as varchar(50) = 'M1Y|M7B|NFM|NFQ|LLX|L7T|XMX'
 set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250 - 2'
 set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 2'
 

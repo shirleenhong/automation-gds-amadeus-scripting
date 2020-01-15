@@ -42,9 +42,8 @@ export class ContainerComponent implements OnInit {
     });
   }
 
-  hasShowCondition(conditions) {
-    // return true;
-    // console.log(conditions);
+  hasShowCondition(conditions, input) {
+    console.log(JSON.stringify(input));
     let result = true;
     if (conditions) {
       for (const cond of conditions) {
@@ -57,17 +56,16 @@ export class ContainerComponent implements OnInit {
               comparison = this.containerForm.get(match.groups.conditionvalue).value;
               result = this.isConditionValid(comparison, cond.logic, cond.value);
               break;
-            // case 'UI_DEFAULT':
-            // debugger;
-            // if (match.groups.conditionvalue === 'TSTSEGMENTTYPE') {
-            //   comparison = this.getSegmentType(name);
-            //   const segtype = this.isConditionValid(comparison, cond.logic, cond.value);
-            //   if (segtype) {
-            //     this.containerForm.get(name).setValue(cond.result);
-            //   }
-            // }
-            // result = true;
-            // break;
+            case 'UI_DEFAULT':
+              if (match.groups.conditionvalue === 'TSTSEGMENTTYPE') {
+                comparison = this.getSegmentType();
+                const segtype = this.isConditionValid(comparison, cond.logic, cond.value);
+                if (segtype) {
+                  this.containerForm.get(input.controlName).setValue(cond.result);
+                }
+              }
+              result = true;
+              break;
           }
         }
 
@@ -79,18 +77,11 @@ export class ContainerComponent implements OnInit {
     return true;
   }
 
-  getSegmentType(name) {
-    const segmenttype = [];
-    const regex = /(.*)_((?<tstNo>(.*)))/g;
-    const match = regex.exec(name);
-    if (match !== null) {
-      const tst = this.pnrService.tstObj;
-      tst[match.groups.tstNo].segmentInformation.segDetails.segmentDetail.forEach(seg => {
-        segmenttype.push(seg.identification);
-      });
-      return segmenttype.join('|');
-      // const look = tst.find((x) => x);
-    }
+  getSegmentType() {
+    let segmentsTypes = this.pnrService.segments.map((x) => x.segmentType);
+    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.id === thing.id) === i);
+    return segmentsTypes.join('|');
+    // const look = tst.find((x) => x);
   }
 
   isConditionValid(comparison, operator, value) {
@@ -99,6 +90,8 @@ export class ContainerComponent implements OnInit {
         return comparison !== value;
       case 'NOT_IN':
         return comparison.split('|').indexOf(value) === -1;
+      case 'IN':
+        return comparison.split('|').indexOf(value) >= 0;
       default:
         return false;
     }
@@ -117,7 +110,4 @@ export class ContainerComponent implements OnInit {
     });
   }
 
-  // getTSTSegment(){
-
-  // }
 }

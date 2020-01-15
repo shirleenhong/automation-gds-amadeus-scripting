@@ -39,7 +39,7 @@ DECLARE @IS AS int
 declare @ISNOT as int
 declare @CONTAINS as int
 declare @NOTCONTAINS as int
-DECLARE @CFA as varchar(5) = 'M1Y|M7B|NFM|NFQ|LLX|L7T|XMX'
+DECLARE @CFA as varchar(50) = 'M1Y|M7B|NFM|NFQ|LLX|L7T|XMX'
 set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250'
 set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 1'
 
@@ -182,7 +182,7 @@ SET @logicitemid = null;
     ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
     ( @CDRGRoupName, @bid, @IN, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, @IN, 'CAR|HOTEL|RAIL|HTL', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+    ( @CDRGRoupName, @bid4, @IN, 'CAR|HOTEL|RAIL|HTL', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
   
     SET @logicitemid = SCOPE_IDENTITY() -2
 

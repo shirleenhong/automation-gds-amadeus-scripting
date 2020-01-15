@@ -1,3 +1,5 @@
+USE [Desktop_Test]
+
 BEGIN TRAN
 BEGIN TRY
 DECLARE @CreationUserIdentifier nvarchar(200)
@@ -38,8 +40,8 @@ DECLARE @IS AS int
 declare @ISNOT as int
 declare @CONTAINS as int
 declare @NOTCONTAINS as int
-DECLARE @CFA as varchar(5) = '1UP'
-set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250'
+DECLARE @CFA as varchar(5) = 'C6R'
+set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15245'
 set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 1'
 
 set @ClientSubUnitGuid = 'A:FA177'
@@ -161,12 +163,17 @@ WHERE BusinessEntityName='PNR_COUNT_DEPARTURE_DATE_FROM_TODAY';
 SET @bid3=null; 
 SELECT @bid3=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_UDID50';  
+WHERE BusinessEntityName='PNR_AIR_SEGMENT_ROUTE_CODE';  
 
 SET @bid4=null; 
 SELECT @bid4=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='PNR_SEGMENT_TYPES_IN_PNR';  
+
+SET @bid5=null; 
+SELECT @bid5=ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_AS_ClassOfService';  
 
 
 SET @logicitemid = null; 
@@ -175,17 +182,18 @@ SET @logicitemid = null;
     INSERT INTO dbo.ClientDefinedRuleLogicItem
     ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
-    ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, @IN, 'AIR', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+    ( @CDRGRoupName, @bid, @IN, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid3, @CONTAINS, 'AIR', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
   
-    SET @logicitemid = SCOPE_IDENTITY() -2
+    SET @logicitemid = SCOPE_IDENTITY() -1
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic
     (ClientDefinedRuleLogicItemId, ClientDefinedRuleGroupId, LogicSequenceNumber, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 values
-    (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@logicitemid + 2, @CDRGId, 2 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+    (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	--(@logicitemid + 2, @CDRGId, 2 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
+	--(@logicitemid + 3, @CDRGId, 3 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
 		   
 
 
@@ -217,13 +225,11 @@ WHERE BusinessEntityName='PNR_ADD_Remark';
 VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{"type":"text","label":"Declined Airline","name":"declinedAirline","maxLength":"2","required":"false"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, 'RM* U10/-[UI_FORM_declinedAirline]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{"type":"text","label":"Pretrip approval number","name":"preTripNumber","maxLength":"20","required":"false"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_preTripNumber]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-
-
-
+    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Reason why Westjet now booked","name":"resonWhyWestjet","required":"false","options":[{"name":"Schedule","value":"Schedule"},{"name":"Frequent Traveller Points","value":"Frequent Traveller Points"},{"name":"Preference of airline ","value":"Preference of airline "},{"name":"Routing","value":"Routing"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid3, '{"type":"select","label":"Exchange Reason","name":"exchangeReason","required":"false","options":[{"name":"Name Change","value":"NC"},{"name":"Travel Change","value":"TC"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'RM* U15/-[UI_FORM_resonWhyWestjet]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'RM* U16/-[UI_FORM_exchangeReason]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	
 SET @resultitemid = SCOPE_IDENTITY() - 5; -- count of records
 
 
@@ -235,7 +241,7 @@ values
     (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	
+    
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit
     (ClientDefinedRuleGroupId, ClientSubUnitGuid, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)

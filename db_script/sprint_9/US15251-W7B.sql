@@ -171,14 +171,17 @@ VALUES
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid3, '{"type":"text","label":"Lowest Coach Fare for Flts Booked","name":"lowestCoach_[TSTSEGMENT]","required":"false","valuetype":"AmountMask"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid3, '{"type":"text","label":"Approver Last Name","name":"approver_[TSTSEGMENT]","required":"false","valuetype":"AmountMask"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid3, '{"type":"select","label":"Waiver Approved","name":"waiverApproved","required":"false","options":[{"name":"XX","value":"XX"},{"name":"WA","value":"WA"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid4, 'RM* U17/-[UI_FORM_lowestCoach_TSTSEGMENT]/[TST_SEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid4, 'RM* U18/-[UI_FORM_approver_TSTSEGMENT]/[TST_SEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'RM* U10/-[UI_FORM_waiverApproved]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid5, 'U17/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid5, 'U18/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	( @CDRGRoupName, @bid5, 'U18/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, 'U10/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
     
 
 
-SET @resultitemid = SCOPE_IDENTITY() - 7; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 10; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -190,7 +193,10 @@ values
 	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 6, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 8, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 9, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 10, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit

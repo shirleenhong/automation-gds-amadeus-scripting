@@ -23,7 +23,7 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService,
     private ruleUiService: RuleUiService,
     private ruleWriter: RuleWriterService
-  ) {}
+  ) { }
 
   public async initializeRulesEngine() {
     await this.loadRules();

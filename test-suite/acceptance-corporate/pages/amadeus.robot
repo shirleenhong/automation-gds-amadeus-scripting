@@ -94,6 +94,7 @@ Open CA Corporate Test
     Set Test Variable    ${ticketing_complete}     no
     Set Test Variable     ${ticketing_details}    no
     Set Test Variable     ${actual_counselor_identity}    ${EMPTY}
+    Set Test Variable     ${ignored_approval}    False
 
 Add Single BSP Segment And Store Fare
     Create 1 Test Dates

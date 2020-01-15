@@ -41,6 +41,8 @@ Fill Up Approval Fields
     Run Keyword If    "${with_ui}" == "Yes" and "${ignore_approval}" == "Yes"       Select Checkbox    ${checkbox_ignoreApproval}
     ...    ELSE IF    "${with_ui}" == "Yes" and "${ignore_approval}" != "Yes"    Fill Up Approval Reason Fields
     ...    ELSE IF    "${with_ui}" == "No"    Verify Approval Fields Are Not Displayed
+    ${ignored_approval}    Set Variable If     "${with_ui}" == "Yes" and "${ignore_approval}" == "Yes"    True  
+    Set Test Variable    ${ignored_approval}
     [Teardown]    Take Screenshot
     
 Verify Approval Fields Are Not Displayed
@@ -126,7 +128,7 @@ Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${is_ticketing_displayed}" == "True"    Click Ticketing Line Tab   ELSE    Navigate To Page Ticketing Line   
     Select Checkbox    ${checkbox_verifyTicket}
     ${exists}    Run Keyword And Return Status    Element Should Be Visible    ${checkbox_ignoreApproval}
-    Run Keyword If    ${exists}    Click Element    ${checkbox_ignoreApproval}
+    Run Keyword If    ${exists} and "${ignored_approval}" != "True"      Click Element    ${checkbox_ignoreApproval}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
     
@@ -369,7 +371,7 @@ Verify PNR Approval Is Processed Correctly
 Verify PNR Is Queued For Approval
     Open Command Page
     Enter Cryptic Command    RTQ 
-    Run Keyword If    "${cfa}" != "D7V"    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096    
+    Run Keyword If    "${cfa}" != "D7V"    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}007    
     ...    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL28AN${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}096   
     Run Keyword If    "${cfa}" == "D7V"    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096
     [Teardown]    Take Screenshot

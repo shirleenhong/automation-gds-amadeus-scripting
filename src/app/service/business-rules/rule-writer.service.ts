@@ -162,7 +162,7 @@ export class RuleWriterService {
 
   checkControlValid(condition: ControlConditionModel) {
     const logicValue = condition.value.toLowerCase();
-    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName);
+    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName).toLowerCase();
     return this.checkEntity(entity, logicValue, condition.operator);
   }
 

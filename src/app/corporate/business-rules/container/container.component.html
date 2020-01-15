@@ -10,7 +10,8 @@
           </div>
         </ng-template>
         <ng-template [ngSwitchCase]="'text'">
-          <div class="row" *ngIf="hasShowCondition(input.conditions)">
+          <!-- <div class="row" *ngIf="hasShowCondition(input.conditions, input)"> -->
+          <div class="row">
             <div class="col-3">
               <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>
@@ -41,7 +42,7 @@
         </ng-template>
 
         <ng-template [ngSwitchCase]="'select'">
-          <div class="row">
+          <div class="row" *ngIf="hasShowCondition(input.conditions, input)">
             <div class="col-3">
               <label [for]="input.controlName"> {{ input.label }}:</label>
             </div>

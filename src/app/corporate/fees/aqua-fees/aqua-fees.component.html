@@ -16,7 +16,6 @@
           <option value="H"> HOTEL ONLY FEES </option>
           <option value="L"> LIMO ONLY FEES </option>
           <option value="R"> RAIL FEES </option>
-          <option value="S"> SUPPLEMENTAL FEES </option>
         </select>
       </div>
       <div class="col-4" *ngIf="segmentList.length > 0">
@@ -28,6 +27,11 @@
         <app-generic-select [genericList]="segmentList" formControlName="segments" name="segments" id="segments">
           <!-- </app-generic-select>  (passDataParent) = 'checkSelectedInvoice($event)'> -->
         </app-generic-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <label><input type="checkbox" name="enableSupFee" /> Supplemental Fee </label>
       </div>
     </div>
   </form>

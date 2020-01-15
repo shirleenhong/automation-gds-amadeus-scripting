@@ -94,6 +94,13 @@ export class FeesRemarkService {
     if (this.pnrService.getRemarkLineNumbers('MAC/-SUP-PFS').length !== 1) {
       this.remarksManager.createEmptyPlaceHolderValue(['MacLinePlaceholder'], null, 'MAC');
     }
+
+    /// DELETE REMARKS
+    this.remarksManager.createEmptyPlaceHolderValue([], null, 'NUC');
+    this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue'], null, 'OVERRIDE');
+    this.remarksManager.createEmptyPlaceHolderValue(['FeesPlaceholder'], null, 'FEE');
+    this.remarksManager.createEmptyPlaceHolderValue(['SfcPlaceholder'], null, 'SFC');
+
     const feeType = comp.aquaFeeForm.get('feeType').value;
 
     const feeCode = this.getFeeCode(feeType);
@@ -105,9 +112,12 @@ export class FeesRemarkService {
   }
 
   private getFeeCode(feeType) {
-    const ebRemark = this.pnrService.getRemarkText('EB/');
+    const ebRemark = this.pnrService.getRemarkText('EB/-');
     let route = '';
-    if (ebRemark === '') {
+
+    if (feeType === 'L') {
+      route = 'BD';
+    } else if (ebRemark === '') {
       if (this.ddbService.isPnrTransBorder()) {
         route = 'TB';
       } else if (this.ddbService.isPnrDomestic()) {
@@ -115,13 +125,13 @@ export class FeesRemarkService {
       } else {
         route = 'TD';
       }
-    } else if (ebRemark.indexOf('EB/EB') >= 0) {
+    } else if (ebRemark.indexOf('EB/-EB') >= 0) {
       if (feeType === 'A' || feeType === 'R') {
         route = 'TE';
       } else if (feeType === 'C' || feeType === 'H') {
         route = 'BE';
       }
-    } else if (ebRemark.indexOf('EB/AM') >= 0) {
+    } else if (ebRemark.indexOf('EB/-AM') >= 0) {
       if (feeType === 'A' || feeType === 'R') {
         route = 'TA';
       } else if (feeType === 'C' || feeType === 'H') {

@@ -4,6 +4,7 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { DDBService } from '../ddb.service';
 import { AquaFeesComponent } from 'src/app/corporate/fees/aqua-fees/aqua-fees.component';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -96,15 +97,18 @@ export class FeesRemarkService {
     }
 
     /// DELETE REMARKS
-    this.remarksManager.createEmptyPlaceHolderValue([], null, 'NUC');
+    const h = new Map<string, string>();
+    h.set('IsNuc', 'false');
+    this.remarksManager.createPlaceholderValues(null, h, null, null, 'NUC');
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue'], null, 'OVERRIDE');
     this.remarksManager.createEmptyPlaceHolderValue(['FeesPlaceholder'], null, 'FEE');
     this.remarksManager.createEmptyPlaceHolderValue(['SfcPlaceholder'], null, 'SFC');
+
     const tatoos = this.pnrService.getTatooNumberFromSegmentNumber(comp.aquaFeeForm.get('segments').value.split(','));
     const feeType = comp.aquaFeeForm.get('feeType').value;
     const ebRemark = this.pnrService.getRemarkText('EB/-');
     const feeInfo = this.getFeeCode(feeType, ebRemark);
-    if (ebRemark === '') {
+    if (ebRemark === '' && comp.isShowSupFee) {
       const fees = comp.suppFeeComponent.ticketedForm.get('segments') as FormArray;
       let addInfo = null;
       if (comp.suppFeeComponent.hasOlbFee) {

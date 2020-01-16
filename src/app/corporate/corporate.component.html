@@ -263,6 +263,12 @@
   </div>
 </div>
 
+<div *ngIf="!isPnrLoaded" class="loaderBody">
+  <div class="loader">
+    Unable to load PNR or no PNR is loaded in Amadeus.
+  </div>
+</div>
+
 <div *ngIf="dataErrorMessages.length > 0">
   <alert type="warning" dismissible="true">
     <div *ngFor="let msg of dataErrorMessages">

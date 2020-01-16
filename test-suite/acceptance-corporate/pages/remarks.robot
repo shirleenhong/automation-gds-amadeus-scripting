@@ -448,7 +448,7 @@ Complete Fare Rule For Ticket Min/Max Stay With Associated Remarks
     Take Screenshot
     Click Save Button
     Click Associated Remarks Tab
-    Select Itinerary Segments    2
+    Select Segments    2
     Enter Value    ${input_assoc_remark}    Testing Fare Rule For Ticket Min and Max Stay
     Take Screenshot    
     Finish PNR    
@@ -463,7 +463,7 @@ Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
     Take Screenshot
     Click Save Button
     Click Associated Remarks Tab
-    Select Itinerary Segments    2    4
+    Select Segments    2    4
     Enter Value    ${input_assoc_remark}    Testing fare Rule For Ticket Non Ref and Non Ref
     Take Screenshot
     Finish PNR    

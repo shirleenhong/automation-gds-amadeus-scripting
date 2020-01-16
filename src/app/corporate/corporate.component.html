@@ -263,13 +263,11 @@
   </div>
 </div>
 
-<div *ngIf="dataError.hasError">
+<div *ngIf="dataErrorMessages.length > 0">
   <alert type="warning" dismissible="true">
-    <div *ngIf="dataError.matching">Unable to Match PNR from PNR Layout</div>
-    <div *ngIf="dataError.supplier">Unable to get Supplier Codes from DDB</div>
-    <div *ngIf="dataError.servicingOption">Unable to Get Servicing Options</div>
-    <div *ngIf="dataError.pnr">Unable to Load PNR</div>
-    <div *ngIf="dataError.reasoncode">Unable to Reason Codes</div>
+    <div *ngFor="let msg of dataErrorMessages">
+      {{ msg }}
+    </div>
   </alert>
 </div>
 <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>

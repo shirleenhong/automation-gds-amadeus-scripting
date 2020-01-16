@@ -64,7 +64,7 @@ export class CorporateComponent implements OnInit {
   cancelEnabled = true;
   validModel = new ValidateModel();
   itinValidModel = new ValidateModel();
-  dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
+  dataErrorMessages = new Array<string>();
   migrationOBTDates: Array<string>;
   segment = [];
   cfLine: CfRemarkModel;
@@ -157,7 +157,6 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
-    this.dataError.hasError = false;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
@@ -274,20 +273,27 @@ export class CorporateComponent implements OnInit {
   }
 
   checkHasDataLoadError() {
-    this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
-    this.dataError.pnr = !this.isPnrLoaded;
-    this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
-    this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
-    this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-    this.dataError.hasError =
-      this.dataError.matching ||
-      this.dataError.pnr ||
-      this.dataError.reasonCode ||
-      this.dataError.servicingOption ||
-      this.dataError.supplier;
+    this.dataErrorMessages.length = 0;
+    if (!(this.rms.outputItems && this.rms.outputItems.length > 0)) {
+      this.dataErrorMessages.push('Unable to Match PNR from PNR Layout');
+    }
+    if (!(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0)) {
+      this.dataErrorMessages.push('Unable to get Supplier Codes from DDB');
+    }
+    // if (!(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0)) {
+    //   this.dataErrorMessages.push('Unable to Reason Codes');
+    // }
+    if (!(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0)) {
+      this.dataErrorMessages.push('Unable to Get Servicing Options');
+    }
+
+    if (!this.isPnrLoaded) {
+      this.dataErrorMessages.push('Unable to Load PNR');
+    }
   }
+
   resetDataLoadError() {
-    this.dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
+    this.dataErrorMessages.length = 0;
   }
 
   public async SubmitToPNR() {
@@ -614,6 +620,7 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+    this.resetDataLoadError();
     this.cleanupRemarkService.revertDelete();
   }
 
@@ -632,15 +639,6 @@ export class CorporateComponent implements OnInit {
 
   async sendAquaFees() {
     if (this.isPnrLoaded) {
-      // if (!this.sendInvoiceItineraryComponent.checkValid()) {
-      //   const modalRef = this.modalService.show(MessageComponent, {
-      //     backdrop: 'static'
-      //   });
-      //   modalRef.content.modalRef = modalRef;
-      //   modalRef.content.title = 'Invalid Inputs';
-      //   modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
-      //   return;
-      // }
       this.showLoading('Sending Aqua Fees...');
       if (this.aquaFeesComponent.obtComponent) {
         this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);

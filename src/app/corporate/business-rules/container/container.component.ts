@@ -78,9 +78,11 @@ export class ContainerComponent implements OnInit {
   }
 
   getSegmentType() {
-    let segmentsTypes = this.pnrService.segments.map((x) => x.segmentType);
-    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.id === thing.id) === i);
-    return segmentsTypes.join('|');
+    let segmentsTypes = this.pnrService.segments.map((x) => ({
+      types: x.segmentType
+    }));
+    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.types === thing.types) === i);
+    return segmentsTypes.map(t => t.types).join('|');
     // const look = tst.find((x) => x);
   }
 

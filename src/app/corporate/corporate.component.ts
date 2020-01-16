@@ -47,6 +47,7 @@ import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
 import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
+import { common } from 'src/environments/common';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -68,7 +69,8 @@ export class CorporateComponent implements OnInit {
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;
-
+  showAquaFeeButton = false;
+  version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -125,7 +127,6 @@ export class CorporateComponent implements OnInit {
 
   showRule() {
     // get rule
-
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
       this.workflow = '';
@@ -165,6 +166,7 @@ export class CorporateComponent implements OnInit {
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
+    this.checkValidForAquaFee();
   }
 
   initData() {
@@ -243,7 +245,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.cleanupRemarkService.cleanUpRemarks();
     await this.getPnrService();
-
+    this.resetDataLoadError();
     if (!this.pnrService.getClientSubUnit()) {
       this.closePopup();
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
@@ -283,6 +285,9 @@ export class CorporateComponent implements OnInit {
       this.dataError.reasonCode ||
       this.dataError.servicingOption ||
       this.dataError.supplier;
+  }
+  resetDataLoadError() {
+    this.dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
   }
 
   public async SubmitToPNR() {
@@ -862,5 +867,11 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
+  }
+
+  async checkValidForAquaFee() {
+    const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
+    const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+    this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
   }
 }

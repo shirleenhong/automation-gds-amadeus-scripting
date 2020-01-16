@@ -23,7 +23,7 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService,
     private ruleUiService: RuleUiService,
     private ruleWriter: RuleWriterService
-  ) { }
+  ) {}
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -138,6 +138,7 @@ export class RulesEngineService {
         }
       });
     });
+
     return { resultItems, formData };
   }
 
@@ -158,5 +159,10 @@ export class RulesEngineService {
   getRuleDeleteRemarks() {
     const resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
     return this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
+  }
+
+  getRuleDeleteAPERemarks() {
+    const resulttItems = this.getSpecificRulesValue('PNR_DELETE_APE_REMARKS').resultItems;
+    return this.ruleWriter.getDeleteAPERemarksRuleResult(resulttItems);
   }
 }

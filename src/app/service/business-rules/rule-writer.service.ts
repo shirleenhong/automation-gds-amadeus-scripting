@@ -15,7 +15,7 @@ import { RulesReaderService } from './rules-reader.service';
 export class RuleWriterService {
   additionaRemarks = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -49,14 +49,30 @@ export class RuleWriterService {
 
   public getDeleteRemarksRuleResult(resultItems) {
     const remGroup = new RemarkGroup();
-    remGroup.group = 'RuleDeleteRemark';
+    remGroup.group = 'RuleDeleteAPERemark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.passiveSegments = [];
 
     resultItems.forEach((element) => {
       const lineNos = this.pnrService.getRemarkLineNumbers(element);
       if (lineNos) {
-        lineNos.forEach(lineNo => {
+        lineNos.forEach((lineNo) => {
+          remGroup.deleteRemarkByIds.push(lineNo);
+        });
+      }
+    });
+
+    return remGroup;
+  }
+
+  public getDeleteAPERemarksRuleResult(resultItems) {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'RuleDeleteAPERemark';
+    remGroup.remarks = new Array<RemarkModel>();
+
+    resultItems.forEach((element) => {
+      const lineNos = this.pnrService.getAPELineNumbers(element);
+      if (lineNos) {
+        lineNos.forEach((lineNo) => {
           remGroup.deleteRemarkByIds.push(lineNo);
         });
       }
@@ -90,7 +106,7 @@ export class RuleWriterService {
 
   private getUIValues(key: any, element: any, result: any, isUI: boolean) {
     const tsts = this.pnrService.getTstLength();
-    const iteration = (key.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
+    const iteration = key.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
     const origkey = key;
     const origelement = element;
     for (let i = 1; i <= iteration; i++) {

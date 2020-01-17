@@ -263,7 +263,7 @@
   </div>
 </div>
 
-<div *ngIf="!isPnrLoaded" class="loaderBody">
+<div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
   <div class="loader">
     Unable to load PNR or no PNR is loaded in Amadeus.
   </div>

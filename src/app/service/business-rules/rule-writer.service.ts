@@ -14,6 +14,8 @@ import { RulesReaderService } from './rules-reader.service';
 })
 export class RuleWriterService {
   additionaRemarks = [];
+  crypticCommands = [];
+  linesToBeDeleted = [];
 
   constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
@@ -44,23 +46,22 @@ export class RuleWriterService {
     this.additionaRemarks.forEach((element) => {
       remGroup.remarks.push(this.remarkHelper.createRemark(element.text, element.remarktype, element.category, element.segmentAssoc));
     });
+
+    this.crypticCommands.forEach((element) => {
+      remGroup.cryptics.push(element);
+    });
     return remGroup;
   }
 
-  public getDeleteRemarksRuleResult(resultItems) {
-    const remGroup = new RemarkGroup();
-    remGroup.group = 'RuleDeleteAPERemark';
-    remGroup.remarks = new Array<RemarkModel>();
-
+  public getDeleteRemarksRuleResult(resultItems, type?: string) {
     resultItems.forEach((element) => {
-      const lineNos = this.pnrService.getRemarkLineNumbers(element);
+      const lineNos = this.pnrService.getRemarkLineNumbers(element, type);
       if (lineNos) {
         lineNos.forEach((lineNo) => {
           remGroup.deleteRemarkByIds.push(lineNo);
         });
       }
     });
-
     return remGroup;
   }
 
@@ -77,6 +78,17 @@ export class RuleWriterService {
         });
       }
     });
+  }
+
+  public deleteRemarks() {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'RuleDeleteRemark';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.passiveSegments = [];
+
+    this.linesToBeDeleted.forEach((element) => {
+      remGroup.deleteRemarkByIds.push(element);
+    });
 
     return remGroup;
   }
@@ -85,13 +97,24 @@ export class RuleWriterService {
     let isUI = false;
     resultItems.forEach((element) => {
       const regEx = /(\[(?:\[??[^\[]*?\]))/g;
-      element.match(regEx).forEach((result) => {
-        const key = result.replace('[', '').replace(']', '');
-        isUI = this.getUIValues(key, element, result, isUI);
-      });
+      const uiRemarks = element.match(regEx);
+      if (uiRemarks) {
+        uiRemarks.forEach((result) => {
+          const key = result.replace('[', '').replace(']', '');
+          isUI = this.getUIValues(key, element, result, isUI);
+        });
+      }
+
       if (!isUI) {
         this.formatRemarkRuleResult(element);
       }
+    });
+  }
+
+  getCypticCommandRemark(resultItems) {
+    this.crypticCommands = [];
+    resultItems.forEach((element) => {
+      this.crypticCommands.push(element);
     });
   }
 

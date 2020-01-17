@@ -153,12 +153,17 @@ export class RulesEngineService {
     this.ruleWriter.getWriteRemarkWithCondition(resulttItems);
     resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_SEGMENT_RELATE').resultItems;
     this.ruleWriter.getWriteRemarkWithSegmentRelate(resulttItems);
+    resulttItems = this.getSpecificRulesValue('PNR_ADD_CRYPTIC_COMMAND').resultItems;
+    this.ruleWriter.getCypticCommandRemark(resulttItems);
     return this.ruleWriter.writeRuleRemarks();
   }
 
   getRuleDeleteRemarks() {
-    const resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
-    return this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
+    let resulttItems = this.getSpecificRulesValue('PNR_DELETE_Remark').resultItems;
+    this.ruleWriter.getDeleteRemarksRuleResult(resulttItems);
+    resulttItems = this.getSpecificRulesValue('PNR_DELETE_AM_REMARKS').resultItems;
+    this.ruleWriter.getDeleteRemarksRuleResult(resulttItems, 'AM');
+    return this.ruleWriter.deleteRemarks();
   }
 
   getRuleDeleteAPERemarks() {

@@ -23,7 +23,7 @@ export class QueueComponent implements OnInit {
   hasRules = false;
   isEsc = false;
   isOfc = false;
-  constructor(private counselorDetail: CounselorDetail, private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
+  constructor(private counselorDetail: CounselorDetail, private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) { }
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'QUEUE');
@@ -44,6 +44,14 @@ export class QueueComponent implements OnInit {
     if (this.itineraryComponent.itineraryForm.touched && !this.itineraryComponent.itineraryForm.valid) {
       return false;
     }
+
+    if (this.containerComponent) {
+      this.utilHelper.validateAllFields(this.containerComponent.containerForm);
+      if (!this.containerComponent.containerForm.valid) {
+        return false;
+      }
+    }
+
     return true;
   }
 }

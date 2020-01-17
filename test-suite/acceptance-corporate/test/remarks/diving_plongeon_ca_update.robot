@@ -25,7 +25,7 @@ Verify That The Remarks Should Not Be Updated For Diving Plongeon Canada If RM*D
     Verify Remarks Are Added Correctly In The PNR
     
 Verify That The Remarks Should Not Be Updated For Diving Plongeon Canada If RM*DP Remark Is Any Except C6RX and CAMO
-    [Tags]    us15245    not_ready
+    [Tags]    us15245
     Create PNR With Passive Air Segments For Client C6R, Any RM*DP Remark Except CAMO and C6RX
     Complete The PNR In Full Wrap
     Verify Remarks Are Added Correctly In The PNR

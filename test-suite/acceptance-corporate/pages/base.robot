@@ -15,7 +15,6 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          ../../resources/common/api-utilities.txt
 
-
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[contains(text(),'CWT Corp ${env}')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
@@ -83,8 +82,6 @@ Close CA Corporate Test
 
 Click Full Wrap
     Wait Until Page Contains Element   ${button_full_wrap}    180
-    Sleep     2
-    Wait Until Page Contains Element   ${button_full_wrap}    20
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180

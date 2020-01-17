@@ -13,14 +13,14 @@ Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify That The Amadeus TK Line is Written When "PNR On Hold" is Selected
-    [Tags]    us11386
+    [Tags]    us11386    sanity_test
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code AC
     Fill Up Ticketing Panel With PNR ON HOLD
     Verify That Aqua TK Line Is Written Correctly For PNR On Hold
     
 Verify That The Amadeus TK Line is Written When "Fee Only" is Selected
-    [Tags]    us11386
+    [Tags]    us11386    sanity_test
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code AC
     Fill Up Ticketing Panel For FEE ONLY

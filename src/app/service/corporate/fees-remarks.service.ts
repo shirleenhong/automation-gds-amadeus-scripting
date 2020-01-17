@@ -131,9 +131,12 @@ export class FeesRemarkService {
       if (this.ddbService.isPnrTransBorder()) {
         route = 'TB';
       } else if (this.ddbService.isPnrDomestic()) {
-        route = 'TI';
-      } else {
         route = 'TD';
+      } else {
+        route = 'TI';
+      }
+      if (feeType === 'C' || feeType === 'H') {
+        route = 'BD';
       }
     } else if (ebRemark.indexOf('EB/-EB') >= 0) {
       if (feeType === 'A' || feeType === 'R') {

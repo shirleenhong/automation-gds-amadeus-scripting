@@ -69,6 +69,7 @@ export class CorporateComponent implements OnInit {
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;
+  loading = false;
   showAquaFeeButton = false;
   version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
@@ -115,14 +116,15 @@ export class CorporateComponent implements OnInit {
     private rulesEngine: RulesEngineService,
     private commonRemarkService: CommonRemarkService
   ) {
+    this.loading = true;
     this.initData();
-    this.getPnrService();
   }
 
   async ngOnInit(): Promise<void> {
     if (this.modalRef) {
       this.modalRef.hide();
     }
+    this.getPnrService();
   }
 
   showRule() {
@@ -157,10 +159,12 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
+    this.loading = true;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    this.loading = false;
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
@@ -691,6 +695,7 @@ export class CorporateComponent implements OnInit {
   public async aquaFees() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
+    await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'aquaFees';

@@ -39,17 +39,15 @@ BEGIN TRY
 
 
            INSERT INTO [dbo].[PNROutputPlaceHolder]([PNROutputPlaceHolderName],[PNROutputPlaceHolderRegularExpresssion],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber])
-                                                            VALUES ( '%TicketSequence%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 ),
-                                                                      ( '%NumberOfTickets%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 )
+                                                            VALUES    ( '%TicketSequence%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 ),
+                                                                      ( '%NumberOfTickets%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 ),
+																	  ( '%TktRoute%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 ),
+																	  ( '%InvSegment%', '(.*)',@CreationTimestamp, @CreationUserIdentifier, 1 )
+
                                                                                       
              INSERT INTO [dbo].[PNROutputItem]       ([PNROutputItemId],[PNROutputRemarkTypeCode],[PNROutputBindingTypeCode], [PNROutputUpdateTypeCode],[GDSRemarkQualifier],[RemarkFormat],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber],[PNROutputItemDefaultLanguageCode],[PNROutputItemXMLFormat])
-                                                            VALUES       (@PNROutputItemId + 1,0,'S',1,'T','TKT%TicketSequence%-ETK', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
-                                                                    (@PNROutputItemId + 2,0,'S',1,'T','TKT%TicketSequence%-INV-LIMO', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
-                                                                          (@PNROutputItemId + 3,0,'S',1,'T','TKT%TicketSequence%-INV-HTL', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
-                                                                          (@PNROutputItemId + 4,0,'S',1,'T','TKT%TicketSequence%-INV-CAR', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
-                                                                          (@PNROutputItemId + 5,0,'S',1,'T','TKT%TicketSequence%-DOM', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
-                                                                          (@PNROutputItemId + 6,0,'S',1,'T','TKT%TicketSequence%-TRANS', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
-                                                                          (@PNROutputItemId + 7,0,'S',1,'T','TKT%TicketSequence%-INTL', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
+                                                            VALUES       (@PNROutputItemId + 1,0,'S',1,'T','TKT%TicketSequence%-%InvSegment%', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
+                                                                          (@PNROutputItemId + 5,0,'S',1,'T','TKT%TicketSequence%-%TktRoute%', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
                                                                           (@PNROutputItemId + 8,0,'0',1,'Q','ADVISED USTRAVEL A PASSPORT AND VISA ARE REQUIRED', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
                                                                           (@PNROutputItemId + 9,0,'0',1,'Q','ADVISED USTRAVEL 6 MONTH FROM DEPARTURE', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL),
                                                                           (@PNROutputItemId + 10,0,'0',1,'T','SPLIT%NumberOfTickets%', @CreationTimestamp,@CreationUserIdentifier,1,'en-GB',NULL)
@@ -88,16 +86,6 @@ END CATCH
 
 
 
-
-
-
- 
-Stanley Berano Teh (Software Engr. – Business Platforms Group)
-31F Zuellig Building, Makati Avenue corner Paseo De Roxas
-Makati City, Philippines
-+63927-8874408
- 
-With offices in more than 150 countries and territories, Carlson Wagonlit Travel deploys the right people, processes, technologies and skills to consistently deliver effective travel management and bottom-line results.
  
 
 

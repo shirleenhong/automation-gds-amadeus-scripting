@@ -15,7 +15,7 @@ ${test_file_name}    emergency_contact
 
 *** Test Cases ***
 Verify That The Emergency Contact Info Remarks Are Correctly Written When Only Mandatory Fields Are Filled
-    [TAGS]    us9677    
+    [TAGS]    us9677        sanity_test
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Emergency Contact, Mandatory Fields Only
     Add 2 Emergency Contact For Mandatory Fields Only

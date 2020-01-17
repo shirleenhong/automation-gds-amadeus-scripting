@@ -17,7 +17,7 @@ export class RuleWriterService {
   crypticCommands = [];
   linesToBeDeleted = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -57,24 +57,8 @@ export class RuleWriterService {
     resultItems.forEach((element) => {
       const lineNos = this.pnrService.getRemarkLineNumbers(element, type);
       if (lineNos) {
-        lineNos.forEach((lineNo) => {
-          remGroup.deleteRemarkByIds.push(lineNo);
-        });
-      }
-    });
-    return remGroup;
-  }
-
-  public getDeleteAPERemarksRuleResult(resultItems) {
-    const remGroup = new RemarkGroup();
-    remGroup.group = 'RuleDeleteAPERemark';
-    remGroup.remarks = new Array<RemarkModel>();
-
-    resultItems.forEach((element) => {
-      const lineNos = this.pnrService.getAPELineNumbers(element);
-      if (lineNos) {
-        lineNos.forEach((lineNo) => {
-          remGroup.deleteRemarkByIds.push(lineNo);
+        lineNos.forEach(lineNo => {
+          this.linesToBeDeleted.push(lineNo);
         });
       }
     });
@@ -93,6 +77,23 @@ export class RuleWriterService {
     return remGroup;
   }
 
+  public getDeleteAPERemarksRuleResult(resultItems) {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'RuleDeleteAPERemark';
+    remGroup.remarks = new Array<RemarkModel>();
+
+    resultItems.forEach((element) => {
+      const lineNos = this.pnrService.getAPELineNumbers(element);
+      if (lineNos) {
+        lineNos.forEach((lineNo) => {
+          remGroup.deleteRemarkByIds.push(lineNo);
+        });
+      }
+    });
+    return remGroup;
+  }
+
+  
   getPnrAddRemark(resultItems) {
     let isUI = false;
     resultItems.forEach((element) => {

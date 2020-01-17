@@ -34,7 +34,7 @@ Verify That Aqua Ticketing Instructions Remark are Written for Multiple Unticket
     Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 5
     
 Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Air Segments With Limo, Hotel, and Car Segments
-    [Tags]    us11219
+    [Tags]    us11219    sanity_test
     Login To Amadeus Sell Connect Acceptance
     Create PNR With One TST For Airline Code AC
     Add 1 Limo Segments

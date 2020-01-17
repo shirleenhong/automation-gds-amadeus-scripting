@@ -82,7 +82,9 @@ Close CA Corporate Test
     Set Test Variable    ${current_page}    Amadeus
 
 Click Full Wrap
-    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Wait Until Page Contains Element   ${button_full_wrap}    180
+    Sleep     2
+    Wait Until Page Contains Element   ${button_full_wrap}    20
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
@@ -645,7 +647,7 @@ Verify Unexpected Remarks Are Not Written In The PNR
 
 Verify Remarks Are Added Correctly In The PNR
     Finish PNR   queueing=yes
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     
 Verify Remarks Are Not Found In The PNR
     Finish PNR   queueing=yes

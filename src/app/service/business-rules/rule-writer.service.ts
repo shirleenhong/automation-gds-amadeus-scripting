@@ -54,18 +54,26 @@ export class RuleWriterService {
   }
 
   public getDeleteRemarksRuleResult(resultItems, type?: string) {
-    const remGroup = new RemarkGroup();
-    remGroup.group = 'RuleDeleteAPERemark';
-    remGroup.remarks = new Array<RemarkModel>();
-
     resultItems.forEach((element) => {
       const lineNos = this.pnrService.getRemarkLineNumbers(element, type);
       if (lineNos) {
-        lineNos.forEach((lineNo) => {
-          remGroup.deleteRemarkByIds.push(lineNo);
+        lineNos.forEach(lineNo => {
+          this.linesToBeDeleted.push(lineNo);
         });
       }
     });
+  }
+
+  public deleteRemarks() {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'RuleDeleteRemark';
+    remGroup.remarks = new Array<RemarkModel>();
+    remGroup.passiveSegments = [];
+
+    this.linesToBeDeleted.forEach((element) => {
+      remGroup.deleteRemarkByIds.push(element);
+    });
+
     return remGroup;
   }
 
@@ -85,19 +93,7 @@ export class RuleWriterService {
     return remGroup;
   }
 
-  public deleteRemarks() {
-    const remGroup = new RemarkGroup();
-    remGroup.group = 'RuleDeleteRemark';
-    remGroup.remarks = new Array<RemarkModel>();
-    remGroup.passiveSegments = [];
-
-    this.linesToBeDeleted.forEach((element) => {
-      remGroup.deleteRemarkByIds.push(element);
-    });
-
-    return remGroup;
-  }
-
+  
   getPnrAddRemark(resultItems) {
     let isUI = false;
     resultItems.forEach((element) => {

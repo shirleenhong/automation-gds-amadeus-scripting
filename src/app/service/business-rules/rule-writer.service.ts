@@ -17,7 +17,7 @@ export class RuleWriterService {
   crypticCommands = [];
   linesToBeDeleted = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -54,6 +54,10 @@ export class RuleWriterService {
   }
 
   public getDeleteRemarksRuleResult(resultItems, type?: string) {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'RuleDeleteAPERemark';
+    remGroup.remarks = new Array<RemarkModel>();
+
     resultItems.forEach((element) => {
       const lineNos = this.pnrService.getRemarkLineNumbers(element, type);
       if (lineNos) {
@@ -78,6 +82,7 @@ export class RuleWriterService {
         });
       }
     });
+    return remGroup;
   }
 
   public deleteRemarks() {

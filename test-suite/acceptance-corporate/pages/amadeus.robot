@@ -697,7 +697,7 @@ Book ${numberOfAir} Active Air Segments
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
-    \    Enter Cryptic Command    SS${passenger_no}Y${seat_${i}}
+    \    Enter Cryptic Command    SS${passenger_no}${class_${i}}${seat_${i}}
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}
     # \    ${passenger_no}    
       
@@ -706,7 +706,7 @@ Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
-    \    Enter Cryptic Command    SS1Y${seat_${i}}
+    \    Enter Cryptic Command    SS1${class_${i}}${seat_${i}}
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
     
 Add Other Remarks

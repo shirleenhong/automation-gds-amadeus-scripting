@@ -57,7 +57,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact    Fare Rule    Associated Remarks
 @{fees_pages}    Fees
-@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab
+@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab    Client Queue
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
@@ -376,6 +376,7 @@ Navigate From Queue
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
     ...    ELSE IF    "${destination_page}" == "CWT Itinerary Tab"    Click CWT Itinerary Tab In Full Wrap
+    ...    ELSE IF    "${destination_page}" == "Client Queue"    Click Client Queue Tab
     
 Navigate From Itinerary And Queue
     [Arguments]    ${destination_page}
@@ -422,8 +423,12 @@ Submit To PNR
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
+    Fill Up UDID Field As Needed
     Collapse Open Panel
     Click Submit To PNR    ${close_corporate_test}    ${queueing}        
+
+Fill Up UDID Field As Needed
+    Run Keyword If    "${cfa}" == "SGE" and "${num_air_segments}" != "0"    Enter 1 Airline Code/s For CDR per TKT
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
@@ -597,10 +602,18 @@ Get Air Segment Values From Json
     \    ${airline_code}    Get Json Value As String   ${json_file_object}    $.['${client_data}'].AirlineCode${i}
     \    ${price_cmd}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PriceCommand${i}
     \    Assign Seat Select Value    ${json_file_object}    ${client_data}    ${i}
+    \    Assign Seat Class Value    ${json_file_object}    ${client_data}    ${i}
     \    Set Test Variable    ${air_seg_route_${i}}    ${air_seg_route}
     \    Set Test Variable    ${airline_code_${i}}    ${airline_code} 
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
     
+Assign Seat Class Value
+    [Arguments]    ${json_file_object}    ${client_data}    ${index}
+    ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatClass${index}
+    ${class}    Run Keyword If    ${exists}     Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatClass${index}
+    ...    ELSE    Set Variable    Y
+    Set Test Variable    ${class_${index}}    ${class}
+
 Assign Seat Select Value
     [Arguments]    ${json_file_object}    ${client_data}    ${index}
     ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatSelect${index}

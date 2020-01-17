@@ -38,7 +38,7 @@ export class RulesReaderService {
     { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g },
     { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g },
     { type: 'RM', category: '*', regex: /EB\/(?<PNR_EB>.*)/g },
-    { type: 'RM', category: '*', regex: /DP\/(?<PNR_REMARKS_INVOICE>.*)/g }
+    { type: 'RM', category: '*', regex: /DP\/-(?<PNR_DP>.*)/g }
   ];
 
   constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) { }
@@ -190,7 +190,7 @@ export class RulesReaderService {
 
   private checkAmExists() {
     const amElements = (this.pnrService.pnrObj.amElements.length >= 0);
-    this.assignKeyValue('PNR_AM_REMARKS_EXIST', amElements);
+    this.assignKeyValue('PNR_AM_REMARKS_EXIST', amElements.toString().toUpperCase());
   }
 
   parseCarSegments() {

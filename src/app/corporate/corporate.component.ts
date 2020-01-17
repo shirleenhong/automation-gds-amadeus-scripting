@@ -406,7 +406,7 @@ export class CorporateComponent implements OnInit {
       this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
     );
 
-    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
 
     await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
@@ -463,7 +463,8 @@ export class CorporateComponent implements OnInit {
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
     passiveSegmentList: PassiveSegmentModel[],
-    forDeleteRemarks: string[]
+    forDeleteRemarks: string[],
+    commandList: string[]
   ) {
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
@@ -479,6 +480,12 @@ export class CorporateComponent implements OnInit {
           forDeleteRemarks.push(del);
         });
       }
+      if (rem.cryptics) {
+        rem.cryptics.forEach((del) => {
+          commandList.push(del);
+        });
+      }
+
     });
   }
 
@@ -585,7 +592,7 @@ export class CorporateComponent implements OnInit {
     }
     remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion);
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
     //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);

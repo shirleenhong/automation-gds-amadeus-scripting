@@ -41,8 +41,8 @@ declare @ISNOT as int
 declare @CONTAINS as int
 declare @NOTCONTAINS as int
 DECLARE @CFA as varchar(5) = 'C6R'
-set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15245'
-set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 1'
+set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15245 - 2'
+set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 2'
 
 set @ClientSubUnitGuid = 'A:FA177'
 set @TravellerTypeGuid = ''
@@ -177,7 +177,7 @@ WHERE BusinessEntityName='PNR_DP';
 SET @bid5=null; 
 SELECT @bid5=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_AM_REMARKS_EXIST';  
+WHERE BusinessEntityName='PNR_Y';  
 
 SET @logicitemid = null; 
 
@@ -186,18 +186,19 @@ SET @logicitemid = null;
     ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
     ( @CDRGRoupName, @bid, @IN, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, @CONTAINS, 'CAMO', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    ( @CDRGRoupName, @bid4, @CONTAINS, 'CAMO', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid5, @CONTAINS, 'TAX-ON', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
   
-    SET @logicitemid = SCOPE_IDENTITY() - 2
+    SET @logicitemid = SCOPE_IDENTITY() - 3
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic
     (ClientDefinedRuleLogicItemId, ClientDefinedRuleGroupId, LogicSequenceNumber, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 values
     (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	(@logicitemid + 2, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	--(@logicitemid + 3, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	(@logicitemid + 2, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@logicitemid + 3, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	--(@logicitemid + 2, @CDRGId, 2 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
 	--(@logicitemid + 3, @CDRGId, 3 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1);
 		   
@@ -216,11 +217,11 @@ WHERE BusinessEntityName='UI_DISPLAY_CONTAINER';
 
 SELECT @bid3= ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_ADD_CRYPTIC_COMMAND'; 
+WHERE BusinessEntityName='PNR_ADD_Remark'; 
 
 SELECT @bid4 =  ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_DELETE_AM_REMARKS'; 
+WHERE BusinessEntityName='PNR_DELETE_Remark'; 
 
 
 
@@ -231,8 +232,8 @@ WHERE BusinessEntityName='PNR_DELETE_AM_REMARKS';
 VALUES
 
     ( @CDRGRoupName, @bid2, 'SUBMIT', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, 'AM//CY-CLUB DE PLONGEON CAMO/NA-AARON DZIVER/A1-1000 EMILE-JOURNAULT/ZP-H2M 2E7/CI-MONTREAL/ST-QC/CO-CA', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, '', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    ( @CDRGRoupName, @bid3, 'RMY TAX-QC', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'TAX-ON', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
 

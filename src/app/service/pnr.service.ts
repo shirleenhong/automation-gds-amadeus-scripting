@@ -187,8 +187,15 @@ export class PnrService {
             if (type === 'RI') {
                 remarksList = this.pnrObj.riElements;
             }
+            if (type === 'AM') {
+                remarksList = this.pnrObj.amElements;
+            }
+
             for (const rm of remarksList) {
-                if (rm.freeFlowText.indexOf(searchText) === 0) {
+                if (rm.freeFlowText && rm.freeFlowText.indexOf(searchText) === 0) {
+                    lineNos.push(rm.elementNumber);
+                }
+                if (type === 'AM') {
                     lineNos.push(rm.elementNumber);
                 }
             }
@@ -593,10 +600,10 @@ export class PnrService {
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             let longText = '';
             if (elem.fullNode.itineraryFreetext) {
-            longText = elem.fullNode.itineraryFreetext.longFreetext;
+                longText = elem.fullNode.itineraryFreetext.longFreetext;
             } else if (this.pnrObj.miscSegments.fullNode) {
 
-            longText = this.pnrObj.miscSegments.fullNode.itineraryFreetext.longFreetext;
+                longText = this.pnrObj.miscSegments.fullNode.itineraryFreetext.longFreetext;
             }
             elemVendorCode = this.getVendorCodeForPassiveCar(longText);
             if (type !== 'HHL') {

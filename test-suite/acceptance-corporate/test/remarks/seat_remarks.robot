@@ -19,7 +19,7 @@ ${test_file_name}    seat_remarks
 
 *** Test Cases ***
 Verify Seat Remarks Are Written Corretly In The PNR For Single Segment Selection In EN Language
-    [Tags]    us11820
+    [Tags]    us11820    sanity_test
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Corporate, With Seat Remarks For Single Segment For EN
     Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade

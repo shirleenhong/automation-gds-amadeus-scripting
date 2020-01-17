@@ -55,37 +55,37 @@ export class FeesRemarkService {
 
   writeFeeRemarks(feeGroup: FormGroup) {
     const fees = feeGroup.get('segments') as FormArray;
-    this.writeFees(fees);
+    let counter = 1;
+    for (const group of fees.controls) {
+      this.writeFee(counter, group);
+      counter++;
+    }
   }
 
-  private writeFees(items: FormArray) {
-    let counter = 1;
-    for (const group of items.controls) {
-      const feeMap = new Map<string, string>();
-      const fees = [];
-      if (group.get('code').value !== '') {
-        fees.push(group.get('code').value + group.get('fee').value.toString());
-      }
+  writeFee(counter, group, segmentRelate?, additionalFee?) {
+    const feeMap = new Map<string, string>();
+    const fees = [];
+    if (group.get('code').value !== '') {
+      const feeAmt = group.get('fee').value;
+      fees.push(group.get('code').value + (feeAmt ? feeAmt.toString() : ''));
+    }
 
-      if (group.get('supplementalFee').value !== '') {
-        fees.push(group.get('supplementalFee').value);
-      }
+    if (group.get('supplementalFee').value !== '') {
+      fees.push(group.get('supplementalFee').value);
+    }
 
-      let feeValue = fees.join('/');
+    let feeValue = fees.join('/') + (additionalFee ? additionalFee : '');
 
-      if (feeValue === '') {
-        feeValue = group.get('noFeeCode').value;
-      }
+    if (feeValue === '') {
+      feeValue = group.get('noFeeCode').value;
+    }
 
-      if (feeValue !== '') {
-        feeMap.set('SupFeeInfo', feeValue);
-        feeMap.set('SupFeeTicketId', counter.toString());
-        this.remarksManager.createPlaceholderValues(feeMap, null, null);
-      } else {
-        this.remarksManager.createEmptyPlaceHolderValue(['SupFeeInfo', 'SupFeeTicketId'], null, 'SUPFEE');
-      }
-
-      counter++;
+    if (feeValue !== '') {
+      feeMap.set('SupFeeInfo', feeValue);
+      feeMap.set('SupFeeTicketId', counter.toString());
+      this.remarksManager.createPlaceholderValues(feeMap, null, segmentRelate);
+    } else {
+      this.remarksManager.createEmptyPlaceHolderValue(['SupFeeInfo', 'SupFeeTicketId'], null, 'SUPFEE');
     }
   }
 
@@ -96,23 +96,33 @@ export class FeesRemarkService {
     }
 
     /// DELETE REMARKS
-    this.remarksManager.createEmptyPlaceHolderValue([], null, 'NUC');
+    const h = new Map<string, string>();
+    h.set('IsNuc', 'false');
+    this.remarksManager.createPlaceholderValues(null, h, null, null, 'NUC');
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue'], null, 'OVERRIDE');
     this.remarksManager.createEmptyPlaceHolderValue(['FeesPlaceholder'], null, 'FEE');
     this.remarksManager.createEmptyPlaceHolderValue(['SfcPlaceholder'], null, 'SFC');
 
-    const feeType = comp.aquaFeeForm.get('feeType').value;
-
-    const feeCode = this.getFeeCode(feeType);
-    const feeMap = new Map<string, string>();
-    feeMap.set('SupFeeInfo', feeCode);
-    feeMap.set('SupFeeTicketId', '1');
     const tatoos = this.pnrService.getTatooNumberFromSegmentNumber(comp.aquaFeeForm.get('segments').value.split(','));
-    this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
+    const feeType = comp.aquaFeeForm.get('feeType').value;
+    const ebRemark = this.pnrService.getRemarkText('EB/-');
+    const feeInfo = this.getFeeCode(feeType, ebRemark);
+    if (ebRemark === '' && comp.isShowSupFee) {
+      const fees = comp.suppFeeComponent.ticketedForm.get('segments') as FormArray;
+      let addInfo = null;
+      if (comp.suppFeeComponent.hasOlbFee) {
+        addInfo = '/OLB';
+      }
+      this.writeFee(1, fees.controls[0], tatoos.length > 0 ? tatoos : null, addInfo);
+    } else {
+      const feeMap = new Map<string, string>();
+      feeMap.set('SupFeeInfo', feeInfo);
+      feeMap.set('SupFeeTicketId', '1');
+      this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
+    }
   }
 
-  private getFeeCode(feeType) {
-    const ebRemark = this.pnrService.getRemarkText('EB/-');
+  private getFeeCode(feeType, ebRemark) {
     let route = '';
 
     if (feeType === 'L') {

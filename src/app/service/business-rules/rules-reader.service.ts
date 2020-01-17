@@ -148,14 +148,17 @@ export class RulesReaderService {
 
   private parseAirlineCodes() {
     const codes = [];
+    const serviceClass = [];
     if (this.pnrService.pnrObj.airSegments !== undefined && this.pnrService.pnrObj.airSegments.length > 0) {
       this.pnrService.pnrObj.airSegments.forEach((x) => {
         if (!codes.includes(x.airlineCode)) {
           codes.push(x.airlineCode);
         }
+        serviceClass.push(x.class);
       });
     }
     this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join('\n'));
+    this.businessEntities.set('PNR_AS_ClassOfService', serviceClass.join('\n'));
   }
 
   private getArrivaltime() {

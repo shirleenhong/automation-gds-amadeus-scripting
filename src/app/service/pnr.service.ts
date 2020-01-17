@@ -203,6 +203,19 @@ export class PnrService {
         return lineNos;
     }
 
+    getAPELineNumbers(searchText: string) {
+        const lineNos: Array<string> = [];
+        if (this.isPNRLoaded) {
+            const apList = this.pnrObj.apElements;
+            for (const ap of apList) {
+                if (ap.freeFlowText.indexOf(searchText.split('APE')[1].trim()) === 0) {
+                    lineNos.push(ap.elementNumber);
+                }
+            }
+        }
+        return lineNos;
+    }
+
     getRemarkText(searchText: string) {
         if (this.isPNRLoaded) {
             for (const rm of this.pnrObj.rmElements) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
 import { DDBService } from 'src/app/service/ddb.service';
@@ -7,7 +7,7 @@ import { ReportingViewModel } from 'src/app/models/reporting-view.model';
 import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
-import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code.enum';
+import { ObtComponent } from '../obt/obt.component';
 
 @Component({
   selector: 'app-reporting-remarks',
@@ -25,7 +25,7 @@ export class ReportingRemarksComponent implements OnInit {
   showEBDetails: boolean;
   isCorporate = false;
   ebRList: { itemValue: string; itemText: string }[];
-
+  @ViewChild(ObtComponent) obtComponent: ObtComponent;
   @Input() reportingRemarksView = new ReportingViewModel();
   constructor(
     private pnrService: PnrService,
@@ -39,16 +39,9 @@ export class ReportingRemarksComponent implements OnInit {
   async ngOnInit() {
     this.reportingForm = new FormGroup({
       bspRouteCode: new FormControl('', [Validators.required]),
-      segments: this.fb.array([]),
-      ebR: new FormControl('', [Validators.required]),
-      ebT: new FormControl('', [Validators.required]),
-      ebN: new FormControl('GI', [Validators.required]),
-      ebC: new FormControl('', [Validators.required])
+      segments: this.fb.array([])
     });
-    this.reportingForm.get('ebR').disable();
-    this.reportingForm.get('ebT').disable();
-    this.reportingForm.get('ebN').disable();
-    this.reportingForm.get('ebC').disable();
+
     this.bspRoutingCodeProcess();
 
     await this.loadData();
@@ -59,8 +52,6 @@ export class ReportingRemarksComponent implements OnInit {
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
     this.isCorporate = this.counselorDetail.getIsCorporate();
-    await this.loadStaticValue();
-    this.checkEbRemark();
   }
   bspRoutingCodeProcess() {
     if (this.checkTripType()) {
@@ -125,56 +116,5 @@ export class ReportingRemarksComponent implements OnInit {
         }
       }
     }
-  }
-  checkEbRemark() {
-    this.showEBDetails = false;
-    let ebData = this.pnrService.getRemarkText('EB/');
-    if (ebData) {
-      ebData = ebData.split('/');
-      if (ebData.length === 3) {
-        this.populateEBFields(ebData);
-      }
-    }
-  }
-  async populateEBFields(eb) {
-    if (!this.isCorporate) {
-      this.showEBDetails = false;
-      return;
-    }
-    const ebR = eb[1].substr(0, 2);
-    const ebT = eb[1].substr(2, 1);
-    const ebN = eb[2].substr(0, 2);
-    const ebC = eb[2].substr(2, 1);
-
-    this.showEBDetails = ebR && ebT && ebN && ebC ? true : false;
-    if (this.showEBDetails) {
-      const ebrValues = this.ebRList.map((seat) => seat.itemValue);
-
-      if (ebrValues.indexOf(ebR) > -1) {
-        this.reportingForm.controls.ebR.setValue(ebR);
-      }
-
-      for (const c of this.ebCList) {
-        if (c.reasonCode === ebC) {
-          this.reportingForm.controls.ebC.setValue(ebC);
-        }
-      }
-      this.reportingForm.controls.ebT.setValue(ebT);
-      this.reportingForm.controls.ebN.setValue(ebN);
-      this.reportingForm.get('ebR').enable();
-      this.reportingForm.get('ebT').enable();
-      this.reportingForm.get('ebN').enable();
-      this.reportingForm.get('ebC').enable();
-    }
-  }
-  async loadStaticValue() {
-    const self = this;
-    await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.TouchReason], 8).then((x) => {
-      self.ebCList = x;
-    });
-    this.ebRList = [
-      { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
-      { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
-    ];
   }
 }

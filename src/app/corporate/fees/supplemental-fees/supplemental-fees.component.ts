@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { PnrService } from 'src/app/service/pnr.service';
 import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
@@ -36,6 +36,12 @@ export class SupplementalFeesComponent implements OnInit {
   isExchange = false;
   hasAir = false;
   hasTrain = false;
+  @Input()
+  isAquaFee = false;
+  @Input()
+  selectedSegmentType = '';
+  hasOlbFee = false;
+  hasAbfFee = false;
 
   constructor(
     private pnrService: PnrService,
@@ -52,7 +58,6 @@ export class SupplementalFeesComponent implements OnInit {
 
   async ngOnInit() {
     this.isApay = false;
-
     await this.loadData();
     if (this.pnrService.tstObj) {
       this.maxCount = this.pnrService.tstObj.length;
@@ -115,6 +120,8 @@ export class SupplementalFeesComponent implements OnInit {
     try {
       this.clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.cfa);
       this.supplementalFeeList = this.clientFees.filter((item) => item.feeTypeDescription === 'Supplemental Fee' && item.valueAmount > 0);
+      this.hasOlbFee = this.clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
+      this.hasAbfFee = this.clientFees.filter((item) => item.outputFormat === 'ABF' && item.valueAmount > 0).length > 0;
     } catch (e) {
       console.log(e);
     }
@@ -166,13 +173,26 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
+  updateFeeType(feeType) {
+    this.selectedSegmentType = feeType;
+    this.removeFee(0);
+    this.addFee();
+  }
+
   getCode() {
-    // const segments = this.pnrService.getSegmentTatooNumber().filter((x) => x.segmentType === 'AIR' || x.segmentType === 'TRN');
     let code = 'A';
+    let desti = 'T' + this.codeDestination;
     if (!this.hasAir && this.hasTrain) {
       code = 'R';
     }
-    return code + 'T' + this.codeDestination;
+    if (this.selectedSegmentType !== '') {
+      code = this.selectedSegmentType;
+      if (code === 'L') {
+        desti = 'BD';
+      }
+    }
+
+    return code + desti;
   }
 
   setFee(group: FormGroup, feeValue, feeType) {
@@ -191,7 +211,7 @@ export class SupplementalFeesComponent implements OnInit {
       group.get('fee').disable();
     }
     group.get('code').setValue(code);
-    group.get('fee').setValue(fee);
+    group.get('fee').setValue(fee === '0.00' ? '' : fee);
     group.get('noFeeCode').setValue('');
     group.get('feeType').setValue(feeType);
   }
@@ -225,7 +245,7 @@ export class SupplementalFeesComponent implements OnInit {
     if (this.specialFee > 0 && !this.isObt) {
       this.setFee(group, this.specialFee, 'special');
     } else {
-      group.get('fee').setValue('');
+      this.setFee(group, '', '');
     }
   }
 

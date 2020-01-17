@@ -28,7 +28,7 @@ export class PaymentRemarkService {
     private rms: RemarksManagerService,
     private ddbService: DDBService,
     private queService: AmadeusQueueService
-  ) {}
+  ) { }
 
   writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
@@ -539,7 +539,7 @@ export class PaymentRemarkService {
         totalGst += parseFloat(account.penaltyGst);
         totalHst += parseFloat(account.penaltyHst);
         totalQst += parseFloat(account.penaltyQst);
-      }      
+      }
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         totalBaseAmount,
@@ -701,9 +701,17 @@ export class PaymentRemarkService {
     });
 
     if (hasApay) {
-      const ebRemark = new Map<string, string>();
-      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
-      this.remarksManager.createPlaceholderValues(ebRemark);
+      // const ebRemark = new Map<string, string>();
+      // ebRemark.set('TouchLevelCA', 'AMA/-GIS');
+      // this.remarksManager.createPlaceholderValues(ebRemark);
+
+      const map = new Map<string, string>();
+      map.set('TouchLevel', 'AM');
+      map.set('OBTVendorCode', 'A');
+      map.set('TouchType', 'GI');
+      map.set('TouchReason', 'S');
+      this.remarksManager.createPlaceholderValues(map);
+
     }
   }
 
@@ -726,7 +734,7 @@ export class PaymentRemarkService {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Accounting Remark';
     remGroup.remarks = new Array<RemarkModel>();
-    remGroup.passiveSegments = [];    
+    remGroup.passiveSegments = [];
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {

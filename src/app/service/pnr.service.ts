@@ -187,9 +187,29 @@ export class PnrService {
             if (type === 'RI') {
                 remarksList = this.pnrObj.riElements;
             }
+            if (type === 'AM') {
+                remarksList = this.pnrObj.amElements;
+            }
+
             for (const rm of remarksList) {
-                if (rm.freeFlowText.indexOf(searchText) === 0) {
+                if (rm.freeFlowText && rm.freeFlowText.indexOf(searchText) === 0) {
                     lineNos.push(rm.elementNumber);
+                }
+                if (type === 'AM') {
+                    lineNos.push(rm.elementNumber);
+                }
+            }
+        }
+        return lineNos;
+    }
+
+    getAPELineNumbers(searchText: string) {
+        const lineNos: Array<string> = [];
+        if (this.isPNRLoaded) {
+            const apList = this.pnrObj.apElements;
+            for (const ap of apList) {
+                if (ap.freeFlowText.indexOf(searchText.split('APE')[1].trim()) === 0) {
+                    lineNos.push(ap.elementNumber);
                 }
             }
         }
@@ -591,14 +611,22 @@ export class PnrService {
             elemdepdate = fullnodetemp.product.depDate;
             arrivalDate = fullnodetemp.product.arrDate;
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
-            elemVendorCode = this.getVendorCodeForPassiveCar(elem.fullNode.itineraryFreetext.longFreetext);
+            let longText = '';
+            if (elem.fullNode.itineraryFreetext) {
+                longText = elem.fullNode.itineraryFreetext.longFreetext;
+            } else if (this.pnrObj.miscSegments.fullNode) {
+
+                longText = this.pnrObj.miscSegments.fullNode.itineraryFreetext.longFreetext;
+            }
+            elemVendorCode = this.getVendorCodeForPassiveCar(longText);
             if (type !== 'HHL') {
-                flongtext = elem.fullNode.itineraryFreetext.longFreetext;
+                flongtext = longText;
                 // passiveType = flongtext.substr(2, 7);
             } else {
                 flongtext = elem.hotelName;
                 // passiveType = 'TYP-HHL';
             }
+
             hotelChainCode = elem.chainCode ? elem.chainCode : '';
         }
 

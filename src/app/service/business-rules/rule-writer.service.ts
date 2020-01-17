@@ -5,7 +5,7 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { PnrService } from '../pnr.service';
 import { ControlConditionModel } from 'src/app/models/business-rules/control-condition.model';
-import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
+// import { RuleLogicEnum } from 'src/app/enums/rule-logic.enum';
 import { WriteConditionModel } from 'src/app/models/business-rules/write-condition.model';
 import { RulesReaderService } from './rules-reader.service';
 
@@ -14,8 +14,10 @@ import { RulesReaderService } from './rules-reader.service';
 })
 export class RuleWriterService {
   additionaRemarks = [];
+  crypticCommands = [];
+  linesToBeDeleted = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -44,22 +46,48 @@ export class RuleWriterService {
     this.additionaRemarks.forEach((element) => {
       remGroup.remarks.push(this.remarkHelper.createRemark(element.text, element.remarktype, element.category, element.segmentAssoc));
     });
+
+    this.crypticCommands.forEach((element) => {
+      remGroup.cryptics.push(element);
+    });
     return remGroup;
   }
 
-  public getDeleteRemarksRuleResult(resultItems) {
+  public getDeleteRemarksRuleResult(resultItems, type?: string) {
+    resultItems.forEach((element) => {
+      const lineNos = this.pnrService.getRemarkLineNumbers(element, type);
+      if (lineNos) {
+        lineNos.forEach((lineNo) => {
+          remGroup.deleteRemarkByIds.push(lineNo);
+        });
+      }
+    });
+    return remGroup;
+  }
+
+  public getDeleteAPERemarksRuleResult(resultItems) {
+    const remGroup = new RemarkGroup();
+    remGroup.group = 'RuleDeleteAPERemark';
+    remGroup.remarks = new Array<RemarkModel>();
+
+    resultItems.forEach((element) => {
+      const lineNos = this.pnrService.getAPELineNumbers(element);
+      if (lineNos) {
+        lineNos.forEach((lineNo) => {
+          remGroup.deleteRemarkByIds.push(lineNo);
+        });
+      }
+    });
+  }
+
+  public deleteRemarks() {
     const remGroup = new RemarkGroup();
     remGroup.group = 'RuleDeleteRemark';
     remGroup.remarks = new Array<RemarkModel>();
     remGroup.passiveSegments = [];
 
-    resultItems.forEach((element) => {
-      const lineNos = this.pnrService.getRemarkLineNumbers(element);
-      if (lineNos) {
-        lineNos.forEach(lineNo => {
-          remGroup.deleteRemarkByIds.push(lineNo);
-        });
-      }
+    this.linesToBeDeleted.forEach((element) => {
+      remGroup.deleteRemarkByIds.push(element);
     });
 
     return remGroup;
@@ -69,13 +97,24 @@ export class RuleWriterService {
     let isUI = false;
     resultItems.forEach((element) => {
       const regEx = /(\[(?:\[??[^\[]*?\]))/g;
-      element.match(regEx).forEach((result) => {
-        const key = result.replace('[', '').replace(']', '');
-        isUI = this.getUIValues(key, element, result, isUI);
-      });
+      const uiRemarks = element.match(regEx);
+      if (uiRemarks) {
+        uiRemarks.forEach((result) => {
+          const key = result.replace('[', '').replace(']', '');
+          isUI = this.getUIValues(key, element, result, isUI);
+        });
+      }
+
       if (!isUI) {
         this.formatRemarkRuleResult(element);
       }
+    });
+  }
+
+  getCypticCommandRemark(resultItems) {
+    this.crypticCommands = [];
+    resultItems.forEach((element) => {
+      this.crypticCommands.push(element);
     });
   }
 
@@ -90,7 +129,7 @@ export class RuleWriterService {
 
   private getUIValues(key: any, element: any, result: any, isUI: boolean) {
     const tsts = this.pnrService.getTstLength();
-    const iteration = (key.indexOf('TSTSEGMENT') > -1) ? tsts : 1;
+    const iteration = key.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
     const origkey = key;
     const origelement = element;
     for (let i = 1; i <= iteration; i++) {
@@ -162,23 +201,23 @@ export class RuleWriterService {
 
   checkControlValid(condition: ControlConditionModel) {
     const logicValue = condition.value.toLowerCase();
-    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName);
+    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName).toLowerCase();
     return this.checkEntity(entity, logicValue, condition.operator);
   }
 
   checkEntity(entity, logicValue, operator: string) {
     if (entity) {
       entity = entity.toLowerCase();
-      switch (RuleLogicEnum[operator]) {
-        case RuleLogicEnum.IS:
+      switch (operator) {
+        case 'IS':
           return entity === logicValue;
-        case RuleLogicEnum.CONTAINS:
+        case 'CONTAINS':
           return entity.indexOf(logicValue) >= 0;
-        case RuleLogicEnum.IS_NOT:
+        case 'IS_NOT':
           return entity !== logicValue;
-        case RuleLogicEnum.NOT_IN:
+        case 'NOT_IN':
           return logicValue.split('|').indexOf(entity) === -1;
-        case RuleLogicEnum.IN:
+        case 'IN':
           return logicValue.split('|').indexOf(entity) >= 0;
       }
     }

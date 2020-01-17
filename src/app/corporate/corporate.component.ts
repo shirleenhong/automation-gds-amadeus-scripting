@@ -46,6 +46,9 @@ import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
+import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
+import { common } from 'src/environments/common';
+
 declare var smartScriptUtils: any;
 @Component({
   selector: 'app-corporate',
@@ -61,12 +64,13 @@ export class CorporateComponent implements OnInit {
   cancelEnabled = true;
   validModel = new ValidateModel();
   itinValidModel = new ValidateModel();
-  dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
+  dataErrorMessages = new Array<string>();
   migrationOBTDates: Array<string>;
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;
-
+  showAquaFeeButton = false;
+  version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -83,6 +87,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
   @ViewChild(PricingComponent) pricingComponent: PricingComponent;
+  @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -122,7 +127,6 @@ export class CorporateComponent implements OnInit {
 
   showRule() {
     // get rule
-
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
       this.workflow = '';
@@ -153,7 +157,6 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
-    this.dataError.hasError = false;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
@@ -162,6 +165,7 @@ export class CorporateComponent implements OnInit {
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
+    this.checkValidForAquaFee();
   }
 
   initData() {
@@ -240,7 +244,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.cleanupRemarkService.cleanUpRemarks();
     await this.getPnrService();
-
+    this.resetDataLoadError();
     if (!this.pnrService.getClientSubUnit()) {
       this.closePopup();
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
@@ -269,17 +273,27 @@ export class CorporateComponent implements OnInit {
   }
 
   checkHasDataLoadError() {
-    this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
-    this.dataError.pnr = !this.isPnrLoaded;
-    this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
-    this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
-    this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-    this.dataError.hasError =
-      this.dataError.matching ||
-      this.dataError.pnr ||
-      this.dataError.reasonCode ||
-      this.dataError.servicingOption ||
-      this.dataError.supplier;
+    this.dataErrorMessages.length = 0;
+    if (!(this.rms.outputItems && this.rms.outputItems.length > 0)) {
+      this.dataErrorMessages.push('Unable to Match PNR from PNR Layout');
+    }
+    if (!(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0)) {
+      this.dataErrorMessages.push('Unable to get Supplier Codes from DDB');
+    }
+    // if (!(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0)) {
+    //   this.dataErrorMessages.push('Unable to Reason Codes');
+    // }
+    if (!(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0)) {
+      this.dataErrorMessages.push('Unable to Get Servicing Options');
+    }
+
+    if (!this.isPnrLoaded) {
+      this.dataErrorMessages.push('Unable to Load PNR');
+    }
+  }
+
+  resetDataLoadError() {
+    this.dataErrorMessages.length = 0;
   }
 
   public async SubmitToPNR() {
@@ -301,7 +315,6 @@ export class CorporateComponent implements OnInit {
     if (this.pricingComponent.exchangeEndorsementsComponent) {
       accRemarks.push(this.pricingService.getExchangeEndorsement(this.pricingComponent.exchangeEndorsementsComponent));
     }
-
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
@@ -354,7 +367,8 @@ export class CorporateComponent implements OnInit {
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
-    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.reportingForm);
+
+    this.reportingRemarkService.writeEBRemarks(this.reportingComponent.reportingRemarksComponent.obtComponent);
 
     this.invoiceRemarkService.sendU70Remarks();
 
@@ -395,13 +409,17 @@ export class CorporateComponent implements OnInit {
     }
 
     remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteAPERemarks());
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
-    remarkCollection.push(this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks));
+
+    remarkCollection.push(
+      await this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks)
+    );
     remarkCollection.push(
       this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
     );
 
-    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
 
     await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
@@ -453,11 +471,13 @@ export class CorporateComponent implements OnInit {
       }
     );
   }
+
   private getStaticModelRemarks(
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
     passiveSegmentList: PassiveSegmentModel[],
-    forDeleteRemarks: string[]
+    forDeleteRemarks: string[],
+    commandList: string[]
   ) {
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
@@ -473,6 +493,12 @@ export class CorporateComponent implements OnInit {
           forDeleteRemarks.push(del);
         });
       }
+      if (rem.cryptics) {
+        rem.cryptics.forEach((del) => {
+          commandList.push(del);
+        });
+      }
+
     });
   }
 
@@ -579,7 +605,7 @@ export class CorporateComponent implements OnInit {
     }
     remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion);
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
     //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
@@ -601,6 +627,7 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+    this.resetDataLoadError();
     this.cleanupRemarkService.revertDelete();
   }
 
@@ -614,6 +641,29 @@ export class CorporateComponent implements OnInit {
       this.closePopup();
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async sendAquaFees() {
+    if (this.isPnrLoaded) {
+      this.showLoading('Sending Aqua Fees...');
+      if (this.aquaFeesComponent.obtComponent) {
+        this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);
+      }
+      this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+
+      await this.rms.submitToPnr(null, null).then(
+        () => {
+          this.isPnrLoaded = false;
+          this.workflow = '';
+          this.getPnr();
+          this.closePopup();
+        },
+        (error) => {
+          console.log(JSON.stringify(error));
+          this.workflow = '';
+        }
+      );
     }
   }
 
@@ -635,6 +685,18 @@ export class CorporateComponent implements OnInit {
         this.setControl();
         // this.closePopup();
       }
+    }
+  }
+
+  public async aquaFees() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'aquaFees';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -812,5 +874,11 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
+  }
+
+  async checkValidForAquaFee() {
+    const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
+    const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+    this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
   }
 }

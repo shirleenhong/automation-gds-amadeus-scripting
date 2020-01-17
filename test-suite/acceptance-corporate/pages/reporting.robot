@@ -504,18 +504,14 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
 
 Verify Online Fields And Update Agent Assisted And Touch Reason Codes
     Navigate To Page Reporting Remarks
-    Verify Online Touch Reason Fields Are Populated With Correct Values    CT    A    GI    C
+    Verify Online Touch Reason Fields Are Populated With Correct Values    CT     C
     Update Agent Assisted And Touch Reason Code    AM    S
     
 Verify Online Touch Reason Fields Are Populated With Correct Values
-    [Arguments]    ${expected_agent_assisted}    ${expected_input_tool_identifier}    ${expected_online_format}    ${expected_touch_reason}
+    [Arguments]    ${expected_agent_assisted}    ${expected_touch_reason}
     ${actual_agent_assisted}     Get Value    ${list_agent_assisted}
-    ${actual_input_tool_identifier}     Get Value    ${input_tool_identifier}
-    ${actual_online_format}     Get Value    ${input_online_format}
     ${actual_touch_reason}     Get Value    ${list_touch_reason}
     Should Be Equal    ${actual_agent_assisted}    ${expected_agent_assisted}  
-    Should Be Equal    ${actual_input_tool_identifier}    ${expected_input_tool_identifier}
-    Should Be Equal    ${actual_online_format}    ${expected_online_format}  
     Should Be Equal    ${actual_touch_reason}    ${expected_touch_reason}
     Take Screenshot
 
@@ -777,3 +773,6 @@ Verify That UI Should Not Appear For Client ${client_code} When There Is No TSTs
     Close CA Corporate Test
     Logout To Amadeus Sell Connect
     
+Verify That The Remarks For Diving Plongeon Canada Are Updated Correctly
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR

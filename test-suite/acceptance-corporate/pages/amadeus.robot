@@ -94,6 +94,7 @@ Open CA Corporate Test
     Set Test Variable    ${ticketing_complete}     no
     Set Test Variable     ${ticketing_details}    no
     Set Test Variable     ${actual_counselor_identity}    ${EMPTY}
+    Set Test Variable     ${ignored_approval}    False
 
 Add Single BSP Segment And Store Fare
     Create 1 Test Dates
@@ -293,7 +294,7 @@ Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
     Take Screenshot
 
 Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    TKOK     RM*CF/-VB70000000C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*U86/-OVERRIDE OFC    TKOK     RM*CF/-AAA0000000C
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
@@ -301,7 +302,7 @@ Move Single Passenger And Add Passive Segment With Airline Code ${airline_code}
     Take Screenshot
     
 Move Single Passenger And Add Passive Segment For APAY With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK     RM*CF/-VB70000000C
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK     RM*CF/-AAA0000000C
     Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${consultant_number}    CN1
     Set Test Variable    ${airline_code}
@@ -317,7 +318,7 @@ Move Single Passenger For Specific Client And Add Passive Segment With Airline C
     Take Screenshot
 
 Move Single Passenger And Add Multiple Air Passive Segments With Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-VB70000000C        TKOK
+    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    RM*CF/-AAA0000000C        TKOK
     Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     Set Test Variable    ${airline_code}
     Handle Smart Tool PopUp

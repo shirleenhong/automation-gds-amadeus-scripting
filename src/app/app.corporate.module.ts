@@ -44,7 +44,9 @@ import { IrdRateRequestComponent } from './corporate/ird-rate-request/ird-rate-r
 import { IrdInvoiceRequestComponent } from './corporate/ird-rate-request/ird-invoice-request/ird-invoice-request.component';
 import { PricingComponent } from './corporate/pricing/pricing.component';
 import { AirFareCommissionComponent } from './corporate/pricing/air-fare-commission/air-fare-commission.component';
-import {ExchangeEndorsementsComponent} from './corporate/pricing/exchange-endorsements/exchange-endorsements.component'
+import { ExchangeEndorsementsComponent } from './corporate/pricing/exchange-endorsements/exchange-endorsements.component';
+import { ObtComponent } from './corporate/reporting/obt/obt.component';
+import { AquaFeesComponent } from './corporate/fees/aqua-fees/aqua-fees.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,9 @@ import {ExchangeEndorsementsComponent} from './corporate/pricing/exchange-endors
     IrdInvoiceRequestComponent,
     PricingComponent,
     AirFareCommissionComponent,
-    ExchangeEndorsementsComponent 
+    ExchangeEndorsementsComponent,
+    ObtComponent,
+    AquaFeesComponent
   ],
   imports: [
     BrowserModule,
@@ -110,4 +114,4 @@ import {ExchangeEndorsementsComponent} from './corporate/pricing/exchange-endors
   exports: [CorporateComponent],
   entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

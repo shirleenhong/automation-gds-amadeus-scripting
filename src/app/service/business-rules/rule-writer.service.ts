@@ -17,7 +17,7 @@ export class RuleWriterService {
   crypticCommands = [];
   linesToBeDeleted = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -57,7 +57,7 @@ export class RuleWriterService {
     resultItems.forEach((element) => {
       const lineNos = this.pnrService.getRemarkLineNumbers(element, type);
       if (lineNos) {
-        lineNos.forEach(lineNo => {
+        lineNos.forEach((lineNo) => {
           this.linesToBeDeleted.push(lineNo);
         });
       }
@@ -93,7 +93,6 @@ export class RuleWriterService {
     return remGroup;
   }
 
-  
   getPnrAddRemark(resultItems) {
     let isUI = false;
     resultItems.forEach((element) => {
@@ -202,7 +201,8 @@ export class RuleWriterService {
 
   checkControlValid(condition: ControlConditionModel) {
     const logicValue = condition.value.toLowerCase();
-    const entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName).toLowerCase();
+    let entity = this.ruleReader.businessEntities.get('UI_FORM_' + condition.controlName);
+    entity = entity ? entity.toLowerCase() : '';
     return this.checkEntity(entity, logicValue, condition.operator);
   }
 

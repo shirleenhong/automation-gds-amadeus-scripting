@@ -7,7 +7,7 @@ BEGIN TRY
 DECLARE @CreationUserIdentifier		NVARCHAR(150) = 'Amadeus CA Migration - US13840'
 
 
-DELETE FROM ConfigurationParameter where CreationUserIdentifier = @CreationUserIdentifier
+--- DELETE FROM ConfigurationParameter where CreationUserIdentifier = @CreationUserIdentifier
 
 INSERT INTO ConfigurationParameter
    (ConfigurationParameterName, ConfigurationParameterValue, ContextId, CreationTimestamp, CreationUserIdentifier, VersionNumber)
@@ -21,14 +21,6 @@ where CreationUserIdentifier in  ('Amadeus CA Migration - US11193', 'Amadeus CA 
 	DELETE FROM PNROutputItem WHERE CreationUserIdentifier in  (select PNROutputItemId
 from PNROutputItem
 where CreationUserIdentifier in  ('Amadeus CA Migration - US11193', 'Amadeus CA Migration - US100128'))
-	--DELETE FROM PNROutputPlaceHolder WHERE	CreationUserIdentifier = ('Amadeus CA Migration - US11193', 'Amadeus CA Migration - US100128')
-
-	
--- DELETE FROM PNROutputItem 
---  where CreationUserIdentifier in  ('Amadeus CA Migration - US11193', 'Amadeus CA Migration - US100128')
---     and RemarkFormat like 'EB/%'
-
-   --- UPDATE EB Remarks-------------
 
 
    if exists (select *

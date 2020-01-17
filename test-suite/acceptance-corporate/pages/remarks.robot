@@ -67,6 +67,7 @@ ${input_assoc_remark}    //input[@formcontrolname="remarkText"]
 ${label_ticket_amount}    //label[contains(text(), 'Ticket Amount')]
 ${span_nonRef_pct}    //span[contains(text(), 'Non-Refundable%:')]
 ${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
+${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
 
 *** Keywords ***
 Click Seats Tab
@@ -500,3 +501,7 @@ Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Verify Expected Remarks Are Written In The PNR
     Switch To Command Page
     
+Verify Dana International Advisory Is Not Displayed
+    Navigate to Page Visa And Passport
+    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
+    Take Screenshot

@@ -7,7 +7,6 @@ Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    dana_international_advisory
-${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
 
 *** Test Cases ***
 Verify Verbiage In Visa And Passport When CFA Is QR2 And Flight Is International
@@ -25,8 +24,3 @@ Verify Verbiage Is Not Displayed In Visa And Passport When CFA Is Not QR2
     Create PNR With Active Air Segments For Other Client 
     Verify Dana International Advisory Is Not Displayed
     
-*** Keywords ***    
-Verify Dana International Advisory Is Not Displayed
-    Navigate to Page Visa And Passport
-    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
-    Take Screenshot

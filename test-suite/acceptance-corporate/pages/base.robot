@@ -83,8 +83,6 @@ Close CA Corporate Test
 
 Click Full Wrap
     Wait Until Page Contains Element   ${button_full_wrap}    180
-    Sleep     2
-    Wait Until Page Contains Element   ${button_full_wrap}    20
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180

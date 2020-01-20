@@ -115,11 +115,11 @@ export class TicketingLineComponent implements OnInit {
       presetDone = this.presetSegmentCancelled();
     }
 
-    if (!presetDone) {
-      presetDone = this.presetSegmentByChargeFee();
-    }
+    // if (!presetDone) {
+    //   presetDone = this.presetSegmentByChargeFee();
+    // }
 
-    if (null === presetDone) {
+    if (!presetDone) {
       this.presetSegmentByIssueTix();
     }
   }
@@ -163,30 +163,30 @@ export class TicketingLineComponent implements OnInit {
    * Presets the TK dropdown to "INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY" if there is a matched
    * CFA Charging fee, else presets to "CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE".
    */
-  private presetSegmentByChargeFee(): boolean {
-    let hasChargingMatch = false;
-    const cfLine = this.pnrService.getCFLine();
+  // private presetSegmentByChargeFee(): boolean {
+  //   let hasChargingMatch = false;
+  //   const cfLine = this.pnrService.getCFLine();
 
-    if (cfLine) {
-      const cfaChargingFees = this.staticValues.getCfaChargingFees();
+  //   if (cfLine) {
+  //     const cfaChargingFees = this.staticValues.getCfaChargingFees();
 
-      for (const cfaChargingFee of cfaChargingFees) {
-        if (cfaChargingFee.cfa === cfLine.cfa) {
-          hasChargingMatch = true;
-          break;
-        }
-      }
+  //     for (const cfaChargingFee of cfaChargingFees) {
+  //       if (cfaChargingFee.cfa === cfLine.cfa) {
+  //         hasChargingMatch = true;
+  //         break;
+  //       }
+  //     }
 
-      if (hasChargingMatch) {
-        this.updateTkDropdown('INV');
-      } else {
-        hasChargingMatch = false;
-        this.updateTkDropdown('CHG');
-      }
-    }
+  //     if (hasChargingMatch) {
+  //       this.updateTkDropdown('INV');
+  //     } else {
+  //       hasChargingMatch = false;
+  //       this.updateTkDropdown('CHG');
+  //     }
+  //   }
 
-    return hasChargingMatch;
-  }
+  //   return hasChargingMatch;
+  // }
 
   /**
    * Presets the TK dropdown to "ISSUE E-TICKET OR NON BSP TICKET" if all conditions/checkings

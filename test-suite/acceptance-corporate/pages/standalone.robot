@@ -33,6 +33,8 @@ ${row_stopver}    //div[@formarrayname='stops']
 ${row_comments}    //div[@formarrayname='comments']
 ${input_isTravel_yes}     //input[@id='isTravel'][@value='Y']
 ${input_isTravel_no}     //input[@id='isTravel'][@value='N']
+${list_fee_type}    css=#feeType
+${select_fee_segment}    //input[@formcontrolname='genericElement']
 
 
 *** Keywords ***
@@ -384,3 +386,52 @@ Verify That PNR Is Queued When Travel Is ${travel_time} 24 Hrs
 Verify That IRD Rate Request Is Not Displayed On the Main Menu
     Open CA Corporate Test
     Page Should Not Contain Element    ${input_agent_queue} 
+    
+Select ${aqua_fee} Type Of Fee
+    Navigate To Page Aqua Fees
+    Select From List By Label   ${list_fee_type}    ${aqua_fee}
+    Take Screenshot
+    
+Select ${aqua_fee} Type Of Fee And Select Segment
+    Navigate To Page Aqua Fees
+    Select From List By Label   ${list_fee_type}    ${aqua_fee}
+    Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Select Segments For Aqua Fee   3    4
+    Run Keyword If    "${aqua_fee}" == "HOTEL ONLY FEES"    Select Segments For Aqua Fee   2    3 
+    Run Keyword If    "${aqua_fee}" == "LIMO ONLY FEES"    Select Segments For Aqua Fee   3 
+    Take Screenshot
+    
+Click Submit To PNR On Aqua Fees
+    Click Submit To PNR    
+    Switch To Graphic Mode
+    Get PNR Details
+    
+Verify Aqua Fee Remarks Are Written In The PNR
+    Click Submit To PNR On Aqua Fees
+    Verify Expected Remarks Are Written In The PNR    True
+    Verify Unexpected Remarks Are Not Written In The PNR
+    
+Select Segments For Aqua Fee
+    [Arguments]    @{segment_number}
+    Wait Until Element Is Visible    ${select_fee_segment}    30
+    Click Button    ${select_fee_segment}
+    Wait Until Element Is Visible    ${list_segment}    30
+    :FOR    ${segment_number}    IN    @{segment_number}
+    \    Click Element    ${list_segment}${open_bracket}1${close_bracket}${checkbox_start}${segment_number}${checkbox_end}
+    Click Element    ${select_fee_segment}
+    [Teardown]    Take Screenshot
+   
+Select ${aqua_fee} And Update Touch Reason
+    Set Test Variable    ${aqua_fee}
+    Navigate To Page Aqua Fees
+    Select ${aqua_fee} Type Of Fee
+    Run Keyword If    "${aqua_fee}" == "AIR FEES"    Update Agent Assisted And Touch Reason Code    AM    A
+    Run Keyword If    "${aqua_fee}" == "RAIL FEES"    Update Agent Assisted And Touch Reason Code    AM    S
+    
+Select Update Touch Reason ${aqua_fee}, And Segment 
+    Set Test Variable    ${aqua_fee}
+    Navigate To Page Aqua Fees
+    Select ${aqua_fee} Type Of Fee And Select Segment
+    Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    C
+    Run Keyword If    "${aqua_fee}" == "HOTEL ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    M
+    Run Keyword If    "${aqua_fee}" == "LIMO ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    L
+    

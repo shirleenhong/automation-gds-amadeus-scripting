@@ -32,5 +32,5 @@ export const common = {
   matrixSupplierService: '/service/repo/powerbaseaws/Matrix/Supplier',
   businessRules: '/service/repo/powerbaseaws/BusinessRules',
   airSupplierCodes: '/service/repo/powerbaseaws/Supplier?SupplierCodes=',
-  LeisureVersionNumber: '20.1.1'
+  LeisureVersionNumber: '20.1.2'
 };

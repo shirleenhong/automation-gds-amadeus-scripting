@@ -271,13 +271,13 @@ export class ReportingRemarkService {
     }
   }
   writeEBRemarks(obtComponent: ObtComponent) {
-    if (obtComponent.showEBDetails) {
-      const touchReasonForm = obtComponent.obtForm;
+    const touchReasonForm = obtComponent.obtForm;
+    if (obtComponent.showEBDetails && touchReasonForm.controls.ebR.value) {
       const map = new Map<string, string>();
-      map.set('TouchCode', touchReasonForm.controls.ebR.value);
-      map.set('BookingToolCode', touchReasonForm.controls.ebT.value);
-      map.set('ReasonType', touchReasonForm.controls.ebN.value);
-      map.set('ReasonCode', touchReasonForm.controls.ebC.value);
+      map.set('TouchLevel', touchReasonForm.controls.ebR.value);
+      map.set('OBTVendorCode', touchReasonForm.controls.ebT.value);
+      map.set('TouchType', touchReasonForm.controls.ebN.value);
+      map.set('TouchReason', touchReasonForm.controls.ebC.value);
       this.remarksManager.createPlaceholderValues(map);
     }
   }

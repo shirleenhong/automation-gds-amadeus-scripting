@@ -701,9 +701,17 @@ export class PaymentRemarkService {
     });
 
     if (hasApay) {
-      const ebRemark = new Map<string, string>();
-      ebRemark.set('TouchLevelCA', 'AMA/-GIS');
-      this.remarksManager.createPlaceholderValues(ebRemark);
+      // const ebRemark = new Map<string, string>();
+      // ebRemark.set('TouchLevelCA', 'AMA/-GIS');
+      // this.remarksManager.createPlaceholderValues(ebRemark);
+
+      const map = new Map<string, string>();
+      map.set('TouchLevel', 'AM');
+      map.set('OBTVendorCode', 'A');
+      map.set('TouchType', 'GI');
+      map.set('TouchReason', 'S');
+      this.remarksManager.createPlaceholderValues(map);
+
     }
   }
 

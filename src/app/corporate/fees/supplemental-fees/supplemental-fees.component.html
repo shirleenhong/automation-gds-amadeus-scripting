@@ -8,14 +8,14 @@
     <div class="col-3">No Fee Code</div>
   </div> -->
 
-  <table class="feeTable">
+  <table class="feeTable" *ngIf="this.ticketedForm.get('segments')['controls'].length > 0">
     <tr>
       <th width="50px"><div class="">Schedule Change?</div></th>
       <!-- <th width="50px"><div class="">Ticketed Segment</div></th> -->
       <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
       <th width="150px"><div class="">Supplemental Fee</div></th>
       <th width="70px"><div class=""></div></th>
-      <th width="150px"><div class="cl">No Fee Code</div></th>
+      <th width="150px" *ngIf="isAquaFee == false"><div class="cl">No Fee Code</div></th>
     </tr>
 
     <tbody formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
@@ -61,7 +61,7 @@
           </div>
         </td>
 
-        <td width="150px">
+        <td width="150px" *ngIf="isAquaFee == false">
           <select
             class="form-control "
             id="noFeeCode"
@@ -75,13 +75,13 @@
             </option>
           </select>
         </td>
-        <td *ngIf="i == this.ticketedForm.get('segments')['controls'].length - 1 && i < maxCount - 1">
+        <td *ngIf="i == this.ticketedForm.get('segments')['controls'].length - 1 && i < maxCount - 1 && isAquaFee == false">
           <div (click)="addFee()">
             <i class="fas fa-plus-circle " id="addFee"></i>
             Add Fee
           </div>
         </td>
-        <td *ngIf="i > 0">
+        <td *ngIf="i > 0 && isAquaFee == false">
           <div (click)="removeFee(i)">
             <i class="fas fa-minus-circle" id="removeFee"> </i>
             Remove Fee
@@ -91,4 +91,8 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<div *ngIf="this.ticketedForm.get('segments')['controls'].length == 0">
+  Fees Not Applicable to this PNR
 </div>

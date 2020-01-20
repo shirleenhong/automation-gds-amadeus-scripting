@@ -37,10 +37,11 @@ export class RulesReaderService {
     { type: 'RM', category: 'Z', regex: /(?<PNR_Z>.*)$/g },
     { type: 'UDID', category: '*', regex: /U(?<PNR_UDID>.*)\/-(?<PNR_UDID_value>.*)$/g },
     { type: 'RM', category: '*', regex: /CF\/-(?<PNR_CF>[A-Z0-9]{3})/g },
-    { type: 'RM', category: '*', regex: /EB\/(?<PNR_EB>.*)/g }
+    { type: 'RM', category: '*', regex: /EB\/(?<PNR_EB>.*)/g },
+    { type: 'RM', category: '*', regex: /DP\/-(?<PNR_DP>.*)/g }
   ];
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) { }
 
   public async readPnr() {
     this.businessEntities = new Map<string, string>();
@@ -52,6 +53,7 @@ export class RulesReaderService {
     this.getDepartureDateFromTodayCount();
     this.getSegmentTypes();
     this.parseCarSegments();
+    this.checkAmExists();
   }
 
   private setMatchEntity(regex, text) {
@@ -146,14 +148,17 @@ export class RulesReaderService {
 
   private parseAirlineCodes() {
     const codes = [];
+    const serviceClass = [];
     if (this.pnrService.pnrObj.airSegments !== undefined && this.pnrService.pnrObj.airSegments.length > 0) {
       this.pnrService.pnrObj.airSegments.forEach((x) => {
         if (!codes.includes(x.airlineCode)) {
           codes.push(x.airlineCode);
         }
+        serviceClass.push(x.class);
       });
     }
     this.businessEntities.set('PNR_AIR_SEGMENT_AIRLINE_CODE', codes.join('\n'));
+    this.businessEntities.set('PNR_AS_ClassOfService', serviceClass.join('\n'));
   }
 
   private getArrivaltime() {
@@ -179,9 +184,16 @@ export class RulesReaderService {
   }
 
   private getSegmentTypes() {
-    let segmentsTypes = this.pnrService.segments.map((x) => x.segmentType);
-    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.id === thing.id) === i);
-    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.join('\n'));
+    let segmentsTypes = this.pnrService.segments.map((x) => ({
+      types: x.segmentType
+    }));
+    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.types === thing.types) === i);
+    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.map(t => t.types).join('\n'));
+  }
+
+  private checkAmExists() {
+    const amElements = (this.pnrService.pnrObj.amElements.length >= 0);
+    this.assignKeyValue('PNR_AM_REMARKS_EXIST', amElements.toString().toUpperCase());
   }
 
   parseCarSegments() {

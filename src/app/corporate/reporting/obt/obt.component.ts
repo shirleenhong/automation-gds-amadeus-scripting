@@ -37,7 +37,7 @@ export class ObtComponent implements OnInit {
     this.showEBDetails = false;
     let ebData = this.pnrService.getRemarkText('EB/');
     if (ebData) {
-      ebData = ebData.split('/');
+      ebData = ebData.split('/-');
       if (ebData.length === 3) {
         this.populateEBFields(ebData);
       }

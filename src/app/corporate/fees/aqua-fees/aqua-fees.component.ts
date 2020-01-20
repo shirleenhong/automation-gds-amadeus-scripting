@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 import { ObtComponent } from '../../reporting/obt/obt.component';
-import { DDBService } from 'src/app/service/ddb.service';
+import { SupplementalFeesComponent } from '../supplemental-fees/supplemental-fees.component';
 
 @Component({
   selector: 'app-aqua-fees',
@@ -13,18 +13,23 @@ export class AquaFeesComponent implements OnInit {
   aquaFeeForm: FormGroup;
   segmentList: Array<any>;
   hasPFS = false;
-  showAquaFee = false;
+  isShowSupFee = false;
+  isObt = false;
+  selectedFeeType = '';
   @ViewChild(ObtComponent) obtComponent: ObtComponent;
-  constructor(private pnrService: PnrService, private ddbService: DDBService) {}
+  @ViewChild(SupplementalFeesComponent) suppFeeComponent: SupplementalFeesComponent;
+
+  constructor(private pnrService: PnrService) {}
 
   ngOnInit() {
     this.segmentList = new Array<any>();
     this.hasPFS = this.pnrService.getRemarkLineNumber('MAC/-SUP-PFS') !== '';
     this.aquaFeeForm = new FormGroup({
       feeType: new FormControl('', [Validators.required]),
-      segments: new FormControl('')
+      segments: new FormControl(''),
+      enableSupFee: new FormControl('')
     });
-    this.checkValidForAquaFee();
+    this.isObt = this.pnrService.getRemarkText('EB/-') !== '';
   }
 
   selectFeeType(val) {
@@ -36,9 +41,6 @@ export class AquaFeesComponent implements OnInit {
         break;
       case 'H':
         types = ['HTL', 'HHL'];
-        break;
-      case 'R':
-        types = ['RAL', 'MIS'];
         break;
       case 'L':
         types = ['LIM', 'MIS'];
@@ -54,14 +56,12 @@ export class AquaFeesComponent implements OnInit {
             freeText: x.longFreeText,
             isChecked: false
           };
-
           this.segmentList.push(selectAllObj);
         });
     }
-  }
-  async checkValidForAquaFee() {
-    const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
-    const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-    this.showAquaFee = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
+    this.selectedFeeType = val;
+    if (this.isShowSupFee) {
+      this.suppFeeComponent.updateFeeType(val);
+    }
   }
 }

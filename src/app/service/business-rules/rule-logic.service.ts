@@ -56,7 +56,7 @@ export class RulesLogicService {
           }
           break;
       }
-      if (ruleLogic) {
+      if (!ruleLogic) {
         return ruleLogic;
       }
     }

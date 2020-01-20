@@ -15,7 +15,7 @@ ${test_file_name}    esc_remarks
 
 *** Test Cases ***
 Verify That The ESC Remarks Are Correctly Written In The PNR If Agent Is ESC And Agent Has Read The ESC Remarks
-    [Tags]    us9762
+    [Tags]    us9762    sanity_test
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For ESC Remarks
     Select Counselor Identity: ESC

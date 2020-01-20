@@ -15,7 +15,6 @@ Resource          reporting.robot
 Resource          remarks.robot
 Resource          ../../resources/common/api-utilities.txt
 
-
 *** Variables ***
 ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[contains(text(),'CWT Corp ${env}')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
@@ -50,19 +49,20 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 ${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 ${window_marriot_policy}    //div[contains(text(), 'MARRIOTT POLICY VIOLATION')]
 ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees  
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
 @{pricing_pages}     Pricing    Airfare Commission    Exchange Endorsements
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID
-@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact
+@{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact    Fare Rule    Associated Remarks
 @{fees_pages}    Fees
-@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab
+@{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab    Client Queue
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
+${button_aqua_fees}    //button[contains(text(), 'Aqua Fees')]
 
 *** Keywords ***
 Enter Value
@@ -81,7 +81,7 @@ Close CA Corporate Test
     Set Test Variable    ${current_page}    Amadeus
 
 Click Full Wrap
-    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Wait Until Page Contains Element   ${button_full_wrap}    180
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
@@ -127,7 +127,6 @@ Click Send Itinerary And Queue
     Sleep    5
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     
-
 Click Reporting Panel
     Wait Until Element Is Visible    ${panel_payment}     60
     Scroll Element Into View     ${panel_payment}
@@ -263,6 +262,7 @@ Navigate From Corp
      ...    ELSE IF    "${to_cancel_segments}" == "True"    Click Cancel Segments
      ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
      ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
+     ...    ELSE IF    "${destination_page}" == "Aqua Fees"     Click Aqua Fees
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments
@@ -358,6 +358,8 @@ Navigate From Remarks
     ...    ELSE IF    "${destination_page}" == "Visa And Passport"    Click Visa And Passport Tab
     ...    ELSE IF    "${destination_page}" == "ESC Remarks"    Click ESC Remarks Tab
     ...    ELSE IF    "${destination_page}" == "Emergency Contact"    Click Emergency Contact Tab
+    ...    ELSE IF    "${destination_page}" == "Fare Rule"    Click Fare Rule Tab
+    ...    ELSE IF    "${destination_page}" == "Associated Remarks"    Click Associated Remarks Tab
 
 Navigate From Ticketing
     [Arguments]    ${destination_page}
@@ -374,6 +376,7 @@ Navigate From Queue
     ...    ELSE IF    "${destination_page}" == "OFC Documentation And Queue"    Click OFC Documentation And Queue Tab
     ...    ELSE IF    "${destination_page}" == "Queue Placement"    Click Queue Placement Tab
     ...    ELSE IF    "${destination_page}" == "CWT Itinerary Tab"    Click CWT Itinerary Tab In Full Wrap
+    ...    ELSE IF    "${destination_page}" == "Client Queue"    Click Client Queue Tab
     
 Navigate From Itinerary And Queue
     [Arguments]    ${destination_page}
@@ -420,8 +423,12 @@ Submit To PNR
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
     Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
+    Fill Up UDID Field As Needed
     Collapse Open Panel
     Click Submit To PNR    ${close_corporate_test}    ${queueing}        
+
+Fill Up UDID Field As Needed
+    Run Keyword If    "${cfa}" == "SGE" and "${num_air_segments}" != "0"    Enter 1 Airline Code/s For CDR per TKT
     
 Click Ticketing Panel
     Wait Until Element Is Visible    ${panel_ticketing}    60
@@ -470,6 +477,7 @@ Click Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Remarks
+    Take Screenshot    
     
 Collapse Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
@@ -594,10 +602,18 @@ Get Air Segment Values From Json
     \    ${airline_code}    Get Json Value As String   ${json_file_object}    $.['${client_data}'].AirlineCode${i}
     \    ${price_cmd}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].PriceCommand${i}
     \    Assign Seat Select Value    ${json_file_object}    ${client_data}    ${i}
+    \    Assign Seat Class Value    ${json_file_object}    ${client_data}    ${i}
     \    Set Test Variable    ${air_seg_route_${i}}    ${air_seg_route}
     \    Set Test Variable    ${airline_code_${i}}    ${airline_code} 
     \    Set Test Variable    ${price_cmd_${i}}    ${price_cmd}
     
+Assign Seat Class Value
+    [Arguments]    ${json_file_object}    ${client_data}    ${index}
+    ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatClass${index}
+    ${class}    Run Keyword If    ${exists}     Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatClass${index}
+    ...    ELSE    Set Variable    Y
+    Set Test Variable    ${class_${index}}    ${class}
+
 Assign Seat Select Value
     [Arguments]    ${json_file_object}    ${client_data}    ${index}
     ${exists}    Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].SeatSelect${index}
@@ -641,7 +657,7 @@ Verify Unexpected Remarks Are Not Written In The PNR
 
 Verify Remarks Are Added Correctly In The PNR
     Finish PNR   queueing=yes
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     
 Verify Remarks Are Not Found In The PNR
     Finish PNR   queueing=yes
@@ -740,3 +756,11 @@ Enter Date Value
     Press Keys    ${element}    ARROW_LEFT
     Press Keys    none    ARROW_LEFT
     Press Keys    none    ${day}    ${month}    ${year}
+    
+Click Aqua Fees
+    Wait Until Page Contains Element    ${button_aqua_fees}      180
+    Click Element     ${button_aqua_fees} 
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Aqua Fees

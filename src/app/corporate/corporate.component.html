@@ -28,14 +28,14 @@
 
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
+        <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-fees></app-fees>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-ticket-alt"></i> Queue
+        <i class="fas fa-stream"></i> Queue
         <i [ngClass]="validModel.queueValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
@@ -51,7 +51,7 @@
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-ticket-alt"></i> Pricing
+        <i class="fas  fa-money-check-alt"></i> Pricing
         <i [ngClass]="validModel.pricingValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
@@ -61,7 +61,7 @@
 
   <!-- <accordian>
     <accordian-group [panelClass] = "'customClass'">
-      <div accordion-heading>
+      <div accordion-heading>0
         <i class="fas fa-ticket-alt"></i> Pricing
         <i [ngClass] = "validModel.pricingValidCss"></i>
         <span class="cwt-logo"></span>
@@ -209,7 +209,7 @@
   <br />
   <div class="form-group  row">
     <div class="col">
-      <button class="leisureBtnSubmit" (click)="sendAquaFees()" *ngIf="aquaFeesComponent ? aquaFeesComponent.showAquaFee : false">
+      <button class="leisureBtnSubmit" (click)="sendAquaFees()">
         Submit to PNR
       </button>
       <button class="backMain" (click)="back()">Back To Main Menu</button>
@@ -249,7 +249,7 @@
         Cancel Segments
       </button>
     </div>
-    <div>
+    <div *ngIf="showAquaFeeButton">
       <button class="leisureButton btnMenu" (click)="aquaFees()">
         Aqua Fees
       </button>
@@ -261,14 +261,21 @@
       </button>
     </div>
   </div>
+  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
-<div *ngIf="dataError.hasError">
+<div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
+  <div class="loader">
+    Unable to load PNR or no PNR is loaded in Amadeus.
+  </div>
+</div>
+
+<div *ngIf="dataErrorMessages.length > 0">
   <alert type="warning" dismissible="true">
-    <div *ngIf="dataError.matching">Unable to Match PNR from PNR Layout</div>
-    <div *ngIf="dataError.supplier">Unable to get Supplier Codes from DDB</div>
-    <div *ngIf="dataError.servicingOption">Unable to Get Servicing Options</div>
-    <div *ngIf="dataError.pnr">Unable to Load PNR</div>
-    <div *ngIf="dataError.reasoncode">Unable to Reason Codes</div>
+    <div *ngFor="let msg of dataErrorMessages">
+      {{ msg }}
+    </div>
   </alert>
 </div>
+
+<br />

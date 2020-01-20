@@ -44,14 +44,30 @@ ${input_esc_read_yes}    //input[@id='isESCRead' and @ng-reflect-value='Y']
 ${input_esc_read_no}    //input[@id='isESCRead' and @ng-reflect-value='N']
 ${tab_emergency_contact}    css=#emergencyContact-link
 ${button_add_emergency_contact}    //button[@class='leisureBtnSubmit addContactButton']
-${input_ec_name}    //input[@ng-reflect-name='name']
-${input_ec_country_code}    //input[@ng-reflect-name='countryCode']
-${input_ec_phone}    //input[@ng-reflect-name='phone']
-${input_ec_free_flow_text}    //input[@ng-reflect-name='freeFlowText']
-${list_ec_passengers}    //select[@ng-reflect-name='passengers']
+${input_ec_name}    //input[@formcontrolname='name']
+${input_ec_country_code}    //input[@formcontrolname='countryCode']
+${input_ec_phone}    //input[@formcontrolname='phone']
+${input_ec_free_flow_text}    //input[@formcontrolname='freeFlowText']
+${list_ec_passengers}    //select[@formcontrolname='passengers']
 ${button_add}    //i[@id='add']
 ${button_remove}    //i[@id='remove']
-${div_ec_row}    //tab[@id='emergencyContact']//div[@ng-reflect-name='items']
+${div_ec_row}    //tab[@id='emergencyContact']//div[@formarrayname='items']
+${tab_fare_rule}    //span[contains(text(), 'Fare Rule')]
+${button_addFare_rule}    //button[contains(text(), 'Add Fare Rule')]
+${select_airline}    //select[@id="airlineCode"]
+${input_tkt_nonRef}    //input[@id="isTicketNonRefundable"]
+${input_tkt_min_maxStay}    //input[@id="isTicketMinMax"]
+${input_tkt_nonRef_percentage}    //input[@id="isTicketNonRef"]
+${input_currencyType}    //input[@id="currencyType"]
+${input_min_changeFee}    //input[@id="minChangeFee"]
+${input_ticket_amount}    //input[@id="ticketAmount"]
+${input_nonRefundable}    //input[@id="nonRefundable"]
+${tab_associatedRemarks}    //span[contains(text(), 'Associated Remarks')]
+${input_assoc_remark}    //input[@formcontrolname="remarkText"]
+${label_ticket_amount}    //label[contains(text(), 'Ticket Amount')]
+${span_nonRef_pct}    //span[contains(text(), 'Non-Refundable%:')]
+${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
+${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
 
 *** Keywords ***
 Click Seats Tab
@@ -408,3 +424,79 @@ Add ${number_of_segments} Passive Car Segments With ${vendor_code}
     \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-${vendor_code}/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1
     Take Screenshot
     
+Verify Dana International Advisory Is Not Displayed
+    Navigate to Page Visa And Passport
+    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
+    Take Screenshot
+    
+Navigate To Add Fare Rule
+    Click Element    ${tab_fare_rule}   
+    Click Element    ${button_addFare_rule}    
+    Set Test Variable    ${current_page}    Add Fare Rule
+    Set Test Variable    ${ticketing_details_complete}    no
+    
+Click Fare Rule Tab
+    Wait Until Element Is Visible    ${tab_fare_rule}    30
+    Click Element    ${tab_fare_rule}    
+    Click Element    ${button_addFare_rule}    
+    Set Test Variable    ${current_page}    Fare Rule
+    Set Test Variable    ${ticketing_details_complete}    no
+    
+Click Associated Remarks Tab
+    Wait Until Element Is Visible    ${tab_associatedRemarks}    30
+    Click Element    ${tab_associatedRemarks}
+    Set Test Variable    ${current_page}    Associated Remarks
+    Set Test Variable    ${ticketing_details_complete}    no
+    
+Complete Fare Rule For Ticket Min/Max Stay With Associated Remarks
+    Navigate To Page Fare Rule
+    Select From List By Label    ${select_airline}     2 ${airline_code_${i}}1074 Y${test_date_${i}} YYZORD GK1 1155 1440 ${test_date_${i}} ABCDEFG
+    Click Element    ${input_tkt_min_maxStay}
+    Take Screenshot
+    Click Save Button
+    Click Associated Remarks Tab
+    Select Segments    2
+    Enter Value    ${input_assoc_remark}    Testing Fare Rule For Ticket Min and Max Stay
+    Take Screenshot    
+    Finish PNR    
+    Verify Expected Remarks Are Written In The PNR
+    Switch To Command Page
+    
+Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
+    Navigate To Page Fare Rule
+    Select From List By Label    ${select_airline}     2 ${airline_code_${i}}1074 Y${test_date_${i}} YYZORD GK1 1155 1440 ${test_date_${i}} ABCDEFG
+    Click Element    ${input_tkt_nonRef}
+    Click Element    ${input_tkt_nonRef_percentage}
+    Take Screenshot
+    Click Save Button
+    Click Associated Remarks Tab
+    Select Segments    2    4
+    Enter Value    ${input_assoc_remark}    Testing fare Rule For Ticket Non Ref and Non Ref
+    Take Screenshot
+    Finish PNR    
+    Verify Expected Remarks Are Written In The PNR
+    Switch To Command Page
+    
+Complete Fare Rule For Ticket Amount And Verify Remarks
+    Navigate To Page Fare Rule
+    Select From List By Label    ${select_airline}     2 ${airline_code_${i}}1074 Y${test_date_${i}} YYZORD GK1 1155 1440 ${test_date_${i}} ABCDEFG
+    Enter Value    ${input_currencyType}    CAD
+    Click Element    ${label_ticket_amount}
+    Enter Value    ${input_ticket_amount}    123.50
+    Take Screenshot
+    Click Save Button
+    Finish PNR    
+    Verify Expected Remarks Are Written In The PNR
+    Switch To Command Page
+    
+Complete fare Rule For Non Refundable Percentage And Verify Remarks
+    Navigate To Page Fare Rule
+    Select From List By Label    ${select_airline}    3 U21074 Y${test_date_${i}} ORDYYT GK1 0130 1240 ${test_date_${i}} 1234567
+    Enter Value    ${input_currencyType}    USD
+    Click Element    ${span_nonRef_pct}
+    Enter Value    ${input_nonRefundable}    23
+    Take Screenshot
+    Click Save Button
+    Finish PNR    
+    Verify Expected Remarks Are Written In The PNR
+    Switch To Command Page

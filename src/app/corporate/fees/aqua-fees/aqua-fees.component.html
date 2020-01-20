@@ -1,4 +1,6 @@
-<div *ngIf="showAquaFee">
+<div>
+  <br />
+
   <div *ngIf="!hasPFS">
     <app-obt></app-obt>
   </div>
@@ -16,7 +18,6 @@
           <option value="H"> HOTEL ONLY FEES </option>
           <option value="L"> LIMO ONLY FEES </option>
           <option value="R"> RAIL FEES </option>
-          <option value="S"> SUPPLEMENTAL FEES </option>
         </select>
       </div>
       <div class="col-4" *ngIf="segmentList.length > 0">
@@ -30,7 +31,18 @@
         </app-generic-select>
       </div>
     </div>
-  </form>
-</div>
+    <div class="row" *ngIf="!isObt">
+      <div class="col-4">
+        <label
+          ><input type="checkbox" name="enableSupFee" formControlName="enableSupFee" (change)="isShowSupFee = !isShowSupFee" /> Supplemental
+          Fee
+        </label>
+      </div>
+    </div>
 
-<div *ngIf="!showAquaFee">Aqua Fee is not Applicable to this Client. Please Add this client to Configuration Parameter.</div>
+    <div *ngIf="isShowSupFee">
+      <app-supplemental-fees [isAquaFee]="true" [selectedSegmentType]="selectedFeeType"></app-supplemental-fees>
+    </div>
+  </form>
+  <br />
+</div>

@@ -47,6 +47,7 @@ import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
 import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
+import { common } from 'src/environments/common';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -63,12 +64,14 @@ export class CorporateComponent implements OnInit {
   cancelEnabled = true;
   validModel = new ValidateModel();
   itinValidModel = new ValidateModel();
-  dataError = { matching: false, supplier: false, reasonCode: false, servicingOption: false, pnr: false, hasError: false };
+  dataErrorMessages = new Array<string>();
   migrationOBTDates: Array<string>;
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;
-
+  loading = false;
+  showAquaFeeButton = false;
+  version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -113,19 +116,19 @@ export class CorporateComponent implements OnInit {
     private rulesEngine: RulesEngineService,
     private commonRemarkService: CommonRemarkService
   ) {
+    this.loading = true;
     this.initData();
-    this.getPnrService();
   }
 
   async ngOnInit(): Promise<void> {
     if (this.modalRef) {
       this.modalRef.hide();
     }
+    this.getPnrService();
   }
 
   showRule() {
     // get rule
-
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
       this.workflow = '';
@@ -156,15 +159,17 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
-    this.dataError.hasError = false;
+    this.loading = true;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
+    this.loading = false;
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
+    this.checkValidForAquaFee();
   }
 
   initData() {
@@ -243,7 +248,7 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
     this.cleanupRemarkService.cleanUpRemarks();
     await this.getPnrService();
-
+    this.resetDataLoadError();
     if (!this.pnrService.getClientSubUnit()) {
       this.closePopup();
       this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
@@ -272,17 +277,27 @@ export class CorporateComponent implements OnInit {
   }
 
   checkHasDataLoadError() {
-    this.dataError.matching = !(this.rms.outputItems && this.rms.outputItems.length > 0);
-    this.dataError.pnr = !this.isPnrLoaded;
-    this.dataError.reasonCode = !(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0);
-    this.dataError.servicingOption = !(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0);
-    this.dataError.supplier = !(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0);
-    this.dataError.hasError =
-      this.dataError.matching ||
-      this.dataError.pnr ||
-      this.dataError.reasonCode ||
-      this.dataError.servicingOption ||
-      this.dataError.supplier;
+    this.dataErrorMessages.length = 0;
+    if (!(this.rms.outputItems && this.rms.outputItems.length > 0)) {
+      this.dataErrorMessages.push('Unable to Match PNR from PNR Layout');
+    }
+    if (!(this.ddbService.supplierCodes && this.ddbService.supplierCodes.length > 0)) {
+      this.dataErrorMessages.push('Unable to get Supplier Codes from DDB');
+    }
+    // if (!(this.ddbService.reasonCodeList && this.ddbService.reasonCodeList.length > 0)) {
+    //   this.dataErrorMessages.push('Unable to Reason Codes');
+    // }
+    if (!(this.ddbService.servicingOption && this.ddbService.servicingOption.length > 0)) {
+      this.dataErrorMessages.push('Unable to Get Servicing Options');
+    }
+
+    if (!this.isPnrLoaded) {
+      this.dataErrorMessages.push('Unable to Load PNR');
+    }
+  }
+
+  resetDataLoadError() {
+    this.dataErrorMessages.length = 0;
   }
 
   public async SubmitToPNR() {
@@ -398,7 +413,9 @@ export class CorporateComponent implements OnInit {
     }
 
     remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteAPERemarks());
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
+
     remarkCollection.push(
       await this.segmentService.writeOptionalFareRule(this.corpRemarksComponent.fareRuleSegmentComponent.fareRuleRemarks)
     );
@@ -406,7 +423,7 @@ export class CorporateComponent implements OnInit {
       this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
     );
 
-    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks);
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
 
     await this.rms.SendCommand(
       this.paymentRemarkService.moveProfile(
@@ -463,7 +480,8 @@ export class CorporateComponent implements OnInit {
     remarkCollection: RemarkGroup[],
     remarkList: RemarkModel[],
     passiveSegmentList: PassiveSegmentModel[],
-    forDeleteRemarks: string[]
+    forDeleteRemarks: string[],
+    commandList: string[]
   ) {
     remarkCollection.forEach((rem) => {
       rem.remarks.forEach((remModel) => {
@@ -479,6 +497,12 @@ export class CorporateComponent implements OnInit {
           forDeleteRemarks.push(del);
         });
       }
+      if (rem.cryptics) {
+        rem.cryptics.forEach((del) => {
+          commandList.push(del);
+        });
+      }
+
     });
   }
 
@@ -585,7 +609,7 @@ export class CorporateComponent implements OnInit {
     }
     remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
-    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion);
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
     //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
@@ -607,6 +631,7 @@ export class CorporateComponent implements OnInit {
 
   back() {
     this.workflow = '';
+    this.resetDataLoadError();
     this.cleanupRemarkService.revertDelete();
   }
 
@@ -625,15 +650,6 @@ export class CorporateComponent implements OnInit {
 
   async sendAquaFees() {
     if (this.isPnrLoaded) {
-      // if (!this.sendInvoiceItineraryComponent.checkValid()) {
-      //   const modalRef = this.modalService.show(MessageComponent, {
-      //     backdrop: 'static'
-      //   });
-      //   modalRef.content.modalRef = modalRef;
-      //   modalRef.content.title = 'Invalid Inputs';
-      //   modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
-      //   return;
-      // }
       this.showLoading('Sending Aqua Fees...');
       if (this.aquaFeesComponent.obtComponent) {
         this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);
@@ -679,6 +695,7 @@ export class CorporateComponent implements OnInit {
   public async aquaFees() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
+    await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'aquaFees';
@@ -862,5 +879,11 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
+  }
+
+  async checkValidForAquaFee() {
+    const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
+    const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+    this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
   }
 }

@@ -8,6 +8,7 @@ Resource          base.robot
 *** Variables ***
 ${tab_queue}    css=#queue-link
 ${tab_ofc_doc}    css=#ofcDocumentation-link
+${tab_client_queue}    //span[contains(text(), 'Client Queue')]
 ${select_transaction}   css=#typeTransaction
 ${select_teamQueue}   css=#teamQueue
 ${input_queueNo}    css=#queueNo
@@ -31,16 +32,28 @@ ${input_ticket}    //input[@id='ticket']
 ${input_offer}    //input[@id='offer']
 ${button_add}    //i[@id='add']
 ${button_remove}    //i[@id='remove']
-${div_email_addresses}    //div[@ng-reflect-name='emailAddresses']
-${div_services}    //div[@ng-reflect-name='services']
-${div_tickets}    //div[@ng-reflect-name='tickets']
-${div_offers}     //div[@ng-reflect-name='offers']
+${div_email_addresses}    //div[@formarrayname='emailAddresses']
+${div_services}    //div[@formarrayname='services']
+${div_tickets}    //div[@formarrayname='tickets']
+${div_offers}     //div[@formarrayname='offers']
 ${tab_cwt_itinerary}    //a[@id='tab2-link']
 ${option_email}    //option[@ng-reflect-value='
 ${div_label_ornge}    //div[@class='col displayMsg']//p[@_ngcontent-c17]
 ${tab_cwt_itin}    css=#CWTItin-link
+${select_isBusiness}    css=#isBusiness
 
 *** Keywords ***
+Click Client Queue Tab
+    Wait Until Element Is Visible     ${tab_client_queue}    30
+    Click Element     ${tab_client_queue}
+    Wait Until Element Is Visible    ${select_isBusiness}    30    
+    Set Test Variable    ${current_page}     Client Queue
+    
+Select ${value} In Is Business Class Booked
+    Navigate To Page Client Queue
+    Select From List By Value    ${select_isBusiness}    ${value}
+    Take Screenshot
+
 Click OFC Documentation And Queue Tab
     Wait Until Element Is Visible     ${tab_ofc_doc}    30
     Click Element     ${tab_ofc_doc}
@@ -392,3 +405,8 @@ Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${
     Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
   
+
+Verify Client Queue Tab Is Not Displayed
+    Navigate To Page Queue
+    Element Should Not Be Visible    ${tab_client_queue}
+    Take Screenshot

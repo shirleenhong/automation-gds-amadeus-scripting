@@ -147,7 +147,8 @@ export class TicketRemarkService {
     let transformedDate: string;
 
     if (tktDate) {
-      transformedDate = this.DATE_PIPE.transform(new Date(tktDate), 'ddMMM').toUpperCase();
+      // transformedDate = this.DATE_PIPE.transform(new Date(tktDate), 'ddMMM').toUpperCase();
+      transformedDate = formatDate(tktDate, 'ddMMM', 'en-US').toUpperCase();
     } else {
       transformedDate = '';
     }

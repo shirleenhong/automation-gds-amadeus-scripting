@@ -22,7 +22,7 @@ Verify That Passport Remark Is Written When PNR Route Is International
     Verify Remarks Are Added Correctly In The PNR
     
 Verify That Visa And Passport Remark Is Written When PNR Route Is International
-    [Tags]    us10040
+    [Tags]    us10040    sanity_test
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For International Flight, Passport And Visa Remark
     Fill Up Visa And Passport With CA Citizenship, Advised To Mr. Corp And Select Visa For Segment/s 1

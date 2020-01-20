@@ -44,14 +44,14 @@ ${input_esc_read_yes}    //input[@id='isESCRead' and @ng-reflect-value='Y']
 ${input_esc_read_no}    //input[@id='isESCRead' and @ng-reflect-value='N']
 ${tab_emergency_contact}    css=#emergencyContact-link
 ${button_add_emergency_contact}    //button[@class='leisureBtnSubmit addContactButton']
-${input_ec_name}    //input[@ng-reflect-name='name']
-${input_ec_country_code}    //input[@ng-reflect-name='countryCode']
-${input_ec_phone}    //input[@ng-reflect-name='phone']
-${input_ec_free_flow_text}    //input[@ng-reflect-name='freeFlowText']
-${list_ec_passengers}    //select[@ng-reflect-name='passengers']
+${input_ec_name}    //input[@formcontrolname='name']
+${input_ec_country_code}    //input[@formcontrolname='countryCode']
+${input_ec_phone}    //input[@formcontrolname='phone']
+${input_ec_free_flow_text}    //input[@formcontrolname='freeFlowText']
+${list_ec_passengers}    //select[@formcontrolname='passengers']
 ${button_add}    //i[@id='add']
 ${button_remove}    //i[@id='remove']
-${div_ec_row}    //tab[@id='emergencyContact']//div[@ng-reflect-name='items']
+${div_ec_row}    //tab[@id='emergencyContact']//div[@formarrayname='items']
 ${tab_fare_rule}    //span[contains(text(), 'Fare Rule')]
 ${button_addFare_rule}    //button[contains(text(), 'Add Fare Rule')]
 ${select_airline}    //select[@id="airlineCode"]
@@ -66,6 +66,8 @@ ${tab_associatedRemarks}    //span[contains(text(), 'Associated Remarks')]
 ${input_assoc_remark}    //input[@formcontrolname="remarkText"]
 ${label_ticket_amount}    //label[contains(text(), 'Ticket Amount')]
 ${span_nonRef_pct}    //span[contains(text(), 'Non-Refundable%:')]
+${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
+${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
 
 *** Keywords ***
 Click Seats Tab
@@ -422,6 +424,11 @@ Add ${number_of_segments} Passive Car Segments With ${vendor_code}
     \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-${vendor_code}/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1
     Take Screenshot
     
+Verify Dana International Advisory Is Not Displayed
+    Navigate to Page Visa And Passport
+    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
+    Take Screenshot
+    
 Navigate To Add Fare Rule
     Click Element    ${tab_fare_rule}   
     Click Element    ${button_addFare_rule}    
@@ -448,7 +455,7 @@ Complete Fare Rule For Ticket Min/Max Stay With Associated Remarks
     Take Screenshot
     Click Save Button
     Click Associated Remarks Tab
-    Select Itinerary Segments    2
+    Select Segments    2
     Enter Value    ${input_assoc_remark}    Testing Fare Rule For Ticket Min and Max Stay
     Take Screenshot    
     Finish PNR    
@@ -463,7 +470,7 @@ Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
     Take Screenshot
     Click Save Button
     Click Associated Remarks Tab
-    Select Itinerary Segments    2    4
+    Select Segments    2    4
     Enter Value    ${input_assoc_remark}    Testing fare Rule For Ticket Non Ref and Non Ref
     Take Screenshot
     Finish PNR    
@@ -494,6 +501,7 @@ Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Verify Expected Remarks Are Written In The PNR
     Switch To Command Page
     
-    
-    
-    
+Verify Dana International Advisory Is Not Displayed
+    Navigate to Page Visa And Passport
+    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
+    Take Screenshot

@@ -59,6 +59,69 @@ ${input_nz7_yupFare_start}    //input[@name='yupFare_
 ${input_w7b_lowestCoach_start}    //input[@name='lowestCoach_
 ${input_w7b_approverName_start}    //input[@name='approver_
 ${input_cdrPerTkt_ui_end}    ']
+${list_bookLessThan14Days}    //select[@name='bookLessThan14Days']
+${list_reasonBookedLessThan14Days}    //select[@name='reasonBookedLessThan14Days']
+${input_noHotelCodes}    //input[@name='noHotelCodes']
+${input_whyNotOnline}    //input[@name='whyNotOnline']
+${list_guestType}    //select[@name='guestType']
+${list_reasonNotBook14Days}    //select[@name='reasonNotBook14Days']
+${list_notBooked14dayAdvance}    //select[@name='notBooked14dayAdvance']
+${list_notBooked14dayInAdvance}    //select[@name='bookedLess14Days']
+${input_approverName}    //input[@name='approverName']
+${list_outOfPolicy}    //select[@name='outOfPolicy']
+${list_notBooked14Days}     //select[@name='notBooked14Days']
+${input_businessClassApprover}    //input[@name='businessClassApprover']
+${list_offlineReasonCode}    //select[@name='offlineReasonCode']
+${list_noHotelBooked}    //select[@name='noHotelBooked']
+${list_airCanadaPassTracker}    //select[@name='airCanadaPassTracker']
+${input_uniqueTravelerId}    //input[@name='uniqueTravelerId']
+${list_notBooked7Days}     //select[@name='notBooked7Days']
+${list_whyHotelNotBooked}    //select[@name='whyHotelNotBooked']
+${input_guestSponsorName}    //input[@name='guestSponsorName']
+${list_approverName}    //select[@name='approverName']
+${list_bookAdvanceReason}    //select[@name='bookAdvanceReason']
+${input_noHotel}    //input[@name='noHotelBookedReason']
+${list_reasonAirBooked14Days}    //select[@name='reasonAirBooked14Days']
+${list_hotelNotBooked}    //select[@name='hotelNotBooked']
+${list_reasonNotOnline}    //select[@name='reasonNotOnline']
+${input_travelerType}    //input[@name='travellerType']
+${list_noHotel}    //select[@name='noHotelBookedReason']
+${input_btaApproval}    //input[@name='btaApproval']
+${input_lowestGdsFare}    //input[@name='lowestGdsFare']
+${list_passTracker}    //select[@name='passTracker']
+${list_bookingAdvance}    //select[@name='bookAdvance']
+${input_approverInfo}    //input[@name='approverInfo']
+${list_advanceBooking}    css=#advanceBooking
+${list_booking_within_14d}    css=#bookReason
+${input_amei}    css=#amei
+${list_whyLessThanDays}    //select[@name='whyLessThanDays']
+${list_authorizer}    //select[@name='authorizer']
+${list_noHotelReason}    //select[@name='noHotelReason']
+${input_exceptionApprover}     //input[@name='exceptionApprover']
+${input_businessClassApproval}    //input[@name='businessClassApproval']
+${input_authorizationNo}    //input[@name='authorizationNo']
+${list_businessClassApprover}    //select[@name='businessClassApprover']
+${list_bookedLessFourteen}     //select[@name='bookedLessFourteen']
+${input_moxieId}    //input[@name='moxieId']
+${input_destinationUdid}    //input[@name='destinationUdid']
+${input_approvelEmail}    //input[@name='approvelEmail']
+${list_advanceDaysReason}     //select[@name='advanceDaysReason']
+${input_authorizer}    //input[@name='authorizer']
+${input_btaReasonUsage}    //input[@name='btaReasonUsage']
+${input_employeeId}    //input[@name='employeeId']
+${list_reasonNotBooking}    //select[@name='reasonNotBooking']
+${input_lowGdsFare}    //input[@name='lowGdsFare']
+${list_companyCode}    //select[@name='companyCode']
+${list_splitCharge}     //select[@name='splitCharge']
+${list_guestBook}    //select[@name='guestBook']
+${input_whyBookedOnline}    //input[@name='whyBookedOnline']
+${input_feeReason}     //input[@name='feeReason']
+${list_reasonForNotBookingOL}    //select[@name='reasonForNotBookingOL']
+${list_reasonWhyWestjet}    //select[@id='reasonWhyWestjet']
+${list_exchangeReason}    //select[@id='exchangeReason']
+${list_waiverApproved}    //select[@id='waiverApproved']
+${input_declinedAirline}    //input[@name='declinedAirline']
+${input_preTripNumber}    //input[@name='preTripNumber']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -504,18 +567,14 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
 
 Verify Online Fields And Update Agent Assisted And Touch Reason Codes
     Navigate To Page Reporting Remarks
-    Verify Online Touch Reason Fields Are Populated With Correct Values    CT    A    GI    C
+    Verify Online Touch Reason Fields Are Populated With Correct Values    CT     C
     Update Agent Assisted And Touch Reason Code    AM    S
     
 Verify Online Touch Reason Fields Are Populated With Correct Values
-    [Arguments]    ${expected_agent_assisted}    ${expected_input_tool_identifier}    ${expected_online_format}    ${expected_touch_reason}
+    [Arguments]    ${expected_agent_assisted}    ${expected_touch_reason}
     ${actual_agent_assisted}     Get Value    ${list_agent_assisted}
-    ${actual_input_tool_identifier}     Get Value    ${input_tool_identifier}
-    ${actual_online_format}     Get Value    ${input_online_format}
     ${actual_touch_reason}     Get Value    ${list_touch_reason}
     Should Be Equal    ${actual_agent_assisted}    ${expected_agent_assisted}  
-    Should Be Equal    ${actual_input_tool_identifier}    ${expected_input_tool_identifier}
-    Should Be Equal    ${actual_online_format}    ${expected_online_format}  
     Should Be Equal    ${actual_touch_reason}    ${expected_touch_reason}
     Take Screenshot
 
@@ -780,3 +839,262 @@ Verify That UI Should Not Appear For Client ${client_code} When There Is No TSTs
 Verify That The Remarks For Diving Plongeon Canada Are Updated Correctly
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
+    
+Select Reason Not Booked 14 Days Advance: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_notBooked14dayAdvance}    ${reason}
+    Take Screenshot
+
+Select Reason For Not Booking 14 Days In Advance: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_reasonNotBook14Days}    ${reason}
+    Take Screenshot
+
+Select Guest Type: ${guest_type}
+    Navigate To Page UDID
+    Select From List By Label    ${list_guestType}    ${guest_type}
+    Take Screenshot
+
+Select Book Less Than 14 Days Value: ${value}
+    Navigate To Page UDID
+    Select From List By Label    ${list_bookLessThan14Days}    ${value}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Sunovion
+    Navigate To Page UDID
+    Select From List By Label    ${list_reasonBookedLessThan14Days}    Need to travel occurred less then 14 days prior
+    Enter Value    ${input_noHotelCodes}    XX
+    Enter Value    ${input_whyNotOnline}    AA
+    Take Screenshot
+    
+Select Booked Less Than 14 Days Advance Value: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_notBooked14dayInAdvance}    ${reason}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Nexans
+    Navigate To Page UDID
+    Enter Value    ${input_approverName}    Chuck Velasquez
+    Select From List By Label    ${list_outOfPolicy}    Urgent internal Nexans
+    Take Screenshot
+    
+Select Reason Not Booked 14 Days In Advance: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_notBooked14Days}    ${reason}
+    Take Screenshot
+    
+Enter Business Class Approver Name: ${approver_name}
+    Navigate To Page UDID
+    Enter Value    ${input_businessClassApprover}    ${approver_name}
+    Take Screenshot
+    
+Fill Up Udid Fields For Client Philip Morris International
+    Navigate To Page UDID
+    Select From List By Label    ${list_offlineReasonCode}     Family travel (spouse, kids) paid by PMI
+    Select From List By Label    ${list_noHotelBooked}    HOTEL BOOKED BY CONFERENCE ORGANIZER
+    Take Screenshot
+    
+Fill Up Udid Fields For Client PostMedia
+    Navigate To Page UDID
+    Select From List By Label    ${list_airCanadaPassTracker}    Approval received from Judy Simpson
+    Enter Value     ${input_uniqueTravelerId}    U013KXV
+    Take Screenshot
+    
+Fill Up Udid Fields For Client Invenergy
+    Navigate To Page UDID
+    Select From List By Label    ${list_notBooked7Days}    Had to Wait for Dates to be Confirmed
+    Select From List By Label    ${list_whyHotelNotBooked}    Reside in City or One Way
+    Take Screenshot
+    
+Select Reason No Hotel Booked: ${reason}
+    Navigate To Page UDID
+    Select From List By Label     ${list_noHotelBooked}    ${reason}
+    Take Screenshot
+    
+Fill Up UDID Fields For Dana
+    Navigate To Page UDID
+    Enter Value    ${input_guestSponsorName}    Shirleen Hong
+    Select From List By Label    ${list_approverName}    DWAYNE MATTHEWS
+    Take Screenshot
+    
+Select Value For Why Not Booked 21 Days In Advance: ${value}
+    Navigate To Page UDID
+    Select From List By Label    ${list_bookAdvanceReason}    ${value}
+    Take Screenshot
+    
+Enter No Hotel Booked Value: ${value}
+    Navigate To Page UDID
+    Enter Value    ${input_noHotel}    ${value}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Bacardi
+    Navigate To Page UDID
+    Select From List By Label    ${list_reasonAirBooked14Days}    Site Visit
+    Select From List By Label    ${list_hotelNotBooked}    Hotel was booked
+    Take Screenshot
+    
+Select Reason Why Not Booked Online: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_reasonNotOnline}    ${reason}
+    Take Screenshot
+    
+Fill Up UDID Fields For Ribbon Communications
+    Navigate To Page UDID
+    Select From List By Label    ${list_noHotel}    TB - Hotel to be advised
+    Enter Value    ${input_travelerType}    Chuck Velasquez
+    Take Screenshot
+    
+Fill Up UDID Fields With Default Values For Ontario Teachers
+    Navigate To Page UDID
+    Enter Value    ${input_btaApproval}    A0123
+    Enter Value    ${input_lowestGdsFare}    100.00
+    Select From List By Label    ${list_passTracker}    PASS PURCHASE PNR - Approval received from Judy Simpson
+    Take Screenshot
+
+Select Advance Booking Reason: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_bookingAdvance}     ${reason}
+    Take Screenshot
+    
+Input Value In Approver Info: ${name}
+    Navigate To Page UDID
+    Enter Value    ${input_approverInfo}    ${name}
+    Take Screenshot
+    
+Select No Hotel Booked Value: ${value}
+    Navigate To Page UDID
+    Select From List By Label    ${list_noHotel}    ${value}
+    Take Screenshot
+    
+Enter Approver Name For International Travel: ${name}
+    Navigate To Page UDID
+    Enter Value    ${input_approverName}    ${name}
+    Take Screenshot
+    
+Select Advance Booking Value: ${value}
+    Navigate To Page UDID
+    Select From List By Label    ${list_advanceBooking}    ${value}
+    Take Screenshot
+    
+Select Reason For Booking Within 14 Days: ${reason}
+    Navigate To Page UDID
+    Select From List By Label    ${list_booking_within_14d}    ${reason}
+    Take Screenshot
+    
+Fill Up UDID Values For Client Arcelormittal
+    Navigate To Page UDID
+    Select From List By Label    ${list_authorizer}    SEAN DONNELLY
+    Take Screenshot
+    
+Select Reason Why Booked Less Than 14 Days: ${reason}
+    Navigate To Page UDID
+    Select From List By Label   ${list_whyLessThanDays}    ${reason}
+    Take Screenshot
+    
+Fill Up Udid Fielads For Client Gilead
+    Navigate To Page UDID
+    Select From List By Label   ${list_noHotelReason}    Booked Own Hotel
+    Enter Value    ${input_uniqueTravelerId}    TVL444
+    Enter Value    ${input_exceptionApprover}     CHUCK VELASQUEZ
+    Take Screenshot
+    
+Enter Unique Traveler ID: ${id}
+    Navigate To Page UDID
+    Enter Value    ${input_uniqueTravelerId}    ${id}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Juniper
+    Navigate To Page UDID
+    Enter Value    ${input_businessClassApproval}    CHUCK VELASQUEZ
+    Select From List By Label    ${list_noHotel}    One-way trip
+    Take Screenshot
+    
+Enter Spend Authorization Number: ${auth_no}
+    Navigate To Page UDID
+    Enter Value    ${input_authorizationNo}    ${auth_no}
+    Take Screenshot
+    
+Select Business Class Approver: ${approver}
+    Navigate To Page UDID
+    Select From List By Label    ${list_businessClassApprover}    ${approver}
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Purdue Pharma
+    Navigate To Page UDID
+    Select From List By Label    ${list_bookedLessFourteen}    Site Visit
+    Enter Value   ${input_moxieId}    98765
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Senvion
+    Navigate To Page UDID
+    Enter Value    ${input_destinationUdid}    America
+    Enter Value    ${input_approvelEmail}    mgr@email.com
+    Select From List By Label    ${list_advanceDaysReason}    Initial travel request not apprvd by mgr on time
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Smith & Nephew
+    Navigate To Page UDID
+    Select From List By Label    ${list_noHotel}    C - Separate PNR with CWT
+    Enter Value    ${input_authorizer}    CHUCK VELASQUEZ
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Steelcase
+    Navigate To Page UDID
+    Enter Value    ${input_btaReasonUsage}    CV
+    Enter Value    ${input_employeeId}    123456789
+    Take Screenshot
+    
+Fill Up UDID Fields For Client Sobeys
+    Navigate To Page UDID
+    Select From List By Label    ${list_reasonNotBooking}    Medical/Health/Physical
+    Enter Value    ${input_lowGdsFare}    1000
+    Select From List By Label    ${list_companyCode}    E999
+    Take Screenshot
+
+Fill Up UDID Fields For Client Thales Canada
+    Navigate To Page UDID
+    Run Keyword If    "${num_htl_segments}" == "0"    Select From List By Label    ${list_splitCharge}    SPLIT
+    Run Keyword If    "${num_htl_segments}" != "0"    Enter Value    ${input_noHotelCodes}    AA
+    Enter Value    ${input_whyBookedOnline}    A23
+    Take Screenshot
+    
+Fill Up Udid Fields For Client UL
+    Navigate To Page UDID
+    Select From List By Label    ${list_ul_fareType}    REF-Refundable
+    Enter Value    ${input_noHotel}    15JULSFOHEENN
+    Enter Value    ${input_feeReason}    ACCEPTABLE REASON 1
+    Take Screenshot
+    
+Select Approver Name: ${approver_name}
+    Navigate To Page UDID
+    Select From List By Label    ${list_approverName}    ${approver_name}
+    Take Screenshot
+    
+Fill Up Udid Fields For Client University Travel Business
+    Navigate To Page UDID
+    Enter Value    ${input_noHotel}    15JULSFOHEENN
+    Select From List By Label    ${list_reasonForNotBookingOL}    K INTERNATIONAL/COMPLEX BOOKING
+    Take Screenshot
+    
+Fill Up Udid Fields For Client University Of Manitoba
+    Navigate To Page UDID
+    Enter Value    ${input_noHotel}    15JULSFOHEENN
+    Select From List By Label    ${list_reasonForNotBookingOL}    C GROUP BOOKING
+    Take Screenshot
+    
+Fill Up Udid Fields For Client Winners
+    Navigate To Page UDID
+    Select From List By Label    ${list_reasonWhyWestjet}    Frequent Traveller Points
+    Select From List By Label    ${list_exchangeReason}    Travel Change
+    Take Screenshot
+    
+Fill Up UDID Values For Client Parsons Corporation
+    Navigate To Page UDID
+    Select From List By Label    ${list_waiverApproved}    XX
+    Take Screenshot
+    
+Fill Up UDID Values For Client Intercontinental Hotel
+    Navigate To Page UDID
+    Enter Value    ${input_declinedAirline}    UA
+    Enter Value    ${input_preTripNumber}   AAA0123
+    Take Screenshot

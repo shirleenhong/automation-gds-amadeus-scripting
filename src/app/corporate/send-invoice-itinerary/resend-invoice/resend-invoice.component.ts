@@ -298,7 +298,7 @@ export class ResendInvoiceComponent implements OnInit {
   }
   checkSelectedTickets(data: any) {
     if (data.lineNo === 'All') {
-      const newVal = !data.isChecked;
+      const newVal = data.isChecked;
       for (const ele of this.eTicketsList) {
         if (ele.lineNo !== 'None') {
           ele.isChecked = newVal;

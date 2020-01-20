@@ -500,8 +500,3 @@ Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Finish PNR    
     Verify Expected Remarks Are Written In The PNR
     Switch To Command Page
-    
-Verify Dana International Advisory Is Not Displayed
-    Navigate to Page Visa And Passport
-    Run Keyword And Continue On Failure    Element Should Not Be Visible    ${text_advisory}
-    Take Screenshot

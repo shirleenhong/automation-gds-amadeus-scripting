@@ -259,14 +259,14 @@ export class ResendInvoiceComponent implements OnInit {
   }
   checkSelectedInvoice(data: any) {
     if (data.lineNo === 'All') {
-      const newVal = !data.isChecked;
+      const newVal = data.isChecked;
       for (const ele of this.invoiceList) {
         ele.isChecked = newVal;
       }
     } else {
       for (const ele of this.invoiceList) {
         if (data.lineNo === ele.lineNo) {
-          ele.isChecked = !ele.isChecked;
+          ele.isChecked = ele.isChecked;
         }
       }
       if (this.checkForAllSelectionInvoice()) {
@@ -281,7 +281,7 @@ export class ResendInvoiceComponent implements OnInit {
   checkSelectedFeeLines(data: any) {
     for (const ele of this.feeAccountingList) {
       if (ele.lineNo === data.lineNo) {
-        ele.isChecked = !ele.isChecked;
+        ele.isChecked = ele.isChecked;
       }
     }
     this.selectedElementsUI.selectedFeeLines = this.updateValUI(this.feeAccountingList);
@@ -290,7 +290,7 @@ export class ResendInvoiceComponent implements OnInit {
   checkSelectedNonBspLines(data: any) {
     for (const ele of this.nonBspAccountingList) {
       if (ele.lineNo === data.lineNo) {
-        ele.isChecked = !ele.isChecked;
+        ele.isChecked = ele.isChecked;
       }
     }
     this.selectedElementsUI.selectedNonBspLines = this.updateValUI(this.nonBspAccountingList);
@@ -317,10 +317,7 @@ export class ResendInvoiceComponent implements OnInit {
     } else {
       for (const ele of this.eTicketsList) {
         if (data.lineNo === ele.lineNo) {
-          ele.isChecked = !ele.isChecked;
-        }
-        if (ele.lineNo === 'None' && ele.isChecked) {
-          ele.isChecked = !ele.isChecked;
+          ele.isChecked = ele.isChecked;
         }
       }
       if (this.checkForAllSelectionTickets()) {

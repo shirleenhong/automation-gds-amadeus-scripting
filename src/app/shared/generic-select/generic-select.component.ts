@@ -66,7 +66,7 @@ export class GenericSelectComponent implements OnInit {
         selectedEle.push(ele.lineNo);
         break;
       } else {
-        if (ele.isChecked) {
+        if (ele.isChecked && ele.lineNo !== 'None') {
           selectedEle.push(ele.lineNo);
         }
       }

@@ -13,6 +13,7 @@ Resource          pricing.robot
 Resource          queues.robot
 Resource          reporting.robot
 Resource          remarks.robot
+Resource          fees.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***

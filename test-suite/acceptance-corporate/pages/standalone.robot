@@ -35,6 +35,7 @@ ${input_isTravel_yes}     //input[@id='isTravel'][@value='Y']
 ${input_isTravel_no}     //input[@id='isTravel'][@value='N']
 ${list_fee_type}    css=#feeType
 ${select_fee_segment}    //input[@formcontrolname='genericElement']
+${checkbox_supplemental_fee}    //input[@name='enableSupFee']
 
 
 *** Keywords ***
@@ -392,7 +393,7 @@ Select ${aqua_fee} Type Of Fee
     Select From List By Label   ${list_fee_type}    ${aqua_fee}
     Take Screenshot
     
-Select ${aqua_fee} Type Of Fee And Select Segment
+Select Segment And Select ${aqua_fee} 
     Navigate To Page Aqua Fees
     Select From List By Label   ${list_fee_type}    ${aqua_fee}
     Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Select Segments For Aqua Fee   3    4
@@ -407,7 +408,7 @@ Click Submit To PNR On Aqua Fees
     
 Verify Aqua Fee Remarks Are Written In The PNR
     Click Submit To PNR On Aqua Fees
-    Verify Expected Remarks Are Written In The PNR    True
+    Verify Expected Remarks Are Written In The PNR
     Verify Unexpected Remarks Are Not Written In The PNR
     
 Select Segments For Aqua Fee
@@ -434,4 +435,21 @@ Select Update Touch Reason ${aqua_fee}, And Segment
     Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    C
     Run Keyword If    "${aqua_fee}" == "HOTEL ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    M
     Run Keyword If    "${aqua_fee}" == "LIMO ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    L
+    
+Create PNR And Exchange Ticket
+    Add FS And Commission Line In The PNR    FS02    FM10.00    RFCWTPTEST    ER     ER
+    Sleep    4
+    Get Record Locator Value
+    Ticket TST1
+    Create 1 Test Dates
+    Create Exchange PNR In The GDS
+    
+Select ${aqua_fee} Type Of Fee And ${fee_type}
+    Select ${aqua_fee} Type Of Fee
+    Select Checkbox    ${checkbox_supplemental_fee}
+    Wait Until Element Is Visible    ${input_fee} 
+    Run Keyword If    "${fee_type}" == "Schedule Change"    Select Checkbox    ${checkbox_schedule_change}
+    Run Keyword If    "${fee_type}" == "Input Special Fee"    Enter Value    ${input_fee}    12.99
+    Take Screenshot
+    
     

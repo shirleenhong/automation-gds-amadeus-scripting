@@ -37,7 +37,7 @@ Verify That The Amadeus TK Line is Written For Changed PNR with Billed Service
     [Tags]    us11386
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code AC
-    Verify Ticketing Panel Dropdown For INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY
+    Verify Ticketing Panel Dropdown For ISSUE E-TICKET OR NON BSP TICKET
     Fill Up Ticketing Panel For CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
     Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
 
@@ -45,7 +45,7 @@ Verify That The Amadeus TK Line is Written For Changed PNR without Billed Servic
     [Tags]    us11386
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Passive Air With Different Airline Codes
-    Verify Ticketing Panel Dropdown For CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
+    Verify Ticketing Panel Dropdown For ISSUE E-TICKET OR NON BSP TICKET
     Fill Up Ticketing Panel For CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
     Verify That Aqua TK Line Is Written Correctly For Changed PNR Without Billed Service Fee
 

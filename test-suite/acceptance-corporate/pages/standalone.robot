@@ -36,6 +36,7 @@ ${input_isTravel_no}     //input[@id='isTravel'][@value='N']
 ${list_fee_type}    css=#feeType
 ${select_fee_segment}    //input[@formcontrolname='genericElement']
 ${checkbox_supplemental_fee}    //input[@name='enableSupFee']
+${button_add_supplemental_fee}    //tbody[@formarrayname='segments']//i[@id='add']
 
 
 *** Keywords ***
@@ -452,4 +453,21 @@ Select ${aqua_fee} Type Of Fee And ${fee_type}
     Run Keyword If    "${fee_type}" == "Input Special Fee"    Enter Value    ${input_fee}    12.99
     Take Screenshot
     
+Add Supplemental Fee Code
+    Navigate To Page Aqua Fees
+    Click Add Supplemental Fee Button
+    Select Supplemental Fee    1
+
+Select Supplemental Fee
+     [Arguments]   @{supplemental_fee_index}
+    : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
+    \    Select Checkbox    ${input_supplementalFee_chckbox}${open_bracket}${supplemental_fee_index}${close_bracket}${input_supfee_checkbox}
+    Click Button    ${button_save}  
+    Wait Until Element Is Enabled    ${checkbox_supplemental_fee}    30   
+    Click Element At Coordinates    ${input_feeCode}    0    0
+
+Click Add Supplemental Fee Button
+    Wait Until Element Is Visible    ${button_add_supplemental_fee}    30
+    Click Element At Coordinates    ${button_add_supplemental_fee}    0    0
+    Wait Until Element Is Visible    ${input_supfee_checkbox}    30
     

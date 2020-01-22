@@ -176,7 +176,7 @@ Verify That Aqua TK Line Is Written Correctly For PNR On Hold
     Finish PNR
     ${tktl_line}    Get Lines Containing String    ${pnr_details}    TK TL
     Run Keyword And Continue On Failure    Should Contain    ${tktl_line}    /YTOWL2106/Q8C1-ONHOLD
-    Verify Specific Remark Is Written In The PNR    RIR ONHOLD:AWAITING APPROVAL
+    Verify Specific Remark Is Written In The PNR    RMM ONHOLD:AWAITING APPROVAL
     
 Verify That Aqua TK Line Is Written Correctly For Fee Only
     Finish PNR
@@ -198,7 +198,7 @@ Verify That Aqua TK Line Is Written Correctly For Updated TK Line
     Finish PNR
     ${tktl_line}    Get Lines Containing String    ${pnr_details}    TK TL
     Run Keyword And Continue On Failure    Should Contain    ${tktl_line}    /YTOWL2106/Q8C1-ONHOLD
-    Verify Specific Remark Is Written In The PNR    RIR ONHOLD:AWAITING APPROVAL
+    Verify Specific Remark Is Written In The PNR    RMM ONHOLD:AWAITING APPROVAL
     
 Verify Aqua Ticketing Instructions Remark Are Written For Hotel Only Segments
     Finish PNR

@@ -8,7 +8,7 @@
     <div class="col-3">No Fee Code</div>
   </div> -->
 
-  <table class="feeTable">
+  <table class="feeTable" *ngIf="this.ticketedForm.get('segments')['controls'].length > 0">
     <tr>
       <th width="50px"><div class="">Schedule Change?</div></th>
       <!-- <th width="50px"><div class="">Ticketed Segment</div></th> -->
@@ -91,4 +91,8 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<div *ngIf="this.ticketedForm.get('segments')['controls'].length == 0">
+  Fees Not Applicable to this PNR
 </div>

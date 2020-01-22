@@ -28,14 +28,14 @@
 
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
+        <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-fees></app-fees>
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-ticket-alt"></i> Queue
+        <i class="fas fa-stream"></i> Queue
         <i [ngClass]="validModel.queueValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
@@ -51,7 +51,7 @@
     </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-ticket-alt"></i> Pricing
+        <i class="fas  fa-money-check-alt"></i> Pricing
         <i [ngClass]="validModel.pricingValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
@@ -61,7 +61,7 @@
 
   <!-- <accordian>
     <accordian-group [panelClass] = "'customClass'">
-      <div accordion-heading>
+      <div accordion-heading>0
         <i class="fas fa-ticket-alt"></i> Pricing
         <i [ngClass] = "validModel.pricingValidCss"></i>
         <span class="cwt-logo"></span>
@@ -261,6 +261,7 @@
       </button>
     </div>
   </div>
+  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
 <div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
@@ -276,4 +277,5 @@
     </div>
   </alert>
 </div>
-<div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
+
+<br />

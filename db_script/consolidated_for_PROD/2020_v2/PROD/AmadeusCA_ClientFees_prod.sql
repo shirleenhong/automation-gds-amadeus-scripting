@@ -1,4 +1,4 @@
-USE [Desktop_SyEx_Pilot]
+USE Desktop_Prod
 	BEGIN TRANSACTION
 	BEGIN TRY
 

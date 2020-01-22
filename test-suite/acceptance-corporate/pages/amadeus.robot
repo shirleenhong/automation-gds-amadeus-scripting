@@ -822,4 +822,12 @@ Handle E-ticket Error
     Retrieve Current PNR 
     ${status}    Run Keyword And Return Status    Element Should Contain    ${text_area_command}    ETKT DISALLOWED
     Run keyword If    '${status}' == 'True'    Enter Cryptic Command     TTP/T${tst_no}
-    
+
+Add ${number_of_segments} Rail Segments With ${route} City Codes
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Run Keyword If    "${route}"== "Domestic"   Enter Cryptic Command    RU1AHK1YYZ${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Run Keyword If    "${route}"== "Transborder"   Enter Cryptic Command    RU1AHK1ORD${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Run Keyword If    "${route}"== "International"   Enter Cryptic Command    RU1AHK1LHR${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+

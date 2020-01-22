@@ -23,14 +23,14 @@ Verify Aqua fee Is Written For OBT Agent Unassisted With MAC line Not Equal To P
     [Tags]    us13840
     Create PNR With Active Air Segments For OBT PNR With non-PFS Supplier For APAY
     Complete The PNR With Default Values 
-    Select CAR ONLY FEES Type Of Fee And Select Segment
+    Select Segment And Select CAR ONLY FEES
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua fee Is Written For OBT Agent Unassisted With Multiple MAC Line Not Equal To PFS And Hotel Fee Is Selected
     [Tags]    us13840
     Create PNR For OBT PNR With Multiple non-PFS Supplier For APAY
     Complete The PNR In Corporate Scripts
-    Select HOTEL ONLY FEES Type Of Fee And Select Segment
+    Select Segment And Select HOTEL ONLY FEES 
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua Fee Is Written For OBT Agent Unassisted Without MAC Line And Limo Fee Is Selected
@@ -38,7 +38,7 @@ Verify Aqua Fee Is Written For OBT Agent Unassisted Without MAC Line And Limo Fe
     Create PNR With Active Air Segments For OBT PNR Without APAY
     Add 2 Limo Segments
     Complete The PNR With Default Values 
-    Select LIMO ONLY FEES Type Of Fee And Select Segment
+    Select Segment And Select LIMO ONLY FEES
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua fee Is Written For OBT Agent Unassisted Without MAC Line And Rail Fee Is Selected

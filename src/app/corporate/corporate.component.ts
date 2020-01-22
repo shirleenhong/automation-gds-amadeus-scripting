@@ -258,7 +258,10 @@ export class CorporateComponent implements OnInit {
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');
-        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+        await this.ddbService.getTravelPortInformation(
+          this.pnrService.pnrObj.airSegments,
+          this.pnrService.getSegmentList().filter((x) => x.segmentType === 'MIS')
+        );
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
         await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
@@ -502,7 +505,6 @@ export class CorporateComponent implements OnInit {
           commandList.push(del);
         });
       }
-
     });
   }
 
@@ -654,9 +656,9 @@ export class CorporateComponent implements OnInit {
       if (this.aquaFeesComponent.obtComponent) {
         this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);
       }
-      this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+      const commandList = this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
 
-      await this.rms.submitToPnr(null, null).then(
+      await this.rms.submitToPnr(null, null, commandList).then(
         () => {
           this.isPnrLoaded = false;
           this.workflow = '';
@@ -695,7 +697,10 @@ export class CorporateComponent implements OnInit {
   public async aquaFees() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+    await this.ddbService.getTravelPortInformation(
+      this.pnrService.pnrObj.airSegments,
+      this.pnrService.getSegmentList().filter((x) => x.segmentType === 'MIS')
+    );
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'aquaFees';

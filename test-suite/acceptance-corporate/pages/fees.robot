@@ -171,6 +171,8 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Sleep    4
     Create 2 Test Dates
     Create Multiple TKT Exchange PNR In The GDS
+    Set Test Variable    ${cfa}    NRD
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Multiple Segment For Transborder With TSTs
     Move Single Passenger For Fees
@@ -180,23 +182,31 @@ Move Single Passenger With Multiple Segment For Transborder With TSTs
     Sleep    4
     Create 2 Test Dates
     Create Multiple TKT Exchange PNR In The GDS
+    Set Test Variable    ${cfa}    RH6
+    Set Test Variable    ${num_air_segments}     0
        
 Move Single Passenger With Single Segment For International With Non Exchange Ticket
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-XXP0000000C
     Add International Segment And Store Single Fare
-    Sleep    4  
+    Sleep    4
+    Set Test Variable    ${cfa}    XXP
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Single Segment With Special Fee Required Inputs
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-YXU0000000C
     Add International Segment And Store Single Fare
-    Sleep    4 
+    Sleep    4
+    Set Test Variable    ${cfa}    YXU
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
     Add OBT Remark In The PNR    RM*EB/-EBA    RM*CF/-RH60000000C    RFCWTPTEST    ER
+    Set Test Variable    ${cfa}    RH6
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Transborder Segments And Single Ticket
     Create And Ticket PNR With Airline Code AC
@@ -205,6 +215,8 @@ Add Passive Rail Segment For CFA With Special Fee
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-XXP0000000C
     Add 1 Rail Segments
+    Set Test Variable    ${cfa}    XXP
+    Set Test Variable    ${num_air_segments}     0
     
 Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Navigate To Page Fees

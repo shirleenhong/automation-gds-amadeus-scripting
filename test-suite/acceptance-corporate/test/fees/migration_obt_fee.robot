@@ -21,6 +21,7 @@ Verify OBT SupFee Remark Is Written In The PNR with Air, Rail, Hotel, and Car Se
     Book Multiple Segments With Air Car Rail And Hotel
     Open CA Corporate Test
     Click Full Wrap
+    Select Counselor Identity: ESC
     Verify Correct OBT Fee Remark Are Written In The PNR For Multiple Segment
     
     
@@ -31,6 +32,7 @@ Verify OBT SupFee Remark is written In The PNR For Air Only Segment
     Add International Segment And Store Single Fare
     Open CA Corporate Test
     Click Full Wrap
+    Select Counselor Identity: OFC
     Verify Correct OBT Fee Remark Are Written In The PNR For Air Only
     
     
@@ -51,6 +53,7 @@ Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
     Add 2 Passive Hotel Segments
     Open CA Corporate Test
     Click Full Wrap
+    Select Counselor Identity: ESC
     Verify Correct OBT Fee Remark Are Written In The PNR For Hotel Only
     
     
@@ -61,6 +64,7 @@ Verify OBT SupFee Remark is written In The PNR For Car Only Segment
     Add 2 Car Segments
     Open CA Corporate Test
     Click Full Wrap
+    Select Counselor Identity: OFC
     Verify Correct OBT Fee Remark Are Written In The PNR For Car Only
     
     

@@ -20,21 +20,24 @@ ${button_addFee}    //i[@id='addFee']
 
 *** Keywords ***
 Add Canada Domestic Segment And Store Multiple Fare
-    @{gds_commands}    Create List    AN10JANYYCYEG/AAC    SS1Y1    FXP/S2    AN15JANYEGYYC/AAC    SS1Y1    FXP/S3
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YYCYEG/AAC    SS1Y1    FXP/S2    AN${test_date_2}YEGYYC/AAC    SS1Y1    FXP/S3
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Add Transborder Segment And Store Multiple Fare
-    @{gds_commands}    Create List    AN20JANORDYYC/AAC    SS1Y1    FXP/S2    AN25JANYYCORD/AAC    SS1Y1    FXP/S3
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}ORDYYC/AAC    SS1Y1    FXP/S2    AN${test_date_2}YYCORD/AAC    SS1Y1    FXP/S3
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
     
 Add International Segment And Store Single Fare
-    @{gds_commands}    Create List    AN10JANYULCDG/AAF    SS1Y1    AN15JANCDGYUL/AAF    SS1Y1    FXP
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YULCDG/AAF    SS1Y1    AN${test_date_2}CDGYUL/AAF    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}

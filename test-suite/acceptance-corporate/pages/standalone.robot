@@ -431,7 +431,7 @@ Select ${aqua_fee} And Update Touch Reason
 Select Update Touch Reason ${aqua_fee}, And Segment 
     Set Test Variable    ${aqua_fee}
     Navigate To Page Aqua Fees
-    Select ${aqua_fee} Type Of Fee And Select Segment
+    Select Segment And Select ${aqua_fee}
     Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    C
     Run Keyword If    "${aqua_fee}" == "HOTEL ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    M
     Run Keyword If    "${aqua_fee}" == "LIMO ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    L

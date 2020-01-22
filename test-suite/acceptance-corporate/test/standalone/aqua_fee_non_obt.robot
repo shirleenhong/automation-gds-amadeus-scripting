@@ -128,11 +128,12 @@ Verify Aqua Fee OLB Code In Non-OBT Is Written In The PNR
     Select AIR FEES Type Of Fee And Supplemental Fee
     Verify Aqua Fee Remarks Are Written In The PNR
     
-Verify Aqua Fee OBF Fee In Non-OBT Is Written In The PNR
+Verify Aqua Fee OBF Code In Non-OBT Is Written In The PNR
     [Tags]    us13841
-    Create PNR With Active Air Segments For Non-OBT With Air For OLB Fee
+    Create PNR With Active Air Segments For Non-OBT With Air For OFB Fee
     Add 1 Rail Segments With Transborder City Codes
     Complete The PNR With Default Values 
     Select RAIL FEES Type Of Fee And Supplemental Fee
+    Add Supplemental Fee Code
     Verify Aqua Fee Remarks Are Written In The PNR
    

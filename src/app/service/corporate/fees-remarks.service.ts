@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
-import { DDBService } from '../ddb.service';
 import { AquaFeesComponent } from 'src/app/corporate/fees/aqua-fees/aqua-fees.component';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeesRemarkService {
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService, private ddbService: DDBService) {}
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
   /**
    * US9402
@@ -62,9 +62,9 @@ export class FeesRemarkService {
     }
   }
 
-  writeFee(counter, group, segmentRelate?, additionalFee?) {
+  writeFee(counter, group, segmentRelate?, additionalFee?, ticketRemark?) {
     const feeMap = new Map<string, string>();
-    const fees = [];
+    let fees = [];
     if (group.get('code').value !== '') {
       const feeAmt = group.get('fee').value;
       fees.push(group.get('code').value + (feeAmt ? feeAmt.toString() : ''));
@@ -73,15 +73,19 @@ export class FeesRemarkService {
     if (group.get('supplementalFee').value !== '') {
       fees.push(group.get('supplementalFee').value);
     }
+    if (additionalFee) {
+      fees = additionalFee.concat(fees);
+    }
+    fees = fees.filter((el, i, a) => i === a.indexOf(el)); // Prevent DUplicate
 
-    let feeValue = fees.join('/') + (additionalFee ? additionalFee : '');
+    let feeValue = fees.join('/');
 
     if (feeValue === '') {
       feeValue = group.get('noFeeCode').value;
     }
 
     if (feeValue !== '') {
-      feeMap.set('SupFeeInfo', feeValue);
+      feeMap.set('SupFeeInfo', feeValue + ticketRemark);
       feeMap.set('SupFeeTicketId', counter.toString());
       this.remarksManager.createPlaceholderValues(feeMap, null, segmentRelate);
     } else {
@@ -102,55 +106,34 @@ export class FeesRemarkService {
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue'], null, 'OVERRIDE');
     this.remarksManager.createEmptyPlaceHolderValue(['FeesPlaceholder'], null, 'FEE');
     this.remarksManager.createEmptyPlaceHolderValue(['SfcPlaceholder'], null, 'SFC');
-
+    const ticketNum = comp.aquaFeeForm.get('ticketNumber').value;
     const tatoos = this.pnrService.getTatooNumberFromSegmentNumber(comp.aquaFeeForm.get('segments').value.split(','));
     const feeType = comp.aquaFeeForm.get('feeType').value;
     const ebRemark = this.pnrService.getRemarkText('EB/-');
-    const feeInfo = this.getFeeCode(feeType, ebRemark);
-    if (ebRemark === '' && comp.isShowSupFee) {
+    const feeInfo = comp.getFeeCode(feeType, ebRemark);
+    const ticketRemark = ticketNum ? '/TK-' + ticketNum : '';
+
+    const addInfo = [];
+    if (comp.suppFeeComponent.hasExchangeFee) {
+      addInfo.push('EPF');
+    }
+    if (comp.suppFeeComponent.hasConcurFee()) {
+      addInfo.push('ABF');
+    }
+    if (comp.suppFeeComponent.hasOlbFee) {
+      addInfo.push('OLB');
+    }
+
+    if (comp.isShowSupFee) {
       const fees = comp.suppFeeComponent.ticketedForm.get('segments') as FormArray;
-      let addInfo = null;
-      if (comp.suppFeeComponent.hasOlbFee) {
-        addInfo = '/OLB';
-      }
-      this.writeFee(1, fees.controls[0], tatoos.length > 0 ? tatoos : null, addInfo);
+      this.writeFee(1, fees.controls[0], tatoos.length > 0 ? tatoos : null, addInfo, ticketRemark);
     } else {
       const feeMap = new Map<string, string>();
-      feeMap.set('SupFeeInfo', feeInfo);
+      feeMap.set('SupFeeInfo', feeInfo + (addInfo.length > 0 ? '/' + addInfo.join('/') : '') + ticketRemark);
       feeMap.set('SupFeeTicketId', '1');
       this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
     }
-  }
-
-  private getFeeCode(feeType, ebRemark) {
-    let route = '';
-
-    if (feeType === 'L') {
-      route = 'BD';
-    } else if (ebRemark === '') {
-      if (this.ddbService.isPnrTransBorder()) {
-        route = 'TB';
-      } else if (this.ddbService.isPnrDomestic()) {
-        route = 'TD';
-      } else {
-        route = 'TI';
-      }
-      if (feeType === 'C' || feeType === 'H') {
-        route = 'BD';
-      }
-    } else if (ebRemark.indexOf('EB/-EB') >= 0) {
-      if (feeType === 'A' || feeType === 'R') {
-        route = 'TE';
-      } else if (feeType === 'C' || feeType === 'H') {
-        route = 'BE';
-      }
-    } else if (ebRemark.indexOf('EB/-AM') >= 0) {
-      if (feeType === 'A' || feeType === 'R') {
-        route = 'TA';
-      } else if (feeType === 'C' || feeType === 'H') {
-        route = 'BA';
-      }
-    }
-    return feeType + route;
+    const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();
+    return this.pnrService.getSegmentList().length === 0 ? ['RU1AHK1YYZ' + dateNow + '/TYP-CWT/FEE ONLY'] : [];
   }
 }

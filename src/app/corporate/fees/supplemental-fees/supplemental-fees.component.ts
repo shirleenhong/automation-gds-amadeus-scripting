@@ -22,7 +22,7 @@ export class SupplementalFeesComponent implements OnInit {
   supplementalFeeList: ClientFeeItem[];
   clientFees: Array<ClientFeeItem> = [];
   isObt = false;
-  exchangeFee = 0;
+  schedChangeFee = 0;
   flatFee = 0;
   specialFee = 0;
   obFee = 0;
@@ -39,9 +39,10 @@ export class SupplementalFeesComponent implements OnInit {
   @Input()
   isAquaFee = false;
   @Input()
-  selectedSegmentType = '';
+  byPassFeeCode = '';
   hasOlbFee = false;
   hasAbfFee = false;
+  hasExchangeFee = false;
 
   constructor(
     private pnrService: PnrService,
@@ -64,13 +65,13 @@ export class SupplementalFeesComponent implements OnInit {
     } else {
       this.maxCount = 1;
     }
-    this.exchangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
+    this.schedChangeFee = this.getFeeValue('Schedule Change Only Fee on Air Exchange Ticket');
     this.flatFee = this.getFeeValue('Flat Exchange Fee');
     this.specialFee = this.getFeeValue('Special Fee');
 
     this.checkObFee();
 
-    if (!this.isObt) {
+    if (!this.isObt || this.isAquaFee) {
       this.isExchange = this.exchangeSegments.length > 0;
       this.addFee();
     }
@@ -110,6 +111,13 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
+  hasConcurFee() {
+    const hasWNFlight = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && x.airlineCode === 'WN').length > 0;
+    const ebRem = this.pnrService.getRemarkText('EB/');
+    const isConcurEB = ebRem.indexOf('EB/-EBA') >= 0 || ebRem.indexOf('EB/-AMA') >= 0;
+    return hasWNFlight && isConcurEB && this.hasAbfFee;
+  }
+
   async loadData(): Promise<void> {
     this.noFeeCodes = this.ddbService.getNoFeeCodes();
     this.hasAir = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR').length > 0;
@@ -122,6 +130,7 @@ export class SupplementalFeesComponent implements OnInit {
       this.supplementalFeeList = this.clientFees.filter((item) => item.feeTypeDescription === 'Supplemental Fee' && item.valueAmount > 0);
       this.hasOlbFee = this.clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
       this.hasAbfFee = this.clientFees.filter((item) => item.outputFormat === 'ABF' && item.valueAmount > 0).length > 0;
+      this.hasExchangeFee = this.clientFees.filter((item) => item.outputFormat === 'EXC' && item.valueAmount > 0).length > 0;
     } catch (e) {
       console.log(e);
     }
@@ -173,25 +182,21 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
-  updateFeeType(feeType) {
-    this.selectedSegmentType = feeType;
+  resetFees(feeCode) {
+    this.byPassFeeCode = feeCode;
     this.removeFee(0);
     this.addFee();
   }
 
   getCode() {
+    if (this.byPassFeeCode !== '') {
+      return this.byPassFeeCode;
+    }
     let code = 'A';
-    let desti = 'T' + this.codeDestination;
+    const desti = 'T' + this.codeDestination;
     if (!this.hasAir && this.hasTrain) {
       code = 'R';
     }
-    if (this.selectedSegmentType !== '') {
-      code = this.selectedSegmentType;
-      if (code === 'L') {
-        desti = 'BD';
-      }
-    }
-
     return code + desti;
   }
 
@@ -226,7 +231,7 @@ export class SupplementalFeesComponent implements OnInit {
 
   processExchange(group: FormGroup, isChange: boolean) {
     if (isChange && group.get('isExchange').value && !this.isObt) {
-      this.setFee(group, this.exchangeFee, 'exchange');
+      this.setFee(group, this.schedChangeFee, 'exchange');
     } else {
       this.processFlatFee(group);
     }

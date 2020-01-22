@@ -296,7 +296,7 @@ export class DDBService implements OnInit {
     return this.supplierCodes;
   }
 
-  async getTravelPortInformation(airSegments) {
+  async getTravelPortInformation(airSegments, misSegments?) {
     await airSegments.forEach(async (station) => {
       await this.getTravelPort(station.arrivalAirport).then(async (port) => {
         await this.extractDataPort(port);
@@ -306,6 +306,14 @@ export class DDBService implements OnInit {
         await this.extractDataPort(port);
       });
     });
+
+    if (misSegments) {
+      await misSegments.forEach(async (mis) => {
+        await this.getTravelPort(mis.cityCode).then(async (port) => {
+          await this.extractDataPort(port);
+        });
+      });
+    }
     await this.delay(1500);
   }
 

@@ -535,7 +535,7 @@
 		"NumCarSegments": "0",
 		"NumHotelSegments": "0",
 		"OtherRemarks1": "RM*NUC",
-		"OtherRemarks2": "RMF/SUPFEE1-ATI",
+		"OtherRemarks2": "RMF/SUPFEE1-ATB",
 		"OtherRemarks3": "RM*U86/-OVERRIDE ESC",
 		"OtherRemarks4": "RM*FEE/-FA",
 		"OtherRemarks5": "RM*SFC/-FA-",
@@ -559,7 +559,7 @@
 		"UnexpectedRemark2": "RM *U86/-OVERRIDE ESC",
 		"UnexpectedRemark3": "RM *FEE",
 		"UnexpectedRemark4": "RM *SFC",
-		"UnexpectedRemark5": "RMF SUPFEE1-ATI"
+		"UnexpectedRemark5": "RMF SUPFEE1-ATB"
 	},
 	"Non-OBT With Exchange PNR For Flat Fee": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

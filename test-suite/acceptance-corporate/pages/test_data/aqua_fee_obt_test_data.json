@@ -42,8 +42,8 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
 		"ExpectedRemark1": "RMF SUPFEE1-ATE",
-		"ExpectedRemark2": "RM *MAC/-SUP-PFS/-LK-MAC1/-AMT-123.00/-PT-1.00RC/-PT-1.00XG/-PT-1.00XQ/-PT-1.00XT/-CD-0.00",
-		"ExpectedRemark3": "RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-123456/S2-3",
+		"ExpectedRemark2": "RM *MAC/-SUP-PFS/-",
+		"ExpectedRemark3": "RM *MAC/-LK-MAC1/-",
 		"ExpectedRemark4": "RM *EB/-EBA/-GIC",
 		"UnexpectedRemark1": "RM *NUC",
 		"UnexpectedRemark2": "RM *U86/-OVERRIDE ESC",
@@ -314,8 +314,8 @@
 		"UnexpectedRemark3": "RM *FEE",
 		"UnexpectedRemark4": "RM *SFC",
 		"UnexpectedRemark5": "RMF SUPFEE1-ATI",
-		"UnexpectedRemark6": "RM *MAC/-SUP-AAA/-LK-MAC1/-AMT-123.00/-PT-1.00RC/-PT-1.00XG/-PT-1.00XQ/-PT-1.00XT/-CD-0.00",
-		"UnexpectedRemark7": "RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-123456/S2-3"
+		"UnexpectedRemark6": "RM *MAC/-SUP-AAA/-",
+		"UnexpectedRemark7": "RM *MAC/-LK-MAC1/-"
 	},
 	"OBT PNR With APAY For Agent Assisted With Car": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -368,8 +368,8 @@
 		"UnexpectedRemark3": "RM *FEE",
 		"UnexpectedRemark4": "RM *SFC",
 		"UnexpectedRemark5": "RMF SUPFEE1-ATI",
-		"UnexpectedRemark6": "RM *MAC/-SUP-AAA/-LK-MAC1/-AMT-123.00/-PT-1.00RC/-PT-1.00XG/-PT-1.00XQ/-PT-1.00XT/-CD-0.00",
-		"UnexpectedRemark7": "RM *MAC/-LK-MAC1/-FOP-CCVIXXXXXXXXXXXX1111/-EXP-0323/-MP-ALL/-BKN-123456/S2-3"
+		"UnexpectedRemark6": "RM *MAC/-SUP-AAA/-",
+		"UnexpectedRemark7": "RM *MAC/-LK-MAC1/-"
 	},
 	"OBT PNR With APAY For Agent Assisted With Hotel": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

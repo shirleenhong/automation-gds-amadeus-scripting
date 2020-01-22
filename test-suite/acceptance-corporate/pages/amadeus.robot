@@ -797,3 +797,4 @@ Handle E-ticket Error
     Retrieve Current PNR 
     ${status}    Run Keyword And Return Status    Element Should Contain    ${text_area_command}    ETKT DISALLOWED
     Run keyword If    '${status}' == 'True'    Enter Cryptic Command     TTP/T${tst_no}
+    

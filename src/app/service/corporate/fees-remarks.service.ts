@@ -4,12 +4,19 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { AquaFeesComponent } from 'src/app/corporate/fees/aqua-fees/aqua-fees.component';
 import { DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeesRemarkService {
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(
+    private remarksManager: RemarksManagerService,
+    private pnrService: PnrService,
+    private queueRemarksService: AmadeusQueueService
+  ) {}
 
   /**
    * US9402
@@ -113,15 +120,38 @@ export class FeesRemarkService {
     const feeInfo = comp.getFeeCode(feeType, ebRemark);
     const ticketRemark = ticketNum ? '/TK-' + ticketNum : '';
 
+    // Ticketing and Queue
+    const oid = this.pnrService.extractOidFromBookRemark();
+    const dateToday = formatDate(Date.now(), 'ddMMM', 'en').toString();
+    this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
+    const override = new Map<string, string>();
+    override.set('CAOverrideValue', 'FEE');
+    this.remarksManager.createPlaceholderValues(override);
+    if (this.isPnrHotelOnly()) {
+      const numberOfTicketRemark = new Map<string, string>();
+      numberOfTicketRemark.set('NumberOfTickets', '1');
+      this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+    }
+
+    const queue = new QueuePlaceModel();
+    queue.pcc = oid;
+    queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+    queue.queueNo = '70';
+    queue.category = '1';
+    this.queueRemarksService.addQueueCollection(queue);
+
     const addInfo = [];
-    if (comp.suppFeeComponent.hasExchangeFee) {
-      addInfo.push('EPF');
-    }
-    if (comp.suppFeeComponent.hasConcurFee()) {
-      addInfo.push('ABF');
-    }
-    if (comp.suppFeeComponent.hasOlbFee) {
-      addInfo.push('OLB');
+
+    if (comp.suppFeeComponent !== undefined) {
+      if (comp.suppFeeComponent.hasExchangeFee) {
+        addInfo.push('EPF');
+      }
+      if (comp.suppFeeComponent.hasConcurFee()) {
+        addInfo.push('ABF');
+      }
+      if (comp.suppFeeComponent.hasOlbFee) {
+        addInfo.push('OLB');
+      }
     }
 
     if (comp.isShowSupFee) {
@@ -133,7 +163,24 @@ export class FeesRemarkService {
       feeMap.set('SupFeeTicketId', '1');
       this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
     }
+
+    if (oid) {
+      const remark = 'TKTL' + dateToday + '/' + oid + '/' + 'Q8C1-FEE';
+      this.remarksManager.SendCommand(remark);
+    }
+
     const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();
     return this.pnrService.getSegmentList().length === 0 ? ['RU1AHK1YYZ' + dateNow + '/TYP-CWT/FEE ONLY'] : [];
+  }
+
+  isPnrHotelOnly(): boolean {
+    const nonHotel = this.pnrService.getSegmentList().filter((segment) => segment.segmentType !== 'HTL' && segment.segmentType !== 'HHL');
+    const hotelOnly = this.pnrService.getSegmentList().filter((segment) => segment.segmentType === 'HTL' || segment.segmentType === 'HHL');
+
+    if (nonHotel.length === 0 && hotelOnly.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

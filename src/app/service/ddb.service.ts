@@ -456,10 +456,10 @@ export class DDBService implements OnInit {
   /**
    * Get the Leisure On Demand PCCs
    */
-  public async getLeisureOnDemandPCC() {
+  public async getTeamQueuePCCOID() {
     try {
       let lodPCC = null;
-      const response = await this.getConfigurationParameter('LeisureOnDemand');
+      const response = await this.getConfigurationParameter('TeamQueuePCCOID');
       lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
       lodPCC = lodPCC.map((pcc) => {
         return pcc.trim();

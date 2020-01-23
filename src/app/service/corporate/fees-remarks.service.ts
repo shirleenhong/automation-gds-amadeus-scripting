@@ -132,8 +132,6 @@ export class FeesRemarkService {
       numberOfTicketRemark.set('NumberOfTickets', '1');
       this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
     }
-    const remark = 'TKTL' + dateToday + '/' + oid + '/' + 'Q8C1-FEE';
-    this.remarksManager.SendCommand(remark);
 
     const queue = new QueuePlaceModel();
     queue.pcc = oid;
@@ -143,14 +141,17 @@ export class FeesRemarkService {
     this.queueRemarksService.addQueueCollection(queue);
 
     const addInfo = [];
-    if (comp.suppFeeComponent.hasExchangeFee) {
-      addInfo.push('EPF');
-    }
-    if (comp.suppFeeComponent.hasConcurFee()) {
-      addInfo.push('ABF');
-    }
-    if (comp.suppFeeComponent.hasOlbFee) {
-      addInfo.push('OLB');
+
+    if (comp.suppFeeComponent !== undefined) {
+      if (comp.suppFeeComponent.hasExchangeFee) {
+        addInfo.push('EPF');
+      }
+      if (comp.suppFeeComponent.hasConcurFee()) {
+        addInfo.push('ABF');
+      }
+      if (comp.suppFeeComponent.hasOlbFee) {
+        addInfo.push('OLB');
+      }
     }
 
     if (comp.isShowSupFee) {
@@ -161,6 +162,11 @@ export class FeesRemarkService {
       feeMap.set('SupFeeInfo', feeInfo + (addInfo.length > 0 ? '/' + addInfo.join('/') : '') + ticketRemark);
       feeMap.set('SupFeeTicketId', '1');
       this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
+    }
+
+    if (oid) {
+      const remark = 'TKTL' + dateToday + '/' + oid + '/' + 'Q8C1-FEE';
+      this.remarksManager.SendCommand(remark);
     }
 
     const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();

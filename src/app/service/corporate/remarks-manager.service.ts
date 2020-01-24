@@ -229,7 +229,7 @@ export class RemarksManagerService {
       this.newPlaceHolderValues = [];
       await this.deleteSSRLines();
       if (commandList && commandList.length > 0) {
-        await this.sendCrypticCommands(commandList, 0);
+        await this.sendCrypticCommands(commandList);
       }
 
       this.endPnr();

@@ -125,15 +125,8 @@ export class SupplementalFeesComponent implements OnInit {
     this.exchangeSegments = this.pnrService.getExchangeSegmentNumbers();
 
     this.cfa = this.pnrService.getCFLine().cfa;
-    try {
-      this.clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.cfa);
-      this.supplementalFeeList = this.clientFees.filter((item) => item.feeTypeDescription === 'Supplemental Fee' && item.valueAmount > 0);
-      this.hasOlbFee = this.clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
-      this.hasAbfFee = this.clientFees.filter((item) => item.outputFormat === 'ABF' && item.valueAmount > 0).length > 0;
-      this.hasExchangeFee = this.clientFees.filter((item) => item.outputFormat === 'EXC' && item.valueAmount > 0).length > 0;
-    } catch (e) {
-      console.log(e);
-    }
+
+    await this.loadClientFeesItems();
     this.codeDestination = 'I';
     if (this.ddbService.isPnrTransBorder()) {
       this.codeDestination = 'B';
@@ -141,6 +134,18 @@ export class SupplementalFeesComponent implements OnInit {
       this.codeDestination = 'D';
     }
     this.isObt = this.pnrService.getRemarkText('EB/') !== '';
+  }
+
+  async loadClientFeesItems() {
+    try {
+      this.clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.cfa);
+      this.supplementalFeeList = this.clientFees.filter((item) => item.feeTypeDescription === 'Supplemental Fee' && item.valueAmount > 0);
+      this.hasOlbFee = this.clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
+      this.hasAbfFee = this.clientFees.filter((item) => item.outputFormat === 'ABF' && item.valueAmount > 0).length > 0;
+      this.hasExchangeFee = this.clientFees.filter((item) => item.outputFormat === 'EPF' && item.valueAmount > 0).length > 0;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   feeChange(group: FormGroup) {

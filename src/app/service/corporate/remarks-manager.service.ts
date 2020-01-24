@@ -235,8 +235,8 @@ export class RemarksManagerService {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
       await this.deleteSSRLines();
-      if (commandList) {
-        await this.sendSSRCommands(commandList, 0);
+      if (commandList && commandList.length > 0) {
+        await this.sendCrypticCommands(commandList);
       }
 
       this.endPnr();
@@ -309,12 +309,9 @@ export class RemarksManagerService {
     return deleteResponse;
   }
 
-  async sendSSRCommands(cmds, index) {
-    const self = this;
-    if (!(index === cmds.length)) {
-      await smartScriptSession.send(cmds[index]).then(async () => {
-        await self.sendSSRCommands(cmds, index + 1);
-      });
+  async sendCrypticCommands(commands) {
+    for (const com of commands) {
+      await smartScriptSession.send(com);
     }
   }
 

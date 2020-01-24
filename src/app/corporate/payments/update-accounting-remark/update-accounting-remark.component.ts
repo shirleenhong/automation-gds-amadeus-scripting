@@ -371,6 +371,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.accountingRemark.baseAmount = '';
       this.accountingRemark.hst = '';
       this.accountingRemark.gst = '';
+      this.setBaseAmount();
+      this.matrixAccountingForm.get('gst').setValue('0.00');
+      this.matrixAccountingForm.get('hst').setValue('0.00');
+      this.matrixAccountingForm.get('qst').setValue('0.00');
+      this.matrixAccountingForm.get('otherTax').setValue('0.00');
+      this.matrixAccountingForm.get('commisionWithoutTax').setValue('0.00');
     }
   }
 

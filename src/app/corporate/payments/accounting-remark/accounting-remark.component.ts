@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatrixAccountingModel } from '../../../models/pnr/matrix-accounting.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UpdateAccountingRemarkComponent } from '../update-accounting-remark/update-accounting-remark.component';
@@ -22,6 +22,9 @@ export class AccountingRemarkComponent implements OnInit {
   isAddNew = false;
   isPassPurchase = false;
 
+  @Input() windowFilter: string;
+
+
   constructor(
     private modalService: BsModalService,
     private utilHelper: UtilHelper,
@@ -31,7 +34,9 @@ export class AccountingRemarkComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.accountingRemarks = this.extractAccountingModelsFromPnr();
+    if (!this.windowFilter) {
+      this.accountingRemarks = this.extractAccountingModelsFromPnr();
+    }
     this.modalSubscribeOnClose();
     this.isPassPurchaseTransaction();
     this.valueChangeListener.accountingRemarksChange(this.accountingRemarks);
@@ -165,6 +170,8 @@ export class AccountingRemarkComponent implements OnInit {
     this.utilHelper.modelCopy(r, this.modalRef.content.accountingRemark);
     const code = r.supplierCodeName;
     this.modalRef.content.isAddNew = false;
+    this.modalRef.content.isStandAlone = this.windowFilter === 'standalone';
+    this.modalRef.content.loadAccountingRemarkList(this.windowFilter === 'standalone');
     this.modalRef.content.onChangeAccountingType(r.accountingTypeRemark);
     r.supplierCodeName = code;
 
@@ -210,6 +217,8 @@ export class AccountingRemarkComponent implements OnInit {
     accountingRemark.tkMacLine = this.accountingRemarks.length + 1;
     this.modalRef.content.isAddNew = true;
     this.modalRef.content.accountingRemark = accountingRemark;
+    this.modalRef.content.isStandAlone = this.windowFilter === 'standalone';
+    this.modalRef.content.loadAccountingRemarkList(this.windowFilter === 'standalone');
     this.isAddNew = true;
     this.modalSubscribeOnClose();
   }

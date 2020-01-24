@@ -446,6 +446,44 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+  public async addPassPurchaseToPNR() {
+    // const remarkCollection = new Array<RemarkGroup>();
+    this.showLoading('Updating PNR...', 'SubmitToPnr');
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
+    const accRemarks = new Array<RemarkGroup>();
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    const commandList = [];
+    const forDeleteRemarks = [];
+    // let remarkList = new Array<RemarkModel>();
+
+    // const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
+    // accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
+    accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
+    this.corpRemarkService.BuildRemarks(accRemarks);
+    await this.corpRemarkService.SubmitRemarks().then(async () => {
+      await this.getPnrService();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
+
+    this.paymentRemarkService.deleteRemarksStandAlone();
+    remarkCollection.push(this.paymentRemarkService.writeStandAlonePassPurchase(this.paymentsComponent.accountingRemark));
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
+
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
+
   async sendIrdRateParameters() {
     if (!this.irdRateRequestComponent.checkValid()) {
       const modalRef = this.modalService.show(MessageComponent, {
@@ -712,6 +750,19 @@ export class CorporateComponent implements OnInit {
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'irdRateRequest';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async corporatePassPurchase() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'corporatePass';
       this.closePopup();
     } catch (e) {
       console.log(e);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { AccountingRemarkComponent } from './accounting-remark/accounting-remark.component';
 import { NonAcceptanceComponent } from './non-acceptance/non-acceptance.component';
 import { PnrService } from '../../service/pnr.service';
@@ -17,6 +17,8 @@ export class PaymentsComponent implements OnInit {
   @ViewChild(NonAcceptanceComponent) nonAcceptance: NonAcceptanceComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
 
+  @Input() windowFilter: string;
+
   hasValidUnticketed = false;
   hasFop = false;
   tstData = [];
@@ -26,7 +28,7 @@ export class PaymentsComponent implements OnInit {
     private utilHelper: UtilHelper,
     private staticService: StaticValuesService,
     private rulesEngineService: RulesEngineService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.tstData = this.pnrService.getUnticketedCorpReceipts();

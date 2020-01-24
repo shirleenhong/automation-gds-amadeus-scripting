@@ -10,7 +10,7 @@ declare var smartScriptSession: any;
 export class CleanUpRemarkService {
   deleteRemarksByIds = Array<string>();
 
-  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) {}
+  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) { }
 
   cleanUpRemarks() {
     this.markIdForDeletion();
@@ -39,6 +39,14 @@ export class CleanUpRemarkService {
     remarks.push('FEE'); // RM*FEE
     this.getIdsForDeletion(remarks);
   }
+
+  // standAloneDelete() {
+  //   const remarks = Array<string>();
+  //   remarks.push('TKT'); // TKT
+  //   remarks.push('CN/-A9I');
+  //   remarks.push('U63/-NO-0.00');
+  //   this.getIdsForDeletion(remarks);
+  // }
 
   writePossibleConcurObtRemark() {
     const eba = this.pnrService.getRemarkText('EB/-EBA');

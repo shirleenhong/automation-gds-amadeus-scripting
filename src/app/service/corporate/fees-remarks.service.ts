@@ -122,7 +122,6 @@ export class FeesRemarkService {
 
     // Ticketing and Queue
     const oid = this.pnrService.extractOidFromBookRemark();
-    const dateToday = formatDate(Date.now(), 'ddMMM', 'en').toString();
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
     const override = new Map<string, string>();
     override.set('CAOverrideValue', 'FEE');

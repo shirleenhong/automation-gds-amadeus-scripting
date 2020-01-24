@@ -663,11 +663,16 @@ export class CorporateComponent implements OnInit {
       ticketRemark.oid = this.pnrService.extractOidFromBookRemark();
       ticketRemark.tktDate = formatDate(Date.now(), 'ddMMM', 'en').toString();
       ticketRemark.tkLine = 'FEE';
-      const commandList = this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+      this.ticketRemarkService.deleteTicketingLine();
+      const commandList = await this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
       remarkCollection.push(this.ticketRemarkService.submitTicketRemark(ticketRemark));
-      this.getStaticModelRemarks(remarkCollection, null, new Array<PassiveSegmentModel>(), new Array<string>(), commandList);
+      let forDelete = new Array<string>();
+      forDelete = remarkCollection[0].deleteRemarkByIds;
 
-      await this.rms.submitToPnr(null, null, commandList).then(
+      if (commandList) {
+        this.getStaticModelRemarks(remarkCollection, null, new Array<PassiveSegmentModel>(), new Array<string>(), commandList);
+      }
+      await this.rms.submitToPnr(null, forDelete, commandList).then(
         () => {
           this.isPnrLoaded = false;
           this.workflow = '';

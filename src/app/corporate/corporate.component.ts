@@ -71,6 +71,7 @@ export class CorporateComponent implements OnInit {
   showIrdRequestButton = false;
   loading = false;
   showAquaFeeButton = false;
+  withPasspurchaseAccess = false;
   version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -170,6 +171,7 @@ export class CorporateComponent implements OnInit {
       this.showIrdRequestButton = true;
     }
     this.checkValidForAquaFee();
+    this.hasAccessInPassPurchase();
   }
 
   initData() {
@@ -941,5 +943,11 @@ export class CorporateComponent implements OnInit {
     const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
     const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
     this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
+  }
+
+  async hasAccessInPassPurchase() {
+    const response = await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase');
+    const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+    this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
   }
 }

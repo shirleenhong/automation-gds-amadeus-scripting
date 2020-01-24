@@ -263,8 +263,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.setRequired(['departureCity', 'originalTktLine'], false);
     this.setRequired(['tktLine'], true);
     this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
-    // 'vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], false);
-    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
+    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType',
+      'vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], true);
     this.matrixAccountingForm.get('otherDescription').clearValidators();
     this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
@@ -342,6 +342,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
         break;
     }
+
     this.loadPassType(accRemark);
 
   }
@@ -352,9 +353,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       this.matrixAccountingForm.get('hst').setValidators([Validators.required, Validators.maxLength(8)]);
       this.matrixAccountingForm.get('qst').setValidators([Validators.required, Validators.maxLength(8)]);
       this.matrixAccountingForm.get('otherTax').setValidators([Validators.required, Validators.maxLength(8)]);
-    }else {
+    } else {
       this.setRequired(['gst', 'hst', 'qst', 'otherTax'], false);
       this.clearValidity(['gst', 'hst', 'qst', 'otherTax', 'baseAmount']);
+      this.enableFormControls(['vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], false);
       this.setRequired(['vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], true);
     }
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);

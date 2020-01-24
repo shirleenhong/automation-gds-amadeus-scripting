@@ -25,6 +25,7 @@ BEGIN TRY
        DELETE FROM PNROutputItemLanguage WHERE CreationUserIdentifier = @CreationUserIdentifier
        DELETE FROM PNROutputItem WHERE CreationUserIdentifier = @CreationUserIdentifier
        DELETE FROM PNROutputPlaceHolder WHERE   CreationUserIdentifier = @CreationUserIdentifier
+	   delete from ConfigurationParameter WHERE   CreationUserIdentifier = @CreationUserIdentifier
 
        
        ----------------------------------
@@ -83,6 +84,10 @@ BEGIN TRY
                                                (@PNROutputItemId + 2, 'IsPos', 'true', @CreationTimestamp, @CreationUserIdentifier, 1),
 										       (@PNROutputItemId + 3, 'IsPos', 'true', @CreationTimestamp, @CreationUserIdentifier, 1)
 											   
+			 
+			 INSERT INTO ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId,	CreationTimestamp,	CreationUserIdentifier,	VersionNumber)
+							VALUES('UsersToStandAlonePassPurchase', 'U001RCM, U001RXJ', 11 , @CreationTimestamp, @CreationUserIdentifier, 1)
+
 
        PRINT 'END Script'
 

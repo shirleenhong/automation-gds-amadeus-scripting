@@ -205,7 +205,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   loadReasonCodeList() {
-    this.reasonCodeList = [{ itemText: '', itemValue: '' }, { itemText: 'L - Low Fare', itemValue: 'L' }];
+    this.reasonCodeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'L - Low Fare', itemValue: 'L' }
+    ];
   }
 
   loadPassType(accountingType) {
@@ -216,11 +219,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       case 'WCPP':
       case 'WCPPC':
-        this.passPurchaseList = [{ itemText: '', itemValue: '' }, { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }];
+        this.passPurchaseList = [
+          { itemText: '', itemValue: '' },
+          { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }
+        ];
         break;
       case 'PCPP':
       case 'PCPPC':
-        this.passPurchaseList = [{ itemText: '', itemValue: '' }, { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }];
+        this.passPurchaseList = [
+          { itemText: '', itemValue: '' },
+          { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }
+        ];
         break;
       default:
         break;
@@ -287,6 +296,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
           this.accountingRemark.baseAmount = '';
           this.accountingRemark.hst = '';
           this.accountingRemark.gst = '';
+          this.setBaseAmount();
+          this.matrixAccountingForm.get('gst').setValue('0.00');
+          this.matrixAccountingForm.get('hst').setValue('0.00');
+          this.matrixAccountingForm.get('qst').setValue('0.00');
+          this.matrixAccountingForm.get('otherTax').setValue('0.00');
+          this.matrixAccountingForm.get('commisionWithoutTax').setValue('0.00');
         }
 
         this.enableFormControls(['fareType'], accRemark !== 'ACPP' && accRemark === 'ACPPC');
@@ -479,20 +494,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   getAllErrors(): { [key: string]: any } | null {
     let hasError = false;
-    const result = Object.keys(this.matrixAccountingForm.controls).reduce(
-      (acc, key) => {
-        const control = this.matrixAccountingForm.get(key);
+    const result = Object.keys(this.matrixAccountingForm.controls).reduce((acc, key) => {
+      const control = this.matrixAccountingForm.get(key);
 
-        const errors =
-          control instanceof FormGroup || control instanceof FormArray ? this.getAllErrors() : control.touched ? control.errors : '';
-        if (errors) {
-          acc[key] = errors;
-          hasError = true;
-        }
-        return acc;
-      },
-      {} as { [key: string]: any }
-    );
+      const errors =
+        control instanceof FormGroup || control instanceof FormArray ? this.getAllErrors() : control.touched ? control.errors : '';
+      if (errors) {
+        acc[key] = errors;
+        hasError = true;
+      }
+      return acc;
+    }, {} as { [key: string]: any });
     return hasError ? result : null;
   }
 

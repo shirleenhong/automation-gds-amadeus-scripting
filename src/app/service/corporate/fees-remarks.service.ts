@@ -164,11 +164,6 @@ export class FeesRemarkService {
       this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
     }
 
-    if (oid) {
-      const remark = 'TKTL' + dateToday + '/' + oid + '/' + 'Q8C1-FEE';
-      this.remarksManager.SendCommand(remark);
-    }
-
     const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();
     return this.pnrService.getSegmentList().length === 0 ? ['RU1AHK1YYZ' + dateNow + '/TYP-CWT/FEE ONLY'] : [];
   }

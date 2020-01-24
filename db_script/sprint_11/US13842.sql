@@ -43,7 +43,7 @@ SET IDENTITY_INSERT [dbo].CLIENTFEEOUTPUT ON;
 	INSERT INTO CLIENTFEEOUTPUT
     (clientFeeOutputId,[ClientFeeId],OutputFormat,OutputDescription, CreationTimeStamp,[CreationUserIdentifier],[VersionNumber])
 VALUES
-    (@clientFeeOutputId+1, @feeId+1, 'EXC', 'Exchange Fee', @creationTimestamp, @creationIdentifier, 1),
+    (@clientFeeOutputId+1, @feeId+1, 'EPF', 'Exchange Fee', @creationTimestamp, @creationIdentifier, 1),
     (@clientFeeOutputId+2, @feeId+1, 'ABF', 'ABF Concur Fee', @creationTimestamp, @creationIdentifier, 1)
 
 		   

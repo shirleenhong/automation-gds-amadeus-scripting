@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { formatDate } from '@angular/common';
 import { AmadeusQueueService } from '../amadeus-queue.service';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class FeesRemarkService {
   constructor(
     private remarksManager: RemarksManagerService,
     private pnrService: PnrService,
-    private queueRemarksService: AmadeusQueueService
+    private queueRemarksService: AmadeusQueueService,
+    private ddbService: DDBService
   ) {}
 
   /**
@@ -81,7 +83,7 @@ export class FeesRemarkService {
       fees.push(group.get('supplementalFee').value);
     }
     if (additionalFee) {
-      fees = additionalFee.concat(fees);
+      fees = fees.concat(additionalFee);
     }
     fees = fees.filter((el, i, a) => i === a.indexOf(el)); // Prevent DUplicate
 
@@ -100,7 +102,7 @@ export class FeesRemarkService {
     }
   }
 
-  public writeAquaFees(comp: AquaFeesComponent) {
+  public async writeAquaFees(comp: AquaFeesComponent) {
     // DELETE ALL MACLINES IF NOT only 1 pfs
     if (this.pnrService.getRemarkLineNumbers('MAC/-SUP-PFS').length !== 1) {
       this.remarksManager.createEmptyPlaceHolderValue(['MacLinePlaceholder'], null, 'MAC');
@@ -141,17 +143,34 @@ export class FeesRemarkService {
     this.queueRemarksService.addQueueCollection(queue);
 
     const addInfo = [];
+    /// Ge Fees
+    let hasOlbFee = false;
+    let hasExchangeFee = false;
+    let hasConcurFee = false;
 
     if (comp.suppFeeComponent !== undefined) {
-      if (comp.suppFeeComponent.hasExchangeFee) {
-        addInfo.push('EPF');
-      }
-      if (comp.suppFeeComponent.hasConcurFee()) {
-        addInfo.push('ABF');
-      }
-      if (comp.suppFeeComponent.hasOlbFee) {
-        addInfo.push('OLB');
-      }
+      hasExchangeFee = comp.suppFeeComponent.hasExchangeFee;
+      hasConcurFee = comp.suppFeeComponent.hasConcurFee();
+      hasOlbFee = comp.suppFeeComponent.hasOlbFee;
+    } else {
+      const clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
+      hasOlbFee = clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
+      const hasAbfFee = clientFees.filter((item) => item.outputFormat === 'ABF' && item.valueAmount > 0).length > 0;
+      hasExchangeFee = clientFees.filter((item) => item.outputFormat === 'EPF' && item.valueAmount > 0).length > 0;
+      const hasWNFlight = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && x.airlineCode === 'WN').length > 0;
+      const ebRem = this.pnrService.getRemarkText('EB/');
+      const isConcurEB = ebRem.indexOf('EB/-EBA') >= 0 || ebRem.indexOf('EB/-AMA') >= 0;
+      hasConcurFee = hasWNFlight && isConcurEB && hasAbfFee;
+    }
+
+    if (hasExchangeFee) {
+      addInfo.push('EPF');
+    }
+    if (hasConcurFee) {
+      addInfo.push('ABF');
+    }
+    if (hasOlbFee) {
+      addInfo.push('OLB');
     }
 
     if (comp.isShowSupFee) {

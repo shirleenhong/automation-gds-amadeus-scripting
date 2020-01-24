@@ -124,7 +124,6 @@ export class FeesRemarkService {
 
     // Ticketing and Queue
     const oid = this.pnrService.extractOidFromBookRemark();
-    const dateToday = formatDate(Date.now(), 'ddMMM', 'en').toString();
     this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
     const override = new Map<string, string>();
     override.set('CAOverrideValue', 'FEE');
@@ -181,11 +180,6 @@ export class FeesRemarkService {
       feeMap.set('SupFeeInfo', feeInfo + (addInfo.length > 0 ? '/' + addInfo.join('/') : '') + ticketRemark);
       feeMap.set('SupFeeTicketId', '1');
       this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
-    }
-
-    if (oid) {
-      const remark = 'TKTL' + dateToday + '/' + oid + '/' + 'Q8C1-FEE';
-      this.remarksManager.SendCommand(remark);
     }
 
     const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();

@@ -48,6 +48,8 @@ import { RulesEngineService } from '../service/business-rules/rules-engine.servi
 import { CommonRemarkService } from '../service/common-remark.service';
 import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
 import { common } from 'src/environments/common';
+import { TicketModel } from '../models/pnr/ticket.model';
+import { formatDate } from '@angular/common';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -696,9 +698,21 @@ export class CorporateComponent implements OnInit {
       if (this.aquaFeesComponent.obtComponent) {
         this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);
       }
-      const commandList = this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+      const remarkCollection = new Array<RemarkGroup>();
+      const ticketRemark = new TicketModel();
+      ticketRemark.oid = this.pnrService.extractOidFromBookRemark();
+      ticketRemark.tktDate = formatDate(Date.now(), 'ddMMM', 'en').toString();
+      ticketRemark.tkLine = 'FEE';
+      this.ticketRemarkService.deleteTicketingLine();
+      const commandList = await this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+      remarkCollection.push(this.ticketRemarkService.submitTicketRemark(ticketRemark));
+      let forDelete = new Array<string>();
+      forDelete = remarkCollection[0].deleteRemarkByIds;
 
-      await this.rms.submitToPnr(null, null, commandList).then(
+      if (commandList) {
+        this.getStaticModelRemarks(remarkCollection, null, new Array<PassiveSegmentModel>(), new Array<string>(), commandList);
+      }
+      await this.rms.submitToPnr(null, forDelete, commandList).then(
         () => {
           this.isPnrLoaded = false;
           this.workflow = '';

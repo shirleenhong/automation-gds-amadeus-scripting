@@ -108,6 +108,9 @@ export class PaymentRemarkService {
       this.createRemarks(null, null, 'ADMINISTRATION FEE OF [FEE] PLUS TAX', null, ['IsPos'], ['true']);
       this.createRemarks(null, null, 'TOTAL FEE IS NONREFUNDABLE', null, ['IsPos'], ['true']);
     } else {
+      this.createRemarks(null, null, 'ONE TIME CWT FEE FOR PASS TRANSACTIONS', null, ['IsPos'], ['false']);
+      this.createRemarks(null, null, 'ADMINISTRATION FEE OF [FEE] PLUS TAX', null, ['IsPos'], ['false']);
+      this.createRemarks(null, null, 'TOTAL FEE IS NONREFUNDABLE', null, ['IsPos'], ['false']);
       this.createRemarks(['SupFeeTicketId', 'SupFeeInfo'], ['1', 'NFR']);
       this.createRemarks(['PassFeeAmount'], [account.feeAmount]);
     }

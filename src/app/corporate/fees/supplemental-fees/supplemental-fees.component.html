@@ -10,7 +10,7 @@
 
   <table class="feeTable" *ngIf="this.ticketedForm.get('segments')['controls'].length > 0">
     <tr>
-      <th width="50px" *ng><div class="">Schedule Change?</div></th>
+      <th width="50px" *ngIf="isExchange"><div class="">Schedule Change?</div></th>
       <!-- <th width="50px"><div class="">Ticketed Segment</div></th> -->
       <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
       <th width="150px"><div class="">Supplemental Fee</div></th>

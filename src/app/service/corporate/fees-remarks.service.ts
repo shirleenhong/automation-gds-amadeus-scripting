@@ -94,7 +94,7 @@ export class FeesRemarkService {
     }
 
     if (feeValue !== '') {
-      feeMap.set('SupFeeInfo', feeValue + ticketRemark);
+      feeMap.set('SupFeeInfo', feeValue + (ticketRemark ? ticketRemark : ''));
       feeMap.set('SupFeeTicketId', counter.toString());
       this.remarksManager.createPlaceholderValues(feeMap, null, segmentRelate);
     } else {

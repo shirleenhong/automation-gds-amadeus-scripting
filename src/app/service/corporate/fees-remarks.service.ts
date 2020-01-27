@@ -82,8 +82,9 @@ export class FeesRemarkService {
     if (group.get('supplementalFee').value !== '') {
       fees.push(group.get('supplementalFee').value);
     }
+
     if (additionalFee) {
-      fees = fees.concat(additionalFee);
+      fees = additionalFee.concat(fees);
     }
     fees = fees.filter((el, i, a) => i === a.indexOf(el)); // Prevent DUplicate
 

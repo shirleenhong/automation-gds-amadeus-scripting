@@ -471,3 +471,15 @@ Click Add Supplemental Fee Button
     Click Element At Coordinates    ${button_add_supplemental_fee}    0    0
     Wait Until Element Is Visible    ${input_supfee_checkbox}    30
     
+Verify TKTL Remark Is Updated And PNR Is Queued Correctly
+    Assign Current Date
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-FEE
+    Verify PNR Is Queued For Aqua Fees
+    
+Verify PNR Is Queued For Aqua Fees
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
+    Take Screenshot 
+    

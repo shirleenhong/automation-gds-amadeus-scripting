@@ -136,4 +136,25 @@ Verify Aqua Fee OBF Code In Non-OBT Is Written In The PNR
     Select RAIL FEES Type Of Fee And Supplemental Fee
     Add Supplemental Fee Code
     Verify Aqua Fee Remarks Are Written In The PNR
-   
+    
+Verify That Correct Ticketing Remarks Are Written And PNR Is Queued Correctly For Air Only PNRs
+    [Tags]    us13843
+    Create PNR With Active Air Segments For Non-OBT With Air Only Segment For TKTL Update And Queueing
+    Complete The PNR With Default Values 
+    Select AIR FEES Type Of Fee
+    Verify TKTL Remark Is Updated And PNR Is Queued Correctly
+    
+Verify That Correct Ticketing Remarks Are Written And PNR Is Queued Correctly For Hotel Only PNRs
+    [Tags]    us13843
+    Create PNR For Non-OBT With Hotel Only Segment For TKTL Update And Queueing
+    Complete The PNR With Default Values 
+    Select AIR FEES Type Of Fee
+    Verify TKTL Remark Is Updated And PNR Is Queued Correctly
+    
+Verify That Correct Ticketing Remarks Are Written And PNR Is Queued Correctly For Mix Segment PNRs
+    [Tags]    us13843
+    Create PNR With Active Air Segments For Non-OBT With Mix Segment For TKTL Update And Queueing
+    Complete The PNR With Default Values 
+    Select AIR FEES Type Of Fee
+    Verify TKTL Remark Is Updated And PNR Is Queued Correctly
+    

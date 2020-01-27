@@ -86,7 +86,7 @@ Open CA Corporate Test
     Click Element    ${menu_corp_test}
     Wait Until Element Is Visible    ${header_corp_test}    60
     Wait Until Element Is Visible    ${window_corp_test}    60
-    Sleep    10
+    Sleep     10
     Select Frame    ${window_corp_test}
     Set Test Variable    ${current_page}    CWT Corporate
     Set Test Variable    ${pnr_submitted}    no
@@ -95,6 +95,8 @@ Open CA Corporate Test
     Set Test Variable     ${ticketing_details}    no
     Set Test Variable     ${actual_counselor_identity}    ${EMPTY}
     Set Test Variable     ${ignored_approval}    False
+    Import Library     AngularJSLibrary    app-root
+    Wait For Script To Complete
 
 Add Single BSP Segment And Store Fare
     Create 1 Test Dates

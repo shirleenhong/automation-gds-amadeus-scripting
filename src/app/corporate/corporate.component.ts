@@ -310,12 +310,7 @@ export class CorporateComponent implements OnInit {
   public async SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
     if (!this.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
@@ -454,7 +449,6 @@ export class CorporateComponent implements OnInit {
   }
 
   public async addPassPurchaseToPNR() {
-    // const remarkCollection = new Array<RemarkGroup>();
     this.showLoading('Updating PNR...', 'SubmitToPnr');
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
@@ -462,10 +456,7 @@ export class CorporateComponent implements OnInit {
     const remarkList = new Array<RemarkModel>();
     const commandList = [];
     const forDeleteRemarks = [];
-    // let remarkList = new Array<RemarkModel>();
 
-    // const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-    // accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
@@ -493,12 +484,7 @@ export class CorporateComponent implements OnInit {
 
   async sendIrdRateParameters() {
     if (!this.irdRateRequestComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
@@ -550,14 +536,18 @@ export class CorporateComponent implements OnInit {
     });
   }
 
+  shoInvalidInputMessage() {
+    const modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
+    modalRef.content.modalRef = modalRef;
+    modalRef.content.title = 'Invalid Inputs';
+    modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+  }
+
   async cancelPnr() {
     if (!this.cancelComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
 
@@ -640,7 +630,6 @@ export class CorporateComponent implements OnInit {
       const canceltktl = this.ticketRemarkService.cancelTicketRemark();
       if (canceltktl) {
         canceltktl.cryptics.forEach((c) => commandList.push(c));
-
         if (this.pnrService.getTkLineNumber() && canceltktl.cryptics.length > 0) {
           forDeletion.push(this.pnrService.getTkLineNumber().toString());
         }
@@ -693,6 +682,11 @@ export class CorporateComponent implements OnInit {
   }
 
   async sendAquaFees() {
+    if (!this.aquaFeesComponent.checkValid()) {
+      this.shoInvalidInputMessage();
+      return;
+    }
+
     if (this.isPnrLoaded) {
       this.showLoading('Sending Aqua Fees...');
       if (this.aquaFeesComponent.obtComponent) {
@@ -817,12 +811,7 @@ export class CorporateComponent implements OnInit {
   async SendItineraryAndQueue() {
     // if (!this.itineraryqueueComponent.checkValid()) {
     if (!this.CheckValidItinModel()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
@@ -921,12 +910,7 @@ export class CorporateComponent implements OnInit {
   }
   async ReSendInvoice() {
     if (!this.sendInvoiceItineraryComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Sending Invoice...');

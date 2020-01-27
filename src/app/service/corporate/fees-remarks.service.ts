@@ -146,11 +146,12 @@ export class FeesRemarkService {
     let hasOlbFee = false;
     let hasExchangeFee = false;
     let hasConcurFee = false;
-
+    let isExchange = false;
     if (comp.suppFeeComponent !== undefined) {
       hasExchangeFee = comp.suppFeeComponent.hasExchangeFee;
       hasConcurFee = comp.suppFeeComponent.hasConcurFee();
       hasOlbFee = comp.suppFeeComponent.hasOlbFee;
+      isExchange = comp.suppFeeComponent.isExchange;
     } else {
       const clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
       hasOlbFee = clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
@@ -160,9 +161,10 @@ export class FeesRemarkService {
       const ebRem = this.pnrService.getRemarkText('EB/');
       const isConcurEB = ebRem.indexOf('EB/-EBA') >= 0 || ebRem.indexOf('EB/-AMA') >= 0;
       hasConcurFee = hasWNFlight && isConcurEB && hasAbfFee;
+      isExchange = this.pnrService.getExchangeSegmentNumbers().length > 0;
     }
 
-    if (hasExchangeFee) {
+    if (hasExchangeFee && isExchange) {
       addInfo.push('EPF');
     }
     if (hasConcurFee) {

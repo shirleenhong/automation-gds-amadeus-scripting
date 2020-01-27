@@ -4,6 +4,7 @@ import { PnrService } from 'src/app/service/pnr.service';
 import { ObtComponent } from '../../reporting/obt/obt.component';
 import { SupplementalFeesComponent } from '../supplemental-fees/supplemental-fees.component';
 import { DDBService } from 'src/app/service/ddb.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-aqua-fees',
@@ -22,7 +23,7 @@ export class AquaFeesComponent implements OnInit {
   @ViewChild(SupplementalFeesComponent) suppFeeComponent: SupplementalFeesComponent;
   hasAir = false;
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
     this.segmentList = new Array<any>();
@@ -101,5 +102,13 @@ export class AquaFeesComponent implements OnInit {
       }
     }
     return feeType + route;
+  }
+
+  checkValid() {
+    this.utilHelper.validateAllFields(this.aquaFeeForm);
+    if (!this.aquaFeeForm.valid) {
+      return false;
+    }
+    return true;
   }
 }

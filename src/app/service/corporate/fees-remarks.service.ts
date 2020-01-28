@@ -79,13 +79,13 @@ export class FeesRemarkService {
       fees.push(group.get('code').value + (feeAmt ? feeAmt.toString() : ''));
     }
 
-    if (group.get('supplementalFee').value !== '') {
-      fees.push(group.get('supplementalFee').value);
-    }
     if (additionalFee) {
       fees = fees.concat(additionalFee);
     }
-    fees = fees.filter((el, i, a) => i === a.indexOf(el)); // Prevent DUplicate
+
+    if (group.get('supplementalFee').value !== '') {
+      fees.push(group.get('supplementalFee').value);
+    }
 
     let feeValue = fees.join('/');
 

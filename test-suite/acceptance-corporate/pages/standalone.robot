@@ -37,7 +37,12 @@ ${list_fee_type}    css=#feeType
 ${select_fee_segment}    //input[@formcontrolname='genericElement']
 ${checkbox_supplemental_fee}    //input[@name='enableSupFee']
 ${button_add_supplemental_fee}    //tbody[@formarrayname='segments']//i[@id='add']
-
+${button_add_supplier_accounting_remark}    //button[contains(text(), 'Add Supplier Accounting Remark')]
+${select_billing_type}    css=#billingType
+${input_admin_fee}    css=#feeAmount
+${input_segment_cost}    css=#segmentCost
+${input_passExpDate}    css=#passExpDate
+${button_submit_corporate}    //button[contains(text(), 'Submit Corporate Pass ')]
 
 
 *** Keywords ***
@@ -484,34 +489,37 @@ Verify PNR Is Queued For Aqua Fees
     Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
     Take Screenshot 
     
+Click Submit Corporate Pass
+    Click Element    ${button_submit_corporate}
+        
 Add Accounting Remark For Standalone Air Canada Pass Purchase
     Click Airline Corporate Pass Purchase
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    1234
-    #Enter Commission
     Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_commission}    2.00
     Enter Value    ${input_departurecity}    YUL        
     Select From List By Label    ${list_purchasetype}     RAPIDAIR
     Select From List By Label    ${list_faretype}       FLEX
     Select Visa As FOP
     Enter Credit Card Number 4444333322221111
-    Enter Credit Card Expiration Date 1220
-    #Select Admin Fee
-    #Enter Admin Fee
-    #Enter Segment Cost
-    #Enter Pass Expiry Date
+    Enter Credit Card Expiration Date 1222
+    Select From List By Label    ${select_billing_type}    POS Service Fee
+    Enter Value    ${input_admin_fee}    20.00
+    Enter Value    ${input_segment_cost}    10.00
+    Enter Value    ${input_passExpDate}    1222
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot    
     Click Save Button
-    #Click Submit Corporate Pass
+    Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Westjet Pass Purchase
     Click Airline Corporate Pass Purchase
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    8888
-    #Enter Commission
+    Enter Value    ${input_commission}    80.00
     Enter Value    ${input_tktnumber}    0888823456
     Enter Value    ${input_departurecity}    CDG        
     Select From List By Label    ${list_purchasetype}     WESTJET TRAVEL PASS
@@ -519,21 +527,22 @@ Add Accounting Remark For Standalone Westjet Pass Purchase
     Select Visa As FOP
     Enter Credit Card Number 4444333322221111
     Enter Credit Card Expiration Date 1222
-    #Select Admin Fee
-    #Enter Admin Fee
-    #Enter Segment Cost
-    #Enter Pass Expiry Date
+    Select From List By Label    ${select_billing_type}    Settlement Fee
+    Enter Value    ${input_admin_fee}    18.05
+    Enter Value    ${input_segment_cost}    101.00
+    Enter Value    ${input_passExpDate}    1222
     Verify Supplier Code Default Value Is Correct For Westjet Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    #Click Submit Corporate Pass
+    Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Porter Pass Purchase
     Click Airline Corporate Pass Purchase
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    4433
-    #Enter Commission
+    Enter Value    ${input_commission}    12.00
+    Enter Value    ${input_commission}    2.00
     Enter Value    ${input_tktnumber}    8888999912
     Enter Value    ${input_departurecity}    FRA        
     Select From List By Label    ${list_purchasetype}     PORTER TRAVEL PASS
@@ -541,21 +550,21 @@ Add Accounting Remark For Standalone Porter Pass Purchase
     Select American Express As FOP
     Enter Credit Card Number 378282246310005
     Enter Credit Card Expiration Date 1222
-    #Select Admin Fee
-    #Enter Admin Fee
-    #Enter Segment Cost
-    #Enter Pass Expiry Date
+    Select From List By Label    ${select_billing_type}    POS Service Fee
+    Enter Value    ${input_admin_fee}    12.20
+    Enter Value    ${input_segment_cost}    350.00
+    Enter Value    ${input_passExpDate}    1222
     Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
-    Take Screenshot
+    Take Screenshot    
     Click Save Button
-    #Click Submit Corporate Pass
+    Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Air North Pass Purchase
     Click Airline Corporate Pass Purchase
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Air North Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    5432
-    #Enter Commission
+    Enter Value    ${input_commission}    1.00
     Enter Value    ${input_tktnumber}    4444888822
     Enter Value    ${input_departurecity}    AKL        
     Select From List By Label    ${list_purchasetype}     U.S COMMUTER
@@ -563,21 +572,21 @@ Add Accounting Remark For Standalone Air North Pass Purchase
     Select Mastercard As FOP
     Enter Credit Card Number 5555555555554444
     Enter Credit Card Expiration Date 1222
-    #Select Admin Fee
-    #Enter Admin Fee
-    #Enter Segment Cost
-    #Enter Pass Expiry Date
+    Select From List By Label    ${select_billing_type}    Settlement Fee
+    Enter Value    ${input_admin_fee}    10.00
+    Enter Value    ${input_segment_cost}    120.05
+    Enter Value    ${input_passExpDate}    1222
     Verify Supplier Code Default Value Is Correct For Air North Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    #Click Submit Corporate Pass
+    Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
     Click Airline Corporate Pass Purchase
     Click Add Accounting Line Button
     Select From List By Label    ${list_accounting_type}    Pacific Coastal Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    2222
-    #Enter Commission
+    Enter Value    ${input_commission}    12.12
     Enter Value    ${input_tktnumber}    0888823456
     Enter Value    ${input_departurecity}    BFS        
     Select From List By Label    ${list_purchasetype}     QUEBEC
@@ -585,12 +594,12 @@ Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
     Select Visa As FOP
     Enter Credit Card Number 4444333322221111
     Enter Credit Card Expiration Date 1222
-    #Select Admin Fee
-    #Enter Admin Fee
-    #Enter Segment Cost
-    #Enter Pass Expiry Date
+    Select From List By Label    ${select_billing_type}    POS Service Fee
+    Enter Value    ${input_admin_fee}    5.01
+    Enter Value    ${input_segment_cost}    75.01
+    Enter Value    ${input_passExpDate}    1222
     Verify Supplier Code Default Value Is Correct For Air North Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    #Click Submit Corporate Pass
+    Click Submit Corporate Pass
     

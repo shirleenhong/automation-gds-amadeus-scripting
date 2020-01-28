@@ -114,7 +114,7 @@ export class PaymentRemarkService {
       this.createRemarks(['SupFeeTicketId', 'SupFeeInfo'], ['1', 'NFR']);
       this.createRemarks(['PassFeeAmount'], [account.feeAmount]);
     }
-    this.createRemarks(['PassName', 'FareType'], [account.passPurchase, faretype], null, segmentrelate);
+    this.createRemarks(['PassName', 'FareType'], [account.passPurchase, faretype + ' FARE'], null, segmentrelate);
     this.createRemarks(['AirlineCode', 'PassNumber', 'PassName', 'FareType'],
       [airlineCode, account.tktLine, account.passPurchase, faretype], null, null);
 

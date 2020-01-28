@@ -127,7 +127,6 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-    this.getPnrService();
   }
 
   showRule() {
@@ -167,17 +166,19 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
-    this.loading = false;
+
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
-    this.checkValidForAquaFee();
-    this.hasAccessInPassPurchase();
+    await this.checkValidForAquaFee();
+    await this.hasAccessInPassPurchase();
+    this.loading = false;
   }
 
-  initData() {
+  async initData() {
     this.ddbService.getAllMatrixSupplierCodes();
+    await this.getPnrService();
   }
 
   showLoading(msg, caller?) {
@@ -944,8 +945,9 @@ export class CorporateComponent implements OnInit {
   }
 
   async hasAccessInPassPurchase() {
-    const response = await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase');
-    const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-    this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+    await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
+      const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+    });
   }
 }

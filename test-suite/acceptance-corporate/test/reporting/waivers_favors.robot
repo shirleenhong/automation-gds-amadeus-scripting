@@ -11,7 +11,7 @@ Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify U63 Is Written For Single Ticket With Single Codes
-    [Tags]    us12284
+    [Tags]    us12284    full_regression
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
     Select Waivers Code Option For Single Ticket
@@ -27,7 +27,7 @@ Verify U63 Is Written For Single Ticket With Multiple Codes
     Delete Fare and Itinerary
 
 Verify U63 Is Written For Multiple Tickets With Multiple Codes  
-    [Tags]    us12284
+    [Tags]    us12284    full_regression
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple BSP Segment With TSTs
     Select Multiple Waiver Code Options For Multiple Tickets

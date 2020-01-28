@@ -14,7 +14,7 @@ ${test_file_name}    car_savings_code
 
 *** Test Cases ***
 Verify That Car Savings Code Remark Should Be Written When There Is A Single Passive Car Segment In The PNR
-    [Tags]    us14342
+    [Tags]    us14342    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Car Savings Code, Single Passive Segment
     Add Car Savings Code For 1 Segments

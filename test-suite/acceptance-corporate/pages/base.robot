@@ -282,7 +282,7 @@ Navigate From Corp
      ...    ELSE IF    "${destination_page}" == "Aqua Fees"     Click Aqua Fees
      ...    ELSE    Close CA Corporate Test
 
-Navigate From Cancel Segments
+Navigate From Cancel Segments 
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Cancel Segments"    Click Cancel Segments Tab     
     ...    ELSE IF    "${destination_page}" == "NonBSP Ticket Credit"    Click NonBSP Ticket Credit Tab

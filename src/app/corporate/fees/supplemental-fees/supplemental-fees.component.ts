@@ -71,6 +71,7 @@ export class SupplementalFeesComponent implements OnInit {
 
     this.checkObFee();
 
+    debugger;
     if (!this.isObt || this.isAquaFee) {
       this.isExchange = this.exchangeSegments.length > 0;
       this.addFee();

@@ -13,11 +13,14 @@ BEGIN TRY
        DECLARE @InvoiceGroup            INT
        DECLARE @ApplicationGroup        INT
        DECLARE @GeneralGroup            INT
-       
+
+       DECLARE @PNROutputItemIdPassName INT
        -----------------------
        -- ROLLBACK Scripts
        -----------------------
        SET @CreationUserIdentifier              = 'Amadeus CA Migration - US11387'
+	   DELETE FROM [PNROutputRemarkGroupPNROutputItem] WHERE CreationUserIdentifier = @CreationUserIdentifier
+	   DELETE FROM PNROutputRemarkGroup WHERE CreationUserIdentifier = @CreationUserIdentifier
        DELETE FROM PnrOutputCondition WHERE CreationUserIdentifier = @CreationUserIdentifier
        DELETE FROM PNROutputGroupPNROutputItem WHERE CreationUserIdentifier = @CreationUserIdentifier
        DELETE FROM PNROutputGroup WHERE CreationUserIdentifier = @CreationUserIdentifier
@@ -38,6 +41,7 @@ BEGIN TRY
              SET @PNROutputGroupID   =  (SELECT MAX(PNROutputGroupId)  FROM [PNROutputGroup])
              SET @GeneralGroup       =  (SELECT PNROutputGroupId  FROM [PNROutputGroup] Where PNROutputGroupName = 'Canada Migration General Group')
 			 SET @ItineraryGroup       =  (SELECT PNROutputGroupId  FROM [PNROutputGroup] Where PNROutputGroupName = 'Canada Migration Itinerary Group')
+			 SET @PNROutputRemarkGroupId = (SELECT MAX(PNROutputRemarkGroupId)  FROM [PNROutputRemarkGroup])
 
 
            INSERT INTO [dbo].[PNROutputPlaceHolder]([PNROutputPlaceHolderName],[PNROutputPlaceHolderRegularExpresssion],[CreationTimestamp],[CreationUserIdentifier],[VersionNumber])
@@ -87,7 +91,20 @@ BEGIN TRY
 			 
 			 INSERT INTO ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId,	CreationTimestamp,	CreationUserIdentifier,	VersionNumber)
 							VALUES('UsersToStandAlonePassPurchase', 'U001RCM, U001RXJ', 11 , @CreationTimestamp, @CreationUserIdentifier, 1)
+				
+			 INSERT INTO dbo.PNROutputRemarkGroup(PNROutputRemarkGroupId, PNROutputRemarkGroupName, CreationTimestamp, CreationUserIdentifier, LastUpdateTimestamp, LastUpdateUserIdentifier, VersionNumber,       PNROutputRemarkGroupKey) 
+                            VALUES (@PNROutputRemarkGroupId + 1, 'CAPassPurchase', @CreationTimestamp,  @CreationUserIdentifier, NULL, NULL, 1,NULL),
+								   (@PNROutputRemarkGroupId + 2, 'CAPassPurchasePos', @CreationTimestamp,  @CreationUserIdentifier, NULL, NULL, 1,NULL)
 
+             SET @PNROutputItemIdPassName = (SELECT PNROutputItemId FROM [PNROutputItem] Where remarkformat = '%PassNameNonAc% PASS')
+
+			INSERT INTO [dbo].[PNROutputRemarkGroupPNROutputItem]([PNROutputRemarkGroupId],PNROutputItemId,[CreationTimestamp],[CreationUserIdentifier],[VersionNumber])
+                VALUES(@PNROutputRemarkGroupId + 1 ,@PNROutputItemId + 1,@CreationTimestamp,@CreationUserIdentifier,1),
+                     (@PNROutputRemarkGroupId + 1 ,@PNROutputItemId + 2,@CreationTimestamp,@CreationUserIdentifier,1),
+                     (@PNROutputRemarkGroupId + 1 ,@PNROutputItemId + 3,@CreationTimestamp,@CreationUserIdentifier,1),
+					 (@PNROutputRemarkGroupId + 2 ,@PNROutputItemIdPassName, @CreationTimestamp,@CreationUserIdentifier,1),
+					 (@PNROutputRemarkGroupId + 2 ,@PNROutputItemId + 7,@CreationTimestamp,@CreationUserIdentifier,1),
+					 (@PNROutputRemarkGroupId + 2 ,@PNROutputItemId + 8,@CreationTimestamp,@CreationUserIdentifier,1)
 
        PRINT 'END Script'
 

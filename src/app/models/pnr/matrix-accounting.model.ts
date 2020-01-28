@@ -37,6 +37,10 @@ export class MatrixAccountingModel {
   penaltyQst = '0.00';
   penaltyOtherTax = '0.00';
   status: string; // ADDED, UPDATED
+  billingType: string;
+  feeAmount: string;
+  segmentCost: string;
+  passExpDate: string;
 
   // Non BSP Exchange properties
   gdsFare: number;

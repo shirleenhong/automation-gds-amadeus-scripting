@@ -27,6 +27,7 @@ export class PnrService {
     segments = [];
     amountPipe = new AmountPipe();
     PCC = '';
+    uid = '';
     pnrResponse: any;
     clientSubUnitGuid: string;
     exchangeTatooNumbers = [];
@@ -57,7 +58,7 @@ export class PnrService {
             .catch((err) => {
                 console.log(err);
             });
-        this.getPCC();
+        await this.getPCC();
         // this.getRecordLocator();
         console.log(JSON.stringify(this.pnrObj));
     }
@@ -113,9 +114,10 @@ export class PnrService {
         return false;
     }
 
-    getPCC(): void {
-        smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
+    async getPCC() {
+        await smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
             this.PCC = x.ACTIVE_OFFICE_ID;
+            this.uid = x.USER_ALIAS;
         });
     }
 

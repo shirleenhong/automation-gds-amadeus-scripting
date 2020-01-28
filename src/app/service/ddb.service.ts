@@ -385,6 +385,8 @@ export class DDBService implements OnInit {
     });
     if (countries.length === 2 && countries.indexOf('US') >= 0 && countries.indexOf('CA') >= 0) {
       return true;
+    } else if (countries.length === 1 && countries.indexOf('US') >= 0) {
+      return true;
     }
     return false;
   }
@@ -456,10 +458,10 @@ export class DDBService implements OnInit {
   /**
    * Get the Leisure On Demand PCCs
    */
-  public async getLeisureOnDemandPCC() {
+  public async getTeamQueuePCCOID() {
     try {
       let lodPCC = null;
-      const response = await this.getConfigurationParameter('LeisureOnDemand');
+      const response = await this.getConfigurationParameter('TeamQueuePCCOID');
       lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
       lodPCC = lodPCC.map((pcc) => {
         return pcc.trim();

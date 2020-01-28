@@ -10,10 +10,10 @@ import { PnrService } from 'src/app/service/pnr.service';
 })
 export class ItineraryInvoiceQueue implements OnInit {
   queueForm: FormGroup;
-  transactionTypeList: { itemText: string; itemValue: string; }[];
-  teamQueueList: { itemText: string; itemValue: string; }[];
+  transactionTypeList: { itemText: string; itemValue: string }[];
+  teamQueueList: { itemText: string; itemValue: string }[];
   isLeisureOnDemadOid = false;
-  pccList: any = "";
+  pccList: any = '';
 
   constructor(private ddb: DDBService, private pnrService: PnrService) {
     this.queueForm = new FormGroup({
@@ -26,8 +26,8 @@ export class ItineraryInvoiceQueue implements OnInit {
   }
 
   async ngOnInit() {
-    this.pccList = await this.ddb.getLeisureOnDemandPCC();
-    this.isLeisureOnDemadOid = this.checkForLeisureOnDemandOID();
+    this.pccList = await this.ddb.getTeamQueuePCCOID();
+    this.isLeisureOnDemadOid = this.checkForTeamQueuePCCOID();
     this.loadTransactionType();
     this.loadTeamQueueList();
   }
@@ -36,14 +36,12 @@ export class ItineraryInvoiceQueue implements OnInit {
     return this.queueForm.controls;
   }
 
-
   loadTransactionType() {
     this.transactionTypeList = [
       { itemText: '', itemValue: '' },
       { itemText: 'Invoice', itemValue: 'invoice' },
       { itemText: 'Itinerary', itemValue: 'itinerary' }
     ];
-
   }
 
   loadTeamQueueList() {
@@ -66,17 +64,14 @@ export class ItineraryInvoiceQueue implements OnInit {
       { itemText: 'Optional 3', itemValue: 'optional3' },
       { itemText: 'Optional 4', itemValue: 'optional4' },
       { itemText: 'EMD', itemValue: 'EMD' }
-    ]
+    ];
   }
 
-  checkForLeisureOnDemandOID() {
+  checkForTeamQueuePCCOID() {
     if (this.pccList.indexOf(this.pnrService.PCC) > 0) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
-
-
 }

@@ -4,12 +4,21 @@ import { RemarksManagerService } from './remarks-manager.service';
 import { PnrService } from '../pnr.service';
 import { AquaFeesComponent } from 'src/app/corporate/fees/aqua-fees/aqua-fees.component';
 import { DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { DDBService } from '../ddb.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeesRemarkService {
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(
+    private remarksManager: RemarksManagerService,
+    private pnrService: PnrService,
+    private queueRemarksService: AmadeusQueueService,
+    private ddbService: DDBService
+  ) {}
 
   /**
    * US9402
@@ -70,13 +79,13 @@ export class FeesRemarkService {
       fees.push(group.get('code').value + (feeAmt ? feeAmt.toString() : ''));
     }
 
+    if (additionalFee) {
+      fees = fees.concat(additionalFee);
+    }
+
     if (group.get('supplementalFee').value !== '') {
       fees.push(group.get('supplementalFee').value);
     }
-    if (additionalFee) {
-      fees = additionalFee.concat(fees);
-    }
-    fees = fees.filter((el, i, a) => i === a.indexOf(el)); // Prevent DUplicate
 
     let feeValue = fees.join('/');
 
@@ -93,7 +102,7 @@ export class FeesRemarkService {
     }
   }
 
-  public writeAquaFees(comp: AquaFeesComponent) {
+  public async writeAquaFees(comp: AquaFeesComponent) {
     // DELETE ALL MACLINES IF NOT only 1 pfs
     if (this.pnrService.getRemarkLineNumbers('MAC/-SUP-PFS').length !== 1) {
       this.remarksManager.createEmptyPlaceHolderValue(['MacLinePlaceholder'], null, 'MAC');
@@ -113,14 +122,55 @@ export class FeesRemarkService {
     const feeInfo = comp.getFeeCode(feeType, ebRemark);
     const ticketRemark = ticketNum ? '/TK-' + ticketNum : '';
 
+    // Ticketing and Queue
+    const oid = this.pnrService.extractOidFromBookRemark();
+    this.remarksManager.createEmptyPlaceHolderValue(['CAOverrideValue']);
+    const override = new Map<string, string>();
+    override.set('CAOverrideValue', 'FEE');
+    this.remarksManager.createPlaceholderValues(override);
+    if (this.isPnrHotelOnly()) {
+      const numberOfTicketRemark = new Map<string, string>();
+      numberOfTicketRemark.set('NumberOfTickets', '1');
+      this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
+    }
+
+    const queue = new QueuePlaceModel();
+    queue.pcc = oid;
+    queue.date = formatDate(Date.now(), 'ddMMyy', 'en').toString();
+    queue.queueNo = '70';
+    queue.category = '1';
+    this.queueRemarksService.addQueueCollection(queue);
+
     const addInfo = [];
-    if (comp.suppFeeComponent.hasExchangeFee) {
+    /// Ge Fees
+    let hasOlbFee = false;
+    let hasExchangeFee = false;
+    let hasConcurFee = false;
+    let isExchange = false;
+    if (comp.suppFeeComponent !== undefined) {
+      hasExchangeFee = comp.suppFeeComponent.hasExchangeFee;
+      hasConcurFee = comp.suppFeeComponent.hasConcurFee();
+      hasOlbFee = comp.suppFeeComponent.hasOlbFee;
+      isExchange = comp.suppFeeComponent.isExchange;
+    } else {
+      const clientFees = await this.ddbService.getFees(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
+      hasOlbFee = clientFees.filter((item) => item.outputFormat === 'OLB' && item.valueAmount > 0).length > 0;
+      const hasAbfFee = clientFees.filter((item) => item.outputFormat === 'ABF' && item.valueAmount > 0).length > 0;
+      hasExchangeFee = clientFees.filter((item) => item.outputFormat === 'EPF' && item.valueAmount > 0).length > 0;
+      const hasWNFlight = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && x.airlineCode === 'WN').length > 0;
+      const ebRem = this.pnrService.getRemarkText('EB/');
+      const isConcurEB = ebRem.indexOf('EB/-EBA') >= 0 || ebRem.indexOf('EB/-AMA') >= 0;
+      hasConcurFee = hasWNFlight && isConcurEB && hasAbfFee;
+      isExchange = this.pnrService.getExchangeSegmentNumbers().length > 0;
+    }
+
+    if (hasExchangeFee && isExchange) {
       addInfo.push('EPF');
     }
-    if (comp.suppFeeComponent.hasConcurFee()) {
+    if (hasConcurFee) {
       addInfo.push('ABF');
     }
-    if (comp.suppFeeComponent.hasOlbFee) {
+    if (hasOlbFee) {
       addInfo.push('OLB');
     }
 
@@ -133,7 +183,19 @@ export class FeesRemarkService {
       feeMap.set('SupFeeTicketId', '1');
       this.remarksManager.createPlaceholderValues(feeMap, null, tatoos.length > 0 ? tatoos : null);
     }
+
     const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();
     return this.pnrService.getSegmentList().length === 0 ? ['RU1AHK1YYZ' + dateNow + '/TYP-CWT/FEE ONLY'] : [];
+  }
+
+  isPnrHotelOnly(): boolean {
+    const nonHotel = this.pnrService.getSegmentList().filter((segment) => segment.segmentType !== 'HTL' && segment.segmentType !== 'HHL');
+    const hotelOnly = this.pnrService.getSegmentList().filter((segment) => segment.segmentType === 'HTL' || segment.segmentType === 'HHL');
+
+    if (nonHotel.length === 0 && hotelOnly.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

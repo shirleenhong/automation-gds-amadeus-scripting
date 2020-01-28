@@ -193,7 +193,7 @@ Open Command Page
 
 Switch To Graphic Mode
     Wait Until Element Is Visible    ${button_graphical}    30
-    Click Element    ${button_graphical}
+    Click Element At Coordinates    ${button_graphical}    0    0
     Wait Until Page Contains Element    ${tab_cryptic_display}    60
     Wait Until Element Is Not Visible    ${overlay_loader}    60
     Set Test Variable    ${current_page}    Cryptic Display

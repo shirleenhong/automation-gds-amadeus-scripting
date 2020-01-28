@@ -8,7 +8,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { AirlineCorporatePass } from 'src/app/models/pnr/airline-corporate-pass.model';
 import { AirlineCorporatePassService } from 'src/app/service/corporate/airline-corporate-pass.service';
-// import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
+// import { validateExpDate } from 'src/app/shared/validators/leisure.validators';
+import { validateCreditCard, validateExpDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-update-accounting-remark',
@@ -28,6 +29,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   supplierCodeList: Array<any>;
   passengerList: Array<any>;
   fareTypeList = [];
+  billingTypeList = [];
   passPurchaseList = [];
   matrixAccountingForm: FormGroup;
   isSubmitted: boolean;
@@ -42,6 +44,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   descriptionList: Array<SelectItem>;
   showOtherDescription = false;
   segments = [];
+  isStandAlone = false;
   maxSegmentsCount = this.pnrService.getPassiveAirSegmentNumbers().length;
 
   constructor(
@@ -54,7 +57,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   ) {
     this.accountingRemarkList = new Array<SelectItem>();
     this.accountingRemark = new MatrixAccountingModel();
-    this.loadAccountingRemarkList();
     this.loadFareType();
     this.loadReasonCodeList();
     this.passPurchaseList = this.ddbService.getACPassPurchaseList();
@@ -77,7 +79,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       airlineRecordLocator: new FormControl('', []),
       gdsFare: new FormControl(0, []),
       consultantNo: new FormControl('', []),
-
       gst: new FormControl('', [Validators.required]),
       hst: new FormControl('', [Validators.required]),
       qst: new FormControl('', [Validators.required]),
@@ -97,7 +98,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       duplicateFare: new FormControl(''),
       typeOfPass: new FormControl(''),
       otherDescription: new FormControl('', []),
-
       airlineCorporatePassId: new FormControl('', []),
       segmentsCount: new FormControl(this.pnrService.getPassiveAirSegmentNumbers().length.toString(), []),
       segments: new FormArray([]),
@@ -111,7 +111,14 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       oidOrigTicketIssue: new FormControl(''),
       additionalNotes1: new FormControl(''),
       additionalNotes2: new FormControl(''),
-      cancelAll: new FormControl('')
+      cancelAll: new FormControl(''),
+      vendorCode: new FormControl('', [Validators.required]),
+      cardNumber: new FormControl('', [Validators.required, validateCreditCard('vendorCode')]),
+      expDate: new FormControl('', [Validators.required, validateExpDate()]),
+      billingType: new FormControl('', [Validators.required]),
+      feeAmount: new FormControl('', [Validators.required]),
+      segmentCost: new FormControl('', [Validators.required]),
+      passExpDate: new FormControl('', [Validators.required, validateExpDate()])
     });
     this.name = 'Supplier Confirmation Number:';
     this.utilHelper.validateAllFields(this.matrixAccountingForm);
@@ -120,6 +127,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.loadDescription();
     this.getSegmentTatooValue();
     this.addCheckboxes();
+    this.loadVendorCode();
   }
 
   getSegmentTatooValue() {
@@ -178,22 +186,39 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: 'TANGO ', itemValue: 'TANGO' },
       { itemText: 'PREMIUM ECONOMY', itemValue: 'PREMIUM ECONOMY' }
     ];
+
+    this.billingTypeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'POS Service Fee', itemValue: 'POS' },
+      { itemText: 'Settlement Fee', itemValue: 'SETTLEMENT' }
+    ]
   }
 
-  loadAccountingRemarkList() {
-    this.accountingRemarkList = [
-      { itemText: '', itemValue: '' },
-      { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
-      { itemText: 'Airline Corporate Pass Redemption', itemValue: 'ACPR' },
-      { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
-      { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
-      { itemText: 'Airline Pass Cancellation with a Cancellation Fee', itemValue: 'ACPPC' },
-      // { itemText: 'Westjet Individual Pass Purchase with Cancellation', itemValue: 'WCPPC' },
-      // { itemText: 'Porter Individual Pass Purchase with Cancellation', itemValue: 'PCPPC' },
-      { itemText: 'Non BSP Exchange', itemValue: 'NONBSPEXCHANGE' },
-      { itemText: 'Non BSP Airline', itemValue: 'NONBSP' },
-      { itemText: 'APAY', itemValue: 'APAY' }
-    ];
+  loadAccountingRemarkList(standAlone) {
+    if (!standAlone) {
+      this.accountingRemarkList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
+        { itemText: 'Airline Corporate Pass Redemption', itemValue: 'ACPR' },
+        { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
+        { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
+        { itemText: 'Airline Pass Cancellation with a Cancellation Fee', itemValue: 'ACPPC' },
+        // { itemText: 'Westjet Individual Pass Purchase with Cancellation', itemValue: 'WCPPC' },
+        // { itemText: 'Porter Individual Pass Purchase with Cancellation', itemValue: 'PCPPC' },
+        { itemText: 'Non BSP Exchange', itemValue: 'NONBSPEXCHANGE' },
+        { itemText: 'Non BSP Airline', itemValue: 'NONBSP' },
+        { itemText: 'APAY', itemValue: 'APAY' }
+      ];
+    } else {
+      this.accountingRemarkList = [
+        { itemText: '', itemValue: '' },
+        { itemText: 'Air Canada Individual Pass Purchase', itemValue: 'ACPP' },
+        { itemText: 'Westjet Individual Pass Purchase', itemValue: 'WCPP' },
+        { itemText: 'Porter Individual Pass Purchase', itemValue: 'PCPP' },
+        { itemText: 'Air North Individual Pass Purchase', itemValue: 'ANCPP' },
+        { itemText: 'Pacific Coastal Individual Pass Purchase', itemValue: 'PCCPP' }
+      ];
+    }
   }
 
   cancelAll(checkValue) {
@@ -238,7 +263,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.setRequired(['departureCity', 'originalTktLine'], false);
     this.setRequired(['tktLine'], true);
     this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
-    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType'], true);
+    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType',
+      'vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], true);
     this.matrixAccountingForm.get('otherDescription').clearValidators();
     this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
@@ -265,30 +291,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       case 'WCPPC':
       case 'PCPPC':
       case 'PCPP':
-        accRemark === 'ACPP'
-          ? (this.accountingRemark.supplierCodeName = 'ACJ')
-          : accRemark === 'WCPP'
-          ? (this.accountingRemark.supplierCodeName = 'WJP')
-          : (this.accountingRemark.supplierCodeName = 'PTP');
+      case 'ANCPP':
+      case 'PCCPP':
+        accRemark === 'ACPP' ? (this.accountingRemark.supplierCodeName = 'ACJ')
+          : accRemark === 'WCPP' ? (this.accountingRemark.supplierCodeName = 'WJP')
+            : accRemark === 'PCPP' ? (this.accountingRemark.supplierCodeName = 'PTP')
+              : accRemark === 'ANCPP' ? (this.accountingRemark.supplierCodeName = 'A5P')
+                : (this.accountingRemark.supplierCodeName = 'PSI');
 
-        this.matrixAccountingForm.get('gst').setValidators([Validators.required, Validators.maxLength(8)]);
-        this.matrixAccountingForm.get('hst').setValidators([Validators.required, Validators.maxLength(8)]);
-        this.matrixAccountingForm.get('qst').setValidators([Validators.required, Validators.maxLength(8)]);
-        this.matrixAccountingForm.get('otherTax').setValidators([Validators.required, Validators.maxLength(8)]);
-        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
-        this.enableFormControls(['departureCity', 'passPurchase'], false);
-        this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
-        this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
-        this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
-        // this.enableFormControls(['otherTax'], false);
-        // this.enableFormControls(['commisionWithoutTax'], true);
-        if (this.isAddNew) {
-          this.accountingRemark.qst = '';
-          this.accountingRemark.baseAmount = '';
-          this.accountingRemark.hst = '';
-          this.accountingRemark.gst = '';
-        }
-
+        this.PasspUrchaseControlValidators();
         this.enableFormControls(['fareType'], accRemark !== 'ACPP' && accRemark === 'ACPPC');
         break;
       case 'ACPR':
@@ -331,7 +342,42 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
         break;
     }
+
     this.loadPassType(accRemark);
+
+  }
+
+  private PasspUrchaseControlValidators() {
+    if (!this.isStandAlone) {
+      this.matrixAccountingForm.get('gst').setValidators([Validators.required, Validators.maxLength(8)]);
+      this.matrixAccountingForm.get('hst').setValidators([Validators.required, Validators.maxLength(8)]);
+      this.matrixAccountingForm.get('qst').setValidators([Validators.required, Validators.maxLength(8)]);
+      this.matrixAccountingForm.get('otherTax').setValidators([Validators.required, Validators.maxLength(8)]);
+    } else {
+      this.setRequired(['gst', 'hst', 'qst', 'otherTax'], false);
+      this.clearValidity(['gst', 'hst', 'qst', 'otherTax', 'baseAmount']);
+      this.enableFormControls(['vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], false);
+      this.setRequired(['vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], true);
+    }
+    this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
+    this.enableFormControls(['departureCity', 'passPurchase'], false);
+    this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
+    this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
+    this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
+    // this.enableFormControls(['otherTax'], false);
+    // this.enableFormControls(['commisionWithoutTax'], true);
+    if (this.isAddNew) {
+      this.accountingRemark.qst = '';
+      this.accountingRemark.baseAmount = '';
+      this.accountingRemark.hst = '';
+      this.accountingRemark.gst = '';
+      this.setBaseAmount();
+      this.matrixAccountingForm.get('gst').setValue('0.00');
+      this.matrixAccountingForm.get('hst').setValue('0.00');
+      this.matrixAccountingForm.get('qst').setValue('0.00');
+      this.matrixAccountingForm.get('otherTax').setValue('0.00');
+      this.matrixAccountingForm.get('commisionWithoutTax').setValue('0.00');
+    }
   }
 
   configureNonBSPExchangeControls(): void {
@@ -452,6 +498,13 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       } else {
         this.matrixAccountingForm.get(c).enable();
       }
+    });
+  }
+
+  clearValidity(controls: string[]) {
+    controls.forEach((c) => {
+      this.matrixAccountingForm.get(c).clearValidators();
+      this.matrixAccountingForm.get(c).updateValueAndValidity();
     });
   }
 

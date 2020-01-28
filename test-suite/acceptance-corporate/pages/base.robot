@@ -202,6 +202,8 @@ Click Back To Main Menu
 Click Add Segment From Main Menu
     #Wait Until Element Is Visible    ${button_add_segment}     60   
     Click Element    ${button_add_segment}
+    Wait Until Element Is Visible     ${button_add_passive_segment}    30
+    Set Focus To Element    ${button_add_passive_segment}
     Set Test Variable    ${current_page}    Add Segment
     
 Click Add Segment to PNR
@@ -292,7 +294,6 @@ Navigate From Add Segment
 
 Click Add Passive Segment Button
 	#Wait Until Element Is Visible     ${button_add_passive_segment}    30
-	Click Element At Coordinates    ${button_add_passive_segment}   0   0
 	Click Element At Coordinates    ${button_add_passive_segment}   0   0
 	#Wait Until Element Is Visible    ${select_segment_type}    30
 	Wait For Script To Complete

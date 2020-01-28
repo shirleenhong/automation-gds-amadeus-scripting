@@ -141,7 +141,6 @@ Click Add Sup Fee Button ${add_fee_index}
     Wait Until Element Is Visible    ${tab_supplemental_fees}${open_bracket}1${close_bracket}${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    30
     Click Element At Coordinates    ${tab_supplemental_fees}${open_bracket}1${close_bracket}${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    0    0
     Wait Until Element Is Visible    ${input_supplementalFee_chckbox}${open_bracket}1${close_bracket}${input_supfee_checkbox}    30
-    Sleep    4
     
 Click Add Fee Button
     Click Element    ${tab_supplemental_fees}${button_addFee} 

@@ -37,6 +37,8 @@ ${list_fee_type}    css=#feeType
 ${select_fee_segment}    //input[@formcontrolname='genericElement']
 ${checkbox_supplemental_fee}    //input[@name='enableSupFee']
 ${button_add_supplemental_fee}    //tbody[@formarrayname='segments']//i[@id='add']
+${input_fee_ticket_number}    css=#ticketNumber
+${input_supfee_amount}    //input[@id='valueAmount']
 
 
 *** Keywords ***
@@ -446,6 +448,7 @@ Create PNR And Exchange Ticket
     Create Exchange PNR In The GDS
     
 Select ${aqua_fee} Type Of Fee And ${fee_type}
+    Navigate To Page Aqua Fees 
     Select ${aqua_fee} Type Of Fee
     Select Checkbox    ${checkbox_supplemental_fee}
     Wait Until Element Is Visible    ${input_fee} 
@@ -454,12 +457,12 @@ Select ${aqua_fee} Type Of Fee And ${fee_type}
     Take Screenshot
     
 Add Supplemental Fee Code
-    Navigate To Page Aqua Fees
     Click Add Supplemental Fee Button
     Select Supplemental Fee    1
+    Take Screenshot
 
 Select Supplemental Fee
-     [Arguments]   @{supplemental_fee_index}
+    [Arguments]   @{supplemental_fee_index}
     : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
     \    Select Checkbox    ${input_supplementalFee_chckbox}${open_bracket}${supplemental_fee_index}${close_bracket}${input_supfee_checkbox}
     Click Button    ${button_save}  
@@ -482,4 +485,28 @@ Verify PNR Is Queued For Aqua Fees
     Enter Cryptic Command    RTQ
     Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
     Take Screenshot 
+   
+Add Supplemental Fee Code With Ticket Number
+    Click Add Supplemental Fee Button
+    Select Supplemental Fee    1
+    Enter Value    ${input_fee_ticket_number}    1234321567
+    Take Screenshot
+    
+Select Supplemental Fee With Amount
+    [Arguments]   @{supplemental_fee_index}
+    : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
+    \    Select Checkbox    ${input_supplementalFee_chckbox}${open_bracket}${supplemental_fee_index}${close_bracket}${input_supfee_checkbox}
+    Enter Value    ${input_supplementalFee_chckbox}${open_bracket}2${close_bracket}${input_supfee_amount}    100.00
+    Take Screenshot
+    Click Button    ${button_save} 
+
+Select Type Of Fee And Supplemental Fee With Amount    
+    Select AIR FEES Type Of Fee And Supplemental Fee
+    Click Add Supplemental Fee Button
+    Select Supplemental Fee With Amount    2
+    Take Screenshot
+    
+Verify MIS Segment For Aqua Fee Is Written In The PNR
+    Assign Current Date    
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ ${current_date}-TYP-CWT/FEE ONLY
     

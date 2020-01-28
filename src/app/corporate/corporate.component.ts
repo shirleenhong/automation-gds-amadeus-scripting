@@ -133,14 +133,15 @@ export class CorporateComponent implements OnInit {
     // get rule
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
-      this.workflow = '';
       this.showMessage(
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message').replace(/{br}/g, '<br>'),
         MessageType.Default,
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
         'Loading'
       );
+      return true;
     }
+    return false;
   }
 
   hasAirportCode(airportCode: string) {
@@ -226,7 +227,11 @@ export class CorporateComponent implements OnInit {
 
   public async wrapPnr() {
     await this.loadPnrData();
-    this.workflow = 'wrap';
+    if (this.showRule()){
+      this.workflow = '';
+    } else {
+      this.workflow = 'wrap';
+    }
   }
 
   public async AddSegment() {
@@ -281,7 +286,6 @@ export class CorporateComponent implements OnInit {
     }
     this.closePopup();
     this.checkHasDataLoadError();
-    this.showRule();
   }
 
   checkHasDataLoadError() {

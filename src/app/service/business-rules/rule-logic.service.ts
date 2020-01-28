@@ -30,15 +30,9 @@ export class RulesLogicService {
           break;
         case 'CONTAINS':
           ruleLogic = entity.indexOf(logicValue) >= 0;
-          if (ruleLogic) {
-            return ruleLogic;
-          }
           break;
         case 'NOT CONTAINS':
           ruleLogic = entity.indexOf(logicValue) === -1;
-          if (!ruleLogic) {
-            return ruleLogic;
-          }
           break;
         case 'IS NOT':
           ruleLogic = entity !== logicValue;
@@ -61,6 +55,15 @@ export class RulesLogicService {
             ruleLogic = !(rulelogic[0] <= entity && entity <= rulelogic[1]);
           }
           break;
+      }
+      if (logic.relationalOperatorName == 'CONTAINS') {
+        if (ruleLogic) {
+          return ruleLogic;
+        } 
+      } else { //for all other operators, if it already failed, no need to evaluate succeeding, already return FALSE
+        if (!ruleLogic) {
+          return ruleLogic;
+        }
       }
     }
     return ruleLogic;

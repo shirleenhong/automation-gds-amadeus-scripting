@@ -453,6 +453,8 @@ Verify Supplier Code Default Value Is Correct For ${acct_remark_type}
     Run Keyword If    "${acct_remark_type}" == "Air Canada Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    ACJ
     Run Keyword If    "${acct_remark_type}" == "Westjet Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    WJP
     Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP
+    Run Keyword If    "${acct_remark_type}" == "Air North Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    A5P
+    Run Keyword If    "${acct_remark_type}" == "Pacific Coastal Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PSI
     
 Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Set Test Variable    ${airline_code}

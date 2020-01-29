@@ -207,6 +207,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         // { itemText: 'Porter Individual Pass Purchase with Cancellation', itemValue: 'PCPPC' },
         { itemText: 'Non BSP Exchange', itemValue: 'NONBSPEXCHANGE' },
         { itemText: 'Non BSP Airline', itemValue: 'NONBSP' },
+        { itemText: 'RAIL', itemValue: 'RAIL' },
         { itemText: 'APAY', itemValue: 'APAY' }
       ];
     } else {
@@ -253,6 +254,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   onChangeAccountingType(accRemark) {
+    this.filterSupplierCodeList = this.ddbService.supplierCodes;
     if (this.isAddNew) {
       this.accountingRemark.vendorCode = '';
       this.accountingRemark.supplierCodeName = '';
@@ -320,15 +322,22 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
         break;
       case 'NONBSP':
-        this.name = 'Airline Record Locator:';
+      case 'RAIL':
+        if (accRemark === 'RAIL') {
+          this.filterSupplierCodeList = this.ddbService.getSupplierCodes('RAIL');
+          this.name = 'Rail Record Locator:';
+        } else {
+          this.name = 'Airline Record Locator:';
+        }
+
         this.checkSupplierCode();
         this.enableFormControls(['supplierCodeName', 'otherTax', 'commisionWithoutTax', 'segmentNo'], false);
         this.enableFormControls(['descriptionapay', 'departureCity', 'passPurchase', 'fareType'], true);
         this.setRequired(['commisionWithoutTax'], false);
-        if (accRemark === 'NONBSP') {
-          this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
-          this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
-        }
+        // if (accRemark === 'NONBSP') {
+        this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
+        this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
+        // }
         this.matrixAccountingForm.get('commisionWithoutTax').setValidators([Validators.required]);
         this.matrixAccountingForm.get('commisionWithoutTax').updateValueAndValidity();
         break;

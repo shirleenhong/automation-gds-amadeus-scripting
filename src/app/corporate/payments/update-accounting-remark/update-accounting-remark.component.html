@@ -51,7 +51,8 @@
       </div>
     </div>
 
-    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP'" class=" row form-group">
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP'"
+      class=" row form-group">
       <div class="col-4"></div>
       <div class="col-8">
         <input type="checkbox" name="nonbspexchange" formControlName="nonbspexchange" id="nonbspexchange"
@@ -60,8 +61,11 @@
       </div>
     </div>
 
-    <div
-      *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' || accountingRemark.accountingTypeRemark === 'APAY' || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' || accountingRemark.accountingTypeRemark === 'ACPR'">
+    <div *ngIf="accountingRemark.accountingTypeRemark === 'NONBSP' 
+      || accountingRemark.accountingTypeRemark === 'APAY' 
+      || accountingRemark.accountingTypeRemark === 'NONBSPEXCHANGE' 
+      || accountingRemark.accountingTypeRemark === 'ACPR'
+      || accountingRemark.accountingTypeRemark === 'RAIL'">
       <div class="form-group  row">
         <div class="col-sm-4">Itinerary Segments:</div>
         <div class="col-sm-8">

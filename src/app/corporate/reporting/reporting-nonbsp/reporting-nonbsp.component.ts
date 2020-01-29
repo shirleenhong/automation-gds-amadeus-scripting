@@ -60,8 +60,8 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
-
-    var lowFareValMap = [];
+    debugger;
+    let lowFareValMap = [];
     for (const element of this.nonBspInformation) {
       let lowFare: any;
       let isAdded = false;

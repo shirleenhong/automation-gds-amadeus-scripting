@@ -87,7 +87,7 @@ export class ReportingNonbspComponent implements OnInit {
       lowFareValMap["baseAmount" + element.tkMacLine] = parseFloat(element.baseAmount);
       if (this.nonBspInformation.length == element.tkMacLine) {
         let lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
-        lowFare = await this.decPipe.transform(lowFareVal);
+        lowFare = await this.decPipe.transform(lowFareVal, '1.2-2').replace(',', '');
         let formGroup = await this.nonBspGroup.get('nonbsp');
         formGroup.at(0).get('lowFareText').setValue(lowFare);
       }

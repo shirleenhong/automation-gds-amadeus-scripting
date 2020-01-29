@@ -62,7 +62,7 @@ export class ReportingNonbspComponent implements OnInit {
     }
     debugger;
     let lowFareValMap = [];
-    for (const element of this.nonBspInformation) {
+    this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
       let isAdded = false;
       const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo));
@@ -91,7 +91,7 @@ export class ReportingNonbspComponent implements OnInit {
         let formGroup = await this.nonBspGroup.get('nonbsp');
         formGroup.at(0).get('lowFareText').setValue(lowFare);
       }
-    }
+    });
   }
 
   createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string): FormGroup {

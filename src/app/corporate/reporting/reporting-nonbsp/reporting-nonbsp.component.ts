@@ -60,8 +60,9 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
-    debugger;
-    this.nonBspInformation.forEach(async (element) => {
+
+    var lowFareValMap = [];
+    for (const element of this.nonBspInformation) {
       let lowFare: any;
       let isAdded = false;
       const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo));
@@ -70,8 +71,7 @@ export class ReportingNonbspComponent implements OnInit {
       // } else {
       //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
       // }
-      // lowFare = '';
-      // lowFare = Number(element.baseAmount) + 
+      lowFare = '';
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
           isAdded = true;
@@ -83,7 +83,15 @@ export class ReportingNonbspComponent implements OnInit {
         this.nonBspGroup.updateValueAndValidity();
         this.fareList.push(element.segmentNo);
       }
-    });
+      lowFareValMap["hst" + element.tkMacLine] = parseFloat(element.hst);
+      lowFareValMap["baseAmount" + element.tkMacLine] = parseFloat(element.baseAmount);
+      if (this.nonBspInformation.length == element.tkMacLine) {
+        let lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
+        lowFare = await this.decPipe.transform(lowFareVal);
+        let formGroup = await this.nonBspGroup.get('nonbsp');
+        formGroup.at(0).get('lowFareText').setValue(lowFare);
+      }
+    }
   }
 
   createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string): FormGroup {

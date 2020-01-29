@@ -45,7 +45,7 @@ Fill Up Exhange Endorsements For Airline Code ${airline_code}
     Navigate To Page Exchange Endorsements
     Run Keyword If    "${airline_code}" == "AC" or "${airline_code}" == "OS" or "${airline_code}" == "SN" or "${airline_code}" == "LH"    Click Element    ${checkbox_exchangeEndorsement}
     Run Keyword If    "${airline_code}" == "OS" or "${airline_code}" == "SN" or "${airline_code}" == "LH"    Enter Value    ${input_scFlight}        123
-    Run Keyword If   "${airline_code}" == "OS" or "${airline_code}" == "SN" or "${airline_code}" == "LH"    Enter Date Value    ${input_scDate}    02    12    2020
+    Run Keyword If   "${airline_code}" == "OS" or "${airline_code}" == "SN" or "${airline_code}" == "LH"    Input Text    ${input_scDate}    02122020
     Click Element    ${checkbox_exchangeServiceFund}    
     Take Screenshot
     
@@ -53,7 +53,7 @@ Fill Up Exchange Endorsements For UA With ${value}
     Navigate To Page Exchange Endorsements
     Select From List By Value    ${list_uaEndorsement}    ${value}
     Run Keyword If    "${value}" != "UAMKW"    Enter Value    ${input_scFlight}        123
-    Run Keyword If    "${value}" != "UAMKW"    Enter Date Value    ${input_scDate}    02    12    2020
+    Run Keyword If    "${value}" != "UAMKW"    Input Text    ${input_scDate}    02122020
     Click Element    ${checkbox_exchangeServiceFund}
     Enter Value    ${input_exchangeServiceValue}    9999999
     Take Screenshot

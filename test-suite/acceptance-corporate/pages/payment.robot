@@ -391,7 +391,7 @@ Click Matrix Receipt Tab
     Click Element    ${tab_matrix_receipt}
    
 Click Add Accounting Line Button
-    Click Element    ${button_addaccountingline}
+    Click Element    ${button_add_supplier_accounting_remark}
     
 Select Accounting Remark Type
     [Arguments]    ${accounting_remark_type}

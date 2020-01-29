@@ -39,7 +39,6 @@ ${checkbox_supplemental_fee}    //input[@name='enableSupFee']
 ${button_add_supplemental_fee}    //tbody[@formarrayname='segments']//i[@id='add']
 ${input_fee_ticket_number}    css=#ticketNumber
 ${input_supfee_amount}    //input[@id='valueAmount']
-${button_add_supplier_accounting_remark}    //button[contains(text(), 'Add Supplier Accounting Remark')]
 ${select_billing_type}    css=#billingType
 ${input_admin_fee}    css=#feeAmount
 ${input_segment_cost}    css=#segmentCost

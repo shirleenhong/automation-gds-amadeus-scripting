@@ -25,6 +25,7 @@ export class ReportingRemarkService {
     const bspGroup: FormGroup = rbc.bspGroup;
     const items = bspGroup.get('fares') as FormArray;
     this.writeHighLowFare(items, false);
+    this.writeExchangeFeeIndicator(items);
   }
   writeCarSavingsRemarks(carSavings: CarSavingsCodeComponent, reAddRemarks) {
     const carSavingsGroup: FormGroup = carSavings.carSavingsCodeGroup;
@@ -40,6 +41,18 @@ export class ReportingRemarkService {
     const nbspGroup: FormGroup = nrbc.nonBspGroup;
     const items = nbspGroup.get('nonbsp') as FormArray;
     this.writeHighLowFare(items, true);
+  }
+  
+  writeExchangeFeeIndicator(items: any){
+    let index = 1;
+    for (const group of items.controls) {
+      if (group.get('isExchange').value === true) {
+        const exchangeFeeRemark = new Map<string, string>();
+        exchangeFeeRemark.set('ExchangeSequenceNumber', index.toString());
+        this.remarksManager.createPlaceholderValues(exchangeFeeRemark);
+        index++;
+      }
+    }
   }
 
   private writeHighLowFare(items: any, write: boolean) {

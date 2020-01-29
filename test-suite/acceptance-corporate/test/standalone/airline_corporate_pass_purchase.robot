@@ -20,33 +20,28 @@ Verify That For Air Canada Pass Purchase Correct Fee And Remarks Are Written In 
     [Tags]    US11387
     Create PNR For Corporate, Air Canada For Pass Purchase
     Add Accounting Remark For Standalone Air Canada Pass Purchase
-    Verify Expected Remarks Are Written In The PNR   True
-    Switch To Command Page
+    Verify Accounting Remarks Per Airline Are Written Correctly
     
 Verify That For Westjet Pass Purchase Correct Fee And Remarks Are Written In The PNR
     [Tags]    US11387
     Create PNR For Corporate, Westjet Pass Purchase
     Add Accounting Remark For Standalone Westjet Pass Purchase
-    Verify Expected Remarks Are Written In The PNR   True
-    Switch To Command Page
+    Verify Accounting Remarks Per Airline Are Written Correctly
     
 Verify That For Porter Pass Purchase Correct Fee And Remarks Are Written In The PNR
     [Tags]    US11387
     Create PNR For Corporate, Porter Pass Purchase
     Add Accounting Remark For Standalone Porter Pass Purchase
-    Verify Expected Remarks Are Written In The PNR   True
-    Switch To Command Page
+    Verify Accounting Remarks Per Airline Are Written Correctly
     
 Verify That For Air North Pass Purchase Correct Fee And Remarks Are Written In The PNR
     [Tags]    US11387
     Create PNR For Corporate, Air North Pass Purchase
     Add Accounting Remark For Standalone Air North Pass Purchase
-    Verify Expected Remarks Are Written In The PNR   True
-    Switch To Command Page
+    Verify Accounting Remarks Per Airline Are Written Correctly
     
 Verify That For Pacific Coastal Pass Purchase Correct Fee And Remarks Are Written In The PNR
     [Tags]    US11387
     Create PNR For Corporate, Pacific Coastal Pass Purchase
     Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
-    Verify Expected Remarks Are Written In The PNR   True
-    Switch To Command Page
+    Verify Accounting Remarks Per Airline Are Written Correctly

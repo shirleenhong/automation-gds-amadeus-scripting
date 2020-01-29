@@ -10,7 +10,7 @@ ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment
 ${list_segment}    //ul[@id='dropdown-basic']
 ${list_accounting_type}    css=#accountingTypeRemark
 ${input_suppliercode}    css=#supplierCodeName
-${button_addaccountingline}    //button[contains(text(), 'Add Accounting Line')]
+${button_add_supplier_accounting_remark}    //button[contains(text(), 'Add Supplier Accounting Remark')]
 ${tab_nonBsp_processing}    //span[contains(text(), 'Non-BSP Processing')]
 ${tab_matrix_receipt}    //span[contains(text(), 'Matrix Receipt')]
 ${tab_leisure_fee}    //span[contains(text(), 'Leisure Fee')]
@@ -707,7 +707,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
 
 Navigate To Add Accounting Line
     Click Element At Coordinates    ${tab_nonBsp_processing}    0    0    
-    Click Element    ${button_addaccountingline} 
+    Click Element    ${button_add_supplier_accounting_remark} 
     Set Test Variable    ${current_page}    Add Accounting Line
     Set Test Variable    ${ticketing_details_complete}    no
     

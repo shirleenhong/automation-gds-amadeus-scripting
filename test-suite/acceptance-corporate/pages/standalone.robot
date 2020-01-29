@@ -491,16 +491,20 @@ Verify PNR Is Queued For Aqua Fees
     
 Click Submit Corporate Pass
     Click Element    ${button_submit_corporate}
+    
+Click Add Supplier Remark
+    Click Element    ${button_add_supplier_accounting_remark}
         
 Add Accounting Remark For Standalone Air Canada Pass Purchase
+    Open CA Corporate Test
     Click Airline Corporate Pass Purchase
-    Click Add Accounting Line Button
+    Click Add Supplier Remark
     Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    1234
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_commission}    2.00
-    Enter Value    ${input_departurecity}    YUL        
-    Select From List By Label    ${list_purchasetype}     RAPIDAIR
+    Enter Value    ${input_departurecity}    YUL
+    Enter Value    ${list_purchasetype}     RAPIDAIR
     Select From List By Label    ${list_faretype}       FLEX
     Select Visa As FOP
     Enter Credit Card Number 4444333322221111
@@ -515,15 +519,16 @@ Add Accounting Remark For Standalone Air Canada Pass Purchase
     Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Westjet Pass Purchase
+    Open CA Corporate Test
     Click Airline Corporate Pass Purchase
-    Click Add Accounting Line Button
+    Click Add Supplier Remark
     Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    8888
     Enter Value    ${input_commission}    80.00
     Enter Value    ${input_tktnumber}    0888823456
     Enter Value    ${input_departurecity}    CDG        
-    Select From List By Label    ${list_purchasetype}     WESTJET TRAVEL PASS
-    Select From List By Label    ${list_faretype}       LAT
+    Enter Value    ${list_purchasetype}     Westjet Travel Pass
+    Enter Value    ${list_faretype}       LAT
     Select Visa As FOP
     Enter Credit Card Number 4444333322221111
     Enter Credit Card Expiration Date 1222
@@ -537,16 +542,17 @@ Add Accounting Remark For Standalone Westjet Pass Purchase
     Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Porter Pass Purchase
+    Open CA Corporate Test
     Click Airline Corporate Pass Purchase
-    Click Add Accounting Line Button
+    Click Add Supplier Remark
     Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    4433
     Enter Value    ${input_commission}    12.00
     Enter Value    ${input_commission}    2.00
     Enter Value    ${input_tktnumber}    8888999912
     Enter Value    ${input_departurecity}    FRA        
-    Select From List By Label    ${list_purchasetype}     PORTER TRAVEL PASS
-    Select From List By Label    ${list_faretype}       EXECUTIVE
+    Enter Value    ${list_purchasetype}     Porter Travel Pass 
+    Enter Value    ${list_faretype}       EXECUTIVE
     Select American Express As FOP
     Enter Credit Card Number 378282246310005
     Enter Credit Card Expiration Date 1222
@@ -560,15 +566,16 @@ Add Accounting Remark For Standalone Porter Pass Purchase
     Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Air North Pass Purchase
+    Open CA Corporate Test
     Click Airline Corporate Pass Purchase
-    Click Add Accounting Line Button
+    Click Add Supplier Remark
     Select From List By Label    ${list_accounting_type}    Air North Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    5432
     Enter Value    ${input_commission}    1.00
     Enter Value    ${input_tktnumber}    4444888822
     Enter Value    ${input_departurecity}    AKL        
-    Select From List By Label    ${list_purchasetype}     U.S COMMUTER
-    Select From List By Label    ${list_faretype}       TANGO
+    Enter Value    ${list_purchasetype}     U.S COMMUTER 
+    Enter Value    ${list_faretype}       TANGO
     Select Mastercard As FOP
     Enter Credit Card Number 5555555555554444
     Enter Credit Card Expiration Date 1222
@@ -582,15 +589,16 @@ Add Accounting Remark For Standalone Air North Pass Purchase
     Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
+    Open CA Corporate Test
     Click Airline Corporate Pass Purchase
-    Click Add Accounting Line Button
+    Click Add Supplier Remark
     Select From List By Label    ${list_accounting_type}    Pacific Coastal Individual Pass Purchase
     Enter Value   ${input_supplier_confirmationNo}    2222
     Enter Value    ${input_commission}    12.12
     Enter Value    ${input_tktnumber}    0888823456
     Enter Value    ${input_departurecity}    BFS        
-    Select From List By Label    ${list_purchasetype}     QUEBEC
-    Select From List By Label    ${list_faretype}       PREMIUM ECONOMY
+    Enter Value    ${list_purchasetype}     QUEBEC 
+    Enter Value    ${list_faretype}       PREMIUM ECONOMY
     Select Visa As FOP
     Enter Credit Card Number 4444333322221111
     Enter Credit Card Expiration Date 1222
@@ -598,8 +606,15 @@ Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
     Enter Value    ${input_admin_fee}    5.01
     Enter Value    ${input_segment_cost}    75.01
     Enter Value    ${input_passExpDate}    1222
-    Verify Supplier Code Default Value Is Correct For Air North Individual Pass Purchase
+    Verify Supplier Code Default Value Is Correct For Pacific Coastal Individual Pass Purchase
     Take Screenshot
     Click Save Button
     Click Submit Corporate Pass
     
+Verify Accounting Remarks Per Airline Are Written Correctly
+    Sleep    5
+    Close CA Corporate Test
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Expected Remarks Are Written In The PNR    True
+    Switch To Command Page

@@ -25,7 +25,6 @@ export class ReportingRemarkService {
     const bspGroup: FormGroup = rbc.bspGroup;
     const items = bspGroup.get('fares') as FormArray;
     this.writeHighLowFare(items, false);
-    this.writeExchangeFeeIndicator(items);
   }
   writeCarSavingsRemarks(carSavings: CarSavingsCodeComponent, reAddRemarks) {
     const carSavingsGroup: FormGroup = carSavings.carSavingsCodeGroup;
@@ -43,16 +42,39 @@ export class ReportingRemarkService {
     this.writeHighLowFare(items, true);
   }
   
-  writeExchangeFeeIndicator(items: any){
+  WriteExchangeIndicator(count){
+    for (let index = 1; index <= count; index++) {
+      const exchangeIndicatorRemark = new Map<string, string>();
+      exchangeIndicatorRemark.set('AirTicketId', index.toString());
+      exchangeIndicatorRemark.set('TktRemark', 'EXCH');
+      this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
+    }
+    /*
+    const bspGroup: FormGroup = rbc.bspGroup;
+    const bspItems = bspGroup.get('fares') as FormArray;
+
+    const nbspGroup: FormGroup = nrbc.nonBspGroup;
+    const _nbspItems = nbspGroup.get('nonbsp') as FormArray;
+
+    const exchangeIndicatorRemark = new Map<string, string>();
+
     let index = 1;
-    for (const group of items.controls) {
-      if (group.get('isExchange').value === true) {
-        const exchangeFeeRemark = new Map<string, string>();
-        exchangeFeeRemark.set('ExchangeSequenceNumber', index.toString());
-        this.remarksManager.createPlaceholderValues(exchangeFeeRemark);
+    for (const bspControls of bspItems.controls) {
+      if (bspControls.get('isExchange').value === true) {
+        exchangeIndicatorRemark.set('AirTicketId', index.toString());
+        exchangeIndicatorRemark.set('TktRemark', 'EXCH');
+        this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
         index++;
       }
     }
+    
+    for (const _nbspControl of _nbspItems.controls) {
+      exchangeIndicatorRemark.set('AirTicketId', index.toString());
+      exchangeIndicatorRemark.set('TktRemark', 'EXCH');
+      this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
+      index++;
+    }
+    */
   }
 
   private writeHighLowFare(items: any, write: boolean) {

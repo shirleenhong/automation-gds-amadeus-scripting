@@ -792,7 +792,6 @@ Click Aqua Fees
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Wait For Script To Complete
     Set Test Variable    ${current_page}    Aqua Fees
-    Set Test Variable    ${current_page}    Aqua Fees
     
 Click Airline Corporate Pass Purchase
     Wait Until Page Contains Element    ${button_airline_pass_standalone}    100

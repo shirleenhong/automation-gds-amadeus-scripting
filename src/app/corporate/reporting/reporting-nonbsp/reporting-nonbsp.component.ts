@@ -60,7 +60,6 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
-    debugger;
     this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
       let isAdded = false;

@@ -9,6 +9,7 @@ import { ControlConditionModel } from 'src/app/models/business-rules/control-con
 import { WriteConditionModel } from 'src/app/models/business-rules/write-condition.model';
 import { RulesReaderService } from './rules-reader.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +18,7 @@ export class RuleWriterService {
   crypticCommands = [];
   linesToBeDeleted = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -93,15 +94,15 @@ export class RuleWriterService {
     return remGroup;
   }
 
-  getPnrAddRemark(resultItems) {
+  getPnrAddRemark(resultItems, tstNumber?) {
     let isUI = false;
     resultItems.forEach((element) => {
-      const regEx = /(\[(?:\[??[^\[]*?\]))/g;
+      const regEx = /(\[(?:(UI_FORM)\[??[^\[]*?\]))/g;
       const uiRemarks = element.match(regEx);
       if (uiRemarks) {
         uiRemarks.forEach((result) => {
           const key = result.replace('[', '').replace(']', '');
-          isUI = this.getUIValues(key, element, result, isUI);
+          isUI = this.getUIValues(key, element, result, isUI, tstNumber);
         });
       }
 
@@ -127,19 +128,44 @@ export class RuleWriterService {
     return { remark, hastst: false };
   }
 
-  private getUIValues(key: any, element: any, result: any, isUI: boolean) {
+  private addTktNumber(element: string, tktNo: string) {
+    if (element.indexOf('[TSTNumber]') > -1) {
+      element = element.replace('[TSTNumber]', tktNo);
+    }
+    return element;
+  }
+
+  private getTSTIteration(tstRef: string) {
     const tsts = this.pnrService.getTstLength();
-    const iteration = key.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
+    switch (tstRef) {
+      case '1':
+        return { first: 1, last: 1 };
+      case '>1':
+        return { first: 2, last: tsts };
+      case 'ALL':
+        return { first: 1, last: tsts };
+      default:
+        return { first: 1, last: 1 };
+    }
+  }
+
+  private getUIValues(key: any, element: any, result: any, isUI: boolean, tsts?: string) {
+    if (!tsts && key.indexOf('TSTSEGMENT') > -1) {
+      tsts = 'ALL';
+    }
+    const tst = this.getTSTIteration(tsts);
+    // const iteration = key.indexOf('TSTSEGMENT') > -1 ? tsts : 1;
     const origkey = key;
     const origelement = element;
-    for (let i = 1; i <= iteration; i++) {
+    for (let i = tst.first; i <= tst.last; i++) {
       key = origkey.replace('TSTSEGMENT', i.toString());
       const val = this.ruleReader.getEntityValue(key);
       if (val) {
         element = origelement.replace(result, val);
         isUI = true;
-        const { remark, hastst } = this.removeTstSegment(element);
-        const testSegment = hastst ? this.writeRemarkPerTst(i) : '';
+        const rem = this.removeTstSegment(element);
+        const remark = this.addTktNumber(rem.remark, i.toString());
+        const testSegment = rem.hastst ? this.writeRemarkPerTst(i) : '';
         this.formatRemarkRuleResult(remark, testSegment);
       }
     }

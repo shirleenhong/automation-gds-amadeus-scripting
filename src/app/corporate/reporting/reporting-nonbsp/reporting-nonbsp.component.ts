@@ -60,7 +60,6 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
-    debugger;
     let lowFareValMap = [];
     this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
@@ -88,8 +87,8 @@ export class ReportingNonbspComponent implements OnInit {
       if (this.nonBspInformation.length == element.tkMacLine) {
         let lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
         lowFare = await this.decPipe.transform(lowFareVal, '1.2-2').replace(',', '');
-        let formGroup = await this.nonBspGroup.get('nonbsp');
-        formGroup.at(0).get('lowFareText').setValue(lowFare);
+        let formGroup = await this.nonBspGroup.get('nonbsp') as FormArray;
+        formGroup.controls.forEach((element) => element.get('lowFareText').setValue(lowFare));
       }
     });
   }

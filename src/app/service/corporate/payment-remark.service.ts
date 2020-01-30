@@ -379,7 +379,6 @@ export class PaymentRemarkService {
         segmentrelate = segmentAssoc;
       }
       // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-      // debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,

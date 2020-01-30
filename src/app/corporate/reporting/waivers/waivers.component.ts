@@ -48,7 +48,7 @@ export class WaiversComponent implements OnInit {
     }
   }
 
-  async loadData(): Promise<void> {}
+  async loadData(): Promise<void> { }
   createFormGroup(segmentNo) {
     const val = this.getWaiverValue(segmentNo);
     return this.fb.group({

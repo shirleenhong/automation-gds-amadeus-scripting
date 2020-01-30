@@ -359,7 +359,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
     Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Enter Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
@@ -373,7 +373,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
     Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
     Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Enter Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       PREMIUM ECONOMY
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
@@ -439,7 +439,7 @@ Enter Credit Card Expiration Date ${exp_date}
          
 Select Type Of Pass Purchase ${pass_purchase_type}
     Set Test Variable    ${pass_purchase_type}    
-    Select From List By Value    ${list_purchasetype}    ${pass_purchase_type}
+    Enter Value    ${list_purchasetype}    ${pass_purchase_type}
     [Teardown]    Take Screenshot
 
 Select Fare Type ${fare_type}
@@ -668,7 +668,7 @@ Add Matrix Accounting Remark For WestJet Pass Purchase
     Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0987612345
     Enter Value    ${input_departurecity}    YYZ        
-    Select From List By Label    ${list_purchasetype}     Westjet Travel Pass
+    Enter Value    ${list_purchasetype}     Westjet Travel Pass
     Verify Supplier Code Default Value Is Correct For Westjet Individual Pass Purchase
     Take Screenshot
     Click Save Button
@@ -681,7 +681,7 @@ Add Matrix Accounting Remark For Porter Pass Purchase
     Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_departurecity}    YCC        
-    Select From List By Label    ${list_purchasetype}     Porter Travel Pass
+    Enter Value    ${list_purchasetype}     Porter Travel Pass
     Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
     Take Screenshot
     Click Save Button
@@ -698,7 +698,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
     Enter Value    ${input_tktnumber}    0987654321
     Enter Value    ${input_departurecity}    YCC        
-    Select From List By Label    ${list_purchasetype}     REGIONAL-QUEBEC
+    Enter Value    ${list_purchasetype}     REGIONAL-QUEBEC
     Select From List By Label    ${list_faretype}       LATITUDE
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot

@@ -191,7 +191,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'POS Service Fee', itemValue: 'POS' },
       { itemText: 'Settlement Fee', itemValue: 'SETTLEMENT' }
-    ]
+    ];
   }
 
   loadAccountingRemarkList(standAlone) {
@@ -231,7 +231,10 @@ export class UpdateAccountingRemarkComponent implements OnInit {
   }
 
   loadReasonCodeList() {
-    this.reasonCodeList = [{ itemText: '', itemValue: '' }, { itemText: 'L - Low Fare', itemValue: 'L' }];
+    this.reasonCodeList = [
+      { itemText: '', itemValue: '' },
+      { itemText: 'L - Low Fare', itemValue: 'L' }
+    ];
   }
 
   loadPassType(accountingType) {
@@ -242,11 +245,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         break;
       case 'WCPP':
       case 'WCPPC':
-        this.passPurchaseList = [{ itemText: '', itemValue: '' }, { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }];
+        this.passPurchaseList = [
+          { itemText: '', itemValue: '' },
+          { itemText: 'Westjet Travel Pass', itemValue: 'Westjet Travel Pass' }
+        ];
         break;
       case 'PCPP':
       case 'PCPPC':
-        this.passPurchaseList = [{ itemText: '', itemValue: '' }, { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }];
+        this.passPurchaseList = [
+          { itemText: '', itemValue: '' },
+          { itemText: 'Porter Travel Pass', itemValue: 'Porter Travel Pass' }
+        ];
         break;
       default:
         break;
@@ -265,8 +274,23 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.setRequired(['departureCity', 'originalTktLine'], false);
     this.setRequired(['tktLine'], true);
     this.enableFormControls(['descriptionapay', 'departureCity', 'supplierConfirmatioNo', 'originalTktLine', 'otherDescription'], false);
-    this.enableFormControls(['otherTax', 'gdsFare', 'segmentNo', 'passPurchase', 'fareType',
-      'vendorCode', 'cardNumber', 'expDate', 'billingType', 'feeAmount', 'segmentCost', 'passExpDate'], true);
+    this.enableFormControls(
+      [
+        'otherTax',
+        'gdsFare',
+        'segmentNo',
+        'passPurchase',
+        'fareType',
+        'vendorCode',
+        'cardNumber',
+        'expDate',
+        'billingType',
+        'feeAmount',
+        'segmentCost',
+        'passExpDate'
+      ],
+      true
+    );
     this.matrixAccountingForm.get('otherDescription').clearValidators();
     this.matrixAccountingForm.get('otherDescription').updateValueAndValidity();
     this.matrixAccountingForm.get('commisionWithoutTax').clearValidators();
@@ -295,11 +319,15 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       case 'PCPP':
       case 'ANCPP':
       case 'PCCPP':
-        accRemark === 'ACPP' ? (this.accountingRemark.supplierCodeName = 'ACJ')
-          : accRemark === 'WCPP' ? (this.accountingRemark.supplierCodeName = 'WJP')
-            : accRemark === 'PCPP' ? (this.accountingRemark.supplierCodeName = 'PTP')
-              : accRemark === 'ANCPP' ? (this.accountingRemark.supplierCodeName = 'A5P')
-                : (this.accountingRemark.supplierCodeName = 'PSI');
+        accRemark === 'ACPP'
+          ? (this.accountingRemark.supplierCodeName = 'ACJ')
+          : accRemark === 'WCPP'
+          ? (this.accountingRemark.supplierCodeName = 'WJP')
+          : accRemark === 'PCPP'
+          ? (this.accountingRemark.supplierCodeName = 'PTP')
+          : accRemark === 'ANCPP'
+          ? (this.accountingRemark.supplierCodeName = 'A5P')
+          : (this.accountingRemark.supplierCodeName = 'PSI');
 
         this.PasspUrchaseControlValidators();
         this.enableFormControls(['fareType'], accRemark !== 'ACPP' && accRemark === 'ACPPC');
@@ -353,7 +381,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
 
     this.loadPassType(accRemark);
-
   }
 
   private PasspUrchaseControlValidators() {
@@ -370,6 +397,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     }
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(15)]);
     this.enableFormControls(['departureCity', 'passPurchase'], false);
+    this.enableFormControls(['otherTax'], false);
     this.matrixAccountingForm.controls.supplierConfirmatioNo.clearValidators();
     this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
     this.matrixAccountingForm.get('departureCity').setValidators([Validators.required]);
@@ -418,7 +446,6 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm.get('supplierConfirmatioNo').setValidators([Validators.required, Validators.maxLength(10)]);
     this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
     this.matrixAccountingForm.get('airlineCorporatePassId').setValidators([Validators.required]);
-
     this.matrixAccountingForm.get('gst').setValue('0.00');
     this.matrixAccountingForm.get('hst').setValue('0.00');
     this.matrixAccountingForm.get('qst').setValue('0.00');
@@ -428,7 +455,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       .get('segmentsCount')
       .setValidators([Validators.required, Validators.min(1), Validators.max(this.maxSegmentsCount)]);
     this.matrixAccountingForm.get('segmentsCount').setValue(this.pnrService.getPassiveAirSegmentNumbers().length);
-
+    this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
     this.requireGDSFare();
   }
 
@@ -541,20 +568,17 @@ export class UpdateAccountingRemarkComponent implements OnInit {
 
   getAllErrors(): { [key: string]: any } | null {
     let hasError = false;
-    const result = Object.keys(this.matrixAccountingForm.controls).reduce(
-      (acc, key) => {
-        const control = this.matrixAccountingForm.get(key);
+    const result = Object.keys(this.matrixAccountingForm.controls).reduce((acc, key) => {
+      const control = this.matrixAccountingForm.get(key);
 
-        const errors =
-          control instanceof FormGroup || control instanceof FormArray ? this.getAllErrors() : control.touched ? control.errors : '';
-        if (errors) {
-          acc[key] = errors;
-          hasError = true;
-        }
-        return acc;
-      },
-      {} as { [key: string]: any }
-    );
+      const errors =
+        control instanceof FormGroup || control instanceof FormArray ? this.getAllErrors() : control.touched ? control.errors : '';
+      if (errors) {
+        acc[key] = errors;
+        hasError = true;
+      }
+      return acc;
+    }, {} as { [key: string]: any });
     return hasError ? result : null;
   }
 

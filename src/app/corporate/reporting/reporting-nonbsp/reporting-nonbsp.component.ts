@@ -34,7 +34,7 @@ export class ReportingNonbspComponent implements OnInit {
     private valueChagneListener: ValueChangeListener,
     private ddbService: DDBService,
     private utilHelper: UtilHelper
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.nonBspGroup = this.fb.group({
@@ -51,6 +51,7 @@ export class ReportingNonbspComponent implements OnInit {
   }
 
   async drawControlsForNonBsp() {
+    debugger;
     this.nonBspReasonList = [
       { itemText: '', itemValue: '' },
       { itemText: 'L- Lower Fare', itemValue: 'L' }
@@ -60,7 +61,6 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
-    debugger;
     this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
       let isAdded = false;
@@ -71,7 +71,7 @@ export class ReportingNonbspComponent implements OnInit {
       //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
       // }
       // lowFare = '';
-      // lowFare = Number(element.baseAmount) + 
+      // lowFare = Number(element.baseAmount) +
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
           isAdded = true;

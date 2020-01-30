@@ -316,6 +316,7 @@ Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In T
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
+    Update Client Reporting Values For Non-BSP
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True

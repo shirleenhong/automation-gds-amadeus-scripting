@@ -840,4 +840,7 @@ export class CancelSegmentComponent implements OnInit {
       this.enableFormControls(['airlineNo'], false);
     }
   }
+  getReasonCodeDescription(descriptions: any) {
+    return this.utilHelper.getObjectMapKeyValueByIndex(descriptions, 1);
+  }
 }

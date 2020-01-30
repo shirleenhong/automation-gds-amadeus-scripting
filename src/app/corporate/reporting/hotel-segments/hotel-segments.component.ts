@@ -155,4 +155,7 @@ export class HotelSegmentsComponent implements OnInit {
     control.clearValidators();
     control.updateValueAndValidity();
   }
+  getReasonCodeDescription(descriptions: any) {
+    return this.utilHelper.getObjectMapKeyValueByIndex(descriptions, 0);
+  }
 }

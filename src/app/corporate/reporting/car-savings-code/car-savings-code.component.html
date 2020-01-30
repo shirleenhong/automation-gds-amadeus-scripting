@@ -33,7 +33,7 @@
         <select autofocus id="carReasonCode" class="form-control" formControlName="carReasonCode" name="carReasonCode">
           <option [ngValue]="null"></option>
           <option *ngFor="let reason of carReasonCodes" [value]="reason.reasonCode">{{
-            reason.reasonCode + ' : ' + reason.reasonCodeProductTypeDescription
+            reason.reasonCode + ' : ' + getReasonCodeDescription(reason.reasonCodeProductTypeDescriptions)
           }}</option>
         </select>
       </div>

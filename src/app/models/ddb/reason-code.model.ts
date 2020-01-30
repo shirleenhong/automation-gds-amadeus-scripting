@@ -3,13 +3,14 @@ export class ReasonCode {
   reasonCode: string;
   reasonCodeGroupId: number;
   reasonCodeTypeId: number;
+  reasonCodeProductTypeDescriptions: any;
   reasonCodeProductTypeDescription: string;
   displayOrder: number;
   productId: number;
   awaitingApprovalFlag: boolean;
   versionNumber: number;
   travelerFacingFlag: boolean;
-  reasonCodeAlternativeDescription: string;
+  reasonCodeAlternativeDescription: string; // This does not specify which language
 
   constructor(json: any) {
     this.reasonCodeItemId = json.ReasonCodeItemId;
@@ -21,6 +22,7 @@ export class ReasonCode {
     this.awaitingApprovalFlag = json.AwaitingApprovalFlag;
     this.versionNumber = json.VersionNumber;
     this.travelerFacingFlag = json.TravelerFacingFlag;
+    this.reasonCodeProductTypeDescriptions = json.ReasonCodeProductTypeDescriptions;
     this.reasonCodeProductTypeDescription = json.ReasonCodeProductTypeDescription;
     this.reasonCodeAlternativeDescription = json.reasonCodeAlternativeDescription;
   }

@@ -177,4 +177,7 @@ export class CarSavingsCodeComponent implements OnInit {
     }
     return deletedRmks;
   }
+  getReasonCodeDescription(descriptions: any) {
+    return this.utilHelper.getObjectMapKeyValueByIndex(descriptions, 0);
+  }
 }

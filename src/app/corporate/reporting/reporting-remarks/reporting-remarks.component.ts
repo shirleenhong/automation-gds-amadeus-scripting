@@ -45,7 +45,7 @@ export class ReportingRemarksComponent implements OnInit {
     this.bspRoutingCodeProcess();
 
     await this.loadData();
-    this.segments = await this.pnrService.getTstSegments();
+    this.segments = await this.pnrService.getSegmentList().map(segment => segment.lineNo).map(segment => segment);
     for (const segment of this.segments) {
       this.showSegments = true;
       const group = this.createFormGroup(segment);

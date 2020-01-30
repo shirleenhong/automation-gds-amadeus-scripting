@@ -90,7 +90,7 @@ BEGIN TRY
 											   
 			 
 			 INSERT INTO ConfigurationParameter(ConfigurationParameterName, ConfigurationParameterValue, ContextId,	CreationTimestamp,	CreationUserIdentifier,	VersionNumber)
-							VALUES('UsersToStandAlonePassPurchase', 'U001RCM, U001RXJ', 11 , @CreationTimestamp, @CreationUserIdentifier, 1)
+							VALUES('UsersToStandAlonePassPurchase', 'U001RCM,U001RXJ,UMXS737,UCXW256,U28TO07', 11 , @CreationTimestamp, @CreationUserIdentifier, 1)
 				
 			 INSERT INTO dbo.PNROutputRemarkGroup(PNROutputRemarkGroupId, PNROutputRemarkGroupName, CreationTimestamp, CreationUserIdentifier, LastUpdateTimestamp, LastUpdateUserIdentifier, VersionNumber,       PNROutputRemarkGroupKey) 
                             VALUES (@PNROutputRemarkGroupId + 1, 'CAPassPurchase', @CreationTimestamp,  @CreationUserIdentifier, NULL, NULL, 1,NULL),

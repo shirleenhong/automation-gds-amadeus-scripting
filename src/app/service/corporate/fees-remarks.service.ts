@@ -63,7 +63,6 @@ export class FeesRemarkService {
   }
 
   writeFeeRemarks(feeGroup: FormGroup) {
-    debugger;
     const fees = feeGroup.get('segments') as FormArray;
     let counter = 1;
     for (const group of fees.controls) {
@@ -73,7 +72,6 @@ export class FeesRemarkService {
   }
 
   writeFee(counter, group, segmentRelate?, additionalFee?, ticketRemark?) {
-    debugger;
     const feeMap = new Map<string, string>();
     let fees = [];
     if (group.get('code').value !== '') {
@@ -109,8 +107,6 @@ export class FeesRemarkService {
     if (this.pnrService.getRemarkLineNumbers('MAC/-SUP-PFS').length !== 1) {
       this.remarksManager.createEmptyPlaceHolderValue(['MacLinePlaceholder'], null, 'MAC');
     }
-
-    debugger;
 
     /// DELETE REMARKS
     const h = new Map<string, string>();

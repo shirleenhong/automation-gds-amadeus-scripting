@@ -219,7 +219,9 @@ export class CorporateComponent implements OnInit {
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
-    this.validModel.isFeesValid = this.feesComponent.checkValid();
+    if (this.feesComponent) {
+      this.validModel.isFeesValid = this.feesComponent.checkValid();
+    }
     this.validModel.isQueueValid = this.queueComponent.checkValid();
     this.validModel.isPricingValid = this.pricingComponent.checkValid();
     return this.validModel.isCorporateAllValid();
@@ -227,7 +229,7 @@ export class CorporateComponent implements OnInit {
 
   public async wrapPnr() {
     await this.loadPnrData();
-    if (this.showRule()){
+    if (this.showRule()) {
       this.workflow = '';
     } else {
       this.workflow = 'wrap';

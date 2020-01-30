@@ -177,8 +177,8 @@ Click Submit To PNR
     #Wait For Script To Complete
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
-    #Wait Until Element Is Not Visible     ${message_updatingPnr}    180
-    #Wait Until Element Is Visible    ${button_full_wrap}    180
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
     Run Keyword If   "${queueing}" == "yes"     Sleep    5
     # Sleep    5

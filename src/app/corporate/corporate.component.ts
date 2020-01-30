@@ -50,7 +50,6 @@ import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
 import { common } from 'src/environments/common';
 import { TicketModel } from '../models/pnr/ticket.model';
 import { formatDate } from '@angular/common';
-import { FormArray } from '@angular/forms';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -342,12 +341,8 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
       await this.rms.getMatchcedPlaceholderValues();
     });
-    this.reportingRemarkService.WriteExchangeIndicator(
-      (this.reportingComponent.reportingBSPComponent.bspGroup.get('fares') as FormArray).controls.filter((x) => x.get('isExchange').value === true).length +
-      this.paymentsComponent.accountingRemark.accountingRemarks.filter((x) => x.accountingTypeRemark === 'NONBSPEXCHANGE').length
-    );
     
-    this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    this.paymentRemarkService.writeAccountingRemarks(this.paymentsComponent.accountingRemark);
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }

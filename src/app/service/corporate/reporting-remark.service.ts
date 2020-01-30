@@ -25,6 +25,7 @@ export class ReportingRemarkService {
     const bspGroup: FormGroup = rbc.bspGroup;
     const items = bspGroup.get('fares') as FormArray;
     this.writeHighLowFare(items, false);
+    this.writeExchangeIndicator(items);
   }
   writeCarSavingsRemarks(carSavings: CarSavingsCodeComponent, reAddRemarks) {
     const carSavingsGroup: FormGroup = carSavings.carSavingsCodeGroup;
@@ -42,39 +43,22 @@ export class ReportingRemarkService {
     this.writeHighLowFare(items, true);
   }
   
-  WriteExchangeIndicator(count){
-    for (let index = 1; index <= count; index++) {
-      const exchangeIndicatorRemark = new Map<string, string>();
-      exchangeIndicatorRemark.set('AirTicketId', index.toString());
-      exchangeIndicatorRemark.set('TktRemark', 'EXCH');
-      this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
-    }
-    /*
-    const bspGroup: FormGroup = rbc.bspGroup;
-    const bspItems = bspGroup.get('fares') as FormArray;
+  writeExchangeIndicator(items: any){
+    var tstList = new Array();
 
-    const nbspGroup: FormGroup = nrbc.nonBspGroup;
-    const _nbspItems = nbspGroup.get('nonbsp') as FormArray;
-
-    const exchangeIndicatorRemark = new Map<string, string>();
-
-    let index = 1;
-    for (const bspControls of bspItems.controls) {
+    for (const bspControls of items.controls) {
       if (bspControls.get('isExchange').value === true) {
-        exchangeIndicatorRemark.set('AirTicketId', index.toString());
-        exchangeIndicatorRemark.set('TktRemark', 'EXCH');
-        this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
-        index++;
+        tstList.push(bspControls.get('tstNumber').value);
       }
     }
-    
-    for (const _nbspControl of _nbspItems.controls) {
-      exchangeIndicatorRemark.set('AirTicketId', index.toString());
+
+    //avoid duplicate tst's (1 tst can contain multiple segments)
+    tstList.filter(function(elem, index, self) {return index === self.indexOf(elem);}).forEach(x => {
+      const exchangeIndicatorRemark = new Map<string, string>();
+      exchangeIndicatorRemark.set('AirTicketId', x);
       exchangeIndicatorRemark.set('TktRemark', 'EXCH');
       this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
-      index++;
-    }
-    */
+    });
   }
 
   private writeHighLowFare(items: any, write: boolean) {

@@ -31,7 +31,7 @@ export class PaymentRemarkService {
     private queService: AmadeusQueueService
   ) { }
 
-  writeAccountingReamrks(accountingComponents: AccountingRemarkComponent) {
+  writeAccountingRemarks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
     this.writePassPurchase(
@@ -604,10 +604,16 @@ export class PaymentRemarkService {
       const gdsFare = new Map<string, string>();
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark = new Map<string, string>();
+      const exchangeIndicatorRemark = new Map<string, string>();
+      
       let totalBaseAmount = parseFloat(account.baseAmount);
       let totalGst = parseFloat(account.gst);
       let totalHst = parseFloat(account.hst);
       let totalQst = parseFloat(account.qst);
+      
+      exchangeIndicatorRemark.set('AirTicketId', (accountingRemarks.indexOf(account) + 1).toString());
+      exchangeIndicatorRemark.set('TktRemark', 'EXCH');
+      this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
 
       if (account.originalTktLine !== undefined) {
         originalTicketRemarks.set('OriginalTicketNumber', account.originalTktLine);

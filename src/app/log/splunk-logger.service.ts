@@ -41,7 +41,7 @@ export class SplunkLogger {
 
   private getDefaultLogObj(): Map<string, string> {
     const logObj = new Map<string, string>();
-    logObj.set('DateTime', new Date().toDateString());
+    logObj.set('DateTime', new Date().toUTCString());
     logObj.set('Environment', environment.env);
     logObj.set('CounselorIdentity', this.counselorDetails.getIdentity());
     logObj.set('RecordLocator', this.pnrService.recordLocator());

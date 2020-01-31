@@ -35,7 +35,7 @@ Verify That Non-BSP Ticketing Remarks Without Ticket Number Are Written
     Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In The PNR 
       
 Verify That Multiple Non-BSP Ticketing Remarks Are Written
-    [Tags]    us10552
+    [Tags]    us10552    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Multiple Air Passive Segments With Airline Code WS
     Add Non-BSP Ticketing Details Per Segment

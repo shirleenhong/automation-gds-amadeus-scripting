@@ -212,9 +212,9 @@ Click Add Segment to PNR
     #Wait Until Element Is Visible    ${button_add_segment_toPNR}    60  
     #Sleep   3  
     Click Element At Coordinates    ${button_add_segment_toPNR}   0   0
-    #Wait Until Element Is Not Visible     ${message_add_segments}      180
-    #Wait Until Element Is Visible    ${button_full_wrap}    180
-    #Sleep   3
+    Wait Until Element Is Not Visible     ${message_add_segments}      180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    # Sleep   3
     Wait For Script To Complete 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${current_page}     CWT Corporate
@@ -295,10 +295,10 @@ Navigate From Add Segment
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
 
 Click Add Passive Segment Button
-	#Wait Until Element Is Visible     ${button_add_passive_segment}    30
+	# Wait Until Element Is Visible     ${button_add_passive_segment}    30
 	Click Element At Coordinates    ${button_add_passive_segment}   0   0
-	#Wait Until Element Is Visible    ${select_segment_type}    30
-	Wait For Script To Complete
+	Wait Until Element Is Visible    ${select_segment_type}    30
+	# Wait For Script To Complete
 	Set Test Variable   ${current_page}    Add Passive Segment
 
 Collapse Open Panel

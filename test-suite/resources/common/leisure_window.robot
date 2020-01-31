@@ -12,10 +12,12 @@ Click Panel
 
 Click Submit To PNR
     Scroll Element Into View    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
-    Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    60
+    # Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    60
     Sleep    5
     Click Element    xpath=//button[contains(text(), 'SUBMIT TO PNR')]
-    Sleep    10
+    Wait Until Element Is Not Visible     xpath=//div[contains(text(), 'Updating PNR')]    180
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Wrap PNR')]    180
+    Wait For Script To Complete
 
 Enter Company Name
     [Arguments]    ${company_name}
@@ -23,12 +25,14 @@ Enter Company Name
     Input Text    css=#companyName    ${company_name}
 
 Click Wrap PNR
-    Sleep    5
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Wrap PNR')]    30
+    Wait For Script To Complete
     Click Element    xpath=//button[contains(text(), 'Wrap PNR')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'SUBMIT TO PNR')]    30
 
 Click Cancel Segment
-    Sleep    5
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Cancel Segments')]    30
+    Wait For Script To Complete
     Click Element    xpath=//button[contains(text(), 'Cancel Segments')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Back To Main Menu')]    30
 
@@ -46,6 +50,8 @@ Confirm Delete
     Take Screenshot
 
 Click Add Segment Main Menu
+    Wait Until Element Is Visible    xpath=//button[contains(text(), 'Add Segment')]    30
+    Wait For Script To Complete
     Click Element    xpath=//button[contains(text(), 'Add Segment')]
     Wait Until Element Is Visible    xpath=//button[contains(text(), 'Back To Main Menu')]    30
 

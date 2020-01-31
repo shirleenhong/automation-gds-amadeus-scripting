@@ -122,11 +122,9 @@ Add Air Segment for ZZ In The PNR
     Enter Value    ${input_airline_recloc}    ARL76
     Take Screenshot    
     Click Add Passive Save Button
-    Sleep    3
     
 Verify Air Segment for ZZ In The PNR
     Click Add Segment to PNR    yes
-    Sleep    3
     Finish PNR
     Verify Specific Remark Is Written In The PNR    ZZ8888 Y 02JAN
     Verify Specific Remark Is Written In The PNR    ZZZZZZ GK1${SPACE}${SPACE}1530 1715${SPACE}${SPACE}03JAN${SPACE}${SPACE}${SPACE}${SPACE}${SPACE}ARL76
@@ -138,6 +136,7 @@ Click Add Passive Save Button
     Wait Until Element Is Visible    ${button_save_passive}    60
     Click Element At Coordinates  ${button_save_passive}    0    0
     Wait Until Element Is Visible    ${button_add_passive_segment}   30
+    Wait For Script To Complete
     
 Add Passive Hotel Segment ${with_optional} Values On Optional Fields
     Navigate To Page Add Passive Segment

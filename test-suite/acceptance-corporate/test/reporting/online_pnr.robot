@@ -23,7 +23,7 @@ Verify That EB Remark Is Retained For Online PNR
     Verify EB Remark Written In The PNR
     
 Verify That Online Touch Reason Fields Are Not Displayed When PNR Has No EB Remark
-    [Tags]    us11196
+    [Tags]    us11196    full_regression
     Create PNR With Active Air Segments For Offline PNR
     Complete The PNR With Default Values 
     Verify That Online Touch Reason Fields Are Not Displayed

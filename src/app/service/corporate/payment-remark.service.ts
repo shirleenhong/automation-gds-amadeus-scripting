@@ -46,7 +46,8 @@ export class PaymentRemarkService {
 
     // Write Non BSP Exhange Remarks
     this.writeNonBSPExchange(accList.filter((x) => x.accountingTypeRemark === 'NONBSPEXCHANGE'));
-    this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'));
+    this.writeNonBspApay(accList.filter((x) => x.accountingTypeRemark === 'APAY' || x.accountingTypeRemark === 'NONBSP'
+      || x.accountingTypeRemark === 'RAIL'));
     this.writeAquaTicketingRemarks(accList.filter((x) => x.accountingTypeRemark === 'NONBSP'));
     this.writeCancelRemarks(accList.filter((x) => x.accountingTypeRemark === 'ACPPC'));
     accountingComponents.accountingRemarks.length = 0;
@@ -114,7 +115,7 @@ export class PaymentRemarkService {
       this.createRemarks(['SupFeeTicketId', 'SupFeeInfo'], ['1', 'NFR']);
       this.createRemarks(['PassFeeAmount'], [account.feeAmount]);
     }
-    this.createRemarks(['PassName', 'FareType'], [account.passPurchase, faretype], null, segmentrelate);
+    this.createRemarks(['PassName', 'FareType'], [account.passPurchase, faretype + ' FARE'], null, segmentrelate);
     this.createRemarks(['AirlineCode', 'PassNumber', 'PassName', 'FareType'],
       [airlineCode, account.tktLine, account.passPurchase, faretype], null, null);
 
@@ -378,7 +379,6 @@ export class PaymentRemarkService {
         segmentrelate = segmentAssoc;
       }
       // const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-      // debugger;
       this.writeTicketingLine(
         account.tkMacLine.toString(),
         account.baseAmount,
@@ -716,75 +716,14 @@ export class PaymentRemarkService {
     accountingRemarks.forEach((account) => {
       const itiRemarks = new Map<string, string>();
       const { uniqueairlineCode, segmentAssoc } = this.GetSegmentAssociation(account);
-      if (account.accountingTypeRemark === 'NONBSP') {
-        // debugger;
-        this.writeTicketingLine(
-          account.tkMacLine.toString(),
-          account.baseAmount,
-          account.gst,
-          account.hst,
-          account.qst,
-          account.otherTax,
-          account.commisionWithoutTax,
-          segmentAssoc,
-          account.supplierCodeName,
-          account.tktLine
-        );
-
-        const totalCost =
-          parseFloat(account.baseAmount) +
-          parseFloat(account.gst) +
-          parseFloat(account.hst) +
-          parseFloat(account.qst) +
-          parseFloat(account.otherTax);
-        const lookindex = totalcostlist.findIndex((x) => x.AirlineCode === uniqueairlineCode);
-        if (lookindex > -1) {
-          totalcostlist[lookindex].totalAmount = totalcostlist[lookindex].totalAmount + totalCost;
-        } else {
-          totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
-        }
-
-        itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
+      if (account.accountingTypeRemark === 'NONBSP' || account.accountingTypeRemark === 'RAIL') {
+        this.tktNonBSPRail(account, segmentAssoc, totalcostlist, uniqueairlineCode, itiRemarks);
       }
-
       if (account.accountingTypeRemark === 'APAY' && parseFloat(account.baseAmount) > 0) {
-        this.writeTicketingPenalty(
-          account.tkMacLine.toString(),
-          account.supplierCodeName,
-          account.baseAmount,
-          account.gst,
-          account.hst,
-          account.qst,
-          account.otherTax,
-          segmentAssoc
-        );
-
-        if (account.tkMacLine.toString() !== null && account.tkMacLine.toString() !== '') {
-          itiRemarks.set('ConfNbr', account.tktLine);
-        }
-
-        if (account.descriptionapay === 'OTHER COSTS') {
-          itiRemarks.set('RemarkDescription', account.otherCostDescription);
-        } else {
-          itiRemarks.set('RemarkDescription', account.descriptionapay);
-        }
-        const totalTax = parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
-
-        itiRemarks.set('BaseAmt', account.baseAmount);
-        itiRemarks.set(
-          'TotalTax',
-          this.decPipe
-            .transform(totalTax, '1.2-2')
-            .replace(',', '')
-            .toString()
-        );
-        const ccVendor = this.pnrService.getCCVendorCode();
-        if (ccVendor !== '') {
-          itiRemarks.set('CCVendor', ccVendor);
-        }
+        this.tktApay(account, segmentAssoc, itiRemarks);
+        hasApay = true;
       }
       this.remarksManager.createPlaceholderValues(itiRemarks, null, segmentAssoc);
-      hasApay = true;
     });
 
     totalcostlist.forEach((element) => {
@@ -808,6 +747,50 @@ export class PaymentRemarkService {
       map.set('TouchReason', 'S');
       this.remarksManager.createPlaceholderValues(map);
 
+    }
+  }
+
+  private tktApay(account: MatrixAccountingModel, segmentAssoc: string[], itiRemarks: Map<string, string>) {
+    this.writeTicketingPenalty(account.tkMacLine.toString(), account.supplierCodeName,
+      account.baseAmount, account.gst, account.hst, account.qst, account.otherTax, segmentAssoc);
+    if (account.tkMacLine.toString() !== null && account.tkMacLine.toString() !== '') {
+      itiRemarks.set('ConfNbr', account.tktLine);
+    }
+    if (account.descriptionapay === 'OTHER COSTS') {
+      itiRemarks.set('RemarkDescription', account.otherCostDescription);
+    }
+    else {
+      itiRemarks.set('RemarkDescription', account.descriptionapay);
+    }
+    const totalTax = parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
+    itiRemarks.set('BaseAmt', account.baseAmount);
+    itiRemarks.set('TotalTax', this.decPipe
+      .transform(totalTax, '1.2-2')
+      .replace(',', '')
+      .toString());
+    const ccVendor = this.pnrService.getCCVendorCode();
+    if (ccVendor !== '') {
+      itiRemarks.set('CCVendor', ccVendor);
+    }
+  }
+
+  private tktNonBSPRail(account: MatrixAccountingModel, segmentAssoc: string[],
+    totalcostlist: any[], uniqueairlineCode: string, itiRemarks: Map<string, string>) {
+    this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst, account.hst, account.qst, account.otherTax,
+      account.commisionWithoutTax, segmentAssoc, account.supplierCodeName, account.tktLine);
+    if (account.accountingTypeRemark === 'NONBSP') {
+      const totalCost = parseFloat(account.baseAmount) +
+        parseFloat(account.gst) +
+        parseFloat(account.hst) +
+        parseFloat(account.qst) +
+        parseFloat(account.otherTax);
+      const lookindex = totalcostlist.findIndex((x) => x.AirlineCode === uniqueairlineCode);
+      if (lookindex > -1) {
+        totalcostlist[lookindex].totalAmount = totalcostlist[lookindex].totalAmount + totalCost;
+      } else {
+        totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
+      }
+      itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
     }
   }
 

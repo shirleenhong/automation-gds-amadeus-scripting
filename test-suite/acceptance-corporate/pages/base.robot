@@ -50,7 +50,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 ${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 ${window_marriot_policy}    //div[contains(text(), 'MARRIOTT POLICY VIOLATION')]
 ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees  
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees    Airline Corporate Pass Purchase
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
@@ -65,6 +65,7 @@ ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-U
 @{ird_pages}    IRD Rate Request
 @{aqua_fees_pages}    Aqua Fees
 ${button_aqua_fees}    //button[contains(text(), 'Aqua Fees')]
+${button_airline_pass_standalone}    //button[contains(text(), 'Airline Corporate Pass Purchase')]
 
 *** Keywords ***
 Enter Value
@@ -176,10 +177,10 @@ Click Submit To PNR
     #Wait For Script To Complete
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
-    #Wait Until Element Is Not Visible     ${message_updatingPnr}    180
-    #Wait Until Element Is Visible    ${button_full_wrap}    180
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
-    #Run Keyword If   "${queueing}" == "yes"     Sleep    5
+    Run Keyword If   "${queueing}" == "yes"     Sleep    5
     # Sleep    5
     Wait For Script To Complete
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
@@ -280,6 +281,7 @@ Navigate From Corp
      ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
      ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
      ...    ELSE IF    "${destination_page}" == "Aqua Fees"     Click Aqua Fees
+     ...    ELSE IF    "${destination_page}" == "Payment"    Click Airline Corporate Pass Purchase
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments 
@@ -790,3 +792,14 @@ Click Aqua Fees
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Wait For Script To Complete
     Set Test Variable    ${current_page}    Aqua Fees
+    
+Click Airline Corporate Pass Purchase
+    Wait Until Page Contains Element    ${button_airline_pass_standalone}    100
+    Click Element    ${button_airline_pass_standalone}    
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Payment
+    
+
+    

@@ -51,6 +51,7 @@ export class ReportingNonbspComponent implements OnInit {
   }
 
   async drawControlsForNonBsp() {
+    debugger;
     this.nonBspReasonList = [
       { itemText: '', itemValue: '' },
       { itemText: 'L- Lower Fare', itemValue: 'L' }
@@ -69,7 +70,8 @@ export class ReportingNonbspComponent implements OnInit {
       // } else {
       //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
       // }
-      lowFare = '';
+      // lowFare = '';
+      // lowFare = Number(element.baseAmount) +
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
           isAdded = true;

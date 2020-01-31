@@ -18,7 +18,7 @@ export class FeesRemarkService {
     private pnrService: PnrService,
     private queueRemarksService: AmadeusQueueService,
     private ddbService: DDBService
-  ) {}
+  ) { }
 
   /**
    * US9402
@@ -94,7 +94,7 @@ export class FeesRemarkService {
     }
 
     if (feeValue !== '') {
-      feeMap.set('SupFeeInfo', feeValue + ticketRemark);
+      feeMap.set('SupFeeInfo', feeValue + (ticketRemark ? ticketRemark : ''));
       feeMap.set('SupFeeTicketId', counter.toString());
       this.remarksManager.createPlaceholderValues(feeMap, null, segmentRelate);
     } else {

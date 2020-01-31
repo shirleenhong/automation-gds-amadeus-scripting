@@ -20,14 +20,14 @@ Verify ABF Fee Code Is Written For EB/EBA With WN flight
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify ABF Fee Code Is Written For EB/AMA With WN flight
-    [Tags]    us13842
+    [Tags]    us13842    full_regression
     Create PNR With Passive Air Segments For OBT PNR AMA With WN Airline
     Complete The PNR With Default Values 
     Select AIR FEES Type Of Fee And Supplemental Fee
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Exchange Fee And OLB Fee Without Supplemental Fee Is Written
-    [Tags]    us13842
+    [Tags]    us13842    full_regression
     Create PNR With Active Air Segments For Exchange Fee And OLB Fee
     Create PNR And Exchange Ticket
     Select AIR FEES Type Of Fee And Supplemental Fee
@@ -42,7 +42,7 @@ Verify Exchange Fee, And OLB Fee With Supplemental Fee Is Written
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Supplemental Fee With Ticket Number Is Written
-    [Tags]    us13842
+    [Tags]    us13842    full_regression
     Create PNR With Active Air Segments For Supplemental Fee With Ticket Number
     Select AIR FEES Type Of Fee And Supplemental Fee
     Add Supplemental Fee Code With Ticket Number
@@ -72,14 +72,14 @@ Verify That MIS Line And Applicable Fees Is Written When PNR Has No Itinerary Se
     Verify MIS Segment For Aqua Fee Is Written In The PNR
     
 Verify ABF Fee Code Is Not Written For EB/ABA With flight Is Not WN
-    [Tags]    us13842
+    [Tags]    us13842    full_regression
     Create PNR With Passive Air Segments For OBT PNR EBA With non-WN Airline
     Complete The PNR With Default Values 
     Select AIR FEES Type Of Fee And Supplemental Fee
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify ABF Fee Code Is Not Written For Non-OBT PNR With WN flight
-    [Tags]    us13842
+    [Tags]    us13842    full_regression
     Create PNR With Passive Air Segments For Non-OBT PNR With WN Airline
     Complete The PNR With Default Values 
     Select AIR FEES Type Of Fee And Supplemental Fee

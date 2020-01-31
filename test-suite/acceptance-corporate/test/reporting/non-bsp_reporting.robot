@@ -9,7 +9,7 @@ ${test_file_name}    non_bsp_reporting
 
 *** Test Cases ***
 Verify That Reporting Remarks Are Written For Single Non-BSP Segment
-    [Tags]    us13617    us16563 
+    [Tags]    us13617    us16563    full_regression 
     Create PNR For Non BSP Reporting
     Book 1 Passive Air Segments For AC With Flight Number 317 And Route YULYYC
     Add Non-BSP Ticketing Details For Segment 2

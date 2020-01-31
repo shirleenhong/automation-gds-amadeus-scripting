@@ -26,7 +26,7 @@
       <app-corp-remarks></app-corp-remarks>
     </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'">
+    <accordion-group [panelClass]="'customClass'" *ngIf="showAquaFeeButton">
       <div accordion-heading>
         <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
         <span class="cwt-logo"></span>
@@ -101,6 +101,7 @@
     </div>
   </div>
 </div>
+
 <div *ngIf="workflow === 'sendInvoice'">
   <accordion>
     <accordion-group [panelClass]="'customClass'" [isOpen]="true">
@@ -163,6 +164,7 @@
     </div>
   </div>
 </div>
+
 <div *ngIf="workflow === 'irdRateRequest'">
   <accordion>
     <accordion-group [panelClass]="'customClass'" [isOpen]="true">
@@ -184,7 +186,6 @@
     </div>
   </div>
 </div>
-
 
 <div *ngIf="workflow === 'corporatePass'">
   <accordion>
@@ -240,7 +241,7 @@
   </div>
 </div>
 
-<div *ngIf="isPnrLoaded && workflow === ''" class="loaderBody">
+<div *ngIf="isPnrLoaded && workflow === '' && loading === false" class="loaderBody">
   <div class="loader">
     <div>
       Corporate

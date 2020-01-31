@@ -127,21 +127,21 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-    this.getPnrService();
   }
 
   showRule() {
     // get rule
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
-      this.workflow = '';
       this.showMessage(
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message').replace(/{br}/g, '<br>'),
         MessageType.Default,
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
         'Loading'
       );
+      return true;
     }
+    return false;
   }
 
   hasAirportCode(airportCode: string) {
@@ -167,17 +167,19 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
-    this.loading = false;
+
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
-    this.checkValidForAquaFee();
-    this.hasAccessInPassPurchase();
+    await this.checkValidForAquaFee();
+    await this.hasAccessInPassPurchase();
+    this.loading = false;
   }
 
-  initData() {
+  async initData() {
     this.ddbService.getAllMatrixSupplierCodes();
+    await this.getPnrService();
   }
 
   showLoading(msg, caller?) {
@@ -217,7 +219,9 @@ export class CorporateComponent implements OnInit {
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
-    this.validModel.isFeesValid = this.feesComponent.checkValid();
+    if (this.feesComponent) {
+      this.validModel.isFeesValid = this.feesComponent.checkValid();
+    }
     this.validModel.isQueueValid = this.queueComponent.checkValid();
     this.validModel.isPricingValid = this.pricingComponent.checkValid();
     return this.validModel.isCorporateAllValid();
@@ -225,7 +229,11 @@ export class CorporateComponent implements OnInit {
 
   public async wrapPnr() {
     await this.loadPnrData();
-    this.workflow = 'wrap';
+    if (this.showRule()) {
+      this.workflow = '';
+    } else {
+      this.workflow = 'wrap';
+    }
   }
 
   public async AddSegment() {
@@ -280,7 +288,6 @@ export class CorporateComponent implements OnInit {
     }
     this.closePopup();
     this.checkHasDataLoadError();
-    this.showRule();
   }
 
   checkHasDataLoadError() {
@@ -944,8 +951,9 @@ export class CorporateComponent implements OnInit {
   }
 
   async hasAccessInPassPurchase() {
-    const response = await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase');
-    const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-    this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+    await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
+      const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+    });
   }
 }

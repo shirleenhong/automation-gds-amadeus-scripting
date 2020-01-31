@@ -23,7 +23,7 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService,
     private ruleUiService: RuleUiService,
     private ruleWriter: RuleWriterService
-  ) {}
+  ) { }
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -149,6 +149,10 @@ export class RulesEngineService {
   getRuleWriteRemarks() {
     let resulttItems = this.getSpecificRulesValue('PNR_ADD_Remark').resultItems;
     this.ruleWriter.getPnrAddRemark(resulttItems);
+    resulttItems = this.getSpecificRulesValue('PNR_ADD_REMARKS_FIRST_TST').resultItems;
+    this.ruleWriter.getPnrAddRemark(resulttItems, '1');
+    resulttItems = this.getSpecificRulesValue('PNR_ADD_REMARKS_PER_TST_FIRST_NOT_INCLUDED').resultItems;
+    this.ruleWriter.getPnrAddRemark(resulttItems, '>1');
     resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_CONDTION').resultItems;
     this.ruleWriter.getWriteRemarkWithCondition(resulttItems);
     resulttItems = this.getSpecificRulesValue('PNR_WRITE_REMARK_WITH_SEGMENT_RELATE').resultItems;

@@ -32,6 +32,8 @@ export class PnrService {
     clientSubUnitGuid: string;
     exchangeTatooNumbers = [];
     agentSign = '';
+    agentFirstName = '';
+    agentLastName = '';
     constructor() { }
 
     async getPNR(): Promise<void> {
@@ -144,6 +146,8 @@ export class PnrService {
 
             if (res) {
                 this.agentSign = res.AGENT_SIGN;
+                this.agentFirstName = res.FIRST_NAME;
+                this.agentLastName = res.LAST_NAME;
             }
         });
     }

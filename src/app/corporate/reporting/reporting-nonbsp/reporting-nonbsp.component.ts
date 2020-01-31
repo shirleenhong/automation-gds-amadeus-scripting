@@ -51,7 +51,6 @@ export class ReportingNonbspComponent implements OnInit {
   }
 
   async drawControlsForNonBsp() {
-    debugger;
     this.nonBspReasonList = [
       { itemText: '', itemValue: '' },
       { itemText: 'L- Lower Fare', itemValue: 'L' }
@@ -61,18 +60,12 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
-    let lowFareValMap = [];
+    const lowFareValMap = [];
     this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
       let isAdded = false;
       const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo));
-      // if (this.isDomesticFlight) {
-      //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, element.segmentNo));
-      // } else {
-      //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
-      // }
       lowFare = '';
-      // lowFare = Number(element.baseAmount) +
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
           isAdded = true;
@@ -84,13 +77,15 @@ export class ReportingNonbspComponent implements OnInit {
         this.nonBspGroup.updateValueAndValidity();
         this.fareList.push(element.segmentNo);
       }
-      lowFareValMap["hst" + element.tkMacLine] = parseFloat(element.hst);
-      lowFareValMap["baseAmount" + element.tkMacLine] = parseFloat(element.baseAmount);
-      if (this.nonBspInformation.length == element.tkMacLine) {
-        let lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
+      lowFareValMap['hst' + element.tkMacLine] = parseFloat(element.hst);
+      lowFareValMap['baseAmount' + element.tkMacLine] = parseFloat(element.baseAmount);
+      if (this.nonBspInformation.length === element.tkMacLine) {
+        const lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
         lowFare = await this.decPipe.transform(lowFareVal, '1.2-2').replace(',', '');
-        let formGroup = await this.nonBspGroup.get('nonbsp') as FormArray;
-        formGroup.controls.forEach((element) => element.get('lowFareText').setValue(lowFare));
+        const formGroup = (await this.nonBspGroup.get('nonbsp')) as FormArray;
+        formGroup.controls.forEach((el) => {
+          return el.get('lowFareText').setValue(lowFare);
+        });
       }
     });
   }

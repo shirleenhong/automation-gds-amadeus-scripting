@@ -74,6 +74,25 @@ export class DDBService implements OnInit {
         }
       });
   }
+  async postRequest(serviceName: string, params?) {
+    if (!environment.proxy) {
+      await this.getToken();
+    }
+    const hds = new HttpHeaders().append('Content', 'application/json');
+    return this.httpClient
+      .post<any>(serviceName, params, {
+        headers: hds
+      })
+      .toPromise()
+      .catch((e) => {
+        // retry if unauthorized to get new token
+        if (e.status === 401 && this.retry < 3) {
+          this.retry += 1;
+          this.isTokenExpired = true;
+          this.postRequest(serviceName);
+        }
+      });
+  }
 
   async getAllServicingOptions(clientSubUnit) {
     if (this.servicingOption.length === 0) {
@@ -199,18 +218,17 @@ export class DDBService implements OnInit {
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
     const reasons = [];
-    await this.getRequest(common.reasonCodesService + '?TripTypeId=1&&IncludeNullTripTypes=false&ClientSubUnitGuid=' + clientSubUnitId
-    + otherParamString).then(
-      (response) => {
-        if (response && response.ReasonCodeItems) {
-          response.ReasonCodeItems.forEach((reasonJson) => {
-            if (reasonJson.ReasonCodeProductTypeDescriptions) {
-              reasons.push(new ReasonCode(reasonJson));
-            }
-          });
-        }
+    await this.getRequest(
+      common.reasonCodesService + '?TripTypeId=1&&IncludeNullTripTypes=false&ClientSubUnitGuid=' + clientSubUnitId + otherParamString
+    ).then((response) => {
+      if (response && response.ReasonCodeItems) {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          if (reasonJson.ReasonCodeProductTypeDescriptions) {
+            reasons.push(new ReasonCode(reasonJson));
+          }
+        });
       }
-    );
+    });
     return reasons;
   }
 
@@ -487,5 +505,22 @@ export class DDBService implements OnInit {
         clientSubUnitGuid +
         '&SourceSystemCode=CA1'
     );
+  }
+
+  postSplunkLog(data: Map<string, string>, source?) {
+    if (!source) {
+      source = 'AmadeusCAScript';
+    }
+    // debugger;
+    // const params = new HttpParams();
+    // params.set('sourceType', source);
+    // params.set('jsonData', JSON.stringify(data));
+
+    const jsonObject = {};
+    data.forEach((value, key) => {
+      jsonObject[key] = value;
+    });
+    const params = '?sourceType=' + source + '&jsonData=' + encodeURIComponent(JSON.stringify(jsonObject));
+    return this.postRequest(common.splunkLog + params);
   }
 }

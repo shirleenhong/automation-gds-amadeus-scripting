@@ -1,6 +1,5 @@
 *** Settings ***
 Force Tags        corp
-Library           String
 Resource          ../../pages/base.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers

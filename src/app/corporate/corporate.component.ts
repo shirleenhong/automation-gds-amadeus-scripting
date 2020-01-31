@@ -343,8 +343,8 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
       await this.rms.getMatchcedPlaceholderValues();
     });
-
-    this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    
+    this.paymentRemarkService.writeAccountingRemarks(this.paymentsComponent.accountingRemark);
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
@@ -375,8 +375,8 @@ export class CorporateComponent implements OnInit {
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
-
     this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+    
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);

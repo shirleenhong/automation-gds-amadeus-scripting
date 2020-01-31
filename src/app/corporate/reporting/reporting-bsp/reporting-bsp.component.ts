@@ -75,14 +75,14 @@ export class ReportingBSPComponent implements OnInit {
     this.total = items.length;
   }
 
-  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
+  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean, tstNumber?: string) {
     const items = this.bspGroup.get('fares') as FormArray;
 
     if (Number(highFare) < Number(chargeFare)) {
       highFare = chargeFare;
     }
 
-    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
+    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange, tstNumber));
     this.total = items.length;
   }
 
@@ -104,7 +104,8 @@ export class ReportingBSPComponent implements OnInit {
     lowFare: string,
     reasonCode: string,
     chargeFare: string,
-    isExchange?: boolean
+    isExchange?: boolean,
+    tstNumber?: string
     // defaultValue?: any
   ): FormGroup {
     const group = this.fb.group({
@@ -115,7 +116,8 @@ export class ReportingBSPComponent implements OnInit {
       chargeFare: new FormControl(chargeFare),
       chkIncluded: new FormControl(''),
       isExchange: new FormControl(isExchange),
-      lowFareOption: new FormControl('')
+      lowFareOption: new FormControl(''),
+      tstNumber: new FormControl(tstNumber)
     });
 
     group.get('reasonCodeText').valueChanges.subscribe((val) => {
@@ -220,7 +222,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.reasonCodes.push([]);
 
-    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
+    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange, tst.fareReference.uniqueReference);
 
     if (index === tstCount) {
       this.isDoneLoading = true;

@@ -10,7 +10,7 @@ import { AddWaiverComponent } from 'src/app/corporate/reporting/waivers/add-waiv
   styleUrls: ['./waivers.component.scss']
 })
 export class WaiversComponent implements OnInit {
-  ticketedSegments = [];//rename if they mean to add waiver for all segments other than ticketed segments. ticketed segments working on this.
+  ticketedSegments = [];
   ticketedForm: FormGroup;
   modalRef: BsModalRef;
   selectedGroup: FormGroup;
@@ -28,7 +28,7 @@ export class WaiversComponent implements OnInit {
       segments: this.fb.array([])
     });
 
-    this.ticketedSegments = await this.pnrService.getSegmentList().map(segment => segment.lineNo).map(segment => segment);
+    this.ticketedSegments = await this.pnrService.getTstSegments();
     for (const segment of this.ticketedSegments) {
       const group = this.createFormGroup(segment);
       (this.ticketedForm.get('segments') as FormArray).push(group);

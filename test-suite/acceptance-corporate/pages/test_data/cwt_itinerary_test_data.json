@@ -17,6 +17,7 @@
 		"AirlineCode2": null,
 		"AirlineCode3": null,
 		"AirlineCode4": null,
+		"SeatSelect1": "2",
 		"PriceCommand1": "FXP/S2",
 		"PriceCommand2": null,
 		"PriceCommand3": null,
@@ -43,7 +44,6 @@
 		"UnexpectedRemark1": "RMZ CONF*LANG:EN",
 		"UnexpectedRemark2": "RMT TKT1-DOM",
 		"UnexpectedRemark3": "RMQ AUTOMAIL-NO"
-		
 	},
 	"CWT Itinerary, Domestic Flight": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -63,6 +63,7 @@
 		"AirlineCode2": null,
 		"AirlineCode3": null,
 		"AirlineCode4": null,
+		"SeatSelect1": "2",
 		"PriceCommand1": "FXP/S2",
 		"PriceCommand2": null,
 		"PriceCommand3": null,
@@ -110,6 +111,7 @@
 		"AirlineCode2": null,
 		"AirlineCode3": null,
 		"AirlineCode4": null,
+		"SeatSelect1": "2",
 		"PriceCommand1": "FXP/S2",
 		"PriceCommand2": null,
 		"PriceCommand3": null,
@@ -167,6 +169,7 @@
 		"AirlineCode2": null,
 		"AirlineCode3": null,
 		"AirlineCode4": null,
+		"SeatSelect1": "2",
 		"PriceCommand1": "FXP/S2",
 		"PriceCommand2": null,
 		"PriceCommand3": null,
@@ -214,6 +217,7 @@
 		"AirlineCode2": null,
 		"AirlineCode3": null,
 		"AirlineCode4": null,
+		"SeatSelect1": "2",
 		"PriceCommand1": null,
 		"PriceCommand2": null,
 		"PriceCommand3": null,

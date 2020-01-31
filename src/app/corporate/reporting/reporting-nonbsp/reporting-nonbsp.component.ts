@@ -61,6 +61,7 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
+    let lowFareValMap = [];
     this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
       let isAdded = false;
@@ -70,7 +71,7 @@ export class ReportingNonbspComponent implements OnInit {
       // } else {
       //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
       // }
-      // lowFare = '';
+      lowFare = '';
       // lowFare = Number(element.baseAmount) +
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
@@ -82,6 +83,14 @@ export class ReportingNonbspComponent implements OnInit {
         this.utilHelper.validateAllFields(this.nonBspGroup);
         this.nonBspGroup.updateValueAndValidity();
         this.fareList.push(element.segmentNo);
+      }
+      lowFareValMap["hst" + element.tkMacLine] = parseFloat(element.hst);
+      lowFareValMap["baseAmount" + element.tkMacLine] = parseFloat(element.baseAmount);
+      if (this.nonBspInformation.length == element.tkMacLine) {
+        let lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
+        lowFare = await this.decPipe.transform(lowFareVal, '1.2-2').replace(',', '');
+        let formGroup = await this.nonBspGroup.get('nonbsp') as FormArray;
+        formGroup.controls.forEach((element) => element.get('lowFareText').setValue(lowFare));
       }
     });
   }

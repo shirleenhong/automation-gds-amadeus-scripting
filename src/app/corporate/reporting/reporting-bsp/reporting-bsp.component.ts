@@ -89,7 +89,7 @@ export class ReportingBSPComponent implements OnInit {
   getReasonCodeValue(code, index): string {
     const reasonText = this.reasonCodes[index]
       .filter((x) => x.reasonCode === code)
-      .map((x) => x.reasonCode + ' : ' + this.getReasonCodeDescription(x.reasonCodeProductTypeDescriptions));
+      .map((x) => x.reasonCode + ' : ' + x.getDescription());
 
     if (reasonText.length >= 0) {
       return reasonText[0];
@@ -160,7 +160,7 @@ export class ReportingBSPComponent implements OnInit {
       if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
         reasonCode =
           this.reasonCodes[currentIndex][0].reasonCode + ' : '
-          + this.getReasonCodeDescription(this.reasonCodes[currentIndex][0].reasonCodeProductTypeDescriptions);
+          + this.reasonCodes[currentIndex][0].getDescription();
         group.get('reasonCodeText').setValue(reasonCode);
       }
     }
@@ -469,8 +469,5 @@ export class ReportingBSPComponent implements OnInit {
         }
         break;
     }
-  }
-  getReasonCodeDescription(descriptions: any) {
-    return this.utilHelper.getObjectMapKeyValueByIndex(descriptions, 0);
   }
 }

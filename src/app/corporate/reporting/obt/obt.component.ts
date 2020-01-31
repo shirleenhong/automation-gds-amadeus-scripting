@@ -5,7 +5,6 @@ import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DDBService } from 'src/app/service/ddb.service';
 import { ReasonCodeTypeEnum } from 'src/app/enums/reason-code.enum';
-import { UtilHelper } from '../../../helper/util.helper';
 
 @Component({
   selector: 'app-obt',
@@ -19,8 +18,7 @@ export class ObtComponent implements OnInit {
   obtForm: FormGroup;
   ebRList: { itemValue: string; itemText: string }[];
 
-  constructor(private pnrService: PnrService, private counselorDetail: CounselorDetail, private utilHelper: UtilHelper,
-              private ddbService: DDBService) {}
+  constructor(private pnrService: PnrService, private counselorDetail: CounselorDetail, private ddbService: DDBService) {}
 
   ngOnInit() {
     this.checkEbRemark();
@@ -86,8 +84,5 @@ export class ObtComponent implements OnInit {
       { itemValue: 'AM', itemText: 'AM- Full Service Agent Assisted' },
       { itemValue: 'CT', itemText: 'CT- Online Agent Assisted' }
     ];
-  }
-  getReasonCodeDescription(descriptions: any) {
-    return this.utilHelper.getObjectMapKeyValueByIndex(descriptions, 0);
   }
 }

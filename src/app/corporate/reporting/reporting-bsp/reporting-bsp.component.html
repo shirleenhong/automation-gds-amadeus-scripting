@@ -62,7 +62,7 @@
             name="reasonCodeText">
             <option [ngValue]="null"></option>
             <option *ngFor="let reason of reasonCodes[i]" [value]="reason.reasonCode">{{
-              reason.reasonCode + ' : ' + getReasonCodeDescription(reason.reasonCodeProductTypeDescriptions)
+              reason.reasonCode + ' : ' + reason.getDescription()
             }}</option>
           </select>
         </div>

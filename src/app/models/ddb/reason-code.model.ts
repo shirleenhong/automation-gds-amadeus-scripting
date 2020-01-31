@@ -26,4 +26,14 @@ export class ReasonCode {
     this.reasonCodeProductTypeDescription = json.ReasonCodeProductTypeDescription;
     this.reasonCodeAlternativeDescription = json.reasonCodeAlternativeDescription;
   }
+
+  getDescription() {
+    let value = '';
+    if (this.reasonCodeProductTypeDescriptions) {
+      const key = Object.keys(this.reasonCodeProductTypeDescriptions)[0];
+      value = this.reasonCodeProductTypeDescriptions[key];
+    }
+
+    return value;
+  }
 }

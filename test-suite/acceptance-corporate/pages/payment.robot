@@ -70,11 +70,11 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Select Itinerary Segments    2
     Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
-    Select From List By Label    ${list_faretype}       FLEX
+    Select Fare Type FLEX
     Set Test Variable    ${tkt_number}    ${EMPTY}
     Set Test Variable    ${orig_tkt_number}    ${EMPTY}
     Set Test Variable    ${fare_type}    FLEX
-    [TEARDOWN]    Take Screenshot
+    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Navigate To Page Add Accounting Line
@@ -97,12 +97,32 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Select Itinerary Segments    2
     Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
-    Select From List By Label    ${list_faretype}       FLEX
+    Select Fare Type FLEX
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
     Set Test Variable    ${orig_tkt_number}    0987654321
     Set Test Variable    ${fare_type}    FLEX
+    [TEARDOWN]    Take Screenshot
+    
+Add Multiple Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
+    Select Itinerary Segments    2
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
+    Select Fare Type FLEX
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_origTicketLine}    0987654321
+    Click Save Button
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
+    Select Itinerary Segments    3
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
+    Add Ticketing Amount Details With Other Tax And Commission    1002.00    102.00    12.00    1.20    0.10    0.1
+    Select Fare Type FLEX
+    Enter Value    ${input_tktnumber}    0987654321
+    Enter Value    ${input_origTicketLine}    1234567890
     [TEARDOWN]    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
@@ -444,8 +464,9 @@ Select Type Of Pass Purchase ${pass_purchase_type}
     [Teardown]    Take Screenshot
 
 Select Fare Type ${fare_type}
-    Set Test Variable    ${fare_type}    
-    Select From List By Value    ${list_faretype}    ${fare_type}
+    Set Test Variable    ${fare_type}
+    ${exists}    Run Keyword And Return Status    Element Should Be Visible    ${list_faretype}     
+    Run Keyword If    ${exists}    Select From List By Value    ${list_faretype}    ${fare_type}
     [Teardown]    Take Screenshot
 
 Verify Supplier Code Default Value Is Correct For ${acct_remark_type}

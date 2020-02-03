@@ -194,6 +194,12 @@ Add Client Reporting Values For Single BSP Segment
     Set Test Variable    ${actual_low_fare}
     Take Screenshot
 
+Select Reason Code Value ${reason_code} For TST ${tst_no}
+    Navigate To Page BSP Reporting
+    Select Client Reporting Fields To Be Written    ${tst_no}
+    Select From List By Value    ${fare_row_number}${open_bracket}${tst_no}${close_bracket}${list_reason_code}    ${reason_code}
+    Take Screenshot
+
 Add Client Reporting Values For Multiple BSP Segment
     Navigate To Page BSP Reporting
     Wait Until Page Contains Element    ${tab_clientReporting}${open_bracket}3${close_bracket}${checkbox_clientReporting}    60
@@ -510,12 +516,6 @@ Populate Destination Code Fields For ${tst_no} TST
 Verify Destination Code Remarks Are Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
-    
-Select Reason Code ${reason_code_value} For TST${tst_number}
-    Navigate To Page BSP Reporting
-    Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
-    Sleep    2
-    Take Screenshot
     
 Add Car Savings Code For ${number_of} Segments
     Navigate to Page Car Savings Code

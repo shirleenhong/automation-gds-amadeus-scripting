@@ -300,9 +300,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U17/-221.01/S3",
+		"ExpectedRemark1": "RM *U17/-221.01",
 		"ExpectedRemark2": "RMT TKT2-U17/-221.02",
-		"UnexpectedRemark1": "RM *U17/-221.02"
+		"UnexpectedRemark1": "RM *U17/-221.02/S3"
 	},
 	"Client EJ5, No Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

@@ -823,6 +823,7 @@ Enter ${number} Lowest Coach Fare And Approver Name For CDR per TKT
     Take Screenshot
     
 Verify That The UDID ${udid_num} Remark Is Written In The PNR For ${client} With ${single_multiple} Active Air Segments
+    Run Keyword If    "${client}" == "SGE"     Select Yes In Is Business Class Booked
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     

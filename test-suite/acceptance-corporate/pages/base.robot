@@ -189,8 +189,8 @@ Click Submit To PNR
 Click Cancel Segment Button 
    Scroll Element Into View    ${button_cancel_segment}
    Click Element    ${button_cancel_segment}
-   #Wait Until Element Is Not Visible     ${message_updatingPnr}    180
-   #Wait Until Element Is Visible    ${button_full_wrap}    180
+   Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+   Wait Until Element Is Visible    ${button_full_wrap}    180
    Set Test Variable    ${current_page}     CWT Corporate
    Wait For Script To Complete
    Close CA Corporate Test

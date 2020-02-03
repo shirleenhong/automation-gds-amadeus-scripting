@@ -58,6 +58,8 @@ Open CA Migration Window
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Sleep    5
+    Import Library    AngularJSLibrary    app-root
+    Wait For Script To Complete
 
 Open Cryptic Display Window
     Wait Until Element Is Enabled    css=.bookingTool.FS    30
@@ -200,3 +202,7 @@ Get PNR Details
 Handle Smart Tool PopUp
     ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']    20
     Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']
+
+Wait For Script To Complete
+    Wait For Angular
+    Set Ignore Implicit Angular Wait    ${True}

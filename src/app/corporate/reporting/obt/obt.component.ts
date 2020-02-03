@@ -38,7 +38,7 @@ export class ObtComponent implements OnInit {
     let ebData = this.pnrService.getRemarkText('EB/');
     if (ebData) {
       ebData = ebData.split('/-');
-      if (ebData.length === 3) {
+      if (ebData.length >= 2) {
         this.populateEBFields(ebData);
       }
     }
@@ -50,10 +50,13 @@ export class ObtComponent implements OnInit {
     }
     const ebR = eb[1].substr(0, 2);
     const ebT = eb[1].substr(2, 1);
-    const ebN = eb[2].substr(0, 2);
-    const ebC = eb[2].substr(2, 1);
-
-    this.showEBDetails = ebR && ebT && ebN && ebC ? true : false;
+    let ebN = 'GI';
+    let ebC = '';
+    if (eb.length > 2) {
+      ebN = eb[2].substr(0, 2);
+      ebC = eb[2].substr(2, 1);
+    }
+    this.showEBDetails = ebR && ebT ? true : false;
     if (this.showEBDetails) {
       await this.loadStaticValue();
       const ebrValues = this.ebRList.map((seat) => seat.itemValue);

@@ -42,23 +42,25 @@ export class ReportingRemarkService {
     const items = nbspGroup.get('nonbsp') as FormArray;
     this.writeHighLowFare(items, true);
   }
-  
-  writeExchangeIndicator(items: any){
-    var tstList = new Array();
+
+  writeExchangeIndicator(items: any) {
+    const tstList = new Array();
 
     for (const bspControls of items.controls) {
       if (bspControls.get('isExchange').value === true) {
         tstList.push(bspControls.get('tstNumber').value);
       }
     }
-
-    //avoid duplicate tst's (1 tst can contain multiple segments)
-    tstList.filter(function(elem, index, self) {return index === self.indexOf(elem);}).forEach(x => {
-      const exchangeIndicatorRemark = new Map<string, string>();
-      exchangeIndicatorRemark.set('AirTicketId', x);
-      exchangeIndicatorRemark.set('TktRemark', 'EXCH');
-      this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
-    });
+    tstList
+      .filter(function(elem, index, self) {
+        return index === self.indexOf(elem);
+      })
+      .forEach((x) => {
+        const exchangeIndicatorRemark = new Map<string, string>();
+        exchangeIndicatorRemark.set('AirTicketId', x);
+        exchangeIndicatorRemark.set('TktRemark', 'EXCH');
+        this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
+      });
   }
 
   private writeHighLowFare(items: any, write: boolean) {

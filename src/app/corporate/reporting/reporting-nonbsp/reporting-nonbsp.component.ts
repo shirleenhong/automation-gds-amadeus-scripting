@@ -96,6 +96,7 @@ export class ReportingNonbspComponent implements OnInit {
       highFareText: new FormControl(highFare, [Validators.required]),
       lowFareText: new FormControl(lowFare, [Validators.required]),
       reasonCodeText: new FormControl(reasonCode, [Validators.required]),
+      currency: new FormControl('CAD'),
       chkIncluded: new FormControl('')
     });
 

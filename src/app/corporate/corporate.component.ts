@@ -343,7 +343,7 @@ export class CorporateComponent implements OnInit {
       await this.getPnrService();
       await this.rms.getMatchcedPlaceholderValues();
     });
-    
+
     this.paymentRemarkService.writeAccountingRemarks(this.paymentsComponent.accountingRemark);
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
@@ -357,7 +357,10 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.councelorDetail.getIdentity());
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
-      this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+      this.reportingRemarkService.WriteBspRemarks(
+        this.reportingComponent.reportingBSPComponent,
+        this.reportingComponent.reportingRemarksComponent
+      );
     }
     if (this.reportingComponent.carSavingsCodeComponent !== undefined) {
       this.reportingRemarkService.writeCarSavingsRemarks(
@@ -375,8 +378,10 @@ export class CorporateComponent implements OnInit {
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
-    this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
-    
+    this.reportingRemarkService.WriteNonBspRemarks(
+      this.reportingComponent.reportingNonbspComponent,
+      this.reportingComponent.reportingRemarksComponent
+    );
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);

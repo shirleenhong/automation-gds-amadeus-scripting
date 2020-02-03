@@ -44,7 +44,7 @@ export class ReportingBSPComponent implements OnInit {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private valueChagneListener: ValueChangeListener
-  ) { }
+  ) {}
 
   async ngOnInit() {
     await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1).then((response) => {
@@ -56,7 +56,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.isDoneLoading = false;
     this.bspGroup = this.fb.group({
-      fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
+      fares: this.fb.array([this.createFormGroup('', '', '', '', '', '')])
     });
 
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
@@ -75,21 +75,28 @@ export class ReportingBSPComponent implements OnInit {
     this.total = items.length;
   }
 
-  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean, tstNumber?: string) {
+  addFares(
+    segmentNo: string,
+    highFare: string,
+    lowFare: string,
+    reasonCode: string,
+    chargeFare: string,
+    isExchange: boolean,
+    currency: string,
+    tstNumber?: string
+  ) {
     const items = this.bspGroup.get('fares') as FormArray;
 
     if (Number(highFare) < Number(chargeFare)) {
       highFare = chargeFare;
     }
 
-    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange, tstNumber));
+    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, currency, isExchange, tstNumber));
     this.total = items.length;
   }
 
   getReasonCodeValue(code, index): string {
-    const reasonText = this.reasonCodes[index]
-      .filter((x) => x.reasonCode === code)
-      .map((x) => x.reasonCode + ' : ' + x.getDescription());
+    const reasonText = this.reasonCodes[index].filter((x) => x.reasonCode === code).map((x) => x.reasonCode + ' : ' + x.getDescription());
 
     if (reasonText.length >= 0) {
       return reasonText[0];
@@ -104,6 +111,7 @@ export class ReportingBSPComponent implements OnInit {
     lowFare: string,
     reasonCode: string,
     chargeFare: string,
+    currency: string,
     isExchange?: boolean,
     tstNumber?: string
     // defaultValue?: any
@@ -114,6 +122,7 @@ export class ReportingBSPComponent implements OnInit {
       lowFareText: new FormControl(lowFare),
       reasonCodeText: new FormControl(reasonCode),
       chargeFare: new FormControl(chargeFare),
+      currency: new FormControl(currency),
       chkIncluded: new FormControl(''),
       isExchange: new FormControl(isExchange),
       lowFareOption: new FormControl(''),
@@ -160,9 +169,7 @@ export class ReportingBSPComponent implements OnInit {
     } else {
       this.changeReasonCodes(group, currentIndex);
       if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
-        reasonCode =
-          this.reasonCodes[currentIndex][0].reasonCode + ' : '
-          + this.reasonCodes[currentIndex][0].getDescription();
+        reasonCode = this.reasonCodes[currentIndex][0].reasonCode + ' : ' + this.reasonCodes[currentIndex][0].getDescription();
         group.get('reasonCodeText').setValue(reasonCode);
       }
     }
@@ -202,6 +209,7 @@ export class ReportingBSPComponent implements OnInit {
   async populateData(tst, index, tstCount: number) {
     const fareInfo = tst.fareDataInformation.fareDataSupInformation;
     const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
+    const currency = fareInfo[fareInfo.length - 1].fareCurrency;
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
@@ -223,7 +231,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.reasonCodes.push([]);
 
-    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange, tst.fareReference.uniqueReference);
+    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange, currency, tst.fareReference.uniqueReference);
 
     if (index === tstCount) {
       this.isDoneLoading = true;

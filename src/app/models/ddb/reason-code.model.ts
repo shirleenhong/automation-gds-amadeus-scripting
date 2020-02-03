@@ -33,7 +33,6 @@ export class ReasonCode {
       const key = Object.keys(this.reasonCodeProductTypeDescriptions)[0];
       value = this.reasonCodeProductTypeDescriptions[key];
     }
-
     return value;
   }
 }

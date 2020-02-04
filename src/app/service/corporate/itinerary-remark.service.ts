@@ -153,6 +153,6 @@ export class ItineraryRemarkService implements OnInit {
     this.rms.createPlaceholderValues(enableAutoMail, null, null, null, 'AUTOMAIL-');
   }
   addAquaQueue() {
-    this.amadeusQueue.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', 'C1'));
+    this.amadeusQueue.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', '1'));
   }
 }

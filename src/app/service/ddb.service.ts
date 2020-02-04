@@ -395,6 +395,16 @@ export class DDBService implements OnInit {
     return this.servicingOption.find((x) => x.ServiceOptionId === soId);
   }
 
+  getServicingOptionValueList(soID) {
+    const valueList = [];
+    this.servicingOption.forEach((x) => {
+      if (x.ServiceOptionId === soID) {
+        valueList.push(x);
+      }
+    });
+    return valueList;
+  }
+
   getCityCountry(search: string) {
     console.log(JSON.stringify(this.airTravelPortInformation));
     if (this.airTravelPortInformation.findIndex((x) => x.travelPortCode === search) !== -1) {

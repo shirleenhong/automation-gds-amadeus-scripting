@@ -23,7 +23,7 @@ export class ReportingBSPComponent implements OnInit {
   reasonCodes: Array<ReasonCode[]> = [];
   bspGroup: FormGroup;
   total = 1;
-  highFareSO: any;
+  highFareSO: any[];
   lowFareDom: any;
   lowFareInt: any;
   isDomesticFlight = true;
@@ -44,7 +44,7 @@ export class ReportingBSPComponent implements OnInit {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private valueChagneListener: ValueChangeListener
-  ) { }
+  ) {}
 
   async ngOnInit() {
     await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1).then((response) => {
@@ -77,7 +77,6 @@ export class ReportingBSPComponent implements OnInit {
 
   addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
     const items = this.bspGroup.get('fares') as FormArray;
-
     if (Number(highFare) < Number(chargeFare)) {
       highFare = chargeFare;
     }
@@ -150,7 +149,7 @@ export class ReportingBSPComponent implements OnInit {
         group.get('reasonCodeText').setValue('E');
       }
 
-      group.get('highFareText').setValue(chargeFare);
+      group.get('highFareText').setValue(highFare);
       group.get('lowFareText').setValue(chargeFare);
       group.get('reasonCodeText').disable();
       group.get('highFareText').disable();
@@ -172,7 +171,8 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   getServicingOptionValuesFares() {
-    this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
+    // this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
+    this.highFareSO = this.ddbService.getServicingOptionValueList(ServicingOptionEnums.High_Fare_Calculation);
     this.lowFareDom = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Domestic_Calculation);
     this.lowFareInt = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_Calculation);
   }
@@ -202,7 +202,16 @@ export class ReportingBSPComponent implements OnInit {
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
-    const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
+    let highFare: string;
+
+    for (const item of this.highFareSO) {
+      if (highFare === undefined || highFare === '') {
+        highFare = await this.getHighFare(this.insertSegment(item.ServiceOptionItemValue, segmentLineNo));
+      }
+    }
+    if (!highFare) {
+      highFare = chargeFare;
+    }
 
     let lowFare = '';
 
@@ -309,10 +318,10 @@ export class ReportingBSPComponent implements OnInit {
 
   async getHighFare(command: string) {
     let value = '';
+
     await smartScriptSession.send(command).then((res) => {
       const regex = /TOTALS (.*)/g;
       const match = regex.exec(res.Response);
-
       // regex.lastIndex = 0;
       if (match !== null) {
         const temp = match[0].split('    ');

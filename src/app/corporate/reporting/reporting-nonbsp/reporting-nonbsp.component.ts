@@ -51,7 +51,6 @@ export class ReportingNonbspComponent implements OnInit {
   }
 
   async drawControlsForNonBsp() {
-    debugger;
     this.nonBspReasonList = [
       { itemText: '', itemValue: '' },
       { itemText: 'L- Lower Fare', itemValue: 'L' }

@@ -40,7 +40,7 @@ export class AirFareCommissionComponent implements OnInit {
         break;
       }
     }
-    if (tstData.length > 0) {
+    if (tstData && tstData.length > 0) {
       for (const tst of tstData) {
         const airfareObject = JSON.parse(JSON.stringify(airFareObj));
         for (const fmEle of this.newFmElements) {

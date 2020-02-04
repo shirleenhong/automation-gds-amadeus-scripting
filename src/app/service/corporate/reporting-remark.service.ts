@@ -104,7 +104,7 @@ export class ReportingRemarkService {
         const tktBFRemark = new Map<string, string>();
         tktBFRemark.set('AirTicketId', counter.toString());
         tktBFRemark.set('AirBaseCurrency', group.get('currency').value);
-        tktBFRemark.set('AirBaseFare', group.get('chargeFare').value);
+        tktBFRemark.set('AirBaseFare', group.get('baseFare').value);
         this.remarksManager.createPlaceholderValues(tktBFRemark);
         counter++;
       }

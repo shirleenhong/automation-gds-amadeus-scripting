@@ -221,6 +221,8 @@ export class CorporateComponent implements OnInit {
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
     if (this.feesComponent) {
       this.validModel.isFeesValid = this.feesComponent.checkValid();
+    } else {
+      this.validModel.isFeesValid = true;
     }
     this.validModel.isQueueValid = this.queueComponent.checkValid();
     this.validModel.isPricingValid = this.pricingComponent.checkValid();
@@ -348,7 +350,9 @@ export class CorporateComponent implements OnInit {
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
-    this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
+    if (this.feesComponent) {
+      this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
+    }
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
 

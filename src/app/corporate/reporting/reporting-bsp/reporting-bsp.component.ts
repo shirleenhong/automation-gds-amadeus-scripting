@@ -56,7 +56,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.isDoneLoading = false;
     this.bspGroup = this.fb.group({
-      fares: this.fb.array([this.createFormGroup('', '', '', '', '', '')])
+      fares: this.fb.array([this.createFormGroup('', '', '', '', '', '', '')])
     });
 
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
@@ -83,6 +83,7 @@ export class ReportingBSPComponent implements OnInit {
     chargeFare: string,
     isExchange: boolean,
     currency: string,
+    baseFare: string,
     tstNumber?: string
   ) {
     const items = this.bspGroup.get('fares') as FormArray;
@@ -90,7 +91,7 @@ export class ReportingBSPComponent implements OnInit {
       highFare = chargeFare;
     }
 
-    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, currency, isExchange, tstNumber));
+    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, currency, baseFare, isExchange, tstNumber));
     this.total = items.length;
   }
 
@@ -111,6 +112,7 @@ export class ReportingBSPComponent implements OnInit {
     reasonCode: string,
     chargeFare: string,
     currency: string,
+    baseFare: string,
     isExchange?: boolean,
     tstNumber?: string
     // defaultValue?: any
@@ -122,6 +124,7 @@ export class ReportingBSPComponent implements OnInit {
       reasonCodeText: new FormControl(reasonCode),
       chargeFare: new FormControl(chargeFare),
       currency: new FormControl(currency),
+      baseFare: new FormControl(baseFare),
       chkIncluded: new FormControl(''),
       isExchange: new FormControl(isExchange),
       lowFareOption: new FormControl(''),
@@ -209,7 +212,15 @@ export class ReportingBSPComponent implements OnInit {
   async populateData(tst, index, tstCount: number) {
     const fareInfo = tst.fareDataInformation.fareDataSupInformation;
     const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
-    const currency = fareInfo[fareInfo.length - 1].fareCurrency;
+    const baseFareInfo = fareInfo.filter((x) => x.fareDataQualifier === 'B');
+
+    let currency;
+    let baseFare;
+    if (baseFareInfo.length > 0) {
+      baseFare = baseFareInfo[0].fareAmount;
+      currency = baseFareInfo[0].fareCurrency;
+    }
+
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
@@ -240,7 +251,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.reasonCodes.push([]);
 
-    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange, currency, tst.fareReference.uniqueReference);
+    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange, currency, baseFare, tst.fareReference.uniqueReference);
 
     if (index === tstCount) {
       this.isDoneLoading = true;

@@ -521,10 +521,6 @@ export class DDBService implements OnInit {
     if (!source) {
       source = 'AmadeusCAScript';
     }
-    // debugger;
-    // const params = new HttpParams();
-    // params.set('sourceType', source);
-    // params.set('jsonData', JSON.stringify(data));
 
     const jsonObject = {};
     data.forEach((value, key) => {

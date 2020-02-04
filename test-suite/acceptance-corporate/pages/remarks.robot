@@ -58,7 +58,7 @@ ${select_airline}    //select[@id="airlineCode"]
 ${input_tkt_nonRef}    //input[@id="isTicketNonRefundable"]
 ${input_tkt_min_maxStay}    //input[@id="isTicketMinMax"]
 ${input_tkt_nonRef_percentage}    //input[@id="isTicketNonRef"]
-${input_currencyType}    //input[@id="currencyType"]
+${input_fare_currencyType}    //input[@id="currencyType"]
 ${input_min_changeFee}    //input[@id="minChangeFee"]
 ${input_ticket_amount}    //input[@id="ticketAmount"]
 ${input_nonRefundable}    //input[@id="nonRefundable"]
@@ -479,7 +479,7 @@ Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
 Complete Fare Rule For Ticket Amount And Verify Remarks
     Navigate To Page Fare Rule
     Select From List By Value    ${select_airline}     2
-    Enter Value    ${input_currencyType}    CAD
+    Enter Value    ${input_fare_currencyType}    CAD
     Click Element    ${label_ticket_amount}
     Enter Value    ${input_ticket_amount}    123.50
     Take Screenshot
@@ -491,7 +491,7 @@ Complete Fare Rule For Ticket Amount And Verify Remarks
 Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Navigate To Page Fare Rule
     Select From List By Value    ${select_airline}    3
-    Enter Value    ${input_currencyType}    USD
+    Enter Value    ${input_fare_currencyType}    USD
     Click Element    ${span_nonRef_pct}
     Enter Value    ${input_nonRefundable}    23
     Take Screenshot

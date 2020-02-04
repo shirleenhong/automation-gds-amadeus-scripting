@@ -34,6 +34,7 @@ export class PaymentRemarkService {
   writeAccountingRemarks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
+    debugger;
     this.writePassPurchase(
       accList.filter(
         (x) =>
@@ -349,8 +350,10 @@ export class PaymentRemarkService {
         airlineCodeRemark.set('AirlineCode', 'AC');
         airlineCodeInvoice.set('AirlineCode', 'AC');
         confNbrRem.set('AirlineCode', 'AC');
-        redemptionRemark.set('PassName', 'Air Canada Individual');
-        passNameRedemptionRemark.set('PassNameRedemption', 'Air Canada Individual');
+        if (account.accountingTypeRemark === 'ACPPC') {
+          redemptionRemark.set('PassName', 'Air Canada Individual');
+          passNameRedemptionRemark.set('PassNameRedemption', 'Air Canada Individual');
+        }
       } else {
         if (account.accountingTypeRemark === 'WCPP' || account.accountingTypeRemark === 'WCPPC') {
           // airline = 'WS';

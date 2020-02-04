@@ -203,7 +203,7 @@
         </div>
 
         <div class="col" *ngIf="accountingRemark.accountingTypeRemark !== 'APAY'">
-          <div class="">Commission <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"></span>:</div>
+          <div class="">Commission ($) <span *ngIf="accountingRemark.accountingTypeRemark === 'ACPPC'"></span>:</div>
           <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
             [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"
             maxlength="8" AmountMask required />
@@ -213,7 +213,7 @@
 
     <div *ngIf="isStandAlone">
       <div class="form-group  row">
-        <div class="col-sm-4">Commission</div>
+        <div class="col-sm-4">Commission ($)</div>
         <div class="col-sm-8">
           <input type="text" class="form-control" id="commisionWithoutTax" formControlName="commisionWithoutTax"
             [(ngModel)]="accountingRemark.commisionWithoutTax" name="commisionWithoutTax" required placeholder="00.00"

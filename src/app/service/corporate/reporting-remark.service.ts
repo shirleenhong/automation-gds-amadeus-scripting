@@ -99,13 +99,13 @@ export class ReportingRemarkService {
           }
         }
         otherTktMap.set('CAPointOfTurnAround', desti);
-        this.remarksManager.createPlaceholderValues(otherTktMap);
+        this.remarksManager.createPlaceholderValues(otherTktMap, null, segmentrelate);
 
         const tktBFRemark = new Map<string, string>();
         tktBFRemark.set('AirTicketId', counter.toString());
         tktBFRemark.set('AirBaseCurrency', group.get('currency').value);
         tktBFRemark.set('AirBaseFare', group.get('baseFare').value);
-        this.remarksManager.createPlaceholderValues(tktBFRemark);
+        this.remarksManager.createPlaceholderValues(tktBFRemark, null, segmentrelate);
         counter++;
       }
     }

@@ -72,7 +72,9 @@ export class ReportingNonbspComponent implements OnInit {
         }
       });
       if (!isAdded) {
-        items.push(this.createFormGroup(element.segmentNo, highFare, lowFare, 'L', element.baseAmount));
+        items.push(
+          this.createFormGroup(element.segmentNo, highFare, lowFare, 'L', element.baseAmount, element.getTotalAmount().toString())
+        );
         this.utilHelper.validateAllFields(this.nonBspGroup);
         this.nonBspGroup.updateValueAndValidity();
         this.fareList.push(element.segmentNo);
@@ -90,7 +92,7 @@ export class ReportingNonbspComponent implements OnInit {
     });
   }
 
-  createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string, baseAmount: string): FormGroup {
+  createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string, baseAmount: string, chargeFare: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       highFareText: new FormControl(highFare, [Validators.required]),
@@ -98,6 +100,7 @@ export class ReportingNonbspComponent implements OnInit {
       reasonCodeText: new FormControl(reasonCode, [Validators.required]),
       currency: new FormControl('CAD'),
       baseFare: new FormControl(baseAmount),
+      chargeFare: new FormControl(chargeFare),
       chkIncluded: new FormControl('')
     });
 

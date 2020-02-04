@@ -15,7 +15,7 @@ ${tab_tktLine}    //span[contains(text(), 'Ticketing Line')]
 ${tab_tktInstructions}    //span[contains(text(), 'Ticketing Instruction')]
 ${list_segments}    //ul[@id='dropdown-basic']
 ${input_unticketedTst}    //input[@formcontrolname='tst']
-${input_nonAirSegments}    //input[@formcontrolname='segment']
+${input_nonAirSegments}    //tab[@id='ticketingInstruction']//input[@formcontrolname='segment']
 ${tab_tktInstruction}    //tab[@id='ticketingInstruction']
 ${text_noSegments}    //b[contains(text(), '*No Segments Available for Ticketing*')]
 ${select_primaryReason}    //select[@id='primaryReason']
@@ -199,53 +199,11 @@ Verify That Aqua TK Line Is Written Correctly For Updated TK Line
     ${tktl_line}    Get Lines Containing String    ${pnr_details}    TK TL
     Run Keyword And Continue On Failure    Should Contain    ${tktl_line}    /YTOWL2106/Q8C1-ONHOLD
     Verify Specific Remark Is Written In The PNR    RMM ONHOLD:AWAITING APPROVAL
-    
-Verify Aqua Ticketing Instructions Remark Are Written For Hotel Only Segments
-    Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-INV-HTL/S3-4
-    Verify Specific Remark Is Written In The PNR    RMT SPLIT1
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-CAR/S2
-
-Verify Aqua Ticketing Instructions Remark Are Written For Limo Segment ${limo_segments} Only
-    Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMT SPLIT1
-    Verify Specific Remark Is Written In The PNR     RMT TKT1-INV-LIMO/S${limo_segments}
-    
-    
-Verify Aqua Ticketing Instructions Remark Are Written For Car Segment ${car_segments} Only
-    Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMT SPLIT1
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-INV-CAR/S${car_segments}
-       
-Verify Aqua Ticketing Instructions Remark Are Written For Hotel Segment ${hotel_segments} Only
-    Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMT SPLIT1
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-INV-HTL/S${hotel_segments}
-
-Verify Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segments, Limo, Hotel And Car Segments
-    Finish PNR
-    Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 2
-    Verify Specific Remark Is Not Written In The PNR    RMQ ADVISED USTRAVEL A PASSPORT AND VISA ARE REQUIRED
-    Verify Specific Remark Is Not Written In The PNR    RMQ ADVISED USTRAVEL 6 MONTH FROM DEPARTURE
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-LIMO/S3
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-HTL/S4
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-CAR/S5
 
 Verify Message No Unticketed Air Segment Is Displayed
     Navigate To Page Ticketing Instructions
     Run Keyword And Continue On Failure    Page Should Contain Element    ${text_noSegments}
     #Run Keyword And Continue On Failure    Set Focus To Element    ${tab_tktInstruction}
-
-Verify Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment ${segment_number} Only
-    Finish PNR
-    Verify Specific Remark Is Written In The PNR     RMT TKT1-ETK/S${segment_number}
-    Verify Specific Remark Is Written In The PNR     RMT TKT1-${route_code}/S${segment_number}
-    Verify Specific Remark Is Written In The PNR     RMT SPLIT1
-    Verify Specific Remark Is Written In The PNR     RMQ ADVISED USTRAVEL A PASSPORT AND VISA ARE REQUIRED
-    Verify Specific Remark Is Written In The PNR     RMQ ADVISED USTRAVEL 6 MONTH FROM DEPARTURE
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-LIMO/S3
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-HTL/S4
-    Verify Specific Remark Is Not Written In The PNR    RMT TKT1-INV-CAR/S5
 
 Select Unticketed TST ${unticketed_segment}
     Navigate To Page Ticketing Instructions
@@ -322,18 +280,6 @@ Verify Ticketing Instruction Remarks Are Written For Unticketed Air Segments ${a
     Verify Specific Remark Is Written In The PNR    RMT TKT1-ETK/S${air_segments}
     Verify Specific Remark Is Written In The PNR    RMT SPLIT1
     Verify Specific Remark Is Written In The PNR    RMT TKT1-${route_code}/S${air_segments}
-    
-Verify Ticketing Instruction Remarks Are Written For Multiple Unticketed Air Segments ${start} To ${end}
-    Finish PNR
-    Set Test Variable    ${tkt_num}    0
-    ${end}    Evaluate    ${end} + 1
-    :FOR    ${i}    IN RANGE    ${start}    ${end}
-    \    ${tkt_num}    Evaluate    ${tkt_num} + 1
-    \    Verify Specific Remark Is Written In The PNR    RMT TKT${tkt_num}-ETK/S${i}
-    \    Verify Specific Remark Is Written In The PNR    RMT TKT${tkt_num}-${route_code_${tkt_num}}/S${i}
-    \    ${i}    Evaluate    ${i} + 1
-    Verify Specific Remark Is Written In The PNR    RMT SPLIT${tkt_num}
-
     
 Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment ${segment_number}
     Finish PNR

@@ -567,9 +567,17 @@ Get Test Data From Json
     Get Historical Remark Values From Json    ${json_file_object}    ${client_data}
     ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
     ${num_htl_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumHotelSegments
+    Get Limo Values From Json    ${json_file_object}    ${client_data}    
     Get Car Segment Values From Json    ${json_file_object}    ${client_data}
     Set Test variable    ${num_htl_segments}
     
+Get Limo Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    ${exists}     Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumLimoSegments
+    ${num_limo_segments}    Run Keyword If    ${exists}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumLimoSegments
+    ...    ELSE    Set Variable    0
+    Set Test Variable     ${num_limo_segments}
+
 Get Passenger Info From Json
     [Arguments]    ${json_file_object}     ${client_data}
     Get Passenger Name Values From Json    ${json_file_object}    ${client_data}

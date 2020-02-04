@@ -466,27 +466,6 @@ Ticket TST${tst_no}
     Enter Cryptic Command    RT${actual_record_locator}
     Set Test Variable    ${ticketed_tst}    ${tst_no}
     
-Create PNR With 4 TST And Ticket Last TST For Airline Code ${airline_code}
-    Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH
-    Create 4 Test Dates
-    Move Profile to GDS    AN${test_date_1}YULCDG/A${airline_code}    SS1Y1    AN${test_date_2}CDGTXL/AAF   SS1Y1    AN${test_date_3}TXLCDG/AAF    SS1Y1    AN${test_date_4}CDGYUL/A${airline_code}    SS1Y1    SR DOCS AC HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S2,5    SR DOCS AF HK1-P-GBR-00823451-GB-30JUN73-M-14APR09-CORPORATE-AMADEUS/P1/S3-4
-    Move Profile to GDS    FXP/S2    FXP/S3    FXP/S4    FXP/S5    RFCWTTEST   ER    ER
-    Sleep    4
-    Get Record Locator Value
-    Move Profile to GDS    TTP/T4
-    Set Test Variable    ${ticketed_tst}    1
-    Sleep    4
-    Retrieve Current PNR 
-    Set Test Variable    ${airline_code}
-    Set Test Variable    ${route_code_1}    INTL
-    Set Test Variable    ${route_code_2}    INTL
-    Set Test Variable    ${route_code_3}    INTL
-    Set Test Variable    ${route_code_4}    INTL
-    Handle Smart Tool PopUp
-    Take Screenshot
-    Set Test Variable    ${cfa}    AAA
-    Set Test Variable    ${num_air_segments}     0
-    
 Create PNR With 1 TST And Ticket For Airline Code ${airline_code}
     Move Profile to GDS    NM1CORPORATE/AMADEUS MR    RM*U25/-A:FA177    APE-test@email.com    RM*CN/-CN1    RM*U14/-${airline_code}PASS-1234567890.LAT/777    RM*CF/-AAA0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    TKOK    FS02    FM10    FPCASH    
     Create 2 Test Dates
@@ -575,7 +554,7 @@ Add ${number_of_segments} Passive Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1
+    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1    0.5
 
 Add ${number_of_segments} Active Hotel Segments In ${city_code}
     Create ${number_of_segments} Test Dates
@@ -590,7 +569,7 @@ Add ${number_of_segments} Limo Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345          
+    \    Enter Cryptic Command    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345    0.5          
 
 Add Passenger Names
     :FOR    ${i}     IN RANGE    1    99
@@ -604,13 +583,13 @@ Add ${number_of_segments} Car Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1       
+    \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1    0.5       
 
 Add ${number_of_segments} Rail Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+    \    Enter Cryptic Command    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345    0.5
     
 Create PNR With Passive Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
@@ -656,6 +635,7 @@ Create PNR With Active Air Segments For ${client_data}
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
+    Run Keyword If    "${num_limo_segments}" != 0    Add ${num_limo_segments} Limo Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Enter Cryptic Command    RT
     Handle Smart Tool PopUp
@@ -668,6 +648,7 @@ Create PNR With Active Air Segments Less Than ${no_of_days} Days For ${client_da
     Run Keyword If    "${num_air_segments}" != "0"    Book ${num_air_segments} Active Air Segments Less Than ${no_of_days} Days
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
+    Run Keyword If    "${num_limo_segments}" != 0    Add ${num_limo_segments} Limo Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Enter Cryptic Command    RT
     Handle Smart Tool PopUp
@@ -680,6 +661,7 @@ Create PNR For ${client_data}
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
+    Run Keyword If    "${num_limo_segments}" != 0    Add ${num_limo_segments} Limo Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Handle Smart Tool PopUp
     Take Screenshot
@@ -691,6 +673,7 @@ Create PNR With Active Hotel Segments In ${city_code} For ${client_data}
     Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FPCASH    RM*U50/-${udid50}
     Run Keyword If    "${num_car_segments}" != "0"    Add ${num_car_segments} Car Segments
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Active Hotel Segments In ${city_code}
+    Run Keyword If    "${num_limo_segments}" != 0    Add ${num_limo_segments} Limo Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
     Handle Smart Tool PopUp
     Take Screenshot
@@ -707,9 +690,9 @@ Create PNR With Active Car Segments For ${client_data}
     Take Screenshot
 
 Enter Cryptic Command
-    [Arguments]    ${gds_command}
+    [Arguments]    ${gds_command}    ${sleep_amount}=0.1
     Input Text    ${input_commandText}     ${gds_command}
-    Sleep    0.1
+    Sleep    ${sleep_amount}
     Press Key    ${input_commandText}    \\13
     Wait Until Element Is Not Visible    ${icon_processing}    30
 
@@ -748,7 +731,7 @@ Book ${numberOfAir} Active Air Segments
     Create ${numberOfAir} Test Dates
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
-    \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
+    \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}    0.5
     \    Enter Cryptic Command    SS${passenger_no}${class_${i}}${seat_${i}}
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}
     # \    ${passenger_no}    
@@ -757,7 +740,7 @@ Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
     Create ${numberOfAir} Test Dates For Booking Less Than ${no_of_days} days
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1   
-    \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}
+    \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}    0.5
     \    Enter Cryptic Command    SS1${class_${i}}${seat_${i}}
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
     

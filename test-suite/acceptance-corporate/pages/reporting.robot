@@ -128,7 +128,7 @@ Click BSP Reporting Tab
     Wait Until Element Is Visible    ${tab_bsp}    30
     Click Element    ${tab_bsp}
     Set Test Variable    ${current_page}    BSP Reporting
-    Wait Until Element Is Visible    ${fare_row_number}${open_bracket}1${close_bracket}${list_reason_code}    20
+    Wait Until Element Is Visible    ${fare_row_number}${open_bracket}1${close_bracket}${list_reason_code}    30
 
 Click Non BSP Reporting Tab
     Wait Until Element Is Visible    ${tab_nonBsp}    30
@@ -560,8 +560,8 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
     Finish PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    RM *CS21FEBPEK/-SV-I
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YYZ/-SV-C
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}CDG/-SV-R
+    Verify Specific Remark Is Written In The PNR    RM *CS10JUNYYZ/-SV-C
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-R
     Verify Specific Remark Is Not Written In The PNR    RM *CS23NOVPEK/-SV-X
     Verify Specific Remark Is Not Written In The PNR    RM *CS14DECMEL/-SV-Y
 

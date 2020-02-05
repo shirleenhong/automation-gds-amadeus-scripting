@@ -278,6 +278,9 @@ Add Ticketing Amount Details With Other Tax And Commission
     Enter Value    ${input_qsttax}    ${qst_tax}
     Enter Value    ${input_othtax}   ${oth_tax}
     Enter Value    ${input_commission}    ${comm_amt}
+    ${expected_low_fare}    Evaluate    ${base_amt} + ${hst_tax}
+    ${expected_low_fare}    Convert To Number    ${expected_low_fare}    2
+    Set Test Variable    ${expected_low_fare}    ${expected_low_fare}0
     
 Add Penalty Amount Details
     [Arguments]     ${penalty_base_amt}=${EMPTY}     ${penalty_gst_tax}=${EMPTY}     ${penalty_hst_tax}=${EMPTY}    ${penalty_qst_tax}=${EMPTY}

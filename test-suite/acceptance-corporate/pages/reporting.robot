@@ -279,16 +279,12 @@ Verify Client Reporting Fields For Non-BSP For ${segment_number} Segment
     ${actual_segment_number}    Get Value    ${input_segment_number} 
     ${actual_full_fare}    Get Value    ${input_full_fare}
     ${actual_low_fare}    Get Value    ${input_low_fare}
+    ${actual_low_fare}    Convert To Number    ${actual_low_fare}    2
+    Set Test Variable    ${actual_low_fare}    ${actual_low_fare}0
+    Set Test Variable    ${actual_full_fare}
     Run Keyword If    '${segment_number}' == 'Single'     Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2    ELSE   Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2,3 
     Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare}    760.00    
-    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${EMPTY}
-    Take Screenshot
-    ${actual_low_fare}    Evaluate    ${actual_full_fare} - 10
-    ${actual_low_fare}    Convert to String    ${actual_low_fare}    
-    Enter Value    ${input_low_fare}    ${actual_low_fare}
-    ${actual_low_fare}    Get Value    ${input_low_fare}     
-    Set Test Variable    ${actual_full_fare}
-    Set Test Variable    ${actual_low_fare} 
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${expected_low_fare} 
     Take Screenshot
 
 Update Client Reporting Values For Non-BSP
@@ -683,7 +679,7 @@ Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus C
 Verify High Fare Calculation For ${number_of_segment} Segment Is Sent
     Switch To Command Page
     Enter Cryptic Command    RT
-    Run Keyword If    '${number_of_segment}' == '1'    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R/S2    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R/S2,3
+    Run Keyword If    '${number_of_segment}' == '1'    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R,*NR/S2    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R,*NR/S2,3
 
 Book ${numberOfAir} Passive Air Segments For ${airline_code} With Flight Number ${flight_number} And Route ${route_code}
     Create ${numberOfAir} Test Dates

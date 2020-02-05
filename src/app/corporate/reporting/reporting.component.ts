@@ -12,6 +12,8 @@ import { HotelSegmentsComponent } from './hotel-segments/hotel-segments.componen
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { DDBService } from 'src/app/service/ddb.service';
+import { ServicingOptionEnums } from '../../enums/servicing-options.enum';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -33,12 +35,14 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(AccountingRemarkComponent) accountingComponent: AccountingRemarkComponent;
   hasRules = false;
   components = [];
+  showCarSavingsTab: boolean;
 
   constructor(
     private utilHelper: UtilHelper,
     private cdr: ChangeDetectorRef,
     private pnrService: PnrService,
-    private rulesEngineService: RulesEngineService
+    private rulesEngineService: RulesEngineService,
+    private ddbService: DDBService
   ) {}
 
   ngOnInit() {
@@ -52,6 +56,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
       }
     });
     this.showHotelsTab = segments.length > 0 ? true : false;
+    this.showCarSavingsTab = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Car_Show_Missed_Savings).ServiceOptionItemValue;
   }
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;

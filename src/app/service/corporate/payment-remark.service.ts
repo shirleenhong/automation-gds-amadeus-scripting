@@ -34,7 +34,6 @@ export class PaymentRemarkService {
   writeAccountingRemarks(accountingComponents: AccountingRemarkComponent) {
     const accList = accountingComponents.accountingRemarks;
     // tslint:disable-next-line:max-line-length
-    debugger;
     this.writePassPurchase(
       accList.filter(
         (x) =>

@@ -147,7 +147,7 @@
 		"UnexpectedRemark1": "RIR *SERVICE**THIS IS A TEST FOR*",
 		"UnexpectedRemark2": "RIR *SERVICE**ADDING SERVICES REMARK*",
 		"UnexpectedRemark3": "RIR *TICKET**THIS IS ALSO A TEST*",
-		"UnexpectedRemark4": "RIR *TICKET**FOR ADDING TICKETS REMARK*",
+		"UnexpectedRemark4": "RIR *TICKET**FOR ADDING REMARKUPDATED TICKETS REMARK*",
 		"UnexpectedRemark5": "RMT TKT1-INTL",
 		"UnexpectedRemark6": "RMQ AUTOMAIL-NO"
 	},

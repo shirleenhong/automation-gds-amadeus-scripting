@@ -12,6 +12,8 @@ import { HotelSegmentsComponent } from './hotel-segments/hotel-segments.componen
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { ServicingOptionEnums } from 'src/app/enums/servicing-options.enum';
+import { DDBService } from 'src/app/service/ddb.service';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -33,25 +35,22 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(AccountingRemarkComponent) accountingComponent: AccountingRemarkComponent;
   hasRules = false;
   components = [];
+  hotelShowMissedSavingsSO: any;
+  isHotelSavingsCodeSo: boolean;
 
   constructor(
     private utilHelper: UtilHelper,
     private cdr: ChangeDetectorRef,
     private pnrService: PnrService,
-    private rulesEngineService: RulesEngineService
+    private rulesEngineService: RulesEngineService,
+    private ddbService: DDBService
   ) {}
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
     this.hasTst = true;
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
-    let segments = this.pnrService.getSegmentList();
-    segments = segments.filter((x) => {
-      if (x.segmentType === 'HTL') {
-        return x;
-      }
-    });
-    this.showHotelsTab = segments.length > 0 ? true : false;
+    this.showHotelTab();
   }
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;
@@ -95,5 +94,23 @@ export class ReportingComponent implements OnInit, AfterViewInit {
       }
     }
     return true;
+  }
+
+  showHotelTab() {
+    this.hotelShowMissedSavingsSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Hotel_Show_Missed_Savings);
+    if (
+      this.hotelShowMissedSavingsSO.ServiceOptionItemValue !== undefined &&
+      this.hotelShowMissedSavingsSO.ServiceOptionItemValue === 'Yes'
+    ) {
+      let segments = this.pnrService.getSegmentList();
+      segments = segments.filter((x) => {
+        if (x.segmentType === 'HTL') {
+          return x;
+        }
+      });
+      this.showHotelsTab = segments.length > 0 ? true : false;
+    } else {
+      this.showHotelsTab = false;
+    }
   }
 }

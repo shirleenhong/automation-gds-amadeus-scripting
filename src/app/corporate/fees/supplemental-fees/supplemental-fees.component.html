@@ -10,7 +10,7 @@
 
   <table class="feeTable" *ngIf="this.ticketedForm.get('segments')['controls'].length > 0">
     <tr>
-      <th width="50px"><div class="">Schedule Change?</div></th>
+      <th width="50px" *ngIf="isExchange"><div class="">Schedule Change?</div></th>
       <!-- <th width="50px"><div class="">Ticketed Segment</div></th> -->
       <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
       <th width="150px"><div class="">Supplemental Fee</div></th>
@@ -20,7 +20,7 @@
 
     <tbody formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
       <tr [formGroupName]="i">
-        <td widhth="50px">
+        <td widhth="50px" *ngIf="item.get('isExchange').value">
           <div *ngIf="item.get('isExchange').value">
             <input
               type="checkbox"
@@ -93,6 +93,6 @@
   </table>
 </div>
 
-<div *ngIf="this.ticketedForm.get('segments')['controls'].length == 0">
-  Fees Not Applicable to this PNR
-</div>
+<!-- <div *ngIf="this.ticketedForm.get('segments')['controls'].length == 0">
+  Fees not applicable to this PNR.
+</div> -->

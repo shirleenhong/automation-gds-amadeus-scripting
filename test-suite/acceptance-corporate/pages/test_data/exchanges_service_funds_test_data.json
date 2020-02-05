@@ -127,8 +127,8 @@
 		"QueueToTkt": "No",
 		"ExpectedRemark1": "RMA ADD ENDORSE-REISSUED DUE TO SC SN123/12FEB",
 		"ExpectedRemark2": "RMA SN SVC FUND USED/CODE-383923",
-		"ExpectedRemark3": "FE PAX *M*FARE RESTRICTION MAY APPLY -BG:OS REISSUED DUE TO",
-		"ExpectedRemark4": "SC OS123/12FEB383923/S2"
+		"ExpectedRemark3": "FE PAX *M*ANY SN FLIGHT FARE RESTRICTIONS APPLY REISSUED DUE",
+		"ExpectedRemark4": "TO SC SN123/12FEB383923/S2"
 	},
 	"Client Lufthansa Airline, with Exchange Single Ticket": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

@@ -78,4 +78,10 @@ export class UtilHelper {
     );
     return days;
   }
+
+  getObjectMapKeyValueByIndex(object: any, index: number) {
+    const key = Object.keys(object)[index];
+    const value = object[key];
+    return value;
+  }
 }

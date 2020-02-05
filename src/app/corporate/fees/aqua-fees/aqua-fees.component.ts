@@ -3,6 +3,8 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { PnrService } from 'src/app/service/pnr.service';
 import { ObtComponent } from '../../reporting/obt/obt.component';
 import { SupplementalFeesComponent } from '../supplemental-fees/supplemental-fees.component';
+import { DDBService } from 'src/app/service/ddb.service';
+import { UtilHelper } from 'src/app/helper/util.helper';
 
 @Component({
   selector: 'app-aqua-fees',
@@ -16,10 +18,12 @@ export class AquaFeesComponent implements OnInit {
   isShowSupFee = false;
   isObt = false;
   selectedFeeType = '';
+  feeCode = '';
   @ViewChild(ObtComponent) obtComponent: ObtComponent;
   @ViewChild(SupplementalFeesComponent) suppFeeComponent: SupplementalFeesComponent;
+  hasAir = false;
 
-  constructor(private pnrService: PnrService) {}
+  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   ngOnInit() {
     this.segmentList = new Array<any>();
@@ -27,9 +31,11 @@ export class AquaFeesComponent implements OnInit {
     this.aquaFeeForm = new FormGroup({
       feeType: new FormControl('', [Validators.required]),
       segments: new FormControl(''),
-      enableSupFee: new FormControl('')
+      enableSupFee: new FormControl(''),
+      ticketNumber: new FormControl('')
     });
     this.isObt = this.pnrService.getRemarkText('EB/-') !== '';
+    this.hasAir = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR').length > 0;
   }
 
   selectFeeType(val) {
@@ -60,8 +66,49 @@ export class AquaFeesComponent implements OnInit {
         });
     }
     this.selectedFeeType = val;
+    this.feeCode = this.getFeeCode(val, this.pnrService.getRemarkText('EB/-'));
     if (this.isShowSupFee) {
-      this.suppFeeComponent.updateFeeType(val);
+      this.suppFeeComponent.resetFees(this.feeCode);
     }
+  }
+
+  getFeeCode(feeType, ebRemark) {
+    let route = '';
+
+    if (feeType === 'L') {
+      route = 'BD';
+    } else if (ebRemark === '') {
+      if (this.ddbService.isPnrTransBorder()) {
+        route = 'TB';
+      } else if (this.ddbService.isPnrDomestic()) {
+        route = 'TD';
+      } else {
+        route = 'TI';
+      }
+      if (feeType === 'C' || feeType === 'H') {
+        route = 'BD';
+      }
+    } else if (ebRemark.indexOf('EB/-EB') >= 0) {
+      if (feeType === 'A' || feeType === 'R') {
+        route = 'TE';
+      } else if (feeType === 'C' || feeType === 'H') {
+        route = 'BE';
+      }
+    } else if (ebRemark.indexOf('EB/-AM') >= 0) {
+      if (feeType === 'A' || feeType === 'R') {
+        route = 'TA';
+      } else if (feeType === 'C' || feeType === 'H') {
+        route = 'BA';
+      }
+    }
+    return feeType + route;
+  }
+
+  checkValid() {
+    this.utilHelper.validateAllFields(this.aquaFeeForm);
+    if (!this.aquaFeeForm.valid) {
+      return false;
+    }
+    return true;
   }
 }

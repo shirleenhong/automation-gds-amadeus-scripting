@@ -60,15 +60,11 @@ export class ReportingNonbspComponent implements OnInit {
     while (items.length !== 0) {
       items.removeAt(0);
     }
+    const lowFareValMap = [];
     this.nonBspInformation.forEach(async (element) => {
       let lowFare: any;
       let isAdded = false;
       const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, element.segmentNo));
-      // if (this.isDomesticFlight) {
-      //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareDom.ServiceOptionItemValue, element.segmentNo));
-      // } else {
-      //   lowFare = await this.getLowFare(this.insertSegment(this.lowFareInt.ServiceOptionItemValue, element.segmentNo));
-      // }
       lowFare = '';
       items.controls.forEach((x) => {
         if (x.value.segment === element.segmentNo) {
@@ -76,20 +72,35 @@ export class ReportingNonbspComponent implements OnInit {
         }
       });
       if (!isAdded) {
-        items.push(this.createFormGroup(element.segmentNo, highFare, lowFare, 'L'));
+        items.push(
+          this.createFormGroup(element.segmentNo, highFare, lowFare, 'L', element.baseAmount, element.getTotalAmount().toString())
+        );
         this.utilHelper.validateAllFields(this.nonBspGroup);
         this.nonBspGroup.updateValueAndValidity();
         this.fareList.push(element.segmentNo);
       }
+      lowFareValMap['hst' + element.tkMacLine] = parseFloat(element.hst);
+      lowFareValMap['baseAmount' + element.tkMacLine] = parseFloat(element.baseAmount);
+      if (this.nonBspInformation.length === element.tkMacLine) {
+        const lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
+        lowFare = await this.decPipe.transform(lowFareVal, '1.2-2').replace(',', '');
+        const formGroup = (await this.nonBspGroup.get('nonbsp')) as FormArray;
+        formGroup.controls.forEach((el) => {
+          return el.get('lowFareText').setValue(lowFare);
+        });
+      }
     });
   }
 
-  createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string): FormGroup {
+  createFormGroup(segmentNo: string, highFare: any, lowFare: any, reasonCode: string, baseAmount: string, chargeFare: string): FormGroup {
     const group = this.fb.group({
       segment: new FormControl(segmentNo),
       highFareText: new FormControl(highFare, [Validators.required]),
       lowFareText: new FormControl(lowFare, [Validators.required]),
       reasonCodeText: new FormControl(reasonCode, [Validators.required]),
+      currency: new FormControl('CAD'),
+      baseFare: new FormControl(baseAmount),
+      chargeFare: new FormControl(chargeFare),
       chkIncluded: new FormControl('')
     });
 

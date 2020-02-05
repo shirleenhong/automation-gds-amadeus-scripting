@@ -10,7 +10,7 @@ ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment
 ${list_segment}    //ul[@id='dropdown-basic']
 ${list_accounting_type}  css=#accountingTypeRemark
 ${input_suppliercode}    css=#supplierCodeName
-${button_addaccountingline}    //button[contains(text(), 'Add Supplier Accounting Remark')]
+${button_add_supplier_accounting_remark}    //button[contains(text(), 'Add Supplier Accounting Remark')]
 ${tab_nonBsp_processing}    //span[contains(text(), 'Non-BSP Processing')]
 ${tab_matrix_receipt}    //span[contains(text(), 'Matrix Receipt')]
 ${tab_leisure_fee}    //span[contains(text(), 'Leisure Fee')]
@@ -92,11 +92,11 @@ Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Select Itinerary Segments    2
     Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.10
-    Select From List By Label    ${list_faretype}       FLEX
+    Select Fare Type FLEX
     Set Test Variable    ${tkt_number}    ${EMPTY}
     Set Test Variable    ${orig_tkt_number}    ${EMPTY}
     Set Test Variable    ${fare_type}    FLEX
-    [TEARDOWN]    Take Screenshot
+    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Single Segment With GDS Fare
     Navigate To Page Add Accounting Line
@@ -119,12 +119,32 @@ Add Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
     Select Itinerary Segments    2
     Enter Value    ${input_supplier_confirmationNo}    0000054321
     Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
-    Select From List By Label    ${list_faretype}       FLEX
+    Select Fare Type FLEX
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_origTicketLine}    0987654321
     Set Test Variable    ${tkt_number}    1234567890
     Set Test Variable    ${orig_tkt_number}    0987654321
     Set Test Variable    ${fare_type}    FLEX
+    [TEARDOWN]    Take Screenshot
+    
+Add Multiple Non-BSP Exchange Ticketing Details For Single Segment With Ticket Number
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
+    Select Itinerary Segments    2
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
+    Add Ticketing Amount Details With Other Tax And Commission    1000.00    100.00    10.00    1.00    0.10    0.1
+    Select Fare Type FLEX
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_origTicketLine}    0987654321
+    Click Save Button
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    Non BSP Exchange
+    Select Itinerary Segments    3
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
+    Add Ticketing Amount Details With Other Tax And Commission    1002.00    102.00    12.00    1.20    0.10    0.1
+    Select Fare Type FLEX
+    Enter Value    ${input_tktnumber}    0987654321
+    Enter Value    ${input_origTicketLine}    1234567890
     [TEARDOWN]    Take Screenshot
     
 Add Non-BSP Exchange Ticketing Details For Multiple Segments With Ticket Number
@@ -280,6 +300,9 @@ Add Ticketing Amount Details With Other Tax And Commission
     Enter Value    ${input_qsttax}    ${qst_tax}
     Enter Value    ${input_othtax}   ${oth_tax}
     Enter Value    ${input_commission}    ${comm_amt}
+    ${expected_low_fare}    Evaluate    ${base_amt} + ${hst_tax}
+    ${expected_low_fare}    Convert To Number    ${expected_low_fare}    2
+    Set Test Variable    ${expected_low_fare}    ${expected_low_fare}0
     
 Add Penalty Amount Details
     [Arguments]     ${penalty_base_amt}=${EMPTY}     ${penalty_gst_tax}=${EMPTY}     ${penalty_hst_tax}=${EMPTY}    ${penalty_qst_tax}=${EMPTY}
@@ -338,6 +361,7 @@ Verify That Ticketing Remarks For Non-BSP Without Ticket Number Are Written In T
     Verify Specific Remark Is Written In The PNR    RIR AIRLINE LOCATOR NUMBER - 54321/S2
     
 Verify That Ticketing Remarks For Multiple Non-BSP Are Written In The PNR
+    Update Client Reporting Values For Non-BSP
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-1234567890/VN-WJ3/S2 
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-750.00/TX1-1.00XG/TX2-2.00RC/TX3-3.00XQ/TX4-4.00XT/COMM-5.00/S2    True
@@ -381,7 +405,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
     Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Enter Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
@@ -395,7 +419,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
     Add Ticketing Amount Details With Commission    100.00    15.05    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0002167899
     Enter Value    ${input_departurecity}    YVR        
-    Select From List By Label    ${list_purchasetype}     COMMUTER-U.S COMMUTER
+    Enter Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       PREMIUM ECONOMY
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
@@ -413,7 +437,7 @@ Click Matrix Receipt Tab
     Click Element    ${tab_matrix_receipt}
    
 Click Add Accounting Line Button
-    Click Element    ${button_addaccountingline}
+    Click Element    ${button_add_supplier_accounting_remark}
     
 Select Accounting Remark Type
     [Arguments]    ${accounting_remark_type}
@@ -461,12 +485,13 @@ Enter Credit Card Expiration Date ${exp_date}
          
 Select Type Of Pass Purchase ${pass_purchase_type}
     Set Test Variable    ${pass_purchase_type}    
-    Select From List By Value    ${list_purchasetype}    ${pass_purchase_type}
+    Enter Value    ${list_purchasetype}    ${pass_purchase_type}
     [Teardown]    Take Screenshot
 
 Select Fare Type ${fare_type}
-    Set Test Variable    ${fare_type}    
-    Select From List By Value    ${list_faretype}    ${fare_type}
+    Set Test Variable    ${fare_type}
+    ${exists}    Run Keyword And Return Status    Element Should Be Visible    ${list_faretype}     
+    Run Keyword If    ${exists}    Select From List By Value    ${list_faretype}    ${fare_type}
     [Teardown]    Take Screenshot
 
 Verify Supplier Code Default Value Is Correct For ${acct_remark_type}
@@ -475,6 +500,8 @@ Verify Supplier Code Default Value Is Correct For ${acct_remark_type}
     Run Keyword If    "${acct_remark_type}" == "Air Canada Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    ACJ
     Run Keyword If    "${acct_remark_type}" == "Westjet Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    WJP
     Run Keyword If    "${acct_remark_type}" == "Porter Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PTP
+    Run Keyword If    "${acct_remark_type}" == "Air North Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    A5P
+    Run Keyword If    "${acct_remark_type}" == "Pacific Coastal Individual Pass Purchase"   Should Contain    ${actual_supplier_code}    PSI
     
 Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Set Test Variable    ${airline_code}
@@ -694,7 +721,7 @@ Add Matrix Accounting Remark For WestJet Pass Purchase
     Add Ticketing Amount Details With Commission    210.00    10.00    2.20    10.00    3.00
     Enter Value    ${input_tktnumber}    0987612345
     Enter Value    ${input_departurecity}    YYZ        
-    Select From List By Label    ${list_purchasetype}     Westjet Travel Pass
+    Enter Value    ${list_purchasetype}     Westjet Travel Pass
     Verify Supplier Code Default Value Is Correct For Westjet Individual Pass Purchase
     Take Screenshot
     Click Save Button
@@ -707,7 +734,7 @@ Add Matrix Accounting Remark For Porter Pass Purchase
     Add Ticketing Amount Details With Commission    105.00    15.05    3.00    12.00    1.00
     Enter Value    ${input_tktnumber}    1234567890
     Enter Value    ${input_departurecity}    YCC        
-    Select From List By Label    ${list_purchasetype}     Porter Travel Pass
+    Enter Value    ${list_purchasetype}     Porter Travel Pass
     Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
     Take Screenshot
     Click Save Button
@@ -724,7 +751,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
     Add Ticketing Amount Details With Commission    200.10    5.05    3.20    2.00    3.00
     Enter Value    ${input_tktnumber}    0987654321
     Enter Value    ${input_departurecity}    YCC        
-    Select From List By Label    ${list_purchasetype}     REGIONAL-QUEBEC
+    Enter Value    ${list_purchasetype}     REGIONAL-QUEBEC
     Select From List By Label    ${list_faretype}       LATITUDE
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot
@@ -733,7 +760,7 @@ Modify Matrix Accounting Remark For Air Canada Pass Purchase
 
 Navigate To Add Accounting Line
     Click Element At Coordinates    ${tab_nonBsp_processing}    0    0    
-    Click Element    ${button_addaccountingline} 
+    Click Element    ${button_add_supplier_accounting_remark} 
     Set Test Variable    ${current_page}    Add Accounting Line
     Set Test Variable    ${ticketing_details_complete}    no
     

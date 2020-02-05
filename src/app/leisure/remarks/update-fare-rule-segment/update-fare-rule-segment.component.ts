@@ -170,7 +170,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
           ) {
             const output = res.Response.toString()
               .split('-------')[1]
-              .split('       ');
+              .split('\n').map(x => x.trim());
 
             output.forEach(element => {
               if (element.indexOf('RM') > -1) {

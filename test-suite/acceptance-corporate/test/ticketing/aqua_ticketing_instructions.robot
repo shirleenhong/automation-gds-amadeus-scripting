@@ -1,106 +1,82 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/payment.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/ticketing.robot
-Resource          ../../../resources/common/api-utilities.txt
-Test Teardown    Close All Browsers
+Test Setup       Login To Amadeus Sell Connect Acceptance
+Test Teardown    Close All Browsers   
 
 *** Variables ***
 ${test_file_name}    aqua_tkt_instruction
 
 *** Test Cases ***
 Verify That Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment And Not Ticketed Air Segments 
-    [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
+    [Tags]    us11219    full_regression
     Create PNR With Active Air Segments For Air Only Segments, Ticket 1st TST
     Ticket TST1
     Select Unticketed TST 2
-    Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 2
     Verify Remarks Are Added Correctly In The PNR
+    Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 2
     
 Verify That Aqua Ticketing Instructions Remark are Written for Multiple Unticketed Air Segments And Not Ticketed Air Segments
-    [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 4 TST And Ticket Last TST For Airline Code AC
+    [Tags]    us11219    full_regression
+    Create PNR With Active Air Segments For Air Only Segments with 4 TST, Ticket 4th TST
+    Ticket TST4
     Select All Unticketed TSTs
-    Verify Ticketing Instruction Remarks Are Written For Multiple Unticketed Air Segments 2 To 4
+    Verify Remarks Are Added Correctly In The PNR
     Verify Ticketing Instruction Remarks Are Not Written For Ticketed Air Segment 5
     
 Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Air Segments With Limo, Hotel, and Car Segments
     [Tags]    us11219    sanity_test
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With One TST For Airline Code AC
-    Add 1 Limo Segments
-    Add 1 Passive Hotel Segments
-    Add 1 Car Segments
+    Create PNR With Active Air Segments For Mix Segments, All Unticketed
     Select Unticketed TST 1
-    Verify Aqua Ticketing Instructions Remark Are Written For Unticketed Air Segment 2,6 Only
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Remarks Are Not Found In The PNR
     
 Verify That Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segments, Limo, Hotel And Car Segments
-    [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 1 TST And Ticket For Airline Code AC
-    Add 1 Limo Segments
-    Add 1 Passive Hotel Segments
-    Add 1 Car Segments
+    [Tags]    us11219    full_regression
+    Create PNR With Active Air Segments For Mix Segments, Ticketed Air
+    Ticket TST1
     Verify Message No Unticketed Air Segment Is Displayed
-    Verify Aqua Ticketing Instruction Remarks Are Not Written For Ticketed Air Segments, Limo, Hotel And Car Segments
+    Verify Remarks Are Not Found In The PNR
     
 Verify That Aqua Ticketing Instructions Remark Are Written For One Limo Only Segment
     [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 1 Limo Segments
+    Create PNR For One Limo Segment Only
     Select Unticketed Limo Segment 2
-    Verify Aqua Ticketing Instructions Remark Are Written For Limo Segment 2 Only
-    
+    Verify Remarks Are Added Correctly In The PNR
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Limo Only Segment
-    [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 2 Limo Segments
+    [Tags]    us11219    full_regression
+    Create PNR For Multi Limo Segments
     Select All Unticketed Limo Segment
-    Verify Aqua Ticketing Instructions Remark Are Written For Limo Segment 2-3 Only
+    Verify Remarks Are Added Correctly In The PNR
     
 Verify That Aqua Ticketing Instructions Remark Are Written For One Car Only Segment
     [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 1 Car Segments
+    Create PNR For One Car Segment Only
     Select Unticketed Car Segment 2
-    Verify Aqua Ticketing Instructions Remark Are Written For Car Segment 2 Only
+    Verify Remarks Are Added Correctly In The PNR
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Car Only Segment
-    [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 2 Car Segments
+    [Tags]    us11219    full_regression
+    Create PNR For Multi Car Segments
     Select All Unticketed Car Segment
-    Verify Aqua Ticketing Instructions Remark Are Written For Car Segment 2-3 Only
+    Verify Remarks Are Added Correctly In The PNR
     
-Verify That Aqua Ticketing Instructions Remark Are Written For One Hotel Only Segment
+Verify That Aqua Ticketingk Instructions Remark Are Written For One Hotel Only Segment
     [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 1 Hotel Segments
+    Create PNR For One Hotel Segment Only
     Select Unticketed Hotel Segment 2
-    Verify Aqua Ticketing Instructions Remark Are Written For Hotel Segment 2 Only
+    Verify Remarks Are Added Correctly In The PNR
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Multiple Hotel Only Segment
-    [Tags]    us11219
-    Login To Amadeus Sell Connect Acceptance 
-    Create PNR With 2 Hotel Segments
+    [Tags]    us11219    full_regression
+    Create PNR For Multi Hotel Segments
     Select All Unticketed Hotel Segment
-    Verify Aqua Ticketing Instructions Remark Are Written For Hotel Segment 2-3 Only
+    Verify Remarks Are Added Correctly In The PNR
     
 Verify That Aqua Ticketing Instructions Remark Are Written For Hotel And Car Only Segments
-    [Tags]     us11219
-    Login To Amadeus Sell Connect Acceptance
-    Create PNR With 2 Hotel Segments
-    Add 1 Car Segments
+    [Tags]     us11219    full_regression
+    Create PNR For Car And Hotel Segments
     Select All Unticketed Hotel Segment
-    Verify Aqua Ticketing Instructions Remark Are Written For Hotel Only Segments
-    
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Remarks Are Not Found In The PNR

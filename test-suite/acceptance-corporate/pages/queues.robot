@@ -38,7 +38,7 @@ ${div_tickets}    //div[@formarrayname='tickets']
 ${div_offers}     //div[@formarrayname='offers']
 ${tab_cwt_itinerary}    //a[@id='tab2-link']
 ${option_email}    //option[@ng-reflect-value='
-${div_label_ornge}    //div[@class='col displayMsg']//p[@_ngcontent-c17]
+${div_label_ornge}    //div[@class='col displayMsg']
 ${tab_cwt_itin}    css=#CWTItin-link
 ${select_isBusiness}    css=#isBusiness
 
@@ -257,6 +257,12 @@ Verify PNR Is Queued To Correct Multiple Queue Placement
     Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}010${SPACE}${SPACE}${SPACE}${SPACE}000
     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}001
     
+Verify PNR Is Queued Correctly At The End Of PNR
+    Finish PNR   queueing=yes
+    Open Command Page
+    Enter Cryptic Command    RTQ 
+    Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}001
+    
 Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type  
     Navigate To Page CWT Itinerary
     Select Emails In CWT Itinerary    ${email}
@@ -374,7 +380,7 @@ Delete Offer Remark
 
 Verify CWT Itinerary UI For Client Ornge
     Navigate To Page CWT Itinerary
-    Wait Until Element Is Visible    ${div_label_ornge}    20
+    Wait Until Element Is Visible    ${div_label_ornge}    30
     Element Should Not Be Visible    ${div_email_addresses}${button_add}
     ${ornge_label}    Get Text    ${div_label_ornge}
     ${new_ornge_label}    Replace String    ${ornge_label}    \n    ${EMPTY}

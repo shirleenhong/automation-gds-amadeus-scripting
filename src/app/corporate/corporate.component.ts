@@ -48,6 +48,8 @@ import { RulesEngineService } from '../service/business-rules/rules-engine.servi
 import { CommonRemarkService } from '../service/common-remark.service';
 import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
 import { common } from 'src/environments/common';
+import { TicketModel } from '../models/pnr/ticket.model';
+import { formatDate } from '@angular/common';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -71,6 +73,7 @@ export class CorporateComponent implements OnInit {
   showIrdRequestButton = false;
   loading = false;
   showAquaFeeButton = false;
+  withPasspurchaseAccess = false;
   version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -124,21 +127,21 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-    this.getPnrService();
   }
 
   showRule() {
     // get rule
     const isMarriottPopUP = this.rulesEngine.checkRuleResultExist('UI_Popup_Title', 'MARRIOTT POLICY VIOLATION');
     if (isMarriottPopUP) {
-      this.workflow = '';
       this.showMessage(
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Message').replace(/{br}/g, '<br>'),
         MessageType.Default,
         this.rulesEngine.getSpecificRuleResultItemValue('UI_Popup_Title'),
         'Loading'
       );
+      return true;
     }
+    return false;
   }
 
   hasAirportCode(airportCode: string) {
@@ -164,16 +167,19 @@ export class CorporateComponent implements OnInit {
     await this.pnrService.getPNR();
     this.cfLine = this.pnrService.getCFLine();
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
-    this.loading = false;
+
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
     if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
-    this.checkValidForAquaFee();
+    await this.checkValidForAquaFee();
+    await this.hasAccessInPassPurchase();
+    this.loading = false;
   }
 
-  initData() {
+  async initData() {
     this.ddbService.getAllMatrixSupplierCodes();
+    await this.getPnrService();
   }
 
   showLoading(msg, caller?) {
@@ -213,7 +219,11 @@ export class CorporateComponent implements OnInit {
     this.validModel.isReportingValid = this.reportingComponent.checkValid();
     this.validModel.isRemarkValid = this.corpRemarksComponent.checkValid();
     this.validModel.isTicketingValid = this.ticketingComponent.checkValid();
-    this.validModel.isFeesValid = this.feesComponent.checkValid();
+    if (this.feesComponent) {
+      this.validModel.isFeesValid = this.feesComponent.checkValid();
+    } else {
+      this.validModel.isFeesValid = true;
+    }
     this.validModel.isQueueValid = this.queueComponent.checkValid();
     this.validModel.isPricingValid = this.pricingComponent.checkValid();
     return this.validModel.isCorporateAllValid();
@@ -221,7 +231,11 @@ export class CorporateComponent implements OnInit {
 
   public async wrapPnr() {
     await this.loadPnrData();
-    this.workflow = 'wrap';
+    if (this.showRule()) {
+      this.workflow = '';
+    } else {
+      this.workflow = 'wrap';
+    }
   }
 
   public async AddSegment() {
@@ -258,7 +272,10 @@ export class CorporateComponent implements OnInit {
         // this.showLoading('Matching Remarks', 'initData');
         await this.rms.getMatchcedPlaceholderValues();
         // this.showLoading('Servicing Options', 'initData');
-        await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+        await this.ddbService.getTravelPortInformation(
+          this.pnrService.pnrObj.airSegments,
+          this.pnrService.getSegmentList().filter((x) => x.segmentType === 'MIS')
+        );
         await this.ddbService.getAllServicingOptions(this.pnrService.clientSubUnitGuid);
         // this.showLoading('ReasonCodes', 'initData');
         await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
@@ -273,7 +290,6 @@ export class CorporateComponent implements OnInit {
     }
     this.closePopup();
     this.checkHasDataLoadError();
-    this.showRule();
   }
 
   checkHasDataLoadError() {
@@ -303,12 +319,7 @@ export class CorporateComponent implements OnInit {
   public async SubmitToPNR() {
     const remarkCollection = new Array<RemarkGroup>();
     if (!this.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
@@ -335,11 +346,13 @@ export class CorporateComponent implements OnInit {
       await this.rms.getMatchcedPlaceholderValues();
     });
 
-    this.paymentRemarkService.writeAccountingReamrks(this.paymentsComponent.accountingRemark);
+    this.paymentRemarkService.writeAccountingRemarks(this.paymentsComponent.accountingRemark);
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
-    this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
+    if (this.feesComponent) {
+      this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
+    }
 
     this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
 
@@ -348,7 +361,10 @@ export class CorporateComponent implements OnInit {
     this.invoiceRemarkService.WriteInvoiceRemark(this.reportingComponent.matrixReportingComponent);
     this.reportingRemarkService.WriteEscOFCRemark(this.councelorDetail.getIdentity());
     if (this.reportingComponent.reportingBSPComponent !== undefined) {
-      this.reportingRemarkService.WriteBspRemarks(this.reportingComponent.reportingBSPComponent);
+      this.reportingRemarkService.WriteBspRemarks(
+        this.reportingComponent.reportingBSPComponent,
+        this.reportingComponent.reportingRemarksComponent
+      );
     }
     if (this.reportingComponent.carSavingsCodeComponent !== undefined) {
       this.reportingRemarkService.writeCarSavingsRemarks(
@@ -366,8 +382,10 @@ export class CorporateComponent implements OnInit {
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
-
-    this.reportingRemarkService.WriteNonBspRemarks(this.reportingComponent.reportingNonbspComponent);
+    this.reportingRemarkService.WriteNonBspRemarks(
+      this.reportingComponent.reportingNonbspComponent,
+      this.reportingComponent.reportingRemarksComponent
+    );
     this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
     this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
     this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
@@ -446,14 +464,43 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+  public async addPassPurchaseToPNR() {
+    this.showLoading('Updating PNR...', 'SubmitToPnr');
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
+    const accRemarks = new Array<RemarkGroup>();
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = new Array<RemarkModel>();
+    const commandList = [];
+    const forDeleteRemarks = [];
+
+    accRemarks.push(this.paymentRemarkService.addSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));
+    this.corpRemarkService.BuildRemarks(accRemarks);
+    await this.corpRemarkService.SubmitRemarks().then(async () => {
+      await this.getPnrService();
+      await this.rms.getMatchcedPlaceholderValues();
+    });
+
+    this.paymentRemarkService.deleteRemarksStandAlone();
+    remarkCollection.push(this.paymentRemarkService.writeStandAlonePassPurchase(this.paymentsComponent.accountingRemark));
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
+
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
+
   async sendIrdRateParameters() {
     if (!this.irdRateRequestComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Updating PNR...', 'SubmitToPnr');
@@ -502,18 +549,21 @@ export class CorporateComponent implements OnInit {
           commandList.push(del);
         });
       }
-
     });
+  }
+
+  shoInvalidInputMessage() {
+    const modalRef = this.modalService.show(MessageComponent, {
+      backdrop: 'static'
+    });
+    modalRef.content.modalRef = modalRef;
+    modalRef.content.title = 'Invalid Inputs';
+    modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
   }
 
   async cancelPnr() {
     if (!this.cancelComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
 
@@ -596,7 +646,6 @@ export class CorporateComponent implements OnInit {
       const canceltktl = this.ticketRemarkService.cancelTicketRemark();
       if (canceltktl) {
         canceltktl.cryptics.forEach((c) => commandList.push(c));
-
         if (this.pnrService.getTkLineNumber() && canceltktl.cryptics.length > 0) {
           forDeletion.push(this.pnrService.getTkLineNumber().toString());
         }
@@ -649,14 +698,31 @@ export class CorporateComponent implements OnInit {
   }
 
   async sendAquaFees() {
+    if (!this.aquaFeesComponent.checkValid()) {
+      this.shoInvalidInputMessage();
+      return;
+    }
+
     if (this.isPnrLoaded) {
       this.showLoading('Sending Aqua Fees...');
       if (this.aquaFeesComponent.obtComponent) {
         this.reportingRemarkService.writeEBRemarks(this.aquaFeesComponent.obtComponent);
       }
-      this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+      const remarkCollection = new Array<RemarkGroup>();
+      const ticketRemark = new TicketModel();
+      ticketRemark.oid = this.pnrService.extractOidFromBookRemark();
+      ticketRemark.tktDate = formatDate(Date.now(), 'ddMMM', 'en').toString();
+      ticketRemark.tkLine = 'FEE';
+      this.ticketRemarkService.deleteTicketingLine();
+      const commandList = await this.feesRemarkService.writeAquaFees(this.aquaFeesComponent);
+      remarkCollection.push(this.ticketRemarkService.submitTicketRemark(ticketRemark));
+      let forDelete = new Array<string>();
+      forDelete = remarkCollection[0].deleteRemarkByIds;
 
-      await this.rms.submitToPnr(null, null).then(
+      if (commandList) {
+        this.getStaticModelRemarks(remarkCollection, null, new Array<PassiveSegmentModel>(), new Array<string>(), commandList);
+      }
+      await this.rms.submitToPnr(null, forDelete, commandList).then(
         () => {
           this.isPnrLoaded = false;
           this.workflow = '';
@@ -695,7 +761,10 @@ export class CorporateComponent implements OnInit {
   public async aquaFees() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
-    await this.ddbService.getTravelPortInformation(this.pnrService.pnrObj.airSegments);
+    await this.ddbService.getTravelPortInformation(
+      this.pnrService.pnrObj.airSegments,
+      this.pnrService.getSegmentList().filter((x) => x.segmentType === 'MIS')
+    );
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'aquaFees';
@@ -712,6 +781,19 @@ export class CorporateComponent implements OnInit {
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'irdRateRequest';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async corporatePassPurchase() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'corporatePass';
       this.closePopup();
     } catch (e) {
       console.log(e);
@@ -745,12 +827,7 @@ export class CorporateComponent implements OnInit {
   async SendItineraryAndQueue() {
     // if (!this.itineraryqueueComponent.checkValid()) {
     if (!this.CheckValidItinModel()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Sending Itinerary and Queueing...');
@@ -849,12 +926,7 @@ export class CorporateComponent implements OnInit {
   }
   async ReSendInvoice() {
     if (!this.sendInvoiceItineraryComponent.checkValid()) {
-      const modalRef = this.modalService.show(MessageComponent, {
-        backdrop: 'static'
-      });
-      modalRef.content.modalRef = modalRef;
-      modalRef.content.title = 'Invalid Inputs';
-      modalRef.content.message = 'Please make sure all the inputs are valid and put required values!';
+      this.shoInvalidInputMessage();
       return;
     }
     this.showLoading('Sending Invoice...');
@@ -885,5 +957,12 @@ export class CorporateComponent implements OnInit {
     const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
     const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
     this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
+  }
+
+  async hasAccessInPassPurchase() {
+    await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
+      const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+    });
   }
 }

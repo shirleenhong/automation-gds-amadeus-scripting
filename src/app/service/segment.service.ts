@@ -34,8 +34,8 @@ export class SegmentService {
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
-        private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService, private ddbService: DDBService,
-        private counselorDetail: CounselorDetail) { }
+                private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService, private ddbService: DDBService,
+                private counselorDetail: CounselorDetail) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -240,7 +240,7 @@ export class SegmentService {
     }
 
     private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
-        cValue: string, segmentAssoc: string, pText: string) {
+                                   cValue: string, segmentAssoc: string, pText: string) {
         this.corpRemarks.push(
             {
                 placeholder: pName, placeholdervalue: pValue,
@@ -416,7 +416,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vir: number, itinLanguage: string, isCorp: boolean) {
+                     amk: number, vir: number, itinLanguage: string, isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             if (isCorp) {
@@ -585,7 +585,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+                            startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -974,7 +974,8 @@ export class SegmentService {
 
             affectedairline = affectedairline.replace(/^,+/, '');
             if (this.isCorporate) {
-                this.assignCorpPlaceholders(['CancelDate'], [dateToday], 'CancelType', 'withIrop', null, '/CANCEL NR DUE TO IROP OR SKD CHG');
+                this.assignCorpPlaceholders(
+                    ['CancelDate'], [dateToday], 'CancelType', 'withIrop', null, '/CANCEL NR DUE TO IROP OR SKD CHG');
             } else {
                 remText = dateToday + '/CANCEL NR DUE TO IROP OR SKD CHG';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
@@ -1104,14 +1105,16 @@ export class SegmentService {
                         rmGroup.remarks.push(this.remarkHelper.createRemark(airlineName + ' FARE INFORMATION', 'RI', 'R'));
                     }
                     if (model.isTicketNonRefundable) {
-                        rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
+                        rmGroup.remarks.push(
+                            this.remarkHelper.createRemark('TICKET IS NONREFUNDABLE - NO CHANGES CAN BE MADE.', 'RI', 'R'));
                     }
                     if (model.isTicketMinMax) {
                         // tslint:disable-next-line:max-line-length
                         rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET HAS A MINIMUM AND/OR MAXIMUM STAY REQUIREMENT.', 'RI', 'R'));
                     }
                     if (model.isTicketNonRef) {
-                        rmGroup.remarks.push(this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
+                        rmGroup.remarks.push(
+                            this.remarkHelper.createRemark('TICKET IS NON-REFUNDABLE - UNDER CERTAIN CONDITIONS', 'RI', 'R'));
                         rmGroup.remarks.push(this.remarkHelper.createRemark('VALUE MAY BE APPLIED FOR FUTURE TRAVEL.', 'RI', 'R'));
                     }
                     if (model.ticketAmount && model.currencyType) {

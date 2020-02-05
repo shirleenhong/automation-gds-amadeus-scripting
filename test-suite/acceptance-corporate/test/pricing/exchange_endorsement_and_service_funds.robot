@@ -1,17 +1,6 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/payment.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/fees.robot
-Resource          ../../pages/ticketing.robot
-Resource          ../../pages/remarks.robot
-Resource          ../../../resources/common/api-utilities.txt
 Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
 

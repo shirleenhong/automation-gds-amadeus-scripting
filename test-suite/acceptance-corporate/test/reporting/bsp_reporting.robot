@@ -11,7 +11,7 @@ Test Teardown     Close All Browsers
 
 *** Test Cases ***
 Verify That Reporting Remarks Are Written For Single TST
-    [Tags]    us10551    us9700
+    [Tags]    us10551    us9700    full_regression   
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
     Add Client Reporting Values For Single BSP Segment

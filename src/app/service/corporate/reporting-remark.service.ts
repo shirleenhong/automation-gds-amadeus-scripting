@@ -21,10 +21,11 @@ export class ReportingRemarkService {
 
   constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
-  WriteBspRemarks(rbc: ReportingBSPComponent) {
+  WriteBspRemarks(rbc: ReportingBSPComponent, rptComp: ReportingRemarksComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;
     const items = bspGroup.get('fares') as FormArray;
-    this.writeHighLowFare(items, false);
+    this.writeHighLowFare(items, false, rptComp);
+    this.writeExchangeIndicator(items);
   }
   writeCarSavingsRemarks(carSavings: CarSavingsCodeComponent, reAddRemarks) {
     const carSavingsGroup: FormGroup = carSavings.carSavingsCodeGroup;
@@ -36,13 +37,34 @@ export class ReportingRemarkService {
     const items = carSavingsGroup.get('hotels') as FormArray;
     this.writeHotelSavings(items, reAddRemarks);
   }
-  WriteNonBspRemarks(nrbc: ReportingNonbspComponent) {
+  WriteNonBspRemarks(nrbc: ReportingNonbspComponent, rptComp: ReportingRemarksComponent) {
     const nbspGroup: FormGroup = nrbc.nonBspGroup;
     const items = nbspGroup.get('nonbsp') as FormArray;
-    this.writeHighLowFare(items, true);
+    this.writeHighLowFare(items, true, rptComp);
   }
 
-  private writeHighLowFare(items: any, write: boolean) {
+  writeExchangeIndicator(items: any) {
+    const tstList = new Array();
+
+    for (const bspControls of items.controls) {
+      if (bspControls.get('isExchange').value === true) {
+        tstList.push(bspControls.get('tstNumber').value);
+      }
+    }
+    tstList
+      .filter(function(elem, index, self) {
+        return index === self.indexOf(elem);
+      })
+      .forEach((x) => {
+        const exchangeIndicatorRemark = new Map<string, string>();
+        exchangeIndicatorRemark.set('AirTicketId', x);
+        exchangeIndicatorRemark.set('TktRemark', 'EXCH');
+        this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
+      });
+  }
+
+  private writeHighLowFare(items: any, write: boolean, rptComp: ReportingRemarksComponent) {
+    let counter = 1;
     for (const group of items.controls) {
       if (group.get('chkIncluded').value === true || write) {
         const highFareRemark = new Map<string, string>();
@@ -59,9 +81,36 @@ export class ReportingRemarkService {
         this.remarksManager.createPlaceholderValues(highFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(lowFareRemark, null, segmentrelate);
         this.remarksManager.createPlaceholderValues(airReasonCodeRemark, null, segmentrelate);
+
+        const otherTktMap = new Map<string, string>();
+        otherTktMap.set('AirTicketId', counter.toString());
+        otherTktMap.set('AirChargedFare', group.get('chargeFare').value);
+        otherTktMap.set('AirLowFare', group.get('lowFareText').value);
+        otherTktMap.set('AirSavingCode', output[0].trim());
+        otherTktMap.set('AirHighFare', group.get('highFareText').value);
+        otherTktMap.set('HemisphereId', rptComp.reportingForm.get('bspRouteCode').value);
+        otherTktMap.set('TripTypeEquivalent', '1');
+        const arr = rptComp.reportingForm.get('segments') as FormArray;
+        let desti = '';
+        for (const g of arr.controls) {
+          if (g.get('segment').value === segments.join(',')) {
+            desti = g.get('destinationList').value;
+            break;
+          }
+        }
+        otherTktMap.set('CAPointOfTurnAround', desti);
+        this.remarksManager.createPlaceholderValues(otherTktMap, null, segmentrelate);
+
+        const tktBFRemark = new Map<string, string>();
+        tktBFRemark.set('AirTicketId', counter.toString());
+        tktBFRemark.set('AirBaseCurrency', group.get('currency').value);
+        tktBFRemark.set('AirBaseFare', group.get('baseFare').value);
+        this.remarksManager.createPlaceholderValues(tktBFRemark, null, segmentrelate);
+        counter++;
       }
     }
   }
+
   private writeCarSavings(items: any, reAddRemarks) {
     for (const group of items.controls) {
       if (group.get('chkIncluded').value === true) {
@@ -81,6 +130,7 @@ export class ReportingRemarkService {
       this.remarksManager.createPlaceholderValues(carRemarksMap);
     }
   }
+
   writeHotelSavings(items: any, reAddRemarks) {
     for (const group of items.controls) {
       if (group.get('chkIncluded').value === true) {

@@ -35,6 +35,15 @@ ${input_isTravel_yes}     //input[@id='isTravel'][@value='Y']
 ${input_isTravel_no}     //input[@id='isTravel'][@value='N']
 ${list_fee_type}    css=#feeType
 ${select_fee_segment}    //input[@formcontrolname='genericElement']
+${checkbox_supplemental_fee}    //input[@name='enableSupFee']
+${button_add_supplemental_fee}    //tbody[@formarrayname='segments']//i[@id='add']
+${input_fee_ticket_number}    css=#ticketNumber
+${input_supfee_amount}    //input[@id='valueAmount']
+${select_billing_type}    css=#billingType
+${input_admin_fee}    css=#feeAmount
+${input_segment_cost}    css=#segmentCost
+${input_passExpDate}    css=#passExpDate
+${button_submit_corporate}    //button[contains(text(), 'Submit Corporate Pass ')]
 
 
 *** Keywords ***
@@ -392,7 +401,7 @@ Select ${aqua_fee} Type Of Fee
     Select From List By Label   ${list_fee_type}    ${aqua_fee}
     Take Screenshot
     
-Select ${aqua_fee} Type Of Fee And Select Segment
+Select Segment And Select ${aqua_fee} 
     Navigate To Page Aqua Fees
     Select From List By Label   ${list_fee_type}    ${aqua_fee}
     Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Select Segments For Aqua Fee   3    4
@@ -407,7 +416,7 @@ Click Submit To PNR On Aqua Fees
     
 Verify Aqua Fee Remarks Are Written In The PNR
     Click Submit To PNR On Aqua Fees
-    Verify Expected Remarks Are Written In The PNR    True
+    Verify Expected Remarks Are Written In The PNR
     Verify Unexpected Remarks Are Not Written In The PNR
     
 Select Segments For Aqua Fee
@@ -430,8 +439,208 @@ Select ${aqua_fee} And Update Touch Reason
 Select Update Touch Reason ${aqua_fee}, And Segment 
     Set Test Variable    ${aqua_fee}
     Navigate To Page Aqua Fees
-    Select ${aqua_fee} Type Of Fee And Select Segment
+    Select Segment And Select ${aqua_fee}
     Run Keyword If    "${aqua_fee}" == "CAR ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    C
     Run Keyword If    "${aqua_fee}" == "HOTEL ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    M
     Run Keyword If    "${aqua_fee}" == "LIMO ONLY FEES"    Update Agent Assisted And Touch Reason Code    AM    L
     
+Create PNR And Exchange Ticket
+    Add FS And Commission Line In The PNR    FS02    FM10.00    RFCWTPTEST    ER     ER
+    Sleep    4
+    Get Record Locator Value
+    Ticket TST1
+    Create 1 Test Dates
+    Create Exchange PNR In The GDS
+    
+Select ${aqua_fee} Type Of Fee And ${fee_type}
+    Navigate To Page Aqua Fees 
+    Select ${aqua_fee} Type Of Fee
+    Select Checkbox    ${checkbox_supplemental_fee}
+    Wait Until Element Is Visible    ${input_fee} 
+    Run Keyword If    "${fee_type}" == "Schedule Change"    Select Checkbox    ${checkbox_schedule_change}
+    Run Keyword If    "${fee_type}" == "Input Special Fee"    Enter Value    ${input_fee}    12.99
+    Take Screenshot
+    
+Add Supplemental Fee Code
+    Click Add Supplemental Fee Button
+    Select Supplemental Fee    1
+    Take Screenshot
+
+Select Supplemental Fee
+    [Arguments]   @{supplemental_fee_index}
+    : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
+    \    Select Checkbox    ${input_supplementalFee_chckbox}${open_bracket}${supplemental_fee_index}${close_bracket}${input_supfee_checkbox}
+    Click Button    ${button_save}  
+    Wait Until Element Is Enabled    ${checkbox_supplemental_fee}    30   
+    Click Element At Coordinates    ${input_feeCode}    0    0
+
+Click Add Supplemental Fee Button
+    Wait Until Element Is Visible    ${button_add_supplemental_fee}    30
+    Click Element At Coordinates    ${button_add_supplemental_fee}    0    0
+    Wait Until Element Is Visible    ${input_supfee_checkbox}    30
+    
+Verify TKTL Remark Is Updated And PNR Is Queued Correctly
+    Assign Current Date
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-FEE
+    Verify PNR Is Queued For Aqua Fees
+    
+Verify PNR Is Queued For Aqua Fees
+    Open Command Page
+    Enter Cryptic Command    RTQ
+    Element Should Contain    ${text_area_command}   YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
+    Take Screenshot 
+   
+Add Supplemental Fee Code With Ticket Number
+    Click Add Supplemental Fee Button
+    Select Supplemental Fee    1
+    Enter Value    ${input_fee_ticket_number}    1234321567
+    Take Screenshot
+    
+Select Supplemental Fee With Amount
+    [Arguments]   @{supplemental_fee_index}
+    : FOR   ${supplemental_fee_index}   IN    @{supplemental_fee_index}
+    \    Select Checkbox    ${input_supplementalFee_chckbox}${open_bracket}${supplemental_fee_index}${close_bracket}${input_supfee_checkbox}
+    Enter Value    ${input_supplementalFee_chckbox}${open_bracket}2${close_bracket}${input_supfee_amount}    100.00
+    Take Screenshot
+    Click Button    ${button_save} 
+
+Select Type Of Fee And Supplemental Fee With Amount    
+    Select AIR FEES Type Of Fee And Supplemental Fee
+    Click Add Supplemental Fee Button
+    Select Supplemental Fee With Amount    2
+    Take Screenshot
+    
+Verify MIS Segment For Aqua Fee Is Written In The PNR
+    Assign Current Date    
+    Verify Specific Remark Is Written In The PNR    MIS 1A HK1 YYZ ${current_date}-TYP-CWT/FEE ONLY
+    
+Click Submit Corporate Pass
+    Click Element    ${button_submit_corporate}
+    
+Click Add Supplier Remark
+    Click Element    ${button_add_supplier_accounting_remark}
+        
+Add Accounting Remark For Standalone Air Canada Pass Purchase
+    Open CA Corporate Test
+    Click Airline Corporate Pass Purchase
+    Click Add Supplier Remark
+    Select From List By Label    ${list_accounting_type}    Air Canada Individual Pass Purchase
+    Enter Value   ${input_supplier_confirmationNo}    1234
+    Enter Value    ${input_tktnumber}    1234567890
+    Enter Value    ${input_commission}    2.00
+    Enter Value    ${input_departurecity}    YUL
+    Enter Value    ${list_purchasetype}     RAPIDAIR
+    Select From List By Label    ${list_faretype}       FLEX
+    Select Visa As FOP
+    Enter Credit Card Number 4444333322221111
+    Enter Credit Card Expiration Date 1222
+    Select From List By Label    ${select_billing_type}    POS Service Fee
+    Enter Value    ${input_admin_fee}    20.00
+    Enter Value    ${input_segment_cost}    10.00
+    Enter Value    ${input_passExpDate}    1222
+    Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
+    Take Screenshot    
+    Click Save Button
+    Click Submit Corporate Pass
+    
+Add Accounting Remark For Standalone Westjet Pass Purchase
+    Open CA Corporate Test
+    Click Airline Corporate Pass Purchase
+    Click Add Supplier Remark
+    Select From List By Label    ${list_accounting_type}    Westjet Individual Pass Purchase
+    Enter Value   ${input_supplier_confirmationNo}    8888
+    Enter Value    ${input_commission}    80.00
+    Enter Value    ${input_tktnumber}    0888823456
+    Enter Value    ${input_departurecity}    CDG        
+    Enter Value    ${list_purchasetype}     Westjet Travel Pass
+    Enter Value    ${list_faretype}       LAT
+    Select Visa As FOP
+    Enter Credit Card Number 4444333322221111
+    Enter Credit Card Expiration Date 1222
+    Select From List By Label    ${select_billing_type}    Settlement Fee
+    Enter Value    ${input_admin_fee}    18.05
+    Enter Value    ${input_segment_cost}    101.00
+    Enter Value    ${input_passExpDate}    1222
+    Verify Supplier Code Default Value Is Correct For Westjet Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    Click Submit Corporate Pass
+    
+Add Accounting Remark For Standalone Porter Pass Purchase
+    Open CA Corporate Test
+    Click Airline Corporate Pass Purchase
+    Click Add Supplier Remark
+    Select From List By Label    ${list_accounting_type}    Porter Individual Pass Purchase
+    Enter Value   ${input_supplier_confirmationNo}    4433
+    Enter Value    ${input_commission}    12.00
+    Enter Value    ${input_commission}    2.00
+    Enter Value    ${input_tktnumber}    8888999912
+    Enter Value    ${input_departurecity}    FRA        
+    Enter Value    ${list_purchasetype}     Porter Travel Pass 
+    Enter Value    ${list_faretype}       EXECUTIVE
+    Select American Express As FOP
+    Enter Credit Card Number 378282246310005
+    Enter Credit Card Expiration Date 1222
+    Select From List By Label    ${select_billing_type}    POS Service Fee
+    Enter Value    ${input_admin_fee}    12.20
+    Enter Value    ${input_segment_cost}    350.00
+    Enter Value    ${input_passExpDate}    1222
+    Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
+    Take Screenshot    
+    Click Save Button
+    Click Submit Corporate Pass
+    
+Add Accounting Remark For Standalone Air North Pass Purchase
+    Open CA Corporate Test
+    Click Airline Corporate Pass Purchase
+    Click Add Supplier Remark
+    Select From List By Label    ${list_accounting_type}    Air North Individual Pass Purchase
+    Enter Value   ${input_supplier_confirmationNo}    5432
+    Enter Value    ${input_commission}    1.00
+    Enter Value    ${input_tktnumber}    4444888822
+    Enter Value    ${input_departurecity}    AKL        
+    Enter Value    ${list_purchasetype}     U.S COMMUTER 
+    Enter Value    ${list_faretype}       TANGO
+    Select Mastercard As FOP
+    Enter Credit Card Number 5555555555554444
+    Enter Credit Card Expiration Date 1222
+    Select From List By Label    ${select_billing_type}    Settlement Fee
+    Enter Value    ${input_admin_fee}    10.00
+    Enter Value    ${input_segment_cost}    120.05
+    Enter Value    ${input_passExpDate}    1222
+    Verify Supplier Code Default Value Is Correct For Air North Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    Click Submit Corporate Pass
+    
+Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
+    Open CA Corporate Test
+    Click Airline Corporate Pass Purchase
+    Click Add Supplier Remark
+    Select From List By Label    ${list_accounting_type}    Pacific Coastal Individual Pass Purchase
+    Enter Value   ${input_supplier_confirmationNo}    2222
+    Enter Value    ${input_commission}    12.12
+    Enter Value    ${input_tktnumber}    0888823456
+    Enter Value    ${input_departurecity}    BFS        
+    Enter Value    ${list_purchasetype}     QUEBEC 
+    Enter Value    ${list_faretype}       PREMIUM ECONOMY
+    Select Visa As FOP
+    Enter Credit Card Number 4444333322221111
+    Enter Credit Card Expiration Date 1222
+    Select From List By Label    ${select_billing_type}    POS Service Fee
+    Enter Value    ${input_admin_fee}    5.01
+    Enter Value    ${input_segment_cost}    75.01
+    Enter Value    ${input_passExpDate}    1222
+    Verify Supplier Code Default Value Is Correct For Pacific Coastal Individual Pass Purchase
+    Take Screenshot
+    Click Save Button
+    Click Submit Corporate Pass
+    
+Verify Accounting Remarks Per Airline Are Written Correctly
+    Sleep    5
+    Close CA Corporate Test
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Expected Remarks Are Written In The PNR    True
+    Switch To Command Page

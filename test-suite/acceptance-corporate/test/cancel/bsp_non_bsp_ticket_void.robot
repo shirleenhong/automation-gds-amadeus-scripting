@@ -9,7 +9,7 @@ Test Teardown    Close All Browsers
 ${test_file_name}    bsp_non_bsp_ticket_void
 
 *** Test Cases ***
-Verify PNR With Voided BSP Segment Can Be Cancelled Without Reuising Credit Card Autohrization
+Verify PNR With Voided BSP Segment Can Be Cancelled Without Reuising Credit Card Authorization
     [Tags]    us11189
     Create PNR With Active Air Segments For Ticket Void Cancellation
     Complete PNR And Ticket TST1
@@ -17,7 +17,7 @@ Verify PNR With Voided BSP Segment Can Be Cancelled Without Reuising Credit Card
     Cancel Segment For BSP Void, Don't Reuse Credit Card Authorization And Select Passenger VRsn Option
     Verify Cancellation For Voided BSP Ticket Remarks Are Written In The PNR
     
-Verify PNR With Voided BSP Segment Can Be Cancelled While Reuising Credit Card Autohrization
+Verify PNR With Voided BSP Segment Can Be Cancelled While Reuising Credit Card Authorization
     [Tags]    us11189
     Create PNR With Active Air Segments For Ticket Void Cancellation
     Complete PNR And Ticket TST1

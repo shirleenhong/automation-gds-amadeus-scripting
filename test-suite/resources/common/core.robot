@@ -56,9 +56,10 @@ Open CA Migration Window
     Click Element    //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Canada Leisure ${env}"]
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure ${env}')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
-    Sleep    10
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
     Sleep    5
+    Import Library    AngularJSLibrary    app-root
+    Wait For Script To Complete
 
 Open Cryptic Display Window
     Wait Until Element Is Enabled    css=.bookingTool.FS    30
@@ -125,7 +126,7 @@ Open CA Migration Prod
     Wait Until Element Is Visible    xpath=//div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Canada Leisure')]    60
     Wait Until Element Is Visible    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]    60
     Select Frame    xpath=//iframe[contains(@src,'/portal/gds-scripting-amadeus')]
-    Wait Until Page Contains Element    xpath=//button[contains(text(), 'Wrap PNR')]    180
+    Sleep    5
 
 Close CA Migration Prod
     Unselect Frame
@@ -201,3 +202,7 @@ Get PNR Details
 Handle Smart Tool PopUp
     ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']    20
     Run Keyword If    ${exists}    Click Element    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']
+
+Wait For Script To Complete
+    Wait For Angular
+    Set Ignore Implicit Angular Wait    ${True}

@@ -39,9 +39,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM*U6/-Core Team Bus Class Approved",
-		"ExpectedRemark2": "RM*U4/-VIP ON APPROVED LIST",
-		"ExpectedRemark3": "RM*U9/-Ref",
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
 		"UnexpectedRemark1": null
 	},
 	"Client LH1, Select Any Except Core Team Bus Class Approved": {
@@ -84,9 +84,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM*U6/-ANNY EXCEPT Core Team Bus Class Approved",
-		"ExpectedRemark2": "RM*U4/-Test123",
-		"ExpectedRemark3": "RM*U9/-Ref",
+		"ExpectedRemark1": null,
+		"ExpectedRemark2": null,
+		"ExpectedRemark3": null,
 		"UnexpectedRemark1": null
 	},
 	"Client SGE, Single Active Air Segment": {
@@ -127,8 +127,8 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U3/-A1/S2",
-		"UnexpectedRemark1": "RM *U3/-A1/S3"
+		"ExpectedRemark1": "RM *U3/-A1",
+		"UnexpectedRemark1": "RM *U3/-A1/S2"
 	},
 	"Client SGE, Multiple Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -170,9 +170,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U3/-A1/S2",
-		"ExpectedRemark2": "RM *U3/-A2/S3",
-		"UnexpectedRemark1": null
+		"ExpectedRemark1": "RM *U3/-A1",
+		"ExpectedRemark2": "RMT TKT2-U3/-A2",
+		"UnexpectedRemark1": "RM *U3/-A2"
 	},
 	"Client SGE, No Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -257,8 +257,8 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U17/-221.01/S2",
-		"UnexpectedRemark1": "RM *U17/-221.01/S3"
+		"ExpectedRemark1": "RM *U17/-221.01",
+		"UnexpectedRemark1": "RM *U17/-221.01/S2"
 	},
 	"Client EJ5, Multiple Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -300,9 +300,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U17/-221.01/S3",
-		"ExpectedRemark2": "RM *U17/-221.02/S2,4",
-		"UnexpectedRemark1": null
+		"ExpectedRemark1": "RM *U17/-221.01",
+		"ExpectedRemark2": "RMT TKT2-U17/-221.02",
+		"UnexpectedRemark1": "RM *U17/-221.02/S3"
 	},
 	"Client EJ5, No Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -387,8 +387,8 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U3/-168.01/S2",
-		"UnexpectedRemark1": "RM *U3/-168.02/S2"
+		"ExpectedRemark1": "RM *U3/-168.01",
+		"UnexpectedRemark1": "RM *U3/-168.01/S2"
 	},
 	"Client NZ7, Multiple Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -430,9 +430,10 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U3/-168.01/S2",
-		"ExpectedRemark2": "RM *U3/-168.02/S3",
-		"UnexpectedRemark1": null
+		"ExpectedRemark1": "RM *U3/-168.01",
+		"ExpectedRemark2": "RMT TKT2-U3/-168.02",
+		"UnexpectedRemark1": "RM *U3/-168.02",
+		"UnexpectedRemark2": "RM *U3/-168.01/S2"
 	},
 	"Client NZ7, No Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -517,10 +518,10 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U17/-131.91/S2",
-		"ExpectedRemark2": "RM *U18/-APPROVER NAME1/S2",
-		"UnexpectedRemark1": "RM *U17/-131.92/S3",
-		"UnexpectedRemark2": "RM *U18/-APPROVER NAME2/S2",
+		"ExpectedRemark1": "RM *U17/-131.91",
+		"ExpectedRemark2": "RM *U18/-APPROVER NAME1",
+		"UnexpectedRemark1": "RM *U17/-131.91/S2",
+		"UnexpectedRemark2": "RM *U18/-APPROVER NAME1/S2",
 		"UnexpectedRemark3": null
 	},
 	"Client W7B, Multiple Active Air Segments": {
@@ -563,11 +564,14 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *U17/-131.91/S3",
-		"ExpectedRemark2": "RM *U18/-APPROVER NAME1/S3",
-		"ExpectedRemark1": "RM *U17/-131.92/S2,4",
-		"ExpectedRemark2": "RM *U18/-APPROVER NAME2/S2,4",
-		"UnexpectedRemark1": null
+		"ExpectedRemark1": "RM *U17/-131.91",
+		"ExpectedRemark2": "RM *U18/-APPROVER NAME1",
+		"ExpectedRemark3": "RMT TKT2-U17/-131.92",
+		"ExpectedRemark4": "RMT TKT2-U18/-APPROVER NAME2",
+		"UnexpectedRemark1": "RM *U17/-131.91/S3",
+		"UnexpectedRemark2": "RM *U18/-APPROVER NAME1/S3",
+		"UnexpectedRemark3": "RM *U17/-131.92/S2,4",
+		"UnexpectedRemark4": "RM *U18/-APPROVER NAME2/S2,4"
 	},
 	"Client W7B, No Active Air Segments": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

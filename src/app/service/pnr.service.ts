@@ -27,10 +27,13 @@ export class PnrService {
     segments = [];
     amountPipe = new AmountPipe();
     PCC = '';
+    uid = '';
     pnrResponse: any;
     clientSubUnitGuid: string;
     exchangeTatooNumbers = [];
     agentSign = '';
+    agentFirstName = '';
+    agentLastName = '';
     constructor() { }
 
     async getPNR(): Promise<void> {
@@ -57,7 +60,7 @@ export class PnrService {
             .catch((err) => {
                 console.log(err);
             });
-        this.getPCC();
+        await this.getPCC();
         // this.getRecordLocator();
         console.log(JSON.stringify(this.pnrObj));
     }
@@ -113,9 +116,10 @@ export class PnrService {
         return false;
     }
 
-    getPCC(): void {
-        smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
+    async getPCC() {
+        await smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
             this.PCC = x.ACTIVE_OFFICE_ID;
+            this.uid = x.USER_ALIAS;
         });
     }
 
@@ -142,6 +146,8 @@ export class PnrService {
 
             if (res) {
                 this.agentSign = res.AGENT_SIGN;
+                this.agentFirstName = res.FIRST_NAME;
+                this.agentLastName = res.LAST_NAME;
             }
         });
     }

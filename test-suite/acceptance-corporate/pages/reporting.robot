@@ -128,7 +128,7 @@ Click BSP Reporting Tab
     Wait Until Element Is Visible    ${tab_bsp}    30
     Click Element    ${tab_bsp}
     Set Test Variable    ${current_page}    BSP Reporting
-    Wait Until Element Is Visible    ${fare_row_number}${open_bracket}1${close_bracket}${list_reason_code}    20
+    Wait Until Element Is Visible    ${fare_row_number}${open_bracket}1${close_bracket}${list_reason_code}    30
 
 Click Non BSP Reporting Tab
     Wait Until Element Is Visible    ${tab_nonBsp}    30
@@ -192,6 +192,12 @@ Add Client Reporting Values For Single BSP Segment
     Select Reason Code    A : Lowest Fare Accepted
     Set Test Variable    ${actual_full_fare}
     Set Test Variable    ${actual_low_fare}
+    Take Screenshot
+
+Select Reason Code Value ${reason_code} For TST ${tst_no}
+    Navigate To Page BSP Reporting
+    Select Client Reporting Fields To Be Written    ${tst_no}
+    Select From List By Value    ${fare_row_number}${open_bracket}${tst_no}${close_bracket}${list_reason_code}    ${reason_code}
     Take Screenshot
 
 Add Client Reporting Values For Multiple BSP Segment
@@ -273,16 +279,12 @@ Verify Client Reporting Fields For Non-BSP For ${segment_number} Segment
     ${actual_segment_number}    Get Value    ${input_segment_number} 
     ${actual_full_fare}    Get Value    ${input_full_fare}
     ${actual_low_fare}    Get Value    ${input_low_fare}
+    ${actual_low_fare}    Convert To Number    ${actual_low_fare}    2
+    Set Test Variable    ${actual_low_fare}    ${actual_low_fare}0
+    Set Test Variable    ${actual_full_fare}
     Run Keyword If    '${segment_number}' == 'Single'     Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2    ELSE   Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2,3 
     Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare}    760.00    
-    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${EMPTY}
-    Take Screenshot
-    ${actual_low_fare}    Evaluate    ${actual_full_fare} - 10
-    ${actual_low_fare}    Convert to String    ${actual_low_fare}    
-    Enter Value    ${input_low_fare}    ${actual_low_fare}
-    ${actual_low_fare}    Get Value    ${input_low_fare}     
-    Set Test Variable    ${actual_full_fare}
-    Set Test Variable    ${actual_low_fare} 
+    Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${expected_low_fare} 
     Take Screenshot
 
 Update Client Reporting Values For Non-BSP
@@ -511,12 +513,6 @@ Verify Destination Code Remarks Are Written In The PNR
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
-Select Reason Code ${reason_code_value} For TST${tst_number}
-    Navigate To Page BSP Reporting
-    Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
-    Sleep    2
-    Take Screenshot
-    
 Add Car Savings Code For ${number_of} Segments
     Navigate to Page Car Savings Code
     Add ${number_of} Car Savings Code
@@ -560,8 +556,8 @@ Verify Car Savings Code Remark For Active And Passive Car Segments
     Finish PNR
     Assign Current Date
     Verify Specific Remark Is Written In The PNR    RM *CS21FEBPEK/-SV-I
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}YYZ/-SV-C
-    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_2}CDG/-SV-R
+    Verify Specific Remark Is Written In The PNR    RM *CS10JUNYYZ/-SV-C
+    Verify Specific Remark Is Written In The PNR    RM *CS${test_date_1}CDG/-SV-R
     Verify Specific Remark Is Not Written In The PNR    RM *CS23NOVPEK/-SV-X
     Verify Specific Remark Is Not Written In The PNR    RM *CS14DECMEL/-SV-Y
 
@@ -683,7 +679,7 @@ Verify UL Client UDID Remarks For Any First Booked Reason Except Core Team Bus C
 Verify High Fare Calculation For ${number_of_segment} Segment Is Sent
     Switch To Command Page
     Enter Cryptic Command    RT
-    Run Keyword If    '${number_of_segment}' == '1'    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R/S2    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R/S2,3
+    Run Keyword If    '${number_of_segment}' == '1'    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R,*NR/S2    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    FXA/R,*NR/S2,3
 
 Book ${numberOfAir} Passive Air Segments For ${airline_code} With Flight Number ${flight_number} And Route ${route_code}
     Create ${numberOfAir} Test Dates
@@ -823,6 +819,7 @@ Enter ${number} Lowest Coach Fare And Approver Name For CDR per TKT
     Take Screenshot
     
 Verify That The UDID ${udid_num} Remark Is Written In The PNR For ${client} With ${single_multiple} Active Air Segments
+    Run Keyword If    "${client}" == "SGE"     Select Yes In Is Business Class Booked
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     
@@ -1097,4 +1094,9 @@ Fill Up UDID Values For Client Intercontinental Hotel
     Navigate To Page UDID
     Enter Value    ${input_declinedAirline}    UA
     Enter Value    ${input_preTripNumber}   AAA0123
+    Take Screenshot
+    
+Update Agent Assisted And Touch Reason Codes
+    Navigate To Page Reporting Remarks
+    Update Agent Assisted And Touch Reason Code    AM    A
     Take Screenshot

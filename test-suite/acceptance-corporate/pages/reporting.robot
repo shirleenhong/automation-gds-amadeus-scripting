@@ -1099,3 +1099,8 @@ Fill Up UDID Values For Client Intercontinental Hotel
     Enter Value    ${input_declinedAirline}    UA
     Enter Value    ${input_preTripNumber}   AAA0123
     Take Screenshot
+    
+Update Agent Assisted And Touch Reason Codes
+    Navigate To Page Reporting Remarks
+    Update Agent Assisted And Touch Reason Code    AM    A
+    Take Screenshot

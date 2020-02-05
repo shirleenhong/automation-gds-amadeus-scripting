@@ -27,3 +27,10 @@ Verify That Online Touch Reason Fields Are Not Displayed When PNR Has No EB Rema
     Create PNR With Active Air Segments For Offline PNR
     Complete The PNR With Default Values 
     Verify That Online Touch Reason Fields Are Not Displayed
+    
+Verify That Touchless PNR Is Updated
+    [Tags]    us11196    de3140
+    Create PNR With Active Air Segments For Touchless PNR
+    Complete The PNR With Default Values
+    Update Agent Assisted And Touch Reason Codes
+    Verify EB Remark Written In The PNR

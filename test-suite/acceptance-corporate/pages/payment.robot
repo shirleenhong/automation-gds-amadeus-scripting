@@ -8,7 +8,7 @@ Resource          base.robot
 *** Variables ***
 ${input_segment}   //button[@id='button-basic']//input[@formcontrolname='segment']
 ${list_segment}    //ul[@id='dropdown-basic']
-${list_accounting_type}    css=#accountingTypeRemark
+${list_accounting_type}  css=#accountingTypeRemark
 ${input_suppliercode}    css=#supplierCodeName
 ${button_add_supplier_accounting_remark}    //button[contains(text(), 'Add Supplier Accounting Remark')]
 ${tab_nonBsp_processing}    //span[contains(text(), 'Non-BSP Processing')]
@@ -64,6 +64,28 @@ ${input_credit_card}    //input[@id='ccNo']
 ${select_segment}    //app-segment-select[@id='segmentNo']//input[@formcontrolname='segment']
 
 *** Keywords ***    
+Add Rail Ticketing Details For Single Segment Without Ticket Number
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    RAIL
+    Select Itinerary Segments    2
+    Enter Value    ${input_suppliercode}   RIL
+    Set Test Variable    ${input_suppliercode}   RIL
+    Enter Value    ${input_supplier_confirmationNo}    0000054321
+    Add Ticketing Amount Details With Other Tax And Commission    1.00    2.00    3.00    4.00    5.00    6.00
+    [TEARDOWN]    Take Screenshot
+    
+Add Rail Ticketing Details For Single Segment With Ticket Number
+    Navigate To Page Add Accounting Line
+    Select From List By Label    ${list_accounting_type}    RAIL
+    Select Itinerary Segments    2
+    Enter Value    ${input_suppliercode}    RIL
+    Set Test Variable    ${input_suppliercode}   RIL
+    Enter Value    ${input_supplier_confirmationNo}    0000054321 
+    Add Ticketing Amount Details With Other Tax And Commission    1.00    2.00    3.00    4.00    5.00    6.00
+	Enter Value    ${input_tktnumber}    1234567890
+	Set Test Variable    ${input_tktnumber}    1234567890
+    [TEARDOWN]    Take Screenshot
+        
 Add Non-BSP Exchange Ticketing Details For Single Segment Without Ticket Number
     Navigate To Page Add Accounting Line
     Select From List By Label    ${list_accounting_type}    Non BSP Exchange
@@ -497,6 +519,12 @@ Verify That Supplier Code Default Value Is Correct For ${airline_code}
     Run Keyword If    "${airline_code}" == "WN"   Should Contain    ${actual_supplier_code}    SOA
     Run Keyword If    "${airline_code}" == "Seat Costs APAY"   Should Contain    ${actual_supplier_code}    PFS
     Run Keyword If    "${airline_code}" == "Other Type Of APAY"   Should Contain    ${actual_supplier_code}    CGO
+
+Verify Ticketing Instruction Remarks For Rail ${with_value} Ticket Number Are Written In The PNR
+    Finish PNR
+    Run Keyword If    "${with_value}" == "With"    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/TK-${input_tktnumber}/VN-${input_suppliercode}/S2
+    ...    ELSE    Verify Specific Remark Is Written In The PNR    RMT TKT1-VEN/VN-${input_suppliercode}/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BA-1.00/TX1-2.00XG/TX2-3.00RC/TX3-4.00XQ/TX4-5.00XT/COMM-6.00/S2    True
     
 Verify Ticketing Instruction Remarks for NonBSP Air Exchange ${with_value} Ticket Number Are Written In The PNR
     Finish PNR

@@ -278,7 +278,7 @@ Verify That Special Fee Is Written In The PNR
     
 Verify That Special Fee Is Written In The PNR For Rail
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTD60.00
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTI60.00
     Switch To Command Page 
     
 Verify That Entered Special Fee Is Written In The PNR

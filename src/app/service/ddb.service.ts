@@ -452,6 +452,17 @@ export class DDBService implements OnInit {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
     }
   }
+  public async getMigrationOBTFeeCFA() {
+    try {
+      let cfalist = '';
+      const response = await this.getConfigurationParameter('MigrationOBTFee');
+      cfalist = response.ConfigurationParameters[0].ConfigurationParameterValue;
+      return cfalist;
+    } catch (error) {
+      throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
+    }
+    return '';
+  }
 
   getProvinces(): any {
     return this.staticValues.getProvinces();

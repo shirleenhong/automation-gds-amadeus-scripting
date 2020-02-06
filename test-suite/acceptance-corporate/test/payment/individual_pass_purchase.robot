@@ -7,7 +7,7 @@ Test Teardown     Close All Browsers
 *** Test Cases ***
 Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass Purchase PNR
     [Tags]    us10869    us14121
-    Move Single Passenger For EN
+    Move Single Passenger For FR
     Add Matrix Accounting Remark For Air Canada Pass Purchase
     Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
     Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR

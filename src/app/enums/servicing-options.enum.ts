@@ -7,5 +7,6 @@ export enum ServicingOptionEnums {
   Low_Fare_Internationl_DirectFlight_Calculation = 532,
   Low_Fare_International_ConnectingFlight_Calculation = 533,
   Car_Show_Missed_Savings = 299,
-  Hotel_Show_Missed_Savings = 537
+  Hotel_Show_Missed_Savings = 537,
+  No_Hotel_Booked_Codes = 65
 }

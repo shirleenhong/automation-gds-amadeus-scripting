@@ -29,6 +29,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(CarSavingsCodeComponent) carSavingsCodeComponent: CarSavingsCodeComponent;
   hasTst: boolean;
   showHotelsTab: boolean;
+  showNoHotelBooked: boolean;
   @Input() reportingRemarksView: any;
   @ViewChild(WaiversComponent) waiversComponent: WaiversComponent;
   @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
@@ -52,8 +53,8 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
     this.hasTst = true;
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
-    this.showCarSavingsTab = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Car_Show_Missed_Savings).ServiceOptionItemValue;
     this.showHotelTab();
+    this.showCarTab();
   }
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;
@@ -99,7 +100,17 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     return true;
   }
 
+  showCarTab() {
+    const so = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Car_Show_Missed_Savings).ServiceOptionItemValue;
+    this.showCarSavingsTab = false;
+    if (so === 'Yes') {
+      const segments = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'CCR' || x.segmentType === 'CAR');
+      this.showCarSavingsTab = segments.length > 0 ? true : false;
+    }
+  }
+
   showHotelTab() {
+    this.showHotelsTab = false;
     this.hotelShowMissedSavingsSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Hotel_Show_Missed_Savings);
     if (
       this.hotelShowMissedSavingsSO.ServiceOptionItemValue !== undefined &&
@@ -112,8 +123,6 @@ export class ReportingComponent implements OnInit, AfterViewInit {
         }
       });
       this.showHotelsTab = segments.length > 0 ? true : false;
-    } else {
-      this.showHotelsTab = false;
     }
   }
 }

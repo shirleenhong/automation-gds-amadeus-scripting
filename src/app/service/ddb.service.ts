@@ -74,6 +74,25 @@ export class DDBService implements OnInit {
         }
       });
   }
+  async postRequest(serviceName: string, params?) {
+    if (!environment.proxy) {
+      await this.getToken();
+    }
+    const hds = new HttpHeaders().append('Content', 'application/json');
+    return this.httpClient
+      .post<any>(serviceName, params, {
+        headers: hds
+      })
+      .toPromise()
+      .catch((e) => {
+        // retry if unauthorized to get new token
+        if (e.status === 401 && this.retry < 3) {
+          this.retry += 1;
+          this.isTokenExpired = true;
+          this.postRequest(serviceName);
+        }
+      });
+  }
 
   async getAllServicingOptions(clientSubUnit) {
     if (this.servicingOption.length === 0) {
@@ -199,27 +218,32 @@ export class DDBService implements OnInit {
 
   async getReasonCodes(clientSubUnitId: string, otherParamString: string = '') {
     const reasons = [];
-    await this.getRequest(common.reasonCodesService + '?TripTypeId=1&ClientSubUnitGuid=' + clientSubUnitId + otherParamString).then(
-      (response) => {
-        if (response && response.ReasonCodeItems) {
-          response.ReasonCodeItems.forEach((reasonJson) => {
+    await this.getRequest(
+      common.reasonCodesService + '?TripTypeId=1&&IncludeNullTripTypes=false&ClientSubUnitGuid=' + clientSubUnitId + otherParamString
+    ).then((response) => {
+      if (response && response.ReasonCodeItems) {
+        response.ReasonCodeItems.forEach((reasonJson) => {
+          if (reasonJson.ReasonCodeProductTypeDescriptions) {
             reasons.push(new ReasonCode(reasonJson));
-          });
-        }
+          }
+        });
       }
-    );
+    });
     return reasons;
   }
 
   async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
     const reasonCodeList = [];
+    const languageCode = this.pnrService.getItineraryLanguage();
+
     if (productID === undefined) {
       productID = 8; // ALL
     }
     for (const id of ids) {
-      await this.getReasonCodeByClientSubUnit(
+      // await this.getReasonCodeByClientSubUnit(
+      await this.getReasonCodes(
         this.pnrService.getClientSubUnit(),
-        '&LanguageCode=en-GB&ProductId=' + productID + '&ReasonCodeTypeId=' + id
+        '&LanguageCode=' + languageCode + '&ProductId=' + productID + '&ReasonCodeTypeId=' + id
       ).then((response) => {
         response.forEach((reason) => {
           reasonCodeList.push(reason);
@@ -296,7 +320,7 @@ export class DDBService implements OnInit {
     return this.supplierCodes;
   }
 
-  async getTravelPortInformation(airSegments) {
+  async getTravelPortInformation(airSegments, misSegments?) {
     await airSegments.forEach(async (station) => {
       await this.getTravelPort(station.arrivalAirport).then(async (port) => {
         await this.extractDataPort(port);
@@ -306,6 +330,14 @@ export class DDBService implements OnInit {
         await this.extractDataPort(port);
       });
     });
+
+    if (misSegments) {
+      await misSegments.forEach(async (mis) => {
+        await this.getTravelPort(mis.cityCode).then(async (port) => {
+          await this.extractDataPort(port);
+        });
+      });
+    }
     await this.delay(1500);
   }
 
@@ -377,12 +409,24 @@ export class DDBService implements OnInit {
     });
     if (countries.length === 2 && countries.indexOf('US') >= 0 && countries.indexOf('CA') >= 0) {
       return true;
+    } else if (countries.length === 1 && countries.indexOf('US') >= 0) {
+      return true;
     }
     return false;
   }
 
   getServicingOptionValue(soId) {
     return this.servicingOption.find((x) => x.ServiceOptionId === soId);
+  }
+
+  getServicingOptionValueList(soID) {
+    const valueList = [];
+    this.servicingOption.forEach((x) => {
+      if (x.ServiceOptionId === soID) {
+        valueList.push(x);
+      }
+    });
+    return valueList;
   }
 
   getCityCountry(search: string) {
@@ -448,10 +492,10 @@ export class DDBService implements OnInit {
   /**
    * Get the Leisure On Demand PCCs
    */
-  public async getLeisureOnDemandPCC() {
+  public async getTeamQueuePCCOID() {
     try {
       let lodPCC = null;
-      const response = await this.getConfigurationParameter('LeisureOnDemand');
+      const response = await this.getConfigurationParameter('TeamQueuePCCOID');
       lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
       lodPCC = lodPCC.map((pcc) => {
         return pcc.trim();
@@ -471,5 +515,18 @@ export class DDBService implements OnInit {
         clientSubUnitGuid +
         '&SourceSystemCode=CA1'
     );
+  }
+
+  postSplunkLog(data: Map<string, string>, source?) {
+    if (!source) {
+      source = 'AmadeusCAScript';
+    }
+
+    const jsonObject = {};
+    data.forEach((value, key) => {
+      jsonObject[key] = value;
+    });
+    const params = '?sourceType=' + source + '&jsonData=' + encodeURIComponent(JSON.stringify(jsonObject));
+    return this.postRequest(common.splunkLog + params);
   }
 }

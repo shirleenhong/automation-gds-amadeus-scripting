@@ -32,5 +32,6 @@ export const common = {
   matrixSupplierService: '/service/repo/powerbaseaws/Matrix/Supplier',
   businessRules: '/service/repo/powerbaseaws/BusinessRules',
   airSupplierCodes: '/service/repo/powerbaseaws/Supplier?SupplierCodes=',
-  LeisureVersionNumber: '20.1.2'
+  splunkLog: '/service/ap/splunk-service-rest/api/splunk/log',
+  LeisureVersionNumber: '20.2.1'
 };

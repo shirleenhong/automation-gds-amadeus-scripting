@@ -51,7 +51,7 @@ Verify That List Of Non-BSP Accounting Lines Are Displayed And RM Remarks Are Wr
     Verify That PNR Is Correctly Queued
     
 Verify That List Of Fee And Non-BSP Accounting Lines Are Displayed And RM Remarks Are Written
-    [Tags]    us12476
+    [Tags]    us12476    full_regression
     Create PNR With Active Air Segments For Resending Of Invoice With Fee And Non-BSP Accounting Lines
     Complete PNR In Amadeus Send Cryptic For Invoice
     Select All Fees and Non-BSP Accounting Lines
@@ -59,7 +59,7 @@ Verify That List Of Fee And Non-BSP Accounting Lines Are Displayed And RM Remark
     Verify New MAC Remarks Are Written
     Verify That PNR Is Correctly Queued
 
-Verify That Invoice, E-Tickets, Fee, And Non-BSP Accounting Lines Are Resent And Email Address Is Updated
+Verify That Invoice, E-Tickets, Fee, And Non-BSP Accounting Lines Are Present And Email Address Is Updated
     [Tags]    us12476
     Create PNR With Active Air Segments For Resending Of Invoice With Fee And Non-BSP Accounting Lines
     Complete PNR In Amadeus Send Cryptic For Invoice

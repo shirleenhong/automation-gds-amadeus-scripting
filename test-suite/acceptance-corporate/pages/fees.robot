@@ -20,21 +20,24 @@ ${button_addFee}    //i[@id='addFee']
 
 *** Keywords ***
 Add Canada Domestic Segment And Store Multiple Fare
-    @{gds_commands}    Create List    AN10JANYYCYEG/AAC    SS1Y1    FXP/S2    AN15JANYEGYYC/AAC    SS1Y1    FXP/S3
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YYCYEG/AAC    SS1Y1    FXP/S2    AN${test_date_2}YEGYYC/AAC    SS1Y1    FXP/S3
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
 
 Add Transborder Segment And Store Multiple Fare
-    @{gds_commands}    Create List    AN20JANORDYYC/AAC    SS1Y1    FXP/S2    AN25JANYYCORD/AAC    SS1Y1    FXP/S3
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}ORDYYC/AAC    SS1Y1    FXP/S2    AN${test_date_2}YYCORD/AAC    SS1Y1    FXP/S3
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
     \    Press Key    ${input_commandText}    \\13
     
 Add International Segment And Store Single Fare
-    @{gds_commands}    Create List    AN10JANYULCDG/AAF    SS1Y1    AN15JANCDGYUL/AAF    SS1Y1    FXP
+    Create 2 Test Dates
+    @{gds_commands}    Create List    AN${test_date_1}YULCDG/AAF    SS1Y1    AN${test_date_2}CDGYUL/AAF    SS1Y1    FXP
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Input Text    ${input_commandText}    ${gds_command}
@@ -138,7 +141,6 @@ Click Add Sup Fee Button ${add_fee_index}
     Wait Until Element Is Visible    ${tab_supplemental_fees}${open_bracket}1${close_bracket}${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    30
     Click Element At Coordinates    ${tab_supplemental_fees}${open_bracket}1${close_bracket}${row_supplemental_fees}[${add_fee_index}]${button_addSupFee}    0    0
     Wait Until Element Is Visible    ${input_supplementalFee_chckbox}${open_bracket}1${close_bracket}${input_supfee_checkbox}    30
-    Sleep    4
     
 Click Add Fee Button
     Click Element    ${tab_supplemental_fees}${button_addFee} 
@@ -171,6 +173,8 @@ Move Single Passenger With Multiple Segment For Dom Canada With TSTs
     Sleep    4
     Create 2 Test Dates
     Create Multiple TKT Exchange PNR In The GDS
+    Set Test Variable    ${cfa}    NRD
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Multiple Segment For Transborder With TSTs
     Move Single Passenger For Fees
@@ -180,23 +184,31 @@ Move Single Passenger With Multiple Segment For Transborder With TSTs
     Sleep    4
     Create 2 Test Dates
     Create Multiple TKT Exchange PNR In The GDS
+    Set Test Variable    ${cfa}    RH6
+    Set Test Variable    ${num_air_segments}     0
        
 Move Single Passenger With Single Segment For International With Non Exchange Ticket
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-XXP0000000C
     Add International Segment And Store Single Fare
-    Sleep    4  
+    Sleep    4
+    Set Test Variable    ${cfa}    XXP
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Single Segment With Special Fee Required Inputs
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-YXU0000000C
     Add International Segment And Store Single Fare
-    Sleep    4 
+    Sleep    4
+    Set Test Variable    ${cfa}    YXU
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Transborder Segments And Single Ticket For OBT
     Move Single Passenger For Fees
     Add International Segment And Store Single Fare
     Add OBT Remark In The PNR    RM*EB/-EBA    RM*CF/-RH60000000C    RFCWTPTEST    ER
+    Set Test Variable    ${cfa}    RH6
+    Set Test Variable    ${num_air_segments}     0
     
 Move Single Passenger With Transborder Segments And Single Ticket
     Create And Ticket PNR With Airline Code AC
@@ -205,6 +217,8 @@ Add Passive Rail Segment For CFA With Special Fee
     Move Single Passenger For Fees
     Add CFA Remark    RM*CF/-XXP0000000C
     Add 1 Rail Segments
+    Set Test Variable    ${cfa}    XXP
+    Set Test Variable    ${num_air_segments}     0
     
 Verify OBT PNR defaults Fee For Tkt And Write No Fee Code In The PNR
     Navigate To Page Fees
@@ -264,7 +278,7 @@ Verify That Special Fee Is Written In The PNR
     
 Verify That Special Fee Is Written In The PNR For Rail
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTD60.00
+    Verify Specific Remark Is Written In The PNR    RMF SUPFEE1-RTI60.00
     Switch To Command Page 
     
 Verify That Entered Special Fee Is Written In The PNR

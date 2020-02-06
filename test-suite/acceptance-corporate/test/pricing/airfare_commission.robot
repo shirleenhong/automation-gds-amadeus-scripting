@@ -1,6 +1,5 @@
 *** Settings ***
 Force Tags        corp
-Library           String
 Resource          ../../pages/base.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers   
@@ -10,7 +9,7 @@ ${test_file_name}    airfare_commission
 
 *** Test Cases ***
 Verify Commission Remark In Percentage Format Is Written Correctly For Unticketed TST
-    [tags]    us15252    sanity_test    not_ready
+    [tags]    us15252    sanity_test
     Create PNR With Active Air Segments For Unticketed TST, Add Single FM Remark By Percentage
     Update Airfare Commision With 5 Percentage For Segment 2
     Verify Remarks Are Added Correctly In The PNR

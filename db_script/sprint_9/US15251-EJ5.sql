@@ -157,6 +157,14 @@ WHERE BusinessEntityName='PNR_ADD_Remark');
 DECLARE  @bid5 as int = (select ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='PNR_DELETE_Remark'); 
+
+DECLARE  @bid6 as int = (select ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_ADD_REMARKS_FIRST_TST'); 
+
+DECLARE  @bid7 as int = (select ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_ADD_REMARKS_PER_TST_FIRST_NOT_INCLUDED'); 
  
     INSERT INTO dbo.ClientDefinedRuleResultItem
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
@@ -164,11 +172,12 @@ VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid3, '{"type":"text","label":"Coach Fare if Premium Fare Booked","name":"coachFare_[TSTSEGMENT]","required":"false","valuetype":"AmountMask"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U17/-[UI_FORM_coachFare_TSTSEGMENT]/[TST_SEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid6, 'RM* U17/-[UI_FORM_coachFare_TSTSEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid7, 'RMT TKT[TSTNumber]-U17/-[UI_FORM_coachFare_TSTSEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid5, 'U17/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
     
 
-SET @resultitemid = SCOPE_IDENTITY() - 4; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 5; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -177,7 +186,8 @@ values
     (@resultitemid + 1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 2, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	(@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit

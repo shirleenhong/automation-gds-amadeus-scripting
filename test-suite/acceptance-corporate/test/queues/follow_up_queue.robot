@@ -15,7 +15,7 @@ ${test_file_name}    follow_up_queue
 
 *** Test Cases ***
 Verify That PNR Is Queued To Correct Itinerary Queue As Part Of Full Wrap
-    [Tags]    us11130
+    [Tags]    us11130    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Follow-Up Queue
     Populate Itinerary Transaction Type Queue
@@ -57,7 +57,7 @@ Verify That PNR Is Queued To Correct Itinerary Queue As Standalone
     Verify PNR Is Queued To Correct Transaction Type Queue For Standalone
     
 Verify That PNR Is Queued To Correct Invoice Queue As Standalone
-    [Tags]    us11130
+    [Tags]    us11130    full_regression
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Air Segments For Follow-Up Queue
     Populate Invoice Transaction Type Queue In Standalone

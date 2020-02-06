@@ -105,7 +105,11 @@ FROM ClientDefinedRuleRelationalOperator
 where RelationalOperatorName = 'IN'
 
 
+INSERT INTO [dbo].[ClientDefinedRuleBusinessEntity]([BusinessEntityName],[BusinessEntityDescription],[CreationTimeStamp],[CreationUserIdentifier],[VersionNumber],[IsLogic],[IsResult])
+		VALUES ('PNR_ADD_REMARKS_FIRST_TST', 'Add Remarks 1st TST Only', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1),
+				('PNR_ADD_REMARKS_PER_TST_FIRST_NOT_INCLUDED', 'Add Remarks Per TST - 1st TST Not Included', @CreationTimeStamp, @CreationUserIdentifier, 1, 1, 1)
 --ClientDefinedRuleGroupTrigger
+
 INSERT INTO dbo.ClientDefinedRuleGroupTrigger
     ( ClientDefinedRuleGroupId,ClientDefinedRuleWorkflowTriggerId,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
@@ -157,13 +161,22 @@ WHERE BusinessEntityName='UI_ADD_CONTROL';
 
 DECLARE  @bid4 as int = (select ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_ADD_Remark'); 
+WHERE BusinessEntityName='PNR_ADD_REMARKS_FIRST_TST'); 
 
 
 DECLARE  @bid5 as int = (select ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='PNR_DELETE_Remark'); 
  
+DECLARE  @bid6 as int = (select ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_ADD_REMARKS_PER_TST_FIRST_NOT_INCLUDED'); 
+
+DECLARE  @bid7 as int = (select ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_ADD_Remark'); 
+
+
     INSERT INTO dbo.ClientDefinedRuleResultItem
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
@@ -172,16 +185,16 @@ VALUES
 	( @CDRGRoupName, @bid3, '{"type":"text","label":"Lowest Coach Fare for Flts Booked","name":"lowestCoach_[TSTSEGMENT]","required":"false","valuetype":"AmountMask"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid3, '{"type":"text","label":"Approver Last Name","name":"approver_[TSTSEGMENT]","required":"false","valuetype":"AmountMask"}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid3, '{"type":"select","label":"Waiver Approved","name":"waiverApproved","required":"false","options":[{"name":"XX","value":"XX"},{"name":"WA","value":"WA"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U17/-[UI_FORM_lowestCoach_TSTSEGMENT]/[TST_SEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U18/-[UI_FORM_approver_TSTSEGMENT]/[TST_SEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	( @CDRGRoupName, @bid4, 'RM* U10/-[UI_FORM_waiverApproved]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'RM* U17/-[UI_FORM_lowestCoach_TSTSEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid4, 'RM* U18/-[UI_FORM_approver_TSTSEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid6, 'RMT TKT[TSTNumber]-U17/-[UI_FORM_lowestCoach_TSTSEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid6, 'RMT TKT[TSTNumber]-U18/-[UI_FORM_approver_TSTSEGMENT]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	( @CDRGRoupName, @bid7, 'RM* U10/-[UI_FORM_waiverApproved]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid5, 'U17/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid5, 'U18/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	( @CDRGRoupName, @bid5, 'U10/-', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
     
-
-
-SET @resultitemid = SCOPE_IDENTITY() - 10; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 12; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -196,7 +209,9 @@ values
 	(@resultitemid + 7, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 8, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
 	(@resultitemid + 9, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-	(@resultitemid + 10, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	(@resultitemid + 10, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 11, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+	(@resultitemid + 12, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 
 INSERT INTO ClientDefinedRuleGroupClientSubUnit

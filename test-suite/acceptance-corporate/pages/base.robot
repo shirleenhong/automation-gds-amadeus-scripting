@@ -13,6 +13,7 @@ Resource          pricing.robot
 Resource          queues.robot
 Resource          reporting.robot
 Resource          remarks.robot
+Resource          fees.robot
 Resource          ../../resources/common/api-utilities.txt
 
 *** Variables ***
@@ -49,7 +50,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 ${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 ${window_marriot_policy}    //div[contains(text(), 'MARRIOTT POLICY VIOLATION')]
 ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees  
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees    Airline Corporate Pass Purchase
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
@@ -62,7 +63,9 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
+@{aqua_fees_pages}    Aqua Fees
 ${button_aqua_fees}    //button[contains(text(), 'Aqua Fees')]
+${button_airline_pass_standalone}    //button[contains(text(), 'Airline Corporate Pass Purchase')]
 
 *** Keywords ***
 Enter Value
@@ -80,12 +83,17 @@ Close CA Corporate Test
     Click Element    ${button_close}
     Set Test Variable    ${current_page}    Amadeus
 
+Wait For Script To Complete
+    Wait For Angular
+    Set Ignore Implicit Angular Wait    ${True}
+
 Click Full Wrap
-    Wait Until Page Contains Element   ${button_full_wrap}    180
+    #Wait Until Page Contains Element   ${button_full_wrap}    180
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Wait For Script To Complete
     Set Test Variable    ${current_page}    Full Wrap PNR
     Set Test Variable    ${ticketing_complete}    no
     Set Test Variable    ${ofc_documentation_complete}     no
@@ -96,20 +104,24 @@ Click Full Wrap
     [Teardown]    Take Screenshot
     
 Click Cancel Segments
-    Sleep    5
-    Wait Until Page Contains Element    ${button_cancel_segments}     180
+    #Sleep    5
+    #Wait Until Page Contains Element    ${button_cancel_segments}     180
+    Wait For Script To Complete
     Click Element At Coordinates    ${button_cancel_segments}    0    0
-    Wait Until Element Is Visible    ${input_requestor}     120
+    #Wait Until Element Is Visible    ${input_requestor}     120
+    Wait For Script To Complete
     Set Test Variable    ${current_page}    Cancel Segments
     Set Test Variable    ${pnr_submitted}   no
     Set Test Variable    ${non_bsp_ticket_credit_complete}    no
     Set Test Variable    ${cancel_segments_complete}    no
 
 Click Itinerary And Queue
-    Wait Until Page Contains Element   ${button_full_wrap}    180 
+    Wait For Script To Complete
+    #Wait Until Page Contains Element   ${button_full_wrap}    180 
     Click Element At Coordinates    ${button_itinerary_queue}    0    0 
-    Wait Until Element Is Visible    ${button_submit_pnr}    30
-    Wait Until Element Is Visible    ${select_transaction}      30
+    #Wait Until Element Is Visible    ${button_submit_pnr}    30
+    #Wait Until Element Is Visible    ${select_transaction}      30
+    Wait For Script To Complete
     Set Test Variable    ${current_page}    Follow-Up Queue S
     Set Test Variable    ${pnr_submitted}    no
     Set Test Variable    ${ticketing_complete}    no
@@ -118,40 +130,42 @@ Click Itinerary And Queue
     
 Click Send Itinerary And Queue
     [Arguments]    ${close_corporate_test}=yes
-    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Wait For Script To Complete
+    #Wait Until Page Contains Element    ${button_submit_pnr}    30
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
-    Wait Until Element Is Not Visible     ${message_sendingItinerary}    180
-    Wait Until Element Is Visible    ${button_full_wrap}    180
+    #Wait Until Element Is Not Visible     ${message_sendingItinerary}    180
+    #Wait Until Element Is Visible    ${button_full_wrap}    180
     Set Test Variable    ${current_page}     CWT Corporate
-    Sleep    5
+    #Sleep    5
+    Wait For Script To Complete
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     
 Click Reporting Panel
-    Wait Until Element Is Visible    ${panel_payment}     60
+    #Wait Until Element Is Visible    ${panel_payment}     60
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
     
 Collapse Reporting Panel
-    Wait Until Element Is Visible    ${panel_reporting}    60
+    #Wait Until Element Is Visible    ${panel_reporting}    60
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
 Click Payment Panel
-    Wait Until Element Is Visible    ${panel_payment}    60
+    #Wait Until Element Is Visible    ${panel_payment}    60
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Payment
     
 Click Pricing Panel
-    Wait Until Element Is Visible    ${panel_pricing}    30
+    #Wait Until Element Is Visible    ${panel_pricing}    30
     Click Element    ${panel_pricing}
     Set Test Variable    ${current_page}    Pricing
     
 Collapse Payment Panel
-    Wait Until Element Is Visible    ${panel_payment}    60
+    #Wait Until Element Is Visible    ${panel_payment}    60
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Full Wrap PNR
@@ -159,7 +173,8 @@ Collapse Payment Panel
     
 Click Submit To PNR
     [Arguments]    ${close_corporate_test}=yes     ${queueing}=no
-    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    #Wait Until Page Contains Element    ${button_submit_pnr}    30
+    #Wait For Script To Complete
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
@@ -167,37 +182,40 @@ Click Submit To PNR
     Set Test Variable    ${current_page}     CWT Corporate
     Run Keyword If   "${queueing}" == "yes"     Sleep    5
     # Sleep    5
+    Wait For Script To Complete
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${pnr_submitted}    yes
     
 Click Cancel Segment Button 
-   Wait Until Page Contains Element    ${button_cancel_segment}     10
    Scroll Element Into View    ${button_cancel_segment}
    Click Element    ${button_cancel_segment}
    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
    Wait Until Element Is Visible    ${button_full_wrap}    180
    Set Test Variable    ${current_page}     CWT Corporate
-   Sleep    5
+   Wait For Script To Complete
    Close CA Corporate Test
     
 Click Back To Main Menu
-    Wait Until Element Is Visible    ${button_main_menu}
+    #Wait Until Element Is Visible    ${button_main_menu}
     Click Element    ${button_main_menu}
     Set Test Variable    ${current_page}    CWT Corporate
     
 Click Add Segment From Main Menu
-    Wait Until Element Is Visible    ${button_add_segment}     60   
+    #Wait Until Element Is Visible    ${button_add_segment}     60   
     Click Element    ${button_add_segment}
+    Wait Until Element Is Visible     ${button_add_passive_segment}    30
+    Set Focus To Element    ${button_add_passive_segment}
     Set Test Variable    ${current_page}    Add Segment
     
 Click Add Segment to PNR
     [Arguments]    ${close_corporate_test}=yes
-    Wait Until Element Is Visible    ${button_add_segment_toPNR}    60  
-    Sleep   3  
+    #Wait Until Element Is Visible    ${button_add_segment_toPNR}    60  
+    #Sleep   3  
     Click Element At Coordinates    ${button_add_segment_toPNR}   0   0
     Wait Until Element Is Not Visible     ${message_add_segments}      180
     Wait Until Element Is Visible    ${button_full_wrap}    180
-    Sleep   3 
+    # Sleep   3
+    Wait For Script To Complete 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     Set Test Variable    ${current_page}     CWT Corporate
   
@@ -263,9 +281,10 @@ Navigate From Corp
      ...    ELSE IF    "${destination_page}" == "Send Invoice/Itinerary"     Click Send Invoice
      ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
      ...    ELSE IF    "${destination_page}" == "Aqua Fees"     Click Aqua Fees
+     ...    ELSE IF    "${destination_page}" == "Payment"    Click Airline Corporate Pass Purchase
      ...    ELSE    Close CA Corporate Test
 
-Navigate From Cancel Segments
+Navigate From Cancel Segments 
     [Arguments]    ${destination_page}
     Run Keyword If    "${destination_page}" == "Cancel Segments"    Click Cancel Segments Tab     
     ...    ELSE IF    "${destination_page}" == "NonBSP Ticket Credit"    Click NonBSP Ticket Credit Tab
@@ -276,10 +295,10 @@ Navigate From Add Segment
     Run Keyword If    "${destination_page}" == "Add Passive Segment"    Click Add Passive Segment Button
 
 Click Add Passive Segment Button
-	Wait Until Element Is Visible     ${button_add_passive_segment}    30
-	Click Element At Coordinates    ${button_add_passive_segment}   0   0
+	# Wait Until Element Is Visible     ${button_add_passive_segment}    30
 	Click Element At Coordinates    ${button_add_passive_segment}   0   0
 	Wait Until Element Is Visible    ${select_segment_type}    30
+	# Wait For Script To Complete
 	Set Test Variable   ${current_page}    Add Passive Segment
 
 Collapse Open Panel
@@ -388,6 +407,7 @@ Navigate From Itinerary And Queue
        
 Click Itinerary And Queue Panel
     Wait Until Element Is Visible    ${panel_itinerary_and_queue}    60
+    #Wait For Script To Complete
     Click Element    ${panel_itinerary_and_queue}
     Set Test Variable    ${current_page}    Itinerary And Queue
 
@@ -397,10 +417,12 @@ Finish PNR
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain    ${itinerary_and_queue_pages}    ${current_page}
     ${in_cancel_segments}    Run Keyword And Return Status    Should Contain    ${cancel_segment_pages}    ${current_page}
     ${in_ird}    Run Keyword And Return Status    Should Contain    ${ird_pages}    ${current_page}
+    ${in_aqua_fees}    Run Keyword And Return Status    Should Contain    ${aqua_fees_pages}    ${current_page}
     Run Keyword If    "${pnr_submitted}" == "no" and "${in_full_wrap}" == "True"     Submit To PNR    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_itinerary_and_queue}" == "True"     Send Itinerary And Queue    ${close_corporate_test}    ${queueing}
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_cancel_segments}" == "True"    Fill Up Required And Cancel Segments
     ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_ird}" == "True"    Submit IRD Request
+    ...    ELSE IF    "${pnr_submitted}" == "no" and "${in_aqua_fees}" == "True"    Click Submit To PNR    ${close_corporate_test}    ${queueing}
     ${status}     Run Keyword And Return Status    Should Not Be Empty  ${pnr_details}
     Run Keyword If    "${status}" == "False" and "${close_corporate_test}" == "yes"     Run Keywords        Switch To Graphic Mode    Get PNR Details
 
@@ -431,13 +453,13 @@ Fill Up UDID Field As Needed
     Run Keyword If    "${cfa}" == "SGE" and "${num_air_segments}" != "0"    Enter 1 Airline Code/s For CDR per TKT
     
 Click Ticketing Panel
-    Wait Until Element Is Visible    ${panel_ticketing}    60
+    #Wait Until Element Is Visible    ${panel_ticketing}    60
     Scroll Element Into View    ${panel_ticketing}
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Ticketing
     
 Collapse Ticketing Panel
-    Wait Until Element Is Visible    ${panel_ticketing}    60
+    #Wait Until Element Is Visible    ${panel_ticketing}    60
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Full Wrap PNR
@@ -458,12 +480,12 @@ Verify UDID 86 Remark Is Written Correctly In The PNR
     Verify Specific Remark Is Written In The PNR    RM *U86/-OVERRIDE ${actual_counselor_identity}
      
 Click Fees Panel
-    Wait Until Element Is Visible    ${panel_fees}    60
+    #Wait Until Element Is Visible    ${panel_fees}    60
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Fees
     
 Collapse Fees Panel
-    Wait Until Element Is Visible    ${panel_fees}    60
+    #Wait Until Element Is Visible    ${panel_fees}    60
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Full Wrap PNR
@@ -481,17 +503,20 @@ Click Remarks Panel
     
 Collapse Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
+    #Wait For Script To Complete
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
 Click Queue Panel
     Wait Until Element Is Visible    ${panel_queue}    60
+    #Wait For Script To Complete
     Click Element    ${panel_queue}
     Set Test Variable    ${current_page}    Queue
     
 Collapse Queue Panel
     Wait Until Element Is Visible    ${panel_queue}    60
+    #Wait For Script To Complete
     Scroll Element Into View     ${panel_payment}
     Click Element    ${panel_queue}
     Set Test Variable    ${current_page}    Full Wrap PNR
@@ -542,9 +567,17 @@ Get Test Data From Json
     Get Historical Remark Values From Json    ${json_file_object}    ${client_data}
     ${num_car_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumCarSegments
     ${num_htl_segments}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumHotelSegments
+    Get Limo Values From Json    ${json_file_object}    ${client_data}    
     Get Car Segment Values From Json    ${json_file_object}    ${client_data}
     Set Test variable    ${num_htl_segments}
     
+Get Limo Values From Json
+    [Arguments]    ${json_file_object}     ${client_data}
+    ${exists}     Run Keyword And Return Status    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumLimoSegments
+    ${num_limo_segments}    Run Keyword If    ${exists}    Get Json Value As String    ${json_file_object}    $.['${client_data}'].NumLimoSegments
+    ...    ELSE    Set Variable    0
+    Set Test Variable     ${num_limo_segments}
+
 Get Passenger Info From Json
     [Arguments]    ${json_file_object}     ${client_data}
     Get Passenger Name Values From Json    ${json_file_object}    ${client_data}
@@ -676,11 +709,12 @@ Verify Element Contains Text
     Run Keyword And Continue On Failure    Should Be Equal As Strings    ${value}    ${text}
 
 Click Send Invoice
-    Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
+    #Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
     Click Element     ${button_send_invoice_itinerary} 
-    Wait Until Element Is Visible    ${message_loadingPnr}    180
-    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
-    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    #Wait Until Element Is Visible    ${message_loadingPnr}    180
+    #Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    #Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Wait For Script To Complete
     Set Test Variable    ${current_page}    Send Invoice/Itinerary
     Set Test Variable    ${pnr_submitted}   no
     
@@ -712,19 +746,21 @@ Complete The PNR In Full Wrap
 Click IRD Rate Request
     Wait Until Page Contains Element    ${button_ird_rate_request}      180
     Click Element     ${button_ird_rate_request} 
-    Wait Until Element Is Visible    ${message_loadingPnr}    180
-    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
-    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    #Wait Until Element Is Visible    ${message_loadingPnr}    180
+    #Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    #Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Wait For Script To Complete
     Set Test Variable    ${current_page}    IRD Rate Request
     Set Test Variable    ${pnr_submitted}   no
     
 Submit IRD Request
     [Arguments]    ${close_corporate_test}=yes
-    Wait Until Page Contains Element    ${button_submit_pnr}    30
+    #Wait Until Page Contains Element    ${button_submit_pnr}    30
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
-    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
-    Wait Until Element Is Visible    ${button_full_wrap}    180
+    #Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    #Wait Until Element Is Visible    ${button_full_wrap}    180
+    Wait For Script To Complete
     Set Test Variable    ${current_page}     CWT Corporate 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
     
@@ -758,9 +794,20 @@ Enter Date Value
     Press Keys    none    ${day}    ${month}    ${year}
     
 Click Aqua Fees
-    Wait Until Page Contains Element    ${button_aqua_fees}      180
     Click Element     ${button_aqua_fees} 
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Wait For Script To Complete
     Set Test Variable    ${current_page}    Aqua Fees
+    
+Click Airline Corporate Pass Purchase
+    Wait Until Page Contains Element    ${button_airline_pass_standalone}    100
+    Click Element    ${button_airline_pass_standalone}    
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Test Variable    ${current_page}    Payment
+    
+
+    

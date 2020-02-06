@@ -629,7 +629,8 @@ export class PaymentRemarkService {
       const fg = ticketfop.bspTicketFopForm;
       switch (fg.get('bspfop').value) {
         case 'CC':
-          remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value + fg.get('ccNo').value + '/' + fg.get('expDate').value.replace('/', ''));
+          remGroup.cryptics.push('FPCC' + fg.get('vendorCode').value +
+          fg.get('ccNo').value + '/' + fg.get('expDate').value.replace('/', ''));
           deletePayment = true;
           break;
         case 'CK':

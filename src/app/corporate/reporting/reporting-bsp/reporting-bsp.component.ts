@@ -23,7 +23,7 @@ export class ReportingBSPComponent implements OnInit {
   reasonCodes: Array<ReasonCode[]> = [];
   bspGroup: FormGroup;
   total = 1;
-  highFareSO: any;
+  highFareSO: any[];
   lowFareDom: any;
   lowFareInt: any;
   isDomesticFlight = true;
@@ -44,7 +44,7 @@ export class ReportingBSPComponent implements OnInit {
     private ddbService: DDBService,
     private utilHelper: UtilHelper,
     private valueChagneListener: ValueChangeListener
-  ) { }
+  ) {}
 
   async ngOnInit() {
     await this.ddbService.getReasonCodeByTypeId([ReasonCodeTypeEnum.Realized], 1).then((response) => {
@@ -56,7 +56,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.isDoneLoading = false;
     this.bspGroup = this.fb.group({
-      fares: this.fb.array([this.createFormGroup('', '', '', '', '')])
+      fares: this.fb.array([this.createFormGroup('', '', '', '', '', '', '')])
     });
 
     this.isDomesticFlight = this.ddbService.isPnrDomestic();
@@ -75,21 +75,28 @@ export class ReportingBSPComponent implements OnInit {
     this.total = items.length;
   }
 
-  addFares(segmentNo: string, highFare: string, lowFare: string, reasonCode: string, chargeFare: string, isExchange: boolean) {
+  addFares(
+    segmentNo: string,
+    highFare: string,
+    lowFare: string,
+    reasonCode: string,
+    chargeFare: string,
+    isExchange: boolean,
+    currency: string,
+    baseFare: string,
+    tstNumber?: string
+  ) {
     const items = this.bspGroup.get('fares') as FormArray;
-
     if (Number(highFare) < Number(chargeFare)) {
       highFare = chargeFare;
     }
 
-    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, isExchange));
+    items.push(this.createFormGroup(segmentNo, highFare, lowFare, reasonCode, chargeFare, currency, baseFare, isExchange, tstNumber));
     this.total = items.length;
   }
 
   getReasonCodeValue(code, index): string {
-    const reasonText = this.reasonCodes[index]
-      .filter((x) => x.reasonCode === code)
-      .map((x) => x.reasonCode + ' : ' + x.reasonCodeProductTypeDescription);
+    const reasonText = this.reasonCodes[index].filter((x) => x.reasonCode === code).map((x) => x.reasonCode + ' : ' + x.getDescription());
 
     if (reasonText.length >= 0) {
       return reasonText[0];
@@ -104,7 +111,10 @@ export class ReportingBSPComponent implements OnInit {
     lowFare: string,
     reasonCode: string,
     chargeFare: string,
-    isExchange?: boolean
+    currency: string,
+    baseFare: string,
+    isExchange?: boolean,
+    tstNumber?: string
     // defaultValue?: any
   ): FormGroup {
     const group = this.fb.group({
@@ -113,9 +123,12 @@ export class ReportingBSPComponent implements OnInit {
       lowFareText: new FormControl(lowFare),
       reasonCodeText: new FormControl(reasonCode),
       chargeFare: new FormControl(chargeFare),
+      currency: new FormControl(currency),
+      baseFare: new FormControl(baseFare),
       chkIncluded: new FormControl(''),
       isExchange: new FormControl(isExchange),
-      lowFareOption: new FormControl('')
+      lowFareOption: new FormControl(''),
+      tstNumber: new FormControl(tstNumber)
     });
 
     group.get('reasonCodeText').valueChanges.subscribe((val) => {
@@ -150,7 +163,7 @@ export class ReportingBSPComponent implements OnInit {
         group.get('reasonCodeText').setValue('E');
       }
 
-      group.get('highFareText').setValue(chargeFare);
+      group.get('highFareText').setValue(highFare);
       group.get('lowFareText').setValue(chargeFare);
       group.get('reasonCodeText').disable();
       group.get('highFareText').disable();
@@ -158,8 +171,7 @@ export class ReportingBSPComponent implements OnInit {
     } else {
       this.changeReasonCodes(group, currentIndex);
       if (this.reasonCodes.length > 0 && this.reasonCodes[currentIndex].length === 1) {
-        reasonCode =
-          this.reasonCodes[currentIndex][0].reasonCode + ' : ' + this.reasonCodes[currentIndex][0].reasonCodeProductTypeDescription;
+        reasonCode = this.reasonCodes[currentIndex][0].reasonCode + ' : ' + this.reasonCodes[currentIndex][0].getDescription();
         group.get('reasonCodeText').setValue(reasonCode);
       }
     }
@@ -172,7 +184,8 @@ export class ReportingBSPComponent implements OnInit {
   }
 
   getServicingOptionValuesFares() {
-    this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
+    // this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
+    this.highFareSO = this.ddbService.getServicingOptionValueList(ServicingOptionEnums.High_Fare_Calculation);
     this.lowFareDom = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_Domestic_Calculation);
     this.lowFareInt = this.ddbService.getServicingOptionValue(ServicingOptionEnums.Low_Fare_International_Calculation);
   }
@@ -199,10 +212,28 @@ export class ReportingBSPComponent implements OnInit {
   async populateData(tst, index, tstCount: number) {
     const fareInfo = tst.fareDataInformation.fareDataSupInformation;
     const chargeFare = fareInfo[fareInfo.length - 1].fareAmount;
+    const baseFareInfo = fareInfo.filter((x) => x.fareDataQualifier === 'B');
+
+    let currency;
+    let baseFare;
+    if (baseFareInfo.length > 0) {
+      baseFare = baseFareInfo[0].fareAmount;
+      currency = baseFareInfo[0].fareCurrency;
+    }
+
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.getSegmentLineNo(segmentNo);
-    const highFare = await this.getHighFare(this.insertSegment(this.highFareSO.ServiceOptionItemValue, segmentLineNo)); // FXA/S
+    let highFare: string;
+
+    for (const item of this.highFareSO) {
+      if (highFare === undefined || highFare === '') {
+        highFare = await this.getHighFare(this.insertSegment(item.ServiceOptionItemValue, segmentLineNo));
+      }
+    }
+    if (!highFare) {
+      highFare = chargeFare;
+    }
 
     let lowFare = '';
 
@@ -220,7 +251,7 @@ export class ReportingBSPComponent implements OnInit {
 
     this.reasonCodes.push([]);
 
-    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange);
+    this.addFares(segmentLineNo, highFare, lowFare, '', chargeFare, isExchange, currency, baseFare, tst.fareReference.uniqueReference);
 
     if (index === tstCount) {
       this.isDoneLoading = true;
@@ -309,10 +340,10 @@ export class ReportingBSPComponent implements OnInit {
 
   async getHighFare(command: string) {
     let value = '';
+
     await smartScriptSession.send(command).then((res) => {
       const regex = /TOTALS (.*)/g;
       const match = regex.exec(res.Response);
-
       // regex.lastIndex = 0;
       if (match !== null) {
         const temp = match[0].split('    ');

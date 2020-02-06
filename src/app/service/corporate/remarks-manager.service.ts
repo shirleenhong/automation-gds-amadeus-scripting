@@ -16,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -100,15 +100,22 @@ export class RemarksManagerService {
   // use this if you wan to forcely delete the remark
   public createEmptyPlaceHolderValue(keys: string[], condition?, staticText?) {
     const map = new Map<string, string>();
+    // const conditionmap = new Map<string, string>();
     keys.forEach((key) => {
       map.set(key, '');
     });
+
+    // condition.forEach((key) => {
+    //   conditionmap.set(key, '');
+    // });
+
     const placeHolder = new PlaceholderValues({
       id: this.getOutputItemId(map, staticText, condition),
       segmentNumberReferences: [],
       passengerNumberReferences: [],
       matchedPlaceholders: null
     });
+
     this.newPlaceHolderValues.push(placeHolder);
   }
 
@@ -228,8 +235,8 @@ export class RemarksManagerService {
       console.log(JSON.stringify(res));
       this.newPlaceHolderValues = [];
       await this.deleteSSRLines();
-      if (commandList) {
-        await this.sendSSRCommands(commandList, 0);
+      if (commandList && commandList.length > 0) {
+        await this.sendCrypticCommands(commandList);
       }
 
       this.endPnr();
@@ -302,12 +309,9 @@ export class RemarksManagerService {
     return deleteResponse;
   }
 
-  async sendSSRCommands(cmds, index) {
-    const self = this;
-    if (!(index === cmds.length)) {
-      await smartScriptSession.send(cmds[index]).then(async () => {
-        await self.sendSSRCommands(cmds, index + 1);
-      });
+  async sendCrypticCommands(commands) {
+    for (const com of commands) {
+      await smartScriptSession.send(com);
     }
   }
 

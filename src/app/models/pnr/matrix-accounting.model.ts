@@ -37,6 +37,10 @@ export class MatrixAccountingModel {
   penaltyQst = '0.00';
   penaltyOtherTax = '0.00';
   status: string; // ADDED, UPDATED
+  billingType: string;
+  feeAmount: string;
+  segmentCost: string;
+  passExpDate: string;
 
   // Non BSP Exchange properties
   gdsFare: number;
@@ -57,4 +61,22 @@ export class MatrixAccountingModel {
   additionalNotes1: string;
   additionalNotes2: string;
   oid: string;
+
+  getTotalAmount() {
+    return (
+      this.getNumberValue(this.baseAmount) +
+      this.getNumberValue(this.gst) +
+      this.getNumberValue(this.qst) +
+      this.getNumberValue(this.hst) +
+      this.getNumberValue(this.otherTax)
+    ).toFixed(2);
+  }
+
+  getNumberValue(val) {
+    try {
+      return parseFloat(val);
+    } catch (ex) {
+      return 0.0;
+    }
+  }
 }

@@ -31,7 +31,7 @@
         </app-generic-select>
       </div>
     </div>
-    <div class="row" *ngIf="!isObt">
+    <div class="row">
       <div class="col-4">
         <label
           ><input type="checkbox" name="enableSupFee" formControlName="enableSupFee" (change)="isShowSupFee = !isShowSupFee" /> Supplemental
@@ -41,7 +41,25 @@
     </div>
 
     <div *ngIf="isShowSupFee">
-      <app-supplemental-fees [isAquaFee]="true" [selectedSegmentType]="selectedFeeType"></app-supplemental-fees>
+      <app-supplemental-fees [isAquaFee]="true" [byPassFeeCode]="feeCode"></app-supplemental-fees>
+      <br />
+    </div>
+
+    <div class="row" *ngIf="hasAir">
+      <div class="col-3">
+        Ticket Number:
+        <input
+          type="text"
+          class="form-control"
+          formControlName="ticketNumber"
+          name="ticketNumber"
+          id="ticketNumber"
+          maxlength="10"
+          minlength="10"
+          NumberOnlyMask
+        />
+      </div>
+      <div class="col-4"></div>
     </div>
   </form>
   <br />

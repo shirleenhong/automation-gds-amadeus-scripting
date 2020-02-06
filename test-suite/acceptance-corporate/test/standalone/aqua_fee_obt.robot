@@ -20,17 +20,17 @@ Verify Aqua fee Is Written For OBT Agent Unassisted With MAC line And Air Fee Is
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua fee Is Written For OBT Agent Unassisted With MAC line Not Equal To PFS And Car Fee Is Selected
-    [Tags]    us13840
+    [Tags]    us13840    full_regression
     Create PNR With Active Air Segments For OBT PNR With non-PFS Supplier For APAY
     Complete The PNR With Default Values 
-    Select CAR ONLY FEES Type Of Fee And Select Segment
+    Select Segment And Select CAR ONLY FEES
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua fee Is Written For OBT Agent Unassisted With Multiple MAC Line Not Equal To PFS And Hotel Fee Is Selected
-    [Tags]    us13840
+    [Tags]    us13840    full_regression
     Create PNR For OBT PNR With Multiple non-PFS Supplier For APAY
-    Complete The PNR In Corporate Scripts
-    Select HOTEL ONLY FEES Type Of Fee And Select Segment
+    Complete The PNR With Default Values
+    Select Segment And Select HOTEL ONLY FEES 
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua Fee Is Written For OBT Agent Unassisted Without MAC Line And Limo Fee Is Selected
@@ -38,11 +38,11 @@ Verify Aqua Fee Is Written For OBT Agent Unassisted Without MAC Line And Limo Fe
     Create PNR With Active Air Segments For OBT PNR Without APAY
     Add 2 Limo Segments
     Complete The PNR With Default Values 
-    Select LIMO ONLY FEES Type Of Fee And Select Segment
+    Select Segment And Select LIMO ONLY FEES
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua fee Is Written For OBT Agent Unassisted Without MAC Line And Rail Fee Is Selected
-    [Tags]    us13840
+    [Tags]    us13840    full_regression
     Create PNR With Active Air Segments For OBT PNR Without APAY With Rail
     Add 1 Rail Segments
     Complete The PNR With Default Values 
@@ -50,7 +50,7 @@ Verify Aqua fee Is Written For OBT Agent Unassisted Without MAC Line And Rail Fe
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua Fee Is Written For OBT Agent Assisted With MAC Line And Air Fee Is Selected
-    [Tags]    us13840
+    [Tags]    us13840    full_regression
     Create PNR With Active Air Segments For OBT PNR With APAY For Agent Assisted
     Complete The PNR With Default Values
     Select AIR FEES And Update Touch Reason
@@ -79,7 +79,7 @@ Verify Aqua Fee Is Written For OBT Agent Assisted Without MAC Line And Limo Fee 
     Verify Aqua Fee Remarks Are Written In The PNR
     
 Verify Aqua Fee Is Written For OBT Agent Assisted Without MAC Line And Rail Fee Is Selected
-    [Tags]    us13840
+    [Tags]    us13840    full_regression
     Create PNR With Active Air Segments For OBT PNR Without APAY For Agent Assisted With Rail
     Complete The PNR With Default Values
     Select RAIL FEES And Update Touch Reason

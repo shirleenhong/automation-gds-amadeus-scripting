@@ -68,6 +68,7 @@ export class CorporateComponent implements OnInit {
   itinValidModel = new ValidateModel();
   dataErrorMessages = new Array<string>();
   migrationOBTDates: Array<string>;
+  migrationOBTCfas="";
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;
@@ -283,6 +284,9 @@ export class CorporateComponent implements OnInit {
         await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
           this.migrationOBTDates = dates;
         });
+        await this.ddbService.getMigrationOBTFeeCFA().then((cfa) => {
+          this.migrationOBTCfas = cfa;
+        });
         await this.rulesEngine.initializeRulesEngine();
       } catch (e) {
         console.log(e);
@@ -354,7 +358,7 @@ export class CorporateComponent implements OnInit {
       this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
     }
 
-    this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates);
+    this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates, this.migrationOBTCfas);
 
     this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
 

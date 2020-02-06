@@ -99,7 +99,7 @@ export class ReportingRemarkService {
           }
         }
         otherTktMap.set('CAPointOfTurnAround', desti);
-        this.remarksManager.createPlaceholderValues(otherTktMap, null, segmentrelate);
+        this.remarksManager.createPlaceholderValues(otherTktMap);
 
         const tktBFRemark = new Map<string, string>();
         tktBFRemark.set('AirTicketId', counter.toString());

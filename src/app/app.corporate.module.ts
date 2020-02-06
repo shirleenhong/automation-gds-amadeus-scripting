@@ -47,7 +47,6 @@ import { AirFareCommissionComponent } from './corporate/pricing/air-fare-commiss
 import { ExchangeEndorsementsComponent } from './corporate/pricing/exchange-endorsements/exchange-endorsements.component';
 import { ObtComponent } from './corporate/reporting/obt/obt.component';
 import { AquaFeesComponent } from './corporate/fees/aqua-fees/aqua-fees.component';
-import { NoBookedHotelComponent } from './corporate/reporting/no-booked-hotel/no-booked-hotel.component';
 
 @NgModule({
   declarations: [
@@ -93,8 +92,7 @@ import { NoBookedHotelComponent } from './corporate/reporting/no-booked-hotel/no
     AirFareCommissionComponent,
     ExchangeEndorsementsComponent,
     ObtComponent,
-    AquaFeesComponent,
-    NoBookedHotelComponent
+    AquaFeesComponent
   ],
   imports: [
     BrowserModule,

@@ -18,7 +18,7 @@ export class FeesRemarkService {
     private pnrService: PnrService,
     private queueRemarksService: AmadeusQueueService,
     private ddbService: DDBService
-  ) { }
+  ) {}
 
   /**
    * US9402
@@ -27,36 +27,39 @@ export class FeesRemarkService {
    *
    * @return void
    */
-  public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>): void {
+  public writeMigrationOBTFeeRemarks(migrationOBTDates: Array<string>, cfaList): void {
     // Check if CFA and OBT remarks exists in PNR
     if (this.pnrService.getCFLine() && this.pnrService.isOBT()) {
-      const now = Date.now();
-      const startDate = Date.parse(migrationOBTDates[0]);
-      const endDate = Date.parse(migrationOBTDates[1]);
+      const cfa = this.pnrService.getCFLine().cfa;
+      if (cfaList && cfaList.indexOf(cfa) >= 0) {
+        const now = Date.now();
+        const startDate = Date.parse(migrationOBTDates[0]);
+        const endDate = Date.parse(migrationOBTDates[1]);
 
-      // Check if booking date is within configurated dates
-      if (now >= startDate && now <= endDate) {
-        const airSegments = this.pnrService.getPassiveSegmentTypes('AIR');
-        const railSegments = this.pnrService.getPassiveSegmentTypes('MIS');
-        const hotelSegments = this.pnrService.getPassiveSegmentTypes('HTL');
-        const carSegments = this.pnrService.getPassiveSegmentTypes('CAR');
-        let remarkValue: string = null;
+        // Check if booking date is within configurated dates
+        if (now >= startDate && now <= endDate) {
+          const airSegments = this.pnrService.getPassiveSegmentTypes('AIR');
+          const railSegments = this.pnrService.getPassiveSegmentTypes('MIS');
+          const hotelSegments = this.pnrService.getPassiveSegmentTypes('HTL');
+          const carSegments = this.pnrService.getPassiveSegmentTypes('CAR');
+          let remarkValue: string = null;
 
-        if (airSegments.length) {
-          remarkValue = 'ATE';
-        } else if (railSegments.length && !airSegments.length) {
-          remarkValue = 'RTE';
-        } else if (hotelSegments.length && !airSegments.length) {
-          remarkValue = 'HBE';
-        } else if (carSegments.length && !airSegments.length) {
-          remarkValue = 'CBE';
-        }
+          if (airSegments.length) {
+            remarkValue = 'ATE';
+          } else if (railSegments.length && !airSegments.length) {
+            remarkValue = 'RTE';
+          } else if (hotelSegments.length && !airSegments.length) {
+            remarkValue = 'HBE';
+          } else if (carSegments.length && !airSegments.length) {
+            remarkValue = 'CBE';
+          }
 
-        if (remarkValue) {
-          const migrationOBTFeeMap = new Map<string, string>();
-          migrationOBTFeeMap.set('SupFeeTicketId', '1');
-          migrationOBTFeeMap.set('SupFeeInfo', remarkValue);
-          this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+          if (remarkValue) {
+            const migrationOBTFeeMap = new Map<string, string>();
+            migrationOBTFeeMap.set('SupFeeTicketId', '1');
+            migrationOBTFeeMap.set('SupFeeInfo', remarkValue);
+            this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
+          }
         }
       }
     }

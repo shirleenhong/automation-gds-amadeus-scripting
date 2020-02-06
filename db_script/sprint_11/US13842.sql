@@ -7,10 +7,6 @@ Update PNROUTPUTPlaceholder set PNROutputPlaceHolderRegularExpresssion= '((([A-Z
 
 
 
-
-
-
-
 DECLARE @creationIdentifier AS VARCHAR(50) = 'Amadeus CA Migration - US13842'
 	DECLARE @creationtimestamp AS DATETIME = GETUTCDATE()
 	DECLARE @feeId as Int = (select max(clientfeeId)
@@ -35,7 +31,6 @@ from ClientFeeOutput);
 VALUES
     (@feeId+1, 'Exchange Fee', 2, 1, @creationTimestamp, @creationIdentifier, null, null, 1, '1A'),
     (@feeId+2, 'ABF Fee', 2, 1, @creationTimestamp, @creationIdentifier, null, null, 1, '1A')
-					
 
 
 SET IDENTITY_INSERT [dbo].CLIENTFEEOUTPUT ON;  

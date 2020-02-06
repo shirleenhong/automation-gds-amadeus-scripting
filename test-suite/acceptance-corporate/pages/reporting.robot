@@ -1130,4 +1130,9 @@ Get Value Of Charge Fare For ${no_of_tst} TST
     \    ${i}    Evaluate    ${i} + 1
     \    ${actual_charge_fare}    Get Value    ${div_fares}${open_bracket}${i}${close_bracket}${input_charge_fare}
     \    Set Test Variable    ${actual_charge_fare_${i}}    ${actual_charge_fare}
-
+    
+Verify That Car Savings Code Should Not Be Displayed In The UI
+    Navigate to Page Reporting
+    Wait Until Element Is Not Visible    ${tab_car_savings_code}    20
+    Take Screenshot
+    Close CA Corporate Test

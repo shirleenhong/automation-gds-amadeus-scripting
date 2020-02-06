@@ -22,14 +22,14 @@
       "^/service/ap/remarks-manager/api": "/remarks-manager-rest/api"
     }
   },
-  "/service/ap/splunk-service-rest/api/splunk/*": {
+  "/service/cbt-splunk-service/api/splunk/*": {
     "dev_target": "https://internal-dev-non-pci-int-lb-1435393786.us-west-2.elb.amazonaws.com",
     "target": "https://internal-test-non-pci-int-lb-654675869.us-west-2.elb.amazonaws.com",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^/service/ap/splunk-service-rest/api/splunk": "/splunk-service-rest/api/splunk"
+      "^/service/cbt-splunk-service/api/splunk": "/splunk-service-rest/api/splunk"
     }
   }
 }

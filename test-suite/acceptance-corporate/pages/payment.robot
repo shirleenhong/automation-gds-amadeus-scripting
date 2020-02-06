@@ -407,6 +407,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase
     Enter Value    ${input_departurecity}    YVR        
     Enter Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       FLEX
+    Take Screenshot
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
     Take Screenshot
@@ -421,6 +422,7 @@ Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
     Enter Value    ${input_departurecity}    YVR        
     Enter Value    ${list_purchasetype}     COMMUTER-U.S COMMUTER
     Select From List By Label    ${list_faretype}       PREMIUM ECONOMY
+    Take Screenshot
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Click Save Button
     Take Screenshot
@@ -624,21 +626,23 @@ Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
     Verify Specific Remark Is Written In The PNR    YCCYCC GK1 0700 0800 ${current_date} 879222    True
 
 Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
-    Verify Specific Remark Is Written In The PNR    RIR U.S COMMUTER PASS-FLEX/S2    
-    Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    
-    Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
-    Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
-    Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    
+    Verify Specific Remark Is Written In The PNR    RIR COMMUTER-U.S COMMUTER PASS-FLEX/S2  
+    Verify Specific Remark Is Written In The PNR    RIR TOUS LES DETAILS ONT ETE PRESENTES AU CLIENT ET
+    Verify Specific Remark Is Written In The PNR    RIR APPROUVES PAR CE DERNIER.  
+    Verify Specific Remark Is Written In The PNR    RIR LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES  
+    Verify Specific Remark Is Written In The PNR    RIR CLIENTS ONT ETE APPROUVES PAR LE CLIENT.
+    Verify Specific Remark Is Written In The PNR    RIR VOTRE NUMERO DE CONFIRMATION AC EST 879111/S2
+    Verify Specific Remark Is Not Written In The PNR    RIR AIR CANADA INDIVIDUAL PASS REDEMPTION-FLEX FARE/S2    True
     Take Screenshot
     
 Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR For Premium
-    Verify Specific Remark Is Written In The PNR    RIR U.S COMMUTER PASS-PREMIUM ECONOMY/S2    
+    Verify Specific Remark Is Written In The PNR    RIR COMMUTER-U.S COMMUTER PASS-PREMIUM ECONOMY/S2    
     Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    
     Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
     Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
     Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT    
-    Verify Specific Remark Is Written In The PNR    RIR AIR CANADA INDIVIDUAL PASS REDEMPTION-PREMIUM ECONOMY FARE/S2    True
     Verify Specific Remark Is Written In The PNR    RIR YOUR AC CONFIRMATION NUMBER IS 879111/S2    
+    Verify Specific Remark Is Not Written In The PNR    RIR AIR CANADA INDIVIDUAL PASS REDEMPTION-PREMIUM ECONOMY FARE/S2    True
     Take Screenshot
     
 Verify Updated Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
@@ -666,7 +670,7 @@ Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    APPROUVES PAR CE DERNIER    
     Verify Specific Remark Is Written In The PNR    LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES    
     Verify Specific Remark Is Written In The PNR    CLIENTS ONT ETE APPROUVES PAR LE CLIENT    
-    Verify Specific Remark Is Written In The PNR    RIR WESTJET INDIVIDUAL PASS REDEMPTION/S2  
+    Verify Specific Remark Is Not Written In The PNR    RIR WESTJET INDIVIDUAL PASS REDEMPTION/S2  
     Verify Specific Remark Is Written In The PNR    RIR VOTRE NUMERO DE CONFIRMATION WS EST 123456/S2
     Take Screenshot
     

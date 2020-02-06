@@ -1100,3 +1100,9 @@ Update Agent Assisted And Touch Reason Codes
     Navigate To Page Reporting Remarks
     Update Agent Assisted And Touch Reason Code    AM    A
     Take Screenshot
+    
+Verify That Car Savings Code Should Not Be Displayed In The UI
+    Navigate to Page Reporting
+    Wait Until Element Is Not Visible    ${tab_car_savings_code}    20
+    Take Screenshot
+    Close CA Corporate Test

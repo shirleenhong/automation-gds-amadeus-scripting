@@ -68,7 +68,7 @@ export class CorporateComponent implements OnInit {
   itinValidModel = new ValidateModel();
   dataErrorMessages = new Array<string>();
   migrationOBTDates: Array<string>;
-  migrationOBTCfas= '';
+  migrationOBTCfas = '';
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;

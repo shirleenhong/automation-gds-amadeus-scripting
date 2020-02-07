@@ -147,7 +147,6 @@ export class CorpCancelRemarkService {
   }
 
   writeAquaTouchlessRemark(cancel: any) {
-    debugger;
     if (
       cancel.value.followUpOption === 'BSPKT' ||
       cancel.value.followUpOption === 'NONBSPKT' ||
@@ -158,7 +157,6 @@ export class CorpCancelRemarkService {
       let value = '';
       if (bbExist) {
         if (remarkText !== '') {
-          debugger;
           const regex = /(?<BB>\d(.*))/g;
           const match = regex.exec(remarkText);
           regex.lastIndex = 0;

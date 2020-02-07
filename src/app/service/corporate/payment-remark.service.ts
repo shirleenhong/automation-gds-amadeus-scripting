@@ -359,15 +359,15 @@ export class PaymentRemarkService {
           airlineCodeRemark.set('AirlineCode', 'WS');
           airlineCodeInvoice.set('AirlineCode', 'WS');
           confNbrRem.set('AirlineCode', 'WS');
-          redemptionRemark.set('PassName', 'Westjet Individual');
-          passNameRedemptionRemark.set('PassNameRedemption', 'Westjet Individual');
+          // redemptionRemark.set('PassName', 'Westjet Individual');
+          // passNameRedemptionRemark.set('PassNameRedemption', 'Westjet Individual');
         } else {
           // airline = 'PD';
           airlineCodeRemark.set('AirlineCode', 'PD');
           airlineCodeInvoice.set('AirlineCode', 'PD');
           confNbrRem.set('AirlineCode', 'PD');
-          redemptionRemark.set('PassName', 'Porter Individual');
-          passNameRedemptionRemark.set('PassNameRedemption', 'Porter Individual');
+          // redemptionRemark.set('PassName', 'Porter Individual');
+          // passNameRedemptionRemark.set('PassNameRedemption', 'Porter Individual');
         }
         paymentRemark.set('PassNameNonAc', account.passPurchase);
       }

@@ -105,7 +105,7 @@
 		"AirlineCode4": null,
 		"PriceCommand1": "FXP",
 		"PriceCommand2": null,
-		"PriceCommand3": null,
+		"PriceCommand3": null, 
 		"PriceCommand4": null,
 		"NumCarSegments": "0",
 		"NumHotelSegments": "0",
@@ -262,7 +262,7 @@
 		"ExpectedRemark2": "RMA UA SVC FUND USED/WAIVER-9999999",
 		"ExpectedRemark3": "FE PAX *M*/C1 REFUNDABLE -BG:UA UAIRROPS9999999/S2",
 		"ExpectedRemark4": "FE PAX *M*/C1 REFUNDABLE -BG:UA UAIRROPS9999999/S3",
-		"ExpectedRemark5": "OSI UA IRR DELAY/UA123/12FEB",
-		"ExpectedRemark6": "OSI UA IRR CANCEL/UA123/12FEB"
+		"ExpectedRemark5": "OSI UA IRR DELAY/UA123/02DEC",
+		"ExpectedRemark6": "OSI UA IRR CANCEL/UA123/02DEC"
 	}
 }

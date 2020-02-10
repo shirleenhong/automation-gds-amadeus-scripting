@@ -2,7 +2,7 @@
 Force Tags        corp
 Resource          ../../pages/base.robot
 Test Setup        Login To Amadeus Sell Connect Acceptance
-Test Teardown     Close All Browsers
+#Test Teardown     Close All Browsers
 
 *** Test Cases ***
 Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass Purchase PNR
@@ -52,3 +52,6 @@ Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purc
     Verify That Accounting Remark Is Written Correctly For Non BSP Airline Pass Purchase
     Logout To Amadeus Sell Connect
     
+test us16896
+    Move Single Passenger For EN
+    Navigate To Page Add Accounting Line

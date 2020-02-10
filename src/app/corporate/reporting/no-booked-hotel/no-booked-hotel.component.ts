@@ -85,8 +85,9 @@ export class NoBookedHotelComponent implements OnInit {
     seg2Date.setHours(time2.substr(0, 2));
     seg2Date.setMinutes(time2.substr(2, 2));
     const hourDiff = this.utilHelper.dateDiffInHours(seg1Date, seg2Date);
+    const dayDiff = this.utilHelper.dateDiffInDays(seg1Date, seg2Date);
     // day diff should be more than 4 hours
-    return hourDiff > 4;
+    return dayDiff > 0 && hourDiff > 4;
   }
 
   isLess4HourTimeDiff(time1, date2) {

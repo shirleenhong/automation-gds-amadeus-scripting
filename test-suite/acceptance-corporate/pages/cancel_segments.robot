@@ -435,6 +435,7 @@ Verify Non BSP ${refund_type} Refund Remarks Are Written In The PNR
     Run Keyword If    "${refund_type}" == "Partial"    Verify Specific Remark Is Written In The PNR    RMX . REFUND BASE AMOUNT ${base_amount} GST ${gst} TAX ${other_tax}      
     Verify Specific Remark Is Written In The PNR    RMX . ${free_flow_1}
     Verify Specific Remark Is Written In The PNR    RMX . ${free_flow_2}
+    Verify Specific Remark Is Written In The PNR    RM *BB/-123456
     Verify Cancelled For Non BSP Refund PNR IS Queued Correctly    
     
 Void The Ticket

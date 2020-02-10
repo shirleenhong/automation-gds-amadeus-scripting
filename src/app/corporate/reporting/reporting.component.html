@@ -21,8 +21,10 @@
   <tab heading="Car Savings Code" id="carSavingsCode" tabOrder="7" *ngIf="showCarSavingsTab">
     <app-car-savings-code></app-car-savings-code>
   </tab>
-
-  <tab heading="UDID" id="rules" tabOrder="8" *ngIf="hasRules">
+  <tab heading="No Hotel Booked" id="noHotelBook" tabOrder="8" *ngIf="showNoHotelBooked">
+    <app-no-booked-hotel></app-no-booked-hotel>
+  </tab>
+  <tab heading="UDID" id="rules" tabOrder="9" *ngIf="hasRules">
     <app-container [containerFilter]="'REPORTING'"></app-container>
   </tab>
 </tabset>

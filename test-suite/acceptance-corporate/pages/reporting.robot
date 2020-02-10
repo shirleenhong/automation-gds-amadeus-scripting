@@ -191,7 +191,9 @@ Add Client Reporting Values For Single BSP Segment
     Select Client Reporting Fields To Be Written    1
     ${actual_charge_fare}    Get Value   ${input_charge_fare}
     ${actual_full_fare}    Get Value    ${input_full_fare}
-    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Get Low Fare Value
+    Run Keyword If    "${actual_low_fare}" == "${EMPTY}"    Enter Value    ${input_low_fare}    550.50
+    Run Keyword If    "${actual_low_fare}" == "${EMPTY}"    Get Low Fare Value
     Select Reason Code    A : Lowest Fare Accepted
     Set Test Variable    ${actual_charge_fare}
     Set Test Variable    ${actual_full_fare}
@@ -289,15 +291,25 @@ Verify Client Reporting Fields For Non-BSP For ${segment_number} Segment
     Click Save Button
     Navigate To Page Non BSP Reporting
     ${actual_segment_number}    Get Value    ${input_segment_number} 
-    ${actual_full_fare}    Get Value    ${input_full_fare}
-    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Get Full Fare Value
+    Get Low Fare Value
+    Run Keyword If    "${actual_full_fare}" == "${EMPTY}"    Enter Value    ${input_full_fare}    1123.50
+    Run Keyword If    "${actual_full_fare}" == "${EMPTY}"    Get Full Fare Value
     ${actual_low_fare}    Convert To Number    ${actual_low_fare}    2
-    Set Test Variable    ${actual_low_fare}    ${actual_low_fare}
-    Set Test Variable    ${actual_full_fare}
+    Set Test Variable    ${actual_low_fare}    ${actual_low_fare}0
+    # Set Test Variable    ${actual_full_fare}
     Run Keyword If    '${segment_number}' == 'Single'     Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2    ELSE   Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2,3 
     Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare}    760.00    
     Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${expected_low_fare} 
     Take Screenshot
+    
+Get Full Fare Value
+    ${actual_full_fare}    Get Value    ${input_full_fare}
+    Set Test Variable    ${actual_full_fare}
+    
+Get Low Fare Value
+    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Set Test Variable    ${actual_low_fare}
 
 Update Client Reporting Values For Non-BSP
     Click Save Button
@@ -318,7 +330,7 @@ Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single S
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-A/FF-${actual_full_fare}/FS91/DE
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-L/FF-${actual_full_fare}/FS91/DE
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BFCAD750.00/S2
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
@@ -326,6 +338,8 @@ Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-L/FF-${actual_full_fare}/FS91/DE-
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BFCAD750.00/S2-3
 
 Verify That Updated Non-BSP Client Reporting Remarks Are Written In The PNR
     Finish PNR

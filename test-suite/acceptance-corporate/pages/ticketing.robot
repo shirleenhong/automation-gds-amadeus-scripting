@@ -193,6 +193,7 @@ Verify That Aqua TK Line Is Written Correctly For Changed PNR Without Billed Ser
 Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
     Finish PNR
     Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1
+    Open Command Page
     
 Verify That Aqua TK Line Is Written Correctly For Updated TK Line
     Finish PNR

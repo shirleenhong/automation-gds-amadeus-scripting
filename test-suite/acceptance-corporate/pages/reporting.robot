@@ -67,7 +67,7 @@ ${list_guestType}    //select[@name='guestType']
 ${list_reasonNotBook14Days}    //select[@name='reasonNotBook14Days']
 ${list_notBooked14dayAdvance}    //select[@name='notBooked14dayAdvance']
 ${list_notBooked14dayInAdvance}    //select[@name='bookedLess14Days']
-${input_approverName}    //input[@name='approverName']
+${input_udid_approverName}    //input[@name='approverName']
 ${list_outOfPolicy}    //select[@name='outOfPolicy']
 ${list_notBooked14Days}     //select[@name='notBooked14Days']
 ${input_businessClassApprover}    //input[@name='businessClassApprover']
@@ -87,7 +87,7 @@ ${list_reasonNotOnline}    //select[@name='reasonNotOnline']
 ${input_travelerType}    //input[@name='travellerType']
 ${list_noHotel}    //select[@name='noHotelBookedReason']
 ${input_btaApproval}    //input[@name='btaApproval']
-${input_lowestGdsFare}    //input[@name='lowestGdsFare']
+${input_udid_lowestGdsFare}    //input[@name='lowestGdsFare']
 ${list_passTracker}    //select[@name='passTracker']
 ${list_bookingAdvance}    //select[@name='bookAdvance']
 ${input_approverInfo}    //input[@name='approverInfo']
@@ -871,7 +871,7 @@ Select Booked Less Than 14 Days Advance Value: ${reason}
     
 Fill Up UDID Fields For Client Nexans
     Navigate To Page UDID
-    Enter Value    ${input_approverName}    Chuck Velasquez
+    Enter Value    ${input_udid_approverName}    Chuck Velasquez
     Select From List By Label    ${list_outOfPolicy}    Urgent internal Nexans
     Take Screenshot
     
@@ -944,7 +944,7 @@ Fill Up UDID Fields For Ribbon Communications
 Fill Up UDID Fields With Default Values For Ontario Teachers
     Navigate To Page UDID
     Enter Value    ${input_btaApproval}    A0123
-    Enter Value    ${input_lowestGdsFare}    100.00
+    Enter Value    ${input_udid_lowestGdsFare}    100.00
     Select From List By Label    ${list_passTracker}    PASS PURCHASE PNR - Approval received from Judy Simpson
     Take Screenshot
 
@@ -965,9 +965,9 @@ Select No Hotel Booked Value: ${value}
     
 Enter Approver Name For International Travel: ${name}
     Navigate To Page UDID
-    Enter Value    ${input_approverName}    ${name}
+    Enter Value    ${input_udid_approverName}    ${name}
     Take Screenshot
-    
+
 Select Advance Booking Value: ${value}
     Navigate To Page UDID
     Select From List By Label    ${list_advanceBooking}    ${value}
@@ -1106,3 +1106,13 @@ Verify That Car Savings Code Should Not Be Displayed In The UI
     Wait Until Element Is Not Visible    ${tab_car_savings_code}    20
     Take Screenshot
     Close CA Corporate Test
+
+Verify Hotel Savings Tab Is Displayed
+    Navigate To Page Reporting Remarks
+    Page Should Contain Element    ${tab_hotelSavingsCode}
+    Take Screenshot
+    
+Verify Hotel Savings Tab Is Not Displayed
+    Navigate To Page Reporting Remarks
+    Page Should Not Contain Element    ${tab_hotelSavingsCode}
+    Take Screenshot

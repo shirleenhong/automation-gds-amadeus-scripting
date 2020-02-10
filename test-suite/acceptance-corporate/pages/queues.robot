@@ -391,7 +391,7 @@ Verify CWT Itinerary UI For Client Ornge
 Verify PNR Is Queud To Aqua Queue
     Switch To Command Page
     Enter Cryptic Command    RTQ 
-    Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}000
+    Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}001
     Take Screenshot
     
 Click CWT Itinerary Tab In Full Wrap

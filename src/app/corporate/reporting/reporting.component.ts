@@ -141,6 +141,6 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     if (!so) {
       return false;
     }
-    return so.ServiceOptionItemValue === 'Yes' && this.pnrService.getSegmentList().length > 1;
+    return so.ServiceOptionItemValue === 'Yes' && this.pnrService.getSegmentsForNoHotel().length > 1;
   }
 }

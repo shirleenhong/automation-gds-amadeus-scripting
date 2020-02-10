@@ -341,6 +341,7 @@ export class ReportingRemarkService {
         rems.push(rm);
       }
     }
+
     if (rems.length > 0) {
       let map = new Map<string, string>();
       map.set('HotelReasonCodes1', rems[0] + (rems.length > 1 ? '/' + rems[1] : ''));
@@ -350,6 +351,11 @@ export class ReportingRemarkService {
         map.set('HotelReasonCodes2', rems[2] + (rems.length > 3 ? '/' + rems[3] : ''));
         this.remarksManager.createPlaceholderValues(map);
       }
+    } else {
+      this.remarksManager.createEmptyPlaceHolderValue(['HotelReasonCodes1']);
+    }
+    if (rems.length < 3) {
+      this.remarksManager.createEmptyPlaceHolderValue(['HotelReasonCodes2']);
     }
   }
 }

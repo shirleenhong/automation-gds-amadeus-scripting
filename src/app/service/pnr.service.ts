@@ -7,6 +7,7 @@ import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 import { ExchangeTicketModel } from '../models/pnr/exchange-ticket.model';
+import { UtilHelper } from '../helper/util.helper';
 
 
 
@@ -34,7 +35,8 @@ export class PnrService {
     agentSign = '';
     agentFirstName = '';
     agentLastName = '';
-    constructor() { }
+ 
+    constructor(private utilHelper: UtilHelper) { }
 
     async getPNR(): Promise<void> {
         this.cfLine = null;
@@ -2045,4 +2047,56 @@ export class PnrService {
         }
         return feList;
     }
+
+    getSegmentsForNoHotel() {
+        const noHotelSegment = [];
+        const segments = this.getSegmentList().sort((a, b) => {
+          if (Number(a.lineNo) < Number(b.lineNo)) {
+            return -1;
+          } else if (Number(a.lineNo) < Number(b.lineNo)) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        // tslint:disable-next-line: prefer-for-of
+        for (let i = 0; i < segments.length - 1; i++) {
+          const seg1 = segments[i];
+          const seg2 = segments[i + 1];
+          if (!this.isHotel(seg1) && !this.isHotel(seg2)) {
+            if (this.isNotLess4hrDateDiff(seg1.arrivalDate, seg2.departureDate, seg1.arrivalTime, seg2.departureTime)) {
+              noHotelSegment.push(seg1);
+            } else if (this.isCar(seg1)) {
+              if (this.isNotLess4hrDateDiff(seg1.departureDate, seg1.arrivalDate, seg1.departureTime, seg1.arrivalTime)) {
+                noHotelSegment.push(seg1);
+              }
+            }
+            if (i + 1 === segments.length - 1 && this.isCar(seg2)) {
+              if (this.isNotLess4hrDateDiff(seg2.departureDate, seg2.arrivalDate, seg2.departureTime, seg2.arrivalTime)) {
+                noHotelSegment.push(seg2);
+              }
+            }
+          }
+        }
+        return noHotelSegment;
+      }
+      isHotel(segment) {
+        return segment.segmentType === 'HTL' && segment.segmentType === 'HHL';
+      }
+      isCar(segment) {
+        return segment.segmentType === 'CCR' || segment.segmentType === 'CAR';
+      }
+      
+      isNotLess4hrDateDiff(date1, date2, time1, time2) {
+        const seg1Date = new Date(this.utilHelper.convertSegmentDate(date1));
+        const seg2Date = new Date(this.utilHelper.convertSegmentDate(date2));
+        seg1Date.setHours(time1.substr(0, 2));
+        seg1Date.setMinutes(time1.substr(2, 2));
+        seg2Date.setHours(time2.substr(0, 2));
+        seg2Date.setMinutes(time2.substr(2, 2));
+        const hourDiff = this.utilHelper.dateDiffInHours(seg1Date, seg2Date);
+        const dayDiff = this.utilHelper.dateDiffInDays(seg1Date, seg2Date);
+        // day diff should be more than 4 hours
+        return dayDiff > 0 && hourDiff > 4;
+      }
 }

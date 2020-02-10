@@ -9,6 +9,7 @@ Resource          base.robot
 ${fare_row_number}    //div[@formarrayname='fares']
 ${input_full_fare}    //input[@formcontrolname='highFareText']
 ${input_low_fare}    //input[@formcontrolname='lowFareText']
+${input_charge_fare}    //input[@formcontrolname='chargeFare']
 ${list_reason_code}    //select[@formcontrolname='reasonCodeText']
 ${tab_clientReporting}    //div[@formarrayname='fares']
 ${checkbox_clientReporting}    //input[@id='chkIncluded']
@@ -184,12 +185,17 @@ Select Reason Code
     Select From List By Label    ${fare_row_number}${open_bracket}${tst_number}${close_bracket}${list_reason_code}    ${reason_code_value}
 
 Add Client Reporting Values For Single BSP Segment
+    Select Single Destination Code And Routing Code For Reporting
     Navigate To Page BSP Reporting
     Wait Until Page Contains Element    ${checkbox_clientReporting}    30
     Select Client Reporting Fields To Be Written    1
+    ${actual_charge_fare}    Get Value   ${input_charge_fare}
     ${actual_full_fare}    Get Value    ${input_full_fare}
-    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Get Low Fare Value
+    Run Keyword If    "${actual_low_fare}" == "${EMPTY}"    Enter Value    ${input_low_fare}    550.50
+    Run Keyword If    "${actual_low_fare}" == "${EMPTY}"    Get Low Fare Value
     Select Reason Code    A : Lowest Fare Accepted
+    Set Test Variable    ${actual_charge_fare}
     Set Test Variable    ${actual_full_fare}
     Set Test Variable    ${actual_low_fare}
     Take Screenshot
@@ -213,6 +219,7 @@ Add Client Reporting Values For Multiple BSP Segment
     Enter Full Fare    790.00    3
     Enter Low Fare    678.00    3
     Select Reason Code    5 : Fare not in compliance    3
+    Get Value Of Charge Fare For 3 TST
     Take Screenshot
 
 Add Client Reporting Values For Multiple BSP Segment And Multiple TSTs
@@ -232,12 +239,13 @@ Verify That Client Reporting Remarks Are Written In The PNR For Single TST
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-A/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ${actual_charge_fare}/LP-${actual_low_fare}/FS-A/FF-${actual_full_fare}/FS01/DE-ORD
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BF${actual_tst_currency_1}${actual_tst_fare_1}/S2
     Switch To Command Page
 
 Verify Aqua Compliance Tracker Is Written In The PNR
     Get Record Locator Value
     Verify Specific Remark Is Written In The PNR    RM *U70/-${actual_record_locator}
-    Switch To Command Page
 
 Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Finish PNR
@@ -250,6 +258,12 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Verify Specific Remark Is Written In The PNR    RM *FF/-790.00/S5
     Verify Specific Remark Is Written In The PNR    RM *LP/-678.00/S5
     Verify Specific Remark Is Written In The PNR    RM *FS/-5/S5
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ${actual_charge_fare_1}/LP-300.00/FS-C/FF-4000.50/FS91/DE-YUL
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BF${actual_tst_currency_1}${actual_tst_fare_1}/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-FQ${actual_charge_fare_2}/LP-123.00/FS-K/FF-5123.50/FS91/DE-YUL
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-BF${actual_tst_currency_2}${actual_tst_fare_2}/S4
+    Verify Specific Remark Is Written In The PNR    RMT TKT3-FQ${actual_charge_fare_3}/LP-678.00/FS-5/FF-790.00/FS91/DE-YUL
+    Verify Specific Remark Is Written In The PNR    RMT TKT3-BF${actual_tst_currency_3}${actual_tst_fare_3}/S5
     Switch To Command Page
 
 Verify That Client Reporting Remarks Are Written In The PNR For Multiple Segments And Multiple TSTs
@@ -277,15 +291,25 @@ Verify Client Reporting Fields For Non-BSP For ${segment_number} Segment
     Click Save Button
     Navigate To Page Non BSP Reporting
     ${actual_segment_number}    Get Value    ${input_segment_number} 
-    ${actual_full_fare}    Get Value    ${input_full_fare}
-    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Get Full Fare Value
+    Get Low Fare Value
+    Run Keyword If    "${actual_full_fare}" == "${EMPTY}"    Enter Value    ${input_full_fare}    1123.50
+    Run Keyword If    "${actual_full_fare}" == "${EMPTY}"    Get Full Fare Value
     ${actual_low_fare}    Convert To Number    ${actual_low_fare}    2
     Set Test Variable    ${actual_low_fare}    ${actual_low_fare}0
-    Set Test Variable    ${actual_full_fare}
+    # Set Test Variable    ${actual_full_fare}
     Run Keyword If    '${segment_number}' == 'Single'     Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2    ELSE   Run Keyword And Continue On Failure    Should Be Equal    ${actual_segment_number}    2,3 
     Run Keyword And Continue On Failure    Should Not Be Equal    ${actual_full_fare}    760.00    
     Run Keyword And Continue On Failure    Should Be Equal    ${actual_low_fare}    ${expected_low_fare} 
     Take Screenshot
+    
+Get Full Fare Value
+    ${actual_full_fare}    Get Value    ${input_full_fare}
+    Set Test Variable    ${actual_full_fare}
+    
+Get Low Fare Value
+    ${actual_low_fare}    Get Value    ${input_low_fare}
+    Set Test Variable    ${actual_low_fare}
 
 Update Client Reporting Values For Non-BSP
     Click Save Button
@@ -306,12 +330,16 @@ Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Single S
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-L/FF-${actual_full_fare}/FS91/DE
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BFCAD750.00/S2
 
 Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple Segments
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-L/FF-${actual_full_fare}/FS91/DE-
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-BFCAD750.00/S2-3
 
 Verify That Updated Non-BSP Client Reporting Remarks Are Written In The PNR
     Finish PNR
@@ -1100,6 +1128,22 @@ Update Agent Assisted And Touch Reason Codes
     Navigate To Page Reporting Remarks
     Update Agent Assisted And Touch Reason Code    AM    A
     Take Screenshot
+
+Select ${number_of_destination} Destination Code And Routing Code For Reporting
+    Navigate To Page Reporting Remarks
+    Run Keyword If  "${number_of_destination}" == "Single"   Select Destination Code Values    ORD
+    ...  ELSE IF   "${number_of_destination}" == "Multiple"    Select Destination Code Values   YUL   YYZ   ORD
+    Set Test Variable    ${destination_selected}    yes
+    Select From List By Label    ${list_routing_code}     USA incl. all US Territories and Possessions
+    Set Test Variable    ${routing_code_selected}    yes
+    Take Screenshot
+    
+Get Value Of Charge Fare For ${no_of_tst} TST
+    Set Test Variable    ${i}    0
+    :FOR    ${i}    IN RANGE    0    ${no_of_tst} 
+    \    ${i}    Evaluate    ${i} + 1
+    \    ${actual_charge_fare}    Get Value    ${div_fares}${open_bracket}${i}${close_bracket}${input_charge_fare}
+    \    Set Test Variable    ${actual_charge_fare_${i}}    ${actual_charge_fare}
     
 Verify That Car Savings Code Should Not Be Displayed In The UI
     Navigate to Page Reporting

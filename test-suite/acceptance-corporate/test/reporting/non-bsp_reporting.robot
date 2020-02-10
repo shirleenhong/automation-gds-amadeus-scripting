@@ -9,7 +9,7 @@ ${test_file_name}    non_bsp_reporting
 
 *** Test Cases ***
 Verify That Reporting Remarks Are Written For Single Non-BSP Segment
-    [Tags]    us13617    us16563    full_regression    us16895
+    [Tags]    us13617    us16563    full_regression    us16895    us17609
     Create PNR For Non BSP Reporting
     Book 1 Passive Air Segments For AC With Flight Number 317 And Route YULYYC
     Add Non-BSP Ticketing Details For Segment 2
@@ -18,7 +18,7 @@ Verify That Reporting Remarks Are Written For Single Non-BSP Segment
     Verify High Fare Calculation For 1 Segment Is Sent
     
 Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
-    [Tags]    us13617    us16563
+    [Tags]    us13617    us16563    us17609
     Create PNR For Non BSP Reporting
     Book 2 Multiple Passive Air Segments For WS
     Add Non-BSP Ticketing Details For Multiple Segments
@@ -27,7 +27,7 @@ Verify That Reporting Remarks Are Written For Multiple Non-BSP Segments
     Verify High Fare Calculation For 2 Segment Is Sent
 
 Verify That Multiple Reporting Remarks Are Written for Multiple Non-BSP Accounting
-    [Tags]    us13617    us16563
+    [Tags]    us13617    us16563    not_ready
     Create PNR For Non BSP Reporting
     Book 4 Multiple Passive Air Segments For Different Airline Codes
     Add Multiple Non-BSP Ticketing Details For Multiple Segments

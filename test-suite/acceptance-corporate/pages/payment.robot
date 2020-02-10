@@ -666,12 +666,13 @@ Verify UDID Remark Are Written For Air Canada Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    RM *U14/-ACPASS-INDIVIDUAL
     
 Verify Itinerary Remarks Are Written For Westjet Pass Purchase PNR
+    Verify Specific Remark Is Written In The PNR    WESTJET TRAVEL PASS PASS/S2
     Verify Specific Remark Is Written In The PNR    TOUS LES DETAILS ONT ETE PRESENTES AU CLIENT ET    
     Verify Specific Remark Is Written In The PNR    APPROUVES PAR CE DERNIER    
     Verify Specific Remark Is Written In The PNR    LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES    
     Verify Specific Remark Is Written In The PNR    CLIENTS ONT ETE APPROUVES PAR LE CLIENT    
     Verify Specific Remark Is Not Written In The PNR    RIR WESTJET INDIVIDUAL PASS REDEMPTION/S2  
-    Verify Specific Remark Is Written In The PNR    RIR VOTRE NUMERO DE CONFIRMATION WS EST 123456/S2
+    Verify Specific Remark Is Written In The PNR    VOTRE NUMERO DE CONFIRMATION WS EST 123456/S2
     Take Screenshot
     
 Verify Ticketing Remarks Are Written For Westjet Pass Purchase PNR
@@ -691,7 +692,9 @@ Verify Itinerary Remarks Are Written For Porter Pass Purchase PNR
     Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT
     Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD 
     Verify Specific Remark Is Written In The PNR    AUTHORIZED BY CLIENT
-    Verify Specific Remark Is Written In The PNR    RIR PORTER INDIVIDUAL PASS REDEMPTION/S2   
+    Verify Specific Remark Is Written In The PNR    YOUR PD CONFIRMATION NUMBER IS 123ABC/S2
+    Verify Specific Remark Is Written In The PNR    PORTER TRAVEL PASS PASS/S2
+    Verify Specific Remark Is Not Written In The PNR    RIR PORTER INDIVIDUAL PASS REDEMPTION/S2   
     Take Screenshot
     
 Verify Ticketing Remarks Are Written For Porter Pass Purchase PNR

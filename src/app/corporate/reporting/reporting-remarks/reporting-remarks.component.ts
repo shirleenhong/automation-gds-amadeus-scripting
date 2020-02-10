@@ -8,7 +8,6 @@ import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { ObtComponent } from '../obt/obt.component';
-import { ServicingOptionEnums } from 'src/app/enums/servicing-options.enum';
 
 @Component({
   selector: 'app-reporting-remarks',
@@ -25,7 +24,7 @@ export class ReportingRemarksComponent implements OnInit {
   ebCList: Array<ReasonCode> = [];
   showEBDetails: boolean;
   isCorporate = false;
-  showNoHotelBooked = false;
+
   ebRList: { itemValue: string; itemText: string }[];
   @ViewChild(ObtComponent) obtComponent: ObtComponent;
   @Input() reportingRemarksView = new ReportingViewModel();
@@ -36,15 +35,6 @@ export class ReportingRemarksComponent implements OnInit {
     private counselorDetail: CounselorDetail
   ) {
     this.destinations = pnrService.getAirDestinations();
-    this.showNoHotelBooked = this.checkNoHotelBooked();
-  }
-
-  checkNoHotelBooked() {
-    const so = this.ddbService.getServicingOptionValue(ServicingOptionEnums.No_Hotel_Booked_Codes);
-    if (!so){
-      return false;
-    }
-    return so.ServiceOptionItemValue==='Yes'
   }
 
   async loadData(): Promise<void> {}

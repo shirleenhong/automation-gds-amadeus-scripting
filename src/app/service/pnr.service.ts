@@ -516,6 +516,7 @@ export class PnrService {
                 this.getSegmentDetails(misc, 'MIS');
             }
         }
+        console.log(this.segments);
         return this.segments;
     }
 
@@ -615,6 +616,9 @@ export class PnrService {
                 this.formatDate(fullnodetemp.product.depDate);
             elemStatus = elem.fullNode.relatedProduct.status;
             elemdepdate = fullnodetemp.product.depDate;
+            if (!departureDate) {
+                departureDate = elemdepdate;
+            }
             arrivalDate = fullnodetemp.product.arrDate;
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             let longText = '';
@@ -634,6 +638,16 @@ export class PnrService {
             }
 
             hotelChainCode = elem.chainCode ? elem.chainCode : '';
+
+            flongtext.split('/').forEach(t => {
+                if (t.startsWith('ST')) {
+                    departureTime = t.replace('ST-', '');
+                } else  if (t.startsWith('ET')) {
+                    arrivalTime = t.replace('ET-', '');
+                } else  if (t.startsWith('ED')) {
+                    arrivalDate = this.convertDDYYY(t.replace('ED-', ''));
+                }
+            });
         }
 
         if (type === 'MIS') {
@@ -721,6 +735,20 @@ export class PnrService {
             lastDeptDate = this.getLastDate(miscdate, lastDeptDate);
         }
         return lastDeptDate;
+    }
+
+    convertDDYYY(date) {
+        // convert ddYYY to dd/mm/yy
+        const dd = date.substr(0, 2);
+        const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        const month = (m.indexOf(date.substr(2, 3)) + 1).toString().padStart(2, '0') ;
+        const nowMonth  = (new Date().getMonth()) + 1;
+        let year = new Date().getFullYear();
+        if (Number(month) < nowMonth) {
+            year += 1;
+        }
+        return dd + month + year.toString().substr(2, 2);
+
     }
 
     getRemarksFromGDS() {

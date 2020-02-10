@@ -79,6 +79,11 @@ export class UtilHelper {
     return days;
   }
 
+  dateDiffInHours(dt1: Date, dt2: Date) {
+    const hours = (dt2.getTime() - dt1.getTime()) / (1000 * 60 * 60);
+    return hours;
+  }
+
   getObjectMapKeyValueByIndex(object: any, index: number) {
     const key = Object.keys(object)[index];
     const value = object[key];

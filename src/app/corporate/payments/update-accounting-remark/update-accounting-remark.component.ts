@@ -421,11 +421,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.name = 'Airline Record Locator:';
     this.matrixAccountingForm
       .get('airlineRecordLocator')
-      .setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+      .setValidators([Validators.required, Validators.minLength(1), Validators.maxLength(10)]);
 
     this.matrixAccountingForm
       .get('supplierConfirmatioNo')
-      .setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+      .setValidators([Validators.required, Validators.minLength(1), Validators.maxLength(10)]);
+    this.matrixAccountingForm.get('supplierConfirmatioNo').updateValueAndValidity();
 
     this.requireGDSFare();
 

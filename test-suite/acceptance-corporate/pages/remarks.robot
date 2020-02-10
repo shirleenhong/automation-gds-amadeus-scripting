@@ -483,10 +483,17 @@ Complete Fare Rule For Ticket Amount And Verify Remarks
     Click Element    ${label_ticket_amount}
     Enter Value    ${input_ticket_amount}    123.50
     Take Screenshot
-    Click Save Button
+    Click Save Button In Add Fare Rule
     Finish PNR    
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     Switch To Command Page
+    
+Click Save Button In Add Fare Rule
+    Click Element    ${button_save}
+    Wait Until Page Contains Element    ${button_update}     30
+    Set Focus To Element    ${button_submit_pnr}
+    Set Test Variable    ${current_page}    Fare Rule
+    [Teardown]    Take Screenshot
     
 Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Navigate To Page Fare Rule
@@ -495,7 +502,7 @@ Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Click Element    ${span_nonRef_pct}
     Enter Value    ${input_nonRefundable}    23
     Take Screenshot
-    Click Save Button
+    Click Save Button In Add Fare Rule
     Finish PNR    
-    Verify Expected Remarks Are Written In The PNR
+    Verify Expected Remarks Are Written In The PNR    True
     Switch To Command Page

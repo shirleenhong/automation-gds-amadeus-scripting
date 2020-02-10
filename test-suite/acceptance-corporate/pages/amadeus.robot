@@ -378,7 +378,8 @@ Enter RIR Remarks In French
 Handle Simultaneous Changes To PNR
     Sleep   3
     ${status}    Run Keyword And Return Status    Page Should Contain Element     ${response_simultaneous}
-    Run keyword If    '${status}' == 'True'    Delete Fare and Itinerary
+    Run keyword If    ${status}    Sleep    60    #to avoid simultaneous change before performing action
+    Run keyword If    ${status}    Delete Fare and Itinerary
 
 Move Single Passenger For EN
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
@@ -711,7 +712,7 @@ Book ${num_car_segments} Active Car Segments
     \    ${i}    Evaluate    ${i} + 1
 
 Handle Smart Tool PopUp
-    ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    ${button_closeSmartTool}    20
+    ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    ${button_closeSmartTool}    180
     Run Keyword If    ${exists}    Click Element    ${button_closeSmartTool} 
     
 Book ${numberOfAir} Passive Air Segments

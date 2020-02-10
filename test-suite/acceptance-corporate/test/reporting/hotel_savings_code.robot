@@ -50,3 +50,13 @@ Verify That Existing RM*HS Remark Is Deleted If No Associated Date Are In The Ho
     Create PNR For Single Hotel Segment
     Fill Up Hotel Savings Code With Value E
     Verify Hotel Savings Remark Is Written In The PNR
+    
+Verify That Hotel Savings Code Tab Is Displayed When SO Is Set To Show
+    [tags]    us17593
+    Create PNR For Single Hotel Segment, SO Is Set To Yes
+    Verify Hotel Savings Tab Is Displayed
+    
+Verify That Hotel Savings Code Tab Is Displayed When SO Is Set To Not Show
+    [tags]    us17593
+    Create PNR For Single Hotel Segment, SO Is Set To No
+    Verify Hotel Savings Tab Is Not Displayed

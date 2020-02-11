@@ -1005,7 +1005,7 @@ export class UpdateSegmentComponent implements OnInit {
       this.commandCache.loadCarType = command;
       let lines = res.Response.split('\r\n');
       lines = await this.getMDResult(lines);
-      const regex = /\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
+      const regex = /\*\s(?<code>[A-Z]{4}) ([A-Z]{1}|\s) (?<text>.+?(?=\s{2}))/g;
       lines.forEach((x) => {
         const match = regex.exec(x);
         if (match && match.groups) {

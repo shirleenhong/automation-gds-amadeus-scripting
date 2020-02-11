@@ -15,7 +15,7 @@ import { RuleWriterService } from './rule-writer.service';
 export class RulesEngineService {
   businessRuleList: BusinessRuleList;
   businessEntities: Map<string, string>;
-  validBusinessRules: BusinessRule[];
+  validBusinessRules: BusinessRule[] = [];
   constructor(
     private ddb: DDBService,
     private pnrService: PnrService,
@@ -23,7 +23,7 @@ export class RulesEngineService {
     private ruleReaderService: RulesReaderService,
     private ruleUiService: RuleUiService,
     private ruleWriter: RuleWriterService
-  ) { }
+  ) {}
 
   public async initializeRulesEngine() {
     await this.loadRules();
@@ -131,12 +131,14 @@ export class RulesEngineService {
     const resultItems = [];
     const formData = [];
     this.validBusinessRules.forEach((bRule) => {
-      bRule.ruleResult.forEach((result) => {
-        if (result.businessEntityName === entityName) {
-          resultItems.push(result.resultItemValue);
-          formData.push(new BusinessRulesFormData(result.resultItemValue));
-        }
-      });
+      if (bRule && bRule.ruleResult) {
+        bRule.ruleResult.forEach((result) => {
+          if (result.businessEntityName === entityName) {
+            resultItems.push(result.resultItemValue);
+            formData.push(new BusinessRulesFormData(result.resultItemValue));
+          }
+        });
+      }
     });
 
     return { resultItems, formData };

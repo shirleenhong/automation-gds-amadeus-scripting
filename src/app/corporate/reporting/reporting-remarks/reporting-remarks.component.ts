@@ -19,7 +19,6 @@ export class ReportingRemarksComponent implements OnInit {
   isTripTypeCorporate = false;
   reportingForm: FormGroup;
   destinations: Array<any>;
-  nonBspDestinations: Array<any>;
   segments: any[];
   showSegments = false;
   ebCList: Array<ReasonCode> = [];

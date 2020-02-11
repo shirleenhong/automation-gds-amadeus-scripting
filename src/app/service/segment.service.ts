@@ -1098,7 +1098,7 @@ export class SegmentService {
             // const airlineName = await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR');
             await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR').then((airlineName) => {
                 if (model.fareRuleType !== '') {
-                    smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '*');
+                    smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '/*');
                     rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R'));
                 } else {
                     if (airlineName) {

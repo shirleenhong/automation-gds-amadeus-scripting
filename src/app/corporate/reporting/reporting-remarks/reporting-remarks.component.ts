@@ -34,7 +34,7 @@ export class ReportingRemarksComponent implements OnInit {
     private fb: FormBuilder,
     private counselorDetail: CounselorDetail
   ) {
-    this.destinations = pnrService.getAirDestinations();
+    this.destinations = pnrService.getPnrDestinations();
   }
 
   async loadData(): Promise<void> {}
@@ -47,7 +47,14 @@ export class ReportingRemarksComponent implements OnInit {
     this.bspRoutingCodeProcess();
 
     await this.loadData();
-    this.segments = await this.pnrService.getTstSegments();
+    const tstSegments = await this.pnrService.getTstSegments();
+    const allSegments = this.pnrService
+      .getSegmentList()
+      .map((segment) => segment.lineNo)
+      .map((segment) => segment);
+    const nonTstSegments = allSegments.filter((s) => !tstSegments.includes(s));
+    this.segments = tstSegments.concat(nonTstSegments);
+
     for (const segment of this.segments) {
       this.showSegments = true;
       const group = this.createFormGroup(segment);
@@ -101,22 +108,28 @@ export class ReportingRemarksComponent implements OnInit {
 
   getDestinationValue(segmentNo): string {
     let val: string;
-
-    for (const element of this.pnrService.pnrObj.rmElements) {
-      if (element.freeFlowText.includes('*DE/-')) {
-        const tatoo = this.pnrService.getTatooNumberFromSegmentNumber(segmentNo);
-        const ref = element.fullNode.referenceForDataElement.reference;
-
-        if (ref.length > 0) {
-          if (ref[0].number === tatoo.toString().split(',')[0]) {
-            val = element.freeFlowText.split('*DE/-')[1];
-            return val;
-          }
-        } else if (tatoo.includes(ref.number)) {
-          val = element.freeFlowText.split('*DE/-')[1];
-          return val;
-        }
+    for (const air of this.pnrService.pnrObj.airSegments) {
+      if (air.elementNumber === segmentNo) {
+        val = air.arrivalAirport;
       }
     }
+    for (const car of this.pnrService.pnrObj.auxCarSegments) {
+      if (car.elementNumber === segmentNo) {
+        val = car.fullNode.travelProduct.boardpointDetail.cityCode;
+      }
+    }
+
+    for (const hotel of this.pnrService.pnrObj.auxHotelSegments) {
+      if (hotel.elementNumber === segmentNo) {
+        val = hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+      }
+    }
+
+    for (const misc of this.pnrService.pnrObj.miscSegments) {
+      if (misc.elementNumber === segmentNo) {
+        val = misc.fullNode.travelProduct.boardpointDetail.cityCode;
+      }
+    }
+    return val;
   }
 }

@@ -163,9 +163,9 @@ export class ReportingRemarkService {
   }
   getRemarkSegmentAssociation(segments: string[]): string[] {
     const segmentrelate: string[] = [];
-    const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
-    air.forEach((airElement) => {
-      segmentrelate.push(airElement.tatooNo);
+    const segment = this.pnrService.getSegmentList().filter((x) => segments.indexOf(x.lineNo) >= 0);
+    segment.forEach((x) => {
+      segmentrelate.push(x.tatooNo);
     });
 
     return segmentrelate;
@@ -288,7 +288,6 @@ export class ReportingRemarkService {
   WriteDestinationCode(rc: ReportingRemarksComponent) {
     const reportingRemarksGroup: FormGroup = rc.reportingForm;
     const items = reportingRemarksGroup.get('segments') as FormArray;
-
     for (const control of items.controls) {
       if (control instanceof FormGroup) {
         const fg = control as FormGroup;
@@ -304,7 +303,6 @@ export class ReportingRemarkService {
               .forEach((val) => {
                 segments.push(val);
               });
-
             segmentrelate = this.getRemarkSegmentAssociation(segments);
           }
 

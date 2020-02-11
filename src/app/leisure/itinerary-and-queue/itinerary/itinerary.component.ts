@@ -27,6 +27,7 @@ export class ItineraryComponent implements OnInit {
   // itineraryRemarks: ItineraryModel;
   listRemark: Array<string>;
   displayMessage = '';
+  isLeisure = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -54,6 +55,7 @@ export class ItineraryComponent implements OnInit {
     this.loadTransactionType();
     this.readDefaultLanguage();
     this.loadRulesEngine();
+    this.isLeisure = !this.counselorDetail.isCorporate;
   }
 
   loadRulesEngine() {

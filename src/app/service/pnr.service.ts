@@ -35,7 +35,6 @@ export class PnrService {
     agentSign = '';
     agentFirstName = '';
     agentLastName = '';
- 
     constructor(private utilHelper: UtilHelper) { }
 
     async getPNR(): Promise<void> {
@@ -2086,7 +2085,7 @@ export class PnrService {
       isCar(segment) {
         return segment.segmentType === 'CCR' || segment.segmentType === 'CAR';
       }
-      
+
       isNotLess4hrDateDiff(date1, date2, time1, time2) {
         const seg1Date = new Date(this.utilHelper.convertSegmentDate(date1));
         const seg2Date = new Date(this.utilHelper.convertSegmentDate(date2));

@@ -854,12 +854,14 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addAquaOverrideRmk();
     }
     const accRemarks = new Array<RemarkGroup>();
-    accRemarks.push(
-      this.ticketRemarkService.submitTicketRemark(
-        this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
-        this.itineraryqueueComponent.ticketingLineComponent.approvalForm
-      )
-    );
+    if (this.itineraryqueueComponent.ticketingLineComponent.ticketForm.get('verifyAck').value) {
+      accRemarks.push(
+        this.ticketRemarkService.submitTicketRemark(
+          this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
+          this.itineraryqueueComponent.ticketingLineComponent.approvalForm
+        )
+      );
+    }
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();

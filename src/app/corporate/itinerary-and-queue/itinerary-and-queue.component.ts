@@ -30,7 +30,7 @@ export class ItineraryAndQueueComponent implements OnInit {
     }
 
     this.utilHelper.validateAllFields(this.ticketingLineComponent.ticketForm);
-    if (!this.ticketingLineComponent.ticketForm.get('verifyAck').value && !this.ticketingLineComponent.ticketForm.valid) {
+    if (this.ticketingLineComponent.ticketForm.get('verifyAck').value && !this.ticketingLineComponent.ticketForm.valid) {
       return false;
     }
 

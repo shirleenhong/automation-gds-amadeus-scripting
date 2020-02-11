@@ -13,7 +13,7 @@ import { RuleWriterService } from './rule-writer.service';
   providedIn: 'root'
 })
 export class RulesEngineService {
-  businessRuleList: BusinessRuleList;
+  businessRuleList = new BusinessRuleList('');
   businessEntities: Map<string, string>;
   validBusinessRules: BusinessRule[] = [];
   constructor(

@@ -215,7 +215,7 @@ export class UpdateFareRuleSegmentComponent implements OnInit {
         this.fareRules.airlineCode +
         ' ' +
         fareRule +
-        '*'
+        '/*'
       );
     }
   }

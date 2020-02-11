@@ -150,7 +150,8 @@ export class CorpCancelRemarkService {
     if (
       cancel.value.followUpOption === 'BSPKT' ||
       cancel.value.followUpOption === 'NONBSPKT' ||
-      cancel.value.followUpOption === 'NONBSPREFUND'
+      cancel.value.followUpOption === 'NONBSPREFUND' ||
+      cancel.value.followUpOption === 'HOTELCARLIMO'
     ) {
       const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
       const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
@@ -167,6 +168,9 @@ export class CorpCancelRemarkService {
         }
       }
       this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 70, 1));
+      if (cancel.value.followUpOption === 'HOTELCARLIMO') {
+        this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', '1'));
+      }
     }
   }
 

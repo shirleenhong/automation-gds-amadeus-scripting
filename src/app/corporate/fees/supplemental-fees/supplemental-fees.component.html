@@ -12,9 +12,11 @@
     <tr>
       <th width="50px" *ngIf="isExchange"><div class="">Schedule Change?</div></th>
       <!-- <th width="50px"><div class="">Ticketed Segment</div></th> -->
-      <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th>
-      <th width="150px"><div class="">Supplemental Fee</div></th>
-      <th width="70px"><div class=""></div></th>
+      <!-- <th width="100px" colspan="2"><div style="text-align: center">Fee</div></th> -->
+      <th width="100px" *ngIf="isGreaterThanZero"><div style="text-align: left">Fee</div></th>
+      <th width="150px" colspan="2"><div class="" style="text-align: left">Supplemental Fee</div></th>
+      <!-- <th width="100px"><div class=""></div></th> -->
+      <!-- <th width="70px"><div class=""></div></th> -->
       <th width="150px" *ngIf="isAquaFee == false"><div class="cl">No Fee Code</div></th>
     </tr>
 
@@ -36,10 +38,10 @@
           <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
         </td> -->
 
-        <td width="50px">
+        <td width="50px" *ngIf="false">
           <input type="text" class="form-control" formControlName="code" name="code" id="code" readonly (change)="feeChange(item)" />
         </td>
-        <td width="50px">
+        <td width="100px" *ngIf="isGreaterThanZero">
           <input type="text" class="form-control" formControlName="fee" name="fee" id="fee" (change)="feeChange(item)" AmountMask />
         </td>
 

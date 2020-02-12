@@ -607,12 +607,12 @@ export class PaymentRemarkService {
       const consultantNoRemarkStatic = new Map<string, string>();
       const separatePenaltyRemark = new Map<string, string>();
       const exchangeIndicatorRemark = new Map<string, string>();
-      
+
       let totalBaseAmount = parseFloat(account.baseAmount);
       let totalGst = parseFloat(account.gst);
       let totalHst = parseFloat(account.hst);
       let totalQst = parseFloat(account.qst);
-      
+
       exchangeIndicatorRemark.set('AirTicketId', (accountingRemarks.indexOf(account) + 1).toString());
       exchangeIndicatorRemark.set('TktRemark', 'EXCH');
       this.remarksManager.createPlaceholderValues(exchangeIndicatorRemark);
@@ -842,7 +842,7 @@ export class PaymentRemarkService {
     accounting.forEach((account) => {
       if (account.accountingTypeRemark === 'ACPPC') {
         account.segments.forEach((element) => {
-          remGroup.deleteRemarkByIds.push(element.lineNo);
+          remGroup.deleteSegmentByIds.push(element.lineNo);
         });
       }
 

@@ -99,7 +99,8 @@ export class UpdateAccountingRemarkComponent implements OnInit {
       typeOfPass: new FormControl(''),
       otherDescription: new FormControl('', []),
       airlineCorporatePassId: new FormControl('', []),
-      segmentsCount: new FormControl(this.pnrService.getPassiveAirSegmentNumbers().length.toString(), []),
+      // segmentsCount: new FormControl(this.pnrService.getPassiveAirSegmentNumbers().length.toString(), []),
+      segmentsCount: new FormControl('', []),
       segments: new FormArray([]),
       baseAmountRefund: new FormControl(''),
       gstRefund: new FormControl(''),
@@ -322,12 +323,12 @@ export class UpdateAccountingRemarkComponent implements OnInit {
         accRemark === 'ACPP'
           ? (this.accountingRemark.supplierCodeName = 'ACJ')
           : accRemark === 'WCPP'
-          ? (this.accountingRemark.supplierCodeName = 'WJP')
-          : accRemark === 'PCPP'
-          ? (this.accountingRemark.supplierCodeName = 'PTP')
-          : accRemark === 'ANCPP'
-          ? (this.accountingRemark.supplierCodeName = 'A5P')
-          : (this.accountingRemark.supplierCodeName = 'PSI');
+            ? (this.accountingRemark.supplierCodeName = 'WJP')
+            : accRemark === 'PCPP'
+              ? (this.accountingRemark.supplierCodeName = 'PTP')
+              : accRemark === 'ANCPP'
+                ? (this.accountingRemark.supplierCodeName = 'A5P')
+                : (this.accountingRemark.supplierCodeName = 'PSI');
 
         this.PasspUrchaseControlValidators();
         this.enableFormControls(['fareType'], accRemark !== 'ACPP' && accRemark === 'ACPPC');
@@ -455,7 +456,7 @@ export class UpdateAccountingRemarkComponent implements OnInit {
     this.matrixAccountingForm
       .get('segmentsCount')
       .setValidators([Validators.required, Validators.min(1), Validators.max(this.maxSegmentsCount)]);
-    this.matrixAccountingForm.get('segmentsCount').setValue(this.pnrService.getPassiveAirSegmentNumbers().length);
+    // this.matrixAccountingForm.get('segmentsCount').setValue(this.pnrService.getPassiveAirSegmentNumbers().length);
     this.enableFormControls(['otherTax', 'commisionWithoutTax', 'segmentNo'], false);
     this.requireGDSFare();
   }

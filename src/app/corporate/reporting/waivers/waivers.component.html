@@ -1,33 +1,31 @@
-<div [formGroup]="ticketedForm" class="form-group" style="margin-top:10px;padding-left: 10px">
-  <table class="feeTable">
-    <tr>
-      <th width="130px"><div class="segmentTable">Segment(s)</div></th>
-      <th width="300px"><div class="segmentTable"></div></th>
-    </tr>
+<form [formGroup]="ticketedForm">
+  <div class="documentContainer">
+    <div>
+      <div>
+        <table style="width:100%">
+          <tr>
+            <td style="width:50%">
+              <!-- <input formControlName="documentation" type="text" class="form-control" maxlength="55"
+                style="width:98%" /> -->
+              <input type="text" class="form-control" formControlName="waiver" name="waiver" id="waiver" readonly />
+            </td>
 
-    <tbody formArrayName="segments" *ngFor="let item of this.ticketedForm.get('segments')['controls']; let i = index">
-      <tr [formGroupName]="i">
-        <td width="130px" class="segmentTable">
-          <input type="text" class="form-control" name="segment" formControlName="segment" id="segment" readonly />
-        </td>
+            <td style="width:10%" class="docTable">
+              <div (click)="addWaivers()">
+                <i class="fas fa-plus-circle" id="add"></i>
+                Add Waiver
+              </div>
+            </td>
 
-        <td width="300px" class="segmentTable">
-          <input type="text" class="form-control" formControlName="waiver" name="waiver" id="waiver" readonly />
-        </td>
-        <td width="90px" class="segmentTable">
-          <div (click)="addWaivers(item)" *ngIf="check(item)">
-            <i class="fas fa-plus-circle" id="add"></i>
-            Add Waiver
-          </div>
-        </td>
-
-        <td width="130px" class="segmentTable">
-          <div (click)="removeWaivers(item)" *ngIf="checkRemove(item)">
-            <i class="fas fa-minus-circle" id="remove"></i>
-            Remove Waiver
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+            <td style="width:12%" class="docTable">
+              <div (click)="removeWaivers()">
+                <i class="fas fa-minus-circle" id="remove"></i>
+                Remove Waiver
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>

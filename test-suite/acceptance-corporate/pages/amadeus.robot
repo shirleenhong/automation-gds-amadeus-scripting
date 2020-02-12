@@ -712,7 +712,7 @@ Book ${num_car_segments} Active Car Segments
     \    ${i}    Evaluate    ${i} + 1
 
 Handle Smart Tool PopUp
-    ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    ${button_closeSmartTool}    180
+    ${exists}    Run Keyword And Return Status    Wait Until Element Is Visible    ${button_closeSmartTool}    20
     Run Keyword If    ${exists}    Click Element    ${button_closeSmartTool} 
     
 Book ${numberOfAir} Passive Air Segments

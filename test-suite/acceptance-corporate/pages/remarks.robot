@@ -67,6 +67,8 @@ ${input_assoc_remark}    //input[@formcontrolname="remarkText"]
 ${label_ticket_amount}    //label[contains(text(), 'Ticket Amount')]
 ${span_nonRef_pct}    //span[contains(text(), 'Non-Refundable%:')]
 ${text_advisory}    //app-container[@ng-reflect-container-filter='VISA AND PASSPORT']//div[@class='row']
+${select_fareRule_fareRuleList}    //select[@id='fareRuleList']
+${input_fareRule_cityPair}    //input[@id='cityPair']
 
 *** Keywords ***
 Click Seats Tab
@@ -506,3 +508,27 @@ Complete fare Rule For Non Refundable Percentage And Verify Remarks
     Finish PNR    
     Verify Expected Remarks Are Written In The PNR    True
     Switch To Command Page
+    
+Add Fare Rule For ${airline_code} Segments
+    Navigate To Page Fare Rule
+    Run Keyword If    "${airline_code}" == "Air Canada"    Select From List By Value    ${select_airline}    2
+    Run Keyword If    "${airline_code}" == "WestJet"    Select From List By Value    ${select_airline}    5
+    Wait Until Element Is Visible    ${select_fareRule_fareRuleList}    10
+    Run Keyword If    "${airline_code}" == "Air Canada"    Enter Value    ${input_fareRule_cityPair}    Quebec to Chicago
+    Run Keyword If    "${airline_code}" == "WestJet"    Enter Value    ${input_fareRule_cityPair}    Chicago to Quebec
+    Run Keyword If    "${airline_code}" == "Air Canada"    Select From List By Label    ${select_fareRule_fareRuleList}    AC STANDARD
+    Run Keyword If    "${airline_code}" == "WestJet"    Select From List By Label    ${select_fareRule_fareRuleList}    WS ECONO INTERNATIONAL
+    Take Screenshot
+    Click Save Button In Add Fare Rule
+    
+Verify If PBN Remark For Fare Rule Are Entered In The PNR For ${airline_code} Segment/s
+    Finish PNR
+    Run Keyword If    "${airline_code}" == "Air Canada"    Verify Specific Remark Is Written In The PNR    RIR QUEBEC TO CHICAGO
+    Run Keyword If    "${airline_code}" == "WestJet"    Verify Specific Remark Is Written In The PNR    RIR CHICAGO TO QUEBEC
+    Take Screenshot
+    # Close Cryptic Display
+    Switch To Command Page
+    Run Keyword If    "${airline_code}" == "Air Canada"    Element Should Contain    ${text_area_command}    PBN/YTOWL210N/AC STANDARD/*
+    Run Keyword If    "${airline_code}" == "WestJet"    Element Should Contain    ${text_area_command}    PBN/YTOWL210N/WS ECONO INTERNATIONAL/*
+    Take Screenshot
+    

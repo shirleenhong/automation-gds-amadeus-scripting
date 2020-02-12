@@ -229,7 +229,6 @@ export class ReportingRemarkService {
   }
 
   WriteU63(wc: WaiversComponent) {
-    debugger;
     const bspGroup: FormGroup = wc.ticketedForm;
     if (bspGroup.get('waiver').value) {
       const waiverRemark = new Map<string, string>();

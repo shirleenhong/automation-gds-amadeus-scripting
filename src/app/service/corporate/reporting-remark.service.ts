@@ -308,7 +308,7 @@ export class ReportingRemarkService {
 
           if (key === 'destinationList') {
             if (fg.get(key).value !== null && fg.get(key).value !== '') {
-              destinationRemark.set('IataCode', fg.get(key).value);
+              destinationRemark.set('PointOfTurnAround', fg.get(key).value);
             }
           }
         });

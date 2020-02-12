@@ -33,25 +33,26 @@ export class NoBookedHotelComponent implements OnInit {
     const u22 = this.pnrService.getRemarkText('U22/-').split('/');
     const arr = new FormArray([]);
     this.pnrService.getSegmentsForNoHotel().forEach((seg) => {
-      const cityCode = seg.arrivalStation ? seg.arrivalStation : seg.cityCode;
-      const date = formatDate(this.utilHelper.convertSegmentDate(seg.arrivalDate), 'ddMMM', 'en-US').toUpperCase();
-      let reasonCode = '';
-      let numdays = '';
-      /// extract existing data
-      u21
-        .filter((x) => x.indexOf(date + cityCode) >= 0)
-        .forEach((x) => {
-          numdays = x.slice(x.length - 2, x.length);
-          reasonCode = x.slice(x.length - 4, x.length - 2);
-        });
-      u22
-        .filter((x) => x.indexOf(date + cityCode) >= 0)
-        .forEach((x) => {
-          numdays = x.slice(x.length - 2, x.length);
-          reasonCode = x.slice(x.length - 4, x.length - 2);
-        });
-
-      arr.push(this.createGroup(date, cityCode, reasonCode, numdays));
+      if (arr.length < 4) {
+        const cityCode = seg.arrivalStation ? seg.arrivalStation : seg.cityCode;
+        const date = formatDate(this.utilHelper.convertSegmentDate(seg.arrivalDate), 'ddMMM', 'en-US').toUpperCase();
+        let reasonCode = '';
+        let numdays = '';
+        /// extract existing data
+        u21
+          .filter((x) => x.indexOf(date + cityCode) >= 0)
+          .forEach((x) => {
+            numdays = x.slice(x.length - 2, x.length);
+            reasonCode = x.slice(x.length - 4, x.length - 2);
+          });
+        u22
+          .filter((x) => x.indexOf(date + cityCode) >= 0)
+          .forEach((x) => {
+            numdays = x.slice(x.length - 2, x.length);
+            reasonCode = x.slice(x.length - 4, x.length - 2);
+          });
+        arr.push(this.createGroup(date, cityCode, reasonCode, numdays));
+      }
     });
     return arr;
   }
@@ -62,7 +63,7 @@ export class NoBookedHotelComponent implements OnInit {
       date: new FormControl(date, [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{3}')]),
       cityCode: new FormControl(cityCode, [Validators.required, Validators.pattern('[A-Z]{3}')]),
       reasonCode: new FormControl(reasonCode, [Validators.required]),
-      numDays: new FormControl(numDays, [Validators.required, Validators.pattern('[0-9]{1,2}')])
+      numDays: new FormControl(numDays, [Validators.required])
     });
   }
 }

@@ -84,7 +84,9 @@ export class PnrService {
             .requestService('ws.displayTST_v14.1', displayElement)
             .then(
                 (tst) => {
+                    if ( tst.response.model.output.response) {
                     this.tstObj = tst.response.model.output.response.fareList;
+                    }
                     this.errorMessage = 'TST Loaded Successfully';
                 },
                 (error: string) => {
@@ -2049,7 +2051,9 @@ export class PnrService {
 
     getSegmentsForNoHotel() {
         const noHotelSegment = [];
-        const segments = this.getSegmentList().sort((a, b) => {
+        const segments = this.getSegmentList()
+        .filter(x => this.isCar(x)  || this.isHotel(x) || this.isRail(x) || x.segmentType === 'AIR')
+        .sort((a, b) => {
           if (Number(a.lineNo) < Number(b.lineNo)) {
             return -1;
           } else if (Number(a.lineNo) < Number(b.lineNo)) {
@@ -2062,28 +2066,39 @@ export class PnrService {
         for (let i = 0; i < segments.length - 1; i++) {
           const seg1 = segments[i];
           const seg2 = segments[i + 1];
-          if (!this.isHotel(seg1) && !this.isHotel(seg2)) {
+          if (!this.isCar(seg1)) {
             if (this.isNotLess4hrDateDiff(seg1.arrivalDate, seg2.departureDate, seg1.arrivalTime, seg2.departureTime)) {
               noHotelSegment.push(seg1);
-            } else if (this.isCar(seg1)) {
-              if (this.isNotLess4hrDateDiff(seg1.departureDate, seg1.arrivalDate, seg1.departureTime, seg1.arrivalTime)) {
-                noHotelSegment.push(seg1);
-              }
-            }
-            if (i + 1 === segments.length - 1 && this.isCar(seg2)) {
-              if (this.isNotLess4hrDateDiff(seg2.departureDate, seg2.arrivalDate, seg2.departureTime, seg2.arrivalTime)) {
-                noHotelSegment.push(seg2);
-              }
             }
           }
+        
+          if (this.isCar(seg1)) {
+            const seg1Dep = new Date(this.utilHelper.convertSegmentDate(seg1.departureDate));
+            const seg2Arr = new Date(this.utilHelper.convertSegmentDate(seg1.arrivalDate));
+            const hotels = segments.filter(x => this.isHotel(x));
+            hotels.forEach(x => {
+                const xDep = new Date(this.utilHelper.convertSegmentDate(x.departureDate));
+                const xArr = new Date(this.utilHelper.convertSegmentDate(x.arrivalDate));
+                if (this.utilHelper.dateDiffInDays(seg1Dep, xDep) > 1 || this.utilHelper.dateDiffInDays(seg2Arr, xArr) > 1) {
+                    noHotelSegment.push(seg1);
+                    return;
+                }
+             });
+
+          }
+        
         }
         return noHotelSegment;
       }
+
       isHotel(segment) {
-        return segment.segmentType === 'HTL' && segment.segmentType === 'HHL';
+        return segment.segmentType === 'HTL' || segment.segmentType === 'HHL';
       }
       isCar(segment) {
         return segment.segmentType === 'CCR' || segment.segmentType === 'CAR';
+      }
+      isRail(segment) {
+        return segment.passive === 'TYP-TRN';
       }
 
       isNotLess4hrDateDiff(date1, date2, time1, time2) {

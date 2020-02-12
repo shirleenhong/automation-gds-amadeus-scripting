@@ -621,7 +621,7 @@ export class UpdateSegmentComponent implements OnInit {
     const cityCode = this.passiveSegments.departureCity;
     if (chainCode !== undefined && chainCode.length === 2 && (cityCode !== undefined && cityCode.length === 3)) {
       this.hotelList = [];
-      const command = 'HL' + chainCode + cityCode;
+      const command = 'HL' + chainCode + cityCode + '/AR-ALL';
       if (this.commandCache.getHotels === command) {
         return;
       }

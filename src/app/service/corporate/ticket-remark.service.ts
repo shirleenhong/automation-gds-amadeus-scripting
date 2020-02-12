@@ -34,7 +34,7 @@ export class TicketRemarkService {
     private remarkHelper: RemarkHelper,
     private amdeusQueue: AmadeusQueueService,
     private pricingService: PricingService
-  ) { }
+  ) {}
   /**
    * Method to add Tktline for BSP and NonBsp Cancel
    */
@@ -103,6 +103,7 @@ export class TicketRemarkService {
       remGroup.deleteRemarkByIds.push(existingFSLineNum.toString());
       // linesToDelete.push(existingFSLineNum);
     }
+    //
     // if (linesToDelete.length > 0) {
     //   smartScriptSession.send('XE' + linesToDelete.join(','));
     // }
@@ -134,7 +135,6 @@ export class TicketRemarkService {
     if (fg) {
       this.writeOnHoldRemark(ticketRemark.pnrOnHold);
     }
-
 
     return remGroup;
   }
@@ -173,12 +173,18 @@ export class TicketRemarkService {
     return tkSuffix;
   }
 
-  private writeOnHoldRemark(pnrOnHold: boolean): void {
+  public writeOnHoldRemark(pnrOnHold: boolean): void {
+    // to be removed once data is updated
+    let mapCond = new Map<string, string>();
+    mapCond.set('isOnHold', 'false');
+    this.remarksManagerSvc.createPlaceholderValues(null, mapCond, null, null, 'ONHOLD:AWAITING APPROVAL');
+    // ---------------------
     if (pnrOnHold) {
-      const staticRemarksCondition = new Map<string, string>();
-      staticRemarksCondition.set('isOnHold', 'true');
-
-      this.remarksManagerSvc.createPlaceholderValues(null, staticRemarksCondition, null, null, 'ONHOLD:AWAITING APPROVAL');
+      mapCond = new Map<string, string>();
+      mapCond.set('OnHoldNP', 'AWAITING APPROVAL');
+      this.remarksManagerSvc.createPlaceholderValues(mapCond, null, null, null);
+    } else {
+      this.remarksManagerSvc.createEmptyPlaceHolderValue(['OnHoldNP']);
     }
   }
 

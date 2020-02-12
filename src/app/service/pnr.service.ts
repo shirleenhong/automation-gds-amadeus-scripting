@@ -2066,13 +2066,10 @@ export class PnrService {
         for (let i = 0; i < segments.length - 1; i++) {
           const seg1 = segments[i];
           const seg2 = segments[i + 1];
-          if (!this.isCar(seg1)) {
-            if (this.isNotLess4hrDateDiff(seg1.arrivalDate, seg2.departureDate, seg1.arrivalTime, seg2.departureTime)) {
+
+          if (this.isNotLess4hrDateDiff(seg1.arrivalDate, seg2.departureDate, seg1.arrivalTime, seg2.departureTime)) {
               noHotelSegment.push(seg1);
-            }
-          }
-        
-          if (this.isCar(seg1)) {
+            } else if (this.isCar(seg1)) {
             const seg1Dep = new Date(this.utilHelper.convertSegmentDate(seg1.departureDate));
             const seg2Arr = new Date(this.utilHelper.convertSegmentDate(seg1.arrivalDate));
             const hotels = segments.filter(x => this.isHotel(x));
@@ -2084,9 +2081,8 @@ export class PnrService {
                     return;
                 }
              });
-
           }
-        
+
         }
         return noHotelSegment;
       }

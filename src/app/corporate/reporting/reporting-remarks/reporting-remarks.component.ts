@@ -48,20 +48,25 @@ export class ReportingRemarksComponent implements OnInit {
 
     await this.loadData();
     const tstSegments = await this.pnrService.getTstSegments();
-    const allSegments = this.pnrService
-      .getSegmentList()
-      .map((segment) => segment.lineNo)
-      .map((segment) => segment);
-    const nonTstSegments = allSegments.filter((s) => !tstSegments.includes(s));
-    this.segments = tstSegments.concat(nonTstSegments);
+    const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
 
-    for (const segment of this.segments) {
+    const nonTstSegments = allSegments.filter((s) => tstSegments.map((x) => x.replace(' ', '').split(','))[0].indexOf(s) === -1);
+
+    for (const segment of tstSegments) {
       this.showSegments = true;
       const group = this.createFormGroup(segment);
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
+
+    const destiList = nonTstSegments.map((x) => this.getDestinationValue(x));
+    if (destiList.length > 0) {
+      const group = this.createFormGroup('');
+      (this.reportingForm.get('segments') as FormArray).push(group);
+    }
+
     this.isCorporate = this.counselorDetail.getIsCorporate();
   }
+
   bspRoutingCodeProcess() {
     if (this.checkTripType()) {
       this.isTripTypeCorporate = true;
@@ -88,10 +93,9 @@ export class ReportingRemarksComponent implements OnInit {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
   createFormGroup(segmentNo) {
-    const val = this.getDestinationValue(segmentNo);
     return this.fb.group({
       segment: new FormControl(segmentNo),
-      destinationList: new FormControl(val, [Validators.required])
+      destinationList: new FormControl('', [Validators.required])
     });
   }
 

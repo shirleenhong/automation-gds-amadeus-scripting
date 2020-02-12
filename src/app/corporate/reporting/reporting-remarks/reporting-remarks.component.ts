@@ -50,7 +50,10 @@ export class ReportingRemarksComponent implements OnInit {
     const tstSegments = await this.pnrService.getTstSegments();
     const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
 
-    const nonTstSegments = allSegments.filter((s) => tstSegments.map((x) => x.replace(' ', '').split(','))[0].indexOf(s) === -1);
+    const nonTstSegments = allSegments.filter(
+      (s) =>
+        (tstSegments.length > 0 && tstSegments.map((x) => x.replace(' ', '').split(','))[0].indexOf(s) === -1) || tstSegments.length === 0
+    );
 
     for (const segment of tstSegments) {
       this.showSegments = true;
@@ -60,6 +63,7 @@ export class ReportingRemarksComponent implements OnInit {
 
     const destiList = nonTstSegments.map((x) => this.getDestinationValue(x));
     if (destiList.length > 0) {
+      this.showSegments = true;
       const group = this.createFormGroup('');
       (this.reportingForm.get('segments') as FormArray).push(group);
     }

@@ -123,6 +123,11 @@ ${list_exchangeReason}    //select[@id='exchangeReason']
 ${list_waiverApproved}    //select[@id='waiverApproved']
 ${input_declinedAirline}    //input[@name='declinedAirline']
 ${input_preTripNumber}    //input[@name='preTripNumber']
+${tab_noHotelBooked}    //span[contains(text(), 'No Hotel Booked')]
+${select_hotelReasonCode}    //select[@id='reasonCode']
+${input_segmentDate}    //input[@name='date']
+${input_segmentCityCode}    //input[@name='cityCode']
+${input_NumberOfDays}    //input[@name='numDays']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -171,6 +176,12 @@ Click UDID Tab
     Wait Until Element Is Visible    ${tab_udid}    30
     Click Element    ${tab_udid}
     Set Test Variable    ${current_page}    UDID    
+    
+Click No Hotel Booked Tab
+    Wait Until Element Is Visible    ${tab_noHotelBooked}    30
+    Click Element    ${tab_noHotelBooked}
+    Wait Until Element Is Visible    ${select_hotelReasonCode}    30
+    Set Test Variable    ${current_page}    No Hotel Booked
     
 Enter Full Fare
     [Arguments]    ${full_fare_value}    ${tst_number}=1
@@ -1160,3 +1171,23 @@ Verify Hotel Savings Tab Is Not Displayed
     Navigate To Page Reporting Remarks
     Page Should Not Contain Element    ${tab_hotelSavingsCode}
     Take Screenshot
+    
+Select No Hotel Booked Reason Code 
+    [Arguments]    @{no_hotel_reason_codes}
+    Set Test Variable    ${i}    0
+    :FOR    ${no_hotel_reason_codes}    IN    @{no_hotel_reason_codes}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Select From List By Label    ${form_segments}${open_bracket}${i}${close_bracket}${select_hotelReasonCode}    ${no_hotel_reason_codes} 
+
+Enter Number Of Days
+    [Arguments]    @{number_of_days}
+    Set Test Variable    ${i}    0
+    :FOR    ${number_of_days}    IN    @{number_of_days}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Select From List By Label    ${form_segments}${open_bracket}${i}${close_bracket}${input_NumberOfDays}    ${number_of_days}
+
+Verify ${number_of_hotel} No Hotel Booked Fields And Populate With Valid Values
+    Navigate To Page No Hotel Booked 
+    Select No Hotel Booked Reason Code
+    Enter Number Of Days
+ 

@@ -6,7 +6,7 @@ Test Teardown     Close All Browsers
 
 *** Test Cases ***
 Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass Purchase PNR
-    [Tags]    us10869    us14121
+    [Tags]    us10869    us14121    de3204
     Move Single Passenger For FR
     Add Matrix Accounting Remark For Air Canada Pass Purchase
     Verify Passive Segment Are Written For Air Canada Pass Purchase PNR
@@ -16,7 +16,7 @@ Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass 
     Verify UDID Remark Are Written For Air Canada Pass Purchase PNR
     
 Verify That Non BSP Processing Remark Is Written For Air Canada Individual Pass Purchase Premium
-    [Tags]    us10869    us14121
+    [Tags]    us10869    us14121    de3204
     Move Single Passenger For EN
     Add Matrix Accounting Remark For Air Canada Pass Purchase For Premium
     Verify Passive Segment Are Written For Air Canada Pass Purchase PNR

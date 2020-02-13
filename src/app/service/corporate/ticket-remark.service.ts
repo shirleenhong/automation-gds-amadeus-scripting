@@ -182,9 +182,9 @@ export class TicketRemarkService {
     if (pnrOnHold) {
       mapCond = new Map<string, string>();
       mapCond.set('OnHoldNP', 'AWAITING APPROVAL');
-      this.remarksManagerSvc.createPlaceholderValues(mapCond, null, null, null);
+      this.remarksManagerSvc.createPlaceholderValues(mapCond, null, null, null, 'ONHOLD:');
     } else {
-      this.remarksManagerSvc.createEmptyPlaceHolderValue(['OnHoldNP']);
+      this.remarksManagerSvc.createEmptyPlaceHolderValue(['OnHoldNP'], null, 'ONHOLD:');
     }
   }
 

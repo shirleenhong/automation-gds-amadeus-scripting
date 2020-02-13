@@ -62,6 +62,7 @@ ${checkbox_start}    //input[@value='
 ${checkbox_end}    ']
 ${input_credit_card}    //input[@id='ccNo']
 ${select_segment}    //app-segment-select[@id='segmentNo']//input[@formcontrolname='segment']
+${input_segment_count}    css=#segmentsCount
 
 *** Keywords ***    
 Add Rail Ticketing Details For Single Segment Without Ticket Number
@@ -626,7 +627,7 @@ Verify Updated Passive Segment Are Written For Air Canada Pass Purhase PNR
     Verify Specific Remark Is Written In The PNR    YCCYCC GK1 0700 0800 ${current_date} 879222    True
 
 Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
-    Verify Specific Remark Is Written In The PNR    RIR COMMUTER-U.S COMMUTER PASS-FLEX/S2  
+    Verify Specific Remark Is Written In The PNR    RIR COMMUTER-U.S COMMUTER PASS-FLEX FARE/S2  
     Verify Specific Remark Is Written In The PNR    RIR TOUS LES DETAILS ONT ETE PRESENTES AU CLIENT ET
     Verify Specific Remark Is Written In The PNR    RIR APPROUVES PAR CE DERNIER.  
     Verify Specific Remark Is Written In The PNR    RIR LES FRAIS APPLIQUES A LA CARTE DE CREDIT DES  
@@ -636,7 +637,7 @@ Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR
     Take Screenshot
     
 Verify Itinerary Remarks Are Written For Air Canada Pass Purchase PNR For Premium
-    Verify Specific Remark Is Written In The PNR    RIR COMMUTER-U.S COMMUTER PASS-PREMIUM ECONOMY/S2    
+    Verify Specific Remark Is Written In The PNR    RIR COMMUTER-U.S COMMUTER PASS-PREMIUM ECONOMY FARE/S2    
     Verify Specific Remark Is Written In The PNR    ALL DETAILS DISCUSSED AND    
     Verify Specific Remark Is Written In The PNR    APPROVED BY CLIENT    
     Verify Specific Remark Is Written In The PNR    CHARGE TO CLIENTS CREDIT CARD    
@@ -790,6 +791,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values
     Select Airline Corporate Pass Redemption
     Select Airline Corporate Pass By Value     1
     Select Itinerary Segments   2   3   4
+    Enter Value    ${input_segment_count}    3
     Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
     Take Screenshot
@@ -810,6 +812,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For ZZB
     Select Airline Corporate Pass Redemption
     Select Airline Corporate Pass By Label    AC/TRANSTEST.LAT/1238903456789
     Select Itinerary Segments   2   3
+    Enter Value    ${input_segment_count}    2
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
     Enter 123 In Lowest GDS Fare Field
@@ -819,6 +822,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For 92Z
     Select Airline Corporate Pass Redemption
     Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414
     Select Itinerary Segments   2
+    Enter Value    ${input_segment_count}    1
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
     Enter 2134 In Lowest GDS Fare Field
@@ -828,6 +832,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVQ
     Select Airline Corporate Pass Redemption
     Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414
     Select Itinerary Segments   2    4
+    Enter Value    ${input_segment_count}    2
 	Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter Value    ${input_tktnumber}    1234561234
     Enter 2134 In Lowest GDS Fare Field
@@ -836,6 +841,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For YVQ
     Select Airline Corporate Pass Redemption
     Select Airline Corporate Pass By Label    WS/TRANSCONTL.LAT/0140831475422
     Select Itinerary Segments   3
+    Enter Value    ${input_segment_count}    1
     Enter Value    ${input_supplier_confirmationNo}    1212321234
     Enter Value    ${input_tktnumber}    9812356781
     Enter 2311 In Lowest GDS Fare Field
@@ -846,6 +852,7 @@ Add Airline Corporate Pass Redemption And Verify Default Amount Values For YFV
     Select Airline Corporate Pass Redemption
     Select Airline Corporate Pass By Label    WS/RAPIDAIR.FLE/091241421414 
     Select Itinerary Segments   2   3
+    Enter Value    ${input_segment_count}    2
     Enter Value    ${input_supplier_confirmationNo}    0987654321
     Enter 2134 In Lowest GDS Fare Field
     Take Screenshot

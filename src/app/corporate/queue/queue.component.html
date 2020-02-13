@@ -1,6 +1,6 @@
 <tabset id="remarksTab">
   <tab heading="Follow-up Queue" id="queue" tabOrder="1">
-    <app-itinerary-invoice-queue></app-itinerary-invoice-queue>
+    <app-itinerary-invoice-queue [workflow]="'wrap'"></app-itinerary-invoice-queue>
   </tab>
   <tab heading="Queue Placement" id="queueMinder" tabOrder="2" *ngIf="isEsc">
     <app-queue-minder> </app-queue-minder>
@@ -12,6 +12,6 @@
     <app-container [containerFilter]="'QUEUE'"></app-container>
   </tab>
   <tab heading="CWT Itinerary" id="CWTItin" tabOrder="5">
-    <app-itinerary></app-itinerary>
+    <app-itinerary [workflow]="'wrap'"></app-itinerary>
   </tab>
 </tabset>

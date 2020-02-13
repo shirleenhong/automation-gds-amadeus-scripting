@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { UtilHelper } from '../../helper/util.helper';
 import { ItineraryInvoiceQueue } from './itinerary-invoice-queue/itinerary-invoice-queue.component';
 import { ItineraryComponent } from 'src/app/leisure/itinerary-and-queue/itinerary/itinerary.component';
@@ -15,8 +15,10 @@ export class ItineraryAndQueueComponent implements OnInit {
   @ViewChild(ItineraryComponent) itineraryComponent: ItineraryComponent;
   @ViewChild(TicketingLineComponent) ticketingLineComponent: TicketingLineComponent;
   validModel = new ValidateModel();
-  constructor(private utilHelper: UtilHelper) {}
+  @Input()
+  workflow;
 
+  constructor(private utilHelper: UtilHelper) {}
   ngOnInit() {}
 
   checkValid() {

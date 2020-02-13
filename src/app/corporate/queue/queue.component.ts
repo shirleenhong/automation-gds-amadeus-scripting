@@ -29,7 +29,6 @@ export class QueueComponent implements OnInit {
   constructor(private counselorDetail: CounselorDetail, private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
 
   ngOnInit() {
-    debugger;
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'QUEUE');
     this.counselorDetail.identityOnChange.subscribe((x) => {
       this.isEsc = x === 'ESC';

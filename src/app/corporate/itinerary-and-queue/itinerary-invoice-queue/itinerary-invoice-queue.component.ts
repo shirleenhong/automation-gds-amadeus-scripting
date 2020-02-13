@@ -30,7 +30,6 @@ export class ItineraryInvoiceQueue implements OnInit {
   }
 
   async ngOnInit() {
-    debugger;
     this.pccList = await this.ddb.getTeamQueuePCCOID();
     this.isLeisureOnDemadOid = this.checkForTeamQueuePCCOID();
     this.loadTransactionType();

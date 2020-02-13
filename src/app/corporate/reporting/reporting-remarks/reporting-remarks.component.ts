@@ -8,7 +8,6 @@ import { ReasonCode } from 'src/app/models/ddb/reason-code.model';
 
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { ObtComponent } from '../obt/obt.component';
-import { ServicingOptionEnums } from 'src/app/enums/servicing-options.enum';
 
 @Component({
   selector: 'app-reporting-remarks',
@@ -25,7 +24,7 @@ export class ReportingRemarksComponent implements OnInit {
   ebCList: Array<ReasonCode> = [];
   showEBDetails: boolean;
   isCorporate = false;
-  showNoHotelBooked = false;
+
   ebRList: { itemValue: string; itemText: string }[];
   @ViewChild(ObtComponent) obtComponent: ObtComponent;
   @Input() reportingRemarksView = new ReportingViewModel();
@@ -35,16 +34,7 @@ export class ReportingRemarksComponent implements OnInit {
     private fb: FormBuilder,
     private counselorDetail: CounselorDetail
   ) {
-    this.destinations = pnrService.getAirDestinations();
-    this.showNoHotelBooked = this.checkNoHotelBooked();
-  }
-
-  checkNoHotelBooked() {
-    const so = this.ddbService.getServicingOptionValue(ServicingOptionEnums.No_Hotel_Booked_Codes);
-    if (!so){
-      return false;
-    }
-    return so.ServiceOptionItemValue==='Yes'
+    this.destinations = pnrService.getPnrDestinations();
   }
 
   async loadData(): Promise<void> {}
@@ -57,14 +47,30 @@ export class ReportingRemarksComponent implements OnInit {
     this.bspRoutingCodeProcess();
 
     await this.loadData();
-    this.segments = await this.pnrService.getTstSegments();
-    for (const segment of this.segments) {
+    const tstSegments = await this.pnrService.getTstSegments();
+    const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
+
+    const nonTstSegments = allSegments.filter(
+      (s) =>
+        (tstSegments.length > 0 && tstSegments.map((x) => x.replace(' ', '').split(','))[0].indexOf(s) === -1) || tstSegments.length === 0
+    );
+
+    for (const segment of tstSegments) {
       this.showSegments = true;
       const group = this.createFormGroup(segment);
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
+
+    const destiList = nonTstSegments.map((x) => this.getDestinationValue(x));
+    if (destiList.length > 0) {
+      this.showSegments = true;
+      const group = this.createFormGroup('');
+      (this.reportingForm.get('segments') as FormArray).push(group);
+    }
+
     this.isCorporate = this.counselorDetail.getIsCorporate();
   }
+
   bspRoutingCodeProcess() {
     if (this.checkTripType()) {
       this.isTripTypeCorporate = true;
@@ -91,10 +97,9 @@ export class ReportingRemarksComponent implements OnInit {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
   }
   createFormGroup(segmentNo) {
-    const val = this.getDestinationValue(segmentNo);
     return this.fb.group({
       segment: new FormControl(segmentNo),
-      destinationList: new FormControl(val, [Validators.required])
+      destinationList: new FormControl('', [Validators.required])
     });
   }
 
@@ -111,22 +116,28 @@ export class ReportingRemarksComponent implements OnInit {
 
   getDestinationValue(segmentNo): string {
     let val: string;
-
-    for (const element of this.pnrService.pnrObj.rmElements) {
-      if (element.freeFlowText.includes('*DE/-')) {
-        const tatoo = this.pnrService.getTatooNumberFromSegmentNumber(segmentNo);
-        const ref = element.fullNode.referenceForDataElement.reference;
-
-        if (ref.length > 0) {
-          if (ref[0].number === tatoo.toString().split(',')[0]) {
-            val = element.freeFlowText.split('*DE/-')[1];
-            return val;
-          }
-        } else if (tatoo.includes(ref.number)) {
-          val = element.freeFlowText.split('*DE/-')[1];
-          return val;
-        }
+    for (const air of this.pnrService.pnrObj.airSegments) {
+      if (air.elementNumber === segmentNo) {
+        val = air.arrivalAirport;
       }
     }
+    for (const car of this.pnrService.pnrObj.auxCarSegments) {
+      if (car.elementNumber === segmentNo) {
+        val = car.fullNode.travelProduct.boardpointDetail.cityCode;
+      }
+    }
+
+    for (const hotel of this.pnrService.pnrObj.auxHotelSegments) {
+      if (hotel.elementNumber === segmentNo) {
+        val = hotel.fullNode.travelProduct.boardpointDetail.cityCode;
+      }
+    }
+
+    for (const misc of this.pnrService.pnrObj.miscSegments) {
+      if (misc.elementNumber === segmentNo) {
+        val = misc.fullNode.travelProduct.boardpointDetail.cityCode;
+      }
+    }
+    return val;
   }
 }

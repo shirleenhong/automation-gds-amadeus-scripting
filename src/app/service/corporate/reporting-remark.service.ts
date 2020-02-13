@@ -12,6 +12,7 @@ import { ReportingRemarksComponent } from 'src/app/corporate/reporting/reporting
 import { CarSavingsCodeComponent } from 'src/app/corporate/reporting/car-savings-code/car-savings-code.component';
 import { HotelSegmentsComponent } from 'src/app/corporate/reporting/hotel-segments/hotel-segments.component';
 import { ObtComponent } from 'src/app/corporate/reporting/obt/obt.component';
+import { NoBookedHotelComponent } from 'src/app/corporate/reporting/no-booked-hotel/no-booked-hotel.component';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ import { ObtComponent } from 'src/app/corporate/reporting/obt/obt.component';
 export class ReportingRemarkService {
   hasTransborder: boolean;
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) { }
 
   WriteBspRemarks(rbc: ReportingBSPComponent, rptComp: ReportingRemarksComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;
@@ -52,9 +53,7 @@ export class ReportingRemarkService {
       }
     }
     tstList
-      .filter(function(elem, index, self) {
-        return index === self.indexOf(elem);
-      })
+      .filter((elem, index, self) => index === self.indexOf(elem))
       .forEach((x) => {
         const exchangeIndicatorRemark = new Map<string, string>();
         exchangeIndicatorRemark.set('AirTicketId', x);
@@ -164,9 +163,9 @@ export class ReportingRemarkService {
   }
   getRemarkSegmentAssociation(segments: string[]): string[] {
     const segmentrelate: string[] = [];
-    const air = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && segments.indexOf(x.lineNo) >= 0);
-    air.forEach((airElement) => {
-      segmentrelate.push(airElement.tatooNo);
+    const segment = this.pnrService.getSegmentList().filter((x) => segments.indexOf(x.lineNo) >= 0);
+    segment.forEach((x) => {
+      segmentrelate.push(x.tatooNo);
     });
 
     return segmentrelate;
@@ -231,37 +230,41 @@ export class ReportingRemarkService {
 
   WriteU63(wc: WaiversComponent) {
     const bspGroup: FormGroup = wc.ticketedForm;
-    const items = bspGroup.get('segments') as FormArray;
-
-    for (const control of items.controls) {
-      if (control instanceof FormGroup) {
-        const fg = control as FormGroup;
-        const waiverRemark = new Map<string, string>();
-
-        const segments: string[] = [];
-        let segmentrelate: string[] = [];
-
-        Object.keys(fg.controls).forEach((key) => {
-          if (key === 'segment') {
-            fg.get(key)
-              .value.split(',')
-              .forEach((val) => {
-                segments.push(val);
-              });
-
-            segmentrelate = this.getRemarkSegmentAssociation(segments);
-          }
-
-          if (key === 'waiver') {
-            if (fg.get(key).value !== null && fg.get(key).value !== '') {
-              waiverRemark.set('WaiverLine', fg.get(key).value);
-            }
-          }
-        });
-
-        this.remarksManager.createPlaceholderValues(waiverRemark, null, segmentrelate);
-      }
+    if (bspGroup.get('waiver').value) {
+      const waiverRemark = new Map<string, string>();
+      waiverRemark.set('WaiverLine', bspGroup.get('waiver').value);
+      this.remarksManager.createPlaceholderValues(waiverRemark, null, null);
     }
+
+    //   }
+    // const items = bspGroup.get('segments') as FormArray;
+
+    // for (const control of items.controls) {
+    //   if (control instanceof FormGroup) {
+    //     const fg = control as FormGroup;
+    //     const waiverRemark = new Map<string, string>();
+
+    //     Object.keys(fg.controls).forEach((key) => {
+    //       //   if (key === 'segment') {
+    //       //     fg.get(key)
+    //       //       .value.split(',')
+    //       //       .forEach((val) => {
+    //       //         segments.push(val);
+    //       //       });
+
+    //       //     segmentrelate = this.getRemarkSegmentAssociation(segments);
+    //       //   }
+
+    //       if (key === 'waiver') {
+    //         if (fg.get(key).value !== null && fg.get(key).value !== '') {
+    //           waiverRemark.set('WaiverLine', fg.get(key).value);
+    //         }
+    //       }
+    //     });
+
+    //     this.remarksManager.createPlaceholderValues(waiverRemark, null, null);
+    //   }
+    // }
   }
   public GetRoutingRemark(reporting: ReportingViewModel) {
     const rmGroup = new RemarkGroup();
@@ -289,7 +292,6 @@ export class ReportingRemarkService {
   WriteDestinationCode(rc: ReportingRemarksComponent) {
     const reportingRemarksGroup: FormGroup = rc.reportingForm;
     const items = reportingRemarksGroup.get('segments') as FormArray;
-
     for (const control of items.controls) {
       if (control instanceof FormGroup) {
         const fg = control as FormGroup;
@@ -305,13 +307,12 @@ export class ReportingRemarkService {
               .forEach((val) => {
                 segments.push(val);
               });
-
             segmentrelate = this.getRemarkSegmentAssociation(segments);
           }
 
           if (key === 'destinationList') {
             if (fg.get(key).value !== null && fg.get(key).value !== '') {
-              destinationRemark.set('IataCode', fg.get(key).value);
+              destinationRemark.set('PointOfTurnAround', fg.get(key).value);
             }
           }
         });
@@ -329,6 +330,34 @@ export class ReportingRemarkService {
       map.set('TouchType', touchReasonForm.controls.ebN.value);
       map.set('TouchReason', touchReasonForm.controls.ebC.value);
       this.remarksManager.createPlaceholderValues(map);
+    }
+  }
+
+  writeNoHotelBooked(comp: NoBookedHotelComponent) {
+    const items = comp.segmentForm.get('segments') as FormArray;
+    const rems = [];
+    for (const control of items.controls) {
+      if (control instanceof FormGroup) {
+        const days = control.get('numDays').value.padStart(2, '0');
+        const rm = control.get('date').value + control.get('cityCode').value + 'H' + control.get('reasonCode').value + days;
+        rems.push(rm);
+      }
+    }
+
+    if (rems.length > 0) {
+      let map = new Map<string, string>();
+      map.set('HotelReasonCodes1', rems[0] + (rems.length > 1 ? '/' + rems[1] : ''));
+      this.remarksManager.createPlaceholderValues(map);
+      if (rems.length > 2) {
+        map = new Map<string, string>();
+        map.set('HotelReasonCodes2', rems[2] + (rems.length > 3 ? '/' + rems[3] : ''));
+        this.remarksManager.createPlaceholderValues(map);
+      }
+    } else {
+      this.remarksManager.createEmptyPlaceHolderValue(['HotelReasonCodes1']);
+    }
+    if (rems.length < 3) {
+      this.remarksManager.createEmptyPlaceHolderValue(['HotelReasonCodes2']);
     }
   }
 }

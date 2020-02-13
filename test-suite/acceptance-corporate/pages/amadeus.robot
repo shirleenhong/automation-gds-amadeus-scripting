@@ -46,7 +46,12 @@ ${oid_YTOWL2101}    //a[contains(text(), 'YTOWL2101')]
 ${tst_line}    //table[@class='tstTsmView line']//tr
 ${tst_row}    //td[@class='price textwrap']
 ${button_closeSmartTool}    //div[contains(@class,'std_titleBar')]//span[@class='xWidget xICNstd']
-
+${link_view_tst}    //a[contains(text(), 'View/Modify TST
+${link_view_tst_end}    ')]
+${popup_amadeus_tst}    //div[@id='e4retrievePNR_manageTSTPopup_id']
+${input_base_fare}    //input[@name='baseFare']
+${input_tst_currency}    //input[@name='baseCur']
+${close_tst_window}    css=#e4retrievePNR_manageTSTPopup_id > .ydlg-close
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -175,7 +180,7 @@ Get Booking File History
 
 Switch To Command Page
     Wait Until Page Contains Element    ${button_cryptic}    60
-    Click Element    ${button_cryptic}
+    Click Element At Coordinates    ${button_cryptic}    0    0
     Wait Until Element Is Visible    ${input_commandText}    60
     Set Test Variable    ${current_page}    Amadeus
     [Teardown]    Take Screenshot
@@ -373,7 +378,8 @@ Enter RIR Remarks In French
 Handle Simultaneous Changes To PNR
     Sleep   3
     ${status}    Run Keyword And Return Status    Page Should Contain Element     ${response_simultaneous}
-    Run keyword If    '${status}' == 'True'    Delete Fare and Itinerary
+    Run keyword If    ${status}    Sleep    60    #to avoid simultaneous change before performing action
+    Run keyword If    ${status}    Delete Fare and Itinerary
 
 Move Single Passenger For EN
     Move Profile to GDS    NM1Juarez/Rose Ms    APE-test@email.com    RM*CF/-RBP0000000C    RMP/CITIZENSHIP-CA    RM*U25/-A:FA177    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA
@@ -815,4 +821,21 @@ Add ${number_of_segments} Rail Segments With ${route} City Codes
     \    Run Keyword If    "${route}"== "Domestic"   Enter Cryptic Command    RU1AHK1YYZ${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     \    Run Keyword If    "${route}"== "Transborder"   Enter Cryptic Command    RU1AHK1ORD${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     \    Run Keyword If    "${route}"== "International"   Enter Cryptic Command    RU1AHK1LHR${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+
+Get Base Fare For ${no_of_tst} TST
+    Switch To Graphic Mode
+    Set Test Variable    ${i}    0
+    :FOR    ${i}    IN RANGE    0    ${no_of_tst}
+    \    ${i}    Evaluate    ${i} + 1
+    \    Click Element    ${link_view_tst}${i}${link_view_tst_end}
+    \    Wait Until Page Contains Element    ${popup_amadeus_tst}    30
+    \    Wait Until Element Is Visible    ${input_base_fare}    30
+    \    ${actual_tst_currency}    Get Value    ${input_tst_currency}
+    \    ${actual_tst_fare}    Get Value    ${input_base_fare}
+    \    Set Test Variable   ${actual_tst_currency_${i}}    ${actual_tst_currency}
+    \    Set Test Variable   ${actual_tst_fare_${i}}    ${actual_tst_fare}
+    \    Click Element    ${close_tst_window}
+    \    Wait Until Page Contains Element    ${button_cryptic}    120
+    \    Sleep    5
+    Switch To Command Page
 

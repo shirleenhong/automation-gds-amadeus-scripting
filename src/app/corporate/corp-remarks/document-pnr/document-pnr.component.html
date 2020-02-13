@@ -1,16 +1,14 @@
 <form [formGroup]="documentForm">
   <div class="documentContainer">
-    <div formArrayName="items" *ngFor="let item of this.documentForm.get('items')['controls']; let i = index;"
-      class="col">
+    <div formArrayName="items" *ngFor="let item of this.documentForm.get('items')['controls']; let i = index" class="col">
       <div [formGroupName]="i">
         <table style="width:100%">
           <tr>
-            <td style="width:3%">
-              Remark:
+            <td style="width:10%">
+              Internal Remarks:
             </td>
             <td style="width:50%">
-              <input formControlName="documentation" type="text" class="form-control" maxlength="55"
-                style="width:98%" />
+              <input formControlName="documentation" type="text" class="form-control" maxlength="55" style="width:98%" />
             </td>
 
             <td style="width:10%" class="docTable">
@@ -36,8 +34,5 @@
         </table>
       </div>
     </div>
-
-
   </div>
-
 </form>

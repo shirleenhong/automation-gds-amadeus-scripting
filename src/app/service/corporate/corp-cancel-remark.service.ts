@@ -147,7 +147,12 @@ export class CorpCancelRemarkService {
   }
 
   writeAquaTouchlessRemark(cancel: any) {
-    if (cancel.value.followUpOption === 'BSPKT' || cancel.value.followUpOption === 'NONBSPKT') {
+    if (
+      cancel.value.followUpOption === 'BSPKT' ||
+      cancel.value.followUpOption === 'NONBSPKT' ||
+      cancel.value.followUpOption === 'NONBSPREFUND' ||
+      cancel.value.followUpOption === 'HOTELCARLIMO'
+    ) {
       const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
       const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
       let value = '';
@@ -163,6 +168,9 @@ export class CorpCancelRemarkService {
         }
       }
       this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 70, 1));
+      if (cancel.value.followUpOption === 'HOTELCARLIMO') {
+        this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', '1'));
+      }
     }
   }
 
@@ -178,15 +186,14 @@ export class CorpCancelRemarkService {
     });
     this.remarksManager.createPlaceholderValues(map, null, null, null, statictext);
   }
-   sendEBRemarks(cancelForm: FormGroup) {
-     const map = new Map<string, string>();
-     map.set('TouchCode', cancelForm.controls.ebR.value);
-     map.set('BookingToolCode', cancelForm.controls.ebT.value);
-     map.set('ReasonType', cancelForm.controls.ebN.value);
-     map.set('ReasonCode', cancelForm.controls.ebC.value);
-     this.remarksManager.createPlaceholderValues(map);
+  sendEBRemarks(cancelForm: FormGroup) {
+    const map = new Map<string, string>();
+    map.set('TouchCode', cancelForm.controls.ebR.value);
+    map.set('BookingToolCode', cancelForm.controls.ebT.value);
+    map.set('ReasonType', cancelForm.controls.ebN.value);
+    map.set('ReasonCode', cancelForm.controls.ebC.value);
+    this.remarksManager.createPlaceholderValues(map);
   }
-
 
   WriteTicketRefund(group: FormGroup, refundType: string) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');

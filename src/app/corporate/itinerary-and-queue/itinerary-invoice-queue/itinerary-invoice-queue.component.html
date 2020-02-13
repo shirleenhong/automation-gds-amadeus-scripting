@@ -1,14 +1,12 @@
 <form [formGroup]="queueForm">
   <div class="queueContainer">
-
     <div class="row form-group">
       <div class="col-3"></div>
     </div>
-    <div class="form-group  row">
+    <div class="form-group  row" *ngIf="showTypeOfTransaction">
       <div class="col-sm-3">Type of Transaction:</div>
       <div class="col-sm-4">
-        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction"
-          name="typeTransaction">
+        <select autofocus id="typeTransaction" class="form-control" formControlName="typeTransaction" name="typeTransaction">
           <option *ngFor="let item of transactionTypeList" [value]="item.itemValue">
             {{ item.itemText }}
           </option>
@@ -43,10 +41,8 @@
         <input type="text" class="form-control" id="queueNo" name="queueNo" formControlName="queueNo" maxlength="35" />
       </div>
       <div class="col-2">
-        <input type="text" class="form-control" id="queueCategory" name="queueCategory" formControlName="queueCategory"
-          maxlength="35" />
+        <input type="text" class="form-control" id="queueCategory" name="queueCategory" formControlName="queueCategory" maxlength="35" />
       </div>
     </div>
-
   </div>
 </form>

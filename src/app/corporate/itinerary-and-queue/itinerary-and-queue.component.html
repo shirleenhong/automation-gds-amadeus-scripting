@@ -1,11 +1,11 @@
 <tabset>
   <tab heading="Follow-up Queue" id="tab1" tabOrder="1">
-    <app-itinerary-invoice-queue></app-itinerary-invoice-queue>
+    <app-itinerary-invoice-queue [workflow]="'queue'"></app-itinerary-invoice-queue>
   </tab>
   <tab heading="CWT Itinerary" id="tab2" tabOrder="2">
-    <app-itinerary></app-itinerary>
+    <app-itinerary [workflow]="'queue'"></app-itinerary>
   </tab>
   <tab heading="TKTL Update for Aqua Ticketing" id="tab3" tabOrder="3">
-    <app-ticketing-line></app-ticketing-line>
+    <app-ticketing-line [containerFilter]="'UPDATE'"></app-ticketing-line>
   </tab>
 </tabset>

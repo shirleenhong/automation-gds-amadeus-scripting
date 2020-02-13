@@ -12,9 +12,9 @@ import { HotelSegmentsComponent } from './hotel-segments/hotel-segments.componen
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { AccountingRemarkComponent } from '../payments/accounting-remark/accounting-remark.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
-
 import { ServicingOptionEnums } from 'src/app/enums/servicing-options.enum';
 import { DDBService } from 'src/app/service/ddb.service';
+import { NoBookedHotelComponent } from './no-booked-hotel/no-booked-hotel.component';
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
@@ -35,6 +35,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
   @ViewChild(HotelSegmentsComponent) hotelSegmentsComponent: HotelSegmentsComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
   @ViewChild(AccountingRemarkComponent) accountingComponent: AccountingRemarkComponent;
+  @ViewChild(NoBookedHotelComponent) noBookedHotelComponent: NoBookedHotelComponent;
   hasRules = false;
   components = [];
   showCarSavingsTab: boolean;
@@ -55,6 +56,7 @@ export class ReportingComponent implements OnInit, AfterViewInit {
     this.reportingRemarksView = this.reportingRemarksComponent.reportingRemarksView;
     this.showHotelTab();
     this.showCarTab();
+    this.showNoHotelBooked = this.checkNoHotelBooked();
   }
   ngAfterViewInit() {
     this.hasTst = this.reportingBSPComponent.hasTst;
@@ -92,6 +94,12 @@ export class ReportingComponent implements OnInit, AfterViewInit {
         return false;
       }
     }
+    if (this.noBookedHotelComponent !== undefined) {
+      this.utilHelper.validateAllFields(this.noBookedHotelComponent.segmentForm);
+      if (!this.noBookedHotelComponent.segmentForm.valid) {
+        return false;
+      }
+    }
 
     if (this.containerComponent) {
       this.utilHelper.validateAllFields(this.containerComponent.containerForm);
@@ -126,5 +134,13 @@ export class ReportingComponent implements OnInit, AfterViewInit {
       });
       this.showHotelsTab = segments.length > 0 ? true : false;
     }
+  }
+
+  checkNoHotelBooked() {
+    const so = this.ddbService.getServicingOptionValue(ServicingOptionEnums.No_Hotel_Booked_Codes);
+    if (!so) {
+      return false;
+    }
+    return so.ServiceOptionItemValue === 'Yes' && this.pnrService.getSegmentsForNoHotel().length > 0;
   }
 }

@@ -383,6 +383,11 @@ export class CorporateComponent implements OnInit {
         this.reportingComponent.hotelSegmentsComponent.reAddRemarks
       );
     }
+
+    if (this.reportingComponent.noBookedHotelComponent !== undefined) {
+      this.reportingRemarkService.writeNoHotelBooked(this.reportingComponent.noBookedHotelComponent);
+    }
+
     if (this.councelorDetail.getIdentity() === 'OFC') {
       this.ofcRemarkService.WriteOfcDocumentation(this.queueComponent.ofcDocumentation.ofcDocForm);
     }
@@ -807,7 +812,7 @@ export class CorporateComponent implements OnInit {
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
-      if (seg.segmentType === 'HHL') {
+      if (seg.segmentType === 'HHL' || seg.segmentType === 'HTL') {
         return true;
       }
     }
@@ -849,12 +854,14 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.addAquaOverrideRmk();
     }
     const accRemarks = new Array<RemarkGroup>();
-    accRemarks.push(
-      this.ticketRemarkService.submitTicketRemark(
-        this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
-        this.itineraryqueueComponent.ticketingLineComponent.approvalForm
-      )
-    );
+    if (this.itineraryqueueComponent.ticketingLineComponent.ticketForm.get('verifyAck').value) {
+      accRemarks.push(
+        this.ticketRemarkService.submitTicketRemark(
+          this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
+          this.itineraryqueueComponent.ticketingLineComponent.approvalForm
+        )
+      );
+    }
     this.corpRemarkService.BuildRemarks(accRemarks);
     await this.corpRemarkService.SubmitRemarks().then(async () => {
       await this.getPnrService();
@@ -959,8 +966,11 @@ export class CorporateComponent implements OnInit {
 
   async checkValidForAquaFee() {
     const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
-    const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-    this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
+    this.showAquaFeeButton = false;
+    if (response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+      const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
+    }
   }
 
   async hasAccessInPassPurchase() {

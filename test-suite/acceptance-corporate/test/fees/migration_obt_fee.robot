@@ -15,7 +15,7 @@ Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify OBT SupFee Remark Is Written In The PNR with Air, Rail, Hotel, and Car Segments
-    [Tags]    us9402
+    [Tags]    us9402    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Book Multiple Segments With Air Car Rail And Hotel
@@ -26,7 +26,7 @@ Verify OBT SupFee Remark Is Written In The PNR with Air, Rail, Hotel, and Car Se
     
     
 Verify OBT SupFee Remark is written In The PNR For Air Only Segment
-    [Tags]    us9402
+    [Tags]    us9402    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add International Segment And Store Single Fare
@@ -37,7 +37,7 @@ Verify OBT SupFee Remark is written In The PNR For Air Only Segment
     
     
 Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
-    [Tags]    us9402
+    [Tags]    us9402    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 1 Rail Segments
@@ -45,9 +45,8 @@ Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
     Click Full Wrap
     Verify Correct OBT Fee Remark Are Written In The PNR For Rail Only
     
-    
 Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
-    [Tags]    us9402
+    [Tags]    us9402    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 2 Passive Hotel Segments
@@ -56,9 +55,8 @@ Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
     Select Counselor Identity: ESC
     Verify Correct OBT Fee Remark Are Written In The PNR For Hotel Only
     
-    
 Verify OBT SupFee Remark is written In The PNR For Car Only Segment
-    [Tags]    us9402
+    [Tags]    us9402    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 2 Car Segments
@@ -69,7 +67,7 @@ Verify OBT SupFee Remark is written In The PNR For Car Only Segment
     
     
 Verify That Non OBT PNR Has No Supfee Remark In The PNR
-    [Tags]    us9402
+    [Tags]    us9402    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger
     Book Multiple Segments With Air Car Rail And Hotel

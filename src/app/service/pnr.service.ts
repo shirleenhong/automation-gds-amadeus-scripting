@@ -7,6 +7,7 @@ import { AmountPipe } from '../pipes/amount.pipe';
 import { PassiveSegmentsModel } from '../models/pnr/passive-segments.model';
 import { LeisureFeeModel } from '../models/pnr/leisure-fee.model';
 import { ExchangeTicketModel } from '../models/pnr/exchange-ticket.model';
+import { UtilHelper } from '../helper/util.helper';
 
 
 
@@ -34,7 +35,7 @@ export class PnrService {
     agentSign = '';
     agentFirstName = '';
     agentLastName = '';
-    constructor() { }
+    constructor(private utilHelper: UtilHelper) { }
 
     async getPNR(): Promise<void> {
         this.cfLine = null;
@@ -83,7 +84,9 @@ export class PnrService {
             .requestService('ws.displayTST_v14.1', displayElement)
             .then(
                 (tst) => {
+                    if ( tst.response.model.output.response) {
                     this.tstObj = tst.response.model.output.response.fareList;
+                    }
                     this.errorMessage = 'TST Loaded Successfully';
                 },
                 (error: string) => {
@@ -516,6 +519,7 @@ export class PnrService {
                 this.getSegmentDetails(misc, 'MIS');
             }
         }
+        console.log(this.segments);
         return this.segments;
     }
 
@@ -615,6 +619,9 @@ export class PnrService {
                 this.formatDate(fullnodetemp.product.depDate);
             elemStatus = elem.fullNode.relatedProduct.status;
             elemdepdate = fullnodetemp.product.depDate;
+            if (!departureDate) {
+                departureDate = elemdepdate;
+            }
             arrivalDate = fullnodetemp.product.arrDate;
             elemcitycode = fullnodetemp.boardpointDetail.cityCode;
             let longText = '';
@@ -634,6 +641,16 @@ export class PnrService {
             }
 
             hotelChainCode = elem.chainCode ? elem.chainCode : '';
+
+            flongtext.split('/').forEach(t => {
+                if (t.startsWith('ST')) {
+                    departureTime = t.replace('ST-', '');
+                } else  if (t.startsWith('ET')) {
+                    arrivalTime = t.replace('ET-', '');
+                } else  if (t.startsWith('ED')) {
+                    arrivalDate = this.convertDDYYY(t.replace('ED-', ''));
+                }
+            });
         }
 
         if (type === 'MIS') {
@@ -721,6 +738,20 @@ export class PnrService {
             lastDeptDate = this.getLastDate(miscdate, lastDeptDate);
         }
         return lastDeptDate;
+    }
+
+    convertDDYYY(date) {
+        // convert ddYYY to dd/mm/yy
+        const dd = date.substr(0, 2);
+        const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        const month = (m.indexOf(date.substr(2, 3)) + 1).toString().padStart(2, '0') ;
+        const nowMonth  = (new Date().getMonth()) + 1;
+        let year = new Date().getFullYear();
+        if (Number(month) < nowMonth) {
+            year += 1;
+        }
+        return dd + month + year.toString().substr(2, 2);
+
     }
 
     getRemarksFromGDS() {
@@ -2017,4 +2048,65 @@ export class PnrService {
         }
         return feList;
     }
+
+    getSegmentsForNoHotel() {
+        const noHotelSegment = [];
+        const segments = this.getSegmentList()
+        .filter(x => this.isCar(x)  || this.isHotel(x) || this.isRail(x) || x.segmentType === 'AIR')
+        .sort((a, b) => {
+          if (Number(a.lineNo) < Number(b.lineNo)) {
+            return -1;
+          } else if (Number(a.lineNo) < Number(b.lineNo)) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        // tslint:disable-next-line: prefer-for-of
+        for (let i = 0; i < segments.length - 1; i++) {
+          const seg1 = segments[i];
+          const seg2 = segments[i + 1];
+
+          if (this.isNotLess4hrDateDiff(seg1.arrivalDate, seg2.departureDate, seg1.arrivalTime, seg2.departureTime)) {
+              noHotelSegment.push(seg1);
+            } else if (this.isCar(seg1)) {
+            const seg1Dep = new Date(this.utilHelper.convertSegmentDate(seg1.departureDate));
+            const seg2Arr = new Date(this.utilHelper.convertSegmentDate(seg1.arrivalDate));
+            const hotels = segments.filter(x => this.isHotel(x));
+            hotels.forEach(x => {
+                const xDep = new Date(this.utilHelper.convertSegmentDate(x.departureDate));
+                const xArr = new Date(this.utilHelper.convertSegmentDate(x.arrivalDate));
+                if (this.utilHelper.dateDiffInDays(seg1Dep, xDep) > 1 || this.utilHelper.dateDiffInDays(seg2Arr, xArr) > 1) {
+                    noHotelSegment.push(seg1);
+                    return;
+                }
+             });
+          }
+
+        }
+        return noHotelSegment;
+      }
+
+      isHotel(segment) {
+        return segment.segmentType === 'HTL' || segment.segmentType === 'HHL';
+      }
+      isCar(segment) {
+        return segment.segmentType === 'CCR' || segment.segmentType === 'CAR';
+      }
+      isRail(segment) {
+        return segment.passive === 'TYP-TRN';
+      }
+
+      isNotLess4hrDateDiff(date1, date2, time1, time2) {
+        const seg1Date = new Date(this.utilHelper.convertSegmentDate(date1));
+        const seg2Date = new Date(this.utilHelper.convertSegmentDate(date2));
+        seg1Date.setHours(time1.substr(0, 2));
+        seg1Date.setMinutes(time1.substr(2, 2));
+        seg2Date.setHours(time2.substr(0, 2));
+        seg2Date.setMinutes(time2.substr(2, 2));
+        const hourDiff = this.utilHelper.dateDiffInHours(seg1Date, seg2Date);
+        const dayDiff = this.utilHelper.dateDiffInDays(seg1Date, seg2Date);
+        // day diff should be more than 4 hours
+        return dayDiff > 0 && hourDiff > 4;
+      }
 }

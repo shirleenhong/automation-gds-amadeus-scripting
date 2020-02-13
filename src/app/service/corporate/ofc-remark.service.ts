@@ -11,8 +11,8 @@ import { AmadeusQueueService } from '../amadeus-queue.service';
 })
 export class OfcRemarkService {
   queues: Array<QueuePlaceModel> = [];
-  // ofcQueue = '75C110';
-  ofcQueue = '41C96';
+  ofcQueue = '75C110';
+
   constructor(private pnrService: PnrService, private remarksManager: RemarksManagerService, private amdeusQueue: AmadeusQueueService) {}
 
   public WriteOfcDocumentation(fg: FormGroup) {

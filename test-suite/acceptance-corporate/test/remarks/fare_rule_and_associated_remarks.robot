@@ -1,17 +1,6 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/payment.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/fees.robot
-Resource          ../../pages/ticketing.robot
-Resource          ../../pages/remarks.robot
-Resource          ../../../resources/common/api-utilities.txt
 Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
 
@@ -38,4 +27,16 @@ Verify That Fare Rule Optional Fare Remarks Are Written For Non-Refundable %
     [Tags]    us16893    us16892
     Create PNR With Passive Air Segments For Corporate, Fare Rule Non refundable Percentage
     Complete fare Rule For Non Refundable Percentage And Verify Remarks
+    
+Verify That PBN Remark For Fare Rule Optional Fare Remarks Are Entered In The PNR For Air Canada Segment/s
+    [Tags]    us16893    us16892    us17708
+    Create PNR With Active Air Segments For Corporate, Fare Rule For Air Canada and WestJet Segments
+    Add Fare Rule For Air Canada Segments
+    Verify If PBN Remark For Fare Rule Are Entered In The PNR For Air Canada Segment/s
+    
+Verify That PBN Remark For Fare Rule Optional Fare Remarks Are Entered In The PNR For WestJet Segment/s
+    [Tags]    us16893    us16892    us17708
+    Create PNR With Active Air Segments For Corporate, Fare Rule For Air Canada and WestJet Segments
+    Add Fare Rule For WestJet Segments
+    Verify If PBN Remark For Fare Rule Are Entered In The PNR For WestJet Segment/s
     

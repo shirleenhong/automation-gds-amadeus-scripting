@@ -274,7 +274,8 @@ export class CancelSegmentComponent implements OnInit {
         { itemText: 'Non BSP Ticket Refund', itemValue: 'NONBSPREFUND' },
         { itemText: 'Non BSP Ticket Recredit', itemValue: 'NONBSPRECREDIT' },
         { itemText: 'Void - BSP Ticket', itemValue: 'Void BSP' },
-        { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' }
+        { itemText: 'Void - Non BSP Matrix Reversal', itemValue: 'Void Non BSP' },
+        { itemText: 'Hotel, Car or Limo', itemValue: 'HOTELCARLIMO' }
       ];
     } else {
       this.followUpOptionList = [
@@ -410,7 +411,8 @@ export class CancelSegmentComponent implements OnInit {
           this.isAC = true;
           if (
             (this.cancelForm.controls.reasonUACancel.value !== '4' || this.cancelForm.controls.reasonUACancel.value !== '5') &&
-            (this.cancelForm.controls.reasonNonACCancel.value !== 'IROP' && this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE')
+            this.cancelForm.controls.reasonNonACCancel.value !== 'IROP' &&
+            this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE'
           ) {
             this.enableFormControls(['airlineNo'], true);
           }
@@ -590,7 +592,10 @@ export class CancelSegmentComponent implements OnInit {
       if (look) {
         if (look.airlineCode === 'AC') {
           acCount = acCount + 1;
-          controlsArr = [{ control: 'acFlightNo', controlvalue: look.flightNumber }, { control: 'acpassengerNo', controlvalue: pass }];
+          controlsArr = [
+            { control: 'acFlightNo', controlvalue: look.flightNumber },
+            { control: 'acpassengerNo', controlvalue: pass }
+          ];
         }
       }
     });
@@ -794,6 +799,9 @@ export class CancelSegmentComponent implements OnInit {
       case 'NONBSPKT':
         this.enableFormControls(['reasonUACancel'], true);
         this.enableFormControls(['tickets'], false);
+        break;
+      case 'HOTELCARLIMO':
+        this.isNonBSP = false;
         break;
       default:
         this.enableFormControls(

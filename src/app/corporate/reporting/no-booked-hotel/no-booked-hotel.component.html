@@ -1,0 +1,48 @@
+<form [formGroup]="segmentForm" class="form-group" style="margin: 20px;">
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th class="" *ngIf="false"></th>
+          <th class="column-header">Date</th>
+          <th class="column-header">City Code</th>
+          <th class="column-header">Reason Code</th>
+          <th class="column-header">Number of Days</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody formArrayName="segments" name="segments" *ngFor="let item of this.segmentForm.get('segments')['controls']; let i = index">
+        <tr [formGroupName]="i">
+          <td style="width: 2% !important;" *ngIf="false">
+            <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" placeholder="(sample: 12MAR)" />
+          </td>
+          <td style="width: 5%;">
+            <input formControlName="date" type="text" class="form-control" name="date" maxlength="5" minlength="5" />
+          </td>
+          <td>
+            <input formControlName="cityCode" type="text" class="form-control" name="cityCode" maxlength="3" minlength="3" />
+          </td>
+          <td style="width:40%">
+            <select id="reasonCode" class="form-control" formControlName="reasonCode" name="reasonCode">
+              <option *ngFor="let reason of reasonCodeList" [value]="reason.reasonCode">{{
+                reason.reasonCode + ' : ' + reason.getDescription()
+              }}</option>
+            </select>
+          </td>
+          <td style="width: 5% important!;">
+            <input
+              formControlName="numDays"
+              type="text"
+              class="form-control"
+              placeholder="##"
+              name="numDays"
+              maxlength="2"
+              NumberOnlyMask
+            />
+          </td>
+          <td style="width: 50%"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</form>

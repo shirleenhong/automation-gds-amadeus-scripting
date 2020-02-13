@@ -127,6 +127,7 @@ Fill Up Ticketing Panel With Default Values
     ${is_ticketing_displayed}    Run Keyword And Return Status    Element Should Be Visible    ${tab_tktLine}        
     Run Keyword If    "${is_ticketing_displayed}" == "True"    Click Ticketing Line Tab   ELSE    Navigate To Page Ticketing Line   
     Select Checkbox    ${checkbox_verifyTicket}
+    Fill Up Ticketing Panel For ISSUE E-TICKET OR NON BSP TICKET
     ${exists}    Run Keyword And Return Status    Element Should Be Visible    ${checkbox_ignoreApproval}
     Run Keyword If    ${exists} and "${ignored_approval}" != "True"      Click Element    ${checkbox_ignoreApproval}
     Set Test Variable    ${ticketing_complete}    yes
@@ -193,6 +194,7 @@ Verify That Aqua TK Line Is Written Correctly For Changed PNR Without Billed Ser
 Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
     Finish PNR
     Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1
+    Open Command Page
     
 Verify That Aqua TK Line Is Written Correctly For Updated TK Line
     Finish PNR

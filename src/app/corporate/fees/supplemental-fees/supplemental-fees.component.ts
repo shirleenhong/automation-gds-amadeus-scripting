@@ -43,6 +43,7 @@ export class SupplementalFeesComponent implements OnInit {
   hasOlbFee = false;
   hasAbfFee = false;
   hasExchangeFee = false;
+  isGreaterThanZero = false;
 
   constructor(
     private pnrService: PnrService,
@@ -217,8 +218,10 @@ export class SupplementalFeesComponent implements OnInit {
     if (fee === '0.01') {
       group.get('fee').enable();
       fee = '';
+      this.isGreaterThanZero = true;
     } else {
       group.get('fee').disable();
+      this.isGreaterThanZero = false;
     }
     group.get('code').setValue(code);
     group.get('fee').setValue(fee === '0.00' ? '' : fee);

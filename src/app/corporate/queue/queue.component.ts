@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { QueueMinderComponent } from './queue-minder/queue-minder.component';
 import { CounselorDetail } from 'src/app/globals/counselor-identity';
 import { ItineraryInvoiceQueue } from '../itinerary-and-queue/itinerary-invoice-queue/itinerary-invoice-queue.component';
@@ -19,11 +19,14 @@ export class QueueComponent implements OnInit {
   @ViewChild(OfcDocumentationComponent) ofcDocumentation: OfcDocumentationComponent;
   @ViewChild(ContainerComponent) containerComponent: ContainerComponent;
   @ViewChild(ItineraryComponent) itineraryComponent: ItineraryComponent;
-
   hasRules = false;
   isEsc = false;
   isOfc = false;
-  constructor(private counselorDetail: CounselorDetail, private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) { }
+
+  @Input()
+  workflow;
+
+  constructor(private counselorDetail: CounselorDetail, private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService) {}
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'QUEUE');

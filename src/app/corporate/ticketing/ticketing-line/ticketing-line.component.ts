@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { SelectItem } from 'src/app/models/select-item.model';
@@ -29,6 +29,8 @@ export class TicketingLineComponent implements OnInit {
   primaryReasonList: Array<ApprovalItem> = [];
   secondaryReasonList: Array<ApprovalItem> = [];
   additionalReasonList: Array<ApprovalItem> = [];
+  @Input() containerFilter: string;
+
   constructor(
     private staticValues: StaticValuesService,
     private pnrService: PnrService,
@@ -103,6 +105,9 @@ export class TicketingLineComponent implements OnInit {
    */
   private loadTKList(): void {
     this.tkList = this.staticValues.getTKList();
+    if (this.containerFilter === 'FULLWRAP') {
+      this.tkList.splice(4, 2);
+    }
   }
 
   /**
@@ -193,7 +198,7 @@ export class TicketingLineComponent implements OnInit {
    * before this did not satisfy.
    */
   private presetSegmentByIssueTix(): void {
-    this.updateTkDropdown('ISS');
+    this.updateTkDropdown('');
   }
 
   /**

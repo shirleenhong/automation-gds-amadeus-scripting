@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { SelectItem } from 'src/app/models/select-item.model';
 import { PnrService } from 'src/app/service/pnr.service';
@@ -29,6 +29,9 @@ export class ItineraryComponent implements OnInit {
   displayMessage = '';
   isLeisure = true;
 
+  @Input()
+  workflow;
+
   constructor(
     private formBuilder: FormBuilder,
     private pnrService: PnrService,
@@ -55,9 +58,16 @@ export class ItineraryComponent implements OnInit {
     this.loadTransactionType();
     this.readDefaultLanguage();
     this.loadRulesEngine();
-    this.isLeisure = !this.counselorDetail.isCorporate;
+    this.isLeisure = !this.counselorDetail.isCorporate || this.showTypeOfTransaction();
   }
 
+  showTypeOfTransaction() {
+    if (this.workflow === 'wrap') {
+      return false;
+    } else {
+      return true;
+    }
+  }
   loadRulesEngine() {
     if (this.counselorDetail.isCorporate) {
       const rules = this.rulesEngine.getRuleWithEntities(['UI_DISPLAY_CONTAINER', 'UI_SEND_ITIN_ALLOWED_EMAIL_ENTRY']);

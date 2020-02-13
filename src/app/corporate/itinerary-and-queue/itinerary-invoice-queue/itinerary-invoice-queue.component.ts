@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { DDBService } from '../../../service/ddb.service';
 import { PnrService } from 'src/app/service/pnr.service';
@@ -14,6 +14,10 @@ export class ItineraryInvoiceQueue implements OnInit {
   teamQueueList: { itemText: string; itemValue: string }[];
   isLeisureOnDemadOid = false;
   pccList: any = '';
+  showTypeOfTransaction = false;
+
+  @Input()
+  workflow;
 
   constructor(private ddb: DDBService, private pnrService: PnrService) {
     this.queueForm = new FormGroup({
@@ -30,6 +34,7 @@ export class ItineraryInvoiceQueue implements OnInit {
     this.isLeisureOnDemadOid = this.checkForTeamQueuePCCOID();
     this.loadTransactionType();
     this.loadTeamQueueList();
+    this.setShowTypeofTransaction();
   }
 
   get f() {
@@ -72,6 +77,14 @@ export class ItineraryInvoiceQueue implements OnInit {
       return true;
     } else {
       return false;
+    }
+  }
+
+  setShowTypeofTransaction() {
+    if (this.workflow === 'wrap') {
+      this.showTypeOfTransaction = false;
+    } else {
+      this.showTypeOfTransaction = true;
     }
   }
 }

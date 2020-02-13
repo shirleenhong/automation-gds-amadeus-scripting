@@ -344,7 +344,7 @@ export class PaymentRemarkService {
 
       if (account.accountingTypeRemark === 'ACPP' || account.accountingTypeRemark === 'ACPPC') {
         paymentRemark.set('PassName', account.passPurchase);
-        paymentRemark.set('FareType', account.fareType);
+        paymentRemark.set('FareType', account.fareType + 'FARE');
         // airline = 'AC';
         airlineCodeRemark.set('AirlineCode', 'AC');
         airlineCodeInvoice.set('AirlineCode', 'AC');

@@ -2,7 +2,7 @@
 Force Tags        corp
 Resource          ../../pages/base.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance
-#Test Teardown    Close All Browsers
+Test Teardown    Close All Browsers
 
 *** Variables ***
 ${test_file_name}    cancel_pnr_workflow
@@ -169,10 +169,4 @@ Verify That PNR With Voided Ticket And Is Booked Via Concur Will Be Cancelled
     Complete The PNR With Default Values
     Cancel Segment 2 Using Cryptic Command
     Verify Cancel Segment Fields Are Defaulted For PNRs Voided And Booked Via Concur
-    Verify Expected Cancellation Remarks Are Written
-    
-test
-    Create PNR With Active Hotel Segments In LGA For Cancellation, Active Hotel Segment
-    Complete The PNR With Default Values 
-    Cancel Hotel, Car Or Limo Segments
     Verify Expected Cancellation Remarks Are Written

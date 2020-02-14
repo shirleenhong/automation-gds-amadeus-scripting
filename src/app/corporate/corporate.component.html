@@ -290,6 +290,11 @@
         Airline Corporate Pass Purchase
       </button>
     </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="amadeusQueues()">
+        Amadeus Queue
+      </button>
+    </div>
   </div>
   <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
@@ -308,4 +313,18 @@
   </alert>
 </div>
 
+<div *ngIf="!isPnrLoaded" class="loaderBody">
+  <div class="loader">
+    <div>
+      Corporate
+      <span class="cwt-logo"></span>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="amadeusQueues()">
+        Amadeus Queue1111111
+      </button>
+    </div>
+  </div>
+  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
+</div>
 <br />

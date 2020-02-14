@@ -74,6 +74,7 @@ export class CorporateComponent implements OnInit {
   showIrdRequestButton = false;
   loading = false;
   showAquaFeeButton = false;
+  showAmadeusQueueButton = false;
   withPasspurchaseAccess = false;
   version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
@@ -128,6 +129,7 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
+    await this.checkValidForAmadeusQueues();
   }
 
   showRule() {
@@ -783,6 +785,17 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  public amadeusQueues() {
+    this.showLoading('Queueing Data', 'initData');
+    try {
+      this.queueService.oidQueuePlacement().then(() => {
+        this.closePopup();
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async irdRateRequest() {
     this.showLoading('Loading PNR and Data', 'initData');
     await this.getPnrService();
@@ -977,6 +990,13 @@ export class CorporateComponent implements OnInit {
     await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
       const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
       this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+    });
+  }
+
+  async checkValidForAmadeusQueues() {
+    await this.ddbService.getConfigurationParameter('UsersToStandAloneAmadeusQueues').then((response) => {
+      const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      this.showAmadeusQueueButton = listUsers.indexOf(this.pnrService.uid) > -1;
     });
   }
 }

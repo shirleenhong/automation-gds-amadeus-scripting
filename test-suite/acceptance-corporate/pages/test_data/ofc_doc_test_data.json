@@ -34,7 +34,7 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RMG OFC-ISSUED NONBSP TKT FOR FLT OR FARE/QUEUED TO 41C96"
+		"ExpectedRemark1": "RMG OFC-ISSUED NONBSP TKT FOR FLT OR FARE/QUEUED TO 75C110"
 	},
 	"OFC Documentation And Queue, Non-BSP, OSC To Queue": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -71,7 +71,7 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RMG OSC-QUEUED TO Q 41C96 FOR NR/CANCELLED PNR"
+		"ExpectedRemark1": "RMG OSC-QUEUED TO Q 75C110 FOR NR/CANCELLED PNR"
 	},
 	"OFC Documentation And Queue": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

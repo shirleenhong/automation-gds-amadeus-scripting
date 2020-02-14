@@ -191,6 +191,12 @@ Cancel AC Segment With Reason ${reason}
     Take Screenshot
     Set Test Variable    ${cancel_segments_complete}    yes
     
+Cancel Hotel, Car Or Limo Segments
+    Cancel All Segments
+    Select From List By Label    ${list_followUp}     Hotel, Car or Limo
+    Take Screenshot
+    Set Test Variable    ${cancel_segments_complete}    yes
+    
 Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Full
     Cancel All Segments
     Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
@@ -264,7 +270,7 @@ Verify Agent Is Unable To Cancel Segments Due To Existing Power Hotel Segment
     Navigate To Page CWT Corporate
     Wait Until Page Contains Element    ${button_cancel_segments}     180
     Click Element At Coordinates    ${button_cancel_segments}    0    0
-    Click Element At Coordinates    ${button_cancel_segments}    0    0
+    #Click Element At Coordinates    ${button_cancel_segments}    0    0
     Wait Until Page Contains Element   ${text_warningMessage}    30
     Run Keyword And Continue On Failure    Page Should Contain    Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script
     Take Screenshot

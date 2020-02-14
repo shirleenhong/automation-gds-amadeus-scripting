@@ -71,4 +71,3 @@ Verify That Flatkill Fee With Multiple Supplemental Fee Are Written In The PNR
     Create Multiple TKT Exchange PNR In The GDS
     Select Supplemental Fees For All TSTs
     Verify Remarks Are Added Correctly In The PNR
-    

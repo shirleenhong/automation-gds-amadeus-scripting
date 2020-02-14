@@ -569,7 +569,7 @@ Add ${number_of_segments} Active Hotel Segments In ${city_code}
     \    Enter Cryptic Command    HA ${city_code} ${test_date_${i}}-1
     \    Enter Cryptic Command    HA1
     \    Enter Cryptic Command    HP1
-    \    Enter Cryptic Command    HS/G-CCVI4444333322221111EXP1219
+    \    Enter Cryptic Command    HS/G-CCVI4444333322221111EXP1221
     
 Add ${number_of_segments} Limo Segments
     Create ${number_of_segments} Test Dates
@@ -778,9 +778,12 @@ Get ${number_of_segment} Air Segments In The PNR
     Set Test Variable    ${number_of_segment}
     :FOR     ${i}    IN RANGE     0     ${number_of_segment}
     \    ${i}    Evaluate   ${i} + 1
+    \    ${cur_seg}    Evaluate    ${i} + 1
+    \    ${cur_seg}    Convert To String    ${cur_seg}
     \    Log    ${airline_code_${i}} HK1
     \    ${active_air}    Get Lines Containing String    ${pnr_details}    ${air_seg_route_${i}}
     \    ${active_air}    Fetch from Left   ${active_air}    HK1
+    \    ${active_air}    Fetch from Right   ${active_air}    ${cur_seg}${SPACE}${SPACE}
     \    Set Test Variable    ${active_air_${i}}    ${active_air}     
 
 Add Passive Car Segment On ${city_code} From ${pickup_date} To ${return_date}

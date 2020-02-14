@@ -74,6 +74,7 @@ export class CorporateComponent implements OnInit {
   showIrdRequestButton = false;
   loading = false;
   showAquaFeeButton = false;
+  showAmadeusQueueButton = false;
   withPasspurchaseAccess = false;
   version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
@@ -778,6 +779,17 @@ export class CorporateComponent implements OnInit {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'aquaFees';
       this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public amadeusQueues() {
+    this.showLoading('Queueing Data', 'initData');
+    try {
+      this.queueService.oidQueuePlacement().then(() => {
+        this.closePopup();
+      });
     } catch (e) {
       console.log(e);
     }

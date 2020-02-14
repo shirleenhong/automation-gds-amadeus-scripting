@@ -1632,7 +1632,9 @@ export class PnrService {
         return segmentLines;
     }
 
-    getTstSegments(): string[] {
+
+
+    getTstTicketedSegments(): string[] {
         const segmentTatooNumbers = [];
         for (const ticketed of this.pnrObj.fvElements) {
             const s = [];
@@ -1999,7 +2001,18 @@ export class PnrService {
         return tstslength;
     }
 
-    getTstSegment(tst: any) {
+    getTstSegmentNumbers() {
+        let segments = [];
+        if (this.tstObj.length && this.tstObj.length > 0) {
+            segments =  segments.concat( this.tstObj.map(x => this.extractTstSegment(x)));
+        }  else if (this.tstObj.length === undefined) {
+            segments.push(this.extractTstSegment(this.tstObj));
+        }
+        return  segments.map(x => x.map(z => this.segments.find(y => y.tatooNo === z).lineNo).join(','));
+     }
+
+
+    extractTstSegment(tst: any) {
         const segments = [];
         if (tst.segmentInformation.length === undefined) {
             segments.push(tst.segmentInformation.segmentReference.refDetails.refNumber);
@@ -2108,5 +2121,22 @@ export class PnrService {
         const dayDiff = this.utilHelper.dateDiffInDays(seg1Date, seg2Date);
         // day diff should be more than 4 hours
         return dayDiff > 0 && hourDiff > 4;
+      }
+
+      getSegmentRoutes() {
+        const routes = [];
+        this.segments.forEach(x => {
+            if (x.departureAirport && routes.indexOf(x.departureAirport) === -1) {
+                routes.push(x.departureAirport);
+            }
+            if (x.arrivalAirport && routes.indexOf(x.arrivalAirport) === -1) {
+                routes.push(x.arrivalAirport);
+            }
+            if (x.cityCode && routes.indexOf(x.cityCode) === -1 ) {
+                routes.push(x.cityCode);
+            }
+         });
+        return routes;
+
       }
 }

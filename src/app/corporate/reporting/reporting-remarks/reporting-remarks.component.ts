@@ -18,7 +18,7 @@ export class ReportingRemarksComponent implements OnInit {
   bspRouteCodeList: SelectItem[];
   isTripTypeCorporate = false;
   reportingForm: FormGroup;
-  destinations: Array<any>;
+  destinations: any[];
   segments: any[];
   showSegments = false;
   ebCList: Array<ReasonCode> = [];
@@ -34,7 +34,7 @@ export class ReportingRemarksComponent implements OnInit {
     private fb: FormBuilder,
     private counselorDetail: CounselorDetail
   ) {
-    this.destinations = pnrService.getPnrDestinations();
+    this.destinations = pnrService.getSegmentRoutes();
   }
 
   async loadData(): Promise<void> {}
@@ -47,13 +47,9 @@ export class ReportingRemarksComponent implements OnInit {
     this.bspRoutingCodeProcess();
 
     await this.loadData();
-    const tstSegments = await this.pnrService.getTstSegments();
+    const tstSegments = await this.pnrService.getTstSegmentNumbers();
     const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
-
-    const nonTstSegments = allSegments.filter(
-      (s) =>
-        (tstSegments.length > 0 && tstSegments.map((x) => x.replace(' ', '').split(','))[0].indexOf(s) === -1) || tstSegments.length === 0
-    );
+    const nonTstSegments = allSegments.filter((s) => tstSegments.filter((z) => z.indexOf(s) === -1).length === 0);
 
     for (const segment of tstSegments) {
       this.showSegments = true;
@@ -61,8 +57,7 @@ export class ReportingRemarksComponent implements OnInit {
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
 
-    const destiList = nonTstSegments.map((x) => this.getDestinationValue(x));
-    if (destiList.length > 0) {
+    if (nonTstSegments.length > 0) {
       this.showSegments = true;
       const group = this.createFormGroup('');
       (this.reportingForm.get('segments') as FormArray).push(group);

@@ -9,7 +9,6 @@ import { ControlConditionModel } from 'src/app/models/business-rules/control-con
 import { WriteConditionModel } from 'src/app/models/business-rules/write-condition.model';
 import { RulesReaderService } from './rules-reader.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +17,7 @@ export class RuleWriterService {
   crypticCommands = [];
   linesToBeDeleted = [];
 
-  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) { }
+  constructor(private remarkHelper: RemarkHelper, private pnrService: PnrService, private ruleReader: RulesReaderService) {}
   /**
    * This get the business Rules - adding remark rule from rule Engine Service
    */
@@ -188,7 +187,7 @@ export class RuleWriterService {
     if (this.pnrService.tstObj.length) {
       tst = this.pnrService.tstObj[tstNo - 1];
     }
-    const segmentNo = this.pnrService.getTstSegment(tst);
+    const segmentNo = this.pnrService.extractTstSegment(tst);
     return segmentNo;
   }
 

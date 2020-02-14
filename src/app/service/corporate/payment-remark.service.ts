@@ -102,7 +102,7 @@ export class PaymentRemarkService {
   }
 
   private writePPRemarks(account: MatrixAccountingModel, segmentrelate: string[],
-    airlineCode: string, airlineName: string, faretype: string) {
+                         airlineCode: string, airlineName: string, faretype: string) {
     if (account.billingType === 'POS') {
       this.createRemarks(['SupFeeTicketId', 'SupFeeInfo'], ['1', 'ATD' + account.feeAmount]);
       this.createRemarks(null, null, 'ONE TIME CWT FEE FOR PASS TRANSACTIONS', null, ['IsPos'], ['true']);
@@ -660,7 +660,7 @@ export class PaymentRemarkService {
       const totalCost =
         totalBaseAmount + totalGst + totalHst + totalQst + parseFloat(account.otherTax) + parseFloat(account.commisionWithoutTax);
 
-      ;
+      
       const airlineCorporatePassCondition = new Map<string, string>();
       airlineCorporatePassCondition.set('AirlineCorporatePass', 'false');
       const tattooNumbers = this.pnrService.getTatooNumberFromSegmentNumber(account.segmentNo.split(','));
@@ -766,8 +766,7 @@ export class PaymentRemarkService {
     }
     if (account.descriptionapay === 'OTHER COSTS') {
       itiRemarks.set('RemarkDescription', account.otherCostDescription);
-    }
-    else {
+    } else {
       itiRemarks.set('RemarkDescription', account.descriptionapay);
     }
     const totalTax = parseFloat(account.gst) + parseFloat(account.hst) + parseFloat(account.qst);
@@ -783,7 +782,7 @@ export class PaymentRemarkService {
   }
 
   private tktNonBSPRail(account: MatrixAccountingModel, segmentAssoc: string[],
-    totalcostlist: any[], uniqueairlineCode: string, itiRemarks: Map<string, string>) {
+                        totalcostlist: any[], uniqueairlineCode: string, itiRemarks: Map<string, string>) {
     this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst, account.hst, account.qst, account.otherTax,
       account.commisionWithoutTax, segmentAssoc, account.supplierCodeName, account.tktLine);
     if (account.accountingTypeRemark === 'NONBSP') {

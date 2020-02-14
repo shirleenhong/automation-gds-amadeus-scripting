@@ -545,10 +545,12 @@ Populate Destination Code Fields For ${tst_no} TST
     Navigate To Page Reporting Remarks
     Run Keyword If  "${tst_no}" == "Single"   Select Destination Code Values    YUL
     ...  ELSE IF   "${tst_no}" == "Multiple"    Select Destination Code Values   YUL   YYZ   ORD
+    ...  ELSE IF   "${tst_no}" == "Active Car, No"    Select Destination Code Values   CDG
     Set Test Variable    ${destination_selected}    yes
     Take Screenshot
     
 Verify Destination Code Remarks Are Written In The PNR
+    Navigate To Page Reporting Remarks
     Finish PNR
     Verify Expected Remarks Are Written In The PNR
     

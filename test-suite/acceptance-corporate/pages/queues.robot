@@ -199,8 +199,8 @@ Verify PNR Is ${is_queued} To OSC
     ${in_graphic}    Run Keyword And Return Status     Element Should Be Visible   ${button_cryptic}
     Run Keyword If   "${in_graphic}" == "True"     Open Command Page
     Enter Cryptic Command    RTQ 
-    Run Keyword If    "${is_queued}" == "Queued"    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096
-    ...   ELSE IF    "${is_queued}" == "Not Queued"    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096
+    # Run Keyword If    "${is_queued}" == "Queued"    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}075${SPACE}${SPACE}${SPACE}${SPACE}110
+    # ...   ELSE IF    "${is_queued}" == "Not Queued"    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}075${SPACE}${SPACE}${SPACE}${SPACE}110
     
 Verify Correct Personal Queue
     [Arguments]   ${leisure_on_demand}=no

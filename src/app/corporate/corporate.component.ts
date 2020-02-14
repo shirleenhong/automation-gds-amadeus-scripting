@@ -129,7 +129,6 @@ export class CorporateComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-    await this.checkValidForAmadeusQueues();
   }
 
   showRule() {
@@ -990,13 +989,6 @@ export class CorporateComponent implements OnInit {
     await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
       const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
       this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
-    });
-  }
-
-  async checkValidForAmadeusQueues() {
-    await this.ddbService.getConfigurationParameter('UsersToStandAloneAmadeusQueues').then((response) => {
-      const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-      this.showAmadeusQueueButton = listUsers.indexOf(this.pnrService.uid) > -1;
     });
   }
 }

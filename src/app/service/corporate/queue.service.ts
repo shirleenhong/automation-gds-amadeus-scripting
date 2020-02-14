@@ -25,7 +25,6 @@ export class QueueService {
   }
 
   public async oidQueuePlacement() {
-    debugger;
     await smartScriptSession.send('QC7CE');
     await smartScriptSession.send('QAM7C1');
     await smartScriptSession.send('QAC7c1-8');

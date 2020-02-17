@@ -128,6 +128,7 @@ ${select_hotelReasonCode}    //select[@id='reasonCode']
 ${input_segmentDate}    //input[@name='date']
 ${input_segmentCityCode}    //input[@name='cityCode']
 ${input_NumberOfDays}    //input[@name='numDays']
+${tab_waivers_favors}     //tab[@id='waiverFavorsTab']
 
 *** Keywords ***
 Click BSP Reporting Tab
@@ -431,14 +432,15 @@ Verify CN And NUC Remark Are Updated Correctly For PNR With Hotel and Invoice Re
     Verify Specific Remark Is Written In The PNR    RM *NUC
     
 Click Add Waiver Button ${button_no}
-    Click Element    ${form_segments}${open_bracket}${button_no}${close_bracket}${button_addWaiver}
+    Wait Until Element Is Visible    ${input_waiver}    20    
+    Click Element    ${tab_waivers_favors}${open_bracket}${button_no}${close_bracket}${button_addWaiver}
     Wait Until Page Contains Element    ${list_waivers}     30
 
 Select Waivers Code Option For Single Ticket
     Navigate To Page Waivers
     Select Waiver Code Options   1   ANC/50 - Name Change 
 
-Select Multiple Waiver Code Options For Single Ticket
+Select Multiple Waiver Code Options
     Navigate To Page Waivers
     Select Waiver Code Options   1    ASC/50 - Seat / Waitlist Change    CSR/50 - Car Certificate Usage    HNS - Waived No Show Charge
     Take Screenshot
@@ -449,10 +451,9 @@ Select Multiple Waiver Code Options For Multiple Tickets
     Select Waiver Code Options    2    HSR/50 - Hotel Certificate Usage     HNS - Waived No Show Charge    
     Select Waiver Code Options    3    ANC/50 - Name Change      CSR/50 - Car Certificate Usage      AMT - Client Missed Ticketing   
 
-Select Multiple Waiver Code Options With Values For Multiple Tickets
+Select Multiple Waiver Code Options With Values
     Navigate To Page Waivers
-    Select Waiver Code Options    1    AFM - Fair Match    AMT - Client Missed Ticketing     
-    Select Waiver Code Options    2    HNS - Waived No Show Charge  
+    Select Waiver Code Options    1    AFM - Fair Match    AMT - Client Missed Ticketing     HNS - Waived No Show Charge
 
 Select Waiver Code Options
     [Arguments]   ${tst_no}    @{waiver_codes}
@@ -485,8 +486,7 @@ Verify That Multiple Waiver Codes Are Written In The PNR For Multiple Tickets
     
 Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multiple Tickets
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *U63/-AFMCN11234/AMTCN11234
-    Verify Specific Remark Is Written In The PNR    RM *U63/-HNSCN11234
+    Verify Specific Remark Is Written In The PNR    RM *U63/-AFMCN11234/AMTCN11234/HNSCN11234
     Switch To Command Page
 
 Verify Routing Code Dropdown Is Displayed With Correct Values

@@ -271,10 +271,9 @@ export class PnrService {
                         return cfLine;
                     }
                 }
-            } else {
-                return cfLine;
-
             }
+            return cfLine;
+
         } else {
             return this.cfLine;
         }

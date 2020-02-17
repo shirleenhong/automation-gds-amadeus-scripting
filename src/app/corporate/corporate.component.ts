@@ -171,7 +171,7 @@ export class CorporateComponent implements OnInit {
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
 
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
-    if (this.pnrService.pnrObj.header.recordLocator && tst.length > 0) {
+    if (this.pnrService.recordLocator() && tst.length > 0) {
       this.showIrdRequestButton = true;
     }
     await this.checkValidForAquaFee();

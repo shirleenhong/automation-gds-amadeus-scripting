@@ -267,9 +267,13 @@ export class PnrService {
                         cfLine.lastLetter = rm.freeFlowText.substr(-1);
                         cfLine.cfa = rm.freeFlowText.substr(4, 3);
                         cfLine.code = rm.freeFlowText;
+                        this.cfLine = cfLine;
                         return cfLine;
                     }
                 }
+            } else {
+                return cfLine;
+
             }
         } else {
             return this.cfLine;
@@ -1393,7 +1397,11 @@ export class PnrService {
     }
 
     recordLocator() {
+        try {
         return this.pnrObj.header.recordLocator;
+        } catch (ex) {
+            return '';
+        }
     }
 
     hasAmendMISRetentionLine() {
@@ -2137,6 +2145,5 @@ export class PnrService {
             }
          });
         return routes;
-
       }
 }

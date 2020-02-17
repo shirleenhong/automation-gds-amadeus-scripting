@@ -1,43 +1,37 @@
 *** Settings ***
-Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/base.robot
+Force Tags       corp
+Resource         ../../pages/base.robot
+Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    waivers_favors
 
 *** Test Cases ***
 Verify U63 Is Written For Single Ticket With Single Codes
-    [Tags]    us12284    full_regression
-    Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Single BSP Segment With TST
+    [Tags]    us12284    full_regression    us17711
+    Create PNR With Active Air Segments For Single Waiver/Favors
     Select Waivers Code Option For Single Ticket
     Verify That Waivers Code Is Written In The PNR
     Delete Fare and Itinerary
     
-Verify U63 Is Written For Single Ticket With Multiple Codes
-    [Tags]    us12284
-    Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Multiple BSP Segments With Single TST
-    Select Multiple Waiver Code Options For Single Ticket
+Verify U63 Is Written For Single Passive Segment With Multiple Codes
+    [Tags]    us12284    us17711
+    Create PNR With Passive Air Segments For Multiple Waiver/Favors
+    Select Multiple Waiver Code Options
     Verify That Multiple Waiver Codes Are Written In The PNR For Single Ticket
     Delete Fare and Itinerary
 
 Verify U63 Is Written For Multiple Tickets With Multiple Codes  
-    [Tags]    us12284    full_regression
-    Login To Amadeus Sell Connect Acceptance
+    [Tags]    us12284    full_regression    us17711    expect_to_fail
     Move Single Passenger And Add Multiple BSP Segment With TSTs
     Select Multiple Waiver Code Options For Multiple Tickets
     Verify That Multiple Waiver Codes Are Written In The PNR For Multiple Tickets
     Delete Fare and Itinerary
         
-Verify U63 Is Written For Multiple Tickets With Multiple Codes That Has Values
-    [Tags]    us12284
-    Login To Amadeus Sell Connect Acceptance
-    Move Single Passenger And Add Multiple BSP Segment With Multiple TSTs
-    Select Multiple Waiver Code Options With Values For Multiple Tickets
+Verify U63 Is Written For Multiple Passive Segment With Multiple Codes That Has Values
+    [Tags]    us12284    us17711
+    Create PNR With Passive Air Segments For Multiple Waiver/Favors
+    Select Multiple Waiver Code Options With Values
     Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multiple Tickets
     Delete Fare and Itinerary   

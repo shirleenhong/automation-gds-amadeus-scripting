@@ -545,7 +545,13 @@ Populate Destination Code Fields For ${tst_no} TST
     Navigate To Page Reporting Remarks
     Run Keyword If  "${tst_no}" == "Single"   Select Destination Code Values    YUL
     ...  ELSE IF   "${tst_no}" == "Multiple"    Select Destination Code Values   YUL   YYZ   ORD
+    ...  ELSE IF   "${tst_no}" == "Passive Air, No"    Select Destination Code Values   YUL
     ...  ELSE IF   "${tst_no}" == "Active Car, No"    Select Destination Code Values   CDG
+    ...  ELSE IF   "${tst_no}" == "Passive Car, No"    Select Destination Code Values   FRA
+    ...  ELSE IF   "${tst_no}" == "Active Hotel, No"    Select Destination Code Values   YVR
+    ...  ELSE IF   "${tst_no}" == "Passive Hotel, No"    Select Destination Code Values   STR
+    ...  ELSE IF   "${tst_no}" == "Rail, No"    Select Destination Code Values   CUN
+    ...  ELSE IF   "${tst_no}" == "Limo, No"    Select Destination Code Values   DXB
     Set Test Variable    ${destination_selected}    yes
     Take Screenshot
     

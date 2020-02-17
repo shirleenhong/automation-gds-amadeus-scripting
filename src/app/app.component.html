@@ -16,8 +16,9 @@
         name="counselorIdentity"
         [(ngModel)]="counselorIdentity"
         (change)="onChangeIdentity()"
+        style="font-weight: bold;"
       >
-        <option *ngFor="let item of identityList" [value]="item.itemValue">
+        <option *ngFor="let item of identityList" [value]="item.itemValue" style="font-weight: bold;">
           {{ item.itemText }}
         </option>
       </select>

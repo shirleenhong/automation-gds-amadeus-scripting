@@ -56,11 +56,12 @@ export class RulesLogicService {
           }
           break;
       }
-      if (logic.relationalOperatorName == 'CONTAINS') {
+      if (logic.relationalOperatorName === 'CONTAINS') {
         if (ruleLogic) {
           return ruleLogic;
-        } 
-      } else { //for all other operators, if it already failed, no need to evaluate succeeding, already return FALSE
+        }
+      } else {
+        // for all other operators, if it already failed, no need to evaluate succeeding, already return FALSE
         if (!ruleLogic) {
           return ruleLogic;
         }

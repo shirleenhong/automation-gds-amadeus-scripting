@@ -43,7 +43,7 @@ export class StaticValuesService {
     }
 
     getCounselorIdentityList() {
-        return [{ itemText: '', itemValue: '' }, { itemText: 'ESC', itemValue: 'ESC' }, { itemText: 'OFC', itemValue: 'OFC' }];
+        return [{ itemText: '', itemValue: '' }, { itemText: '24H', itemValue: 'ESC' }, { itemText: 'OSC', itemValue: 'OFC' }];
     }
 
     getTKList() {

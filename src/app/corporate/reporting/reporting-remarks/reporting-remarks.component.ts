@@ -49,7 +49,7 @@ export class ReportingRemarksComponent implements OnInit {
     await this.loadData();
     const tstSegments = await this.pnrService.getTstSegmentNumbers();
     const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
-    const nonTstSegments = allSegments.filter((s) => tstSegments.filter((z) => z.indexOf(s) === -1).length === 0);
+    const nonTstSegments = allSegments.filter((s) => tstSegments.filter((z) => z.indexOf(s) > -1).length === 0);
 
     for (const segment of tstSegments) {
       this.showSegments = true;

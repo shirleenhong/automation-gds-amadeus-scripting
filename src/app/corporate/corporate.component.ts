@@ -824,7 +824,7 @@ export class CorporateComponent implements OnInit {
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
-      if (seg.segmentType === 'HHL' || seg.segmentType === 'HTL') {
+      if (seg.segmentType === 'HHL' || (seg.segmentType === 'HTL' && seg.freetext.indexOf('CF:*H01*') > -1)) {
         return true;
       }
     }

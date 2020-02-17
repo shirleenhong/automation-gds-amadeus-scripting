@@ -61,7 +61,7 @@ Verify That Aqua Override Remark Is Written When CWT Itinerary Tab Standalone Is
     Verify PNR Is Queud To Aqua Queue
     
 Verify That Aqua Override Remark Is Not Written When CWT Itinerary Tab In Full Wrap Is Accessed
-    [Tags]    us15702
+    [Tags]    us15702    us17707
     Create PNR With Active Air Segments For CWT Itinerary, Domestic Flight
     Add CWT Itinerary Details For Email test@email.com, In English Language And For Invoice Transaction Type In Full Wrap
     Verify Remarks Are Not Found In The PNR

@@ -404,10 +404,10 @@ Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${
     Navigate To Page CWT Itinerary Tab
     Select Emails In CWT Itinerary    ${email}
     Select From List By Label    ${list_language}    ${language}
-    Select From List By Label    ${list_transaction_type}    ${transaction}
+    # Select From List By Label    ${list_transaction_type}    ${transaction}
     Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
     Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
-    Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    # Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
     Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
   

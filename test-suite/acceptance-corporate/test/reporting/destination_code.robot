@@ -36,41 +36,51 @@ Verify That Destination Code Remark Is Written For Multiple Segment And Multiple
     Verify Destination Code Remarks Are Written In The PNR
     
 Verify That Destination Code Remark Is Written For Passive Air Segments
-    [Tags]   us17712    not_ready
+    [Tags]   us17712
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Passive Air Segments For Destination Code Remark For Passive Air Segment/s
-    # Verify Destination Code Remarks Are Written In The PNR    
+    Populate Destination Code Fields For Passive Air, No TST
+    Verify Destination Code Remarks Are Written In The PNR
 
 Verify That Destination Code Remark Is Written For Active Car Segments
-    [Tags]   us17712    not_ready
+    [Tags]   us17712
     Login To Amadeus Sell Connect Acceptance
     Create PNR With Active Car Segments For Destination Code Remark For Active Car Segment/s
     Populate Destination Code Fields For Active Car, No TST
-    # Verify Destination Code Remarks Are Written In The PNR
+    Verify Destination Code Remarks Are Written In The PNR
     
 Verify That Destination Code Remark Is Written For Passive Car Segments
-    [Tags]   us17712    not_ready
+    [Tags]   us17712
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Destination Code Remark For Passive Car Segment/s
-    # Populate Destination Code Fields For Single TST
-    # Verify Destination Code Remarks Are Written In The PNR
+    Populate Destination Code Fields For Passive Car, No TST
+    Verify Destination Code Remarks Are Written In The PNR
     
 Verify That Destination Code Remark Is Written For Active Hotel Segments
     [Tags]   us17712    not_ready
     Login To Amadeus Sell Connect Acceptance
-    Create PNR With Active Hotel Segments In YYZ For Destination Code Remark For Active Hotel Segment/s
-    Populate Destination Code Fields For Single TST
-    # Verify Destination Code Remarks Are Written In The PNR    
+    Create PNR With Active Hotel Segments In YVR For Destination Code Remark For Active Hotel Segment/s
+    Populate Destination Code Fields For Active Hotel, No TST
+    Verify Destination Code Remarks Are Written In The PNR    
     
 Verify That Destination Code Remark Is Written For Passive Hotel Segments
     [Tags]   us17712
     Login To Amadeus Sell Connect Acceptance
     Create PNR For Destination Code Remark For Passive Hotel Segment/s
-    Populate Destination Code Fields For Single TST
-    # Verify Destination Code Remarks Are Written In The PNR
+    Populate Destination Code Fields For Passive Hotel, No TST
+    Verify Destination Code Remarks Are Written In The PNR
     
-Verify That Destination Code Remark Is Written For Passive Hotel Segments For Rail Segments
-    [Tags]    us17712    not_ready
+Verify That Destination Code Remark Is Written For Rail Segments
+    [Tags]    us17712
+    Login To Amadeus Sell Connect Acceptance
     Create PNR For Destination Code Remark For Rail Segment/s
-    Add 1 Rail Segments
-    # Verify Destination Code Remarks Are Written In The PNR
+    Add 2 Rail Segments
+    Populate Destination Code Fields For Rail, No TST
+    Verify Destination Code Remarks Are Written In The PNR
+    
+Verify That Destination Code Remark Is Written For Limo Segments
+    [Tags]    us17712
+    Login To Amadeus Sell Connect Acceptance
+    Create PNR For Destination Code Remark For Limo Segment/s
+    Populate Destination Code Fields For Limo, No TST
+    Verify Destination Code Remarks Are Written In The PNR

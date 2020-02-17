@@ -137,6 +137,7 @@ Fill Up TKTL Update With Default Values
     ${is_ticketing_displayed}    Run Keyword And Return Status    Should Be Equal    ${current_page}    TKTL Update For Aqua Ticketing   
     Run Keyword If    "${is_ticketing_displayed}" == "False"    Navigate To Page TKTL Update For Aqua Ticketing   
     Select Checkbox    ${checkbox_verifyTicket}
+    Fill Up Ticketing Panel For ISSUE E-TICKET OR NON BSP TICKET
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
     

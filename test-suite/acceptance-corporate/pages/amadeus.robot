@@ -403,8 +403,10 @@ Create ${num_of_test_dates} Test Dates
     \    ${test_date}    Add Time To Date    ${tdate}    ${add_to_date}
     \    Set Test Variable    ${tdate}    ${test_date}
     \    ${day}    Convert Date    ${test_date}    %d
+    \    ${car_drop_day}    Evaluate    ${day} + 1
     \    ${month}    Convert Month To MMM    ${test_date}
     \    Set Test Variable    ${test_date_${i}}    ${day}${month}
+    \    Set Test Variable    ${car_drop_day_${i}}    ${car_drop_day}${month}
     \    Set Test Variable    ${tdate}    ${test_date}
 
 Create ${num_of_test_dates} Test Dates For Booking Less Than ${no_of_days} days
@@ -841,4 +843,11 @@ Get Base Fare For ${no_of_tst} TST
     \    Wait Until Page Contains Element    ${button_cryptic}    120
     \    Sleep    5
     Switch To Command Page
+    
+Add ${number_of_segments} Car Segments With Pick And Drop Off Days Apart
+    Create ${number_of_segments} Test Dates
+    :FOR    ${i}    IN RANGE    0   ${number_of_segments}
+    \    ${i}    Evaluate    ${i} + 1
+    Enter Cryptic Command    CU1AHK1ORD${test_date_${i}}-${car_drop_day_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${car_drop_day_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1    0.5       
+
 

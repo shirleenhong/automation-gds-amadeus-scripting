@@ -468,25 +468,25 @@ Select Waiver Code Options
   
 Verify That Waivers Code Is Written In The PNR
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *U63/-ANCCN150/S2    
+    Verify Specific Remark Is Written In The PNR    RM *U63/-ANCCN150   
     Switch To Command Page
     
 Verify That Multiple Waiver Codes Are Written In The PNR For Single Ticket
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *U63/-ASCCN150/CSRCN150/HNSCN11234/S2-3
+    Verify Specific Remark Is Written In The PNR    RM *U63/-ASCCN150/CSRCN150/HNSCN11234
     Switch To Command Page
     
 Verify That Multiple Waiver Codes Are Written In The PNR For Multiple Tickets
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *U63/-ASCCN150/S2-3
-    Verify Specific Remark Is Written In The PNR    RM *U63/-HSRCN150/HNSCN11234/S4
-    Verify Specific Remark Is Written In The PNR    RM *U63/-ANCCN150/CSRCN150/AMTCN11234/S5
+    Verify Specific Remark Is Written In The PNR    RM *U63/-ASCCN150
+    Verify Specific Remark Is Written In The PNR    RM *U63/-HSRCN150/HNSCN11234
+    Verify Specific Remark Is Written In The PNR    RM *U63/-ANCCN150/CSRCN150/AMTCN11234
     Switch To Command Page
     
 Verify That Multiple Waiver Codes With Values Are Written In The PNR For Multiple Tickets
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    RM *U63/-AFMCN11234/AMTCN11234/S3,5-6
-    Verify Specific Remark Is Written In The PNR    RM *U63/-HNSCN11234/S2,4
+    Verify Specific Remark Is Written In The PNR    RM *U63/-AFMCN11234/AMTCN11234
+    Verify Specific Remark Is Written In The PNR    RM *U63/-HNSCN11234
     Switch To Command Page
 
 Verify Routing Code Dropdown Is Displayed With Correct Values
@@ -1186,10 +1186,29 @@ Enter Number Of Days
     Set Test Variable    ${i}    0
     :FOR    ${number_of_days}    IN    @{number_of_days}
     \    ${i}    Evaluate    ${i} + 1
-    \    Select From List By Label    ${form_segments}${open_bracket}${i}${close_bracket}${input_NumberOfDays}    ${number_of_days}
+    \    Enter Value    ${form_segments}${open_bracket}${i}${close_bracket}${input_NumberOfDays}    ${number_of_days}
 
-Verify ${number_of_hotel} No Hotel Booked Fields And Populate With Valid Values
+Verify No Hotel Booked Displayed Is ${number_of_no_hotel_reason}
+    ${number_of_no_hotel_reason}    Convert To Integer    ${number_of_no_hotel_reason}    
+    ${no_hotel_reason_count}    Get Element Count    ${select_hotelReasonCode}
+    Should Be Equal    ${no_hotel_reason_count}    ${number_of_no_hotel_reason}    
+
+Verify ${number_of_no_hotel_reason} No Hotel Booked Fields And Populate With Valid Values
+    Set Test Variable    ${number_of_no_hotel_reason}
     Navigate To Page No Hotel Booked 
-    Select No Hotel Booked Reason Code
-    Enter Number Of Days
+    Verify No Hotel Booked Displayed Is ${number_of_no_hotel_reason}  
+    Run Keyword If    "${number_of_no_hotel_reason}" == "1"    Select No Hotel Booked Reason Code    CH : Booked by Client      
+    ...    ELSE IF    "${number_of_no_hotel_reason}" == "2"    Select No Hotel Booked Reason Code    H7 : Resides in city or one way    TB : Hotel to be advised 
+    Run Keyword If    "${number_of_no_hotel_reason}" == "1"    Enter Number Of Days    03
+    ...    ELSE IF    "${number_of_no_hotel_reason}" == "2"    Enter Number Of Days    03    04
+    Take Screenshot
  
+Verify No Hotel Booked UDIDs Are Written In the PNR
+    Finish PNR
+    Run Keyword If    "${number_of_no_hotel_reason}" == "2"     Verify Specific Remark Is Written In The PNR    RM *U21/-${test_date_1}ORDHH703/${test_date_2}YULHTB04    ELSE    Verify Specific Remark Is Written In The PNR    RM *U21/-${test_date_1}ORDHCH03
+    
+Verify No Hotel Booked UDIDs Are Written In the PNR With Car
+    Finish PNR
+    Verify Specific Remark Is Written In The PNR    RM *U21/-${car_drop_day_1}ORDHCH03
+    
+

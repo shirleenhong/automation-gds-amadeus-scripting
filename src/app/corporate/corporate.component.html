@@ -294,11 +294,11 @@
   <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
-<div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
+<!-- <div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
   <div class="loader">
     Unable to load PNR or no PNR is loaded in Amadeus.
   </div>
-</div>
+</div> -->
 
 <div *ngIf="dataErrorMessages.length > 0">
   <alert type="warning" dismissible="true">
@@ -308,7 +308,7 @@
   </alert>
 </div>
 
-<div *ngIf="!isPnrLoaded" class="loaderBody">
+<div *ngIf="!isPnrLoaded && loading === false" class="loaderBody">
   <div class="loader">
     <div>
       Corporate

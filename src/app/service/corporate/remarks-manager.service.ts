@@ -16,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -121,6 +121,9 @@ export class RemarksManagerService {
 
   // search OutputItemId with the given placeholdervalues
   getOutputItemId(values?: Map<string, string>, staticText?, conditions?: Map<string, string>) {
+    if (!this.outputItems) {
+      return null;
+    }
     const ids = this.outputItems
       .filter(
         (out) =>

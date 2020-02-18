@@ -297,8 +297,9 @@ export class ResendInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls.nonBspAccountingNo.setValue(this.selectedElementsUI.selectedNonBspLines);
   }
   checkSelectedTickets(data: any) {
+    const newVal = data.isChecked;
+
     if (data.lineNo === 'All') {
-      const newVal = data.isChecked;
       for (const ele of this.eTicketsList) {
         if (ele.lineNo !== 'None') {
           ele.isChecked = newVal;
@@ -316,7 +317,9 @@ export class ResendInvoiceComponent implements OnInit {
       }
     } else {
       for (const ele of this.eTicketsList) {
-        if (data.lineNo === ele.lineNo) {
+        if (ele.lineNo === 'All' || ele.lineNo === 'None') {
+          ele.isChecked = false;
+        } else if (data.lineNo === ele.lineNo) {
           ele.isChecked = ele.isChecked;
         }
       }

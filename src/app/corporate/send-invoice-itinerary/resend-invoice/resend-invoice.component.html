@@ -1,14 +1,13 @@
 <form [formGroup]="invoiceFormGroup">
   <div class="itineraryContainer">
-    <div *ngIf='showSegments' class="segment-list">
+    <div *ngIf="showSegments" class="segment-list">
       <div class="form-group  row">
         <div class="col-md-4">Itinerary Segments:</div>
         <div class="col-md-4">
-          <app-segment-select formControlName="segmentNo" name="segmentNo" id="segmentNo">
-          </app-segment-select>
+          <app-segment-select formControlName="segmentNo" name="segmentNo" id="segmentNo"> </app-segment-select>
         </div>
         <div class="col-xs-4">
-          <button class="leisureBtnSubmit" (click) = 'generateInvoice()'>
+          <button class="leisureBtnSubmit" (click)="generateInvoice()">
             Get Invoice
           </button>
         </div>
@@ -18,45 +17,79 @@
       <div class="form-group row">
         <div class="col-md-4">Invoice Numbers:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='invoiceList' formControlName="invoiceNo" name="invoiceNo" id="invoiceNo" (passDataParent) = 'checkSelectedInvoice($event)'>
+          <app-generic-select
+            [genericList]="invoiceList"
+            formControlName="invoiceNo"
+            name="invoiceNo"
+            id="invoiceNo"
+            (passDataParent)="checkSelectedInvoice($event)"
+          >
           </app-generic-select>
         </div>
       </div>
     </div>
-    <div  class="non-bsp-accounting-list">
+    <div class="non-bsp-accounting-list">
       <div class="form-group row">
         <div class="col-md-4">Select E-tickets for Re-Send:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='eTicketsList' name="eTicketNo" id="eTicketNo" (passDataParent) = 'checkSelectedTickets($event)'>
+          <app-generic-select
+            [genericList]="eTicketsList"
+            formControlName="eTicketNo"
+            name="eTicketNo"
+            id="eTicketNo"
+            (passDataParent)="checkSelectedTickets($event)"
+          >
           </app-generic-select>
         </div>
       </div>
     </div>
-    <div  class="fee-accounting-list">
+    <div class="fee-accounting-list">
       <div class="form-group row">
         <div class="col-md-4">Fee Accounting Lines:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='feeAccountingList' formControlName="feesAccountingNo" name="feesAccountingNo" id="feesAccountingNo" (passDataParent) = 'checkSelectedFeeLines($event)'>
+          <app-generic-select
+            [genericList]="feeAccountingList"
+            formControlName="feesAccountingNo"
+            name="feesAccountingNo"
+            id="feesAccountingNo"
+            (passDataParent)="checkSelectedFeeLines($event)"
+          >
           </app-generic-select>
         </div>
       </div>
     </div>
-    <div  class="non-bsp-accounting-list">
+    <div class="non-bsp-accounting-list">
       <div class="form-group row">
         <div class="col-md-4">Non BSP Accounting Lines:</div>
         <div class="col-sm-8">
-          <app-generic-select [genericList]='nonBspAccountingList' formControlName="nonBspAccountingNo" name="nonBspAccountingNo" id="nonBspAccountingNo" (passDataParent) = 'checkSelectedNonBspLines($event)'>
+          <app-generic-select
+            [genericList]="nonBspAccountingList"
+            formControlName="nonBspAccountingNo"
+            name="nonBspAccountingNo"
+            id="nonBspAccountingNo"
+            (passDataParent)="checkSelectedNonBspLines($event)"
+          >
           </app-generic-select>
         </div>
       </div>
     </div>
-    <div formArrayName="emailAddresses" class="email-list"
-      *ngFor="let item of this.invoiceFormGroup.get('emailAddresses')['controls']; let i = index">
+    <div
+      formArrayName="emailAddresses"
+      class="email-list"
+      *ngFor="let item of this.invoiceFormGroup.get('emailAddresses')['controls']; let i = index"
+    >
       <div [formGroupName]="i" class="form-group row">
         <div class="col-sm-4">Email Address {{ i + 1 }}:</div>
         <div class="col-4">
-          <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" list="dynamicEmail"
-            AllCapsMask formControlName="emailAddress" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="emailAddress"
+            id="emailAddress"
+            list="dynamicEmail"
+            AllCapsMask
+            formControlName="emailAddress"
+          />
           <datalist id="dynamicEmail">
             <option *ngFor="let item of listEmail" [value]="item">{{ item }} </option>
           </datalist>

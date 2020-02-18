@@ -118,6 +118,7 @@ export class InvoiceRemarkService {
   addETicketRemarks(selectedUIElements, eTicketsList) {
     const selectedETickets = selectedUIElements.selectedETickets;
     if (selectedETickets === 'All') {
+      this.rms.createEmptyPlaceHolderValue([], null, 'SPCL-TKT0');
       // create placeholder for all values
       for (const eTicket of eTicketsList) {
         if (eTicket.lineNo !== 'All' && eTicket.lineNo !== 'None') {
@@ -127,6 +128,7 @@ export class InvoiceRemarkService {
         }
       }
     } else if (selectedETickets === 'None') {
+      this.rms.createEmptyPlaceHolderValue(['TicketNum']);
       // create placeholder for no ticket
       const ticketMap = new Map<string, string>();
       ticketMap.set('EticketNone', 'true');

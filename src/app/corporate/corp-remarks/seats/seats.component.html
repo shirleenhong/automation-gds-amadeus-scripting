@@ -29,6 +29,6 @@
 
 <div class="row">
   <div class="col">
-    <button (click)="create()">Add Seat Remarks</button>
+    <button *ngIf="seatIsAvailable()" (click)="create()">Add Seat Remarks</button>
   </div>
 </div>

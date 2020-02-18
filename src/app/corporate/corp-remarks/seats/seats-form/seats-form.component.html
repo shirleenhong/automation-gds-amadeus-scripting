@@ -10,11 +10,11 @@
     <!-- headers -->
     <div class="row">
       <div class="col-2">Segment:</div>
-      <div class="col-3">
+      <div class="col-8">
         <select formControlName="segment" class="form-control">
           <option>&nbsp;</option>
-          <option *ngFor="let id of segmentIdOptions" [value]="id">
-            {{ id }}
+          <option *ngFor="let id of segmentIdOptions" [value]="id.segmentid">
+            {{ id.segmentid }} {{id.information}}
           </option>
         </select>
       </div>
@@ -62,14 +62,8 @@
         <label>
           <input type="checkbox" formControlName="check5" name="check5" (change)="checkChanged(5)" />
           UPGRADE CONFIRMED -
-          <input
-            type="text"
-            class="form-control seatType"
-            formControlName="seatNumber"
-            name="seatNumber"
-            placeholder="Seat Number"
-            disabled
-          />
+          <input type="text" class="form-control seatType" formControlName="seatNumber" name="seatNumber"
+            placeholder="Seat Number" disabled />
           CONFIRMED
         </label>
       </div>
@@ -111,7 +105,8 @@
 </div>
 
 <div class="modal-footer">
-  <button type="submit" form="seatsForm" class="btn btn-outline-dark" [disabled]="!seatsForm.valid || !hasSelectedItems">
+  <button type="submit" form="seatsForm" class="btn btn-outline-dark"
+    [disabled]="!seatsForm.valid || !hasSelectedItems">
     Save
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="close()">

@@ -849,9 +849,12 @@ export class SegmentService {
             if (cancel.value.uaPassengerNo !== undefined) {
                 uapass = cancel.value.uaPassengerNo;
             }
-            if (cancel.value.reasonUACancel === '1') {
-                remText = 'SROTHSUA-' + cancel.value.uasegNo + '/BSP24REFUND/P' + uapass;
-            }
+            const usPassAss = uapass.split(',');
+            usPassAss.forEach(element => {
+                if (cancel.value.reasonUACancel === '1') {
+                    remText = 'SROTHSUA-' + cancel.value.uasegNo + '/BSP24REFUND/P' + element;
+                }
+            });
             rmGroup.cryptics.push(remText);
         }
 

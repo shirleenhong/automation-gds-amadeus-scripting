@@ -34,7 +34,7 @@ export class ReportingNonbspComponent implements OnInit {
     private valueChagneListener: ValueChangeListener,
     private ddbService: DDBService,
     private utilHelper: UtilHelper
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.nonBspGroup = this.fb.group({
@@ -81,6 +81,11 @@ export class ReportingNonbspComponent implements OnInit {
       }
       lowFareValMap['hst' + element.tkMacLine] = parseFloat(element.hst);
       lowFareValMap['baseAmount' + element.tkMacLine] = parseFloat(element.baseAmount);
+      lowFareValMap['gst' + element.tkMacLine] = parseFloat(element.gst);
+      lowFareValMap['qst' + element.tkMacLine] = parseFloat(element.qst);
+      lowFareValMap['commisionWithoutTax' + element.tkMacLine] = parseFloat(element.commisionWithoutTax);
+      lowFareValMap['otherTax' + element.tkMacLine] = parseFloat(element.otherTax);
+
       if (this.nonBspInformation.length === element.tkMacLine) {
         const lowFareVal = Object.values(lowFareValMap).reduce((a, b) => a + b, 0);
         lowFare = await this.decPipe.transform(lowFareVal, '1.2-2').replace(',', '');

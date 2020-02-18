@@ -445,7 +445,7 @@ Submit To PNR
     Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
-    Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
+    Run Keyword If    "${actual_counselor_identity}" == "OSC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
     Fill Up UDID Field As Needed
     Collapse Open Panel
     Click Submit To PNR    ${close_corporate_test}    ${queueing}        
@@ -710,10 +710,10 @@ Verify Element Contains Text
     Run Keyword And Continue On Failure    Should Be Equal As Strings    ${value}    ${text}
 
 Click Send Invoice
-    #Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
+    Wait Until Page Contains Element    ${button_send_invoice_itinerary}      180
     Click Element     ${button_send_invoice_itinerary} 
-    #Wait Until Element Is Visible    ${message_loadingPnr}    180
-    #Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     #Wait Until Element Is Visible    ${button_submit_pnr}    30
     Wait For Script To Complete
     Set Test Variable    ${current_page}    Send Invoice/Itinerary
@@ -810,5 +810,5 @@ Click Airline Corporate Pass Purchase
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    Payment
     
-
-    
+Fill Up OFC Documentation With Default Values
+    Select From List By Label    ${select_ticketType}     BSP Airline Ticket

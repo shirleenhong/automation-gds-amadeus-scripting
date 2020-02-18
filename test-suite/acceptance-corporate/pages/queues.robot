@@ -105,7 +105,7 @@ Populate Personal Queue And Category
     [Teardown]    Take Screenshot
 
 Fill Up OFC Documentation And Queue With Default Values
-    Select Counselor Identity: OFC
+    Select Counselor Identity: OSC
     Navigate To Page OFC Documentation And Queue
     Select From List By Label    ${select_ticketType}     Non-BSP/Vendor Ticket
     Set Test Variable    ${ofc_documentation_complete}     yes
@@ -115,7 +115,7 @@ Select ${ticket_type} That Is ${is_issued_by} OSC And ${to_queue} In OFC Documen
     Log    "${is_issued_by}"
     Log    "${to_queue}"
     ${queue}     Set Variable If    "${to_queue}" == "Queue"    1    0
-    Select Counselor Identity: OFC
+    Select Counselor Identity: OSC
     Navigate To Page OFC Documentation And Queue
     Select From List By Label    ${select_ticketType}     ${ticket_type}
     Run Keyword If    "${is_issued_by}" == "Issued By"    Click Element At Coordinates    ${input_isOscTravel_yes}    0    0
@@ -223,7 +223,7 @@ Enter Queue And Category For Queue Placement
     Enter Value    ${row_queuePlacement}${open_bracket}${queue_index}${close_bracket}${input_queueCat_placement}    ${queue_category}     
 
 Verify Default Values Of Queue Placement
-    Select Counselor Identity: ESC
+    Select Counselor Identity: 24H
     Navigate To Page Queue Placement
     ${actual_oid}   Get Value    ${input_oid} 
     ${actual_queueNo}    Get Value    ${input_queueNo_placement}
@@ -234,7 +234,7 @@ Verify Default Values Of Queue Placement
     Take Screenshot 
     
 Populate Multiple Queue Placements
-    Select Counselor Identity: ESC
+    Select Counselor Identity: 24H
     Navigate To Page Queue Placement
     Click Add Queue Button 1
     Enter Queue And Category For Queue Placement   2   YTOWL2106    10    1

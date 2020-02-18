@@ -786,20 +786,20 @@ export class PaymentRemarkService {
     totalcostlist: any[], uniqueairlineCode: string, itiRemarks: Map<string, string>) {
     this.writeTicketingLine(account.tkMacLine.toString(), account.baseAmount, account.gst, account.hst, account.qst, account.otherTax,
       account.commisionWithoutTax, segmentAssoc, account.supplierCodeName, account.tktLine);
-    if (account.accountingTypeRemark === 'NONBSP') {
-      const totalCost = parseFloat(account.baseAmount) +
-        parseFloat(account.gst) +
-        parseFloat(account.hst) +
-        parseFloat(account.qst) +
-        parseFloat(account.otherTax);
-      const lookindex = totalcostlist.findIndex((x) => x.AirlineCode === uniqueairlineCode);
-      if (lookindex > -1) {
-        totalcostlist[lookindex].totalAmount = totalcostlist[lookindex].totalAmount + totalCost;
-      } else {
-        totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
-      }
-      itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
+    // if (account.accountingTypeRemark === 'NONBSP') {
+    const totalCost = parseFloat(account.baseAmount) +
+      parseFloat(account.gst) +
+      parseFloat(account.hst) +
+      parseFloat(account.qst) +
+      parseFloat(account.otherTax);
+    const lookindex = totalcostlist.findIndex((x) => x.AirlineCode === uniqueairlineCode);
+    if (lookindex > -1) {
+      totalcostlist[lookindex].totalAmount = totalcostlist[lookindex].totalAmount + totalCost;
+    } else {
+      totalcostlist.push({ AirlineCode: uniqueairlineCode, totalAmount: totalCost });
     }
+    itiRemarks.set('ConfNbr', account.supplierConfirmatioNo);
+    // }
   }
 
   private createRemarks(keys, values, statictext?, segments?, conditionsKeys?, conditionValues?) {
@@ -827,7 +827,7 @@ export class PaymentRemarkService {
     segmentNos.forEach((segs) => {
       const look = segmentDetails.find((x) => segs === x.lineNo);
       if (look) {
-        uniqueairlineCode = look.airlineCode;
+        uniqueairlineCode = (look.airlineCode) ? look.airlineCode : look.vendorCode;
         segmentAssoc.push(look.tatooNo);
       }
     });

@@ -132,7 +132,7 @@ Populate Personal Queue and Select ${team_queue} Team Queue
 Populate Personal Queue And Select ${transaction_type} Transaction Type
 	Navigate To Page Follow-Up Queue
 	Enter Personal Queue And Category    1    1
-	Select ${transaction_type} Transaction type
+	# Select ${transaction_type} Transaction type
 	[Teardown]    Take Screenshot
 	
 Populate ${queue_type} Transaction Type Queue In Standalone
@@ -211,7 +211,6 @@ Verify Leisure On Demand PNR Is Queued To Correct Queues
     Finish PNR   queueing=yes
     Open Command Page
     Enter Cryptic Command    RTQ 
-    Verify Correct Transaction Type Queue
     Verify Correct Personal Queue    yes
 
 Click Add Queue Button ${button_no}

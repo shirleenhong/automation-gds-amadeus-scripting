@@ -15,24 +15,24 @@ Test Teardown    Close All Browsers
 
 *** Test Cases ***
 Verify OBT SupFee Remark Is Written In The PNR with Air, Rail, Hotel, and Car Segments
-    [Tags]    us9402    not_ready
+    [Tags]    us9402    us17741    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Book Multiple Segments With Air Car Rail And Hotel
     Open CA Corporate Test
     Click Full Wrap
-    Select Counselor Identity: ESC
+    Select Counselor Identity: 24H
     Verify Correct OBT Fee Remark Are Written In The PNR For Multiple Segment
     
     
 Verify OBT SupFee Remark is written In The PNR For Air Only Segment
-    [Tags]    us9402    not_ready
+    [Tags]    us9402    us17741    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add International Segment And Store Single Fare
     Open CA Corporate Test
     Click Full Wrap
-    Select Counselor Identity: OFC
+    Select Counselor Identity: OSC
     Verify Correct OBT Fee Remark Are Written In The PNR For Air Only
     
     
@@ -46,23 +46,23 @@ Verify OBT SupFee Remark is written In The PNR For Rail Only Segment
     Verify Correct OBT Fee Remark Are Written In The PNR For Rail Only
     
 Verify OBT SupFee Remark is written In The PNR For Hotel Only Segment
-    [Tags]    us9402    not_ready
+    [Tags]    us9402    us17741    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 2 Passive Hotel Segments
     Open CA Corporate Test
     Click Full Wrap
-    Select Counselor Identity: ESC
+    Select Counselor Identity: 24H
     Verify Correct OBT Fee Remark Are Written In The PNR For Hotel Only
     
 Verify OBT SupFee Remark is written In The PNR For Car Only Segment
-    [Tags]    us9402    not_ready
+    [Tags]    us9402    us17741    not_ready
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger For OBT
     Add 2 Car Segments
     Open CA Corporate Test
     Click Full Wrap
-    Select Counselor Identity: OFC
+    Select Counselor Identity: OSC
     Verify Correct OBT Fee Remark Are Written In The PNR For Car Only
     
     

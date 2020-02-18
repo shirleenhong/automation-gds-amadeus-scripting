@@ -28,7 +28,7 @@ export class SeatsComponent implements OnInit {
     private remarkManager: RemarksManagerService,
     private pnrService: PnrService,
     private seatsService: SeatsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.seatRemarkOptions = this.getRemarkOptions();
@@ -176,5 +176,11 @@ export class SeatsComponent implements OnInit {
       }
     }
     return this.seats.filter((s) => s.segmentIds === segment).length;
+  }
+
+  seatIsAvailable() {
+    const airSegments = this.pnrService.segments.filter((x) => x.segmentType === 'AIR');
+    const seat = this.seats.map(item => item.segmentIds).filter((value, index, self) => self.indexOf(value) === index);
+    return (airSegments.length > seat.length);
   }
 }

@@ -35,11 +35,19 @@ export class SeatsFormComponent implements OnInit {
     public modalRef: BsModalRef,
     public formBuilder: FormBuilder,
     private pnrService: PnrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.seatSegmentIds = this.getSeatSegments();
-    this.segmentIds = this.pnrService.segments.map((x) => x.lineNo);
+    this.pnrService.segments.map((x) => {
+      if (x.segmentType === 'AIR') {
+        this.segmentIds.push({
+          segmentlineNo: x.lineNo,
+          segmentInfo: x.longFreeText.toUpperCase()
+        });
+      }
+    });
+
     this.segmentIdOptions = this.getSegmentIdOptions();
 
     this.seatsForm = this.formBuilder.group({
@@ -54,7 +62,7 @@ export class SeatsFormComponent implements OnInit {
       seatNumber: new FormControl('')
     });
 
-    this.segmentIds = this.segmentIds.filter((x) => this.existingSegments.indexOf(x) === -1);
+    this.segmentIds = this.segmentIds.filter((x) => this.existingSegments.indexOf(x.segmentlineNo) === -1);
     // Subscribe and handle changes on the seatsForm.
     this.seatsForm.valueChanges.subscribe(() => {
       this.hasSelectedItems = this.hasChecked();
@@ -120,15 +128,21 @@ export class SeatsFormComponent implements OnInit {
     let segmentOptions = [];
 
     for (const segmentId of this.segmentIds) {
-      if (this.seatSegmentIds.indexOf(segmentId) < 0) {
-        segmentOptions.push(segmentId);
+      if (this.seatSegmentIds.indexOf(segmentId.segmentlineNo) < 0) {
+        segmentOptions.push({ segmentid: segmentId.segmentlineNo, information: segmentId.segmentInfo });
+      }
+
+      if (segmentId.segmentlineNo === this.selectedSegment) {
+        segmentOptions.push({ segmentid: segmentId.segmentlineNo, information: segmentId.segmentInfo });
       }
     }
 
     // Retain the segment option on edit.
-    if (this.selectedSegment) {
-      segmentOptions = this.selectedSegment ? this.selectedSegment.split(',').concat(segmentOptions) : segmentOptions;
-    }
+    // debugger;
+    // if (this.selectedSegment) {
+    //   debugger;
+    //   segmentOptions = this.selectedSegment ? this.selectedSegment.split(',').concat(segmentOptions) : segmentOptions;
+    // }
 
     return segmentOptions;
   }

@@ -131,7 +131,8 @@ export class ItineraryRemarkService implements OnInit {
       const rems = this.pnrService.getRemarksFromGDSByRegex(regx, 'RM');
       if (rems.length === 0) {
         const languageMap = new Map<string, string>();
-        languageMap.set('Language', frmGroup.value.language);
+        // languageMap.set('Language', frmGroup.value.language);
+        languageMap.set('ItineraryLanguageCulture', frmGroup.value.language);
         this.rms.createPlaceholderValues(languageMap);
       }
       if (rems.length > 0 && rems[0].remarkText.substr(-5) !== frmGroup.value.language) {

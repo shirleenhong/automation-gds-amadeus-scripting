@@ -130,7 +130,9 @@ export class CorpCancelRemarkService {
         OID = this.pnrService.pnrObj.tkElements[0].ticketingOfficeID;
       }
     }
+
     this.queService.addQueueCollection(new QueuePlaceModel(OID, 60, 1));
+    this.queService.addQueueCollection(new QueuePlaceModel('YTOWL2106', 41, 85));
     return rmGroup;
   }
 

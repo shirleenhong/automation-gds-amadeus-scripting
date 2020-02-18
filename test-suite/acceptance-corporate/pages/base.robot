@@ -809,6 +809,3 @@ Click Airline Corporate Pass Purchase
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    Payment
-    
-Fill Up OFC Documentation With Default Values
-    Select From List By Label    ${select_ticketType}     BSP Airline Ticket

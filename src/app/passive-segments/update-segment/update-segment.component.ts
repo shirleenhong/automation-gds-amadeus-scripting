@@ -238,7 +238,11 @@ export class UpdateSegmentComponent implements OnInit {
   }
 
   loadArrivalDay() {
-    this.arrivaldayList = [{ itemText: '', itemValue: '' }, { itemText: '+1', itemValue: '1' }, { itemText: '+2', itemValue: '2' }];
+    this.arrivaldayList = [
+      { itemText: '', itemValue: '' },
+      { itemText: '+1', itemValue: '1' },
+      { itemText: '+2', itemValue: '2' }
+    ];
   }
 
   loadSegmentType() {
@@ -533,7 +537,9 @@ export class UpdateSegmentComponent implements OnInit {
         this.pickupCityList = [];
         this.segmentList.forEach((s) => {
           if (!this.pickupCityList.find((x) => x.endpoint === s.destinationCity)) {
-            this.pickupCityList.push({ endpoint: s.destinationCity });
+            if (s.destinationCity !== undefined) {
+              this.pickupCityList.push({ endpoint: s.destinationCity });
+            }
           }
         });
 
@@ -614,12 +620,12 @@ export class UpdateSegmentComponent implements OnInit {
     }
   }
 
-  pickUpLocChange() { }
+  pickUpLocChange() {}
 
   getHotels() {
     const chainCode = this.passiveSegments.chainCode;
     const cityCode = this.passiveSegments.departureCity;
-    if (chainCode !== undefined && chainCode.length === 2 && (cityCode !== undefined && cityCode.length === 3)) {
+    if (chainCode !== undefined && chainCode.length === 2 && cityCode !== undefined && cityCode.length === 3) {
       this.hotelList = [];
       const command = 'HL' + chainCode + cityCode + '/AR-ALL';
       if (this.commandCache.getHotels === command) {
@@ -923,7 +929,6 @@ export class UpdateSegmentComponent implements OnInit {
       this.pickupOffAddrList = [];
       this.getOffAddress(this.pickupOffAddrList, command);
       this.commandCache.loadPickupOffAddr = command;
-
     } else {
       this.segmentForm.get('pickupOffAddress').disable();
       this.defaultTravelDateTime();
@@ -956,7 +961,6 @@ export class UpdateSegmentComponent implements OnInit {
       this.dropOffAddrList = [];
       this.getOffAddress(this.dropOffAddrList, command);
       this.commandCache.loadDropOffAddr = command;
-
     } else {
       this.segmentForm.get('dropOffAddress').disable();
       this.defaultTravelDateTime();

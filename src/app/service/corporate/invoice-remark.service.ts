@@ -134,6 +134,7 @@ export class InvoiceRemarkService {
       ticketMap.set('EticketNone', 'true');
       this.rms.createPlaceholderValues(null, ticketMap, null, null, 'SPCL-TKT0');
     } else {
+      this.rms.createEmptyPlaceHolderValue([], null, 'SPCL-TKT0');
       const splitSelectedVals = selectedETickets.split(',');
       for (const selectedEle of splitSelectedVals) {
         const ticketNum = this.getTicketNum(selectedEle, eTicketsList);

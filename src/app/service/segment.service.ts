@@ -1059,16 +1059,6 @@ export class SegmentService {
         return rmGroup;
     }
 
-    // getDeletedSegments(segmentselected) {
-    //     const rmGroup = new RemarkGroup();
-    //     rmGroup.group = 'Cancel';
-    //     rmGroup.remarks = new Array<RemarkModel>();
-    //     segmentselected.forEach(element => {
-    //         rmGroup.deleteSegmentByIds.push(element.lineNo);
-    //     });
-    //     return rmGroup;
-    // }
-
     cancelMisSegment() {
         const misSegment = new Array<PassiveSegmentModel>();
         const datePipe = new DatePipe('en-US');
@@ -1100,8 +1090,10 @@ export class SegmentService {
         for (const model of fareRuleModels) {
             // const airlineName = await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR');
             await this.ddbService.getAirlineSupplierCodes(model.airlineCode, 'AIR').then((airlineName) => {
-                
-                if (model.fareRuleType === '') {
+                if (model.fareRuleType !== '') {
+                    smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '/*');
+                    smartScriptSession.send('RIR' + model.cityPair);
+                } else {
                     if (airlineName) {
                         rmGroup.remarks.push(this.remarkHelper.createRemark(airlineName + ' FARE INFORMATION', 'RI', 'R'));
                     }
@@ -1149,10 +1141,6 @@ export class SegmentService {
                         }
                     });
                     rmGroup.remarks.push(remark);
-                    if (model.fareRuleType !== '') {
-                        smartScriptSession.send('PBN/YTOWL210N/' + model.airlineCode + ' ' + model.fareRuleType + '/*');
-                        rmGroup.remarks.push(this.remarkHelper.createRemark(model.cityPair, 'RI', 'R', remark.relatedSegments ));
-                    }
                 }
             });
         }

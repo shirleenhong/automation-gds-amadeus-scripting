@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
 })
 export class PricingService {
   toDeleteFmLines = [];
-  constructor(private remarkHelper: RemarkHelper) { }
+  constructor(private remarkHelper: RemarkHelper) {}
   getFMDetails(airfareComponent: AirFareCommissionComponent) {
     const rmGroup = new RemarkGroup();
     rmGroup.group = 'Pricing';
@@ -153,7 +153,6 @@ export class PricingService {
         }
       }
 
-
       if (group.get('airline').value === 'UA' && group.get('uaEndorsement').value) {
         switch (group.get('uaEndorsement').value) {
           case 'UASKEDCHG':
@@ -180,12 +179,11 @@ export class PricingService {
         if (group.get('scFlight').value && group.get('scDate').value && group.get('uaEndorsement').value !== 'UAMKW') {
           const datePipe2 = new DatePipe('en-US');
           const scdate = datePipe2.transform(group.get('scDate').value, 'ddMMM');
-          osi = osi + + group.get('scFlight').value + '/' + scdate;
+          osi = osi + group.get('scFlight').value + '/' + scdate;
         }
 
         rmaremark = 'ADD ENDORSE-' + endorse;
         rmGroup.cryptics.push(osi);
-
       }
 
       if (group.get('exchangeServiceFund').value === true && group.get('exchangeServiceValue').value) {
@@ -196,8 +194,7 @@ export class PricingService {
         } else {
           rem = group.get('airline').value + ' SVC FUND USED/WAIVER-' + group.get('exchangeServiceValue').value;
         }
-        rmGroup.remarks.push(this.remarkHelper.createRemark
-          (rem, 'RM', 'A'));
+        rmGroup.remarks.push(this.remarkHelper.createRemark(rem, 'RM', 'A'));
       }
       rmGroup.remarks.push(this.remarkHelper.createRemark(rmaremark, 'RM', 'A'));
       rmGroup.updateCommands.push(group.get('lineNo').value + '//' + endorse);

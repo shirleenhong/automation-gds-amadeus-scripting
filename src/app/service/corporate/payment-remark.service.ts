@@ -322,7 +322,6 @@ export class PaymentRemarkService {
         const consultantNoRemarkStatic = new Map<string, string>();
         consultantNoRemarkStatic.set('IsNuc', 'true');
         this.remarksManager.createPlaceholderValues(null, consultantNoRemarkStatic, null, null, 'NUC');
-
         this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 98));
         this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', 70, 1));
       }

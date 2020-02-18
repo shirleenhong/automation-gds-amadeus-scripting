@@ -51,6 +51,7 @@ export class CorpCancelRemarkService {
             remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow2').value, 'RM', 'X'));
           }
         }
+        this.queueNonBspTicket();
         return { remarks: remarkList, commands: [] };
       }
     } else {

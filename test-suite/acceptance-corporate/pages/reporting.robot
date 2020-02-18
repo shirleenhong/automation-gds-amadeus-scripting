@@ -681,6 +681,7 @@ Verify Hotel Savings Remark Is Written In The PNR
    \    ${i}    Evaluate    ${i} + 1
    \    Exit For Loop If   not ${status} 
    Verify Unexpected Remarks Are Not Written In The PNR
+   Switch To Command Page
    Cancel PNR
     
 Verify HS Remark Is Written Without Savings Code
@@ -691,6 +692,7 @@ Verify HS Remark Is Written Without Savings Code
     \    ${i}    Evaluate    ${i} + 1
     \    Exit For Loop If   not ${status} 
     Verify Unexpected Remarks Are Not Written In The PNR
+    Switch To Command Page
     Cancel PNR
     
 Add Values For UL Client When Why First/Bus Booked Is ${why_first_booked}

@@ -403,7 +403,8 @@ Create ${num_of_test_dates} Test Dates
     \    ${test_date}    Add Time To Date    ${tdate}    ${add_to_date}
     \    Set Test Variable    ${tdate}    ${test_date}
     \    ${day}    Convert Date    ${test_date}    %d
-    \    ${car_drop_day}    Evaluate    ${day} + 1
+    \    ${day_int}    Convert To Integer    ${day}
+    \    ${car_drop_day}    Evaluate    ${day_int} + 1
     \    ${month}    Convert Month To MMM    ${test_date}
     \    Set Test Variable    ${test_date_${i}}    ${day}${month}
     \    Set Test Variable    ${car_drop_day_${i}}    ${car_drop_day}${month}
@@ -568,11 +569,16 @@ Add ${number_of_segments} Active Hotel Segments In ${city_code}
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    HA ${city_code} ${test_date_${i}}-1
+    \    Enter Cryptic Command    HA ${city_code} ${test_date_${i}}-1     
     \    Enter Cryptic Command    HA1
     \    Enter Cryptic Command    HP1
-    \    Enter Cryptic Command    HS/G-CCVI4444333322221111EXP1221
+    \    Enter Cryptic Command    HS/G-CCVI4012888888881881EXP1221
+    \    Verify Hotel Segment Is Booked
     
+Verify Hotel Segment Is Booked
+    Element Should Not Contain    ${text_area_command}    UNABLE TO PROCESS - CONTACT HELP DESK
+    Take Screenshot
+
 Add ${number_of_segments} Limo Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}

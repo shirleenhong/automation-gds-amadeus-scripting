@@ -459,9 +459,7 @@ Complete Fare Rule For Ticket Min/Max Stay With Associated Remarks
     Select Segments    2
     Enter Value    ${input_assoc_remark}    Testing Fare Rule For Ticket Min and Max Stay
     Take Screenshot    
-    Finish PNR    
-    Verify Expected Remarks Are Written In The PNR
-    Switch To Command Page
+    
     
 Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
     Navigate To Page Fare Rule
@@ -474,9 +472,6 @@ Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
     Select Segments    2    4
     Enter Value    ${input_assoc_remark}    Testing fare Rule For Ticket Non Ref and Non Ref
     Take Screenshot
-    Finish PNR    
-    Verify Expected Remarks Are Written In The PNR
-    Switch To Command Page
     
 Complete Fare Rule For Ticket Amount And Verify Remarks
     Navigate To Page Fare Rule
@@ -488,6 +483,11 @@ Complete Fare Rule For Ticket Amount And Verify Remarks
     Click Save Button In Add Fare Rule
     Finish PNR    
     Verify Expected Remarks Are Written In The PNR    True
+    Switch To Command Page
+
+Verify Fare Rule Remarks Are Written In The PNR
+    Finish PNR    
+    Verify Expected Remarks Are Written In The PNR
     Switch To Command Page
     
 Click Save Button In Add Fare Rule
@@ -520,15 +520,16 @@ Add Fare Rule For ${airline_code} Segments
     Run Keyword If    "${airline_code}" == "WestJet"    Select From List By Label    ${select_fareRule_fareRuleList}    WS ECONO INTERNATIONAL
     Take Screenshot
     Click Save Button In Add Fare Rule
-    
+  
 Verify If PBN Remark For Fare Rule Are Entered In The PNR For ${airline_code} Segment/s
     Finish PNR
     Run Keyword If    "${airline_code}" == "Air Canada"    Verify Specific Remark Is Written In The PNR    RIR QUEBEC TO CHICAGO
     Run Keyword If    "${airline_code}" == "WestJet"    Verify Specific Remark Is Written In The PNR    RIR CHICAGO TO QUEBEC
     Take Screenshot
-    # Close Cryptic Display
     Switch To Command Page
     Run Keyword If    "${airline_code}" == "Air Canada"    Element Should Contain    ${text_area_command}    PBN/YTOWL210N/AC STANDARD/*
+    Run Keyword If    "${airline_code}" == "Air Canada"    Element Should Contain    ${text_area_command}    RIRQuebec to Chicago
     Run Keyword If    "${airline_code}" == "WestJet"    Element Should Contain    ${text_area_command}    PBN/YTOWL210N/WS ECONO INTERNATIONAL/*
+    Run Keyword If    "${airline_code}" == "WestJet"    Element Should Contain    ${text_area_command}    RIRChicago to Quebec
     Take Screenshot
     

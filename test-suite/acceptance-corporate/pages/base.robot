@@ -21,7 +21,7 @@ ${button_sign_out}    css=#uicAlertBox_ok > span.uicButtonBd
 ${button_close}    //span[contains(text(),'CWT Corp ${env}')]/following-sibling::span[@class='xDialog_close xDialog_std_close']
 ${button_full_wrap}    //button[contains(text(), 'Full Wrap PNR')]
 ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
-${button_cancel_segments}    //button[contains(text(), 'Cancel Segments')]
+${button_cancel_segments}    //button[contains(text(), 'Cancel Script')]
 ${button_cancel_segment}    //button[@class='cancelsegment']
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
 ${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
@@ -39,11 +39,11 @@ ${text_warning}    //div[@class='col message']
 ${panel_queue}    //div[@class='panel-title']//div[contains(text(), 'Queue')]
 ${button_itinerary_queue}    //button[contains(text(), 'Itinerary and Queue')]
 ${message_sendingItinerary}     //div[contains(text(), 'Sending Itinerary and Queueing')]
-${button_send_invoice_itinerary}    //button[contains(text(), 'Re-send Invoice/Itinerary')]
+${button_send_invoice_itinerary}    //button[contains(text(), 'Re-send TKT/INV')]
 ${open_bracket}     [
 ${close_bracket}     ]
 ${panel_passive_segment}    //div[contains(text(),  'Passive Segment')]
-${button_add_segment}    //div[@class='loader']//button[contains(text(), 'Add Segment')]
+${button_add_segment}    //button[contains(text(), 'Add Passive Segment')]
 ${message_add_segments}    //div[contains(text(), 'Adding Segments')]
 ${button_add_passive_segment}    //div[@class='panel-body card-block card-body']//button[contains(text(), 'Add Segment')]
 ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
@@ -64,7 +64,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
 @{aqua_fees_pages}    Aqua Fees
-${button_aqua_fees}    //button[contains(text(), 'Aqua Fees')]
+${button_aqua_fees}    //button[contains(text(), 'Fee Only')]
 ${button_airline_pass_standalone}    //button[contains(text(), 'Airline Corporate Pass Purchase')]
 
 *** Keywords ***

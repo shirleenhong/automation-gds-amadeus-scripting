@@ -134,8 +134,8 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
     Enter Airline Name For ZZ    Air Canada
     Enter Flight Number    1234
     Enter Class Of Service    Y
-    Enter Departure Date    01022020
-    Enter Arrival Date    01042020
+    Enter Departure Date    10022020
+    Enter Arrival Date    10042020
     Enter Departure City    ZZZ
     Enter Departure Name For ZZZ    Departure ZZZ
     Enter Destination City    ZZZ
@@ -148,7 +148,7 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02JAN 4 ${departure_city}${destination_city} GK1 \ 1530 1715 \ 04JAN \ \ \ \ ${airline_recloc}
+    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 4 ${departure_city}${destination_city} GK1 \ 1530 1715 \ 04OCT \ \ \ \ ${airline_recloc}
     Verify Specific Remark Is Written In The PNR    RIR FLIGHT IS CONFIRMED WITH AIR CANADA/S2
     Verify Specific Remark Is Written In The PNR    RIR DEPARTURE CITY IS DEPARTURE ZZZ/S2
     Verify Specific Remark Is Written In The PNR    RIR ARRIVAL CITY IS ARRIVAL ZZZ/S2
@@ -172,7 +172,7 @@ Verify Passive Limo Segment Is Added In the PNR For EN Language
     Enter Limo Pickup Location    Home address
     Enter Limo Transfer To Location    Los Angeles Intl Airport
     Enter Limo Pickup City    LAX
-    Enter Limo Pickup Date    12122019
+    Enter Limo Pickup Date    12122020
     Enter Limo Pickup Time    0900AM
     Enter Limo Rate    12.34
     Select Limo Rate Type    Hourly Rate
@@ -192,7 +192,7 @@ Verify Passive Limo Segment Is Added In the PNR For EN Language
     Enter Limo Phone Number    32343234
     Enter Limo Pickup Location    Home Location
     Enter Limo Pickup City    MIA
-    Enter Limo Pickup Date    12202019
+    Enter Limo Pickup Date    12202020
     Enter Limo Pickup Time    0745PM
     Enter Limo Rate    20.92
     Select Limo Rate Type    Flat Rate
@@ -456,7 +456,7 @@ Verify Car Passive Segment Without Optional Values Are Written In The PNR
     Login To Amadeus Sell Connect
     Enter GDS Command    NM1Lastname/Firstname Mr    NM1Leisure/Amadeus Mr    NM1Leisure/Test    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK3YYJ1OCT-CWT RETENTION SEGMENT
     ...    RMZ/LANGUAGE-EN-CA
-    Enter GDS Command    SS AF1074 Y 10DEC YYZORD GK3 / 11551440 / ABCDEFG    SS U21075 Y 15DEC ORDYYT GK3 / 11551440 / 1234567    SS AC1074 Y 30DEC YYTMSP GK3 / 11551440 / YYYD123
+    Enter GDS Command    SS AF1074 Y 10OCT YYZORD GK3 / 11551440 / ABCDEFG    SS U21075 Y 15OCT ORDYYT GK3 / 11551440 / 1234567    SS AC1074 Y 30OCT YYTMSP GK3 / 11551440 / YYYD123
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button

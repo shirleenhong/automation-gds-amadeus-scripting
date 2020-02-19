@@ -23,10 +23,10 @@ Verify Visa And Passport Remarks Are Written In The PNR
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM INTERNATIONAL TRAVEL ADVISORY SENT
     Verify Specific Remark Is Written In The PNR    RM ADVISED PASSPORT NAME VALID PASSPORT IS REQUIRED
-    Verify Specific Remark Is Written In The PNR    RIR FRANCE - A VALID PASSPORT IS REQUIRED/S2,5
-    Verify Specific Remark Is Written In The PNR    RIR SPAIN - A VALID PASSPORT AND VISA ARE REQUIRED/S3
-    Verify Specific Remark Is Written In The PNR    RIR UNITED STATES - A VALID PASSPORT IS REQUIRED/S4
-    Verify Specific Remark Is Written In The PNR    RIR GERMANY - A VALID PASSPORT AND VISA ARE REQUIRED/S6
+    Verify Specific Remark Is Written In The PNR    RIR FRANCE - A VALID PASSPORT IS REQUIRED/S2-3,5-6
+    Verify Specific Remark Is Written In The PNR    RIR SPAIN - A VALID PASSPORT AND VISA ARE REQUIRED/S3-4
+    Verify Specific Remark Is Written In The PNR    RIR UNITED STATES - A VALID PASSPORT IS REQUIRED/S4-5
+    Verify Specific Remark Is Written In The PNR    RIR GERMANY - A VALID PASSPORT AND VISA ARE REQUIRED/S6-7
     Close Cryptic Display Window
 
 Verify Visa And Passport Remarks Are Updated In The PNR
@@ -42,7 +42,7 @@ Verify Visa And Passport Remarks Are Updated In The PNR
     Open Cryptic Display Window
     Verify Specific Remark Is Written In The PNR    RM INTERNATIONAL TRAVEL ADVISORY SENT
     Verify Specific Remark Is Written In The PNR    RM ADVISED LEISURE LASTNAME VALID PASSPORT IS REQUIRED
-    Verify Specific Remark Is Written In The PNR    RIR FRANCE - A VALID PASSPORT AND VISA ARE REQUIRED/S2,5
+    Verify Specific Remark Is Written In The PNR    RIR FRANCE - A VALID PASSPORT AND VISA ARE REQUIRED/S2-3,5-6
     Verify Specific Remark Is Written In The PNR    RIR SPAIN - A VALID PASSPORT AND VISA ARE REQUIRED/S3
     Verify Specific Remark Is Written In The PNR    RIR UNITED STATES - A VALID PASSPORT AND VISA ARE REQUIRED/S4    True
     Verify Specific Remark Is Written In The PNR    RIR GERMANY - A VALID PASSPORT AND VISA ARE REQUIRED/S6

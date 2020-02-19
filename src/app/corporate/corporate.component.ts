@@ -651,6 +651,7 @@ export class CorporateComponent implements OnInit {
     if (
       cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
       cancel.cancelForm.controls.followUpOption.value === 'BSPKT' ||
+      cancel.cancelForm.controls.followUpOption.value === 'HOTELCARLIMO' ||
       sendTkt
     ) {
       const canceltktl = this.ticketRemarkService.cancelTicketRemark();

@@ -88,7 +88,7 @@ Wait For Script To Complete
     Set Ignore Implicit Angular Wait    ${True}
 
 Click Full Wrap
-    #Wait Until Page Contains Element   ${button_full_wrap}    180
+    Wait Until Page Contains Element   ${button_full_wrap}    180
     Click Element    ${button_full_wrap}
     Wait Until Element Is Visible    ${message_loadingPnr}    180
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
@@ -173,7 +173,7 @@ Collapse Payment Panel
     
 Click Submit To PNR
     [Arguments]    ${close_corporate_test}=yes     ${queueing}=no
-    #Wait Until Page Contains Element    ${button_submit_pnr}    30
+    Wait Until Page Contains Element    ${button_submit_pnr}    30
     #Wait For Script To Complete
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}

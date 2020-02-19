@@ -1,7 +1,6 @@
 *** Settings ***
 Force Tags        corp
 Resource          ../../pages/base.robot
-Resource          ../../../resources/common/api-utilities.txt
 Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
 

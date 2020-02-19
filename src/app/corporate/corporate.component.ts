@@ -67,8 +67,7 @@ export class CorporateComponent implements OnInit {
   validModel = new ValidateModel();
   itinValidModel = new ValidateModel();
   dataErrorMessages = new Array<string>();
-  migrationOBTDates: Array<string>;
-  migrationOBTCfas = '';
+  migrationOBTSetting = '';
   segment = [];
   cfLine: CfRemarkModel;
   showIrdRequestButton = false;
@@ -282,11 +281,8 @@ export class CorporateComponent implements OnInit {
         // this.showLoading('ReasonCodes', 'initData');
         await this.ddbService.getApproverGroup(this.pnrService.clientSubUnitGuid, this.pnrService.getCFLine().cfa);
         await this.ddbService.getAirPolicyMissedSavingThreshold(this.pnrService.clientSubUnitGuid);
-        await this.ddbService.getMigrationOBTFeeDates().then((dates) => {
-          this.migrationOBTDates = dates;
-        });
         await this.ddbService.getMigrationOBTFeeCFA().then((cfa) => {
-          this.migrationOBTCfas = cfa;
+          this.migrationOBTSetting = cfa;
         });
         await this.rulesEngine.initializeRulesEngine();
       } catch (e) {
@@ -355,11 +351,10 @@ export class CorporateComponent implements OnInit {
     if (this.paymentsComponent.nonAcceptance !== undefined && this.paymentsComponent.nonAcceptance.unticketedSegments !== undefined) {
       this.paymentRemarkService.writeCorporateReceiptRemarks(this.paymentsComponent.nonAcceptance);
     }
-    if (this.feesComponent) {
+    const isMigration = this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTSetting);
+    if (this.feesComponent && !isMigration) {
       this.feesRemarkService.writeFeeRemarks(this.feesComponent.supplemeentalFees.ticketedForm);
     }
-
-    this.feesRemarkService.writeMigrationOBTFeeRemarks(this.migrationOBTDates, this.migrationOBTCfas);
 
     this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
 

@@ -617,6 +617,16 @@ Create PNR With Passive Air Segments For ${client_data}
     Handle Smart Tool PopUp
     Take Screenshot
 
+Create PNR With ${num_segments} Rail Only Segments For ${client_data}
+    Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
+    Create ${num_air_segments} Test Dates
+    Add Passenger Names
+    Move Profile to GDS    RM*U25/-A:${udid25}    APE-${email}    RM*CN/-${consultant_num}    RM*CF/-${cfa}0000000C    RM*BOOK-YTOWL220N/TKT-YTOWL2106/CC-CA    ${tkt_line}    FP${form_of_payment}    RM*U50/-${udid50}
+    Add ${num_segments} Rail Segments
+    Handle Smart Tool PopUp
+    Take Screenshot
+    
+
 Create PNR With Passive Air Segments That Departs And Arrives From 6:00PM-6:00AM For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
     Create ${num_air_segments} Test Dates

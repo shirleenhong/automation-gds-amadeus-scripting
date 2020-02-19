@@ -302,7 +302,7 @@ Verify Client Reporting Fields For Exchange PNR
 Verify Client Reporting Fields For Non-BSP For ${segment_number} Segment
     Click Save Button
     Navigate To Page Non BSP Reporting
-    ${actual_segment_number}    Get Value    ${input_segment_number} 
+    ${actual_segment_number}    Get Value    ${div_nonBsp}${input_segment_number} 
     Get Full Fare Value
     Get Low Fare Value
     Run Keyword If    "${actual_full_fare}" == "${EMPTY}"    Enter Value    ${input_full_fare}    1123.50

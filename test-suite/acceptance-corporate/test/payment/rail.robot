@@ -1,28 +1,22 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/payment.robot
+Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
+
+*** Variables ***
+${test_file_name}    rail
 
 *** Test Cases ***
 Verify That Ticketing Remarks Are Written Correctly For Rail Without Ticket Number
-    [Tags]    us17416
-    Login To Amadeus Sell Connect Acceptance
-	Move Single Passenger
-	Add 1 Rail Segments
+    [Tags]    us17416    de3221
+	Create PNR With 1 Rail Only Segments For Rail Without Ticket Number
 	Add Rail Ticketing Details For Single Segment Without Ticket Number
-	Verify Ticketing Instruction Remarks For Rail Without Ticket Number Are Written In The PNR
+	Verify Remarks Are Added Correctly In The PNR
 	
 Verify That Ticketing Remarks Are Written Correctly For Rail With Ticket Number
-    [Tags]    us17416
-    Login To Amadeus Sell Connect Acceptance
-	Move Single Passenger
-	Add 1 Rail Segments
+    [Tags]    us17416    de3221
+	Create PNR With 1 Rail Only Segments For Rail With Ticket Number
 	Add Rail Ticketing Details For Single Segment With Ticket Number
-    Verify Ticketing Instruction Remarks For Rail With Ticket Number Are Written In The PNR
+	Verify Remarks Are Added Correctly In The PNR
+    

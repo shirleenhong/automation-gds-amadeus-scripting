@@ -239,7 +239,7 @@ Select And Verify Seat Remarks For Option Online Check-in, Preferred And Upgrade
 Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     Navigate To Page Seats
     Wait Until Element Is Visible    ${input_seat_select3}
-    Select From List By Label    ${select_segment_number}    2
+    Select From List By Value   ${select_segment_number}    2
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
     Click Element   ${input_seat_select6}
@@ -247,7 +247,7 @@ Select And Verify Seat Remarks For Option Waitlist, Request And Clearance Check
     Click Save Button In Seats
     Click Element    ${button_add_seat}
     Wait Until Element Is Visible    ${input_seat_select3}
-    Select From List By Label    ${select_segment_number}    3
+    Select From List By Value    ${select_segment_number}    3
     Click Element   ${input_seat_select3}
     Click Element   ${input_seat_select4}
     Click Element   ${input_seat_select6}

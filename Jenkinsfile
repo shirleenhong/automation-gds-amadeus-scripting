@@ -8,7 +8,7 @@ pipeline {
   environment {
     REGION_NAME = "us-west-2"
     REGISTRY_ID = "061654913004"
-    CLUSTER_NAME = "dev-services"
+    CLUSTER_NAME = "dev-non-pci-services"
     ECR_HOST = 'dkr.ecr.us-west-2.amazonaws.com'    
     APPLICATION_NAME = "bpg-gds-scripting-amadeus"
   }
@@ -39,7 +39,7 @@ pipeline {
       environment {
         ENVIRONMENT = 'dev'
         REGISTRY_ID = '061654913004'
-        CLUSTER_NAME = 'dev-services'
+        CLUSTER_NAME = 'dev-non-pci-services'
         CONTAINER_NAME = 'dev-${APPLICATION_NAME}'
       }
       steps {
@@ -57,7 +57,7 @@ pipeline {
       environment {
         ENVIRONMENT = 'test'
         REGISTRY_ID = '061654913004'
-        CLUSTER_NAME = 'test-services'
+        CLUSTER_NAME = 'test-non-pci-services'
         CONTAINER_NAME = 'test-${APPLICATION_NAME}'
       }
       steps {

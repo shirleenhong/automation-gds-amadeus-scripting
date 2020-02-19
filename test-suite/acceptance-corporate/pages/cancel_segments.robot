@@ -295,7 +295,7 @@ Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When Th
     Open Command Page
     Enter Cryptic Command    RTQ
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
-    [Teardown]    Take Screenshot
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210O${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}098
     
 Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When There Is No Re-credit Fee and Re-credit is Partial
     Assign Current Date
@@ -310,7 +310,7 @@ Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When Th
     Open Command Page
     Enter Cryptic Command    RTQ
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
-    [Teardown]    Take Screenshot
+    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210O${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}098
     
 Fill Up BSP Ticket Keep For Future Travel
     Cancel All Segments

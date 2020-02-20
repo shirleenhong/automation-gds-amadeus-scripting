@@ -2,14 +2,6 @@
   <accordion [closeOthers]="false">
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Payment
-        <i [ngClass]="validModel.paymentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-payments></app-payments>
-    </accordion-group>
-    <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
         <i class="fas fa-file-export"></i> Reporting
         <i [ngClass]="validModel.reportingValidCss"></i>
         <span class="cwt-logo"></span>
@@ -26,13 +18,6 @@
       <app-corp-remarks></app-corp-remarks>
     </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'" *ngIf="showAquaFeeButton">
-      <div accordion-heading>
-        <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-fees></app-fees>
-    </accordion-group>
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas fa-stream"></i> Queue
@@ -41,6 +26,7 @@
       </div>
       <app-queue [workflow]="'wrap'"></app-queue>
     </accordion-group>
+
     <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas fa-ticket-alt"></i> Ticketing
@@ -49,14 +35,34 @@
       </div>
       <app-ticketing></app-ticketing>
     </accordion-group>
+
     <accordion-group [panelClass]="'customClass'">
+      <div accordion-heading>
+        <!-- <i class="fas fa-hand-holding-usd"></i> Payment -->
+        <i class="fas fa-hand-holding-usd"></i> Non-BSP Accounting
+        <i [ngClass]="validModel.paymentValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-payments></app-payments>
+    </accordion-group>
+
+    <accordion-group [panelClass]="'customClass'" *ngIf="showAquaFeeButton">
+      <div accordion-heading>
+        <!-- <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i> -->
+        <i class="fas fa-file-invoice-dollar"></i> Supplemental Fees <i [ngClass]="validModel.feesValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-fees></app-fees>
+    </accordion-group>
+
+    <!-- <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas  fa-money-check-alt"></i> Pricing
         <i [ngClass]="validModel.pricingValidCss"></i>
         <span class="cwt-logo"></span>
       </div>
       <app-pricing></app-pricing>
-    </accordion-group>
+    </accordion-group> -->
   </accordion>
 
   <!-- <accordian>

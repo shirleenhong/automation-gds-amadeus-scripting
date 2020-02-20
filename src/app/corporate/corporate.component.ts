@@ -226,7 +226,7 @@ export class CorporateComponent implements OnInit {
       this.validModel.isFeesValid = true;
     }
     this.validModel.isQueueValid = this.queueComponent.checkValid();
-    this.validModel.isPricingValid = this.pricingComponent.checkValid();
+    // this.validModel.isPricingValid = this.pricingComponent.checkValid();
     return this.validModel.isCorporateAllValid();
   }
 

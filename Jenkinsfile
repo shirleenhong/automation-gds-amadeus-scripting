@@ -75,7 +75,7 @@ pipeline {
       environment {
         ENVIRONMENT = 'staging'
         REGISTRY_ID = '319497233673'
-        CLUSTER_NAME = 'staging-services'
+        CLUSTER_NAME = 'staging-non-pci-services'
         CONTAINER_NAME = 'staging-${APPLICATION_NAME}'
         AWS_STAGING_ROLE = credentials('staging-jenkins-role')
       }

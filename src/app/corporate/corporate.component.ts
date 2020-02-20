@@ -42,7 +42,7 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.component';
-import { PricingComponent } from './pricing/pricing.component';
+// import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
@@ -91,7 +91,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
-  @ViewChild(PricingComponent) pricingComponent: PricingComponent;
+  // @ViewChild(PricingComponent) pricingComponent: PricingComponent;
   @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
 
   constructor(
@@ -327,9 +327,9 @@ export class CorporateComponent implements OnInit {
     const passiveSegmentList = new Array<PassiveSegmentModel>();
     const accRemarks = new Array<RemarkGroup>();
     let remarkList = new Array<RemarkModel>();
-    accRemarks.push(this.pricingService.getFMDetails(this.pricingComponent.airfareCommissionComponent));
-    if (this.pricingComponent.exchangeEndorsementsComponent) {
-      accRemarks.push(this.pricingService.getExchangeEndorsement(this.pricingComponent.exchangeEndorsementsComponent));
+    accRemarks.push(this.pricingService.getFMDetails(this.ticketingComponent.airfareCommissionComponent));
+    if (this.ticketingComponent.exchangeEndorsementsComponent) {
+      accRemarks.push(this.pricingService.getExchangeEndorsement(this.ticketingComponent.exchangeEndorsementsComponent));
     }
 
     accRemarks.push(this.paymentRemarkService.deleteSegmentForPassPurchase(this.paymentsComponent.accountingRemark.accountingRemarks));

@@ -128,6 +128,7 @@ Verify Expected Cancellation Remarks Are Written
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
     Run Keyword If    "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
     ...      Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL NR DUE TO IROP OR SKD CHG
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Verify Expected Remarks Are Written In The PNR
     Verify Historical Remarks Are Written In The PNR
     
@@ -455,6 +456,7 @@ Void The Ticket
     Set Test Variable   ${ticket_num}
     Switch To Command Page
     Enter Cryptic Command   TRDC/L${line_num}
+    Enter Cryptic Command   RT
     
 Cancel Segment For BSP Void, ${reuse_value} Credit Card Authorization And Select ${v_reason} VRsn Option
     Navigate To Page Cancel Segments

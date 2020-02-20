@@ -1,6 +1,5 @@
 *** Settings ***
 Force Tags        corp
-Library           String
 Resource          ../../pages/base.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
@@ -55,4 +54,12 @@ Verify PNR Non Voided Ticket Cannot Be Cancelled
     Complete PNR And Ticket TST1
     Verify Agent Is Not Able To Cancel Segments With Unvoided Ticket
 
-     
+Verify User Is Able To Cancel Both Voided And Unticketed TST
+    [Tags]    de3230
+    Create PNR With Active Air Segments For Multi TST, Ticket Void 1 TST
+    Complete PNR And Ticket TST1
+    Void The Ticket
+    Cancel Segment For BSP Void, Don't Reuse Credit Card Authorization And Select Passenger VRsn Option
+    Verify Cancellation For Voided BSP Ticket Remarks Are Written In The PNR
+    Verify Expected Cancellation Remarks Are Written 
+    

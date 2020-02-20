@@ -987,4 +987,44 @@ export class CorporateComponent implements OnInit {
       this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
     });
   }
+
+  async writeStandaloneRemarks() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      await this.rulesEngine.initializeRulesEngine();
+      this.workflow = 'WriteRemarks';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async addRemarks() {
+    const remarkCollection = new Array<RemarkGroup>();
+    this.showLoading('Adding Remarks...', 'SubmitToPnr');
+    let remarkList = new Array<RemarkModel>();
+    const commandList = [];
+    const passiveSegmentList = new Array<PassiveSegmentModel>();
+    const forDeletion = new Array<string>();
+    this.corpRemarksService.writeSeatRemarks(this.corpRemarksComponent.seatsComponent.seats);
+    remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
+    remarkCollection.push(
+      this.commonRemarkService.buildAssociatedRemarks(this.corpRemarksComponent.associatedRemarksComponent.associatedRemarksForm)
+    );
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
 }

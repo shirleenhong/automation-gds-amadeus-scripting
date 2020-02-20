@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { SeatsComponent } from './seats/seats.component';
 import { IrdRemarksComponent } from './ird-remarks/ird-remarks.component';
 import { UtilHelper } from 'src/app/helper/util.helper';
@@ -37,13 +37,15 @@ export class CorpRemarksComponent implements OnInit {
   isEsc: boolean;
   isPassive: any;
   hasRules = false;
+  @Input() windowFilter: string;
+  isStandalone = false;
 
   constructor(
     private utilHelper: UtilHelper,
     private counselorDetail: CounselorDetail,
     private pnrService: PnrService,
     private rulesEngineService: RulesEngineService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.counselorDetail.identityOnChange.subscribe((x) => {
@@ -51,6 +53,10 @@ export class CorpRemarksComponent implements OnInit {
     });
     this.isPassive = this.checkIfPassiveSegmentPresent();
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REMARKS');
+
+    if (this.windowFilter === 'STANDALONE') {
+      this.isStandalone = true;
+    }
   }
   checkValid() {
     if (this.irdRemarks !== undefined) {

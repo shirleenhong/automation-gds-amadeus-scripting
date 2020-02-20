@@ -193,6 +193,27 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 'WriteRemarks'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="far fa-envelope-open"></i> Remarks
+        <span class="cwt-logo"></span>
+      </div>
+      <app-corp-remarks [windowFilter]="'STANDALONE'"></app-corp-remarks>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group  row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="addRemarks()">
+        Submit Remarks
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="workflow === 'corporatePass'">
   <accordion>
     <accordion-group [panelClass]="'customClass'" [isOpen]="true">
@@ -294,6 +315,11 @@
     <div *ngIf="withPasspurchaseAccess">
       <button class="leisureButton btnMenu" (click)="corporatePassPurchase()">
         Airline Corporate Pass Purchase
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="writeStandaloneRemarks()">
+        Remarks
       </button>
     </div>
   </div>

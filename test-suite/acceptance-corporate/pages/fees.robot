@@ -181,3 +181,13 @@ Verify Air/Rail Fees Are Not Displayed
     Run Keyword And Continue On Failure    Element Should Not Be Visible    ${input_feeCode}
     Run Keyword And Continue On Failure    Element Should Not Be Visible    ${input_fee}
     Take Screenshot
+    
+Verify That Migration OBT Remark Is Written
+    Close CA Corporate Test
+    Finish PNR
+    Verify Expected Remarks Are Written In The PNR 
+    
+Verify That Migration OBT Remark Is Not Written
+    Close CA Corporate Test
+    Finish PNR
+    Verify Unexpected Remarks Are Not Written In The PNR 

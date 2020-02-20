@@ -50,16 +50,17 @@ export class ReportingRemarksComponent implements OnInit {
     const tstSegments = await this.pnrService.getTstSegmentNumbers();
     const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
     const nonTstSegments = allSegments.filter((s) => tstSegments.filter((z) => z.indexOf(s) > -1).length === 0);
+    //const deRemarks = this.pnrService.getRemarksFromGDSByRegex(/DE\/-/g);
 
     for (const segment of tstSegments) {
       this.showSegments = true;
-      const group = this.createFormGroup(segment);
+      const group = this.createFormGroup(segment, '');
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
 
     if (nonTstSegments.length > 0) {
       this.showSegments = true;
-      const group = this.createFormGroup('');
+      const group = this.createFormGroup('', '');
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
 
@@ -90,11 +91,16 @@ export class ReportingRemarksComponent implements OnInit {
   }
   getRouteCodes() {
     this.bspRouteCodeList = this.ddbService.getRouteCodeList();
+    const fs = this.pnrService.getFSRemark();
+    if (fs) {
+      this.reportingRemarksView.routeCode = fs.substr(0, 1);
+      this.reportingForm.get('bspRouteCode').setValue(fs.substr(0, 1));
+    }
   }
-  createFormGroup(segmentNo) {
+  createFormGroup(segmentNo, desti) {
     return this.fb.group({
       segment: new FormControl(segmentNo),
-      destinationList: new FormControl('', [Validators.required])
+      destinationList: new FormControl(desti, [Validators.required])
     });
   }
 

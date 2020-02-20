@@ -148,7 +148,7 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
     Close CA Migration Window
     Switch To Graphic Mode
     Open Cryptic Display Window
-    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 4 ${departure_city}${destination_city} GK1 \ 1530 1715 \ 04OCT \ \ \ \ ${airline_recloc}
+    Verify Specific Remark Is Written In The PNR    ${airline_code}${flight_number} ${class_service} 02OCT 5 ${departure_city}${destination_city} GK1 \ 1530 1715 \ 04OCT \ \ \ \ ${airline_recloc}
     Verify Specific Remark Is Written In The PNR    RIR FLIGHT IS CONFIRMED WITH AIR CANADA/S2
     Verify Specific Remark Is Written In The PNR    RIR DEPARTURE CITY IS DEPARTURE ZZZ/S2
     Verify Specific Remark Is Written In The PNR    RIR ARRIVAL CITY IS ARRIVAL ZZZ/S2
@@ -159,7 +159,7 @@ Verify Passive Air Segment Is Added In the PNR For ZZ Details
 Verify Passive Limo Segment Is Added In the PNR For EN Language
     [Tags]    us8720
     Login To Amadeus Sell Connect
-    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21FEB-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
+    Enter GDS Command    NM1Leisure/Amadeus Mr    NM1Lastname/Firstname Mr    RM*CF/-RBM000000N    APE-Test@email.com    RU1AHK2SIN21DEC-CWT RETENTION SEGMENT    RMZ/LANGUAGE-EN-CA
     Open CA Migration Window
     Click Add Segment Main Menu
     Click Add Segment Button

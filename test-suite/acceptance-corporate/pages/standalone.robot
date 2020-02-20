@@ -456,7 +456,6 @@ Select ${aqua_fee} Type Of Fee And ${fee_type}
     Navigate To Page Aqua Fees 
     Select ${aqua_fee} Type Of Fee
     Select Checkbox    ${checkbox_supplemental_fee}
-    Wait Until Element Is Visible    ${input_fee} 
     Run Keyword If    "${fee_type}" == "Schedule Change"    Select Checkbox    ${checkbox_schedule_change}
     Run Keyword If    "${fee_type}" == "Input Special Fee"    Enter Value    ${input_fee}    12.99
     Take Screenshot

@@ -1,11 +1,17 @@
 <tabset id="ticketingTab">
-  <tab heading="Ticketing Line" id="ticketingLine">
+  <tab heading="Ticketing Line" id="ticketingLine" tabOrder="1">
     <app-ticketing-line [containerFilter]="'FULLWRAP'"></app-ticketing-line>
   </tab>
-  <tab heading="Ticketing Instruction" id="ticketingInstruction">
+  <tab heading="Ticketing Instruction" id="ticketingInstruction" tabOrder="2">
     <app-aqua-ticketing> </app-aqua-ticketing>
   </tab>
-  <tab heading="Rules" id="rules" *ngIf="hasRules">
+  <tab heading="Rules" id="rules" *ngIf="hasRules" tabOrder="3">
     <app-container></app-container>
+  </tab>
+  <tab heading="Airline Commission" id="airlineCommission" tabOrder="4">
+    <app-air-fare-commission></app-air-fare-commission>
+  </tab>
+  <tab *ngIf="isShowExTab" heading="Exchange Endorsements" id="exchangeEndorsements" tabOrder="5">
+    <app-exchange-endorsements></app-exchange-endorsements>
   </tab>
 </tabset>

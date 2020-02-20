@@ -470,7 +470,10 @@ Select Counselor Identity: ${identity}
     Run Keyword If    "${in_corp}" == "False"    Navigate To Page CWT Corporate
     Wait Until Page Contains Element    ${list_counselor_identity}    30
     Select From List By Label    ${list_counselor_identity}     ${identity}
+    ${identity}    Set Variable If    "${identity}" == "24H"    ESC
+    ...    "${identity}" == "OSC"    OFC
     Set Test Variable    ${actual_counselor_identity}    ${identity}
+    
     
 Verify UDID 86 Remark Is Not Written In The PNR
     Finish PNR

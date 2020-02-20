@@ -171,3 +171,27 @@ Verify That PNR With Voided Ticket And Is Booked Via Concur Will Be Cancelled
     Verify Cancel Segment Fields Are Defaulted For PNRs Voided And Booked Via Concur
     Verify Expected Cancellation Remarks Are Written
     
+Verify That PNRs With Active Hotel Segments Are Cancelled When Reason Is Car/Hotel/Limo
+    [tags]    us11192
+    Create PNR For Cancellation, Active Hotel Segment
+    Complete The PNR With Default Values
+    Cancel Hotel, Car Or Limo Segments
+    Verify Expected Cancellation Remarks Are Written
+    Verify PNR Is Queued Correctly At The End Of PNR
+    
+Verify That PNRs With Passive Car Segments Are Cancelled When Reason Is Car/Hotel/Limo
+    [tags]    us11192
+    Create PNR For Cancellation, Car Segment
+    Complete The PNR With Default Values
+    Cancel Hotel, Car Or Limo Segments
+    Verify Expected Cancellation Remarks Are Written
+    Verify PNR Is Queued Correctly At The End Of PNR
+    
+Verify That PNRs With Passive Limo Segments Are Cancelled When Reason Is Car/Hotel/Limo
+    [tags]    us11192
+    Create PNR For Cancellation, Limo Segment
+    Complete The PNR With Default Values
+    Cancel Hotel, Car Or Limo Segments
+    Verify Expected Cancellation Remarks Are Written
+    Verify PNR Is Queued Correctly At The End Of PNR
+    

@@ -156,7 +156,7 @@ Click Waivers Reporting Tab
     Set Test Variable    ${current_page}    Waivers
 
 Click Reporting Remarks Tab
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Wait Until Element Is Visible    ${tab_reportingRemarks}    30
     Click Element    ${tab_reportingRemarks}
     Wait Until Page Contains Element    ${list_routing_code}    30

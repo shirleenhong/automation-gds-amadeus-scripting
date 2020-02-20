@@ -24,7 +24,7 @@ ${button_submit_pnr}    //button[@class='leisureBtnSubmit']
 ${button_cancel_segments}    //button[contains(text(), 'Cancel Script')]
 ${button_cancel_segment}    //button[@class='cancelsegment']
 ${panel_reporting}    //div[@class='panel-title']//div[contains(text(), 'Reporting')]
-${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Payment')]
+${panel_payment}    //div[@class='panel-title']//div[contains(text(), 'Non-BSP Accounting')]
 ${panel_ticketing}    //div[@class='panel-title']//div[contains(text(), 'Ticketing')]
 ${message_updatingPnr}    //div[contains(text(), 'Updating PNR')]
 ${message_loadingPnr}    //div[contains(text(), 'Loading PNR')]
@@ -143,19 +143,19 @@ Click Send Itinerary And Queue
     
 Click Reporting Panel
     #Wait Until Element Is Visible    ${panel_payment}     60
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Reporting
     
 Collapse Reporting Panel
     #Wait Until Element Is Visible    ${panel_reporting}    60
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
 Click Payment Panel
     #Wait Until Element Is Visible    ${panel_payment}    60
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Payment
     
@@ -166,7 +166,7 @@ Click Pricing Panel
     
 Collapse Payment Panel
     #Wait Until Element Is Visible    ${panel_payment}    60
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_payment}
     Set Test Variable    ${current_page}    Full Wrap PNR
     [Teardown]    Take Screenshot
@@ -461,7 +461,7 @@ Click Ticketing Panel
     
 Collapse Ticketing Panel
     #Wait Until Element Is Visible    ${panel_ticketing}    60
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_ticketing}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
@@ -487,7 +487,7 @@ Click Fees Panel
     
 Collapse Fees Panel
     #Wait Until Element Is Visible    ${panel_fees}    60
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_fees}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
@@ -505,7 +505,7 @@ Click Remarks Panel
 Collapse Remarks Panel
     Wait Until Element Is Visible    ${panel_remarks}    60
     #Wait For Script To Complete
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Full Wrap PNR
 
@@ -518,7 +518,7 @@ Click Queue Panel
 Collapse Queue Panel
     Wait Until Element Is Visible    ${panel_queue}    60
     #Wait For Script To Complete
-    Scroll Element Into View     ${panel_payment}
+    Scroll Element Into View     ${panel_reporting}
     Click Element    ${panel_queue}
     Set Test Variable    ${current_page}    Full Wrap PNR
     

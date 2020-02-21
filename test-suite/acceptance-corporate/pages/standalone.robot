@@ -456,6 +456,7 @@ Select ${aqua_fee} Type Of Fee And ${fee_type}
     Navigate To Page Aqua Fees 
     Select ${aqua_fee} Type Of Fee
     Select Checkbox    ${checkbox_supplemental_fee}
+    Wait Until Element Is Visible    ${input_supplementalFee}    20  
     Run Keyword If    "${fee_type}" == "Schedule Change"    Select Checkbox    ${checkbox_schedule_change}
     Run Keyword If    "${fee_type}" == "Input Special Fee"    Enter Value    ${input_fee}    12.99
     Take Screenshot
@@ -643,3 +644,29 @@ Verify Accounting Remarks Per Airline Are Written Correctly
     Get PNR Details
     Verify Expected Remarks Are Written In The PNR    True
     Switch To Command Page
+
+Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type In Standalone
+    Navigate To Page CWT Itinerary
+    Select Emails In CWT Itinerary    ${email}
+    Select From List By Label    ${list_language}    ${language}
+    Select From List By Label    ${list_transaction_type}    ${transaction}
+    Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
+    Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
+    Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    Set Test Variable    ${cwt_itin_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Add CWT Itinerary Details For All Emails, In ${language} Language And For ${transcation} Transaction Type In Standalone
+    Sleep    10
+    Navigate To Page CWT Itinerary
+    Select Emails In CWT Itinerary    TEST@EMAIL.COM    TEST_ARR@EMAIL.COM    TEST_CTC@EMAIL.COM
+    Select From List By Label    ${list_language}    ${language}
+    Select From List By Label    ${list_transaction_type}    ${transcation}
+    Set Test Variable    ${cwt_itin_complete}    yes
+    [Teardown]    Take Screenshot
+    
+Verify Remarks Are Added Correctly In The PNR For Standalone
+    Click Submit To PNR     yes    yes
+    Switch To Graphic Mode
+    Get PNR Details
+    # Verify Expected Remarks Are Written In The PNR    True

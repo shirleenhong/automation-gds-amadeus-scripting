@@ -223,7 +223,7 @@ export class ReportingBSPComponent implements OnInit {
 
     const segmentsInFare = this.getSegment(tst);
     const segmentNo = segmentsInFare;
-    const segmentLineNo = this.getSegmentLineNo(segmentNo);
+    const segmentLineNo = this.pnrService.getSegmentLineNo(segmentNo);
     let highFare: string;
 
     for (const item of this.highFareSO) {
@@ -299,24 +299,6 @@ export class ReportingBSPComponent implements OnInit {
 
   isSegmentExchange(tatooNumber): boolean {
     return this.pnrService.exchangeTatooNumbers.filter((e) => tatooNumber.includes(e)).length > 0;
-  }
-
-  getSegmentLineNo(tatooNumber: string): string {
-    const tatoos: string[] = [];
-    tatooNumber.split(',').forEach((e) => {
-      tatoos.push(e);
-    });
-
-    let segments = '';
-    const seg = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
-    seg.forEach((s) => {
-      if (segments === '') {
-        segments = s.lineNo;
-      } else {
-        segments = segments + ',' + s.lineNo;
-      }
-    });
-    return segments;
   }
 
   getSegment(tst: any): string {
@@ -443,7 +425,7 @@ export class ReportingBSPComponent implements OnInit {
   async getLowFareLilly(tst: any, i: number, command: any, option: string) {
     let lfare = '0.00';
     const segmentsInFare = this.getSegment(tst);
-    const segmentLineNo = this.getSegmentLineNo(segmentsInFare);
+    const segmentLineNo = this.pnrService.getSegmentLineNo(segmentsInFare);
 
     switch (option) {
       case 'DIRECTFLIGHT':

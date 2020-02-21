@@ -44,7 +44,7 @@ ${input_admin_fee}    css=#feeAmount
 ${input_segment_cost}    css=#segmentCost
 ${input_passExpDate}    css=#passExpDate
 ${button_submit_corporate}    //button[contains(text(), 'Submit Corporate Pass ')]
-
+${button_submit_remarks}    //button[contains(text(), 'Submit Remarks')]
 
 *** Keywords ***
 Add Multiple Email Address
@@ -643,3 +643,86 @@ Verify Accounting Remarks Per Airline Are Written Correctly
     Get PNR Details
     Verify Expected Remarks Are Written In The PNR    True
     Switch To Command Page
+
+Select Seats Tab
+    Wait Until Element Is Visible    ${tab_Seats}    10
+    Click Element    ${tab_Seats}    
+
+Click Add Seat Remarks
+    Wait Until Element Is Visible    ${button_add_seat}    10
+    Click Element    ${button_add_seat} 
+    
+Select Agent Remarks Tab
+    Wait Until Element Is Visible    ${tab_documentPnr}    10
+    Click Element    ${tab_documentPnr}
+
+Add Seat Remarks in Standalone For Option Online Check-in, Preferred And Upgrade
+    Navigate To Page Remarks in Main Menu
+    Select Seats Tab 
+    Click Add Seat Remarks
+    Wait Until Element Is Visible    ${input_seat_select1}
+    Click Element    ${input_seat_select1}    
+    Click Element    ${input_seat_select2}
+    Select From List By Label    ${select_seat_Type}    WINDOW
+    Click Element    ${input_seat_select5}
+    Enter Value    ${input_seat_no}    2D
+    Take Screenshot    
+    Click Save Button In Seats
+    
+Add Seat Remarks in Standalone For Option Waitlist, Request And Clearance Check
+    Navigate To Page Remarks in Main Menu
+    Select Seats Tab 
+    Click Add Seat Remarks
+    Wait Until Element Is Visible    ${input_seat_select3}
+    Select From List By Value   ${select_segment_number}    2
+    Click Element   ${input_seat_select3}
+    Click Element   ${input_seat_select4}
+    Click Element   ${input_seat_select6}
+    Take Screenshot    
+    Click Save Button In Seats
+    Click Element    ${button_add_seat}
+    Wait Until Element Is Visible    ${input_seat_select3}
+    Select From List By Value    ${select_segment_number}    3
+    Click Element   ${input_seat_select3}
+    Click Element   ${input_seat_select4}
+    Click Element   ${input_seat_select6}
+    Take Screenshot    
+    Click Save Button In Seats
+    
+Verify If Remarks Are Written Correctly For Standalone Remarks
+    Wait Until Element Is Visible    ${button_submit_remarks}    10
+    Click Element    ${button_submit_remarks}
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
+    Wait For Script To Complete
+    Close CA Corporate Test
+    Switch To Graphic Mode
+    Get PNR Details
+    Verify Expected Remarks Are Written In The PNR    True
+    Switch To Command Page
+    
+Add Single Agent Remark
+    Navigate To Page Remarks in Main Menu
+    Select Agent Remarks Tab
+    Enter Value    ${row_documentPNR}${open_bracket}1${close_bracket}${input_document}    Testing Document PNR Remark
+    Take Screenshot
+    
+Add Multiple Agent Remarks
+    Navigate To Page Remarks in Main Menu
+    Select Agent Remarks Tab
+    Populate Multiple Document PNR    Testing Document PNR Remark 1    Testing Document PNR Remark 2    Testing Document PNR Remark 3    Testing Document PNR Remark 4
+    Take Screenshot
+    
+Add Associated Remarks For Ticket Min/Max Stay
+    Navigate To Page Remarks in Main Menu
+    Click Associated Remarks Tab
+    Select Segments    2
+    Enter Value    ${input_assoc_remark}    Testing Fare Rule For Ticket Min and Max Stay
+    Take Screenshot
+    
+Add Associated Remarks For Ticket Non Refundable
+    Navigate To Page Remarks in Main Menu
+    Click Associated Remarks Tab
+    Select Segments    2    4
+    Enter Value    ${input_assoc_remark}    Testing fare Rule For Ticket Non Ref and Non Ref
+    Take Screenshot

@@ -50,7 +50,7 @@ ${panel_itinerary_and_queue}    //i[contains(text(),  'Itinerary And Queue')]
 ${button_ird_rate_request}    //button[contains(text(), 'IRD Rate Request')]
 ${window_marriot_policy}    //div[contains(text(), 'MARRIOTT POLICY VIOLATION')]
 ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
-@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees    Airline Corporate Pass Purchase
+@{corp_pages}     Add Segment    Full Wrap PNR    Send Invoice/Itinerary    Itinerary and Queue    Cancel Segments    IRD Rate Request    Aqua Fees    Airline Corporate Pass Purchase    Remarks in Main Menu
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
@@ -66,6 +66,7 @@ ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-U
 @{aqua_fees_pages}    Aqua Fees
 ${button_aqua_fees}    //button[contains(text(), 'Fee Only')]
 ${button_airline_pass_standalone}    //button[contains(text(), 'Airline Corporate Pass Purchase')]
+${button_corp_remarks}    //button[contains(text(), 'Remarks')]
 
 *** Keywords ***
 Enter Value
@@ -282,6 +283,7 @@ Navigate From Corp
      ...    ELSE IF    "${destination_page}" == "IRD Rate Request"     Click IRD Rate Request
      ...    ELSE IF    "${destination_page}" == "Aqua Fees"     Click Aqua Fees
      ...    ELSE IF    "${destination_page}" == "Payment"    Click Airline Corporate Pass Purchase
+     ...    ELSE IF    "${destination_page}" == "Remarks in Main Menu"    Click Remarks in Main Menu
      ...    ELSE    Close CA Corporate Test
 
 Navigate From Cancel Segments 
@@ -812,3 +814,10 @@ Click Airline Corporate Pass Purchase
     Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
     Set Test Variable    ${current_page}    Payment
+    
+Click Remarks in Main Menu
+    Wait Until Page Contains Element    ${button_corp_remarks}    100
+    Click Element    ${button_corp_remarks}    
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Set Test Variable    ${current_page}    Remarks in Main Menu

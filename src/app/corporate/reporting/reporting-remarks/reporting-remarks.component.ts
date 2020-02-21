@@ -50,17 +50,21 @@ export class ReportingRemarksComponent implements OnInit {
     const tstSegments = await this.pnrService.getTstSegmentNumbers();
     const allSegments = this.pnrService.getSegmentList().map((segment) => segment.lineNo);
     const nonTstSegments = allSegments.filter((s) => tstSegments.filter((z) => z.indexOf(s) > -1).length === 0);
-    //const deRemarks = this.pnrService.getRemarksFromGDSByRegex(/DE\/-/g);
+    const deRemarks = this.pnrService.getRemarksFromGDSByRegex(/DE\/-/g);
 
     for (const segment of tstSegments) {
       this.showSegments = true;
-      const group = this.createFormGroup(segment, '');
+      const de = deRemarks.filter((s) => this.pnrService.getSegmentLineNo(s.segments.join(',')) === segment);
+      const remark = de.length > 0 ? de[0].remarkText : '';
+      const group = this.createFormGroup(segment, remark.replace('*DE/-', ''));
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
 
     if (nonTstSegments.length > 0) {
+      const de = deRemarks.filter((s) => s.segments.length === 0);
+      const remark = de.length > 0 ? de[0].remarkText : '';
       this.showSegments = true;
-      const group = this.createFormGroup('', '');
+      const group = this.createFormGroup('', remark.replace('*DE/-', ''));
       (this.reportingForm.get('segments') as FormArray).push(group);
     }
 

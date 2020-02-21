@@ -10,7 +10,7 @@ declare var smartScriptSession: any;
 export class CleanUpRemarkService {
   deleteRemarksByIds = Array<string>();
 
-  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) { }
+  constructor(private remarksManagerService: RemarksManagerService, private pnrService: PnrService, private ars: AmadeusRemarkService) {}
 
   cleanUpRemarks() {
     this.markIdForDeletion();
@@ -31,7 +31,7 @@ export class CleanUpRemarkService {
     remarks.push('LP/-'); // RM*LP/-
     remarks.push('FS/-'); // RM*FS/-
     remarks.push('NE/-'); // RM*NE/-
-    remarks.push('DE/-'); // RM*DE/-
+    // remarks.push('DE/-'); // RM*DE/-
     remarks.push('NUC'); // RM*NUC
     remarks.push('AOF'); // RM*AOF
     remarks.push('MAC/-'); // RM*MAC/-

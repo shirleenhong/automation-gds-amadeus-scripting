@@ -1915,13 +1915,14 @@ export class PnrService {
         }
     }
 
+     
     getSegmentLineNo(tatooNumber: string): string {
         const tatoos: string[] = [];
         tatooNumber.split(',').forEach((e) => {
             tatoos.push(e);
         });
         let segments = '';
-        const seg = this.getSegmentList().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
+        const seg = this.getSegmentList().filter((x) => tatoos.includes(x.tatooNo));
         seg.forEach((s) => {
             if (segments === '') {
                 segments = s.lineNo;

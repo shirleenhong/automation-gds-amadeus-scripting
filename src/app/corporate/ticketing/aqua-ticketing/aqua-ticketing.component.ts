@@ -113,24 +113,6 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  getSegmentLineNo(tatooNumber: string): string {
-    const tatoos: string[] = [];
-    tatooNumber.split(',').forEach((e) => {
-      tatoos.push(e);
-    });
-
-    let segments = '';
-    const seg = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR' && tatoos.includes(x.tatooNo));
-    seg.forEach((s) => {
-      if (segments === '') {
-        segments = s.lineNo;
-      } else {
-        segments = segments + ',' + s.lineNo;
-      }
-    });
-    return segments;
-  }
-
   getUnticketedAirSegments() {
     const allAir = this.pnrService.pnrObj.allAirSegments;
     const tstData = [];
@@ -176,7 +158,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
             const segmentTatoo = [];
             x.segmentInformation.forEach((p) => {
               if (p.segmentReference !== undefined) {
-                segmentRef.push(this.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
+                segmentRef.push(this.pnrService.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
                 segmentTatoo.push(p.segmentReference.refDetails.refNumber);
               }
             });
@@ -204,7 +186,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
               if (!ticketedSegments.includes(x.segmentInformation.segmentReference.refDetails.refNumber)) {
                 tstData.push({
                   tstNumber: x.fareReference.uniqueReference,
-                  segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+                  segmentNumber: this.pnrService.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
                   tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
                 });
               }
@@ -219,7 +201,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
           const segmentTatoo = [];
           x.segmentInformation.forEach((p) => {
             if (p.segmentReference !== undefined) {
-              segmentRef.push(this.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
+              segmentRef.push(this.pnrService.getSegmentLineNo(p.segmentReference.refDetails.refNumber));
               segmentTatoo.push(p.segmentReference.refDetails.refNumber);
             }
           });
@@ -231,7 +213,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
         } else {
           tstData.push({
             tstNumber: x.fareReference.uniqueReference,
-            segmentNumber: this.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
+            segmentNumber: this.pnrService.getSegmentLineNo(x.segmentInformation.segmentReference.refDetails.refNumber),
             tatooNumber: x.segmentInformation.segmentReference.refDetails.refNumber
           });
         }

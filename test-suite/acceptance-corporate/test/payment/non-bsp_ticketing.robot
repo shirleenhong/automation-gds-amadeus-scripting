@@ -67,4 +67,5 @@ Verify That Non-BSP With APAY Ticketing Remarks Are Written
     Enter FOP Credit Card Remark
     Enter EB Remark For APAY
     Add Non-BSP and APAY Ticketing Detals For Multiple Segments
+    Update Client Reporting Values For Non-BSP
     Verify That Ticketing Remarks For Non-BSP And APAY With Multiple Segments Are Written In The PNR

@@ -263,13 +263,13 @@ Verify PNR Is Queued Correctly At The End Of PNR
     Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}001
     
 Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type  
-    Navigate To Page CWT Itinerary
+    Navigate To Page CWT Itinerary Tab
     Select Emails In CWT Itinerary    ${email}
     Select From List By Label    ${list_language}    ${language}
-    Select From List By Label    ${list_transaction_type}    ${transaction}
+    # Select From List By Label    ${list_transaction_type}    ${transaction}
     Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
     Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
-    Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    # Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
     Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
     
@@ -399,18 +399,6 @@ Click CWT Itinerary Tab In Full Wrap
     Wait Until Element Is Visible    ${list_email_address}    30    
     Set Test Variable    ${current_page}     CWT Itinerary Tab
     
-Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type In Full Wrap
-    Navigate To Page CWT Itinerary Tab
-    Select Emails In CWT Itinerary    ${email}
-    Select From List By Label    ${list_language}    ${language}
-    # Select From List By Label    ${list_transaction_type}    ${transaction}
-    Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
-    Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
-    # Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
-    Set Test Variable    ${cwt_itin_complete}    yes
-    [Teardown]    Take Screenshot
-  
-
 Verify Client Queue Tab Is Not Displayed
     Navigate To Page Queue
     Element Should Not Be Visible    ${tab_client_queue}

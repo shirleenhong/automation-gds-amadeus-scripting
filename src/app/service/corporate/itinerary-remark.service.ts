@@ -19,6 +19,8 @@ export class ItineraryRemarkService implements OnInit {
   addPersonalQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
+    } else if (frmGroup.controls.queueNo.value && !frmGroup.controls.queueCategory.value) {
+      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, '225');
     }
   }
 

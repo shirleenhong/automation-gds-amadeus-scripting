@@ -75,6 +75,12 @@ Enter Value
     Input Text    ${element}    ${value}
     Press Key    ${element}    \\09
     
+Input Value
+    [Arguments]    ${element}    ${value}
+    Double Click Element    ${element}
+    Press Key    ${element}    \\08
+    Input Text    ${element}    ${value}
+
 Close CA Corporate Test
     Unselect Frame
     Wait Until Element Is Not Visible    ${overlay_loader}    20
@@ -150,6 +156,7 @@ Click Reporting Panel
 Collapse Reporting Panel
     #Wait Until Element Is Visible    ${panel_reporting}    60
     Scroll Element Into View     ${panel_reporting}
+    Press Keys    none    Home
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Full Wrap PNR
     
@@ -338,7 +345,6 @@ Navigate From Full Wrap
     ...    ELSE IF    ${to_fees}    Click Fees Panel
     ...    ELSE IF    ${to_queue}    Navigate From Queue    ${destination_page}
     ...    ELSE IF    ${to_ticketing}       Navigate From Ticketing    ${destination_page}
-    ...    ELSE   Click Back To Main Menu
 
 Navigate From Payment
     [Arguments]    ${destination_page}
@@ -402,7 +408,7 @@ Navigate From Itinerary And Queue
     [Arguments]    ${destination_page}
     ${in_itinerary_and_queue}    Run Keyword And Return Status    Should Contain     ${itinerary_and_queue_pages}    ${current_page}
     Run Keyword If    "${in_itinerary_and_queue}" == "False"    Click Itinerary And Queue Panel
-    Run Keyword If    "${destination_page}" == "Follow-Up Queue S"    Click Follow-Up Queue Tab
+    Run Keyword If    "${destination_page}" == "Follow-Up Queue S"    Click Follow-Up Queue Tab S
     ...    ELSE IF    "${destination_page}" == "CWT Itinerary"    Click CWT Itinerary Tab
     ...    ELSE IF    "${destination_page}" == "TKTL Update For Aqua Ticketing"    Click TKTL Update For Aqua Ticketing Tab
        

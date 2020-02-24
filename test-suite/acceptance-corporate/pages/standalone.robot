@@ -123,7 +123,7 @@ Select Non-BSP Accounting Lines From The List
 Complete The PNR In Corporate Scripts
     Sleep    5
     Enter Cryptic Command    RT
-    Navigate To Page Reporting Remarks
+    Navigate To Page Full Wrap PNR
     Submit To PNR    close_corporate_test=no  
     
 Complete PNR And Send Cryptic For Invoice

@@ -758,6 +758,8 @@ Book ${numberOfAir} Active Air Segments
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}    0.5
     \    Enter Cryptic Command    SS${passenger_no}${class_${i}}${seat_${i}}
     \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}
+    \    ${final_destination}    Get Substring    ${air_seg_route_${i}}    3
+    \    Set Test Variable    ${final_destination}
     # \    ${passenger_no}    
       
 Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days

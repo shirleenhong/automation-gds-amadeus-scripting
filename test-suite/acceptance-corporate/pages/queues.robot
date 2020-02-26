@@ -6,7 +6,7 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${tab_queue}    css=#queue-link
+${tab_queue}    //span[contains(text(),'Follow-up Queue')]
 ${tab_ofc_doc}    css=#ofcDocumentation-link
 ${tab_client_queue}    //span[contains(text(), 'Client Queue')]
 ${select_transaction}   css=#typeTransaction
@@ -64,6 +64,12 @@ Click Follow-Up Queue Tab
     Wait Until Element Is Visible    ${tab_queue}     30
     Click Element    ${tab_queue} 
     Set Test Variable    ${current_page}   Follow-Up Queue
+    Set Test Variable    ${personal_queue_complete}    no
+    
+Click Follow-Up Queue Tab S
+    Wait Until Element Is Visible    ${tab_queue}     30
+    Click Element    ${tab_queue} 
+    Set Test Variable    ${current_page}   Follow-Up Queue S
     Set Test Variable    ${personal_queue_complete}    no
     
 Click Queue Placement Tab
@@ -150,6 +156,13 @@ Populate Personal Queue And Category In Standalone
     Submit To PNR    no
     Click Itinerary And Queue
     Enter Personal Queue And Category    1   1
+    [Teardown]    Take Screenshot
+    
+Populate Personal Queue For Rail In Standalone
+    Navigate To Page Follow-Up Queue S
+    #Finish PNR    queueing=yes
+    #Click Itinerary And Queue
+    Enter Personal Queue And Category    41   ${EMPTY}
     [Teardown]    Take Screenshot
 
 Verify Team Queue Is Not Displayed For Leisure On Demand

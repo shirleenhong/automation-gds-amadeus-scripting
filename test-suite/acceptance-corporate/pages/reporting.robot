@@ -31,6 +31,7 @@ ${input_waiver}    css=#waiver
 ${input_waiverAmount}    css=#waiverText
 ${form_segments}    //tbody[@formarrayname='segments']
 ${input_destination}    //input[@id='destinationList']
+${list_destination}     //datalist[@id='dynamicDestinationCode']
 ${input_car_savings_code_start}    //div[@ng-reflect-name='
 ${input_carSavings_checkBox_end}    ']//input[@name='chkIncluded']
 ${select_carSavings_reasonCode_end}    ']//select[@name='carReasonCode']
@@ -525,14 +526,14 @@ Select Default Value For Destination Code
     Navigate To Page Reporting Remarks
     ${is_destination_present}    Run Keyword And Return Status    Page Should Contain Element    ${input_destination} 
     Run Keyword If    "${is_destination_present}" == "True"   Enter Destination Code Default Value
-    Set Test Variable    ${destination_selected}    yes
+    Set Test Variable    ${destination_selected}    yes 
 
 Enter Destination Code Default Value        
     ${elements_count}    Get Element Count    ${input_destination} 
     Set Test Variable    ${elements_count}
         : FOR    ${destination_index}    IN RANGE    0    ${elements_count}
 	    \    ${destination_index}    Evaluate    ${destination_index} + 1
-	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    YUL
+	    \    Input Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${final_destination}
     
 Select Destination Code Values
 	[Arguments]    @{destination_code}

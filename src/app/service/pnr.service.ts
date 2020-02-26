@@ -1915,7 +1915,6 @@ export class PnrService {
         }
     }
 
-     
     getSegmentLineNo(tatooNumber: string): string {
         const tatoos: string[] = [];
         tatooNumber.split(',').forEach((e) => {

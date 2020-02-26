@@ -223,8 +223,9 @@ export class DDBService implements OnInit {
     ).then((response) => {
       if (response && response.ReasonCodeItems) {
         response.ReasonCodeItems.forEach((reasonJson) => {
-          if (reasonJson.ReasonCodeProductTypeDescriptions) {
-            reasons.push(new ReasonCode(reasonJson));
+          const reason = new ReasonCode(reasonJson);
+          if (reason.getDescription() !== '') {
+            reasons.push(reason);
           }
         });
       }
@@ -234,7 +235,10 @@ export class DDBService implements OnInit {
 
   async getReasonCodeByTypeId(ids: number[], productID: number): Promise<ReasonCode[]> {
     const reasonCodeList = [];
-    const languageCode = this.pnrService.getItineraryLanguage();
+    let languageCode = this.pnrService.getItineraryLanguage();
+    if (!languageCode) {
+      languageCode = 'en-GB';
+    }
 
     if (productID === undefined) {
       productID = 8; // ALL

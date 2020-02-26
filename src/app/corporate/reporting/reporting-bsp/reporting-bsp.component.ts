@@ -87,7 +87,7 @@ export class ReportingBSPComponent implements OnInit {
     tstNumber?: string
   ) {
     const items = this.bspGroup.get('fares') as FormArray;
-    if (Number(highFare) < Number(chargeFare)) {
+    if (isExchange || Number(highFare) < Number(chargeFare)) {
       highFare = chargeFare;
     }
 
@@ -225,10 +225,13 @@ export class ReportingBSPComponent implements OnInit {
     const segmentNo = segmentsInFare;
     const segmentLineNo = this.pnrService.getSegmentLineNo(segmentNo);
     let highFare: string;
+    const isExchange = this.isSegmentExchange(segmentsInFare);
 
-    for (const item of this.highFareSO) {
-      if (highFare === undefined || highFare === '') {
-        highFare = await this.getHighFare(this.insertSegment(item.ServiceOptionItemValue, segmentLineNo));
+    if (!isExchange) {
+      for (const item of this.highFareSO) {
+        if (highFare === undefined || highFare === '') {
+          highFare = await this.getHighFare(this.insertSegment(item.ServiceOptionItemValue, segmentLineNo));
+        }
       }
     }
     if (!highFare) {
@@ -247,7 +250,7 @@ export class ReportingBSPComponent implements OnInit {
       this.commonLowFare.set(index, lowFare);
     }
 
-    const isExchange = this.isSegmentExchange(segmentsInFare); /// get is Exchange
+    /// get is Exchange
 
     this.reasonCodes.push([]);
 

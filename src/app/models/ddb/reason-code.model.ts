@@ -24,14 +24,15 @@ export class ReasonCode {
     this.travelerFacingFlag = json.TravelerFacingFlag;
     this.reasonCodeProductTypeDescriptions = json.ReasonCodeProductTypeDescriptions;
     this.reasonCodeProductTypeDescription = json.ReasonCodeProductTypeDescription;
-    this.reasonCodeAlternativeDescription = json.reasonCodeAlternativeDescription;
+    this.reasonCodeAlternativeDescription = json.ReasonCodeAlternativeDescription;
   }
 
   getDescription() {
     let value = '';
-    if (this.reasonCodeProductTypeDescriptions) {
-      const key = Object.keys(this.reasonCodeProductTypeDescriptions)[0];
-      value = this.reasonCodeProductTypeDescriptions[key];
+    const desc = this.reasonCodeAlternativeDescription ? this.reasonCodeAlternativeDescription : this.reasonCodeProductTypeDescriptions;
+    if (desc) {
+      const key = Object.keys(desc)[0];
+      value = desc[key];
     }
     return value;
   }

@@ -26,10 +26,9 @@ export class ItineraryRemarkService implements OnInit {
 
   private getQueueMinder(controlname: string, queueno?: string, category?: string) {
     const queue = new QueuePlaceModel();
-    const oid = this.pnrService.extractOidFromBookRemark();
     const queuePlaceDescription = [
       // tslint:disable-next-line: object-literal-shorthand
-      { control: 'personalQueue', queueNo: queueno, pcc: oid, text: 'personal Queue', category: category },
+      { control: 'personalQueue', queueNo: queueno, pcc: '', text: 'personal Queue', category: category },
       { control: 'invoice', queueNo: '66', pcc: 'YTOWL210E', text: 'invoice', category: '1' },
       { control: 'itinerary', queueNo: '65', pcc: 'YTOWL210E', text: 'itinerary', category: '1' },
       { control: 'vip', queueNo: '62', pcc: 'PARWL2877', text: '', category: '' },

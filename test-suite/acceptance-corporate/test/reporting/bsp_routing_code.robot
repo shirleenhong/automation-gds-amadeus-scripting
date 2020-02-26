@@ -56,7 +56,6 @@ Verify That BSP Routing Code Is Written Correctly When Destination Is In Asia
     Fill Up Routing Code With Asia incl. India
     Verify Country Of Destination Is Mapped In The FS Remark
     
-    
 Verify That BSP Routing Code Is Written Correctly When Destination Is In Australia/New Zealand/Islands Of The Pacific
     [Tags]    us14703
     Create PNR With Active Air Segments For Corporate, With Flight Destination To Australia

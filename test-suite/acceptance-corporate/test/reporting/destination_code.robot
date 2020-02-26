@@ -4,7 +4,6 @@ Resource          ../../pages/base.robot
 Test Setup        Login To Amadeus Sell Connect Acceptance
 Test Teardown     Close All Browsers
 
-
 *** Variables ***
 ${test_file_name}    destination_code
 

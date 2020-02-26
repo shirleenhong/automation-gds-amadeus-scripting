@@ -13,6 +13,7 @@ ${dropdown_tkLine}    css=#selTK
 ${checkbox_verifyTicket}    css=#chkVerifyAck
 ${tab_tktLine}    //span[contains(text(), 'Ticketing Line')]
 ${tab_tktInstructions}    //span[contains(text(), 'Ticketing Instruction')]
+${tab_airlineCommission}    //span[contains(text(), 'Airline Commission')]
 ${list_segments}    //ul[@id='dropdown-basic']
 ${input_unticketedTst}    //input[@formcontrolname='tst']
 ${input_nonAirSegments}    //tab[@id='ticketingInstruction']//input[@formcontrolname='segment']
@@ -29,6 +30,11 @@ ${option_upgrade_yes}    //input[@ng-reflect-name='isUpgrade' and @ng-reflect-va
 ${option_upgrade_no}    //input[@ng-reflect-name='isUpgrade' and @ng-reflect-value='No']
 
 *** Keywords ***
+Click Airline Commission Tab
+    Wait Until Element Is Visible    ${tab_airlineCommission}    30
+    Click Element    ${tab_airlineCommission}
+    Set Test Variable    ${current_page}    Airline Commission
+
 Select Primary Approval Reason: ${primary_reason}
     Select From List By Label     ${select_primaryReason}    ${primary_reason}
 

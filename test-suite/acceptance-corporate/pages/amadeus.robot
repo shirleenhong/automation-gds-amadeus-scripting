@@ -109,6 +109,8 @@ Add Single BSP Segment And Store Fare
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Set Test Variable    ${final_destination}    ORD    
+
 
 Add Multiple BSP Segment And Store Fare
     Create 4 Test Dates
@@ -117,6 +119,7 @@ Add Multiple BSP Segment And Store Fare
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Set Test Variable    ${final_destination}    ORD  
     
 Add Multiple BSP Segment And Store Multiple Fares
     Create 5 Test Dates
@@ -125,6 +128,7 @@ Add Multiple BSP Segment And Store Multiple Fares
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Set Test Variable    ${final_destination}    CDG
 
 Add Multiple BSP Segments And Store Single Fare
     Create 2 Test Dates
@@ -132,6 +136,7 @@ Add Multiple BSP Segments And Store Single Fare
     Wait Until Element Is Visible    ${label_command_page}    180
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Set Test Variable    ${final_destination}    ORD  
 	
 Delete Fare and Itinerary
     @{gds_commands}    Create List   IR    RT    TTE/ALL    XI    RFCWTPTEST    ER
@@ -208,16 +213,19 @@ Add Passive Air Segment In The GDS With Airline Code ${airline_code}
     Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
     Sleep    2
+    Set Test Variable    ${final_destination}    ORD  
 
 Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
     @{gds_commands}    Create List    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Set Test Variable    ${final_destination}    CDG  
 
 Add Multiple Passive Air Segments In The GDS With Different Airline Codes
     @{gds_commands}    Create List    SS UA1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
+    Set Test Variable    ${final_destination}    CDG
 
 Verify Specific Remark Is Written In The PNR
     [Arguments]    ${expected_remark}    ${multi_line_remark}=False
@@ -738,18 +746,24 @@ Book ${numberOfAir} Passive Air Segments
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 11551440 / ABCDEFG
+    \    ${final_destination}    Get Substring    ${air_seg_route_${i}}    3
+    \    Set Test Variable    ${final_destination}
 
 Book ${numberOfAir} Passive Air Segments That Departs And Arrives From 6:00PM-6:00AM
     Create ${numberOfAir} Test Dates
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 02340436 / ABFGCDE
+    \    ${final_destination}    Get Substring    ${air_seg_route_${i}}    3
+    \    Set Test Variable    ${final_destination}
   
 Book ${numberOfAir} Passive Air Segments That Departs From 6:00PM-6:00AM
     Create ${numberOfAir} Test Dates
     : FOR    ${i}    IN RANGE   0   ${numberOfAir}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    SS ${airline_code_${i}}1074 Y ${test_date_${i}} ${air_seg_route_${i}} GK1 / 05590923 / EFGABCD
+    \    ${final_destination}    Get Substring    ${air_seg_route_${i}}    3
+    \    Set Test Variable    ${final_destination}
         
 Book ${numberOfAir} Active Air Segments
     Create ${numberOfAir} Test Dates
@@ -768,7 +782,9 @@ Book ${numberOfAir} Active Air Segments Less Than ${no_of_days} Days
     \    ${i}    Evaluate    ${i} + 1   
     \    Enter Cryptic Command    AN${test_date_${i}}${air_seg_route_${i}}/A${airline_code_${i}}    0.5
     \    Enter Cryptic Command    SS1${class_${i}}${seat_${i}}
-    \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}    
+    \    Run Keyword If    "${price_cmd_${i}}" != "None"    Enter Cryptic Command    ${price_cmd_${i}}
+    \    ${final_destination}    Get Substring    ${air_seg_route_${i}}    3
+    \    Set Test Variable    ${final_destination}    
     
 Add Other Remarks
     : FOR    ${i}    IN RANGE   0    99

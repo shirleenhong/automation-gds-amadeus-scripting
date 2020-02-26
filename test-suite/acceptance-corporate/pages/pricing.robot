@@ -7,7 +7,6 @@ Resource          base.robot
 
 *** Variables ***
 ${panel_pricing}    //div[@class='panel-title']//div[contains(text(), 'Pricing')]
-${tab_airfareCommission}    //span[contains(text(), 'Airline Commission')]
 ${div_segment_line}     //div[@formarrayname='airFares'][
 ${checkbox_segment}    ]//input[@name='chkIncluded']
 ${input_pricing_segment}    ]//input[@formcontrolname='segments']
@@ -24,11 +23,6 @@ ${tr_endorsement_start}   //tr[@ng-reflect-name='
 ${tr_endorsement_end}     ']
 
 *** Keywords ***
-Click Airfare Commission Tab
-    Wait Until Element Is Visible    ${tab_airfareCommission}    30
-    Click Element    ${tab_airfareCommission}
-    Set Test Variable    ${current_page}    Airfare Commission
-    
 Update Airfare Commision With ${value} ${type} For Segment ${segment_num}
     Navigate To Page Airfare Commission
     : FOR    ${i}     IN RANGE    1    9

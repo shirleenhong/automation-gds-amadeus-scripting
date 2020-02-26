@@ -1,11 +1,5 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
-Resource          ../../pages/reporting.robot
 Resource          ../../pages/base.robot
 Test Setup        Login To Amadeus Sell Connect Acceptance
 Test Teardown     Close All Browsers
@@ -40,7 +34,6 @@ Verify That Reporting Remark Are Written For Multiple Segments And TSTs
     
 Verify That Client Reporting Are Correct For Exchange PNR
     [Tags]    us10551
-    Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Single BSP Segment With TST
     Create Exchange PNR In The GDS
     Verify Client Reporting Fields For Exchange PNR

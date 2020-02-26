@@ -19,17 +19,21 @@ export class ItineraryRemarkService implements OnInit {
   addPersonalQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
+    } else if (frmGroup.controls.queueNo.value && !frmGroup.controls.queueCategory.value) {
+      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, '225');
     }
   }
 
   private getQueueMinder(controlname: string, queueno?: string, category?: string) {
     const queue = new QueuePlaceModel();
+    const oid = this.pnrService.extractOidFromBookRemark();
     const queuePlaceDescription = [
-      { control: 'personalQueue', queueNo: '', pcc: '', text: 'personal Queue', category: '' },
+      // tslint:disable-next-line: object-literal-shorthand
+      { control: 'personalQueue', queueNo: queueno, pcc: oid, text: 'personal Queue', category: category },
       { control: 'invoice', queueNo: '66', pcc: 'YTOWL210E', text: 'invoice', category: '1' },
       { control: 'itinerary', queueNo: '65', pcc: 'YTOWL210E', text: 'itinerary', category: '1' },
       { control: 'vip', queueNo: '62', pcc: 'PARWL2877', text: '', category: '' },
-      { control: 'pendingApproval', queueNo: '63', pcc: 'PARWL2877', text: 'pendingApproval', category: '1' },
+      { control: 'pendingApproval', queueNo: '40', pcc: 'YTOWL2106', text: 'pendingApproval', category: '225' },
       { control: 'confPending', queueNo: '66', pcc: '', text: '', category: '1' },
       { control: 'leadMgr', queueNo: '50', pcc: '', text: '', category: '227' },
       { control: 'groups', queueNo: '50', pcc: '', text: '', category: '228' },

@@ -20,7 +20,7 @@ export class ItineraryRemarkService implements OnInit {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
     } else if (frmGroup.controls.queueNo.value && !frmGroup.controls.queueCategory.value) {
-      this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, '225');
+      // this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, '1');
     }
   }
 

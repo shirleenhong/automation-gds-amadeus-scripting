@@ -59,7 +59,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact    Fare Rule    Associated Remarks
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab    Client Queue
-@{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions
+@{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions    Airline Commission
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
@@ -395,6 +395,7 @@ Navigate From Ticketing
     Run Keyword If    "${in_ticketing}" == "False"    Click Ticketing Panel
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
+    ...   ELSE IF    "${destination_page}" == "Airfare Commission"     Click Airline Commission Tab
 
 Navigate From Queue
     [Arguments]    ${destination_page}

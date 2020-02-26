@@ -16,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -266,6 +266,7 @@ export class RemarksManagerService {
       this.receiveFrom = 'CWTSCRIPT';
     }
     await smartScriptSession.send('RF' + this.receiveFrom);
+    await smartScriptSession.send('ER');
     await smartScriptSession.send('ER');
   }
 

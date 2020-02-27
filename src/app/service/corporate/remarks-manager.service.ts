@@ -241,8 +241,7 @@ export class RemarksManagerService {
       if (commandList && commandList.length > 0) {
         await this.sendCrypticCommands(commandList);
       }
-
-      this.endPnr();
+      await this.endPnr();
       this.refreshPnr();
     });
   }

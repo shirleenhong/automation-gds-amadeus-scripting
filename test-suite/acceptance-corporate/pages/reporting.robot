@@ -252,7 +252,7 @@ Verify That Client Reporting Remarks Are Written In The PNR For Single TST
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2
     Verify Specific Remark Is Written In The PNR    RM *FS/-A/S2
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ${actual_charge_fare}/LP-${actual_low_fare}/FS-A/FF-${actual_full_fare}/FS01/DE-ORD
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ${actual_charge_fare}/LP-${actual_low_fare}/FS-A/FF-${actual_full_fare}/FS01/DE-${final_destination}
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BF${actual_tst_currency_1}${actual_tst_fare_1}/S2
     Switch To Command Page
 
@@ -271,11 +271,11 @@ Verify That Client Reporting Remarks Are Written In The PNR For Multiple TSTs
     Verify Specific Remark Is Written In The PNR    RM *FF/-790.00/S5
     Verify Specific Remark Is Written In The PNR    RM *LP/-678.00/S5
     Verify Specific Remark Is Written In The PNR    RM *FS/-5/S5
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ${actual_charge_fare_1}/LP-300.00/FS-C/FF-4000.50/FS91/DE-YUL
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ${actual_charge_fare_1}/LP-300.00/FS-C/FF-4000.50/FS91/DE-${final_destination}
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BF${actual_tst_currency_1}${actual_tst_fare_1}/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT TKT2-FQ${actual_charge_fare_2}/LP-123.00/FS-K/FF-5123.50/FS91/DE-YUL
+    Verify Specific Remark Is Written In The PNR    RMT TKT2-FQ${actual_charge_fare_2}/LP-123.00/FS-K/FF-5123.50/FS91/DE-${final_destination}
     Verify Specific Remark Is Written In The PNR    RMT TKT2-BF${actual_tst_currency_2}${actual_tst_fare_2}/S4
-    Verify Specific Remark Is Written In The PNR    RMT TKT3-FQ${actual_charge_fare_3}/LP-678.00/FS-5/FF-790.00/FS91/DE-YUL
+    Verify Specific Remark Is Written In The PNR    RMT TKT3-FQ${actual_charge_fare_3}/LP-678.00/FS-5/FF-790.00/FS91/DE-${final_destination}
     Verify Specific Remark Is Written In The PNR    RMT TKT3-BF${actual_tst_currency_3}${actual_tst_fare_3}/S5
     Switch To Command Page
 
@@ -351,7 +351,7 @@ Verify That Non-BSP Client Reporting Remarks Are Written In The PNR For Multiple
     Verify Specific Remark Is Written In The PNR    RM *FF/-${actual_full_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *LP/-${actual_low_fare}/S2-3
     Verify Specific Remark Is Written In The PNR    RM *FS/-L/S2-3
-    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-L/FF-${actual_full_fare}/FS91/DE-
+    Verify Specific Remark Is Written In The PNR    RMT TKT1-FQ760.00/LP-${actual_low_fare}/FS-L/FF-${actual_full_fare}/FS91/DE-${final_destination}
     Verify Specific Remark Is Written In The PNR    RMT TKT1-BFCAD750.00/S2-3
 
 Verify That Updated Non-BSP Client Reporting Remarks Are Written In The PNR

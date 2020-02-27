@@ -13,9 +13,9 @@ export class ItineraryRemarkService implements OnInit {
   destination = [];
   leisureOnDemandOID: any = '';
 
-  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) { }
+  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) {}
 
-  async ngOnInit() { }
+  async ngOnInit() {}
   addPersonalQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
@@ -31,9 +31,9 @@ export class ItineraryRemarkService implements OnInit {
       { control: 'personalQueue', queueNo: queueno, pcc: '', text: 'personal Queue', category: category },
       { control: 'invoice', queueNo: '66', pcc: 'YTOWL210E', text: 'invoice', category: '1' },
       { control: 'itinerary', queueNo: '65', pcc: 'YTOWL210E', text: 'itinerary', category: '1' },
-      { control: 'vip', queueNo: '62', pcc: 'PARWL2877', text: '', category: '' },
-      { control: 'pendingApproval', queueNo: '40', pcc: 'YTOWL2106', text: 'pendingApproval', category: '225' },
-      { control: 'confPending', queueNo: '66', pcc: '', text: '', category: '1' },
+      { control: 'vip', queueNo: '40', pcc: '', text: '', category: '224' },
+      { control: 'pendingApproval', queueNo: '40', pcc: '', text: 'pendingApproval', category: '225' },
+      { control: 'confPending', queueNo: '40', pcc: '', text: '', category: '226' },
       { control: 'leadMgr', queueNo: '40', pcc: '', text: '', category: '227' },
       { control: 'groups', queueNo: '40', pcc: '', text: '', category: '228' },
       { control: 'urgentFollowUp', queueNo: '40', pcc: '', text: '', category: '229' },

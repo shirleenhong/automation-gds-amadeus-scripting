@@ -522,6 +522,7 @@ Click Add Supplier Remark
     Click Element    ${button_add_supplier_accounting_remark}
         
 Add Accounting Remark For Standalone Air Canada Pass Purchase
+    Handle SmartTool PopUp
     Open CA Corporate Test
     Click Airline Corporate Pass Purchase
     Click Add Supplier Remark

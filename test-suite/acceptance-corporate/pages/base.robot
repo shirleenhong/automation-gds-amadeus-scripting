@@ -327,7 +327,6 @@ Collapse Open Panel
 Navigate From Full Wrap
     [Arguments]    ${destination_page}
     ${to_payment}    Run Keyword And Return Status    Should Contain    ${payment_pages}    ${destination_page}
-    ${to_pricing}    Run Keyword And Return Status    Should Contain    ${pricing_pages}    ${destination_page}
     ${to_reporting}    Run Keyword And Return Status    Should Contain    ${reporting_pages}    ${destination_page}
     ${to_remarks}    Run Keyword And Return Status    Should Contain    ${remarks_pages}    ${destination_page}
     ${to_fees}    Run Keyword And Return Status    Should Contain    ${fees_pages}    ${destination_page}
@@ -341,7 +340,6 @@ Navigate From Full Wrap
     Set Test Variable    ${to_ticketing}
     Collapse Open Panel
     Run Keyword If    ${to_payment}    Navigate From Payment    ${destination_page}
-    ...    ELSE IF    ${to_pricing}    Navigate From Pricing    ${destination_page}
     ...    ELSE IF    ${to_reporting}    Navigate From Reporting    ${destination_page}
     ...    ELSE IF    ${to_remarks}   Navigate From Remarks    ${destination_page}
     ...    ELSE IF    ${to_fees}    Click Fees Panel
@@ -395,7 +393,7 @@ Navigate From Ticketing
     Run Keyword If    "${in_ticketing}" == "False"    Click Ticketing Panel
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
-    ...   ELSE IF    "${destination_page}" == "Airfare Commission"     Click Airline Commission Tab
+    ...   ELSE IF    "${destination_page}" == "AirlineCommission"     Click Airline Commission Tab
 
 Navigate From Queue
     [Arguments]    ${destination_page}

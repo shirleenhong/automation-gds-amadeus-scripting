@@ -1,14 +1,6 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
-Resource          ../../pages/amadeus.robot
 Resource          ../../pages/base.robot
-Resource          ../../pages/payment.robot
-Resource          ../../pages/reporting.robot
-Resource          ../../pages/ticketing.robot
 Test Setup       Login To Amadeus Sell Connect Acceptance 
 Test Teardown    Close All Browsers
 
@@ -45,3 +37,4 @@ Verify That For Pacific Coastal Pass Purchase Correct Fee And Remarks Are Writte
     Create PNR For Corporate, Pacific Coastal Pass Purchase
     Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
     Verify Accounting Remarks Per Airline Are Written Correctly
+    

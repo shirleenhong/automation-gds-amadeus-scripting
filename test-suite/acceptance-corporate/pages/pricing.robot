@@ -24,7 +24,7 @@ ${tr_endorsement_end}     ']
 
 *** Keywords ***
 Update Airfare Commision With ${value} ${type} For Segment ${segment_num}
-    Navigate To Page Airfare Commission
+    Navigate To Page Airline Commission
     : FOR    ${i}     IN RANGE    1    9
     \    ${exists}    Run Keyword And Return Status     Element Should Be Visible     ${div_segment_line}${i}${input_pricing_segment}
     \    Exit For Loop If    not ${exists}

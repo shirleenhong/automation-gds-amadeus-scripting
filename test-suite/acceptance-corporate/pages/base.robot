@@ -393,7 +393,7 @@ Navigate From Ticketing
     Run Keyword If    "${in_ticketing}" == "False"    Click Ticketing Panel
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
-    ...   ELSE IF    "${destination_page}" == "AirlineCommission"     Click Airline Commission Tab
+    ...   ELSE IF    "${destination_page}" == "Airline Commission"     Click Airline Commission Tab
 
 Navigate From Queue
     [Arguments]    ${destination_page}

@@ -13,9 +13,9 @@ export class ItineraryRemarkService implements OnInit {
   destination = [];
   leisureOnDemandOID: any = '';
 
-  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) {}
+  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) { }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
   addPersonalQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);
@@ -35,20 +35,20 @@ export class ItineraryRemarkService implements OnInit {
       { control: 'vip', queueNo: '62', pcc: 'PARWL2877', text: '', category: '' },
       { control: 'pendingApproval', queueNo: '40', pcc: 'YTOWL2106', text: 'pendingApproval', category: '225' },
       { control: 'confPending', queueNo: '66', pcc: '', text: '', category: '1' },
-      { control: 'leadMgr', queueNo: '50', pcc: '', text: '', category: '227' },
-      { control: 'groups', queueNo: '50', pcc: '', text: '', category: '228' },
-      { control: 'urgentFollowUp', queueNo: '50', pcc: '', text: '', category: '229' },
-      { control: 'specialServiceWaivers', queueNo: '50', pcc: '', text: '', category: '230' },
-      { control: 'cpmplexIntPending', queueNo: '50', pcc: '', text: '', category: '231' },
-      { control: 'splitTickets', queueNo: '50', pcc: '', text: '', category: '232' },
-      { control: 'clientOptions1', queueNo: '50', pcc: '', text: '', category: '233' },
-      { control: 'clientOptions2', queueNo: '50', pcc: '', text: '', category: '234' },
-      { control: 'acFlipghtPass', queueNo: '50', pcc: '', text: '', category: '235' },
-      { control: 'optional1', queueNo: '50', pcc: '', text: '', category: '236' },
-      { control: 'optional2', queueNo: '50', pcc: '', text: '', category: '237' },
-      { control: 'optional3', queueNo: '50', pcc: '', text: '', category: '238' },
-      { control: 'optional4', queueNo: '50', pcc: '', text: '', category: '239' },
-      { control: 'EMD', queueNo: '50', pcc: 'YTOWL2106 ', text: '', category: '221' }
+      { control: 'leadMgr', queueNo: '40', pcc: '', text: '', category: '227' },
+      { control: 'groups', queueNo: '40', pcc: '', text: '', category: '228' },
+      { control: 'urgentFollowUp', queueNo: '40', pcc: '', text: '', category: '229' },
+      { control: 'specialServiceWaivers', queueNo: '40', pcc: '', text: '', category: '230' },
+      { control: 'cpmplexIntPending', queueNo: '40', pcc: '', text: '', category: '231' },
+      { control: 'splitTickets', queueNo: '40', pcc: '', text: '', category: '232' },
+      { control: 'clientOptions1', queueNo: '40', pcc: '', text: '', category: '233' },
+      { control: 'clientOptions2', queueNo: '40', pcc: '', text: '', category: '234' },
+      { control: 'acFlipghtPass', queueNo: '40', pcc: '', text: '', category: '235' },
+      { control: 'optional1', queueNo: '40', pcc: '', text: '', category: '236' },
+      { control: 'optional2', queueNo: '40', pcc: '', text: '', category: '237' },
+      { control: 'optional3', queueNo: '40', pcc: '', text: '', category: '238' },
+      { control: 'optional4', queueNo: '40', pcc: '', text: '', category: '239' },
+      { control: 'EMD', queueNo: '40', pcc: 'YTOWL2106 ', text: '', category: '221' }
     ];
 
     const look = queuePlaceDescription.find((x) => x.control === controlname);

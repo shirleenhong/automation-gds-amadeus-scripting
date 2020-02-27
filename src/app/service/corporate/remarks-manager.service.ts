@@ -210,7 +210,16 @@ export class RemarksManagerService {
   ) {
     console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
-      await smartScriptSession.send(this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted));
+      //  await smartScriptSession.send(this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted));
+      const forDelete = this.combineForDeleteItems(pnrResponse.deleteCommand, additionalRemarksToBeDeleted);
+      await smartScriptSession.send(forDelete).then(async (response) => {
+        console.log(forDelete + ' = ' + response);
+        if (response.Response.indexOf('ENTRY NOT PROCESSED-PARALLEL') >= 0) {
+          await smartScriptSession.send('IR').then(() => {
+            smartScriptSession.send(forDelete);
+          });
+        }
+      });
     }
 
     if (passiveSegment) {

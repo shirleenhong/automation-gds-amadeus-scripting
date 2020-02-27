@@ -172,7 +172,7 @@
 		"FormOfPayment": "CASH",
 		"Client": "PX1",
 		"Udid50": "NORAM-ASSOCIATE-S",
-		"NumAirSegments": "3",
+		"NumAirSegments": "2",
 		"AirSegmentRoute1": "YQBORD",
 		"AirSegmentRoute2": "ORDYQB",
 		"AirSegmentRoute3": null,

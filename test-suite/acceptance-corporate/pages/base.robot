@@ -157,7 +157,7 @@ Click Reporting Panel
 Collapse Reporting Panel
     #Wait Until Element Is Visible    ${panel_reporting}    60
     Scroll Element Into View     ${panel_reporting}
-    Press Keys    none    Home
+    #Press Keys    none    HOME
     Click Element    ${panel_reporting}
     Set Test Variable    ${current_page}    Full Wrap PNR
     

@@ -128,7 +128,7 @@ Verify Expected Cancellation Remarks Are Written
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
     Run Keyword If    "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
     ...      Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL NR DUE TO IROP OR SKD CHG
-    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
+    Run Keyword If    "${follow_up}" == "Hotel, Car or Limo"    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Verify Expected Remarks Are Written In The PNR
     Verify Historical Remarks Are Written In The PNR
     
@@ -196,11 +196,13 @@ Cancel Hotel, Car Or Limo Segments
     Cancel All Segments
     Select From List By Label    ${list_followUp}     Hotel, Car or Limo
     Take Screenshot
+    Set Test Variable    ${follow_up}    Hotel, Car or Limo
     Set Test Variable    ${cancel_segments_complete}    yes
     
 Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Full
     Cancel All Segments
     Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
+    Set Test Variable    ${follow_up}    Non BSP Ticket Recredit
     Wait Until Element Is Visible    ${input_recredit_no}    10
     Click Element    ${input_recredit_no}
     Select From List By Label    ${select_recredit}    Full Re-Credit
@@ -213,6 +215,7 @@ Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Full
 Cancel Segment For Non BSP Ticket Credit, No Re-credit Fee and Re-credit is Partial
     Cancel All Segments
     Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
+    Set Test Variable    ${follow_up}    Non BSP Ticket Recredit
     Wait Until Element Is Visible    ${input_recredit_no}    10
     Click Element    ${input_recredit_no}
     Select From List By Label    ${select_recredit}    Partial Re-Credit
@@ -284,7 +287,9 @@ Click Cancel Segments Tab
 Fill Up NonBSP Ticket Credit With Default Values For PNRs With No U*14
     Cancel All Segments
     Select From List By Label    ${list_followUp}     Non BSP Ticket Recredit
+    Set Test Variable    ${follow_up}    Non BSP Ticket Recredit
     Wait Until Element Is Visible    ${list_followUp}    10
+    
     Enter Value    ${input_ticketNum}    1234567890
     
 Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When There Is No Re-credit Fee and Re-credit is Full
@@ -317,6 +322,7 @@ Fill Up BSP Ticket Keep For Future Travel
     Cancel All Segments
     Wait Until Element Is Visible    ${list_followUp}    30
     Select From List By Label    ${list_followUp}    BSP Keep Ticket for Future Travel/Cancel Segments Only
+    Set Test Variable    ${follow_up}    BSP Keep Ticket for Future Travel/Cancel Segments Only
     Take Screenshot
     
 Verify BSP Ticket Keep For Future Travel Remarks
@@ -335,6 +341,7 @@ Fill Up Non-BSP Ticket Keep For Future Travel With ${number_of} Ticket/s And Cou
     Wait Until Element Is Visible    ${list_followUp}    30
     Select From List By Label    ${list_followUp}    Non BSP Keep Ticket for Future Travel/Cancel Segments Only
     Enter ${number_of} Ticket And Coupon Numbers
+    Set Test Variable    ${follow_up}    Non BSP Keep Ticket for Future Travel/Cancel Segments Only
     [Teardown]    Take Screenshot
     
 Enter ${number} Ticket And Coupon Numbers
@@ -382,6 +389,7 @@ Cancel Segments For BSP Ticket Refund
     Cancel All Segments
     Wait Until Element Is Visible    ${list_followUp}    5
     Select From List By Label    ${list_followUp}    BSP Ticket Refund
+    Set Test Variable    ${follow_up}    BSP Ticket Refund
     Wait Until Element Is Visible    ${checkbox_refund_ticket}    5
     Click Element    ${checkbox_refund_ticket}
     Sleep    1
@@ -409,6 +417,7 @@ Cancel Segments For Non BSP Ticket ${refund_type} Refund
     Cancel All Segments
     Wait Until Element Is Visible    ${list_followUp}    5
     Select From List By Label    ${list_followUp}    Non BSP Ticket Refund
+    Set Test Variable    ${follow_up}    Non BSP Ticket Refund
     Wait Until Element Is Visible    ${list_partialFull}    5
     Select From List By Value    ${list_partialFull}    ${refund_type.lower()}
     Set Test Variable    ${supplier}     WSJ
@@ -462,6 +471,7 @@ Cancel Segment For BSP Void, ${reuse_value} Credit Card Authorization And Select
     Navigate To Page Cancel Segments
     Cancel All Segments
     Select From List By Value    ${list_followUp}    Void BSP
+    Set Test Variable    ${follow_up}    Void BSP
     Wait Until Element Is Visible    ${input_cFirstInitial}     10
     Enter Value    ${input_cFirstInitial}    C
     Enter Value    ${input_cLastName}    Amadeus
@@ -480,6 +490,7 @@ Cancel Segment For Non BSP Void, ${reverse_item}
     Navigate To Page Cancel Segments
     Cancel All Segments
     Select From List By Value    ${list_followUp}    Void Non BSP
+    Set Test Variable    ${follow_up}    Void Non BSP
     Wait Until Element Is Visible    ${input_cFirstInitial}     10
     Enter Value    ${input_cFirstInitial}    C
     Enter Value    ${input_cLastName}    Amadeus
@@ -522,6 +533,7 @@ Verify Agent Is Not Able To Cancel Segments WIth Unvoided Ticket
     Navigate To Page Cancel Segments
     Cancel All Segments
     Select From List By Value    ${list_followUp}    Void BSP
+    Set Test Variable    ${follow_up}    Void BSP
     Wait Until Element Is Visible    ${input_cFirstInitial}     10
     Enter Value    ${input_cFirstInitial}    C
     Enter Value    ${input_cLastName}    Amadeus

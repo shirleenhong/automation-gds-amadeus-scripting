@@ -195,8 +195,8 @@ Verify PNR Is Queued To Correct ${queue_type} Queue For Standalone
     [Teardown]    Take Screenshot
     
 Verify Correct Team Queue
-    Run Keyword If   "${team_queue}" == "VIP"     Element Should Contain    ${text_area_command}   PARWL2877${SPACE}${SPACE}${SPACE}${SPACE}062${SPACE}${SPACE}${SPACE}${SPACE}000
-    Run Keyword If   "${team_queue}" == "Pending Approval"     Element Should Contain    ${text_area_command}   PARWL2877${SPACE}${SPACE}${SPACE}${SPACE}063${SPACE}${SPACE}${SPACE}${SPACE}000
+    Run Keyword If   "${team_queue}" == "VIP"     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}040${SPACE}${SPACE}${SPACE}${SPACE}224
+    Run Keyword If   "${team_queue}" == "Pending Approval"     Element Should Contain    ${text_area_command}   YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}040${SPACE}${SPACE}${SPACE}${SPACE}225
     
 Verify Correct Transaction Type Queue
     Run Keyword If  "${transaction_type}" == "Itinerary"  Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}065${SPACE}${SPACE}${SPACE}${SPACE}001

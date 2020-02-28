@@ -507,6 +507,7 @@ Navigate From Fees
     Run Keyword If    "${destination_page}" == "Reporting Remarks"    Click Reporting Panel
     
 Click Remarks Panel
+    Scroll Element Into View     ${panel_reporting}
     Wait Until Element Is Visible    ${panel_remarks}    60
     Click Element    ${panel_remarks}
     Set Test Variable    ${current_page}    Remarks

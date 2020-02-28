@@ -135,7 +135,7 @@ Fill Up Ticketing Panel With Default Values
     Select Checkbox    ${checkbox_verifyTicket}
     Fill Up Ticketing Panel For ISSUE E-TICKET OR NON BSP TICKET
     ${exists}    Run Keyword And Return Status    Element Should Be Visible    ${checkbox_ignoreApproval}
-    Run Keyword If    ${exists} and "${ignored_approval}" != "True"      Click Element    ${checkbox_ignoreApproval}
+    Run Keyword If    ${exists} and "${ignored_approval}" == "False"      Click Element    ${checkbox_ignoreApproval}
     Set Test Variable    ${ticketing_complete}    yes
     [Teardown]    Take Screenshot
     

@@ -695,6 +695,7 @@ Create PNR For ${client_data}
     Run Keyword If    "${num_htl_segments}" != 0    Add ${num_htl_segments} Passive Hotel Segments
     Run Keyword If    "${num_limo_segments}" != 0    Add ${num_limo_segments} Limo Segments
     Run Keyword If    "${other_rmk_1}" != "None"    Add Other Remarks
+    Set Test Variable    ${final_destination}    YUL
     Handle Smart Tool PopUp
     Take Screenshot
     

@@ -224,10 +224,28 @@ values
     (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
     
 
-INSERT INTO ClientDefinedRuleGroupClientSubUnit
-    (ClientDefinedRuleGroupId, ClientSubUnitGuid, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
-VALUES( @CDRGId, '14:36E50F', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGId, '14:3A7532', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+IF NOT EXISTS(Select 1
+from ClientAccount
+where ClientAccountNumber='1' + @CFA)
+BEGIN
+
+    INSERT INTO [dbo].[ClientAccount]
+        ([ClientAccountNumber],[ClientAccountName],[SourceSystemCode],[GloryAccountName],[ClientMasterCode]
+        ,[EffectiveDate],[CountryCode],[LastModifiedTimestamp],[CreationTimestamp],[CreationUserIdentifier],[LastUpdateTimestamp],[LastUpdateUserIdentifier],[VersionNumber],[CFA])
+    VALUES
+        ('1C6R', 'CDN AMATEUR DIVING ASSOC', 'CA1', 'CDN AMATEUR DIVING ASSOC', 'CA-C6R', '2000-01-01 00:00:00.000', 'CA', @CreationTimeStamp, @CreationTimeStamp, 'GloryLink', null, null, 1, null)
+
+END
+
+INSERT INTO [ClientDefinedRuleGroupClientAccount]
+    (ClientDefinedRuleGroupId, ClientAccountNumber, SourceSystemCode, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
+VALUES
+    (@CDRGId, @CFA, 'CA1', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+
+-- INSERT INTO ClientDefinedRuleGroupClientSubUnit
+--     (ClientDefinedRuleGroupId, ClientSubUnitGuid, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
+-- VALUES( @CDRGId, '14:36E50F', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+--     ( @CDRGId, '14:3A7532', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
 

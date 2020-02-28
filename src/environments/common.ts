@@ -33,5 +33,6 @@ export const common = {
   businessRules: '/service/repo/powerbaseaws/BusinessRules',
   airSupplierCodes: '/service/repo/powerbaseaws/Supplier?SupplierCodes=',
   splunkLog: '/service/cbt-splunk-service/api/splunk/log',
+  clearCacheByName: '/service/repo/powerbaseaws/cache/deleteByName?cacheName=',
   LeisureVersionNumber: '20.2.4'
 };

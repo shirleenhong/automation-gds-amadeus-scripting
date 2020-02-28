@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { LoadingComponent } from '../shared/loading/loading.component';
@@ -125,9 +125,36 @@ export class CorporateComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.modalSubscribeOnClose();
     if (this.modalRef) {
       this.modalRef.hide();
     }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'C') {
+      this.showClearCache();
+    }
+  }
+
+  modalSubscribeOnClose() {
+    this.modalService.onHide.subscribe(async () => {
+      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+        if (this.modalRef.content.callerName === 'ClearCache' && this.modalRef.content.response === 'YES') {
+          this.ddbService.clearCache();
+        }
+      }
+    });
+  }
+
+  showClearCache() {
+    this.showMessage(
+      'Are you sure you want to Clear Cache DDB API? This will delete all the API Cache used by the script.',
+      MessageType.YesNo,
+      'Clear Cache',
+      'ClearCache'
+    );
   }
 
   showRule() {

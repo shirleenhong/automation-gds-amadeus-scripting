@@ -74,6 +74,27 @@ export class DDBService implements OnInit {
         }
       });
   }
+
+  async deleteRequest(serviceName: string) {
+    if (!environment.proxy) {
+      await this.getToken();
+    }
+    const hds = new HttpHeaders().append('Content', 'application/json');
+    return this.httpClient
+      .delete<any>(serviceName, {
+        headers: hds
+      })
+      .toPromise()
+      .catch((e) => {
+        // retry if unauthorized to get new token
+        if (e.status === 401 && this.retry < 3) {
+          this.retry += 1;
+          this.isTokenExpired = true;
+          this.getRequest(serviceName);
+        }
+      });
+  }
+
   async postRequest(serviceName: string, params?) {
     if (!environment.proxy) {
       await this.getToken();
@@ -291,25 +312,6 @@ export class DDBService implements OnInit {
   async getAllTravelPort() {
     return await this.getRequest(common.airTravelportsService);
   }
-
-  // async loadSupplierCodesFromPowerBase() {
-  //   await this.getRequest(common.supplierCodes).then(
-  //     (x) => {
-  //       this.supplierCodes = [];
-  //       x.SupplierList.forEach((s) => {
-  //         const supplier = {
-  //           type: s.ProductName === 'Car Hire' ? 'Car' : s.ProductName,
-  //           supplierCode: s.SupplierCode,
-  //           supplierName: s.SupplierName
-  //         };
-  //         this.supplierCodes.push(supplier);
-  //       });
-  //     },
-  //     (err) => {
-  //       console.log(JSON.stringify(err));
-  //     }
-  //   );
-  // }
 
   getSupplierCodes(type?: string) {
     if (this.supplierCodes.length === 0) {
@@ -543,5 +545,27 @@ export class DDBService implements OnInit {
     });
     const params = '?sourceType=' + source + '&jsonData=' + encodeURIComponent(JSON.stringify(jsonObject));
     return this.postRequest(common.splunkLog + params);
+  }
+
+  clearCache() {
+    const cacheNames = [
+      'spExpress_GetReasonCodes_v5',
+      'spCCRAPI_GetClientDefinedBusinessRules_v1.sql',
+      'spPowerBaseAPI_SelectServiceOptions_v4',
+      'SelectConfigurationParameter',
+      'SelectReasonCodes.sql',
+      'spExpress_GetAirportList_v2',
+      'spPowerBaseAPI_SelectPolicyAirMissedSavingsThresholdDetails_v2',
+      'SelectPolicyAirMissedSavingsThresholdDetails.sql',
+      'spPowerBaseAPI_SelectPolicyAirMissedSavingsThresholdGroupItems_v1',
+      'spCCRAPI_SelectPolicyAirMissedSavingsThresholdDetails_v1',
+      'spPowerBaseAPI_SelectPolicyAirMissedSavingsThresholdAdvice_v1',
+      'SelectPolicyAirMissedSavingsThresholdAdvice.sql',
+      'SelectApproverDetails.sql',
+      'SelectApproverItemDetails.sql'
+    ];
+    cacheNames.forEach((name) => {
+      this.deleteRequest(common.clearCacheByName + name);
+    });
   }
 }

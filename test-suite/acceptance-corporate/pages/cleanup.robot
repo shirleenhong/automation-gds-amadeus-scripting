@@ -32,6 +32,7 @@ Verify That Cleanup PNR Remarks Are Written In The PNR For When Concur OBT Was B
     Verify Specific Remark Is Not Written In The PNR    RM *MAC/-TEST5
     Verify Specific Remark Is Not Written In The PNR    RM *SFC
     Verify Specific Remark Is Not Written In The PNR    RM *FEE
+    Verify Specific Remark Is Not Written In The PNR    RMF SUPFEE1-ATI
 
 Verify That Cleanup PNR Remarks Are Written In The PNR For When Concur OBT Was Not Yet Booked And Completed
     Sleep    5
@@ -59,3 +60,4 @@ Verify That Cleanup PNR Remarks Are Written In The PNR For When Concur OBT Was N
     Verify Specific Remark Is Not Written In The PNR    RM *SFC
     Verify Specific Remark Is Not Written In The PNR    RM *FEE
     Verify Specific Remark Is Not Written In The PNR    RM *AGENT CLAIMED
+    Verify Specific Remark Is Not Written In The PNR    RMF SUPFEE1-ATI

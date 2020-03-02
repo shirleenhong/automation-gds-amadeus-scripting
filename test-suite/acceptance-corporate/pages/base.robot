@@ -79,7 +79,7 @@ Input Value
     [Arguments]    ${element}    ${value}
     Double Click Element    ${element}
     Press Key    ${element}    \\08
-    Input Text    ${element}    ${value}
+    Input Text    ${element}    ${value} 
 
 Close CA Corporate Test
     Unselect Frame

@@ -1038,7 +1038,7 @@ Select Reason Why Booked Less Than 14 Days: ${reason}
     Select From List By Label   ${list_whyLessThanDays}    ${reason}
     Take Screenshot
     
-Fill Up Udid Fielads For Client Gilead
+Fill Up Udid Fields For Client Gilead
     Navigate To Page UDID
     Select From List By Label   ${list_noHotelReason}    Booked Own Hotel
     Enter Value    ${input_uniqueTravelerId}    TVL444

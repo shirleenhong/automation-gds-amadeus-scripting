@@ -73,6 +73,7 @@ Fill Up Cancel Segment With Default Values
     Set Test Variable    ${cancel_segments_complete}    yes
     Set Test Variable    ${cancel_all}    yes
     Set Test Variable    ${actual_reason}    ${EMPTY}
+    Set Test Variable    ${follow_up}    ${EMPTY}
     [Teardown]    Take Screenshot
 
 Cancel All Segments
@@ -87,6 +88,7 @@ Cancel All Segments
     Set Test Variable   ${cancel_all}    yes
     Set Test Variable    ${cancel_segments_complete}    yes
     Set Test Variable    ${actual_reason}    ${EMPTY}
+    Set Test Variable    ${follow_up}    ${EMPTY}
     [Teardown]    Take Screenshot
 
 Verify Cancel Segment Fields Are Defaulted For PNRs Booked Via Concur
@@ -100,6 +102,7 @@ Verify Cancel Segment Fields Are Defaulted For PNRs Booked Via Concur
     Set Test Variable   ${cancel_all}    yes
     Set Test Variable    ${cancel_segments_complete}    yes
     Set Test Variable    ${actual_reason}    ${EMPTY}
+    Set Test Variable    ${follow_up}    ${EMPTY}
     [Teardown]    Take Screenshot
     
 Verify Cancel Segment Fields Are Defaulted For PNRs Voided And Booked Via Concur
@@ -116,6 +119,7 @@ Verify Cancel Segment Fields Are Defaulted For PNRs Voided And Booked Via Concur
     Set Test Variable   ${cancel_all}    yes
     Set Test Variable    ${cancel_segments_complete}    yes
     Set Test Variable    ${actual_reason}    ${EMPTY}
+    Set Test Variable    ${follow_up}    ${EMPTY}
     [Teardown]    Take Screenshot
     
 Verify Expected Cancellation Remarks Are Written
@@ -162,6 +166,7 @@ Cancel Segments ${segments} Via UI
     Set Test Variable   ${cancel_all}    no
     Set Test Variable    ${actual_reason}    ${EMPTY}
     Set Test Variable    ${cancel_segments_complete}    yes
+    Set Test Variable    ${follow_up}    ${EMPTY}
     Take Screenshot
     
 Tick Checkbox For Segments ${segments}
@@ -173,6 +178,7 @@ Tick Checkbox For Segments ${segments}
 Cancel UA Segment With Reason ${reason}
     Cancel All Segments
     Select UA Reason For Cancel: ${reason}
+    Set Test Variable    ${follow_up}    ${EMPTY}
     Take Screenshot
 
 Select UA Reason For Cancel: ${reason}
@@ -191,6 +197,7 @@ Cancel AC Segment With Reason ${reason}
     Select AC Reason For Cancel: ${reason}
     Take Screenshot
     Set Test Variable    ${cancel_segments_complete}    yes
+    Set Test Variable    ${follow_up}    ${EMPTY}
     
 Cancel Hotel, Car Or Limo Segments
     Cancel All Segments

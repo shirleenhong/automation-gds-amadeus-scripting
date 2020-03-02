@@ -327,7 +327,7 @@ Fill Up BSP Ticket Keep For Future Travel
     
 Verify BSP Ticket Keep For Future Travel Remarks
     Assign Current Date
-    Finish PNR
+    Finish PNR   queueing=yes       
     Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Verify Specific Remark Is Written In The PNR    RM AQUA CHG-RM*BB/-123456
     Verify Specific Remark Is Written In The PNR    RM *BB/-123456

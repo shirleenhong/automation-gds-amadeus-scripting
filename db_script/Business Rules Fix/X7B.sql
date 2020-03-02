@@ -1,9 +1,6 @@
-USE Desktop_Prod
-
+------------------------------------------------------------------------------
 BEGIN TRAN
 BEGIN TRY
-
-
 DECLARE @CreationUserIdentifier nvarchar(200)
 DECLARE @CreationTimestamp DATETIME = GETUTCDATE()
 DECLARE @ClientSubUnitGuid as varchar(50)
@@ -28,40 +25,25 @@ DECLARE @AnyTripType as int
 DECLARE @bid AS int
 DECLARE @logicitemid AS int
 DECLARE @resultitemid AS int
-DECLARE @shouldmaplogic as bit
-DECLARE @shouldmapresult as bit
-DECLARE @WFId_RBPR_NB as int
-DECLARE @WFId_RBP_NB as int
-DECLARE @WFId_RBPR_AB as int
-DECLARE @WFId_RBP_AB as int
+declare @shouldmaplogic as bit
+declare @shouldmapresult as bit
+Declare @WFId_RBPR_NB as int
+Declare @WFId_RBP_NB as int
+Declare @WFId_RBPR_AB as int
+Declare @WFId_RBP_AB as int
 DECLARE @WFId_WFPR_AB as int
 DECLARE @WFId_WFP_AB as int
 DECLARE @CORP_LOAD_FULLWRAP as int
 
 DECLARE @IS AS int
-DECLARE @ISNOT as int
-DECLARE @CONTAINS as int
-DECLARE @NOTCONTAINS as int
-DECLARE @IN as int
-DECLARE @NOTIN as int
-DECLARE @GreaterThanEqual as int
-DECLARE @LessThanEqual as int 
-DECLARE @LessThan as int 
-DECLARE @GreaterThan as int
-
-DECLARE  @bid2 as int 
-DECLARE  @bid3 as int 
-DECLARE  @bid4 as int
-DECLARE  @bid5 as int 
-DECLARE  @bid6 as int 
-DECLARE  @bid7 as int
-
-DECLARE @CFA as varchar(5) = 'C6R'
-
-set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15245'
+declare @ISNOT as int
+declare @CONTAINS as int
+declare @NOTCONTAINS as int
+DECLARE @CFA as varchar(5) = 'X7B'
+set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250'
 set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 1'
-
-set @ClientSubUnitGuid = 'A:FA177'
+PRINT 'START ' + @CDRGRoupName 
+set @ClientSubUnitGuid = '14:3A7532'
 set @TravellerTypeGuid = ''
 set @ClientAccountGuid=''
 set @SourceSystemCode = 'CA1'
@@ -78,6 +60,8 @@ DELETE FROM ClientDefinedRuleLogicItem where CreationUserIdentifier= @CreationUs
 DELETE FROM ClientDefinedRuleGroupTrigger where CreationUserIdentifier= @CreationUserIdentifier
 DELETE FROM ClientDefinedRuleGroupClientSubUnit where CreationUserIdentifier= @CreationUserIdentifier
 DELETE FROM ClientDefinedRuleGroup where CreationUserIdentifier= @CreationUserIdentifier
+
+
 
 
 --dbo.ClientDefinedRuleGroup
@@ -114,7 +98,8 @@ SELECT @NOTCONTAINS = ClientDefinedRuleRelationalOperatorid
 FROM ClientDefinedRuleRelationalOperator
 where RelationalOperatorName = 'NOT CONTAINS'
 
-
+DECLARE @IN as int
+DECLARE @NOTIN as int
 SELECT @NOTIN = ClientDefinedRuleRelationalOperatorid
 FROM ClientDefinedRuleRelationalOperator
 where RelationalOperatorName = 'NOT IN'
@@ -122,6 +107,13 @@ where RelationalOperatorName = 'NOT IN'
 SELECT @IN = ClientDefinedRuleRelationalOperatorid
 FROM ClientDefinedRuleRelationalOperator
 where RelationalOperatorName = 'IN'
+
+
+
+DECLARE @GreaterThanEqual as int
+DECLARE @LessThanEqual as int 
+DECLARE @LessThan as int 
+DECLARE @GreaterThan as int
 
 SELECT @GreaterThanEqual = ClientDefinedRuleRelationalOperatorid
 FROM ClientDefinedRuleRelationalOperator
@@ -146,7 +138,17 @@ VALUES
     ( @CDRGId, @CORP_LOAD_FULLWRAP, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
+DECLARE  @bid2 as int 
+DECLARE  @bid3 as int 
+DECLARE  @bid4 as int
+DECLARE  @bid5 as int 
+DECLARE  @bid6 as int 
+DECLARE  @bid7 as int
 
+
+
+
+--ClientDefinedRuleLogicItem
 SET @bid=null; 
 SELECT @bid=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
@@ -160,17 +162,13 @@ WHERE BusinessEntityName='PNR_COUNT_DEPARTURE_DATE_FROM_TODAY';
 SET @bid3=null; 
 SELECT @bid3=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_AIR_SEGMENT_ROUTE_CODE';  
+WHERE BusinessEntityName='PNR_UDID50';  
 
 SET @bid4=null; 
 SELECT @bid4=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_DP';  
+WHERE BusinessEntityName='PNR_SEGMENT_TYPES_IN_PNR';  
 
-SET @bid5=null; 
-SELECT @bid5=ClientDefinedRuleBusinessEntityID
-FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_AM_REMARKS_EXIST';  
 
 SET @logicitemid = null; 
 
@@ -178,20 +176,17 @@ SET @logicitemid = null;
     INSERT INTO dbo.ClientDefinedRuleLogicItem
     ( ClientDefinedRuleLogicItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleRelationalOperatorId,ClientDefinedRuleLogicItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
-    ( @CDRGRoupName, @bid, @IN, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, @CONTAINS, 'CAMO', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	
+    ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)    
   
-    SET @logicitemid = SCOPE_IDENTITY() - 2
+    SET @logicitemid = SCOPE_IDENTITY() - 1
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic
     (ClientDefinedRuleLogicItemId, ClientDefinedRuleGroupId, LogicSequenceNumber, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 values
-    (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@logicitemid + 2, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-
-
+    (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    
+    
 SELECT @bid2= ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
 WHERE BusinessEntityName='UI_DISPLAY_CONTAINER'; 
@@ -199,20 +194,24 @@ WHERE BusinessEntityName='UI_DISPLAY_CONTAINER';
 
 SELECT @bid3= ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_ADD_CRYPTIC_COMMAND'; 
+WHERE BusinessEntityName='UI_ADD_CONTROL'; 
 
 SELECT @bid4 =  ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_DELETE_AM_REMARKS'; 
+WHERE BusinessEntityName='PNR_ADD_Remark'; 
+
 
  
     INSERT INTO dbo.ClientDefinedRuleResultItem
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
-    ( @CDRGRoupName, @bid2, 'SUBMIT', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, 'AM//CY-CLUB DE PLONGEON CAMO/NA-AARON DZIVER/A1-1000 EMILE-JOURNAULT/ZP-H2M 2E7/CI-MONTREAL/ST-QC/CO-CA', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, '', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	
+
+    ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid3, '{ "type": "text", "label": "Business Class Approver", "name": "businessClassApprover", "maxLength": "35", "required": "false" }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid4, 'RM* U9/-[UI_FORM_businessClassApprover]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+
+
+
 SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
 
 
@@ -222,8 +221,7 @@ values
     (@resultitemid + 1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 2, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-    
-
+	
 IF NOT EXISTS(Select 1
 from ClientAccount
 where ClientAccountNumber='1' + @CFA)
@@ -233,7 +231,7 @@ BEGIN
         ([ClientAccountNumber],[ClientAccountName],[SourceSystemCode],[GloryAccountName],[ClientMasterCode]
         ,[EffectiveDate],[CountryCode],[LastModifiedTimestamp],[CreationTimestamp],[CreationUserIdentifier],[LastUpdateTimestamp],[LastUpdateUserIdentifier],[VersionNumber],[CFA])
     VALUES
-        ('1C6R', 'CDN AMATEUR DIVING ASSOC', 'CA1', 'CDN AMATEUR DIVING ASSOC', 'CA-C6R', '2000-01-01 00:00:00.000', 'CA', @CreationTimeStamp, @CreationTimeStamp, 'GloryLink', null, null, 1, null)
+        ('1' + @CFA, 'Nvent', 'CA1', 'Nvent', 'CA-' + @CFA, '2000-01-01 00:00:00.000', 'CA', @CreationTimeStamp, @CreationTimeStamp, @CreationUserIdentifier, null, null, 1, null)
 
 END
 
@@ -242,12 +240,7 @@ INSERT INTO [ClientDefinedRuleGroupClientAccount]
 VALUES
     (@CDRGId, @CFA, 'CA1', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
--- INSERT INTO ClientDefinedRuleGroupClientSubUnit
---     (ClientDefinedRuleGroupId, ClientSubUnitGuid, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
--- VALUES( @CDRGId, '14:36E50F', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
---     ( @CDRGId, '14:3A7532', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-
-
+SELECT @CDRGID, @CDRGRoupName , @resultitemid
 
 COMMIT TRAN
 END TRY
@@ -257,9 +250,5 @@ DECLARE @ErrorMessage NVARCHAR(4000);
 SELECT @ErrorMessage=ERROR_MESSAGE()
 RAISERROR(@ErrorMessage, 10, 1);
 END CATCH
-
-GO
-
-
-
-
+go
+------------------------------------------------------------------------------

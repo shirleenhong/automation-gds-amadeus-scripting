@@ -87,7 +87,7 @@ Verify That UDID 17 And UDID 18 Remark Should Be Written In The PNR For W7B Clie
     Enter 2 Lowest Coach Fare And Approver Name For CDR per TKT
     Verify That The UDID 17 And UDID 18 Remark Is Written In The PNR For W7B With Multiple Active Air Segments
 
-Verify That UUDID 17 And UDID 18 Remark Should Not Be Written In The PNR For W7B Client When There's No Air Segment Booked And Ticketed In The PNR
+Verify That UDID 17 And UDID 18 Remark Should Not Be Written In The PNR For W7B Client When There's No Air Segment Booked And Ticketed In The PNR
     [Tags]    us15251    us17189
     Create PNR With Passive Air Segments For Client W7B, No Active Air Segments
     Verify That UI Should Not Appear For Client W7B When There Is No TSTs

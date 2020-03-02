@@ -539,7 +539,7 @@ Select Destination Code Values
 	[Arguments]    @{destination_code}
 	Set Test Variable    ${destination_index}    1
 	: FOR    ${destination_code}    IN    @{destination_code}
-	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
+	    \    Input Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
 		\    ${destination_index}    Evaluate    ${destination_index} + 1
 	
 Populate Destination Code Fields For ${tst_no} TST

@@ -317,7 +317,7 @@ Verify PNR Approval Is Processed Correctly
     Run Keyword If    "${queue_approval}" == "Yes"    Verify PNR Is Queued For Approval
     ...    ELSE    Verify PNR Is Not Queued For Approval
     Run Keyword If    "${expected_remark_1}" != "None" and "${secondary_approval_reason}" == "Awaiting ECM Approval"    Verify Specific Remark Is Written In The PNR   ${expected_remark_1}${date_today}
-    ...    ELSE    Run Keyword If    "${expected_remark_1}" != "None"    Verify Expected Remarks Are Written In The PNR    True    
+    ...    ELSE    Run Keyword If    "${expected_remark_1}" != "None"    Verify Expected Remarks Are Written In The PNR  
     Run Keyword If    "${onhold_rmk}" == "Yes"    Verify Specific Remark Is Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD    ELSE   Verify Specific Remark Is Not Written In The PNR   TK TL${current_date}/YTOWL2106/Q8C1-ONHOLD 
     Run Keyword If    "${queue_tkt}" == "Yes"    Verify Specific Remark Is Written In The PNR   RMQ YTOWL2107/70C1
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR   RMQ YTOWL2107/70C1

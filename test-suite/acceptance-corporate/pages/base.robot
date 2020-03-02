@@ -445,7 +445,7 @@ Submit To PNR
     Run Keyword If    "${destination_selected}" == "no"    Select Default Value For Destination Code 
     Run Keyword If    "${ticketing_complete}" == "no"     Fill Up Ticketing Panel With Default Values
     Run Keyword If    "${visa_complete}" == "no"    Fill Up Visa And Passport Fields With Default Values
-    Run Keyword If    "${actual_counselor_identity}" == "OSC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
+    Run Keyword If    "${actual_counselor_identity}" == "OFC" and "${ofc_documentation_complete}" == "no"    Fill Up OFC Documentation And Queue With Default Values
     Fill Up UDID Field As Needed
     Collapse Open Panel
     Click Submit To PNR    ${close_corporate_test}    ${queueing}        
@@ -751,8 +751,8 @@ Complete The PNR In Full Wrap
 Click IRD Rate Request
     Wait Until Page Contains Element    ${button_ird_rate_request}      180
     Click Element     ${button_ird_rate_request} 
-    #Wait Until Element Is Visible    ${message_loadingPnr}    180
-    #Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
     #Wait Until Element Is Visible    ${button_submit_pnr}    30
     Wait For Script To Complete
     Set Test Variable    ${current_page}    IRD Rate Request
@@ -763,8 +763,8 @@ Submit IRD Request
     #Wait Until Page Contains Element    ${button_submit_pnr}    30
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
-    #Wait Until Element Is Not Visible     ${message_updatingPnr}    180
-    #Wait Until Element Is Visible    ${button_full_wrap}    180
+    Wait Until Element Is Not Visible     ${message_updatingPnr}    180
+    Wait Until Element Is Visible    ${button_full_wrap}    180
     Wait For Script To Complete
     Set Test Variable    ${current_page}     CWT Corporate 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test

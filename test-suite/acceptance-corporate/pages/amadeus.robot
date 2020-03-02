@@ -572,6 +572,7 @@ Add ${number_of_segments} Passive Hotel Segments
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1    0.5
+    Set Test Variable    ${final_destination}    ORD
 
 Add ${number_of_segments} Active Hotel Segments In ${city_code}
     Create ${number_of_segments} Test Dates
@@ -582,6 +583,7 @@ Add ${number_of_segments} Active Hotel Segments In ${city_code}
     \    Enter Cryptic Command    HP1
     \    Enter Cryptic Command    HS/G-CCVI4012888888881881EXP1221
     \    Verify Hotel Segment Is Booked
+    Set Test Variable    ${final_destination}    ORD
     
 Verify Hotel Segment Is Booked
     Element Should Not Contain    ${text_area_command}    UNABLE TO PROCESS - CONTACT HELP DESK
@@ -592,6 +594,7 @@ Add ${number_of_segments} Limo Segments
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    RU1AHK1DXB${test_date_${i}}-/TYP-LIM/SUN-EXECUTIVE/SUC-YY/STP-DXB AIRPORT/SD-${test_date_${i}}/ST-1010/EC-DXB/ED-${test_date_${i}}/ET-1300/CF-12345    0.5          
+    Set Test Variable    ${final_destination}    ORD
 
 Add Passenger Names
     :FOR    ${i}     IN RANGE    1    99
@@ -606,12 +609,14 @@ Add ${number_of_segments} Car Segments
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    CU1AHK1FRA${test_date_${i}}-${test_date_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${test_date_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1    0.5       
+    Set Test Variable    ${final_destination}    ORD
 
 Add ${number_of_segments} Rail Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
     \    Enter Cryptic Command    RU1AHK1CUN${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345    0.5
+    Set Test Variable    ${final_destination}    ORD
     
 Create PNR With Passive Air Segments For ${client_data}
     Get Test Data From Json    ${CURDIR}${/}test_data/${test_file_name}_test_data    ${client_data}
@@ -861,6 +866,7 @@ Add ${number_of_segments} Rail Segments With ${route} City Codes
     \    Run Keyword If    "${route}"== "Domestic"   Enter Cryptic Command    RU1AHK1YYZ${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     \    Run Keyword If    "${route}"== "Transborder"   Enter Cryptic Command    RU1AHK1ORD${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
     \    Run Keyword If    "${route}"== "International"   Enter Cryptic Command    RU1AHK1LHR${test_date_${i}}-/TYP-TRN/SUN-NS/SUC-ZZ/SC-KEL/SD-${test_date_${i}}/ST-1800/ED-${test_date_${i}}/ET-0800/CF-12345
+    Set Test Variable    ${final_destination}    ORD
 
 Get Base Fare For ${no_of_tst} TST
     Switch To Graphic Mode

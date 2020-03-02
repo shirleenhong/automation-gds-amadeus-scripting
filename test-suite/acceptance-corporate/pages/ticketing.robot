@@ -170,7 +170,7 @@ Fill Up ${tktl_panel} Panel For ${selected_aqua_tkLine}
     Run Keyword If    "${tktl_panel}" == "Ticketing"    Navigate To Page Ticketing Line
     ...    ELSE IF    "${tktl_panel}" == "Update Tktl"    Navigate To Page TKTL Update For Aqua Ticketing
     Assign Current Date
-    Enter Value    ${input_ticketingDate}    05052020
+    Enter Value    ${input_ticketingDate}    ${current_month}${current_day}${current_year}
     Run Keyword If    "${selected_aqua_tkLine}" == "ISSUE E-TICKET OR NON BSP TICKET"    Select From List By Label    ${dropdown_tkLine}    ISSUE E-TICKET OR NON BSP TICKET
     Run Keyword If    "${selected_aqua_tkLine}" == "INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY"    Select From List By Label    ${dropdown_tkLine}    INVOICE HOTEL ONLY/CAR ONLY/LIMO ONLY
     Run Keyword If    "${selected_aqua_tkLine}" == "CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE"    Select From List By Label    ${dropdown_tkLine}    CHANGED PNR-AFTER TICKETING/UPDATE MATRIX-NO FEE
@@ -326,7 +326,7 @@ Verify PNR Approval Is Processed Correctly
 Verify PNR Is Queued For Approval
     Open Command Page
     Enter Cryptic Command    RTQ 
-    Run Keyword If    "${cfa}" != "D7V"    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}007    
+    Run Keyword If    "${cfa}" != "D7V"    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}001${SPACE}${SPACE}${SPACE}${SPACE}006    
     ...    ELSE    Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL28AN${SPACE}${SPACE}${SPACE}${SPACE}000${SPACE}${SPACE}${SPACE}${SPACE}096   
     Run Keyword If    "${cfa}" == "D7V"    Run Keyword And Continue On Failure    Element Should Not Contain    ${text_area_command}    YTOWL2107${SPACE}${SPACE}${SPACE}${SPACE}041${SPACE}${SPACE}${SPACE}${SPACE}096
     [Teardown]    Take Screenshot

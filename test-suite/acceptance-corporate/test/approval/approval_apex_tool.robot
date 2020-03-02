@@ -1,9 +1,5 @@
 *** Settings ***
 Force Tags        corp
-Library           String
-Library           SeleniumLibrary
-Library           Collections
-Library           Screenshot
 Resource          ../../pages/base.robot
 Test Setup        Login To Amadeus Sell Connect Acceptance
 Test Teardown    Close All Browsers
@@ -32,7 +28,7 @@ Verify That PNRs For Client Apex Tool Can Skip Approval Process
     
 Very That Car/Hotel Only PNRs For Client Apex Tool Do Not Go Thru Approval Process
     [Tags]    us16550    not_ready
-    Create PNR With Active Air Segments For Client Apex Tool With Car & Hotel Only Segments
+    Create PNR For Client Apex Tool With Car & Hotel Only Segments
     Fill Up Approval Fields
     Verify PNR Approval Is Processed Correctly
     

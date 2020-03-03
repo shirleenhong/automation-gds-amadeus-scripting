@@ -18,7 +18,7 @@ export class CorpCancelRemarkService {
     private remarkHelper: RemarkHelper,
     private queService: AmadeusQueueService,
     private pnrService: PnrService
-  ) {}
+  ) { }
 
   WriteNonBspTicketCredit(group: FormGroup) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');

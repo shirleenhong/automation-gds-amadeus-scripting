@@ -1,0 +1,80 @@
+<form [formGroup]="accessQueueForm">
+  <div class="row form-group">
+    <label for="queueOption" class="col-form-label col-sm-3">Select Access Queue Option:</label>
+    <select class="form-control col-sm-4" autofocus id="queueOption" name="queueOption" formControlName="queueOption">
+      <option *ngFor="let item of queueOptionList" [value]="item.itemValue">
+        {{ item.itemText }}
+      </option>
+    </select>
+  </div>
+  <div *ngIf="f.queueOption.value === 'QUEUE'">
+    <div class="row form-group">
+      <div class="col-3"></div>
+      <div class="col-3">Queue Number</div>
+      <div class="col-3">Queue Category</div>
+    </div>
+    <div class="row form-group">
+      <label for="accessQueueNumber" class="col-form-label col-sm-3">Acess Queue:</label>
+      <input class="form-control col-3" id="accessQueueNumber" type="text" formControlName="accessQueueNumber">
+      <input class="form-control col-3" id="accessQueueCat" type="text" formControlName="accessQueueCat">
+    </div>
+  </div>
+  <div *ngIf="f.queueOption.value === 'PNR'">
+    <div class="row form-group">
+      <label for="recordLocator" class="col-form-label col-sm-3">Record Locator:</label>
+      <input class="form-control col-4" id="recordLocator" type="text" formControlName="recordLocator">
+    </div>
+
+    <div class="row form-group">
+      <label for="branchTracking" class="col-form-label col-sm-3">Queue Number/Branch Tracking Code:</label>
+      <input class="form-control col-4" id="branchTracking" type="text" formControlName="branchTracking">
+    </div>
+
+    <div class="row form-group">
+      <label for="queueOption" class="col-form-label col-sm-3">Tracking:</label>
+      <select class="form-control col-sm-4" autofocus id="tracking" name="tracking" formControlName="tracking">
+        <option *ngFor="let item of trackingList" [value]="item.itemValue">
+          {{ item.itemText }}
+        </option>
+      </select>
+    </div>
+
+
+    <div class="row form-group">
+      <!-- Default checked -->
+      <label for="fromQueue" class="col-form-label col-sm-3">Action:</label>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" name="action" formControlName="action" id="action">
+        <label class="custom-control-label" for="action"></label>
+      </div>
+    </div>
+    <fieldset formArrayName="remarks" class="mt-2">
+      <legend class="col-form-label-sm"></legend>
+      <div *ngFor="let remark of remarks.controls; index as i" class="row">
+        <label class="col-sm-3"><span *ngIf="i == 0">Documents:</span></label>
+        <div class="form-group col-sm-4 px-0">
+          <input id="{{ 'remarkField-' + i }}" type="text" [formControlName]="i" placeholder="Enter Documents"
+            class="form-control">
+        </div>
+        <div class="form-group col-sm-auto">
+          <i class="fas fa-minus-circle mr-1" id="{{ 'removeRemark-' + i }}" (click)="removeRemark(i)"
+            *ngIf="remarks.controls.length > 1"></i>
+          <i class="fas fa-plus-circle" id="{{ 'addRemark-' + i }}" (click)="addRemark(i)"></i>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div *ngIf="f.queueOption.value">
+    <h6>Place PNR on Queue/Category</h6>
+    <div class="row form-group">
+      <label for="placeQueueNumber" class="col-form-label col-sm-3">Queue:</label>
+      <input class="form-control col-3" id="placeQueueNumber" type="text" formControlName="placeQueueNumber">
+      <input class="form-control col-3" id="placeQueueCat" type="text" formControlName="placeQueueCat">
+    </div>
+
+    <div class="row form-group">
+      <label for="alternateOid" class="col-form-label col-sm-3">Alternate OID:</label>
+      <input class="form-control col-3" id="alternateOid" type="text" formControlName="alternateOid">
+    </div>
+  </div>
+</form>

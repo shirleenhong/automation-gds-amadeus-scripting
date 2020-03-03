@@ -208,16 +208,16 @@ VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid3, '{ "type": "select", "label": "Reason booked Less than 14 days", "name": "reasonBookedLessThan14Days", "required": "false", "options": [ { "name": "Missing Advance Purchance", "value": "M" }, { "name": "Need to travel occurred less then 14 days prior", "value": "N" }, { "name": "Exchange", "value": "E" } ] }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{ "type": "text", "label": "No Hotel Codes", "name": "noHotelCodes", "maxLength": "2", "required": "false" }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    --( @CDRGRoupName, @bid3, '{ "type": "text", "label": "No Hotel Codes", "name": "noHotelCodes", "maxLength": "2", "required": "false" }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid3, '{ "type": "text", "label": "Why PNR not booked online", "name": "whyNotOnline", "maxLength": "3", "required": "false" }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid4, 'RM* U10/-[UI_FORM_reasonBookedLessThan14Days]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, 'RM* U21/-[UI_FORM_noHotelCodes]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, 'RM* U22/-[UI_FORM_noHotelCodes]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    -- ( @CDRGRoupName, @bid4, 'RM* U21/-[UI_FORM_noHotelCodes]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    -- ( @CDRGRoupName, @bid4, 'RM* U22/-[UI_FORM_noHotelCodes]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid4, 'RM* U56/-[UI_FORM_whyNotOnline]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
 
-SET @resultitemid = SCOPE_IDENTITY() - 8; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 5; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult

@@ -3,13 +3,18 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { formatDate } from '@angular/common';
 import { AmadeusQueueService } from '../amadeus-queue.service';
+import { QueueReportComponent } from 'src/app/corporate/queue-report/queue-report.component';
+import { RemarkModel } from 'src/app/models/pnr/remark.model';
+import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
+import { RemarkHelper } from 'src/app/helper/remark-helper';
+import { PnrService } from '../pnr.service';
 
 declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
 export class QueueService {
-  constructor(private queueRemarksService: AmadeusQueueService) {}
+  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
 
   public getQueuePlacement(queueGroup: FormGroup): void {
     const items = queueGroup.get('queues') as FormArray;
@@ -34,5 +39,90 @@ export class QueueService {
     await smartScriptSession.send('QAC7c14-14');
     await smartScriptSession.send('QAC7c16-16');
     await smartScriptSession.send('QC7CE');
+  }
+
+  public async queueProductivityReport(reportComp: QueueReportComponent) {
+    const queueForm: FormGroup = reportComp.queueReportForm;
+    const rmGroup = new RemarkGroup();
+    rmGroup.group = 'Routing';
+    rmGroup.remarks = new Array<RemarkModel>();
+    rmGroup.cryptics = new Array<string>();
+    rmGroup.deleteRemarkByIds = new Array<string>();
+
+    switch (queueForm.get('queueReport').value) {
+      case 'MOVE':
+        await this.moveNewQueue(reportComp.moveQueueComponent.moveQueueForm, rmGroup);
+        break;
+      case 'ACCESS':
+        await this.accessQueue(reportComp.accessQueueComponent.accessQueueForm, rmGroup);
+        break;
+      case 'REPORT':
+        break;
+    }
+
+    return rmGroup;
+  }
+
+  public async initializeQueueReport() {
+    await smartScriptSession.send('IG');
+  }
+
+  private async moveNewQueue(queueForm, rmGroup) {
+    const fromCat = queueForm.get('fromQueueCategory').value ? 'C' + queueForm.get('fromQueueCategory').value : '';
+    const toCat = queueForm.get('toQueueCategory').value ? 'C' + queueForm.get('toQueueCategory').value : '';
+    const command = queueForm.get('removeQueue').value ? 'QB' : 'QBR';
+
+    // await smartScriptSession.send();
+    rmGroup.cryptics.push(command + queueForm.get('fromQueueNumber').value + fromCat + '-' +
+      queueForm.get('toQueueNumber').value + toCat);
+
+    const moveOid = queueForm.get('oid').value ? '/' + queueForm.get('oid').value : '';
+    const moveCarrier = queueForm.get('carrier').value ? '-AC(' + queueForm.get('carrier').value + ')' : '';
+    const moveTravelDate = queueForm.get('travelDate1').value ? queueForm.get('travelDate2').value ?
+      ',DD(' + queueForm.get('travelDate1').value + ',' + queueForm.get('travelDate2').value + ')' :
+      ',DD(' + queueForm.get('travelDate1').value + ')' : '';
+
+    rmGroup.cryptics.push('QV' + moveOid + queueForm.get('toQueueNumber').value + toCat + moveCarrier + moveTravelDate);
+  }
+
+  private async accessQueue(accessForm, rmGroup) {
+    if (accessForm.get('queueOption').value === 'QUEUE') {
+      const queueCat = accessForm.get('accessQueueCat').value ? 'C' + accessForm.get('accessQueueCat').value : '';
+      rmGroup.cryptics.push('QS' + accessForm.get('accessQueueNumber').value + queueCat);
+    } else {
+      await smartScriptSession.send('RT' + accessForm.get('recordLocator').value);
+      await this.pnrService.getPNR();
+      const oid = this.pnrService.extractOidFromBookRemark();
+      const action = accessForm.get('action').value ? 'A' : '';
+
+      rmGroup.remarks.push(this.remarkHelper.getRemark
+        ('QPROD-' + formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() + '/' + formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
+          '-' + oid + '-' + accessForm.get('recordLocator').value + '-' + this.getCICNumber() + '-'
+          + accessForm.get('tracking').value + action, 'RM', 'J'));
+
+      accessForm.get('remarks').value.array.forEach(element => {
+        rmGroup.remarks.push(this.remarkHelper.getRemark
+          (element, 'RM', 'G'));
+      });
+    }
+    let qmCommand = 'QE50C200';
+    if (accessForm.get('placeQueueNumber').value && accessForm.get('placeQueueCat').value) {
+      if (accessForm.get('alternateOid').value) {
+        qmCommand += '/' + accessForm.get('alternateOid').value;
+      }
+      qmCommand += '/' + accessForm.get('placeQueueNumber').value + 'C' + accessForm.get('placeQueueNumber').value;
+    }
+    rmGroup.cryptics.push(qmCommand);
+  }
+
+  getCICNumber() {
+    const remark = this.pnrService.getRemarkText('CN/-');
+    const regex = /(?<=CN\/-).*$/g;
+
+    const match = regex.exec(remark);
+    if (match !== null) {
+      return match[0];
+    }
+    return '';
   }
 }

@@ -1,4 +1,4 @@
-------------------------------------------------------------------------------
+
 BEGIN TRAN
 BEGIN TRY
 DECLARE @CreationUserIdentifier nvarchar(200)
@@ -39,11 +39,11 @@ DECLARE @IS AS int
 declare @ISNOT as int
 declare @CONTAINS as int
 declare @NOTCONTAINS as int
-DECLARE @CFA as varchar(5) = 'R6S'
+DECLARE @CFA as varchar(5) = 'LL9'
 set @CreationUserIdentifier = 'Amadeus CA Migration  ' + @CFA +  ' - US15250'
 set @CDRGRoupName = 'Amadeus CA Migration - ' + @CFA +  ' Rule 1'
-PRINT 'START ' + @CDRGRoupName 
-set @ClientSubUnitGuid = '14:3A7532'
+
+set @ClientSubUnitGuid = 'A:FA177'
 set @TravellerTypeGuid = ''
 set @ClientAccountGuid=''
 set @SourceSystemCode = 'CA1'
@@ -167,7 +167,12 @@ WHERE BusinessEntityName='PNR_UDID50';
 SET @bid4=null; 
 SELECT @bid4=ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
-WHERE BusinessEntityName='PNR_AIR_SEGMENT_AIRLINE_CODE';  
+WHERE BusinessEntityName='PNR_SEGMENT_TYPES_IN_PNR';  
+
+SET @bid5=null; 
+SELECT @bid5=ClientDefinedRuleBusinessEntityID
+FROM ClientDefinedRuleBusinessEntity
+WHERE BusinessEntityName='PNR_AS_ClassOfService';  
 
 
 SET @logicitemid = null; 
@@ -178,15 +183,14 @@ SET @logicitemid = null;
 VALUES
     ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)    
   
-    SET @logicitemid = SCOPE_IDENTITY() - 1
+    SET @logicitemid = SCOPE_IDENTITY() -1
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic
     (ClientDefinedRuleLogicItemId, ClientDefinedRuleGroupId, LogicSequenceNumber, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 values
     (@logicitemid + 1, @CDRGId, 1 , @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-    
-    
+		
 
 SELECT @bid2= ClientDefinedRuleBusinessEntityID
 FROM ClientDefinedRuleBusinessEntity
@@ -208,11 +212,8 @@ WHERE BusinessEntityName='PNR_ADD_Remark';
 VALUES
 
     ( @CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid3, '{ "type": "select", "label": "Why not booked 7 days in advance", "name": "notBooked7Days", "required": "false", "options": [ { "name": "Interview/Applicant", "value": "APPL" }, { "name": "Meeting Request/Short Notice", "value": "CSTR" }, { "name": "Emergency Travel", "value": "EMER" }, { "name": "Medical/Health/Physical", "value": "MEDI" }, { "name": "High Priority/Special Project", "value": "PROJ" }, { "name": "Employee Error/Should Have Booked Earlier", "value": "USER" }, { "name": "Had to Wait for Dates to be Confirmed", "value": "WAIT" }, { "name": "Had to Wait for Trip to be Approved by Manager", "value": "APRV" }, { "name": "Turbine/Equipment Repair/Short Notice", "value": "TRSN" } ] }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    -- ( @CDRGRoupName, @bid3, '{ "type": "select", "label": "Why Hotel Not Booked", "name": "whyHotelNotBooked", "required": "false", "options": [ { "name": "Attending Training/Meeting/Convention/Trade Show", "value": "MH" }, { "name": "Booked by Client", "value": "CH" }, { "name": "Client Owned Accommodations", "value": "CO" }, { "name": "Booked through Local International Office", "value": "H3" }, { "name": "Booked on Internet", "value": "IH" }, { "name": "Booked on Own", "value": "H0" }, { "name": "Hotel Offered and Declined", "value": "H5" }, { "name": "Pre-Booked Due to Multiple Visits", "value": "H6" }, { "name": "Hotel to Be Booked Later", "value": "TB" }, { "name": "No Overnight Stay", "value": "H9" }, { "name": "Reside in City or One Way", "value": "H7" }, { "name": "Staying with Family/Friends", "value": "FH" } ] }', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_notBooked7Days]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-    -- ( @CDRGRoupName, @bid4, 'RM* U21/-[UI_FORM_whyHotelNotBooked]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    -- ( @CDRGRoupName, @bid4, 'RM* U22/-[UI_FORM_whyHotelNotBooked]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+    ( @CDRGRoupName, @bid3, '{"type":"select","label":"Business class approver","name":"businessClassApprover","required":"false","options":[{"name":"Travler is president/officer/board of director member/In Economy Cabin (no approval needed)","value":"N"},{"name":"Pending business class approval e-mail","value":"P"},{"name":"Approval e-mail received for business class travel","value":"Y"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    ( @CDRGRoupName, @bid4, 'RM* U12/-[UI_FORM_businessClassApprover]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 
 
@@ -224,12 +225,8 @@ SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
 values
     (@resultitemid + 1, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@resultitemid + 2, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@resultitemid + 4, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@resultitemid + 5, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@resultitemid + 6, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-
-
+    (@resultitemid + 3, @CDRGId, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
+	
 IF NOT EXISTS(Select 1
 from ClientAccount
 where ClientAccountNumber='1' + @CFA)
@@ -239,15 +236,13 @@ BEGIN
         ([ClientAccountNumber],[ClientAccountName],[SourceSystemCode],[GloryAccountName],[ClientMasterCode]
         ,[EffectiveDate],[CountryCode],[LastModifiedTimestamp],[CreationTimestamp],[CreationUserIdentifier],[LastUpdateTimestamp],[LastUpdateUserIdentifier],[VersionNumber],[CFA])
     VALUES
-        ('1' + @CFA, 'Invenergy LLC', 'CA1', 'Invenergy LLC', 'CA-' + @CFA, '2000-01-01 00:00:00.000', 'CA', @CreationTimeStamp, @CreationTimeStamp, @CreationUserIdentifier, null, null, 1, null)
-
+        ('1' + @CFA, 'PENTAIR', 'CA1', 'PENTAIR', 'CA-' + @CFA, '2000-01-01 00:00:00.000', 'CA', @CreationTimeStamp, @CreationTimeStamp, 'GloryLink', null, null, 1, null)
 END
 
 INSERT INTO [ClientDefinedRuleGroupClientAccount]
     (ClientDefinedRuleGroupId, ClientAccountNumber, SourceSystemCode, CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
     (@CDRGId, @CFA, 'CA1', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
-	
 
 SELECT @CDRGID, @CDRGRoupName , @resultitemid
 
@@ -260,4 +255,3 @@ SELECT @ErrorMessage=ERROR_MESSAGE()
 RAISERROR(@ErrorMessage, 10, 1);
 END CATCH
 GO
-------------------------------------------------------------------------------

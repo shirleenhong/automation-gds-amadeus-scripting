@@ -1,0 +1,50 @@
+<form [formGroup]="moveQueueForm">
+  <div>
+    <div class="row form-group">
+      <div class="col-3"></div>
+      <div class="col-3">Queue Number</div>
+      <div class="col-3">Queue Category</div>
+    </div>
+    <div class="row form-group">
+      <label for="fromQueue" class="col-form-label col-sm-3">From Queue:</label>
+      <input class="form-control col-3" id="fromQueueNumber" type="text" formControlName="fromQueueNumber">
+      <input class="form-control col-3" id="fromQueueCategory" type="text" formControlName="fromQueueCategory">
+    </div>
+    <div class="row form-group">
+      <label for="fromQueue" class="col-form-label col-sm-3">To Queue:</label>
+      <input class="form-control col-3" id="toQueueNumber" type="text" formControlName="toQueueNumber">
+      <input class="form-control col-3" id="toQueueCategory" type="text" formControlName="toQueueCategory">
+    </div>
+
+    <div class="row form-group">
+      <!-- Default checked -->
+      <label for="fromQueue" class="col-form-label col-sm-4">Remove all PNRs From Original Queue:</label>
+      <!-- <label class="col-form-label col-sm-1" for="removeQueue">NO</label> -->
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" name="removeQueue" formControlName="removeQueue"
+          id="removeQueue">
+        <label class="custom-control-label" for="removeQueue">YES</label>
+      </div>
+      <!-- <label class="col-form-label" for="removeQueue">YES</label> -->
+    </div>
+  </div>
+
+  <h6>Move By Options</h6>
+  <div class="row form-group">
+    <label for="agentSine" class="col-form-label col-sm-3">Agent Sine:</label>
+    <input class="form-control col-3" id="agentSine" type="text" formControlName="agentSine">
+  </div>
+  <div class="row form-group">
+    <label for="carrier" class="col-form-label col-sm-3">Carrier:</label>
+    <input class="form-control col-3" id="carrier" type="text" formControlName="carrier">
+  </div>
+  <div class="row form-group">
+    <label for="oid" class="col-form-label col-sm-3">OID:</label>
+    <input class="form-control col-3" id="oid" type="text" formControlName="oid">
+  </div>
+  <div class="row form-group">
+    <label for="travelDate1" class="col-form-label col-sm-3">Travel Date:</label>
+    <input class="form-control col-3" id="travelDate1" type="text" formControlName="travelDate1">
+    <input class="form-control col-3" id="travelDate2" type="text" formControlName="travelDate2">
+  </div>
+</form>

@@ -48,6 +48,9 @@ import { ExchangeEndorsementsComponent } from './corporate/pricing/exchange-endo
 import { ObtComponent } from './corporate/reporting/obt/obt.component';
 import { AquaFeesComponent } from './corporate/fees/aqua-fees/aqua-fees.component';
 import { NoBookedHotelComponent } from './corporate/reporting/no-booked-hotel/no-booked-hotel.component';
+import { QueueReportComponent } from './corporate/queue-report/queue-report.component';
+import { MoveQueueComponent } from './corporate/queue-report/move-queue/move-queue.component';
+import { AccessQueueComponent } from './corporate/queue-report/access-queue/access-queue.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +97,10 @@ import { NoBookedHotelComponent } from './corporate/reporting/no-booked-hotel/no
     ExchangeEndorsementsComponent,
     ObtComponent,
     AquaFeesComponent,
-    NoBookedHotelComponent
+    NoBookedHotelComponent,
+    QueueReportComponent,
+    MoveQueueComponent,
+    AccessQueueComponent
   ],
   imports: [
     BrowserModule,

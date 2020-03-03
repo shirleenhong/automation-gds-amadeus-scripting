@@ -50,6 +50,7 @@ import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
 import { common } from 'src/environments/common';
 import { TicketModel } from '../models/pnr/ticket.model';
 import { formatDate } from '@angular/common';
+import { QueueReportComponent } from './queue-report/queue-report.component';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -93,6 +94,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
   // @ViewChild(PricingComponent) pricingComponent: PricingComponent;
   @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
+  @ViewChild(QueueReportComponent) queueReportComponent: QueueReportComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -503,6 +505,36 @@ export class CorporateComponent implements OnInit {
     );
   }
 
+  public async processQueueReport() {
+    this.showLoading('Process Queue Report...', 'SubmitToPnr');
+    // const passiveSegmentList = new Array<PassiveSegmentModel>();
+    // const accRemarks = new Array<RemarkGroup>();
+    const remarkCollection = new Array<RemarkGroup>();
+    // const remarkList = new Array<RemarkModel>();
+    // const commandList = [];
+    // const forDeleteRemarks = [];
+
+    // if () {
+    //   await this.queueService.initializeQueueReport();
+    //   await this.getPnrService();
+    // }
+    remarkCollection.push(await this.queueService.queueProductivityReport(this.queueReportComponent));
+    this.corpRemarkService.BuildRemarks(remarkCollection);
+    await this.corpRemarkService.SubmitRemarks('', false).then(async () => {
+      this.isPnrLoaded = false;
+      this.workflow = '';
+      this.getPnr();
+      this.closePopup();
+    },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+    // this.paymentRemarkService.deleteRemarksStandAlone();
+    // remarkCollection.push(this.paymentRemarkService.writeStandAlonePassPurchase(this.paymentsComponent.accountingRemark));
+  }
+
   async sendIrdRateParameters() {
     if (!this.irdRateRequestComponent.checkValid()) {
       this.shoInvalidInputMessage();
@@ -811,6 +843,19 @@ export class CorporateComponent implements OnInit {
     try {
       await this.rms.getMatchcedPlaceholderValues();
       this.workflow = 'corporatePass';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async queueReport() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.queueService.initializeQueueReport();
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'queueReport';
       this.closePopup();
     } catch (e) {
       console.log(e);

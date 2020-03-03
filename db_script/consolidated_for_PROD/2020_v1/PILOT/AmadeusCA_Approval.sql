@@ -369,7 +369,7 @@ BEGIN TRAN
 				(@ApprovalGroupApprovalTypeId +	295	,'REMARKS_EXISTS'		,'RM*|U50/-GUEST-NORAM[OR]RM*|U50/-VIP-CA[OR]RM*|U50/-VIP-CA-S'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
 				(@ApprovalGroupApprovalTypeId +	296	,'REMARKS_EXISTS'		,'RM*|U50/-VIP CEO[OR]RM*|U50/-VIP EXEC'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
 				(@ApprovalGroupApprovalTypeId +	297	,'REMARKS_EXISTS'		,'RM*|U50/-GENERAL-CA[OR]RM*|U50/-GUEST-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-				(@ApprovalGroupApprovalTypeId +	298	,'REMARKS_EXISTS'		,'RM*|U50/-VIP-CA[OR]RM*|U50/-VIP EXEMPT-CA[OR]RM*|U50/-GUEST-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
+				(@ApprovalGroupApprovalTypeId +	298	,'REMARKS_EXISTS'		,'RM*|U50/-VIP-CA[OR]RM*|U50/-VIP EXEMPT-CA[OR]RM*|U50/-GUEST-CA[OR]U50/-GENERAL-CA[OR]U50/-OPERATIONS-CA'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
 				(@ApprovalGroupApprovalTypeId +	299	,'ROUTE'				,'[GROUP_1]Domestic[OR]Transborder'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
 				(@ApprovalGroupApprovalTypeId +	300	,'DEPARTURE'			,'[GROUP_1]14 days'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),
 				(@ApprovalGroupApprovalTypeId +	301	,'REMARKS_EXISTS'		,'[GROUP_1]RM*|FS/-L[OR]RM*|FS/-7'	 ,@CreationTimestamp, @CreationUserIdentifier,1 ),

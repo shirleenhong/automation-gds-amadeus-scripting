@@ -34,7 +34,7 @@ export class TicketRemarkService {
     private remarkHelper: RemarkHelper,
     private amdeusQueue: AmadeusQueueService,
     private pricingService: PricingService
-  ) {}
+  ) { }
   /**
    * Method to add Tktline for BSP and NonBsp Cancel
    */
@@ -413,8 +413,8 @@ export class TicketRemarkService {
         }
 
         if (remark.indexOf('UI_') > -1) {
-          remark = remark.replace(fg.get('primaryReason').value, fg.get('primaryText').value);
-          remark = remark.replace(fg.get('secondaryReason').value, fg.get('secondaryText').value);
+          remark = remark.replace('[' + fg.get('primaryReason').value + ']', fg.get('primaryText').value);
+          remark = remark.replace('[' + fg.get('secondaryReason').value + ']', fg.get('secondaryText').value);
         }
 
         if (remark.indexOf('[DATE_NOW]') >= 0) {

@@ -60,7 +60,7 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab    Client Queue
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions    Airline Commission    Exchange Endorsements
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
-${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
+@{itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
 @{aqua_fees_pages}    Aqua Fees
 ${button_aqua_fees}    //button[contains(text(), 'Fee Only')]

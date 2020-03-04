@@ -15942,5 +15942,36 @@ END CATCH
 
 GO
 
+------------
+
+
+BEGIN TRAN
+BEGIN TRY
+PRINT 'Approval Stories';
+
+UPDATE ApprovalGroupApprovalType
+SET ApprovalGroupApprovalTypeFormat = '[LABEL]TRAVELAPPROVAL@YARDI.COM has been aaded into the APE field. Ensure you select this E-Mail address when you send your Ticket/Invoice to CWT ITINERARY.'
+WHERE ApprovalGroupApprovalTypeFormat like '%YARDI%' AND ApprovalGroupApprovalTypeDescription = 'UI_ADDITIONAL_2_0_1'
+
+UPDATE ApprovalGroupApprovalType
+SET ApprovalGroupApprovalTypeFormat = 'RM*|U50/-VIP-CA[OR]RM*|U50/-VIP EXEMPT-CA[OR]RM*|U50/-GUEST-CA[OR]U50/-GENERAL-CA[OR]U50/-OPERATIONS-CA'
+WHERE ApprovalGroupApprovalTypeFormat like '%U50/-VIP EXEMPT-CA%' and ApprovalGroupApprovalTypeFormat like '%U50/-GUEST-CA%' AND ApprovalGroupApprovalTypeDescription = 'REMARKS_EXISTS'
+
+UPDATE ApprovalGroupApprovalType
+SET ApprovalGroupApprovalTypeFormat = 'Ticket Cost exceeds $750.00 w/in Country CA/US'
+WHERE ApprovalGroupApprovalTypeFormat = 'Ticket Cost exceeds $750.00' 
+
+
+COMMIT TRAN ---
+END TRY
+BEGIN CATCH
+ROLLBACK TRAN
+DECLARE @ErrorMessage NVARCHAR(4000);
+SELECT @ErrorMessage=ERROR_MESSAGE()
+RAISERROR(@ErrorMessage, 10, 1);
+END CATCH
+
+GO
+
 
 

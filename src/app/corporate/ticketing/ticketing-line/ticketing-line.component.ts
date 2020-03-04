@@ -302,7 +302,7 @@ export class TicketingLineComponent implements OnInit {
    * @param selectedRule selected rule keyword from UI sample UI_SECPONDARY_1
    */
   primaryReasonChange(selectedIndex) {
-    if (selectedIndex && selectedIndex >= 0) {
+    if (selectedIndex != null && selectedIndex >= 0) {
       const selectedRule = this.primaryReasonList[selectedIndex];
       this.approvalForm.get('primaryText').setValue(selectedRule.getRuleValueText());
       const index = selectedRule.approvalType.match(/_(\d)/g).join('');

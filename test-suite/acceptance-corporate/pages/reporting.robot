@@ -539,7 +539,7 @@ Select Destination Code Values
 	[Arguments]    @{destination_code}
 	Set Test Variable    ${destination_index}    1
 	: FOR    ${destination_code}    IN    @{destination_code}
-	    \    Enter Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
+	    \    Input Value    ${form_segments}${open_bracket}${destination_index}${close_bracket}${input_destination}    ${destination_code}
 		\    ${destination_index}    Evaluate    ${destination_index} + 1
 	
 Populate Destination Code Fields For ${tst_no} TST
@@ -1038,7 +1038,7 @@ Select Reason Why Booked Less Than 14 Days: ${reason}
     Select From List By Label   ${list_whyLessThanDays}    ${reason}
     Take Screenshot
     
-Fill Up Udid Fielads For Client Gilead
+Fill Up Udid Fields For Client Gilead
     Navigate To Page UDID
     Select From List By Label   ${list_noHotelReason}    Booked Own Hotel
     Enter Value    ${input_uniqueTravelerId}    TVL444

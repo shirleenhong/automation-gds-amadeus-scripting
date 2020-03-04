@@ -59,10 +59,9 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"ExpectedRemark1": "RM *DE/-YUL/S2",
+		"ExpectedRemark1": "RM *DE/-ORD/S2",
 		"ExpectedRemark2": "RM *BB/-012313",
-		"ExpectedRemark3": "RMF SUPFEE1-ATE",
-		"ExpectedRemark4": "RM *AGENT CLAIMED"
+		"ExpectedRemark3": "RM *AGENT CLAIMED"
 	},
 	"Cleanup PNR Remark, BB Remark Is Not 011427, OBT Booked and Concur With Single BSP Segment": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
@@ -126,7 +125,6 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
 		"ExpectedRemark1": "RM *BB/-011426",
-		"ExpectedRemark2": "RM *DE/-YUL/S2",
-		"ExpectedRemark3": "RMF SUPFEE1-ATE"
+		"ExpectedRemark2": "RM *DE/-ORD/S2"
 	}
 }

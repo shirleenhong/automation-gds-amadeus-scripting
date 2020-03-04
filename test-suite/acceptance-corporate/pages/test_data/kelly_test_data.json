@@ -1,5 +1,5 @@
 {
-	"Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel": {
+	"Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel, First Primary Reason": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",
@@ -35,10 +35,10 @@
 		"OtherRemarks10": null,
 		"WithUI": "Yes",
 		"IgnoreApproval": "No",
-		"PrimaryApprovalReason": "Tickets Cost on a Single ticket is Higher than  <Lowest Fare+$150.01>",
+		"PrimaryApprovalReason": " Tickets Cost on a Single ticket is Higher than  <Lowest Fare+$150.01> ",
 		"SecondaryApprovalReason": null,
-		"ApproverName": "100",
-		"TotalCost": null,
+		"ApproverName": null,
+		"TotalCost": "100",
 		"AdditionalMessage": null,
 		"QueueToApproval": "Yes",
 		"ExpectedRemark1": "RIR *TICKET**LOWER FARE DECLINED-100*",
@@ -48,7 +48,7 @@
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No"
 	},
-	"Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel": {
+	"Client Kelly Services With Udid50 EMPLOYEE-CA, Air And Hotel, Second Primary Reason": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",
 		"Udid25": "FA177",
 		"Email": "test@email.com",

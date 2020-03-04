@@ -236,6 +236,28 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 'queueReport'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="fas fa-hand-holding-usd"></i> Payment
+        <i [ngClass]="validModel.paymentValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-queue-report></app-queue-report>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="processQueueReport()">
+        Process Queue Report
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="workflow === 'error'" class="loaderBody">
   <div class="loader">
     <div>
@@ -322,6 +344,11 @@
         Remarks
       </button>
     </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="queueReport()">
+        Queue Productivity Report
+      </button>
+    </div>
   </div>
   <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
@@ -340,7 +367,7 @@
   </alert>
 </div>
 
-<div *ngIf="!isPnrLoaded && loading === false" class="loaderBody">
+<div *ngIf="!isPnrLoaded && loading === false && workflow === ''" class="loaderBody">
   <div class="loader">
     <div>
       Corporate
@@ -349,6 +376,11 @@
     <div>
       <button class="leisureButton btnMenu" (click)="amadeusQueues()">
         Support Amadeus Queue
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="queueReport()">
+        Queue Productivity Report
       </button>
     </div>
   </div>

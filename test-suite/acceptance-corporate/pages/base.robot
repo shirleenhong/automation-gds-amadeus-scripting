@@ -54,14 +54,13 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{add_segment_pages}    Passive Segment    Add Passive Segment
 @{cancel_segment_pages}    Cancel Segments     NonBSP Ticket Credit
 @{payment_pages}    Payment    Non BSP Processing    Add Accounting Line    Corporate Receipt
-@{pricing_pages}     Pricing    Airfare Commission    Exchange Endorsements
 @{reporting_pages}    Reporting    BSP Reporting    Non BSP Reporting    Matrix Reporting    Waivers    Reporting Remarks    Car Savings Code    Hotel Savings Code    UDID    No Hotel Booked
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact    Fare Rule    Associated Remarks
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab    Client Queue
 @{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions    Airline Commission    Exchange Endorsements
 @{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
-${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
+@{itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
 @{aqua_fees_pages}    Aqua Fees
 ${button_aqua_fees}    //button[contains(text(), 'Fee Only')]
@@ -80,7 +79,7 @@ Input Value
     [Arguments]    ${element}    ${value}
     Double Click Element    ${element}
     Press Key    ${element}    \\08
-    Input Text    ${element}    ${value}
+    Input Text    ${element}    ${value} 
 
 Close CA Corporate Test
     Unselect Frame
@@ -351,14 +350,7 @@ Navigate From Payment
     ${in_payment}    Run Keyword And Return Status    Should Contain     ${payment_pages}    ${current_page}
     Run Keyword If    "${in_payment}" == "False"    Click Payment Panel
     Run Keyword If    "${destination_page}" == "Add Accounting Line"    Navigate To Add Accounting Line
-    Run Keyword If    "${destination_page}" == "Corporate Receipt"    Click Corporate Receipt Tab    
-
-Navigate From Pricing
-    [Arguments]    ${destination_page}
-    ${in_pricing}    Run Keyword And Return Status     Should Contain     ${pricing_pages}    ${current_page}
-    Run Keyword If    not ${in_pricing}    Click Pricing Panel
-    Run Keyword If    "${destination_page}" == "Airfare Commission"     Click Airfare Commission Tab   
-    Run Keyword If    "${destination_page}" == "Exchange Endorsements"    Click Exchange Endorsements Tab     
+    Run Keyword If    "${destination_page}" == "Corporate Receipt"    Click Corporate Receipt Tab     
 
 Navigate From Reporting
     [Arguments]    ${destination_page}
@@ -394,6 +386,7 @@ Navigate From Ticketing
     Run Keyword If    "${destination_page}" == "Ticketing Instructions"    Click Ticketing Instructions Tab
     ...   ELSE IF    "${destination_page}" == "Ticketing Line"    Click Ticketing Line Tab
     ...   ELSE IF    "${destination_page}" == "Airline Commission"     Click Airline Commission Tab
+    ...   ELSE IF    "${destination_page}" == "Exchange Endorsements"    Click Exchange Endorsements Tab
 
 Navigate From Queue
     [Arguments]    ${destination_page}

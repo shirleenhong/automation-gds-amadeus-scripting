@@ -16,7 +16,6 @@ export class RulesLogicService {
       // return true if the logic is negative
       return ['IS NOT', 'NOT CONTAINS', 'NOT IN'].indexOf(logic.relationalOperatorName) >= 0;
     }
-
     for (let entity of entities) {
       if (!entity) {
         entity = '';
@@ -55,16 +54,11 @@ export class RulesLogicService {
             ruleLogic = !(rulelogic[0] <= entity && entity <= rulelogic[1]);
           }
           break;
+        default:
+          ruleLogic = false;
       }
-      if (logic.relationalOperatorName === 'CONTAINS') {
-        if (ruleLogic) {
-          return ruleLogic;
-        }
-      } else {
-        // for all other operators, if it already failed, no need to evaluate succeeding, already return FALSE
-        if (!ruleLogic) {
-          return ruleLogic;
-        }
+      if (ruleLogic) {
+        return ruleLogic;
       }
     }
     return ruleLogic;

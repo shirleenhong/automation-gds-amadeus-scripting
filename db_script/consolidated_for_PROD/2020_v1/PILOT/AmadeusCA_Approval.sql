@@ -380,7 +380,7 @@ BEGIN TRAN
 				(@ApprovalGroupApprovalTypeId + 305 ,'FOP'					,'[GROUP_1][NOT]AX'         ,@CreationTimestamp, @CreationUserIdentifier,1 ),
                 (@ApprovalGroupApprovalTypeId + 307 ,'REMARKS_EXISTS'		,'[GROUP_1]RM*|FS/-L'         ,@CreationTimestamp, @CreationUserIdentifier,1 ),
                 (@ApprovalGroupApprovalTypeId + 308 ,'SEGMENT_TYPE'			,'[GROUP_1][ONLY]AIR'         ,@CreationTimestamp, @CreationUserIdentifier,1 ),
-                (@ApprovalGroupApprovalTypeId + 309 ,'UI_ADDITIONAL_2_0_1'	,'[LABEL]TRAVELAPPROVAL@YARDI.COM has been added. Ensure you select this E-Mail address when you send your Ticket/Invoice to CWT ITINERARY.',@CreationTimestamp, @CreationUserIdentifier,1 ),
+                (@ApprovalGroupApprovalTypeId + 309 ,'UI_ADDITIONAL_2_0_1'	,'[LABEL]TRAVELAPPROVAL@YARDI.COM has been aaded into the APE field. Ensure you select this E-Mail address when you send your Ticket/Invoice to CWT ITINERARY.',@CreationTimestamp, @CreationUserIdentifier,1 ),
                 (@ApprovalGroupApprovalTypeId + 310 ,'QUEUE_1_0_0'			,'{BOOKING_OID}/41C96'         ,@CreationTimestamp, @CreationUserIdentifier,1 ),
                 (@ApprovalGroupApprovalTypeId + 311 ,'WRITE_REMARK_2_0_1'	,'APE|TRAVELAPPROVAL@YARDI.COM'         ,@CreationTimestamp, @CreationUserIdentifier,1 ),
                 (@ApprovalGroupApprovalTypeId + 312 ,'SEGMENT_TYPE'			,'[GROUP_2]HOTEL'         ,@CreationTimestamp, @CreationUserIdentifier,1 ),

@@ -59,8 +59,8 @@ ${button_close_marriot_policy}    //button[contains(text(), 'Close')]
 @{remarks_pages}    Remarks    Seats    IRD Remarks    Document PNR    Visa And Passport    ESC Remarks    Emergency Contact    Fare Rule    Associated Remarks
 @{fees_pages}    Fees
 @{queue_pages}    Queue    Follow-Up Queue    OFC Documentation And Queue    Queue Placement    CWT Itinerary Tab    Client Queue
-@{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions    Airline Commission
-@{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}    @{pricing_pages}
+@{ticketing_pages}    Ticketing    Ticketing Line    Ticketing Instructions    Airline Commission    Exchange Endorsements
+@{full_wrap_pages}    Full Wrap PNR    @{payment_pages}    @{reporting_pages}    @{remarks_pages}    @{fees_pages}    @{queue_pages}    @{ticketing_pages}
 ${itinerary_and_queue_pages}    Itinerary and Queue    CWT Itinerary    Follow-Up Queue S    TKTL Update For Aqua Ticketing
 @{ird_pages}    IRD Rate Request
 @{aqua_fees_pages}    Aqua Fees
@@ -127,7 +127,7 @@ Click Itinerary And Queue
     #Wait Until Page Contains Element   ${button_full_wrap}    180 
     Click Element At Coordinates    ${button_itinerary_queue}    0    0 
     #Wait Until Element Is Visible    ${button_submit_pnr}    30
-    #Wait Until Element Is Visible    ${select_transaction}      30
+    Wait Until Element Is Visible    ${select_transaction}      30
     Wait For Script To Complete
     Set Test Variable    ${current_page}    Follow-Up Queue S
     Set Test Variable    ${pnr_submitted}    no
@@ -758,20 +758,22 @@ Complete The PNR In Full Wrap
 Click IRD Rate Request
     Wait Until Page Contains Element    ${button_ird_rate_request}      180
     Click Element     ${button_ird_rate_request} 
-    Wait Until Element Is Visible    ${message_loadingPnr}    180
-    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
-    #Wait Until Element Is Visible    ${button_submit_pnr}    30
-    Wait For Script To Complete
+    # Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Element Is Not Visible     ${message_loadingPnr}    180
+    Wait Until Element Is Visible    ${button_submit_pnr}    30
+    # Wait For Script To Complete
+    Set Focus To Element    ${input_consultant_name}
     Set Test Variable    ${current_page}    IRD Rate Request
     Set Test Variable    ${pnr_submitted}   no
     
 Submit IRD Request
-    [Arguments]    ${close_corporate_test}=yes
+    [Arguments]    ${close_corporate_test}=yes    ${queueing}=no
     #Wait Until Page Contains Element    ${button_submit_pnr}    30
     Scroll Element Into View     ${button_submit_pnr}
     Click Button    ${button_submit_pnr}
     Wait Until Element Is Not Visible     ${message_updatingPnr}    180
     Wait Until Element Is Visible    ${button_full_wrap}    180
+    Run Keyword If   "${queueing}" == "yes"     Sleep    5
     Wait For Script To Complete
     Set Test Variable    ${current_page}     CWT Corporate 
     Run Keyword If     "${close_corporate_test}" == "yes"     Close CA Corporate Test
@@ -816,9 +818,11 @@ Click Aqua Fees
 Click Airline Corporate Pass Purchase
     Wait Until Page Contains Element    ${button_airline_pass_standalone}    100
     Click Element    ${button_airline_pass_standalone}    
-    Wait Until Element Is Visible    ${message_loadingPnr}    180
-    Wait Until Page Does Not Contain Element    ${message_loadingPnr}    180
+    # Wait Until Element Is Visible    ${message_loadingPnr}    180
+    Wait Until Element Is Not Visible    ${message_loadingPnr}    180
     Wait Until Element Is Visible    ${button_submit_pnr}    30
+    Set Focus To Element    ${button_add_supplier_accounting_remark}
+    # Wait For Script To Complete
     Set Test Variable    ${current_page}    Payment
     
 Click Remarks in Main Menu

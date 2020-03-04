@@ -18,7 +18,7 @@ ${input_email}    //input[@id='emailAddress']
 ${form_email}    //div[@formarrayname='emailAddresses']
 ${button_emailAdd}    //div[@formarrayname='emailAddresses']//i[@id='add']
 ${checkbox_select}    //input[@type='checkbox']
-${input_consultant_name}    css=#name
+${input_consultant_name}    //input[@id='name']
 ${input_consultant_number}    css=#cnNumber
 ${input_consultant_oid}    css=#officeId
 ${input_agent_queue}     css=#queue
@@ -45,6 +45,7 @@ ${input_segment_cost}    css=#segmentCost
 ${input_passExpDate}    css=#passExpDate
 ${button_submit_corporate}    //button[contains(text(), 'Submit Corporate Pass ')]
 ${button_submit_remarks}    //button[contains(text(), 'Submit Remarks')]
+${tab_standalone_nonbsp}    //app-accounting-remark
 
 *** Keywords ***
 Add Multiple Email Address
@@ -297,6 +298,7 @@ Verify New MAC Remarks Are Written
      
 Populate IRD Rate Request Mandatory And Optional Fields
     Navigate To Page IRD Rate Request
+    Click Element At Coordinates    ${input_consultant_name}    0    0
     Enter Value    ${input_consultant_name}     Consultant Name
     Enter Value    ${input_consultant_number}    AB1
     Enter Value    ${input_consultant_oid}     YTOWL2107
@@ -313,6 +315,7 @@ Populate IRD Rate Request Mandatory And Optional Fields
 Populate IRD Rate Request Mandatory Fields Only
     Set Test Variable    ${actual_agent_queue}    51C200
     Navigate To Page IRD Rate Request
+    Click Element At Coordinates    ${input_consultant_name}    0    0
     Enter Value    ${input_consultant_name}     Consultant Name
     Enter Value    ${input_consultant_number}    AB1
     Enter Value    ${input_consultant_oid}     YTOWL2107
@@ -323,6 +326,7 @@ Populate IRD Rate Request Mandatory Fields Only
 
 Populate IRD Rate Request With Multiple Stopovers
     Navigate To Page IRD Rate Request
+    Click Element At Coordinates    ${input_consultant_name}    0    0
     Enter Value    ${input_consultant_name}     Consultant Name
     Enter Value    ${input_consultant_number}    AB1
     Enter Value    ${input_consultant_oid}     YTOWL2107
@@ -337,6 +341,7 @@ Populate IRD Rate Request With Multiple Stopovers
     
 Populate IRD Rate Request With Multiple Comments
     Navigate To Page IRD Rate Request
+    Click Element At Coordinates    ${input_consultant_name}    0    0
     Enter Value    ${input_consultant_name}     Consultant Name
     Enter Value    ${input_consultant_number}    AB1
     Enter Value    ${input_consultant_oid}     YTOWL2107
@@ -379,13 +384,14 @@ Verify Agent Queue And Category Default Value
     Set Test Variable    ${actual_agent_queue}
     
 Verify IRD Rate Request Remarks Are Written
-    Finish PNR
+    Finish PNR    queueing=yes
     Assign Current Date
     Verify Expected Remarks Are Written In The PNR
     Verify Unexpected Remarks Are Not Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMF DATE-${current_date} OID-YTOWL2107 AGENT QUEUE/CATEGORY - ${actual_agent_queue} CFA-AAA    True
     
 Verify That PNR Is Queued When Travel Is ${travel_time} 24 Hrs
+    # queue is no longer working for 2107
     Open Command Page
     Enter Cryptic Command    RTQ 
     # Run Keyword If    '${travel_time}' == 'Within'    Element Should Contain    ${text_area_command}    YTOWL210N${SPACE}${SPACE}${SPACE}${SPACE}040${SPACE}${SPACE}${SPACE}${SPACE}250
@@ -519,7 +525,9 @@ Click Submit Corporate Pass
     Click Element    ${button_submit_corporate}
     
 Click Add Supplier Remark
-    Click Element    ${button_add_supplier_accounting_remark}
+    Click Element At Coordinates    ${button_add_supplier_accounting_remark}    0    0
+    Click Element At Coordinates    ${button_add_supplier_accounting_remark}    0    0
+    Wait Until Element Is Visible    ${list_accounting_type}    10    
         
 Add Accounting Remark For Standalone Air Canada Pass Purchase
     Handle SmartTool PopUp
@@ -543,7 +551,7 @@ Add Accounting Remark For Standalone Air Canada Pass Purchase
     Verify Supplier Code Default Value Is Correct For Air Canada Individual Pass Purchase
     Take Screenshot    
     Click Save Button
-    Click Submit Corporate Pass
+    # Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Westjet Pass Purchase
     Open CA Corporate Test
@@ -566,7 +574,7 @@ Add Accounting Remark For Standalone Westjet Pass Purchase
     Verify Supplier Code Default Value Is Correct For Westjet Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    Click Submit Corporate Pass
+    # Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Porter Pass Purchase
     Open CA Corporate Test
@@ -590,7 +598,7 @@ Add Accounting Remark For Standalone Porter Pass Purchase
     Verify Supplier Code Default Value Is Correct For Porter Individual Pass Purchase
     Take Screenshot    
     Click Save Button
-    Click Submit Corporate Pass
+    # Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Air North Pass Purchase
     Open CA Corporate Test
@@ -613,7 +621,7 @@ Add Accounting Remark For Standalone Air North Pass Purchase
     Verify Supplier Code Default Value Is Correct For Air North Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    Click Submit Corporate Pass
+    # Click Submit Corporate Pass
     
 Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
     Open CA Corporate Test
@@ -636,11 +644,9 @@ Add Accounting Remark For Standalone Pacific Coastal Pass Purchase
     Verify Supplier Code Default Value Is Correct For Pacific Coastal Individual Pass Purchase
     Take Screenshot
     Click Save Button
-    Click Submit Corporate Pass
     
 Verify Accounting Remarks Per Airline Are Written Correctly
-    Sleep    5
-    Close CA Corporate Test
+    Click Submit To PNR
     Switch To Graphic Mode
     Get PNR Details
     Verify Expected Remarks Are Written In The PNR    True

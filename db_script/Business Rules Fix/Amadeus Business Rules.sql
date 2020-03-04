@@ -1710,7 +1710,7 @@ WHERE BusinessEntityName='PNR_ADD_Remark';
     ( ClientDefinedRuleResultItemDescription,ClientDefinedRuleBusinessEntityId,ClientDefinedRuleResultItemValue,CreationTimestamp,CreationUserIdentifier,LastUpdateTimeStamp,LastUpdateUserIdentifier,VersionNumber)
 VALUES
     (@CDRGRoupName, @bid2, 'REPORTING', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
-    (@CDRGRoupName, @bid3, '{"type":"select","label":"Booking Less Than 14 days in advance","name":"bookAdvance","required":"false","options":[{"name":"P14 - Purchased with a 14+ advanceR","value":"P14"},{"name":"LN - Received notice/confirmation of trip <14 days","value":"LN"},{"name":"WP - Work Priorities delayed purchase","value":"WP"},{"name":"XT - Change to existing trip","value":"XT"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
+    (@CDRGRoupName, @bid3, '{"type":"select","label":"Booking Less Than 14 days in advance","name":"bookAdvance","required":"false","options":[{"name":"P14 - Purchased with a 14+ advance","value":"P14"},{"name":"LN - Received notice/confirmation of trip <14 days","value":"LN"},{"name":"WP - Work Priorities delayed purchase","value":"WP"},{"name":"XT - Change to existing trip","value":"XT"}]}', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     (@CDRGRoupName, @bid4, 'RM* U5/-[UI_FORM_bookAdvance]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 
 

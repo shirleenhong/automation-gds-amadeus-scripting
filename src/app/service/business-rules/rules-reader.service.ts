@@ -185,14 +185,21 @@ export class RulesReaderService {
 
   private getSegmentTypes() {
     let segmentsTypes = this.pnrService.segments.map((x) => ({
-      types: this.getType(x)
+      type: this.getType(x, false),
+      nameType: this.getType(x, true)
     }));
-    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.types === thing.types) === i);
-    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.map((t) => t.types).join('\n'));
+    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.type === thing.type) === i);
+    this.assignKeyValue(
+      'PNR_SEGMENT_TYPES_IN_PNR',
+      segmentsTypes.map((t) => t.type).join('\n') + segmentsTypes.map((t) => t.nameType).join('\n')
+    );
   }
 
-  getType(segment) {
+  getType(segment, isGeneric) {
     const type = segment.segmentType === 'MIS' ? segment.passive.replace('TYP-', '') : segment.segmentType;
+    if (isGeneric) {
+      return type;
+    }
     switch (type) {
       case 'HTL':
       case 'HHL':

@@ -16350,7 +16350,7 @@ VALUES
     ( @CDRGRoupName, @bid, @IS, @CFA, @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1),
     ( @CDRGRoupName, @bid2, @CONTAINS, 'AIR', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
   
-    SET @logicitemid = SCOPE_IDENTITY() - 3
+    SET @logicitemid = SCOPE_IDENTITY() - 2
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupLogic

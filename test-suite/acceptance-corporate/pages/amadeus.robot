@@ -571,7 +571,7 @@ Add ${number_of_segments} Passive Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1    0.5
+    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:*H01*,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1    1
     Set Test Variable    ${final_destination}    ORD
 
 Add ${number_of_segments} Active Hotel Segments In ${city_code}

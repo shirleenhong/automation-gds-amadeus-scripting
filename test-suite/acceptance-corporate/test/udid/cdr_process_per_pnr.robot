@@ -137,7 +137,7 @@ Verify UDID Remarks Are Added For Gemalto
 Verify UDID Remarks Are Added For Client Gilead
     [Tags]    us15250
     Create PNR With Active Air Segments For Gilead
-    Fill Up Udid Fielads For Client Gilead
+    Fill Up Udid Fields For Client Gilead
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client Gilead With Hotel Segment

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
 import { DDBService } from '../ddb.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { TourPackageComponent } from 'src/app/leisure/remarks/tour-package/tour-package.component';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +42,7 @@ export class RulesReaderService {
     { type: 'RM', category: '*', regex: /DP\/-(?<PNR_DP>.*)/g }
   ];
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) { }
+  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   public async readPnr() {
     this.businessEntities = new Map<string, string>();
@@ -185,14 +186,35 @@ export class RulesReaderService {
 
   private getSegmentTypes() {
     let segmentsTypes = this.pnrService.segments.map((x) => ({
-      types: x.segmentType
+      types: this.getType(x)
     }));
     segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.types === thing.types) === i);
-    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.map(t => t.types).join('\n'));
+    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.map((t) => t.types).join('\n'));
+  }
+
+  getType(segment) {
+    const type = segment.segmentType === 'MIS' ? segment.passive.replace('TYP-', '') : segment.segmentType;
+    switch (type) {
+      case 'HTL':
+      case 'HHL':
+        return 'HOTEL';
+      case 'CCR':
+      case 'CAR':
+        return 'CAR';
+      case 'LIM':
+        return 'LIMO';
+      case 'TRN':
+      case 'RAL':
+        return 'RAIL';
+      case 'TOR':
+        return 'TOUR';
+      default:
+        return type;
+    }
   }
 
   private checkAmExists() {
-    const amElements = (this.pnrService.pnrObj.amElements.length >= 0);
+    const amElements = this.pnrService.pnrObj.amElements.length >= 0;
     this.assignKeyValue('PNR_AM_REMARKS_EXIST', amElements.toString().toUpperCase());
   }
 

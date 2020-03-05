@@ -117,7 +117,7 @@ Verify UDID Remarks Are Added For Equifax
     Verify Remarks Are Added Correctly In The PNR
 
 Verify UDID Remarks Are Added For Client Fujitsu
-    [Tags]    us15250    full_regression
+    [Tags]    us15250    full_regression    expect_to_fail
     Create PNR With Active Air Segments For Fujitsu
     Select Reason No Hotel Booked: Hotel Sold Out
     Verify Remarks Are Added Correctly In The PNR
@@ -315,7 +315,7 @@ Verify UDID Remarks Are Added For Client Sunovion
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client Thales Canada With Air Only Segments
-    [Tags]    us15250
+    [Tags]    us15250    expect_to_fail
     Create PNR With Active Air Segments For Thales Canada With Air Only Segments 
     Fill Up UDID Fields For Client Thales Canada
     Verify Remarks Are Added Correctly In The PNR
@@ -333,7 +333,7 @@ Verify UDID Remarks Are Added For Client Toys R Us
     Verify Remarks Are Added Correctly In The PNR
 
 Verify UDID Remarks Are Added For Client UL
-    [Tags]    us15250    full_regression
+    [Tags]    us15250    full_regression    expect_to_fail
     Create PNR With Active Air Segments For UL
     Fill Up Udid Fields For Client UL
     Verify Remarks Are Added Correctly In The PNR
@@ -345,13 +345,13 @@ Verify UDID Remarks Are Added For Client Under Armour
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client University Travel Business
-    [Tags]    us15250    full_regression
+    [Tags]    us15250    full_regression    expect_to_fail
     Create PNR With Active Air Segments For University Travel Business
     Fill Up Udid Fields For Client University Travel Business
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client University Of Manitoba
-    [Tags]    us15250    full_regression
+    [Tags]    us15250    full_regression    expect_to_fail
     Create PNR With Active Air Segments For University Of Manitoba
     Fill Up Udid Fields For Client University Of Manitoba
     Verify Remarks Are Added Correctly In The PNR

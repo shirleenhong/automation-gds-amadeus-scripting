@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { PnrService } from '../pnr.service';
 import { DDBService } from '../ddb.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
-import { TourPackageComponent } from 'src/app/leisure/remarks/tour-package/tour-package.component';
 
 @Injectable({
   providedIn: 'root'

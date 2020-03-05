@@ -93,7 +93,7 @@ pipeline {
       }
       environment {
         ENVIRONMENT = 'prod'
-        CLUSTER_NAME = 'services'
+        CLUSTER_NAME = 'non-pci-services'
         REGISTRY_ID = '169046481431'
         CONTAINER_NAME = '${APPLICATION_NAME}'
         AWS_PROD_ROLE = credentials('jenkins-role')

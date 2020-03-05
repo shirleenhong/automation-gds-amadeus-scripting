@@ -177,7 +177,7 @@ Verify UDID Remarks Are Not Added For Client Intercontinental Hotel With Domesti
     Verify Remarks Are Not Found In The PNR
 
 Verify UDID Remarks Are Added For Client Invenergy
-    [Tags]    us15250    full_regression
+    [Tags]    us15250    full_regression    expect_to_fail
     Create PNR With Active Air Segments For Invenergy
     Fill Up Udid Fields For Client Invenergy
     Verify Remarks Are Added Correctly In The PNR

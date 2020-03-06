@@ -51,6 +51,7 @@ import { common } from 'src/environments/common';
 import { TicketModel } from '../models/pnr/ticket.model';
 import { formatDate } from '@angular/common';
 import { QueueReportComponent } from './queue-report/queue-report.component';
+import { environment } from 'src/environments/environment';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -135,7 +136,7 @@ export class CorporateComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'C') {
+    if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'C' && environment.env === 'TEST') {
       this.showClearCache();
     }
   }

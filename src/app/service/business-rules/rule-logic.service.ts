@@ -16,7 +16,7 @@ export class RulesLogicService {
       // return true if the logic is negative
       return ['IS NOT', 'NOT CONTAINS', 'NOT IN'].indexOf(logic.relationalOperatorName) >= 0;
     }
-
+    let isNegative = false;
     for (let entity of entities) {
       if (!entity) {
         entity = '';
@@ -32,13 +32,15 @@ export class RulesLogicService {
           ruleLogic = entity.indexOf(logicValue) >= 0;
           break;
         case 'NOT CONTAINS':
-          ruleLogic = entity.indexOf(logicValue) === -1;
+          ruleLogic = entity.indexOf(logicValue) >= 0;
+          isNegative = true;
           break;
         case 'IS NOT':
           ruleLogic = entity !== logicValue;
           break;
         case 'NOT IN':
-          ruleLogic = logicValue.split('|').indexOf(entity) === -1;
+          ruleLogic = logicValue.split('|').indexOf(entity) > -1;
+          isNegative = true;
           break;
         case 'IN':
           ruleLogic = logicValue.split('|').indexOf(entity) >= 0;
@@ -55,19 +57,17 @@ export class RulesLogicService {
             ruleLogic = !(rulelogic[0] <= entity && entity <= rulelogic[1]);
           }
           break;
+        default:
+          ruleLogic = false;
       }
-      if (logic.relationalOperatorName === 'CONTAINS') {
-        if (ruleLogic) {
-          return ruleLogic;
-        }
-      } else {
-        // for all other operators, if it already failed, no need to evaluate succeeding, already return FALSE
-        if (!ruleLogic) {
-          return ruleLogic;
-        }
+
+      if (isNegative && ruleLogic) {
+        return false;
+      } else if (ruleLogic) {
+        return ruleLogic;
       }
     }
-    return ruleLogic;
+    return isNegative ? !ruleLogic : ruleLogic;
   }
 
   isRuleLogicValid(ruleLogics: RuleLogic[], businessEntityList: Map<string, string>) {

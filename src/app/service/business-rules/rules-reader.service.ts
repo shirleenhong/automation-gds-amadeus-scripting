@@ -41,7 +41,7 @@ export class RulesReaderService {
     { type: 'RM', category: '*', regex: /DP\/-(?<PNR_DP>.*)/g }
   ];
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) { }
+  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
 
   public async readPnr() {
     this.businessEntities = new Map<string, string>();
@@ -185,14 +185,42 @@ export class RulesReaderService {
 
   private getSegmentTypes() {
     let segmentsTypes = this.pnrService.segments.map((x) => ({
-      types: x.segmentType
+      type: this.getType(x, false),
+      nameType: this.getType(x, true)
     }));
-    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.types === thing.types) === i);
-    this.assignKeyValue('PNR_SEGMENT_TYPES_IN_PNR', segmentsTypes.map(t => t.types).join('\n'));
+    segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.type === thing.type) === i);
+    this.assignKeyValue(
+      'PNR_SEGMENT_TYPES_IN_PNR',
+      segmentsTypes.map((t) => t.type).join('\n') + segmentsTypes.map((t) => t.nameType).join('\n')
+    );
+  }
+
+  getType(segment, isGeneric) {
+    const type = segment.segmentType === 'MIS' ? segment.passive.replace('TYP-', '') : segment.segmentType;
+    if (isGeneric) {
+      return type;
+    }
+    switch (type) {
+      case 'HTL':
+      case 'HHL':
+        return 'HOTEL';
+      case 'CCR':
+      case 'CAR':
+        return 'CAR';
+      case 'LIM':
+        return 'LIMO';
+      case 'TRN':
+      case 'RAL':
+        return 'RAIL';
+      case 'TOR':
+        return 'TOUR';
+      default:
+        return type;
+    }
   }
 
   private checkAmExists() {
-    const amElements = (this.pnrService.pnrObj.amElements.length >= 0);
+    const amElements = this.pnrService.pnrObj.amElements.length >= 0;
     this.assignKeyValue('PNR_AM_REMARKS_EXIST', amElements.toString().toUpperCase());
   }
 

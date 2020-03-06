@@ -142,7 +142,7 @@ export class CorporateComponent implements OnInit {
 
   modalSubscribeOnClose() {
     this.modalService.onHide.subscribe(async () => {
-      if (this.modalRef !== undefined && this.modalRef.content !== undefined) {
+      if (this.modalRef && this.modalRef.content) {
         if (this.modalRef.content.callerName === 'ClearCache' && this.modalRef.content.response === 'YES') {
           this.ddbService.clearCache();
         }
@@ -547,12 +547,13 @@ export class CorporateComponent implements OnInit {
     // }
     remarkCollection.push(await this.queueService.queueProductivityReport(this.queueReportComponent));
     this.corpRemarkService.BuildRemarks(remarkCollection);
-    await this.corpRemarkService.SubmitRemarks('', false).then(async () => {
-      this.isPnrLoaded = false;
-      this.workflow = '';
-      this.getPnr();
-      this.closePopup();
-    },
+    await this.corpRemarkService.SubmitRemarks('', false).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
       (error) => {
         console.log(JSON.stringify(error));
         this.workflow = '';

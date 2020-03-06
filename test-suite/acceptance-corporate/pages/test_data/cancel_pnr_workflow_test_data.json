@@ -221,7 +221,7 @@
 		"QueueToApproval": "No",
 		"OnHoldRmk": "No",
 		"QueueToTkt": "No",
-		"HistoricalRemark1": "SSR OTHSUA 2/BSP24REFUND/CORPORATE/AMADEUS MR"
+		"HistoricalRemark1": "SROTHSUA-2,3/BSP24REFUND/P1"
 	},
 	"Cancellation, UA Air Segments, Non Refundable Ticket Cancelled Due To IROP": {
 		"PassengerName1": "CORPORATE/AMADEUS MR",

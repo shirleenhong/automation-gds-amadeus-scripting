@@ -102,11 +102,15 @@ export class RulesEngineService {
 
   private buildFormData(ite, result, formData) {
     for (let i = 1; i <= ite; i++) {
-      const rules = new BusinessRulesFormData(result.resultItemValue);
-      rules.label = rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.label + 'TST ' + i.toString() : rules.label;
-      rules.controlName =
-        rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.controlName.replace('[TSTSEGMENT]', i.toString()) : rules.controlName;
-      formData.push(rules);
+      if (result.resultItemValue) {
+        const rules = new BusinessRulesFormData(result.resultItemValue);
+        rules.label = rules && rules.controlName.indexOf('TSTSEGMENT') > -1 ? rules.label + 'TST ' + i.toString() : rules.label;
+        rules.controlName =
+          rules && rules.controlName.indexOf('TSTSEGMENT') > -1
+            ? rules.controlName.replace('[TSTSEGMENT]', i.toString())
+            : rules.controlName;
+        formData.push(rules);
+      }
     }
   }
 

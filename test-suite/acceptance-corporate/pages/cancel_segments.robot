@@ -137,12 +137,10 @@ Verify Expected Cancellation Remarks Are Written
     Verify Historical Remarks Are Written In The PNR
     
 Verify Historical Remarks Are Written In The PNR
-    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${historical_remark_1}
-    Run Keyword If    "${exists}" == "True"    Get Booking File History
-    : FOR    ${i}    IN RANGE   0    99
-    \    ${i}    Evaluate    ${i} + 1
+    Switch To Command Page
+    : FOR    ${i}    IN RANGE   1    99
     \    ${exists}     Run Keyword And Return Status      Should Not Be Empty    ${historical_remark_${i}}
-    \    Run Keyword If    "${exists}" == "True" and "${historical_remark_${i}}" != "None"     Verify Specific Remark Is Written In The PNR   ${historical_remark_${i}}
+    \    Run Keyword If    ${exists} and "${historical_remark_${i}}" != "None"     Element Should Contain    ${text_area_command}   ${historical_remark_${i}}
     \    Exit For Loop If    "${exists}" == "False"
 
 Verify NonBSP Ticket Credit from Supplier Remark For PNRs With No U*14

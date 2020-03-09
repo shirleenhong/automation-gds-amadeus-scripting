@@ -54,6 +54,7 @@ export class RulesReaderService {
     this.getSegmentTypes();
     this.parseCarSegments();
     this.checkAmExists();
+    this.checkHasNoHotelBooked();
   }
 
   private setMatchEntity(regex, text) {
@@ -66,6 +67,10 @@ export class RulesReaderService {
         this.businessEntities.set(key, match.groups[key]);
       }
     });
+  }
+
+  private checkHasNoHotelBooked() {
+    this.businessEntities.set('PNR_HAS_NO_HOTEL_BOOKED', this.pnrService.getSegmentsForNoHotel().length > 0 ? 'YES' : 'NO');
   }
 
   private parseRemarks() {

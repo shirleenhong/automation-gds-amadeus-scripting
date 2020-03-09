@@ -41,7 +41,7 @@
 		"ExpectedRemark6": "RIR YOUR AIR CANADA CONFIRMATION NUMBER IS 1234567890",
 		"ExpectedRemark7": "RM *CN/-A9I",
 		"ExpectedRemark8": "RM *U14/-ACPASS-1234567890-RAPIDAIR.FLE",
-		"ExpectedRemark9": "RM*U63/-NO-0.00",
+		"ExpectedRemark9": "RM *U63/-NO-0.00",
 		"ExpectedRemark10": "RMA BULK99-AC/RAPIDAIR.FLE/1234567890/10.00/12/22",
 		"ExpectedRemark11": "RMA CCVI4444333322221111EXP12/22/30C*BULK99",
 		"ExpectedRemark12": "RMF LCC-AC*GRAND TOTAL CAD 0.00",

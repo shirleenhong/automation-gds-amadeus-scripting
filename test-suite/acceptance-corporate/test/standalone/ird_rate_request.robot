@@ -14,7 +14,7 @@ Verify IRD Rate Request Remarks Are Written In the PNR When All Mandatory And Op
     Complete The PNR With Default Values
     Populate IRD Rate Request Mandatory And Optional Fields
     Verify IRD Rate Request Remarks Are Written
-    Verify That PNR Is Queued When Travel Is Within 24 Hrs
+    # Verify That PNR Is Queued When Travel Is Within 24 Hrs
     
 Verify IRD Rate Request Remarks Are Written In the PNR When Optional Fields Are Blank
     [Tags]    us16315
@@ -22,7 +22,7 @@ Verify IRD Rate Request Remarks Are Written In the PNR When Optional Fields Are 
     Complete The PNR With Default Values
     Populate IRD Rate Request Mandatory Fields Only
     Verify IRD Rate Request Remarks Are Written
-    Verify That PNR Is Queued When Travel Is Within 24 Hrs
+    # Verify That PNR Is Queued When Travel Is Within 24 Hrs
     
 Verify IRD Rate Request Remarks Are Written In the PNR When Multiple Stopovers Are Entered
     [Tags]    us16315
@@ -30,7 +30,7 @@ Verify IRD Rate Request Remarks Are Written In the PNR When Multiple Stopovers A
     Complete The PNR With Default Values
     Populate IRD Rate Request With Multiple Stopovers
     Verify IRD Rate Request Remarks Are Written
-    Verify That PNR Is Queued When Travel Is Within 24 Hrs
+    # Verify That PNR Is Queued When Travel Is Within 24 Hrs
     
 Verify IRD Rate Request Remarks Are Written In the PNR When Multiple Comments Are Entered
     [Tags]    us16315
@@ -38,7 +38,7 @@ Verify IRD Rate Request Remarks Are Written In the PNR When Multiple Comments Ar
     Complete The PNR With Default Values
     Populate IRD Rate Request With Multiple Comments
     Verify IRD Rate Request Remarks Are Written
-    Verify That PNR Is Queued When Travel Is Within 24 Hrs
+    # Verify That PNR Is Queued When Travel Is Within 24 Hrs
     
 Verify That IRD Rate Request Is Not In the Main Menu When PNR Don't Have Stored Fares
     [Tags]    us16315

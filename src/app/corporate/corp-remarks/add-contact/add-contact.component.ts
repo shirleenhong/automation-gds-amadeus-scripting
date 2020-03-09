@@ -18,6 +18,9 @@ export class AddContactComponent implements OnInit {
   ngOnInit() {
     this.getPassengers();
     this.arrayGroup = this.getSSRPreFilledValues();
+    if (this.arrayGroup.length <= 0) {
+      this.arrayGroup = this.getRMEPrefilledValues();
+    }
     if (this.arrayGroup.length > 0) {
       this.showComponent = this.arrayGroup.length > 0 ? true : this.showComponent;
       this.arrayGroup.push(this.createItem());
@@ -127,5 +130,36 @@ export class AddContactComponent implements OnInit {
     });
     this.items = this.addContactForm.get('items') as FormArray;
     this.showComponent = true;
+    this.getRMEPrefilledValues();
+  }
+
+  getRMEPrefilledValues() {
+    const rmeElements = this.pnrService.getRME();
+    let name = '';
+    let countryCode = '';
+    let phone = '';
+    let freeFlowText = '';
+    const groupArray = [];
+
+    for (const rm of rmeElements) {
+      const text = rm.freeFlowText;
+
+      const output = text.split('/');
+      name = output[2].replace('N-', '');
+      phone = output[1].replace('TEL-', '');
+      countryCode = output[4].replace('C-', '');
+      freeFlowText = output[3].replace('R-', '');
+      const association = this.getPaxAssociations(rm.associations);
+      const group = this.fb.group({
+        name: new FormControl(name, [Validators.required]),
+        countryCode: new FormControl(countryCode, [Validators.required]),
+        phone: new FormControl(phone, [Validators.required]),
+        freeFlowText: new FormControl(freeFlowText, [Validators.required]),
+        passengers: new FormControl(association, [])
+      });
+      groupArray.push(group);
+    }
+
+    return groupArray;
   }
 }

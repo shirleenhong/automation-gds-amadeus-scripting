@@ -200,7 +200,7 @@ export class QueueService {
           }
 
           if (counter === queueCtr) {
-            const report = new AngularCsv(data, productivityReportForm.manualFileName);
+            const report = new AngularCsv(data, productivityReportForm.productivityReportForm.get('reportFileName').value);
             if (report) {
               smartScriptSession.send('QI');
             } else {

@@ -42,7 +42,6 @@ export class ReportingNonbspComponent implements OnInit {
     });
     this.getServicingOptionValuesFares();
     this.valueChagneListener.accountingRemarkChange.subscribe((accRemarks) => {
-      debugger;
       this.nonBspInformation = accRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP' || x.accountingTypeRemark === 'NONBSPEXCHANGE');
       if (!this.processed) {
         this.drawControlsForNonBsp();
@@ -52,7 +51,6 @@ export class ReportingNonbspComponent implements OnInit {
   }
 
   async drawControlsForNonBsp() {
-    debugger;
     this.nonBspReasonList = [
       { itemText: '', itemValue: '' },
       { itemText: 'L- Lower Fare', itemValue: 'L' }
@@ -74,7 +72,6 @@ export class ReportingNonbspComponent implements OnInit {
         }
       });
       if (!isAdded) {
-        debugger;
         items.push(
           this.createFormGroup(element.segmentNo, highFare, lowFare, 'L', element.baseAmount, element.getTotalAmount().toString())
         );

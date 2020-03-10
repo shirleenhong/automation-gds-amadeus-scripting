@@ -8,13 +8,15 @@ import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkGroup } from 'src/app/models/pnr/remark.group.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
 import { PnrService } from '../pnr.service';
+import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 
 declare var smartScriptSession: any;
 @Injectable({
   providedIn: 'root'
 })
 export class QueueService {
-  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
+  pnrList: string[] = [];
+  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) {}
 
   public getQueuePlacement(queueGroup: FormGroup): void {
     const items = queueGroup.get('queues') as FormArray;
@@ -56,7 +58,8 @@ export class QueueService {
       case 'ACCESS':
         await this.accessQueue(reportComp.accessQueueComponent.accessQueueForm, rmGroup);
         break;
-      case 'REPORT':
+      case 'PRODUCTIVITY':
+        await this.generateProductivityReport(reportComp.productivityReportComponent);
         break;
     }
 
@@ -73,14 +76,15 @@ export class QueueService {
     const command = queueForm.get('removeQueue').value ? 'QB' : 'QBR';
 
     // await smartScriptSession.send();
-    rmGroup.cryptics.push(command + queueForm.get('fromQueueNumber').value + fromCat + '-' +
-      queueForm.get('toQueueNumber').value + toCat);
+    rmGroup.cryptics.push(command + queueForm.get('fromQueueNumber').value + fromCat + '-' + queueForm.get('toQueueNumber').value + toCat);
 
     const moveOid = queueForm.get('oid').value ? '/' + queueForm.get('oid').value : '';
     const moveCarrier = queueForm.get('carrier').value ? '-AC(' + queueForm.get('carrier').value + ')' : '';
-    const moveTravelDate = queueForm.get('travelDate1').value ? queueForm.get('travelDate2').value ?
-      ',DD(' + queueForm.get('travelDate1').value + ',' + queueForm.get('travelDate2').value + ')' :
-      ',DD(' + queueForm.get('travelDate1').value + ')' : '';
+    const moveTravelDate = queueForm.get('travelDate1').value
+      ? queueForm.get('travelDate2').value
+        ? ',DD(' + queueForm.get('travelDate1').value + ',' + queueForm.get('travelDate2').value + ')'
+        : ',DD(' + queueForm.get('travelDate1').value + ')'
+      : '';
 
     rmGroup.cryptics.push('QV' + moveOid + queueForm.get('toQueueNumber').value + toCat + moveCarrier + moveTravelDate);
   }
@@ -95,14 +99,28 @@ export class QueueService {
       const oid = this.pnrService.extractOidFromBookRemark();
       const action = accessForm.get('action').value ? 'A' : '';
 
-      rmGroup.remarks.push(this.remarkHelper.getRemark
-        ('QPROD-' + formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() + '/' + formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
-          '-' + oid + '-' + accessForm.get('recordLocator').value + '-' + this.getCICNumber() + '-'
-          + accessForm.get('tracking').value + action, 'RM', 'J'));
+      rmGroup.remarks.push(
+        this.remarkHelper.getRemark(
+          'QPROD-' +
+            formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() +
+            '/' +
+            formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
+            '-' +
+            oid +
+            '-' +
+            accessForm.get('recordLocator').value +
+            '-' +
+            this.getCICNumber() +
+            '-' +
+            accessForm.get('tracking').value +
+            action,
+          'RM',
+          'J'
+        )
+      );
 
-      accessForm.get('remarks').value.array.forEach(element => {
-        rmGroup.remarks.push(this.remarkHelper.getRemark
-          (element, 'RM', 'G'));
+      accessForm.get('remarks').value.array.forEach((element) => {
+        rmGroup.remarks.push(this.remarkHelper.getRemark(element, 'RM', 'G'));
       });
     }
     let qmCommand = 'QE50C200';
@@ -124,5 +142,73 @@ export class QueueService {
       return match[0];
     }
     return '';
+  }
+
+  private async generateProductivityReport(productivityReportForm) {
+    const data: any[] = [];
+    await smartScriptSession.send('QI');
+    await smartScriptSession
+      .send(
+        'QS' +
+          productivityReportForm.productivityReportForm.get('queueNumber').value +
+          'C' +
+          productivityReportForm.productivityReportForm.get('category').value
+      )
+      .then(async (res) => {
+        const regex = /\(\d{1,2}\)/g;
+        const match = regex.exec(res.Response);
+        let queueCtr: any;
+
+        if (match[0] !== null) {
+          queueCtr = match[0].replace('(', '');
+          queueCtr = queueCtr.replace(')', '');
+        }
+
+        data.push({
+          date: 'DATE',
+          time: 'TIME',
+          bookingoid: 'BOOKING OID',
+          pnrLocator: 'PNR LOCATOR',
+          cicCode: 'CIC CODE',
+          trackingCode: 'TRACKING CODE',
+          action: 'ACTION / NO ACTION'
+        });
+
+        queueCtr = Number(queueCtr);
+        let counter = 0;
+        while (counter < queueCtr) {
+          await smartScriptSession.send('QD');
+          await this.pnrService.getPNR();
+          this.pnrList.push(this.pnrService.pnrObj.header.recordLocator.toString());
+          counter++;
+          if (this.pnrService.pnrObj) {
+            this.pnrService.pnrObj.rmElements.forEach((x) => {
+              if (x.category === 'J') {
+                const t1 = x.freeFlowText.split('/');
+                const t2 = t1[1].split('-');
+                data.push({
+                  date: t1[0].split('-')[1],
+                  time: t2[0],
+                  bookingoid: t2[1],
+                  pnrLocator: t2[2],
+                  cicCode: t2[3],
+                  trackingCode: t2[4],
+                  action: t2[4][t2[4].length - 1] === 'A' ? '' : 'Action'
+                });
+              }
+            });
+          }
+
+          if (counter === queueCtr) {
+            const report = new AngularCsv(data, productivityReportForm.productivityReportForm.get('reportFileName').value);
+            if (report) {
+              smartScriptSession.send('QI');
+            } else {
+              // to do for failed report
+              smartScriptSession.send('QI');
+            }
+          }
+        }
+      });
   }
 }

@@ -51,6 +51,7 @@ import { NoBookedHotelComponent } from './corporate/reporting/no-booked-hotel/no
 import { QueueReportComponent } from './corporate/queue-report/queue-report.component';
 import { MoveQueueComponent } from './corporate/queue-report/move-queue/move-queue.component';
 import { AccessQueueComponent } from './corporate/queue-report/access-queue/access-queue.component';
+import { ProductivityReportComponent } from './corporate/queue-report/productivity-report/productivity-report.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { AccessQueueComponent } from './corporate/queue-report/access-queue/acce
     NoBookedHotelComponent,
     QueueReportComponent,
     MoveQueueComponent,
-    AccessQueueComponent
+    AccessQueueComponent,
+    ProductivityReportComponent
   ],
   imports: [
     BrowserModule,

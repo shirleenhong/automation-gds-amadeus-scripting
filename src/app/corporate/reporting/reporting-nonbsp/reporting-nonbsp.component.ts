@@ -34,7 +34,7 @@ export class ReportingNonbspComponent implements OnInit {
     private valueChagneListener: ValueChangeListener,
     private ddbService: DDBService,
     private utilHelper: UtilHelper
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.nonBspGroup = this.fb.group({
@@ -42,7 +42,7 @@ export class ReportingNonbspComponent implements OnInit {
     });
     this.getServicingOptionValuesFares();
     this.valueChagneListener.accountingRemarkChange.subscribe((accRemarks) => {
-      this.nonBspInformation = accRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP');
+      this.nonBspInformation = accRemarks.filter((x) => x.accountingTypeRemark === 'NONBSP' || x.accountingTypeRemark === 'NONBSPEXCHANGE');
       if (!this.processed) {
         this.drawControlsForNonBsp();
       }

@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MoveQueueComponent } from './move-queue/move-queue.component';
 import { AccessQueueComponent } from './access-queue/access-queue.component';
-import { ProductivityReportComponent } from './productivity-report/productivity-report.component';
 
 @Component({
   selector: 'app-queue-report',
@@ -15,7 +14,6 @@ export class QueueReportComponent implements OnInit {
 
   @ViewChild(MoveQueueComponent) moveQueueComponent: MoveQueueComponent;
   @ViewChild(AccessQueueComponent) accessQueueComponent: AccessQueueComponent;
-  @ViewChild(ProductivityReportComponent) productivityReportComponent: ProductivityReportComponent;
 
   constructor() {
     this.loadQueueReportType();
@@ -32,11 +30,12 @@ export class QueueReportComponent implements OnInit {
       { itemText: '', itemValue: '' },
       { itemText: 'Move PNRs from a Queue to Work', itemValue: 'MOVE' },
       { itemText: 'Access Queue to work PNRs/Track Queue work', itemValue: 'ACCESS' },
-      { itemText: 'Queue Productivity Report', itemValue: 'PRODUCTIVITY' }
+      { itemText: 'Queue Productivity Report', itemValue: 'Report' }
     ];
   }
 
   get f() {
     return this.queueReportForm.controls;
   }
+
 }

@@ -2,7 +2,8 @@
   <div class="queueContainer">
     <div class="row form-group">
       <label for="queueReport" class="col-form-label col-sm-3">Queue Report:</label>
-      <select class="form-control col-sm-4" autofocus id="queueReport" name="queueReport" formControlName="queueReport" required>
+      <select class="form-control col-sm-4" autofocus id="queueReport" name="queueReport" formControlName="queueReport"
+        required>
         <option *ngFor="let item of queueReportList" [value]="item.itemValue">
           {{ item.itemText }}
         </option>
@@ -14,8 +15,6 @@
     <div *ngIf="f.queueReport.value === 'ACCESS'">
       <app-access-queue></app-access-queue>
     </div>
-    <div *ngIf="f.queueReport.value === 'PRODUCTIVITY'">
-      <app-productivity-report></app-productivity-report>
-    </div>
+
   </div>
 </form>

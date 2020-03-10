@@ -196,7 +196,7 @@ export class RulesReaderService {
     segmentsTypes = segmentsTypes.filter((thing, i, arr) => arr.findIndex((t) => t.type === thing.type) === i);
     this.assignKeyValue(
       'PNR_SEGMENT_TYPES_IN_PNR',
-      segmentsTypes.map((t) => t.type).join('\n') + segmentsTypes.map((t) => t.nameType).join('\n')
+      segmentsTypes.map((t) => t.type).join('\n') + '\n' + segmentsTypes.map((t) => t.nameType).join('\n')
     );
   }
 

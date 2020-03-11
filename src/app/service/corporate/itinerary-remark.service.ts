@@ -13,9 +13,9 @@ export class ItineraryRemarkService implements OnInit {
   destination = [];
   leisureOnDemandOID: any = '';
 
-  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) {}
+  constructor(private pnrService: PnrService, private amadeusQueue: AmadeusQueueService, private rms: RemarksManagerService) { }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
   addPersonalQueue(frmGroup: FormGroup) {
     if (frmGroup.controls.queueNo.value && frmGroup.controls.queueCategory.value) {
       this.getQueueMinder('personalQueue', frmGroup.controls.queueNo.value, frmGroup.controls.queueCategory.value);

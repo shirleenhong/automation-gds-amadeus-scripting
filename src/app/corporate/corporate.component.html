@@ -258,6 +258,28 @@
   </div>
 </div>
 
+<div *ngIf="workflow === 'emd'">
+  <accordion>
+    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+      <div accordion-heading>
+        <i class="fas fa-hand-holding-usd"></i> Payment
+        <i [ngClass]="validModel.paymentValidCss"></i>
+        <span class="cwt-logo"></span>
+      </div>
+      <app-emd></app-emd>
+    </accordion-group>
+  </accordion>
+  <br />
+  <div class="form-group row">
+    <div class="col">
+      <button class="leisureBtnSubmit" (click)="processEmd()">
+        Process EMD
+      </button>
+      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="workflow === 'error'" class="loaderBody">
   <div class="loader">
     <div>
@@ -347,6 +369,11 @@
     <div>
       <button class="leisureButton btnMenu" (click)="queueReport()">
         Queue Productivity Report
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="emd()">
+        EMD
       </button>
     </div>
   </div>

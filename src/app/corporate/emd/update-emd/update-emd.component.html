@@ -1,0 +1,79 @@
+<div class="modal-header">
+  <div class="modal-title">{{title}}</div>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="emdForm">
+    <div>
+      <div class="row form-group">
+        <label for="emdType" class="col-form-label col-sm-4">EMD Type:</label>
+        <input class="form-control col-8" id="emdType" type="text" formControlName="emdType" AllCapsMask>
+      </div>
+      <div class="row form-group">
+        <label for="passengerName" class="col-form-label col-sm-4">Passenger Name:</label>
+        <select class="form-control col-sm-8" autofocus id="passengerName" name="passengerName"
+          formControlName="passengerName">
+          <option *ngFor="let item of passengerList" [value]="item.surname + ' ' + item.firstname">
+            {{ item.surname }} {{ item.firstname }}
+          </option>
+        </select>
+      </div>
+      <div class="row form-group">
+        <label for="ticketNumber" class="col-form-label col-sm-4">Ticket Number:</label>
+        <select class="form-control col-sm-8" autofocus id="ticketNumber" name="ticketNumber"
+          formControlName="ticketNumber">
+          <option *ngFor="let item of ticketList" [value]="item.ticketNumber">
+            {{ item.ticketNumber }}
+          </option>
+        </select>
+      </div>
+      <div class="row form-group">
+        <label for="baseAmount" class="col-form-label col-sm-4">Base Amount:</label>
+        <select class="form-control col-sm-4" autofocus id="currency" name="currency" formControlName="currency">
+          <option *ngFor="let item of currencyList" [value]="item.itemValue">
+            {{ item.itemValue }}
+          </option>
+        </select>
+        <div class="col-4 py-sm-0 pl-sm-1 pr-sm-0">
+          <input class="form-control" id="baseAmount" type="text" formControlName="baseAmount" AmountMask>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label for="otherTaxes" class="col-form-label col-sm-4">Taxes:</label>
+        <input class="form-control col-4" id="taxes" type="text" formControlName="taxes" AmountMask
+          placeholder="V.A.T/HST/GST">
+        <div class="col-4 py-sm-0 pl-sm-1 pr-sm-0">
+          <input class="form-control" id="otherTaxes" type="text" formControlName="otherTaxes" AmountMask
+            placeholder="Other Taxes">
+        </div>
+      </div>
+      <div class="row form-group">
+        <label for="totalCharge" class="col-form-label col-sm-4">Total Charge:</label>
+        <select class="form-control col-sm-4" autofocus id="totalCurrency" name="totalCurrency"
+          formControlName="totalCurrency">
+          <option *ngFor="let item of currencyList" [value]="item.itemValue">
+            {{ item.itemValue }}
+          </option>
+        </select>
+        <div class="col-4 py-sm-0 pl-sm-1 pr-sm-0">
+          <input class="form-control" id="totalCharge" type="text" formControlName="totalCharge" AmountMask>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label for="fop" class="col-form-label col-sm-4">Form of Payment:</label>
+        <input class="form-control col-8" id="fop" type="text" formControlName="fop">
+      </div>
+      <div class="row form-group">
+        <label for="invoiceNumber" class="col-form-label col-sm-4">Invoice Number:</label>
+        <input class="form-control col-8" id="invoiceNumber" type="text" formControlName="invoiceNumber">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" id="saveButton" (click)="save()"
+    [disabled]="!emdForm.valid">Save</button>
+  <button type="button" class="btn btn-outline-dark" id="cancelButton" (click)="modalRef.hide()">Cancel</button>
+</div>

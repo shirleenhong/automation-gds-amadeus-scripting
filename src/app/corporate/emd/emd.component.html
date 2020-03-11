@@ -1,0 +1,44 @@
+<form [formGroup]="emdFormGroup" class="form-group">
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col" class="text-center">Id</th>
+          <th scope="col" class="text-center">Emd Type</th>
+          <th scope="col" class="text-center">Ticket Number</th>
+          <th scope="col" class="text-center">Base Amount</th>
+          <th scope="col" class="text-center">Other Taxes</th>
+          <th scope="col" class="text-center">V.A.T/HST/GST</th>
+          <th scope="col" class="text-center">Total Charge</th>
+          <th scope="col" class="text-center">Invoice Number</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of emdList; index as i">
+          <td [id]="'emd-' + item.id">{{ item.id }}</td>
+          <td [id]="'emd-emdType-' + item.id">{{ item.emdType }}</td>
+          <td [id]="'emd-ticketNumber-' + item.id">{{ item.ticketNumber }}</td>
+          <td [id]="'emd-baseAmount-' + item.id">{{ item.baseAmount }}</td>
+          <td [id]="'emd-otherTaxes-' + item.id">{{ item.otherTaxes}}</td>
+          <td [id]="'emd-taxes' + item.id">{{ item.taxes }}</td>
+          <td [id]="'emd-totalCharge' + item.id">{{ item.totalCharge }}</td>
+          <td [id]="'emd-invoiceNumber' + item.id">{{ item.invoiceNumber }}</td>
+          <td class="text-center align-middle"><i class="fas fa-edit" (click)="updateItem(item)"
+              id="{{ 'updateLfoButton-' + i }}"></i>
+            &nbsp;&nbsp;&nbsp;
+            <i class="fas fa-trash-alt" (click)="deleteItem(item)" id="{{ 'deleteLfoButton-' + i }}"> </i>
+          </td>
+        </tr>
+        <tr *ngIf="emdList.length == 0">
+          <td colspan="8" class="text-center">No EMD found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col">
+      <button type="button" (click)="addEmd()" id="addButton">Add EMD</button>
+    </div>
+  </div>
+</form>

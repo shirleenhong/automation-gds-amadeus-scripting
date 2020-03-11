@@ -52,6 +52,8 @@ import { TicketModel } from '../models/pnr/ticket.model';
 import { formatDate } from '@angular/common';
 import { QueueReportComponent } from './queue-report/queue-report.component';
 import { environment } from 'src/environments/environment';
+import { EmdService } from '../service/corporate/emd.service';
+import { EmdComponent } from './emd/emd.component';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -96,6 +98,7 @@ export class CorporateComponent implements OnInit {
   // @ViewChild(PricingComponent) pricingComponent: PricingComponent;
   @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
   @ViewChild(QueueReportComponent) queueReportComponent: QueueReportComponent;
+  @ViewChild(EmdComponent) emdComponent: EmdComponent;
 
   constructor(
     private pnrService: PnrService,
@@ -121,7 +124,8 @@ export class CorporateComponent implements OnInit {
     private corpCancelRemarkService: CorpCancelRemarkService,
     private pricingService: PricingService,
     private rulesEngine: RulesEngineService,
-    private commonRemarkService: CommonRemarkService
+    private commonRemarkService: CommonRemarkService,
+    private emdService: EmdService
   ) {
     this.loading = true;
     this.initData();
@@ -535,17 +539,7 @@ export class CorporateComponent implements OnInit {
 
   public async processQueueReport() {
     this.showLoading('Process Queue Report...', 'SubmitToPnr');
-    // const passiveSegmentList = new Array<PassiveSegmentModel>();
-    // const accRemarks = new Array<RemarkGroup>();
     const remarkCollection = new Array<RemarkGroup>();
-    // const remarkList = new Array<RemarkModel>();
-    // const commandList = [];
-    // const forDeleteRemarks = [];
-
-    // if () {
-    //   await this.queueService.initializeQueueReport();
-    //   await this.getPnrService();
-    // }
     remarkCollection.push(await this.queueService.queueProductivityReport(this.queueReportComponent));
     this.corpRemarkService.BuildRemarks(remarkCollection);
     await this.corpRemarkService.SubmitRemarks('', false).then(
@@ -560,8 +554,30 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
-    // this.paymentRemarkService.deleteRemarksStandAlone();
-    // remarkCollection.push(this.paymentRemarkService.writeStandAlonePassPurchase(this.paymentsComponent.accountingRemark));
+  }
+
+  public async processEmd() {
+    this.showLoading('Process EMD...', 'SubmitToPnr');
+    if (this.emdComponent.emdList.length === 0) {
+      this.closePopup();
+      return;
+    }
+
+    const remarkCollection = new Array<RemarkGroup>();
+    remarkCollection.push(this.emdService.writeEmdRemarks(this.emdComponent));
+    this.corpRemarkService.BuildRemarks(remarkCollection);
+    await this.corpRemarkService.SubmitRemarks('').then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
   }
 
   async sendIrdRateParameters() {
@@ -891,6 +907,18 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  async emd() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      // await this.rms.getMatchcedPlaceholderValues();
+      this.workflow = 'emd';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
@@ -931,12 +959,13 @@ export class CorporateComponent implements OnInit {
       this.itineraryService.getItineraryRemarks(this.itineraryqueueComponent.itineraryComponent.itineraryForm);
     }
 
-    this.itineraryService.addAquaQueue();
     if (!this.itineraryqueueComponent.itineraryComponent.itineraryForm.touched) {
       this.itineraryService.addAquaOverrideRmk();
     }
+
     const accRemarks = new Array<RemarkGroup>();
     if (this.itineraryqueueComponent.ticketingLineComponent.ticketForm.get('verifyAck').value) {
+      this.itineraryService.addAquaQueue();
       accRemarks.push(
         this.ticketRemarkService.submitTicketRemark(
           this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),

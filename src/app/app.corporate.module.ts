@@ -51,6 +51,8 @@ import { NoBookedHotelComponent } from './corporate/reporting/no-booked-hotel/no
 import { QueueReportComponent } from './corporate/queue-report/queue-report.component';
 import { MoveQueueComponent } from './corporate/queue-report/move-queue/move-queue.component';
 import { AccessQueueComponent } from './corporate/queue-report/access-queue/access-queue.component';
+import { EmdComponent } from './corporate/emd/emd.component';
+import { UpdateEmdComponent } from './corporate/emd/update-emd/update-emd.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +102,9 @@ import { AccessQueueComponent } from './corporate/queue-report/access-queue/acce
     NoBookedHotelComponent,
     QueueReportComponent,
     MoveQueueComponent,
-    AccessQueueComponent
+    AccessQueueComponent,
+    EmdComponent,
+    UpdateEmdComponent
   ],
   imports: [
     BrowserModule,
@@ -120,6 +124,7 @@ import { AccessQueueComponent } from './corporate/queue-report/access-queue/acce
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent, SeatsFormComponent, UpdateAccountingRemarkComponent]
+  entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent,
+    SeatsFormComponent, UpdateAccountingRemarkComponent, UpdateEmdComponent]
 })
-export class AppCorporateModule {}
+export class AppCorporateModule { }

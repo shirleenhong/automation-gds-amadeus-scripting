@@ -32,7 +32,7 @@ export class PnrService {
   agentSign = '';
   agentFirstName = '';
   agentLastName = '';
-  constructor(private utilHelper: UtilHelper) {}
+  constructor(private utilHelper: UtilHelper) { }
 
   async getPNR(): Promise<void> {
     this.cfLine = null;
@@ -1738,17 +1738,25 @@ export class PnrService {
 
   getTicketList() {
     const ticketList = [];
+    const regex = new RegExp('[0-9]{3}-[0-9]+');
+    let ticket = '';
     for (const ticketed of this.pnrObj.faElements) {
+      const match = regex.exec(ticketed.freeFlowText);
+      regex.lastIndex = 0;
+      if (match !== null) {
+        ticket = match[0].replace('-', '');
+      }
       ticketList.push({
         // tslint:disable-next-line: max-line-length
-        freeFlowText:
-          ticketed.freeFlowText.split('/')[0] + ' / ' + ticketed.freeFlowText.split('/')[1] + ' / ' + ticketed.freeFlowText.split('/')[2],
+        freeFlowText: ticketed.freeFlowText.split('/')[0] + ' / ' + ticketed.freeFlowText.split('/')[1] + ' / ' + ticketed.freeFlowText.split('/')[2],
         tatooNo: ticketed.tatooNumber,
-        segmentReference: ticketed.fullNode.referenceForDataElement
+        segmentReference: ticketed.fullNode.referenceForDataElement,
+        ticketNumber: ticket
       });
     }
     return ticketList;
   }
+
 
   getTktNumber(): string {
     let ticket: string;

@@ -17,13 +17,17 @@ export class AddContactComponent implements OnInit {
   constructor(private fb: FormBuilder, private pnrService: PnrService) {}
   ngOnInit() {
     this.getPassengers();
+    let hasRme = false;
     this.arrayGroup = this.getSSRPreFilledValues();
     if (this.arrayGroup.length <= 0) {
       this.arrayGroup = this.getRMEPrefilledValues();
+      hasRme = true;
     }
     if (this.arrayGroup.length > 0) {
       this.showComponent = this.arrayGroup.length > 0 ? true : this.showComponent;
-      this.arrayGroup.push(this.createItem());
+      if (hasRme === false) {
+        this.arrayGroup.push(this.createItem());
+      }
       this.addContactForm = new FormGroup({
         items: this.fb.array(this.arrayGroup)
       });

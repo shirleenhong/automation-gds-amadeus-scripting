@@ -36,7 +36,8 @@ export class RulesLogicService {
           isNegative = true;
           break;
         case 'IS NOT':
-          ruleLogic = entity !== logicValue;
+          ruleLogic = entity === logicValue;
+          isNegative = true;
           break;
         case 'NOT IN':
           ruleLogic = logicValue.split('|').indexOf(entity) > -1;

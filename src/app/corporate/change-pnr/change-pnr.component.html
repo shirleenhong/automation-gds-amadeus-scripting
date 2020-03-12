@@ -1,0 +1,47 @@
+<div class="form-group" [formGroup]="changePnrForm" style="padding:10px;">
+  <div class="row">
+    <div class="col-3">PNR Change:</div>
+    <div class="col-5">
+      <select class="form-control" formControlName="change" name="change" id="change">
+        <option value="air">Air Only Change – No Ticket Reissue Required</option>
+        <option value="hotel">Booked Hotel Segment</option>
+        <option value="car">Booked Car Segment</option>
+        <option value="limo">Booked Limo Segments</option>
+        <option value="modify">Modified Dates/Room Type on Existing Hotel/Car/Limo Segment </option>
+      </select>
+    </div>
+    <br />
+  </div>
+  <tabset *ngIf="changePnrForm.get('change').value != ''">
+    <tab heading="Hotel Missed Savings" id="tab1" *ngIf="'hotel,modify'.indexOf(changePnrForm.get('change').value) >= 0">
+      <app-hotel-segments></app-hotel-segments>
+    </tab>
+    <tab heading="Car Missed Savings" id="tab2" *ngIf="'car,modify'.indexOf(changePnrForm.get('change').value) >= 0">
+      <app-car-savings-code></app-car-savings-code>
+    </tab>
+
+    <tab heading="CWT Itinerary" id="tab3">
+      <app-itinerary [workflow]="'queue'"></app-itinerary>
+    </tab>
+    <tab heading="Waivers / Favors" id="tab4">
+      <app-waivers></app-waivers>
+    </tab>
+    <tab heading="OBT Touch Reason" id="tab5" *ngIf="isOBT() && 'car,hotel,limo'.indexOf(changePnrForm.get('change').value) >= 0">
+      <app-obt></app-obt>
+    </tab>
+    <tab heading="Matrix Reporting" id="tab6" *ngIf="'car,hotel,limo'.indexOf(changePnrForm.get('change').value) >= 0">
+      <app-matrix-reporting></app-matrix-reporting>
+    </tab>
+
+    <tab
+      heading="Ticketing Instruction"
+      id="tab7"
+      *ngIf="'car,hotel,limo'.indexOf(changePnrForm.get('change').value) >= 0 && showTicketing"
+    >
+      <app-aqua-ticketing></app-aqua-ticketing>
+    </tab>
+    <tab heading="UDID" id="rules" tabOrder="9" *ngIf="hasRules">
+      <app-container [containerFilter]="'REPORTING'"></app-container>
+    </tab>
+  </tabset>
+</div>

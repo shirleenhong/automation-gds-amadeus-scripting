@@ -50,10 +50,13 @@ import { AquaFeesComponent } from './fees/aqua-fees/aqua-fees.component';
 import { common } from 'src/environments/common';
 import { TicketModel } from '../models/pnr/ticket.model';
 import { formatDate } from '@angular/common';
-import { QueueReportComponent } from './queue-report/queue-report.component';
 import { environment } from 'src/environments/environment';
 import { EmdService } from '../service/corporate/emd.service';
 import { EmdComponent } from './emd/emd.component';
+import { ChangePnrComponent } from './change-pnr/change-pnr.component';
+import { ChangePnrService } from '../service/corporate/change-pnr.service';
+import { QueuePlaceModel } from '../models/pnr/queue-place.model';
+import { QueueReportComponent } from './queue-report/queue-report.component';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -78,7 +81,9 @@ export class CorporateComponent implements OnInit {
   loading = false;
   showAquaFeeButton = false;
   showAmadeusQueueButton = false;
+  showChangePnr = false;
   withPasspurchaseAccess = false;
+  changePnrConfig = '';
   version = common.LeisureVersionNumber;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
@@ -100,6 +105,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(QueueReportComponent) queueReportComponent: QueueReportComponent;
   @ViewChild(EmdComponent) emdComponent: EmdComponent;
 
+  @ViewChild(ChangePnrComponent) changePnrComponent: ChangePnrComponent;
   constructor(
     private pnrService: PnrService,
     private rms: RemarksManagerService,
@@ -125,7 +131,8 @@ export class CorporateComponent implements OnInit {
     private pricingService: PricingService,
     private rulesEngine: RulesEngineService,
     private commonRemarkService: CommonRemarkService,
-    private emdService: EmdService
+    private emdService: EmdService,
+    private changePnrService: ChangePnrService
   ) {
     this.loading = true;
     this.initData();
@@ -197,6 +204,7 @@ export class CorporateComponent implements OnInit {
   }
 
   async getPnrService() {
+    this.cfLine = null;
     this.loading = true;
     this.pnrService.isPNRLoaded = false;
     await this.pnrService.getPNR();
@@ -209,6 +217,8 @@ export class CorporateComponent implements OnInit {
     }
     await this.checkValidForAquaFee();
     await this.hasAccessInPassPurchase();
+    await this.getChangePnrCfaConfig();
+    this.checkChangePnr();
     this.loading = false;
   }
 
@@ -523,6 +533,91 @@ export class CorporateComponent implements OnInit {
     remarkCollection.push(this.paymentRemarkService.writeStandAlonePassPurchase(this.paymentsComponent.accountingRemark));
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
 
+    await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
+      async () => {
+        this.isPnrLoaded = false;
+        this.workflow = '';
+        this.getPnr();
+        this.closePopup();
+      },
+      (error) => {
+        console.log(JSON.stringify(error));
+        this.workflow = '';
+      }
+    );
+  }
+
+  public async processChangePnr() {
+    if (!this.changePnrComponent.checkValid()) {
+      this.shoInvalidInputMessage();
+      return;
+    }
+
+    this.showLoading('Updating PNR...', 'SubmitToPnr');
+
+    const changeVal = this.changePnrComponent.changePnrForm.get('change').value;
+    if (changeVal !== 'air' && changeVal !== 'modify') {
+      this.cleanupRemarkService.cleanUpRemarks();
+      await this.getPnrService();
+    }
+
+    const tktl = this.changePnrService.getTKTRemark(this.changePnrComponent, this.changePnrConfig);
+
+    if (this.changePnrComponent.matrixComp) {
+      this.invoiceRemarkService.WriteInvoiceRemark(this.changePnrComponent.matrixComp);
+    }
+    if (this.changePnrComponent.obtComp) {
+      this.reportingRemarkService.writeEBRemarks(this.changePnrComponent.obtComp);
+    }
+    if (this.changePnrComponent.waiversFavorComp) {
+      this.reportingRemarkService.WriteU63(this.changePnrComponent.waiversFavorComp);
+    }
+    if (!this.changePnrComponent.itineraryComp.itineraryForm.pristine) {
+      this.itineraryService.getItineraryRemarks(this.changePnrComponent.itineraryComp.itineraryForm);
+    }
+
+    if (this.changePnrComponent.aquaTicketingComp) {
+      this.ticketRemarkService.WriteAquaTicketing(this.changePnrComponent.aquaTicketingComp);
+    }
+
+    if (this.changePnrComponent.carMissedSavingComp) {
+      this.reportingRemarkService.writeCarSavingsRemarks(
+        this.changePnrComponent.carMissedSavingComp,
+        this.changePnrComponent.carMissedSavingComp.reAddRemarks
+      );
+    }
+
+    if (this.changePnrComponent.hotelMissedSavingComp) {
+      this.reportingRemarkService.writeHotelSavingsRemarks(
+        this.changePnrComponent.hotelMissedSavingComp,
+        this.changePnrComponent.hotelMissedSavingComp.reAddRemarks
+      );
+    }
+    const queue = new QueuePlaceModel();
+    if (this.pnrService.getRemarkText('BB/-011427') !== '') {
+      queue.category = '80';
+      queue.queueNo = '1';
+      queue.pcc = 'YYYCWL2102';
+      this.amadeusQueueService.addQueueCollection(queue);
+    } else if (this.pnrService.getRemarkText('BB/-')) {
+      queue.category = '70';
+      queue.queueNo = '1';
+      queue.pcc = this.pnrService.extractOidFromBookRemark();
+      this.amadeusQueueService.addQueueCollection(queue);
+    }
+
+    const remarkCollection = new Array<RemarkGroup>();
+    const remarkList = [];
+    const forDeleteRemarks = [];
+    const commandList = [];
+    const passiveSegmentList = [];
+
+    remarkCollection.push(this.rulesEngine.getRuleWriteRemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteAPERemarks());
+    remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
+
+    this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
+    commandList.push(tktl);
     await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
       async () => {
         this.isPnrLoaded = false;
@@ -918,6 +1013,19 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  async changePnr() {
+    this.showLoading('Loading PNR and Data', 'initData');
+    await this.getPnrService();
+    try {
+      await this.rms.getMatchcedPlaceholderValues();
+      await this.rulesEngine.initializeRulesEngine();
+      this.workflow = 'changePnr';
+      this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
     for (const seg of segmentDetails) {
@@ -1083,6 +1191,13 @@ export class CorporateComponent implements OnInit {
     }
   }
 
+  async getChangePnrCfaConfig() {
+    const response = await this.ddbService.getConfigurationParameter('CA_ChangePnrCFA');
+    if (response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+      this.changePnrConfig = response.ConfigurationParameters[0].ConfigurationParameterValue;
+    }
+  }
+
   async hasAccessInPassPurchase() {
     await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
       const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
@@ -1128,5 +1243,13 @@ export class CorporateComponent implements OnInit {
         this.workflow = '';
       }
     );
+  }
+
+  checkChangePnr() {
+    if (this.pnrService.pnrObj.tkElements && this.pnrService.pnrObj.tkElements.length > 0) {
+      this.showChangePnr = this.pnrService.pnrObj.tkElements[0].ticketingAction === 'OK' && !this.pnrService.hasUnticketedTst();
+    } else {
+      this.showChangePnr = false;
+    }
   }
 }

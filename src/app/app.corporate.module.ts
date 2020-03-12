@@ -53,6 +53,8 @@ import { MoveQueueComponent } from './corporate/queue-report/move-queue/move-que
 import { AccessQueueComponent } from './corporate/queue-report/access-queue/access-queue.component';
 import { EmdComponent } from './corporate/emd/emd.component';
 import { UpdateEmdComponent } from './corporate/emd/update-emd/update-emd.component';
+// import { ProductivityReportComponent } from './corporate/queue-report/productivity-report/productivity-report.component';
+import { ChangePnrComponent } from './corporate/change-pnr/change-pnr.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +106,9 @@ import { UpdateEmdComponent } from './corporate/emd/update-emd/update-emd.compon
     MoveQueueComponent,
     AccessQueueComponent,
     EmdComponent,
-    UpdateEmdComponent
+    UpdateEmdComponent,
+    // ProductivityReportComponent,
+    ChangePnrComponent
   ],
   imports: [
     BrowserModule,
@@ -124,7 +128,12 @@ import { UpdateEmdComponent } from './corporate/emd/update-emd/update-emd.compon
   providers: [],
   bootstrap: [],
   exports: [CorporateComponent],
-  entryComponents: [AddSupplementalFeesComponent, AddWaiverComponent,
-    SeatsFormComponent, UpdateAccountingRemarkComponent, UpdateEmdComponent]
+  entryComponents: [
+    AddSupplementalFeesComponent,
+    AddWaiverComponent,
+    SeatsFormComponent,
+    UpdateAccountingRemarkComponent,
+    UpdateEmdComponent
+  ]
 })
-export class AppCorporateModule { }
+export class AppCorporateModule {}

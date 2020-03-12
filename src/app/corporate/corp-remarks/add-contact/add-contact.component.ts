@@ -150,7 +150,10 @@ export class AddContactComponent implements OnInit {
 
       const output = text.split('/');
       name = output[2].replace('N-', '');
-      phone = output[1].replace('TEL-', '');
+      phone = output[1]
+        .replace('TEL-', '')
+        .replace('-', '')
+        .replace('-', '');
       countryCode = output[4].replace('C-', '');
       freeFlowText = output[3].replace('R-', '');
       const association = this.getPaxAssociations(rm.associations);

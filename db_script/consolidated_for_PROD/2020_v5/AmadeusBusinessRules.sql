@@ -4082,9 +4082,6 @@ END CATCH
 
 GO
 
-USE Desktop_Test
-GO
-
 BEGIN TRAN
 BEGIN TRY
 

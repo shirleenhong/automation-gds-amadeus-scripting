@@ -18,7 +18,7 @@ export class CorpCancelRemarkService {
     private remarkHelper: RemarkHelper,
     private queService: AmadeusQueueService,
     private pnrService: PnrService
-  ) { }
+  ) {}
 
   WriteNonBspTicketCredit(group: FormGroup) {
     const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
@@ -51,6 +51,7 @@ export class CorpCancelRemarkService {
             remarkList.push(this.remarkHelper.createRemark('.  ' + group.get('freeFlow2').value, 'RM', 'X'));
           }
         }
+
         this.queueNonBspTicket();
         return { remarks: remarkList, commands: [] };
       }
@@ -113,6 +114,11 @@ export class CorpCancelRemarkService {
         remarkSet.set('CounselorLastName', cancel.value.cLastName);
         this.remarksManager.createPlaceholderValues(remarkSet, null, null);
       }
+      if (cancel.value.vRsnOption) {
+        remarkSet = new Map<string, string>();
+        remarkSet.set('VRsn', cancel.value.vRsnOption);
+        this.remarksManager.createPlaceholderValues(remarkSet, null, null);
+      }
       if (cancel.value.otherDetails1.trim !== '') {
         rmGroup.remarks.push(this.getRemarksModel(cancel.value.otherDetails1, 'RM', 'X'));
       }
@@ -120,19 +126,9 @@ export class CorpCancelRemarkService {
         rmGroup.remarks.push(this.getRemarksModel(cancel.value.otherDetails2, 'RM', 'X'));
       }
     }
-    let OID = '';
-    if (this.pnrService.pnrObj.tkElements.length > 0) {
-      OID = this.pnrService
-        .getRemarkText('BOOK-')
-        .split('/')[1]
-        .split('-')[1];
-      if (OID === '') {
-        OID = this.pnrService.pnrObj.tkElements[0].ticketingOfficeID;
-      }
-    }
 
-    this.queService.addQueueCollection(new QueuePlaceModel(OID, 60, 1));
-    this.queService.addQueueCollection(new QueuePlaceModel('YTOWL2106', 41, 85));
+    this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 60, 1));
+    this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 41, 85));
     return rmGroup;
   }
 

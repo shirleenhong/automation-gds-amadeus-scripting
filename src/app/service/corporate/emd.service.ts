@@ -32,7 +32,7 @@ export class EmdService {
       rmGroup.remarks.push(this.remarkHelper.getRemark('*TICKET**TOTAL CHARGE: ' +
         emdRemarks.totalCurrency + ' ' + emdRemarks.totalCharge + ' *', 'RI', 'R'));
       rmGroup.remarks.push(this.remarkHelper.getRemark('*TICKET**FORM OF PAYMENT: ' + emdRemarks.fop + ' *', 'RI', 'R'));
-      rmGroup.remarks.push(this.remarkHelper.getRemark('*TICKET**INVOICE NUMBER-' + emdRemarks.ticketNumber + ' *', 'RI', 'R'));
+      rmGroup.remarks.push(this.remarkHelper.getRemark('*TICKET**INVOICE NUMBER-' + emdRemarks.invoiceNumber + ' *', 'RI', 'R'));
       rmGroup.remarks.push(this.remarkHelper.getRemark('*TICKET**PLEASE NOTE TOTAL AMOUNT BELOW *', 'RI', 'R'));
       rmGroup.remarks.push(this.remarkHelper.getRemark('*TICKET**WILL NOT REFLECT THIS CHARGE *', 'RI', 'R'));
     });

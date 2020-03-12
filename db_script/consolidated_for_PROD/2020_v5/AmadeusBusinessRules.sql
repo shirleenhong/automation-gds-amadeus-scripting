@@ -470,7 +470,7 @@ VALUES
     ( @CDRGRoupName, @bid4, 'RM* U56/-[UI_FORM_reasonForNotBookingOL]', @CreationTimestamp, @CreationUserIdentifier, @CreationTimestamp, @CreationUserIdentifier, 1)
 	
 	
-SET @resultitemid = SCOPE_IDENTITY() - 6; -- count of records
+SET @resultitemid = SCOPE_IDENTITY() - 3; -- count of records
 
 
     INSERT INTO dbo.ClientDefinedRuleGroupResult
@@ -4081,3 +4081,46 @@ RAISERROR(@ErrorMessage, 10, 1);
 END CATCH
 
 GO
+
+BEGIN TRAN
+BEGIN TRY
+
+	DECLARE @CreationTimestamp		DATETIME = GETUTCDATE()	
+	DECLARE @CreationUserIdentifier NVARCHAR(170)	
+	DECLARE @QueueMinderTypeId int
+	
+	-----------------------
+	-- ROLLBACK Scripts
+	-----------------------
+	--SET @CreationUserIdentifier			= 'Amadeus CA Migration - DE3204'
+	----------------------------------
+	-- Insert Scripts
+	----------------------------------
+	PRINT 'START Script'
+		SET @CreationUserIdentifier			= 'Amadeus CA Migration - DE3204'	
+		Update PNROutputItem 
+		set remarkFormat = '%PassName% PASS-%FareType%'
+		Where remarkFormat = '%PassName% PASS-%FareType% FARE'
+
+		SET @CreationUserIdentifier = 'Link - US18346'
+		SET @QueueMinderTypeId = (Select Max(QueueMinderTypeId) FROM QueueMinderType)
+											
+	
+		INSERT INTO QueueMinderType(QueueMinderTypeId,QueueMinderTypeDescription,CreationTimestamp,CreationUserIdentifier,VersionNumber)
+		VALUES(@QueueMinderTypeId + 1 , 'Link-IRD', @CreationTimestamp, @CreationUserIdentifier, 1),
+			  (@QueueMinderTypeId + 2 , 'Link-Refund', @CreationTimestamp, @CreationUserIdentifier, 1),
+			  (@QueueMinderTypeId + 3 , 'Link-Ticketing', @CreationTimestamp, @CreationUserIdentifier, 1)
+	
+	PRINT 'END Script'
+	COMMIT TRAN
+END TRY
+	
+BEGIN CATCH
+ROLLBACK TRAN
+
+	DECLARE @ErrorMessage NVARCHAR(4000);
+	SELECT @ErrorMessage=ERROR_MESSAGE()
+	RAISERROR(@ErrorMessage, 10, 1);
+
+END CATCH
+

@@ -746,7 +746,7 @@ export class CorporateComponent implements OnInit {
     //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
     // }
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
-    commandList.push('BT');
+    // commandList.push('BT');
     await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
       () => {
         this.isPnrLoaded = false;

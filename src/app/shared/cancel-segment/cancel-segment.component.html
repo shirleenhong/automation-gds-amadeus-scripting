@@ -122,16 +122,16 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="row form-group">
-        <div class="col-4">Select vRsn option:</div>
-        <div class="col-4">
-          <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
-            <option value=""></option>
-            <option value="PASSENGER">Passenger</option>
-            <option value="AGENCY">Agency</option>
-          </select>
-        </div>
+    <div class="row form-group" *ngIf="f.followUpOption.value === 'Void BSP' || f.followUpOption.value === 'Void Non BSP'">
+      <div class="col-4">Select vRsn option:</div>
+      <div class="col-4">
+        <select class="form-control" name="vRsnOption" formControlName="vRsnOption" id="vRsnOption">
+          <option value=""></option>
+          <option value="PASSENGER">Passenger</option>
+          <option value="AGENCY">Agency</option>
+        </select>
       </div>
     </div>
 

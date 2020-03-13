@@ -1506,7 +1506,7 @@ export class PnrService {
     return relatedPassenger;
   }
 
-  getUnticketedTst() {
+  hasUnticketedTst() {
     let unticketed = [];
     if (!this.tstObj) {
       return false;
@@ -1516,7 +1516,7 @@ export class PnrService {
     } else {
       unticketed = this.tstObj.filter((t) => this.checkPaxRefDetails(t.paxSegReference.refDetails));
     }
-    return unticketed.length > 0;
+    return unticketed.length > 0 && this.segments.length > 0;
   }
 
   checkPaxRefDetails(refDetails) {

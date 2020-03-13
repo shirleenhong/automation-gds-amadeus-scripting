@@ -32,6 +32,8 @@ export class AddWaiverComponent implements OnInit {
 
     if (this.cnNumber !== undefined) {
       this.cnNumber = this.cnNumber.split('CN/-')[1];
+    } else {
+      this.cnNumber = '';
     }
     this.formGroup = this.fb.group({
       waiver: new FormControl(''),

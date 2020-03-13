@@ -112,7 +112,7 @@ export class PaymentComponent {
         (x.airlineCode === 'AC' || x.airlineCode === 'WS' || x.airlineCode === 'PD') &&
         (x.status === 'DK' || x.status === 'HK')
     );
-    const unticketedTst = this.pnrService.getUnticketedTst();
+    const unticketedTst = this.pnrService.hasUnticketedTst();
     if (look && unticketedTst) {
       this.bspTicketFopValid = true;
       // this.bspTicketFop.bspTicketFopForm.disable();

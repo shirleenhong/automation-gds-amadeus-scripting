@@ -779,6 +779,7 @@ export class CorporateComponent implements OnInit {
     const deleteSegments = new Array<string>();
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
+    let executeBT = false;
     let sendTkt = false;
 
     getSelected.forEach((element) => {
@@ -836,13 +837,18 @@ export class CorporateComponent implements OnInit {
     remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
     remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
+
+    if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPRECREDIT') {
+      if (cancel.nonBspTicketCreditComponent.nonBspForm.value.isReCredit === 'N') {
+        executeBT = true;
+      }
+    }
     this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
     // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
     //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
     // }
     this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
-    // commandList.push('BT');
-    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList).then(
+    await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList, executeBT).then(
       () => {
         this.isPnrLoaded = false;
         this.getPnr();

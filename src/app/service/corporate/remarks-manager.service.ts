@@ -5,6 +5,7 @@ import { OutputItem } from 'src/app/models/output-item.model';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { AmadeusRemarkService } from '../amadeus-remark.service';
 import { PassiveSegmentModel } from 'src/app/models/pnr/passive-segment.model';
+import { PnrService } from '../pnr.service';
 
 declare var smartScriptSession: any;
 declare var PNR: any;
@@ -16,7 +17,12 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
+  // tslint:disable-next-line: max-line-length
+  constructor(
+    private serviceApi: RemarksManagerApiService,
+    private amadeusRemarkService: AmadeusRemarkService,
+    private pnrService: PnrService
+  ) {}
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -178,14 +184,16 @@ export class RemarksManagerService {
     additionalRemarks?: Array<RemarkModel>,
     additionalRemarksToBeDeleted?: Array<string>,
     commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>
+    passiveSegment?: Array<PassiveSegmentModel>,
+    executeBT?: boolean
   ) {
     await this.sendPnrToAmadeus(
       await this.serviceApi.getPnrAmadeusAddmultiElementRequest(this.newPlaceHolderValues),
       additionalRemarks,
       additionalRemarksToBeDeleted,
       commandList,
-      passiveSegment
+      passiveSegment,
+      executeBT
     );
   }
 
@@ -206,7 +214,8 @@ export class RemarksManagerService {
     additionalRemarks?: Array<RemarkModel>,
     additionalRemarksToBeDeleted?: Array<string>,
     commandList?,
-    passiveSegment?: Array<PassiveSegmentModel>
+    passiveSegment?: Array<PassiveSegmentModel>,
+    executeBT?: boolean
   ) {
     console.log('multiElement' + JSON.stringify(pnrResponse.pnrAddMultiElements));
     if (pnrResponse.deleteCommand.trim() !== 'XE') {
@@ -250,8 +259,10 @@ export class RemarksManagerService {
       if (commandList && commandList.length > 0) {
         await this.sendCrypticCommands(commandList);
       }
-      await this.endPnr();
-      this.refreshPnr();
+      await this.endPnr(executeBT);
+      if (!executeBT) {
+        this.refreshPnr();
+      }
     });
   }
 
@@ -269,13 +280,18 @@ export class RemarksManagerService {
     });
   }
 
-  async endPnr() {
+  async endPnr(executeBT?: boolean) {
     if (this.receiveFrom === '') {
       this.receiveFrom = 'CWTSCRIPT';
     }
     await smartScriptSession.send('RF' + this.receiveFrom);
     await smartScriptSession.send('ER');
+
     await smartScriptSession.send('ER');
+    if (executeBT) {
+      await smartScriptSession.send('BT');
+      await smartScriptSession.send('RT' + this.pnrService.recordLocator());
+    }
   }
 
   setReceiveFrom(rcvFrom: string) {

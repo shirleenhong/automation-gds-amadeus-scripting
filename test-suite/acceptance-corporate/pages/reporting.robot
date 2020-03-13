@@ -910,8 +910,14 @@ Select Book Less Than 14 Days Value: ${value}
 Fill Up UDID Fields For Client Sunovion
     Navigate To Page UDID
     Select From List By Label    ${list_reasonBookedLessThan14Days}    Need to travel occurred less then 14 days prior
-    Enter Value    ${input_noHotelCodes}    XX
     Enter Value    ${input_whyNotOnline}    AA
+    Take Screenshot
+    Fill Up No Hotel Booking With Default Values
+    
+Fill Up No Hotel Booking With Default Values
+    Navigate To Page No Hotel Booked 
+    Select No Hotel Booked Reason Code    H7 : Resides in city or one way
+    Enter Number Of Days    03
     Take Screenshot
     
 Select Booked Less Than 14 Days Advance Value: ${reason}
@@ -950,9 +956,10 @@ Fill Up Udid Fields For Client PostMedia
 Fill Up Udid Fields For Client Invenergy
     Navigate To Page UDID
     Select From List By Label    ${list_notBooked7Days}    Had to Wait for Dates to be Confirmed
-    Select From List By Label    ${list_whyHotelNotBooked}    Reside in City or One Way
+    # Select From List By Label    ${list_whyHotelNotBooked}    Reside in City or One Way
     Take Screenshot
-    
+    Fill Up No Hotel Booking With Default Values
+      
 Select Reason No Hotel Booked: ${reason}
     Navigate To Page UDID
     Select From List By Label     ${list_noHotelBooked}    ${reason}
@@ -1101,16 +1108,22 @@ Fill Up UDID Fields For Client Sobeys
 Fill Up UDID Fields For Client Thales Canada
     Navigate To Page UDID
     Run Keyword If    "${num_htl_segments}" == "0"    Select From List By Label    ${list_splitCharge}    SPLIT
-    Run Keyword If    "${num_htl_segments}" != "0"    Enter Value    ${input_noHotelCodes}    AA
     Enter Value    ${input_whyBookedOnline}    A23
     Take Screenshot
+    
+Fill Up UDID Fields For Client Thales Canada For No Hotel Booked
+    Navigate To Page UDID
+    Run Keyword If    "${num_htl_segments}" == "0"    Select From List By Label    ${list_splitCharge}    SPLIT
+    Enter Value    ${input_whyBookedOnline}    A23
+    Take Screenshot
+    Fill Up No Hotel Booking With Default Values
     
 Fill Up Udid Fields For Client UL
     Navigate To Page UDID
     Select From List By Label    ${list_ul_fareType}    REF-Refundable
-    Enter Value    ${input_noHotel}    15JULSFOHEENN
     Enter Value    ${input_feeReason}    ACCEPTABLE REASON 1
     Take Screenshot
+    Fill Up No Hotel Booking With Default Values
     
 Select Approver Name: ${approver_name}
     Navigate To Page UDID
@@ -1119,15 +1132,15 @@ Select Approver Name: ${approver_name}
     
 Fill Up Udid Fields For Client University Travel Business
     Navigate To Page UDID
-    Enter Value    ${input_noHotel}    15JULSFOHEENN
     Select From List By Label    ${list_reasonForNotBookingOL}    K INTERNATIONAL/COMPLEX BOOKING
     Take Screenshot
+    Fill Up No Hotel Booking With Default Values
     
 Fill Up Udid Fields For Client University Of Manitoba
     Navigate To Page UDID
-    Enter Value    ${input_noHotel}    15JULSFOHEENN
     Select From List By Label    ${list_reasonForNotBookingOL}    C GROUP BOOKING
     Take Screenshot
+    Fill Up No Hotel Booking With Default Values
     
 Fill Up Udid Fields For Client Winners
     Navigate To Page UDID
@@ -1220,4 +1233,5 @@ Verify No Hotel Booked UDIDs Are Written In the PNR With Car
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RM *U21/-${car_drop_day_1}ORDHCH03
     
-
+Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
+    Verify Specific Remark Is Written In The PNR    RM *U21/-${test_date_1}YYZHH703

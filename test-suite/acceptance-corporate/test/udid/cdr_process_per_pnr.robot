@@ -80,15 +80,15 @@ Verify UDID Tab Is Not Displayed For Client BWX Technologies When PNR Is Hotel &
     Complete The PNR In Full Wrap
     Verify Remarks Are Not Found In The PNR
     
-Verify UDID Remarks Are Added For Client Campbell Soup With Hotel Segment
+Verify UDID Remarks Are Added For Client Campbell Soup Without Hotel Segment
     [Tags]    us15250
-    Create PNR With Active Air Segments For Campbell Soup, With Hotel Segment
+    Create PNR With Active Air Segments For Campbell Soup, Without Hotel Segment
     Select No Hotel Booked Value: HO - BOOKED BY LOCAL OFFICE
     Verify Remarks Are Added Correctly In The PNR
     
-Verify UDID Remarks Are Not Written For Client Campbell Without Hotel Segment
+Verify UDID Remarks Are Not Written For Client Campbell With Hotel Segment
     [Tags]    us15250    full_regression
-    Create PNR With Active Air Segments For Campbell Soup, Without Hotel Segment
+    Create PNR With Active Air Segments For Campbell Soup, With Hotel Segment
     Complete The PNR In Full Wrap
     Verify Remarks Are Not Found In The PNR
 
@@ -117,7 +117,7 @@ Verify UDID Remarks Are Added For Equifax
     Verify Remarks Are Added Correctly In The PNR
 
 Verify UDID Remarks Are Added For Client Fujitsu
-    [Tags]    us15250    full_regression    expect_to_fail
+    [Tags]    us15250    full_regression
     Create PNR With Active Air Segments For Fujitsu
     Select Reason No Hotel Booked: Hotel Sold Out
     Verify Remarks Are Added Correctly In The PNR
@@ -177,10 +177,11 @@ Verify UDID Remarks Are Not Added For Client Intercontinental Hotel With Domesti
     Verify Remarks Are Not Found In The PNR
 
 Verify UDID Remarks Are Added For Client Invenergy
-    [Tags]    us15250    full_regression    expect_to_fail
+    [Tags]    us15250    full_regression
     Create PNR With Active Air Segments For Invenergy
     Fill Up Udid Fields For Client Invenergy
     Verify Remarks Are Added Correctly In The PNR
+    Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
 
 Verify UDID Remarks Are Added For Client Johns Manville
     [Tags]    us15250    full_regression
@@ -313,18 +314,20 @@ Verify UDID Remarks Are Added For Client Sunovion
     Create PNR With Active Air Segments For Sunovion
     Fill Up UDID Fields For Client Sunovion
     Verify Remarks Are Added Correctly In The PNR
+    Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
     
 Verify UDID Remarks Are Added For Client Thales Canada With Air Only Segments
-    [Tags]    us15250    expect_to_fail
+    [Tags]    us15250    
     Create PNR With Active Air Segments For Thales Canada With Air Only Segments 
     Fill Up UDID Fields For Client Thales Canada
     Verify Remarks Are Added Correctly In The PNR
     
-Verify UDID Remarks Are Added For Client Thales Canada With Hotel Segment
+Verify UDID Remarks Are Added For Client Thales Canada Without Hotel Segment
     [Tags]    us15250    full_regression
-    Create PNR With Active Air Segments For Thales Canada With Hotel Segment
-    Fill Up UDID Fields For Client Thales Canada
+    Create PNR With Active Air Segments For Thales Canada Without Hotel Segment
+    Fill Up UDID Fields For Client Thales Canada For No Hotel Booked
     Verify Remarks Are Added Correctly In The PNR
+    Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
     
 Verify UDID Remarks Are Added For Client Toys R Us
     [Tags]    us15250    full_regression
@@ -333,10 +336,11 @@ Verify UDID Remarks Are Added For Client Toys R Us
     Verify Remarks Are Added Correctly In The PNR
 
 Verify UDID Remarks Are Added For Client UL
-    [Tags]    us15250    full_regression    expect_to_fail
+    [Tags]    us15250    full_regression
     Create PNR With Active Air Segments For UL
     Fill Up Udid Fields For Client UL
     Verify Remarks Are Added Correctly In The PNR
+    Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
     
 Verify UDID Remarks Are Added For Client Under Armour
     [Tags]    us15250    full_regression
@@ -345,16 +349,18 @@ Verify UDID Remarks Are Added For Client Under Armour
     Verify Remarks Are Added Correctly In The PNR
     
 Verify UDID Remarks Are Added For Client University Travel Business
-    [Tags]    us15250    full_regression    expect_to_fail
+    [Tags]    us15250    full_regression
     Create PNR With Active Air Segments For University Travel Business
     Fill Up Udid Fields For Client University Travel Business
     Verify Remarks Are Added Correctly In The PNR
+    Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
     
 Verify UDID Remarks Are Added For Client University Of Manitoba
-    [Tags]    us15250    full_regression    expect_to_fail
+    [Tags]    us15250    full_regression
     Create PNR With Active Air Segments For University Of Manitoba
     Fill Up Udid Fields For Client University Of Manitoba
     Verify Remarks Are Added Correctly In The PNR
+    Verify No Hotel Booked UDIDs Are Written For CDR Per PNR
 
 Verify UDID Remarks Are Added For Client Viavi
     [Tags]    us15250

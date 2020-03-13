@@ -16,7 +16,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) { }
+  constructor(private serviceApi: RemarksManagerApiService, private amadeusRemarkService: AmadeusRemarkService) {}
 
   public async getMatchcedPlaceholderValues() {
     return await this.serviceApi
@@ -191,7 +191,7 @@ export class RemarksManagerService {
 
   async SendCommand(command: string) {
     if (command) {
-      await smartScriptSession.send(command);
+      return await smartScriptSession.send(command);
     }
   }
 

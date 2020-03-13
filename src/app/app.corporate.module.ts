@@ -55,6 +55,7 @@ import { EmdComponent } from './corporate/emd/emd.component';
 import { UpdateEmdComponent } from './corporate/emd/update-emd/update-emd.component';
 // import { ProductivityReportComponent } from './corporate/queue-report/productivity-report/productivity-report.component';
 import { ChangePnrComponent } from './corporate/change-pnr/change-pnr.component';
+import { AssignInvoiceToOidComponent } from './corporate/assign-invoice-to-oid/assign-invoice-to-oid.component';
 
 @NgModule({
   declarations: [
@@ -108,7 +109,8 @@ import { ChangePnrComponent } from './corporate/change-pnr/change-pnr.component'
     EmdComponent,
     UpdateEmdComponent,
     // ProductivityReportComponent,
-    ChangePnrComponent
+    ChangePnrComponent,
+    AssignInvoiceToOidComponent
   ],
   imports: [
     BrowserModule,

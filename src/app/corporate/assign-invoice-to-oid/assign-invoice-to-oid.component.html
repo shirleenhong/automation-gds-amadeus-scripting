@@ -1,0 +1,45 @@
+<div class="form-group" style="padding:10px" [formGroup]="assignInvoiceForm">
+  <div class="row">
+    <div class="col-3">Task:</div>
+    <div class="col-6">
+      <select class="form-control" name="task" formControlName="task" id="task">
+        <option value="assign">Assign New Invoice Numbers</option>
+        <option value="modify">Modify Existing Invoice Numbers</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      MNEM: &nbsp;&nbsp;
+    </div>
+    <div class="col-6">
+      {{ mnem }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-3">
+      Starting Invoice:
+    </div>
+    <div class="col-6">
+      <input
+        type="text"
+        class="form-control"
+        name="start"
+        formControlName="start"
+        id="start"
+        minlength="10"
+        maxlength="10"
+        NumberOnlyMask
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      Ending Invoice:
+    </div>
+    <div class="col-6">
+      <input type="text" class="form-control" name="end" formControlName="end" id="end" minlength="10" maxlength="10" NumberOnlyMask />
+    </div>
+  </div>
+</div>

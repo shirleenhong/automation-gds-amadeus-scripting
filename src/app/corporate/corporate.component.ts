@@ -57,6 +57,7 @@ import { ChangePnrComponent } from './change-pnr/change-pnr.component';
 import { ChangePnrService } from '../service/corporate/change-pnr.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueReportComponent } from './queue-report/queue-report.component';
+import { AssignInvoiceToOidComponent } from './assign-invoice-to-oid/assign-invoice-to-oid.component';
 
 declare var smartScriptUtils: any;
 @Component({
@@ -85,6 +86,7 @@ export class CorporateComponent implements OnInit {
   withPasspurchaseAccess = false;
   changePnrConfig = '';
   version = common.LeisureVersionNumber;
+  showAssignInvoiceToOid = false;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;
   @ViewChild(ReportingComponent) reportingComponent: ReportingComponent;
@@ -104,7 +106,7 @@ export class CorporateComponent implements OnInit {
   @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
   @ViewChild(QueueReportComponent) queueReportComponent: QueueReportComponent;
   @ViewChild(EmdComponent) emdComponent: EmdComponent;
-
+  @ViewChild(AssignInvoiceToOidComponent) assignToNewOidComponent: AssignInvoiceToOidComponent;
   @ViewChild(ChangePnrComponent) changePnrComponent: ChangePnrComponent;
   constructor(
     private pnrService: PnrService,
@@ -219,6 +221,7 @@ export class CorporateComponent implements OnInit {
     await this.hasAccessInPassPurchase();
     await this.getChangePnrCfaConfig();
     this.checkChangePnr();
+    await this.hasAssignInvoiceToOID();
     this.loading = false;
   }
 
@@ -241,8 +244,10 @@ export class CorporateComponent implements OnInit {
   }
 
   closePopup() {
-    this.modalRef.content = null;
-    this.modalRef.hide();
+    if (this.modalRef) {
+      this.modalRef.content = null;
+      this.modalRef.hide();
+    }
   }
 
   showMessage(msg: string, type: MessageType, title: string, caller: string) {
@@ -608,7 +613,7 @@ export class CorporateComponent implements OnInit {
 
     const remarkCollection = new Array<RemarkGroup>();
     const remarkList = [];
-    const forDeleteRemarks = [];
+    let forDeleteRemarks = [];
     const commandList = [];
     const passiveSegmentList = [];
 
@@ -617,6 +622,8 @@ export class CorporateComponent implements OnInit {
     remarkCollection.push(this.rulesEngine.getRuleDeleteRemarks());
 
     this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeleteRemarks, commandList);
+    const tktlNos = this.pnrService.pnrObj.tkElements.map((x) => x.elementNumber);
+    forDeleteRemarks = forDeleteRemarks.concat(tktlNos);
     commandList.push(tktl);
     await this.rms.submitToPnr(remarkList, forDeleteRemarks, commandList, passiveSegmentList).then(
       async () => {
@@ -1025,6 +1032,31 @@ export class CorporateComponent implements OnInit {
       console.log(e);
     }
   }
+  async assignInvoiceToOid() {
+    this.closePopup();
+    // this.showLoading('Loading PNR and Data', 'initData');
+    // await this.getPnrService();
+    try {
+      this.workflow = 'assignInvoiceToOid';
+      //   await this.rms.getMatchcedPlaceholderValues();
+      // this.closePopup();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  assignToOidCommand() {
+    if (!this.assignToNewOidComponent.assignInvoiceForm.valid) {
+      this.shoInvalidInputMessage();
+      return;
+    }
+    const task = this.assignToNewOidComponent.assignInvoiceForm.get('task').value;
+    const start = this.assignToNewOidComponent.assignInvoiceForm.get('start').value;
+    const end = this.assignToNewOidComponent.assignInvoiceForm.get('end').value;
+    const emnem = this.assignToNewOidComponent.mnem;
+    this.rms.SendCommand('TSM/IN1/' + start + '-' + end + '/P-' + emnem + (task === 'modify' ? '/x' : '')).then((res) => {
+      this.showMessage(res.Response, MessageType.Success, 'AssignToOid', 'Cryptic Response');
+    });
+  }
 
   checkHasPowerHotel() {
     const segmentDetails = this.pnrService.getSegmentList();
@@ -1251,5 +1283,13 @@ export class CorporateComponent implements OnInit {
     } else {
       this.showChangePnr = false;
     }
+  }
+  async hasAssignInvoiceToOID() {
+    await this.ddbService.getConfigurationParameter('CA_AssignInvoiceToNewOidUsers').then((response) => {
+      if (response.ConfigurationParameters && response.ConfigurationParameters.length) {
+        const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+        this.showAssignInvoiceToOid = listUsers.indexOf(this.pnrService.uid) > -1;
+      }
+    });
   }
 }

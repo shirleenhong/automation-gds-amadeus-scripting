@@ -29,7 +29,7 @@ export class ChangePnrService {
       }
     } else if (changePnrValue === 'car' || changePnrValue === 'hotel') {
       comand = 'TKTL' + dateStr + '/';
-      comand = this.pnrService.extractOidFromBookRemark();
+      comand += this.pnrService.extractOidFromBookRemark();
     }
     comand += '/Q8C1-CHG';
 

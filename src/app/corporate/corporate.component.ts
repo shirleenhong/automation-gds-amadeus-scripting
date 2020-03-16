@@ -787,7 +787,7 @@ export class CorporateComponent implements OnInit {
     const forDeletion = new Array<string>();
     const commandList = new Array<string>();
     let executeBT = false;
-    let sendTkt = false;
+    // let sendTkt = false;
 
     getSelected.forEach((element) => {
       deleteSegments.push(element.lineNo);
@@ -811,9 +811,9 @@ export class CorporateComponent implements OnInit {
         cancel.bspRefundComponent.refundType
       );
       if (refundTicket) {
-        if (refundTicket.SendTicket) {
-          sendTkt = true;
-        }
+        // if (refundTicket.SendTicket) {
+        //   //sendTkt = true;
+        // }
         if (refundTicket.remarks) {
           refundTicket.remarks.forEach((rem) => remarkList.push(rem));
         }

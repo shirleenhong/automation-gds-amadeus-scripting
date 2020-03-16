@@ -1198,7 +1198,6 @@ export class CorporateComponent implements OnInit {
     }
     this.showLoading('Sending Invoice...');
     const resendCompData = this.sendInvoiceItineraryComponent.resendInvoiceComponent;
-    debugger;
     this.invoiceRemarkService.addEmailRemarks(resendCompData.invoiceFormGroup);
     const deletedInvoiceLines = this.invoiceRemarkService.getDeletedInvoiceLines(
       resendCompData.selectedElementsUI,

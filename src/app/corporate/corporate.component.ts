@@ -822,21 +822,21 @@ export class CorporateComponent implements OnInit {
         }
       }
     }
-    if (
-      cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
-      cancel.cancelForm.controls.followUpOption.value === 'BSPKT' ||
-      cancel.cancelForm.controls.followUpOption.value === 'HOTELCARLIMO' ||
-      sendTkt
-    ) {
-      const canceltktl = this.ticketRemarkService.cancelTicketRemark();
-      if (canceltktl) {
-        canceltktl.cryptics.forEach((c) => commandList.push(c));
-        if (this.pnrService.getTkLineNumber() && canceltktl.cryptics.length > 0) {
-          forDeletion.push(this.pnrService.getTkLineNumber().toString());
-        }
+    // if (
+    //   cancel.cancelForm.controls.followUpOption.value === 'NONBSPKT' ||
+    //   cancel.cancelForm.controls.followUpOption.value === 'BSPKT' ||
+    //   cancel.cancelForm.controls.followUpOption.value === 'HOTELCARLIMO' ||
+    //   sendTkt
+    // ) {
+    const canceltktl = this.ticketRemarkService.cancelTicketRemark();
+    if (canceltktl) {
+      canceltktl.cryptics.forEach((c) => commandList.push(c));
+      if (this.pnrService.getTkLineNumber() && canceltktl.cryptics.length > 0) {
+        forDeletion.push(this.pnrService.getTkLineNumber().toString());
       }
-      remarkCollection.push(this.ticketRemarkService.deleteTicketingLine());
     }
+    remarkCollection.push(this.ticketRemarkService.deleteTicketingLine());
+    // }
 
     if (getSelected.length === this.segment.length) {
       remarkCollection.push(this.segmentService.cancelMisSegment());

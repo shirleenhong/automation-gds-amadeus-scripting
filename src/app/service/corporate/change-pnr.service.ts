@@ -18,17 +18,12 @@ export class ChangePnrService {
     }
     const dateStr = formatDate(changePnrComponent.changePnrForm.get('ticketDate').value, 'ddMMM', 'en-US').toUpperCase();
     comand = 'TKTL' + dateStr + '/';
-    if (changePnrValue === 'air' || changePnrValue === 'modify') {
-      if (this.pnrService.getRemarkText('BB/-011427') !== '') {
-        comand += 'YYCWL2102';
-      } else {
-        comand += 'YTOWL2106';
-      }
-    } else if (changePnrValue === 'car' || changePnrValue === 'hotel') {
+    if ((changePnrValue === 'air' || changePnrValue === 'modify') && this.pnrService.getRemarkText('BB/-011427') !== '') {
+      comand += 'YYCWL2102';
+    } else {
       comand += this.pnrService.extractOidFromBookRemark();
     }
     comand += '/Q8C1-CHG';
-
     return comand;
   }
   checkToWriteNFR(changePnrConfig) {

@@ -600,13 +600,13 @@ export class CorporateComponent implements OnInit {
     }
     const queue = new QueuePlaceModel();
     if (this.pnrService.getRemarkText('BB/-011427') !== '') {
-      queue.category = '80';
-      queue.queueNo = '1';
+      queue.category = '1';
+      queue.queueNo = '80';
       queue.pcc = 'YYCWL2102';
       this.amadeusQueueService.addQueueCollection(queue);
-    } else if (this.pnrService.getRemarkText('BB/-')) {
-      queue.category = '70';
-      queue.queueNo = '1';
+    } else {
+      queue.category = '1';
+      queue.queueNo = '70';
       queue.pcc = this.pnrService.extractOidFromBookRemark();
       this.amadeusQueueService.addQueueCollection(queue);
     }

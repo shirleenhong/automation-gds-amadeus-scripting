@@ -12,11 +12,9 @@ export class ChangePnrService {
   getTKTRemark(changePnrComponent: ChangePnrComponent, changePnrConfig) {
     let comand = '';
     const changePnrValue = changePnrComponent.changePnrForm.get('change').value;
-    const foundCfa = this.checkCfaMatch(changePnrConfig);
+
     if (changePnrValue === 'hotel' || changePnrValue === 'car') {
-      if (!foundCfa && this.pnrService.getRemarkText('BB/-') !== '') {
-        this.writeNFR();
-      }
+      this.checkToWriteNFR(changePnrConfig);
     }
     const dateStr = formatDate(changePnrComponent.changePnrForm.get('ticketDate').value, 'ddMMM', 'en-US').toUpperCase();
     comand = 'TKTL' + dateStr + '/';
@@ -33,15 +31,18 @@ export class ChangePnrService {
 
     return comand;
   }
-  checkCfaMatch(changePnrConfig) {
+  checkToWriteNFR(changePnrConfig) {
     const cfa = this.pnrService.getCFLine().cfa;
-    return changePnrConfig.indexOf(cfa) >= 0;
+    const foundCfa = changePnrConfig.split('|').filter((x) => x.indexOf(cfa) >= 0); /// indexOf(cfa) >= 0;
+    if (foundCfa.length === 0 || (this.pnrService.getRemarkText('EB/-') === '' && foundCfa[0].indexOf('=OBT') >= 0)) {
+      this.writeNFR();
+    }
   }
 
   writeNFR() {
     const migrationOBTFeeMap = new Map<string, string>();
     migrationOBTFeeMap.set('SupFeeTicketId', '1');
-    migrationOBTFeeMap.set('SupFeeInfo', 'ATE');
+    migrationOBTFeeMap.set('SupFeeInfo', 'NFR');
     this.remarksManager.createPlaceholderValues(migrationOBTFeeMap, null, null);
   }
 }

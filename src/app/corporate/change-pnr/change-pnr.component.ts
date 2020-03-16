@@ -11,8 +11,7 @@ import { MatrixReportingComponent } from '../reporting/matrix-reporting/matrix-r
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
-import { formatDate } from '@angular/common';
-import { validateSegmentDate } from 'src/app/shared/validators/leisure.validators';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-change-pnr',
@@ -43,14 +42,19 @@ export class ChangePnrComponent implements OnInit {
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
-    const dateStr = formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase();
+    // const dateStr = formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase();
     this.changePnrForm = this.fb.group({
       change: new FormControl('', [Validators.required]),
-      ticketDate: new FormControl(dateStr, [Validators.required, validateSegmentDate()])
+      ticketDate: new FormControl('', [Validators.required])
     });
     this.showTicketing = this.checkShowTicketing();
+    this.loadDefaultDate();
   }
-
+  private loadDefaultDate() {
+    const datePipe = new DatePipe('en-GB');
+    const dateToday = datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.changePnrForm.get('ticketDate').setValue(dateToday);
+  }
   isOBT() {
     const changePnrValue = this.changePnrForm.get('change').value;
     const allow = 'car,hotel,limo'.indexOf(changePnrValue) >= 0;
@@ -99,7 +103,6 @@ export class ChangePnrComponent implements OnInit {
     if (this.itineraryComp.itineraryForm.touched && !this.itineraryComp.itineraryForm.valid) {
       return false;
     }
-
     return true;
   }
 }

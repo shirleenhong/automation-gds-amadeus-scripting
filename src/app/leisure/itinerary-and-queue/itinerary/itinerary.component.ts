@@ -118,7 +118,8 @@ export class ItineraryComponent implements OnInit {
 
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
-      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')])
+      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')]),
+      donotSendEmail: new FormControl('', [])
     });
 
     return group;

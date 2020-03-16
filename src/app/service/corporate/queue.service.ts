@@ -100,7 +100,7 @@ export class QueueService {
           '-' + oid + '-' + accessForm.get('recordLocator').value + '-' + this.getCICNumber() + '-'
           + accessForm.get('tracking').value + action, 'RM', 'J'));
 
-      accessForm.get('remarks').value.array.forEach(element => {
+      accessForm.get('remarks').value.forEach(element => {
         rmGroup.remarks.push(this.remarkHelper.getRemark
           (element, 'RM', 'G'));
       });

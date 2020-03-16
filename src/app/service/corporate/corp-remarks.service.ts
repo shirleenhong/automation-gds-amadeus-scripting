@@ -7,6 +7,8 @@ import { IrdRemarksComponent } from 'src/app/corporate/corp-remarks/ird-remarks/
 import { FormGroup, FormArray } from '@angular/forms';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
 import { RemarkHelper } from 'src/app/helper/remark-helper';
+import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
+import { AmadeusQueueService } from '../amadeus-queue.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,8 @@ export class CorpRemarksService {
     private remarksManagerService: RemarksManagerService,
     private pms: PnrService,
     private rms: RemarksManagerService,
-    private remarkHelper: RemarkHelper
+    private remarkHelper: RemarkHelper,
+    private queService: AmadeusQueueService
   ) { }
 
   /**
@@ -161,6 +164,10 @@ export class CorpRemarksService {
       this.rms.createPlaceholderValues(nbrStatus);
       this.rms.createPlaceholderValues(irdSavings);
       this.rms.createPlaceholderValues(lowFareSavings);
+    }
+
+    if (items.length > 0) {
+      this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 285));
     }
   }
 

@@ -127,7 +127,7 @@ export class CorpCancelRemarkService {
       }
     }
 
-    this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 60, 1));
+    // this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 60, 1));
     this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 41, 85));
     return rmGroup;
   }

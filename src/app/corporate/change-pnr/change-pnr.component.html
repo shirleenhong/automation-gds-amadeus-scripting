@@ -1,7 +1,7 @@
 <div class="form-group" [formGroup]="changePnrForm" style="padding:10px;">
   <div class="row">
     <div class="col-3">PNR Change:</div>
-    <div class="col-5">
+    <div class="col-6">
       <select class="form-control" formControlName="change" name="change" id="change">
         <option value="air">Air Only Change – No Ticket Reissue Required</option>
         <option value="hotel">Booked Hotel Segment</option>
@@ -10,8 +10,14 @@
         <option value="modify">Modified Dates/Room Type on Existing Hotel/Car/Limo Segment </option>
       </select>
     </div>
-    <br />
   </div>
+  <div class="row">
+    <div class="col-3">Ticket Date:</div>
+    <div class="col-3">
+      <input type="text" class="form-control" id="ticketDate" name="ticketDate" formControlName="ticketDate" maxlength="5" AllCapsMask />
+    </div>
+  </div>
+  <br />
   <tabset *ngIf="changePnrForm.get('change').value != ''">
     <tab heading="Hotel Missed Savings" id="tab1" *ngIf="'hotel,modify'.indexOf(changePnrForm.get('change').value) >= 0">
       <app-hotel-segments></app-hotel-segments>

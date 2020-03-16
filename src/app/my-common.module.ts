@@ -26,6 +26,7 @@ import { ContainerComponent } from './corporate/business-rules/container/contain
 import { AssociatedRemarksComponent } from './leisure/remarks/associated-remarks/associated-remarks.component';
 import { FareRuleSegmentComponent } from './leisure/remarks/fare-rule-segment/fare-rule-segment.component';
 import { UpdateFareRuleSegmentComponent } from './leisure/remarks/update-fare-rule-segment/update-fare-rule-segment.component';
+import { DateMaskDirective } from './directives/date-mask.directive';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { UpdateFareRuleSegmentComponent } from './leisure/remarks/update-fare-ru
     AssociatedRemarksComponent,
     FareRuleSegmentComponent,
     UpdateFareRuleSegmentComponent,
+    DateMaskDirective
   ],
   imports: [
     CommonModule,
@@ -83,9 +85,9 @@ import { UpdateFareRuleSegmentComponent } from './leisure/remarks/update-fare-ru
     ContainerComponent,
     AssociatedRemarksComponent,
     FareRuleSegmentComponent,
-    UpdateFareRuleSegmentComponent
+    UpdateFareRuleSegmentComponent,
+    DateMaskDirective
   ],
-  entryComponents: [
-    UpdateFareRuleSegmentComponent]
+  entryComponents: [UpdateFareRuleSegmentComponent]
 })
-export class MyCommonModule { }
+export class MyCommonModule {}

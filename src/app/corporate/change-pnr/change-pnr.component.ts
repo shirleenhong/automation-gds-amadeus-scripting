@@ -11,6 +11,8 @@ import { MatrixReportingComponent } from '../reporting/matrix-reporting/matrix-r
 import { UtilHelper } from 'src/app/helper/util.helper';
 import { ContainerComponent } from '../business-rules/container/container.component';
 import { RulesEngineService } from 'src/app/service/business-rules/rules-engine.service';
+import { formatDate } from '@angular/common';
+import { validateSegmentDate } from 'src/app/shared/validators/leisure.validators';
 
 @Component({
   selector: 'app-change-pnr',
@@ -31,6 +33,7 @@ export class ChangePnrComponent implements OnInit {
   changePnrConfig: string;
   showTicketing = false;
   hasRules = false;
+
   constructor(
     private fb: FormBuilder,
     private rulesEngineService: RulesEngineService,
@@ -40,8 +43,10 @@ export class ChangePnrComponent implements OnInit {
 
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'REPORTING');
+    const dateStr = formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase();
     this.changePnrForm = this.fb.group({
-      change: new FormControl('', [Validators.required])
+      change: new FormControl('', [Validators.required]),
+      ticketDate: new FormControl(dateStr, [Validators.required, validateSegmentDate()])
     });
     this.showTicketing = this.checkShowTicketing();
   }

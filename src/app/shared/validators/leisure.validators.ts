@@ -139,3 +139,27 @@ export function validateNotEqualTo(compareValues: string[]): ValidatorFn {
     return null;
   };
 }
+
+export function validateSegmentDate(): ValidatorFn {
+  return (currentControl: AbstractControl): { [key: string]: any } => {
+    const newValue = currentControl.value;
+    if (newValue === undefined) {
+      return { no_value: true };
+    }
+    if (newValue.length > 5) {
+      return { INVALID_LENGTH: true };
+    }
+    const regex = /[0-9]{2}[A-Z]{3}/g;
+    if (!newValue.match(regex)) {
+      return { INVALID_FORMAT: true };
+    }
+    if (Number(newValue.substr(0, 2)) > 31) {
+      return { INVALID_DAY: true };
+    }
+    const month = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    if (month.indexOf(newValue.substr(2, 3)) === -1) {
+      return { INVALID_MONTH: true };
+    }
+    return null;
+  };
+}

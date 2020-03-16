@@ -602,7 +602,7 @@ export class CorporateComponent implements OnInit {
     if (this.pnrService.getRemarkText('BB/-011427') !== '') {
       queue.category = '80';
       queue.queueNo = '1';
-      queue.pcc = 'YYYCWL2102';
+      queue.pcc = 'YYCWL2102';
       this.amadeusQueueService.addQueueCollection(queue);
     } else if (this.pnrService.getRemarkText('BB/-')) {
       queue.category = '70';

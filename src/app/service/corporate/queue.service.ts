@@ -119,7 +119,7 @@ export class QueueService {
         )
       );
 
-      accessForm.get('remarks').value.array.forEach((element) => {
+      accessForm.get('remarks').value.forEach((element) => {
         rmGroup.remarks.push(this.remarkHelper.getRemark(element, 'RM', 'G'));
       });
     }

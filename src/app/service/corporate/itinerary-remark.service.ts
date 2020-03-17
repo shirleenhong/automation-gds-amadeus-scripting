@@ -89,16 +89,22 @@ export class ItineraryRemarkService implements OnInit {
   }
   getItineraryRemarks(frmGroup: FormGroup) {
     let arr = frmGroup.get('emailAddresses') as FormArray;
+    let hasDoNotSend = false;
     for (const c of arr.controls) {
       const email = c.get('emailAddress').value;
       const donotSend = c.get('donotSendEmail').value;
-      if (!donotSend) {
+      if (donotSend) {
         if (email) {
+          hasDoNotSend = true;
           const emailAddresses = new Map<string, string>();
           emailAddresses.set('CWTItineraryEmailRecipient', email);
           this.rms.createPlaceholderValues(emailAddresses);
         }
       }
+    }
+
+    if (hasDoNotSend) {
+      this.addAquaOverrideRmk();
     }
 
     if (frmGroup.value.typeTransaction) {

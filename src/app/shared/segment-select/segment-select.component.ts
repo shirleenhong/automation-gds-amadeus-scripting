@@ -75,7 +75,8 @@ export class SegmentSelectComponent
 
   ngOnInit() {
     if (this.segmentFilter) {
-      this.segmentList = this.pnrService.getSegmentList().filter(x => x.passive === this.segmentFilter);
+      const segments = this.segmentFilter.split(',');
+      this.segmentList = this.pnrService.getSegmentList().filter(x => segments.indexOf(x.passive) > -1);
     } else {
       this.segmentList = this.pnrService.getSegmentList();
     }

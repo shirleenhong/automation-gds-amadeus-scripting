@@ -19,10 +19,10 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   isLimoPNR: boolean;
   hasAirSegment: boolean;
 
-  onTouched: any = () => {};
-  onChange: any = () => {};
+  onTouched: any = () => { };
+  onChange: any = () => { };
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService) {}
+  constructor(private fb: FormBuilder, private pnrService: PnrService) { }
 
   ngOnInit() {
     this.aquaTicketingFormGroup = this.fb.group({
@@ -35,8 +35,8 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     this.hasAirTst = false;
     this.hasAirSegment = false;
     this.getUnticketedAirSegments();
-    this.isHotelPNR = this.isPnrTypeOnly('HTL');
-    this.isCarPNR = this.isPnrTypeOnly('CAR');
+    this.isHotelPNR = this.isPnrTypeOnly('HTL') || this.isPnrTypeOnly('HHL');
+    this.isCarPNR = this.isPnrTypeOnly('CAR') || this.isPnrTypeOnly('CCR');
     this.isLimoPNR = this.isPnrTypeOnly('TYP-LIM');
 
     this.aquaTicketingFormGroup.get('tst').markAsDirty();

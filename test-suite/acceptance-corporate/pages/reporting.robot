@@ -1060,8 +1060,9 @@ Enter Unique Traveler ID: ${id}
 Fill Up UDID Fields For Client Juniper
     Navigate To Page UDID
     Enter Value    ${input_businessClassApproval}    CHUCK VELASQUEZ
-    Select From List By Label    ${list_noHotel}    One-way trip
+    # Select From List By Label    ${list_noHotel}    One-way trip
     Take Screenshot
+    Fill Up No Hotel Booking With Default Values
     
 Enter Spend Authorization Number: ${auth_no}
     Navigate To Page UDID

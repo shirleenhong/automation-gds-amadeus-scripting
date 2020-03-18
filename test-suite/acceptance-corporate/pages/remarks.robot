@@ -452,7 +452,8 @@ Click Associated Remarks Tab
 Complete Fare Rule For Ticket Min/Max Stay With Associated Remarks
     Navigate To Page Fare Rule
     Select From List By Value    ${select_airline}     2
-    Click Element    ${input_tkt_min_maxStay}
+    Wait Until Element Is Visible    ${input_tkt_min_maxStay}    2
+    Click Element At Coordinates    ${input_tkt_min_maxStay}    0    0
     Take Screenshot
     Click Save Button
     Click Associated Remarks Tab
@@ -464,8 +465,9 @@ Complete Fare Rule For Ticket Min/Max Stay With Associated Remarks
 Complete Fare Rule For Ticket Non Refundable And Non Ref With Associated Remarks
     Navigate To Page Fare Rule
     Select From List By Value    ${select_airline}     2
-    Click Element    ${input_tkt_nonRef}
-    Click Element    ${input_tkt_nonRef_percentage}
+    Wait Until Element Is Visible    ${input_tkt_nonRef}    2
+    Click Element At Coordinates    ${input_tkt_nonRef}    0    0
+    Click Element At Coordinates    ${input_tkt_nonRef_percentage}    0    0
     Take Screenshot
     Click Save Button
     Click Associated Remarks Tab

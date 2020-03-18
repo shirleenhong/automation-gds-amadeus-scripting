@@ -16,7 +16,7 @@ declare var smartScriptSession: any;
 })
 export class QueueService {
   pnrList: string[] = [];
-  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
+  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) {}
 
   public getQueuePlacement(queueGroup: FormGroup): void {
     const items = queueGroup.get('queues') as FormArray;
@@ -89,8 +89,9 @@ export class QueueService {
         : ',DD(' + queueForm.get('travelDate1').value + ')'
       : '';
 
-    rmGroup.cryptics.push('QV' + moveOid + queueForm.get('toQueueNumber').value + toCat + moveCarrier +
-      moveSegment + creationDate + tk + moveTravelDate);
+    rmGroup.cryptics.push(
+      'QV' + moveOid + queueForm.get('toQueueNumber').value + toCat + moveCarrier + moveSegment + creationDate + tk + moveTravelDate
+    );
   }
 
   private async accessQueue(accessForm, rmGroup) {
@@ -106,18 +107,18 @@ export class QueueService {
       rmGroup.remarks.push(
         this.remarkHelper.getRemark(
           'QPROD-' +
-          formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() +
-          '/' +
-          formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
-          '-' +
-          oid +
-          '-' +
-          accessForm.get('recordLocator').value +
-          '-' +
-          this.getCICNumber() +
-          '-' +
-          accessForm.get('tracking').value +
-          action,
+            formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() +
+            '/' +
+            formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
+            '-' +
+            oid +
+            '-' +
+            accessForm.get('recordLocator').value +
+            '-' +
+            this.getCICNumber() +
+            '-' +
+            accessForm.get('tracking').value +
+            action,
           'RM',
           'J'
         )
@@ -125,8 +126,9 @@ export class QueueService {
 
       const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();
       accessForm.get('remarks').value.forEach((element) => {
-        rmGroup.remarks.push(this.remarkHelper.getRemark('C-TQ' + accessForm.get('placeQueueNumber').value
-          + '-' + dateNow + '-' + element, 'RM', 'G'));
+        rmGroup.remarks.push(
+          this.remarkHelper.getRemark('C-TQ' + accessForm.get('placeQueueNumber').value + '-' + dateNow + '-' + element, 'RM', 'G')
+        );
       });
     }
     let qmCommand = 'QE50C200';
@@ -166,9 +168,9 @@ export class QueueService {
     await smartScriptSession
       .send(
         'QS' +
-        productivityReportForm.productivityReportForm.get('queueNumber').value +
-        'C' +
-        productivityReportForm.productivityReportForm.get('category').value
+          productivityReportForm.productivityReportForm.get('queueNumber').value +
+          'C' +
+          productivityReportForm.productivityReportForm.get('category').value
       )
       .then(async (res) => {
         const queueCtr = await this.getQueueCount(res);
@@ -200,7 +202,7 @@ export class QueueService {
           let ctr: number;
           ctr = 0;
 
-          while (ctr < Number(queueCtr)) {
+          while (ctr !== Number(queueCtr)) {
             await smartScriptSession.send('RTRJ').then(async (x) => {
               const rgx = /RMJ (.*)/g;
               const rmj = rgx.exec(x.Response);
@@ -218,8 +220,9 @@ export class QueueService {
                 });
               }
               ctr++;
-              await smartScriptSession.send('QN');
-              await smartScriptSession.send('RTRJ');
+              if (ctr !== Number(queueCtr)) {
+                await smartScriptSession.send('QD');
+              }
             });
           }
           await smartScriptSession.send('IG');

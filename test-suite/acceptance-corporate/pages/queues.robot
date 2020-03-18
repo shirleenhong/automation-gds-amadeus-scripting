@@ -276,7 +276,7 @@ Verify PNR Is Queued Correctly At The End Of PNR
     Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}001
     
 Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type  
-    Navigate To Page CWT Itinerary Tab
+    # Navigate To Page CWT Itinerary Tab
     Select Emails In CWT Itinerary    ${email}
     Select From List By Label    ${list_language}    ${language}
     # Select From List By Label    ${list_transaction_type}    ${transaction}

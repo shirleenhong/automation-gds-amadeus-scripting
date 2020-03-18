@@ -135,6 +135,7 @@ export class ReportingBSPComponent implements OnInit {
       if (!val) {
         return;
       }
+      group.get('chkIncluded').setValue(true);
       const arr = this.bspGroup.get('fares') as FormArray;
       const reasons = [];
       for (const control of arr.controls) {
@@ -143,7 +144,7 @@ export class ReportingBSPComponent implements OnInit {
         }
       }
       if (reasons.length > 0) {
-        this.valueChagneListener.reasonCodeChange(reasons);
+        this.valueChagneListener.reasonCodeChange(reasons, this.getCheckedSegments());
       }
     });
 
@@ -183,6 +184,16 @@ export class ReportingBSPComponent implements OnInit {
     return group;
   }
 
+  getCheckedSegments() {
+    const frm = this.bspGroup.get('fares') as FormArray;
+    const segments = [];
+    for (const control of frm.controls) {
+      if (control.get('chkIncluded').value) {
+        segments.push(control.get('segment').value);
+      }
+    }
+    return segments;
+  }
   getServicingOptionValuesFares() {
     // this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
     this.highFareSO = this.ddbService.getServicingOptionValueList(ServicingOptionEnums.High_Fare_Calculation);
@@ -382,6 +393,7 @@ export class ReportingBSPComponent implements OnInit {
       this.removeValidation(group, 'highFareText');
       this.removeValidation(group, 'lowFareText');
       this.removeValidation(group, 'reasonCodeText');
+      group.get('reasonCodeText').setValue('');
     }
   }
 

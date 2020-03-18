@@ -561,7 +561,6 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
 
     const changeVal = this.changePnrComponent.changePnrForm.get('change').value;
-    
 
     const tktl = this.changePnrService.getTKTRemark(this.changePnrComponent, this.changePnrConfig);
 

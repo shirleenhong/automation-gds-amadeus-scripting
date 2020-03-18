@@ -34,7 +34,7 @@ export class TicketRemarkService {
     private remarkHelper: RemarkHelper,
     private amdeusQueue: AmadeusQueueService,
     private pricingService: PricingService
-  ) { }
+  ) {}
   /**
    * Method to add Tktline for BSP and NonBsp Cancel
    */
@@ -201,7 +201,7 @@ export class TicketRemarkService {
   private WriteAquaTicketingRemarks(unticketed: any[], tstSelected: any[]) {
     let ticketNumber: number;
     ticketNumber = 0;
-
+    let tripType: string;
     tstSelected.forEach((x) => {
       unticketed.forEach((p) => {
         if (x === p.tstNumber) {
@@ -213,7 +213,6 @@ export class TicketRemarkService {
           tstSequenceRemark.set('InvSegment', 'ETK');
           tstRouteRemark.set('TicketSequence', ticketNumber.toString());
           segmentrelate = p.tatooNumber;
-          let tripType: string;
           tripType = this.getTripType(segmentrelate);
           tstRouteRemark.set('TktRoute', tripType);
           this.remarksManager.createPlaceholderValues(tstSequenceRemark, null, segmentrelate);
@@ -226,7 +225,7 @@ export class TicketRemarkService {
       const numberOfTicketRemark = new Map<string, string>();
       numberOfTicketRemark.set('NumberOfTickets', ticketNumber.toString());
       this.remarksManager.createPlaceholderValues(numberOfTicketRemark, null);
-      if (this.hasTransborder) {
+      if (tripType !== 'DOM') {
         const staticRemarksCondition = new Map<string, string>();
         staticRemarksCondition.set('AquaTicketingCondition', 'true');
         this.remarksManager.createPlaceholderValues(

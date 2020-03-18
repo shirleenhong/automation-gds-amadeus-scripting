@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ControlValueAccessor, Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-aqua-ticketing',
@@ -19,10 +20,10 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   isLimoPNR: boolean;
   hasAirSegment: boolean;
 
-  onTouched: any = () => { };
-  onChange: any = () => { };
+  onTouched: any = () => {};
+  onChange: any = () => {};
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService) { }
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private valueChangeListener: ValueChangeListener) {}
 
   ngOnInit() {
     this.aquaTicketingFormGroup = this.fb.group({
@@ -40,6 +41,19 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     this.isLimoPNR = this.isPnrTypeOnly('TYP-LIM');
 
     this.aquaTicketingFormGroup.get('tst').markAsDirty();
+    this.subscribeReporting();
+  }
+
+  subscribeReporting() {
+    this.valueChangeListener.reasonCodeOnChange.subscribe((reason) => {
+      const tsts = this.unticketedSegments
+        .filter((t) => reason.segments.indexOf(t.segmentNumber instanceof Array ? t.segmentNumber.join(',') : t.segmentNumber) >= 0)
+        .map((x) => x.tstNumber);
+      tsts.forEach((x) => {
+        this.tstSelected.push(x);
+      });
+      this.aquaTicketingFormGroup.get('tst').setValue(tsts.join(','));
+    });
   }
 
   get value() {

@@ -49,6 +49,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       const tsts = this.unticketedSegments
         .filter((t) => reason.segments.indexOf(t.segmentNumber instanceof Array ? t.segmentNumber.join(',') : t.segmentNumber) >= 0)
         .map((x) => x.tstNumber);
+      this.tstSelected = [];
       tsts.forEach((x) => {
         this.tstSelected.push(x);
       });

@@ -132,7 +132,7 @@ Verify Expected Cancellation Remarks Are Written
     ...    ELSE    Verify Specific Remark Is Not Written In The PNR    RIR *FULLCXL**
     Run Keyword If    "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO IROP" or "${actual_reason.upper()}" == "NON REFUNDABLE TICKET CANCELLED DUE TO SCHEDULE CHANGE"
     ...      Verify Specific Remark Is Written In The PNR    RMX ${current_date}/CANCEL NR DUE TO IROP OR SKD CHG
-    Run Keyword If    "${follow_up}" == "Hotel, Car or Limo"    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Verify Expected Remarks Are Written In The PNR
     Verify Historical Remarks Are Written In The PNR
     
@@ -147,6 +147,7 @@ Verify NonBSP Ticket Credit from Supplier Remark For PNRs With No U*14
     Assign Current Date
     Finish PNR
     Verify Specific Remark Is Written In The PNR    RMX DOCUBANK/TKT 1234567890/${current_date}
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     
 Cancel Segment ${segment} Using Cryptic Command
     Enter Cryptic Command    XE${segment}
@@ -303,6 +304,7 @@ Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When Th
     Verify Specific Remark Is Written In The PNR    RMX ATTN ACCTNG - NONBSP FULL RECREDIT - ${current_date}
     Verify Specific Remark Is Written In The PNR    RMX . NONBSP..ACY - ISSUE OID YTOWL2106
     Verify Specific Remark Is Written In The PNR    RMX . ${current_date}/ FISHER P.
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Open Command Page
     Enter Cryptic Command    RTQ
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
@@ -318,6 +320,7 @@ Verify That NonBSP Ticket Credit from Supplier Remarks Should Be Written When Th
     Verify Specific Remark Is Written In The PNR    RMX . THIS IS A SAMPLE
     Verify Specific Remark Is Written In The PNR    RMX . OF A FREE FLOW TEXT
     Verify Specific Remark Is Written In The PNR    RMX . ${current_date}/ ROBINSON J.
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Open Command Page
     Enter Cryptic Command    RTQ
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
@@ -513,6 +516,7 @@ Verify Cancellation For Voided BSP Ticket Remarks Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMX ${current_date}/${c_name}
     Verify Specific Remark Is Written In The PNR    RMX ATTN BRANCH ADMIN - VOID TKT NBR ${ticket_num}
     Verify Specific Remark Is Written In The PNR    RMX VOID REASON - ${v_reason.upper()}
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Run Keyword If    "${reuse}" == "yes"     Verify Specific Remark Is Written In The PNR    RMX REISS VOID TKT/${current_date}-USE ORIG AUTH ${authorization.upper()}
     ...   ELSE    Verify Specific Remark Is Not Written In The PNR    RMX REISS VOID TKT
     Verify Cancelled And Voided PNR IS Queued Correctly
@@ -520,6 +524,7 @@ Verify Cancellation For Voided BSP Ticket Remarks Are Written In The PNR
 Verify Cancelled And Voided PNR IS Queued Correctly
     Switch To Command Page
     Enter Cryptic Command    RTQ
+    #TODO: Change YTOWL2106 value to YTOWL220N
     Run Keyword And Continue On Failure    Element Should Contain    ${text_area_command}    YTOWL2106${SPACE}${SPACE}${SPACE}${SPACE}060${SPACE}${SPACE}${SPACE}${SPACE}001
     
 Verify Cancellation For Voided Non BSP Ticket Remarks Are Written In The PNR
@@ -532,6 +537,7 @@ Verify Cancellation For Voided Non BSP Ticket Remarks Are Written In The PNR
     Verify Specific Remark Is Written In The PNR    RMX ATTN NONBSP - ${reverse_value}
     Verify Specific Remark Is Written In The PNR    RMX ${other_details_1}
     Verify Specific Remark Is Written In The PNR    RMX ${other_details_2}
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CXL
     Verify Cancelled And Voided PNR IS Queued Correctly
     
 Verify Agent Is Not Able To Cancel Segments WIth Unvoided Ticket

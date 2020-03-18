@@ -71,14 +71,14 @@ ${button_corp_remarks}    //button[contains(text(), 'Remarks')]
 Enter Value
     [Arguments]    ${element}    ${value}
     Double Click Element    ${element}
-    Press Key    ${element}    \\08
+    Press Keys    ${element}    BACKSPACE
     Input Text    ${element}    ${value}
-    Press Key    ${element}    \\09
+    Press Keys    ${element}    TAB
     
 Input Value
     [Arguments]    ${element}    ${value}
     Double Click Element    ${element}
-    Press Key    ${element}    \\08
+    Press Keys    ${element}    BACKSPACE
     Input Text    ${element}    ${value} 
 
 Close CA Corporate Test

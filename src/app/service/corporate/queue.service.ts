@@ -188,7 +188,7 @@ export class QueueService {
                 pnrLocator: rmjB[2],
                 cicCode: rmjB[3],
                 trackingCode: rmjB[4],
-                action: rmjB[4][rmjB[4].length - 1] === 'A' ? '' : 'Action'
+                action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
               });
               await smartScriptSession.send('QN');
               await smartScriptSession.send('IG');
@@ -214,7 +214,7 @@ export class QueueService {
                   pnrLocator: rmjB[2],
                   cicCode: rmjB[3],
                   trackingCode: rmjB[4],
-                  action: rmjB[4][rmjB[4].length - 1] === 'A' ? '' : 'Action'
+                  action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
                 });
               }
               ctr++;

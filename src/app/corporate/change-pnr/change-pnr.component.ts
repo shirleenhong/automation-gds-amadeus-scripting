@@ -74,6 +74,13 @@ export class ChangePnrComponent implements OnInit {
   }
 
   checkValid() {
+    if (this.obtComp) {
+      this.utilHelper.validateAllFields(this.obtComp.obtForm);
+      if (!this.obtComp.obtForm.valid) {
+        return false;
+      }
+    }
+
     if (this.carMissedSavingComp !== undefined) {
       this.utilHelper.validateAllFields(this.carMissedSavingComp.carSavingsCodeGroup);
       if (!this.carMissedSavingComp.carSavingsCodeGroup.valid) {

@@ -561,10 +561,7 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
 
     const changeVal = this.changePnrComponent.changePnrForm.get('change').value;
-    if (changeVal !== 'air' && changeVal !== 'modify') {
-      this.cleanupRemarkService.cleanUpRemarks();
-      await this.getPnrService();
-    }
+    
 
     const tktl = this.changePnrService.getTKTRemark(this.changePnrComponent, this.changePnrConfig);
 
@@ -598,6 +595,12 @@ export class CorporateComponent implements OnInit {
         this.changePnrComponent.hotelMissedSavingComp.reAddRemarks
       );
     }
+
+    if (changeVal !== 'air' && changeVal !== 'modify') {
+      this.cleanupRemarkService.cleanUpRemarks();
+      await this.pnrService.getPNR();
+    }
+
     const queue = new QueuePlaceModel();
     if (this.pnrService.getRemarkText('BB/-011427') !== '') {
       queue.category = '1';

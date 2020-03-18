@@ -25,20 +25,30 @@
       <input class="form-control col-4" id="recordLocator" type="text" formControlName="recordLocator">
     </div>
 
-    <div class="row form-group">
+    <!-- <div class="row form-group">
       <label for="branchTracking" class="col-form-label col-sm-3">Queue Number/Branch Tracking Code:</label>
       <input class="form-control col-4" id="branchTracking" type="text" formControlName="branchTracking">
-    </div>
+    </div> -->
 
-    <div class="row form-group">
+    <!-- <div class="row form-group">
       <label for="queueOption" class="col-form-label col-sm-3">Tracking:</label>
       <select class="form-control col-sm-4" autofocus id="tracking" name="tracking" formControlName="tracking">
         <option *ngFor="let item of trackingList" [value]="item.itemValue">
           {{ item.itemText }}
         </option>
       </select>
-    </div>
+    </div> -->
 
+    <div class="row form-group">
+      <label for="queueOption" class="col-form-label col-sm-3">Tracking:</label>
+      <!-- <div class="col-sm-4"> -->
+      <input type="text" class="form-control col-sm-4" placeholder="select a tracking Code" formControlName="tracking"
+        id="tracking" list="dynamicTracking" AllCapsMask formControlName="tracking" />
+      <datalist id="dynamicTracking">
+        <option *ngFor="let item of trackingList" [value]="item.itemValue">{{ item.itemText }}</option>
+      </datalist>
+      <!-- </div> -->
+    </div>
 
     <div class="row form-group">
       <!-- Default checked -->

@@ -23,7 +23,10 @@ export class MoveQueueComponent implements OnInit {
       carrier: new FormControl('', []),
       oid: new FormControl('', []),
       travelDate1: new FormControl('', []),
-      travelDate2: new FormControl('', [])
+      travelDate2: new FormControl('', []),
+      moveSegment: new FormControl('', []),
+      creationDate: new FormControl('', []),
+      moveTk: new FormControl('', [])
     });
   }
 

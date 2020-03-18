@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
-import { formatDate } from '@angular/common';
+import { formatDate, DatePipe } from '@angular/common';
 import { AmadeusQueueService } from '../amadeus-queue.service';
 import { QueueReportComponent } from 'src/app/corporate/queue-report/queue-report.component';
 import { RemarkModel } from 'src/app/models/pnr/remark.model';
@@ -16,7 +16,7 @@ declare var smartScriptSession: any;
 })
 export class QueueService {
   pnrList: string[] = [];
-  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) {}
+  constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) { }
 
   public getQueuePlacement(queueGroup: FormGroup): void {
     const items = queueGroup.get('queues') as FormArray;
@@ -80,13 +80,17 @@ export class QueueService {
 
     const moveOid = queueForm.get('oid').value ? '/' + queueForm.get('oid').value : '';
     const moveCarrier = queueForm.get('carrier').value ? '-AC(' + queueForm.get('carrier').value + ')' : '';
+    const moveSegment = queueForm.get('moveSegment').value ? '-SC(' + queueForm.get('moveSegment').value + ')' : '';
+    const creationDate = queueForm.get('creationDate').value ? '-CD(' + queueForm.get('creationDate').value + ')' : '';
+    const tk = queueForm.get('moveTk').value ? '-TK(' + queueForm.get('moveTk').value + ')' : '';
     const moveTravelDate = queueForm.get('travelDate1').value
       ? queueForm.get('travelDate2').value
         ? ',DD(' + queueForm.get('travelDate1').value + ',' + queueForm.get('travelDate2').value + ')'
         : ',DD(' + queueForm.get('travelDate1').value + ')'
       : '';
 
-    rmGroup.cryptics.push('QV' + moveOid + queueForm.get('toQueueNumber').value + toCat + moveCarrier + moveTravelDate);
+    rmGroup.cryptics.push('QV' + moveOid + queueForm.get('toQueueNumber').value + toCat + moveCarrier +
+      moveSegment + creationDate + tk + moveTravelDate);
   }
 
   private async accessQueue(accessForm, rmGroup) {
@@ -102,29 +106,32 @@ export class QueueService {
       rmGroup.remarks.push(
         this.remarkHelper.getRemark(
           'QPROD-' +
-            formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() +
-            '/' +
-            formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
-            '-' +
-            oid +
-            '-' +
-            accessForm.get('recordLocator').value +
-            '-' +
-            this.getCICNumber() +
-            '-' +
-            accessForm.get('tracking').value +
-            action,
+          formatDate(new Date(), 'ddMMM', 'en-US').toUpperCase() +
+          '/' +
+          formatDate(new Date(), 'HHmm', 'en-US').toUpperCase() +
+          '-' +
+          oid +
+          '-' +
+          accessForm.get('recordLocator').value +
+          '-' +
+          this.getCICNumber() +
+          '-' +
+          accessForm.get('tracking').value +
+          action,
           'RM',
           'J'
         )
       );
 
+      const dateNow = new DatePipe('en-US').transform(new Date(), 'ddMMM').toString();
       accessForm.get('remarks').value.forEach((element) => {
-        rmGroup.remarks.push(this.remarkHelper.getRemark(element, 'RM', 'G'));
+        rmGroup.remarks.push(this.remarkHelper.getRemark('C-TQ' + accessForm.get('placeQueueNumber').value
+          + '-' + dateNow + '-' + element, 'RM', 'G'));
       });
     }
     let qmCommand = 'QE50C200';
     if (accessForm.get('placeQueueNumber').value && accessForm.get('placeQueueCat').value) {
+      qmCommand = 'QM50C200';
       if (accessForm.get('alternateOid').value) {
         qmCommand += '/' + accessForm.get('alternateOid').value;
       }
@@ -159,9 +166,9 @@ export class QueueService {
     await smartScriptSession
       .send(
         'QS' +
-          productivityReportForm.productivityReportForm.get('queueNumber').value +
-          'C' +
-          productivityReportForm.productivityReportForm.get('category').value
+        productivityReportForm.productivityReportForm.get('queueNumber').value +
+        'C' +
+        productivityReportForm.productivityReportForm.get('category').value
       )
       .then(async (res) => {
         const queueCtr = await this.getQueueCount(res);

@@ -135,7 +135,7 @@ export class QueueService {
       if (accessForm.get('alternateOid').value) {
         qmCommand += '/' + accessForm.get('alternateOid').value;
       }
-      qmCommand += '/' + accessForm.get('placeQueueNumber').value + 'C' + accessForm.get('placeQueueNumber').value;
+      qmCommand += '/' + accessForm.get('placeQueueNumber').value + 'C' + accessForm.get('placeQueueCat').value;
     }
     rmGroup.cryptics.push(qmCommand);
   }

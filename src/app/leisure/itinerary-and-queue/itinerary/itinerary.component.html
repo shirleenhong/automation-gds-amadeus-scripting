@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <div class="col-3">
+      <div class="col-3" *ngIf="!isLeisure">
         <label>
           <input type="checkbox" formControlName="donotSendEmail" name="donotSendEmail" />
           Do Not Send Email Yet

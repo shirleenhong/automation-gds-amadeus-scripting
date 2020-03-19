@@ -214,7 +214,7 @@ export class QueueService {
           await smartScriptSession.send('XE' + rmjLinenumber);
           await smartScriptSession.send('RFCWT');
           await smartScriptSession.send('ER');
-          await smartScriptSession.send('QD');
+          await smartScriptSession.send('QN');
           await smartScriptSession.send('QI');
         } else {
           await smartScriptSession.send('IG');
@@ -248,7 +248,7 @@ export class QueueService {
             await smartScriptSession.send('XE' + rmjLinenumber);
             await smartScriptSession.send('RFCWT');
             await smartScriptSession.send('ER');
-            await smartScriptSession.send('QD');
+            await smartScriptSession.send('QN');
           }
         });
       }

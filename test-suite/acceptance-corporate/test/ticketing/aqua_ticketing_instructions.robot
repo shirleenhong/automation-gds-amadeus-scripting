@@ -80,3 +80,31 @@ Verify That Aqua Ticketing Instructions Remark Are Written For Hotel And Car Onl
     Select All Unticketed Hotel Segment
     Verify Remarks Are Added Correctly In The PNR
     Verify Remarks Are Not Found In The PNR
+    
+Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed International Air Segments
+    [Tags]    us11219    de3210
+    Create PNR With Active Air Segments For Unticketed International Air Segments
+    Select Unticketed TST 1
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Remarks Are Not Found In The PNR
+    
+Verify That Aqua Ticketing Instructions Remark Are Written for Multiple Unticketed International Air Segments
+    [Tags]    us11219    de3210
+    Create PNR With Active Air Segments For Multiple Unticketed International Air Segments
+    Select All Unticketed TSTs
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Remarks Are Not Found In The PNR
+    
+Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Transborder Air Segments
+    [Tags]    us11219    de3210
+    Create PNR With Active Air Segments For Unticketed Transborder Air Segments
+    Select Unticketed TST 1
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Remarks Are Not Found In The PNR
+    
+Verify That Aqua Ticketing Instructions Remark Are Written for Unticketed Domestic Air Segments
+    [Tags]    us11219    de3210
+    Create PNR With Active Air Segments For Unticketed Domestic Air Segments
+    Select Unticketed TST 1
+    Verify Remarks Are Added Correctly In The PNR
+    Verify Remarks Are Not Found In The PNR

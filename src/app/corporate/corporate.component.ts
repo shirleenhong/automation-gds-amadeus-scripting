@@ -454,12 +454,15 @@ export class CorporateComponent implements OnInit {
     this.cleanupRemarkService.writePossibleAquaTouchlessRemark();
     this.cleanupRemarkService.writePossibleConcurObtRemark();
     // below additional process not going through remarks manager
-
-    remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    if (this.ticketingComponent.ticketlineComponent.approvalForm) {
+      remarkList = this.ticketRemarkService.getApprovalRemarks(this.ticketingComponent.ticketlineComponent.approvalForm);
+    }
     remarkList = remarkList.concat(this.corpRemarksService.buildDocumentRemarks(this.corpRemarksComponent.documentComponent.documentForm));
-
-    const forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
-    this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    let forDeleteRemarks = [];
+    if (this.ticketingComponent.ticketlineComponent.approvalForm) {
+      forDeleteRemarks = this.ticketRemarkService.getApprovalRemarksForDelete(this.ticketingComponent.ticketlineComponent.approvalForm);
+      this.ticketRemarkService.getApprovalQueue(this.ticketingComponent.ticketlineComponent.approvalForm);
+    }
     if (this.queueComponent.queueMinderComponent) {
       this.queueService.getQueuePlacement(this.queueComponent.queueMinderComponent.queueMinderForm);
     }
@@ -561,7 +564,6 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
 
     const changeVal = this.changePnrComponent.changePnrForm.get('change').value;
-
     const tktl = this.changePnrService.getTKTRemark(this.changePnrComponent, this.changePnrConfig);
 
     if (this.changePnrComponent.matrixComp) {

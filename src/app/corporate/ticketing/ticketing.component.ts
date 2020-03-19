@@ -21,7 +21,7 @@ export class TicketingComponent implements OnInit {
   @ViewChild(ExchangeEndorsementsComponent) exchangeEndorsementsComponent: ExchangeEndorsementsComponent;
   isShowExTab = false;
 
-  constructor(private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService, private pnrService: PnrService) {}
+  constructor(private utilHelper: UtilHelper, private rulesEngineService: RulesEngineService, private pnrService: PnrService) { }
   hasRules = false;
   ngOnInit() {
     this.hasRules = this.rulesEngineService.checkRuleResultExist('UI_DISPLAY_CONTAINER', 'TICKETING');
@@ -41,10 +41,13 @@ export class TicketingComponent implements OnInit {
       return false;
     }
 
-    this.utilHelper.validateAllFields(this.ticketlineComponent.approvalForm);
-    if (!this.ticketlineComponent.approvalForm.valid) {
-      return false;
+    if (this.ticketlineComponent.approvalForm) {
+      this.utilHelper.validateAllFields(this.ticketlineComponent.approvalForm);
+      if (!this.ticketlineComponent.approvalForm.valid) {
+        return false;
+      }
     }
+
 
     this.utilHelper.validateAllFields(this.airfareCommissionComponent.airFareCommissionFormGroup);
     if (!this.airfareCommissionComponent.airFareCommissionFormGroup.valid) {

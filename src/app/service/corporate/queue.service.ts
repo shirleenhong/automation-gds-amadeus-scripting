@@ -214,6 +214,7 @@ export class QueueService {
           await smartScriptSession.send('XE' + rmjLinenumber);
           await smartScriptSession.send('RFCWT');
           await smartScriptSession.send('ER');
+          await smartScriptSession.send('ER');
           await smartScriptSession.send('QN');
           await smartScriptSession.send('QI');
         } else {
@@ -247,6 +248,7 @@ export class QueueService {
           if (ctr !== Number(this.queueCtr)) {
             await smartScriptSession.send('XE' + rmjLinenumber);
             await smartScriptSession.send('RFCWT');
+            await smartScriptSession.send('ER');
             await smartScriptSession.send('ER');
             await smartScriptSession.send('QN');
           }

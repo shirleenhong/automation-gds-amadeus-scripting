@@ -208,7 +208,7 @@ export class QueueService {
             bookingoid: rmjB[1],
             pnrLocator: rmjB[2],
             cicCode: rmjB[3],
-            trackingCode: rmjB[4],
+            trackingCode: rmjB[4].slice(0, 3),
             action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
           });
           await smartScriptSession.send('XE' + rmjLinenumber);
@@ -240,7 +240,7 @@ export class QueueService {
               bookingoid: rmjB[1],
               pnrLocator: rmjB[2],
               cicCode: rmjB[3],
-              trackingCode: rmjB[4],
+              trackingCode: rmjB[4].slice(0, 3),
               action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
             });
           }

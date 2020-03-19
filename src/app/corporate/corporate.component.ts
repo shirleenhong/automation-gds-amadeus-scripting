@@ -1242,8 +1242,10 @@ export class CorporateComponent implements OnInit {
 
   async hasAccessInPassPurchase() {
     await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
-      const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-      this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+      if (response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+        const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+        this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
+      }
     });
   }
 

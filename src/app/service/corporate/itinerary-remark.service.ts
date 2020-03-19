@@ -152,7 +152,7 @@ export class ItineraryRemarkService implements OnInit {
         this.rms.createPlaceholderValues(additionalLanguageMap);
       }
     }
-    if (!donotSend) {
+    if (!hasDoNotSend) {
       if (!this.pnrService.getRmqEmail()) {
         const aquaRmkConditions = new Map<string, string>();
         aquaRmkConditions.set('EmailAddNo', 'true');

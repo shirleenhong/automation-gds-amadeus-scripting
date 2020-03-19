@@ -451,8 +451,9 @@ export class DDBService implements OnInit {
     try {
       let migrationOBTFeeDateRange = null;
       const response = await this.getConfigurationParameter('MigrationOBTFeeDate');
-      migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-
+      if (response && response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+        migrationOBTFeeDateRange = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+      }
       return [migrationOBTFeeDateRange[0], migrationOBTFeeDateRange[1]];
     } catch (error) {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
@@ -462,7 +463,9 @@ export class DDBService implements OnInit {
     try {
       let cfalist = '';
       const response = await this.getConfigurationParameter('MigrationOBTFee');
-      cfalist = response.ConfigurationParameters[0].ConfigurationParameterValue;
+      if (response && response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+        cfalist = response.ConfigurationParameters[0].ConfigurationParameterValue;
+      }
       return cfalist;
     } catch (error) {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);
@@ -513,10 +516,12 @@ export class DDBService implements OnInit {
     try {
       let lodPCC = null;
       const response = await this.getConfigurationParameter('TeamQueuePCCOID');
-      lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
-      lodPCC = lodPCC.map((pcc) => {
-        return pcc.trim();
-      });
+      if (response && response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+        lodPCC = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
+        lodPCC = lodPCC.map((pcc) => {
+          return pcc.trim();
+        });
+      }
       return lodPCC;
     } catch (error) {
       throw new Error('Failed to get Migration OBT Fee configuration. Response: ' + error);

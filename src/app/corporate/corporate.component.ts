@@ -1227,7 +1227,7 @@ export class CorporateComponent implements OnInit {
   async checkValidForAquaFee() {
     const response = await this.ddbService.getConfigurationParameter('CA_Script_Aqua_Fee_Excluded_CFA');
     this.showAquaFeeButton = false;
-    if (response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+    if (response && response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
       const listCfa = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
       this.showAquaFeeButton = listCfa.indexOf(this.pnrService.getCFLine().cfa) === -1;
     }
@@ -1235,14 +1235,14 @@ export class CorporateComponent implements OnInit {
 
   async getChangePnrCfaConfig() {
     const response = await this.ddbService.getConfigurationParameter('CA_ChangePnrCFA');
-    if (response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+    if (response && response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
       this.changePnrConfig = response.ConfigurationParameters[0].ConfigurationParameterValue;
     }
   }
 
   async hasAccessInPassPurchase() {
     await this.ddbService.getConfigurationParameter('UsersToStandAlonePassPurchase').then((response) => {
-      if (response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
+      if (response && response.ConfigurationParameters && response.ConfigurationParameters.length > 0) {
         const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
         this.withPasspurchaseAccess = listUsers.indexOf(this.pnrService.uid) > -1;
       }
@@ -1298,7 +1298,7 @@ export class CorporateComponent implements OnInit {
   }
   async hasAssignInvoiceToOID() {
     await this.ddbService.getConfigurationParameter('CA_AssignInvoiceToNewOidUsers').then((response) => {
-      if (response.ConfigurationParameters && response.ConfigurationParameters.length) {
+      if (response && response.ConfigurationParameters && response.ConfigurationParameters.length) {
         const listUsers = response.ConfigurationParameters[0].ConfigurationParameterValue.split(',');
         this.showAssignInvoiceToOid = listUsers.indexOf(this.pnrService.uid) > -1;
       }

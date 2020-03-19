@@ -158,7 +158,9 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
 
     allAir.forEach((x) => {
       if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
-        unticketedSegments.push(x.tatooNumber);
+        if (unticketedSegments.indexOf(x.tatooNumber) === -1) {
+          unticketedSegments.push(x.tatooNumber);
+        }
         this.hasAirSegment = true;
       }
     });
@@ -168,7 +170,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
         this.hasAirTst = false;
       } else if (tstObj.length > 0) {
         tstObj.forEach((x) => {
-          if (x.segmentInformation.length > 0) {
+          if (x.segmentInformation.length > 0 && tstData.filter((z) => z.tstNumber === x.fareReference.uniqueReference).length === 0) {
             const segmentRef = [];
             const segmentTatoo = [];
             x.segmentInformation.forEach((p) => {
@@ -180,11 +182,13 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
             if (segmentTatoo.length > 0) {
               segmentTatoo.forEach((element) => {
                 if (unticketedSegments.includes(element)) {
-                  tstData.push({
-                    tstNumber: x.fareReference.uniqueReference,
-                    segmentNumber: segmentRef,
-                    tatooNumber: segmentTatoo
-                  });
+                  if (tstData.filter((z) => z.tstNumber === x.fareReference.uniqueReference).length === 0) {
+                    tstData.push({
+                      tstNumber: x.fareReference.uniqueReference,
+                      segmentNumber: segmentRef,
+                      tatooNumber: segmentTatoo
+                    });
+                  }
                 }
               });
             } else {

@@ -131,22 +131,6 @@ export class ReportingBSPComponent implements OnInit {
       tstNumber: new FormControl(tstNumber)
     });
 
-    group.get('reasonCodeText').valueChanges.subscribe((val) => {
-      if (!val) {
-        return;
-      }
-      const arr = this.bspGroup.get('fares') as FormArray;
-      const reasons = [];
-      for (const control of arr.controls) {
-        if (control.get('reasonCodeText').value) {
-          reasons.push(control.get('reasonCodeText').value);
-        }
-      }
-      if (reasons.length > 0) {
-        this.valueChagneListener.reasonCodeChange(reasons);
-      }
-    });
-
     const currentIndex = this.reasonCodes.length - 1;
     if (this.thresholdAmount > 0) {
       if (Number(chargeFare) <= Number(lowFare) + Number(this.thresholdAmount)) {
@@ -183,6 +167,32 @@ export class ReportingBSPComponent implements OnInit {
     return group;
   }
 
+  updateReasonCode(group, val) {
+    const arr = this.bspGroup.get('fares') as FormArray;
+    const reasons = [];
+    for (const control of arr.controls) {
+      if (control.get('reasonCodeText').value) {
+        reasons.push(control.get('reasonCodeText').value);
+      }
+    }
+    if (val.indexOf('null') === -1) {
+      group.get('chkIncluded').setValue(true);
+    } else {
+      group.get('chkIncluded').setValue(false);
+    }
+    this.valueChagneListener.reasonCodeChange(reasons, this.getCheckedSegments());
+  }
+
+  getCheckedSegments() {
+    const frm = this.bspGroup.get('fares') as FormArray;
+    const segments = [];
+    for (const control of frm.controls) {
+      if (control.get('chkIncluded').value) {
+        segments.push(control.get('segment').value);
+      }
+    }
+    return segments;
+  }
   getServicingOptionValuesFares() {
     // this.highFareSO = this.ddbService.getServicingOptionValue(ServicingOptionEnums.High_Fare_Calculation);
     this.highFareSO = this.ddbService.getServicingOptionValueList(ServicingOptionEnums.High_Fare_Calculation);
@@ -382,6 +392,7 @@ export class ReportingBSPComponent implements OnInit {
       this.removeValidation(group, 'highFareText');
       this.removeValidation(group, 'lowFareText');
       this.removeValidation(group, 'reasonCodeText');
+      group.get('reasonCodeText').setValue('');
     }
   }
 

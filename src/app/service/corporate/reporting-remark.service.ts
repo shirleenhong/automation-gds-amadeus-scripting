@@ -20,7 +20,7 @@ import { NoBookedHotelComponent } from 'src/app/corporate/reporting/no-booked-ho
 export class ReportingRemarkService {
   hasTransborder: boolean;
 
-  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) { }
+  constructor(private remarksManager: RemarksManagerService, private pnrService: PnrService) {}
 
   WriteBspRemarks(rbc: ReportingBSPComponent, rptComp: ReportingRemarksComponent) {
     const bspGroup: FormGroup = rbc.bspGroup;
@@ -95,8 +95,8 @@ export class ReportingRemarkService {
           if (g.get('segment').value === segments.join(',')) {
             desti = g.get('destinationList').value;
             break;
-          } else if(g.get('segment').value === '' && write) {
-             desti = g.get('destinationList').value;
+          } else if (g.get('segment').value === '' && write) {
+            desti = g.get('destinationList').value;
           }
         }
         otherTktMap.set('CAPointOfTurnAround', desti);
@@ -236,7 +236,7 @@ export class ReportingRemarkService {
       const waiverRemark = new Map<string, string>();
       waiverRemark.set('WaiverLine', bspGroup.get('waiver').value);
       this.remarksManager.createPlaceholderValues(waiverRemark, null, null);
-    }    
+    }
   }
   public GetRoutingRemark(reporting: ReportingViewModel) {
     const rmGroup = new RemarkGroup();

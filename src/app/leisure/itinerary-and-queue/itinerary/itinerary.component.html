@@ -6,36 +6,42 @@
         <p [innerHTML]="displayMessage"></p>
       </div>
     </div>
-    <div formArrayName="emailAddresses" *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
-      <div [formGroupName]="i" class="form-group row">
-        <div class="col-sm-3">Email Address {{ i + 1 }}:</div>
-        <div class="col-4">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="emailAddress"
-            id="emailAddress"
-            list="dynamicEmail"
-            AllCapsMask
-            formControlName="emailAddress"
-          />
-          <datalist id="dynamicEmail">
-            <option *ngFor="let item of listEmail" [value]="item">{{ item }} </option>
-          </datalist>
+
+    <div class="form-group row">
+      <div class="col-9">
+        <div formArrayName="emailAddresses" *ngFor="let item of this.itineraryForm.get('emailAddresses')['controls']; let i = index">
+          <div [formGroupName]="i" class="form-group row">
+            <div class="col-sm-4">Email Address {{ i + 1 }}:</div>
+            <div class="col-5">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="emailAddress"
+                id="emailAddress"
+                list="dynamicEmail"
+                AllCapsMask
+                formControlName="emailAddress"
+              />
+              <datalist id="dynamicEmail">
+                <option *ngFor="let item of listEmail" [value]="item">{{ item }} </option>
+              </datalist>
+            </div>
+            <div *ngIf="remove" class="">
+              <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'email')"> </i>
+            </div>
+            <div *ngIf="add" class="">
+              &nbsp;
+              <i class="fas fa-plus-circle" id="add" (click)="addItems('email')"></i>
+            </div>
+          </div>
         </div>
-        <div *ngIf="remove" class="">
-          <i class="fas fa-minus-circle" id="remove" (click)="removeItems(i, 'email')"> </i>
-        </div>
-        <div *ngIf="add" class="">
-          &nbsp;
-          <i class="fas fa-plus-circle" id="add" (click)="addItems('email')"></i>
-        </div>
-        <div class="col">
-          <label>
-            <input type="checkbox" formControlName="donotSendEmail" name="donotSendEmail" />
-            Do Not Send Email Yet
-          </label>
-        </div>
+      </div>
+
+      <div class="col-3">
+        <label>
+          <input type="checkbox" formControlName="donotSendEmail" name="donotSendEmail" />
+          Do Not Send Email Yet
+        </label>
       </div>
     </div>
 

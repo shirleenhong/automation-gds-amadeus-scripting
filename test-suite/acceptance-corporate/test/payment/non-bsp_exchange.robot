@@ -71,7 +71,7 @@ Verify That Consultant Number Remark Is Updated When Consultant Number Field Is 
     Verify That Supplier Code Default Value Is Correct For PD
     Verify Consultant Number Remark Is Written With The Correct Value
     
-Verify That G Remark Is Written When RM*U14-[AirlineCode]PASS Is Present In PNR
+Verify That G Remark Is Written When RM*U14 PASS Is Present In PNR
     [Tags]    us11134
     Login To Amadeus Sell Connect Acceptance
     Move Single Passenger And Add Passive Segment With Airline Code MO

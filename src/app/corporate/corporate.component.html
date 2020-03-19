@@ -428,12 +428,6 @@
         Amadeus Queue
       </button>
     </div>
-
-    <div *ngIf="showAssignInvoiceToOid">
-      <button class="leisureButton btnMenu" (click)="assignInvoiceToOid()">
-        Assign Invoice to new OID
-      </button>
-    </div>
   </div>
   <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
@@ -466,6 +460,11 @@
     <div>
       <button class="leisureButton btnMenu" (click)="queueReport()">
         Queue Productivity Report
+      </button>
+    </div>
+    <div *ngIf="showAssignInvoiceToOid">
+      <button class="leisureButton btnMenu" (click)="assignInvoiceToOid()">
+        Assign Invoice to new OID
       </button>
     </div>
   </div>

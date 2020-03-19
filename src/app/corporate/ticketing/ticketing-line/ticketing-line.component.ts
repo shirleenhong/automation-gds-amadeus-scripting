@@ -58,9 +58,9 @@ export class TicketingLineComponent implements OnInit {
     this.secondaryReasonList = this.approvalRuleService.getSecondaryApprovalList();
     this.additionalReasonList = this.approvalRuleService.getAdditionalList();
     this.loadApproval([]);
-    this.valueChangeListener.reasonCodeOnChange.subscribe((reasonCodes) => {
-      if (reasonCodes.length > 0) {
-        this.loadApproval(reasonCodes);
+    this.valueChangeListener.reasonCodeOnChange.subscribe((reason) => {
+      if (reason.reasonCodes.length > 0) {
+        this.loadApproval(reason.reasonCodes);
       }
     });
   }

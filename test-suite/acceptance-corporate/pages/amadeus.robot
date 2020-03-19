@@ -210,19 +210,19 @@ Switch To Graphic Mode
     [Teardown]    Take Screenshot
 
 Add Passive Air Segment In The GDS With Airline Code ${airline_code}
-    Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG
+    Input Text    ${input_commandText}    SS ${airline_code}1074 Y 10JUN YYZORD GK1 / 11551440 / ABCDEFG
     Press Key    ${input_commandText}    \\13
     Sleep    2
     Set Test Variable    ${final_destination}    ORD  
 
 Add Multiple Passive Air Segments In The GDS With Airline Code ${airline_code}
-    @{gds_commands}    Create List    SS ${airline_code}1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
+    @{gds_commands}    Create List    SS ${airline_code}1074 Y 10JUN YYZORD GK1 / 11551440 / ABCDEFG    SS ${airline_code}1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
     Set Test Variable    ${final_destination}    CDG  
 
 Add Multiple Passive Air Segments In The GDS With Different Airline Codes
-    @{gds_commands}    Create List    SS UA1074 Y 10MAR YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
+    @{gds_commands}    Create List    SS UA1074 Y 10JUN YYZORD GK1 / 11551440 / ABCDEFG    SS AF1075 Y 15MAR ORDCDG GK1 / 01301240 / 1234567    SS UA1075 Y 20MAR CDGYYZ GK1 / 01301240 / ABC123
     : FOR    ${gds_command}    IN    @{gds_commands}
     \    Enter Cryptic Command    ${gds_command}
     Set Test Variable    ${final_destination}    CDG
@@ -571,7 +571,7 @@ Add ${number_of_segments} Passive Hotel Segments
     Create ${number_of_segments} Test Dates
     :FOR    ${i}    IN RANGE    0   ${number_of_segments}
     \    ${i}    Evaluate    ${i} + 1
-    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:*H01*,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1    1
+    \    Enter Cryptic Command    HU1AHK1STR${test_date_${i}}-${test_date_${i}}/GERMANY,PARK INN STUTTGART,TEL-+49 711320940,FAX-+49 7113209410,CF:12345,SINGLE ROOM,RATE:CWT EUR60.00/NIGHT,SI-*H01*/p1    1
     Set Test Variable    ${final_destination}    ORD
 
 Add ${number_of_segments} Active Hotel Segments In ${city_code}
@@ -731,7 +731,7 @@ Enter Cryptic Command
     [Arguments]    ${gds_command}    ${sleep_amount}=0.1
     Input Text    ${input_commandText}     ${gds_command}
     Sleep    ${sleep_amount}
-    Press Key    ${input_commandText}    \\13
+    Press Keys    ${input_commandText}    ENTER
     Wait Until Element Is Not Visible    ${icon_processing}    30
 
 Book ${num_car_segments} Active Car Segments

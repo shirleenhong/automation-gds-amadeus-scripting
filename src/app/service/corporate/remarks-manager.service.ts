@@ -17,7 +17,7 @@ export class RemarksManagerService {
   outputItems: Array<OutputItem>;
   newPlaceHolderValues = new Array<PlaceholderValues>();
   receiveFrom = '';
-  
+
   // tslint:disable-next-line: max-line-length
   constructor(
     private serviceApi: RemarksManagerApiService,

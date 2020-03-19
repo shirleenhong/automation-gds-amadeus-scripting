@@ -7,7 +7,7 @@ export class ValueChangeListener {
   accountingObserver: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   accountingRemarkChange = this.accountingObserver.asObservable();
 
-  reasonCodeObserver = new BehaviorSubject([]);
+  reasonCodeObserver = new BehaviorSubject({ reasonCodes: [], segments: '' });
   reasonCodeOnChange = this.reasonCodeObserver.asObservable();
 
   constructor() {}
@@ -15,7 +15,7 @@ export class ValueChangeListener {
     this.accountingObserver.next(accountingRemarks);
   }
 
-  reasonCodeChange(reasonCodes) {
-    this.reasonCodeObserver.next(reasonCodes);
+  reasonCodeChange(reasonCodes, segments) {
+    this.reasonCodeObserver.next({ reasonCodes, segments });
   }
 }

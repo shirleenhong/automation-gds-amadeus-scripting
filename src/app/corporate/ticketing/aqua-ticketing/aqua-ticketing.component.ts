@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ControlValueAccessor, Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
+import { ValueChangeListener } from 'src/app/service/value-change-listener.service';
 
 @Component({
   selector: 'app-aqua-ticketing',
@@ -19,10 +20,10 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
   isLimoPNR: boolean;
   hasAirSegment: boolean;
 
-  onTouched: any = () => { };
-  onChange: any = () => { };
+  onTouched: any = () => {};
+  onChange: any = () => {};
 
-  constructor(private fb: FormBuilder, private pnrService: PnrService) { }
+  constructor(private fb: FormBuilder, private pnrService: PnrService, private valueChangeListener: ValueChangeListener) {}
 
   ngOnInit() {
     this.aquaTicketingFormGroup = this.fb.group({
@@ -40,6 +41,21 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
     this.isLimoPNR = this.isPnrTypeOnly('TYP-LIM');
 
     this.aquaTicketingFormGroup.get('tst').markAsDirty();
+    this.subscribeReporting();
+  }
+
+  subscribeReporting() {
+    this.valueChangeListener.reasonCodeOnChange.subscribe((reason) => {
+      const tsts = this.unticketedSegments
+        .filter((t) => reason.segments.indexOf(t.segmentNumber instanceof Array ? t.segmentNumber.join(',') : t.segmentNumber) >= 0)
+        .map((x) => x.tstNumber);
+      this.tstSelected = [];
+      tsts.forEach((x) => {
+        this.tstSelected.push(x);
+      });
+      this.value = tsts.join(',');
+      this.aquaTicketingFormGroup.get('tst').setValue(tsts.join(','));
+    });
   }
 
   get value() {
@@ -143,7 +159,9 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
 
     allAir.forEach((x) => {
       if (!ticketedSegments.find((p) => x.tatooNumber === p)) {
-        unticketedSegments.push(x.tatooNumber);
+        if (unticketedSegments.indexOf(x.tatooNumber) === -1) {
+          unticketedSegments.push(x.tatooNumber);
+        }
         this.hasAirSegment = true;
       }
     });
@@ -153,7 +171,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
         this.hasAirTst = false;
       } else if (tstObj.length > 0) {
         tstObj.forEach((x) => {
-          if (x.segmentInformation.length > 0) {
+          if (x.segmentInformation.length > 0 && tstData.filter((z) => z.tstNumber === x.fareReference.uniqueReference).length === 0) {
             const segmentRef = [];
             const segmentTatoo = [];
             x.segmentInformation.forEach((p) => {
@@ -165,11 +183,13 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
             if (segmentTatoo.length > 0) {
               segmentTatoo.forEach((element) => {
                 if (unticketedSegments.includes(element)) {
-                  tstData.push({
-                    tstNumber: x.fareReference.uniqueReference,
-                    segmentNumber: segmentRef,
-                    tatooNumber: segmentTatoo
-                  });
+                  if (tstData.filter((z) => z.tstNumber === x.fareReference.uniqueReference).length === 0) {
+                    tstData.push({
+                      tstNumber: x.fareReference.uniqueReference,
+                      segmentNumber: segmentRef,
+                      tatooNumber: segmentTatoo
+                    });
+                  }
                 }
               });
             } else {

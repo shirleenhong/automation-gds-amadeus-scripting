@@ -90,10 +90,11 @@ export class ItineraryRemarkService implements OnInit {
   getItineraryRemarks(frmGroup: FormGroup) {
     let arr = frmGroup.get('emailAddresses') as FormArray;
     let hasDoNotSend = false;
-    for (const c of arr.controls) {
-      const email = c.get('emailAddress').value;
-      const donotSend = c.get('donotSendEmail').value;
-      if (donotSend) {
+    const donotSend = frmGroup.get('donotSendEmail').value;
+
+    if (donotSend) {
+      for (const c of arr.controls) {
+        const email = c.get('emailAddress').value;
         if (email) {
           hasDoNotSend = true;
           const emailAddresses = new Map<string, string>();
@@ -154,10 +155,12 @@ export class ItineraryRemarkService implements OnInit {
         this.rms.createPlaceholderValues(additionalLanguageMap);
       }
     }
-    if (!this.pnrService.getRmqEmail()) {
-      const aquaRmkConditions = new Map<string, string>();
-      aquaRmkConditions.set('EmailAddNo', 'true');
-      this.rms.createPlaceholderValues(null, aquaRmkConditions, null, null, 'EMAIL ADD-NO');
+    if (!donotSend) {
+      if (!this.pnrService.getRmqEmail()) {
+        const aquaRmkConditions = new Map<string, string>();
+        aquaRmkConditions.set('EmailAddNo', 'true');
+        this.rms.createPlaceholderValues(null, aquaRmkConditions, null, null, 'EMAIL ADD-NO');
+      }
     }
   }
   addAquaOverrideRmk() {

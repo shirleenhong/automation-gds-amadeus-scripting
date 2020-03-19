@@ -176,11 +176,11 @@ export class SupplementalFeesComponent implements OnInit {
     }
   }
 
-  createFormGroup(exchange) {
+  createFormGroup(exchange, feeValue?) {
     return this.fb.group({
       isChange: new FormControl(''),
       code: new FormControl(''),
-      fee: new FormControl({ value: '', disabled: true }),
+      fee: new FormControl({ value: feeValue ? feeValue : '', disabled: true }),
       noFeeCode: new FormControl(''),
       supplementalFee: new FormControl(''),
       feeType: new FormControl(''),
@@ -188,10 +188,10 @@ export class SupplementalFeesComponent implements OnInit {
     });
   }
 
-  resetFees(feeCode) {
+  resetFees(feeCode, feeValue) {
     this.byPassFeeCode = feeCode;
     this.removeFee(0);
-    this.addFee();
+    this.addFee(feeValue);
   }
 
   getCode() {
@@ -288,8 +288,8 @@ export class SupplementalFeesComponent implements OnInit {
     this.modalRef.content.setClientFees(this.supplementalFeeList, group.get('supplementalFee'));
   }
 
-  addFee(): void {
-    const group = this.createFormGroup(this.isExchange);
+  addFee(feeValue?): void {
+    const group = this.createFormGroup(this.isExchange, feeValue);
     (this.ticketedForm.get('segments') as FormArray).push(group);
     this.processExchange(group, false);
   }

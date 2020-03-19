@@ -68,11 +68,11 @@ export class FeesRemarkService {
     }
   }
 
-  writeFee(counter, group, segmentRelate?, additionalFee?, ticketRemark?) {
+  writeFee(counter, group, segmentRelate?, additionalFee?, ticketRemark?, fee?) {
     const feeMap = new Map<string, string>();
     let fees = [];
     if (group.get('code').value !== '') {
-      const feeAmt = group.get('fee').value;
+      const feeAmt = fee ? fee : group.get('fee').value;
       fees.push(group.get('code').value + (feeAmt ? feeAmt.toString() : ''));
     }
 
@@ -114,9 +114,9 @@ export class FeesRemarkService {
     this.remarksManager.createEmptyPlaceHolderValue(['SfcPlaceholder'], null, 'SFC');
     const ticketNum = comp.aquaFeeForm.get('ticketNumber').value;
     const tatoos = this.pnrService.getTatooNumberFromSegmentNumber(comp.aquaFeeForm.get('segments').value.split(','));
-    const feeType = comp.aquaFeeForm.get('feeType').value;
-    const ebRemark = this.pnrService.getRemarkText('EB/-');
-    const feeInfo = comp.getFeeCode(feeType, ebRemark);
+    // const feeType = comp.aquaFeeForm.get('feeType').value;
+    // const ebRemark = this.pnrService.getRemarkText('EB/-');
+    const feeInfo = comp.feeCode + comp.feeValue;
     const ticketRemark = ticketNum ? '/TK-' + ticketNum : '';
 
     // Ticketing and Queue
@@ -173,7 +173,7 @@ export class FeesRemarkService {
 
     if (comp.isShowSupFee) {
       const fees = comp.suppFeeComponent.ticketedForm.get('segments') as FormArray;
-      this.writeFee(1, fees.controls[0], tatoos.length > 0 ? tatoos : null, addInfo, ticketRemark);
+      this.writeFee(1, fees.controls[0], tatoos.length > 0 ? tatoos : null, addInfo, ticketRemark, comp.feeValue);
     } else {
       const feeMap = new Map<string, string>();
       feeMap.set('SupFeeInfo', feeInfo + (addInfo.length > 0 ? '/' + addInfo.join('/') : '') + ticketRemark);

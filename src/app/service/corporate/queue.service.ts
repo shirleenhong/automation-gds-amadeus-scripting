@@ -16,6 +16,8 @@ declare var smartScriptSession: any;
 })
 export class QueueService {
   pnrList: string[] = [];
+  data: any[] = [];
+  queueCtr = '';
   constructor(private queueRemarksService: AmadeusQueueService, private remarkHelper: RemarkHelper, private pnrService: PnrService) {}
 
   public getQueuePlacement(queueGroup: FormGroup): void {
@@ -154,8 +156,8 @@ export class QueueService {
   }
 
   private async generateProductivityReport(productivityReportForm) {
-    const data: any[] = [];
-    data.push({
+    this.data = [];
+    this.data.push({
       date: 'DATE',
       time: 'TIME',
       bookingoid: 'BOOKING OID',
@@ -173,65 +175,84 @@ export class QueueService {
           productivityReportForm.productivityReportForm.get('category').value
       )
       .then(async (res) => {
-        const queueCtr = await this.getQueueCount(res);
-        if (queueCtr === '') {
+        this.queueCtr = await this.getQueueCount(res);
+        if (this.queueCtr === '') {
           await smartScriptSession.send('QI');
-        } else if (queueCtr === '0') {
-          await smartScriptSession.send('RTRJ').then(async (x) => {
-            const rgx = /RMJ (.*)/g;
-            const rmj = rgx.exec(x.Response);
-            if (rmj && !rmj.toLocaleString().includes('NO ELEMENT FOUND')) {
-              const rmjA = rmj[1].split('/');
-              const rmjB = rmjA[1].split('-');
-              data.push({
-                date: rmjA[0].split('-')[1],
-                time: rmjB[0],
-                bookingoid: rmjB[1],
-                pnrLocator: rmjB[2],
-                cicCode: rmjB[3],
-                trackingCode: rmjB[4],
-                action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
-              });
-              await smartScriptSession.send('QN');
-              await smartScriptSession.send('IG');
-            } else {
-              await smartScriptSession.send('IG');
-            }
-          });
+        } else if (this.queueCtr === '0') {
+          await this.parseRSJRemark('single');
         } else {
-          let ctr: number;
-          ctr = 0;
+          await this.parseRSJRemark('multiple');
+          await this.parseRSJRemark('single');
+        }
+      });
+    if (this.data.length > 1) {
+      const report = new AngularCsv(this.data, productivityReportForm.productivityReportForm.get('forClosing').value);
+      if (report) {
+      }
+    }
+  }
 
-          while (ctr !== Number(queueCtr)) {
-            await smartScriptSession.send('RTRJ').then(async (x) => {
-              const rgx = /RMJ (.*)/g;
-              const rmj = rgx.exec(x.Response);
-              if (rmj) {
-                const rmjA = rmj[1].split('/');
-                const rmjB = rmjA[1].split('-');
-                data.push({
-                  date: rmjA[0].split('-')[1],
-                  time: rmjB[0],
-                  bookingoid: rmjB[1],
-                  pnrLocator: rmjB[2],
-                  cicCode: rmjB[3],
-                  trackingCode: rmjB[4],
-                  action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
-                });
-              }
-              ctr++;
-              if (ctr !== Number(queueCtr)) {
-                await smartScriptSession.send('QD');
-              }
-            });
-          }
+  async parseRSJRemark(type) {
+    if (type === 'single') {
+      await smartScriptSession.send('RTRJ').then(async (x) => {
+        const rgx = /\d{1,3} RMJ (.*)/g;
+        const rmj = rgx.exec(x.Response);
+        if (rmj && !rmj.toLocaleString().includes('NO ELEMENT FOUND')) {
+          const rmjA = rmj[1].split('/');
+          const rmjB = rmjA[1].split('-');
+          let rmjLinenumber = '';
+          rmjLinenumber = rmj[0].split(' ')[0];
+          this.data.push({
+            date: rmjA[0].split('-')[1],
+            time: rmjB[0],
+            bookingoid: rmjB[1],
+            pnrLocator: rmjB[2],
+            cicCode: rmjB[3],
+            trackingCode: rmjB[4],
+            action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
+          });
+          await smartScriptSession.send('XE' + rmjLinenumber);
+          await smartScriptSession.send('RFCWT');
+          await smartScriptSession.send('ER');
+          await smartScriptSession.send('QD');
+          await smartScriptSession.send('QI');
+        } else {
           await smartScriptSession.send('IG');
         }
       });
-    if (data.length > 1) {
-      const report = new AngularCsv(data, productivityReportForm.productivityReportForm.get('forClosing').value);
-      if (report) {
+    } else if (type === 'multiple') {
+      let ctr: number;
+      ctr = 0;
+
+      while (ctr !== Number(this.queueCtr)) {
+        await smartScriptSession.send('RTRJ').then(async (x) => {
+          const rgx = /\d{1,3} RMJ (.*)/g;
+          const rmj = rgx.exec(x.Response);
+          let rmjLinenumber = '';
+          if (rmj) {
+            const rmjA = rmj[1].split('/');
+            const rmjB = rmjA[1].split('-');
+            rmjLinenumber = rmj[0].split(' ')[0];
+            this.data.push({
+              date: rmjA[0].split('-')[1],
+              time: rmjB[0],
+              bookingoid: rmjB[1],
+              pnrLocator: rmjB[2],
+              cicCode: rmjB[3],
+              trackingCode: rmjB[4],
+              action: rmjB[4][rmjB[4].length - 1] === 'A' ? 'A' : ''
+            });
+          }
+          ctr++;
+          if (ctr !== Number(this.queueCtr)) {
+            await smartScriptSession.send('XE' + rmjLinenumber);
+            await smartScriptSession.send('RFCWT');
+            await smartScriptSession.send('ER');
+            await smartScriptSession.send('QD');
+          }
+        });
       }
+      await smartScriptSession.send('IG');
     }
   }
 

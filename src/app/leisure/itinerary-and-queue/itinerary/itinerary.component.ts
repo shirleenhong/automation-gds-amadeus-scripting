@@ -42,6 +42,7 @@ export class ItineraryComponent implements OnInit {
     this.itineraryForm = new FormGroup({
       emailAddresses: new FormArray([this.createFormGroup()]),
       // sendItinerary: new FormControl('', []),
+      donotSendEmail: new FormControl('', []),
       language: new FormControl('', []),
       test: new FormControl('', []),
       typeTransaction: new FormControl('', []),
@@ -118,8 +119,8 @@ export class ItineraryComponent implements OnInit {
 
   createFormGroup(): FormGroup {
     const group = this.formBuilder.group({
-      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')]),
-      donotSendEmail: new FormControl('', [])
+      emailAddress: new FormControl('', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}')])
+      // donotSendEmail: new FormControl('', [])
     });
 
     return group;

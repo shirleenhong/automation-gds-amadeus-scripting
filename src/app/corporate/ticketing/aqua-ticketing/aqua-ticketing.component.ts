@@ -53,6 +53,7 @@ export class AquaTicketingComponent implements OnInit, ControlValueAccessor {
       tsts.forEach((x) => {
         this.tstSelected.push(x);
       });
+      this.value = tsts.join(',');
       this.aquaTicketingFormGroup.get('tst').setValue(tsts.join(','));
     });
   }

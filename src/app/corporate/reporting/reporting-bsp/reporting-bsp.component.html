@@ -32,13 +32,11 @@
       <div *ngIf="isLilly" class="header" style="width:22%">
         Calculation Option For Lilly
       </div>
-
     </div>
     <div formArrayName="fares" *ngFor="let item of this.bspGroup.get('fares')['controls']; let i = index" class="col">
       <div [formGroupName]="i" class="row">
         <div style="width:5%;padding-left:15px">
-          <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded"
-            (change)="checkChange(item)" />
+          <input type="checkbox" name="chkIncluded" formControlName="chkIncluded" id="chkIncluded" (change)="checkChange(item)" />
         </div>
 
         <div class="colfare">
@@ -50,16 +48,20 @@
         </div>
 
         <div class="colfare">
-          <input formControlName="highFareText" type="text" class="form-control" maxlength="55"
-            (change)="validateFares(item)" />
+          <input formControlName="highFareText" type="text" class="form-control" maxlength="55" (change)="validateFares(item)" />
         </div>
         <div class="colfare">
-          <input formControlName="lowFareText" type="text" class="form-control" maxlength="55"
-            (change)="changeReasonCodes(item, i)" />
+          <input formControlName="lowFareText" type="text" class="form-control" maxlength="55" (change)="changeReasonCodes(item, i)" />
         </div>
         <div class="dropdown">
-          <select autofocus id="reasonCodeText" class="form-control" formControlName="reasonCodeText"
-            name="reasonCodeText">
+          <select
+            autofocus
+            id="reasonCodeText"
+            class="form-control"
+            formControlName="reasonCodeText"
+            name="reasonCodeText"
+            (change)="updateReasonCode(item, $event.target.value)"
+          >
             <option [ngValue]="null"></option>
             <option *ngFor="let reason of reasonCodes[i]" [value]="reason.reasonCode">{{
               reason.reasonCode + ' : ' + reason.getDescription()
@@ -67,10 +69,14 @@
           </select>
         </div>
         <div *ngIf="isLilly" class="dropdown">
-          <select class="form-control " id="lowFareOption" formControlName="lowFareOption" name="lowFareOption"
-            (change)="checkLowFareOption($event.target.value, item, i)">
-            <option *ngFor="let lfOption of lowFareOptionList" [value]="lfOption.itemValue"> {{ lfOption.itemText }}
-            </option>
+          <select
+            class="form-control "
+            id="lowFareOption"
+            formControlName="lowFareOption"
+            name="lowFareOption"
+            (change)="checkLowFareOption($event.target.value, item, i)"
+          >
+            <option *ngFor="let lfOption of lowFareOptionList" [value]="lfOption.itemValue"> {{ lfOption.itemText }} </option>
           </select>
         </div>
       </div>

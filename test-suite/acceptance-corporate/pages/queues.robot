@@ -276,25 +276,32 @@ Verify PNR Is Queued Correctly At The End Of PNR
     Element Should Contain    ${text_area_command}   YTOWL210E${SPACE}${SPACE}${SPACE}${SPACE}070${SPACE}${SPACE}${SPACE}${SPACE}001
     
 Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type  
-    # Navigate To Page CWT Itinerary Tab
+    Navigate To Page CWT Itinerary Tab
     Select Emails In CWT Itinerary    ${email}
-    Select From List By Label    ${list_language}    ${language}
-    # Select From List By Label    ${list_transaction_type}    ${transaction}
+    Select From List By Label    ${list_language}    ${language}    
     Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
     Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
-    # Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
     Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
     
-Add CWT Itinerary Details For All Emails, In ${language} Language And For ${transcation} Transaction Type
+Add CWT Itinerary Details For All Emails, In ${language} Language And For ${transaction} Transaction Type
     Sleep    10
-    Navigate To Page CWT Itinerary
+    Navigate To Page CWT Itinerary Tab
     Select Emails In CWT Itinerary    TEST@EMAIL.COM    TEST_ARR@EMAIL.COM    TEST_CTC@EMAIL.COM
     Select From List By Label    ${list_language}    ${language}
-    Select From List By Label    ${list_transaction_type}    ${transcation}
     Set Test Variable    ${cwt_itin_complete}    yes
     [Teardown]    Take Screenshot
-    
+
+Add CWT Itinerary Details For Email ${email}, In ${language} Language And For ${transaction} Transaction Type For Client Ornge
+    Select Emails In CWT Itinerary    ${email}
+    Select From List By Label    ${list_language}    ${language}
+    Select From List By Label    ${list_transaction_type}    ${transaction}
+    Add Services Remark     THIS IS A TEST FOR    ADDING SERVICES REMARK
+    Add Tickets Remark     THIS IS ALSO A TEST     FOR ADDING TICKETS REMARK
+    Run Keyword If    "${transaction}" == "Itinerary"     Add Offers Remark    THIS ONE IS FOR    ADDING OFFER REMARKS
+    Set Test Variable    ${cwt_itin_complete}    yes
+    [Teardown]    Take Screenshot
+
 Update Services And Test Remarks
     Update Existing Services Remarks    1     UPDATED SERVICES REMARK
     Delete Existing Services Remarks    2

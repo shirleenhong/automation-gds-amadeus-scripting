@@ -88,8 +88,6 @@
 		"ExpectedRemark5": "RIR *SERVICE**ADDING SERVICES REMARK",
 		"ExpectedRemark6": "RIR *TICKET**THIS IS ALSO A TEST",
 		"ExpectedRemark7": "RIR *TICKET**FOR ADDING TICKETS REMARK",
-		"ExpectedRemark8": "RIR *OFFER**THIS ONE IS FOR",
-		"ExpectedRemark9": "RIR *OFFER**ADDING OFFER REMARKS",
 		"UnexpectedRemark1": "RMT TKT1-DOM",
 		"UnexpectedRemark2": "RMQ AUTOMAIL-NO"
 	},
@@ -194,8 +192,6 @@
 		"ExpectedRemark5": "RIR *SERVICE**ADDING SERVICES REMARK",
 		"ExpectedRemark6": "RIR *TICKET**THIS IS ALSO A TEST",
 		"ExpectedRemark7": "RIR *TICKET**FOR ADDING TICKETS REMARK",
-		"ExpectedRemark8": "RIR *OFFER**THIS ONE IS FOR",
-		"ExpectedRemark9": "RIR *OFFER**ADDING OFFER REMARKS",
 		"UnexpectedRemark1": "RMT TKT1-TRANS",
 		"UnexpectedRemark2": "RMQ AUTOMAIL-NO"
 	},

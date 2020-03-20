@@ -5,6 +5,7 @@ import { ObtComponent } from '../../reporting/obt/obt.component';
 import { SupplementalFeesComponent } from '../supplemental-fees/supplemental-fees.component';
 import { DDBService } from 'src/app/service/ddb.service';
 import { UtilHelper } from 'src/app/helper/util.helper';
+import { StaticValuesService } from 'src/app/service/static-values.services';
 
 @Component({
   selector: 'app-aqua-fees',
@@ -19,11 +20,18 @@ export class AquaFeesComponent implements OnInit {
   isObt = false;
   selectedFeeType = '';
   feeCode = '';
+  feeValue = '';
   @ViewChild(ObtComponent) obtComponent: ObtComponent;
   @ViewChild(SupplementalFeesComponent) suppFeeComponent: SupplementalFeesComponent;
   hasAir = false;
+  feeCodes = [];
 
-  constructor(private pnrService: PnrService, private ddbService: DDBService, private utilHelper: UtilHelper) {}
+  constructor(
+    private pnrService: PnrService,
+    private ddbService: DDBService,
+    private utilHelper: UtilHelper,
+    private staticValues: StaticValuesService
+  ) {}
 
   ngOnInit() {
     this.segmentList = new Array<any>();
@@ -32,13 +40,16 @@ export class AquaFeesComponent implements OnInit {
       feeType: new FormControl('', [Validators.required]),
       segments: new FormControl(''),
       enableSupFee: new FormControl(''),
-      ticketNumber: new FormControl('')
+      ticketNumber: new FormControl(''),
+      feeValue: new FormControl(''),
+      feeCode: new FormControl('')
     });
     this.isObt = this.pnrService.getRemarkText('EB/-') !== '';
     this.hasAir = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR').length > 0;
   }
 
   selectFeeType(val) {
+    this.getFeeCodes(val);
     this.segmentList = new Array<any>();
     let types = [];
     switch (val) {
@@ -66,9 +77,12 @@ export class AquaFeesComponent implements OnInit {
         });
     }
     this.selectedFeeType = val;
-    this.feeCode = this.getFeeCode(val, this.pnrService.getRemarkText('EB/-'));
+  }
+  updateFeeCode() {
+    this.feeCode = this.aquaFeeForm.get('feeCode').value;
+    this.feeValue = this.aquaFeeForm.get('feeValue').value;
     if (this.isShowSupFee) {
-      this.suppFeeComponent.resetFees(this.feeCode);
+      this.suppFeeComponent.resetFees(this.feeCode, this.feeValue);
     }
   }
 
@@ -110,5 +124,25 @@ export class AquaFeesComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  getFeeCodes(val) {
+    switch (val) {
+      case 'C':
+        this.feeCodes = this.staticValues.getCarFees();
+        break;
+      case 'H':
+        this.feeCodes = this.staticValues.getHotelFees();
+        break;
+      case 'A':
+        this.feeCodes = this.staticValues.getAirFees();
+        break;
+      case 'R':
+        this.feeCodes = this.staticValues.getRailFees();
+        break;
+      case 'L':
+        this.feeCodes = [{ itemText: 'LBD', itemValue: 'LBD' }];
+        break;
+    }
   }
 }

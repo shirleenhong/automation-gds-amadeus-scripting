@@ -31,6 +31,31 @@
         </app-generic-select>
       </div>
     </div>
+    <div class="row form-group ">
+      <div class="col-4">Fee Code:</div>
+      <div class="col-4">Fee Value:</div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <select class="form-control " id="feeCode" formControlName="feeCode" name="feeCode" (change)="updateFeeCode()">
+          <option *ngFor="let item of feeCodes" [value]="item.itemValue">
+            {{ item.itemText }}
+          </option>
+        </select>
+      </div>
+      <div class="col-3">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="feeValue"
+          name="feeValue"
+          id="feeValue"
+          AmountMask
+          (change)="updateFeeCode()"
+        />
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-4">
         <label

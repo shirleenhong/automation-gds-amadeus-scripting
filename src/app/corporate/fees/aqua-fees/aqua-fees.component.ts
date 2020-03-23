@@ -46,6 +46,10 @@ export class AquaFeesComponent implements OnInit {
     });
     this.isObt = this.pnrService.getRemarkText('EB/-') !== '';
     this.hasAir = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR').length > 0;
+
+    this.aquaFeeForm.get('feeValue').valueChanges.subscribe(() => {
+      this.updateFeeCode();
+    });
   }
 
   selectFeeType(val) {

@@ -196,11 +196,13 @@ Verify That Aqua TK Line Is Written Correctly For Cancelled PNR
 
 Verify That Aqua TK Line Is Written Correctly For Changed PNR Without Billed Service Fee
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1-CHG
+    Assign Current Date
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1-CHG
     
 Verify That Aqua TK Line Is Written Correctly For For Other Type of TK Line
     Finish PNR
-    Verify Specific Remark Is Written In The PNR    TK TL05MAY/YTOWL2106/Q8C1
+    Assign Current Date
+    Verify Specific Remark Is Written In The PNR    TK TL${current_date}/YTOWL2106/Q8C1
     Open Command Page
     
 Verify That Aqua TK Line Is Written Correctly For Updated TK Line

@@ -386,7 +386,8 @@ export class CorporateComponent implements OnInit {
     accRemarks.push(
       this.ticketRemarkService.submitTicketRemark(
         this.ticketingComponent.ticketlineComponent.getTicketingDetails(),
-        this.ticketingComponent.ticketlineComponent.approvalForm
+        this.ticketingComponent.ticketlineComponent.approvalForm,
+        this.ticketingComponent.ticketlineComponent.containerFilter
       )
     );
     accRemarks.push(this.reportingRemarkService.GetRoutingRemark(this.reportingComponent.reportingRemarksView));
@@ -564,6 +565,7 @@ export class CorporateComponent implements OnInit {
     this.showLoading('Updating PNR...', 'SubmitToPnr');
 
     const changeVal = this.changePnrComponent.changePnrForm.get('change').value;
+
     const tktl = this.changePnrService.getTKTRemark(this.changePnrComponent, this.changePnrConfig);
 
     if (this.changePnrComponent.matrixComp) {
@@ -1118,7 +1120,8 @@ export class CorporateComponent implements OnInit {
       accRemarks.push(
         this.ticketRemarkService.submitTicketRemark(
           this.itineraryqueueComponent.ticketingLineComponent.getTicketingDetails(),
-          this.itineraryqueueComponent.ticketingLineComponent.approvalForm
+          this.itineraryqueueComponent.ticketingLineComponent.approvalForm,
+          this.itineraryqueueComponent.ticketingLineComponent.containerFilter
         )
       );
     }

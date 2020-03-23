@@ -56,12 +56,12 @@ export class TicketRemarkService {
    * Method that cleansup existing TK remark, then invokes another method to write new.
    * @returns RemarkGroup - the remark group for the new TKTL remark
    */
-  public submitTicketRemark(ticketRemark: TicketModel, fg?: FormGroup): RemarkGroup {
+  public submitTicketRemark(ticketRemark: TicketModel, fg?: FormGroup, filter?: string): RemarkGroup {
     const remGroup = new RemarkGroup();
     remGroup.group = 'Ticketing';
     remGroup.cryptics = new Array<string>();
     remGroup.deleteRemarkByIds = new Array<string>();
-    this.cleanupTicketRemark(remGroup);
+    this.cleanupTicketRemark(remGroup, filter);
     this.writeTicketRemark(ticketRemark, remGroup, fg);
     return remGroup;
   }
@@ -78,35 +78,33 @@ export class TicketRemarkService {
   /**
    * Cleans up existing TK remark (as well as RIR if on hold).
    */
-  private cleanupTicketRemark(remGroup: RemarkGroup): void {
-    // const linesToDelete: Array<number> = new Array();
-
-    const existingTkLineNum = this.pnrService.getTkLineNumber();
-    const existingFSLineNum = this.pnrService.getFSLineNumber();
-    const fmLineNumbers = this.pricingService.toDeleteFmLines;
-    if (existingTkLineNum >= 0) {
-      remGroup.deleteRemarkByIds.push(existingTkLineNum.toString());
-      // linesToDelete.push(existingTkLineNum);
-
-      const existingRirLineNum = this.pnrService.getRIRLineNumber(this.ONHOLD_KEYWORD);
-      if (existingRirLineNum && existingRirLineNum >= 0) {
-        remGroup.deleteRemarkByIds.push(existingRirLineNum.toString());
-        // linesToDelete.push(existingRirLineNum);
+  private cleanupTicketRemark(remGroup: RemarkGroup, filter?: string): void {
+    if (filter === 'FULLWRAP') {
+      const existingTkLineNum = this.pnrService.getTkLineNumber();
+      const existingFSLineNum = this.pnrService.getFSLineNumber();
+      const fmLineNumbers = this.pricingService.toDeleteFmLines;
+      if (existingTkLineNum >= 0) {
+        remGroup.deleteRemarkByIds.push(existingTkLineNum.toString());
+        const existingRirLineNum = this.pnrService.getRIRLineNumber(this.ONHOLD_KEYWORD);
+        if (existingRirLineNum && existingRirLineNum >= 0) {
+          remGroup.deleteRemarkByIds.push(existingRirLineNum.toString());
+        }
+      }
+      // to delete FM lines from the PNR
+      for (const fmLine of fmLineNumbers) {
+        remGroup.deleteRemarkByIds.push(fmLine.toString());
+        // linesToDelete.push(fmLine);
+      }
+      if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
+        remGroup.deleteRemarkByIds.push(existingFSLineNum.toString());
+        // linesToDelete.push(existingFSLineNum);
+      }
+    } else if (filter === 'UPDATE') {
+      const existingTkLineNum = this.pnrService.getTkLineNumber();
+      if (existingTkLineNum >= 0) {
+        remGroup.deleteRemarkByIds.push(existingTkLineNum.toString());
       }
     }
-    // to delete FM lines from the PNR
-    for (const fmLine of fmLineNumbers) {
-      remGroup.deleteRemarkByIds.push(fmLine.toString());
-      // linesToDelete.push(fmLine);
-    }
-    if (existingFSLineNum !== '' && existingFSLineNum >= 0) {
-      remGroup.deleteRemarkByIds.push(existingFSLineNum.toString());
-      // linesToDelete.push(existingFSLineNum);
-    }
-    //
-    // if (linesToDelete.length > 0) {
-    //   smartScriptSession.send('XE' + linesToDelete.join(','));
-    // }
   }
 
   /**

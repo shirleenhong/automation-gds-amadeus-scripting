@@ -42,7 +42,7 @@ export class AquaFeesComponent implements OnInit {
       enableSupFee: new FormControl(''),
       ticketNumber: new FormControl(''),
       feeValue: new FormControl(''),
-      feeCode: new FormControl('')
+      feeCode: new FormControl('', [Validators.required])
     });
     this.isObt = this.pnrService.getRemarkText('EB/-') !== '';
     this.hasAir = this.pnrService.getSegmentList().filter((x) => x.segmentType === 'AIR').length > 0;
@@ -146,6 +146,7 @@ export class AquaFeesComponent implements OnInit {
         break;
       case 'L':
         this.feeCodes = [{ itemText: 'LBD', itemValue: 'LBD' }];
+        this.aquaFeeForm.get('feeCode').setValue('LBD');
         break;
     }
   }

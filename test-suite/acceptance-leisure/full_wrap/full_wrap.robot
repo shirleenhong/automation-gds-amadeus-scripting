@@ -501,7 +501,7 @@ Verify Insurance Reporting Remarks Are Added In The PNR
     Verify Specific Remark Is Written In The PNR    RIR I DECLINED TO PURCHASE THE FOLLOWING TRAVEL INSURANCE
     Verify Specific Remark Is Written In The PNR    RIR OPTIONS THAT MY TRAVEL AGENT HAS OFFERED AND EXPLAINED TO ME    True
     Verify Specific Remark Is Written In The PNR    RIR ...DELUXE PACKAGE INSURANCE
-    Verify Specific Remark Is Written In The PNR    RIR ...NONE OF CARLSON WAGONLIT CANADA OR YOUR CWT TRAVEL
+    Verify Specific Remark Is Written In The PNR    RIR ...NONE OF CWT VACATIONS CANADA OR YOUR CWT TRAVEL
     Verify Specific Remark Is Written In The PNR    RIR ...AGENT ADVISOR OR YOUR CWT TRAVEL AGENCY WILL BE
     Verify Specific Remark Is Written In The PNR    RIR ...RESPONSIBLE FOR ANY EXPENSES LOSSES CLAIMS
     Verify Specific Remark Is Written In The PNR    RIR ...LIABILITIES COSTS ACCOUNTS CHARGES TAXES ACTIONS

@@ -510,7 +510,7 @@ export class PnrService {
 
     for (const misc of this.pnrObj.miscSegments) {
       if (
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') === -1 &&
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CWT') === -1 &&
         misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') === -1 &&
         misc.fullNode.itineraryFreetext.longFreetext.indexOf('CWT RETENTION SEGMENT') === -1
       ) {
@@ -1403,7 +1403,7 @@ export class PnrService {
 
   hasAmendMISRetentionLine() {
     for (const misc of this.pnrObj.miscSegments) {
-      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1) {
+      if (misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CWT') > -1) {
         return true;
       }
     }
@@ -1482,7 +1482,7 @@ export class PnrService {
     for (const misc of this.pnrObj.miscSegments) {
       if (
         misc.fullNode.itineraryFreetext.longFreetext.indexOf('PNR CANCELLED') > -1 ||
-        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CARLSON') > -1
+        misc.fullNode.itineraryFreetext.longFreetext.indexOf('THANK YOU FOR CHOOSING CWT') > -1
       ) {
         // this.getSegmentDetails(misc, 'MIS');
         return misc.elementNumber;

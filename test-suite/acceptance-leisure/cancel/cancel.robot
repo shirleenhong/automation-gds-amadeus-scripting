@@ -66,7 +66,7 @@ Verify That Selected Segments Are Cancelled And Cancel Remarks Are Written When 
     Verify Specific Remark Is Written In The PNR    /TKT NBR-1234ABC CPNS-9825252
     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
     Verify Specific Remark Is Written In The PNR    RMX AC REFUND WAIVER CODE - ACFLTIRROP1111
-    Verify Specific Remark Is Not Written In The PNR    /THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL
+    Verify Specific Remark Is Not Written In The PNR    /THANK YOU FOR CHOOSING CWT VACATIONS TRAVEL
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser
@@ -180,7 +180,7 @@ Verify That AC Segment Are Cancelled And Cancel Remarks Are Written
     Verify Specific Remark Is Written In The PNR    /CANCELLED/CXLD SEG-ALL
     Verify Specific Remark Is Written In The PNR    /TKT NBR-112233 CPNS-7654321
     Verify Specific Remark Is Written In The PNR    RIR *FULLCXL**
-    Verify Specific Remark Is Not Written In The PNR    /THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL
+    Verify Specific Remark Is Not Written In The PNR    /THANK YOU FOR CHOOSING CWT VACATIONS TRAVEL
     Close Cryptic Display Window
     Logout To Amadeus Sell Connect
     [Teardown]    Close Browser

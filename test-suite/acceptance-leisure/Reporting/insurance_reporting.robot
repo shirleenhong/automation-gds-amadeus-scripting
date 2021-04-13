@@ -421,7 +421,7 @@ Verify RIR Remarks Is Written In The PNR When Insurance Is Declined With Multipl
 
 *** Keywords ***
 Verify Insurance Decline Information Is Written For EN
-    Verify Specific Remark Is Written In The PNR    RIR ...NONE OF CARLSON WAGONLIT CANADA OR YOUR CWT TRAVEL
+    Verify Specific Remark Is Written In The PNR    RIR ...NONE OF CWT VACATIONS CANADA OR YOUR CWT TRAVEL
     Verify Specific Remark Is Written In The PNR    RIR ...AGENT ADVISOR OR YOUR CWT TRAVEL AGENCY WILL BE
     Verify Specific Remark Is Written In The PNR    RIR ...RESPONSIBLE FOR ANY EXPENSES LOSSES CLAIMS
     Verify Specific Remark Is Written In The PNR    RIR ...LIABILITIES COSTS ACCOUNTS CHARGES TAXES ACTIONS
@@ -454,7 +454,7 @@ Verify Insurance Decline Information Is Written For EN
     Verify Specific Remark Is Written In The PNR    RIR ...SUPPLIER PENALTIES.
 
 Verify Insurance Decline Information Is Written For FR
-    Verify Specific Remark Is Written In The PNR    RIR ...NI CARLSON WAGONLIT CANADA VOTRE CONSEILLER EN
+    Verify Specific Remark Is Written In The PNR    RIR ...NI CWT VOYAGES CANADA VOTRE CONSEILLER EN
     Verify Specific Remark Is Written In The PNR    RIR ...VOYAGES CWT OU VOTRE AGENCE DE VOYAGES CWT NE
     Verify Specific Remark Is Written In The PNR    RIR ...SERA TENU RESPONSABLE DE DEPENSES PERTESRECLAMATIONS
     Verify Specific Remark Is Written In The PNR    RIR ...COUTS COMPTES COURANTS FRAIS TAXES ACTIONS REQUETES

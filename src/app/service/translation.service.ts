@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TranslationService {
   language = ['EN', 'FR'];
@@ -11,7 +11,7 @@ export class TranslationService {
     ['EMERGENCY MEDICAL/TRANSPORTATION', 'FRAIS MEDICAUX D URGENCES/DE TRANSPORT'],
     ['FLIGHT AND TRAVEL ACCIDENT', 'ACCIDENTS DE VOL ET DE VOYAGES'],
     ['', ''],
-    ['', '']
+    ['', ''],
   ];
 
   groupRemarks = [
@@ -19,7 +19,7 @@ export class TranslationService {
       groupName: 'DeclinedReason',
       remarks: [
         [
-          'NONE OF CARLSON WAGONLIT CANADA OR YOUR CWT TRAVEL',
+          'NONE OF CWT VACATIONS CANADA OR YOUR CWT TRAVEL',
           'AGENT ADVISOR OR YOUR CWT TRAVEL AGENCY WILL BE',
           'RESPONSIBLE FOR ANY EXPENSES LOSSES CLAIMS ',
           'LIABILITIES COSTS ACCOUNTS CHARGES TAXES ACTIONS',
@@ -49,10 +49,10 @@ export class TranslationService {
           '5. OTHER ADDITIONAL COSTS IF INSURANCE IS NOT ',
           'PURCHASED AT THE TIME OF INITIAL DEPOSIT. SUCH AS A',
           'CHANGE IN MEDICAL CONDITION OR INCREASED',
-          'SUPPLIER PENALTIES.'
+          'SUPPLIER PENALTIES.',
         ],
         [
-          'NI CARLSON WAGONLIT CANADA VOTRE CONSEILLER EN',
+          'NI CWT VOYAGES CANADA VOTRE CONSEILLER EN',
           'VOYAGES CWT OU VOTRE AGENCE DE VOYAGES CWT NE',
           'SERA TENU RESPONSABLE DE DEPENSES PERTESRECLAMATIONS',
           'COUTS COMPTES COURANTS FRAIS TAXES ACTIONS REQUETES ',
@@ -74,9 +74,9 @@ export class TranslationService {
           'REGIME PUBLIC DE SANTE',
           '3. COUT DU SUPPLEMENT SIMPLE SI VOTRE COMPAGNON NE',
           'PEUT PLUSVOYAGER ET QUE VOUS CHOISISSEZ DE VOYAGER',
-          'QUAND MEME'
-        ]
-      ]
+          'QUAND MEME',
+        ],
+      ],
     },
     {
       groupName: 'InsuranceDeclinedNo',
@@ -85,16 +85,16 @@ export class TranslationService {
         [
           'J AI REFUSE D ACHETER LES OPTIONS D ASSURANCES VOYAGES',
           'CI-DESSOUS M AYANT ETE OFFERTES ET EXPLIQUEES PAR MON',
-          'CONSEILLER EN VOYAGES'
-        ]
-      ]
+          'CONSEILLER EN VOYAGES',
+        ],
+      ],
     },
     {
       groupName: 'InsuranceDeclinedYes',
       remarks: [
         ['ALL INCLUSIVE OR PREMIUM PROTECTION INSURANCE HAS BEEN', 'PURCHASED FOR THE FULL VALUE OF THE TRIP.'],
-        ['LE FORFAIT D ASSURANCE SUPERIEUR A ETE ACHETE.', 'RIR POUR LE MONTANT TOTAL DU VOYAGE.']
-      ]
+        ['LE FORFAIT D ASSURANCE SUPERIEUR A ETE ACHETE.', 'RIR POUR LE MONTANT TOTAL DU VOYAGE.'],
+      ],
     },
     {
       groupName: 'VibRemarksSegment',
@@ -108,7 +108,7 @@ export class TranslationService {
           'TICKET IS ENDORSED BY VIA 1 TICKET LOUNGE.',
           'PLEASE CALL VIA RAIL AT 1-888-842-7245',
           'TO RECONFIRM YOUR',
-          'TRAIN DEPARTURE/ARRIVAL TIMES.'
+          'TRAIN DEPARTURE/ARRIVAL TIMES.',
         ],
         [
           'POUR LES DEPLACEMENTS A BORD DE VIA RAIL VEUILLEZ VOUS',
@@ -119,10 +119,10 @@ export class TranslationService {
           'VOTRE ITINERAIRE EN COURS DE ROUTE ASSUREZ-VOUS QUE VOTRE',
           'BILLET EST ENDOSSE PAR LA BILLETTERIE VIA 1.',
           'VEUILLEZ COMMUNIQUER AVEC VIA RAIL AU 1-888-842-7245 POUR',
-          'RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.'
-        ]
-      ]
-    }
+          'RECONFIRMER LES HEURES DE DEPART/D ARRIVEE DE VOTRE TRAIN.',
+        ],
+      ],
+    },
   ];
 
   translate(remark, lang) {

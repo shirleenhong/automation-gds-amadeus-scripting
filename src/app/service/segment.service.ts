@@ -669,7 +669,7 @@ export class SegmentService {
         const misSegment = new Array<PassiveSegmentModel>();
 
 
-        const mis = this.setMisRemark(finaldate, odate, 'THANK YOU FOR CHOOSING CARLSON WAGONLIT TRAVEL');
+        const mis = this.setMisRemark(finaldate, odate, 'THANK YOU FOR CHOOSING CWT VACATIONS TRAVEL');
         const passGroup = new RemarkGroup();
         passGroup.group = 'MIS Remark';
         misSegment.push(mis);

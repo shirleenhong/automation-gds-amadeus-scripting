@@ -6,7 +6,6 @@ import { MessageComponent } from '../shared/message/message.component';
 import { PaymentsComponent } from './payments/payments.component';
 import { ReportingComponent } from '../corporate/reporting/reporting.component';
 import { TicketingComponent } from './ticketing/ticketing.component';
-
 import { PnrService } from '../service/pnr.service';
 import { DDBService } from '../service/ddb.service';
 import { RemarksManagerService } from '../service/corporate/remarks-manager.service';
@@ -60,6 +59,8 @@ import { QueueReportComponent } from './queue-report/queue-report.component';
 import { AssignInvoiceToOidComponent } from './assign-invoice-to-oid/assign-invoice-to-oid.component';
 
 declare var smartScriptUtils: any;
+declare var smartScriptSession: any;
+declare var PNR: any;
 @Component({
   selector: 'app-corporate',
   templateUrl: './corporate.component.html',
@@ -67,7 +68,13 @@ declare var smartScriptUtils: any;
 })
 export class CorporateComponent implements OnInit {
   title = 'bpg-gds-scripting-amadeus';
+  pnrObj: any;
+  clientSubUnitGuid: string;
   errorPnrMsg = '';
+  activeOID = '';
+  uid = '';
+  tstObj = [];
+  errorMessage = '';
   isPnrLoaded = false;
   modalRef: BsModalRef;
   workflow = '';
@@ -140,12 +147,75 @@ export class CorporateComponent implements OnInit {
     this.initData();
   }
 
+  async getPNR(): Promise<void> {
+    this.cfLine = null;
+    this.clientSubUnitGuid = null;
+    this.pnrObj = new PNR();
+    await this.pnrObj
+      .retrievePNR()
+      .then(
+        async (res) => {
+          await this.getTST();
+        },
+        (error: string) => {
+          this.errorMessage = 'Error: ' + error;
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+    await this.getPCC();
+    // this.getRecordLocator();
+    console.log(JSON.stringify(this.pnrObj));
+  }
+  async getTST(): Promise<void> {
+    this.tstObj = new Array<any>();
+    const attributeDetails = {
+      attributeType: 'ALL'
+    };
+
+    const displayMode = {
+      attributeDetails
+    };
+
+    const displayElement = {
+      displayMode
+    };
+
+    await smartScriptSession
+      .requestService('ws.displayTST_v14.1', displayElement)
+      .then(
+        (tst) => {
+          if (tst.response.model.output.response) {
+            this.tstObj = tst.response.model.output.response.fareList;
+          }
+          this.errorMessage = 'TST Loaded Successfully';
+        },
+        (error: string) => {
+          this.errorMessage = 'Error: ' + error;
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log(JSON.stringify(this.tstObj));
+  }
+
+  async getPCC() {
+    await smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
+      this.activeOID = x.ACTIVE_OFFICE_ID;
+      this.uid = x.USER_ALIAS;
+    });
+  }
+
   async ngOnInit(): Promise<void> {
+    this.getPCC();
     this.modalSubscribeOnClose();
     if (this.modalRef) {
       this.modalRef.hide();
     }
   }
+
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -228,6 +298,7 @@ export class CorporateComponent implements OnInit {
   async initData() {
     this.ddbService.getAllMatrixSupplierCodes();
     await this.getPnrService();
+
   }
 
   showLoading(msg, caller?) {

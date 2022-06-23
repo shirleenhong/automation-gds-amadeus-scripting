@@ -26,6 +26,7 @@ export class PnrService {
   amountPipe = new AmountPipe();
   PCC = '';
   uid = '';
+  currentOID = '';
   pnrResponse: any;
   clientSubUnitGuid: string;
   exchangeTatooNumbers = [];
@@ -120,8 +121,10 @@ export class PnrService {
     await smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.PCC = x.ACTIVE_OFFICE_ID;
       this.uid = x.USER_ALIAS;
+      this.currentOID = x.OFFICE_ID;
     });
   }
+
 
   getAgentIdCreatedPnr() {
     return this.pnrObj.header.agentIdCreated;

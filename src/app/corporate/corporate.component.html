@@ -354,7 +354,7 @@
   </div>
 </div>
 
-<div *ngIf="isPnrLoaded && workflow === '' && loading === false" class="loaderBody">
+<div *ngIf="isPnrLoaded && workflow === '' && loading === false && activeOID === 'YTOWL2107'" class="loaderBody">
   <div class="loader">
     <div>
       Corporate
@@ -432,6 +432,82 @@
   <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
+<div *ngIf="isPnrLoaded && workflow === '' && loading === false && activeOID === 'MSPWL23GC'" class="loaderBody">
+  <div class="loader">
+    <div>
+      Corporate
+      <span class="cwt-logo"></span>
+    </div>
+    <!-- <div>
+      <button class="leisureButton btnMenu" (click)="AddSegment()">
+        Add Passive Segment
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="wrapPnr()">
+        Full Wrap PNR
+      </button>
+    </div> -->
+
+    <div>
+      <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
+        Itinerary and Queue
+      </button>
+    </div>
+    <!--<div>
+      <button class="leisureButton btnMenu" (click)="sendInvoice()">
+        Re-send TKT/INV
+      </button>
+    </div>-->
+    <div>
+      <button class="leisureButton btnMenu" (click)="cancelSegment()">
+        Cancel Script
+      </button>
+    </div>
+    <div>
+      <button class="leisureButton btnMenu" (click)="aquaFees()">
+        Fee Only
+      </button>
+    </div>
+    <div *ngIf="!showIrdRequestButton">
+      <button class="leisureButton btnMenu" (click)="irdRateRequest()">
+        IRD Rate Request
+      </button>
+    </div>
+    <!--<div *ngIf="!withPasspurchaseAccess">
+      <button class="leisureButton btnMenu" (click)="corporatePassPurchase()">
+        Airline Corporate Pass Purchase
+      </button>
+    </div>-->
+    <!--<div>
+      <button class="leisureButton btnMenu" (click)="writeStandaloneRemarks()">
+        Remarks
+      </button>
+    </div>-->
+    <div>
+      <button class="leisureButton btnMenu" (click)="queueReport()">
+        Queue Productivity Report
+      </button>
+    </div>
+    <!--<div>
+      <button class="leisureButton btnMenu" (click)="emd()">
+        EMD Support Script
+      </button>
+    </div>-->
+    <!--<div *ngIf="showChangePnr">
+      <button class="leisureButton btnMenu" (click)="changePnr()">
+        Change PNR Workflow
+      </button>
+    </div>-->
+    <div>
+      <button class="leisureButton btnMenu" (click)="amadeusQueues()">
+        Amadeus Queue
+      </button>
+    </div>
+  </div>
+  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
+</div>
+
 <!-- <div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
   <div class="loader">
     Unable to load PNR or no PNR is loaded in Amadeus.
@@ -446,28 +522,5 @@
   </alert>
 </div>
 
-<div *ngIf="!isPnrLoaded && loading === false && workflow === ''" class="loaderBody">
-  <div class="loader">
-    <div>
-      Corporate
-      <span class="cwt-logo"></span>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="amadeusQueues()">
-        Support Amadeus Queue
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="queueReport()">
-        Queue Productivity Report
-      </button>
-    </div>
-    <div *ngIf="showAssignInvoiceToOid">
-      <button class="leisureButton btnMenu" (click)="assignInvoiceToOid()">
-        Assign Invoice to new OID
-      </button>
-    </div>
-  </div>
-  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
-</div>
+
 <br />

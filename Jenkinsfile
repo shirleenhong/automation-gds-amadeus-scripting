@@ -174,7 +174,7 @@ def deployDockerContainer() {
   echo 'Pushing docker container to ECR triggered by ' + getBuildUserName()
   echo ' ==============  Username is ' + getBuildUserName() + ' ============== '
   echo ' ============== Docker Push ============== '
-  sh 'eval $(aws ecr get-login --registry-ids ${REGISTRY_ID} --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
+  sh 'aws ecr get-login-password | docker login --username AWS --password-stdin ${REGISTRY_ID}.${ECR_HOST} | sed \'s|https://||\''
   sh 'docker push ${REGISTRY_ID}.${ECR_HOST}/${APPLICATION_NAME}:${TAG_VERSION}'
   echo ' ============== ECR Push Complete ============== '
 

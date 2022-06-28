@@ -174,7 +174,7 @@ def deployDockerContainer() {
   echo 'Pushing docker container to ECR triggered by ' + getBuildUserName()
   echo ' ==============  Username is ' + getBuildUserName() + ' ============== '
   echo ' ============== Docker Push ============== '
-  sh 'eval $(aws ecr get-login --registry-ids ${REGISTRY_ID} --no-include-email --region ${REGION_NAME} | sed \'s|https://||\')'
+  sh 'aws ecr get-login --registry-ids ${REGISTRY_ID} --no-include-email --region ${REGION_NAME} | sed \'s|https://||\''
   sh 'docker push ${REGISTRY_ID}.${ECR_HOST}/${APPLICATION_NAME}:${TAG_VERSION}'
   echo ' ============== ECR Push Complete ============== '
 
@@ -194,9 +194,9 @@ def deployDockerContainer() {
    's|\\$SERVICE_NAME|' + env.APPLICATION_NAME + '|g;' +
    's|\\$ARTIFACT_NAME|' + env.APPLICATION_NAME + '|g" > ' + dockerComposeFile
 
-  sh '/usr/bin/aws ecs register-task-definition --region ${REGION_NAME} --cpu 256 --memory 720 --cli-input-json file://'+dockerComposeFile
-  sh '/usr/bin/aws ecs update-service --service ${APPLICATION_NAME} --cluster ${CLUSTER_NAME} --region ${REGION_NAME} --task-definition '+env.CONTAINER_NAME
-
+  sh 'aws ecs register-task-definition --region ${REGION_NAME} --cpu 256 --memory 720 --cli-input-json file://'+dockerComposeFile
+  sh 'aws ecs update-service --service ${APPLICATION_NAME} --cluster ${CLUSTER_NAME} --region ${REGION_NAME} --task-definition '+env.CONTAINER_NAME
+  
   echo ' ============== ECS Deployment End ============== '
 }
 

@@ -155,6 +155,7 @@ export class CorporateComponent implements OnInit {
       .retrievePNR()
       .then(
         async (res) => {
+          console.log(res);
           await this.getTST();
         },
         (error: string) => {
@@ -165,7 +166,6 @@ export class CorporateComponent implements OnInit {
         console.log(err);
       });
     await this.getPCC();
-    // this.getRecordLocator();
     console.log(JSON.stringify(this.pnrObj));
   }
   async getTST(): Promise<void> {

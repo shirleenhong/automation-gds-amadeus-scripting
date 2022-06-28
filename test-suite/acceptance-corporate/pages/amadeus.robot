@@ -6,7 +6,7 @@ Library           Screenshot
 Resource          base.robot
 
 *** Variables ***
-${url_amadeus}    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&appUri=/app_sell2.0/apf/init/login
+${url_amadeus}    https://acceptance.custom.sellingplatformconnect.amadeus.com/LoginService/login.jsp?SITE=I05WI05W&OV_SITE_UM_USE_PREF_PACKAGE=FALSE&OV_SITE_UM_USE_HMC_HIERARCHY=FALSE&LANGUAGE=US&refreshOnError=true&event=LOGIN_LOGOUT&appUri=/app_sell2.0/apf/init/login
 ${input_username}    css=#username > span:first-child input
 ${input_dutyCode}    css=#dutyCode input
 ${input_officeId}    css=#officeId input
@@ -52,6 +52,9 @@ ${popup_amadeus_tst}    //div[@id='e4retrievePNR_manageTSTPopup_id']
 ${input_base_fare}    //input[@name='baseFare']
 ${input_tst_currency}    //input[@name='baseCur']
 ${close_tst_window}    css=#e4retrievePNR_manageTSTPopup_id > .ydlg-close
+${panel_oid_list}    //div[@class='offices-list-container']
+${link_oid}    //a[contains(text(), '${oid}')]
+${checkbox_new_session}    //label[@for='newSession']
 
 *** Keywords ***
 Login To Amadeus Sell Connect Acceptance
@@ -59,8 +62,8 @@ Login To Amadeus Sell Connect Acceptance
     Maximize Browser Window
     Wait Until Element Is Visible    ${input_username}    60
     Input Text    ${input_username}    ${username}
-    Input Text    ${input_dutyCode}    GS
-    Input Text    ${input_officeId}    YTOWL2107
+    Input Text    ${input_dutyCode}    SU
+    Input Text    ${input_officeId}    BKKOK215C
     Input Password    ${input_password}    ${password}
     Wait Until Element Is Not Visible    ${button_disabled_login}    30
     Click Element    ${button_enabled_login}
@@ -805,12 +808,13 @@ Create MIS Segment With ${mis_segment_type} 5 Months From Now
 
 Emulate To Leisure On Demand OID 
     Click Element    ${button_officeId}
-    Wait Until Page Contains Element   ${popUp_oid}     20
+    Wait Until Page Contains Element   ${popUp_oid}    20
+    Wait Until Page Contains Element    ${panel_oid_list}    20
     Scroll Element Into View    ${oid_YTOWL2101} 
     Wait Until Page Contains Element    ${oid_YTOWL2101}    20   
     Click Element    ${oid_YTOWL2101}
     Sleep    7
-    Select Window  title=YTOWL2101 - Amadeus Selling Platform Connect  
+    Switch Window  title=YTOWL2107 - Amadeus Selling Platform Connect  
     Wait Until Element Is Visible    ${tab_mainPage}    60
     Click Element    ${button_command_page}
     Wait Until Page Contains Element    ${input_commandText}    180
@@ -891,4 +895,18 @@ Add ${number_of_segments} Car Segments With Pick And Drop Off Days Apart
     \    ${i}    Evaluate    ${i} + 1
     Enter Cryptic Command    CU1AHK1ORD${test_date_${i}}-${car_drop_day_${i}}CCMR/SUC-EP/SUN-EUROPCAR/SD-${test_date_${i}}/ST-1700/ED-${car_drop_day_${i}}/ET-1700/TTL-100.00USD/DUR-DAILY/MI-50KM FREE/CF-TEST/P1    0.5       
 
+Emulate To Specific OID
+    Click Element    ${button_officeId}
+    Wait Until Page Contains Element   ${popUp_oid}    20
+    Wait Until Page Contains Element    ${panel_oid_list}    20
+    Scroll Element Into View    ${link_oid}
+    Wait Until Page Contains Element    ${link_oid}    20   
+    Click Element    ${link_oid}
+    Sleep    7
+    Switch Window  title=${oid} - Amadeus Selling Platform Connect
+    Wait Until Element Is Visible    ${tab_mainPage}    60
+    Click Element    ${button_command_page}
+    Wait Until Page Contains Element    ${input_commandText}    180
+    Set Test Variable    ${current_page}    Amadeus
+    
 

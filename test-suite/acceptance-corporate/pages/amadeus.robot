@@ -20,8 +20,8 @@ ${button_command_page}    css=#etoolbar_toolbarSection_newcommandpagebtn_id
 ${input_commandText}    css=.cmdPromptDiv > textArea
 ${label_command_page}    //span[contains(@class, 'title cryptic')]
 ${menu_amadeus}    css=#emenu_menuSection_desktop_menu_data_idscript
-${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corp ${env}"]
-${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corp ${env}')]
+${menu_corp_test}      //li[@id="emenu_menuSection_desktop_menu_data_id_SMART_TOOL_CWT Corporate ${env}"]
+${header_corp_test}    //div[@class="xDialog_titleBar xDialog_std_titleBar"]//span[contains(text(), 'CWT Corporate ${env}')]
 ${window_corp_test}    //iframe[contains(@src,'/portal/gds-scripting-amadeus/?corporate')]
 ${link_sign_out}    css=#eusermanagement_logout_logo_logout_id
 ${popUp_sign_out}    //div[contains(text(),'Sign out')]
@@ -96,6 +96,7 @@ Open CA Corporate Test
     Wait Until Element Is Visible    ${window_corp_test}    60
     Sleep     10
     Select Frame    ${window_corp_test}
+    Take Screenshot
     Set Test Variable    ${current_page}    CWT Corporate
     Set Test Variable    ${pnr_submitted}    no
     Set Test Variable    ${pnr_details}     ${EMPTY}

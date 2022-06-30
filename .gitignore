@@ -36,3 +36,6 @@ debug.log
 debug.log
 test-suite/acceptance-corporate/pages/test_data/test_kwcv_test_data.json
 test-suite/acceptance-corporate/test/udid/test_kwcv.robot
+.metadata/.lock
+.metadata/.plugins/org.eclipse.jdt.core/index.db
+/.metadata/

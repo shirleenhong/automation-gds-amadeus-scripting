@@ -354,7 +354,7 @@
   </div>
 </div>
 
-<div *ngIf="isPnrLoaded && workflow === '' && loading === false && activeOID === 'YTOWL2107'" class="loaderBody">
+<div *ngIf="isPnrLoaded && workflow === '' && loading === false && isUSOID === false" class="loaderBody">
   <div class="loader">
     <div>
       CA Corporate
@@ -432,7 +432,7 @@
   <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
-<div *ngIf="isPnrLoaded && workflow === '' && loading === false && activeOID === 'MSPWL23GC'" class="loaderBody">
+<div *ngIf="isPnrLoaded && workflow === '' && loading === false && isUSOID === true" class="loaderBody">
   <div class="loader">
     <div>
       US Corporate

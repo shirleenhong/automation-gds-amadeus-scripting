@@ -68,6 +68,7 @@ declare var PNR: any;
 })
 export class CorporateComponent implements OnInit {
   title = 'bpg-gds-scripting-amadeus';
+  isUSOID = false;
   pnrObj: any;
   clientSubUnitGuid: string;
   errorPnrMsg = '';
@@ -201,11 +202,38 @@ export class CorporateComponent implements OnInit {
     console.log(JSON.stringify(this.tstObj));
   }
 
-  async getPCC() {
+   async getPCC() {
+    let listOfOID = [
+      {country: 'US', oid: 'MSPWL21GC'},
+      {country: 'US', oid: 'MSPWL22GC'},
+      {country: 'US', oid: 'MSPWL23GC'},
+      {country: 'US', oid: 'STLWL21GC'},
+      {country: 'US', oid: 'DFWWL21GC'},
+      {country: 'US', oid: 'STLWL22GC'},
+      {country: 'US', oid: 'ORDWL21GC'},
+      {country: 'CA', oid: 'YOWWL21AC'},
+      {country: 'CA', oid: 'YTOWL2101'},
+      {country: 'CA', oid: 'YTOWL2102'},
+      {country: 'CA', oid: 'YTOWL2103'},
+      {country: 'CA', oid: 'YTOWL2104'},
+      {country: 'CA', oid: 'YTOWL2105'},
+      {country: 'CA', oid: 'YTOWL2106'},
+      {country: 'CA', oid: 'YTOWL2107'}
+    ];
     await smartScriptSession.requestService('usermanagement.retrieveUser').then((x) => {
       this.activeOID = x.ACTIVE_OFFICE_ID;
       this.uid = x.USER_ALIAS;
     });
+    for (let index = 0; index < listOfOID.length; index++) {
+      if(listOfOID[index].oid === this.activeOID){
+        if(listOfOID[index].country === 'US'){
+          this.isUSOID = true;
+        }
+        else{
+          this.isUSOID = false;
+        }
+      }
+    }
   }
 
   async ngOnInit(): Promise<void> {

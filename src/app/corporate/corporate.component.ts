@@ -93,7 +93,7 @@ export class CorporateComponent implements OnInit {
   showChangePnr = false;
   withPasspurchaseAccess = false;
   changePnrConfig = '';
-  version = common.LeisureVersionNumber;
+  version = common.CorporateVersionNumber;
   showAssignInvoiceToOid = false;
   @ViewChild(ItineraryAndQueueComponent) itineraryqueueComponent: ItineraryAndQueueComponent;
   @ViewChild(PaymentsComponent) paymentsComponent: PaymentsComponent;

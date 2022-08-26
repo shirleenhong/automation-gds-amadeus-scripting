@@ -34,8 +34,8 @@ export class SegmentService {
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
     constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
-                private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService, private ddbService: DDBService,
-                private counselorDetail: CounselorDetail) { }
+        private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService, private ddbService: DDBService,
+        private counselorDetail: CounselorDetail) { }
 
 
     GetSegmentRemark(segmentRemarks: PassiveSegmentsModel[]) {
@@ -240,7 +240,7 @@ export class SegmentService {
     }
 
     private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
-                                   cValue: string, segmentAssoc: string, pText: string) {
+        cValue: string, segmentAssoc: string, pText: string) {
         this.corpRemarks.push(
             {
                 placeholder: pName, placeholdervalue: pValue,
@@ -416,7 +416,7 @@ export class SegmentService {
     }
 
     private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-                     amk: number, vir: number, itinLanguage: string, isCorp: boolean) {
+        amk: number, vir: number, itinLanguage: string, isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             if (isCorp) {
@@ -585,7 +585,7 @@ export class SegmentService {
     }
 
     private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-                            startTime: string, enddatevalue: string, endTime: string) {
+        startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -696,13 +696,14 @@ export class SegmentService {
         const mo = this.padDate((finaldate.getMonth() + 1).toString());
         const yr = odate.getFullYear().toString().substr(-2);
         const noOfPassenger = this.pnrService.getPassengers().length;
+        const isUSOID = localStorage.getItem('isUSOID') === 'true';
 
         mis.vendor = '1A';
         mis.status = 'HK';
         mis.startDate = day + mo + yr;
         mis.endDate = day + mo + yr;
-        mis.startPoint = 'YYZ';
-        mis.endPoint = 'YYZ';
+        mis.startPoint = isUSOID ? 'MSP' : 'YYZ';
+        mis.endPoint = isUSOID ? 'MSP' : 'YYZ';
         mis.freeText = freetext;
         mis.quantity = noOfPassenger;
         mis.startTime = '0000';
@@ -963,8 +964,6 @@ export class SegmentService {
                 }
             }
         }
-
-
 
         if (cancel.value.airlineNo || (cancel.value.acFlightNo && cancel.value.reasonACCancel === '6')) {
             let affectedairline = '';

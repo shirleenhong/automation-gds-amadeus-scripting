@@ -62,6 +62,7 @@ export class CancelSegmentComponent implements OnInit {
     ticketArray = [];
     ebCList: Array<ReasonCode> = [];
     isUSOID!: boolean;
+    showRushInfo = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -108,7 +109,10 @@ export class CancelSegmentComponent implements OnInit {
             ticketNumber: new FormControl('', []),
             vRsnOption: new FormControl('', []),
             ticketList: new FormControl('', []),
-            ticketVoidList: new FormArray([])
+            ticketVoidList: new FormArray([]),
+            rushRefund: new FormControl(false),
+            mco: new FormControl(false),
+            mcoIATA: new FormControl('', [Validators.pattern('^[0-9]{8}$'), Validators.minLength(8), Validators.maxLength(8)])
         });
         // this.showMessage();
         // this.checkHasPowerHotel();
@@ -857,6 +861,11 @@ export class CancelSegmentComponent implements OnInit {
 
         if (nonAcValue !== 'NONE') {
             this.enableFormControls(['airlineNo'], false);
+        }
+    }
+    public onMCOChange(checked: boolean): void {
+        if (!checked) {
+            this.cancelForm.controls.mcoIATA.setValue('');
         }
     }
 }

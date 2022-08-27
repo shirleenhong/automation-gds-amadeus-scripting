@@ -153,6 +153,54 @@
                 </div>
             </div>
         </div>
+
+        <div *ngIf="f.followUpOption.value === 'BSPREFUND'">
+            <div class="row form-group">
+                <div class="col-4"></div>
+                <div class="col-8 d-flex align-items-center">
+                    <input id="rushRefund" type="checkbox" name="rushRefund" formControlName="rushRefund" />
+                    <label for="rushRefund" class="ml-1 mb-0">Rush Refund required</label>
+                    <div class="position-relative ml-3" (mouseenter)="showRushInfo=true"
+                        (mouseleave)="showRushInfo=false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="#333F48">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                        <div *ngIf="showRushInfo"
+                            class="position-absolute d-flex flex-column align-items-center rush-info">
+                            <div class="p-3 pr-5 message">
+                                <p>Criteria for URGENT refund</p>
+                                <ul>
+                                    <li>Travel w/in 5 bus days with potential for incorrect usage</li>
+                                    <li class="my-1">New tkt must be issued and old ticket must be refunded</li>
+                                    <li>Customer Service Issue</li>
+                                </ul>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="8px" fill="#FFFFFF"
+                                viewBox="0 0 16 8">
+                                <polygon points="0,0 8,8 16,0" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-container *ngIf="isUSOID">
+            <div>
+                <div class="row form-group">
+                    <div class="col-4"><span>MCO</span></div>
+                    <div class="col-8 d-flex align-items-center">
+                        <input #mco type="checkbox" name="mco" formControlName="mco"
+                            (change)="onMCOChange($event.target.checked)" />
+                        <input *ngIf="mco.checked" type="number" name="mcoIATA" formControlName="mcoIATA" required
+                            class="form-control ml-4" placeholder="IATA where MCO was issued" />
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
         <div *ngIf="f.followUpOption.value !== 'Void Non BSP'">
             <div class="row form-group">
                 <div class="col-4"></div>
@@ -164,13 +212,12 @@
             <div class="row form-group">
                 <div class="col-4">Segments:</div>
                 <div class="col-8">
-                    <label>
-                        <div formArrayName="segments"
-                            *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index">
-                            <input type="checkbox" [formControlName]="i" (change)="checkSegmentAirline()" />
-                            {{ segments[i].name }}
-                        </div>
-                    </label>
+                    <div formArrayName="segments"
+                        *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index">
+                        <input [id]="'segment' + i" type="checkbox" [formControlName]="i"
+                            (change)="checkSegmentAirline()" />
+                        <label [for]="'segment' + i" class="ml-1">{{ segments[i].name }}</label>
+                    </div>
                 </div>
             </div>
 
@@ -179,7 +226,7 @@
                 <div class="col-8 emphasize">
                     <input type="checkbox" name="cancelAll" formControlName="cancelAll" id="cancelAll"
                         (change)="cancelAll($event.target.checked)" />
-                    Cancel All Segments
+                    <label for="cancelAll" class="ml-1">Cancel All Segments</label>
                 </div>
             </div>
         </div>

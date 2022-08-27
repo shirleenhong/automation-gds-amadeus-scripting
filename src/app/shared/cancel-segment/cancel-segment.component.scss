@@ -11,3 +11,18 @@
     font-size: 12px;
     font-weight: bold;
 }
+
+.rush-info {
+    width: max-content;
+    z-index: 1;
+    bottom: 34px;
+    right: 12px;
+    transform: translateX(50%);
+    filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
+
+    & .message {    
+        background-color: #FFFFFF;
+        color: #1f2937;        
+        border-radius: 0.5rem;
+    }
+}

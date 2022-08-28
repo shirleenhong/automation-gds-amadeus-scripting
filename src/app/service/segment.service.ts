@@ -33,7 +33,8 @@ export class SegmentService {
             'REX', 'SCX', 'SLW', 'SFH', 'SLP', 'UAC', 'NLU', 'SRL', 'TAM', 'TSL', 'TAP', 'TCN', 'TPQ', 'TZM',
             'TLC', 'TRC', 'TUY', 'TGZ', 'UPN', 'VER', 'VSA', 'JAL', 'ZCL', 'ZMM'];
 
-    constructor(private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
+    constructor(
+        private pnrService: PnrService, private remarkHelper: RemarkHelper, private translations: TranslationService,
         private amadeusQueueService: AmadeusQueueService, private rms: RemarksManagerService, private ddbService: DDBService,
         private counselorDetail: CounselorDetail) { }
 
@@ -239,8 +240,8 @@ export class SegmentService {
         });
     }
 
-    private assignCorpPlaceholders(pName: Array<string>, pValue: Array<string>, cName: string,
-        cValue: string, segmentAssoc: string, pText: string) {
+    private assignCorpPlaceholders(
+        pName: Array<string>, pValue: Array<string>, cName: string, cValue: string, segmentAssoc: string, pText: string) {
         this.corpRemarks.push(
             {
                 placeholder: pName, placeholdervalue: pValue,
@@ -415,8 +416,9 @@ export class SegmentService {
         }
     }
 
-    private rirTrain(pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup,
-        amk: number, vir: number, itinLanguage: string, isCorp: boolean) {
+    private rirTrain(
+        pnrSegment: any, segmentrem: PassiveSegmentsModel, rmGroup: RemarkGroup, amk: number, vir: number, itinLanguage: string,
+        isCorp: boolean) {
 
         if (segmentrem.trainNumber && segmentrem.classService) {
             if (isCorp) {
@@ -584,8 +586,8 @@ export class SegmentService {
         return rem;
     }
 
-    private extractFreeText(segment: PassiveSegmentsModel, startdatevalue: string,
-        startTime: string, enddatevalue: string, endTime: string) {
+    private extractFreeText(
+        segment: PassiveSegmentsModel, startdatevalue: string, startTime: string, enddatevalue: string, endTime: string) {
         let freetext = '';
         let suplierName = '';
         if (segment.vendorName) {
@@ -873,7 +875,7 @@ export class SegmentService {
         return rmGroup;
     }
 
-    buildCancelRemarks(cancel: any, segmentselected: any) {
+    buildCancelRemarks(cancel: any, segmentselected: any, isUSOID?: boolean) {
         this.corpRemarks = [];
         this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
@@ -897,11 +899,21 @@ export class SegmentService {
         if (cancel.value.desc1) {
             remText = dateToday + '/' + cancel.value.desc1;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+
+            if (isUSOID) {
+                remText = `${dateToday}/TESTING NOTE 1 ${cancel.value.desc1}`;
+                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+            }
         }
 
         if (cancel.value.desc2) {
             remText = dateToday + '/' + cancel.value.desc2;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+
+            if (isUSOID) {
+                remText = `${dateToday}/TESTING NOTE 2 ${cancel.value.desc1}`;
+                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+            }
         }
 
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
@@ -919,7 +931,9 @@ export class SegmentService {
                 const pArray = ['CancelDate', 'CancelHotel'];
                 const pValueArray = [dateToday, 'NO HTL'];
                 this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
-            } else {
+            }
+
+            if (!this.isCorporate || isUSOID) {
                 remText = dateToday + '/NO HTL SEGMENT INCLUDED IN CANCEL';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }

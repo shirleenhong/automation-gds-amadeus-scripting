@@ -384,9 +384,10 @@ export class CancelSegmentComponent implements OnInit {
     submit() {
         // Filter out the unselected ids
         const checkSegment = [];
-        const selectedPreferences = this.cancelForm.value.segments
-            .map((checked, index) => (checked ? this.segments[index].id : null))
-            .filter((value) => value !== null);
+        // const selectedPreferences = this.cancelForm.value.segments
+        //     .map((checked, index) => (checked ? this.segments[index].id : null))
+        //     .filter((value) => value !== null);
+        const selectedPreferences = this.getSelectedSegments();
         selectedPreferences.forEach((element) => {
             const look = this.segments.find((x) => x.id === element);
             if (look) {
@@ -411,9 +412,11 @@ export class CancelSegmentComponent implements OnInit {
 
         this.enableFormControls(['acFlightNo', 'relationship'], true);
         this.enableFormControls(['reasonUACancel', 'uasegNo', 'uaPassengerNo'], true);
-        const selectedPreferences = this.cancelForm.value.segments
-            .map((checked, index) => (checked ? this.segments[index].id : null))
-            .filter((value) => value !== null);
+        // const selectedPreferences = this.cancelForm.value.segments
+        //     .map((checked, index) => (checked ? this.segments[index].id : null))
+        //     .filter((value) => value !== null);
+
+        const selectedPreferences = this.getSelectedSegments();
 
         if (selectedPreferences.length === 0) {
             this.isOthers = true;
@@ -489,7 +492,8 @@ export class CancelSegmentComponent implements OnInit {
     //   });
     //   this.modalRef.content.modalRef = this.modalRef;
     //   this.modalRef.content.title = 'Hotel(s) booked via Power Hotel';
-    //   this.modalRef.content.message = 'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script';
+    //   this.modalRef.content.message =
+    //      'Power Hotel segment(s) must be cancelled in Power Hotel first before launching cancellation script';
     //   this.modalRef.content.callerName = 'Cancel';
     //   this.modalRef.content.response = '';
     //   // this.modalRef.content.paramValue = r;
@@ -599,9 +603,11 @@ export class CancelSegmentComponent implements OnInit {
         let controlsArr = [];
         const pass = this.getPassengerNo();
 
-        const selectedPreferences = this.cancelForm.value.segments
-            .map((checked, index) => (checked ? this.segments[index].id : null))
-            .filter((value) => value !== null);
+        // const selectedPreferences = this.cancelForm.value.segments
+        //     .map((checked, index) => (checked ? this.segments[index].id : null))
+        //     .filter((value) => value !== null);
+        const selectedPreferences = this.getSelectedSegments();
+
         selectedPreferences.forEach((element) => {
             const look = this.segments.find((x) => x.id === element);
             if (look) {
@@ -639,9 +645,10 @@ export class CancelSegmentComponent implements OnInit {
 
     defaultSegment() {
         let ua = '';
-        const selectedPreferences = this.cancelForm.value.segments
-            .map((checked, index) => (checked ? this.segments[index].id : null))
-            .filter((value) => value !== null);
+        // const selectedPreferences = this.cancelForm.value.segments
+        //     .map((checked, index) => (checked ? this.segments[index].id : null))
+        //     .filter((value) => value !== null);
+        const selectedPreferences = this.getSelectedSegments();
         selectedPreferences.forEach((element) => {
             const look = this.segments.find((x) => x.id === element);
             if (look) {
@@ -774,10 +781,21 @@ export class CancelSegmentComponent implements OnInit {
     }
 
     cancelAll(checkValue) {
-        const segment = this.cancelForm.controls.segments as FormArray;
-        segment.controls.forEach((element) => {
-            element.setValue(checkValue);
-        });
+        // const segment = this.cancelForm.controls.segments as FormArray;
+        // segment.controls.forEach((element) => {
+        //     element.setValue(checkValue);
+        // });
+        if (checkValue) {
+            const segment = this.cancelForm.controls.segments as FormArray;
+            segment.controls.forEach((element) => {
+                element.setValue(false);
+            });
+        }
+        this.checkSegmentAirline();
+    }
+    public cancelSegment(): void {
+        this.cancelForm.controls.cancelAll.setValue(false);
+
         this.checkSegmentAirline();
     }
 
@@ -786,7 +804,8 @@ export class CancelSegmentComponent implements OnInit {
             case 'Keep Ticket':
             case 'Non BSP Refund':
                 this.enableFormControls(
-                    ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+                    ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo',
+                        'tickets'],
                     true
                 );
                 this.checkAcTicketPassenger('');
@@ -795,7 +814,8 @@ export class CancelSegmentComponent implements OnInit {
                 this.isBSP = true;
                 this.isNonBSP = false;
                 this.enableFormControls(
-                    ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+                    ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo',
+                        'tickets'],
                     true
                 );
                 break;
@@ -803,7 +823,8 @@ export class CancelSegmentComponent implements OnInit {
                 this.isBSP = false;
                 this.isNonBSP = true;
                 this.enableFormControls(
-                    ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
+                    ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo',
+                        'tickets'],
                     true
                 );
                 break;
@@ -867,5 +888,11 @@ export class CancelSegmentComponent implements OnInit {
         if (!checked) {
             this.cancelForm.controls.mcoIATA.setValue('');
         }
+    }
+    private getSelectedSegments(): any {
+        return this.cancelForm.controls.cancelAll.value
+            ? this.cancelForm.value.segments.map((_checked, index) => this.segments[index].id)
+            : this.cancelForm.value.segments.map((checked, index) => (checked ? this.segments[index].id : null))
+                .filter((value) => value !== null);
     }
 }

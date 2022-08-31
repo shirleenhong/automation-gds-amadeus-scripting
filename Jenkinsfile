@@ -197,6 +197,7 @@ def deployDockerContainer() {
   sh 'aws ecs register-task-definition --region ${REGION_NAME} --cpu 256 --memory 720 --cli-input-json file://'+dockerComposeFile
   sh 'aws ecs update-service --service ${APPLICATION_NAME} --cluster ${CLUSTER_NAME} --region ${REGION_NAME} --task-definition '+env.CONTAINER_NAME
   
+  
   echo ' ============== ECS Deployment End ============== '
 }
 

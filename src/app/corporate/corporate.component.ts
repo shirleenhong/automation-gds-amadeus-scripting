@@ -41,7 +41,6 @@ import { PassiveSegmentModel } from '../models/pnr/passive-segment.model';
 import { CorpCancelRemarkService } from '../service/corporate/corp-cancel-remark.service';
 import { InvoiceRemarkService } from '../service/corporate/invoice-remark.service';
 import { IrdRateRequestComponent } from './ird-rate-request/ird-rate-request.component';
-// import { PricingComponent } from './pricing/pricing.component';
 import { PricingService } from '../service/corporate/pricing.service';
 import { RulesEngineService } from '../service/business-rules/rules-engine.service';
 import { CommonRemarkService } from '../service/common-remark.service';
@@ -110,7 +109,6 @@ export class CorporateComponent implements OnInit {
   @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
   @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
   @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
-  // @ViewChild(PricingComponent) pricingComponent: PricingComponent;
   @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
   @ViewChild(QueueReportComponent) queueReportComponent: QueueReportComponent;
   @ViewChild(EmdComponent) emdComponent: EmdComponent;
@@ -208,8 +206,9 @@ export class CorporateComponent implements OnInit {
       {country: 'US', oid: 'MSPWL22GC'},
       {country: 'US', oid: 'MSPWL23GC'},
       {country: 'US', oid: 'STLWL21GC'},
-      {country: 'US', oid: 'DFWWL21GC'},
       {country: 'US', oid: 'STLWL22GC'},
+      {country: 'US', oid: 'DFWWL21GC'},
+      {country: 'US', oid: 'ORDWL21AC'},
       {country: 'US', oid: 'ORDWL21GC'},
       {country: 'CA', oid: 'YOWWL21AC'},
       {country: 'CA', oid: 'YTOWL2101'},
@@ -234,6 +233,7 @@ export class CorporateComponent implements OnInit {
         }
       }
     }
+    localStorage.setItem('isUSOID', this.isUSOID.toString());
   }
 
   async ngOnInit(): Promise<void> {
@@ -312,7 +312,10 @@ export class CorporateComponent implements OnInit {
     this.isPnrLoaded = this.pnrService.isPNRLoaded;
 
     const tst = smartScriptUtils.normalize(this.pnrService.tstObj);
-    if (this.pnrService.recordLocator() && tst.length > 0) {
+    let hasInternationalFlight: boolean = false;
+    hasInternationalFlight = true; //this.hasInternationalFlights();
+    if (hasInternationalFlight === undefined) hasInternationalFlight = false;
+    if (this.pnrService.recordLocator() != '' && tst.length > 0 && hasInternationalFlight) {
       this.showIrdRequestButton = true;
     }
     await this.checkValidForAquaFee();
@@ -328,6 +331,34 @@ export class CorporateComponent implements OnInit {
     await this.getPnrService();
 
   }
+  
+  // hasInternationalFlights() {
+  //   let cityCountry: string;
+  //   if (this.pnrService.isPNRLoaded) {
+  //     const destinations = Array<string>();
+  //     this.pnrService.pnrObj.airSegments.forEach((x) => {
+  //       cityCountry = this.ddbService.getCityCountry(x.arrivalAirport).country;
+  //       if (this.ddbService.getCityCountry(x.arrivalAirport) !== '') {
+  //         console.log(cityCountry);
+  //         destinations.push(cityCountry);
+  //       }
+
+  //       cityCountry = this.ddbService.getCityCountry(x.departureAirport).country;
+  //       if (this.ddbService.getCityCountry(x.departureAirport) !== '') {
+  //         console.log(cityCountry);
+  //         destinations.push(cityCountry);
+  //       }
+  //     });
+
+  //     let hasInternationalFlight: boolean;
+  //     destinations.forEach((x) => {
+  //       if (x !== 'Canada' && x !== 'United States') {
+  //         hasInternationalFlight = true;
+  //       }
+  //     });
+  //     return hasInternationalFlight;
+  //   }
+  // }
 
   showLoading(msg, caller?) {
     const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
@@ -796,6 +827,7 @@ export class CorporateComponent implements OnInit {
     const remarkList = this.invoiceRemarkService.buildIrdCommentsRemarks(
       this.irdRateRequestComponent.irdInvoiceRequestComponent.commentsForm
     );
+    // this.rms.getMatchcedPlaceholderValues();
     this.invoiceRemarkService.writeIrdRateRequestRemarks(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
     this.invoiceRemarkService.addTravelTicketingQueue(this.irdRateRequestComponent.irdInvoiceRequestComponent.irdRequestForm);
     await this.rms.submitToPnr(remarkList, [], [], []).then(
@@ -976,7 +1008,14 @@ export class CorporateComponent implements OnInit {
   back() {
     this.workflow = '';
     this.resetDataLoadError();
-    this.cleanupRemarkService.revertDelete();
+  }
+
+  cancel() {
+    if (confirm('Are you sure you want to cancel changes? This will initiate IR?\n\nPress OK to continue...')) {
+      this.workflow = '';
+      this.resetDataLoadError();
+      this.cleanupRemarkService.revertDelete();
+    }
   }
 
   async sendItineraryAndQueue() {

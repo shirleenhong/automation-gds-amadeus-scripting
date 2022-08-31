@@ -1,4 +1,4 @@
-<form [formGroup]="irdRequestForm" style="padding:5px;">
+<form [formGroup]="irdRequestForm" class="form-submit" style="padding:5px;">
   <div class="irdRateRequestContainer">
     <div class="row form-group">
       <div class="col-3"></div>
@@ -103,6 +103,15 @@
             Remove
           </div>
         </div>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-3">
+        Total of ALL Stored Fares:
+      </div>
+      <div class="w-10" style="margin-left: 10px">
+        <input class="form-control" type="text" name="totalFare" id="totalFare" formControlName="totalFare" />
       </div>
     </div>
 

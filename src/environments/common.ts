@@ -35,5 +35,7 @@ export const common = {
   splunkLog: '/service/cbt-splunk-service/api/splunk/log',
   clearCacheByName: '/service/repo/powerbaseaws/cache/deleteByName?cacheName=', 
   LeisureVersionNumber: '20.3.4',
-  CorporateVersionNumber: '22.7.29',
+  CorporateVersionNumber: '22.8.28',
+  defaultIRDOfficeIdUS: 'MSPWL24GC',
+  defaultIRDOfficeIdCA: 'YTOWL210N'
 };

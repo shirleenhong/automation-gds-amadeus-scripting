@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 //import { UtilHelper } from '../../../helper/util.helper';
 
 // import { ValidateModel } from 'src/app/models/validate-model';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { formatDate } from '@angular/common';
+import { common } from 'src/environments/common';
 
 @Component({
   selector: 'app-ird-invoice-request',
@@ -20,6 +21,7 @@ export class IrdInvoiceRequestComponent implements OnInit {
   fareRequestList: { itemText: string; itemValue: string; }[];
   stops: FormArray;
   fareRequest = '';
+  isUSOID = false;
   constructor(private pnrService: PnrService, private fb: FormBuilder) {
     let stops = [];
     stops.push(this.createStop());
@@ -27,7 +29,7 @@ export class IrdInvoiceRequestComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       cnNumber: new FormControl('', [Validators.required]),
       officeId: new FormControl('', [Validators.required]),
-      queue: new FormControl('50C231', [Validators.required]),
+      queue: new FormControl('', [Validators.required]),
       date: new FormControl(formatDate((new Date()), 'ddMMM', 'en-US').toUpperCase(), []),
       cfa: new FormControl('', []),
       fareRequest: new FormControl('', [Validators.required]),
@@ -35,7 +37,8 @@ export class IrdInvoiceRequestComponent implements OnInit {
       dateFlexibility: new FormControl('', []),
       scheduleFlexibility: new FormControl('', []),
       isTravel: new FormControl('', [Validators.required]),
-      stops : this.fb.array(stops)
+      stops : this.fb.array(stops),
+      totalFare : new FormControl('', [Validators.required, Validators.pattern('[0-9]*(.[0-9]+)')])
     });
     
   }
@@ -55,6 +58,18 @@ export class IrdInvoiceRequestComponent implements OnInit {
         { itemText: 'J Class', itemValue: 'J Class' },
         { itemText: 'Least Expensive', itemValue: 'Least Expensive' }
       ];
+      this.isUSOID = (localStorage.getItem('isUSOID') == true.toString());
+      if (this.isUSOID) {
+        this.irdRequestForm.get('officeId').setValue(common.defaultIRDOfficeIdUS);
+        this.irdRequestForm.get('queue').setValue('50C02');
+      }
+      else {
+        this.irdRequestForm.get('officeId').setValue(common.defaultIRDOfficeIdCA);
+        this.irdRequestForm.get('queue').setValue('50C231');
+      }
+      // // this.irdRequestForm.get('totalFare').valueChanges.subscribe((totalFareAmount) => {
+      // //   this.irdRequestForm.get('officeId').setValue(this.defaultIRDOfficeIdCA);
+      // // }
     
   }
   createStop(): FormGroup{

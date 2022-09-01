@@ -1,0 +1,55 @@
+
+USE [Desktop_Prod]
+GO
+
+BEGIN TRAN
+BEGIN TRY
+
+		DECLARE @CreationUserIdentifier		NVARCHAR(150)
+		DECLARE @CreationTimestamp			DATETIME = GETUTCDATE()
+		DECLARE @PNROutputId			    INT
+		DECLARE @PNROutputItemId			INT
+        DECLARE @GroupName                  NVARCHAR(150)
+        DECLARE @GroupId                    INT
+		
+		SET @CreationUserIdentifier = 'AGSC - PEAGSCPAEL-819'
+        SET @GroupName = 'Canada Migration BackOffice Group'
+
+        SET @PNROutputItemId = (SELECT TOP 1 PNROutputItemId FROM PNROutputItem WHERE RemarkFormat = 'Queue Completed Rate to IRD %TravelQueue%')
+
+		UPDATE PNROutputItem
+		SET RemarkFormat = 'Queue Completed Rate to IRD YTOWL210N/%TravelQueue%'
+		WHERE PNROutputitemId = @PNROutputItemId
+
+        SET @PNROutputItemId = (SELECT TOP 1 PNROutputItemId FROM PNROutputItem WHERE RemarkFormat = 'Queue Completed Rate to IRD %IRDOfficeID%/%TravelQueue%')
+
+		UPDATE PNROutputItem
+		SET RemarkFormat = 'Queue Completed Rate to IRD YTOWL210N/%TravelQueue%'
+		WHERE PNROutputitemId = @PNROutputItemId
+
+        DELETE FROM PNROutputGroupPNROutputItem WHERE CreationUserIdentifier = @CreationUserIdentifier
+        DELETE FROM PNROutputItem WHERE CreationUserIdentifier = @CreationUserIdentifier
+        DELETE FROM PNROutputPlaceHolder WHERE CreationUserIdentifier = @CreationUserIdentifier
+
+
+	COMMIT TRAN
+END TRY
+	
+BEGIN CATCH
+
+	ROLLBACK TRAN
+
+	PRINT 'ERROR OCCURRED! Rolled back transactions if there are any:' 
+    PRINT ERROR_NUMBER() 
+       PRINT 'Error Severity: ' 
+    PRINT ERROR_SEVERITY() 
+       PRINT 'Error State: ' 
+    PRINT ERROR_STATE() 
+       PRINT 'Error Procedure: ' 
+    PRINT ERROR_PROCEDURE() 
+       PRINT 'Error Line: ' 
+    PRINT ERROR_LINE() 
+       PRINT 'Error Message: ' 
+    PRINT ERROR_MESSAGE(); 
+
+END CATCH

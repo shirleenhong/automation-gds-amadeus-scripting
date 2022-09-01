@@ -60,11 +60,11 @@ export class IrdInvoiceRequestComponent implements OnInit {
       ];
       this.isUSOID = (localStorage.getItem('isUSOID') == true.toString());
       if (this.isUSOID) {
-        this.irdRequestForm.get('officeId').setValue(common.defaultIRDOfficeIdUS);
+        //this.irdRequestForm.get('officeId').setValue(common.defaultIRDOfficeIdUS);
         this.irdRequestForm.get('queue').setValue('50C02');
       }
       else {
-        this.irdRequestForm.get('officeId').setValue(common.defaultIRDOfficeIdCA);
+        //this.irdRequestForm.get('officeId').setValue(common.defaultIRDOfficeIdCA);
         this.irdRequestForm.get('queue').setValue('50C231');
       }
       // // this.irdRequestForm.get('totalFare').valueChanges.subscribe((totalFareAmount) => {

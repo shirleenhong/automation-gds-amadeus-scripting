@@ -5,7 +5,7 @@ import { Component, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PnrService } from '../../../service/pnr.service';
 import { formatDate } from '@angular/common';
-import { common } from 'src/environments/common';
+//import { common } from 'src/environments/common';
 
 @Component({
   selector: 'app-ird-invoice-request',

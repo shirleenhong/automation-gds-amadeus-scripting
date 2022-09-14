@@ -212,7 +212,9 @@ export class CorpCancelRemarkService {
                     this.createRemarks(['MCOIata'], [mcoIATA]);
                 }
             }
-            this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
+            if (!isUSOID) {
+                this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
+            }
             let bb = this.pnrService.getRemarkText('AQUA UPDATED THE BB FROM');
             if (bb !== '') {
                 bb = bb.substr(bb.length - 6);

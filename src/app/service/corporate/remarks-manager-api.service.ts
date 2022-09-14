@@ -63,9 +63,11 @@ export class RemarksManagerApiService {
       await this.getToken();
     }
 
-    const hds = new HttpHeaders().append('Content', 'application/json');
+    const hds = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
     return this.httpClient
-      .post<any>(serviceName, body, {
+      .post<any>(serviceName, JSON.stringify(body), {
         headers: hds
       })
       .toPromise()

@@ -10,6 +10,7 @@ import { AmadeusQueueService } from '../amadeus-queue.service';
 import { QueuePlaceModel } from 'src/app/models/pnr/queue-place.model';
 import { RemarkModel } from '../../models/pnr/remark.model';
 import { RemarkHelper } from '../../helper/remark-helper';
+import { common } from 'src/environments/common';
 declare var smartScriptSession: any;
 
 @Injectable({
@@ -17,6 +18,7 @@ declare var smartScriptSession: any;
 })
 export class InvoiceRemarkService {
   DATE_PIPE = new DatePipe('en-US');
+  isUSOID = false;
 
   constructor(
     private pnrService: PnrService,
@@ -364,11 +366,28 @@ export class InvoiceRemarkService {
       this.rms.createPlaceholderValues(map7);
     }
     const map8 = new Map<string, string>();
+    this.isUSOID = (localStorage.getItem('isUSOID') == true.toString());
     if (irdForm.controls.isTravel.value) {
-      map8.set('TravelQueue', irdForm.controls.isTravel.value === 'Y' ? '40C250' : '40C240');
+      if (this.isUSOID) {
+        map8.set('TravelQueue', common.defaultIRDOfficeIdUS.concat('\/', irdForm.controls.isTravel.value === 'Y' ? '49C41' : '49C40'));
+      }
+      else {
+        map8.set('TravelQueue', common.defaultIRDOfficeIdCA.concat('\/', irdForm.controls.isTravel.value === 'Y' ? '40C250' : '40C240'));
+      }
       this.rms.createEmptyPlaceHolderValue(['TravelQueue']);
       this.rms.createPlaceholderValues(map8);
     }
+    const map9 = new Map<string, string>();
+    if (isNaN(irdForm.controls.totalFare.value)) {
+      irdForm.controls.totalFare.setValue('0.00');
+    }
+    try {
+      map9.set('IRDTotalFare', Number.parseFloat(irdForm.controls.totalFare.value).toFixed(2));
+    } catch {
+      map9.set('IRDTotalFare', irdForm.controls.totalFare.value);
+    }
+    this.rms.createEmptyPlaceHolderValue(['IRDTotalFare']);
+    this.rms.createPlaceholderValues(map9);
   }
 
   buildIrdCommentsRemarks(comments: FormGroup) {
@@ -384,15 +403,23 @@ export class InvoiceRemarkService {
     }
     return remarkList;
   }
-
+  
   addTravelTicketingQueue(form: FormGroup) {
     const isTravel = form.controls.isTravel.value;
 
-    if (isTravel === 'Y') {
-      this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 250));
-    }
-    if (isTravel === 'N') {
-      this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210N', 40, 240));
+    this.isUSOID = (localStorage.getItem('isUSOID') == true.toString());
+    if (this.isUSOID == true) {
+      if (isTravel === 'Y') {
+        this.queService.addQueueCollection(new QueuePlaceModel(common.defaultIRDOfficeIdUS, 49, 41));
+      } else  {
+        this.queService.addQueueCollection(new QueuePlaceModel(common.defaultIRDOfficeIdUS, 49, 40));
+      }
+    } else {
+      if (isTravel === 'Y') {
+        this.queService.addQueueCollection(new QueuePlaceModel(common.defaultIRDOfficeIdCA, 40, 250));
+      } else {
+        this.queService.addQueueCollection(new QueuePlaceModel(common.defaultIRDOfficeIdCA, 40, 240));
+      }
     }
   }
 }

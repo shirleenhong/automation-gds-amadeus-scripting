@@ -36,4 +36,6 @@ export const common = {
     clearCacheByName: '/service/repo/powerbaseaws/cache/deleteByName?cacheName=',
     LeisureVersionNumber: '20.3.4',
     CorporateVersionNumber: '22.9.14',
+    defaultIRDOfficeIdUS: 'MSPWL24GC',
+    defaultIRDOfficeIdCA: 'YTOWL210N'
 };

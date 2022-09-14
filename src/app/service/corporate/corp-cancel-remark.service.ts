@@ -127,6 +127,7 @@ export class CorpCancelRemarkService {
             }
         }
 
+        // this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 60, 1));
         this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 41, 85));
         return rmGroup;
     }
@@ -144,29 +145,31 @@ export class CorpCancelRemarkService {
         return rem;
     }
 
-    writeAquaTouchlessRemark(cancel: any) {
+    writeAquaTouchlessRemark(cancel: any, isUSOID: boolean) {
         if (
             cancel.value.followUpOption === 'BSPKT' ||
             cancel.value.followUpOption === 'NONBSPKT' ||
             cancel.value.followUpOption === 'NONBSPREFUND' ||
             cancel.value.followUpOption === 'HOTELCARLIMO'
         ) {
-            const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
-            const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
-            let value = '';
-            if (bbExist) {
-                if (remarkText !== '') {
-                    const regex = /(?<BB>\d(.*))/g;
-                    const match = regex.exec(remarkText);
-                    regex.lastIndex = 0;
-                    if (match !== null) {
-                        value = match[0];
-                        this.createRemarks(['MatrixLineBB'], [value]);
+            if (!isUSOID) {
+                const bbExist = this.remarksManager.getMatchedPlaceHoldersWithKey('MatrixLineBB');
+                const remarkText = this.pnrService.getRemarkText('AQUA CHG-RM*BB/-');
+                let value = '';
+                if (bbExist) {
+                    if (remarkText !== '') {
+                        const regex = /(?<BB>\d(.*))/g;
+                        const match = regex.exec(remarkText);
+                        regex.lastIndex = 0;
+                        if (match !== null) {
+                            value = match[0];
+                            this.createRemarks(['MatrixLineBB'], [value]);
+                        }
                     }
                 }
             }
             this.queService.addQueueCollection(new QueuePlaceModel(this.pnrService.extractOidFromBookRemark(), 70, 1));
-            if (cancel.value.followUpOption === 'HOTELCARLIMO') {
+            if (!isUSOID && cancel.value.followUpOption === 'HOTELCARLIMO') {
                 this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210E', '70', '1'));
             }
         }

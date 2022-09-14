@@ -873,7 +873,7 @@ export class SegmentService {
         return rmGroup;
     }
 
-    buildCancelRemarks(cancel: any, segmentselected: any) {
+    buildCancelRemarks(cancel: any, segmentselected: any, isUSOID?: boolean) {
         this.corpRemarks = [];
         this.isCorporate = this.counselorDetail.getIsCorporate();
         let remText = '';
@@ -897,11 +897,21 @@ export class SegmentService {
         if (cancel.value.desc1) {
             remText = dateToday + '/' + cancel.value.desc1;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+
+            if (isUSOID) {
+                remText = `${dateToday}/TESTING NOTE 1 ${cancel.value.desc1}`;
+                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+            }
         }
 
         if (cancel.value.desc2) {
             remText = dateToday + '/' + cancel.value.desc2;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+
+            if (isUSOID) {
+                remText = `${dateToday}/TESTING NOTE 2 ${cancel.value.desc1}`;
+                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
+            }
         }
 
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
@@ -919,7 +929,9 @@ export class SegmentService {
                 const pArray = ['CancelDate', 'CancelHotel'];
                 const pValueArray = [dateToday, 'NO HTL'];
                 this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
-            } else {
+            }
+
+            if (!this.isCorporate || isUSOID) {
                 remText = dateToday + '/NO HTL SEGMENT INCLUDED IN CANCEL';
                 rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
             }

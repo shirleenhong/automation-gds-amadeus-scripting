@@ -57,6 +57,7 @@ import { ChangePnrService } from '../service/corporate/change-pnr.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueReportComponent } from './queue-report/queue-report.component';
 import { AssignInvoiceToOidComponent } from './assign-invoice-to-oid/assign-invoice-to-oid.component';
+import { FormGroup } from '@angular/forms';
 
 declare var smartScriptUtils: any;
 declare var smartScriptSession: any;
@@ -906,7 +907,9 @@ export class CorporateComponent implements OnInit {
         if (cancel.bspRefundComponent) {
             const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
                 cancel.bspRefundComponent.refundForm,
-                cancel.bspRefundComponent.refundType
+                cancel.bspRefundComponent.refundType,
+                this.isUSOID,
+                cancel.cancelForm.controls.mcoIATA.value
             );
             if (refundTicket) {
                 // if (refundTicket.SendTicket) {
@@ -940,7 +943,7 @@ export class CorporateComponent implements OnInit {
             remarkCollection.push(this.segmentService.cancelMisSegment());
         }
         remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
-        remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+        remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected, this.isUSOID));
         this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
 
         if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPRECREDIT') {
@@ -953,6 +956,9 @@ export class CorporateComponent implements OnInit {
         //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
         // }
         this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
+
+        this.setUSQueuing(cancel.cancelForm);
+
         await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList, executeBT).then(
             () => {
                 this.isPnrLoaded = false;
@@ -1398,5 +1404,22 @@ export class CorporateComponent implements OnInit {
                 this.showAssignInvoiceToOid = listUsers.indexOf(this.pnrService.uid) > -1;
             }
         });
+    }
+
+
+    private setUSQueuing(cancelForm: FormGroup): void {
+        if (this.isUSOID) {
+            let queue = new QueuePlaceModel();
+            queue.category = '1';
+            queue.queueNo = '70';
+            queue.pcc = this.pnrService.extractOidFromBookRemark();
+            this.amadeusQueueService.addQueueCollection(queue);
+
+            queue = new QueuePlaceModel();
+            queue.category = cancelForm.controls.rushRefund.value ? '201' : '200';
+            queue.queueNo = '40';
+            queue.pcc = 'MSPWL24GC';
+            this.amadeusQueueService.addQueueCollection(queue);
+        }
     }
 }

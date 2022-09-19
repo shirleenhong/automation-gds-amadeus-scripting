@@ -401,7 +401,11 @@ export class CancelSegmentComponent implements OnInit {
         return checkSegment;
     }
 
-    checkSegmentAirline() {
+    public onCancelSegmentSelected() {
+        this.cancelForm.controls.cancelAll.setValue(false);
+        this.checkSegmentAirline();
+    }
+    private checkSegmentAirline() {
         this.isAC = false;
         this.isUA = false;
         this.isOthers = false;

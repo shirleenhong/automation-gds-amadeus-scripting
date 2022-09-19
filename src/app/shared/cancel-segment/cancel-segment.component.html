@@ -169,7 +169,7 @@
                             <div class="p-3 pr-5 message">
                                 <p>Criteria for URGENT refund</p>
                                 <ul>
-                                    <li>Travel w/in 5 bus days with potential for incorrect usage</li>
+                                    <li>Travel within 5 bus days with potential for incorrect usage</li>
                                     <li class="my-1">New ticket must be issued and old ticket must be refunded</li>
                                     <li>Customer Service Issue</li>
                                 </ul>
@@ -187,10 +187,10 @@
             </div>
         </div>
 
-        <ng-container *ngIf="isUSOID">
+        <ng-container *ngIf="isUSOID && f.followUpOption.value === 'BSPREFUND'">
             <div>
                 <div class="row form-group">
-                    <div class="col-4"><span>MCO</span></div>
+                    <div class="col-4"><span>Is this an MCO?</span></div>
                     <div class="col-8 d-flex align-items-center">
                         <input #mco type="checkbox" name="mco" formControlName="mco"
                             (change)="onMCOChange($event.target.checked)" />
@@ -215,7 +215,7 @@
                     <div formArrayName="segments"
                         *ngFor="let name of this.cancelForm.controls.segments['controls']; let i = index">
                         <input [id]="'segment' + i" type="checkbox" [formControlName]="i"
-                            (change)="checkSegmentAirline()" />
+                            (change)="onCancelSegmentSelected()" />
                         <label [for]="'segment' + i" class="ml-1">{{ segments[i].name }}</label>
                     </div>
                 </div>

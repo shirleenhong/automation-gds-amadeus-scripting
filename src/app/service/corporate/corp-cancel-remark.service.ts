@@ -209,7 +209,7 @@ export class CorpCancelRemarkService {
                 }
                 this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum').value, t.get('coupon').value]);
                 if (isUSOID && mcoIATA !== '') {
-                    this.createRemarks(['MCOIata'], [mcoIATA]);
+                    this.createRemarks(['CorpIATACode'], [mcoIATA]);
                 }
             }
             if (!isUSOID) {
